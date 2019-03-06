@@ -637,7 +637,7 @@ public final class JavaTypeHelper {
 			return null;
 		}
 
-		return new Double((double)valueWithNull);
+		return (Double) valueWithNull;
 	}
 
 	private static Double convertToDouble(Float valueWithNull) {

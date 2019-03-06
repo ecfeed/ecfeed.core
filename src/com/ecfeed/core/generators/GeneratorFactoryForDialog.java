@@ -16,36 +16,30 @@ import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
+import com.ecfeed.core.model.ChoiceNode;
 
 public class GeneratorFactoryForDialog<E> {
 
-	public final static String GEN_TYPE_N_WISE = "N-wise generator";
+	public IGenerator<E> getGenerator(String code) throws GeneratorException { // TODO - rename to create generator
 
-	private Map<String, Class<? extends IGenerator<E>>> fAvailableGenerators;
-
-	@SuppressWarnings("unchecked")
-	public GeneratorFactoryForDialog(){
-		fAvailableGenerators = new LinkedHashMap<String, Class<? extends IGenerator<E>>>();
-		registerGenerator(GEN_TYPE_N_WISE, (Class<? extends IGenerator<E>>) NWiseGenerator.class);
-		registerGenerator("Cartesian Product generator", (Class<? extends IGenerator<E>>) CartesianProductGenerator.class);
-		registerGenerator("Adaptive random generator", (Class<? extends IGenerator<E>>) AdaptiveRandomGenerator.class);
-		registerGenerator("Random generator", (Class<? extends IGenerator<E>>) RandomGenerator.class);
-	}
-
-	public Set<String> availableGenerators(){
-		return fAvailableGenerators.keySet();
-	}
-
-	public IGenerator<E> getGenerator(String name) throws GeneratorException{
-		try {
-			return fAvailableGenerators.get(name).newInstance();
-		} catch (Exception e) {
-			GeneratorException.report("Cannot instantiate " + name + ": " + e);
-			return null;
+		if (code.equals("N-wise generator")) { // TODO
+			return new NWiseGenerator();
 		}
+
+		if (code.equals("Cartesian Product generator")) { // TODO
+			return new CartesianProductGenerator();
+		}
+
+		if (code.equals("Adaptive random generator")) { // TODO
+			return new AdaptiveRandomGenerator();
+		}
+
+		if (code.equals("Random generator")) { // TODO
+			return new RandomGenerator();
+		}
+
+		GeneratorException.report("Cannot create generator for code:" + code );
+		return null;
 	}
 
-	private void registerGenerator(String name, Class<? extends IGenerator<E>> generatorClass) {
-		fAvailableGenerators.put(name, generatorClass);
-	}
 }
