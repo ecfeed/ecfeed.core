@@ -19,19 +19,19 @@ public class GeneratorFactoryWithCodes {
 	public IGenerator<ChoiceNode> createGenerator(String code) throws GeneratorException {
 
 		if (code.equals(DataSourceHelper.dataSourceGenNWise)) {
-			return new NWiseGenerator();
+			return new NWiseGenerator<ChoiceNode>();
 		}
 
 		if (code.equals(DataSourceHelper.dataSourceGenCartesian)) {
-			return new CartesianProductGenerator();
+			return new CartesianProductGenerator<ChoiceNode>();
 		}
 
 		if (code.equals(DataSourceHelper.dataSourceGenAdaptiveRandom)) {
-			return new AdaptiveRandomGenerator();
+			return new AdaptiveRandomGenerator<ChoiceNode>();
 		}
 
 		if (code.equals(DataSourceHelper.dataSourceGenRandom)) {
-			return new RandomGenerator();
+			return new RandomGenerator<ChoiceNode>();
 		}
 
 		GeneratorException.report("Cannot create generator for code:" + code );

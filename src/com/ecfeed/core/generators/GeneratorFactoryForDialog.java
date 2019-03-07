@@ -10,36 +10,55 @@
 
 package com.ecfeed.core.generators;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
-import com.ecfeed.core.model.ChoiceNode;
 
 public class GeneratorFactoryForDialog<E> {
 
+	private static final String N_WISE = "N-wise generator";
+	private static final String CARTESIAN = "Cartesian Product generator";
+	private static final String ADAPTIVE = "Adaptive random generator";
+	private static final String RANDOM = "Random generator";
+	
+	
 	public IGenerator<E> getGenerator(String code) throws GeneratorException { // TODO - rename to create generator
 
-		if (code.equals("N-wise generator")) { // TODO
-			return new NWiseGenerator();
+		if (code.equals(N_WISE)) {
+			return new NWiseGenerator<E>();
 		}
 
-		if (code.equals("Cartesian Product generator")) { // TODO
-			return new CartesianProductGenerator();
+		if (code.equals(CARTESIAN)) {
+			return new CartesianProductGenerator<E>();
 		}
 
-		if (code.equals("Adaptive random generator")) { // TODO
-			return new AdaptiveRandomGenerator();
+		if (code.equals(ADAPTIVE)) {
+			return new AdaptiveRandomGenerator<E>();
 		}
 
-		if (code.equals("Random generator")) { // TODO
-			return new RandomGenerator();
+		if (code.equals(RANDOM)) {
+			return new RandomGenerator<E>();
 		}
 
 		GeneratorException.report("Cannot create generator for code:" + code );
 		return null;
 	}
 
+	public String[] getGeneratorNames() {
+		
+		return new String[] { N_WISE, CARTESIAN, ADAPTIVE, RANDOM };
+	}
+	
+	public int getGeneratorCount() {
+		return 4;
+	}
+
+	public boolean isGenWiseGenerator(String generatorName) {
+		
+		if (generatorName.equals(N_WISE)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 }
