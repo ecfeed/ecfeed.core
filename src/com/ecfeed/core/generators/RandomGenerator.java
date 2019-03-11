@@ -23,10 +23,11 @@ import com.ecfeed.core.model.IConstraint;
 public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		IGenerator<E> {
 
-	public final String LENGTH_PARAMETER_NAME = "Length";
-	public final int DEFAULT_LENGTH = 1;
-	public final String DUPLICATES_PARAMETER_NAME = "Duplicates"; 
-	public final boolean DEFAULT_DUPLICATES = false;
+	// TODO - make generator parameter strings as private + methods set and get, exchange Object to IGeneratorParameter in parameters map
+	public static final String LENGTH_PARAMETER_NAME = "Length";
+	public static final int DEFAULT_LENGTH = 1;
+	public static final String DUPLICATES_PARAMETER_NAME = "Duplicates";
+	public static final boolean DEFAULT_DUPLICATES = false;
 	
 	public RandomGenerator() throws GeneratorException{
 		addParameterDefinition(new IntegerParameter(LENGTH_PARAMETER_NAME, true, DEFAULT_LENGTH, 0, Integer.MAX_VALUE));

@@ -20,14 +20,14 @@ import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
 
 public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
-	public final String HISTORY_DEPTH_PARAMETER_NAME = "Depth";
-	public final int DEFAULT_HISTORY_DEPTH_VALUE = -1;
-	public final String CANDIDATE_SET_SIZE_PARAMETER_NAME = "Candidate set size";
-	public final int DEFAULT_CANDIDATE_SET_SIZE_PARAMETER_VALUE = 100;
-	public final String TEST_SUITE_SIZE_PARAMETER_NAME = "Length";
-	public final int DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE = 1;
-	public final String DUPLICATES_PARAMETER_NAME = "Duplicates";
-	public final boolean DEFAULT_DUPLICATES_PARAMETER_VALUE = false;
+	public static final String HISTORY_DEPTH_PARAMETER_NAME = "Depth";
+	public static final int DEFAULT_HISTORY_DEPTH_VALUE = -1;
+	public static final String CANDIDATE_SET_SIZE_PARAMETER_NAME = "Candidate set size";
+	public static final int DEFAULT_CANDIDATE_SET_SIZE_PARAMETER_VALUE = 100;
+	public static final String TEST_SUITE_SIZE_PARAMETER_NAME = "Length";
+	public static final int DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE = 1;
+	public static final String DUPLICATES_PARAMETER_NAME = "Duplicates";
+	public static final boolean DEFAULT_DUPLICATES_PARAMETER_VALUE = false;
 
 	public AdaptiveRandomGenerator() throws GeneratorException{
 		addParameterDefinition(new IntegerParameter(HISTORY_DEPTH_PARAMETER_NAME, 
