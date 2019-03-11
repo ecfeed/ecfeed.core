@@ -12,11 +12,10 @@ package com.ecfeed.core.type.adapter;
 
 import java.util.Arrays;
 
+import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
-
-import nl.flotsam.xeger.Xeger;
 
 public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 
