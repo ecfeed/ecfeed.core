@@ -265,7 +265,7 @@ public class MethodNode extends ParametersParentNode {
 
 			AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);
 
-			List<ChoiceNode> choicesForParameter = abstractParameterNode.getChoices();
+			List<ChoiceNode> choicesForParameter = abstractParameterNode.getLeafChoicesWithCopies();
 			testDomain.add(choicesForParameter);
 		}
 
