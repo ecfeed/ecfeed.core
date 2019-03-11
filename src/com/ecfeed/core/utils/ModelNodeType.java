@@ -1,0 +1,5 @@
+package com.ecfeed.core.utils;
+
+public enum ModelNodeType {
+	PROJECT, CLASS, METHOD, PARAMETER, METHOD_PARAMETER, GLOBAL_PARAMETER, CONSTRAINT, TEST_CASE, CHOICE;
+}
