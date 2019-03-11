@@ -6,7 +6,7 @@ import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.utils.ExceptionHelper;
 
-public class ModelTestHelper {
+public class ModelTestHelper {  // TODO - rename / move to ModelHelper
 
 	public static RootNode createModel(String modelXml) {
 
