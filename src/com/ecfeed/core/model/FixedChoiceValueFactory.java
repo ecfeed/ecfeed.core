@@ -65,8 +65,14 @@ public class FixedChoiceValueFactory {
 	private Object parseUserTypeValue(String valueString, String typeName) {
 
 		Object value = null;
-		Class<?> typeClass = fLoader.loadClass(typeName);
-
+		Class<?> typeClass = null;
+		
+		try {
+			typeClass = fLoader.loadClass(typeName);
+		} catch(Exception e) {
+			return valueString;
+		}
+		
 		if (typeClass != null) {
 			for (Object object: typeClass.getEnumConstants()) {
 				if ((((Enum<?>)object).name()).equals(valueString)) {
@@ -78,5 +84,6 @@ public class FixedChoiceValueFactory {
 
 		return value;
 	}
+
 
 }
