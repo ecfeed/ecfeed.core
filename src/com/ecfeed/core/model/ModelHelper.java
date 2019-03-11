@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
@@ -59,11 +60,15 @@ public class ModelHelper {
 		return result;
 	}
 
-	public static RootNode findRoot(AbstractNode startNode) {  // TODO - move to abstract node 
+	public static RootNode findRoot(AbstractNode startNode) { 
 
 		AbstractNode node = startNode;
 
-		for (int cnt = 0; cnt < 100; cnt++) {  // TODO - remove 100
+		for (int cnt = 0;  ; cnt++) {
+			
+			if (cnt >= 1000) {
+				ExceptionHelper.reportRuntimeException("Model too deep or recursive. Cannot find root.");
+			}
 
 			AbstractNode parent = node.getParent();
 
@@ -79,7 +84,6 @@ public class ModelHelper {
 			node = parent;
 		}
 
-		return null;
 	}
 
 }
