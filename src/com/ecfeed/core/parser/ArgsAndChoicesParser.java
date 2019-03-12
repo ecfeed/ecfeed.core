@@ -1,9 +1,9 @@
-package com.ecfeed.core.data;
+package com.ecfeed.core.parser;
 
 import java.util.List;
 import java.util.Map;
 
-public class ArgsAndChoicesData {  // TODO - REUSE IN JUNIT5
+public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
 
     private enum ChoicesValueType {
 
@@ -15,13 +15,13 @@ public class ArgsAndChoicesData {  // TODO - REUSE IN JUNIT5
     private static final String specialValueAllChoices = "ALL";
     private static final String specialValueNoneChoices = "NONE";
 
-    private ArgsAndChoicesData.ChoicesValueType fChoicesValueType;
+    private ArgsAndChoicesParser.ChoicesValueType fChoicesValueType;
     private Map<String, List<String>> fArgAndChoiceNames = null;
 
-    public ArgsAndChoicesData(Object choicesObject) throws Exception {
+    public ArgsAndChoicesParser(Object choicesObject) throws Exception {
 
         if (choicesObject == null) {
-            fChoicesValueType = ArgsAndChoicesData.ChoicesValueType.ALL;
+            fChoicesValueType = ArgsAndChoicesParser.ChoicesValueType.ALL;
             return;
         }
 
@@ -67,7 +67,7 @@ public class ArgsAndChoicesData {  // TODO - REUSE IN JUNIT5
 
     public boolean isAllArgsAndChoices() {
 
-        if (fChoicesValueType == ArgsAndChoicesData.ChoicesValueType.ALL) {
+        if (fChoicesValueType == ArgsAndChoicesParser.ChoicesValueType.ALL) {
             return true;
         }
 
@@ -76,7 +76,7 @@ public class ArgsAndChoicesData {  // TODO - REUSE IN JUNIT5
 
     public boolean isNoneChoices() {
 
-        if (fChoicesValueType == ArgsAndChoicesData.ChoicesValueType.NONE) {
+        if (fChoicesValueType == ArgsAndChoicesParser.ChoicesValueType.NONE) {
             return true;
         }
 
@@ -88,14 +88,14 @@ public class ArgsAndChoicesData {  // TODO - REUSE IN JUNIT5
         return fArgAndChoiceNames;
     }
 
-    private ArgsAndChoicesData.ChoicesValueType getConstraintsFromString(String constraintsString) throws Exception {
+    private ArgsAndChoicesParser.ChoicesValueType getConstraintsFromString(String constraintsString) throws Exception {
 
         if (constraintsString.equals(specialValueNoneChoices)) {
-            return ArgsAndChoicesData.ChoicesValueType.NONE;
+            return ArgsAndChoicesParser.ChoicesValueType.NONE;
         }
 
         if (constraintsString.equals(specialValueAllChoices)) {
-            return ArgsAndChoicesData.ChoicesValueType.ALL;
+            return ArgsAndChoicesParser.ChoicesValueType.ALL;
         }
 
         throw new Exception("Invalid special value for choices: " + constraintsString);

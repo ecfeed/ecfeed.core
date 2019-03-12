@@ -1,15 +1,15 @@
-package com.ecfeed.core.data;
+package com.ecfeed.core.parser;
 
 import java.util.List;
 
-public class TestSuitesData { // TODO - REUSE IN JUNIT5
+public class TestSuitesParser { // TODO - REUSE IN JUNIT5
 
     private static final String specialValueAllSuites = "ALL";
 
     private List<String> fTestSuiteNames = null;
     private boolean fIsSpecialValueAllSuites = false;
 
-    public TestSuitesData(Object testSuitesObject) throws Exception {
+    public TestSuitesParser(Object testSuitesObject) throws Exception {
 
         if (testSuitesObject == null) {
             setSpecialValueAllSuitesToTrue();

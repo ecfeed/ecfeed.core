@@ -1,13 +1,13 @@
-package com.ecfeed.core.data;
+package com.ecfeed.core.parser;
 
-public class DuplicatesData {
+public class DuplicatesParser {
 
     private final static String duplicatesTrue = "true";
     private final static String duplicatesFalse = "false";
 
     private boolean fDuplicates = false;
 
-    public DuplicatesData(String duplicatesStr) throws Exception {
+    public DuplicatesParser(String duplicatesStr) throws Exception {
 
         if (duplicatesStr == null) {
             fDuplicates = false;

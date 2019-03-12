@@ -1,8 +1,8 @@
-package com.ecfeed.core.data;
+package com.ecfeed.core.parser;
 
 import java.util.List;
 
-public class ConstraintsData { // TODO - REUSE IN JUNIT5
+public class ConstraintsParser { // TODO - REUSE IN JUNIT5
 
     private enum ConstraintsValueType {
 
@@ -14,13 +14,13 @@ public class ConstraintsData { // TODO - REUSE IN JUNIT5
     private static final String specialValueAllConstraints = "ALL";
     private static final String specialValueNoneConstraints = "NONE";
 
-    private ConstraintsData.ConstraintsValueType fConstraintsValueType;
+    private ConstraintsParser.ConstraintsValueType fConstraintsValueType;
     private List<String> fConstraintNames = null;
 
-    public ConstraintsData(Object constraintsObject) throws Exception {
+    public ConstraintsParser(Object constraintsObject) throws Exception {
 
         if (constraintsObject == null) {
-            fConstraintsValueType = ConstraintsData.ConstraintsValueType.ALL;
+            fConstraintsValueType = ConstraintsParser.ConstraintsValueType.ALL;
             return;
         }
 

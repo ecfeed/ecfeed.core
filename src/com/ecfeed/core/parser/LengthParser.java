@@ -1,10 +1,10 @@
-package com.ecfeed.core.data;
+package com.ecfeed.core.parser;
 
-public class LengthData {
+public class LengthParser {
 
     private int fLength = 1;
 
-    public LengthData(String length) throws Exception {
+    public LengthParser(String length) throws Exception {
 
         if (length == null) {
             fLength = 1;
