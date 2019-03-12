@@ -19,7 +19,7 @@ public class GeneratorsNParser {
     }
 
     public int getN() {
-        
+
         return fN;
     }
 
