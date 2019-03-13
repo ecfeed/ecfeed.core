@@ -20,7 +20,7 @@ public interface IGenerator<E> {
 	/*
 	 * returns list of parameters used by this generator.
 	 */
-	public List<IGeneratorParameter> parameters();
+	public List<IGeneratorParamDefinition> getParameterDefinitions();
 	/*
 	 * Should be called prior to first call of next()
 	 */

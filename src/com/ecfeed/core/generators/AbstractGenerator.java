@@ -18,13 +18,13 @@ import java.util.Map;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
-import com.ecfeed.core.generators.api.IGeneratorParameter;
+import com.ecfeed.core.generators.api.IGeneratorParamDefinition;
 import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
 
 public class AbstractGenerator<E> implements IGenerator<E> {
 
-	private List<IGeneratorParameter> fParameterDefinitions = new ArrayList<IGeneratorParameter>();
+	private List<IGeneratorParamDefinition> fParameterDefinitions = new ArrayList<IGeneratorParamDefinition>();
 	private Map<String, Object> fParameterValues = null;
 	private IAlgorithm<E> fAlgorithm = null;
 	private List<List<E>> fInput;
@@ -36,7 +36,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 			Collection<IConstraint<E>> constraints,
-			Map<String, Object> parameters,
+			Map<String, Object> parameters, // TODO - use List<IGeneratorArgument> (create IGeneratorArgument)
 			IGeneratorProgressMonitor generatorProgressMonitor)
 			throws GeneratorException {
 		validateInput(inputDomain);
@@ -72,7 +72,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 	@Override
-	public List<IGeneratorParameter> parameters() {
+	public List<IGeneratorParamDefinition> getParameterDefinitions() {
 		return fParameterDefinitions;
 	}
 
@@ -109,7 +109,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	protected void validateParameters(Map<String, Object> parameters) throws GeneratorException {
 		int requiredParameters = 0;
 		
-		for(IGeneratorParameter definition : fParameterDefinitions){
+		for(IGeneratorParamDefinition definition : fParameterDefinitions){
 			Object providedValue = parameters.get(definition.getName());
 			if(providedValue == null){
 				if(definition.isRequired()){
@@ -127,7 +127,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		
 		if(parameters != null){
 			for(String parameterName : parameters.keySet()){
-				IGeneratorParameter definition = getParameterDefinition(parameterName);
+				IGeneratorParamDefinition definition = getParameterDefinition(parameterName);
 				if(definition == null){
 					GeneratorException.report("Unknown parameter " + parameterName);
 				}
@@ -152,7 +152,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		fAlgorithm.cancel();
 	}
 	
-	protected void addParameterDefinition(IGeneratorParameter definition){
+	protected void addParameterDefinition(IGeneratorParamDefinition definition){
 		for(int i = 0; i < fParameterDefinitions.size(); i++){
 			if(fParameterDefinitions.get(i).getName().equals(definition.getName())){
 				fParameterDefinitions.set(i, definition);
@@ -161,8 +161,8 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		fParameterDefinitions.add(definition);
 	}
 
-	protected IGeneratorParameter getParameterDefinition(String name) throws GeneratorException{
-		for(IGeneratorParameter parameter : fParameterDefinitions){
+	protected IGeneratorParamDefinition getParameterDefinition(String name) throws GeneratorException{
+		for(IGeneratorParamDefinition parameter : fParameterDefinitions){
 			if(parameter.getName().equals(name)){
 				return parameter;
 			}
@@ -226,8 +226,8 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 	private Object getParameterValue(String name, Map<String, Object> values) throws GeneratorException {
-		IGeneratorParameter definition = null;
-		for(IGeneratorParameter def : fParameterDefinitions){
+		IGeneratorParamDefinition definition = null;
+		for(IGeneratorParamDefinition def : fParameterDefinitions){
 			if(def.getName().equals(name)){
 				definition = def;
 			}

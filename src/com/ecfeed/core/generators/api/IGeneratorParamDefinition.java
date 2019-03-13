@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.generators.api;
 
-public interface IGeneratorParameter {
+public interface IGeneratorParamDefinition {
 	public enum TYPE{
 		BOOLEAN, INTEGER, DOUBLE, STRING
 	}
