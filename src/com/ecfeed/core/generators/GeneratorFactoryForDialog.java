@@ -13,13 +13,12 @@ package com.ecfeed.core.generators;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 
-public class GeneratorFactoryForDialog<E> {
+public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactoryWithCodes (get/create generator using enum GeneratorType, not by String)
 
 	private static final String N_WISE = "N-wise generator";
 	private static final String CARTESIAN = "Cartesian Product generator";
 	private static final String ADAPTIVE = "Adaptive random generator";
 	private static final String RANDOM = "Random generator";
-	
 	
 	public IGenerator<E> getGenerator(String code) throws GeneratorException { // TODO - rename to create generator
 

@@ -16,25 +16,25 @@ import com.ecfeed.core.model.ChoiceNode;
 
 public class GeneratorFactoryWithCodes {
 
-	public IGenerator<ChoiceNode> createGenerator(String code) throws GeneratorException {
+	public IGenerator<ChoiceNode> createGenerator(GeneratorType type) throws GeneratorException {
 
-		if (code.equals(DataSourceHelper.dataSourceGenNWise)) {
+		if (type == GeneratorType.N_WISE) {
 			return new NWiseGenerator<ChoiceNode>();
 		}
 
-		if (code.equals(DataSourceHelper.dataSourceGenCartesian)) {
+		if (type == GeneratorType.CARTESIAN) {
 			return new CartesianProductGenerator<ChoiceNode>();
 		}
 
-		if (code.equals(DataSourceHelper.dataSourceGenAdaptiveRandom)) {
+		if (type == GeneratorType.ADAPTIVE_RANDOM) {
 			return new AdaptiveRandomGenerator<ChoiceNode>();
 		}
 
-		if (code.equals(DataSourceHelper.dataSourceGenRandom)) {
+		if (type == GeneratorType.RANDOM) {
 			return new RandomGenerator<ChoiceNode>();
 		}
 
-		GeneratorException.report("Cannot create generator for code:" + code );
+		GeneratorException.report("Can not create generator. Unsupported generator type.");
 		return null;
 	}
 }
