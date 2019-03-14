@@ -8,13 +8,11 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.generators;
+package com.ecfeed.core.generators.api;
 
-public class DataSourceHelper {
+public interface IGeneratorArgument {
 
-	public final static String dataSourceGenNWise = "genNWise";
-	public final static String dataSourceGenCartesian = "genCartesian";
-	public final static String dataSourceGenAdaptiveRandom = "genAdaptiveRandom";
-	public final static String dataSourceGenRandom = "genRandom";
-	public final static String dataSourceStaticContent = "static"; 
+	String getName();
+	Object getValue();
 }
+

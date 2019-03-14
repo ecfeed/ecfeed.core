@@ -10,9 +10,9 @@
 
 package com.ecfeed.core.generators;
 
-import com.ecfeed.core.generators.api.IGeneratorParameter;
+import com.ecfeed.core.generators.api.IGeneratorParamDefinition;
 
-public class AbstractParameter implements IGeneratorParameter {
+public class AbstractParameter implements IGeneratorParamDefinition {
 
 	private String fName;
 	private TYPE fType;

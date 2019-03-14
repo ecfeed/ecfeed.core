@@ -117,6 +117,11 @@ public class MethodNode extends ParametersParentNode {
 		return result;
 	}
 
+	public String getLongSignature() {
+
+		return getParent().getFullName() + "." + getShortSignature();
+	}
+
 	@Override
 	public List<? extends AbstractNode> getChildren(){
 		List<AbstractNode> children = new ArrayList<AbstractNode>(super.getChildren());

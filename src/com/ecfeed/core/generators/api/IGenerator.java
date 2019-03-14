@@ -20,13 +20,14 @@ public interface IGenerator<E> {
 	/*
 	 * returns list of parameters used by this generator.
 	 */
-	public List<IGeneratorParameter> parameters();
+	public List<IGeneratorParamDefinition> getParameterDefinitions();
 	/*
 	 * Should be called prior to first call of next()
 	 */
 	public void initialize(List<List<E>> inputDomain, 
 			Collection<IConstraint<E>> constraints,
-			Map<String, Object> parameters,
+//			Map<String, Object> parameters,
+		    Map<String, IGeneratorArgument> arguments,
 			IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException;
 	
 	public void addConstraint(IConstraint<E> constraint);

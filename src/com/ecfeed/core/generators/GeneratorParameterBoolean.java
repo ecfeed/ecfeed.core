@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.generators;
 
-public class BooleanParameter extends AbstractParameter {
+public class GeneratorParameterBoolean extends AbstractParameter {
 
 	private boolean fDefaultValue;
 
-	public BooleanParameter(String name, boolean required, boolean defaultValue){
+	public GeneratorParameterBoolean(String name, boolean required, boolean defaultValue){
 		super(name, TYPE.BOOLEAN, required);
 		fDefaultValue = defaultValue;
 	}

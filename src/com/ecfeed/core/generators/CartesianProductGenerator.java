@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
 
@@ -23,7 +24,7 @@ public class CartesianProductGenerator<E> extends AbstractGenerator<E> {
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 			Collection<IConstraint<E>> constraints,
-			Map<String, Object> parameters,
+			Map<String, IGeneratorArgument> parameters,
 			IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException {
 		
 		super.initialize(inputDomain, constraints, parameters, generatorProgressMonitor);
