@@ -358,16 +358,16 @@ public final class Benchmark {
 		return fPath;
 	}
 	
-	public static void main(String[] args) {
-		try {
-			Thread.sleep(60000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		new Benchmark(IteratedRandomizedNWiseAlgorithm.class, RandomizedNWiseAlgorithm.class)
-			.setPath(Paths.get("/home/krzysztof/Desktop/tmpbenchmark.data"))
-			.runFullBenchmark();
-	}
+//	public static void main(String[] args) {
+//		try {
+//			Thread.sleep(60000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		new Benchmark(IteratedRandomizedNWiseAlgorithm.class, RandomizedNWiseAlgorithm.class)
+//			.setPath(Paths.get("/home/krzysztof/Desktop/tmpbenchmark.data"))
+//			.runFullBenchmark();
+//	}
 }
