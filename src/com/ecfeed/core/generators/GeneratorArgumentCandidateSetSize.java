@@ -2,17 +2,10 @@ package com.ecfeed.core.generators;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 
-public class GeneratorArgumentCandidateSetSize extends AbstractGeneratorArgument {
-
-    Integer fCandidateSetSize;
+public class GeneratorArgumentCandidateSetSize extends GeneratorArgumentInteger {
 
     public GeneratorArgumentCandidateSetSize(int candidateSetSize) throws GeneratorException {
-        super(new GeneratorParameterCandidateSetSize().getName());
-        fCandidateSetSize = candidateSetSize;
+        super(new GeneratorParameterCandidateSetSize().getName(), candidateSetSize);
     }
             
-    @Override
-    public Integer getValue() {
-        return fCandidateSetSize;
-    }
 }
