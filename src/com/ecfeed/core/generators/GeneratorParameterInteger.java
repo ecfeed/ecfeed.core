@@ -14,19 +14,19 @@ import java.util.Arrays;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 
-public class IntegerParameter extends AbstractParameter {
+public class GeneratorParameterInteger extends AbstractParameter {
 
 	private Integer[] fAllowedValues = null;
 	private int fDefaultValue;
 	private int fMinValue = Integer.MIN_VALUE;
 	private int fMaxValue = Integer.MAX_VALUE;
 
-	public IntegerParameter(String name, boolean required, int defaultValue){
+	public GeneratorParameterInteger(String name, boolean required, int defaultValue){
 		super(name, TYPE.INTEGER, required);
 		fDefaultValue = defaultValue;
 	}
 
-	public IntegerParameter(String name, boolean required, int defaultValue, Integer[] allowedValues) throws GeneratorException {
+	public GeneratorParameterInteger(String name, boolean required, int defaultValue, Integer[] allowedValues) throws GeneratorException {
 		super(name, TYPE.INTEGER, required);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
@@ -39,7 +39,7 @@ public class IntegerParameter extends AbstractParameter {
 		}
 	}
 
-	public IntegerParameter(String name, boolean required, int defaultValue, int min, int max) throws GeneratorException {
+	public GeneratorParameterInteger(String name, boolean required, int defaultValue, int min, int max) throws GeneratorException {
 		super(name, TYPE.INTEGER, required);
 		fDefaultValue = defaultValue;
 		fMinValue = min;

@@ -16,16 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGenerator;
-import com.ecfeed.core.generators.api.IGeneratorParamDefinition;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
+import com.ecfeed.core.generators.api.*;
 import com.ecfeed.core.model.IConstraint;
 
 public class AbstractGenerator<E> implements IGenerator<E> {
 
 	private List<IGeneratorParamDefinition> fParameterDefinitions = new ArrayList<IGeneratorParamDefinition>();
-	private Map<String, Object> fParameterValues = null;
+	private Map<String, IGeneratorArgument> fArguments = null;
 	private IAlgorithm<E> fAlgorithm = null;
 	private List<List<E>> fInput;
 	private Collection<IConstraint<E>> fConstraints;
@@ -36,12 +33,12 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 			Collection<IConstraint<E>> constraints,
-			Map<String, Object> parameters, // TODO - use List<IGeneratorArgument> (create IGeneratorArgument)
+            Map<String, IGeneratorArgument> arguments,
 			IGeneratorProgressMonitor generatorProgressMonitor)
 			throws GeneratorException {
 		validateInput(inputDomain);
-		validateParameters(parameters);
-		fParameterValues = parameters;
+		validateArguments(arguments);
+		fArguments = arguments;
 		fInput = inputDomain;
 		fConstraints = constraints;
 		fGeneratorProgressMonitor = generatorProgressMonitor;
@@ -106,11 +103,12 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		return fAlgorithm.getConstraints();
 	}
 
-	protected void validateParameters(Map<String, Object> parameters) throws GeneratorException {
+	protected void validateArguments(Map<String, IGeneratorArgument> arguments) throws GeneratorException {
 		int requiredParameters = 0;
 		
 		for(IGeneratorParamDefinition definition : fParameterDefinitions){
-			Object providedValue = parameters.get(definition.getName());
+			IGeneratorArgument generatorArgument = arguments.get(definition.getName());
+			Object providedValue = generatorArgument.getValue();
 			if(providedValue == null){
 				if(definition.isRequired()){
 					GeneratorException.report("Value of required parameret " + definition.getName() + " is not provided");
@@ -125,8 +123,8 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 			}
 		}
 		
-		if(parameters != null){
-			for(String parameterName : parameters.keySet()){
+		if(arguments != null){
+			for(String parameterName : arguments.keySet()){
 				IGeneratorParamDefinition definition = getParameterDefinition(parameterName);
 				if(definition == null){
 					GeneratorException.report("Unknown parameter " + parameterName);
@@ -176,7 +174,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		if(!fInitialized){
 			GeneratorException.report("Parameter values can be obtained after the generator is initialized");
 		}
-		Object value = getParameterValue(name, fParameterValues);
+		Object value = getParameterValue(name, fArguments);
 		if(value instanceof Integer == false){
 			GeneratorException.report("Parameter type must be integer: " + name);
 		}
@@ -184,7 +182,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 	protected boolean getBooleanParameter(String name) throws GeneratorException {
-		Object value = getParameterValue(name, fParameterValues);
+		Object value = getParameterValue(name, fArguments);
 		if(value instanceof Boolean == false){
 			GeneratorException.report("Parameter type must be boolean: " + name);
 		}
@@ -192,7 +190,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 	protected double getDoubleParameter(String name) throws GeneratorException {
-		Object value = getParameterValue(name, fParameterValues);
+		Object value = getParameterValue(name, fArguments);
 		if(value instanceof Double == false){
 			GeneratorException.report("Parameter type must be double: " + name);
 		}
@@ -200,7 +198,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	}
 	
 	protected String getStringParameter(String name) throws GeneratorException {
-		Object value = getParameterValue(name, fParameterValues);
+		Object value = getParameterValue(name, fArguments);
 		if(value instanceof String == false){
 			GeneratorException.report("Parameter type must be integer: " + name);
 		}
@@ -225,7 +223,8 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		}
 	}
 
-	private Object getParameterValue(String name, Map<String, Object> values) throws GeneratorException {
+	private Object getParameterValue(String name, Map<String, IGeneratorArgument> arguments) throws GeneratorException {
+
 		IGeneratorParamDefinition definition = null;
 		for(IGeneratorParamDefinition def : fParameterDefinitions){
 			if(def.getName().equals(name)){
@@ -235,7 +234,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		if(definition == null){
 			GeneratorException.report("Unknown parameter: " + name);
 		}
-		Object value = values.get(name);
+		Object value = arguments.get(name).getValue();
 		if(value == null){
 			if(definition.isRequired()){
 				GeneratorException.report("Required parameter not defined: " + name);

@@ -26,7 +26,8 @@ public interface IGenerator<E> {
 	 */
 	public void initialize(List<List<E>> inputDomain, 
 			Collection<IConstraint<E>> constraints,
-			Map<String, Object> parameters,
+//			Map<String, Object> parameters,
+		    Map<String, IGeneratorArgument> arguments,
 			IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException;
 	
 	public void addConstraint(IConstraint<E> constraint);
