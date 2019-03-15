@@ -2,9 +2,11 @@ package com.ecfeed.core.provider;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
-public interface ITestCasesProvider {
+public interface ITCProvider {
 
+	void initialize(ITCProviderInitData initData, IEcfProgressMonitor progressMonitor) throws Exception;
     MethodNode getMethodNode();
     TestCaseNode getNextTestCase() throws Exception;
     boolean canCalculateProgress();

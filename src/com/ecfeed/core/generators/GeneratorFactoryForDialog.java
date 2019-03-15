@@ -20,7 +20,7 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 	private static final String ADAPTIVE = "Adaptive random generator";
 	private static final String RANDOM = "Random generator";
 	
-	public IGenerator<E> getGenerator(String code) throws GeneratorException { // TODO - rename to create generator
+	public IGenerator<E> createGenerator(String code) throws GeneratorException {
 
 		if (code.equals(N_WISE)) {
 			return new NWiseGenerator<E>();

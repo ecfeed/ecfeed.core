@@ -23,9 +23,9 @@ import javax.management.RuntimeErrorException;
 
 import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
@@ -69,7 +69,7 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 	@Override
 	public List<E> getNext() throws GeneratorException {
 
-		IGeneratorProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
+		IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
 		while (true) {
 

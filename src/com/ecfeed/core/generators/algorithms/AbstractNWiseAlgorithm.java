@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
 
@@ -33,7 +33,7 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 	
 	public void initialize(List<List<E>> input, 
 			Collection<IConstraint<E>> constraints,
-			IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 		if(N < 1 || N > input.size()){
 			GeneratorException.report("Value of N for this input must be between 1 and " + input.size());

@@ -18,8 +18,8 @@ import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		IGenerator<E> {
@@ -34,7 +34,7 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 	public void initialize(List<List<E>> inputDomain,
 			Collection<IConstraint<E>> constraints,
 			Map<String, IGeneratorArgument> parameters,
-			IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException{
+			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 
 		super.initialize(inputDomain, constraints, parameters, generatorProgressMonitor);
 		int length = getIntParameter(new GeneratorParameterLength().getName());

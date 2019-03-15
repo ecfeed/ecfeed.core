@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public interface IGenerator<E> {
 	/*
@@ -27,7 +28,7 @@ public interface IGenerator<E> {
 	public void initialize(List<List<E>> inputDomain, 
 			Collection<IConstraint<E>> constraints,
 		    Map<String, IGeneratorArgument> arguments,
-			IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException;
+			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException;
 	
 	public void addConstraint(IConstraint<E> constraint);
 

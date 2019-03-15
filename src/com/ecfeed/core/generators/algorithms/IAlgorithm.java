@@ -14,14 +14,14 @@ import java.util.Collection;
 import java.util.List;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public interface IAlgorithm<E> {
 	
 	public void initialize(List<List<E>> input, 
 			Collection<IConstraint<E>> constraints,
-			IGeneratorProgressMonitor fGeneratorProgressMonitor) throws GeneratorException;
+			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException;
 	
 	public List<E> getNext() throws GeneratorException;
 	public void reset();

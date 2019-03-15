@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class RBOptimalFullCoverageNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
@@ -28,7 +28,7 @@ public class RBOptimalFullCoverageNWiseAlgorithm<E> extends AbstractNWiseAlgorit
 	private List<List<E>> all = null;
 	private int next = -1;
 	
-	IGeneratorProgressMonitor fGeneratorProgressMonitor;
+	IEcfProgressMonitor fGeneratorProgressMonitor;
 
 	public RBOptimalFullCoverageNWiseAlgorithm(int n) {
 		super(n, 100);
@@ -36,7 +36,9 @@ public class RBOptimalFullCoverageNWiseAlgorithm<E> extends AbstractNWiseAlgorit
 
 	@Override
 	public void initialize(
-			List<List<E>> input, Collection<IConstraint<E>> constraints, IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			List<List<E>> input, 
+			Collection<IConstraint<E>> constraints, 
+			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 		
 		super.initialize(input, constraints, generatorProgressMonitor);
 

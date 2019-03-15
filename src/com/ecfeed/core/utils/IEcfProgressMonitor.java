@@ -8,9 +8,13 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.generators.api;
+package com.ecfeed.core.utils;
 
-// TODO - REMOVE
-//public interface IGeneratorProgressMonitor {
-//	boolean isCanceled();
-//}
+
+public interface IEcfProgressMonitor {
+	
+	public void setTaskBegin(String name, int totalProgress);
+	public void setTaskEnd();
+	public void setCurrentProgress(int work);
+	boolean isCanceled();
+}

@@ -18,9 +18,9 @@ import java.util.Random;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
 
@@ -80,7 +80,7 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 	@Override
 	public void initialize(List<List<E>> input,
 			Collection<IConstraint<E>> constraints,
-			IGeneratorProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 		if(fDuplicates == false){
 			constraints.add(new BlackList(fHistory));

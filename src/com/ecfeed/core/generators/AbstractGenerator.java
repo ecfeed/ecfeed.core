@@ -18,6 +18,7 @@ import java.util.Map;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.api.*;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class AbstractGenerator<E> implements IGenerator<E> {
 
@@ -26,7 +27,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	private IAlgorithm<E> fAlgorithm = null;
 	private List<List<E>> fInput;
 	private Collection<IConstraint<E>> fConstraints;
-	private IGeneratorProgressMonitor fGeneratorProgressMonitor;
+	private IEcfProgressMonitor fGeneratorProgressMonitor;
 	
 	private boolean fInitialized = false;
 	
@@ -34,7 +35,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	public void initialize(List<List<E>> inputDomain,
 			Collection<IConstraint<E>> constraints,
             Map<String, IGeneratorArgument> arguments,
-			IGeneratorProgressMonitor generatorProgressMonitor)
+			IEcfProgressMonitor generatorProgressMonitor)
 			throws GeneratorException {
 		validateInput(inputDomain);
 		validateArguments(arguments);

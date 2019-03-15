@@ -18,9 +18,9 @@ import java.util.Set;
 
 import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorProgressMonitor;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public final class IteratedRandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
@@ -52,7 +52,7 @@ public final class IteratedRandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgo
 	@Override
 	public List<E> getNext() throws GeneratorException {
 
-		IGeneratorProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
+		IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
 		while (true) {
 
