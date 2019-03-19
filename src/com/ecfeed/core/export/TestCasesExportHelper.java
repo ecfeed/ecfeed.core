@@ -31,11 +31,12 @@ public class TestCasesExportHelper {
 	private static final String TEST_SUITE_NAME_SEQUENCE = "%suite";
 	private static final String TEST_CASE_INDEX_NAME_SEQUENCE = "%index";
 	private static final String PARAMETER_COMMAND_NAME = "name";
+	private static final String PARAMETER_COMMAND_TYPE = "type";
 	private static final String CHOICE_COMMAND_SHORT_NAME = "choice";
 	private static final String CHOICE_COMMAND_FULL_NAME = "full_choice";
 	private static final String CHOICE_COMMAND_VALUE = "value";
 	private static final String TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN = "\\$\\w+\\.(" + CHOICE_COMMAND_SHORT_NAME + "|" + CHOICE_COMMAND_FULL_NAME + "|" + CHOICE_COMMAND_VALUE + ")";
-	private static final String METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN = "\\$\\w+\\." + PARAMETER_COMMAND_NAME;
+	private static final String METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN = "\\$\\w+\\.(" + PARAMETER_COMMAND_NAME + "|" + PARAMETER_COMMAND_TYPE + ")";
 	private static final String ARITHMETIC_EXPRESSION_SEQUENCE_GENERIC_PATTERN = "\\$\\(.*\\)";
 	private static final String PARAMETER_SEPARATOR = ",";
 
@@ -107,6 +108,8 @@ public class TestCasesExportHelper {
 		case PARAMETER_COMMAND_NAME:
 			result = parameter.getFullName();
 			break;
+		case PARAMETER_COMMAND_TYPE:
+			result = parameter.getType();
 		default:
 			break;
 		}
