@@ -4,7 +4,7 @@ public class GeneratorArgumentBoolean extends GeneratorArgument {
 
     boolean fValue;
 
-    public GeneratorArgumentBoolean(String name, boolean value) {
+    public GeneratorArgumentBoolean(String name, boolean value) { // TODO - protected constructor (Do we need to use objects of this class?)
 
         super(name);
         fValue = value;

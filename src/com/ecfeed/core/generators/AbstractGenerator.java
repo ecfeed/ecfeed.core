@@ -109,7 +109,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		
 		for(IGeneratorParamDefinition definition : fParameterDefinitions){
 			IGeneratorArgument generatorArgument = arguments.get(definition.getName());
-			Object providedValue = generatorArgument.getValue();
+			Object providedValue = getProvidedValue(generatorArgument);
 			if(providedValue == null){
 				if(definition.isRequired()){
 					GeneratorException.report("Value of required parameret " + definition.getName() + " is not provided");
@@ -136,7 +136,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 			GeneratorException.report("Unexpected null value");
 		}
 	}
-	
+
 	protected void setAlgorithm(IAlgorithm<E> algorithm) throws GeneratorException{
 		fAlgorithm = algorithm;
 		fAlgorithm.initialize(fInput, fConstraints, fGeneratorProgressMonitor);
@@ -235,7 +235,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		if(definition == null){
 			GeneratorException.report("Unknown parameter: " + name);
 		}
-		Object value = arguments.get(name).getValue();
+		Object value = getProvidedValue(arguments.get(name));
 		if(value == null){
 			if(definition.isRequired()){
 				GeneratorException.report("Required parameter not defined: " + name);
@@ -259,4 +259,14 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		}
 		return value;
 	}
+
+	private Object getProvidedValue(IGeneratorArgument generatorArgument) {
+
+		if (generatorArgument == null) {
+			return null;
+		}
+
+		return generatorArgument.getValue();
+	}
+
 }

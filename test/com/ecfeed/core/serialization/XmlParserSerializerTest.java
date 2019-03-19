@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import com.ecfeed.core.generators.GeneratorArgumentDuplicates;
+import com.ecfeed.core.generators.GeneratorArgumentLength;
+import com.ecfeed.core.generators.api.IGeneratorArgument;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.RandomGenerator;
@@ -495,11 +498,15 @@ public class XmlParserSerializerTest {
 			List<IConstraint<ChoiceNode>> constraints = new ArrayList<IConstraint<ChoiceNode>>();
 			RandomGenerator<ChoiceNode> generator = new RandomGenerator<ChoiceNode>();
 			List<List<ChoiceNode>> input = getGeneratorInput(parameters);
-			Map<String, Object> genParameters = new HashMap<String, Object>();
-			genParameters.put("Length", numOfTestCases);
-			genParameters.put("Duplicates", true);
+			Map<String, IGeneratorArgument> genArguments = new HashMap<>();
 
-			generator.initialize(input, constraints, genParameters, null);
+			GeneratorArgumentLength generatorArgumentLength = new GeneratorArgumentLength(numOfTestCases);
+			genArguments.put(generatorArgumentLength.getName(), generatorArgumentLength);
+
+			GeneratorArgumentDuplicates generatorArgumentDuplicates = new GeneratorArgumentDuplicates(true);
+			genArguments.put(generatorArgumentDuplicates.getName(), generatorArgumentDuplicates);
+
+			generator.initialize(input, constraints, genArguments, null);
 			List<ChoiceNode> next;
 			while((next = generator.next()) != null){
 				result.add(new TestCaseNode(randomName(), null, next));

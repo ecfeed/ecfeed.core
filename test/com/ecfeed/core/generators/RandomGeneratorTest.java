@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.generators.api.IGeneratorArgument;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.RandomGenerator;
@@ -36,18 +37,22 @@ public class RandomGeneratorTest {
 			RandomGenerator<String> generator = new RandomGenerator<String>();
 			List<List<String>> inputDomain = GeneratorTestUtils.prepareInput(3, 3);
 			Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>();
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("Length", 100);
+			Map<String, IGeneratorArgument> arguments = new HashMap<>();
 
-			generator.initialize(inputDomain, constraints, parameters, null);
+			GeneratorArgumentLength generatorArgumentLength = new GeneratorArgumentLength(100);
+			arguments.put(generatorArgumentLength.getName(), generatorArgumentLength);
+
+			generator.initialize(inputDomain, constraints, arguments, null);
 			IAlgorithm<String> algorithm = generator.getAlgorithm(); 
 			assertTrue(algorithm instanceof RandomAlgorithm);
 			assertEquals(false, ((RandomAlgorithm<String>)algorithm).getDuplicates());
 			assertEquals(100, ((RandomAlgorithm<String>)algorithm).getLength());
 			
 			try{
-				parameters.put("Duplicates", true);
-				generator.initialize(inputDomain, constraints, parameters, null);
+
+				GeneratorArgumentDuplicates generatorArgumentDuplicates = new GeneratorArgumentDuplicates(true);
+				arguments.put(generatorArgumentDuplicates.getName(), generatorArgumentDuplicates);
+				generator.initialize(inputDomain, constraints, arguments, null);
 				assertEquals(false, ((RandomAlgorithm<String>)algorithm).getDuplicates());
 			}catch(GeneratorException e) {
 				fail("Unexpected GeneratorException: " + e.getMessage());

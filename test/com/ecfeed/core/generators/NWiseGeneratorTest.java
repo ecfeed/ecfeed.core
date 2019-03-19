@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.generators.api.IGeneratorArgument;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.NWiseGenerator;
@@ -40,29 +41,34 @@ public class NWiseGeneratorTest {
 			List<List<String>> inputDomain = GeneratorTestUtils.prepareInput(3,
 					3);
 			Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>();
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("N", 2);
+			Map<String, IGeneratorArgument> arguments = new HashMap<>();
 
-			generator.initialize(inputDomain, constraints, parameters, null);
+			GeneratorArgumentN generatorArgumentN = new GeneratorArgumentN(2);
+			arguments.put(generatorArgumentN.getName(), generatorArgumentN);
+
+			generator.initialize(inputDomain, constraints, arguments, null);
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
 			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
 			assertEquals(2, ((AbstractNWiseAlgorithm<String>) algorithm).getN());
 
 			try {
-				parameters.put("N", 5);
-				generator.initialize(inputDomain, constraints, parameters, null);
+				GeneratorArgumentN generatorArgumentN2 = new GeneratorArgumentN(5);
+				arguments.put(generatorArgumentN2.getName(), generatorArgumentN2);
+				generator.initialize(inputDomain, constraints, arguments, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
-				parameters.put("N", -1);
-				generator.initialize(inputDomain, constraints, parameters, null);
+				GeneratorArgumentN generatorArgumentN2 = new GeneratorArgumentN(-1);
+				arguments.put(generatorArgumentN2.getName(), generatorArgumentN2);
+				generator.initialize(inputDomain, constraints, arguments, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
-				parameters.put("N", 2);
-				generator.initialize(inputDomain, constraints, parameters, null);
+				GeneratorArgumentN generatorArgumentN2 = new GeneratorArgumentN(2);
+				arguments.put(generatorArgumentN2.getName(), generatorArgumentN2);
+				generator.initialize(inputDomain, constraints, arguments, null);
 			} catch (GeneratorException e) {
 				fail("Unexpected GeneratorException");
 			}
@@ -80,31 +86,38 @@ public class NWiseGeneratorTest {
 			List<List<String>> inputDomain = GeneratorTestUtils.prepareInput(3,
 					3);
 			Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>();
-			Map<String, Object> parameters = new HashMap<String, Object>();
-			parameters.put("N", 2);
-			parameters.put("Coverage", 100);
+			Map<String, IGeneratorArgument> arguments = new HashMap<>();
 
-			generator.initialize(inputDomain, constraints, parameters, null);
+			GeneratorArgumentN generatorArgumentN = new GeneratorArgumentN(2);
+			arguments.put(generatorArgumentN.getName(), generatorArgumentN);
+
+			GeneratorArgumentCoverage generatorArgumentCoverage = new GeneratorArgumentCoverage(100);
+			arguments.put(generatorArgumentCoverage.getName(), generatorArgumentCoverage);
+
+			generator.initialize(inputDomain, constraints, arguments, null);
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
 			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
 			assertEquals(100,
 					((AbstractNWiseAlgorithm<String>) algorithm).getCoverage());
 
 			try {
-				parameters.put("Coverage", 101);
-				generator.initialize(inputDomain, constraints, parameters, null);
+				GeneratorArgumentCoverage generatorArgumentCoverage2 = new GeneratorArgumentCoverage(101);
+				arguments.put(generatorArgumentCoverage2.getName(), generatorArgumentCoverage2);
+				generator.initialize(inputDomain, constraints, arguments, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
-				parameters.put("Coverage", -1);
-				generator.initialize(inputDomain, constraints, parameters, null);
+				GeneratorArgumentCoverage generatorArgumentCoverage2 = new GeneratorArgumentCoverage(-1);
+				arguments.put(generatorArgumentCoverage2.getName(), generatorArgumentCoverage2);
+				generator.initialize(inputDomain, constraints, arguments, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
-				parameters.put("Coverage", 50);
-				generator.initialize(inputDomain, constraints, parameters, null);
+				GeneratorArgumentCoverage generatorArgumentCoverage2 = new GeneratorArgumentCoverage(50);
+				arguments.put(generatorArgumentCoverage2.getName(), generatorArgumentCoverage2);
+				generator.initialize(inputDomain, constraints, arguments, null);
 			} catch (GeneratorException e) {
 				fail("Unexpected GeneratorException");
 			}

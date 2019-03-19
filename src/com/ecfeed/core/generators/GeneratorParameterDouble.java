@@ -14,19 +14,19 @@ import java.util.Arrays;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 
-public class DoubleParameter extends AbstractParameter {
+public class GeneratorParameterDouble extends AbstractParameter {
 
 	private Double[] fAllowedValues = null;
 	private double fDefaultValue;
 	private double fMinValue = -Double.MAX_VALUE;
 	private double fMaxValue = Double.MAX_VALUE;
 
-	public DoubleParameter(String name, boolean required, double defaultValue){
+	public GeneratorParameterDouble(String name, boolean required, double defaultValue){
 		super(name, TYPE.DOUBLE, required);
 		fDefaultValue = defaultValue;
 	}
 
-	public DoubleParameter(String name, boolean required, double defaultValue, Double[] allowedValues) throws GeneratorException {
+	public GeneratorParameterDouble(String name, boolean required, double defaultValue, Double[] allowedValues) throws GeneratorException {
 		super(name, TYPE.DOUBLE, required);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
@@ -35,7 +35,7 @@ public class DoubleParameter extends AbstractParameter {
 		}
 	}
 
-	public DoubleParameter(String name, boolean required, double defaultValue, double min, double max) throws GeneratorException {
+	public GeneratorParameterDouble(String name, boolean required, double defaultValue, double min, double max) throws GeneratorException {
 		super(name, TYPE.DOUBLE, required);
 		fDefaultValue = defaultValue;
 		fMinValue = min;

@@ -14,12 +14,12 @@ import java.util.Arrays;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 
-public class StringParameter extends AbstractParameter {
+public class GeneratorParameterString extends AbstractParameter {
 
 	private String[] fAllowedValues = null;
 	private String fDefaultValue;
 
-	public StringParameter(String name, boolean required, String defaultValue, String[] allowedValues) throws GeneratorException {
+	public GeneratorParameterString(String name, boolean required, String defaultValue, String[] allowedValues) throws GeneratorException {
 		super(name, TYPE.STRING, required);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
@@ -28,7 +28,7 @@ public class StringParameter extends AbstractParameter {
 		}
 	}
 
-	public StringParameter(String name, boolean required, String defaultValue){
+	public GeneratorParameterString(String name, boolean required, String defaultValue){
 		super(name, TYPE.STRING, required);
 		fDefaultValue = defaultValue;
 	}

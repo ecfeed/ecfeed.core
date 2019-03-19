@@ -7,7 +7,7 @@ public class GeneratorArgumentDouble extends GeneratorArgument {
 
     Double fValue;
 
-    public GeneratorArgumentDouble(String name, double value) throws GeneratorException {
+    public GeneratorArgumentDouble(String name, double value) throws GeneratorException { // TODO - protected constructor (Do we need to use objects of this class?)
         super(name);
         fValue = value;
     }

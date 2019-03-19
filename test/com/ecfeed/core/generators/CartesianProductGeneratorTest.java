@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.generators.api.IGeneratorArgument;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.CartesianProductGenerator;
@@ -41,7 +42,7 @@ public class CartesianProductGeneratorTest{
 		}
 		assertTrue(generator.getAlgorithm() instanceof CartesianProductAlgorithm);
 		
-		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, IGeneratorArgument> parameters = new HashMap<>();
 		try {
 			generator.initialize(inputDomain, constraints, parameters, null);
 		} catch (GeneratorException e) {

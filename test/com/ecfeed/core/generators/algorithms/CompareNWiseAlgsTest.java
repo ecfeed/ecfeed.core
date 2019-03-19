@@ -15,10 +15,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.generators.*;
+import com.ecfeed.core.generators.api.IGeneratorArgument;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.AbstractGenerator;
-import com.ecfeed.core.generators.NWiseGenerator;
 import com.ecfeed.core.generators.algorithms.AbstractNWiseAlgorithm;
 import com.ecfeed.core.generators.algorithms.FastNWiseAlgorithm;
 import com.ecfeed.core.generators.algorithms.OptimalNWiseAlgorithm;
@@ -52,9 +52,13 @@ public class CompareNWiseAlgsTest {
 		FastNWiseAlgorithm<Integer> fast = new FastNWiseAlgorithm<>(3, 100);
 		try {
 			nWiseGen = new NWiseGenerator<>();
-			Map<String, Object> params = new HashMap<>();
-			params.put("N", 3);
-			params.put("coverage", 100);
+			Map<String, IGeneratorArgument> params = new HashMap<>();
+
+			GeneratorArgumentN generatorArgumentN = new GeneratorArgumentN(3);
+			params.put(generatorArgumentN.getName(), generatorArgumentN);
+
+			GeneratorArgumentCoverage generatorArgumentCoverage = new GeneratorArgumentCoverage(100);
+			params.put(generatorArgumentCoverage.getName(), generatorArgumentCoverage);
 			nWiseGen.initialize(input1, new HashSet<IConstraint<Integer>>(), params, null);
 
 			fast.initialize(input2, new HashSet<IConstraint<Integer>>(), null);
