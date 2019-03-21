@@ -17,6 +17,15 @@ public class ExceptionHelper {
 		throw new RuntimeException(message);
 	}
 
+	public static void reportRuntimeException(String message, Exception e) {
+
+		RuntimeException runtimeException = new RuntimeException(message);
+		runtimeException.addSuppressed(e);
+
+		SystemLogger.logThrow(message);
+		throw runtimeException;
+	}
+
 	public static String createErrorMessage(String basicMessage, Exception e) {
 
 		String causedBy = " Caused by: ";
