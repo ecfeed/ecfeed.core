@@ -6,7 +6,7 @@ public enum DataSource {
     GEN_N_WISE("genNWise"),
     GEN_CARTESIAN("genCartesian"),
     GEN_ADAPTIVE_RANDOM("genAdaptiveRandom"),
-    GEN_RAMDOM("genRandom");
+    GEN_RANDOM("genRandom");
 
     private final String fDataSource;
 
@@ -38,8 +38,8 @@ public enum DataSource {
             return GEN_ADAPTIVE_RANDOM;
         }
 
-        if (dataSourceStr.equals(GEN_RAMDOM.toString())) {
-            return GEN_RAMDOM;
+        if (dataSourceStr.equals(GEN_RANDOM.toString())) {
+            return GEN_RANDOM;
         }
 
         throw new Exception("Can not convert string: " + dataSourceStr + " to data source." );
