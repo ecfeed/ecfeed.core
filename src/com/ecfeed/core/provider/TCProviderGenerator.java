@@ -41,6 +41,10 @@ public class TCProviderGenerator implements ITCProvider {
 				progressMonitor);
 
 	}
+
+	@Override
+	public void close() {
+	}
 	
 	@Override
 	public MethodNode getMethodNode() {

@@ -7,6 +7,7 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 public interface ITCProvider {
 
 	void initialize(ITCProviderInitData initData, IEcfProgressMonitor progressMonitor) throws Exception;
+	void close();
     MethodNode getMethodNode();
     TestCaseNode getNextTestCase() throws Exception;
     boolean canCalculateProgress();
