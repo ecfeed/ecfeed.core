@@ -59,6 +59,12 @@ public class TestCaseNode extends AbstractNode {
 		fTestData = testData;
 	}
 
+	public TestCaseNode(List<ChoiceNode> testData) {
+
+		super("", null);
+		fTestData = testData;
+	}
+
 	public MethodNode getMethod() {
 		return (MethodNode)getParent();
 	}
