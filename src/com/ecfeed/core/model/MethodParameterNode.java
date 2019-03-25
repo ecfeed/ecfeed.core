@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -134,6 +135,23 @@ public class MethodParameterNode extends AbstractParameterNode {
 			return fChoicesCopy;
 		}
 		return super.getChoices();
+	}
+
+	public ChoiceNode findChoice(String choiceQualifiedName) {
+
+		Set<ChoiceNode> choiceNodes = getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			if (choiceNode.getQualifiedName().equals(choiceQualifiedName)) {
+				return choiceNode;
+			}
+		}
+
+		return null;
 	}
 
 	private boolean choiceListsMatch(List<ChoiceNode> list1,
