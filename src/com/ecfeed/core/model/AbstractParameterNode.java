@@ -66,7 +66,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	public String getType() {
-		return fType;
+		return fType; // TODO - returns e.g Number or int depending on view mode but view model should not know anything about view mode (can be tested in export for tag $1.type) 
 	}
 
 	public void setType(String type) {
