@@ -22,6 +22,7 @@ public class TCProviderGenerator implements ITCProvider {
 
 	private MethodNode fMethodNode;
 	private IGenerator<ChoiceNode> fGenerator;
+	private IEcfProgressMonitor fProgressMonitor;
 	
 	public TCProviderGenerator(MethodNode methodNode, IGenerator<ChoiceNode> generator) {
 		
@@ -31,7 +32,9 @@ public class TCProviderGenerator implements ITCProvider {
 
 	@Override
 	public void initialize(ITCProviderInitData initData, IEcfProgressMonitor progressMonitor) throws Exception {
-		
+
+		fProgressMonitor = progressMonitor;
+
 		TCProviderGenInitData genInitData = (TCProviderGenInitData)initData;
 		
 		fGenerator.initialize(
@@ -39,7 +42,6 @@ public class TCProviderGenerator implements ITCProvider {
 				genInitData.getConstraints(), 
 				genInitData.getGeneratorArguments(), 
 				progressMonitor);
-
 	}
 
 	@Override
@@ -57,25 +59,15 @@ public class TCProviderGenerator implements ITCProvider {
 		List<ChoiceNode> choices = fGenerator.next();
 		
 		if (choices == null) {
+
+			if (fProgressMonitor != null) {
+				fProgressMonitor.setTaskEnd();
+			}
+
 			return null;
 		}
 		
 		return new TestCaseNode("", null, choices);
-	}
-
-	@Override
-	public boolean canCalculateProgress() {
-		return true;
-	}
-
-	@Override
-	public int getTotalProgress() {
-		return fGenerator.totalProgress();
-	}
-
-	@Override
-	public int getActualProgress() {
-		return fGenerator.workProgress();
 	}
 
 }
