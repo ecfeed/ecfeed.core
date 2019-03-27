@@ -3,7 +3,6 @@ package com.ecfeed.core.evaluator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.IConstraint;
@@ -17,7 +16,6 @@ public class HomebrewConstraintEvaluator<E> implements IConstraintEvaluator<E> {
     public HomebrewConstraintEvaluator(Collection<IConstraint<E>> constraints)
     {
         fConstraints = new ArrayList<IConstraint<E>>(constraints);
-//        fConstraints = constraints.stream().collect(Collectors.toList());
     }
 
 
