@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
@@ -31,8 +32,8 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 		N = n;
 	}
 	
-	public void initialize(List<List<E>> input, 
-			Collection<IConstraint<E>> constraints,
+	public void initialize(List<List<E>> input,
+						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 		if(N < 1 || N > input.size()){
@@ -42,8 +43,8 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 			GeneratorException.report("Coverage must be between 1 and 100");
 		}
 		fCartesianAlgorithm = new CartesianProductAlgorithm<E>();
-		fCartesianAlgorithm.initialize(input, constraints, generatorProgressMonitor);
-		super.initialize(input, constraints, generatorProgressMonitor);
+		fCartesianAlgorithm.initialize(input, constraintEvaluator, generatorProgressMonitor);
+		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 	}
 	
 	@Override

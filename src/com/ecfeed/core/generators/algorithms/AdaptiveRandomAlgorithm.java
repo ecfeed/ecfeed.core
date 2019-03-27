@@ -18,6 +18,7 @@ import java.util.Random;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
@@ -79,15 +80,15 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 
 	@Override
 	public void initialize(List<List<E>> input,
-			Collection<IConstraint<E>> constraints,
+						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 		if(fDuplicates == false){
-			constraints.add(new BlackList(fHistory));
+			//constraints.add(new BlackList(fHistory)); //TODO: No such method available
 		}
-		fCartesianAlgorithm.initialize(input, constraints, generatorProgressMonitor);
+		fCartesianAlgorithm.initialize(input, constraintEvaluator, generatorProgressMonitor);
 		setTotalWork(fLength);
-		super.initialize(input, constraints, generatorProgressMonitor);
+		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 	}
 
 	@Override
@@ -143,13 +144,13 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 	}
 
 	protected List<E> getCandidate(BlackList blackList) throws GeneratorException{
-		fCartesianAlgorithm.addConstraint(blackList);
+	//	fCartesianAlgorithm.addConstraint(blackList); //TODO: addConstraint goes away from IAlgorithm
 		List<Integer> random = randomVector(getInput());
 		List<E> result = fCartesianAlgorithm.getNext(instance(random));
 		if(result == null){
 			result = fCartesianAlgorithm.getNext(null);
 		};
-		fCartesianAlgorithm.removeConstraint(blackList);
+	//	fCartesianAlgorithm.removeConstraint(blackList);  //TODO: removeConstraint goes away from IAlgorithm
 		return result;
 	}
 

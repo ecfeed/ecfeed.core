@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
@@ -28,18 +29,18 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 	private IEcfProgressMonitor fGeneratorProgressMonitor;
 
 	private List<List<E>> fInput;
-	private Collection<IConstraint<E>> fConstraints;
+	private IConstraintEvaluator<E> fConstraintEvaluator;
 
 	@Override
 	public void initialize(List<List<E>> input,
-			Collection<IConstraint<E>> constraints,
+						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
-		if(input == null || constraints == null){
+		if(input == null || constraintEvaluator == null){
 			GeneratorException.report("input or constraints of algorithm cannot be null");
 		}
 		fInput = input;
-		fConstraints = constraints;
+		fConstraintEvaluator = constraintEvaluator;
 		fGeneratorProgressMonitor = generatorProgressMonitor;
 		reset();
 	}
@@ -69,19 +70,19 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 		fProgress = 0;
 	}
 
-	@Override
-	public void addConstraint(IConstraint<E> constraint) {
-		fConstraints.add(constraint);
-	}
+//	@Override
+//	public void addConstraint(IConstraint<E> constraint) {
+//		fConstraints.add(constraint);
+//	}
+
+//	@Override
+//	public void removeConstraint(IConstraint<E> constraint) {
+//		fConstraints.remove(constraint);
+//	}
 
 	@Override
-	public void removeConstraint(IConstraint<E> constraint) {
-		fConstraints.remove(constraint);
-	}
-
-	@Override
-	public Collection<? extends IConstraint<E>> getConstraints() {
-		return fConstraints;
+	public IConstraintEvaluator<E> getConstraintEvaluator() {
+		return fConstraintEvaluator;
 	}
 
 	public List<List<E>> getInput(){
@@ -123,29 +124,19 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 
 	protected EvaluationResult checkConstraints(List<E> test) {
 
-		if (test == null) { 
-			return EvaluationResult.TRUE;
-		}
-
-		for(IConstraint<E> constraint : fConstraints) {
-			if(constraint.evaluate(test) == EvaluationResult.FALSE) {
-				return EvaluationResult.FALSE;
-			}
-		}
-
-		return EvaluationResult.TRUE;
+		return fConstraintEvaluator.evaluate(test);
 	}
 
-	protected boolean isDimensionMentionedInConstraints(int dimension) {
-
-		for (IConstraint<E> constraint : fConstraints) {
-			if (constraint.mentions(dimension)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
+//	protected boolean isDimensionMentionedInConstraints(int dimension) {
+//
+//		for (IConstraint<E> constraint : fConstraints) {
+//			if (constraint.mentions(dimension)) {
+//				return true;
+//			}
+//		}
+//
+//		return false;
+//	}
 
 	@Override
 	public void cancel() {

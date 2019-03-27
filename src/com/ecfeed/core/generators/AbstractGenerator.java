@@ -26,14 +26,14 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	private Map<String, IGeneratorArgument> fArguments = null;
 	private IAlgorithm<E> fAlgorithm = null;
 	private List<List<E>> fInput;
-	private Collection<IConstraint<E>> fConstraints;
+	private IConstraintEvaluator<E> fConstraintEvaluator;
 	private IEcfProgressMonitor fGeneratorProgressMonitor;
 	
 	private boolean fInitialized = false;
 	
 	@Override
 	public void initialize(List<List<E>> inputDomain,
-			Collection<IConstraint<E>> constraints,
+						   IConstraintEvaluator<E> constraintEvaluator,
             Map<String, IGeneratorArgument> arguments,
 			IEcfProgressMonitor generatorProgressMonitor)
 			throws GeneratorException {
@@ -41,7 +41,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		validateArguments(arguments);
 		fArguments = arguments;
 		fInput = inputDomain;
-		fConstraints = constraints;
+		fConstraintEvaluator = constraintEvaluator;
 		fGeneratorProgressMonitor = generatorProgressMonitor;
 	
 		fInitialized = true; 
@@ -89,19 +89,19 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 		return fAlgorithm.totalProgress();
 	}
 
-	@Override
-	public void addConstraint(IConstraint<E> constraint) {
-		fAlgorithm.addConstraint(constraint);
-	}
+//	@Override
+//	public void addConstraint(IConstraint<E> constraint) {
+//		fAlgorithm.addConstraint(constraint);
+//	}
+//
+//	@Override
+//	public void removeConstraint(IConstraint<E> constraint) {
+//		fAlgorithm.removeConstraint(constraint);
+//	}
 
 	@Override
-	public void removeConstraint(IConstraint<E> constraint) {
-		fAlgorithm.removeConstraint(constraint);
-	}
-
-	@Override
-	public Collection<? extends IConstraint<E>> getConstraints() {
-		return fAlgorithm.getConstraints();
+	public IConstraintEvaluator<E> getConstraintEvaluator() {
+		return fAlgorithm.getConstraintEvaluator();
 	}
 
 	protected void validateArguments(Map<String, IGeneratorArgument> arguments) throws GeneratorException {
@@ -139,7 +139,7 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 
 	protected void setAlgorithm(IAlgorithm<E> algorithm) throws GeneratorException{
 		fAlgorithm = algorithm;
-		fAlgorithm.initialize(fInput, fConstraints, fGeneratorProgressMonitor);
+		fAlgorithm.initialize(fInput, fConstraintEvaluator, fGeneratorProgressMonitor);
 	}
 
 	protected IAlgorithm<E> getAlgorithm(){
@@ -207,13 +207,9 @@ public class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 
-	protected List<E> adapt(List<E> values){
-		if(values != null){
-			for(IConstraint<E> constraint : getConstraints()){
-				constraint.adapt(values);
-			}
-		}
-		return values;
+	protected List<E> adapt(List<E> values)
+	{
+		return fConstraintEvaluator.adapt(values);
 	}
 
 	private void validateInput(List<? extends List<E>> inputDomain) throws GeneratorException {

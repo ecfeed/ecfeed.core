@@ -17,7 +17,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.IConstraint;
@@ -35,8 +37,8 @@ public abstract class GeneratorHelper {
 				GeneratorHelper.getPossibleChoicesForMethodParameters(methodNode);
 
 		Collection<IConstraint<ChoiceNode>> constraints = methodNode.getAllConstraints();
-
-		algorithm.initialize(choicesForParameters, constraints, null);
+		IConstraintEvaluator<ChoiceNode> constraintEvaluator = new HomebrewConstraintEvaluator<ChoiceNode>(constraints);
+		algorithm.initialize(choicesForParameters, constraintEvaluator, null);
 
 		List<List<ChoiceNode>> testCases = new ArrayList<List<ChoiceNode>>();
 		List<ChoiceNode> testCase = null;

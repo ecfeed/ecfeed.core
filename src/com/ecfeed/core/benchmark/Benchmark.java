@@ -13,11 +13,13 @@ import java.util.Set;
 
 import com.ecfeed.core.benchmark.BenchmarkTestSet.ChoiceSelectionAlgorithm;
 import com.ecfeed.core.benchmark.BenchmarkTestSet.InputShape;
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.algorithms.AbstractAlgorithm;
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
 import com.ecfeed.core.generators.algorithms.IteratedRandomizedNWiseAlgorithm;
 import com.ecfeed.core.generators.algorithms.RandomizedNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IConstraint;
 
 public final class Benchmark {
@@ -227,7 +229,7 @@ public final class Benchmark {
 		results.setNameBenchmark(benchmarkDescription);
 		
 		try {
-			algorithm.initialize(new BenchmarkTestSet(this).generateInput(), new HashSet<IConstraint<Integer>>(), null);
+			algorithm.initialize(new BenchmarkTestSet(this).generateInput(), new HomebrewConstraintEvaluator<Integer>(new HashSet<IConstraint<Integer>>()), null);
 		} catch (GeneratorException e) {
 			System.out.println("unexpected exception during initialization: ");
 			e.printStackTrace();

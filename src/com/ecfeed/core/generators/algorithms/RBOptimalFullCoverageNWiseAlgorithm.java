@@ -17,13 +17,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class RBOptimalFullCoverageNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 	protected ArrayList<Parameter> inputs = new ArrayList<>();
-	protected Collection<IConstraint<E>> myConstraints;
+	protected IConstraintEvaluator<E> myConstraintEvaluator;
 
 	private List<List<E>> all = null;
 	private int next = -1;
@@ -36,14 +37,14 @@ public class RBOptimalFullCoverageNWiseAlgorithm<E> extends AbstractNWiseAlgorit
 
 	@Override
 	public void initialize(
-			List<List<E>> input, 
-			Collection<IConstraint<E>> constraints, 
+			List<List<E>> input,
+			IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 		
-		super.initialize(input, constraints, generatorProgressMonitor);
+		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 
 		fGeneratorProgressMonitor = generatorProgressMonitor;
-		myConstraints = constraints;
+		myConstraintEvaluator = constraintEvaluator;  //TODO: WHY DO WE NEED SEPARATE COPY OF IT?!?!?!?!?!?!?!?!??!?!?!
 
 		for (int i = 0; i < input.size(); i++) {
 			List<E> item = input.get(i);
@@ -253,7 +254,7 @@ public class RBOptimalFullCoverageNWiseAlgorithm<E> extends AbstractNWiseAlgorit
 		}
 
 		CartesianProductAlgorithm<E> alg = new CartesianProductAlgorithm<>();
-		alg.initialize(startingList, myConstraints, fGeneratorProgressMonitor);
+		alg.initialize(startingList, myConstraintEvaluator, fGeneratorProgressMonitor);
 
 		List<List<E>> allCombs = new ArrayList<>();
 		List<E> comb = alg.getNext();
