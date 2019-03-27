@@ -18,9 +18,13 @@ public interface IEcfProgressMonitor {
 	void setTaskBegin(String name, int totalProgress);
 	void setTaskEnd();
 	void setCurrentProgress(int work);
+	void setCanceled();
+	
+	boolean isTaskRunning();
 	boolean isCanceled();
+	
 	boolean canCalculateProgress();
 	int getTotalProgress();
 	int getCurrentProgress();
-	boolean wasTaskEnd();
+	
 }
