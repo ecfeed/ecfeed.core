@@ -143,6 +143,7 @@ public final class JavaTypeHelper {
 		return SUPPORTED_JAVA_TYPES;
 	}
 	
+	// TODO - move to another package Utils should not see AbstractParameterNode
 	public static void convertTypeSimpleToJava(AbstractParameterNode node) {
 		if (isJavaType(node.getType())) {
 			return;
