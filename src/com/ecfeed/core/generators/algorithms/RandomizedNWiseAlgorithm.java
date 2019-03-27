@@ -91,12 +91,12 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			if (randomTest != null) {
 				if (fRemainingTuples.size() <= fIgnoreCount) {
 					// no need for optimization
-					progress(1);
+					incrementProgress(1);
 					return randomTest;
 				}
 				List<E> improvedTest = improveCoverageOfTest(randomTest, nTuple);
 				int cov = removeCoveredNTuples(improvedTest);
-				progress(cov);
+				incrementProgress(cov);
 				return improvedTest;
 			} else {
 				//System.out.println("Cannot generate test for" + toString(nTuple) + "!!! " + fRemainingTuples.size());

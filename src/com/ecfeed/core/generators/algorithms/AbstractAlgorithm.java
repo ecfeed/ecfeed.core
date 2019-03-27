@@ -21,9 +21,9 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 
-	private int fTotalWork;
-	private int fProgress;
-	private int fTotalProgress;
+	private int fTotalWork; // TODO - remove ? (calculation on progress monitor)
+	private int fProgress; // TODO - remove ? (calculation on progress monitor)
+	private int fTotalProgress; // TODO - remove ? (calculation on progress monitor)
 	protected boolean fCancel;
 	private IEcfProgressMonitor fGeneratorProgressMonitor;
 
@@ -88,13 +88,15 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 		return fInput;
 	}
 
-	protected void progress(int progress){
-		fProgress += progress;
-		fTotalProgress += progress;
+	protected void incrementProgress(int progressIncrement){
+		fProgress += progressIncrement;
+		fTotalProgress += progressIncrement;
+		fGeneratorProgressMonitor.incrementProgress(progressIncrement);
 	}
 
 	protected void setTotalWork(int totalWork){
 		fTotalWork = totalWork;
+		fGeneratorProgressMonitor.setTaskBegin("Generator", totalWork);
 	}
 
 	protected List<E> instance(List<Integer> vector) {
@@ -149,6 +151,7 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 
 	@Override
 	public void cancel() {
+		fGeneratorProgressMonitor.setCanceled();
 		fCancel = true;
 	}
 

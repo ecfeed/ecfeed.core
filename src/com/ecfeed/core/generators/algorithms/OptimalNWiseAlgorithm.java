@@ -39,7 +39,7 @@ public class OptimalNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E>{
 			Set<List<E>> originalTuples = originalTuples(next); 
 			if(originalTuples.size() == K){
 				fGeneratedTuples.addAll(originalTuples);
-				progress(originalTuples.size());
+				incrementProgress(originalTuples.size());
 				return next;
 			}
 		}

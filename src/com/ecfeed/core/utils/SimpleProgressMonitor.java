@@ -39,6 +39,12 @@ public class SimpleProgressMonitor implements IEcfProgressMonitor {
 	}
 
 	@Override
+	public void incrementProgress(int increment) {
+
+		fCurrentProgress += increment;
+	}
+
+	@Override
 	public void setCanceled() {
 		
 		fIsCancelled = true;

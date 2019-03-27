@@ -99,7 +99,7 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 		List<E> optimalCandidate = getOptimalCandidate(candidates, 
 				fHistory.subList(Math.max(fHistory.size() - fDepth, 0), fHistory.size()));
 		fHistory.add(optimalCandidate);
-		progress(1);
+		incrementProgress(1);
 		return optimalCandidate;
 	}
 

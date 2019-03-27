@@ -31,7 +31,7 @@ public class FastNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			Set<List<E>> originalTuples = originalTuples(next);
 			if(originalTuples.size() > 0){
 				fCoveredTuples.addAll(originalTuples);
-				progress(originalTuples.size());
+				incrementProgress(originalTuples.size());
 				return next;
 			}
 		}

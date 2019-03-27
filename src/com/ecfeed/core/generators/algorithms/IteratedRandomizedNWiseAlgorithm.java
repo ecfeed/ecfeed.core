@@ -68,7 +68,7 @@ public final class IteratedRandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgo
 
 			List<DimensionedItem<E>> nextTuple = iteratorTuples.next();
 			numberOfRemainingTuples--;
-			progress(1);
+			incrementProgress(1);
 			
 			if (isTupleInTestSet(nextTuple)) {
 				continue;

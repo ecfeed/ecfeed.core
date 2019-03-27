@@ -41,10 +41,10 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 			List<List<E>> input, 
 			Collection<IConstraint<E>> constraints,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
-		
-		fInitialized = true;
-		setTotalWork(calculateProductSize(input));
+
 		super.initialize(input, constraints, generatorProgressMonitor);
+		setTotalWork(calculateProductSize(input));
+		fInitialized = true;
 	}
 	
 	public void reset(){
@@ -57,7 +57,7 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 		while((nextElement = incrementVector(nextElement)) != null){
 			List<E> instance = instance(nextElement);
 			if (checkConstraints(instance) == EvaluationResult.TRUE) {
-				progress(1);
+				incrementProgress(1);
 				return instance;
 			}
 		}
