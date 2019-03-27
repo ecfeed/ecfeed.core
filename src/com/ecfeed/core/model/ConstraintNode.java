@@ -130,7 +130,7 @@ public class ConstraintNode extends AbstractNode{
 
 	public boolean updateReferences(MethodNode method) {
 		
-		if (fConstraint.updateRefrences(method)) {
+		if (fConstraint.updateReferences(method)) {
 			setParent(method);
 			registerChange();
 			return true;
