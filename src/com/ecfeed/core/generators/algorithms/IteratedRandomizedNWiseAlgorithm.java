@@ -74,7 +74,7 @@ public final class IteratedRandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgo
 				continue;
 			}
 			
-			if (checkConstraintsOnExtendedTuple(fillEmptyArgumentsWithNull(nextTuple)).equals(EvaluationResult.FALSE)) {
+			if (checkConstraints(fillEmptyArgumentsWithNull(nextTuple)) == EvaluationResult.FALSE) {
 				continue;
 			}
 			
@@ -262,29 +262,29 @@ public final class IteratedRandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgo
 		return numberOfCoveredTuples;
 	}
 
-	protected EvaluationResult checkConstraintsOnExtendedTuple(List<E> vector) {
-
-		if (vector == null) {
-			return EvaluationResult.TRUE;
-		}
-
-		boolean insufficientData = false;
-
-		for (IConstraint<E> constraint : getConstraints()) {
-
-			EvaluationResult value = constraint.evaluate(vector);
-			if (value == EvaluationResult.FALSE) {
-				return EvaluationResult.FALSE;
-			}
-
-			if (value == EvaluationResult.INSUFFICIENT_DATA) {
-				insufficientData = true;
-			}
-		}
-
-		if (insufficientData)
-			return EvaluationResult.INSUFFICIENT_DATA;
-
-		return EvaluationResult.TRUE;
-	}
+//	protected EvaluationResult checkConstraintsOnExtendedTuple(List<E> vector) {
+//
+//		if (vector == null) {
+//			return EvaluationResult.TRUE;
+//		}
+//
+//		boolean insufficientData = false;
+//
+//		for (IConstraint<E> constraint : getConstraints()) {
+//
+//			EvaluationResult value = constraint.evaluate(vector);
+//			if (value == EvaluationResult.FALSE) {
+//				return EvaluationResult.FALSE;
+//			}
+//
+//			if (value == EvaluationResult.INSUFFICIENT_DATA) {
+//				insufficientData = true;
+//			}
+//		}
+//
+//		if (insufficientData)
+//			return EvaluationResult.INSUFFICIENT_DATA;
+//
+//		return EvaluationResult.TRUE;
+//	}
 }

@@ -26,16 +26,16 @@ public interface IGenerator<E> {
 	/*
 	 * Should be called prior to first call of next()
 	 */
-	public void initialize(List<List<E>> inputDomain, 
-			Collection<IConstraint<E>> constraints,
+	public void initialize(List<List<E>> inputDomain,
+						   IConstraintEvaluator<E> constraintEvaluator,
 		    Map<String, IGeneratorArgument> arguments,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException;
 	
-	public void addConstraint(IConstraint<E> constraint);
-
-	public void removeConstraint(IConstraint<E> constraint);
+//	public void addConstraint(IConstraint<E> constraint);
+//
+//	public void removeConstraint(IConstraint<E> constraint);
 	
-	public Collection<? extends IConstraint<E>> getConstraints();
+	public IConstraintEvaluator<E> getConstraintEvaluator();
 	
 	/*
 	 * Returns null if no more data can be generated, e.g.if the test generation should end 

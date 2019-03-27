@@ -12,6 +12,8 @@ package com.ecfeed.core.provider;
 
 import java.util.List;
 
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
@@ -39,7 +41,7 @@ public class TCProviderGenerator implements ITCProvider {
 		
 		fGenerator.initialize(
 				genInitData.getChoiceInput(), 
-				genInitData.getConstraints(), 
+				new HomebrewConstraintEvaluator<>(genInitData.getConstraints()),
 				genInitData.getGeneratorArguments(), 
 				progressMonitor);
 	}

@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.management.RuntimeErrorException;
 
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.model.IConstraint;
@@ -329,7 +330,7 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			}
 
 			CartesianProductAlgorithm<DimensionedItem<E>> cartAlg = new CartesianProductAlgorithm<>();
-			cartAlg.initialize(tempIn, new HashSet<IConstraint<DimensionedItem<E>>>(), getGeneratorProgressMonitor());
+			cartAlg.initialize(tempIn, new HomebrewConstraintEvaluator<DimensionedItem<E>>(new HashSet<IConstraint<DimensionedItem<E>>>()), getGeneratorProgressMonitor());
 			List<DimensionedItem<E>> tuple = null;
 			while ((tuple = cartAlg.getNext()) != null) {
 
@@ -341,7 +342,7 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 				for (DimensionedItem<E> var : tuple)
 					fullTuple.set(var.getDimension(), var.getItem());
 
-				EvaluationResult check = checkConstraintsOnExtendedNTuple(fullTuple);
+				EvaluationResult check = checkConstraints(fullTuple);
 
 				if (check == EvaluationResult.INSUFFICIENT_DATA) {
 					unevaluableNTuples.add(tuple);
@@ -362,7 +363,7 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 				tempIn.add(getInput().get(comb.get(i)));
 
 			CartesianProductAlgorithm<E> cartAlg = new CartesianProductAlgorithm<>();
-			cartAlg.initialize(tempIn, (Collection<IConstraint<E>>) getConstraints(), getGeneratorProgressMonitor());
+			cartAlg.initialize(tempIn, getConstraintEvaluator(), getGeneratorProgressMonitor());
 			List<E> tuple = null;
 			while ((tuple = cartAlg.getNext()) != null) {
 				List<DimensionedItem<E>> extendedTuple = new ArrayList<>();
@@ -387,29 +388,29 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 	 * accessing some of the indices with a null value, the constraints cannot
 	 * be evaluated and the method returns null; otherwise it returns false.
 	 */
-	protected EvaluationResult checkConstraintsOnExtendedNTuple(List<E> vector) {
-
-		if (vector == null) {
-			return EvaluationResult.TRUE;
-		}
-
-		boolean insufficientData = false;
-
-		for (IConstraint<E> constraint : getConstraints()) {
-
-			EvaluationResult value = constraint.evaluate(vector);
-			if (value == EvaluationResult.FALSE) {
-				return EvaluationResult.FALSE;
-			}
-
-			if (value == EvaluationResult.INSUFFICIENT_DATA) {
-				insufficientData = true;
-			}
-		}
-
-		if (insufficientData)
-			return EvaluationResult.INSUFFICIENT_DATA;
-
-		return EvaluationResult.TRUE;
-	}
+//	protected EvaluationResult checkConstraintsOnExtendedNTuple(List<E> vector) {
+//
+//		if (vector == null) {
+//			return EvaluationResult.TRUE;
+//		}
+//
+//		boolean insufficientData = false;
+//
+//		for (IConstraint<E> constraint : getConstraints()) {
+//
+//			EvaluationResult value = constraint.evaluate(vector);
+//			if (value == EvaluationResult.FALSE) {
+//				return EvaluationResult.FALSE;
+//			}
+//
+//			if (value == EvaluationResult.INSUFFICIENT_DATA) {
+//				insufficientData = true;
+//			}
+//		}
+//
+//		if (insufficientData)
+//			return EvaluationResult.INSUFFICIENT_DATA;
+//
+//		return EvaluationResult.TRUE;
+//	}
 }

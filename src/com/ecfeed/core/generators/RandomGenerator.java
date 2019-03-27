@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.model.IConstraint;
@@ -33,11 +34,11 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 	
 	@Override
 	public void initialize(List<List<E>> inputDomain,
-			Collection<IConstraint<E>> constraints,
+						   IConstraintEvaluator<E> constraintEvaluator,
 			Map<String, IGeneratorArgument> parameters,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 
-		super.initialize(inputDomain, constraints, parameters, generatorProgressMonitor);
+		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
 		int length = getIntParameter(new GeneratorParameterLength().getName());
 		boolean duplicates = getBooleanParameter(new GeneratorParameterDuplicates().getName());
 		setAlgorithm(new RandomAlgorithm<E>(length, duplicates));
