@@ -47,11 +47,16 @@ public interface IGenerator<E> {
 	 * Resets generator to its initial state.
 	 */
 	public void reset();
-	
+
+	// TODO - remove obsolete methods
+
+	// Obsolete - totalWorkShould be taken from progress monitor
 	public int totalWork();
-	
+
+	// Obsolete - totalWorkShould be taken from progress monitor
 	public int workProgress();
-	
+
+	// Obsolete - totalWorkShould be taken from progress monitor
 	public int totalProgress();
 	
 	public void cancel();
