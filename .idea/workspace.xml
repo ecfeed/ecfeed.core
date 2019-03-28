@@ -1,537 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a9b86f7-99b5-4dd9-8118-ccd0f2a72bca" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/jarAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/benchmark/Benchmark.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/benchmark/BenchmarkResults.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/benchmark/BenchmarkResultsHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/benchmark/BenchmarkTestSet$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/benchmark/BenchmarkTestSet$ChoiceSelectionAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/benchmark/BenchmarkTestSet$InputShape.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/benchmark/BenchmarkTestSet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/AbstractExportTemplate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/BasicExportTemplate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/CsvExportTemplate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/ExportTemplateFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$15.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$16.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$17.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$18.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$19.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$20.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$21.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$22.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$23.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$24.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$25.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$26.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$27.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$28.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$29.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$30.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$31.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$32.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$33.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$34.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$35.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$36.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$37.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$38.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$39.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$ExpressionException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$Function.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$Operator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression$Tokenizer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/Expression.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/GherkinExportTemplate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/IExportTemplate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/TestCasesExportHelper$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/TestCasesExportHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/export/XmlExportTemplate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/AbstractGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/AbstractParameter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/AdaptiveRandomGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/CartesianProductGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/Culprit$OtherData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/Culprit.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/DimensionedItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/DimensionedString.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgument.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentBoolean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentCandidateSetSize.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentCoverage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentDepth.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentDouble.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentDuplicates.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentInteger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentLength.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorArgumentString.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorFactoryForDialog.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorFactoryWithCodes.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterBoolean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterCandidateSetSize.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterCoverage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterDepth.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterDouble.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterDuplicates.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterInteger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterLength.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterN.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorParameterString.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/GeneratorType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/NWiseGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/RandomGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultDescription.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalysis$FailureComparator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalysis$FailureComparatorDecreasing.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalysis$FailureIndexComparatorDecreasing.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalysis$FailureRateComparator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalysis$OccurenceComparator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalysis$OccurenceComparatorDecreasing.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalysis.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/TestResultsAnalyzer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/AbstractAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/AbstractNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/AdaptiveRandomAlgorithm$BlackList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/AdaptiveRandomAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/CartesianProductAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/ComparableChoiceTuple.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/GeneratorHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/IAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/IterableTestSubinput$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/IterableTestSubinput.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/OptimalNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/Parameter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/RandomAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/Tuples.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/TuplesIterator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/algorithms/TuplesIteratorStructure.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/api/GeneratorException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/api/IGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/api/IGeneratorArgument.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/api/IGeneratorParamDefinition$TYPE.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/generators/api/IGeneratorParamDefinition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractImplementationStatusResolver$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractImplementationStatusResolver$StatusResolver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractImplementationStatusResolver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractJavaModelImplementer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractModelImplementer$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractModelImplementer$ImplementableVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractModelImplementer$NodeImplementer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/AbstractModelImplementer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/CachedImplementationStatusResolver$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/CachedImplementationStatusResolver$CacheCleaner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/CachedImplementationStatusResolver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/EImplementationStatus$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/EImplementationStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/IImplementationStatusResolver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/ILoaderProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/IModelImplementer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/JavaImplementationStatusResolver$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/JavaImplementationStatusResolver$InternalStatusResolver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/JavaImplementationStatusResolver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/implementation/ModelClassLoader.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/json/JsonHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/json/TestCasesRequestParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/json/TestCasesUserInputParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/library/Xeger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/AbstractNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/AbstractParameterNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/AbstractStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ChoiceCondition$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ChoiceCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ChoiceDomain.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ChoiceNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ChoiceNodeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ChoicesParentNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ClassNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ClassNodeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ConditionHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/Constraint$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/Constraint$ReferencedChoicesProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/Constraint$ReferencedLabelsProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/Constraint$ReferencedParametersProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/Constraint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ConstraintNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/EStatementOperator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ExpectedValueStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/FixedChoiceValueFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/GlobalParameterNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/GlobalParametersParentNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IChoicesParentVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IConstraint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IModelChangeRegistrator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IModelVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IParameterVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IRelationalStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IStatementCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IStatementVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/IsNodeIncludedInGenerationPredicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/LabelCondition$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/LabelCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ListOfTestCases.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/MethodNode$ConstraintsItr.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/MethodNode$ConstraintsItrImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/MethodNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/MethodNodeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/MethodParameterNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelChangeRegistrator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelConstants.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelConverter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelLogger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelOperationException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelTestHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ModelVersionDistributor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodeProperties.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodeProperty.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodePropertyDef.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodePropertyDefElemType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodePropertyDefFindByType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodePropertyDefs$PropertyId.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodePropertyDefs.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/NodePropertyValueSet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ParameterCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ParametersParentNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/RelationStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/RootNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/RootNodeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/StatementArray$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/StatementArray.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/StatementConditionHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/StaticStatement$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/StaticStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/TestCase.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/TestCaseNode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ValueCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/ValueFieldOperationException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/ISerializerPredicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/Messages.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/ModelParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/ModelPartialSerializer$SerializerPredicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/ModelPartialSerializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/ModelSerializer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/ParserException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/SerializationConstants.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/SerializationHelperVersion0.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/SerializationHelperVersion1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/SerializatorParams.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/WhiteCharConverter$SpecialItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/WhiteCharConverter$StringHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/WhiteCharConverter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomAnalyser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomAnalyserFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomAnalyserVersion0.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomAnalyserVersion1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomAnalyserVersion2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomAnalyserWithNewNodeNames.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomBuilderFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomBuilderVersion0.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomBuilderVersion1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomBuilderVersion2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomBuilderVersionWithNewNodeNames.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomModelVersionDetector.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomStatementBuilder$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/model/serialization/XomStatementBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/net/HttpCommunicator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/net/HttpProperty.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/net/IHttpCommunicator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/AbstractModelOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/AbstractNodeOperationSetProperty.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/AbstractParameterOperationSetType$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/AbstractParameterOperationSetType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/AbstractReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/BulkOperation$ICheckOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/BulkOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationAddLabel$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationAddLabel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationAddLabels.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationRemoveLabel$RemoveLabelOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationRemoveLabel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationRemoveLabels.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationRenameLabel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationSetRandomizedValue$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationSetRandomizedValue.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationSetValue$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationSetValue$ParameterAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationSetValue$ReverseOperation$ReverseParameterAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationSetValue$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ChoiceOperationSetValue.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ClassOperationAddMethod.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ClassOperationAddMethods.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ClassOperationRemoveMethod.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ClassOperationSetAndroidBaseRunner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ClassOperationSetRunOnAndroid.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ConstraintOperationReplaceStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryAddChildOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRemoveChildOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRemoveOperation$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRemoveOperation$RemoveOperationVisitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRemoveOperation$UnsupportedModelOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRemoveOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRenameOperation$ChoiceOperationRename.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRenameOperation$ClassOperationRename.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRenameOperation$GlobalParameterOperationRename.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRenameOperation$MethodOperationRename.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRenameOperation$MethodParameterOperationRename.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRenameOperation$RenameOperationProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryRenameOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryShiftOperation$MoveUpDownOperationProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryShiftOperation$ShiftToIndexOperationProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/FactoryShiftOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericAddChildrenOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericMoveOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationAddChoice$AddChoiceOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationAddChoice.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationAddParameter$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationAddParameter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveChoice$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveChoice$RemoveChoiceOperation$OperationValidator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveChoice$RemoveChoiceOperation$ParameterAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveChoice$RemoveChoiceOperation$ReverseOperation$ReverseParameterAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveChoice$RemoveChoiceOperation$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveChoice$RemoveChoiceOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveChoice.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveGlobalParameter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRemoveParameter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRename$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRename$NameRegexProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRename$RegexProblemMessageProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericOperationRename.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericRemoveNodesOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericSetCommentsOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GenericShiftOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/GlobalParameterOperationSetType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/IModelOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationAddConstraint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationAddParameter$MethodReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationAddParameter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationAddTestCase.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationAddTestSuite.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationConvertTo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationMakeConsistent$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationMakeConsistent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveConstraint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveParameter$RemoveMethodParameterOperation$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveParameter$RemoveMethodParameterOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveParameter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveTestCase$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveTestCase$DummyAdapterProvider$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveTestCase$DummyAdapterProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRemoveTestCase.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodOperationRenameTestCases.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetLink$SetLinkOperation$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetLink$SetLinkOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetLink.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetLinked$SetLinkedOperation$ReverseSetLinkedOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetLinked$SetLinkedOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetLinked.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetType$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetType$SetTypeOperation$RealChoicesProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetType$SetTypeOperation$ReverseSetTypeOperation$StatementValueRestorer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetType$SetTypeOperation$ReverseSetTypeOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetType$SetTypeOperation$StatementAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetType$SetTypeOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterOperationSetType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/MethodParameterShiftOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ModelOperationManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/OperationMessages.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/OperationNames.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ParameterOperationSetDefaultValue.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ParameterOperationSetExpected$ReverseOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ParameterOperationSetExpected.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ParameterSetTypeCommentsOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ReplaceChoicesOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ReplaceMethodParametersWithGlobalOperation$ReplaceParameterWithLink.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/ReplaceMethodParametersWithGlobalOperation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/RootOperationAddClasses.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/RootOperationAddNewClass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/RootOperationRemoveClass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/StatementOperationAddStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/StatementOperationChangeOperator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/StatementOperationRemoveStatement.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/StatementOperationReplaceChild.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/StatementOperationSetCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/StatementOperationSetRelation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/operations/TestCaseOperationUpdateTestData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/ArgsAndChoicesParser$ChoicesValueType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/ArgsAndChoicesParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/CandidateSetSizeParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/ConstraintsParser$ConstraintsValueType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/ConstraintsParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/CoverageParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/DataSource.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/DataSourceParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/DepthParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/DuplicatesParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/GeneratorsNParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/LengthParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/parser/TestSuitesParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/provider/ITCProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/provider/ITCProviderInitData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/provider/TCProviderGenInitData.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/provider/TCProviderGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/runner/ExportTestMethodInvoker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/runner/ITestMethodInvoker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/runner/JUnitTestMethodInvoker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/runner/JavaTestRunner.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/runner/Messages.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/runner/RunnerException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/runner/TestMethodInvokerHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/EclipseTypeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/IPrimitiveTypePredicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/ITypeAdapter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/ITypeAdapterProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/JavaPrimitiveTypePredicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterBaseForUserType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterFloatingPoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForBoolean.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForByte.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForChar.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForDouble.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForFloat.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForInt.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForLogical.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForLong.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForNumber.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForNumericType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForShort.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForString.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForText.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterForTypeWithRange.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/type/adapter/TypeAdapterProvider.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/BooleanHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/BooleanHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/CheckSumHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/CommonConstants.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/DiskFileHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EMathRelation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/ERunMode.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/ETypeName.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EcException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/EvaluationResult.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/ExceptionHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/IEcfProgressMonitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/INotifier.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/IValueApplier.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/IWorker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/IntegerHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/ItemHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/JarExtractor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/JavaLanguageHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/JavaTypeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/JustifyType$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/JustifyType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/MapTypeTextFile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/MessageStack.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/ModelNodeType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/ObjectHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/PackageClassHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/Pair.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/PathHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/RangeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/RegexHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/RelationMatcher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/SimpleProgressMonitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/SimpleTypeHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/SleepHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/StatementRelationNames.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/StreamHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/StrgList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/StringHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/StringHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/StringTabHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/SystemHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/SystemLogger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/TestCasesRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/TestCasesUserInput.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/TestModel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/TextFileHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/TimeStringHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/Trio.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/UriHelper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/com/ecfeed/core/utils/XmlComparator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/libs/ecfeed.core-1.0.0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/ecfeed.core-1.0.0.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/classes/Gradle#20Test#20Executor#203.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/reports/tests/test/packages/default-package.html" beforeDir="false" afterPath="$PROJECT_DIR$/build/reports/tests/test/packages/default-package.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/TEST-Gradle#20Test#20Executor#203.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" beforeDir="false" afterPath="$PROJECT_DIR$/build/test-results/test/binary/results.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/AbstractAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/AdaptiveRandomAlgorithm$BlackList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/AdaptiveRandomAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/CartesianProductAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/OptimalNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithm.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/ExceptionHelper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/ExceptionHelper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/IEcfProgressMonitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/SimpleProgressMonitor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/CartesianProductGeneratorTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/CartesianProductGeneratorTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ecfeed/core/utils/ExceptionHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ecfeed/core/utils/ExceptionHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/GenWebServiceClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/GenWebServiceClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/SecurityHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/SecurityHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/ServiceRestKeyManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/ServiceRestKeyManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/ServiceRestTrustManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/ServiceRestTrustManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/ServiceWebHostnameVerifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ecfeed/core/webservice/client/ServiceWebHostnameVerifier.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/CartesianProductGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/CartesianProductGeneratorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/NWiseGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/NWiseGeneratorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/RandomGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/RandomGeneratorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/AdaptiveRandomAlgorithmTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/AdaptiveRandomAlgorithmTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/AlgorithmPerformanceTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/AlgorithmPerformanceTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CartesianProductTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CartesianProductTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithmTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithmTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithmTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithmTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/NWiseAlgorithmTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/NWiseAlgorithmTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/OptimalNWiseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/OptimalNWiseTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithmTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithmTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/serialization/XmlParserSerializerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/serialization/XmlParserSerializerTest.java" afterDir="false" />
-    </list>
+    <list default="true" id="6a9b86f7-99b5-4dd9-8118-ccd0f2a72bca" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -629,27 +99,27 @@
           <entry key="gradle" value="4" />
           <entry key="gradlew" value="1" />
           <entry key="html" value="1" />
-          <entry key="java" value="31" />
+          <entry key="java" value="32" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Groovy" value="4" />
           <entry key="HTML" value="1" />
-          <entry key="JAVA" value="31" />
+          <entry key="JAVA" value="32" />
           <entry key="PLAIN_TEXT" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gradle" value="36" />
-          <entry key="java" value="1327" />
+          <entry key="java" value="1332" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="36" />
-          <entry key="JAVA" value="1327" />
+          <entry key="JAVA" value="1332" />
         </counts>
       </usages-collector>
     </session>
@@ -684,6 +154,15 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="424">
+              <caret line="94" column="88" selection-start-line="94" selection-start-column="88" selection-end-line="94" selection-end-column="88" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="173">
@@ -724,15 +203,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="173">
               <caret line="68" column="97" selection-start-line="68" selection-start-column="97" selection-end-line="68" selection-end-column="97" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithmTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="320" column="26" selection-start-line="320" selection-start-column="16" selection-end-line="320" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -1078,12 +548,12 @@
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/OptimalNWiseTest.java" />
-        <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/serialization/XmlParserSerializerTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/NWiseAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java" />
+        <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java" />
       </list>
     </option>
   </component>
@@ -1160,7 +630,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="Exce&#9;PSI&#9;JAVA://com.ecfeed.core.utils.ExceptionHelper" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553761446962" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553761645251" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -1283,15 +753,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 11m 41s.xml">
-      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 12m 14s.xml">
-      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 19m 10s.xml">
-      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="FastNWiseAlgorithmTest - 2019.03.28 at 09h 20m 50s.xml">
       <configuration name="FastNWiseAlgorithmTest" configurationId="JUnit" />
     </history-entry>
@@ -1313,6 +774,15 @@
     <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 23m 18s.xml">
       <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 23m 35s.xml">
+      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 24m 03s.xml">
+      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 24m 28s.xml">
+      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="1985" y="-4" width="1855" height="1084" extended-state="6" />
@@ -1328,13 +798,13 @@
       <window_info anchor="bottom" id="Messages" sideWeight="0.4991708" weight="0.3294979" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4997236" weight="0.3294979" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6782753" weight="0.3294979" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.7423991" visible="true" weight="0.39958158" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6771697" visible="true" weight="0.3294979" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7418463" weight="0.39958158" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.4997236" weight="0.3294979" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.25760087" side_tool="true" visible="true" weight="0.39958158" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.3228303" side_tool="true" visible="true" weight="0.3294979" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Build" order="10" sideWeight="0.4991708" weight="0.33891213" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -1524,13 +994,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="52" column="88" selection-start-line="52" selection-start-column="88" selection-end-line="52" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithmTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -1587,6 +1050,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="88" column="80" selection-start-line="88" selection-start-column="80" selection-end-line="88" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/AbstractAlgorithm.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -1594,10 +1064,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java">
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="88" column="80" selection-start-line="88" selection-start-column="80" selection-end-line="88" selection-end-column="80" />
+        <state relative-caret-position="424">
+          <caret line="94" column="88" selection-start-line="94" selection-start-column="88" selection-end-line="94" selection-end-column="88" />
         </state>
       </provider>
     </entry>
