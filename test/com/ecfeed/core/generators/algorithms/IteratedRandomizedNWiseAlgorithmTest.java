@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,7 +62,7 @@ public class IteratedRandomizedNWiseAlgorithmTest {
 		}
 
 		try {
-			alg.initialize(input, constraints, null);
+			alg.initialize(input, constraints, new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("unexpected exception during initialization: " + e.getMessage());
 			e.printStackTrace();
@@ -210,7 +211,7 @@ public class IteratedRandomizedNWiseAlgorithmTest {
 		}
 
 		try {
-			alg.initialize(input, EMPTY_CONSTRAINTS, null);
+			alg.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("unexpected exception during initialization: " + e.getMessage());
 			e.printStackTrace();

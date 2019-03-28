@@ -1,6 +1,6 @@
 package com.ecfeed.core.webservice.client;
 
-import com.ecfeed.junit.utils.Localization;
+import com.ecfeed.core.utils.ExceptionHelper;
 
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
@@ -88,14 +88,11 @@ public class GenWebServiceClient implements IWebServiceClient {
 
         } catch (KeyManagementException e) {
 
-            RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestSecureConnectionError"), e);
-            exception.addSuppressed(e);
-            throw exception;
+            ExceptionHelper.reportRuntimeException("The secure connection (TLSv1.2) could not be established.", e);
 
         } catch (NoSuchAlgorithmException e) {
-            RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestNoProtocolProvider"), e);
-            exception.addSuppressed(e);
-            throw exception;
+
+            ExceptionHelper.reportRuntimeException("The implementation for the protocol specified is not available", e);
         }
 
         return securityContext;

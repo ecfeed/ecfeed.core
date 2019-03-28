@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.generators.api.IGeneratorArgument;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.CartesianProductGenerator;
@@ -36,7 +37,7 @@ public class CartesianProductGeneratorTest{
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>();
 
 		try {
-			generator.initialize(inputDomain, constraints, null, null);
+			generator.initialize(inputDomain, constraints, null, new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -44,7 +45,7 @@ public class CartesianProductGeneratorTest{
 		
 		Map<String, IGeneratorArgument> parameters = new HashMap<>();
 		try {
-			generator.initialize(inputDomain, constraints, parameters, null);
+			generator.initialize(inputDomain, constraints, parameters, new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}

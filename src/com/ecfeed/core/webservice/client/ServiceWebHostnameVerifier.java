@@ -1,19 +1,17 @@
 package com.ecfeed.core.webservice.client;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
-import com.ecfeed.junit.utils.Localization;
-import com.ecfeed.junit.utils.Logger;
-
+// TODO - convert to helper with static methods
 public class ServiceWebHostnameVerifier {
 
 	private ServiceWebHostnameVerifier() {
-		RuntimeException exception = new RuntimeException(Localization.bundle.getString("classInitializationError"));
-		Logger.exception(exception);
-		throw exception;
+		ExceptionHelper.reportRuntimeException("It is not possible to create instances of this class.");
 	}
-	
+
 	static HostnameVerifier noSecurity() {
 		
 		HostnameVerifier verifier = new HostnameVerifier() {

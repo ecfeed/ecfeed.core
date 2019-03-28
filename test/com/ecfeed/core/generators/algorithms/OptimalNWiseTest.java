@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
@@ -53,7 +54,7 @@ public class OptimalNWiseTest extends NWiseAlgorithmTest {
 						Collection<IConstraint<String>> constraints = EMPTY_CONSTRAINTS;
 						IAlgorithm<String> algorithm = new OptimalNWiseAlgorithm<String>(n, 100);
 
-						algorithm.initialize(input, constraints, null);
+						algorithm.initialize(input, constraints, new SimpleProgressMonitor());
 						int generatedDataSize = GeneratorTestUtils.algorithmResult(algorithm).size();
 						int referenceDataSize = referenceResult(input, n).size();
 						assertTrue(Math.abs(generatedDataSize - referenceDataSize) <= referenceDataSize / 30);

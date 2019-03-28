@@ -1,5 +1,7 @@
 package com.ecfeed.core.webservice.client;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 import java.net.Socket;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -12,15 +14,10 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.X509KeyManager;
 
-import com.ecfeed.junit.utils.Localization;
-import com.ecfeed.junit.utils.Logger;
-
 public final class ServiceRestKeyManager {
 	
-	private ServiceRestKeyManager() {
-		RuntimeException exception = new RuntimeException(Localization.bundle.getString("classInitializationError"));
-		Logger.exception(exception);
-		throw exception;
+	private ServiceRestKeyManager() { // TODO - remove ?
+		ExceptionHelper.reportRuntimeException("Can not create.");
 	}
 	
 	static KeyManager[] noSecurity() {
@@ -79,20 +76,11 @@ public final class ServiceRestKeyManager {
 			keyManagerFactory = KeyManagerFactory.getInstance("NewSunX509");
 			keyManagerFactory.init(SecurityHelper.getKeyStore(keyStorePath), SecurityHelper.UNIVERSAL_PASSWORD.toCharArray());
 		} catch (NoSuchAlgorithmException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestKeyManagerNoSuchAlgorithmException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("No such algoritm.");
 		} catch (UnrecoverableKeyException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestKeyManagerUnrecoverableKeyException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The key could not be retrieved.", e);
 		} catch (KeyStoreException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestKeyManagerKeyStoreException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The key store could not be loaded.", e);
 		}
        
         return keyManagerFactory.getKeyManagers();

@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.ecfeed.core.generators.*;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.algorithms.AbstractNWiseAlgorithm;
@@ -104,8 +105,8 @@ public class CompareNWiseAlgsTest {
 				100);
 
 		try {
-			fast.initialize(input1, new HashSet<IConstraint<Integer>>(), null);
-			optimal.initialize(input2, new HashSet<IConstraint<Integer>>(), null);
+			fast.initialize(input1, new HashSet<IConstraint<Integer>>(), new SimpleProgressMonitor());
+			optimal.initialize(input2, new HashSet<IConstraint<Integer>>(), new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("Unexpected exception when initializing the algorithms.");
 			e.printStackTrace();

@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
@@ -42,7 +43,7 @@ public class CartesianProductTest {
 					List<List<String>> input = GeneratorTestUtils.prepareInput(
 							variables, choices);
 					Set<List<String>> referenceSet = referenceSet(input);
-					ALGORITHM.initialize(input, EMPTY_CONSTRAINTS, null);
+					ALGORITHM.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
 					Set<List<String>> algorithmResult = GeneratorTestUtils
 							.algorithmResult(ALGORITHM);
 					assertEquals(referenceSet.size(), algorithmResult.size());
@@ -63,7 +64,7 @@ public class CartesianProductTest {
 				try {
 					List<List<String>> input = GeneratorTestUtils.prepareInput(
 							variables, choices);
-					ALGORITHM.initialize(input, EMPTY_CONSTRAINTS, null);
+					ALGORITHM.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
 
 					ALGORITHM.cancel();
 
@@ -89,7 +90,7 @@ public class CartesianProductTest {
 							.generateRandomConstraints(input);
 					Set<List<String>> referenceSet = referenceSet(input);
 					referenceSet = filter(referenceSet, constraints);
-					ALGORITHM.initialize(input, constraints, null);
+					ALGORITHM.initialize(input, constraints, new SimpleProgressMonitor());
 					Set<List<String>> algorithmResult = GeneratorTestUtils
 							.algorithmResult(ALGORITHM);
 					assertEquals(referenceSet.size(), algorithmResult.size());

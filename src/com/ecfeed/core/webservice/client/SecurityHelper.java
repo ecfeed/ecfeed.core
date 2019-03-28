@@ -23,9 +23,10 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Optional;
 
-import com.ecfeed.junit.utils.Localization;
-import com.ecfeed.junit.utils.Logger;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.google.common.io.BaseEncoding;
+
+import static com.ecfeed.core.utils.ExceptionHelper.reportRuntimeExceptionCanNotCreateObject;
 
 public final class SecurityHelper {
 
@@ -46,10 +47,8 @@ public final class SecurityHelper {
 	private static KeyStore loadedStore = null;
 	private static String loadedStorePath = "";
 	
-	private SecurityHelper() {
-		RuntimeException exception = new RuntimeException(Localization.bundle.getString("classInitializationError"));
-		Logger.exception(exception);
-		throw exception;
+	private SecurityHelper() { // TODO - remove ?
+		reportRuntimeExceptionCanNotCreateObject();
 	}
 	
 	public static KeyStore getKeyStore() {
@@ -64,9 +63,7 @@ public final class SecurityHelper {
 	public static KeyStore getKeyStore(String path) {
 		
 		if (path == null) {
-			RuntimeException exception = new NullPointerException(Localization.bundle.getString("securityHelperMissingStorePath"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The path to the store must be provided.");
 		}
 		
 		if (!loadedStorePath.equals(path)) {
@@ -80,9 +77,7 @@ public final class SecurityHelper {
 	public static X509Certificate getCertificate(String keyStorePath, String alias) {
 		
 		if (alias == null) {
-			RuntimeException exception = new NullPointerException(Localization.bundle.getString("securityHelperMissingCertificateAlias"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The certificate alias must be provided");
 		}
 		
 		X509Certificate certificate = null;
@@ -92,16 +87,11 @@ public final class SecurityHelper {
 		try {
 			certificate = (X509Certificate) loadedStore.getCertificate(alias);
 		} catch (KeyStoreException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperKeystoreNotInitialized") + " " + alias, e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The store was not initialized: " + alias, e);
 		}
 		
 		if (certificate == null) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperErroneousCertificateAlias"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The certificate with the requested alias is not in the store.");
 		}
 		
 		return certificate;
@@ -110,9 +100,7 @@ public final class SecurityHelper {
 	public static X509Certificate getCertificateFromFile(String path) {
 		
 		if (path == null) {
-			RuntimeException exception = new NullPointerException(Localization.bundle.getString("securityHelperMissingCertificatePath"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The path to the certificate must be provided.");
 		}
 		
 		X509Certificate certificate = null;
@@ -123,15 +111,9 @@ public final class SecurityHelper {
 			CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
 			certificate = (X509Certificate) certificateFactory.generateCertificate(Files.newInputStream(Paths.get(path)));
 		} catch (IOException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperCertificateIOException") + " " + path, e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The requested certificate could not be read from file: " + path, e);
 		} catch (CertificateException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperCertificateException") + " " + path, e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The format of the requested certificate is invalid: " + path, e);
 		}
 		
 		return certificate;
@@ -140,9 +122,7 @@ public final class SecurityHelper {
 	public static PublicKey getPublicKey(String keyStorePath, String alias) {
 		
 		if (alias == null) {
-			RuntimeException exception = new NullPointerException(Localization.bundle.getString("securityHelperMissingPublicKeyAlias"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The public key alias must be provided.");
 		}
 		
 		getKeyStore();
@@ -156,9 +136,7 @@ public final class SecurityHelper {
 		// https://github.com/jclouds/jclouds/blob/master/compute/src/main/java/org/jclouds/ssh/SshKeys.java
 		
 		if (path == null) {
-			RuntimeException exception = new NullPointerException(Localization.bundle.getString("securityHelperMissingPublicKeyFilePath"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The path to the public key must be provided.");
 		}
 		
 		PublicKey publicKey = null;
@@ -179,20 +157,11 @@ public final class SecurityHelper {
 			 
 			 publicKey = keyFactory.generatePublic(keySpecification);
 		 } catch (IOException e) {
-			 RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPublicKeyIOException") + " " + path, e);
-			 Logger.exception(exception);
-			 exception.addSuppressed(e);
-			 throw exception;
+		 	 ExceptionHelper.reportRuntimeException("The requested public key could not be read from file: " + path, e);
 		 } catch (NoSuchAlgorithmException e) {
-			 RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPublicKeyNoSuchAlgorithmException"), e);
-			 exception.addSuppressed(e);
-			 Logger.exception(exception);
-			 throw exception;
+		 	 ExceptionHelper.reportRuntimeException("The requested public key could not be read." + e);
 		 } catch (InvalidKeySpecException e) {
-			 RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPublicKeyInvalidKeySpecException"), e);
-			 exception.addSuppressed(e);
-			 Logger.exception(exception);
-			 throw exception;
+		 	 ExceptionHelper.reportRuntimeException("The format of the requested public key is invalid.", e);
 		 }
 			  
 		 return publicKey;
@@ -201,9 +170,7 @@ public final class SecurityHelper {
 	public static PrivateKey getPrivateKey(String alias, String password) {
 		
 		if (alias == null || password == null) {
-			RuntimeException exception = new NullPointerException(Localization.bundle.getString("securityHelperMissingPrivateKeyAliasPassword"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The path and password to the private key must be provided.");
 		}
 		
 		PrivateKey privateKey = null;
@@ -216,20 +183,11 @@ public final class SecurityHelper {
 			KeyStore.PrivateKeyEntry entryPrivateKey = (KeyStore.PrivateKeyEntry) loadedStore.getEntry(alias, entryProtection);
 			privateKey = entryPrivateKey.getPrivateKey();
 		} catch (KeyStoreException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPrivateKeyKeyStoreException") + " " + alias, e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The password associated with the requested key is erroneous: " + alias + ".", e);
 		} catch (NoSuchAlgorithmException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPrivateKeyNoSuchAlgorithmException") + " " + alias, e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The algorithm for recovering the private key could not be found: " + alias, e);
 		} catch (UnrecoverableEntryException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPrivateKeyUnrecoverableEntryException") + " " + alias, e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("Not enough information to recover the key: " + alias, e);
 		}
 		
 		return privateKey;
@@ -238,9 +196,7 @@ public final class SecurityHelper {
 	public static PrivateKey getPrivateKeyFromFilePKCS8(String path) {
 		
 		if (path == null) {
-			RuntimeException exception = new NullPointerException(Localization.bundle.getString("securityHelperMissingPrivateKeyFileAlias"));
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The path to the public key must be provided.");
 		}
 		
 		PrivateKey privateKey = null;
@@ -252,20 +208,11 @@ public final class SecurityHelper {
 			 KeySpec keySpecification = new PKCS8EncodedKeySpec(byteArray);
 			 privateKey = keyFactory.generatePrivate(keySpecification);
 		} catch (NoSuchAlgorithmException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPrivateKeyFileNoSuchAlgorithmException"), e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The algorithm for recovering the private key could not be found.", e);
 		} catch (InvalidKeySpecException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPrivateKeyFileInvalidKeySpecException"), e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The format of the requested private key is invalid.", e);
 		} catch (IOException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("securityHelperPrivateKeyFileIOException") + path, e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The requested public key could not be read from file: " + path, e);
 		}
 		
 		return privateKey;
@@ -287,9 +234,7 @@ public final class SecurityHelper {
 		Optional<String> storePathError = prepareStoreValidateFile(storePath);
 		
 		if (storePathError.isPresent()) {
-			RuntimeException exception = new IllegalArgumentException(storePathError.get());
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("Illegal argument. " + storePathError.get());
 		}
 		
 		return storePath;
@@ -308,23 +253,22 @@ public final class SecurityHelper {
 			return storePath;
 		}
 
-		RuntimeException exception = new IllegalArgumentException(Localization.bundle.getString("securityHelperLoadingStoreError") + " " + prepareStoreErrorMessage());
-		Logger.exception(exception);
-		throw exception;
+		ExceptionHelper.reportRuntimeException("The required store could not be loaded. Please provide a valid path or use one of the following locations: " + prepareStoreErrorMessage());
+		return null;
 	}
 	
 	private static Optional<String> prepareStoreValidateFile(Path path) {
 		
 		if (!Files.exists(path)) {
-			return Optional.of(Localization.bundle.getString("securityHelperNonExistentFile") + " " + path.toAbsolutePath());
+			return Optional.of("The file does not exist: " + path.toAbsolutePath());
 		}
 		
 		if (!Files.isReadable(path)) {
-			return Optional.of(Localization.bundle.getString("securityHelperNotReadableFile") + " " + path.toAbsolutePath());
+			return Optional.of("The file is not readable: " + path.toAbsolutePath());
 		}
 		
 		if (!Files.isRegularFile(path)) {
-			return Optional.of(Localization.bundle.getString("securityHelperNotRegularFile") + " " + path.toAbsolutePath());
+			return Optional.of( "The type of the file is erroneous: " + path.toAbsolutePath());
 		}
 		
 		return Optional.empty();
@@ -347,10 +291,7 @@ public final class SecurityHelper {
 		try {
 			store = KeyStore.getInstance(STORE_TYPE);
 		} catch (KeyStoreException e) {
-			RuntimeException exception = new IllegalArgumentException(Localization.bundle.getString("securityHelperStoreKeyStoreException"), e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The store could not be created.", e);
 		}
 		
 		InputStream storeInputStream = null;
@@ -358,29 +299,17 @@ public final class SecurityHelper {
 		try {
 			storeInputStream = Files.newInputStream(path);
 		} catch (IOException e) {
-			RuntimeException exception = new IllegalArgumentException(Localization.bundle.getString("securityHelperCreateStoreError"), e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The store could not be created.", e);
 		}
 		
 		try {
 			store.load(storeInputStream, UNIVERSAL_PASSWORD.toCharArray());
 		} catch (NoSuchAlgorithmException e) {
-			RuntimeException exception = new IllegalArgumentException(Localization.bundle.getString("securityHelperStoreNoSuchAlgorithmException"), e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The algorithm for checking the store integrity could not be found.", e);
 		} catch (CertificateException e) {
-			RuntimeException exception = new IllegalArgumentException(Localization.bundle.getString("securityHelperStoreCertificateException"), e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("At least one of the certificates included in the store could not be loaded.", e);
 		} catch (IOException e) {
-			RuntimeException exception = new IllegalArgumentException(Localization.bundle.getString("securityHelperStoreIOException") + path, e);
-			Logger.exception(exception);
-			exception.addSuppressed(e);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The password is incorrect. Store path: " + path, e);
 		}
 		
 		loadedStorePath = path.toAbsolutePath().toString();

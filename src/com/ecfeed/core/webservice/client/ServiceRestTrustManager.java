@@ -1,5 +1,7 @@
 package com.ecfeed.core.webservice.client;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -13,16 +15,12 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import com.ecfeed.junit.utils.Localization;
-import com.ecfeed.junit.utils.Logger;
 
 public final class ServiceRestTrustManager {
 	
 
-	private ServiceRestTrustManager() {
-		RuntimeException exception = new RuntimeException(Localization.bundle.getString("classInitializationError"));
-		Logger.exception(exception);
-		throw exception;
+	private ServiceRestTrustManager() { // TODO - remove
+		ExceptionHelper.reportRuntimeException("Can not create.");
 	}
 	
 	static TrustManager[] noSecurity() {
@@ -75,9 +73,7 @@ public final class ServiceRestTrustManager {
 					      }
 					    }
 					
-					RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestTrustManagerSignatureException"));
-					Logger.exception(exception);
-					throw exception;
+					ExceptionHelper.reportRuntimeException("The server certificate is not trusted.");
 	            }
 	
 				@Override
@@ -97,20 +93,11 @@ public final class ServiceRestTrustManager {
 			trustManagerFactory = TrustManagerFactory.getInstance("SunX509", "SunJSSE");
 			trustManagerFactory.init(SecurityHelper.getKeyStore(trustStorePath));
 		} catch (NoSuchAlgorithmException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestTrustManagerNoSuchAlgorithmException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The algorithm for verifying the certificate could not be found (unknown algorithm).", e);
 		} catch (NoSuchProviderException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestTrustManagerNoSuchProviderException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The algorithm for verifying the certificate could not be found (unknown provider).", e);
 		} catch (KeyStoreException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestTrustManagerKeyStoreException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The trust store could not be loaded.", e);
 		}
 
 		return trustManagerFactory.getTrustManagers();			  
@@ -123,15 +110,9 @@ public final class ServiceRestTrustManager {
 			trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 			trustManagerFactory.init((KeyStore) null);
 		} catch (NoSuchAlgorithmException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestTrustManagerNoSuchAlgorithmException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The algorithm for verifying the certificate could not be found (unknown algorithm).", e);
 		} catch (KeyStoreException e) {
-			RuntimeException exception = new RuntimeException(Localization.bundle.getString("serviceRestTrustManagerKeyStoreException"), e);
-			exception.addSuppressed(e);
-			Logger.exception(exception);
-			throw exception;
+			ExceptionHelper.reportRuntimeException("The trust store could not be loaded", e);
 		}
 
 		return trustManagerFactory.getTrustManagers();			  

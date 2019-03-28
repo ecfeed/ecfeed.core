@@ -26,6 +26,16 @@ public class ExceptionHelper {
 		throw runtimeException;
 	}
 
+	public static void reportRuntimeException(Exception e) {
+
+		String exceptionName = e.getClass().getName();
+		reportRuntimeException(exceptionName, e);
+	}
+
+	public static void reportRuntimeExceptionCanNotCreateObject() {
+		ExceptionHelper.reportRuntimeException("Can not create object.");
+	}
+
 	public static String createErrorMessage(String basicMessage, Exception e) {
 
 		String causedBy = " Caused by: ";

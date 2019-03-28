@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.algorithms.AdaptiveRandomAlgorithm;
@@ -168,7 +169,7 @@ public class AlgorithmPerformanceTests {
 					OptimalNWiseAlgorithm<String> nwise = new OptimalNWiseAlgorithm<String>(
 							n, p);
 
-					nwise.initialize(input, EMPTY_CONSTRAINTS, null);
+					nwise.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
 
 					List<List<String>> nwiseSuite = new ArrayList<List<String>>();
 
