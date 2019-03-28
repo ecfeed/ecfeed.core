@@ -231,7 +231,7 @@ public final class SecurityHelper {
 	private static Path prepareStoreUsingProvidedPath(String path) {
 		
 		Path storePath = Paths.get(path);
-		Optional<String> storePathError = prepareStoreValidateFile(storePath);
+		Optional<String> storePathError = validateStorePath(storePath);
 		
 		if (storePathError.isPresent()) {
 			ExceptionHelper.reportRuntimeException("Illegal argument. " + storePathError.get());
@@ -244,7 +244,7 @@ public final class SecurityHelper {
 		
 		for (String storePathChain : DEFAULT_STORE_PATH) {
 			Path storePath = Paths.get(storePathChain);
-			Optional<String> storePathError = prepareStoreValidateFile(storePath);
+			Optional<String> storePathError = validateStorePath(storePath);
 			
 			if (storePathError.isPresent()) {
 				continue;
@@ -257,18 +257,18 @@ public final class SecurityHelper {
 		return null;
 	}
 	
-	private static Optional<String> prepareStoreValidateFile(Path path) {
+	private static Optional<String> validateStorePath(Path storePath) {
 		
-		if (!Files.exists(path)) {
-			return Optional.of("The file does not exist: " + path.toAbsolutePath());
+		if (!Files.exists(storePath)) {
+			return Optional.of("The file does not exist: " + storePath.toAbsolutePath());
 		}
 		
-		if (!Files.isReadable(path)) {
-			return Optional.of("The file is not readable: " + path.toAbsolutePath());
+		if (!Files.isReadable(storePath)) {
+			return Optional.of("The file is not readable: " + storePath.toAbsolutePath());
 		}
 		
-		if (!Files.isRegularFile(path)) {
-			return Optional.of( "The type of the file is erroneous: " + path.toAbsolutePath());
+		if (!Files.isRegularFile(storePath)) {
+			return Optional.of( "The type of the file is erroneous: " + storePath.toAbsolutePath());
 		}
 		
 		return Optional.empty();
