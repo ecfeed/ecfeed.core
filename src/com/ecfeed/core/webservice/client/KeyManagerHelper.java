@@ -2,6 +2,7 @@ package com.ecfeed.core.webservice.client;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
+
 import java.net.Socket;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -9,14 +10,15 @@ import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
+import java.util.Optional;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.X509KeyManager;
 
-public final class ServiceRestKeyManager {
+public final class KeyManagerHelper {
 	
-	private ServiceRestKeyManager() { // TODO - remove ?
+	private KeyManagerHelper() { // TODO - remove ?
 		ExceptionHelper.reportRuntimeException("Can not create.");
 	}
 	
@@ -24,9 +26,9 @@ public final class ServiceRestKeyManager {
 		return null;
 	}
 	
-	static KeyManager[] useKeyManagerCustom(String keyStorePath) {
+	static KeyManager[] useKeyManagerCustom(Optional<String> keyStorePath) {
 
-		KeyManager[] certificates = new KeyManager[]{
+		KeyManager[] keyManagers = new KeyManager[] {
 				new X509KeyManager() {
 
 					X509Certificate certificateClient = SecurityHelper.getCertificate(keyStorePath, SecurityHelper.ALIAS_CLIENT);
@@ -66,10 +68,10 @@ public final class ServiceRestKeyManager {
 	            }
 		};
 		
-		return certificates;
+		return keyManagers;
 	}
 	
-	static KeyManager[] useKeyManager(String keyStorePath) {
+	static KeyManager[] useKeyManager(Optional<String> keyStorePath) {
 		KeyManagerFactory keyManagerFactory = null;
 		
 		try {

@@ -10,16 +10,17 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 
-public final class ServiceRestTrustManager {
+public final class TrustManagerHelper {
 	
 
-	private ServiceRestTrustManager() { // TODO - remove
+	private TrustManagerHelper() { // TODO - remove ?
 		ExceptionHelper.reportRuntimeException("Can not create.");
 	}
 	
@@ -46,9 +47,9 @@ public final class ServiceRestTrustManager {
 		return certificates;
 	}
 	
-	static TrustManager[] useTrustManagerCustom(String trustStorePath) {
+	static TrustManager[] createTrustManagerCustom(Optional<String> trustStorePath) {
 	
-		TrustManager[] certificates = new TrustManager[]{
+		TrustManager[] trustManagers = new TrustManager[] {
 			
 				new X509TrustManager() {
 				
@@ -83,10 +84,10 @@ public final class ServiceRestTrustManager {
 		
 		};
 		
-		return certificates;
+		return trustManagers;
 	}
 	
-	static TrustManager[] useTrustManagerLocal(String trustStorePath) {
+	static TrustManager[] useTrustManagerLocal(Optional<String> trustStorePath) {
 		TrustManagerFactory trustManagerFactory = null;
 		
 		try {

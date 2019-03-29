@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Optional;
 
 public class GenWebServiceClient implements IWebServiceClient {
 
@@ -30,7 +31,7 @@ public class GenWebServiceClient implements IWebServiceClient {
     public GenWebServiceClient(
             String targetStr,
             String communicationProtocol,
-            String keyStorePath,
+            Optional<String> keyStorePath,
             String clientType,
             String clientVersion) {
 
@@ -68,7 +69,7 @@ public class GenWebServiceClient implements IWebServiceClient {
         }
     }
 
-    private static Client createClient(String communicationProtocol, String keyStorePath) {
+    private static Client createClient(String communicationProtocol, Optional<String> keyStorePath) {
 
         ClientBuilder client = ClientBuilder.newBuilder();
 
@@ -78,13 +79,15 @@ public class GenWebServiceClient implements IWebServiceClient {
         return client.build();
     }
 
-    private static SSLContext createSslContext(String communicationProtocol, String keyStorePath) {
+    private static SSLContext createSslContext(String communicationProtocol, Optional<String> keyStorePath) {
 
         SSLContext securityContext = null;
 
         try {
             securityContext = SSLContext.getInstance(communicationProtocol);
-            securityContext.init(ServiceRestKeyManager.useKeyManagerCustom(keyStorePath), ServiceRestTrustManager.useTrustManagerCustom(keyStorePath), new SecureRandom());
+            securityContext.init(
+            		KeyManagerHelper.useKeyManagerCustom(keyStorePath), 
+            		TrustManagerHelper.createTrustManagerCustom(keyStorePath), new SecureRandom());
 
         } catch (KeyManagementException e) {
 

@@ -31,8 +31,8 @@ import static com.ecfeed.core.utils.ExceptionHelper.reportRuntimeExceptionCanNot
 public final class SecurityHelper {
 
 	private final static String[] DEFAULT_STORE_PATH = {
-		"ecfeed/security",
-		System.getProperty("user.home") + "/ecfeed/security",
+		"./.ecfeed/security",
+		System.getProperty("user.home") + "/.ecfeed/security",
 		System.getProperty("java.home") + "/lib/security/cacerts"
 	};
 	
@@ -44,8 +44,8 @@ public final class SecurityHelper {
 	
 	private final static String STORE_TYPE = "PKCS12";
 	
-	private static KeyStore loadedStore = null;
-	private static String loadedStorePath = "";
+	private static KeyStore fLoadedStore = null;
+	private static Optional<String> fLoadedStorePath = Optional.empty();
 	
 	private SecurityHelper() { // TODO - remove ?
 		reportRuntimeExceptionCanNotCreateObject();
@@ -53,28 +53,28 @@ public final class SecurityHelper {
 	
 	public static KeyStore getKeyStore() {
 
-		if (loadedStore == null) {
-			prepareStore(loadedStorePath);
+		if (fLoadedStore == null) {
+			loadKeyStoreFromPath(fLoadedStorePath); // TODO - static method returning fLoadedStore
 		}
 
-		return loadedStore;
+		return fLoadedStore;
 	}
 	
-	public static KeyStore getKeyStore(String path) {
+	public static KeyStore getKeyStore(Optional<String> path) {
 		
 		if (path == null) {
 			ExceptionHelper.reportRuntimeException("The path to the store must be provided.");
 		}
 		
-		if (!loadedStorePath.equals(path)) {
-			loadedStorePath = path;
-			loadedStore = null;
+		if (!fLoadedStorePath.equals(path)) {
+			fLoadedStorePath = path;
+			fLoadedStore = null;
 		}
 		
 		return getKeyStore();
 	}
 	
-	public static X509Certificate getCertificate(String keyStorePath, String alias) {
+	public static X509Certificate getCertificate(Optional<String> keyStorePath, String alias) {
 		
 		if (alias == null) {
 			ExceptionHelper.reportRuntimeException("The certificate alias must be provided");
@@ -85,7 +85,7 @@ public final class SecurityHelper {
 		getKeyStore(keyStorePath);
 		
 		try {
-			certificate = (X509Certificate) loadedStore.getCertificate(alias);
+			certificate = (X509Certificate) fLoadedStore.getCertificate(alias);
 		} catch (KeyStoreException e) {
 			ExceptionHelper.reportRuntimeException("The store was not initialized: " + alias, e);
 		}
@@ -119,7 +119,7 @@ public final class SecurityHelper {
 		return certificate;
 	}
 	
-	public static PublicKey getPublicKey(String keyStorePath, String alias) {
+	public static PublicKey getPublicKey(Optional<String> keyStorePath, String alias) {
 		
 		if (alias == null) {
 			ExceptionHelper.reportRuntimeException("The public key alias must be provided.");
@@ -180,7 +180,7 @@ public final class SecurityHelper {
 		try {
 			char[] entryPassword = password.toCharArray();
 			KeyStore.PasswordProtection entryProtection = new KeyStore.PasswordProtection(entryPassword);
-			KeyStore.PrivateKeyEntry entryPrivateKey = (KeyStore.PrivateKeyEntry) loadedStore.getEntry(alias, entryProtection);
+			KeyStore.PrivateKeyEntry entryPrivateKey = (KeyStore.PrivateKeyEntry) fLoadedStore.getEntry(alias, entryProtection);
 			privateKey = entryPrivateKey.getPrivateKey();
 		} catch (KeyStoreException e) {
 			ExceptionHelper.reportRuntimeException("The password associated with the requested key is erroneous: " + alias + ".", e);
@@ -218,14 +218,13 @@ public final class SecurityHelper {
 		return privateKey;
 	}
 	
-	private static void prepareStore(String path) throws IllegalArgumentException {
+	private static void loadKeyStoreFromPath(Optional<String> path) throws IllegalArgumentException {
 
-		if (path.equals("")) {
-			loadedStore = prepareStoreLoad(prepareStoreUsingDefaultLocation());
+		if (path.isPresent()) {
+			fLoadedStore = prepareLoadedStore(prepareStoreUsingProvidedPath(path.get()));
 		} else {
-			loadedStore = prepareStoreLoad(prepareStoreUsingProvidedPath(path));
+			fLoadedStore = prepareLoadedStore(prepareStoreUsingDefaultLocation());
 		}
-		
 	}
 	
 	private static Path prepareStoreUsingProvidedPath(String path) {
@@ -285,7 +284,7 @@ public final class SecurityHelper {
 		return storePathChainError.toString();
 	}
 	
-	private static KeyStore prepareStoreLoad(Path path) {
+	private static KeyStore prepareLoadedStore(Path path) {
 		KeyStore store = null;
 		
 		try {
@@ -312,7 +311,7 @@ public final class SecurityHelper {
 			ExceptionHelper.reportRuntimeException("The password is incorrect. Store path: " + path, e);
 		}
 		
-		loadedStorePath = path.toAbsolutePath().toString();
+		fLoadedStorePath = Optional.of(path.toAbsolutePath().toString());
 		
 		return store;
 	}
