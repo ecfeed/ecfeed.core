@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
@@ -25,6 +26,9 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
 		super(name, modelChangeRegistrator);
+		
+		verifyType(type);
+		
 		fSuggestedType = Optional.empty();
 		fType = type;
 
@@ -66,10 +70,13 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	public String getType() {
-		return fType; // TODO - returns e.g Number or int depending on view mode but view model should not know anything about view mode (can be tested in export for tag $1.type) 
+		return fType; 
 	}
 
 	public void setType(String type) {
+
+		verifyType(type);
+		
 		fType = type;
 		registerChange();
 	}
@@ -108,5 +115,12 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	public abstract Set<ConstraintNode> getMentioningConstraints();
 	public abstract Set<ConstraintNode> getMentioningConstraints(String label);
+
+	private void verifyType(String type) {
+		
+		if (type.equals("Text") || type.equals("Number")) {
+			ExceptionHelper.reportRuntimeException("Invalid type of parameter: " + type);
+		}
+	}
 
 }
