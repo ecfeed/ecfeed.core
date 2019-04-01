@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public interface IGenerator<E> {
@@ -49,5 +50,7 @@ public interface IGenerator<E> {
 	public void reset();
 
 	public void cancel();
+	
+	public GeneratorType getGeneratorType();
 	
 }

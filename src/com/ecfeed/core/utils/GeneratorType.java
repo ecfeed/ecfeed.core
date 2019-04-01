@@ -1,4 +1,4 @@
-package com.ecfeed.core.generators;
+package com.ecfeed.core.utils;
 
 
 public enum GeneratorType {

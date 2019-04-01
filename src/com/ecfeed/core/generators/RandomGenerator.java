@@ -19,6 +19,7 @@ import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class RandomGenerator<E> extends AbstractGenerator<E> implements
@@ -40,5 +41,11 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		int length = getIntParameter(new GeneratorParameterLength().getName());
 		boolean duplicates = getBooleanParameter(new GeneratorParameterDuplicates().getName());
 		setAlgorithm(new RandomAlgorithm<E>(length, duplicates));
+	}
+
+	@Override
+	public GeneratorType getGeneratorType() {
+		
+		return GeneratorType.RANDOM;
 	}
 }

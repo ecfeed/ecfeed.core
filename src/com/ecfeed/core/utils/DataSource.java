@@ -1,12 +1,13 @@
-package com.ecfeed.core.parser;
+package com.ecfeed.core.utils;
+
 
 public enum DataSource {
 
     STATIC("static"),
-    GEN_N_WISE("genNWise"),
-    GEN_CARTESIAN("genCartesian"),
-    GEN_ADAPTIVE_RANDOM("genAdaptiveRandom"),
-    GEN_RANDOM("genRandom");
+    GEN_N_WISE(GeneratorType.N_WISE.toString()),
+    GEN_CARTESIAN(GeneratorType.CARTESIAN.toString()),
+    GEN_ADAPTIVE_RANDOM(GeneratorType.ADAPTIVE_RANDOM.toString()),
+    GEN_RANDOM(GeneratorType.RANDOM.toString());
 
     private final String fDataSource;
 

@@ -18,6 +18,7 @@ import com.ecfeed.core.generators.algorithms.RandomizedNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class NWiseGenerator<E> extends AbstractGenerator<E>{
@@ -37,5 +38,11 @@ public class NWiseGenerator<E> extends AbstractGenerator<E>{
 		int coverage = getIntParameter(new GeneratorParameterCoverage().getName());
 //		setAlgorithm(new OptimalNWiseAlgorithm<E>(N, coverage));
 		setAlgorithm(new RandomizedNWiseAlgorithm<E>(N, coverage));
+	}
+
+	@Override
+	public GeneratorType getGeneratorType() {
+		
+		return GeneratorType.N_WISE;
 	}
 }

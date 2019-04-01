@@ -18,6 +18,7 @@ import com.ecfeed.core.generators.algorithms.AdaptiveRandomAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
@@ -44,5 +45,10 @@ public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
 
 		setAlgorithm(new AdaptiveRandomAlgorithm<E>(executedSetSize, 
 				candidateSetSize, testSuiteSize, duplicates));
+	}
+
+	@Override
+	public GeneratorType getGeneratorType() {
+		return GeneratorType.ADAPTIVE_RANDOM;
 	}
 }

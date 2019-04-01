@@ -20,7 +20,7 @@ import com.ecfeed.core.generators.api.*;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
-public class AbstractGenerator<E> implements IGenerator<E> {
+public abstract class AbstractGenerator<E> implements IGenerator<E> {
 
 	private List<IGeneratorParamDefinition> fParameterDefinitions = new ArrayList<IGeneratorParamDefinition>();
 	private Map<String, IGeneratorArgument> fArguments = null;

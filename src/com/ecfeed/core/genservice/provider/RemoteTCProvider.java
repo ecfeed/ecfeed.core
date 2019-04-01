@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO - move to genservice package
 
 public class RemoteTCProvider implements ITCProvider {
 

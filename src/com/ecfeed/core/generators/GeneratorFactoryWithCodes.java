@@ -13,6 +13,7 @@ package com.ecfeed.core.generators;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.utils.GeneratorType;
 
 public class GeneratorFactoryWithCodes {
 
