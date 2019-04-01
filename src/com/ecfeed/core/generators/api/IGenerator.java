@@ -48,17 +48,6 @@ public interface IGenerator<E> {
 	 */
 	public void reset();
 
-	// TODO - remove obsolete methods
-
-	// Obsolete - totalWorkShould be taken from progress monitor
-	public int totalWork();
-
-	// Obsolete - totalWorkShould be taken from progress monitor
-	public int workProgress();
-
-	// Obsolete - totalWorkShould be taken from progress monitor
-	public int totalProgress();
-	
 	public void cancel();
 	
 }

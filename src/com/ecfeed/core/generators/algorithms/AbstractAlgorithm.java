@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.ecfeed.core.generators.GeneratorArgument;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -22,9 +21,9 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 
-	private int fTotalWork; // TODO - remove ? (calculation on progress monitor)
-	private int fProgress; // TODO - remove ? (calculation on progress monitor)
-	private int fTotalProgress; // TODO - remove ? (calculation on progress monitor)
+//	private int fTotalWork; // TODO - remove ? (calculation on progress monitor)
+//	private int fProgress; // TODO - remove ? (calculation on progress monitor)
+//	private int fTotalProgress; // TODO - remove ? (calculation on progress monitor)
 	protected boolean fCancel;
 	private IEcfProgressMonitor fGeneratorProgressMonitor;
 
@@ -54,29 +53,12 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 		reset();
 	}
 
-	@Override
-	public int totalWork() {
-		return fTotalWork;
-	}
-
-	@Override
-	public int workProgress() {
-		int progress = fProgress;
-		fProgress = 0;
-		return progress;
-	}
-
-	@Override
-	public int totalProgress(){
-		return fTotalProgress;
-	}
-
 	public IEcfProgressMonitor getGeneratorProgressMonitor() {
 		return fGeneratorProgressMonitor;
 	}
 
 	public void reset(){
-		fProgress = 0;
+		fGeneratorProgressMonitor.setCurrentProgress(0);
 	}
 
 	@Override
@@ -99,13 +81,10 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 	}
 
 	protected void incrementProgress(int progressIncrement){
-		fProgress += progressIncrement;
-		fTotalProgress += progressIncrement;
 		fGeneratorProgressMonitor.incrementProgress(progressIncrement);
 	}
 
 	protected void setTotalWork(int totalWork){
-		fTotalWork = totalWork;
 		fGeneratorProgressMonitor.setTaskBegin("Generator", totalWork);
 	}
 

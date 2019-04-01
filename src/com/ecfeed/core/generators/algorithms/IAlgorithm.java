@@ -28,8 +28,5 @@ public interface IAlgorithm<E> {
 	public void addConstraint(IConstraint<E> constraint);
 	public void removeConstraint(IConstraint<E> constraint);
 	public Collection<? extends IConstraint<E>> getConstraints();
-	public int totalWork();
-	public int totalProgress();
-	public int workProgress();
 	public void cancel();
 }

@@ -301,7 +301,7 @@ public class RemoteTCProvider implements ITCProvider {
         int parametersCount = fMethodNode.getParametersCount();
 
         ChoiceSchema[] choiceSchemas = testCaseSchema.getTestCase();
-        List<ChoiceNode> choiceNodes = new ArrayList();
+        List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
 
         for (int paramIndex = 0; paramIndex < parametersCount; paramIndex++) {
             MethodParameterNode methodParameterNode = getMethodNode().getMethodParameter(paramIndex);
@@ -317,14 +317,6 @@ public class RemoteTCProvider implements ITCProvider {
         }
 
         return new TestCaseNode(choiceNodes);
-    }
-
-    private void verifyProtocolStateForProgress() {
-
-        if (fGenServiceProtocolState == GenServiceProtocolState.BEFORE_BEG_DATA
-                || fGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_DATA) {
-            ExceptionHelper.reportRuntimeException("Can not calculate progress.");
-        }
     }
 
 }
