@@ -23,6 +23,13 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	private String fTypeComments;
 	
 	private Optional<String> fSuggestedType;
+	
+	public abstract List<MethodNode> getMethods();
+	public abstract Object accept(IParameterVisitor visitor) throws Exception;
+
+	public abstract Set<ConstraintNode> getMentioningConstraints();
+	public abstract Set<ConstraintNode> getMentioningConstraints(String label);
+
 
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
 		super(name, modelChangeRegistrator);
@@ -33,11 +40,6 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		fType = type;
 
 		createDefaultProperties();
-	}
-
-	private void createDefaultProperties() {
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
-		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 	}
 
 	@Override
@@ -63,6 +65,18 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 			return getParametersParent().getParameters().size();
 		}
 		return -1;
+	}
+	
+	@Override
+	public boolean isMatch(AbstractNode compared){
+		if(compared instanceof AbstractParameterNode == false){
+			return false;
+		}
+		AbstractParameterNode comparedParameter = (AbstractParameterNode)compared;
+		if(comparedParameter.getType().equals(fType) == false){
+			return false;
+		}
+		return super.isMatch(compared);
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
@@ -98,24 +112,6 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		fSuggestedType = Optional.ofNullable(typeHidden);
 	}
 	
-	@Override
-	public boolean isMatch(AbstractNode compared){
-		if(compared instanceof AbstractParameterNode == false){
-			return false;
-		}
-		AbstractParameterNode comparedParameter = (AbstractParameterNode)compared;
-		if(comparedParameter.getType().equals(fType) == false){
-			return false;
-		}
-		return super.isMatch(compared);
-	}
-
-	public abstract List<MethodNode> getMethods();
-	public abstract Object accept(IParameterVisitor visitor) throws Exception;
-
-	public abstract Set<ConstraintNode> getMentioningConstraints();
-	public abstract Set<ConstraintNode> getMentioningConstraints(String label);
-
 	private void verifyType(String type) {
 		
 		if (type.equals("Text") || type.equals("Number")) {
@@ -123,4 +119,10 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		}
 	}
 
+	private void createDefaultProperties() {
+		
+		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
+		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
+	}
+	
 }
