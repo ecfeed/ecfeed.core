@@ -13,6 +13,7 @@ package com.ecfeed.core.generators;
 import java.util.Arrays;
 
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.utils.ExceptionHelper;
 
 public class GeneratorParameterInteger extends AbstractParameter {
 
@@ -39,7 +40,7 @@ public class GeneratorParameterInteger extends AbstractParameter {
 		}
 	}
 
-	public GeneratorParameterInteger(String name, boolean required, int defaultValue, int min, int max) throws GeneratorException {
+	public GeneratorParameterInteger(String name, boolean required, int defaultValue, int min, int max) {
 		super(name, TYPE.INTEGER, required);
 		fDefaultValue = defaultValue;
 		fMinValue = min;
@@ -47,9 +48,9 @@ public class GeneratorParameterInteger extends AbstractParameter {
 		checkRange(fDefaultValue, fMinValue, fMaxValue);
 	}
 
-	private void checkRange(int value, int minValue, int maxValue) throws GeneratorException {
+	private void checkRange(int value, int minValue, int maxValue) {
 		if(value < minValue || value > maxValue){
-			GeneratorException.report("Inconsistent parameter definition");
+			ExceptionHelper.reportRuntimeException("Inconsistent parameter definition");
 		}
 	}
 

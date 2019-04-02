@@ -1,4 +1,4 @@
-package com.ecfeed.core.parser;
+package com.ecfeed.core.parser; // TODO - rename package to com.ecfeed.core.genservice.parser ? 
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
         }
 
         if (choicesObject instanceof String) {
-            fChoicesValueType = getConstraintsFromString((String) choicesObject);
+            fChoicesValueType = getChoiceValueType((String) choicesObject);
             return;
         }
 
@@ -88,17 +88,17 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
         return fArgAndChoiceNames;
     }
 
-    private ArgsAndChoicesParser.ChoicesValueType getConstraintsFromString(String constraintsString) throws Exception {
+    private ArgsAndChoicesParser.ChoicesValueType getChoiceValueType(String choicesString) throws Exception {
 
-        if (constraintsString.equals(specialValueNoneChoices)) {
+        if (choicesString.equals(specialValueNoneChoices)) {
             return ArgsAndChoicesParser.ChoicesValueType.NONE;
         }
 
-        if (constraintsString.equals(specialValueAllChoices)) {
+        if (choicesString.equals(specialValueAllChoices)) {
             return ArgsAndChoicesParser.ChoicesValueType.ALL;
         }
 
-        throw new Exception("Invalid special value for choices: " + constraintsString);
+        throw new Exception("Invalid special value for choices: " + choicesString);
     }
 
 }

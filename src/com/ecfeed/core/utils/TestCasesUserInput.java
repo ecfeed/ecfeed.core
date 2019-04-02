@@ -115,7 +115,7 @@ public class TestCasesUserInput {
 	}
 
 	@JsonSetter("candidates")
-	public void setCandidates(String candidates) {
+	public void setCandidates(String candidates) { // TODO - rename to setCandidateSetSize
 		fCandidates = candidates;
 	}
 
