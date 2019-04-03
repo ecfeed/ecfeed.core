@@ -11,7 +11,9 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChoiceNodeHelper {
 
@@ -58,4 +60,32 @@ public class ChoiceNodeHelper {
 		last.setParent(parameter);
 	}
 
+	public static Map<String, List<String>> convertToParamAndChoiceNames(MethodNode methodNode, List<List<ChoiceNode>> algorithmInput) {
+		
+		Map<String, List<String>> paramAndChoiceNames = new HashMap<String, List<String>>();
+		
+		int parametersCount = methodNode.getParametersCount();
+		
+		for (int parameterIndex = 0;  parameterIndex < parametersCount;  parameterIndex++) {
+			
+			String parameterName = methodNode.getParameter(parameterIndex).getFullName();
+			List<ChoiceNode> choicesForParameter = algorithmInput.get(parameterIndex);
+			
+			paramAndChoiceNames.put(parameterName, getChoiceNames(choicesForParameter));
+		}
+		
+		return paramAndChoiceNames;
+	}
+	
+	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes) {
+		
+		List<String> choiceNames = new ArrayList<>();
+		
+		for (ChoiceNode choiceNode : choiceNodes) {
+			choiceNames.add(choiceNode.getFullName());
+		}
+		
+		return choiceNames;
+	}
+	
 }
