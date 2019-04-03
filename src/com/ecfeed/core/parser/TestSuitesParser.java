@@ -9,7 +9,8 @@ public class TestSuitesParser { // TODO - REUSE IN JUNIT5
     private List<String> fTestSuiteNames = null;
     private boolean fIsSpecialValueAllSuites = false;
 
-    public TestSuitesParser(Object testSuitesObject) throws Exception {
+    @SuppressWarnings("unchecked")
+	public TestSuitesParser(Object testSuitesObject) throws Exception {
 
         if (testSuitesObject == null) {
             setSpecialValueAllSuitesToTrue();

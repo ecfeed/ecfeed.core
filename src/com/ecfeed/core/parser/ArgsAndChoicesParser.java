@@ -18,7 +18,8 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
     private ArgsAndChoicesParser.ChoicesValueType fChoicesValueType;
     private Map<String, List<String>> fArgAndChoiceNames = null;
 
-    public ArgsAndChoicesParser(Object choicesObject) throws Exception {
+    @SuppressWarnings("unchecked")
+	public ArgsAndChoicesParser(Object choicesObject) throws Exception {
 
         if (choicesObject == null) {
             fChoicesValueType = ArgsAndChoicesParser.ChoicesValueType.ALL;

@@ -17,7 +17,8 @@ public class ConstraintsParser { // TODO - REUSE IN JUNIT5
     private ConstraintsParser.ConstraintsValueType fConstraintsValueType;
     private List<String> fConstraintNames = null;
 
-    public ConstraintsParser(Object constraintsObject) throws Exception {
+    @SuppressWarnings("unchecked")
+	public ConstraintsParser(Object constraintsObject) throws Exception {
 
         if (constraintsObject == null) {
             fConstraintsValueType = ConstraintsParser.ConstraintsValueType.ALL;

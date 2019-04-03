@@ -1,6 +1,7 @@
 package com.ecfeed.core.webservice.client;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.DiskPathHelper;
 
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
@@ -19,86 +20,88 @@ import java.util.Optional;
 
 public class GenWebServiceClient implements IWebServiceClient {
 
-    static final private String TAG_CLIENT_VERSION = "clientVersion";
-    static final private String TAG_CLIENT_TYPE = "clientType";
-    static final private String TAG_REQUEST_TYPE = "requestType";
+	private static final String TAG_CLIENT_VERSION = "clientVersion";
+	private static final String TAG_CLIENT_TYPE = "clientType";
+	private static final String TAG_REQUEST_TYPE = "requestType";
+	private static final String fCommunicationProtocol = "TLSv1.2";
+	private static final String fClientVersion = "1.0";
 
-    private Client fClient;
-    private String fClientType;
-    private String fClientVersion;
-    private WebTarget fWebTarget;
+	private Client fClient;
+	private String fClientType;
+	private WebTarget fWebTarget;
 
-    public GenWebServiceClient(
-            String targetStr,
-            String communicationProtocol,
-            Optional<String> keyStorePath,
-            String clientType,
-            String clientVersion) {
 
-        fClientType = clientType;
-        fClientVersion = clientVersion;
+	public GenWebServiceClient(
+			String serverUrl,
+			String clientType,
+			Optional<String> keyStorePath) {
 
-        fClient = createClient(communicationProtocol, keyStorePath);
-        fWebTarget = fClient.target(targetStr);
-    }
+		fClientType = clientType;
 
-    @Override
-    public WebServiceResponse postRequest(
-            String requestType, String requestJson) {
+		fClient = createClient(fCommunicationProtocol, keyStorePath);
 
-        Response response = fWebTarget
-                .queryParam(TAG_CLIENT_TYPE, fClientType)
-                .queryParam(TAG_CLIENT_VERSION, fClientVersion)
-                .queryParam(TAG_REQUEST_TYPE, requestType)
-                .request()
-                .post(Entity.entity(requestJson, MediaType.APPLICATION_JSON));
+		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, "testCaseService");
 
-        int responseStatus = response.getStatus();
+		fWebTarget = fClient.target(targetStr);
+	}
 
-        BufferedReader responseBufferedReader =
-                new BufferedReader(new InputStreamReader(response.readEntity(InputStream.class)));
+	@Override
+	public WebServiceResponse postRequest(
+			String requestType, String requestJson) {
 
-        return new WebServiceResponse(responseStatus, responseBufferedReader);
-    }
+		Response response = fWebTarget
+				.queryParam(TAG_CLIENT_TYPE, fClientType)
+				.queryParam(TAG_CLIENT_VERSION, fClientVersion)
+				.queryParam(TAG_REQUEST_TYPE, requestType)
+				.request()
+				.post(Entity.entity(requestJson, MediaType.APPLICATION_JSON));
 
-    @Override
-    public void close() {
+		int responseStatus = response.getStatus();
 
-        if (fClient != null) {
-            fClient.close();
-        }
-    }
+		BufferedReader responseBufferedReader =
+				new BufferedReader(new InputStreamReader(response.readEntity(InputStream.class)));
 
-    private static Client createClient(String communicationProtocol, Optional<String> keyStorePath) {
+		return new WebServiceResponse(responseStatus, responseBufferedReader);
+	}
 
-        ClientBuilder client = ClientBuilder.newBuilder();
+	@Override
+	public void close() {
 
-        client.hostnameVerifier(ServiceWebHostnameVerifier.noSecurity());
-        client.sslContext(createSslContext(communicationProtocol, keyStorePath));
+		if (fClient != null) {
+			fClient.close();
+		}
+	}
 
-        return client.build();
-    }
+	private static Client createClient(String communicationProtocol, Optional<String> keyStorePath) {
 
-    private static SSLContext createSslContext(String communicationProtocol, Optional<String> keyStorePath) {
+		ClientBuilder client = ClientBuilder.newBuilder();
 
-        SSLContext securityContext = null;
+		client.hostnameVerifier(ServiceWebHostnameVerifier.noSecurity());
+		client.sslContext(createSslContext(communicationProtocol, keyStorePath));
 
-        try {
-            securityContext = SSLContext.getInstance(communicationProtocol);
-            securityContext.init(
-            		KeyManagerHelper.useKeyManagerCustom(keyStorePath), 
-            		TrustManagerHelper.createTrustManagerCustom(keyStorePath), new SecureRandom());
+		return client.build();
+	}
 
-        } catch (KeyManagementException e) {
+	private static SSLContext createSslContext(String communicationProtocol, Optional<String> keyStorePath) {
 
-            ExceptionHelper.reportRuntimeException("The secure connection (TLSv1.2) could not be established.", e);
+		SSLContext securityContext = null;
 
-        } catch (NoSuchAlgorithmException e) {
+		try {
+			securityContext = SSLContext.getInstance(communicationProtocol);
+			securityContext.init(
+					KeyManagerHelper.useKeyManagerCustom(keyStorePath), 
+					TrustManagerHelper.createTrustManagerCustom(keyStorePath), new SecureRandom());
 
-            ExceptionHelper.reportRuntimeException("The implementation for the protocol specified is not available", e);
-        }
+		} catch (KeyManagementException e) {
 
-        return securityContext;
-    }
+			ExceptionHelper.reportRuntimeException("The secure connection (TLSv1.2) could not be established.", e);
+
+		} catch (NoSuchAlgorithmException e) {
+
+			ExceptionHelper.reportRuntimeException("The implementation for the protocol specified is not available", e);
+		}
+
+		return securityContext;
+	}
 
 }
