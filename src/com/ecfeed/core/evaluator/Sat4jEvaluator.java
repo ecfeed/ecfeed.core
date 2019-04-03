@@ -10,31 +10,31 @@ import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
-    private List<ArrayList<Integer>> clauses;
-    private int firstUnusedID = 1;
-    private HashMap<AbstractStatement, Integer> statementToID;
+    private ArrayList<ArrayList<Integer>> clauses;
+    private int lastUsedID = 1;
+    private HashMap<MethodParameterNode, HashMap<ChoiceNode, Integer>> argChoiceToID;
 
 
 
     public Sat4jEvaluator(Collection<Constraint> initConstraints) {
-        statementToID = new HashMap<>();
+        argChoiceToID = new HashMap<>();
+        clauses = new ArrayList<>();
         if(initConstraints != null) {
             for (Constraint constraint : initConstraints) {
                 ParseConstraint(constraint);
             }
         }
-
     }
 
     private int newID()
     {
-        int ret = firstUnusedID;
-        firstUnusedID++;
-        return ret;
+        lastUsedID++;
+        return lastUsedID;
     }
 
 
@@ -96,8 +96,71 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         @Override
         public Object visit(RelationStatement statement)
         {
-            return 0; //TODO
+            MethodParameterNode arg = statement.getLeftParameter();
+            if(!argChoiceToID.containsKey(arg)) { //we need to create new set of variables, as we are seeing this parameter for the first time
+                ArrayList<Integer> xList = new ArrayList<>(); //xList[i] ==  (this parameter takes value i)
+                ArrayList<Integer> yList = new ArrayList<>(); //yList[i] == (this parameter takes one of values 0,...,i
+                HashMap<ChoiceNode, Integer> choiceIDs = new HashMap<>();
+                for (ChoiceNode choice : arg.getLeafChoices()) {
+                    Integer xID = newID();
+                    Integer yID = newID();
+                    xList.add(xID);
+                    yList.add(yID);
+                    choiceIDs.put(choice, xID);
+                }
+                int n = xList.size();
+
+                clauses.add(xList); //at least one value should be taken
+                for(int i=0;i<n;i++)
+                    clauses.add(new ArrayList<>(Arrays.asList(-xList.get(i),yList.get(i)))); // xList[i] => yList[i];
+                for(int i=0;i<n-1;i++)
+                    clauses.add(new ArrayList<>(Arrays.asList(-yList.get(i),yList.get(i+1)))); // yList[i] => yList[i+1];
+                for(int i=0;i<n-1;i++)
+                    clauses.add(new ArrayList<>(Arrays.asList(-xList.get(i+1),-yList.get(i)))); // NOT( xList[i+1] AND yList[i] ), to guarantee uniqueness
+
+                argChoiceToID.put(arg, choiceIDs);
+            }
+
+
+            Integer myID = newID();
+
+            MethodNode methodNode = arg.getMethod();
+            if (methodNode == null) {
+                return null;
+            }
+
+            int index = methodNode.getParameters().indexOf(arg);
+            if (index == -1) {
+                return null;
+            }
+
+            int size = methodNode.getParametersCount();
+
+            ArrayList<ChoiceNode> dummyValues = new ArrayList<>(size);
+
+            for(ChoiceNode choice : arg.getLeafChoices())
+            {
+                dummyValues.set(index, choice);
+                EvaluationResult result = statement.evaluate(dummyValues);
+                Integer idOfArgChoice = argChoiceToID.get(arg).get(choice);
+                if(result == EvaluationResult.TRUE) {
+                    clauses.add(new ArrayList<>(Arrays.asList(-idOfArgChoice, myID))); // thisChoice => me
+                }
+                else if(result == EvaluationResult.FALSE)
+                {
+                    clauses.add(new ArrayList<>(Arrays.asList(-idOfArgChoice, -myID))); // thisChoice => NOT me
+                }
+                else //INSUFFICIENT.DATA
+                {
+                    System.out.println("dupadupadupa, we have no idea on how to handle this case");
+                    return null; //FIXME
+
+                }
+            }
+
+            return myID;
         }
+
         @Override
         public Object visit(ExpectedValueStatement statement)
         {
@@ -116,22 +179,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         @Override
         public Object visit(LabelCondition statement)
         {
-            return 0; //TODO
+            return null; //this will never happen
         }
         @Override
         public Object visit(ChoiceCondition statement)
         {
-            return 0; //TODO
+            return null; //this will never happen
         }
         @Override
         public Object visit(ParameterCondition statement)
         {
-            return 0; //TODO
+            return null; //this will never happen
         }
         @Override
         public Object visit(ValueCondition statement)
         {
-            return 0; //TODO
+            return null; //this will never happen
         }
     }
 

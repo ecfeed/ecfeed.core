@@ -80,7 +80,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public EvaluationResult evaluate(List<ChoiceNode> values) {
+	public EvaluationResult evaluate(List<ChoiceNode> values) { //TODO We need an intermediate step where we evaluate it only on a SINGLE ChoiceNode, not on List<ChoiceNode>
 
 		EvaluationResult result;
 		try {
