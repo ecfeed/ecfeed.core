@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.ecfeed.core.generators.api.IGeneratorArgument;
+import com.ecfeed.core.utils.GeneratorType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -62,7 +63,7 @@ public class AbstractGeneratorTest {
 
 	@Test
 	public void initializeWithNoConstraintsOnParametersTest() {
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
@@ -110,7 +111,7 @@ public class AbstractGeneratorTest {
 
 	@Test
 	public void initializeWithBoundsTest() {
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
@@ -143,7 +144,7 @@ public class AbstractGeneratorTest {
 
 	@Test
 	public void initializeWithAllowedValuesTest() {
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 		try{
@@ -175,7 +176,7 @@ public class AbstractGeneratorTest {
 
 	@Test
 	public void initializeWithMissingRequiredParameterTest(){
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 		
@@ -214,7 +215,7 @@ public class AbstractGeneratorTest {
 
 	@Test
 	public void initializeWithMissingOptionalParameterTest(){
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 		
@@ -257,7 +258,7 @@ public class AbstractGeneratorTest {
 
 	@Test
 	public void initializeWithAdditionalParameterTest(){
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 		
@@ -295,7 +296,7 @@ public class AbstractGeneratorTest {
 	
 	@Test
 	public void getRequiredParameterTest(){
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 
@@ -352,7 +353,7 @@ public class AbstractGeneratorTest {
 	
 	@Test
 	public void getOptionalParameterTest(){
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 
@@ -425,7 +426,7 @@ public class AbstractGeneratorTest {
 	
 	@Test 
 	public void initializeWithWrongInputDomainTest(){
-		AbstractGenerator<String> generator = new AbstractGenerator<String>();
+		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		inputDomain.add(new ArrayList<String>());
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
@@ -434,6 +435,14 @@ public class AbstractGeneratorTest {
 			generator.initialize(inputDomain, constraints, null, null);
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
+		}
+	}
+
+	private static class TestAbstractGenerator extends AbstractGenerator<String> {
+
+		@Override
+		public GeneratorType getGeneratorType() {
+			return null;
 		}
 	}
 //		

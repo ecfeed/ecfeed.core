@@ -20,80 +20,81 @@ import com.ecfeed.core.utils.DiskFileHelper;
 
 public class DiskFileHelperTest{
 
-	@Test
-	public void shouldReturnNullWhenFileNameIsValid(){
-		String result = DiskFileHelper.checkEctFileName("abcdEFGH1234567890_.ect");
-		assertNull(result);
-	}
-
-	@Test
-	public void shouldReturnNotNullWhenNoEctExtension(){
-		String result = DiskFileHelper.checkEctFileName("abc");
-		assertNotNull(result);
-	}
-
-	@Test
-	public void shouldReturnNotNullWhenNameBeginsWithSpace(){
-		String result = DiskFileHelper.checkEctFileName(" abc.ect");
-		assertNotNull(result);
-	}
-
-	@Test
-	public void shouldReturnNotNullWhenNameContainsSpace(){
-		String result = DiskFileHelper.checkEctFileName("a bc.ect");
-		assertNotNull(result);
-	}	
-
-	@Test
-	public void shouldReturnNotNullWhenNameContainsInvalidChar(){
-		String result = DiskFileHelper.checkEctFileName("abc$.ect");
-		assertNotNull(result);
-	}
+	// TODO - MOVE TO EctFileHelperTest
+//	@Test
+//	public void shouldReturnNullWhenFileNameIsValid(){
+//		String result = DiskFileHelper.checkEctFileName("abcdEFGH1234567890_.ect");
+//		assertNull(result);
+//	}
+//
+//	@Test
+//	public void shouldReturnNotNullWhenNoEctExtension(){
+//		String result = DiskFileHelper.checkEctFileName("abc");
+//		assertNotNull(result);
+//	}
+//
+//	@Test
+//	public void shouldReturnNotNullWhenNameBeginsWithSpace(){
+//		String result = DiskFileHelper.checkEctFileName(" abc.ect");
+//		assertNotNull(result);
+//	}
+//
+//	@Test
+//	public void shouldReturnNotNullWhenNameContainsSpace(){
+//		String result = DiskFileHelper.checkEctFileName("a bc.ect");
+//		assertNotNull(result);
+//	}
+//
+//	@Test
+//	public void shouldReturnNotNullWhenNameContainsInvalidChar(){
+//		String result = DiskFileHelper.checkEctFileName("abc$.ect");
+//		assertNotNull(result);
+//	}
 
 	@Test
 	public void shouldCreateFileName() {
-		String result = DiskFileHelper.createFileName("abc", "txt");
+		String result = DiskPathHelper.createFileName("abc", "txt");
 		assertEquals("abc.txt", result);
 	}
 
 	@Test
 	public void shouldJoinPathWithFile1() {
-		String result = DiskFileHelper.joinPathWithFile("c:", "file.txt");
-		String expectedResult = "c:" + DiskFileHelper.pathSeparator() + "file.txt";
+		String result = DiskPathHelper.joinPathWithFile("c:", "file.txt");
+		String expectedResult = "c:" + DiskPathHelper.getPathSeparator() + "file.txt";
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
 	public void shouldJoinPathWithFile2() {
-		String result = DiskFileHelper.joinPathWithFile("c:" + DiskFileHelper.pathSeparator(), "file.txt");
-		String expectedResult = "c:" + DiskFileHelper.pathSeparator() + "file.txt";
+		String result = DiskPathHelper.joinPathWithFile("c:" + DiskPathHelper.getPathSeparator(), "file.txt");
+		String expectedResult = "c:" + DiskPathHelper.getPathSeparator() + "file.txt";
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
 	public void shouldJoinSubdirectory() {
-		String result = DiskFileHelper.joinPathWithFile("c:", "subdir");
-		String expectedResult = "c:" + DiskFileHelper.pathSeparator() + "subdir";
+		String result = DiskPathHelper.joinPathWithFile("c:", "subdir");
+		String expectedResult = "c:" + DiskPathHelper.getPathSeparator() + "subdir";
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
 	public void shouldExtractFileName() {
-		String result = DiskFileHelper.extractFileName("c:" + DiskFileHelper.pathSeparator() + "file.txt");
+		String result = DiskPathHelper.extractFileName("c:" + DiskPathHelper.getPathSeparator() + "file.txt");
 		String expectedResult = "file.txt";
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
 	public void shouldExtractPathWithSeparator() {
-		String result = DiskFileHelper.extractPathWithSeparator("c:" + DiskFileHelper.pathSeparator() + "file.txt");
-		String expectedResult = "c:" + DiskFileHelper.pathSeparator();
+		String result = DiskPathHelper.extractPathWithSeparator("c:" + DiskPathHelper.getPathSeparator() + "file.txt");
+		String expectedResult = "c:" + DiskPathHelper.getPathSeparator();
 		assertEquals(expectedResult, result);
 	}
 
 	@Test
 	public void shouldExtractFileNameWithoutExtension() {
-		String result = DiskFileHelper.extractFileNameWithoutExtension("file.txt");
+		String result = DiskPathHelper.extractFileNameWithoutExtension("file.txt");
 		String expectedResult = "file";
 		assertEquals(expectedResult, result);
 	}

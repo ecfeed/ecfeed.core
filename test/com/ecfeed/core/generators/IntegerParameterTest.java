@@ -41,13 +41,13 @@ public class IntegerParameterTest {
 			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 0, -1, 1);
 			parameter = new GeneratorParameterInteger("parameter", true, -1, -1, 1);
 			parameter = new GeneratorParameterInteger("parameter", true, 1, -1, 1);
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected GeneratorException");
 		}
 		try {
 			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 2, -1, 1);
 			fail("GeneratorException expected");
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 		}
 	}
 

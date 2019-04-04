@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6a9b86f7-99b5-4dd9-8118-ccd0f2a72bca" name="Default Changelist" comment="" />
+    <list default="true" id="6a9b86f7-99b5-4dd9-8118-ccd0f2a72bca" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/jarAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/AbstractGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/AbstractGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/AdaptiveRandomGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/AdaptiveRandomGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/CartesianProductGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/CartesianProductGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorFactoryWithCodes.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorFactoryWithCodes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterCandidateSetSize.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterCandidateSetSize.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterCoverage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterCoverage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterDepth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterDepth.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterDuplicates.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterDuplicates.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterInteger.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterInteger.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterLength.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterLength.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterN.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorParameterN.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/GeneratorType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/NWiseGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/NWiseGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/RandomGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/RandomGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/IAlgorithm.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/algorithms/IAlgorithm.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/api/IGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/generators/api/IGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/model/AbstractParameterNode.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/model/AbstractParameterNode.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/model/ChoiceNodeHelper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/model/ChoiceNodeHelper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/ArgsAndChoicesParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/ArgsAndChoicesParser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/ConstraintsParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/ConstraintsParser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/DataSource.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/DataSourceParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/DataSourceParser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/TestSuitesParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/parser/TestSuitesParser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/DiskFileHelper.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/DiskFileHelper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/PathHelper.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/TestCasesUserInput.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/classes/com/ecfeed/core/utils/TestCasesUserInput.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/AbstractGeneratorTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/AbstractGeneratorTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/IntegerParameterTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/IntegerParameterTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/utils/DiskFileHelperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/test/classes/com/ecfeed/core/utils/DiskFileHelperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/AbstractGeneratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/AbstractGeneratorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/IntegerParameterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/IntegerParameterTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/com/ecfeed/core/utils/DiskFileHelperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/test/com/ecfeed/core/utils/DiskFileHelperTest.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -88,9 +134,9 @@
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="2" />
-          <entry key="project.open.time.1" value="2" />
+          <entry key="project.open.time.1" value="3" />
           <entry key="project.open.time.3" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -99,27 +145,27 @@
           <entry key="gradle" value="4" />
           <entry key="gradlew" value="1" />
           <entry key="html" value="1" />
-          <entry key="java" value="32" />
+          <entry key="java" value="36" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Groovy" value="4" />
           <entry key="HTML" value="1" />
-          <entry key="JAVA" value="32" />
+          <entry key="JAVA" value="36" />
           <entry key="PLAIN_TEXT" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gradle" value="36" />
-          <entry key="java" value="1332" />
+          <entry key="java" value="1507" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="36" />
-          <entry key="JAVA" value="1332" />
+          <entry key="JAVA" value="1507" />
         </counts>
       </usages-collector>
     </session>
@@ -127,33 +173,6 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithmTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="58" column="36" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/IAlgorithm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="21" column="16" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/AbstractAlgorithm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="47" selection-start-line="47" selection-end-line="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="424">
@@ -163,10 +182,37 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java">
+        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/utils/DiskFileHelperTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="88" column="80" selection-start-line="88" selection-start-column="80" selection-end-line="88" selection-end-column="80" />
+            <state relative-caret-position="522">
+              <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="288">
+              <caret line="134" lean-forward="true" selection-start-line="134" selection-end-line="134" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/AbstractGeneratorTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="64" column="22" selection-start-line="64" selection-start-column="22" selection-end-line="64" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/IntegerParameterTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="305">
+              <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -174,7 +220,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithmTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
+            <state relative-caret-position="561">
               <caret line="64" column="74" selection-start-line="64" selection-start-column="74" selection-end-line="64" selection-end-column="74" />
             </state>
           </provider>
@@ -183,7 +229,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/CartesianProductAlgorithm.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
+            <state relative-caret-position="493">
               <caret line="44" column="18" selection-start-line="44" selection-start-column="18" selection-end-line="44" selection-end-column="18" />
             </state>
           </provider>
@@ -192,7 +238,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/AbstractNWiseAlgorithm.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
+            <state relative-caret-position="510">
               <caret line="44" selection-start-line="44" selection-end-line="44" />
             </state>
           </provider>
@@ -201,7 +247,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/NWiseAlgorithmTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
+            <state relative-caret-position="646">
               <caret line="68" column="97" selection-start-line="68" selection-start-column="97" selection-end-line="68" selection-end-column="97" />
             </state>
           </provider>
@@ -210,7 +256,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/serialization/XmlParserSerializerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
+            <state relative-caret-position="7752">
               <caret line="509" column="32" selection-start-line="509" selection-start-column="22" selection-end-line="509" selection-end-column="32" />
             </state>
           </provider>
@@ -224,6 +270,9 @@
       <find>The format of the requested private key is invalid</find>
       <find>initialize</find>
     </findStrings>
+    <replaceStrings>
+      <replace>TestAbstractGenerator</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -406,7 +455,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="4659682142000" />
+        <entry key="$PROJECT_DIR$" value="4659754104000" />
         <entry key="$PROJECT_DIR$/.gradle" value="0" />
         <entry key="$PROJECT_DIR$/build.gradle" value="2529748244" />
         <entry key="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" value="1416423972" />
@@ -545,7 +594,6 @@
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/AdaptiveRandomAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/AlgorithmPerformanceTests.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CartesianProductTest.java" />
-        <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/OptimalNWiseTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomizedNWiseAlgorithmTest.java" />
@@ -554,6 +602,10 @@
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/NWiseAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java" />
         <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RandomAlgorithmTest.java" />
+        <option value="$PROJECT_DIR$/test/com/ecfeed/core/utils/DiskFileHelperTest.java" />
+        <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java" />
+        <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/IntegerParameterTest.java" />
+        <option value="$PROJECT_DIR$/test/com/ecfeed/core/generators/AbstractGeneratorTest.java" />
       </list>
     </option>
   </component>
@@ -564,10 +616,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1985" />
-    <option name="y" value="-4" />
-    <option name="width" value="1855" />
-    <option name="height" value="1084" />
+    <option name="x" value="1984" />
+    <option name="y" value="-11" />
+    <option name="width" value="1857" />
+    <option name="height" value="1092" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -577,8 +629,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -626,11 +676,13 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="Exce&#9;PSI&#9;JAVA://com.ecfeed.core.utils.ExceptionHelper" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1553761645251" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554379184928" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -650,7 +702,7 @@
     </option>
   </component>
   <component name="RunManager" selected="JUnit.All in ecfeed.core_test">
-    <configuration name="ecfeed.core [compileJava]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="ecfeed.core [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -661,40 +713,14 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="compileJava" />
+            <option value="build" />
           </list>
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
       <method v="2" />
     </configuration>
-    <configuration name="ecfeed.core [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <method v="2" />
-    </configuration>
-    <configuration name="All in ecfeed.core_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ecfeed.core_test" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CartesianProductGeneratorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AbstractGeneratorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ecfeed.core_test" />
       <extension name="coverage">
         <pattern>
@@ -703,7 +729,31 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.ecfeed.core.generators" />
-      <option name="MAIN_CLASS_NAME" value="com.ecfeed.core.generators.CartesianProductGeneratorTest" />
+      <option name="MAIN_CLASS_NAME" value="com.ecfeed.core.generators.AbstractGeneratorTest" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AbstractGeneratorTest.initializeWithNoConstraintsOnParametersTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ecfeed.core_test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ecfeed.core.generators.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ecfeed.core.generators" />
+      <option name="MAIN_CLASS_NAME" value="com.ecfeed.core.generators.AbstractGeneratorTest" />
+      <option name="METHOD_NAME" value="initializeWithNoConstraintsOnParametersTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in ecfeed.core_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ecfeed.core_test" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -723,19 +773,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Gradle.ecfeed.core [test]" />
       <item itemvalue="JUnit.All in ecfeed.core_test" />
-      <item itemvalue="Gradle.ecfeed.core [compileJava]" />
-      <item itemvalue="JUnit.CartesianProductGeneratorTest" />
       <item itemvalue="JUnit.FastNWiseAlgorithmTest" />
+      <item itemvalue="Gradle.ecfeed.core [build]" />
+      <item itemvalue="JUnit.AbstractGeneratorTest.initializeWithNoConstraintsOnParametersTest" />
+      <item itemvalue="JUnit.AbstractGeneratorTest" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.All in ecfeed.core_test" />
+        <item itemvalue="JUnit.AbstractGeneratorTest" />
+        <item itemvalue="JUnit.AbstractGeneratorTest.initializeWithNoConstraintsOnParametersTest" />
+        <item itemvalue="Gradle.ecfeed.core [build]" />
         <item itemvalue="JUnit.FastNWiseAlgorithmTest" />
-        <item itemvalue="JUnit.CartesianProductGeneratorTest" />
-        <item itemvalue="Gradle.ecfeed.core [compileJava]" />
-        <item itemvalue="Gradle.ecfeed.core [test]" />
       </list>
     </recent_temporary>
   </component>
@@ -753,18 +803,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="FastNWiseAlgorithmTest - 2019.03.28 at 09h 20m 50s.xml">
-      <configuration name="FastNWiseAlgorithmTest" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 21m 04s.xml">
-      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 21m 35s.xml">
-      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 21m 56s.xml">
-      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 22m 21s.xml">
       <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
     </history-entry>
@@ -783,36 +821,47 @@
     <history-entry file="All_in_ecfeed_core_test - 2019.03.28 at 09h 24m 28s.xml">
       <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="All_in_ecfeed_core_test - 2019.04.04 at 13h 51m 06s.xml">
+      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AbstractGeneratorTest_initializeWithNoConstraintsOnParametersTest - 2019.04.04 at 13h 56m 56s.xml">
+      <configuration name="AbstractGeneratorTest.initializeWithNoConstraintsOnParametersTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AbstractGeneratorTest - 2019.04.04 at 13h 57m 08s.xml">
+      <configuration name="AbstractGeneratorTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_ecfeed_core_test - 2019.04.04 at 13h 57m 42s.xml">
+      <configuration name="All in ecfeed.core_test" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1985" y="-4" width="1855" height="1084" extended-state="6" />
-    <editor active="true" />
+    <frame x="1984" y="-11" width="1857" height="1092" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25815368" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26091763" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="Capture Tool" order="4" />
       <window_info id="UI Designer" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" sideWeight="0.4991708" weight="0.3294979" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4997236" weight="0.3294979" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.6771697" visible="true" weight="0.3294979" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6766169" visible="true" weight="0.3294979" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.7418463" weight="0.39958158" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.4997236" weight="0.3294979" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.3228303" side_tool="true" visible="true" weight="0.3294979" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.3233831" side_tool="true" visible="true" weight="0.3294979" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Build" order="10" sideWeight="0.4991708" weight="0.33891213" />
+      <window_info anchor="bottom" id="Messages" order="11" sideWeight="0.4991708" weight="0.3294979" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.2498618" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" visible="true" weight="0.2498618" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Gradle" order="5" weight="0.32946378" />
+      <window_info anchor="right" id="Gradle" order="5" visible="true" weight="0.21558872" />
       <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Maven Projects" order="8" weight="0.32946378" />
@@ -826,7 +875,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/AbstractAlgorithm.java</url>
-          <line>47</line>
+          <line>46</line>
           <properties />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
@@ -842,13 +891,7 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/gradlew.bat">
       <provider selected="true" editor-type-id="text-editor" />
@@ -860,13 +903,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/reports/tests/test/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="62" selection-start-line="3" selection-start-column="62" selection-end-line="3" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/build/reports/tests/test/index.html" />
     <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/utils/CheckSumHelperTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
@@ -878,9 +915,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="47" selection-start-line="7" selection-start-column="47" selection-end-line="7" selection-end-column="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -888,9 +922,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1198">
           <caret line="95" selection-start-line="95" selection-end-line="95" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -898,9 +929,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
           <caret line="115" selection-start-line="115" selection-end-line="115" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -908,9 +936,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
           <caret line="83" selection-start-line="83" selection-end-line="83" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -925,9 +950,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="287">
           <caret line="256" column="20" selection-start-line="256" selection-start-column="20" selection-end-line="256" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -980,13 +1002,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="107" column="100" selection-start-line="107" selection-start-column="100" selection-end-line="107" selection-end-column="100" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/OptimalNWiseTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="185">
@@ -1001,16 +1016,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/serialization/XmlParserSerializerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="509" column="32" selection-start-line="509" selection-start-column="22" selection-end-line="509" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/FastNWiseAlgorithmTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
+        <state relative-caret-position="612">
           <caret line="58" column="36" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="36" />
         </state>
       </provider>
@@ -1022,45 +1030,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/AbstractAlgorithm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1122">
+          <caret line="88" column="80" selection-start-line="88" selection-start-column="80" selection-end-line="88" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithmTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="64" column="74" selection-start-line="64" selection-start-column="74" selection-end-line="64" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/CartesianProductAlgorithm.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
+        <state relative-caret-position="493">
           <caret line="44" column="18" selection-start-line="44" selection-start-column="18" selection-end-line="44" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/AbstractNWiseAlgorithm.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
+        <state relative-caret-position="510">
           <caret line="44" selection-start-line="44" selection-end-line="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/IteratedRandomizedNWiseAlgorithmTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="64" column="74" selection-start-line="64" selection-start-column="74" selection-end-line="64" selection-end-column="74" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/NWiseAlgorithmTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
+        <state relative-caret-position="646">
           <caret line="68" column="97" selection-start-line="68" selection-start-column="97" selection-end-line="68" selection-end-column="97" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/RBOptimalFullCoverageNWiseAlgorithmTest.java">
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/serialization/XmlParserSerializerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="88" column="80" selection-start-line="88" selection-start-column="80" selection-end-line="88" selection-end-column="80" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/ecfeed/core/generators/algorithms/AbstractAlgorithm.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
+        <state relative-caret-position="7752">
+          <caret line="509" column="32" selection-start-line="509" selection-start-column="22" selection-end-line="509" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -1068,6 +1083,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="424">
           <caret line="94" column="88" selection-start-line="94" selection-start-column="88" selection-end-line="94" selection-end-column="88" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/utils/DiskFileHelperTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="522">
+          <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/algorithms/CompareNWiseAlgsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="134" lean-forward="true" selection-start-line="134" selection-end-line="134" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/IntegerParameterTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="49" column="17" selection-start-line="49" selection-start-column="17" selection-end-line="49" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/com/ecfeed/core/generators/AbstractGeneratorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="64" column="22" selection-start-line="64" selection-start-column="22" selection-end-line="64" selection-end-column="22" />
         </state>
       </provider>
     </entry>
