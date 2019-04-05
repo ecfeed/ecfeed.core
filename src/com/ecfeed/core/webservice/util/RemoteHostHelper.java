@@ -6,7 +6,7 @@ import java.net.Socket;
 
 public class RemoteHostHelper {
 	
-    public boolean isHostAlive(String host, int port, int timeout) {
+    public static boolean isHostAlive(String host, int port, int timeout) {
     	
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(host, port), timeout);
