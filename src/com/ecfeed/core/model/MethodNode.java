@@ -234,8 +234,8 @@ public class MethodNode extends ParametersParentNode {
 		return fConstraints;
 	}
 
-	public List<IConstraint<ChoiceNode>> getAllConstraints(){
-		List<IConstraint<ChoiceNode>> constraints = new ArrayList<IConstraint<ChoiceNode>>();
+	public List<Constraint> getAllConstraints(){
+		List<Constraint> constraints = new ArrayList<Constraint>();
 		for(ConstraintNode node : fConstraints){
 			constraints.add(node.getConstraint());
 		}

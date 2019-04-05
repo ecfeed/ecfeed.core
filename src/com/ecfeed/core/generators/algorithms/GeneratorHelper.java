@@ -18,14 +18,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
+import com.ecfeed.core.evaluator.Sat4jEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.IConstraint;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.*;
 
 public abstract class GeneratorHelper {
 
@@ -36,8 +32,8 @@ public abstract class GeneratorHelper {
 		List<List<ChoiceNode>> choicesForParameters = 
 				GeneratorHelper.getPossibleChoicesForMethodParameters(methodNode);
 
-		Collection<IConstraint<ChoiceNode>> constraints = methodNode.getAllConstraints();
-		IConstraintEvaluator<ChoiceNode> constraintEvaluator = new HomebrewConstraintEvaluator<ChoiceNode>(constraints);
+		Collection<Constraint> constraints = methodNode.getAllConstraints();
+		IConstraintEvaluator<ChoiceNode> constraintEvaluator = new Sat4jEvaluator(constraints, methodNode);
 		algorithm.initialize(choicesForParameters, constraintEvaluator, null);
 
 		List<List<ChoiceNode>> testCases = new ArrayList<List<ChoiceNode>>();
