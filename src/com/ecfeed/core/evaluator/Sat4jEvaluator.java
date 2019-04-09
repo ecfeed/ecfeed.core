@@ -43,6 +43,33 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         return lastUsedID;
     }
 
+    private void variablesForParameter(MethodParameterNode arg)
+    {
+        if(!argChoiceToID.containsKey(arg)) { //we need to create new set of variables, as we are seeing this parameter for the first time
+            ArrayList<Integer> xList = new ArrayList<>(); //xList[i] ==  (this parameter takes value i)
+            ArrayList<Integer> yList = new ArrayList<>(); //yList[i] == (this parameter takes one of values 0,...,i
+            HashMap<ChoiceNode, Integer> choiceIDs = new HashMap<>();
+            for (ChoiceNode choice : arg.getLeafChoices()) {
+                Integer xID = newID();
+                Integer yID = newID();
+                xList.add(xID);
+                yList.add(yID);
+                choiceIDs.put(choice, xID);
+            }
+            int n = xList.size();
+
+            fClausesVecInt.add(new VecInt(xList.stream().mapToInt(Integer::intValue).toArray())); //at least one value should be taken
+            for(int i=0;i<n;i++)
+                fClausesVecInt.add(new VecInt(new int[] {-xList.get(i),yList.get(i)})); // xList[i] => yList[i];
+            for(int i=0;i<n-1;i++)
+                fClausesVecInt.add(new VecInt(new int[] {-yList.get(i),yList.get(i+1)})); // yList[i] => yList[i+1];
+            for(int i=0;i<n-1;i++)
+                fClausesVecInt.add(new VecInt(new int[] {-xList.get(i+1),-yList.get(i)})); // NOT( xList[i+1] AND yList[i] ), to guarantee uniqueness
+
+            argChoiceToID.put(arg, choiceIDs);
+        }
+    }
+
 
     private void ParseConstraint(Constraint constraint) {
         if(constraint != null) {
@@ -104,61 +131,68 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         @Override
         public Object visit(RelationStatement statement)
         {
-            MethodParameterNode arg = statement.getLeftParameter();
-            if(!argChoiceToID.containsKey(arg)) { //we need to create new set of variables, as we are seeing this parameter for the first time
-                ArrayList<Integer> xList = new ArrayList<>(); //xList[i] ==  (this parameter takes value i)
-                ArrayList<Integer> yList = new ArrayList<>(); //yList[i] == (this parameter takes one of values 0,...,i
-                HashMap<ChoiceNode, Integer> choiceIDs = new HashMap<>();
-                for (ChoiceNode choice : arg.getLeafChoices()) {
-                    Integer xID = newID();
-                    Integer yID = newID();
-                    xList.add(xID);
-                    yList.add(yID);
-                    choiceIDs.put(choice, xID);
-                }
-                int n = xList.size();
+            MethodParameterNode lParam = statement.getLeftParameter();
 
-                fClausesVecInt.add(new VecInt(xList.stream().mapToInt(Integer::intValue).toArray())); //at least one value should be taken
-                for(int i=0;i<n;i++)
-                    fClausesVecInt.add(new VecInt(new int[] {-xList.get(i),yList.get(i)})); // xList[i] => yList[i];
-                for(int i=0;i<n-1;i++)
-                    fClausesVecInt.add(new VecInt(new int[] {-yList.get(i),yList.get(i+1)})); // yList[i] => yList[i+1];
-                for(int i=0;i<n-1;i++)
-                    fClausesVecInt.add(new VecInt(new int[] {-xList.get(i+1),-yList.get(i)})); // NOT( xList[i+1] AND yList[i] ), to guarantee uniqueness
-
-                argChoiceToID.put(arg, choiceIDs);
-            }
-
+            variablesForParameter(lParam);
 
             Integer myID = newID();
 
 
-            int index = fMethod.getMethodParameters().indexOf(arg);
-            if (index == -1) {
+            int lParamIndex = fMethod.getMethodParameters().indexOf(lParam);
+            if (lParamIndex == -1) {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
                 return null;
             }
 
-            int size = fMethod.getParametersCount();
+            ArrayList<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethod.getParametersCount(), null));
 
-            ArrayList<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(size, null));
+            if(statement.getCondition() instanceof ParameterCondition) {
+                MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
 
-            for(ChoiceNode choice : arg.getLeafChoices())
-            {
-                dummyValues.set(index, choice);
-                EvaluationResult result = statement.evaluate(dummyValues);
-                Integer idOfArgChoice = argChoiceToID.get(arg).get(choice);
-                if(result == EvaluationResult.TRUE) {
-                    fClausesVecInt.add(new VecInt(new int[] {-idOfArgChoice, myID})); // thisChoice => me
+                variablesForParameter(rParam);
+
+                int rParamIndex = fMethod.getMethodParameters().indexOf(rParam);
+                if (rParamIndex == -1) {
+                    ExceptionHelper.reportRuntimeException("Parameter not in method!");
+                    return null;
                 }
-                else if(result == EvaluationResult.FALSE)
-                {
-                    fClausesVecInt.add(new VecInt(new int[] {-idOfArgChoice, -myID})); // thisChoice => NOT me
+
+                for(ChoiceNode rChoice : rParam.getLeafChoices()) { //we iterate over all choices of rParam and lParam
+                    Integer idOfRightArgChoice = argChoiceToID.get(rParam).get(rChoice);
+                    dummyValues.set(rParamIndex, rChoice);
+                    for (ChoiceNode lChoice : lParam.getLeafChoices()) {
+                        dummyValues.set(lParamIndex, lChoice);
+                        EvaluationResult result = statement.evaluate(dummyValues);
+                        Integer idOfLeftArgChoice = argChoiceToID.get(lParam).get(lChoice);
+                        if (result == EvaluationResult.TRUE) {
+                            fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice,-idOfRightArgChoice, myID})); // thisChoice => me
+                        } else if (result == EvaluationResult.FALSE) {
+                            fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice, -idOfRightArgChoice, -myID})); // thisChoice => NOT me
+                        } else //INSUFFICIENT_DATA
+                        {
+                            ExceptionHelper.reportRuntimeException("INSUFFICIENT_DATA: You shouldn't be here!");
+                            return null; //FIXME, ideally we will not have INSUFFICIENT_DATA
+                        }
+                    }
                 }
-                else //INSUFFICIENT_DATA
-                {
-                    ExceptionHelper.reportRuntimeException("INSUFFICIENT_DATA: You shouldn't be here!");
-                    return null; //FIXME, ideally we will not have INSUFFICIENT_DATA
+
+
+
+            }
+            else { //we need only to iterate over all choices of single lParam
+                for (ChoiceNode lChoice : lParam.getLeafChoices()) {
+                    dummyValues.set(lParamIndex, lChoice);
+                    EvaluationResult result = statement.evaluate(dummyValues);
+                    Integer idOfLeftArgChoice = argChoiceToID.get(lParam).get(lChoice);
+                    if (result == EvaluationResult.TRUE) {
+                        fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice, myID})); // thisChoice => me
+                    } else if (result == EvaluationResult.FALSE) {
+                        fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice, -myID})); // thisChoice => NOT me
+                    } else //INSUFFICIENT_DATA
+                    {
+                        ExceptionHelper.reportRuntimeException("INSUFFICIENT_DATA: You shouldn't be here!");
+                        return null; //FIXME, ideally we will not have INSUFFICIENT_DATA
+                    }
                 }
             }
 
