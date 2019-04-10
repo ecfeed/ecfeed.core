@@ -10,7 +10,7 @@
 package com.ecfeed.core.generators;
 
 
-public class DimensionedItem<E> {
+public class DimensionedItem<E> implements Comparable<DimensionedItem<E>>{
 	
 	protected int fDimension; // e.g. index of method parameter
 	protected E fItem;
@@ -18,6 +18,12 @@ public class DimensionedItem<E> {
 	public DimensionedItem(int dimension, E item) {
 		fDimension = dimension;
 		fItem = item;
+	}
+
+	@Override
+	public int compareTo(DimensionedItem<E> other)
+	{
+		return Integer.compare(this.fDimension, other.fDimension);
 	}
 
 	@Override
@@ -54,6 +60,13 @@ public class DimensionedItem<E> {
 	
 	public E getItem() {
 		return fItem;
+	}
+
+	public int hashCode()
+	{
+		if(fItem == null)
+			return fDimension;
+		return fDimension ^ fItem.hashCode();
 	}
 
 }

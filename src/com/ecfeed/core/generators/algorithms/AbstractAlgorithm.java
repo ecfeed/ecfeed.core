@@ -13,6 +13,7 @@ package com.ecfeed.core.generators.algorithms;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
@@ -123,9 +124,6 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 	}
 
 	protected EvaluationResult checkConstraints(List<E> test) {
-
-		if(fConstraintEvaluator == null)
-			return EvaluationResult.TRUE;
 		return fConstraintEvaluator.evaluate(test);
 	}
 
