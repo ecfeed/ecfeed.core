@@ -65,8 +65,8 @@ public class DimensionedItem<E> implements Comparable<DimensionedItem<E>>{
 	public int hashCode()
 	{
 		if(fItem == null)
-			return fDimension;
-		return fDimension ^ fItem.hashCode();
+			return (17*fDimension + fDimension*fDimension);
+		return (17*fDimension) ^ fItem.hashCode();
 	}
 
 }
