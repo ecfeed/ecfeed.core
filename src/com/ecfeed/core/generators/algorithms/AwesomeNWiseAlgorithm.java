@@ -13,27 +13,15 @@ import java.util.*;
 
 import javax.management.RuntimeErrorException;
 
-import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
+import com.ecfeed.core.utils.Pair;
 import com.google.common.collect.*;
 
 
 public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
-
-//    final private int RANDOM_TEST_TRIES = 10;
-
-    private Set<List<Integer>> allDimCombs = null;
-
-    private Set<List<DimensionedItem<E>>> fPotentiallyRemainingTuples = null;
-
-    // The set of all n-tuples for which none of the constraints fail (this set
-    // includes both the n-tuples for which all the constraints can be evaluated
-    // and pass, as well as the constraints for which at least one of
-    // constraints cannot be evaluated).
-    private Set<List<DimensionedItem<E>>> fRemainingTuples = null;
 
     private Multiset<List<DimensionedItem<E>>> fPartialTuplesCounter = null;
 
@@ -41,7 +29,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private int fIgnoreCount = 0;
 
-//    final private int CONSISTENCY_LOOP_LIM = 10;
+    private int fLeftTuples;
 
     public AwesomeNWiseAlgorithm(int n, int coverage) {
         super(n, coverage);
@@ -55,11 +43,12 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 for (E v : getInput().get(i))
                     fAllValues.add(new DimensionedItem<E>(i, v));
 
-            fRemainingTuples = getAllNTuples();
-            System.out.println(fRemainingTuples.size());
+            List<List<DimensionedItem<E>>> remainingTuples = getAllNTuples();
+            fLeftTuples = remainingTuples.size();
+            System.out.println(fLeftTuples);
 
             fPartialTuplesCounter = HashMultiset.create();
-            for(List<DimensionedItem<E>> it : fRemainingTuples) {
+            for(List<DimensionedItem<E>> it : remainingTuples) {
                 List<List<DimensionedItem<E>>> allSublists = AlgorithmHelper.AllSublists(it);
                 for (List<DimensionedItem<E>> sublist : allSublists) {
                     Collections.sort(sublist);
@@ -67,7 +56,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 }
             }
 
-            fIgnoreCount = fRemainingTuples.size() * (100 - getCoverage()) / 100;
+            fIgnoreCount = fLeftTuples * (100 - getCoverage()) / 100;
 
         } catch (GeneratorException e) {
             e.printStackTrace();
@@ -91,13 +80,15 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 }
             }
 
-            if (fRemainingTuples.size() <= fIgnoreCount)
+            if (fLeftTuples <= fIgnoreCount)
                 return null;
 
             int dimCount = getInput().size();
 
             List<DimensionedItem<E>> nTuple = new ArrayList<>();
             List<E> fullTuple = new ArrayList<>(Collections.nCopies(getInput().size(), null));
+
+            List<Integer> filledDimensions = new ArrayList<>();
 
             for(int i=0;i< Math.min(N,dimCount); i++)
             {
@@ -113,6 +104,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                     if (fPartialTuplesCounter.contains(nCopy)) {
                         nTuple = nCopy;
                         fullTuple.set(d, dItem.getItem());
+                        filledDimensions.add(d);
 
                         break;
                     }
@@ -131,13 +123,37 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                     continue;
                 List<E> currentDimInput = new ArrayList<>(getInput().get(d));
                 Collections.shuffle(currentDimInput);
+                Set<List<Integer>> dimensionsToCountScore = (new Tuples<>(filledDimensions, Math.min(filledDimensions.size(),N-1))).getAll();
+                List<Pair<Integer, E>> scoreAndElements = new ArrayList<>();
                 for(E val : currentDimInput) {
                     fullTuple.set(d, val);
                     EvaluationResult check = checkConstraints(fullTuple);
                    if (check == EvaluationResult.TRUE) {
-                       break;
+                       int score = 0;
+                       for(List<Integer> dScore : dimensionsToCountScore)
+                       {
+                           List<DimensionedItem<E>> tmpObject = new ArrayList<>();
+                           tmpObject.add(new DimensionedItem<>(d,val));
+                           for(Integer sD : dScore)
+                               tmpObject.add(new DimensionedItem<>(sD,fullTuple.get(sD)));
+                           Collections.sort(tmpObject);
+                           if(fPartialTuplesCounter.contains(tmpObject))
+                               score++;
+                       }
+                       scoreAndElements.add(new Pair<>(score, val));
                     }
                 }
+
+                int bestval = 0;
+                for(Pair<Integer, E> p : scoreAndElements)
+                {
+                    if(p.getFirst() > bestval)
+                    {
+                        bestval = p.getFirst();
+                        fullTuple.set(d, p.getSecond());
+                    }
+                }
+                filledDimensions.add(d);
             }
 
 
@@ -145,8 +161,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 List<DimensionedItem<E>> dTuple = new ArrayList<>();
                 for (Integer d : dimComb)
                     dTuple.add(new DimensionedItem<>(d, fullTuple.get(d)));
-                if (fRemainingTuples.contains(dTuple)) {
-                    fRemainingTuples.remove(dTuple);
+                if (fPartialTuplesCounter.contains(dTuple)) {
+                    fLeftTuples--;
                     for (List<DimensionedItem<E>> sublist : AlgorithmHelper.AllSublists(dTuple)) {
                         Collections.sort(sublist);
                         fPartialTuplesCounter.remove(sublist, 1);
@@ -166,56 +182,45 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         for (int i = 0; i < dimCount; i++)
             dimensions.add(i);
 
-        return (new Tuples<Integer>(dimensions, Math.min(dimCount,N))).getAll();
+        return (new Tuples<>(dimensions, Math.min(dimCount,N))).getAll();
     }
 
-    private Set<List<DimensionedItem<E>>> getAllNTuples() throws GeneratorException { //copied from RandomizedNWiseAlgorithm + few simplifications
+    private List<List<DimensionedItem<E>>> getAllNTuples() throws GeneratorException {
 
-        Set<List<Integer>> allCombs = getAllDimCombs();
-        Set<List<DimensionedItem<E>>> validNTuple = new HashSet<>();
+        List<List<DimensionedItem<E>>> allValidTuples = new ArrayList<>();
+        allValidTuples.add(new ArrayList<>());
 
-
-
-        for (List<Integer> comb : allCombs) {
-
-            List<List<DimensionedItem<E>>> tempIn = new ArrayList<>();
-            for (Integer d : comb){
-                List<DimensionedItem<E>> values = new ArrayList<>();
-                for (E e : getInput().get(d))
-                    values.add(new DimensionedItem<E>(d, e));
-                tempIn.add(values);
-            }
-
-            CartesianProductAlgorithm<DimensionedItem<E>> cartAlg = new CartesianProductAlgorithm<>();
-            cartAlg.initialize(tempIn, new DummyEvaluator<>(), getGeneratorProgressMonitor());
-            List<DimensionedItem<E>> tuple = null;
-            while ((tuple = cartAlg.getNext()) != null) {
-
-                // Generate a full tuple from this nTuple to make sure that it
-                // is consistent with the constraints
+        int dimCount = getInput().size();
+        for(int c = 0; c<N; c++)
+        {
+            List<List<DimensionedItem<E>>> newValidTuples = new ArrayList<>();
+            for(List<DimensionedItem<E>> tuple : allValidTuples)
+            {
                 ArrayList<E> fullTuple = new ArrayList<>(Collections.nCopies(getInput().size(), null));
                 for (DimensionedItem<E> var : tuple)
                     fullTuple.set(var.getDimension(), var.getItem());
-
-                EvaluationResult check = checkConstraints(fullTuple);
-
-                if (check == EvaluationResult.INSUFFICIENT_DATA) {
-     //               unevaluableNTuples.add(tuple); FIXME
-                } else if (check == EvaluationResult.TRUE) {
-                    validNTuple.add(tuple);
+                Integer maxD = -1;
+                if(!tuple.isEmpty())
+                    maxD = tuple.get(tuple.size()-1).getDimension();
+                for(int d = maxD+1; d < dimCount - (N-1-c); d++)
+                {
+                    for(E v : getInput().get(d))
+                    {
+                        fullTuple.set(d,v);
+                        if(checkConstraints(fullTuple) == EvaluationResult.TRUE)
+                        {
+                            List<DimensionedItem<E>> newTuple = new ArrayList<>(tuple);
+                            newTuple.add(new DimensionedItem<>(d,v));
+                            newValidTuples.add(newTuple);
+                        }
+                    }
+                    fullTuple.set(d, null);
                 }
             }
+            allValidTuples = newValidTuples;
         }
 
-        return validNTuple;
-    }
-
-    protected Set<List<Integer>> getAllDimCombs() {
-
-        if (allDimCombs == null)
-            allDimCombs = getAllDimensionCombinations();
-
-        return allDimCombs;
+        return allValidTuples;
     }
 }
 

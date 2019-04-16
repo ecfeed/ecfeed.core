@@ -26,6 +26,18 @@ public class Pair<A, B> {
 
 	public B getSecond() {
 		return fB;
-	}	
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("(");
+		sb.append(fA);
+		sb.append(", ");
+		sb.append(fB);
+		sb.append(")");
+
+		return sb.toString();
+	}
 
 }
