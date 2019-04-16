@@ -20,6 +20,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private int lastUsedID = 1;
     private HashMap<MethodParameterNode, HashMap<ChoiceNode, Integer>> argChoiceToID;
     private MethodNode fMethod;
+    private ISolver fSolver;
+    private Boolean isContradicting = false;
 
 
 
@@ -34,6 +36,20 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             for (Constraint constraint : initConstraints) {
                 ParseConstraint(constraint);
             }
+        }
+        final int maxVar = lastUsedID;
+        final int nbClauses = fClausesVecInt.size();
+        fSolver = SolverFactory.newLight();
+
+
+        try {
+            fSolver.newVar(maxVar);
+            fSolver.setExpectedNumberOfClauses(nbClauses);
+            for(VecInt clause : fClausesVecInt)
+                fSolver.addClause(clause);
+        } catch (ContradictionException e)
+        {
+            isContradicting = true;
         }
     }
 
@@ -243,56 +259,48 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment)
     {
+
         if(fMethod == null)
         {
             return EvaluationResult.TRUE; //no method so there were no constraints
         }
-        final int maxVar = lastUsedID;
-        final int nbClauses = fClausesVecInt.size() + valueAssignment.size();
-        ISolver solver = SolverFactory.newLight();
 
-        try {
-            solver.newVar(maxVar);
-            solver.setExpectedNumberOfClauses(nbClauses);
-            for(VecInt clause : fClausesVecInt)
-                solver.addClause(clause);
+        if(isContradicting)
+            return EvaluationResult.FALSE;
 
 
-            List<MethodParameterNode> params = fMethod.getMethodParameters();
+        List<MethodParameterNode> params = fMethod.getMethodParameters();
 
-            //iterate params and valueAssignment simultanously
-            Iterator<ChoiceNode> cChoiceNode = valueAssignment.iterator();
-            for(MethodParameterNode p : params)
+        List<Integer> assumptions = new ArrayList<>();
+
+        //iterate params and valueAssignment simultanously
+        Iterator<ChoiceNode> cChoiceNode = valueAssignment.iterator();
+        for(MethodParameterNode p : params) {
+            if(!cChoiceNode.hasNext())
             {
-                if(!cChoiceNode.hasNext())
-                {
-                    ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
-                    return null;
-                }
-                ChoiceNode c = cChoiceNode.next();
-
-                if(c!=null) {
-                    if(argChoiceToID.get(p)==null)
-                        continue; //no constraint on this method parameter
-                    Integer idOfParamChoiceVar = argChoiceToID.get(p).get(c);
-
-                    solver.addClause(new VecInt(new int[]{idOfParamChoiceVar}));
-                }
-            }
-            if(cChoiceNode.hasNext()) {
                 ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
                 return null;
             }
-
-        } catch (ContradictionException e)
-        {
-            return EvaluationResult.FALSE;
+            ChoiceNode c = cChoiceNode.next();
+            if(c!=null) {
+                if(argChoiceToID.get(p)==null)
+                    continue; //no constraint on this method parameter
+                Integer idOfParamChoiceVar = argChoiceToID.get(p).get(c);
+                assumptions.add(idOfParamChoiceVar);
+            }
         }
 
-        try {
-                IProblem problem = solver;
+        if(cChoiceNode.hasNext()) {
+            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
+            return null;
+        }
 
-            if (problem.isSatisfiable()) {
+
+
+        try {
+                IProblem problem = fSolver;
+
+            if (problem.isSatisfiable(new VecInt(assumptions.stream().mapToInt(Integer::intValue).toArray()))) {
                 return EvaluationResult.TRUE;
             } else {
                 return EvaluationResult.FALSE;
