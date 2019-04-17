@@ -43,8 +43,8 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 			IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 		fInitialized = true;
-		setTotalWork(calculateProductSize(input));
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
+		setTotalWork(calculateProductSize(input));
 	}
 	
 	public void reset(){
