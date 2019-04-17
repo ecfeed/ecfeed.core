@@ -13,6 +13,7 @@ package com.ecfeed.core.model.serialization;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -41,7 +42,7 @@ public class ModelParser {
 	Builder fBuilder = new Builder();
 	XomAnalyser fXomAnalyser = null;
 
-	public RootNode parseModel(String modelXml, IModelChangeRegistrator modelChangeRegistrator) throws ParserException { 
+	public RootNode parseModel(String modelXml, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
 
 		InputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 
@@ -69,7 +70,7 @@ public class ModelParser {
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
-		} catch (IOException e) {
+		} catch (IOException e) {e.printStackTrace();
 			ParserException.report(Messages.IO_EXCEPTION(e));
 			return null;
 		}
