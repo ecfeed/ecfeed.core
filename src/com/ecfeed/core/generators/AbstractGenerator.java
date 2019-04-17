@@ -74,31 +74,6 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		return fParameterDefinitions;
 	}
 
-	@Override
-
-	public int totalWork() {
-		return fAlgorithm.totalWork();
-	}
-
-	@Override
-	public int workProgress() {
-		return fAlgorithm.workProgress();
-	}
-
-	@Override
-	public int totalProgress() {
-		return fAlgorithm.totalProgress();
-	}
-
-//	@Override
-//	public void addConstraint(IConstraint<E> constraint) {
-//		fAlgorithm.addConstraint(constraint);
-//	}
-//
-//	@Override
-//	public void removeConstraint(IConstraint<E> constraint) {
-//		fAlgorithm.removeConstraint(constraint);
-//	}
 
 	@Override
 	public IConstraintEvaluator<E> getConstraintEvaluator() {
