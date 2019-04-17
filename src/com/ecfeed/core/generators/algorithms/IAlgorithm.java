@@ -27,8 +27,7 @@ public interface IAlgorithm<E> {
 	public List<E> getNext() throws GeneratorException;
 	public void reset();
 
-//	public void addConstraint(IConstraint<E> constraint);
-//	public void removeConstraint(IConstraint<E> constraint);
+
 	public IConstraintEvaluator<E> getConstraintEvaluator();
 
 	public void cancel();

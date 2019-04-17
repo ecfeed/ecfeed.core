@@ -45,7 +45,6 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 		fInitialized = true;
 		setTotalWork(calculateProductSize(input));
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
-
 	}
 	
 	public void reset(){

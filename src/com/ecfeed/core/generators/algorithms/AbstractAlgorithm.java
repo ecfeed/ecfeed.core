@@ -38,7 +38,7 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 
-		if(input == null || constraintEvaluator == null) {
+		if(input == null || constraintEvaluator == null){
 			GeneratorException.report("input or constraints of algorithm cannot be null");
 		}
 

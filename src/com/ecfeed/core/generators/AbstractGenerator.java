@@ -75,6 +75,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 
+
 	@Override
 	public IConstraintEvaluator<E> getConstraintEvaluator() {
 		return fAlgorithm.getConstraintEvaluator();
