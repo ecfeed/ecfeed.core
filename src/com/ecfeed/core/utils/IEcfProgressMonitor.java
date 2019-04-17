@@ -27,5 +27,5 @@ public interface IEcfProgressMonitor {
 	boolean canCalculateProgress();
 	int getTotalProgress();
 	int getCurrentProgress();
-	
+
 }
