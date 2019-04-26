@@ -31,8 +31,8 @@ import static com.ecfeed.core.utils.ExceptionHelper.reportRuntimeExceptionCanNot
 public final class SecurityHelper {
 
 	private final static String[] DEFAULT_STORE_PATH = {
-		"./.ecfeed/security",
-		System.getProperty("user.home") + "/.ecfeed/security",
+		"./.ecfeed/security.p12",
+		System.getProperty("user.home") + "/.ecfeed/security.p12",
 		System.getProperty("java.home") + "/lib/security/cacerts"
 	};
 	
@@ -221,7 +221,11 @@ public final class SecurityHelper {
 	private static void loadKeyStoreFromPath(Optional<String> path) throws IllegalArgumentException {
 
 		if (path.isPresent()) {
-			fLoadedStore = prepareLoadedStore(prepareStoreUsingProvidedPath(path.get()));
+		    if (path.get().equals("")) {
+		        fLoadedStore = prepareLoadedStore(prepareStoreUsingDefaultLocation());
+            } else {
+                fLoadedStore = prepareLoadedStore(prepareStoreUsingProvidedPath(path.get()));
+            }
 		} else {
 			fLoadedStore = prepareLoadedStore(prepareStoreUsingDefaultLocation());
 		}
