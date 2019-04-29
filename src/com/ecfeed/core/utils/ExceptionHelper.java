@@ -26,7 +26,7 @@ public class ExceptionHelper {
 
 		RuntimeException runtimeException = new RuntimeException(message, e);
 
-		SystemLogger.logThrow(createErrorMessage(message, e));
+		SystemLogger.logThrow(createErrorMessage(e, true));
 		throw runtimeException;
 	}
 
@@ -39,11 +39,6 @@ public class ExceptionHelper {
 	public static void reportRuntimeExceptionCanNotCreateObject() {
 
 		ExceptionHelper.reportRuntimeException("Can not create object.");
-	}
-
-	public static String createErrorMessage(String basicMessage, Exception e) {
-
-		return basicMessage + "\n" + causedBy + createErrorMessage(e);
 	}
 
 	public static String createErrorMessage(Exception e) {
