@@ -42,7 +42,7 @@ public class GenericAddChildrenOperation extends BulkOperation {
 				if (operation != null) {
 					addOperation(operation);
 				}
-			} catch (Exception e) {SystemLogger.logCatch(e.getMessage());}
+			} catch (Exception e) {SystemLogger.logCatch(e);}
 		}
 	}
 

@@ -164,14 +164,14 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String getNameRegex(AbstractNode target) {
 		try{
 			return (String)fTarget.accept(new NameRegexProvider());
-		}catch(Exception e){SystemLogger.logCatch(e.getMessage());}
+		}catch(Exception e){SystemLogger.logCatch(e);}
 		return "*";
 	}
 
 	private String getRegexProblemMessage(){
 		try{
 			return (String)fTarget.accept(new RegexProblemMessageProvider());
-		}catch(Exception e){SystemLogger.logCatch(e.getMessage());}
+		}catch(Exception e){SystemLogger.logCatch(e);}
 		return "";
 	}
 

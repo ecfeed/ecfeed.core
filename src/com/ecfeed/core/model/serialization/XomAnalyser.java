@@ -66,6 +66,7 @@ import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.BooleanHolder;
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.StringHolder;
 
@@ -93,14 +94,14 @@ public abstract class XomAnalyser {
 			try{
 				targetRootNode.addParameter(parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator()));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 		for (Element child : getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME)) {
 			try{
 				targetRootNode.addClass(parseClass(child, targetRootNode));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -133,7 +134,7 @@ public abstract class XomAnalyser {
 			try{
 				targetClassNode.addParameter(parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator()));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -141,7 +142,7 @@ public abstract class XomAnalyser {
 			try{
 				targetClassNode.addMethod(parseMethod(child, targetClassNode));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -200,7 +201,7 @@ public abstract class XomAnalyser {
 			try{
 				targetMethodNode.addParameter(parseMethodParameter(child, targetMethodNode));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -208,7 +209,7 @@ public abstract class XomAnalyser {
 			try{
 				targetMethodNode.addTestCase(parseTestCase(child, targetMethodNode));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -216,7 +217,7 @@ public abstract class XomAnalyser {
 			try{
 				targetMethodNode.addConstraint(parseConstraint(child, targetMethodNode));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -287,7 +288,7 @@ public abstract class XomAnalyser {
 			try{
 				targetMethodParameterNode.addChoice(parseChoice(child, targetMethodParameterNode.getModelChangeRegistrator()));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -353,7 +354,7 @@ public abstract class XomAnalyser {
 			try{
 				targetGlobalParameterNode.addChoice(parseChoice(child, modelChangeRegistrator));
 			}catch(ParserException e) {
-				System.err.println("Exception: " + e.getMessage());
+				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 			}
 		}
 
@@ -638,7 +639,7 @@ public abstract class XomAnalyser {
 				try{
 					choice.addChoice(parseChoice(child, modelChangeRegistrator));
 				}catch(ParserException e) {
-					System.err.println("Exception: " + e.getMessage());
+					System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
 				}
 
 			}

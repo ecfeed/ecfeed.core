@@ -29,7 +29,7 @@ public class JarExtractor {
 			jar = new JarFile(jarFile);
 			fileContent = readFileFromJar(filePathName, jar);
 		} catch (IOException | EcException e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 			exceptionMessage = e.getMessage();
 		} finally {
 			tryCloseJar(jar);
@@ -66,7 +66,7 @@ public class JarExtractor {
 			inputStream = jarFile.getInputStream(jarEntry);
 			content = StreamHelper.streamToString(inputStream);
 		} catch (IOException e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 			exceptionMessage = e.getMessage();
 		} finally {
 			tryCloseInputStream(inputStream);
@@ -83,7 +83,7 @@ public class JarExtractor {
 		try {
 			jar.close();
 		} catch (IOException e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 		}
 	}
 
@@ -91,7 +91,7 @@ public class JarExtractor {
 		try {
 			inputStream.close();
 		} catch (IOException e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 		}
 	}
 }

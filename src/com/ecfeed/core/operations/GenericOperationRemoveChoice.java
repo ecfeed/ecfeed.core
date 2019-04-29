@@ -73,7 +73,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 			private void reverseAdaptParameter() {
 				try{
 					fTarget.getParameter().accept(new ReverseParameterAdapter());
-				}catch(Exception e){SystemLogger.logCatch(e.getMessage());}
+				}catch(Exception e){SystemLogger.logCatch(e);}
 			}
 
 		}
@@ -164,7 +164,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 		private void adaptParameter() {
 			try{
 				fTarget.getParameter().accept(new ParameterAdapter());
-			}catch(Exception e){SystemLogger.logCatch(e.getMessage());}
+			}catch(Exception e){SystemLogger.logCatch(e);}
 		}
 
 		private void validateOperation() throws ModelOperationException {

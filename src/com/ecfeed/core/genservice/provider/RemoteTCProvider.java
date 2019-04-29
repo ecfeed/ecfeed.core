@@ -70,7 +70,7 @@ public class RemoteTCProvider implements ITCProvider {
         try {
             fWebServiceResponse.getResponseBufferedReader().close();
         } catch (Exception e) {
-            SystemLogger.logCatch("Cannot close response buffer.");
+            SystemLogger.logCatch(e);
         }
 
         fWebServiceClient.close();

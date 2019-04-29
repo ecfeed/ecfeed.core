@@ -154,7 +154,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 					for(AbstractStatement child : statement.getChildren()) {
 						try {
 							child.accept(this);
-						} catch(Exception e) {SystemLogger.logCatch(e.getMessage());}
+						} catch(Exception e) {SystemLogger.logCatch(e);}
 					}
 					return null;
 				}
@@ -221,7 +221,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 					try {
 						constraint.getConstraint().getPremise().accept(valueRestorer);
 						constraint.getConstraint().getConsequence().accept(valueRestorer);
-					} catch(Exception e) {SystemLogger.logCatch(e.getMessage());}
+					} catch(Exception e) {SystemLogger.logCatch(e);}
 				}
 			}
 
@@ -285,7 +285,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		protected List<ChoiceNode> getChoices(ChoicesParentNode parent) {
 			try {
 				return (List<ChoiceNode>)parent.accept(new RealChoicesProvider());
-			} catch(Exception e) {SystemLogger.logCatch(e.getMessage());}
+			} catch(Exception e) {SystemLogger.logCatch(e);}
 			return null;
 		}
 
