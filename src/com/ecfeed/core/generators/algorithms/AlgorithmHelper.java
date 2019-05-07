@@ -1,8 +1,9 @@
 package com.ecfeed.core.generators.algorithms;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.ecfeed.core.generators.DimensionedItem;
+import com.google.common.collect.Maps;
+
+import java.util.*;
 
 public class AlgorithmHelper {
     public static <E> List<List<E>> AllSublists(List<E> inpList)
@@ -26,6 +27,23 @@ public class AlgorithmHelper {
             y.add(last);
             ret.add(y);
         }
+        return ret;
+    }
+
+
+    public static <E> SortedMap<Integer,E> Compress(List<E> inpList)
+    {
+        SortedMap<Integer,E> ret = Maps.newTreeMap();
+        for(int i=0;i<inpList.size();i++)
+            if(inpList.get(i)!=null)
+                ret.put(i, inpList.get(i));
+            return ret;
+    }
+    public static <E> List<E> Uncompress(SortedMap<Integer,E> inpList,int dimension)
+    {
+        ArrayList<E> ret = new ArrayList<>(Collections.nCopies(dimension, null));
+        for(Map.Entry<Integer,E> entry : inpList.entrySet())
+            ret.set(entry.getKey(), entry.getValue());
         return ret;
     }
 }
