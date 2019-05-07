@@ -80,15 +80,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public EvaluationResult evaluate(List<ChoiceNode> values) { //TODO We need an intermediate step where we evaluate it only on a SINGLE ChoiceNode, not on List<ChoiceNode>
+	public EvaluationResult evaluate(List<ChoiceNode> values) {
 
 		EvaluationResult result;
-		try {
-			result = fRightCondition.evaluate(values);
-		} catch (Exception e) {
-			SystemLogger.logCatch(e.getMessage());
-			return EvaluationResult.FALSE;
-		}
+
+		result = fRightCondition.evaluate(values);
 
 		return result;
 	}
@@ -96,17 +92,17 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean isAmbiguous(List<List<ChoiceNode>> testDomain, MessageStack messageStack) {
 
-		try {
+//		try {
 			if (fRightCondition.isAmbiguous(testDomain, messageStack)) {
 				ConditionHelper.addRelStatementToMesageStack(this, messageStack);
 				return true;
 			}
 			return false;
-		}
-		catch (Exception e) {
-			SystemLogger.logCatch(e.getMessage());
-			return false;
-		}
+//		}
+//		catch (Exception e) {
+//			SystemLogger.logCatch(e.getMessage());
+//			return false;
+//		}
 	}
 
 	@Override
