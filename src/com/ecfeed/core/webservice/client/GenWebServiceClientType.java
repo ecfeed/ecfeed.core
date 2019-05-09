@@ -1,6 +1,8 @@
 package com.ecfeed.core.webservice.client;
 
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 public enum GenWebServiceClientType {
 
     REGULAR("regular"),
@@ -18,7 +20,7 @@ public enum GenWebServiceClientType {
         return fTag;
     }
 
-    public static GenWebServiceClientType parse(String clientTypeStr) throws Exception {
+    public static GenWebServiceClientType parse(String clientTypeStr) {
 
         if (clientTypeStr.equals(REGULAR.toString())) {
             return REGULAR;
@@ -32,7 +34,8 @@ public enum GenWebServiceClientType {
             return LOCAL_TEST_RAP;
         }
 
-        throw new Exception("Cannot convert string: " + clientTypeStr + " to client type.");
+        ExceptionHelper.reportRuntimeException("Cannot convert string: " + clientTypeStr + " to client type.");
+        return null;
     }
 }
 

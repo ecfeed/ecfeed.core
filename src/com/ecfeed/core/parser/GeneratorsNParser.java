@@ -1,10 +1,12 @@
 package com.ecfeed.core.parser;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 public class GeneratorsNParser {
 
     private int fN = 2;
 
-    public GeneratorsNParser(String nStr) throws Exception {
+    public GeneratorsNParser(String nStr) {
 
         if (nStr == null) {
             fN = 2;
@@ -14,7 +16,7 @@ public class GeneratorsNParser {
         try {
             fN = Integer.parseInt(nStr);
         } catch (Exception e) {
-            throw new Exception("Can not set N. " + e.getMessage());
+            ExceptionHelper.reportRuntimeException("Can not set N. " + e.getMessage());
         }
     }
 

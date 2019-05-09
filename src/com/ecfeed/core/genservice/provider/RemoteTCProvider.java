@@ -36,7 +36,7 @@ public class RemoteTCProvider implements ITCProvider {
     }
 
     @Override
-    public void initialize(ITCProviderInitData initData, IEcfProgressMonitor progressMonitor) throws Exception {
+    public void initialize(ITCProviderInitData initData, IEcfProgressMonitor progressMonitor) {
 
         RemoteTCProviderInitData remoteTCProviderInitData = (RemoteTCProviderInitData)initData;
         String requestType = remoteTCProviderInitData.requestType;
@@ -83,7 +83,7 @@ public class RemoteTCProvider implements ITCProvider {
     }
 
     @Override
-    public TestCaseNode getNextTestCase() throws Exception {
+    public TestCaseNode getNextTestCase() {
 
         while(true) {
 
@@ -116,7 +116,7 @@ public class RemoteTCProvider implements ITCProvider {
         }
     }
 
-    public void processInitialTags() throws Exception {
+    public void processInitialTags() {
 
         fBufferedLine = null;
 

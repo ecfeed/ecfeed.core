@@ -20,7 +20,7 @@ public enum GeneratorType {
         return fType;
     }
 
-    public static GeneratorType parse(String type) throws Exception {
+    public static GeneratorType parse(String type) {
 
         if (type.equals(N_WISE.toString())) {
             return N_WISE;
@@ -38,7 +38,8 @@ public enum GeneratorType {
             return RANDOM;
         }
 
-        throw new Exception("Can not convert string: " + type + " to generator type.");
+        ExceptionHelper.reportRuntimeException("Can not convert string: " + type + " to generator type.");
+        return null;
     }
 
 }

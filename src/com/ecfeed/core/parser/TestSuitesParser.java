@@ -1,5 +1,7 @@
 package com.ecfeed.core.parser;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 import java.util.List;
 
 public class TestSuitesParser { // TODO - REUSE IN JUNIT5
@@ -10,7 +12,7 @@ public class TestSuitesParser { // TODO - REUSE IN JUNIT5
     private boolean fIsSpecialValueAllSuites = false;
 
     @SuppressWarnings("unchecked")
-	public TestSuitesParser(Object testSuitesObject) throws Exception {
+	public TestSuitesParser(Object testSuitesObject) {
 
         if (testSuitesObject == null) {
             setSpecialValueAllSuitesToTrue();
@@ -25,11 +27,11 @@ public class TestSuitesParser { // TODO - REUSE IN JUNIT5
         try {
             fTestSuiteNames = (List<String>) testSuitesObject;
         } catch (Exception e) {
-            throw new Exception("Invalid type of test suites object. Can not convert to list of names.");
+            ExceptionHelper.reportRuntimeException("Invalid type of test suites object. Can not convert to list of names.");
         }
 
         if (fTestSuiteNames.size() == 0) {
-            throw new Exception("List of test suite names should not be empty.");
+            ExceptionHelper.reportRuntimeException("List of test suite names should not be empty.");
         }
     }
 
@@ -43,7 +45,7 @@ public class TestSuitesParser { // TODO - REUSE IN JUNIT5
         return fTestSuiteNames;
     }
 
-    private void setTestSuitesFromString(String testSuitesObject) throws Exception {
+    private void setTestSuitesFromString(String testSuitesObject) {
 
         String testSuitesString = testSuitesObject;
 
@@ -53,7 +55,7 @@ public class TestSuitesParser { // TODO - REUSE IN JUNIT5
             return;
         }
 
-        throw new Exception("Invalid special value for test suites: " + testSuitesString);
+        ExceptionHelper.reportRuntimeException("Invalid special value for test suites: " + testSuitesString);
     }
 
     private void setSpecialValueAllSuitesToTrue() {

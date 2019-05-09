@@ -1,5 +1,7 @@
 package com.ecfeed.core.parser;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 import java.util.List;
 
 public class ConstraintsParser { // TODO - REUSE IN JUNIT5
@@ -18,7 +20,7 @@ public class ConstraintsParser { // TODO - REUSE IN JUNIT5
     private List<String> fConstraintNames = null;
 
     @SuppressWarnings("unchecked")
-	public ConstraintsParser(Object constraintsObject) throws Exception {
+	public ConstraintsParser(Object constraintsObject) {
 
         if (constraintsObject == null) {
             fConstraintsValueType = ConstraintsParser.ConstraintsValueType.ALL;
@@ -33,11 +35,11 @@ public class ConstraintsParser { // TODO - REUSE IN JUNIT5
         try {
             fConstraintNames = (List<String>) constraintsObject;
         } catch (Exception e) {
-            throw new Exception("Invalid type of constraints object. Can not convert to list of names.");
+            ExceptionHelper.reportRuntimeException("Invalid type of constraints object. Can not convert to list of names.");
         }
 
         if (fConstraintNames.size() == 0) {
-            throw new Exception("Requested list of constraints should not be empty.");
+            ExceptionHelper.reportRuntimeException("Requested list of constraints should not be empty.");
         }
     }
 
@@ -64,7 +66,7 @@ public class ConstraintsParser { // TODO - REUSE IN JUNIT5
         return fConstraintNames;
     }
 
-    private ConstraintsValueType getConstraintsFromString(String constraintsString) throws Exception {
+    private ConstraintsValueType getConstraintsFromString(String constraintsString) {
 
         if (constraintsString.equals(specialValueNoneConstraints)) {
             return ConstraintsValueType.NONE;
@@ -74,7 +76,8 @@ public class ConstraintsParser { // TODO - REUSE IN JUNIT5
             return ConstraintsValueType.ALL;
         }
 
-        throw new Exception("Invalid special value for constraints: " + constraintsString);
+        ExceptionHelper.reportRuntimeException("Invalid special value for constraints: " + constraintsString);
+        return null;
     }
 
 }
