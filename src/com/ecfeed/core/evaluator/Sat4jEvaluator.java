@@ -3,7 +3,6 @@ package com.ecfeed.core.evaluator;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.*;
-import com.google.common.collect.Sets;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -12,6 +11,8 @@ import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
 import java.util.*;
+
+import static com.ecfeed.core.utils.EMathRelation.*;
 
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
@@ -51,6 +52,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             fSolver.setExpectedNumberOfClauses(nbClauses);
             for(VecInt clause : fClausesVecInt)
                 fSolver.addClause(clause);
+            System.out.println("variables: " + maxVar + " clauses: " + nbClauses);
         } catch (ContradictionException e)
         {
             isContradicting = true;
@@ -255,7 +257,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             if (lParamIndex == -1) {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
-            ArrayList<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethod.getParametersCount(), null));
             MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
 
             variablesForParameter(rParam);
@@ -270,90 +271,98 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             List<ChoiceNode> sortedRChoices = uniqueAndSorted(rParam.getLeafChoices());
             int n = sortedRChoices.size();
 
+            for(int i=0,j=0; i<m; i++) {
+                while (j < n && new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) > 0) {
+                    j++;
+                }
 
-            switch(statement.getRelation())
-            {
-                case EQUAL:
-                {
-                    int i=0;
-                    int j=0;
-                    while(i<m && j<n)
+                Integer leftLessTh = argLessThChoiceID.get(lParam).get(sortedLChoices.get(i));
+                Integer leftLessEq = argLessEqChoiceID.get(lParam).get(sortedLChoices.get(i));
+                Integer rightLessTh = argLessThChoiceID.get(rParam).get(sortedRChoices.get(j));
+                Integer rightLessEq = argLessEqChoiceID.get(rParam).get(sortedRChoices.get(j));
+
+                switch (statement.getRelation()) {
+                    case EQUAL:
+                    case NOT_EQUAL: //negated at return
                     {
-                        switch(new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)))
+                        if (j == n) {
+                            // NOT(i<x) IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
+
+                            break;
+                        } else if (new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
+
+                            // NOT(i<x) AND i<=x IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -myID}));
+                        } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
                         {
-                            case -1:
-                            {
-                                i++;
-                                break;
-                            }
-                            case 1:
-                            {
-                                j++;
-                                break;
-                            }
-                            case 0:
-                            {
-                                Integer leftLessTh = argLessThChoiceID.get(lParam).get(sortedLChoices.get(i));
-                                Integer leftLessEq = argLessEqChoiceID.get(lParam).get(sortedLChoices.get(i));
-                                Integer rightLessTh = argLessThChoiceID.get(rParam).get(sortedLChoices.get(j));
-                                Integer rightLessEq = argLessEqChoiceID.get(rParam).get(sortedRChoices.get(j));
+                            // NOT(i<x) AND i<=x AND NOT(j<y) AND j<=y IMPLIES myID
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, -rightLessEq, myID}));
 
-                                // NOT(i<x) AND i<=x AND NOT(j<x) AND j<=x IMPLIES myID
-                                fClausesVecInt.add(new VecInt(new int[]{leftLessTh,-leftLessEq,rightLessTh,-rightLessEq,myID}));
+                            // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
 
-                                // NOT(i<x) AND i<=x AND j<x IMPLIES NOT(myID)
-                                fClausesVecInt.add(new VecInt(new int[]{leftLessTh,-leftLessEq,-rightLessTh,-myID}));
-
-                                // NOT(i<x) AND i<=x AND NOT(j<=x) IMPLIES NOT(myID)
-                                fClausesVecInt.add(new VecInt(new int[]{leftLessTh,-leftLessEq,rightLessEq,-myID}));
-
-                                i++;
-                                j++;
-                                break;
-                            }
+                            // NOT(i<x) AND i<=x AND NOT(j<=y) IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, -myID}));
                         }
+                        break;
                     }
-                    break;
-                }
-                case NOT_EQUAL:
-                {
-                    break;
-                }
-                case GREATER_EQUAL:
-                {
-                    break;
-                }
-                case LESS_THAN:
-                {
-                    break;
-                }
-                case LESS_EQUAL:
-                {
 
-                }
-                case GREATER_THAN:
-                {
-
-                }
-            }
-            for(ChoiceNode rChoice : rParam.getLeafChoices()) { //we iterate over all choices of rParam and lParam
-                Integer idOfRightArgChoice = argEqualChoiceID.get(rParam).get(rChoice);
-                dummyValues.set(rParamIndex, rChoice);
-                for (ChoiceNode lChoice : lParam.getLeafChoices()) {
-                    dummyValues.set(lParamIndex, lChoice);
-                    EvaluationResult result = statement.evaluate(dummyValues);
-                    Integer idOfLeftArgChoice = argEqualChoiceID.get(lParam).get(lChoice);
-                    if (result == EvaluationResult.TRUE) {
-                        fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice,-idOfRightArgChoice, myID})); // thisChoice => me
-                    } else if (result == EvaluationResult.FALSE) {
-                        fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice, -idOfRightArgChoice, -myID})); // thisChoice => NOT me
-                    } else //INSUFFICIENT_DATA
+                    case LESS_THAN:
+                    case GREATER_EQUAL: //negated at return
                     {
-                        ExceptionHelper.reportRuntimeException("INSUFFICIENT_DATA: You shouldn't be here!");
+                        if (j == n) {
+                            // NOT(i<x) IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
+
+                            break;
+                        } else if (new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
+                            // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+
+                            // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                        } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
+                        {
+                            // NOT(i<x) AND i<=x AND NOT(j<=y) IMPLIES myID
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, myID}));
+
+                            // NOT(i<x) AND i<=x AND j<=y IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessEq, -myID}));
+                        }
+                        break;
+                    }
+                    case LESS_EQUAL:
+                    case GREATER_THAN: //negated at return
+                    {
+                        if (j == n) {
+                            // NOT(i<x) IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
+
+                            break;
+                        } else if (new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
+                            // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+
+                            // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                        } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
+                        {
+                            // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+
+                            // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
+                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                        }
+                        break;
                     }
                 }
             }
-            return myID;
+
+            if(statement.getRelation() == EQUAL || statement.getRelation() == LESS_THAN || statement.getRelation() == LESS_EQUAL)
+                return myID;
+            else
+                return -myID;
         }
 
         @Override
