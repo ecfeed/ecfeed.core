@@ -3,6 +3,7 @@ package com.ecfeed.core.evaluator;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.*;
+import com.google.common.primitives.Ints;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -16,12 +17,13 @@ import static com.ecfeed.core.utils.EMathRelation.*;
 
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
- //   private ArrayList<ArrayList<Integer>> fClauses;
     private ArrayList<VecInt>  fClausesVecInt; //internal type for Sat4j
     private int lastUsedID = 1;
+    private Map<MethodParameterNode, SortedSet<ChoiceNode>> argAllValues;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> argEqualChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> argLessEqChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> argLessThChoiceID;
+    private List<Pair<Integer, ExpectedValueStatement>> expValConstraints;
     private MethodNode fMethod;
     private ISolver fSolver;
     private Boolean isContradicting = false;
@@ -33,18 +35,24 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         argLessEqChoiceID = new HashMap<>();
         argLessThChoiceID = new HashMap<>();
         fClausesVecInt = new ArrayList<>();
+        argAllValues = new HashMap<>();
+        expValConstraints = new ArrayList<>();
         fMethod = method;
         if(fMethod == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
         if(initConstraints != null) {
             for (Constraint constraint : initConstraints) {
-                ParseConstraint(constraint);
+                ParseConstraintForValues(constraint);
+            }
+
+            for (Constraint constraint : initConstraints) {
+                ParseConstraintToSAT(constraint);
             }
         }
         final int maxVar = lastUsedID;
         final int nbClauses = fClausesVecInt.size();
-        fSolver = SolverFactory.newLight();
+        fSolver = SolverFactory.newDefault();
 
 
         try {
@@ -81,7 +89,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         HashMap<ChoiceNode, Integer> inverseLEqVars = new HashMap<>();
         HashMap<ChoiceNode, Integer> inverseLThVars = new HashMap<>();
 
-        ArrayList<ChoiceNode> sortedChoices = new ArrayList<>(arg.getLeafChoices());
+        ArrayList<ChoiceNode> sortedChoices = new ArrayList<>(argAllValues.get(arg));
         Collections.sort(sortedChoices, new choiceNodeComparator());
 
         int n = sortedChoices.size();
@@ -142,22 +150,130 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-
-    private void ParseConstraint(Constraint constraint) {
+    private void ParseConstraintForValues(Constraint constraint) {
         if(constraint != null) {
             AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
-            Integer premiseID=null, consequenceID=null;
-            try {
-                premiseID = (Integer)premise.accept(new ParseStatementVisitor());
-                consequenceID = (Integer)consequence.accept(new ParseStatementVisitor());
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(consequence instanceof ExpectedValueStatement)
+            {
+                try {
+                    premise.accept(new ParseConstraintForValuesVisitor());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            fClausesVecInt.add(new VecInt(new int[] {-premiseID,consequenceID}));
+            else {
+                try {
+                    premise.accept(new ParseConstraintForValuesVisitor());
+                    consequence.accept(new ParseConstraintForValuesVisitor());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-    class ParseStatementVisitor implements IStatementVisitor
+
+    class ParseConstraintForValuesVisitor implements IStatementVisitor
+    {
+        @Override
+        public Object visit(StatementArray statement)
+        {
+            for (AbstractStatement child : statement.getChildren()) {
+                try {
+                    child.accept(new ParseConstraintToSATVisitor());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        public Object visit(RelationStatement statement)
+        {
+            MethodParameterNode lParam = statement.getLeftParameter();
+            if(!argAllValues.containsKey(lParam)) {
+                SortedSet<ChoiceNode> tmp = new TreeSet<>(new choiceNodeComparator());
+                tmp.addAll(lParam.getLeafChoices());
+                argAllValues.put(lParam, tmp);
+            }
+            if(statement.getCondition() instanceof ParameterCondition) {
+
+                MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
+                if(!argAllValues.containsKey(rParam)) {
+                    SortedSet<ChoiceNode> tmp = new TreeSet<>(new choiceNodeComparator());
+                    tmp.addAll(lParam.getLeafChoices());
+                    argAllValues.put(rParam, tmp);
+                }
+            }
+            return null;
+        }
+        @Override
+        public Object visit(StaticStatement statement)
+        {
+            return null;
+        }
+
+
+        @Override
+        public Object visit(ExpectedValueStatement statement)
+        {
+            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+            return null;
+        }
+        @Override
+        public Object visit(LabelCondition statement)
+        {
+            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+            return null; //this will never happen
+        }
+        @Override
+        public Object visit(ChoiceCondition statement)
+        {
+            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+            return null; //this will never happen
+        }
+        @Override
+        public Object visit(ParameterCondition statement)
+        {
+            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+            return null; //this will never happen
+        }
+        @Override
+        public Object visit(ValueCondition statement)
+        {
+            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+            return null; //this will never happen
+        }
+    }
+
+
+    private void ParseConstraintToSAT(Constraint constraint) {
+        if(constraint != null) {
+            AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
+            if(consequence instanceof ExpectedValueStatement) {
+                Integer premiseID = null;
+                try {
+                    premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
+                    expValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                Integer premiseID = null, consequenceID = null;
+                try {
+                    premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
+                    consequenceID = (Integer) consequence.accept(new ParseConstraintToSATVisitor());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                fClausesVecInt.add(new VecInt(new int[] {-premiseID,consequenceID}));
+            }
+        }
+    }
+
+    class ParseConstraintToSATVisitor implements IStatementVisitor
     {
         @Override
         public Object visit(StatementArray statement)
@@ -170,7 +286,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     for (AbstractStatement child : statement.getChildren()) {
                         Integer childID = null;
                         try {
-                            childID = (Integer) child.accept(new ParseStatementVisitor());
+                            childID = (Integer) child.accept(new ParseConstraintToSATVisitor());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -187,7 +303,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     for (AbstractStatement child : statement.getChildren()) {
                         Integer childID = null;
                         try {
-                            childID = (Integer) child.accept(new ParseStatementVisitor());
+                            childID = (Integer) child.accept(new ParseConstraintToSATVisitor());
                         } catch (Exception e) {
                         }
                         bigClause.add(-childID);
@@ -222,7 +338,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             if (lParamIndex == -1) {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
-            for (ChoiceNode lChoice : lParam.getLeafChoices()) {
+            for (ChoiceNode lChoice : argAllValues.get(lParam)) {
                 ArrayList<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethod.getParametersCount(), null));
                 dummyValues.set(lParamIndex, lChoice);
                 EvaluationResult result = statement.evaluate(dummyValues);
@@ -238,13 +354,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
 
             return myID;
-        }
-
-        private List<ChoiceNode> uniqueAndSorted(List<ChoiceNode> inpList)
-        {
-            Set<ChoiceNode> tmp = new TreeSet<>(new choiceNodeComparator());
-            tmp.addAll(inpList);
-            return new ArrayList(tmp);
         }
 
         private Integer doubleChoiceParamConstraints(RelationStatement statement)
@@ -266,9 +375,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
 
-            List<ChoiceNode> sortedLChoices = uniqueAndSorted(lParam.getLeafChoices());
+            List<ChoiceNode> sortedLChoices = new ArrayList<>(argAllValues.get(lParam));
             int m = sortedLChoices.size();
-            List<ChoiceNode> sortedRChoices = uniqueAndSorted(rParam.getLeafChoices());
+            List<ChoiceNode> sortedRChoices = new ArrayList<>(argAllValues.get(rParam));
             int n = sortedRChoices.size();
 
             for(int i=0,j=0; i<m; i++) {
@@ -368,8 +477,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         @Override
         public Object visit(ExpectedValueStatement statement)
         {
-            return 0; //TODO
+            return null; //TODO
         }
+
         @Override
         public Object visit(StaticStatement statement)
         {
@@ -380,6 +490,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 fClausesVecInt.add(new VecInt(new int[] {-myID}));
             return myID;
         }
+
         @Override
         public Object visit(LabelCondition statement)
         {
@@ -406,18 +517,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    @Override
-    public EvaluationResult evaluate(List<ChoiceNode> valueAssignment)
+    private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignment)
     {
-
-        if(fMethod == null)
-        {
-            return EvaluationResult.TRUE; //no method so there were no constraints
-        }
-
-        if(isContradicting)
-            return EvaluationResult.FALSE;
-
 
         List<MethodParameterNode> params = fMethod.getMethodParameters();
 
@@ -445,12 +546,24 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             return null;
         }
 
+        return assumptions;
+    }
+
+    @Override
+    public EvaluationResult evaluate(List<ChoiceNode> valueAssignment)
+    {
+        if(fMethod == null)
+        {
+            return EvaluationResult.TRUE; //no method so there were no constraints
+        }
+
+        if(isContradicting)
+            return EvaluationResult.FALSE;
 
 
         try {
-                IProblem problem = fSolver;
-
-            if (problem.isSatisfiable(new VecInt(assumptions.stream().mapToInt(Integer::intValue).toArray()))) {
+            IProblem problem = fSolver;
+            if (problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray()))) {
                 return EvaluationResult.TRUE;
             } else {
                 return EvaluationResult.FALSE;
@@ -466,7 +579,23 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment)
     {
-        return null; //TODO
+        List<Integer> assumptions = assumptionsFromValues(valueAssignment);
+            try {
+
+                IProblem problem = fSolver;
+                boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
+                if (!b) {
+                    ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
+                    return null;
+                }
+                Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
+                for (Pair<Integer, ExpectedValueStatement> p : expValConstraints) {
+                    if (vars.contains(p.getFirst())) {
+                        p.getSecond().adapt(valueAssignment);
+                    }
+                }
+            } catch (TimeoutException e) {}
+        return valueAssignment;
     }
 
 }

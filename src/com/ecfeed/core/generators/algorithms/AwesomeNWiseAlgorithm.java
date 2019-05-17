@@ -13,7 +13,6 @@ import java.util.*;
 
 import javax.management.RuntimeErrorException;
 
-import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
@@ -32,6 +31,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     private int fLeftTuples;
 
     private int fDimCount;
+
+    static final int NUM_OF_REPETITIONS = 100;
 
     public AwesomeNWiseAlgorithm(int n, int coverage) {
         super(n, coverage);
@@ -74,91 +75,124 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
         while (true) {
 
-            if (generatorProgressMonitor != null) {
-                if (generatorProgressMonitor.isCanceled()) {
+            SortedMap<Integer, E> bestTuple = null;
+            int bestTupleScore = -1;
+
+            for(int dummy=0;dummy<NUM_OF_REPETITIONS;dummy++)
+            {
+                if (generatorProgressMonitor != null) {
+                    if (generatorProgressMonitor.isCanceled()) {
+                        return null;
+                    }
+                }
+
+                if (fLeftTuples <= fIgnoreCount)
                     return null;
+
+                SortedMap<Integer, E> nTuple = Maps.newTreeMap();
+
+                List<Integer> filledDimensions = new ArrayList<>();
+
+                for (int i = 0; i < Math.min(N, fDimCount); i++) {
+                    Collections.shuffle(fAllValues);
+                    Pair<Integer, E> bestItem = null;
+                    int bestItemScore = -1;
+                    for (Pair<Integer, E> dItem : fAllValues) {
+                        Integer d = dItem.getFirst();
+                        if (nTuple.containsKey(d))
+                            continue;
+
+                        nTuple.put(d, dItem.getSecond());
+                        if(fPartialTuplesCounter.count(nTuple)>bestItemScore)
+                        {
+                            bestItem = dItem;
+                            bestItemScore = fPartialTuplesCounter.count(nTuple);
+                        }
+                        nTuple.remove(d);
+                    }
+                    Integer d = bestItem.getFirst();
+                    filledDimensions.add(d);
+                    nTuple.put(d, bestItem.getSecond());
                 }
-            }
 
-            if (fLeftTuples <= fIgnoreCount)
-                return null;
 
-            SortedMap<Integer,E> nTuple = Maps.newTreeMap();
-//            List<E> fullTuple = AlgorithmHelper.Uncompress(nTuple, fDimCount);
+                List<Integer> randomDimension = new ArrayList<>();
+                for (int i = 0; i < fDimCount; i++)
+                    randomDimension.add(i);
+                Collections.shuffle(randomDimension);
 
-            List<Integer> filledDimensions = new ArrayList<>();
-
-            for(int i=0;i< Math.min(N,fDimCount); i++)
-            {
-                Collections.shuffle(fAllValues);
-                for(Pair<Integer,E> dItem : fAllValues) {
-                    Integer d = dItem.getFirst();
-                    if(nTuple.containsKey(d))
+                for (Integer d : randomDimension) {
+                    if (nTuple.containsKey(d))
                         continue;
-
-                    nTuple.put(d,dItem.getSecond());
-                    if (fPartialTuplesCounter.contains(nTuple)) {
-                        filledDimensions.add(d);
-                        break;
+                    List<E> currentDimInput = new ArrayList<>(getInput().get(d));
+                    Collections.shuffle(currentDimInput);
+                    Set<List<Integer>> dimensionsToCountScore = (new Tuples<>(filledDimensions, Math.min(filledDimensions.size(), N - 1))).getAll();
+                    int bestScore = -1;
+                    E bestElement = null;
+                    for (E val : currentDimInput) {
+                        nTuple.put(d, val);
+                        if (checkConstraints(AlgorithmHelper.Uncompress(nTuple, fDimCount)) == EvaluationResult.TRUE) {
+                            int score = 0;
+                            for (List<Integer> dScore : dimensionsToCountScore) {
+                                SortedMap<Integer, E> tmpObject = Maps.newTreeMap();
+                                for (Integer sD : dScore)
+                                    tmpObject.put(sD, nTuple.get(sD));
+                                tmpObject.put(d, val);
+                                if (fPartialTuplesCounter.contains(tmpObject))
+                                    score++;
+                            }
+                            if (score > bestScore) {
+                                bestScore = score;
+                                bestElement = val;
+                            }
+                        }
                     }
-                    nTuple.remove(d);
+                    nTuple.put(d, bestElement);
+                    filledDimensions.add(d);
                 }
+
+                int nTupleScore = countAffectedTuples(nTuple);
+                if(nTupleScore > bestTupleScore)
+                {
+                    bestTupleScore = nTupleScore;
+                    bestTuple = nTuple;
+                }
+
             }
 
+            removeAffectedTuples(bestTuple);
 
-            List<Integer> randomDimension = new ArrayList<>();
-            for(int i=0;i<fDimCount;i++)
-                randomDimension.add(i);
-            Collections.shuffle(randomDimension);
-
-            for(Integer d : randomDimension)
-            {
-                if(nTuple.containsKey(d))
-                    continue;
-                List<E> currentDimInput = new ArrayList<>(getInput().get(d));
-                Collections.shuffle(currentDimInput);
-                Set<List<Integer>> dimensionsToCountScore = (new Tuples<>(filledDimensions, Math.min(filledDimensions.size(),N-1))).getAll();
-                int bestScore = -1;
-                E bestElement = null;
-                for(E val : currentDimInput) {
-                    nTuple.put(d,val);
-                   if (checkConstraints(AlgorithmHelper.Uncompress(nTuple, fDimCount)) == EvaluationResult.TRUE) {
-                       int score = 0;
-                       for(List<Integer> dScore : dimensionsToCountScore)
-                       {
-                           SortedMap<Integer,E> tmpObject = Maps.newTreeMap();
-                           for(Integer sD : dScore)
-                               tmpObject.put(sD,nTuple.get(sD));
-                           tmpObject.put(d,val);
-                           if(fPartialTuplesCounter.contains(tmpObject))
-                               score++;
-                       }
-                       if(score>bestScore)
-                       {
-                           bestScore = score;
-                           bestElement = val;
-                       }
-                    }
-                }
-                nTuple.put(d, bestElement);
-                filledDimensions.add(d);
-            }
-
-
-            for(List<Integer> dimComb : getAllDimensionCombinations()) {
-                SortedMap<Integer,E> dTuple = Maps.newTreeMap();
-                for (Integer d : dimComb)
-                    dTuple.put(d, nTuple.get(d));
-                if (fPartialTuplesCounter.contains(dTuple)) {
-                    fLeftTuples--;
-                    for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.AllSublists(new ArrayList<>(dTuple.entrySet())))
-                        fPartialTuplesCounter.remove(new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build(), 1);
-                }
-            }
-
-            return AlgorithmHelper.Uncompress(nTuple, fDimCount);
+            return AlgorithmHelper.Uncompress(bestTuple, fDimCount);
         }
     }
+
+    private void removeAffectedTuples(SortedMap<Integer,E> nTuple)
+    {
+        for(List<Integer> dimComb : getAllDimensionCombinations()) {
+            SortedMap<Integer,E> dTuple = Maps.newTreeMap();
+            for (Integer d : dimComb)
+                dTuple.put(d, nTuple.get(d));
+            if (fPartialTuplesCounter.contains(dTuple)) {
+                fLeftTuples--;
+                for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.AllSublists(new ArrayList<>(dTuple.entrySet())))
+                    fPartialTuplesCounter.remove(new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build(), 1);
+            }
+        }
+    }
+
+    private int countAffectedTuples(SortedMap<Integer,E> nTuple)
+    {
+        int score=0;
+        for(List<Integer> dimComb : getAllDimensionCombinations()) {
+            SortedMap<Integer,E> dTuple = Maps.newTreeMap();
+            for (Integer d : dimComb)
+                dTuple.put(d, nTuple.get(d));
+            if (fPartialTuplesCounter.contains(dTuple))
+                score++;
+        }
+        return score;
+    }
+
 
     private Set<List<Integer>> getAllDimensionCombinations() {
         List<Integer> dimensions = new ArrayList<>();

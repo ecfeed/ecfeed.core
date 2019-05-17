@@ -305,9 +305,9 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		int dimCount = getInput().size();
 		List<Integer> dimentions = new ArrayList<>();
 		for (int i = 0; i < dimCount; i++)
-			dimentions.add(new Integer(i));
+			dimentions.add(i);
 
-		return (new Tuples<Integer>(dimentions, N)).getAll();
+		return (new Tuples<>(dimentions, N)).getAll();
 	}
 
 	private Map<Boolean, Set<List<DimensionedItem<E>>>> getAllNTuples() throws GeneratorException {
@@ -330,7 +330,7 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			}
 
 			CartesianProductAlgorithm<DimensionedItem<E>> cartAlg = new CartesianProductAlgorithm<>();
-			cartAlg.initialize(tempIn, new HomebrewConstraintEvaluator<DimensionedItem<E>>(new HashSet<IConstraint<DimensionedItem<E>>>()), getGeneratorProgressMonitor());
+			cartAlg.initialize(tempIn, new HomebrewConstraintEvaluator<>(new HashSet<>()), getGeneratorProgressMonitor());
 			List<DimensionedItem<E>> tuple = null;
 			while ((tuple = cartAlg.getNext()) != null) {
 
