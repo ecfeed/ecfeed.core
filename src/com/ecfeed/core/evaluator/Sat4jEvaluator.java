@@ -3,6 +3,7 @@ package com.ecfeed.core.evaluator;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.*;
+import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
@@ -12,45 +13,108 @@ import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
 import java.util.*;
+import java.util.List;
 
 import static com.ecfeed.core.utils.EMathRelation.*;
 
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private ArrayList<VecInt>  fClausesVecInt; //internal type for Sat4j
-    private int lastUsedID = 1;
-    private Map<MethodParameterNode, SortedSet<ChoiceNode>> argAllValues;
-    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> argEqualChoiceID;
-    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> argLessEqChoiceID;
-    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> argLessThChoiceID;
-    private List<Pair<Integer, ExpectedValueStatement>> expValConstraints;
+    private int fFirstFreeID = 1;
+
+    private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllInputValues;
+    private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllSanitizedValues;
+    private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllAtomicValues;
+    private Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal;
+    private Map<ChoiceNode, ChoiceNode> fAtomicValToSanitizedVal;
+    private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
+    private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
+
+//    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgEqualChoiceID;
+    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessEqChoiceID;
+    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessThChoiceID;
+    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID;
+    private List<RelationStatement> fAllRelationConditions;
+    private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
     private MethodNode fMethod;
     private ISolver fSolver;
-    private Boolean isContradicting = false;
-
+    private Boolean fIsContradicting = false;
 
 
     public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
-        argEqualChoiceID = new HashMap<>();
-        argLessEqChoiceID = new HashMap<>();
-        argLessThChoiceID = new HashMap<>();
+ //       fArgEqualChoiceID = new HashMap<>();
+        fArgLessEqChoiceID = new HashMap<>();
+        fArgLessThChoiceID = new HashMap<>();
+        fArgChoiceID = new HashMap<>();
         fClausesVecInt = new ArrayList<>();
-        argAllValues = new HashMap<>();
-        expValConstraints = new ArrayList<>();
+        fArgAllInputValues = new HashMap<>();
+        fArgAllSanitizedValues = new HashMap<>();
+        fArgAllAtomicValues = new HashMap<>();
+        fSanitizedValToInputVal = new HashMap<>();
+        fAtomicValToSanitizedVal = new HashMap<>();
+        fExpectedValConstraints = new ArrayList<>();
+        fAllRelationConditions = new ArrayList<>();
+        fArgInputValToSanitizedVal = new HashMap<>();
+        fSanitizedValToAtomicVal = HashMultimap.create();
         fMethod = method;
         if(fMethod == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
         if(initConstraints != null) {
             for (Constraint constraint : initConstraints) {
-                ParseConstraintForValues(constraint);
+                preParse(constraint); //this fills fArgAllInputValues and fAllRelationConditions
             }
+
+            for(MethodParameterNode arg : fArgAllInputValues.keySet()) {
+                Set<ChoiceNode> setCopy = new HashSet<>(fArgAllInputValues.get(arg));
+                fArgAllSanitizedValues.put(arg, setCopy);
+                for(ChoiceNode node : setCopy) //maintaining the dependencies
+                    fSanitizedValToInputVal.put(node,node);
+            }
+
+            while(true)
+            {
+                Boolean anyChange = false;
+                for(RelationStatement rel : fAllRelationConditions)
+                {
+                    if(SanitizeValsWithRelation(rel))
+                        anyChange = true;
+                }
+                if(!anyChange)
+                    break;
+            }
+
+
+            for(MethodParameterNode param : fArgAllSanitizedValues.keySet()) {
+                fArgInputValToSanitizedVal.put(param, HashMultimap.create());
+                for(ChoiceNode sanitizedChoice : fArgAllSanitizedValues.get(param)) { //build InputVal -> SanitizedVal mapping
+                    ChoiceNode inputChoice = fSanitizedValToInputVal.get(sanitizedChoice);
+                    fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
+                }
+
+                fArgAllAtomicValues.put(param, new HashSet<>());
+                for (ChoiceNode it : fArgAllSanitizedValues.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
+                    if (it.isRandomizedValue()) {
+                        List<ChoiceNode> interleaved = ChoiceNodeHelper.interleavedValues(it, fArgAllSanitizedValues.size());
+                        fArgAllAtomicValues.get(param).addAll(interleaved);
+                        for(ChoiceNode c : interleaved) {
+                            fAtomicValToSanitizedVal.put(c, it);
+                            fSanitizedValToAtomicVal.put(it, c);
+                        }
+                    }
+                    else {
+                        fArgAllAtomicValues.get(param).add(it);
+                        fAtomicValToSanitizedVal.put(it,it);
+                        fSanitizedValToAtomicVal.put(it,it);
+                    }
+            }
+
 
             for (Constraint constraint : initConstraints) {
                 ParseConstraintToSAT(constraint);
             }
         }
-        final int maxVar = lastUsedID;
+        final int maxVar = fFirstFreeID;
         final int nbClauses = fClausesVecInt.size();
         fSolver = SolverFactory.newDefault();
 
@@ -63,43 +127,217 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             System.out.println("variables: " + maxVar + " clauses: " + nbClauses);
         } catch (ContradictionException e)
         {
-            isContradicting = true;
+            fIsContradicting = true;
         }
+    }
+
+
+    private Boolean SanitizeValsWithRelation(RelationStatement relation)
+    {
+        IStatementCondition condition = relation.getCondition();
+        if(condition instanceof LabelCondition)
+            return false;
+
+        MethodParameterNode lParam = relation.getLeftParameter();
+
+        List<ChoiceNode> allLVals = new ArrayList<>(fArgAllSanitizedValues.get(lParam));
+
+
+
+
+        if(condition instanceof ParameterCondition)
+        {
+            MethodParameterNode rParam = ((ParameterCondition) condition).getRightParameterNode();
+            List<ChoiceNode> allRVals = new ArrayList<>(fArgAllSanitizedValues.get(rParam));
+
+            boolean anyChange = false;
+            List<ChoiceNode> allLValsCopy = new ArrayList<>(allLVals);
+            for(ChoiceNode it : allRVals)
+            {
+                Pair<Boolean, List<ChoiceNode>> changeResult = SplitListWithChoiceNode(allLValsCopy, it);
+                anyChange = anyChange || changeResult.getFirst();
+                allLValsCopy = changeResult.getSecond();
+            }
+
+            List<ChoiceNode> allRValsCopy = new ArrayList<>(allRVals);
+            for(ChoiceNode it : allLVals)
+            {
+                Pair<Boolean, List<ChoiceNode>> changeResult = SplitListWithChoiceNode(allRValsCopy, it);
+                anyChange = anyChange || changeResult.getFirst();
+                allRValsCopy = changeResult.getSecond();
+            }
+
+            fArgAllSanitizedValues.put(lParam, new HashSet<>(allLValsCopy));
+
+            fArgAllSanitizedValues.put(rParam, new HashSet<>(allRValsCopy));
+
+            return anyChange;
+        }
+        if((condition instanceof ValueCondition) || (condition instanceof ChoiceCondition)) {
+            ChoiceNode it;
+
+            if (condition instanceof ValueCondition) {
+                String val = ((ValueCondition) condition).getRightValue();
+
+                it = allLVals.get(0).makeClone();
+                it.setRandomizedValue(false);
+                it.setValueString(val);
+            }
+            else {
+                it = ((ChoiceCondition) condition).getRightChoice();
+            }
+
+            Pair<Boolean, List<ChoiceNode>> changeResult = SplitListWithChoiceNode(allLVals, it);
+
+            fArgAllSanitizedValues.put(lParam, new HashSet<>(changeResult.getSecond()));
+            return changeResult.getFirst();
+        }
+
+        ExceptionHelper.reportRuntimeException("We shouldn't be here.");
+        return true;
+    }
+
+
+    private enum TypeOfEndpoint
+    {
+        LEFT_ENDPOINT,
+        RIGHT_ENDPOINT
+    }
+
+    private Pair<Boolean, List<ChoiceNode>> SplitListWithChoiceNode(List<ChoiceNode> toSplit, ChoiceNode val)
+    {
+        ChoiceNode start,end;
+        if(val.isRandomizedValue()) {
+            Pair<ChoiceNode, ChoiceNode> startEnd = ChoiceNodeHelper.rangeSplit(val);
+            start = startEnd.getFirst();
+            end = startEnd.getSecond();
+        }
+        else
+        {
+            start = val;
+            end = val;
+        }
+        Pair<Boolean, List<ChoiceNode>> changeResultLeft = SplitListByValue(toSplit, start, TypeOfEndpoint.LEFT_ENDPOINT);
+        Pair<Boolean, List<ChoiceNode>> changeResultRight = SplitListByValue(changeResultLeft.getSecond(), end, TypeOfEndpoint.RIGHT_ENDPOINT);
+
+        return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
+    }
+
+    private Pair<Boolean, List<ChoiceNode>> SplitListByValue(List<ChoiceNode> toSplit, ChoiceNode val, TypeOfEndpoint type)
+    {
+        Boolean anyChange = false;
+        List<ChoiceNode> newList = new ArrayList<>();
+        for(ChoiceNode it : toSplit)
+            if(! it.isRandomizedValue())
+                newList.add(it);
+            else {
+                Pair<ChoiceNode, ChoiceNode> startEnd = ChoiceNodeHelper.rangeSplit(it);
+                ChoiceNode start = startEnd.getFirst();
+                ChoiceNode end = startEnd.getSecond();
+//                if((new ChoiceNodeComparator().compare(start,val))<0 && (new ChoiceNodeComparator().compare(val,end))<0)
+
+                ChoiceNode val1, val2;
+                if (type == TypeOfEndpoint.LEFT_ENDPOINT) {
+                    val1 = ChoiceNodeHelper.precedingVal(val);
+                    val2 = val;
+                } else { //RIGHT_ENDPOINT
+                    val1 = val;
+                    val2 = ChoiceNodeHelper.followingVal(val);
+                }
+                int cmp1 = new ChoiceNodeComparator().compare(start, val1);
+                int cmp2 = new ChoiceNodeComparator().compare(val2, end);
+                if(cmp1 > 0 || cmp2 > 0) {
+                    newList.add(it);
+                    continue;
+                }
+                ChoiceNode it1, it2;
+                if(cmp1<0)
+                    it1 = ChoiceNodeHelper.toRangeFromFirst(start, val1);
+                else
+                    it1 = start;
+                if(cmp2<0)
+                    it2 = ChoiceNodeHelper.toRangeFromSecond(val2,end);
+                else
+                    it2 = end;
+
+                anyChange = true;
+
+                fSanitizedValToInputVal.put(it1, fSanitizedValToInputVal.get(it));
+                fSanitizedValToInputVal.put(it2, fSanitizedValToInputVal.get(it));
+                newList.add(it1);
+                newList.add(it2);
+            }
+        return new Pair<>(anyChange, newList);
+
     }
 
     private int newID()
     {
-        lastUsedID++;
-        return lastUsedID;
+        return fFirstFreeID++;
     }
 
     private void variablesForParameter(MethodParameterNode arg)
     {
-        if(argEqualChoiceID.containsKey(arg))
+        if(fArgChoiceID.containsKey(arg))
             return;
 
         //we need to create new set of variables, as we are seeing this parameter for the first time
         //choiceVars control whether a choice is taken
         //prefixVars are used to enforce uniqueness of choice
-        ArrayList<Integer> choiceVars = new ArrayList<>(); //choiceVars[i] ==  (this parameter takes choice i)
-        ArrayList<Integer> prefixVars = new ArrayList<>(); //prefixVars[i] == (this parameter takes one of choices 0,...,i)
-        ArrayList<Integer> lessEqVars = new ArrayList<>(); //lessEqVars[i] == (this parameter <= value at i)
-        ArrayList<Integer> lessThVars = new ArrayList<>(); //lessThVars[i] == (this parameter < value at i)
-        HashMap<ChoiceNode, Integer> inverseEqVars = new HashMap<>();
+        List<Integer> choiceVars = new ArrayList<>(); //choiceVars[i] ==  (this parameter takes choice i)
+        List<Integer> prefixVars = new ArrayList<>(); //prefixVars[i] == (this parameter takes one of choices 0,...,i)
+        List<Integer> lessEqVars = new ArrayList<>(); //lessEqVars[i] == (this parameter <= value at i)
+        List<Integer> lessThVars = new ArrayList<>(); //lessThVars[i] == (this parameter < value at i)
+//        HashMap<ChoiceNode, Integer> inverseEqVars = new HashMap<>();
         HashMap<ChoiceNode, Integer> inverseLEqVars = new HashMap<>();
         HashMap<ChoiceNode, Integer> inverseLThVars = new HashMap<>();
+        HashMap<ChoiceNode, Integer> choiceID = new HashMap<>();
 
-        ArrayList<ChoiceNode> sortedChoices = new ArrayList<>(argAllValues.get(arg));
-        Collections.sort(sortedChoices, new choiceNodeComparator());
+
+        List<ChoiceNode> sortedChoices = new ArrayList<>(fArgAllAtomicValues.get(arg));
+        Collections.sort(sortedChoices, new ChoiceNodeComparator());
 
         int n = sortedChoices.size();
 
         prefixVars.add(newID());
-        for(int i=0; i<n; i++)
-        {
+        for(int i=0; i<n; i++) {
             choiceVars.add(newID());
             prefixVars.add(newID());
+            choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
+
+        for(ChoiceNode sanitizedValue : fArgAllSanitizedValues.get(arg))
+            if(! choiceID.containsKey(sanitizedValue)) {
+                Integer sanitizedID = newID();
+                choiceID.put(sanitizedValue, sanitizedID);
+
+                List<Integer> bigClause = new ArrayList<>();
+                for(ChoiceNode atomicValue : fSanitizedValToAtomicVal.get(sanitizedValue))
+                {
+                    Integer atomicID = choiceID.get(atomicValue);
+                    fClausesVecInt.add(new VecInt(new int[]{-atomicID, sanitizedID})); // atomicID => sanitizedID
+                    bigClause.add(atomicID);
+                }
+                bigClause.add(-sanitizedID);
+                fClausesVecInt.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
+            }
+
+        for(ChoiceNode inputValue : fArgAllInputValues.get(arg))
+            if(! choiceID.containsKey(inputValue)) {
+                Integer inputID = newID();
+                choiceID.put(inputValue, inputID);
+
+                List<Integer> bigClause = new ArrayList<>();
+                for(ChoiceNode sanitizedValue : fArgInputValToSanitizedVal.get(arg).get(inputValue))
+                {
+                    Integer sanitizedID = choiceID.get(sanitizedValue);
+                    fClausesVecInt.add(new VecInt(new int[]{-sanitizedID, inputID})); // sanitizedID => inputID
+                    bigClause.add(sanitizedID);
+                }
+                bigClause.add(-inputID);
+                fClausesVecInt.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
+            }
+
 
         fClausesVecInt.add(new VecInt(new int[]{-prefixVars.get(0)}));
         fClausesVecInt.add(new VecInt(new int[]{prefixVars.get(n)})); //at least one value should be taken
@@ -118,53 +356,42 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             lessThVars.add(prefixVars.get(i));
         }
         for(int i=1;i<n;i++) //all elements except first one
-            if(new choiceNodeComparator().compare(sortedChoices.get(i-1),sortedChoices.get(i))==0)
+            if(new ChoiceNodeComparator().compare(sortedChoices.get(i-1),sortedChoices.get(i))==0)
                 lessThVars.set(i, lessThVars.get(i-1));
 
         for(int i=n-1;i>0;i--) //all elements except first one, in reverse
-            if(new choiceNodeComparator().compare(sortedChoices.get(i-1),sortedChoices.get(i))==0)
+            if(new ChoiceNodeComparator().compare(sortedChoices.get(i-1),sortedChoices.get(i))==0)
                 lessEqVars.set(i-1, lessEqVars.get(i));
 
         for(int i=0;i<n;i++)
         {
             ChoiceNode choice = sortedChoices.get(i);
-            inverseEqVars.put(choice, choiceVars.get(i));
+//            inverseEqVars.put(choice, choiceVars.get(i));
             inverseLEqVars.put(choice, lessEqVars.get(i));
             inverseLThVars.put(choice, lessThVars.get(i));
         }
 
-        argEqualChoiceID.put(arg, inverseEqVars);
-        argLessEqChoiceID.put(arg, inverseLEqVars);
-        argLessThChoiceID.put(arg, inverseLThVars);
+//        fArgEqualChoiceID.put(arg, inverseEqVars);
+        fArgLessEqChoiceID.put(arg, inverseLEqVars);
+        fArgLessThChoiceID.put(arg, inverseLThVars);
+        fArgChoiceID.put(arg, choiceID);
     }
 
-    class choiceNodeComparator implements Comparator<ChoiceNode> {
-        public int compare(ChoiceNode leftArg, ChoiceNode rightArg) {
-            String substituteType = JavaTypeHelper.getSubstituteType(leftArg.getParameter().getType(), rightArg.getParameter().getType());
-            if( RelationMatcher.isRelationMatch(EMathRelation.LESS_THAN, substituteType, leftArg.getValueString(), rightArg.getValueString()) )
-                return -1;
-            else if( RelationMatcher.isRelationMatch(EMathRelation.GREATER_THAN, substituteType, leftArg.getValueString(), rightArg.getValueString()) )
-                return 1;
-            else
-                return 0;
-        }
-    }
-
-    private void ParseConstraintForValues(Constraint constraint) {
+    private void preParse(Constraint constraint) {
         if(constraint != null) {
             AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
             if(consequence instanceof ExpectedValueStatement)
             {
                 try {
-                    premise.accept(new ParseConstraintForValuesVisitor());
+                    premise.accept(new PreParseVisitor());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             else {
                 try {
-                    premise.accept(new ParseConstraintForValuesVisitor());
-                    consequence.accept(new ParseConstraintForValuesVisitor());
+                    premise.accept(new PreParseVisitor());
+                    consequence.accept(new PreParseVisitor());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -173,7 +400,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     }
 
 
-    class ParseConstraintForValuesVisitor implements IStatementVisitor
+    class PreParseVisitor implements IStatementVisitor
     {
         @Override
         public Object visit(StatementArray statement)
@@ -190,20 +417,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         @Override
         public Object visit(RelationStatement statement)
         {
+            fAllRelationConditions.add(statement);
             MethodParameterNode lParam = statement.getLeftParameter();
-            if(!argAllValues.containsKey(lParam)) {
-                SortedSet<ChoiceNode> tmp = new TreeSet<>(new choiceNodeComparator());
-                tmp.addAll(lParam.getLeafChoices());
-                argAllValues.put(lParam, tmp);
-            }
+            if(!fArgAllInputValues.containsKey(lParam))
+                fArgAllInputValues.put(lParam, new HashSet<>(lParam.getLeafChoices()));
             if(statement.getCondition() instanceof ParameterCondition) {
-
                 MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
-                if(!argAllValues.containsKey(rParam)) {
-                    SortedSet<ChoiceNode> tmp = new TreeSet<>(new choiceNodeComparator());
-                    tmp.addAll(lParam.getLeafChoices());
-                    argAllValues.put(rParam, tmp);
-                }
+                if(!fArgAllInputValues.containsKey(rParam))
+                    fArgAllInputValues.put(rParam, new HashSet<>(rParam.getLeafChoices()));
             }
             return null;
         }
@@ -254,7 +475,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 Integer premiseID = null;
                 try {
                     premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
-                    expValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
+                    fExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
                 } catch (Exception e)
                 {
                     e.printStackTrace();
@@ -282,7 +503,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             switch(statement.getOperator()){
                 case OR: // y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
                 {
-                    ArrayList<Integer> bigClause = new ArrayList<>();
+                    List<Integer> bigClause = new ArrayList<>();
                     for (AbstractStatement child : statement.getChildren()) {
                         Integer childID = null;
                         try {
@@ -299,7 +520,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 }
                 case AND: // y = (x1 AND x2 AND .. AND xn) compiles to: (x1 OR NOT y) AND ... AND (xn OR NOT y) AND (NOT x1 OR ... OR NOT xn OR y)
                 {
-                    ArrayList<Integer> bigClause = new ArrayList<>();
+                    List<Integer> bigClause = new ArrayList<>();
                     for (AbstractStatement child : statement.getChildren()) {
                         Integer childID = null;
                         try {
@@ -323,9 +544,63 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             if(statement.getCondition() instanceof ParameterCondition) {
                 return doubleChoiceParamConstraints(statement);
             }
-            else { //we need only to iterate over all choices of single lParam
-                return singleChoiceParamConstraints(statement);
-            }
+            else if(statement.getCondition() instanceof ChoiceCondition &&
+                        ((ChoiceCondition) statement.getCondition()).getRightChoice().isRandomizedValue())
+                    {
+                        switch(statement.getRelation())
+                        {
+                            case GREATER_THAN:
+                            case LESS_EQUAL:
+                            {
+                                RelationStatement statement1 = statement.getCopy();
+                                ChoiceNode val = ((ChoiceCondition) statement.getCondition()).getRightChoice();
+                                val = ChoiceNodeHelper.rangeSplit(val).getSecond();
+                                statement1.setCondition(val);
+                                return singleChoiceParamConstraints(statement);
+                            }
+                            case GREATER_EQUAL:
+                            case LESS_THAN:
+                            {
+                                RelationStatement statement1 = statement.getCopy();
+                                ChoiceNode val = ((ChoiceCondition) statement.getCondition()).getRightChoice();
+                                val = ChoiceNodeHelper.rangeSplit(val).getFirst();
+                                statement1.setCondition(val);
+                                return singleChoiceParamConstraints(statement);
+                            }
+                            case NOT_EQUAL:
+                            case EQUAL:
+                            {
+                                RelationStatement statementLow = statement.getCopy();
+                                RelationStatement statementHigh = statement.getCopy();
+                                ChoiceNode val = ((ChoiceCondition) statement.getCondition()).getRightChoice();
+                                ChoiceNode valLow = ChoiceNodeHelper.rangeSplit(val).getFirst();
+                                ChoiceNode valHigh = ChoiceNodeHelper.rangeSplit(val).getSecond();
+                                statementLow.setCondition(valLow);
+                                statementHigh.setCondition(valHigh);
+                                statementLow.setRelation(GREATER_EQUAL);
+                                statementHigh.setRelation(LESS_EQUAL);
+
+                                Integer statementLowID = singleChoiceParamConstraints(statementLow);
+                                Integer statementHighID = singleChoiceParamConstraints(statementHigh);
+
+                                Integer myID = newID();
+
+                                fClausesVecInt.add(new VecInt(new int[] {-statementLowID, -statementHighID, myID}));
+                                fClausesVecInt.add(new VecInt(new int[] {-myID, statementLowID}));
+                                fClausesVecInt.add(new VecInt(new int[] {-myID, statementHighID}));
+                                if(statement.getRelation()==EQUAL)
+                                    return myID; //myID == (statementLowID AND statementHighID)
+                                else //NOT_EQUAL
+                                    return -myID;
+                            }
+                        }
+                    }
+                else {
+                    //we need only to iterate over all choices of single lParam
+                    return singleChoiceParamConstraints(statement);
+                }
+                ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+                return null;
         }
 
         private Integer singleChoiceParamConstraints(RelationStatement statement)
@@ -338,11 +613,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             if (lParamIndex == -1) {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
-            for (ChoiceNode lChoice : argAllValues.get(lParam)) {
-                ArrayList<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethod.getParametersCount(), null));
+            for (ChoiceNode lChoice : fArgAllAtomicValues.get(lParam)) {
+                List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethod.getParametersCount(), null));
                 dummyValues.set(lParamIndex, lChoice);
                 EvaluationResult result = statement.evaluate(dummyValues);
-                Integer idOfLeftArgChoice = argEqualChoiceID.get(lParam).get(lChoice);
+                Integer idOfLeftArgChoice = fArgChoiceID.get(lParam).get(lChoice);
                 if (result == EvaluationResult.TRUE) {
                     fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice, myID})); // thisChoice => me
                 } else if (result == EvaluationResult.FALSE) {
@@ -375,20 +650,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
 
-            List<ChoiceNode> sortedLChoices = new ArrayList<>(argAllValues.get(lParam));
+            List<ChoiceNode> sortedLChoices = new ArrayList<>(fArgAllAtomicValues.get(lParam));
+            Collections.sort(sortedLChoices, new ChoiceNodeComparator());
             int m = sortedLChoices.size();
-            List<ChoiceNode> sortedRChoices = new ArrayList<>(argAllValues.get(rParam));
+            List<ChoiceNode> sortedRChoices = new ArrayList<>(fArgAllAtomicValues.get(rParam));
+            Collections.sort(sortedRChoices, new ChoiceNodeComparator());
             int n = sortedRChoices.size();
 
             for(int i=0,j=0; i<m; i++) {
-                while (j < n && new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) > 0) {
+                while (j < n && new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) > 0) {
                     j++;
                 }
 
-                Integer leftLessTh = argLessThChoiceID.get(lParam).get(sortedLChoices.get(i));
-                Integer leftLessEq = argLessEqChoiceID.get(lParam).get(sortedLChoices.get(i));
-                Integer rightLessTh = argLessThChoiceID.get(rParam).get(sortedRChoices.get(j));
-                Integer rightLessEq = argLessEqChoiceID.get(rParam).get(sortedRChoices.get(j));
+                Integer leftLessTh = fArgLessThChoiceID.get(lParam).get(sortedLChoices.get(i));
+                Integer leftLessEq = fArgLessEqChoiceID.get(lParam).get(sortedLChoices.get(i));
+                Integer rightLessTh = fArgLessThChoiceID.get(rParam).get(sortedRChoices.get(j));
+                Integer rightLessEq = fArgLessEqChoiceID.get(rParam).get(sortedRChoices.get(j));
 
                 switch (statement.getRelation()) {
                     case EQUAL:
@@ -399,7 +676,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                             fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
 
                             break;
-                        } else if (new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
+                        } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
 
                             // NOT(i<x) AND i<=x IMPLIES NOT(myID)
                             fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -myID}));
@@ -425,7 +702,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                             fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
 
                             break;
-                        } else if (new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
+                        } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
                             // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
                             fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
@@ -449,7 +726,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                             fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
 
                             break;
-                        } else if (new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
+                        } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
                             // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
                             fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
@@ -534,9 +811,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
             ChoiceNode c = cChoiceNode.next();
             if(c!=null) {
-                if(argEqualChoiceID.get(p)==null)
+                if(fArgChoiceID.get(p)==null)
                     continue; //no constraint on this method parameter
-                Integer idOfParamChoiceVar = argEqualChoiceID.get(p).get(c);
+                Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c);
                 assumptions.add(idOfParamChoiceVar);
             }
         }
@@ -557,7 +834,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             return EvaluationResult.TRUE; //no method so there were no constraints
         }
 
-        if(isContradicting)
+        if(fIsContradicting)
             return EvaluationResult.FALSE;
 
 
@@ -579,9 +856,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment)
     {
-        List<Integer> assumptions = assumptionsFromValues(valueAssignment);
             try {
-
                 IProblem problem = fSolver;
                 boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
                 if (!b) {
@@ -589,7 +864,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     return null;
                 }
                 Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
-                for (Pair<Integer, ExpectedValueStatement> p : expValConstraints) {
+                for (Pair<Integer, ExpectedValueStatement> p : fExpectedValConstraints) {
                     if (vars.contains(p.getFirst())) {
                         p.getSecond().adapt(valueAssignment);
                     }
