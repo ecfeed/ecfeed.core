@@ -50,7 +50,7 @@ public class TCProviderGenerator implements ITCProvider {
         try {
             fGenerator.initialize(
                     genInitData.getChoiceInput(),
-                    genInitData.getConstraints(),
+                    new HomebrewConstraintEvaluator<>(genInitData.getConstraints()),
                     genInitData.getGeneratorArguments(),
                     progressMonitor);
         } catch (GeneratorException e) {
