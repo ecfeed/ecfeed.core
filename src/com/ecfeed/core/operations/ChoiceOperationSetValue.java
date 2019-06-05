@@ -82,7 +82,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		private void adaptParameter(AbstractParameterNode parameter) {
 			try{
 				parameter.accept(new ReverseParameterAdapter());
-			}catch(Exception e){SystemLogger.logCatch(e.getMessage());}
+			}catch(Exception e){SystemLogger.logCatch(e);}
 		}
 
 		@Override
@@ -114,7 +114,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 	private void adaptParameter(AbstractParameterNode parameter) {
 		try{
 			parameter.accept(new ParameterAdapter());
-		}catch(Exception e){SystemLogger.logCatch(e.getMessage());}
+		}catch(Exception e){SystemLogger.logCatch(e);}
 	}
 
 	@Override

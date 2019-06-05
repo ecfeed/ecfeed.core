@@ -223,6 +223,30 @@ public class StringHelper {
 		return packageWithClass.substring(0, separatorPosition);
 	}
 
+	public static String getPackageWithClass(String methodSignature) {
+
+	    String signatureWithoutModifiers = methodSignature
+                .replaceAll("public", "")
+                .replaceAll("void", "");
+	    String simplifiedSignature = signatureWithoutModifiers
+                .substring(0, signatureWithoutModifiers.indexOf('('));
+	    String packageWithClass = simplifiedSignature
+                .substring(0, simplifiedSignature.lastIndexOf('.'));
+
+	    return packageWithClass.trim();
+    }
+
+    public static String getMethodShortSignature(String methodSignature) {
+
+	    String simplifiedSignature = methodSignature
+                .substring(0, methodSignature.indexOf('('));
+	    int indexOfLastDot = simplifiedSignature.lastIndexOf('.') + 1;
+	    String methodShortSignature = methodSignature.substring(indexOfLastDot);
+
+	    return methodShortSignature.trim();
+
+    }
+
 	public static boolean isCharAt(int index, String strg, String chr) {
 
 		if (strg.charAt(index) == chr.charAt(0)) {

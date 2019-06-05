@@ -83,8 +83,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
 
 		EvaluationResult result;
-
-		result = fRightCondition.evaluate(values);
+		try {
+			result = fRightCondition.evaluate(values);
+		} catch (Exception e) {
+			SystemLogger.logCatch(e);
+			return EvaluationResult.FALSE;
+		}
 
 		return result;
 	}
@@ -98,11 +102,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 				return true;
 			}
 			return false;
-//		}
-//		catch (Exception e) {
-//			SystemLogger.logCatch(e.getMessage());
-//			return false;
-//		}
+		}
+		catch (Exception e) {
+			SystemLogger.logCatch(e);
+			return false;
+		}
 	}
 
 	@Override

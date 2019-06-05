@@ -21,7 +21,7 @@ public enum DataSource {
         return fDataSource;
     }
 
-    public static DataSource parse(String dataSourceStr) throws Exception {
+    public static DataSource parse(String dataSourceStr) {
 
         if (dataSourceStr.equals(STATIC.toString())) {
             return STATIC;
@@ -43,7 +43,8 @@ public enum DataSource {
             return GEN_RANDOM;
         }
 
-        throw new Exception("Can not convert string: " + dataSourceStr + " to data source." );
+        ExceptionHelper.reportRuntimeException("Can not convert string: " + dataSourceStr + " to data source." );
+        return null;
     }
 
 }

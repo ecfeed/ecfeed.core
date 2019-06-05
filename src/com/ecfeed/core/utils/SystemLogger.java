@@ -43,9 +43,9 @@ public class SystemLogger {
 		logStack(stackElements);
 	}
 
-	public static void logCatch(String message) {
+	public static void logCatch(Exception e) {
 		logSimpleLine(EC_FEED_ERROR + ": Exception caught");
-		logIndentedLine("Message: " + message);
+		logIndentedLine("Message: " + ExceptionHelper.createErrorMessage(e));
 		StackTraceElement element = new Throwable().getStackTrace()[ONE_LEVEL_DOWN_ON_STACK];
 		logCurrentStackElement(element);
 	}

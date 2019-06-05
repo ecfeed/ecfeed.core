@@ -197,7 +197,7 @@ public class FactoryRenameOperation {
 	public static IModelOperation getRenameOperation(AbstractNode target, String newName){
 		try{
 			return (IModelOperation)target.accept(new RenameOperationProvider(newName));
-		}catch(Exception e){SystemLogger.logCatch(e.getMessage());}
+		}catch(Exception e){SystemLogger.logCatch(e);}
 		return null;
 	}
 }

@@ -175,7 +175,7 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 	private EImplementationStatus implementationStatus(AbstractNode node) {
 		try {
 			return (EImplementationStatus)node.accept(fStatusVisitor);
-		} catch (Exception e) {SystemLogger.logCatch(e.getMessage());}
+		} catch (Exception e) {SystemLogger.logCatch(e);}
 		return EImplementationStatus.NOT_IMPLEMENTED;
 	}
 

@@ -145,7 +145,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		try {
 			return (boolean)node.accept(fImplementableVisitor);
 		} catch(Exception e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 		}
 		
 		return false;

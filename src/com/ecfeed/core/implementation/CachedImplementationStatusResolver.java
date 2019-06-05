@@ -58,7 +58,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 		try {
 			node.accept(new CacheCleaner());
 		} catch(Exception e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 		}
 
 		clearCache(node.getParent());
