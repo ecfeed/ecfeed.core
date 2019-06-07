@@ -43,8 +43,7 @@ hs_err_pid*
 *.gradletasknamecache
 
 
-
-
+ .gradle/*
 
 
 

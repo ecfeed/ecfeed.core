@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
@@ -56,8 +57,8 @@ public class FastNWiseAlgorithmTest extends NWiseAlgorithmTest {
 			IAlgorithm<String> fastAlgorithm = new FastNWiseAlgorithm<String>(n, 100);
 			IAlgorithm<String> referenceAlgorithm = new OptimalNWiseAlgorithm<String>(n, 100);
 			Collection<IConstraint<String>> constraints = GeneratorTestUtils.generateRandomConstraints(input);
-			fastAlgorithm.initialize(input, constraints, new SimpleProgressMonitor());
-			referenceAlgorithm.initialize(input, constraints, new SimpleProgressMonitor());
+			fastAlgorithm.initialize(input, new HomebrewConstraintEvaluator<>(constraints), new SimpleProgressMonitor());
+			referenceAlgorithm.initialize(input, new HomebrewConstraintEvaluator<>(constraints), new SimpleProgressMonitor());
 
 			long timestampStart = new Date().getTime();
 			GeneratorTestUtils.algorithmResult(fastAlgorithm);

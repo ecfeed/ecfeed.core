@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.*;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
@@ -60,9 +61,9 @@ public class CompareNWiseAlgsTest {
 
 			GeneratorArgumentCoverage generatorArgumentCoverage = new GeneratorArgumentCoverage(100);
 			params.put(generatorArgumentCoverage.getName(), generatorArgumentCoverage);
-			nWiseGen.initialize(input1, new HashSet<IConstraint<Integer>>(), params, null);
+			nWiseGen.initialize(input1, new DummyEvaluator<>(), params, null);
 
-			fast.initialize(input2, new HashSet<IConstraint<Integer>>(), null);
+			fast.initialize(input2, new DummyEvaluator<>(), null);
 		} catch (GeneratorException e) {
 			fail("Unexpected exception when initializing.");
 			e.printStackTrace();
@@ -105,8 +106,8 @@ public class CompareNWiseAlgsTest {
 				100);
 
 		try {
-			fast.initialize(input1, new HashSet<IConstraint<Integer>>(), new SimpleProgressMonitor());
-			optimal.initialize(input2, new HashSet<IConstraint<Integer>>(), new SimpleProgressMonitor());
+			fast.initialize(input1, new DummyEvaluator<>(), new SimpleProgressMonitor());
+			optimal.initialize(input2, new DummyEvaluator<>(), new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("Unexpected exception when initializing the algorithms.");
 			e.printStackTrace();

@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class NWiseGeneratorTest {
 			GeneratorArgumentN generatorArgumentN = new GeneratorArgumentN(2);
 			arguments.put(generatorArgumentN.getName(), generatorArgumentN);
 
-			generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
 			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
 			assertEquals(2, ((AbstractNWiseAlgorithm<String>) algorithm).getN());
@@ -55,21 +56,21 @@ public class NWiseGeneratorTest {
 			try {
 				GeneratorArgumentN generatorArgumentN2 = new GeneratorArgumentN(5);
 				arguments.put(generatorArgumentN2.getName(), generatorArgumentN2);
-				generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
 				GeneratorArgumentN generatorArgumentN2 = new GeneratorArgumentN(-1);
 				arguments.put(generatorArgumentN2.getName(), generatorArgumentN2);
-				generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
 				GeneratorArgumentN generatorArgumentN2 = new GeneratorArgumentN(2);
 				arguments.put(generatorArgumentN2.getName(), generatorArgumentN2);
-				generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 			} catch (GeneratorException e) {
 				fail("Unexpected GeneratorException");
 			}
@@ -95,7 +96,7 @@ public class NWiseGeneratorTest {
 			GeneratorArgumentCoverage generatorArgumentCoverage = new GeneratorArgumentCoverage(100);
 			arguments.put(generatorArgumentCoverage.getName(), generatorArgumentCoverage);
 
-			generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
 			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
 			assertEquals(100,
@@ -104,21 +105,21 @@ public class NWiseGeneratorTest {
 			try {
 				GeneratorArgumentCoverage generatorArgumentCoverage2 = new GeneratorArgumentCoverage(101);
 				arguments.put(generatorArgumentCoverage2.getName(), generatorArgumentCoverage2);
-				generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
 				GeneratorArgumentCoverage generatorArgumentCoverage2 = new GeneratorArgumentCoverage(-1);
 				arguments.put(generatorArgumentCoverage2.getName(), generatorArgumentCoverage2);
-				generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
 			try {
 				GeneratorArgumentCoverage generatorArgumentCoverage2 = new GeneratorArgumentCoverage(50);
 				arguments.put(generatorArgumentCoverage2.getName(), generatorArgumentCoverage2);
-				generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 			} catch (GeneratorException e) {
 				fail("Unexpected GeneratorException");
 			}

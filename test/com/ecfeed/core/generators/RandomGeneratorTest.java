@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class RandomGeneratorTest {
 			GeneratorArgumentLength generatorArgumentLength = new GeneratorArgumentLength(100);
 			arguments.put(generatorArgumentLength.getName(), generatorArgumentLength);
 
-			generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 			IAlgorithm<String> algorithm = generator.getAlgorithm(); 
 			assertTrue(algorithm instanceof RandomAlgorithm);
 			assertEquals(false, ((RandomAlgorithm<String>)algorithm).getDuplicates());
@@ -53,7 +54,7 @@ public class RandomGeneratorTest {
 
 				GeneratorArgumentDuplicates generatorArgumentDuplicates = new GeneratorArgumentDuplicates(true);
 				arguments.put(generatorArgumentDuplicates.getName(), generatorArgumentDuplicates);
-				generator.initialize(inputDomain, constraints, arguments, new SimpleProgressMonitor());
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, new SimpleProgressMonitor());
 				assertEquals(false, ((RandomAlgorithm<String>)algorithm).getDuplicates());
 			}catch(GeneratorException e) {
 				fail("Unexpected GeneratorException: " + e.getMessage());

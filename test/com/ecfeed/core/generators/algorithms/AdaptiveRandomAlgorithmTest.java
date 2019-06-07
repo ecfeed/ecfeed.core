@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
@@ -61,7 +62,7 @@ public class AdaptiveRandomAlgorithmTest {
 				List<List<String>> input = GeneratorTestUtils.prepareInput(parameters, choices);
 				AdaptiveRandomAlgorithm<String> algorithm = 
 						new AdaptiveRandomAlgorithm<String>(0, candidatesCount, Integer.MAX_VALUE, true);
-				algorithm.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+				algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 				for(int i = 0; i < steps; i++){
 					algorithm.getNext();
 				}
@@ -87,7 +88,7 @@ public class AdaptiveRandomAlgorithmTest {
 				List<List<String>> input = GeneratorTestUtils.prepareInput(parameters, choices);
 				AdaptiveRandomAlgorithm<String> algorithm = 
 						new AdaptiveRandomAlgorithm<String>(0, candidatesCount, Integer.MAX_VALUE, false);
-				algorithm.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+				algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 				for(int i = 0; i < steps; i++){
 					algorithm.getNext();
 				}
@@ -113,7 +114,7 @@ public class AdaptiveRandomAlgorithmTest {
 				List<List<String>> input = GeneratorTestUtils.prepareInput(parameters, choices);
 				AdaptiveRandomAlgorithm<String> algorithm = 
 						new AdaptiveRandomAlgorithm<String>(0, candidatesCount, Integer.MAX_VALUE, true);
-				algorithm.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+				algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 				for(int i = 0; i < steps; i++){
 					algorithm.getNext();
 				}
@@ -144,7 +145,7 @@ public class AdaptiveRandomAlgorithmTest {
 				List<List<String>> input = GeneratorTestUtils.prepareInput(parameters, choices);
 				AdaptiveRandomAlgorithm<String> algorithm = 
 						new AdaptiveRandomAlgorithm<String>(0, candidatesCount, Integer.MAX_VALUE, false);
-				algorithm.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+				algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 
 				List<List<String>> candidates = algorithm.getCandidates();
 				Map<List<String>, Integer> histogram = createHistogram(candidates);
@@ -172,7 +173,7 @@ public class AdaptiveRandomAlgorithmTest {
 				List<List<String>> input = GeneratorTestUtils.prepareInput(parameters, choices);
 				AdaptiveRandomAlgorithm<String> algorithm = 
 						new AdaptiveRandomAlgorithm<String>(0, candidatesCount, Integer.MAX_VALUE, true);
-				algorithm.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+				algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 
 				List<List<String>> candidates = algorithm.getCandidates();
 				assertEquals(candidates.size(), Math.min(candidatesCount, productSize(input)));
@@ -195,7 +196,7 @@ public class AdaptiveRandomAlgorithmTest {
 			try{
 				AdaptiveRandomAlgorithm<String> algorithm = 
 						new AdaptiveRandomAlgorithm<String>(historySize, candidatesSize, length, duplicates);
-				algorithm.initialize(GeneratorTestUtils.prepareInput(parameters, choices), EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+				algorithm.initialize(GeneratorTestUtils.prepareInput(parameters, choices), new DummyEvaluator<>(), new SimpleProgressMonitor());
 
 				List<List<String>> candidates = algorithm.getCandidates(); 
 				List<List<String>> history = algorithm.getCandidates();

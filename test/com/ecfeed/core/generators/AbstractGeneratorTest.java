@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
+import com.ecfeed.core.evaluator.Sat4jEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.utils.GeneratorType;
 import org.junit.Before;
@@ -103,7 +105,7 @@ public class AbstractGeneratorTest {
 		arguments.put(STRING_PARAMETER_NAME, generatorArgumentString);
 		
 		try {
-			generator.initialize(inputDomain, constraints, arguments, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -127,13 +129,13 @@ public class AbstractGeneratorTest {
 			GeneratorArgumentDouble generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, 0.0);
 			arguments.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
 
-			generator.initialize(inputDomain, constraints, arguments, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
 
 			GeneratorArgumentInteger argumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 5);
 			arguments.put(INT_PARAMETER_NAME, argumentInteger);
 
 			try{
-				generator.initialize(inputDomain, constraints, arguments, null);
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
@@ -159,13 +161,13 @@ public class AbstractGeneratorTest {
 			GeneratorArgumentDouble generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, 0.0);
 			values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
 
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 
 			GeneratorArgumentInteger argumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 5);
 			values.put(INT_PARAMETER_NAME, argumentInteger);
 
 			try{
-				generator.initialize(inputDomain, constraints, values, null);
+				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
@@ -194,7 +196,7 @@ public class AbstractGeneratorTest {
 		values.put(INT_PARAMETER_NAME, generatorArgumentInteger);
 
 		try{
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}
@@ -207,7 +209,7 @@ public class AbstractGeneratorTest {
 		}
 		values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
 		try{
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -224,7 +226,7 @@ public class AbstractGeneratorTest {
 
 		Map<String, IGeneratorArgument> arguments = new HashMap<>();
 		try{
-			generator.initialize(inputDomain, constraints, arguments, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -237,7 +239,7 @@ public class AbstractGeneratorTest {
 		}
 		arguments.put(INT_PARAMETER_NAME, generatorArgumentInteger);
 		try{
-			generator.initialize(inputDomain, constraints, arguments, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -250,7 +252,7 @@ public class AbstractGeneratorTest {
 		}
 		arguments.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
 		try{
-			generator.initialize(inputDomain, constraints, arguments, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -275,7 +277,7 @@ public class AbstractGeneratorTest {
 		values.put(INT_PARAMETER_NAME, generatorArgumentInteger);
 
 		try{
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -288,7 +290,7 @@ public class AbstractGeneratorTest {
 		}
 		values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
 		try{
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}
@@ -335,7 +337,7 @@ public class AbstractGeneratorTest {
 		values.put(STRING_PARAMETER_NAME, generatorArgumentString);
 		
 		try {
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 			
 			int intParameter = generator.getIntParameter(INT_PARAMETER_NAME);
 			double doubleParameter = generator.getDoubleParameter(DOUBLE_PARAMETER_NAME);
@@ -365,7 +367,7 @@ public class AbstractGeneratorTest {
 		Map<String, IGeneratorArgument> values = new HashMap<>();
 		
 		try {
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 			
 			int intParameter = generator.getIntParameter(INT_PARAMETER_NAME);
 			double doubleParameter = generator.getDoubleParameter(DOUBLE_PARAMETER_NAME);
@@ -408,7 +410,7 @@ public class AbstractGeneratorTest {
 		values.put(STRING_PARAMETER_NAME, generatorArgumentString);
 		
 		try {
-			generator.initialize(inputDomain, constraints, values, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
 			
 			int intParameter = generator.getIntParameter(INT_PARAMETER_NAME);
 			double doubleParameter = generator.getDoubleParameter(DOUBLE_PARAMETER_NAME);
@@ -432,7 +434,7 @@ public class AbstractGeneratorTest {
 		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 
 		try{
-			generator.initialize(inputDomain, constraints, null, null);
+			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), null, null);
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}

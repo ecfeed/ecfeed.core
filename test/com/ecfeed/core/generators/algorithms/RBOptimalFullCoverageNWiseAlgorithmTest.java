@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class RBOptimalFullCoverageNWiseAlgorithmTest {
 
 		RBOptimalFullCoverageNWiseAlgorithm<Integer> alg = new RBOptimalFullCoverageNWiseAlgorithm<Integer>(2);
 		try {
-			alg.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+			alg.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 
 			List<List<Integer>> res = alg.getFirstNTupels();
 			printList(res);
@@ -61,7 +62,7 @@ public class RBOptimalFullCoverageNWiseAlgorithmTest {
 		RBOptimalFullCoverageNWiseAlgorithm<Integer> alg = new RBOptimalFullCoverageNWiseAlgorithm<Integer>(3);
 
 		try {
-			alg.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+			alg.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 
 			Set<List<Boolean>> res = alg.generateNm1ParamIndexCombinations();
 
@@ -86,7 +87,7 @@ public class RBOptimalFullCoverageNWiseAlgorithmTest {
 		int N = 3;
 		RBOptimalFullCoverageNWiseAlgorithm<Integer> alg = new RBOptimalFullCoverageNWiseAlgorithm<Integer>(N);
 		try {
-			alg.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+			alg.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("Unexpected exception: " + e.getMessage());
 			e.printStackTrace();
@@ -111,7 +112,7 @@ public class RBOptimalFullCoverageNWiseAlgorithmTest {
 		int N = 3;
 		RBOptimalFullCoverageNWiseAlgorithm<Integer> alg = new RBOptimalFullCoverageNWiseAlgorithm<Integer>(N);
 		try {
-			alg.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+			alg.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("Unexpected exception: " + e.getMessage());
 			e.printStackTrace();
@@ -137,7 +138,7 @@ public class RBOptimalFullCoverageNWiseAlgorithmTest {
 
 		RBOptimalFullCoverageNWiseAlgorithm<Integer> alg = new RBOptimalFullCoverageNWiseAlgorithm<Integer>(3);
 		try {
-			alg.initialize(input, EMPTY_CONSTRAINTS, new SimpleProgressMonitor());
+			alg.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 
 			List<List<Integer>> res = alg.generateAll();
 			printList(res);

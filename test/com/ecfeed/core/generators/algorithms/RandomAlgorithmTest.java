@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
@@ -50,7 +51,7 @@ public class RandomAlgorithmTest {
 		List<List<String>> input = GeneratorTestUtils.prepareInput(variables, choices);
 		IAlgorithm<String> algorithm = new RandomAlgorithm<String>((int)(SAMPLE_SIZE), true);
 		try {
-			algorithm.initialize(input, EMPTY_CONSTRAINTS(), new SimpleProgressMonitor());
+			algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 			List<String> next;
 			while((next = algorithm.getNext()) != null){
 				if(histogram.containsKey(next)){
@@ -92,7 +93,7 @@ public class RandomAlgorithmTest {
 		List<List<String>> input = GeneratorTestUtils.prepareInput(variables, choices);
 		RandomAlgorithm<String> algorithm = new RandomAlgorithm<String>(SAMPLE_SIZE, false);
 		try {
-			algorithm.initialize(input, EMPTY_CONSTRAINTS(), new SimpleProgressMonitor());
+			algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 			List<String> next;
 			while((next = algorithm.getNext()) != null){
 				if(histogram.containsKey(next)){
