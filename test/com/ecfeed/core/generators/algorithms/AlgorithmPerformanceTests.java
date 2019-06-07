@@ -31,7 +31,6 @@ import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 import com.ecfeed.core.model.IConstraint;
 
 public class AlgorithmPerformanceTests {
-	private final Collection<IConstraint<String>> EMPTY_CONSTRAINTS = new ArrayList<IConstraint<String>>();
 
 	@Test
 	public void dummyTest() {

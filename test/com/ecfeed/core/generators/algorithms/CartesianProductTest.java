@@ -35,7 +35,6 @@ public class CartesianProductTest {
 	final int MAX_VARIABLES = 6;
 	final int MAX_PARTITIONS_PER_VARIABLE = 5;
 	final IAlgorithm<String> ALGORITHM = new CartesianProductAlgorithm<String>();
-	private final Collection<IConstraint<String>> EMPTY_CONSTRAINTS = new HashSet<IConstraint<String>>();
 
 	@Test
 	public void testCorrectness() {

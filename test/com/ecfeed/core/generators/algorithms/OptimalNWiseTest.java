@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
@@ -33,7 +34,6 @@ public class OptimalNWiseTest extends NWiseAlgorithmTest {
 
 	final int MAX_VARIABLES = 5;
 	final int MAX_PARTITIONS_PER_VARIABLE = 5;
-	private final Collection<IConstraint<String>> EMPTY_CONSTRAINTS = new HashSet<IConstraint<String>>();
 
 	@Test
 	public void testCorrectness() {
@@ -52,10 +52,9 @@ public class OptimalNWiseTest extends NWiseAlgorithmTest {
 				for (int choices : new int[] { 1, 2, 5 }) {
 					for (int n = 1; n <= variables; n++) {
 						List<List<String>> input = GeneratorTestUtils.prepareInput(variables, choices);
-						Collection<IConstraint<String>> constraints = EMPTY_CONSTRAINTS;
 						IAlgorithm<String> algorithm = new OptimalNWiseAlgorithm<String>(n, 100);
 
-						algorithm.initialize(input, new HomebrewConstraintEvaluator<>(constraints), new SimpleProgressMonitor());
+						algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 						int generatedDataSize = GeneratorTestUtils.algorithmResult(algorithm).size();
 						int referenceDataSize = referenceResult(input, n).size();
 						assertTrue(Math.abs(generatedDataSize - referenceDataSize) <= referenceDataSize / 30);

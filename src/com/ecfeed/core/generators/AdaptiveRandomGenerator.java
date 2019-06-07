@@ -44,7 +44,7 @@ public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
 		int testSuiteSize = getIntParameter(new GeneratorParameterLength().getName());
 		boolean duplicates = getBooleanParameter(new GeneratorParameterDuplicates().getName());
 
-		setAlgorithm(new AdaptiveRandomAlgorithm<E>(executedSetSize, 
+		setAlgorithm(new AdaptiveRandomAlgorithm<E>(executedSetSize,
 				candidateSetSize, testSuiteSize, duplicates));
 	}
 

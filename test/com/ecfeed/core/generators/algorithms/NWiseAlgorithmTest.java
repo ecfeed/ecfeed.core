@@ -37,7 +37,6 @@ import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
 
 public class NWiseAlgorithmTest{
-	private final Collection<IConstraint<String>> EMPTY_CONSTRAINTS = new HashSet<IConstraint<String>>();
 	
 	@SuppressWarnings("rawtypes")
 	protected void testCorrectness(Class<? extends IAlgorithm> algorithmUnderTestClass) {

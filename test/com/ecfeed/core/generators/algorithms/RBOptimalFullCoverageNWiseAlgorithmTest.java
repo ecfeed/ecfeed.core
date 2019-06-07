@@ -28,8 +28,6 @@ import com.ecfeed.core.model.IConstraint;
 
 public class RBOptimalFullCoverageNWiseAlgorithmTest {
 
-	private final Collection<IConstraint<Integer>> EMPTY_CONSTRAINTS = new HashSet<IConstraint<Integer>>();
-
 	@Test
 	public void testGetFirstNTupels() {
 
