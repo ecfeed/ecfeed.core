@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.SimpleTypeHelper;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.ecfeed.core.utils.JavaTypeHelper.*;
+import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
+import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 public class ChoiceNodeHelper {
 
@@ -139,6 +142,7 @@ public class ChoiceNodeHelper {
 			ExceptionHelper.reportRuntimeException("is randomized value");
 		String type = choice.getParameter().getType();
 		ChoiceNode clone = choice.makeClone();
+		choice = convertValueToNumeric(choice);
 		switch(type)
 		{
 			case TYPE_NAME_DOUBLE:
@@ -158,7 +162,8 @@ public class ChoiceNodeHelper {
 			case TYPE_NAME_SHORT:
 			case TYPE_NAME_LONG: {
 				long val = Long.parseLong(choice.getValueString());
-				val--;
+				if(val!=Long.MIN_VALUE)
+					val--;
 				clone.setValueString(String.valueOf(val));
 				return clone;
 			}
@@ -175,6 +180,7 @@ public class ChoiceNodeHelper {
 			ExceptionHelper.reportRuntimeException("is randomized value");
 		String type = choice.getParameter().getType();
 		ChoiceNode clone = choice.makeClone();
+		choice = convertValueToNumeric(choice);
 		switch(type)
 		{
 			case TYPE_NAME_DOUBLE:
@@ -194,7 +200,8 @@ public class ChoiceNodeHelper {
 			case TYPE_NAME_SHORT:
 			case TYPE_NAME_LONG: {
 				long val = Long.parseLong(choice.getValueString());
-				val++;
+				if(val != Long.MAX_VALUE)
+					val++;
 				clone.setValueString(String.valueOf(val));
 				return clone;
 			}
@@ -204,6 +211,92 @@ public class ChoiceNodeHelper {
 				return null;
 			}
 		}
+	}
+
+	public static ChoiceNode convertValueToNumeric(ChoiceNode choiceInput)
+	{
+		ChoiceNode choice = choiceInput.makeClone();
+		if(choice.isRandomizedValue())
+			ExceptionHelper.reportRuntimeException("is randomized value");
+		String type = choice.getParameter().getType();
+		String valueString = choice.getValueString();
+		switch(type) {
+			case TYPE_NAME_DOUBLE:
+			{
+				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+					choice.setValueString(Double.MIN_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+					choice.setValueString(Double.MAX_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
+					choice.setValueString("-" + Double.MIN_VALUE);
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
+					choice.setValueString("-" + Double.MAX_VALUE);
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+					choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+					choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
+				}
+				break;
+			}
+			case TYPE_NAME_FLOAT:
+			{
+				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+					choice.setValueString(Float.MIN_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+					choice.setValueString(Float.MAX_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
+					choice.setValueString("-" + Float.MIN_VALUE);
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
+					choice.setValueString("-" + Float.MAX_VALUE);
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+					choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+					choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
+				}
+				break;
+			}
+			case TYPE_NAME_BYTE:
+			{
+				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+					choice.setValueString(Byte.MIN_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+					choice.setValueString(Byte.MAX_VALUE + "");
+				}
+				break;
+			}
+			case TYPE_NAME_INT:
+			{
+				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+					choice.setValueString(Integer.MIN_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+					choice.setValueString(Integer.MAX_VALUE + "");
+				}
+				break;
+			}
+			case TYPE_NAME_SHORT:
+			{
+				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+					choice.setValueString(Short.MIN_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+					choice.setValueString(Short.MAX_VALUE + "");
+				}
+				break;
+			}
+			case TYPE_NAME_LONG:
+			{
+				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+					choice.setValueString(Long.MIN_VALUE + "");
+				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+					choice.setValueString(Long.MAX_VALUE + "");
+				}
+				break;
+			}
+			default:
+			{
+				ExceptionHelper.reportRuntimeException("unhandled type");
+			}
+		}
+		return choice;
 	}
 
 	public static List<ChoiceNode> interleavedValues(ChoiceNode choice, int N)

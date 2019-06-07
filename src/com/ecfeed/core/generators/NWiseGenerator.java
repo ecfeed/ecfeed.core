@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
-import com.ecfeed.core.generators.algorithms.RandomizedNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorArgument;

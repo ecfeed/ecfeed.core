@@ -71,7 +71,7 @@ public final class SimpleTypeHelper {
 
 	}
 	
-	private static void convertSpecialChoicesJavaToSimpleByte(AbstractParameterNode node) {
+	public static void convertSpecialChoicesJavaToSimpleByte(AbstractParameterNode node) {
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
 			
@@ -83,7 +83,7 @@ public final class SimpleTypeHelper {
 		}
 	}
 	
-	private static void convertSpecialChoicesJavaToSimpleShort(AbstractParameterNode node) {
+	public static void convertSpecialChoicesJavaToSimpleShort(AbstractParameterNode node) {
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
 			
@@ -95,7 +95,7 @@ public final class SimpleTypeHelper {
 		}
 	}
 	
-	private static void convertSpecialChoicesJavaToSimpleInt(AbstractParameterNode node) {
+	public static void convertSpecialChoicesJavaToSimpleInt(AbstractParameterNode node) {
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
 			
@@ -106,8 +106,8 @@ public final class SimpleTypeHelper {
 			} 
 		}
 	}
-	
-	private static void convertSpecialChoicesJavaToSimpleLong(AbstractParameterNode node) {
+
+	public static void convertSpecialChoicesJavaToSimpleLong(AbstractParameterNode node) {
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
 			
@@ -118,8 +118,8 @@ public final class SimpleTypeHelper {
 			} 
 		}
 	}
-	
-	private static void convertSpecialChoicesJavaToSimpleFloat(AbstractParameterNode node) {
+
+	public static void convertSpecialChoicesJavaToSimpleFloat(AbstractParameterNode node) {
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
 			
@@ -138,8 +138,8 @@ public final class SimpleTypeHelper {
 			} 
 		}
 	}
-	
-	private static void convertSpecialChoicesJavaToSimpleDouble(AbstractParameterNode node) {
+
+	public static void convertSpecialChoicesJavaToSimpleDouble(AbstractParameterNode node) {
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
 			

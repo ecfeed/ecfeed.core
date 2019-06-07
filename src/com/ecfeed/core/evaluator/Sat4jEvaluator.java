@@ -239,10 +239,15 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 ChoiceNode val1, val2;
                 if (type == TypeOfEndpoint.LEFT_ENDPOINT) {
                     val1 = ChoiceNodeHelper.precedingVal(val);
-                    val2 = val;
+                    val2 = ChoiceNodeHelper.convertValueToNumeric(val);
                 } else { //RIGHT_ENDPOINT
-                    val1 = val;
+                    val1 = ChoiceNodeHelper.precedingVal(val);;
                     val2 = ChoiceNodeHelper.followingVal(val);
+                }
+                if(new ChoiceNodeComparator().compare(val1,val2) == 0) //only happens if one was too extreme to be further moved, as in Long.MAX_VALUE or so
+                {
+                    newList.add(it);
+                    continue;
                 }
                 int cmp1 = new ChoiceNodeComparator().compare(start, val1);
                 int cmp2 = new ChoiceNodeComparator().compare(val2, end);
@@ -295,9 +300,21 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
 
         List<ChoiceNode> sortedChoices = new ArrayList<>(fArgAllAtomicValues.get(arg));
+        int n = sortedChoices.size();
+
+        if(! JavaTypeHelper.isNumericTypeName(arg.getType()))
+        {
+            for(int i=0; i<n; i++) {
+                choiceVars.add(newID());
+                choiceID.put(sortedChoices.get(i), choiceVars.get(i));
+            }
+            fArgChoiceID.put(arg, choiceID);
+            return;
+        }
+
+
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
 
-        int n = sortedChoices.size();
 
         prefixVars.add(newID());
         for(int i=0; i<n; i++) {
@@ -407,7 +424,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         {
             for (AbstractStatement child : statement.getChildren()) {
                 try {
-                    child.accept(new ParseConstraintToSATVisitor());
+                    child.accept(new PreParseVisitor());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -525,7 +542,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         Integer childID = null;
                         try {
                             childID = (Integer) child.accept(new ParseConstraintToSATVisitor());
-                        } catch (Exception e) {
+                        } catch (Exception e) { e.printStackTrace();
                         }
                         bigClause.add(-childID);
                         fClausesVecInt.add(new VecInt(new int[] {childID, -myID})); //small fClauses
@@ -869,7 +886,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         p.getSecond().adapt(valueAssignment);
                     }
                 }
-            } catch (TimeoutException e) {}
+            } catch (TimeoutException e) {
+                ExceptionHelper.reportRuntimeException("Timeout, sorry!");
+                return null;
+            }
         return valueAssignment;
     }
 
