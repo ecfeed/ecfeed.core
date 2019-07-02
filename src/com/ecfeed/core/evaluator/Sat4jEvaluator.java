@@ -241,7 +241,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     val1 = ChoiceNodeHelper.precedingVal(val);
                     val2 = ChoiceNodeHelper.convertValueToNumeric(val);
                 } else { //RIGHT_ENDPOINT
-                    val1 = ChoiceNodeHelper.precedingVal(val);;
+                    val1 = ChoiceNodeHelper.convertValueToNumeric(val);;
                     val2 = ChoiceNodeHelper.followingVal(val);
                 }
                 if(new ChoiceNodeComparator().compare(val1,val2) == 0) //only happens if one was too extreme to be further moved, as in Long.MAX_VALUE or so
