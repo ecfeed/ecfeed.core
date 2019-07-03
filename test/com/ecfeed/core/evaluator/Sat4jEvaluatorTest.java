@@ -920,6 +920,72 @@ public class Sat4jEvaluatorTest {
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
+
+    private String xmlMixedTypeOrder = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"n0000wEct25656\" version=\"2\">\n" +
+            "    <Class name=\"com.ecfeed.core.junit5.EcFeedModelTest\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Method name=\"ecFeedModelTest\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Web Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"arg1\" type=\"int\" isExpected=\"false\" expected=\"7\" linked=\"true\" link=\"arg1\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbElementType\" type=\"String\" value=\"Text\"/>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                    <Property name=\"wbFindByType\" type=\"String\" value=\"Id\"/>\n" +
+            "                    <Property name=\"wbFindByValue\" type=\"String\" value=\"arg1\"/>\n" +
+            "                </Properties>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg2\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"true\" link=\"arg2\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "            </Parameter>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&lt;\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "    <Parameter name=\"arg1\" type=\"int\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Comments>\n" +
+            "            <TypeComments/>\n" +
+            "        </Comments>\n" +
+            "        <Choice name=\"choice1a\" value=\"1\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice1b\" value=\"1\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice1c\" value=\"1\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice2a\" value=\"2\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice2b\" value=\"2\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice2c\" value=\"2\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice3\" value=\"3\" isRandomized=\"false\"/>\n" +
+            "    </Parameter>\n" +
+            "    <Parameter name=\"arg2\" type=\"float\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Comments>\n" +
+            "            <TypeComments/>\n" +
+            "        </Comments>\n" +
+            "        <Choice name=\"choice1\" value=\"0.0\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice2\" value=\"1.0\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice3\" value=\"1.5\" isRandomized=\"false\"/>\n" +
+            "        <Choice name=\"choice4\" value=\"4.0\" isRandomized=\"false\"/>\n" +
+            "    </Parameter>\n" +
+            "</Model>\n";
+
     private int CountSatisfying(String xmlModel)
     {
         RootNode model = ModelTestHelper.createModel(xmlModel);
@@ -1035,5 +1101,6 @@ public class Sat4jEvaluatorTest {
         assertEquals(0, CountSatisfying(xmlRangesDoubleSmall));
     }
 
-
+    @Test
+    public void TestMixedTypeOrder() { assertEquals(10, CountSatisfying(xmlMixedTypeOrder)); }
 }
