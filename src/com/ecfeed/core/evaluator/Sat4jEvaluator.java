@@ -681,8 +681,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
                 Integer leftLessTh = fArgLessThChoiceID.get(lParam).get(sortedLChoices.get(i));
                 Integer leftLessEq = fArgLessEqChoiceID.get(lParam).get(sortedLChoices.get(i));
-                Integer rightLessTh = fArgLessThChoiceID.get(rParam).get(sortedRChoices.get(j));
-                Integer rightLessEq = fArgLessEqChoiceID.get(rParam).get(sortedRChoices.get(j));
+                Integer rightLessTh = null;
+                Integer rightLessEq = null;
+                if(j<n) {
+                    rightLessTh = fArgLessThChoiceID.get(rParam).get(sortedRChoices.get(j));
+                    rightLessEq = fArgLessEqChoiceID.get(rParam).get(sortedRChoices.get(j));
+                }
 
                 switch (statement.getRelation()) {
                     case EQUAL:

@@ -1026,13 +1026,13 @@ public class Sat4jEvaluatorTest {
     @Test
     public void TestRangesDouble()
     {
-        assertEquals(4, CountSatisfying(xmlRangesDouble));
+        assertEquals(7, CountSatisfying(xmlRangesDouble));
     }
 
     @Test
     public void TestRangesDoubleSmall()
     {
-        assertEquals(4, CountSatisfying(xmlRangesDoubleSmall));
+        assertEquals(0, CountSatisfying(xmlRangesDoubleSmall));
     }
 
 
