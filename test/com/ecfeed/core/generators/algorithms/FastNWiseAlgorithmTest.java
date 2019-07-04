@@ -36,7 +36,7 @@ public class FastNWiseAlgorithmTest extends NWiseAlgorithmTest {
 
 	@Test
 	public void testConstraints() {
-		testCorrectness(FastNWiseAlgorithm.class);
+		testConstraints(FastNWiseAlgorithm.class);
 	}
 	
 
