@@ -11,6 +11,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
+import  com.ecfeed.core.utils.*;
 
 import java.util.*;
 import java.util.List;
@@ -237,13 +238,24 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 //                if((new ChoiceNodeComparator().compare(start,val))<0 && (new ChoiceNodeComparator().compare(val,end))<0)
 
                 ChoiceNode val1, val2;
-                if (type == TypeOfEndpoint.LEFT_ENDPOINT) {
-                    val1 = ChoiceNodeHelper.precedingVal(val);
-                    val2 = ChoiceNodeHelper.convertValueToNumeric(val);
-                } else { //RIGHT_ENDPOINT
-                    val1 = ChoiceNodeHelper.convertValueToNumeric(val);;
-                    val2 = ChoiceNodeHelper.followingVal(val);
+                val1 = start.makeClone();
+                val2 = end.makeClone();
+                val1.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
+                val2.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
+                if( JavaTypeHelper.isExtendedIntTypeName(start.getParameter().getType())
+                        && JavaTypeHelper.isFloatingPointTypeName(val.getParameter().getType()) )
+                {
+                    val1 = ChoiceNodeHelper.roundValueDown(val1);
+                    val2 = ChoiceNodeHelper.roundValueUp(val2);
                 }
+                if(new ChoiceNodeComparator().compare(val1,val2) == 0) {
+                    if (type == TypeOfEndpoint.LEFT_ENDPOINT)
+                        val1 = ChoiceNodeHelper.precedingVal(val1);
+                    else //RIGHT_ENDPOINT
+                        val2 = ChoiceNodeHelper.followingVal(val2);
+                }
+
+
                 if(new ChoiceNodeComparator().compare(val1,val2) == 0) //only happens if one was too extreme to be further moved, as in Long.MAX_VALUE or so
                 {
                     newList.add(it);

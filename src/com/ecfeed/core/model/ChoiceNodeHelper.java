@@ -15,6 +15,7 @@ import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 
+import java.awt.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -212,6 +213,31 @@ public class ChoiceNodeHelper {
 			}
 		}
 	}
+
+	public static ChoiceNode roundValueDown(ChoiceNode choiceInput)
+	{
+		ChoiceNode choice = choiceInput.makeClone();
+		if(choice.isRandomizedValue())
+			ExceptionHelper.reportRuntimeException("is randomized value");
+
+		double v = Double.parseDouble(choice.getValueString());
+		long w = (long) Math.floor(v);
+		choice.setValueString(String.valueOf(w));
+		return choice;
+	}
+
+	public static ChoiceNode roundValueUp(ChoiceNode choiceInput)
+	{
+		ChoiceNode choice = choiceInput.makeClone();
+		if(choice.isRandomizedValue())
+			ExceptionHelper.reportRuntimeException("is randomized value");
+
+		double v = Double.parseDouble(choice.getValueString());
+		long w = (long) Math.ceil(v);
+		choice.setValueString(String.valueOf(w));
+		return choice;
+	}
+
 
 	public static ChoiceNode convertValueToNumeric(ChoiceNode choiceInput)
 	{

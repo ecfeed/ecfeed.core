@@ -986,6 +986,271 @@ public class Sat4jEvaluatorTest {
             "    </Parameter>\n" +
             "</Model>\n";
 
+    private String xmlNastyRanges = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "    <Class name=\"TestClass1\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Method name=\"testMethod1\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"arg1\" type=\"int\" isExpected=\"false\" expected=\"\" linked=\"false\" link=\"arg1\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0:20\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"3\" isRandomized=\"false\"/>\n" +
+            "                <Choice name=\"choice3\" value=\"5:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg2\" type=\"float\" isExpected=\"false\" expected=\"0.0\" linked=\"false\" link=\"arg1\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"1.0:5.0\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"7.5\" isRandomized=\"false\"/>\n" +
+            "                <Choice name=\"choice3\" value=\"5.0:8.0\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg3\" type=\"long\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"-10:10\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"0\" isRandomized=\"false\"/>\n" +
+            "                <Choice name=\"choice3\" value=\"1:1000000000\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg4\" type=\"double\" isExpected=\"false\" expected=\"0.0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0.0:1.0E-4\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"100.0\" isRandomized=\"false\"/>\n" +
+            "                <Choice name=\"choice3\" value=\"1.0:1.0\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg5\" type=\"byte\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"-128:127\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"127\" isRandomized=\"false\"/>\n" +
+            "                <Choice name=\"choice3\" value=\"0:0\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <StatementArray operator=\"and\">\n" +
+            "                        <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"=\"/>\n" +
+            "                        <ParameterStatement rightParameter=\"arg3\" parameter=\"arg2\" relation=\"=\"/>\n" +
+            "                        <ParameterStatement rightParameter=\"arg4\" parameter=\"arg3\" relation=\"=\"/>\n" +
+            "                        <ParameterStatement rightParameter=\"arg5\" parameter=\"arg4\" relation=\"=\"/>\n" +
+            "                    </StatementArray>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "</Model>\n";
+
+    private String xmlMixedTypeEq1 ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "    <Class name=\"TestClass1\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Method name=\"testMethod1\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"arg1\" type=\"double\" isExpected=\"false\" expected=\"0.0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0.0:10.0\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg2\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg3\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg4\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"=\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg3\" parameter=\"arg2\" relation=\"&lt;\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg4\" relation=\"&lt;\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "</Model>\n";
+
+    private String xmlMixedTypeEq2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "    <Class name=\"TestClass1\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Method name=\"testMethod1\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"arg1\" type=\"double\" isExpected=\"false\" expected=\"0.0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0.0:10.0\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg2\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg3\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"=\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg3\" parameter=\"arg2\" relation=\"&lt;\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "</Model>\n";
+
+    private String xmlMixedTypeEq3 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "    <Class name=\"TestClass1\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Method name=\"testMethod1\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"arg1\" type=\"double\" isExpected=\"false\" expected=\"0.0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0.0:10.0\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg2\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"=\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "</Model>\n";
+
     private int CountSatisfying(String xmlModel)
     {
         RootNode model = ModelTestHelper.createModel(xmlModel);
@@ -1103,4 +1368,17 @@ public class Sat4jEvaluatorTest {
 
     @Test
     public void TestMixedTypeOrder() { assertEquals(10, CountSatisfying(xmlMixedTypeOrder)); }
+
+    @Test
+    public void TestNastyRanges() { assertEquals(2, CountSatisfying(xmlNastyRanges)); }
+
+    @Test
+    public void TestMixedTypeEq1() { assertEquals(1, CountSatisfying(xmlMixedTypeEq1)); }
+
+    @Test
+    public void TestMixedTypeEq2() { assertEquals(1, CountSatisfying(xmlMixedTypeEq2)); }
+
+    @Test
+    public void TestMixedTypeEq3() { assertEquals(1, CountSatisfying(xmlMixedTypeEq3)); }
+
 }
