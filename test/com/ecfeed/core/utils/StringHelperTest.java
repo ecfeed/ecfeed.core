@@ -247,5 +247,40 @@ public class StringHelperTest{
 		assertEquals("   ", StringHelper.removeToPrefixAndFromPostfix("<", ">", "<   >"));
 	}	
 
+	@Test
+	public void shouldReturnPackageWithClassExtended() {
+
+	    String methodSignature = "public void com.ecfeed.test.FlightFinderTest.findFlightsTest" +
+                "(String, String, int, boolean, int, com.ecfeed.test.TicketClass, float)";
+
+	    assertEquals("com.ecfeed.test.FlightFinderTest", StringHelper.getPackageWithClass(methodSignature));
+    }
+
+    @Test
+	public void shouldReturnPackageWithClass() {
+
+	    String methodSignature = "test.Class1.testMethod(String, String)";
+
+	    assertEquals("test.Class1", StringHelper.getPackageWithClass(methodSignature));
+    }
+
+    @Test
+    public void shouldReturnMethodShortSignatureExtended() {
+
+	    String methodSignature = "public void com.ecfeed.test.FlightFinderTest.findFlightsTest" +
+                "(String, String, int, boolean, int, com.ecfeed.test.TicketClass, float)";
+
+	    assertEquals("findFlightsTest(String, String, int, boolean, int, com.ecfeed.test.TicketClass, float)",
+                StringHelper.getMethodShortSignature(methodSignature));
+    }
+
+    @Test
+    public void shouldReturnMethodShortSignature() {
+
+        String methodSignature = "test.Class1.testMethod(String, String)";
+
+	    assertEquals("testMethod(String, String)", StringHelper.getMethodShortSignature(methodSignature));
+    }
+
 
 }

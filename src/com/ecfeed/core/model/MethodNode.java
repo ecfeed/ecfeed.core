@@ -262,20 +262,53 @@ public class MethodNode extends ParametersParentNode {
 
 	public List<List<ChoiceNode>> getTestDomain() {
 
-		List<List<ChoiceNode>> testDomain = new ArrayList<List<ChoiceNode>>();
+		List<List<ChoiceNode>> testDomain = new ArrayList<>();
 
 		int parameterCount = getParametersCount();
 
 		for (int parameterIndex = 0; parameterIndex < parameterCount; parameterIndex++) {
-
-			AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);
-
-			List<ChoiceNode> choicesForParameter = abstractParameterNode.getLeafChoicesWithCopies();
-			testDomain.add(choicesForParameter);
+            testDomain.add(getTestDomainProcessAbstractParameterNode(parameterIndex));
 		}
 
 		return testDomain;
-	}	
+	}
+
+	private List<ChoiceNode> getTestDomainProcessAbstractParameterNode(int parameterIndex) {
+
+        AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);
+
+        if (abstractParameterNode instanceof MethodParameterNode) {
+            return getTestDomainProcessMethodParameterNode(abstractParameterNode);
+        } else {
+            return abstractParameterNode.getLeafChoicesWithCopies();
+        }
+
+    }
+
+    private List<ChoiceNode> getTestDomainProcessMethodParameterNode(AbstractParameterNode abstractParameterNode) {
+        MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
+        List<ChoiceNode> choicesForParameter;
+
+        if (methodParameterNode.isExpected()) {
+            ChoiceNode choiceNode = getTestDomainCreateExpectedChoiceNode(methodParameterNode);
+
+            choicesForParameter = new ArrayList<>();
+            choicesForParameter.add(choiceNode);
+        } else {
+            choicesForParameter = abstractParameterNode.getLeafChoicesWithCopies();
+        }
+
+        return choicesForParameter;
+    }
+
+    private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
+        String defaultValue = methodParameterNode.getDefaultValue();
+
+	    ChoiceNode choiceNode = new ChoiceNode(defaultValue,null, defaultValue);
+        choiceNode.setParent(methodParameterNode);
+
+        return choiceNode;
+    }
 
 	public List<TestCaseNode> getTestCases(){
 		return fTestCases;

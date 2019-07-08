@@ -86,7 +86,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		try {
 			result = fRightCondition.evaluate(values);
 		} catch (Exception e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 			return EvaluationResult.FALSE;
 		}
 
@@ -104,7 +104,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 			return false;
 		}
 		catch (Exception e) {
-			SystemLogger.logCatch(e.getMessage());
+			SystemLogger.logCatch(e);
 			return false;
 		}
 	}

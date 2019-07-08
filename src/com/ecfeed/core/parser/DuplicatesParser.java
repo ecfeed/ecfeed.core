@@ -1,5 +1,7 @@
 package com.ecfeed.core.parser;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 public class DuplicatesParser {
 
     private final static String duplicatesTrue = "true";
@@ -7,7 +9,7 @@ public class DuplicatesParser {
 
     private boolean fDuplicates = false;
 
-    public DuplicatesParser(String duplicatesStr) throws Exception {
+    public DuplicatesParser(String duplicatesStr) {
 
         if (duplicatesStr == null) {
             fDuplicates = false;
@@ -24,7 +26,7 @@ public class DuplicatesParser {
             return;
         }
 
-        throw new Exception("Invalid value for duplicates tag: " + duplicatesStr + ".");
+        ExceptionHelper.reportRuntimeException("Invalid value for duplicates tag: " + duplicatesStr + ".");
     }
 
     public boolean isDuplicates() {

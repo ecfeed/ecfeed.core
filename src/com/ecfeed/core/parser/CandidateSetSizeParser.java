@@ -1,10 +1,12 @@
 package com.ecfeed.core.parser;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 public class CandidateSetSizeParser {
 
     private int fCandidateSetSize = 100;
 
-    public CandidateSetSizeParser(String candidateSetSize) throws Exception {
+    public CandidateSetSizeParser(String candidateSetSize) {
 
         if (candidateSetSize == null) {
             fCandidateSetSize = 100;
@@ -14,7 +16,7 @@ public class CandidateSetSizeParser {
         try {
             fCandidateSetSize = Integer.parseInt(candidateSetSize);
         } catch (Exception e) {
-            throw new Exception("Can not set candidateSetSize. " + e.getMessage());
+            ExceptionHelper.reportRuntimeException("Can not set candidateSetSize.", e);
         }
     }
 

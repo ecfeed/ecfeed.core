@@ -1,10 +1,12 @@
 package com.ecfeed.core.parser;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 public class CoverageParser {
 
     private int fCoverage = 100;
 
-    public CoverageParser(String coverage) throws Exception {
+    public CoverageParser(String coverage) {
 
         if (coverage == null) {
             fCoverage = 100;
@@ -14,7 +16,7 @@ public class CoverageParser {
         try {
             fCoverage = Integer.parseInt(coverage);
         } catch (Exception e) {
-            throw new Exception("Can not set coverage. " + e.getMessage());
+            ExceptionHelper.reportRuntimeException("Can not set coverage. " + e.getMessage());
         }
     }
 

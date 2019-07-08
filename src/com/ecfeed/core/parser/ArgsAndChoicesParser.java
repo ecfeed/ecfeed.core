@@ -1,5 +1,7 @@
 package com.ecfeed.core.parser; // TODO - rename package to com.ecfeed.core.genservice.parser ? 
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +21,7 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
     private Map<String, List<String>> fArgAndChoiceNames = null;
 
     @SuppressWarnings("unchecked")
-	public ArgsAndChoicesParser(Object choicesObject) throws Exception {
+	public ArgsAndChoicesParser(Object choicesObject) {
 
         if (choicesObject == null) {
             fChoicesValueType = ArgsAndChoicesParser.ChoicesValueType.ALL;
@@ -34,17 +36,17 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
         try {
             fArgAndChoiceNames = (Map<String, List<String>>) choicesObject;
         } catch (Exception e) {
-            throw new Exception("Invalid type of choices object. Can not convert to map of arguments with choice names.");
+            ExceptionHelper.reportRuntimeException("Invalid type of choices object. Can not convert to map of arguments with choice names.");
         }
 
         if (fArgAndChoiceNames.size() == 0) {
-            throw new Exception("Requested list of choices should not be empty.");
+            ExceptionHelper.reportRuntimeException("Requested list of choices should not be empty.");
         }
 
         validateMap(fArgAndChoiceNames);
     }
 
-    private void validateMap(Map<String, List<String>> argAndChoiceNames) throws Exception {
+    private void validateMap(Map<String, List<String>> argAndChoiceNames) {
 
         for (Map.Entry<String, List<String>> mapEntry : argAndChoiceNames.entrySet()) {
 
@@ -52,17 +54,17 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
         }
     }
 
-    private void validateMapEntry(Map.Entry<String, List<String>> mapEntry) throws Exception {
+    private void validateMapEntry(Map.Entry<String, List<String>> mapEntry) {
 
         String parameterName = mapEntry.getKey();
         if (parameterName == null) {
-            throw new Exception("Parameter name in choices must not be empty.");
+            ExceptionHelper.reportRuntimeException("Parameter name in choices must not be empty.");
         }
 
         List<String> choices = mapEntry.getValue();
 
         if (choices.size() == 0) {
-            throw new Exception("List of choices for parameter: " + parameterName + " must not be empty.");
+            ExceptionHelper.reportRuntimeException("List of choices for parameter: " + parameterName + " must not be empty.");
         }
     }
 
@@ -89,7 +91,7 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
         return fArgAndChoiceNames;
     }
 
-    private ArgsAndChoicesParser.ChoicesValueType getChoiceValueType(String choicesString) throws Exception {
+    private ArgsAndChoicesParser.ChoicesValueType getChoiceValueType(String choicesString) {
 
         if (choicesString.equals(specialValueNoneChoices)) {
             return ArgsAndChoicesParser.ChoicesValueType.NONE;
@@ -99,7 +101,8 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
             return ArgsAndChoicesParser.ChoicesValueType.ALL;
         }
 
-        throw new Exception("Invalid special value for choices: " + choicesString);
+        ExceptionHelper.reportRuntimeException("Invalid special value for choices: " + choicesString);
+        return null;
     }
 
 }

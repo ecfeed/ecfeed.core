@@ -1,10 +1,12 @@
 package com.ecfeed.core.parser;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 public class LengthParser {
 
     private int fLength = 1;
 
-    public LengthParser(String length) throws Exception {
+    public LengthParser(String length) {
 
         if (length == null) {
             fLength = 1;
@@ -14,7 +16,7 @@ public class LengthParser {
         try {
             fLength = Integer.parseInt(length);
         } catch (Exception e) {
-            throw new Exception("Can parse length. " + e.getMessage());
+            ExceptionHelper.reportRuntimeException("Can parse length.", e);
         }
     }
 
