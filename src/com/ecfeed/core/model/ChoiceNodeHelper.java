@@ -348,25 +348,32 @@ public class ChoiceNodeHelper {
 					tmp.setValueString(String.valueOf(v));
 					ret.add(tmp);
 				}
+
+				long w1 = (long) Math.ceil(v1);
+				long w2 = (long) Math.floor(v2);
+				if(w1 <= w2)
+				{
+					for(String val : interleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
+					{
+						ChoiceNode tmp = startEnd.getFirst().makeClone();
+						tmp.setValueString(val);
+						ret.add(tmp);
+					}
+				}
 				return ret;
 			}
 			case TYPE_NAME_BYTE:
 			case TYPE_NAME_INT:
 			case TYPE_NAME_SHORT:
 			case TYPE_NAME_LONG: {
-				BigInteger v1 = new BigInteger(startEnd.getFirst().getValueString());
-				BigInteger v2 = new BigInteger(startEnd.getSecond().getValueString());
-				String oldval = "";
-				for(int i=0;i<N;i++)
+				String v1 = startEnd.getFirst().getValueString();
+				String v2 = startEnd.getSecond().getValueString();
+
+				for(String val : interleavedBigIntegers(v1,v2,N))
 				{
-					BigInteger v = v1.multiply(BigInteger.valueOf(N-1-i)).add(v2.multiply(BigInteger.valueOf(i))).divide(BigInteger.valueOf(N-1));
-					String newval = String.valueOf(v);
-					if(! oldval.equals(newval)) {
-						ChoiceNode tmp = startEnd.getFirst().makeClone();
-						tmp.setValueString(newval);
-						ret.add(tmp);
-						oldval= newval;
-					}
+					ChoiceNode tmp = startEnd.getFirst().makeClone();
+					tmp.setValueString(val);
+					ret.add(tmp);
 				}
 				return ret;
 			}
@@ -377,4 +384,23 @@ public class ChoiceNodeHelper {
 			}
 		}
 	}
+
+	private static List<String> interleavedBigIntegers(String start, String end, int N)
+	{
+		BigInteger v1 = new BigInteger(start);
+		BigInteger v2 = new BigInteger(end);
+		String oldval = "";
+		List<String> ret = new ArrayList<>();
+		for(int i=0;i<N;i++)
+		{
+			BigInteger v = v1.multiply(BigInteger.valueOf(N-1-i)).add(v2.multiply(BigInteger.valueOf(i))).divide(BigInteger.valueOf(N-1));
+			String newval = String.valueOf(v);
+			if(! oldval.equals(newval)) {
+				ret.add(newval);
+				oldval= newval;
+			}
+		}
+		return ret;
+	}
+
 }

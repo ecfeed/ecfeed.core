@@ -1251,6 +1251,50 @@ public class Sat4jEvaluatorTest {
             "    </Class>\n" +
             "</Model>\n";
 
+    private String xmlMixedTypeOverflow = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<Model name=\"n0000wEct25656\" version=\"2\">\n" +
+            "    <Class name=\"com.example.test.TestClass1\">\n" +
+            "        <Properties>\n" +
+            "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
+            "        </Properties>\n" +
+            "        <Method name=\"testMethod1\">\n" +
+            "            <Properties>\n" +
+            "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
+            "                <Property name=\"wbMapBrowserToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "                <Property name=\"wbBrowser\" type=\"String\" value=\"Chrome\"/>\n" +
+            "                <Property name=\"wbMapStartUrlToParam\" type=\"boolean\" value=\"false\"/>\n" +
+            "            </Properties>\n" +
+            "            <Parameter name=\"arg1\" type=\"int\" isExpected=\"false\" expected=\"0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"1:10\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Parameter name=\"arg2\" type=\"double\" isExpected=\"false\" expected=\"0.0\" linked=\"false\">\n" +
+            "                <Properties>\n" +
+            "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
+            "                </Properties>\n" +
+            "                <Comments>\n" +
+            "                    <TypeComments/>\n" +
+            "                </Comments>\n" +
+            "                <Choice name=\"choice1\" value=\"0.0:1.0E10\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"1.0E11:1.0E12\" isRandomized=\"true\"/>\n" +
+            "            </Parameter>\n" +
+            "            <Constraint name=\"constraint\">\n" +
+            "                <Premise>\n" +
+            "                    <StaticStatement value=\"true\"/>\n" +
+            "                </Premise>\n" +
+            "                <Consequence>\n" +
+            "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&lt;=\"/>\n" +
+            "                </Consequence>\n" +
+            "            </Constraint>\n" +
+            "        </Method>\n" +
+            "    </Class>\n" +
+            "</Model>\n";
+
     private int CountSatisfying(String xmlModel)
     {
         RootNode model = ModelTestHelper.createModel(xmlModel);
@@ -1380,5 +1424,8 @@ public class Sat4jEvaluatorTest {
 
     @Test
     public void TestMixedTypeEq3() { assertEquals(1, CountSatisfying(xmlMixedTypeEq3)); }
+
+    @Test
+    public void TestMixedTypeOverflow() { assertEquals(2, CountSatisfying(xmlMixedTypeOverflow)); }
 
 }
