@@ -125,7 +125,8 @@ public class ChoiceCondition implements IStatementCondition {
 
 		String substituteType = getSubstituteType(actualLeftChoice);
 
-		boolean isRandomizedChoice = 
+		boolean isRandomizedChoice =
+				fRightChoice.isRandomizedValue() ||
 				StatementConditionHelper.getChoiceRandomized(
 						actualLeftChoice, 
 						fParentRelationStatement.getLeftParameter());

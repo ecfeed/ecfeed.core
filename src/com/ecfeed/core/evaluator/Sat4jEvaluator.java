@@ -93,9 +93,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
                 }
 
+
                 fArgAllAtomicValues.put(param, new HashSet<>());
                 for (ChoiceNode it : fArgAllSanitizedValues.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
-                    if (it.isRandomizedValue()) {
+                    if (it.isRandomizedValue() &&
+                            ( JavaTypeHelper.isExtendedIntTypeName(param.getType())
+                            || JavaTypeHelper.isFloatingPointTypeName(param.getType())
+                            ) )
+                    {
                         List<ChoiceNode> interleaved = ChoiceNodeHelper.interleavedValues(it, fArgAllSanitizedValues.size());
                         fArgAllAtomicValues.get(param).addAll(interleaved);
                         for(ChoiceNode c : interleaved) {
@@ -140,6 +145,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             return false;
 
         MethodParameterNode lParam = relation.getLeftParameter();
+
+        if( ! JavaTypeHelper.isExtendedIntTypeName(lParam.getType())
+                && ! JavaTypeHelper.isFloatingPointTypeName(lParam.getType()) )
+            return false;
 
         List<ChoiceNode> allLVals = new ArrayList<>(fArgAllSanitizedValues.get(lParam));
 
@@ -574,7 +583,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 return doubleChoiceParamConstraints(statement);
             }
             else if(statement.getCondition() instanceof ChoiceCondition &&
-                        ((ChoiceCondition) statement.getCondition()).getRightChoice().isRandomizedValue())
+                        ((ChoiceCondition) statement.getCondition()).getRightChoice().isRandomizedValue() &&
+                    ( JavaTypeHelper.isExtendedIntTypeName(statement.getLeftParameter().getType())
+                    || JavaTypeHelper.isFloatingPointTypeName(statement.getLeftParameter().getType()) )
+                    )
                     {
                         switch(statement.getRelation())
                         {

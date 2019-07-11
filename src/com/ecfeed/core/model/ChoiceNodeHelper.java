@@ -330,6 +330,8 @@ public class ChoiceNodeHelper {
 		if(! choice.isRandomizedValue())
 			ExceptionHelper.reportRuntimeException("should be randomized");
 		Pair<ChoiceNode,ChoiceNode> startEnd = rangeSplit(choice);
+		ChoiceNode start = convertValueToNumeric(startEnd.getFirst());
+		ChoiceNode end = convertValueToNumeric(startEnd.getSecond());
 		if(N<2)
 			N=2;
 		List<ChoiceNode> ret = new ArrayList<>();
@@ -339,12 +341,12 @@ public class ChoiceNodeHelper {
 		{
 			case TYPE_NAME_DOUBLE:
 			case TYPE_NAME_FLOAT: {
-				double v1 = Double.parseDouble(startEnd.getFirst().getValueString());
-				double v2 = Double.parseDouble(startEnd.getSecond().getValueString());
+				double v1 = Double.parseDouble(start.getValueString());
+				double v2 = Double.parseDouble(end.getValueString());
 				for(int i=0;i<N;i++)
 				{
 					double v = (v1*(N-1-i)+v2*i)/(N-1);
-					ChoiceNode tmp = startEnd.getFirst().makeClone();
+					ChoiceNode tmp = start.makeClone();
 					tmp.setValueString(String.valueOf(v));
 					ret.add(tmp);
 				}
@@ -355,7 +357,7 @@ public class ChoiceNodeHelper {
 				{
 					for(String val : interleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
 					{
-						ChoiceNode tmp = startEnd.getFirst().makeClone();
+						ChoiceNode tmp = start.makeClone();
 						tmp.setValueString(val);
 						ret.add(tmp);
 					}
@@ -366,12 +368,12 @@ public class ChoiceNodeHelper {
 			case TYPE_NAME_INT:
 			case TYPE_NAME_SHORT:
 			case TYPE_NAME_LONG: {
-				String v1 = startEnd.getFirst().getValueString();
-				String v2 = startEnd.getSecond().getValueString();
+				String v1 = start.getValueString();
+				String v2 = end.getValueString();
 
 				for(String val : interleavedBigIntegers(v1,v2,N))
 				{
-					ChoiceNode tmp = startEnd.getFirst().makeClone();
+					ChoiceNode tmp = start.makeClone();
 					tmp.setValueString(val);
 					ret.add(tmp);
 				}
