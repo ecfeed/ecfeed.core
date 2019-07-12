@@ -1280,15 +1280,19 @@ public class Sat4jEvaluatorTest {
             "                <Comments>\n" +
             "                    <TypeComments/>\n" +
             "                </Comments>\n" +
-            "                <Choice name=\"choice1\" value=\"0.0:1.0E10\" isRandomized=\"true\"/>\n" +
-            "                <Choice name=\"choice2\" value=\"1.0E11:1.0E12\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice1\" value=\"1.0E18:8.0E18\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"8.0E18:1.0E19\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"1.0E19:1.0E20\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"1.0E20:1.0E21\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"1.0E21:1.0E22\" isRandomized=\"true\"/>\n" +
+            "                <Choice name=\"choice2\" value=\"1.0E22:9.0E22\" isRandomized=\"true\"/>\n" +
             "            </Parameter>\n" +
             "            <Constraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
-            "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&lt;=\"/>\n" +
+            "                    <ParameterStatement rightParameter=\"arg1\" parameter=\"arg2\" relation=\"&lt;=\"/>\n" +
             "                </Consequence>\n" +
             "            </Constraint>\n" +
             "        </Method>\n" +
@@ -1464,7 +1468,7 @@ public class Sat4jEvaluatorTest {
     public void TestMixedTypeEq3() { assertEquals(1, CountSatisfying(xmlMixedTypeEq3)); }
 
     @Test
-    public void TestMixedTypeOverflow() { assertEquals(2, CountSatisfying(xmlMixedTypeOverflow)); }
+    public void TestMixedTypeOverflow() { assertEquals(0, CountSatisfying(xmlMixedTypeOverflow)); }
 
     @Test
     public void TestCmpFixedVsRange() { assertEquals(3, CountSatisfying(xmlCmpFixedVsRange) ); }

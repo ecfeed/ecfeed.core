@@ -351,6 +351,8 @@ public class ChoiceNodeHelper {
 					ret.add(tmp);
 				}
 
+				if(v2 > Long.MAX_VALUE || v1 < Long.MIN_VALUE)
+					return ret;
 				long w1 = (long) Math.ceil(v1);
 				long w2 = (long) Math.floor(v2);
 				if(w1 <= w2)
