@@ -16,12 +16,12 @@ public class ExceptionHelper {
 		ONE_LINE,
 		MULTI_LINE
 	};
-	
+
 	public enum StackInfoType {
 		WITH_STACK,
 		WITHOUT_STACK
 	};
-	
+
 	private static final int fMaxDepth = 5;
 	private static final String causedBy = "Caused by: ";
 	private static final String fNoException = "NO-EXCEPTION";
@@ -51,7 +51,7 @@ public class ExceptionHelper {
 
 		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
 	}
-	
+
 	public static String createErrorMessage(Exception e) {
 
 		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
@@ -83,7 +83,7 @@ public class ExceptionHelper {
 		if (stackInfoType == StackInfoType.WITHOUT_STACK) {
 			return errorMessage;
 		}
-		
+
 		Throwable deepestThrowable = getDeepestThrowable(e);
 
 		String stack = getStack(deepestThrowable);
@@ -95,7 +95,7 @@ public class ExceptionHelper {
 
 		final String spaces = "    ";
 
-		String message = "Exceptions: \n" + spaces + getMessage(e);
+		String message = "\n" + spaces + getMessage(e);
 
 		Throwable currentThrowable = (Throwable) e;
 		int depth = 0;
