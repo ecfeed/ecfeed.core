@@ -10,15 +10,15 @@
 
 package com.ecfeed.core.model.serialization;
 
-public class XomAnalyserFactory {
+public class XomBuilderVersion3 extends XomBuilderVersionWithNewNodeNames {
 
-	public static XomAnalyser createXomAnalyser(int version) {
-		if (version == 0) {
-			return new XomAnalyserVersion0();
-		}
-		if (version == 1) {
-			return new XomAnalyserVersion1();
-		}
-		return new XomAnalyserVersion3();
+	XomBuilderVersion3(SerializatorParams serializatorParams) {
+		super(serializatorParams);
 	}
+
+	@Override
+	protected int getModelVersion() {
+		return 3;
+	}
+
 }

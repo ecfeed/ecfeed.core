@@ -20,6 +20,9 @@ public class XomBuilderFactory {
 		if (modelVersion == 1) {
 			return new XomBuilderVersion1(serializatorParams);
 		}
-		return new XomBuilderVersion2(serializatorParams);
+		if (modelVersion == 2) {
+			return new XomBuilderVersion2(serializatorParams);
+		}
+		return new XomBuilderVersion3(serializatorParams);
 	}
 }

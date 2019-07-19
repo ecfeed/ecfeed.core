@@ -780,7 +780,6 @@ public abstract class XomAnalyser {
 		
 	}
 	
-
 	protected static List<Element> getIterableChildren(Element element) {
 		
 		ArrayList<Element> list = new ArrayList<Element>();

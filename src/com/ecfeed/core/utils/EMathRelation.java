@@ -19,7 +19,7 @@ import static com.ecfeed.core.utils.StatementRelationNames.*;
 
 class StatementRelationNames {
 	
-	static final String RELATION_EQUAL = "equal";
+	static final String RELATION_EQUAL = "equal"; 
 	static final String RELATION_NOT_EQUAL = "notequal";
 	static final String RELATION_LESS_THAN = "lessthan";
 	static final String RELATION_LESS_THAN_EQUAL = "lessthanequal";
