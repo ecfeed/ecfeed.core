@@ -12,6 +12,16 @@ package com.ecfeed.core.utils;
 
 public class ExceptionHelper {
 
+	public enum LineSeparationType {
+		ONE_LINE,
+		MULTI_LINE
+	};
+
+	public enum StackInfoType {
+		WITH_STACK,
+		WITHOUT_STACK
+	};
+
 	private static final int fMaxDepth = 5;
 	private static final String causedBy = "Caused by: ";
 	private static final String fNoException = "NO-EXCEPTION";
@@ -37,35 +47,42 @@ public class ExceptionHelper {
 		ExceptionHelper.reportRuntimeException("Can not create object.");
 	}
 
-	public static String createErrorMessage(Throwable e, boolean addClassName) {
+	public static String createErrorMessage(Throwable e) {
 
-		return createErrorMessage(e, addClassName, true);
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
 	}
 
 	public static String createErrorMessage(Exception e) {
 
-		return createErrorMessage(e, true);
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
 	}
 
 	public static String createErrorMessage(String message, Exception e) {
 
 		RuntimeException runtimeException = new RuntimeException(message, e);
 
-		return createErrorMessage(runtimeException, true);
+		return createErrorMessage(runtimeException);
 	}
 
-	public static String createErrorMessage(Throwable e, boolean addClassName, boolean oneLine) {
+	public static String createErrorMessage(
+			Throwable e, 
+			LineSeparationType lineSeparationType,
+			StackInfoType stackInfoType) {
 
 		if (e == null) {
 			return fNoException;
 		}
 
 		String exceptionSeparator = "\n";
-		if (oneLine) {
+		if (lineSeparationType == LineSeparationType.ONE_LINE) {
 			exceptionSeparator = " ";
 		}
 
-		String errorMessage = createExceptionMessage(e, addClassName, exceptionSeparator);
+		String errorMessage = createExceptionMessage(e, exceptionSeparator);
+
+		if (stackInfoType == StackInfoType.WITHOUT_STACK) {
+			return errorMessage;
+		}
 
 		Throwable deepestThrowable = getDeepestThrowable(e);
 
@@ -74,11 +91,11 @@ public class ExceptionHelper {
 		return errorMessage + "\n" + stack;
 	}
 
-	private static String createExceptionMessage(Throwable e, boolean addClassName, String exceptionSeparator) {
+	private static String createExceptionMessage(Throwable e, String exceptionSeparator) {
 
 		final String spaces = "    ";
 
-		String message = "Exceptions stack: \n" + spaces + getMessage(e, addClassName);
+		String message = "\n" + spaces + getMessage(e);
 
 		Throwable currentThrowable = (Throwable) e;
 		int depth = 0;
@@ -91,7 +108,7 @@ public class ExceptionHelper {
 				return message;
 			}
 
-			message += (exceptionSeparator + spaces + causedBy + getMessage(nextThrowable, addClassName));
+			message += (exceptionSeparator + spaces + causedBy + getMessage(nextThrowable));
 
 			currentThrowable = nextThrowable;
 
@@ -146,11 +163,11 @@ public class ExceptionHelper {
 	}
 
 
-	private static String getMessage(Throwable e, boolean addClassName) {
+	private static String getMessage(Throwable e) {
 
 		String message = "";
 
-		if (addClassName) {
+		if (true) {
 			message += "[" + e.getClass().getName() + "] ";
 		}
 

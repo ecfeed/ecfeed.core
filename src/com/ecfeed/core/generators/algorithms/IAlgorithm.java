@@ -23,10 +23,15 @@ public interface IAlgorithm<E> {
 			Collection<IConstraint<E>> constraints,
 			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException;
 	
-	public List<E> getNext() throws GeneratorException;
+	public void setTaskBegin(int totalWork);
+	public void setTaskEnd();
 	public void reset();
+	public void incrementProgress(int progressIncrement);
+	public void cancel();
+	public boolean isCancelled();
+	
+	public List<E> getNext() throws GeneratorException;
 	public void addConstraint(IConstraint<E> constraint);
 	public void removeConstraint(IConstraint<E> constraint);
 	public Collection<? extends IConstraint<E>> getConstraints();
-	public void cancel();
 }
