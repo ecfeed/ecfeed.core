@@ -24,29 +24,42 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 	protected List<Integer> fLastGenerated;
 
 	@Override
-	public List<E> getNext() throws GeneratorException{
-		if(fInitialized == false){
-			GeneratorException.report("Generator not initialized");
-		}
-		if(fCancel){
-			return null;
-		}
-		List<E> next = getNext(instance(fLastGenerated));
-		fLastGenerated = representation(next);
-		return next;
-	}
-
-	@Override
 	public void initialize(
 			List<List<E>> input, 
 			Collection<IConstraint<E>> constraints,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 
 		super.initialize(input, constraints, generatorProgressMonitor);
-		setTotalWork(calculateProductSize(input));
+
+		int totalProgress = calculateProductSize(input);
+
+		setTaskBegin(totalProgress);
 		fInitialized = true;
 	}
-	
+
+	@Override
+	public List<E> getNext() throws GeneratorException{
+
+		if (!fInitialized) {
+			GeneratorException.report("Generator not initialized");
+		}
+
+		if (isCancelled()) {
+			return null;
+		}
+
+		List<E> next = getNext(instance(fLastGenerated));
+		fLastGenerated = representation(next);
+
+		if (next == null) {
+			setTaskEnd();
+			return null;
+		}
+
+		incrementProgress(1);
+		return next;
+	}
+
 	public void reset(){
 		fLastGenerated = null;
 		super.reset();
@@ -57,13 +70,12 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 		while((nextElement = incrementVector(nextElement)) != null){
 			List<E> instance = instance(nextElement);
 			if (checkConstraints(instance) == EvaluationResult.TRUE) {
-				incrementProgress(1);
 				return instance;
 			}
 		}
 		return null;
 	}
-	
+
 	protected List<Integer> incrementVector(List<Integer> vector) {
 		if(vector == null){
 			return firstVector();

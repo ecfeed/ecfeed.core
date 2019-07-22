@@ -15,6 +15,8 @@ public interface IEcfProgressMonitor {
 
 	public final static int PROGRESS_UNKNOWN = 1;
 
+	void reset();
+	
 	void setTaskBegin(String name, int totalProgress);
 	void setTaskEnd();
 	void setCanceled();
