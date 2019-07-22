@@ -23,10 +23,6 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 
-//	private int fTotalWork; // TODO - remove ? (calculation on progress monitor)
-//	private int fProgress; // TODO - remove ? (calculation on progress monitor)
-//	private int fTotalProgress; // TODO - remove ? (calculation on progress monitor)
-	protected boolean fCancel;
 	private IEcfProgressMonitor fGeneratorProgressMonitor;
 
 	private List<List<E>> fInput;
@@ -56,8 +52,33 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 		return fGeneratorProgressMonitor;
 	}
 
+	@Override
+	public void setTaskBegin(int totalWork) {
+
+		fGeneratorProgressMonitor.setTaskBegin("Generator", totalWork);
+	}
+
+	@Override
+	public void setTaskEnd() {
+
+		fGeneratorProgressMonitor.setTaskEnd();
+	}
+
+	@Override
 	public void reset(){
-		fGeneratorProgressMonitor.setCurrentProgress(0);
+
+		fGeneratorProgressMonitor.reset();
+	}
+
+	@Override
+	public void incrementProgress(int progressIncrement) {
+
+		fGeneratorProgressMonitor.incrementProgress(progressIncrement);
+	}
+
+	@Override
+	public void cancel() {
+		fGeneratorProgressMonitor.setCanceled();
 	}
 
 //	@Override
@@ -75,16 +96,13 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 		return fConstraintEvaluator;
 	}
 
+	protected int getCurrentProgress() {
+
+		return fGeneratorProgressMonitor.getCurrentProgress();
+	}
+
 	public List<List<E>> getInput(){
 		return fInput;
-	}
-
-	protected void incrementProgress(int progressIncrement){
-		fGeneratorProgressMonitor.incrementProgress(progressIncrement);
-	}
-
-	protected void setTotalWork(int totalWork){
-		fGeneratorProgressMonitor.setTaskBegin("Generator", totalWork);
 	}
 
 	protected List<E> instance(List<Integer> vector) {
@@ -127,9 +145,12 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 //	}
 
 	@Override
-	public void cancel() {
-		fGeneratorProgressMonitor.setCanceled();
-		fCancel = true;
-	}
+	public boolean isCancelled() {
 
+		if (fGeneratorProgressMonitor.isCanceled()) {
+			return true;
+		}
+
+		return false;
+	}
 }

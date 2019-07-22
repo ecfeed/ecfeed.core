@@ -12,151 +12,168 @@ package com.ecfeed.core.utils;
 
 public class ExceptionHelper {
 
-    private static final int fMaxDepth = 5;
-    private static final String causedBy = "Caused by: ";
-    private static final String fNoException = "NO-EXCEPTION";
+	public enum LineSeparationType {
+		ONE_LINE,
+		MULTI_LINE
+	};
 
-    public static void reportRuntimeException(String message) {
+	public enum StackInfoType {
+		WITH_STACK,
+		WITHOUT_STACK
+	};
 
-        throw new RuntimeException(message);
-    }
+	private static final int fMaxDepth = 5;
+	private static final String causedBy = "Caused by: ";
+	private static final String fNoException = "NO-EXCEPTION";
 
-    public static void reportRuntimeException(String message, Exception e) {
+	public static void reportRuntimeException(String message) {
 
-        throw new RuntimeException(message, e);
-    }
+		throw new RuntimeException(message);
+	}
 
-    public static void reportRuntimeException(Exception e) {
+	public static void reportRuntimeException(String message, Exception e) {
 
-        String exceptionName = e.getClass().getName();
-        reportRuntimeException(exceptionName, e);
-    }
+		throw new RuntimeException(message, e);
+	}
 
-    public static void reportRuntimeExceptionCanNotCreateObject() {
+	public static void reportRuntimeException(Exception e) {
 
-        ExceptionHelper.reportRuntimeException("Can not create object.");
-    }
+		String exceptionName = e.getClass().getName();
+		reportRuntimeException(exceptionName, e);
+	}
 
-    public static String createErrorMessage(Exception e) {
+	public static void reportRuntimeExceptionCanNotCreateObject() {
 
-        return createErrorMessage(e, true);
-    }
+		ExceptionHelper.reportRuntimeException("Can not create object.");
+	}
 
-    public static String createErrorMessage(Exception e, boolean addClassName) {
+	public static String createErrorMessage(Throwable e) {
 
-        return createErrorMessage(e, addClassName, true);
-    }
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
+	}
 
-    public static String createErrorMessage(String message, Exception e) {
+	public static String createErrorMessage(Exception e) {
 
-        Exception tmpException = new Exception(message, e);
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
+	}
 
-        return createErrorMessage(tmpException, true, true);
-    }
+	public static String createErrorMessage(String message, Exception e) {
 
-    public static String createErrorMessage(Exception e, boolean addClassName, boolean oneLine) {
+		RuntimeException runtimeException = new RuntimeException(message, e);
 
-        if (e == null) {
-            return fNoException;
-        }
+		return createErrorMessage(runtimeException);
+	}
 
-        String exceptionSeparator = "\n";
-        if (oneLine) {
-            exceptionSeparator = " ";
-        }
+	public static String createErrorMessage(
+			Throwable e, 
+			LineSeparationType lineSeparationType,
+			StackInfoType stackInfoType) {
 
-        String errorMessage = createExceptionMessage(e, addClassName, exceptionSeparator);
+		if (e == null) {
+			return fNoException;
+		}
 
-        Throwable deepestThrowable = getDeepestThrowable(e);
+		String exceptionSeparator = "\n";
+		if (lineSeparationType == LineSeparationType.ONE_LINE) {
+			exceptionSeparator = " ";
+		}
 
-        String stack = getStack(deepestThrowable);
+		String errorMessage = createExceptionMessage(e, exceptionSeparator);
 
-        return errorMessage + "\n" + stack;
-    }
+		if (stackInfoType == StackInfoType.WITHOUT_STACK) {
+			return errorMessage;
+		}
 
-    private static String createExceptionMessage(Exception e, boolean addClassName, String exceptionSeparator) {
+		Throwable deepestThrowable = getDeepestThrowable(e);
 
-        final String spaces = "    ";
+		String stack = getStack(deepestThrowable);
 
-        String message = "Exceptions stack: \n" + spaces + getMessage(e, addClassName);
+		return errorMessage + "\n" + stack;
+	}
 
-        Throwable currentThrowable = (Throwable) e;
-        int depth = 0;
+	private static String createExceptionMessage(Throwable e, String exceptionSeparator) {
 
-        for ( ; ; ) {
+		final String spaces = "    ";
 
-            Throwable nextThrowable = currentThrowable.getCause();
+		String message = "\n" + spaces + getMessage(e);
 
-            if (nextThrowable == null) {
-                return message;
-            }
+		Throwable currentThrowable = (Throwable) e;
+		int depth = 0;
 
-            message += (exceptionSeparator + spaces + causedBy + getMessage(nextThrowable, addClassName));
+		for ( ; ; ) {
 
-            currentThrowable = nextThrowable;
+			Throwable nextThrowable = currentThrowable.getCause();
 
-            depth++;
+			if (nextThrowable == null) {
+				return message;
+			}
 
-            if (depth >= fMaxDepth) {
-                return message;
-            }
-        }
-    }
+			message += (exceptionSeparator + spaces + causedBy + getMessage(nextThrowable));
 
-    private static String getStack(Throwable throwable) {
+			currentThrowable = nextThrowable;
 
-        String result = "Call stack of root cause: \n";
+			depth++;
 
-        StackTraceElement[] stackElements = throwable.getStackTrace();
+			if (depth >= fMaxDepth) {
+				return message;
+			}
+		}
+	}
 
-        for (int index = stackElements.length - 1; index >= 0 ; index--) {
+	private static String getStack(Throwable throwable) {
 
-            StackTraceElement element = stackElements[index];
+		String result = "Call stack of root cause: \n";
 
-            result +=
-                    "    Class: " + element.getClassName() +
-                    " Method: " + element.getMethodName() +
-                    " Line: " + element.getLineNumber() + "\n";
-        }
+		StackTraceElement[] stackElements = throwable.getStackTrace();
 
-        return result;
-    }
+		for (int index = stackElements.length - 1; index >= 0 ; index--) {
 
-    private static Throwable getDeepestThrowable(Exception e) {
+			StackTraceElement element = stackElements[index];
 
-        Throwable currentThrowable = (Throwable) e;
-        int depth = 0;
+			result = result + 
+					"    Class: " + element.getClassName() +
+					" Method: " + element.getMethodName() +
+					" Line: " + element.getLineNumber() + "\n";
+		}
 
-        for (; ; ) {
+		return result;
+	}
 
-            Throwable nextThrowable = currentThrowable.getCause();
+	private static Throwable getDeepestThrowable(Throwable e) {
 
-            if (nextThrowable == null) {
-                return currentThrowable;
-            }
+		Throwable currentThrowable = (Throwable) e;
+		int depth = 0;
 
-            currentThrowable = nextThrowable;
+		for (; ; ) {
 
-            depth++;
+			Throwable nextThrowable = currentThrowable.getCause();
 
-            if (depth >= fMaxDepth) {
-                return null;
-            }
-        }
-    }
+			if (nextThrowable == null) {
+				return currentThrowable;
+			}
+
+			currentThrowable = nextThrowable;
+
+			depth++;
+
+			if (depth >= fMaxDepth) {
+				return null;
+			}
+		}
+	}
 
 
-    private static String getMessage(Throwable e, boolean addClassName) {
+	private static String getMessage(Throwable e) {
 
-        String message = "";
+		String message = "";
 
-        if (addClassName) {
-            message += "[" + e.getClass().getName() + "] ";
-        }
+		if (true) {
+			message += "[" + e.getClass().getName() + "] ";
+		}
 
-        message += e.getMessage();
+		message += e.getMessage();
 
-        return message;
-    }
+		return message;
+	}
 
 }

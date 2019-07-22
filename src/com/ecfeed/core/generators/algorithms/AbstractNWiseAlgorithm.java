@@ -51,7 +51,7 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 	public void reset(){
 		fCartesianAlgorithm.reset();
 		fTuplesToGenerate = calculateTotalTuples();
-		setTotalWork(fTuplesToGenerate);
+		setTaskBegin(fTuplesToGenerate);
 		super.reset();
 	}
 	

@@ -25,10 +25,12 @@ public interface IAlgorithm<E> {
 			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException;
 	
 	public List<E> getNext() throws GeneratorException;
+	public void setTaskBegin(int totalWork);
+	public void setTaskEnd();
 	public void reset();
-
-
+	public void incrementProgress(int progressIncrement);
 	public IConstraintEvaluator<E> getConstraintEvaluator();
 
 	public void cancel();
+	public boolean isCancelled();
 }
