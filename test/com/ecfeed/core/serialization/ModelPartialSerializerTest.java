@@ -71,7 +71,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -101,7 +101,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -155,7 +155,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -191,7 +191,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass2'>");
 		sb.append("        <Method name='testMethod2'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -250,7 +250,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg1'/>");
@@ -276,7 +276,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg1'/>");
@@ -335,7 +335,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg01'/>");
@@ -368,7 +368,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='arg01'/>");
@@ -432,7 +432,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -440,7 +440,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='choice1' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='choice1' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -500,7 +500,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -512,7 +512,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint1'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -520,7 +520,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Constraint>");
 		sb.append("            <Constraint name='constraint2'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -540,7 +540,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -551,7 +551,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint1'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -607,7 +607,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -619,7 +619,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint1'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -627,7 +627,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Constraint>");
 		sb.append("            <Constraint name='constraint2'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -647,7 +647,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -658,7 +658,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint2'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -716,7 +716,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
@@ -727,7 +727,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint1'>");
 		sb.append("                <Premise>");
-		sb.append("                    <ParameterStatement rightParameter='arg2' parameter='arg1' relation='='/>");
+		sb.append("                    <ParameterStatement rightParameter='arg2' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -789,7 +789,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'>");
@@ -819,7 +819,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'/>");
@@ -874,7 +874,7 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'>");
@@ -882,7 +882,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            </Parameter>");
 		sb.append("            <Constraint name='constraint'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='globalc1:global11' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='globalc1:global11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
@@ -907,13 +907,13 @@ public class ModelPartialSerializerTest {
 		StringBuilder sb = new StringBuilder(); 
 
 		sb.append("<?xml version='1.0' encoding='UTF-8'?>");
-		sb.append("<Model name='PartialSerializerTest' version='2'>");
+		sb.append("<Model name='PartialSerializerTest' version='3'>");
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'/>");
 		sb.append("            <Constraint name='constraint'>");
 		sb.append("                <Premise>");
-		sb.append("                    <Statement choice='globalc1:global11' parameter='arg1' relation='='/>");
+		sb.append("                    <Statement choice='globalc1:global11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
 		sb.append("                <Consequence>");
 		sb.append("                    <StaticStatement value='true'/>");
