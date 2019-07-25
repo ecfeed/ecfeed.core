@@ -12,7 +12,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
-import  com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.*;
 
 import java.util.*;
 import java.util.List;
@@ -909,6 +909,15 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
                     return null;
                 }
+                for(int i=0;i<valueAssignment.size();i++)
+                {
+       			    ChoiceNode p = valueAssignment.get(i);
+				    MethodParameterNode parameter = fMethod.getMethodParameters().get(i);
+				    if(parameter.isExpected()){
+                        valueAssignment.set(i, p.makeClone());
+				    }
+			    }
+
                 Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
                 for (Pair<Integer, ExpectedValueStatement> p : fExpectedValConstraints) {
                     if (vars.contains(p.getFirst())) {
