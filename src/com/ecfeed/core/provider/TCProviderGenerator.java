@@ -14,6 +14,7 @@ import java.util.List;
 
 
 import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
+import com.ecfeed.core.evaluator.Sat4jEvaluator;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
@@ -50,7 +51,7 @@ public class TCProviderGenerator implements ITCProvider {
         try {
             fGenerator.initialize(
                     genInitData.getChoiceInput(),
-                    new HomebrewConstraintEvaluator<>(genInitData.getConstraints()),
+                    new Sat4jEvaluator(genInitData.getConstraints(),genInitData.getMethodNode()),
                     genInitData.getGeneratorArguments(),
                     progressMonitor);
         } catch (GeneratorException e) {

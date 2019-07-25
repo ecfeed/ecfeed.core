@@ -2,6 +2,7 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
