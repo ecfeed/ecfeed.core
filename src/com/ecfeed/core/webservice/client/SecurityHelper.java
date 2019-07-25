@@ -31,8 +31,8 @@ import static com.ecfeed.core.utils.ExceptionHelper.reportRuntimeExceptionCanNot
 public final class SecurityHelper {
 
 	private final static String[] DEFAULT_STORE_PATH = {
-		"./.ecfeed/security.p12",
-        "./ecfeed/security.p12",
+		".ecfeed/security.p12",
+        "ecfeed/security.p12",
 		System.getProperty("user.home") + "/.ecfeed/security.p12",
         System.getProperty("user.home") + "/ecfeed/security.p12",
 		System.getProperty("java.home") + "/lib/security/cacerts"
