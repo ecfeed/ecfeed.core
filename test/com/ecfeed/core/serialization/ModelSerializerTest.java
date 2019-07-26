@@ -18,6 +18,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import org.junit.Test;
 
@@ -64,7 +65,7 @@ public class ModelSerializerTest {
 
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null);
+			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -107,7 +108,7 @@ public class ModelSerializerTest {
 			serializer.serialize(model);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null);
+			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -126,7 +127,7 @@ public class ModelSerializerTest {
 			serializer.serialize(r);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			parser.parseClass(istream);
+			parser.parseClass(istream, new ArrayList<>());
 			fail("Exception expected");
 		} catch (Exception e) {
 			//			System.out.println("Exception caught: " + e.getMessage());

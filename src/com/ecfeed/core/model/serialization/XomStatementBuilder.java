@@ -121,7 +121,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 				new Attribute(fStatementParameterAttributeName, parameterName);
 
 		Attribute relationAttribute =
-				new Attribute(STATEMENT_RELATION_ATTRIBUTE_NAME, statement.getRelation().toString());
+				new Attribute(STATEMENT_RELATION_ATTRIBUTE_NAME, statement.getRelation().getName());
 
 		IStatementCondition condition = statement.getCondition();
 		Element targetStatementElement = (Element)condition.accept(this);

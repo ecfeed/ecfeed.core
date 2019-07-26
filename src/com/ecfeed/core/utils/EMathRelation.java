@@ -11,50 +11,62 @@
 package com.ecfeed.core.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static com.ecfeed.core.utils.StatementRelationNames.*;
 
 class StatementRelationNames {
-	static final String RELATION_EQUAL = "=";
-	static final String RELATION_NOT_EQUAL = "\u2260";
-	static final String RELATION_LESS_THAN = "<";
-	static final String RELATION_LESS_EQUAL = "<=";
-	static final String RELATION_GREATER_THAN = ">";
-	static final String RELATION_GREATER_EQUAL = ">=";
+	
+	static final String RELATION_EQUAL = "equal"; 
+	static final String RELATION_NOT_EQUAL = "notequal";
+	static final String RELATION_LESS_THAN = "lessthan";
+	static final String RELATION_LESS_THAN_EQUAL = "lessthanequal";
+	static final String RELATION_GREATER_THAN = "greaterthan";
+	static final String RELATION_GREATER_THAN_EQUAL = "greaterthanequal";
+	
+	static final String[] SYMBOL_RELATION_EQUAL = { "=" };
+	static final String[] SYMBOL_RELATION_NOT_EQUAL = { "\u2260", "?" };
+	static final String[] SYMBOL_RELATION_LESS_THAN = { "<", "&lt;" };
+	static final String[] SYMBOL_RELATION_LESS_THAN_EQUAL = { "<=", "&le;", "&lt;="};
+	static final String[] SYMBOL_RELATION_GREATER_THAN = { ">", "&gt;" };
+	static final String[] SYMBOL_RELATION_GREATER_THAN_EQUAL = { ">=", "&ge;", "&gt;=",  };
 }
 
 public enum EMathRelation{
-
-	EQUAL(StatementRelationNames.RELATION_EQUAL) {
+	
+	EQUAL(RELATION_EQUAL, SYMBOL_RELATION_EQUAL) {
 		@Override
 		public boolean isMatch(String typeName, String leftString, String rightString) {
 			return StringHelper.isEqual(leftString, rightString);
 		}
 	}, 
-	NOT_EQUAL(StatementRelationNames.RELATION_NOT_EQUAL) {
+	NOT_EQUAL(RELATION_NOT_EQUAL, SYMBOL_RELATION_NOT_EQUAL) {
 		@Override
 		public boolean isMatch(String typeName, String leftString, String rightString) {
 			return RelationMatcher.isRelationMatch(this, typeName, leftString, rightString);
 		}
 	},
-	LESS_THAN(StatementRelationNames.RELATION_LESS_THAN) {
+	LESS_THAN(RELATION_LESS_THAN, SYMBOL_RELATION_LESS_THAN) {
 		@Override
 		public boolean isMatch(String typeName, String leftString, String rightString) {
 			return RelationMatcher.isRelationMatch(this, typeName, leftString, rightString);
 		}
 	}, 
-	LESS_EQUAL(StatementRelationNames.RELATION_LESS_EQUAL) {
+	LESS_EQUAL(RELATION_LESS_THAN_EQUAL, SYMBOL_RELATION_LESS_THAN_EQUAL) {
 		@Override
 		public boolean isMatch(String typeName, String leftString, String rightString) {
 			return RelationMatcher.isRelationMatch(this, typeName, leftString, rightString);
 		}
 	},
-	GREATER_THAN(StatementRelationNames.RELATION_GREATER_THAN) {
+	GREATER_THAN(RELATION_GREATER_THAN, SYMBOL_RELATION_GREATER_THAN) {
 		@Override
 		public boolean isMatch(String typeName, String leftString, String rightString) {
 			return RelationMatcher.isRelationMatch(this, typeName, leftString, rightString);
 		}
 	},
-	GREATER_EQUAL(StatementRelationNames.RELATION_GREATER_EQUAL) {
+	GREATER_EQUAL(RELATION_GREATER_THAN_EQUAL, SYMBOL_RELATION_GREATER_THAN_EQUAL) {
 		@Override
 		public boolean isMatch(String typeName, String leftString, String rightString) {
 			return RelationMatcher.isRelationMatch(this, typeName, leftString, rightString);
@@ -68,34 +80,45 @@ public enum EMathRelation{
 	}
 
 	private String fName;
-
-	private EMathRelation(String name) {
+	private String[] fSymbolArray;
+	
+	private EMathRelation(String name, String[] symbolArray) {
 		fName = name;
+		fSymbolArray = symbolArray;
 	}
 
+	public String[] getSymbolArray() {
+		return fSymbolArray;
+	}
+	
 	public String getName() {
 		return fName; 
 	}
-
+	
+	public String getSymbol() {
+		return fSymbolArray[0]; 
+	}
+	
 	public String toString() {
-		return fName; 
+		return getSymbol(); 
 	}
 
 	public static boolean isRelationEqual(String name) {
 
-		if (name.equals(StatementRelationNames.RELATION_EQUAL)) {
+		if (name.equals(RELATION_EQUAL)) {
 			return true;
 		}
-		return false;
+		
+		return Arrays.stream(SYMBOL_RELATION_EQUAL).anyMatch( name::equals );
 	}
 
 	public static boolean isRelationNotEqual(String name) {
 
-		if (name.equals(StatementRelationNames.RELATION_NOT_EQUAL)) {
+		if (name.equals(RELATION_NOT_EQUAL)) {
 			return true;
 		}
 
-		return false;
+		return Arrays.stream(SYMBOL_RELATION_NOT_EQUAL).anyMatch( name::equals );
 	}	
 
 	public static boolean isOrderRelation(EMathRelation relation) {
@@ -126,8 +149,11 @@ public enum EMathRelation{
 				return relation;
 			}
 		}
-
-		return null;
+		
+		return Stream.of(EMathRelation.values())
+			.filter( e -> Arrays.stream(e.getSymbolArray()).anyMatch( name::equals ) )
+			.findFirst()
+			.orElse(null);
 	}
 
 	public static EMathRelation[] getAvailableRelations(String parameterType) {

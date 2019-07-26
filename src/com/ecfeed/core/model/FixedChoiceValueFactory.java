@@ -30,7 +30,7 @@ public class FixedChoiceValueFactory {
 
 	public Object createValue(ChoiceNode choice){
 
-		if(choice.getParameter() != null){
+		if(choice.getParameter() != null) {
 			return createValue(choice.getValueString(), choice.isRandomizedValue(), choice.getParameter().getType());
 		}
 		

@@ -38,7 +38,7 @@ public class Messages {
 
 	public static String MALFORMED_CONSTRAINT_NODE_DEFINITION(String methodName, String constraintName) {
 		return "Error while parsing constraint " + constraintName + " in method " + methodName 
-				+ "Constraint tag must contain Premise and Consequence children, that consist of single statement.";
+				+ ". Constraint tag must contain Premise and Consequence children, that consist of single statement.";
 	}
 
 	public static String WRONG_STATEMENT_ARRAY_OPERATOR(String methodName, String operator) {
