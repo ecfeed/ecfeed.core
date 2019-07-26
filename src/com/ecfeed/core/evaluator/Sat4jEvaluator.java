@@ -647,6 +647,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         private Integer singleChoiceParamConstraints(RelationStatement statement)
         {
             MethodParameterNode lParam = statement.getLeftParameter();
+
             variablesForParameter(lParam);
             Integer myID = newID();
 
