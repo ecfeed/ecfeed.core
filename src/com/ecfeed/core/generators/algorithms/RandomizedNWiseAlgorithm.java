@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.management.RuntimeErrorException;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
@@ -330,7 +331,7 @@ public class RandomizedNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			}
 
 			CartesianProductAlgorithm<DimensionedItem<E>> cartAlg = new CartesianProductAlgorithm<>();
-			cartAlg.initialize(tempIn, new HomebrewConstraintEvaluator<>(new HashSet<>()), getGeneratorProgressMonitor());
+			cartAlg.initialize(tempIn, new DummyEvaluator(), getGeneratorProgressMonitor());
 			List<DimensionedItem<E>> tuple = null;
 			while ((tuple = cartAlg.getNext()) != null) {
 

@@ -6,29 +6,38 @@ import java.util.Map;
 
 import com.ecfeed.core.generators.api.IGeneratorArgument;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.model.MethodNode;
 
 public class TCProviderGenInitData implements ITCProviderInitData {
 
 	private List<List<ChoiceNode>> fChoiceInput;
-	private Collection<IConstraint<ChoiceNode>> fConstraints;
+	private Collection<Constraint> fConstraints;
 	private Map<String, IGeneratorArgument> fGeneratorArguments;
+	private MethodNode fMethodNode;
 	
 	public TCProviderGenInitData(
 			List<List<ChoiceNode>> choiceInput,
-			Collection<IConstraint<ChoiceNode>> constraints,
-			Map<String, IGeneratorArgument> generatorArguments) {
+			Collection<Constraint> constraints,
+			Map<String, IGeneratorArgument> generatorArguments,
+			MethodNode methodNode) {
 		
 		fChoiceInput = choiceInput;
 		fConstraints = constraints;
 		fGeneratorArguments = generatorArguments;
+		fMethodNode = methodNode;
+	}
+	
+	public MethodNode getMethodNode() {
+		return fMethodNode;
 	}
 
 	public List<List<ChoiceNode>> getChoiceInput() {
 		return fChoiceInput;
 	}
 	
-	public Collection<IConstraint<ChoiceNode>> getConstraints() {
+	public Collection<Constraint> getConstraints() {
 		return fConstraints;
 	}
 	

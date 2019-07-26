@@ -2,6 +2,7 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
@@ -909,6 +910,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
                     return null;
                 }
+
+                Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
+                for (Pair<Integer, ExpectedValueStatement> p : fExpectedValConstraints) {
+                    if (vars.contains(p.getFirst())) {
+                        p.getSecond().adapt(valueAssignment);
+                    }
+                }
                 for(int i=0;i<valueAssignment.size();i++)
                 {
        			    ChoiceNode p = valueAssignment.get(i);
@@ -918,12 +926,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 				    }
 			    }
 
-                Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
-                for (Pair<Integer, ExpectedValueStatement> p : fExpectedValConstraints) {
-                    if (vars.contains(p.getFirst())) {
-                        p.getSecond().adapt(valueAssignment);
-                    }
-                }
             } catch (TimeoutException e) {
                 ExceptionHelper.reportRuntimeException("Timeout, sorry!");
                 return null;
