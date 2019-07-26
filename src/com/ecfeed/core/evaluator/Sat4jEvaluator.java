@@ -459,11 +459,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             fAllRelationConditions.add(statement);
             MethodParameterNode lParam = statement.getLeftParameter();
             if(!fArgAllInputValues.containsKey(lParam))
-                fArgAllInputValues.put(lParam, new HashSet<>(lParam.getLeafChoices()));
+                fArgAllInputValues.put(lParam, new HashSet<>(lParam.getLeafChoicesWithCopies()));
             if(statement.getCondition() instanceof ParameterCondition) {
                 MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
                 if(!fArgAllInputValues.containsKey(rParam))
-                    fArgAllInputValues.put(rParam, new HashSet<>(rParam.getLeafChoices()));
+                    fArgAllInputValues.put(rParam, new HashSet<>(rParam.getLeafChoicesWithCopies()));
             }
             return null;
         }

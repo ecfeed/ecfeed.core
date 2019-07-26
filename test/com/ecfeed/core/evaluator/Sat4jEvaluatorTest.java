@@ -1350,7 +1350,7 @@ public class Sat4jEvaluatorTest {
                 input.add(Collections.singletonList(null));
             }
             else
-                input.add(arg.getChoices());
+                input.add(arg.getLeafChoicesWithCopies());
 
 
         IConstraintEvaluator<ChoiceNode> evaluator = new Sat4jEvaluator(methodNode.getAllConstraints(), methodNode);
