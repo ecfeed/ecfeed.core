@@ -157,7 +157,6 @@ public class RemoteTCProvider implements ITCProvider {
 
         try {
             String line = responseBufferedReader.readLine();
-            System.out.println(line);
             return line;
 
         } catch (IOException e) {
