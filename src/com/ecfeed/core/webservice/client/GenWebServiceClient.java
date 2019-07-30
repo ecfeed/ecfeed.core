@@ -39,14 +39,6 @@ public class GenWebServiceClient implements IWebServiceClient {
 		fClientType = clientType;
 
 		fClient = createClient(fCommunicationProtocol, keyStorePath);
-
-		if (!serverUrl.startsWith("https://")) {
-			serverUrl = "https://" + serverUrl;
-		}
-		
-		if (!serverUrl.endsWith(":8090")) {
-			serverUrl += ":8090";
-		}
 		
 		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, "testCaseService");
 
@@ -56,8 +48,6 @@ public class GenWebServiceClient implements IWebServiceClient {
 	@Override
 	public WebServiceResponse postRequest(
 			String requestType, String requestJson) {
-		
-		requestJson = requestJson.replace("'n'", "'N'");
 		
 		Response response = fWebTarget
 				.queryParam(TAG_CLIENT_TYPE, fClientType)
