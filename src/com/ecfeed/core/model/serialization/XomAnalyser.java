@@ -82,10 +82,10 @@ public abstract class XomAnalyser {
 	protected abstract String getStatementParameterAttributeName();
 
 	public RootNode parseRoot(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> errorList) throws ParserException {
+			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
 		
-		assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, errorList);
-		String name = getElementName(element, errorList);
+		assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
+		String name = getElementName(element, outErrorList);
 
 		RootNode targetRootNode = new RootNode(name, modelChangeRegistrator, getModelVersion());
 
@@ -93,14 +93,14 @@ public abstract class XomAnalyser {
 
 		//parameters must be parsed before classes
 		for (Element child : getIterableChildren(element, getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), errorList);
+			Optional<GlobalParameterNode> node = parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
 			if (node.isPresent()) {
 				targetRootNode.addParameter(node.get());
 			}
 		}
 		
 		for (Element child : getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME)) {
-			Optional<ClassNode> node = parseClass(child, targetRootNode, errorList);
+			Optional<ClassNode> node = parseClass(child, targetRootNode, outErrorList);
 			if (node.isPresent()) {
 				targetRootNode.addClass(node.get());
 			}

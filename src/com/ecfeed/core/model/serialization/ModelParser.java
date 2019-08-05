@@ -44,11 +44,11 @@ public class ModelParser {
 	XomAnalyser fXomAnalyser = null;
 
 	public RootNode parseModel(
-			String modelXml, IModelChangeRegistrator modelChangeRegistrator, List<String> details) throws ParserException { 
+			String modelXml, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException { 
 
 		InputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 
-		return parseModel(istream, modelChangeRegistrator, details);
+		return parseModel(istream, modelChangeRegistrator, outErrorList);
 	}
 
 	public RootNode parseModel(
