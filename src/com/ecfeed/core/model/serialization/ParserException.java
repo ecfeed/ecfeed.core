@@ -23,8 +23,13 @@ public class ParserException extends Exception {
 		super(message);
 	}
 	
+	public static void create() throws ParserException {
+		throw new ParserException("");
+	}
+	
 	public static void report(String message) throws ParserException {
 		SystemLogger.logThrow(message);
 		throw new ParserException(message);
 	}
+	
 }

@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -66,7 +67,6 @@ import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.BooleanHolder;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.StringHolder;
 
@@ -81,9 +81,11 @@ public abstract class XomAnalyser {
 	protected abstract String getParameterNodeName();
 	protected abstract String getStatementParameterAttributeName();
 
-	public RootNode parseRoot(Element element, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
-		assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME);
-		String name = getElementName(element);
+	public RootNode parseRoot(
+			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+		
+		assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
+		String name = getElementName(element, outErrorList);
 
 		RootNode targetRootNode = new RootNode(name, modelChangeRegistrator, getModelVersion());
 
@@ -91,28 +93,33 @@ public abstract class XomAnalyser {
 
 		//parameters must be parsed before classes
 		for (Element child : getIterableChildren(element, getParameterNodeName())) {
-			try{
-				targetRootNode.addParameter(parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator()));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<GlobalParameterNode> node = parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			if (node.isPresent()) {
+				targetRootNode.addParameter(node.get());
 			}
 		}
+		
 		for (Element child : getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME)) {
-			try{
-				targetRootNode.addClass(parseClass(child, targetRootNode));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<ClassNode> node = parseClass(child, targetRootNode, outErrorList);
+			if (node.isPresent()) {
+				targetRootNode.addClass(node.get());
 			}
 		}
 
 		return targetRootNode;
 	}
 
-	public ClassNode parseClass(Element classElement, RootNode parent) throws ParserException {
+	public Optional<ClassNode> parseClass(
+			Element classElement, RootNode parent, List<String> errorList) {
 
-		assertNodeTag(classElement.getQualifiedName(), CLASS_NODE_NAME);
-
-		String name = getElementName(classElement);
+		String name;
+		
+		try {
+			assertNodeTag(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
+			name = getElementName(classElement, errorList);
+		} catch (ParserException e) {
+			return Optional.empty();
+		}
 
 		BooleanHolder runOnAndroidHolder = new BooleanHolder(false);
 		StringHolder androidBaseRunnerHolder = new StringHolder(); 
@@ -131,22 +138,20 @@ public abstract class XomAnalyser {
 
 		//parameters must be parsed before classes
 		for (Element child : getIterableChildren(classElement, getParameterNodeName())) {
-			try{
-				targetClassNode.addParameter(parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator()));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<GlobalParameterNode> node = parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
+			if (node.isPresent()) {
+				targetClassNode.addParameter(node.get());
 			}
 		}
 
 		for (Element child : getIterableChildren(classElement, SerializationConstants.METHOD_NODE_NAME)) {
-			try{
-				targetClassNode.addMethod(parseMethod(child, targetClassNode));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<MethodNode> node = parseMethod(child, targetClassNode, errorList);
+			if (node.isPresent()) {
+				targetClassNode.addMethod(node.get());
 			}
 		}
 
-		return targetClassNode;
+		return Optional.ofNullable(targetClassNode);
 	}
 
 	private void parseAndroidValues(
@@ -188,42 +193,47 @@ public abstract class XomAnalyser {
 		androidBaseRunnerHolder.set(androidBaseRunnerStr);		
 	}
 
-	public MethodNode parseMethod(Element methodElement, ClassNode classNode) throws ParserException{
-		assertNodeTag(methodElement.getQualifiedName(), METHOD_NODE_NAME);
-		String name = getElementName(methodElement);
-
+	public Optional<MethodNode> parseMethod(
+			Element methodElement, ClassNode classNode, List<String> errorList) {
+		
+		String name;
+		
+		try {
+			assertNodeTag(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
+			name = getElementName(methodElement, errorList);
+		} catch (ParserException e) {
+			return Optional.empty();
+		}
+		
 		MethodNode targetMethodNode = new MethodNode(name, classNode.getModelChangeRegistrator());
 		targetMethodNode.setParent(classNode);
 
 		parseMethodProperties(methodElement, targetMethodNode);
 
 		for (Element child : getIterableChildren(methodElement, getParameterNodeName())) {
-			try{
-				targetMethodNode.addParameter(parseMethodParameter(child, targetMethodNode));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<MethodParameterNode> node = parseMethodParameter(child, targetMethodNode, errorList);
+			if (node.isPresent()) {
+				targetMethodNode.addParameter(node.get());
 			}
 		}
 
 		for (Element child : getIterableChildren(methodElement, SerializationConstants.TEST_CASE_NODE_NAME)) {
-			try{
-				targetMethodNode.addTestCase(parseTestCase(child, targetMethodNode));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<TestCaseNode> node = parseTestCase(child, targetMethodNode, errorList);
+			if (node.isPresent()) {
+				targetMethodNode.addTestCase(node.get());
 			}
 		}
 
 		for (Element child : getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME)) {
-			try{
-				targetMethodNode.addConstraint(parseConstraint(child, targetMethodNode));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<ConstraintNode> node = parseConstraint(child, targetMethodNode, errorList);
+			if (node.isPresent()) {
+				targetMethodNode.addConstraint(node.get());
 			}
 		}
 
 		targetMethodNode.setDescription(parseComments(methodElement));
 
-		return targetMethodNode;
+		return Optional.ofNullable(targetMethodNode);
 	}
 
 	private void parseMethodProperties(Element methodElement, MethodNode targetMethodNode) {
@@ -239,6 +249,7 @@ public abstract class XomAnalyser {
 			NodePropertyDefs.PropertyId propertyId, 
 			Element methodElement, 
 			MethodNode targetMethodNode) {
+		
 		String value = getPropertyValue(propertyId, methodElement);
 		if (StringHelper.isNullOrEmpty(value)) {
 			return;
@@ -246,19 +257,27 @@ public abstract class XomAnalyser {
 		targetMethodNode.setPropertyValue(propertyId, value);		
 	}
 
-	public MethodParameterNode parseMethodParameter(Element parameterElement, MethodNode method) throws ParserException{
+	public Optional<MethodParameterNode> parseMethodParameter(
+			Element parameterElement, MethodNode method, List<String> errorList) {
 
-		assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName());
-		String name = getElementName(parameterElement);
-		String type = getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE);
+		String name, type;
 		String defaultValue = null;
 		String expected = String.valueOf(false);
-
-		if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
-			expected = getAttributeValue(parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME);
-			defaultValue = getAttributeValue(parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME);
+		
+		try {
+			assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
+			name = getElementName(parameterElement, errorList);
+			type = getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
+			
+			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
+				expected = getAttributeValue(parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
+				defaultValue = getAttributeValue(parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
+			}
+			
+		} catch (ParserException e) {
+			return Optional.empty();
 		}
-
+		
 		MethodParameterNode targetMethodParameterNode = 
 				new MethodParameterNode(
 						name, method.getModelChangeRegistrator(), 
@@ -267,28 +286,41 @@ public abstract class XomAnalyser {
 		parseParameterProperties(parameterElement, targetMethodParameterNode);
 
 		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
-			boolean linked = Boolean.parseBoolean(getAttributeValue(parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME));
+			boolean linked ;
+			
+			try {
+				linked = Boolean.parseBoolean(getAttributeValue(parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
+			} catch (ParserException e) {
+				return Optional.empty();
+			}
+			
 			targetMethodParameterNode.setLinked(linked);
 		}
 
 		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method != null && method.getClassNode() != null) {
-			String linkPath = getAttributeValue(parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME);
+			String linkPath;
+			
+			try {
+				linkPath = getAttributeValue(parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
+			} catch (ParserException e) {
+				return Optional.empty();
+			}
+			
 			GlobalParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			
 			if (link != null) {
 				targetMethodParameterNode.setLink(link);
-			}
-			else{
+			} else {
 				targetMethodParameterNode.setLinked(false);
 			}
-		}else{
+		} else {
 			targetMethodParameterNode.setLinked(false);
 		}
 
 		for (Element child : getIterableChildren(parameterElement, getChoiceNodeName())) {
-			try{
-				targetMethodParameterNode.addChoice(parseChoice(child, targetMethodParameterNode.getModelChangeRegistrator()));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<ChoiceNode> node = parseChoice(child, targetMethodParameterNode.getModelChangeRegistrator(), errorList);
+			if (node.isPresent()) {
+				targetMethodParameterNode.addChoice(node.get());
 			}
 		}
 
@@ -297,10 +329,11 @@ public abstract class XomAnalyser {
 			targetMethodParameterNode.setTypeComments(parseTypeComments(parameterElement));
 		}
 
-		return targetMethodParameterNode;
+		return Optional.ofNullable(targetMethodParameterNode);
 	}
 
 	private void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
+		
 		parseParameterProperty(
 				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
 				parameterElement, 
@@ -331,6 +364,7 @@ public abstract class XomAnalyser {
 			NodePropertyDefs.PropertyId propertyId, 
 			Element methodElement, 
 			AbstractParameterNode targetAbstractParameterNode) {
+		
 		String value = getPropertyValue(propertyId, methodElement);
 		if (StringHelper.isNullOrEmpty(value)) {
 			return;
@@ -338,36 +372,47 @@ public abstract class XomAnalyser {
 		targetAbstractParameterNode.setPropertyValue(propertyId, value);		
 	}
 
+	public Optional<GlobalParameterNode> parseGlobalParameter(
+			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> errorList) {
 
-	public GlobalParameterNode parseGlobalParameter(
-			Element element, IModelChangeRegistrator modelChangeRegistrator) throws ParserException{
-
-		assertNodeTag(element.getQualifiedName(), getParameterNodeName());
-		String name = getElementName(element);
-		String type = getAttributeValue(element, TYPE_NAME_ATTRIBUTE);
-		GlobalParameterNode targetGlobalParameterNode = 
-				new GlobalParameterNode(name, modelChangeRegistrator, type);
+		String name, type;
+		
+		try {
+			assertNodeTag(element.getQualifiedName(), getParameterNodeName(), errorList);
+			name = getElementName(element, errorList);
+			type = getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errorList);
+		} catch (ParserException e) {
+			return Optional.empty();
+		}
+		
+		GlobalParameterNode targetGlobalParameterNode = new GlobalParameterNode(name, modelChangeRegistrator, type);
 
 		parseParameterProperties(element, targetGlobalParameterNode);
 
 		for (Element child : getIterableChildren(element, getChoiceNodeName())) {
-			try{
-				targetGlobalParameterNode.addChoice(parseChoice(child, modelChangeRegistrator));
-			}catch(ParserException e) {
-				System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+			Optional<ChoiceNode> node = parseChoice(child, modelChangeRegistrator, errorList);
+			if (node.isPresent()) {
+				targetGlobalParameterNode.addChoice(node.get());
 			}
 		}
 
 		targetGlobalParameterNode.setDescription(parseComments(element));
 		targetGlobalParameterNode.setTypeComments(parseTypeComments(element));
 
-		return targetGlobalParameterNode;
+		return Optional.ofNullable(targetGlobalParameterNode);
 	}
 
-	public TestCaseNode parseTestCase(Element element, MethodNode method) throws ParserException{
+	public Optional<TestCaseNode> parseTestCase(
+			Element element, MethodNode method, List<String> errorList) {
 
-		assertNodeTag(element.getQualifiedName(), TEST_CASE_NODE_NAME);
-		String name = getAttributeValue(element, TEST_SUITE_NAME_ATTRIBUTE);
+		String name;
+		
+		try {
+			assertNodeTag(element.getQualifiedName(), TEST_CASE_NODE_NAME, errorList);
+			name = getAttributeValue(element, TEST_SUITE_NAME_ATTRIBUTE, errorList);
+		} catch (ParserException e) {
+			return Optional.empty();
+		}
 
 		String[] elementTypes = new String[] { TEST_PARAMETER_NODE_NAME, EXPECTED_PARAMETER_NODE_NAME };
 		List<Element> parameterElements = getIterableChildren(element, elementTypes);
@@ -376,7 +421,8 @@ public abstract class XomAnalyser {
 		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 
 		if (parameters.size() != parameterElements.size()) {
-			ParserException.report(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(name));
+			errorList.add(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(name));
+			return Optional.empty();
 		}
 
 		for (int i = 0; i < parameterElements.size(); i++) {
@@ -385,287 +431,367 @@ public abstract class XomAnalyser {
 			ChoiceNode testValue = null;
 
 			if (testParameterElement.getLocalName().equals(SerializationConstants.TEST_PARAMETER_NODE_NAME)) {
-				String choiceName = getAttributeValue(testParameterElement, getChoiceAttributeName());
+				String choiceName;
+				
+				try {
+					choiceName = getAttributeValue(testParameterElement, getChoiceAttributeName(), errorList);
+				} catch (ParserException e) {
+					return Optional.empty();
+				}
+				
 				testValue = parameter.getChoice(choiceName);
 				if (testValue == null) {
-					ParserException.report(Messages.PARTITION_DOES_NOT_EXIST(parameter.getFullName(), choiceName));
+					errorList.add(Messages.PARTITION_DOES_NOT_EXIST(parameter.getFullName(), choiceName));
+					return Optional.empty();
 				}
-			}
-			else if (testParameterElement.getLocalName().equals(SerializationConstants.EXPECTED_PARAMETER_NODE_NAME)) {
-				String valueString = getAttributeValue(testParameterElement, SerializationConstants.VALUE_ATTRIBUTE_NAME);
+				
+			} else if (testParameterElement.getLocalName().equals(SerializationConstants.EXPECTED_PARAMETER_NODE_NAME)) {
+				String valueString;
+				
+				try {
+					valueString = getAttributeValue(testParameterElement, SerializationConstants.VALUE_ATTRIBUTE_NAME, errorList);
+				} catch (ParserException e) {
+					return Optional.empty();
+				}
+				
 				if (valueString == null) {
-					ParserException.report(Messages.MISSING_VALUE_ATTRIBUTE_IN_TEST_CASE_ELEMENT);
+					errorList.add(Messages.MISSING_VALUE_ATTRIBUTE_IN_TEST_CASE_ELEMENT);
+					return Optional.empty();
 				}
+				
 				testValue = new ChoiceNode(EXPECTED_VALUE_CHOICE_NAME, parameter.getModelChangeRegistrator(), valueString);
 				testValue.setParent(parameter);
 			}
+			
 			testData.add(testValue);
 		}
 
 		TestCaseNode targetTestCaseNode = new TestCaseNode(name, method.getModelChangeRegistrator(), testData);
 		targetTestCaseNode.setDescription(parseComments(element));
-		return targetTestCaseNode;
+		
+		return Optional.ofNullable(targetTestCaseNode);
 	}
 
-	public ConstraintNode parseConstraint(Element element, MethodNode method) throws ParserException{
-		assertNodeTag(element.getQualifiedName(), CONSTRAINT_NODE_NAME);
-		String name = getElementName(element);
+	public Optional<ConstraintNode> parseConstraint(Element element, MethodNode method, List<String> errorList) {
+		
+		String name;
+		
+		try {
+			assertNodeTag(element.getQualifiedName(), CONSTRAINT_NODE_NAME, errorList);
+			name = getElementName(element, errorList);
+		} catch (ParserException e) {
+			return Optional.empty();
+		}
 
-		AbstractStatement premise = null;
-		AbstractStatement consequence = null;
+		Optional<AbstractStatement> premise = null;
+		Optional<AbstractStatement> consequence = null;
 
 		if ((getIterableChildren(element, SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME).size() != 1) ||
 				(getIterableChildren(element, SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME).size() != 1)) {
-			ParserException.report(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+			
+			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+			return Optional.empty();
 		}
+		
 		for (Element child : getIterableChildren(element, SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME)) {
 			if (child.getLocalName().equals(SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME)) {
 				if (getIterableChildren(child).size() == 1) {
 					//there is only one statement per premise or consequence that is either
 					//a single statement or statement array
-					premise = parseStatement(child.getChildElements().get(0), method);
-				}
-				else{
-					ParserException.report(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+					premise = parseStatement(child.getChildElements().get(0), method, errorList);
+				} else {
+					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+					return Optional.empty();
 				}
 			}
 		}
+		
 		for (Element child : getIterableChildren(element, SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME)) {
 			if (child.getLocalName().equals(SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME)) {
 				if (getIterableChildren(child).size() == 1) {
-					consequence = parseStatement(child.getChildElements().get(0), method);
+					consequence = parseStatement(child.getChildElements().get(0), method, errorList);
+				} else {
+					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+					return Optional.empty();
 				}
-				else{
-					ParserException.report(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
-				}
-			}
-			else{
-				ParserException.report(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+			} else {
+				errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+				return Optional.empty();
 			}
 		}
-		if (premise == null || consequence == null) {
-			ParserException.report(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+		
+		if (!premise.isPresent() || !consequence.isPresent()) {
+			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+			return Optional.empty();
 		}
 
-		Constraint constraint = new Constraint(name, method.getModelChangeRegistrator(), premise, consequence);
+		Constraint constraint = new Constraint(name, method.getModelChangeRegistrator(), premise.get(), consequence.get());
 		ConstraintNode targetConstraint = new ConstraintNode(name, method.getModelChangeRegistrator(), constraint);
 
 		targetConstraint.setDescription(parseComments(element));
 
-		return targetConstraint;
+		return Optional.ofNullable(targetConstraint);
 	}
 
-	public AbstractStatement parseStatement(Element element, MethodNode method) throws ParserException {
+	public Optional<AbstractStatement> parseStatement(Element element, MethodNode method, List<String> errorList) {
 
-		String localName = element.getLocalName();
-
-		switch(localName) {
-
-		case SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME:
-			return parseChoiceStatement(element, method);
-
-		case SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME:
-			return parseParameterStatement(element, method);
-
-		case SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME:
-			return parseValueStatement(element, method);
-
-		case SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME:
-			return parseLabelStatement(element, method);
-
-		case SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME:
-			return parseStatementArray(element, method);
-
-		case SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME:
-			return parseStaticStatement(element, method.getModelChangeRegistrator());
-
-		case SerializationConstants.CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME:
-			return parseExpectedValueStatement(element, method);
-
-		default: return null;
+		try {
+			String localName = element.getLocalName();
+	
+			switch(localName) {
+	
+				case SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME:
+					return Optional.ofNullable(parseChoiceStatement(element, method, errorList));
+		
+				case SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME:
+					return Optional.ofNullable(parseParameterStatement(element, method, errorList));
+		
+				case SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME:
+					return Optional.ofNullable(parseValueStatement(element, method, errorList));
+		
+				case SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME:
+					return Optional.ofNullable(parseLabelStatement(element, method, errorList));
+		
+				case SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME:
+					return Optional.ofNullable(parseStatementArray(element, method, errorList));
+		
+				case SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME:
+					return Optional.ofNullable(parseStaticStatement(element, method.getModelChangeRegistrator(), errorList));
+		
+				case SerializationConstants.CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME:
+					return Optional.ofNullable(parseExpectedValueStatement(element, method, errorList));
+		
+				default: return null;
+			}
+		} catch (Exception e) {
+			return Optional.empty();
 		}
+		
 	}
 
-	public StatementArray parseStatementArray(Element element, MethodNode method) throws ParserException {
+	public StatementArray parseStatementArray(
+			Element element, MethodNode method, List<String> errorList) throws ParserException {
 
-		assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATEMENT_ARRAY_NODE_NAME);
+		assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATEMENT_ARRAY_NODE_NAME, errorList);
 
 		StatementArray statementArray = null;
-		String operatorValue = getAttributeValue(element, SerializationConstants.STATEMENT_OPERATOR_ATTRIBUTE_NAME);
+		String operatorValue = getAttributeValue(element, SerializationConstants.STATEMENT_OPERATOR_ATTRIBUTE_NAME, errorList);
+		
 		switch(operatorValue) {
-		case SerializationConstants.STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE:
-			statementArray = new StatementArray(EStatementOperator.OR, method.getModelChangeRegistrator());
-			break;
-		case SerializationConstants.STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE:
-			statementArray = new StatementArray(EStatementOperator.AND, method.getModelChangeRegistrator());
-			break;
-		default:
-			ParserException.report(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(method.getFullName(), operatorValue));
+			case SerializationConstants.STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE:
+				statementArray = new StatementArray(EStatementOperator.OR, method.getModelChangeRegistrator());
+				break;
+			case SerializationConstants.STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE:
+				statementArray = new StatementArray(EStatementOperator.AND, method.getModelChangeRegistrator());
+				break;
+			default:
+				errorList.add(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(method.getFullName(), operatorValue));
+				return null;
 		}
+		
 		for (Element child : getIterableChildren(element)) {
-			AbstractStatement childStatement = parseStatement(child, method);
-			if (childStatement != null) {
-				statementArray.addStatement(childStatement);
+			Optional<AbstractStatement> childStatement = parseStatement(child, method, errorList);
+			if (childStatement.isPresent()) {
+				statementArray.addStatement(childStatement.get());
 			}
 		}
+		
 		return statementArray;
 	}
 
-	public StaticStatement parseStaticStatement(Element element, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
+	public StaticStatement parseStaticStatement(
+			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> errorList) throws ParserException {
 
-		assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATIC_STATEMENT_NODE_NAME);
+		assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATIC_STATEMENT_NODE_NAME, errorList);
 
-		String valueString = getAttributeValue(element, SerializationConstants.STATIC_VALUE_ATTRIBUTE_NAME);
+		String valueString = getAttributeValue(element, SerializationConstants.STATIC_VALUE_ATTRIBUTE_NAME, errorList);
+		
 		switch(valueString) {
-		case SerializationConstants.STATIC_STATEMENT_TRUE_VALUE:
-			return new StaticStatement(true, modelChangeRegistrator);
-		case SerializationConstants.STATIC_STATEMENT_FALSE_VALUE:
-			return new StaticStatement(false, modelChangeRegistrator);
-		default:
-			ParserException.report(Messages.WRONG_STATIC_STATEMENT_VALUE(valueString));
-			return new StaticStatement(false, modelChangeRegistrator);
+			case SerializationConstants.STATIC_STATEMENT_TRUE_VALUE:
+				return new StaticStatement(true, modelChangeRegistrator);
+			case SerializationConstants.STATIC_STATEMENT_FALSE_VALUE:
+				return new StaticStatement(false, modelChangeRegistrator);
+			default:
+				errorList.add(Messages.WRONG_STATIC_STATEMENT_VALUE(valueString));
+				return null;
 		}
+		
 	}
 
-	public RelationStatement parseChoiceStatement(Element element, MethodNode method) throws ParserException {
-		assertNodeTag(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME);
+	public RelationStatement parseChoiceStatement(
+			Element element, MethodNode method, List<String> errorList) throws ParserException {
+		
+		assertNodeTag(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
-		String parameterName = getAttributeValue(element, getStatementParameterAttributeName());
+		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
 		MethodParameterNode parameter = (MethodParameterNode)method.getParameter(parameterName);
 		if (parameter == null || parameter.isExpected()) {
-			ParserException.report(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			return null;
 		}
 
-		String choiceName = getAttributeValue(element, getStatementChoiceAttributeName());
+		String choiceName = getAttributeValue(element, getStatementChoiceAttributeName(), errorList);
 		ChoiceNode choice = parameter.getChoice(choiceName);
 		if (choice == null) {
-			ParserException.report(Messages.WRONG_PARTITION_NAME(choiceName, parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARTITION_NAME(choiceName, parameterName, method.getFullName()));
+			return null;
 		}
 
-		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME);
-		EMathRelation relation = getRelation(relationName);
+		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
+		EMathRelation relation = getRelation(relationName, errorList);
 
 		return RelationStatement.createStatementWithChoiceCondition(parameter, relation, choice);
 	}
 
-	public RelationStatement parseParameterStatement(Element element, MethodNode method) throws ParserException { 
-		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME);
+	public RelationStatement parseParameterStatement(
+			Element element, MethodNode method, List<String> errorList) throws ParserException { 
+		
+		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
 
-		String parameterName = getAttributeValue(element, getStatementParameterAttributeName());
+		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.getParameter(parameterName);
 		if (leftParameterNode == null || leftParameterNode.isExpected()) {
-			ParserException.report(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			return null;
 		}
 
-		String rightParameterName = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME);
+		String rightParameterName = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, errorList);
 
 		MethodParameterNode rightParameterNode = (MethodParameterNode)method.getParameter(rightParameterName);
 		if (rightParameterNode == null) {
-			ParserException.report(Messages.WRONG_PARAMETER_NAME(rightParameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, method.getFullName()));
+			return null;
 		}
 
-		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME);
-		EMathRelation relation = getRelation(relationName);
+		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
+		EMathRelation relation = getRelation(relationName, errorList);
 
 		return RelationStatement.createStatementWithParameterCondition(leftParameterNode, relation, rightParameterNode);
 	}
 
-	public RelationStatement parseValueStatement(Element element, MethodNode method) throws ParserException {
+	public RelationStatement parseValueStatement(
+			Element element, MethodNode method, List<String> errorList) throws ParserException {
 
-		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME);
+		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
 
-		String parameterName = getAttributeValue(element, getStatementParameterAttributeName());
+		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.getParameter(parameterName);
 		if (leftParameterNode == null || leftParameterNode.isExpected()) {
-			ParserException.report(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			return null;
 		}
 
-		String text = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME);
+		String text = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME, errorList);
 
-		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME);
-		EMathRelation relation = getRelation(relationName);
+		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
+		EMathRelation relation = getRelation(relationName, errorList);
 
 		return RelationStatement.createStatementWithValueCondition(leftParameterNode, relation, text);
 	}
 
-	public RelationStatement parseLabelStatement(Element element, MethodNode method) throws ParserException {
-		assertNodeTag(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME);
+	public RelationStatement parseLabelStatement(
+			Element element, MethodNode method, List<String> errorList) throws ParserException {
+		
+		assertNodeTag(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
 
-		String parameterName = getAttributeValue(element, getStatementParameterAttributeName());
-		String label = getAttributeValue(element, SerializationConstants.STATEMENT_LABEL_ATTRIBUTE_NAME);
-		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME);
+		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
+		String label = getAttributeValue(element, SerializationConstants.STATEMENT_LABEL_ATTRIBUTE_NAME, errorList);
+		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 
 		MethodParameterNode parameter = method.getMethodParameter(parameterName);
 		if (parameter == null || parameter.isExpected()) {
-			ParserException.report(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			return null;
 		}
-		EMathRelation relation = getRelation(relationName);
+		EMathRelation relation = getRelation(relationName, errorList);
 
 		return RelationStatement.createStatementWithLabelCondition(parameter, relation, label);
 	}
 
-	public ExpectedValueStatement parseExpectedValueStatement(Element element, MethodNode method) throws ParserException {
-		assertNodeTag(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME);
+	public ExpectedValueStatement parseExpectedValueStatement(
+			Element element, MethodNode method, List<String> errorList) throws ParserException {
+		
+		assertNodeTag(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
 
-		String parameterName = getAttributeValue(element, getStatementParameterAttributeName());
-		String valueString = getAttributeValue(element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME);
+		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
+		String valueString = getAttributeValue(element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
 		MethodParameterNode parameter = method.getMethodParameter(parameterName);
+		
 		if (parameter == null || !parameter.isExpected()) {
-			ParserException.report(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			return null;
 		}
+		
 		ChoiceNode condition = new ChoiceNode("expected", parameter.getModelChangeRegistrator(), valueString);
 		condition.setParent(parameter);
 
 		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
 	}
 
-	public ChoiceNode parseChoice(Element element, IModelChangeRegistrator modelChangeRegistrator) throws ParserException{
+	public Optional<ChoiceNode> parseChoice(
+			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> errorList) {
 
-		assertNodeTag(element.getQualifiedName(), getChoiceNodeName());
-		String name = getElementName(element);
-		String value = getAttributeValue(element, VALUE_ATTRIBUTE);
-
-		boolean isRandomized = getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
+		String name, value;
+		boolean isRandomized;
+		
+		try {
+			assertNodeTag(element.getQualifiedName(), getChoiceNodeName(), errorList);
+			name = getElementName(element, errorList);
+			value = getAttributeValue(element, VALUE_ATTRIBUTE, errorList);
+			isRandomized = getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
+		} catch (ParserException e) {
+			return Optional.empty();
+		}
 
 		ChoiceNode choice = new ChoiceNode(name, modelChangeRegistrator, value);
 		choice.setRandomizedValue(isRandomized);
 		choice.setDescription(parseComments(element));
 
 		for (Element child : getIterableChildren(element)) {
+			
 			if (child.getLocalName() == getChoiceNodeName()) {
-				try{
-					choice.addChoice(parseChoice(child, modelChangeRegistrator));
-				}catch(ParserException e) {
-					System.err.println("Exception: " + ExceptionHelper.createErrorMessage(e));
+				Optional<ChoiceNode> node = parseChoice(child, modelChangeRegistrator, errorList);
+				if (node.isPresent()) {
+					choice.addChoice(node.get());
+				} else {
+					return Optional.empty();
 				}
 
 			}
+			
 			if (child.getLocalName() == SerializationConstants.LABEL_NODE_NAME) {
 				choice.addLabel(fWhiteCharConverter.decode(child.getAttributeValue(SerializationConstants.LABEL_ATTRIBUTE_NAME)));
 			}
 		}
 
-		return choice;
+		return Optional.ofNullable(choice);
 	}
 
-	private static void assertNodeTag(String qualifiedName, String expectedName) throws ParserException {
+	private static void assertNodeTag(
+			String qualifiedName, String expectedName, List<String> errorList) throws ParserException {
+		
 		if (qualifiedName.equals(expectedName) == false) {
-			ParserException.report("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
+			errorList.add("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
+			ParserException.create();
 		}
+		
 	}
-
+	
 	protected static List<Element> getIterableChildren(Element element) {
+		
 		ArrayList<Element> list = new ArrayList<Element>();
 		Elements children = element.getChildElements();
+		
 		for (int i = 0; i < children.size(); i++) {
 			Node node = children.get(i);
 			if (node instanceof Element) {
 				list.add((Element)node);
 			}
 		}
+		
 		return list;
 	}
 
@@ -679,6 +805,7 @@ public abstract class XomAnalyser {
 				it.remove();
 			}
 		}
+		
 		return elements;
 	}
 
@@ -698,35 +825,49 @@ public abstract class XomAnalyser {
 		return elements;
 	}
 
-	protected String getElementName(Element element) throws ParserException {
+	protected String getElementName(
+			Element element, List<String> errorList) throws ParserException {
+		
 		String name = element.getAttributeValue(SerializationConstants.NODE_NAME_ATTRIBUTE);
+		
 		if (name == null) {
-			ParserException.report(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
+			errorList.add(Messages.MISSING_ATTRIBUTE(element, SerializationConstants.NODE_NAME_ATTRIBUTE));
+			ParserException.create();
 		}
+		
 		return fWhiteCharConverter.decode(name);
 	}
 
-	protected String getAttributeValue(Element element, String attributeName) throws ParserException{
+	protected String getAttributeValue(
+			Element element, String attributeName, List<String> errorList) throws ParserException {
+		
 		String value = element.getAttributeValue(attributeName);
+		
 		if (value == null) {
-			ParserException.report(Messages.MISSING_ATTRIBUTE(element, attributeName));
+			errorList.add(Messages.MISSING_ATTRIBUTE(element, attributeName));
+			ParserException.create();
 		}
+		
 		return fWhiteCharConverter.decode(value);
 	}
 
 	protected boolean getIsRandomizedValue(Element element, String attributeName) throws ParserException {
 		String isRandomizedValue = element.getAttributeValue(attributeName);
+		
 		if (isRandomizedValue == null) {
 			return false;
 		}
+		
 		return Boolean.parseBoolean(fWhiteCharConverter.decode(isRandomizedValue));
 	}
 
-	protected EMathRelation getRelation(String relationName) throws ParserException {
+	protected EMathRelation getRelation(
+			String relationName, List<String> errorList) throws ParserException {
 
 		EMathRelation relation = EMathRelation.getRelation(relationName);
 
 		if (relation == null) {
+			errorList.add(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
 			ParserException.report(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
 		}
 
@@ -734,6 +875,7 @@ public abstract class XomAnalyser {
 	}
 
 	protected String parseComments(Element element) {
+		
 		if (element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 			Element comments = element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).get(0);
 			if (comments.getChildElements(SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME).size() > 0) {
@@ -741,10 +883,12 @@ public abstract class XomAnalyser {
 				return fWhiteCharConverter.decode(basicComments.getValue());
 			}
 		}
+		
 		return null;
 	}
 
 	protected String parseTypeComments(Element element) {
+		
 		if (element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 			Element comments = element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).get(0);
 			if (comments.getChildElements(SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME).size() > 0) {
@@ -752,10 +896,12 @@ public abstract class XomAnalyser {
 				return fWhiteCharConverter.decode(typeComments.getValue());
 			}
 		}
+		
 		return null;
 	}
 
 	private static String getPropertyValue(NodePropertyDefs.PropertyId propertyId, Element classElement) {
+		
 		String propertyName = NodePropertyDefs.getPropertyName(propertyId);
 
 		Elements propertyElements = getPropertyElements(classElement);
@@ -779,6 +925,7 @@ public abstract class XomAnalyser {
 	}	
 
 	private static Elements getPropertyElements(Element parentElement) {
+		
 		Elements propertyBlockElements = parentElement.getChildElements(SerializationConstants.PROPERTIES_BLOCK_TAG_NAME);
 		if (propertyBlockElements.size() == 0) {
 			return null;

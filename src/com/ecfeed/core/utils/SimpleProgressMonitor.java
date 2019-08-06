@@ -18,8 +18,17 @@ public class SimpleProgressMonitor implements IEcfProgressMonitor {
 	boolean fIsCancelled = false;
 
 	@Override
+	public void reset() {
+
+		fTotalProgress = 0;
+		fCurrentProgress = 0;
+		fIsTaskRunning = false;
+		fIsCancelled = false;
+	}
+
+	@Override
 	public void setTaskBegin(String name, int totalProgress) {
-		
+
 		fTotalProgress = totalProgress;
 		fCurrentProgress = 0;
 		fIsTaskRunning = true;
@@ -28,13 +37,13 @@ public class SimpleProgressMonitor implements IEcfProgressMonitor {
 
 	@Override
 	public void setTaskEnd() {
-		
+
 		fIsTaskRunning = false;
 	}
 
 	@Override
 	public void setCurrentProgress(int currentProgress) {
-		
+
 		fCurrentProgress = currentProgress;
 	}
 
@@ -46,17 +55,17 @@ public class SimpleProgressMonitor implements IEcfProgressMonitor {
 
 	@Override
 	public void setCanceled() {
-		
+
 		fIsCancelled = true;
 		fIsTaskRunning = false;
 	}
-	
+
 	@Override
 	public boolean isTaskRunning() {
-		
+
 		return fIsTaskRunning;
 	}
-	
+
 	@Override
 	public boolean isCanceled() {
 		return fIsCancelled;
@@ -64,23 +73,23 @@ public class SimpleProgressMonitor implements IEcfProgressMonitor {
 
 	@Override
 	public boolean canCalculateProgress() {
-		
+
 		if (fTotalProgress == IEcfProgressMonitor.PROGRESS_UNKNOWN) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	@Override
 	public int getTotalProgress() {
-		
+
 		return fTotalProgress;
 	}
 
 	@Override
 	public int getCurrentProgress() {
-		
+
 		return fCurrentProgress;
 	}
 

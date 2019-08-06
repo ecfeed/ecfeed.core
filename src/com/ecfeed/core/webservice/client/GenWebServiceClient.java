@@ -39,7 +39,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 		fClientType = clientType;
 
 		fClient = createClient(fCommunicationProtocol, keyStorePath);
-
+		
 		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, "testCaseService");
 
 		fWebTarget = fClient.target(targetStr);
@@ -48,7 +48,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 	@Override
 	public WebServiceResponse postRequest(
 			String requestType, String requestJson) {
-
+		
 		Response response = fWebTarget
 				.queryParam(TAG_CLIENT_TYPE, fClientType)
 				.queryParam(TAG_CLIENT_VERSION, fClientVersion)

@@ -94,13 +94,13 @@ public class TestCasesUserInput {
 		setCoverage(coverageStr);
 	}
 
-	@JsonGetter("N")
+	@JsonGetter("n")
 	public String getN() {
 		
 		return fN;
 	}
 
-	@JsonSetter("N")
+	@JsonSetter("n")
 	public void setN(String n) {
 		
 		fN = n;

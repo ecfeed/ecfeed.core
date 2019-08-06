@@ -11,11 +11,15 @@
 package com.ecfeed.core.serialization;
 
 import static com.ecfeed.core.testutils.TestUtilConstants.SUPPORTED_TYPES;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import nu.xom.Document;
@@ -73,7 +77,7 @@ public class XomParserTest {
 			TRACE(rootElement);
 
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			RootNode parsedRootNode = analyser.parseRoot(rootElement, null);
+			RootNode parsedRootNode = analyser.parseRoot(rootElement, null, new ArrayList<>());
 			assertElementsEqual(rootNode, parsedRootNode);
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -98,8 +102,8 @@ public class XomParserTest {
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 
 			RootNode tmpRoot = new RootNode("tmp", null);
-			ClassNode parsedClass = analyser.parseClass(element, tmpRoot);
-			assertElementsEqual(classNode, parsedClass);
+			Optional<ClassNode> parsedClass = analyser.parseClass(element, tmpRoot, new ArrayList<>());
+			assertElementsEqual(classNode, parsedClass.get());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
 		}
@@ -124,8 +128,8 @@ public class XomParserTest {
 				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
-				MethodNode parsedMethodNode = analyser.parseMethod(element, tmpClassNode);
-				assertElementsEqual(methodNode, parsedMethodNode);
+				Optional<MethodNode> parsedMethodNode = analyser.parseMethod(element, tmpClassNode, new ArrayList<>());
+				assertElementsEqual(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -153,8 +157,8 @@ public class XomParserTest {
 					TRACE(element);
 
 					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					MethodParameterNode parsedMethodParameterNode = analyser.parseMethodParameter(element, methodNode);
-					assertElementsEqual(methodParameterNode, parsedMethodParameterNode);
+					Optional<MethodParameterNode> parsedMethodParameterNode = analyser.parseMethodParameter(element, methodNode, new ArrayList<>());
+					assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
 				}
 			}
 			catch (Exception e) {
@@ -181,8 +185,8 @@ public class XomParserTest {
 					TRACE(element);
 
 					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					TestCaseNode tc1 = analyser.parseTestCase(element, m);
-					assertElementsEqual(testCaseNode, tc1);
+					Optional<TestCaseNode> tc1 = analyser.parseTestCase(element, m, new ArrayList<>());
+					assertElementsEqual(testCaseNode, tc1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage());
 				}
@@ -209,8 +213,8 @@ public class XomParserTest {
 					TRACE(element);
 
 					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					ConstraintNode c1 = analyser.parseConstraint(element, m);
-					assertElementsEqual(c, c1);
+					Optional<ConstraintNode> c1 = analyser.parseConstraint(element, m, new ArrayList<>());
+					assertElementsEqual(c, c1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage() + "\nMethod\n" + new ModelStringifier().stringify(m, 0));
 				}
@@ -236,8 +240,8 @@ public class XomParserTest {
 				TRACE(element);
 
 				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-				ChoiceNode p1 = analyser.parseChoice(element, null);
-				assertElementsEqual(p, p1);
+				Optional<ChoiceNode> p1 = analyser.parseChoice(element, null, new ArrayList<>());
+				assertElementsEqual(p, p1.get());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
@@ -267,8 +271,8 @@ public class XomParserTest {
 			TRACE(falseElement);
 
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			StaticStatement parsedTrue = analyser.parseStaticStatement(trueElement, null);
-			StaticStatement parsedFalse = analyser.parseStaticStatement(falseElement, null);
+			StaticStatement parsedTrue = analyser.parseStaticStatement(trueElement, null, new ArrayList<>());
+			StaticStatement parsedFalse = analyser.parseStaticStatement(falseElement, null, new ArrayList<>());
 
 			assertStatementsEqual(trueStatement, parsedTrue);
 			assertStatementsEqual(falseStatement, parsedFalse);
@@ -303,10 +307,10 @@ public class XomParserTest {
 				RelationStatement parsedS = null;
 				switch(element.getLocalName()){
 				case SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME:
-					parsedS = analyser.parseLabelStatement(element, m);
+					parsedS = analyser.parseLabelStatement(element, m, new ArrayList<>());
 					break;
 				case SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME:
-					parsedS = analyser.parseChoiceStatement(element, m);
+					parsedS = analyser.parseChoiceStatement(element, m, new ArrayList<>());
 					break;
 				}
 
@@ -359,7 +363,7 @@ public class XomParserTest {
 				TRACE(element);
 
 				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-				ExpectedValueStatement parsedS = analyser.parseExpectedValueStatement(element, m);
+				ExpectedValueStatement parsedS = analyser.parseExpectedValueStatement(element, m, new ArrayList<>());
 				assertStatementsEqual(s, parsedS);
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -388,7 +392,7 @@ public class XomParserTest {
 			TRACE(element);
 
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			StatementArray parsedS = analyser.parseStatementArray(element, m);
+			StatementArray parsedS = analyser.parseStatementArray(element, m, new ArrayList<>());
 			assertStatementsEqual(s, parsedS);
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -415,23 +419,25 @@ public class XomParserTest {
 			Element classElement = (Element)_class.accept(builder);
 
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			RootNode rootNode = analyser.parseRoot(rootElement, null);
+			RootNode rootNode = analyser.parseRoot(rootElement, null, new ArrayList<>());
 
 			try {
-				analyser.parseClass(classElement, rootNode);
+				analyser.parseClass(classElement, rootNode, new ArrayList<>());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
-				analyser.parseClass(rootElement, rootNode);
-				fail("exception expected");
+			    List<String> errorList = new ArrayList<>();
+				analyser.parseClass(rootElement, rootNode, errorList);
+				assertNotEquals("", errorList.size(), 0);
 			} catch (Exception e) {
 			}
 
 			try {
-				analyser.parseRoot(classElement, null);
-				fail("exception expected");
+			    List<String> errorList = new ArrayList<>();
+				analyser.parseRoot(classElement, null, new ArrayList<>());
+				assertNotEquals("", errorList.size(), 0);
 			} catch (Exception e) {
 			}
 		} catch (Exception e) {

@@ -32,7 +32,10 @@ public class ModelConverter {
 			break;
 		case 1:
 			model = convertFrom1To2(model);
-			break;			
+			break;
+		case 2:
+			model = convertFrom2To3(model);
+			break;
 		default:
 			ModelOperationException.report(INVALID_MODEL_VERSION); 
 			break;
@@ -43,12 +46,18 @@ public class ModelConverter {
 	}
 
 	private static RootNode convertFrom0To1(RootNode model) {
-		return model; // no changes in model internal structure, just serialization and parsing differs  
+		// no changes in model internal structure, just serialization and parsing differs
+	    return model;
 	}
 
 	private static RootNode convertFrom1To2(RootNode model) {
 		// Flag of the ClassNode: RunOnAndroid moved to properties in ClassNode constructor.
 		// Serializer in version 2 writes the RunOnAndroid flag to NodeProperties of the ClassNode. 
 		return model;
-	}	
+	}
+
+	private static RootNode convertFrom2To3(RootNode model) {
+		// Relation types changed from symbols to text. The model is compatible backwards.
+		return model;
+	}
 }

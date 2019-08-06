@@ -87,7 +87,7 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 		}
 		fCartesianAlgorithm.initialize(input, constraints, generatorProgressMonitor);
 		super.initialize(input, constraints, generatorProgressMonitor);
-		setTotalWork(fLength);
+		setTaskBegin(fLength);
 	}
 
 	@Override
