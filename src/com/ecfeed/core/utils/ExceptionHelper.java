@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ExceptionHelper {
 
 	public enum LineSeparationType {
@@ -17,9 +20,14 @@ public class ExceptionHelper {
 		MULTI_LINE
 	};
 
-	public enum StackInfoType {
-		WITH_STACK,
-		WITHOUT_STACK
+	public enum CreateCallStack {
+		YES,
+		NO
+	};
+
+	public enum ExceptionStackType {
+		SIMPLE,
+		FULL
 	};
 
 	private static final int fMaxDepth = 5;
@@ -49,12 +57,12 @@ public class ExceptionHelper {
 
 	public static String createErrorMessage(Throwable e) {
 
-		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, ExceptionStackType.FULL, CreateCallStack.YES);
 	}
 
 	public static String createErrorMessage(Exception e) {
 
-		return createErrorMessage(e, LineSeparationType.ONE_LINE, StackInfoType.WITH_STACK);
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, ExceptionStackType.FULL, CreateCallStack.YES);
 	}
 
 	public static String createErrorMessage(String message, Exception e) {
@@ -65,62 +73,140 @@ public class ExceptionHelper {
 	}
 
 	public static String createErrorMessage(
-			Throwable e, 
+			Throwable throwable, 
 			LineSeparationType lineSeparationType,
-			StackInfoType stackInfoType) {
+			ExceptionStackType exceptionStackType,
+			CreateCallStack createCallStack) {
 
-		if (e == null) {
+		if (throwable == null) {
 			return fNoException;
 		}
 
-		String exceptionSeparator = "\n";
-		if (lineSeparationType == LineSeparationType.ONE_LINE) {
-			exceptionSeparator = " ";
+		String exceptionSeparator = createExceptionSeparator(lineSeparationType);
+
+		String errorMessage = createExceptionMessage(throwable, exceptionStackType, exceptionSeparator);
+
+		if (createCallStack == CreateCallStack.YES) {
+
+			Throwable deepestThrowable = getDeepestThrowable(throwable);
+
+			String stackMessage = createStackMessage(deepestThrowable);
+
+			return errorMessage + "\n" + stackMessage;
 		}
 
-		String errorMessage = createExceptionMessage(e, exceptionSeparator);
-
-		if (stackInfoType == StackInfoType.WITHOUT_STACK) {
-			return errorMessage;
-		}
-
-		Throwable deepestThrowable = getDeepestThrowable(e);
-
-		String stack = getStack(deepestThrowable);
-
-		return errorMessage + "\n" + stack;
+		return errorMessage;
 	}
 
-	private static String createExceptionMessage(Throwable e, String exceptionSeparator) {
+	public static String createExceptionSeparator(LineSeparationType lineSeparationType) {
 
-		final String spaces = "    ";
+		if (lineSeparationType == LineSeparationType.ONE_LINE) {
+			return " ";
+		}
 
-		String message = "\n" + spaces + getMessage(e);
+		return "\n";
+	}
+
+	private static String createExceptionMessage(
+			Throwable throwable, 
+			ExceptionStackType exceptionStackType, 
+			String exceptionSeparator) {
+
+		List<ExceptionDescription> exceptionDescriptions = 
+				createExceptionDescriptions(throwable, exceptionStackType);
+
+		String message = "";
+		boolean isFirstMessage = true;
+
+		for (ExceptionDescription exceptionDescription : exceptionDescriptions) {
+			message += createOneMessage(exceptionDescription, exceptionSeparator, exceptionStackType, isFirstMessage);
+			isFirstMessage = false;
+		}
+
+		return message; 
+	}
+
+	public static String createOneMessage(
+			ExceptionDescription exceptionDescription, 
+			String exceptionSeparator,
+			ExceptionStackType exceptionStackType, 
+			boolean isFirstMessage) {
+
+		String result = "";
+
+		if (!isFirstMessage) {
+			result += ("  " + causedBy);
+		}
+
+		result += getMessage(exceptionDescription, exceptionStackType);
+		result += exceptionSeparator;
+
+		return result;
+	}
+
+	public static String getMessage(ExceptionDescription exceptionDescription, ExceptionStackType exceptionStackType) {
+
+		if (exceptionStackType == ExceptionStackType.SIMPLE) {
+			return exceptionDescription.getShortMessage();
+		} else {
+			return exceptionDescription.getFullMessage(); 
+		}
+	}
+
+	private static List<ExceptionDescription> createExceptionDescriptions(
+			Throwable e, ExceptionStackType exceptionStackType) {
+
+		List<ExceptionDescription> exceptionDescriptions = createExceptionDescriptions(e);
+
+		if (exceptionStackType == ExceptionStackType.SIMPLE) {
+			exceptionDescriptions = compressDescriptions(exceptionDescriptions);
+		}
+
+		return exceptionDescriptions;
+	}
+
+	private static List<ExceptionDescription> createExceptionDescriptions(Throwable e) {
+
+		List<ExceptionDescription> exceptionDescriptions = new ArrayList<>();
 
 		Throwable currentThrowable = (Throwable) e;
-		int depth = 0;
 
 		for ( ; ; ) {
+
+			ExceptionDescription exceptionDescription = new ExceptionDescription(currentThrowable);
+
+			exceptionDescriptions.add(exceptionDescription);
 
 			Throwable nextThrowable = currentThrowable.getCause();
 
 			if (nextThrowable == null) {
-				return message;
+				return exceptionDescriptions;
 			}
-
-			message += (exceptionSeparator + spaces + causedBy + getMessage(nextThrowable));
 
 			currentThrowable = nextThrowable;
-
-			depth++;
-
-			if (depth >= fMaxDepth) {
-				return message;
-			}
 		}
 	}
 
-	private static String getStack(Throwable throwable) {
+	private static List<ExceptionDescription> compressDescriptions(List<ExceptionDescription> exceptionDescriptions) {
+
+		List<ExceptionDescription> result = new ArrayList<>();
+
+		String lastMessage = null;
+
+		for (ExceptionDescription exceptionDescription : exceptionDescriptions) {
+
+			String curentMessage = exceptionDescription.getShortMessage();
+
+			if (!StringHelper.isEqual(lastMessage, curentMessage)) {
+				result.add(exceptionDescription);
+				lastMessage = curentMessage;
+			}
+		}
+
+		return result;
+	}
+
+	private static String createStackMessage(Throwable throwable) {
 
 		String result = "Call stack of root cause: \n";
 
@@ -160,20 +246,6 @@ public class ExceptionHelper {
 				return null;
 			}
 		}
-	}
-
-
-	private static String getMessage(Throwable e) {
-
-		String message = "";
-
-		if (true) {
-			message += "[" + e.getClass().getName() + "] ";
-		}
-
-		message += e.getMessage();
-
-		return message;
 	}
 
 }

@@ -13,7 +13,6 @@ package com.ecfeed.core.utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
 public class TimeStringHelper  {
 
@@ -33,20 +32,12 @@ public class TimeStringHelper  {
 
 		return builder.toString(); 
 	}
-	
+
 	public static String getQuasiUniqueString() {
 
-		StringBuilder builder = new StringBuilder();
-
-		builder.append(getTimeLongString());
-
-		builder.append("-");
-		Random rand = new Random();
-		String randomStr = Integer.toString(rand.nextInt(99999));
-		randomStr = StringHelper.insertZerosToLength(randomStr, 5);
-		builder.append(randomStr);
-
-		return builder.toString(); 
+		long milliseconds = System.currentTimeMillis();
+		String result = Long.toString(milliseconds);
+		return result;
 	}
 
 }

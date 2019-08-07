@@ -1,6 +1,7 @@
 package com.ecfeed.core.model;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ParserException;
@@ -14,7 +15,7 @@ public class ModelTestHelper {  // TODO - rename / move to ModelHelper
 			ModelParser parser = new ModelParser();
 			ByteArrayInputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 
-			return parser.parseModel(istream, null);
+			return parser.parseModel(istream, null, new ArrayList<>());
 
 		} catch(ParserException e) {
 			ExceptionHelper.reportRuntimeException(e.getMessage());

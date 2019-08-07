@@ -101,7 +101,7 @@ public class XmlParserSerializerTest {
 				ModelParser parser = new ModelParser();
 				serializer.serialize(model);
 				ByteArrayInputStream istream = new ByteArrayInputStream(ostream.toByteArray());
-				RootNode parsedModel = parser.parseModel(istream, null);
+				RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
 				compareModels(model, parsedModel);
 
 			}
@@ -147,7 +147,7 @@ public class XmlParserSerializerTest {
 			serializer.serialize(root);
 
 			ByteArrayInputStream istream = new ByteArrayInputStream(ostream.toByteArray());
-			RootNode parsedModel = parser.parseModel(istream, null);
+			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
 			compareModels(root, parsedModel);
 		}
 		catch (IOException e) {
@@ -219,7 +219,7 @@ public class XmlParserSerializerTest {
 
 			ByteArrayInputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null);
+			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
 			compareModels(root, parsedModel);
 		}
 		catch (IOException e) {

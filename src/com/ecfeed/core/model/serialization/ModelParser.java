@@ -14,6 +14,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Optional;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -42,14 +44,16 @@ public class ModelParser {
 	Builder fBuilder = new Builder();
 	XomAnalyser fXomAnalyser = null;
 
-	public RootNode parseModel(String modelXml, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
+	public RootNode parseModel(
+			String modelXml, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException { 
 
 		InputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 
-		return parseModel(istream, modelChangeRegistrator);
+		return parseModel(istream, modelChangeRegistrator, outErrorList);
 	}
 
-	public RootNode parseModel(InputStream istream, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
+	public RootNode parseModel(
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
 
 		try {
 			Document document = fBuilder.build(istream);
@@ -66,7 +70,7 @@ public class ModelParser {
 			}
 
 			createXomAnalyser(modelVersion);
-			return getXomAnalyser().parseRoot(element, modelChangeRegistrator);
+			return getXomAnalyser().parseRoot(element, modelChangeRegistrator, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -89,10 +93,13 @@ public class ModelParser {
 		return fXomAnalyser;
 	}
 
-	public ClassNode parseClass(InputStream istream) throws ParserException {
+	// TODO
+	public ClassNode parseClass(
+			InputStream istream, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseClass(document.getRootElement(), null);
+			return getXomAnalyser().parseClass(document.getRootElement(), null, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -102,10 +109,13 @@ public class ModelParser {
 		}
 	}
 
-	public MethodNode parseMethod(InputStream istream) throws ParserException {
+	// TODO
+	public MethodNode parseMethod(
+			InputStream istream, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseMethod(document.getRootElement(), null);
+			return getXomAnalyser().parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -115,10 +125,13 @@ public class ModelParser {
 		}
 	}
 
-	public GlobalParameterNode parseGlobalParameter(InputStream istream, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
+	// TODO
+	public GlobalParameterNode parseGlobalParameter(
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseGlobalParameter(document.getRootElement(), modelChangeRegistrator);
+			return getXomAnalyser().parseGlobalParameter(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -128,10 +141,13 @@ public class ModelParser {
 		}
 	}
 
-	public MethodParameterNode parseMethodParameter(InputStream istream, MethodNode method) throws ParserException {
+	// TODO
+	public MethodParameterNode parseMethodParameter(
+			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseMethodParameter(document.getRootElement(), method);
+			return getXomAnalyser().parseMethodParameter(document.getRootElement(), method, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -141,12 +157,13 @@ public class ModelParser {
 		}
 	}
 
+	// TODO
 	public ChoiceNode parseChoice(
-			InputStream istream, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseChoice(document.getRootElement(), modelChangeRegistrator);
+			return getXomAnalyser().parseChoice(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
 
 		} catch (ParsingException e) {
 
@@ -160,10 +177,13 @@ public class ModelParser {
 		}
 	}
 
-	public TestCaseNode parseTestCase(InputStream istream, MethodNode method) throws ParserException {
+	// TODO
+	public TestCaseNode parseTestCase(
+			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseTestCase(document.getRootElement(), method);
+			return getXomAnalyser().parseTestCase(document.getRootElement(), method, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -173,10 +193,12 @@ public class ModelParser {
 		}
 	}
 
-	public ConstraintNode parseConstraint(InputStream istream, MethodNode method) throws ParserException {
+	public Optional<ConstraintNode> parseConstraint(
+			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseConstraint(document.getRootElement(), method);
+			return getXomAnalyser().parseConstraint(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -186,10 +208,13 @@ public class ModelParser {
 		}
 	}
 
-	public AbstractStatement parseStatement(InputStream istream, MethodNode method) throws ParserException {
+	// TODO
+	public AbstractStatement parseStatement(
+			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseStatement(document.getRootElement(), method);
+			return getXomAnalyser().parseStatement(document.getRootElement(), method, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -199,10 +224,12 @@ public class ModelParser {
 		}
 	}
 
-	public StaticStatement parseStaticStatement(InputStream istream, IModelChangeRegistrator modelChangeRegistrator) throws ParserException {
+	public StaticStatement parseStaticStatement(
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseStaticStatement(document.getRootElement(), modelChangeRegistrator);
+			return getXomAnalyser().parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -212,10 +239,12 @@ public class ModelParser {
 		}
 	}
 
-	public RelationStatement parseChoicesParentStatement(InputStream istream, MethodNode method) throws ParserException {
+	public RelationStatement parseChoicesParentStatement(
+			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseChoiceStatement(document.getRootElement(), method);
+			return getXomAnalyser().parseChoiceStatement(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -225,10 +254,12 @@ public class ModelParser {
 		}
 	}
 
-	public ExpectedValueStatement parseExpectedValueStatement(InputStream istream, MethodNode method) throws ParserException {
+	public ExpectedValueStatement parseExpectedValueStatement(
+			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseExpectedValueStatement(document.getRootElement(), method);
+			return getXomAnalyser().parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return new ExpectedValueStatement(null, null, null);
@@ -238,10 +269,12 @@ public class ModelParser {
 		}
 	}
 
-	public StatementArray parseStatementArray(InputStream istream, MethodNode method) throws ParserException {
+	public StatementArray parseStatementArray(
+			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseStatementArray(document.getRootElement(), method);
+			return getXomAnalyser().parseStatementArray(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return new StatementArray(null, method.getModelChangeRegistrator());
