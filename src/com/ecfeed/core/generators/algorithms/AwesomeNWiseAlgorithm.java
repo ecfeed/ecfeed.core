@@ -164,7 +164,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
 
             removeAffectedTuples(bestTuple);
-            incrementProgress(1);
+            incrementProgress(bestTupleScore);
             return AlgorithmHelper.Uncompress(bestTuple, fDimCount);
         }
     }
