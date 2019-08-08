@@ -213,6 +213,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         for(int c = 0; c<N; c++)
         {
             List<SortedMap<Integer,E>> newValidTuples = new ArrayList<>();
+            if(c==N-1)
+                setTaskBegin(allValidTuples.size());
             for(SortedMap<Integer,E> tuple : allValidTuples)
             {
                 Integer maxD = -1;
@@ -231,6 +233,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                     }
                     tuple.remove(d);
                 }
+                incrementProgress(1);
             }
             allValidTuples = newValidTuples;
         }
