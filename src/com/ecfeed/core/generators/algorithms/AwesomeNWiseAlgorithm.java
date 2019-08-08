@@ -49,6 +49,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             List<SortedMap<Integer,E>> remainingTuples = getAllNTuples();
             fLeftTuples = remainingTuples.size();
+            setTaskBegin(fLeftTuples*getCoverage()/100);
 //            System.out.println(fLeftTuples);
 
             fPartialTuplesCounter = HashMultiset.create();
@@ -86,8 +87,10 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                     }
                 }
 
-                if (fLeftTuples <= fIgnoreCount)
+                if (fLeftTuples <= fIgnoreCount) {
+                    setTaskEnd();
                     return null;
+                }
 
                 SortedMap<Integer, E> nTuple = Maps.newTreeMap();
 
@@ -161,7 +164,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
 
             removeAffectedTuples(bestTuple);
-
+            incrementProgress(1);
             return AlgorithmHelper.Uncompress(bestTuple, fDimCount);
         }
     }
