@@ -25,7 +25,6 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
 
-	private final int fDepth;
 	private final int fCandidatesSize;
 	private final int fLength;
 	private final boolean fDuplicates;
@@ -34,42 +33,9 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 
 	private List<List<E>> fHistory;
 
-	protected class BlackList implements IConstraint<E>{
-		Collection<List<E>> fBlackList;
 
-		public BlackList(Collection<List<E>> blackList){
-			fBlackList = blackList;
-		}
-
-		@Override
-		public EvaluationResult evaluate(List<E> values) {
-			return EvaluationResult.convertFromBoolean(!fBlackList.contains(values));
-		}
-
-		@Override
-		public boolean adapt(List<E> values) {
-			return false;
-		}
-
-		public void setBlackList(Collection<List<E>> newBlackList){
-			fBlackList = newBlackList;
-		}
-
-		public Collection<List<E>> getBlackList(){
-			return fBlackList;
-		}
-
-		@Override
-		public boolean mentions(int dimension) {
-			return false;
-		}
-
-	}
-
-	public AdaptiveRandomAlgorithm(int depth, int candidatesSize, 
+	public AdaptiveRandomAlgorithm(int candidatesSize,
 			int length, boolean duplicates) {
-		if(depth == -1) depth = Integer.MAX_VALUE;
-		fDepth = depth;
 		fCandidatesSize = candidatesSize;
 		fLength = length;
 		fDuplicates = duplicates;
@@ -84,7 +50,8 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 		if(fDuplicates == false){
-			//constraints.add(new BlackList(fHistory)); //TODO: No such method available
+			for(List<E> assignment : fHistory)
+				getConstraintEvaluator().excludeAssignment(assignment);
 		}
 
 		fCartesianAlgorithm.initialize(input, constraintEvaluator, generatorProgressMonitor);
@@ -98,9 +65,9 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 			return null;
 		}
 		List<List<E>> candidates = getCandidates();
-		List<E> optimalCandidate = getOptimalCandidate(candidates, 
-				fHistory.subList(Math.max(fHistory.size() - fDepth, 0), fHistory.size()));
+		List<E> optimalCandidate = getOptimalCandidate(candidates, fHistory);
 		fHistory.add(optimalCandidate);
+		getConstraintEvaluator().excludeAssignment(optimalCandidate);
 		incrementProgress(1);
 		return optimalCandidate;
 	}
@@ -119,10 +86,6 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 		return fDuplicates;
 	}
 
-	public int getHistorySize(){
-		return fDepth;
-	}
-
 	public int getCandidatesSize(){
 		return fCandidatesSize;
 	}
@@ -133,9 +96,8 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 
 	protected List<List<E>> getCandidates() throws GeneratorException {
 		Set<List<E>> candidates = new HashSet<List<E>>();
-		BlackList candidatesBlackList = new BlackList(candidates);
 		while(candidates.size() < fCandidatesSize){
-			List<E> candidate = getCandidate(candidatesBlackList);
+			List<E> candidate = getCandidate();
 			if(candidate == null){
 				break;
 			}
@@ -144,7 +106,7 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 		return new ArrayList<List<E>>(candidates);
 	}
 
-	protected List<E> getCandidate(BlackList blackList) throws GeneratorException{
+	protected List<E> getCandidate() throws GeneratorException{
 	//	fCartesianAlgorithm.addConstraint(blackList); //TODO: addConstraint goes away from IAlgorithm
 		List<Integer> random = randomVector(getInput());
 		List<E> result = fCartesianAlgorithm.getNext(instance(random));

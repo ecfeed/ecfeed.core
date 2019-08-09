@@ -874,6 +874,31 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     }
 
     @Override
+    public void excludeAssignment(List<ChoiceNode> toExclude)
+    {
+        if(fMethod == null)
+            return;
+        if(fIsContradicting)
+            return;
+
+        List<MethodParameterNode> params = fMethod.getMethodParameters();
+        for(MethodParameterNode p : params)
+            variablesForParameter(p);
+
+        VecInt excludeClause = new VecInt(assumptionsFromValues(toExclude).stream().map(x->-x).mapToInt(Integer::intValue).toArray());
+        final int maxVar = fFirstFreeID;
+
+        try {
+            fSolver.newVar(maxVar);
+            fSolver.addClause(excludeClause);
+        } catch (ContradictionException e)
+        {
+            fIsContradicting = true;
+        }
+
+    }
+
+    @Override
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment)
     {
         if(fMethod == null)

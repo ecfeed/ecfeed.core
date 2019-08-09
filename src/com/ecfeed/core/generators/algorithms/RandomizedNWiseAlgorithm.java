@@ -22,7 +22,6 @@ import java.util.Set;
 import javax.management.RuntimeErrorException;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.model.IConstraint;

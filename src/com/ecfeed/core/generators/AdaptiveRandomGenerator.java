@@ -26,7 +26,6 @@ public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
 
 	public AdaptiveRandomGenerator() throws GeneratorException{
 
-		addParameterDefinition(new GeneratorParameterDepth());
 		addParameterDefinition(new GeneratorParameterCandidateSetSize());
 		addParameterDefinition(new GeneratorParameterLength());
 		addParameterDefinition(new GeneratorParameterDuplicates());
@@ -39,12 +38,11 @@ public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 		
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
-		int executedSetSize = getIntParameter(new GeneratorParameterDepth().getName());
 		int candidateSetSize = getIntParameter(new GeneratorParameterCandidateSetSize().getName());
 		int testSuiteSize = getIntParameter(new GeneratorParameterLength().getName());
 		boolean duplicates = getBooleanParameter(new GeneratorParameterDuplicates().getName());
 
-		setAlgorithm(new AdaptiveRandomAlgorithm<E>(executedSetSize,
+		setAlgorithm(new AdaptiveRandomAlgorithm<E>(
 				candidateSetSize, testSuiteSize, duplicates));
 	}
 

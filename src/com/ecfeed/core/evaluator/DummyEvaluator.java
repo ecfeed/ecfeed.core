@@ -17,4 +17,5 @@ public class DummyEvaluator<E> implements IConstraintEvaluator<E> {
     {
         return valueAssignment;
     }
+    public void excludeAssignment(List<E> valueAssignment) {}
 }
