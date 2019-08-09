@@ -68,7 +68,6 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 			getConstraintEvaluator().excludeAssignment(fHistory.get(fHistory.size()-1));
 		List<List<E>> candidates = getCandidates();
 		List<E> optimalCandidate = getOptimalCandidate(candidates, fHistory);
-		System.out.println(optimalCandidate);
 		if(optimalCandidate == null)
 			return null;
 		fHistory.add(optimalCandidate);
