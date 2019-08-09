@@ -63,8 +63,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
         if(initConstraints != null) {
+            List<MethodParameterNode> params = fMethod.getMethodParameters();
+            for(MethodParameterNode p : params)
+                fArgAllInputValues.put(p, new HashSet<>(p.getLeafChoicesWithCopies()));
+
+
             for (Constraint constraint : initConstraints) {
-                preParse(constraint); //this fills fArgAllInputValues and fAllRelationConditions
+                preParse(constraint); //this fills fArgAllInputValues
             }
 
             for(MethodParameterNode arg : fArgAllInputValues.keySet()) {
@@ -457,14 +462,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         public Object visit(RelationStatement statement)
         {
             fAllRelationConditions.add(statement);
-            MethodParameterNode lParam = statement.getLeftParameter();
-            if(!fArgAllInputValues.containsKey(lParam))
-                fArgAllInputValues.put(lParam, new HashSet<>(lParam.getLeafChoicesWithCopies()));
-            if(statement.getCondition() instanceof ParameterCondition) {
-                MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
-                if(!fArgAllInputValues.containsKey(rParam))
-                    fArgAllInputValues.put(rParam, new HashSet<>(rParam.getLeafChoicesWithCopies()));
-            }
             return null;
         }
         @Override
@@ -472,8 +469,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         {
             return null;
         }
-
-
         @Override
         public Object visit(ExpectedValueStatement statement)
         {
