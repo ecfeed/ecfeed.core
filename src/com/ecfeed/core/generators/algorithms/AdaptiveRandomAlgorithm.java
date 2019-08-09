@@ -64,12 +64,13 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 		if(fHistory.size() >= fLength){
 			return null;
 		}
+		if(!fHistory.isEmpty())
+			getConstraintEvaluator().excludeAssignment(fHistory.get(fHistory.size()-1));
 		List<List<E>> candidates = getCandidates();
 		List<E> optimalCandidate = getOptimalCandidate(candidates, fHistory);
 		if(optimalCandidate == null)
 			return null;
 		fHistory.add(optimalCandidate);
-		getConstraintEvaluator().excludeAssignment(optimalCandidate);
 		incrementProgress(1);
 		return optimalCandidate;
 	}
