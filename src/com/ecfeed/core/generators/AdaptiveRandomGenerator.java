@@ -24,9 +24,9 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
 
+	static final int CANDIDATE_SET_SIZE = 100;
 	public AdaptiveRandomGenerator() throws GeneratorException{
 
-		addParameterDefinition(new GeneratorParameterCandidateSetSize());
 		addParameterDefinition(new GeneratorParameterLength());
 		addParameterDefinition(new GeneratorParameterDuplicates());
 	}
@@ -38,7 +38,7 @@ public class AdaptiveRandomGenerator<E> extends AbstractGenerator<E> {
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 		
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
-		int candidateSetSize = getIntParameter(new GeneratorParameterCandidateSetSize().getName());
+		int candidateSetSize = CANDIDATE_SET_SIZE;
 		int testSuiteSize = getIntParameter(new GeneratorParameterLength().getName());
 		boolean duplicates = getBooleanParameter(new GeneratorParameterDuplicates().getName());
 

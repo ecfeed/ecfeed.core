@@ -13,6 +13,6 @@ package com.ecfeed.core.generators.algorithms;
 public class RandomAlgorithm<E> extends AdaptiveRandomAlgorithm<E> {
 	public RandomAlgorithm(int length,
 			boolean duplicates) {
-		super(0, length, duplicates);
+		super(1, length, duplicates);
 	}
 }

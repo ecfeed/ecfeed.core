@@ -122,6 +122,7 @@ public class AdaptiveRandomAlgorithm<E> extends AbstractAlgorithm<E> implements 
 
 	protected List<E> getOptimalCandidate(List<List<E>> candidates, List<List<E>> history) {
 		if(candidates.size() == 0) return null;
+		if(candidates.size() == 1) return candidates.get(1);
 
 		List<E> optimalCandidate = null;
 		int optimalCandidateMinDistance = 0;
