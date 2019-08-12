@@ -28,8 +28,9 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 
 	public RandomGenerator() throws GeneratorException{
 
-		addParameterDefinition(new GeneratorParameterLength());
 		addParameterDefinition(new GeneratorParameterDuplicates());
+		addParameterDefinition(new GeneratorParameterAdaptive());
+		addParameterDefinition(new GeneratorParameterLength());
 	}
 	
 	@Override
@@ -41,7 +42,8 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
 		int length = getIntParameter(new GeneratorParameterLength().getName());
 		boolean duplicates = getBooleanParameter(new GeneratorParameterDuplicates().getName());
-		setAlgorithm(new RandomAlgorithm<E>(length, duplicates));
+		boolean adaptive = getBooleanParameter(new GeneratorParameterAdaptive().getName());
+		setAlgorithm(new RandomAlgorithm<E>(length, duplicates, adaptive));
 	}
 
 	@Override

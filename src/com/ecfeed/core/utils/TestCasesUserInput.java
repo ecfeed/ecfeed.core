@@ -22,6 +22,7 @@ public class TestCasesUserInput {
 	private String fCoverage;
 	private String fN;
 	private String fDuplicates;
+	private String fAdaptive;
 	private String fDepth;
 	private String fLength;
 	private String fCandidates;
@@ -133,25 +134,27 @@ public class TestCasesUserInput {
 		}
 	}
 	
-	@JsonGetter("depth")
-	public String getDepth() {
+	@JsonGetter("adaptive")
+	public String getAdaptive() {
 		
-		return fDepth;
+		return fAdaptive;
 	}
 
-	@JsonSetter("depth")
-	public void setDepth(String depth) {
+	@JsonSetter("adaptive")
+	public void setAdaptive(String adaptive) {
 		
-		fDepth = depth;
+		fAdaptive = adaptive;
 	}
-	
-	public void setDepth(int depth) {
-		
-		String depthStr = Integer.toString(depth);
-		setDepth(depthStr);
-	}
-	
 
+	public void setAdaptive(boolean adaptive) {
+		
+		if (adaptive) {
+			setAdaptive("true"); // TODO - magic string
+		} else {
+			setAdaptive("false"); // TODO - magic string
+		}
+	}
+	
 	@JsonGetter("length")
 	public String getLength() {
 		
@@ -238,5 +241,7 @@ public class TestCasesUserInput {
 		
 		fChoices = choices;
 	}
+
+
 
 }
