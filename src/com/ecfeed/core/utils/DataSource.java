@@ -6,7 +6,6 @@ public enum DataSource {
     STATIC("static"),
     GEN_N_WISE(GeneratorType.N_WISE.toString()),
     GEN_CARTESIAN(GeneratorType.CARTESIAN.toString()),
-    GEN_ADAPTIVE_RANDOM(GeneratorType.ADAPTIVE_RANDOM.toString()),
     GEN_RANDOM(GeneratorType.RANDOM.toString());
 
     private final String fDataSource;
@@ -33,10 +32,6 @@ public enum DataSource {
 
         if (dataSourceStr.equals(GEN_CARTESIAN.toString())) {
             return GEN_CARTESIAN;
-        }
-
-        if (dataSourceStr.equals(GEN_ADAPTIVE_RANDOM.toString())) {
-            return GEN_ADAPTIVE_RANDOM;
         }
 
         if (dataSourceStr.equals(GEN_RANDOM.toString())) {

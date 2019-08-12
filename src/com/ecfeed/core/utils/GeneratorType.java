@@ -5,7 +5,6 @@ public enum GeneratorType {
 
     N_WISE("genNWise"),
     CARTESIAN("genCartesian"),
-    ADAPTIVE_RANDOM("genAdaptiveRandom"),
     RANDOM("genRandom");
 
     private final String fType;
@@ -28,10 +27,6 @@ public enum GeneratorType {
 
         if (type.equals(CARTESIAN.toString())) {
             return CARTESIAN;
-        }
-
-        if (type.equals(ADAPTIVE_RANDOM.toString())) {
-            return ADAPTIVE_RANDOM;
         }
 
         if (type.equals(RANDOM.toString())) {

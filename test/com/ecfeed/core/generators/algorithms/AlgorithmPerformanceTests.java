@@ -23,7 +23,7 @@ import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.algorithms.AdaptiveRandomAlgorithm;
+import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
 import com.ecfeed.core.generators.algorithms.OptimalNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
@@ -46,8 +46,8 @@ public class AlgorithmPerformanceTests {
 						.prepareInput(5, 6);
 				long totalTuples = calculateTotalTuples(input, n);
 
-				AdaptiveRandomAlgorithm<String> adRandom = new AdaptiveRandomAlgorithm<String>(1000, 1000, false);
-				AdaptiveRandomAlgorithm<String> random = new AdaptiveRandomAlgorithm<String>(1, 1000, false);
+				RandomAlgorithm<String> adRandom = new RandomAlgorithm<String>(1000, false, true);
+				RandomAlgorithm<String> random = new RandomAlgorithm<String>( 1000, false, false);
 				OptimalNWiseAlgorithm<String> nwise = new OptimalNWiseAlgorithm<String>(
 						n, 100);
 				CartesianProductAlgorithm<String> cart = new CartesianProductAlgorithm<String>();
@@ -124,10 +124,8 @@ public class AlgorithmPerformanceTests {
 		for (int length : new int[] { 5, 10, 50, 100 }) {
 			System.out.println("length: " + length);
 			try {
-				AdaptiveRandomAlgorithm<String> adRandom = new AdaptiveRandomAlgorithm<String>(
-						 100, length, false);
-				AdaptiveRandomAlgorithm<String> random = new AdaptiveRandomAlgorithm<String>(
-						 1, length, false);
+				RandomAlgorithm<String> adRandom = new RandomAlgorithm<String>(length, false, true);
+				RandomAlgorithm<String> random = new RandomAlgorithm<String>( length, false, false);
 
 				adRandom.initialize(input, new DummyEvaluator<>(), null);
 				random.initialize(input, new DummyEvaluator<>(), null);
@@ -192,8 +190,8 @@ public class AlgorithmPerformanceTests {
 	private double calculateAvgDistance(List<List<String>> suite) {
 		int totalDistance = 0;
 		int distCount = 0;
-		AdaptiveRandomAlgorithm<String> random = new AdaptiveRandomAlgorithm<>(
-				 1, 0, false);
+		RandomAlgorithm<String> random = new RandomAlgorithm<>(
+				0, false, false);
 		for (List<String> testCase : suite) {
 			for (List<String> other : suite) {
 				if (testCase != other) {
