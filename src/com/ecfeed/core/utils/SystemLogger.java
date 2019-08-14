@@ -96,6 +96,11 @@ public class SystemLogger {
 		logLine("");
 	}
 
+	public static void logWarning(String line) {
+		
+		logLine("WARNING! " + line);
+	}
+	
 	public static void logLine(String line) {
 		System.out.println(line);
 
