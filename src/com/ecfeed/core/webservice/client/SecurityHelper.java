@@ -49,10 +49,6 @@ public final class SecurityHelper {
 	private static KeyStore fLoadedStore = null;
 	private static Optional<String> fLoadedStorePath = Optional.empty();
 	
-	private SecurityHelper() { // TODO - remove ?
-		reportRuntimeExceptionCanNotCreateObject();
-	}
-	
 	public static KeyStore getKeyStore() {
 
 		if (fLoadedStore == null) {
