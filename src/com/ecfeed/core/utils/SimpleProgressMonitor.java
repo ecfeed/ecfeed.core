@@ -42,6 +42,12 @@ public class SimpleProgressMonitor implements IEcfProgressMonitor {
 	}
 
 	@Override
+	public void setTotalProgress(int totalProgress) {
+
+		fTotalProgress = totalProgress;
+	}
+
+	@Override
 	public void setCurrentProgress(int currentProgress) {
 
 		fCurrentProgress = currentProgress;

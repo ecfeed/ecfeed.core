@@ -125,7 +125,11 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	
 	@Override
 	public void cancel(){
-		fAlgorithm.cancel();
+		
+		if (fAlgorithm != null) {
+			fAlgorithm.cancel();	
+		}
+		
 	}
 	
 	protected void addParameterDefinition(IGeneratorParamDefinition definition){

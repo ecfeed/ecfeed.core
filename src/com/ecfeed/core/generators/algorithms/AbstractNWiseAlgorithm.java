@@ -18,6 +18,7 @@ import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
 
@@ -42,9 +43,13 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 		if (fCoverage > 100 || fCoverage < 0) {
 			GeneratorException.report("Coverage must be between 1 and 100");
 		}
+
 		fCartesianAlgorithm = new CartesianProductAlgorithm<E>();
-		fCartesianAlgorithm.initialize(input, constraintEvaluator, generatorProgressMonitor);
+		SimpleProgressMonitor notUsedProgressMonitor = new SimpleProgressMonitor();
+		fCartesianAlgorithm.initialize(input, constraintEvaluator, notUsedProgressMonitor);
+
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
+		generatorProgressMonitor.setTotalProgress((int)tuplesToGenerate());
 	}
 	
 	@Override
