@@ -18,10 +18,6 @@ import javax.net.ssl.X509KeyManager;
 
 public final class KeyManagerHelper {
 	
-	private KeyManagerHelper() { // TODO - remove ?
-		ExceptionHelper.reportRuntimeException("Can not create.");
-	}
-	
 	static KeyManager[] noSecurity() {
 		return null;
 	}

@@ -34,7 +34,15 @@ public class ExceptionDescription {
 
 	private String createMessageDescr(Throwable throwable) {
 
+		if (throwable == null) {
+			return ("Invalid throwable: null");
+		}
+		
 		String rawMessage = throwable.getMessage();
+		
+		if (rawMessage == null) {
+			return "No exception message.";
+		}
 
 		int index = rawMessage.lastIndexOf(EXCEPTION_TAG);
 

@@ -33,7 +33,8 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 public class GenericRemoveNodesOperation extends BulkOperation {
 
 	private final Set<AbstractNode> fSelectedNodes;
-	
+
+	private final Set<AbstractNode> fAffectedNodes = new HashSet<>();
 	private final Set<TestCaseNode> fAffectedTestCases = new HashSet<>();
 	private final Set<ConstraintNode> fAffectedConstraints = new HashSet<>();
 
@@ -61,15 +62,15 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				}
 			}
 		}
-		
+
 		prepareOperations(adapterProvider, validate);
 		return;
 	}
-	
+
 	public Set<ConstraintNode> getAffectedConstraints() {
 		return fAffectedConstraints;
 	}
-	
+
 	public Set<TestCaseNode> getAffectedTestCases() {
 		return fAffectedTestCases;
 	}
@@ -105,60 +106,27 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				others.add(node);
 			}		
 		}	
-		
-		Set<ConstraintNode> externalConstraintNode = fSelectedNodes.iterator().next()
-				.getRoot()
-				.getChildren()
-				.stream()
-				.filter(e -> (e instanceof ClassNode))
-				.map(m -> m.getChildren()
-						.stream()
-						.filter(e -> (e instanceof MethodNode))
-						.collect(Collectors.toList()))
-				.flatMap(f -> f.stream())
-				.map(m -> m.getChildren()
-						.stream()
-						.filter(e -> (e instanceof ConstraintNode))
-						.collect(Collectors.toList()))
-				.flatMap(f -> f.stream())
-				.map(e -> (ConstraintNode) e)
-				.collect(Collectors.toSet());
-		
-		Set<TestCaseNode> externalTestCaseNode = fSelectedNodes.iterator().next()
-				.getRoot()
-				.getChildren()
-				.stream()
-				.filter(e -> (e instanceof ClassNode))
-				.map(m -> m.getChildren()
-						.stream()
-						.filter(e -> (e instanceof MethodNode))
-						.collect(Collectors.toList()))
-				.flatMap(f -> f.stream())
-				.map(m -> m.getChildren()
-						.stream()
-						.filter(e -> (e instanceof TestCaseNode))
-						.collect(Collectors.toList()))
-				.flatMap(f -> f.stream())
-				.map(e -> (TestCaseNode) e)
-				.collect(Collectors.toSet());
-		
+
+		Set<ConstraintNode> allConstraintNodes = getAllConstraintNodes();
+		Set<TestCaseNode> allTestCaseNodes = getAllTestCaseNodes();
+
 		// removing classes, they are independent from anything
 		for (ClassNode clazz : classes) {
-			addOperation(FactoryRemoveOperation.getRemoveOperation(clazz, adapterProvider, validate));
+			fAffectedNodes.add(clazz);
 		}
 		// removing choices and deleting connected constraints/test cases from their respective to-remove lists beforehand
 		for (ChoiceNode choice : choices) {
-			eliminateMentioningConstraints(choice, externalConstraintNode);
-			eliminateMentioningTests(choice, externalTestCaseNode);
-			addOperation(FactoryRemoveOperation.getRemoveOperation(choice, adapterProvider, validate));
+			createAffectedConstraints(choice, allConstraintNodes);
+			createAffectedTestCases(choice, allTestCaseNodes);
+			fAffectedNodes.add(choice);
 		}
 		// removing test cases
 		for (TestCaseNode tcase : testcases) {
-			addOperation(FactoryRemoveOperation.getRemoveOperation(tcase, adapterProvider, validate));
+			fAffectedNodes.add(tcase);
 		}
 		// leaving this in case of any further nodes being added
 		for (AbstractNode node : others) {
-			addOperation(FactoryRemoveOperation.getRemoveOperation(node, adapterProvider, validate));
+			fAffectedNodes.add(node);
 		}
 		/*
 		 * Iterate through global params. Do the same checks as for method
@@ -184,8 +152,8 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			}
 			if (!isDependent) {
 				//remove mentioning constraints from the list to avoid duplicates
-				eliminateMentioningConstraints(global, externalConstraintNode);
-				addOperation(FactoryRemoveOperation.getRemoveOperation(global, adapterProvider, validate));
+				createAffectedConstraints(global, allConstraintNodes);
+				fAffectedNodes.add(global);
 				globalItr.remove();
 				/*
 				 * in case linkers contain parameters assigned to removal -
@@ -216,8 +184,8 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				parameterMap.get(method).add(param);
 			} else {
 				//remove mentioning constraints from the list to avoid duplicates
-				eliminateMentioningConstraints(param, externalConstraintNode);
-				addOperation(FactoryRemoveOperation.getRemoveOperation(param, adapterProvider, validate));
+				createAffectedConstraints(param, allConstraintNodes);
+				fAffectedNodes.add(param);
 				paramItr.remove();
 			}
 		}
@@ -225,7 +193,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		Iterator<MethodNode> methodItr = methods.iterator();
 		while (methodItr.hasNext()) {
 			MethodNode method = methodItr.next();
-			addOperation(FactoryRemoveOperation.getRemoveOperation(method, adapterProvider, validate));
+			fAffectedNodes.add(method);
 			methodItr.remove();
 		}
 		// Detect duplicates
@@ -258,8 +226,8 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 						if (parameterMap.containsKey(method)) {
 							for (AbstractParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
-								eliminateMentioningConstraints(node, externalConstraintNode);
-								addOperation(FactoryRemoveOperation.getRemoveOperation(node, adapterProvider, validate));
+								createAffectedConstraints(node, allConstraintNodes);
+								fAffectedNodes.add(node);
 							}
 						}
 					}
@@ -270,7 +238,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 						if (parameterMap.containsKey(method)) {
 							for (AbstractParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
-								eliminateMentioningConstraints(node, externalConstraintNode);
+								createAffectedConstraints(node, allConstraintNodes);
 								if (node instanceof MethodParameterNode) {
 									addOperation(new MethodOperationRemoveParameter(method, (MethodParameterNode)node, validate, true));
 								} else if (node instanceof GlobalParameterNode) {
@@ -282,13 +250,59 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				}
 			}
 		}
-		// removing remaining constraints
+
 		for (ConstraintNode constraint : constraints) {
-			addOperation(FactoryRemoveOperation.getRemoveOperation(constraint, adapterProvider, validate));
+			fAffectedNodes.add(constraint);
 		}
-		
-		fAffectedConstraints.stream().forEach(e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
-		fAffectedTestCases.stream().forEach(e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
+
+		fAffectedConstraints.stream().forEach(
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
+
+		fAffectedTestCases.stream().forEach(
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
+
+		fAffectedNodes.stream().forEach(
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
+	}
+
+	private Set<ConstraintNode> getAllConstraintNodes() {
+		return fSelectedNodes.iterator().next()
+				.getRoot()
+				.getChildren()
+				.stream()
+				.filter(e -> (e instanceof ClassNode))
+				.map(m -> m.getChildren()
+						.stream()
+						.filter(e -> (e instanceof MethodNode))
+						.collect(Collectors.toList()))
+				.flatMap(f -> f.stream())
+				.map(m -> m.getChildren()
+						.stream()
+						.filter(e -> (e instanceof ConstraintNode))
+						.collect(Collectors.toList()))
+				.flatMap(f -> f.stream())
+				.map(e -> (ConstraintNode) e)
+				.collect(Collectors.toSet());
+	}
+
+	private Set<TestCaseNode> getAllTestCaseNodes() {
+		return fSelectedNodes.iterator().next()
+				.getRoot()
+				.getChildren()
+				.stream()
+				.filter(e -> (e instanceof ClassNode))
+				.map(m -> m.getChildren()
+						.stream()
+						.filter(e -> (e instanceof MethodNode))
+						.collect(Collectors.toList()))
+				.flatMap(f -> f.stream())
+				.map(m -> m.getChildren()
+						.stream()
+						.filter(e -> (e instanceof TestCaseNode))
+						.collect(Collectors.toList()))
+				.flatMap(f -> f.stream())
+				.map(e -> (TestCaseNode) e)
+				.collect(Collectors.toSet());
 	}
 
 	private boolean addMethodToMap(MethodNode method, HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, List<MethodNode> removedMethods){
@@ -315,10 +329,10 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return hasDuplicate;
 	}
 
-	private void eliminateMentioningConstraints(AbstractNode node, Set<ConstraintNode> externalConstraintNode) {
+	private void createAffectedConstraints(AbstractNode node, Set<ConstraintNode> allConstraintNodes) {
 
 		if (node instanceof ChoiceNode) {
-			Iterator<ConstraintNode> itr = externalConstraintNode.iterator();
+			Iterator<ConstraintNode> itr = allConstraintNodes.iterator();
 			while (itr.hasNext()) {
 				ConstraintNode constraint = itr.next();
 				if (constraint.mentions((ChoiceNode)node)) {
@@ -326,7 +340,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				}
 			}
 		} else if (node instanceof AbstractParameterNode) {
-			Iterator<ConstraintNode> itr = externalConstraintNode.iterator();
+			Iterator<ConstraintNode> itr = allConstraintNodes.iterator();
 			while (itr.hasNext()) {
 				ConstraintNode constraint = itr.next();
 				if (constraint.mentions((AbstractParameterNode)node)) {
@@ -334,19 +348,19 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				}
 			}
 		}
-		
+
 	}
-	
-	private void eliminateMentioningTests(AbstractNode node, Set<TestCaseNode> externalTestNode) {
-		
-		Iterator<TestCaseNode> itr = externalTestNode.iterator();
+
+	private void createAffectedTestCases(AbstractNode node, Set<TestCaseNode> allTestCaseNodes) {
+
+		Iterator<TestCaseNode> itr = allTestCaseNodes.iterator();
 		while (itr.hasNext()) {
 			TestCaseNode testCase = itr.next();
 			if (testCase.mentions((ChoiceNode)node)) {
 				fAffectedTestCases.add(testCase);
 			}
 		}
-		
+
 	}
 
 }
