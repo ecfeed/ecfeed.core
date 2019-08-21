@@ -46,7 +46,7 @@ public class RemoteTCProvider implements ITCProvider {
 
         fMethodNode = remoteTCProviderInitData.methodNode;
 
-        fWebServiceResponse = fWebServiceClient.postRequest(requestType, requestText);
+        fWebServiceResponse = fWebServiceClient.sendPostRequest(requestType, requestText);
 
         if (!fWebServiceResponse.isResponseStatusOk()) {
             ExceptionHelper.reportRuntimeException(
