@@ -1,7 +1,6 @@
-package com.ecfeed.core.webservice.utils;
+package com.ecfeed.core.webservice.util;
 
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.webservice.util.RemoteHostHelper;
 
 public class GenServiceHelper {
 	

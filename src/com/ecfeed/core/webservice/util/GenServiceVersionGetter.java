@@ -1,4 +1,4 @@
-package com.ecfeed.core.webservice.utils;
+package com.ecfeed.core.webservice.util;
 
 import java.io.BufferedReader;
 import java.util.Optional;
