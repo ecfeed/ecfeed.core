@@ -10,34 +10,51 @@
 
 package com.ecfeed.core.generators;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.generators.api.IGeneratorArgument;
-import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class NWiseGenerator<E> extends AbstractGenerator<E>{
 
+	public final static String COVERAGE_PARAMETER_NAME = "Coverage";
+	public final static String N_PARAMETER_NAME = "N";
+
+	private static IParameterDefinition fDefinitionN;
+	private static IParameterDefinition fDefinitionCoverage;
+
+
 	public NWiseGenerator() throws GeneratorException{
-		addParameterDefinition(new GeneratorParameterN());
-		addParameterDefinition(new GeneratorParameterCoverage());
+		fDefinitionN = new ParameterDefinitionInteger(N_PARAMETER_NAME,  2, 1, Integer.MAX_VALUE);
+		addParameterDefinition(fDefinitionN);
+		fDefinitionCoverage = new ParameterDefinitionInteger(COVERAGE_PARAMETER_NAME,  100, 1, 100);
+		addParameterDefinition(fDefinitionCoverage);
+	}
+
+	public static IParameterDefinition getDefinitionN()
+	{
+		return fDefinitionN;
+	}
+
+	public static IParameterDefinition getDefinitionCoverage()
+	{
+		return fDefinitionCoverage;
 	}
 	
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
-			Map<String, IGeneratorArgument> parameters,
+			List<IGeneratorValue> parameters,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
-		int N = getIntParameter(new GeneratorParameterN().getName());
-		int coverage = getIntParameter(new GeneratorParameterCoverage().getName());
-//		setAlgorithm(new OptimalNWiseAlgorithm<E>(N, coverage));
+		int N = (int)getParameterValue(getDefinitionN());
+		int coverage = (int)getParameterValue(getDefinitionCoverage());
 		setAlgorithm(new AwesomeNWiseAlgorithm<>(N, coverage));
 	}
 

@@ -14,13 +14,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.ecfeed.core.generators.GeneratorParameterBoolean;
-
 public class BooleanParameterTest {
 
 	@Test
 	public void testTest() {
-		GeneratorParameterBoolean parameter = new GeneratorParameterBoolean("parameter", true, false);
+		ParameterDefinitionBoolean parameter = new ParameterDefinitionBoolean("parameter",  false);
 		assertTrue(parameter.test(true));
 		assertTrue(parameter.test(false));
 		assertFalse(parameter.test(8));

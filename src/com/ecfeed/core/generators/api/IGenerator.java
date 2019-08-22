@@ -10,11 +10,8 @@
 
 package com.ecfeed.core.generators.api;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
@@ -22,13 +19,13 @@ public interface IGenerator<E> {
 	/*
 	 * returns list of parameters used by this generator.
 	 */
-	public List<IGeneratorParamDefinition> getParameterDefinitions();
+	public List<IParameterDefinition> getParameterDefinitions();
 	/*
 	 * Should be called prior to first call of next()
 	 */
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
-		    Map<String, IGeneratorArgument> arguments,
+		    List<IGeneratorValue> arguments,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException;
 	
 //	public void addConstraint(IConstraint<E> constraint);

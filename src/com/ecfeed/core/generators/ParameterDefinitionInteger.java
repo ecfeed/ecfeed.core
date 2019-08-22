@@ -15,20 +15,20 @@ import java.util.Arrays;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.utils.ExceptionHelper;
 
-public class GeneratorParameterInteger extends AbstractParameter {
+public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 
 	private Integer[] fAllowedValues = null;
 	private int fDefaultValue;
 	private int fMinValue = Integer.MIN_VALUE;
 	private int fMaxValue = Integer.MAX_VALUE;
 
-	public GeneratorParameterInteger(String name, boolean required, int defaultValue){
-		super(name, TYPE.INTEGER, required);
+	public ParameterDefinitionInteger(String name, int defaultValue){
+		super(name, TYPE.INTEGER);
 		fDefaultValue = defaultValue;
 	}
 
-	public GeneratorParameterInteger(String name, boolean required, int defaultValue, Integer[] allowedValues) throws GeneratorException {
-		super(name, TYPE.INTEGER, required);
+	public ParameterDefinitionInteger(String name, int defaultValue, Integer[] allowedValues) throws GeneratorException {
+		super(name, TYPE.INTEGER);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
 		checkAllowedValues(fDefaultValue, fAllowedValues);
@@ -40,27 +40,27 @@ public class GeneratorParameterInteger extends AbstractParameter {
 		}
 	}
 
-	public GeneratorParameterInteger(String name, boolean required, int defaultValue, int min, int max) {
-		super(name, TYPE.INTEGER, required);
+	public ParameterDefinitionInteger(String name, int defaultValue, int min, int max) throws GeneratorException {
+		super(name, TYPE.INTEGER);
 		fDefaultValue = defaultValue;
 		fMinValue = min;
 		fMaxValue = max;
 		checkRange(fDefaultValue, fMinValue, fMaxValue);
 	}
 
-	private void checkRange(int value, int minValue, int maxValue) {
+	private void checkRange(int value, int minValue, int maxValue) throws GeneratorException {
 		if(value < minValue || value > maxValue){
-			ExceptionHelper.reportRuntimeException("Inconsistent parameter definition");
+			GeneratorException.report("Inconsistent parameter definition");
 		}
 	}
 
 	@Override
-	public Object[] allowedValues(){
+	public Object[] getAllowedValues(){
 		return fAllowedValues;
 	}
 
 	@Override
-	public Object defaultValue() {
+	public Object getDefaultValue() {
 		return fDefaultValue;
 	}
 
@@ -82,9 +82,9 @@ public class GeneratorParameterInteger extends AbstractParameter {
 			return false;
 		}
 		int intValue = (Integer)value;
-		if(allowedValues() != null){
+		if(getAllowedValues() != null){
 			boolean isAllowed = false;
-			for(Object allowed : allowedValues()){
+			for(Object allowed : getAllowedValues()){
 				if(value.equals(allowed)){
 					isAllowed = true;
 				}
@@ -94,11 +94,28 @@ public class GeneratorParameterInteger extends AbstractParameter {
 		return (intValue >= fMinValue && intValue <= fMaxValue);
 	}
 
-	public int getMin(){
-		return fMinValue;
-	}
+	@Override
+	public Object parse(String value) throws GeneratorException
+	{
+		Integer retValue;
+		if(value == null)
+			retValue = fDefaultValue;
+		else {
+			try {
+				retValue = Integer.parseInt(value);
+			} catch (Exception e) {
+				GeneratorException.report("Unable to parse to Integer.");
+				return null;
+			}
+		}
 
-	public int getMax(){
-		return fMaxValue;
+		if(test(retValue))
+			return retValue;
+		else
+		{
+			GeneratorException.report("Integer value not allowed.");
+			return null;
+		}
+
 	}
 }

@@ -10,39 +10,63 @@
 
 package com.ecfeed.core.generators;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.generators.api.IGenerator;
-import com.ecfeed.core.generators.api.IGeneratorArgument;
-import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.generators.api.*;
 import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		IGenerator<E> {
 
+	public final static String ADAPTIVE_PARAMETER_NAME = "Adaptive";
+	public static final String DUPLICATES_PARAMETER_NAME = "Duplicates";
+	public static final String LENGTH_PARAMETER_NAME = "Length";
+	public static final int DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE = 100;
+
+	private static IParameterDefinition fDefinitionAdaptive;
+	private static IParameterDefinition fDefinitionDuplicates;
+	private static IParameterDefinition fDefinitionLength;
+
+
+
+
 	public RandomGenerator() throws GeneratorException{
 
-		addParameterDefinition(new GeneratorParameterDuplicates());
-		addParameterDefinition(new GeneratorParameterAdaptive());
-		addParameterDefinition(new GeneratorParameterLength());
+		fDefinitionAdaptive = new ParameterDefinitionBoolean(ADAPTIVE_PARAMETER_NAME, false);
+		fDefinitionDuplicates = new ParameterDefinitionBoolean(DUPLICATES_PARAMETER_NAME, false);
+		fDefinitionLength = new ParameterDefinitionInteger(LENGTH_PARAMETER_NAME, DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE, 0, Integer.MAX_VALUE);
+		addParameterDefinition( fDefinitionDuplicates);
+		addParameterDefinition(fDefinitionAdaptive);
+		addParameterDefinition(fDefinitionLength);
 	}
-	
+	public static IParameterDefinition getDefinitionAdaptive()
+	{
+		return fDefinitionAdaptive;
+	}
+
+	public static IParameterDefinition getDefinitionDuplicates()
+	{
+		return fDefinitionDuplicates;
+	}
+
+	public static IParameterDefinition getDefinitionLength()
+	{
+		return fDefinitionLength;
+	}
+
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
-			Map<String, IGeneratorArgument> parameters,
+			List<IGeneratorValue> parameters,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
-		int length = getIntParameter(new GeneratorParameterLength().getName());
-		boolean duplicates = getBooleanParameter(new GeneratorParameterDuplicates().getName());
-		boolean adaptive = getBooleanParameter(new GeneratorParameterAdaptive().getName());
+		int length = (int)getParameterValue(getDefinitionLength());
+		boolean duplicates = (boolean)getParameterValue(getDefinitionDuplicates());
+		boolean adaptive = (boolean)getParameterValue(getDefinitionAdaptive());
 		setAlgorithm(new RandomAlgorithm<E>(length, duplicates, adaptive));
 	}
 

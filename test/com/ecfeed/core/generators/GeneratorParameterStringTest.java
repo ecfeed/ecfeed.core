@@ -21,12 +21,12 @@ public class GeneratorParameterStringTest {
 	@Test
 	public void testTest() {
 		try {
-			GeneratorParameterString p1 = new GeneratorParameterString("parameter", true, "default", new String[]{"default", "value"});
+			ParameterDefinitionString p1 = new ParameterDefinitionString("parameter",  "default", new String[]{"default", "value"});
 			assertTrue(p1.test("default"));
 			assertTrue(p1.test("value"));
 			assertFalse(p1.test("other"));
 			assertFalse(p1.test(5));
-			GeneratorParameterString p2 = new GeneratorParameterString("parameter", true, "default");
+			ParameterDefinitionString p2 = new ParameterDefinitionString("parameter",  "default");
 			assertTrue(p2.test("default"));
 			assertTrue(p2.test("value"));
 			assertTrue(p2.test("other"));
@@ -39,14 +39,14 @@ public class GeneratorParameterStringTest {
 	@Test
 	public void constructorTest() {
 		try {
-			GeneratorParameterString parameter = new GeneratorParameterString("parameter", true, "default", new String[]{"default", "value"});
-			assertEquals("default", parameter.defaultValue());
+			ParameterDefinitionString parameter = new ParameterDefinitionString("parameter",  "default", new String[]{"default", "value"});
+			assertEquals("default", parameter.getDefaultValue());
 			assertEquals("parameter", parameter.getName());
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException");
 		}
 		try {
-			new GeneratorParameterString("parameter", true, "default", new String[]{"any", "value"});
+			new ParameterDefinitionString("parameter",  "default", new String[]{"any", "value"});
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}

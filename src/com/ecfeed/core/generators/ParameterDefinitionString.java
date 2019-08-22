@@ -13,14 +13,15 @@ package com.ecfeed.core.generators;
 import java.util.Arrays;
 
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.utils.ExceptionHelper;
 
-public class GeneratorParameterString extends AbstractParameter {
+public class ParameterDefinitionString extends AbstractParameterDefinition {
 
 	private String[] fAllowedValues = null;
 	private String fDefaultValue;
 
-	public GeneratorParameterString(String name, boolean required, String defaultValue, String[] allowedValues) throws GeneratorException {
-		super(name, TYPE.STRING, required);
+	public ParameterDefinitionString(String name, String defaultValue, String[] allowedValues) throws GeneratorException {
+		super(name, TYPE.STRING);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
 		if(!Arrays.asList(fAllowedValues).contains(fDefaultValue)){
@@ -28,18 +29,18 @@ public class GeneratorParameterString extends AbstractParameter {
 		}
 	}
 
-	public GeneratorParameterString(String name, boolean required, String defaultValue){
-		super(name, TYPE.STRING, required);
+	public ParameterDefinitionString(String name, String defaultValue){
+		super(name, TYPE.STRING);
 		fDefaultValue = defaultValue;
 	}
 
 	@Override
-	public Object[] allowedValues(){
+	public Object[] getAllowedValues(){
 		return fAllowedValues;
 	}
 
 	@Override
-	public Object defaultValue() {
+	public Object getDefaultValue() {
 		return fDefaultValue;
 	}
 
@@ -48,9 +49,9 @@ public class GeneratorParameterString extends AbstractParameter {
 		if (value instanceof String == false){
 			return false;
 		}
-		if(allowedValues() != null){
+		if(getAllowedValues() != null){
 			boolean isAllowed = false;
-			for(Object allowed : allowedValues()){
+			for(Object allowed : getAllowedValues()){
 				if(value.equals(allowed)){
 					isAllowed = true;
 				}
@@ -58,6 +59,24 @@ public class GeneratorParameterString extends AbstractParameter {
 			return isAllowed;
 		}
 		return true;
+	}
+
+	@Override
+	public Object parse(String value)
+	{
+		String retValue;
+		if(value == null)
+			retValue = fDefaultValue;
+		else
+			retValue = value;
+
+		if(test(retValue))
+			return retValue;
+		else
+		{
+			ExceptionHelper.reportRuntimeException("Integer value not allowed.");
+			return null;
+		}
 	}
 
 }

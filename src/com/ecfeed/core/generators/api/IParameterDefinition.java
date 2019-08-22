@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.generators.api;
 
-public interface IGeneratorParamDefinition {
+public interface IParameterDefinition {
 	public enum TYPE{
 		BOOLEAN, INTEGER, DOUBLE, STRING
 	}
@@ -26,25 +26,22 @@ public interface IGeneratorParamDefinition {
 	public TYPE getType();
 	
 	/*
-	 * Information, whether this parameter is required or optional.
-	 */
-	public boolean isRequired();
-	
-	/*
 	 * Default value of parameter.
 	 */
-	public Object defaultValue();
+	public Object getDefaultValue();
 	
 	/*
 	 * Set of allowed values of the parameter. If any value is permitted this 
 	 * function should return null
 	 */
-	public Object[] allowedValues();
+	public Object[] getAllowedValues();
 	
 	/*
 	 * Checks if provided value is valid for this parameter
 	 */
 	public boolean test(Object value);
+
+	public Object parse(String value) throws GeneratorException;
 	
 }
 

@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
-import com.ecfeed.core.evaluator.Sat4jEvaluator;
-import com.ecfeed.core.generators.api.IGeneratorArgument;
+import com.ecfeed.core.evaluator.DummyEvaluator;
+import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.utils.GeneratorType;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,44 +67,33 @@ public class AbstractGeneratorTest {
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
+
+		ParameterDefinitionInteger paramDefInt = new ParameterDefinitionInteger(INT_PARAMETER_NAME,  fDefaultIntParameterValue);
+		generator.addParameterDefinition( paramDefInt );
+		ParameterDefinitionBoolean paramDefBool = new ParameterDefinitionBoolean(BOOLEAN_PARAMETER_NAME,  fDefaultBooleanParameterValue);
+		generator.addParameterDefinition( paramDefBool );
+		ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME,  fDefaultDoubleParameterValue);
+		generator.addParameterDefinition(paramDefDouble);
+		ParameterDefinitionString paramDefString = new ParameterDefinitionString(STRING_PARAMETER_NAME,  fDefaultStringParameterValue);
+		generator.addParameterDefinition(paramDefString);
 		
-		generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, true, fDefaultIntParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterBoolean(BOOLEAN_PARAMETER_NAME, true, fDefaultBooleanParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterDouble(DOUBLE_PARAMETER_NAME, true, fDefaultDoubleParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterString(STRING_PARAMETER_NAME, true, fDefaultStringParameterValue));
+		List<IGeneratorValue> arguments = new ArrayList<>();
+
+		try {
+
+			GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, String.valueOf(fIntParameterValue) );
+			arguments.add(generatorValueInteger);
+
+			GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, String.valueOf(fDoubleParameterValue) );
+			arguments.add(generatorValueDouble);
+
+			GeneratorValue generatorValueBoolean = new GeneratorValue(paramDefBool, String.valueOf(fBooleanParameterValue) );
+			arguments.add(generatorValueBoolean);
+
+			GeneratorValue generatorValueString = new GeneratorValue(paramDefString, fStringParameterValue);
+			arguments.add(generatorValueString);
 		
-		Map<String, IGeneratorArgument> arguments = new HashMap<>();
-
-		GeneratorArgumentInteger generatorArgumentInteger = null;
-		try {
-			generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, fIntParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		arguments.put(INT_PARAMETER_NAME, generatorArgumentInteger);
-
-		GeneratorArgumentDouble generatorArgumentDouble = null;
-		try {
-			generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, fDoubleParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		arguments.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
-
-		GeneratorArgumentBoolean generatorArgumentBoolean = new GeneratorArgumentBoolean(BOOLEAN_PARAMETER_NAME, fBooleanParameterValue);
-		arguments.put(BOOLEAN_PARAMETER_NAME, generatorArgumentBoolean);
-
-		GeneratorArgumentString generatorArgumentString = null;
-		try {
-			generatorArgumentString = new GeneratorArgumentString(STRING_PARAMETER_NAME, fStringParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		arguments.put(STRING_PARAMETER_NAME, generatorArgumentString);
-		
-		try {
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -116,26 +104,28 @@ public class AbstractGeneratorTest {
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 		try{
-			generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, true, 0, -1, 1));
-			generator.addParameterDefinition(new GeneratorParameterDouble(DOUBLE_PARAMETER_NAME, true, 0.0, -1.0, 1.0));
+			ParameterDefinitionInteger paramDefInt = new ParameterDefinitionInteger(INT_PARAMETER_NAME,  0, -1, 1);
+			generator.addParameterDefinition(paramDefInt);
+			ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME, 0.0, -1.0, 1.0);
+			generator.addParameterDefinition( paramDefDouble );
 
-			Map<String, IGeneratorArgument> arguments = new HashMap<>();
-
-			GeneratorArgumentInteger generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 0);
-			arguments.put(INT_PARAMETER_NAME, generatorArgumentInteger);
-
-			GeneratorArgumentDouble generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, 0.0);
-			arguments.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
-
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
-
-			GeneratorArgumentInteger argumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 5);
-			arguments.put(INT_PARAMETER_NAME, argumentInteger);
+			List<IGeneratorValue> arguments = new ArrayList<>();
 
 			try{
-				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
+
+				GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, "0");
+				arguments.add(generatorValueInteger);
+
+				GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, "0.0");
+				arguments.add(generatorValueDouble);
+
+				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
+
+				GeneratorValue argumentInteger = new GeneratorValue(paramDefInt, "5");
+				arguments.add(argumentInteger);
+
+				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
@@ -148,26 +138,28 @@ public class AbstractGeneratorTest {
 	public void initializeWithAllowedValuesTest() {
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 		try{
-			generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, true, 0, new Integer[]{-1, 0, 1}));
-			generator.addParameterDefinition(new GeneratorParameterDouble(DOUBLE_PARAMETER_NAME, true, 0.0, new Double[]{-1.0, 0.0, 1.0}));
+			ParameterDefinitionInteger paramDefInt = new ParameterDefinitionInteger(INT_PARAMETER_NAME,  0, new Integer[]{-1, 0, 1});
+			generator.addParameterDefinition(paramDefInt);
+			ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME,  0.0, new Double[]{-1.0, 0.0, 1.0});
+			generator.addParameterDefinition(paramDefDouble);
 
-			Map<String, IGeneratorArgument> values = new HashMap<>();
-
-			GeneratorArgumentInteger generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 0);
-			values.put(INT_PARAMETER_NAME, generatorArgumentInteger);
-
-			GeneratorArgumentDouble generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, 0.0);
-			values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
-
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
-
-			GeneratorArgumentInteger argumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 5);
-			values.put(INT_PARAMETER_NAME, argumentInteger);
+			List<IGeneratorValue> values = new ArrayList<>();;
 
 			try{
-				generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
+
+				GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, "0");
+				values.add(generatorValueInteger);
+
+				GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, "0.0");
+				values.add(generatorValueDouble);
+
+				generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
+
+				GeneratorValue argumentInteger = new GeneratorValue(paramDefInt, "5");
+				values.add(argumentInteger);
+
+				generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
 				fail("GeneratorException expected");
 			} catch (GeneratorException e) {
 			}
@@ -177,82 +169,34 @@ public class AbstractGeneratorTest {
 	}
 
 	@Test
-	public void initializeWithMissingRequiredParameterTest(){
-		TestAbstractGenerator generator = new TestAbstractGenerator();
-		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
-		
-		generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, true, 0));
-		generator.addParameterDefinition(new GeneratorParameterDouble(DOUBLE_PARAMETER_NAME, true, 0.0));
-
-		Map<String, IGeneratorArgument> values = new HashMap<>();
-
-		GeneratorArgumentInteger generatorArgumentInteger = null;
-		try {
-			generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 0);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(INT_PARAMETER_NAME, generatorArgumentInteger);
-
-		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
-			fail("GeneratorException expected");
-		} catch (GeneratorException e) {
-		}
-
-		GeneratorArgumentDouble generatorArgumentDouble = null;
-		try {
-			generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, 0.0);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
-		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
-		}
-	}
-
-	@Test
 	public void initializeWithMissingOptionalParameterTest(){
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
-		
-		generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, false, 0));
-		generator.addParameterDefinition(new GeneratorParameterDouble(DOUBLE_PARAMETER_NAME, false, 0.0));
 
-		Map<String, IGeneratorArgument> arguments = new HashMap<>();
+		ParameterDefinitionInteger paramDefInt = new ParameterDefinitionInteger(INT_PARAMETER_NAME,  0);
+		generator.addParameterDefinition( paramDefInt );
+		ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME,  0.0);
+		generator.addParameterDefinition( paramDefDouble );
+
+		List<IGeneratorValue> arguments = new ArrayList<>();
 		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
 
-		GeneratorArgumentInteger generatorArgumentInteger = null;
-		try {
-			generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 0);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		arguments.put(INT_PARAMETER_NAME, generatorArgumentInteger);
 		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
+			GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, "0");
+			arguments.add(generatorValueInteger);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
 
-		GeneratorArgumentDouble generatorArgumentDouble = null;
-		try {
-			generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, 0.0);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		arguments.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
 		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), arguments, null);
+			GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, "0.0");
+			arguments.add(generatorValueDouble);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
@@ -262,35 +206,27 @@ public class AbstractGeneratorTest {
 	public void initializeWithAdditionalParameterTest(){
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
-		
-		generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, true, 0));
 
-		Map<String, IGeneratorArgument> values = new HashMap<>();
+		ParameterDefinitionInteger paramDefInt = new ParameterDefinitionInteger(INT_PARAMETER_NAME,  0);
+		generator.addParameterDefinition( paramDefInt );
 
-		GeneratorArgumentInteger generatorArgumentInteger = null;
-		try {
-			generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, 0);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(INT_PARAMETER_NAME, generatorArgumentInteger);
+		List<IGeneratorValue> values = new ArrayList<>();
+
 
 		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
+			GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, "0");
+			values.add(generatorValueInteger);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
 
-		GeneratorArgumentDouble generatorArgumentDouble = null;
-		try {
-			generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, 0.0);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
+		ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME,  0.0);
+
 		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
+			GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, "0.0");
+			values.add(generatorValueDouble);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}
@@ -300,49 +236,37 @@ public class AbstractGeneratorTest {
 	public void getRequiredParameterTest(){
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 
-		generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, true, fDefaultIntParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterDouble(DOUBLE_PARAMETER_NAME, true, fDefaultDoubleParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterBoolean(BOOLEAN_PARAMETER_NAME, true, fDefaultBooleanParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterString(STRING_PARAMETER_NAME, true, fDefaultStringParameterValue));
+		ParameterDefinitionInteger paramDefInt = new ParameterDefinitionInteger(INT_PARAMETER_NAME,  fDefaultIntParameterValue);
+		generator.addParameterDefinition( paramDefInt );
+		ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME,  fDefaultDoubleParameterValue);
+		generator.addParameterDefinition( paramDefDouble );
+		ParameterDefinitionBoolean paramDefBoolean = new ParameterDefinitionBoolean(BOOLEAN_PARAMETER_NAME,  fDefaultBooleanParameterValue);
+		generator.addParameterDefinition( paramDefBoolean );
+		ParameterDefinitionString paramDefString = new ParameterDefinitionString(STRING_PARAMETER_NAME,  fDefaultStringParameterValue);
+		generator.addParameterDefinition( paramDefString );
 		
-		Map<String, IGeneratorArgument> values = new HashMap<>();
+		List<IGeneratorValue> values = new ArrayList<>();
 
-		GeneratorArgumentInteger generatorArgumentInteger = null;
-		try {
-			generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, fIntParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(INT_PARAMETER_NAME, generatorArgumentInteger);
 
-		GeneratorArgumentDouble generatorArgumentDouble = null;
 		try {
-			generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, fDoubleParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
+			GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, String.valueOf(fIntParameterValue) );
+			values.add(generatorValueInteger);
 
-		GeneratorArgumentBoolean generatorArgumentBoolean = new GeneratorArgumentBoolean(BOOLEAN_PARAMETER_NAME, fBooleanParameterValue);
-		values.put(BOOLEAN_PARAMETER_NAME, generatorArgumentBoolean);
+			GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, String.valueOf(fDoubleParameterValue));
+			values.add(generatorValueDouble);
 
-		GeneratorArgumentString generatorArgumentString = null;
-		try {
-			generatorArgumentString = new GeneratorArgumentString(STRING_PARAMETER_NAME, fStringParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(STRING_PARAMETER_NAME, generatorArgumentString);
-		
-		try {
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
+			GeneratorValue generatorValueBoolean = new GeneratorValue(paramDefBoolean, String.valueOf(fBooleanParameterValue));
+			values.add(generatorValueBoolean);
+
+			GeneratorValue generatorValueString = new GeneratorValue(paramDefString, fStringParameterValue);
+			values.add(generatorValueString);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
 			
-			int intParameter = generator.getIntParameter(INT_PARAMETER_NAME);
-			double doubleParameter = generator.getDoubleParameter(DOUBLE_PARAMETER_NAME);
-			boolean booleanParameter = generator.getBooleanParameter(BOOLEAN_PARAMETER_NAME);
-			String stringParameter = generator.getStringParameter(STRING_PARAMETER_NAME);
+			int intParameter = (int)generator.getParameterValue(paramDefInt);
+			double doubleParameter = (double)generator.getParameterValue(paramDefDouble);
+			boolean booleanParameter = (boolean)generator.getParameterValue(paramDefBoolean);
+			String stringParameter = (String)generator.getParameterValue(paramDefString);
 			
 			assertEquals(fIntParameterValue, intParameter);
 			assertEquals(fDoubleParameterValue, doubleParameter, 0.0);
@@ -357,22 +281,25 @@ public class AbstractGeneratorTest {
 	public void getOptionalParameterTest(){
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 
-		generator.addParameterDefinition(new GeneratorParameterInteger(INT_PARAMETER_NAME, false, fDefaultIntParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterDouble(DOUBLE_PARAMETER_NAME, false, fDefaultDoubleParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterBoolean(BOOLEAN_PARAMETER_NAME, false, fDefaultBooleanParameterValue));
-		generator.addParameterDefinition(new GeneratorParameterString(STRING_PARAMETER_NAME, false, fDefaultStringParameterValue));
+		ParameterDefinitionInteger paramDefInt = new ParameterDefinitionInteger(INT_PARAMETER_NAME,  fDefaultIntParameterValue);
+		generator.addParameterDefinition(paramDefInt);
+		ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME,  fDefaultDoubleParameterValue);
+		generator.addParameterDefinition(paramDefDouble);
+		ParameterDefinitionBoolean paramDefBoolean = new ParameterDefinitionBoolean(BOOLEAN_PARAMETER_NAME,  fDefaultBooleanParameterValue);
+		generator.addParameterDefinition(paramDefBoolean);
+		ParameterDefinitionString paramDefString = new ParameterDefinitionString(STRING_PARAMETER_NAME,  fDefaultStringParameterValue);
+		generator.addParameterDefinition( paramDefString );
 
-		Map<String, IGeneratorArgument> values = new HashMap<>();
+		List<IGeneratorValue> values = new ArrayList<>();
 		
 		try {
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
 			
-			int intParameter = generator.getIntParameter(INT_PARAMETER_NAME);
-			double doubleParameter = generator.getDoubleParameter(DOUBLE_PARAMETER_NAME);
-			boolean booleanParameter = generator.getBooleanParameter(BOOLEAN_PARAMETER_NAME);
-			String stringParameter = generator.getStringParameter(STRING_PARAMETER_NAME);
+			int intParameter = (int)generator.getParameterValue(paramDefInt);
+			double doubleParameter = (double)generator.getParameterValue(paramDefDouble);
+			boolean booleanParameter = (boolean)generator.getParameterValue(paramDefBoolean);
+			String stringParameter = (String)generator.getParameterValue(paramDefString);
 			
 			assertEquals(fDefaultIntParameterValue, intParameter);
 			assertEquals(fDefaultDoubleParameterValue, doubleParameter, 0.0);
@@ -382,40 +309,26 @@ public class AbstractGeneratorTest {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
 
-		GeneratorArgumentInteger generatorArgumentInteger = null;
-		try {
-			generatorArgumentInteger = new GeneratorArgumentInteger(INT_PARAMETER_NAME, fIntParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(INT_PARAMETER_NAME, generatorArgumentInteger);
 
-		GeneratorArgumentDouble generatorArgumentDouble = null;
 		try {
-			generatorArgumentDouble = new GeneratorArgumentDouble(DOUBLE_PARAMETER_NAME, fDoubleParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(DOUBLE_PARAMETER_NAME, generatorArgumentDouble);
+			GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, String.valueOf(fIntParameterValue));
+			values.add(generatorValueInteger);
 
-		GeneratorArgumentBoolean generatorArgumentBoolean = new GeneratorArgumentBoolean(BOOLEAN_PARAMETER_NAME, fBooleanParameterValue);
-		values.put(BOOLEAN_PARAMETER_NAME, generatorArgumentBoolean);
+			GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, String.valueOf(fDoubleParameterValue));
+			values.add(generatorValueDouble);
 
-		GeneratorArgumentString generatorArgumentString = null;
-		try {
-			generatorArgumentString = new GeneratorArgumentString(STRING_PARAMETER_NAME, fStringParameterValue);
-		} catch (GeneratorException e) {
-			fail();
-		}
-		values.put(STRING_PARAMETER_NAME, generatorArgumentString);
-		
-		try {
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), values, null);
+			GeneratorValue generatorValueBoolean = new GeneratorValue(paramDefBoolean, String.valueOf(fBooleanParameterValue));
+			values.add(generatorValueBoolean);
+
+			GeneratorValue generatorValueString = new GeneratorValue(paramDefString, fStringParameterValue);
+			values.add(generatorValueString);
+
+			generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
 			
-			int intParameter = generator.getIntParameter(INT_PARAMETER_NAME);
-			double doubleParameter = generator.getDoubleParameter(DOUBLE_PARAMETER_NAME);
-			boolean booleanParameter = generator.getBooleanParameter(BOOLEAN_PARAMETER_NAME);
-			String stringParameter = generator.getStringParameter(STRING_PARAMETER_NAME);
+			int intParameter = (int)generator.getParameterValue(paramDefInt);
+			double doubleParameter = (double)generator.getParameterValue(paramDefDouble);
+			boolean booleanParameter = (boolean)generator.getParameterValue(paramDefBoolean);
+			String stringParameter = (String)generator.getParameterValue(paramDefString);
 			
 			assertEquals(fIntParameterValue, intParameter);
 			assertEquals(fDoubleParameterValue, doubleParameter, 0.0);
@@ -431,10 +344,9 @@ public class AbstractGeneratorTest {
 		TestAbstractGenerator generator = new TestAbstractGenerator();
 		List<List<String>> inputDomain = new ArrayList<List<String>>();
 		inputDomain.add(new ArrayList<String>());
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>(); 
 
 		try{
-			generator.initialize(inputDomain, new HomebrewConstraintEvaluator<>(constraints), null, null);
+			generator.initialize(inputDomain, new DummyEvaluator<>(), null, null);
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}
@@ -452,7 +364,7 @@ public class AbstractGeneratorTest {
 //	public void testGetRequiredParameterWithBounds(){
 //		AbstractGenerator<String> generator = new AbstractGenerator<String>();
 //		
-//		generator.addParameterDefinition(new AbstractParameter("parameter", TYPE.INTEGER, true, 2, new Integer[]{1,2,3}));
+//		generator.addParameterDefinition(new AbstractParameterDefinition("parameter", TYPE.INTEGER, true, 2, new Integer[]{1,2,3}));
 //		Map<String, Object> values = new HashMap<String, Object>();
 //		try {
 //			generator.getIntParameter("parameter");
@@ -483,7 +395,7 @@ public class AbstractGeneratorTest {
 //		int parameterValue = rand.nextInt();
 //		int defaultParameterValue = rand.nextInt();
 //		
-//		generator.addParameterDefinition(new AbstractParameter("parameter", TYPE.INTEGER, false, defaultParameterValue, null));
+//		generator.addParameterDefinition(new AbstractParameterDefinition("parameter", TYPE.INTEGER, false, defaultParameterValue, null));
 //		Map<String, Object> values = new HashMap<String, Object>();
 //		try {
 //			int parameter = generator.getIntParameter("parameter", values);
@@ -519,7 +431,7 @@ public class AbstractGeneratorTest {
 //		int parameterValue = rand.nextInt();
 //		
 //		try {
-//			generator.addParameterDefinition(new AbstractParameter("parameter", TYPE.INTEGER, true, 0, -5, 5));
+//			generator.addParameterDefinition(new AbstractParameterDefinition("parameter", TYPE.INTEGER, true, 0, -5, 5));
 //		} catch (GeneratorException e) {
 //			e.printStackTrace();
 //		}

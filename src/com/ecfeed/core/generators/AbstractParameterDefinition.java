@@ -10,25 +10,24 @@
 
 package com.ecfeed.core.generators;
 
-import com.ecfeed.core.generators.api.IGeneratorParamDefinition;
+import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IParameterDefinition;
 
-public class AbstractParameter implements IGeneratorParamDefinition {
+public class AbstractParameterDefinition implements IParameterDefinition {
 
 	private String fName;
 	private TYPE fType;
-	private boolean fRequired;
 
-	public AbstractParameter(String name, TYPE type, boolean required){
+	public AbstractParameterDefinition(String name, TYPE type){
 		fName = name;
 		fType = type;
-		fRequired = required;
 	}
 
-	public AbstractParameter(String name, TYPE type, boolean required,
-			Object defaultValue, Object[] allowedValues){
-		fName = name;
-		fType = type;
-		fRequired = required;
+	@Override
+	public Object parse(String value) throws GeneratorException
+	{
+		GeneratorException.report("parsing into abstract value");
+		return null;
 	}
 
 	@Override
@@ -42,17 +41,12 @@ public class AbstractParameter implements IGeneratorParamDefinition {
 	}
 
 	@Override
-	public boolean isRequired() {
-		return fRequired;
-	}
-
-	@Override
-	public Object defaultValue() {
+	public Object getDefaultValue() {
 		return null;
 	}
 
 	@Override
-	public Object[] allowedValues() {
+	public Object[] getAllowedValues() {
 		return null;
 	}
 

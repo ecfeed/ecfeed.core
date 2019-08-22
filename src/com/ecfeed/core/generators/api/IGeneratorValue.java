@@ -8,27 +8,12 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.generators;
+package com.ecfeed.core.generators.api;
 
-public class GeneratorParameterBoolean extends AbstractParameter {
+public interface IGeneratorValue {
 
-	private boolean fDefaultValue;
+	Object getValue();
 
-	public GeneratorParameterBoolean(String name, boolean required, boolean defaultValue){
-		super(name, TYPE.BOOLEAN, required);
-		fDefaultValue = defaultValue;
-	}
-
-	@Override
-	public Object defaultValue() {
-		return fDefaultValue;
-	}
-
-	@Override
-	public boolean test(Object value){
-		if (value instanceof Boolean == false){
-			return false;
-		}
-		return true;
-	}
+	IParameterDefinition getDefinition();
 }
+

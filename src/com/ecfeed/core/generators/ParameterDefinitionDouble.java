@@ -13,21 +13,22 @@ package com.ecfeed.core.generators;
 import java.util.Arrays;
 
 import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.utils.ExceptionHelper;
 
-public class GeneratorParameterDouble extends AbstractParameter {
+public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 
 	private Double[] fAllowedValues = null;
 	private double fDefaultValue;
 	private double fMinValue = -Double.MAX_VALUE;
 	private double fMaxValue = Double.MAX_VALUE;
 
-	public GeneratorParameterDouble(String name, boolean required, double defaultValue){
-		super(name, TYPE.DOUBLE, required);
+	public ParameterDefinitionDouble(String name, double defaultValue){
+		super(name, TYPE.DOUBLE);
 		fDefaultValue = defaultValue;
 	}
 
-	public GeneratorParameterDouble(String name, boolean required, double defaultValue, Double[] allowedValues) throws GeneratorException {
-		super(name, TYPE.DOUBLE, required);
+	public ParameterDefinitionDouble(String name, double defaultValue, Double[] allowedValues) throws GeneratorException {
+		super(name, TYPE.DOUBLE);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
 		if(!Arrays.asList(fAllowedValues).contains(fDefaultValue)){
@@ -35,8 +36,8 @@ public class GeneratorParameterDouble extends AbstractParameter {
 		}
 	}
 
-	public GeneratorParameterDouble(String name, boolean required, double defaultValue, double min, double max) throws GeneratorException {
-		super(name, TYPE.DOUBLE, required);
+	public ParameterDefinitionDouble(String name, double defaultValue, double min, double max) throws GeneratorException {
+		super(name, TYPE.DOUBLE);
 		fDefaultValue = defaultValue;
 		fMinValue = min;
 		fMaxValue = max;
@@ -46,12 +47,12 @@ public class GeneratorParameterDouble extends AbstractParameter {
 	}
 
 	@Override
-	public Object[] allowedValues(){
+	public Object[] getAllowedValues(){
 		return fAllowedValues;
 	}
 
 	@Override
-	public Object defaultValue() {
+	public Object getDefaultValue() {
 		return fDefaultValue;
 	}
 
@@ -61,9 +62,9 @@ public class GeneratorParameterDouble extends AbstractParameter {
 			return false;
 		}
 		double intValue = (double)value;
-		if(allowedValues() != null){
+		if(getAllowedValues() != null){
 			boolean isAllowed = false;
-			for(Object allowed : allowedValues()){
+			for(Object allowed : getAllowedValues()){
 				if(value.equals(allowed)){
 					isAllowed = true;
 				}
@@ -79,5 +80,30 @@ public class GeneratorParameterDouble extends AbstractParameter {
 
 	public double getMax(){
 		return fMaxValue;
+	}
+
+	@Override
+	public Object parse(String value) throws GeneratorException
+	{
+		Double retValue;
+		if(value == null)
+			retValue = fDefaultValue;
+		else {
+			try {
+				retValue = Double.parseDouble(value);
+			} catch (Exception e) {
+				GeneratorException.report("Unable to parse to Double.");
+				return null;
+			}
+		}
+
+		if(test(retValue))
+			return retValue;
+		else
+		{
+			GeneratorException.report("Double value is illegal.");
+			return null;
+		}
+
 	}
 }
