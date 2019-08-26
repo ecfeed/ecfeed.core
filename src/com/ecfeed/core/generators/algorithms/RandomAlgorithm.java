@@ -115,12 +115,12 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 	protected List<E> getCandidate() throws GeneratorException{
 	//	fCartesianAlgorithm.addConstraint(blackList); //TODO: addConstraint goes away from IAlgorithm
 		List<Integer> random = randomVector(getInput());
-		List<E> result = fCartesianAlgorithm.getNext(instance(random));
+		List<Integer> result = fCartesianAlgorithm.getNext(random);
 		if(result == null){
 			result = fCartesianAlgorithm.getNext(null);
 		};
 	//	fCartesianAlgorithm.removeConstraint(blackList);  //TODO: removeConstraint goes away from IAlgorithm
-		return result;
+		return instance(result);
 	}
 
 	protected List<E> getOptimalCandidate(List<List<E>> candidates, List<List<E>> history) {

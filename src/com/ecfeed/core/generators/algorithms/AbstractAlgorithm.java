@@ -109,24 +109,14 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 		if (vector == null) return null;
 		List<E> instance = new ArrayList<E>();
 		for(int i = 0; i < vector.size(); i++){
-			E element = fInput.get(i).get(vector.get(i));
-			instance.add(element);
+			if(vector.get(i)!=null) {
+				E element = fInput.get(i).get(vector.get(i));
+				instance.add(element);
+			}
+			else
+				instance.add(null);
 		}
 		return instance;
-	}
-
-	protected List<Integer> representation(List<E> vector){
-		if(vector == null) return null;
-		List<Integer> representation = new ArrayList<Integer>();
-		for(int i = 0; i < vector.size(); i++){
-			E element = vector.get(i);
-			int index = fInput.get(i).indexOf(element);
-			if(index < 0){
-				index = 0;
-			}
-			representation.add(index);
-		}
-		return representation;
 	}
 
 	protected EvaluationResult checkConstraints(List<E> test) {

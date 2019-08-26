@@ -12,6 +12,7 @@ package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.ecfeed.core.generators.api.GeneratorException;
@@ -47,8 +48,8 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 			return null;
 		}
 
-		List<E> next = getNext(instance(fLastGenerated));
-		fLastGenerated = representation(next);
+		List<Integer> next = getNext(fLastGenerated);
+		fLastGenerated = next;
 
 		if (next == null) {
 			setTaskEnd();
@@ -56,7 +57,7 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 		}
 
 		incrementProgress(1);
-		return next;
+		return instance(next);
 	}
 
 	public void reset(){
@@ -64,12 +65,15 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 		super.reset();
 	}
 
-	protected List<E> getNext(List<E> last) throws GeneratorException{
-		List<Integer> nextElement = representation(last);
+	protected List<Integer> getNext(List<Integer> last) {
+		List<Integer> nextElement;
+		if(last!=null)
+			nextElement = new ArrayList<>(last);
+		else
+			nextElement = null;
 		while((nextElement = incrementVector(nextElement)) != null){
-			List<E> instance = instance(nextElement);
-			if (checkConstraints(instance) == EvaluationResult.TRUE) {
-				return instance;
+			if (checkConstraints( instance(nextElement)) == EvaluationResult.TRUE) {
+				return nextElement;
 			}
 		}
 		return null;
@@ -77,26 +81,42 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 
 	protected List<Integer> incrementVector(List<Integer> vector) {
 		if(vector == null){
-			return firstVector();
+			return fillNull(new ArrayList<>(Collections.nCopies(getInput().size(), null)));
 		}
 		for(int i = vector.size() - 1; i >= 0; i--){
-			if(vector.get(i) < getInput().get(i).size() - 1){
-				vector.set(i, vector.get(i) + 1);
-				for(++i; i < vector.size(); i++){
-					vector.set(i, 0);
+			int k = vector.get(i)+1;
+			for(;;k++)
+			{
+				if(k==getInput().get(i).size())
+				{
+					vector.set(i, null);
+					break;
 				}
-				return vector;
+				vector.set(i,k);
+
+				if( checkConstraints( instance(vector)) == EvaluationResult.TRUE)
+					return fillNull( vector );
 			}
 		}
 		return null;
 	}
 
-	protected List<Integer> firstVector() {
-		List<Integer> firstVector = new ArrayList<Integer>(getInput().size());
-		for(int i = 0; i < getInput().size(); i++){
-			firstVector.add(0);
-		}
-		return firstVector;
+	protected List<Integer> fillNull(List<Integer> vector) {
+		if( checkConstraints( instance(vector)) == EvaluationResult.FALSE )
+			return null;
+		for(int i = 0; i < getInput().size(); i++)
+			if(vector.get(i)==null)
+			{
+				for(int k = 0; ;k++)
+				{
+					if(k==getInput().get(i).size())
+						return null;
+					vector.set(i,k);
+					if( checkConstraints( instance(vector)) == EvaluationResult.TRUE )
+						break;
+				}
+			}
+		return vector;
 	}
 
 	protected int calculateProductSize(List<? extends List<E>> input) {
