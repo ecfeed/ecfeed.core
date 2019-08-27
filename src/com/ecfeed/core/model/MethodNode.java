@@ -304,7 +304,7 @@ public class MethodNode extends ParametersParentNode {
     private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
         String defaultValue = methodParameterNode.getDefaultValue();
 
-	    ChoiceNode choiceNode = new ChoiceNode(defaultValue,null, defaultValue);
+	    ChoiceNode choiceNode = new ChoiceNode("@expected", methodParameterNode.getModelChangeRegistrator(), defaultValue);
         choiceNode.setParent(methodParameterNode);
 
         return choiceNode;
