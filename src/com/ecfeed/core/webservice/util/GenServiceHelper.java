@@ -18,7 +18,7 @@ public class GenServiceHelper {
 	}
 
 	public static int getGenServicePort() {
-		return 8095;
+		return 443;
 	}
 
 
