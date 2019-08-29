@@ -7,7 +7,7 @@ public class GeneratorArgument implements IGeneratorArgument {
     private String fName;
     private Object fValue = null;
 
-    public GeneratorArgument(String name) {
+    protected GeneratorArgument(String name) {
         fName = name;
     }
     
