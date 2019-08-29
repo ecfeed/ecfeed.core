@@ -13,13 +13,14 @@ public class GenServiceHelper {
 		if (StringHelper.startsWithPrefix("//", host)) {
 			host = host.substring(2);
 		}
+		
+		int port = 443;
+		
+		if (tokens.length > 2) {
+			port = Integer.parseInt(tokens[2]);
+		}
 
-		return RemoteHostHelper.isHostAlive(host, getGenServicePort(), 5);
+		return RemoteHostHelper.isHostAlive(host, port, 5);
 	}
-
-	public static int getGenServicePort() {
-		return 443;
-	}
-
 
 }
