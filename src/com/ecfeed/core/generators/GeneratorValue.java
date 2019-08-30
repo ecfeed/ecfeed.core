@@ -16,7 +16,7 @@ public class GeneratorValue implements IGeneratorValue {
         fDefinition.test(fValue);
     }
 
-	@Override
+ 	@Override
 	public Object getValue() {
 		return fValue;
 	}

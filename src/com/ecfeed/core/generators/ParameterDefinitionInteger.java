@@ -54,6 +54,16 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 		}
 	}
 
+	public int getMin()
+	{
+		return fMinValue;
+	}
+
+	public int getMax()
+	{
+		return fMaxValue;
+	}
+
 	@Override
 	public Object[] getAllowedValues(){
 		return fAllowedValues;
