@@ -54,6 +54,7 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 		}
 	}
 
+	
 	public int getMin()
 	{
 		return fMinValue;
