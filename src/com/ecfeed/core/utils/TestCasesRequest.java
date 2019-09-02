@@ -16,7 +16,7 @@ public class TestCasesRequest {
 	private String fModel;
 
 	private String fUserData;
-	
+
 	public TestCasesRequest() {};
 
 	@JsonGetter("sessionId")
