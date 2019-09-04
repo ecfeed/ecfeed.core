@@ -18,8 +18,15 @@ public class ExceptionDescription {
 
 	public ExceptionDescription(Throwable throwable) {
 
-		fFullMessage = throwable.getMessage();
 		fShortMessage = createMessageDescr(throwable);
+		
+		String fullMessage = throwable.getMessage();
+		
+		if (fullMessage == null) {
+			fullMessage = throwable.getClass().toString();
+		}
+		
+		fFullMessage = fullMessage;
 	}
 
 	public String getShortMessage() {
@@ -41,7 +48,7 @@ public class ExceptionDescription {
 		String rawMessage = throwable.getMessage();
 		
 		if (rawMessage == null) {
-			return "No exception message.";
+			return throwable.getClass().toString();
 		}
 
 		int index = rawMessage.lastIndexOf(EXCEPTION_TAG);

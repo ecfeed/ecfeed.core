@@ -46,7 +46,7 @@ public class RemoteTCProvider implements ITCProvider {
 
         fMethodNode = remoteTCProviderInitData.methodNode;
 
-        fWebServiceResponse = fWebServiceClient.postRequest(requestType, requestText);
+        fWebServiceResponse = fWebServiceClient.sendPostRequest(requestType, requestText);
 
         if (!fWebServiceResponse.isResponseStatusOk()) {
             ExceptionHelper.reportRuntimeException(
@@ -299,13 +299,21 @@ public class RemoteTCProvider implements ITCProvider {
         int parametersCount = fMethodNode.getParametersCount();
 
         ChoiceSchema[] choiceSchemas = testCaseSchema.getTestCase();
-        List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
+        List<ChoiceNode> choiceNodes = new ArrayList<>();
 
         for (int paramIndex = 0; paramIndex < parametersCount; paramIndex++) {
             MethodParameterNode methodParameterNode = getMethodNode().getMethodParameter(paramIndex);
 
             String choiceName = choiceSchemas[paramIndex].getName();
-            ChoiceNode choiceNode = methodParameterNode.findChoice(choiceName);
+            String choiceValue = choiceSchemas[paramIndex].getValue();
+            ChoiceNode choiceNode;
+
+            if (methodParameterNode.isExpected() || choiceName.equals("@expected")) {
+                choiceNode = new ChoiceNode(choiceName, methodParameterNode.getModelChangeRegistrator(), choiceValue);
+                choiceNode.setParent(methodParameterNode);
+            } else {
+                choiceNode = methodParameterNode.findChoice(choiceName);
+            }
 
             if (choiceNode == null) {
                 ExceptionHelper.reportRuntimeException("Cannot find choice node for name: " + choiceName + ".");

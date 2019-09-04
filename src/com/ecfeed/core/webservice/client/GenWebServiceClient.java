@@ -33,6 +33,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 	public GenWebServiceClient(
 			String serverUrl,
+			String endpoint,
 			String clientType,
 			Optional<String> keyStorePath) {
 
@@ -40,13 +41,21 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 		fClient = createClient(fCommunicationProtocol, keyStorePath);
 		
-		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, "testCaseService");
+		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, endpoint);
 
 		fWebTarget = fClient.target(targetStr);
 	}
 
+	public static String getTestCasesEndPoint() {
+		return "testCaseService";
+	}
+
+	public static String getGenServiceVersionEndPoint() {
+		return "genServiceVersion";
+	}
+
 	@Override
-	public WebServiceResponse postRequest(
+	public WebServiceResponse sendPostRequest(
 			String requestType, String requestJson) {
 		
 		Response response = fWebTarget
@@ -55,6 +64,24 @@ public class GenWebServiceClient implements IWebServiceClient {
 				.queryParam(TAG_REQUEST_TYPE, requestType)
 				.request()
 				.post(Entity.entity(requestJson, MediaType.APPLICATION_JSON));
+
+		int responseStatus = response.getStatus();
+
+		BufferedReader responseBufferedReader =
+				new BufferedReader(new InputStreamReader(response.readEntity(InputStream.class)));
+
+		return new WebServiceResponse(responseStatus, responseBufferedReader);
+	}
+
+	@Override
+	public WebServiceResponse sendGetRequest() {
+
+		Response response = fWebTarget
+//				.queryParam(TAG_CLIENT_TYPE, fClientType)
+//				.queryParam(TAG_CLIENT_VERSION, fClientVersion)
+				//.queryParam(TAG_REQUEST_TYPE, requestType)
+				.request()
+				.get();
 
 		int responseStatus = response.getStatus();
 
@@ -82,7 +109,9 @@ public class GenWebServiceClient implements IWebServiceClient {
 		return client.build();
 	}
 
-	private static SSLContext createSslContext(String communicationProtocol, Optional<String> keyStorePath) {
+	private static SSLContext createSslContext(
+			String communicationProtocol,
+			Optional<String> keyStorePath) {
 
 		SSLContext securityContext = null;
 
