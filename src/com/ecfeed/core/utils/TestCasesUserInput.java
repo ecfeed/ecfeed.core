@@ -8,11 +8,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonSetter;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -134,6 +131,12 @@ public class TestCasesUserInput {
 	@JsonAnyGetter
 	public Map<String, String> getProperties() {
 		return fProperties;
+	}
+
+	@JsonAnySetter
+	public void setProperties(String key, String value)
+	{
+		fProperties.put(key, value);
 	}
 
 }

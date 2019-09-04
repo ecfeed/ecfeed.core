@@ -42,4 +42,20 @@ public enum DataSource {
         return null;
     }
 
+    public GeneratorType toGeneratorType()
+    {
+        switch(this)
+        {
+            case GEN_CARTESIAN:
+                return GeneratorType.CARTESIAN;
+            case GEN_N_WISE:
+                return GeneratorType.N_WISE;
+            case GEN_RANDOM:
+                return GeneratorType.RANDOM;
+            default:
+                RuntimeException exception = new RuntimeException("Invalid generator name");
+                throw exception;
+        }
+    }
+
 }
