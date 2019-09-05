@@ -21,9 +21,9 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		IGenerator<E> {
 
-	public final static String ADAPTIVE_PARAMETER_NAME = "Adaptive";
-	public static final String DUPLICATES_PARAMETER_NAME = "Duplicates";
-	public static final String LENGTH_PARAMETER_NAME = "Length";
+	public final static String ADAPTIVE_PARAMETER_NAME = "adaptive";
+	public static final String DUPLICATES_PARAMETER_NAME = "duplicates";
+	public static final String LENGTH_PARAMETER_NAME = "length";
 	public static final int DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE = 100;
 
 	private static IParameterDefinition fDefinitionAdaptive;

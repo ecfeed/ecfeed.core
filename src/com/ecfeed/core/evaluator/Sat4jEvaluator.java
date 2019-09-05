@@ -62,10 +62,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if(fMethod == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
-        if(initConstraints != null) {
+        if(initConstraints != null && !initConstraints.isEmpty()) {
             List<MethodParameterNode> params = fMethod.getMethodParameters();
-            for(MethodParameterNode p : params)
-                fArgAllInputValues.put(p, new HashSet<>(p.getLeafChoicesWithCopies()));
+            for(MethodParameterNode p : params) {
+                Set<ChoiceNode> hset = new HashSet<>();
+                for(ChoiceNode c : p.getLeafChoicesWithCopies())
+                    hset.add(c.getOrigChoiceNode());
+                fArgAllInputValues.put(p, hset);
+            }
 
 
             for (Constraint constraint : initConstraints) {
@@ -195,7 +199,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             if (condition instanceof ValueCondition) {
                 String val = ((ValueCondition) condition).getRightValue();
 
-                it = allLVals.get(0).makeClone();
+                it = allLVals.get(0).makeCloneUnlink();
                 it.setRandomizedValue(false);
                 it.setValueString(val);
             }
@@ -253,8 +257,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 //                if((new ChoiceNodeComparator().compare(start,val))<0 && (new ChoiceNodeComparator().compare(val,end))<0)
 
                 ChoiceNode val1, val2;
-                val1 = start.makeClone();
-                val2 = end.makeClone();
+                val1 = start.makeCloneUnlink();
+                val2 = end.makeCloneUnlink();
                 val1.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
                 val2.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
                 if( JavaTypeHelper.isExtendedIntTypeName(start.getParameter().getType())
@@ -839,6 +843,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignment)
     {
 
+        if(fMethod == null)
+            return new ArrayList<>();
         List<MethodParameterNode> params = fMethod.getMethodParameters();
 
         List<Integer> assumptions = new ArrayList<>();
@@ -855,7 +861,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             if(c!=null) {
                 if(fArgChoiceID.get(p)==null)
                     continue; //no constraint on this method parameter
-                Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c);
+                Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c.getOrigChoiceNode());
                 assumptions.add(idOfParamChoiceVar);
             }
         }
@@ -923,6 +929,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment)
     {
+        if(fMethod == null)
+            return valueAssignment;
+
             try {
                 IProblem problem = fSolver;
                 boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model

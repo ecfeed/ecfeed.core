@@ -23,8 +23,8 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class NWiseGenerator<E> extends AbstractGenerator<E>{
 
-	public final static String COVERAGE_PARAMETER_NAME = "Coverage";
-	public final static String N_PARAMETER_NAME = "N";
+	public final static String COVERAGE_PARAMETER_NAME = "coverage";
+	public final static String N_PARAMETER_NAME = "n";
 
 	private static IParameterDefinition fDefinitionN;
 	private static IParameterDefinition fDefinitionCoverage;

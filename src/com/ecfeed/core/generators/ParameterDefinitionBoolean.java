@@ -39,9 +39,9 @@ public class ParameterDefinitionBoolean extends AbstractParameterDefinition {
 	{
 		if(value == null)
 			return fDefaultValue;
-		if(value == "true")
+		if(value.equals("true"))
 			return true;
-		if(value == "false")
+		if(value.equals("false"))
 			return false;
 		GeneratorException.report("Unable to parse value to bool.");
 		return null;
