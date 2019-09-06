@@ -25,6 +25,12 @@ public class HomebrewConstraintEvaluator<E> implements IConstraintEvaluator<E> {
         ExceptionHelper.reportRuntimeException("this evaluator does not handle excludeAssignment()");
     }
 
+    @Override
+    public void initialize(List<List<E>> input)
+    {
+//        ExceptionHelper.reportRuntimeException("this evaluator does not handle excludeAssignment()");
+    }
+
 
     @Override
     public EvaluationResult evaluate(List<E> valueAssignment) {

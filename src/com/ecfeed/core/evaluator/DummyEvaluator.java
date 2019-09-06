@@ -18,4 +18,6 @@ public class DummyEvaluator<E> implements IConstraintEvaluator<E> {
         return valueAssignment;
     }
     public void excludeAssignment(List<E> valueAssignment) {}
+    @Override
+    public void initialize(List<List<E>> input) {}
 }

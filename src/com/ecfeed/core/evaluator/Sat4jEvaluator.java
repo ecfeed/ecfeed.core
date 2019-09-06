@@ -21,7 +21,7 @@ import static com.ecfeed.core.utils.EMathRelation.*;
 
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
-    private ArrayList<VecInt>  fClausesVecInt; //internal type for Sat4j
+    private List<VecInt>  fClausesVecInt; //internal type for Sat4j
     private int fFirstFreeID = 1;
 
     private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllInputValues;
@@ -41,6 +41,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private MethodNode fMethod;
     private ISolver fSolver;
     private Boolean fIsContradicting = false;
+    private Boolean fNoConstraints = true;
 
 
     public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
@@ -63,6 +64,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
         if(initConstraints != null && !initConstraints.isEmpty()) {
+            fNoConstraints = false;
             List<MethodParameterNode> params = fMethod.getMethodParameters();
             for(MethodParameterNode p : params) {
                 Set<ChoiceNode> hset = new HashSet<>();
@@ -144,6 +146,41 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         } catch (ContradictionException e)
         {
             fIsContradicting = true;
+        }
+    }
+
+    @Override
+    public void initialize(List<List<ChoiceNode>> input)
+    {
+        if(fNoConstraints)
+            return;
+        List<MethodParameterNode> params = fMethod.getMethodParameters();
+
+        //iterate params and valueAssignment simultanously
+        if(input.size() != params.size())
+        {
+            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
+            return;
+        }
+        for(int i=0;i<input.size();i++) {
+            List<Integer> vars = new ArrayList<>();
+            MethodParameterNode p = params.get(i);
+            if(p.isExpected())
+                continue;
+            for(ChoiceNode c : input.get(i))
+            {
+                Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c.getOrigChoiceNode());
+                vars.add(idOfParamChoiceVar);
+            }
+            VecInt clause = new VecInt(vars.stream().mapToInt(Integer::intValue).toArray()); //one of the input values has to be taken, for each variable
+            fClausesVecInt.add(clause);
+            try
+            {
+                fSolver.addClause(clause);
+            } catch (ContradictionException e)
+            {
+                fIsContradicting = true;
+            }
         }
     }
 
@@ -843,21 +880,21 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignment)
     {
 
-        if(fMethod == null)
+        if(fNoConstraints)
             return new ArrayList<>();
         List<MethodParameterNode> params = fMethod.getMethodParameters();
 
         List<Integer> assumptions = new ArrayList<>();
 
         //iterate params and valueAssignment simultanously
-        Iterator<ChoiceNode> cChoiceNode = valueAssignment.iterator();
-        for(MethodParameterNode p : params) {
-            if(!cChoiceNode.hasNext())
-            {
-                ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
-                return null;
-            }
-            ChoiceNode c = cChoiceNode.next();
+        if(valueAssignment.size() != params.size())
+        {
+            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
+            return null;
+        }
+        for(int i=0;i<params.size();i++) {
+            MethodParameterNode p = params.get(i);
+            ChoiceNode c = valueAssignment.get(i);
             if(c!=null) {
                 if(fArgChoiceID.get(p)==null)
                     continue; //no constraint on this method parameter
@@ -866,18 +903,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
         }
 
-        if(cChoiceNode.hasNext()) {
-            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
-            return null;
-        }
-
         return assumptions;
     }
 
     @Override
     public void excludeAssignment(List<ChoiceNode> toExclude)
     {
-        if(fMethod == null)
+        if(fNoConstraints)
             return;
         if(fIsContradicting)
             return;
@@ -902,7 +934,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment)
     {
-        if(fMethod == null)
+        if(fNoConstraints)
         {
             return EvaluationResult.TRUE; //no method so there were no constraints
         }
@@ -929,7 +961,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment)
     {
-        if(fMethod == null)
+        if(fNoConstraints)
             return valueAssignment;
 
             try {

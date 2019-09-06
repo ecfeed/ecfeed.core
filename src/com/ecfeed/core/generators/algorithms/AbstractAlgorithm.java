@@ -45,6 +45,7 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 		fInput = input;
 		fConstraintEvaluator = constraintEvaluator;
 		fGeneratorProgressMonitor = generatorProgressMonitor;
+		constraintEvaluator.initialize(input);
 		reset();
 	}
 
