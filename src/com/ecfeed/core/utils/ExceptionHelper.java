@@ -30,7 +30,7 @@ public class ExceptionHelper {
 		FULL
 	};
 
-	private static final int fMaxDepth = 5;
+	private static final int fMaxDepth = 100;
 	private static final String causedBy = "Caused by: ";
 	private static final String fNoException = "NO-EXCEPTION";
 
