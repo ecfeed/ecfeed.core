@@ -123,7 +123,7 @@ public class RemoteTCProvider implements ITCProvider {
         while(true) {
 
             if (fEcfProgressMonitor.isCanceled()) {
-                return ;
+                return;
             }
 
             String line = readLine(fWebServiceResponse.getResponseBufferedReader());
