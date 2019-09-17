@@ -61,7 +61,7 @@ public class RemoteTCProvider implements ITCProvider {
             return;
         }
 
-        fEcfProgressMonitor.setTaskBegin("Remote test cases provider", fTotalProgress);
+        fEcfProgressMonitor.setTaskBegin("Generating test cases", fTotalProgress);
     }
 
     @Override
