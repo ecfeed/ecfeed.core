@@ -61,7 +61,7 @@ public class RemoteTCProvider implements ITCProvider {
             return;
         }
 
-        fEcfProgressMonitor.setTaskBegin("Remote test cases provider", fTotalProgress);
+        fEcfProgressMonitor.setTaskBegin("Generating test cases", fTotalProgress);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class RemoteTCProvider implements ITCProvider {
         while(true) {
 
             if (fEcfProgressMonitor.isCanceled()) {
-                return ;
+                return;
             }
 
             String line = readLine(fWebServiceResponse.getResponseBufferedReader());

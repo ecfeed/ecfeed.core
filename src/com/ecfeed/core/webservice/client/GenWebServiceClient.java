@@ -10,12 +10,14 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class GenWebServiceClient implements IWebServiceClient {
@@ -93,9 +95,11 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 	@Override
 	public void close() {
-
+		
 		if (fClient != null) {
 			fClient.close();
+			System.out.println(LocalDateTime.now().toString() + " Remote connection closed");
+			fClient = null;
 		}
 	}
 

@@ -93,7 +93,9 @@ public class ChoiceNodeHelper {
 		List<String> choiceNames = new ArrayList<>();
 		
 		for (ChoiceNode choiceNode : choiceNodes) {
-			choiceNames.add(choiceNode.getFullName());
+			
+			String choiceName = choiceNode.getQualifiedName();
+			choiceNames.add(choiceName);
 		}
 		
 		return choiceNames;
