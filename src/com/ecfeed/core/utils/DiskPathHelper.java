@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 public class DiskPathHelper { // TODO - rename to DiskPathHelper
 	
 	private static final String EXTENSION_SEPARATOR = ".";
-	private static final String FILE_SEPARATOR = File.separator; // platform independent
+	private static final String FILE_SEPARATOR = "/"; // platform independent
 	private static final String CURRENT_DIR = "."; // TODO - private
 
 	public static String getApplicationPath() {
