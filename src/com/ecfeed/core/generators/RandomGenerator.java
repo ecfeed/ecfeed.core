@@ -35,9 +35,12 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 
 	public RandomGenerator() throws GeneratorException{
 
-		fDefinitionAdaptive = new ParameterDefinitionBoolean(ADAPTIVE_PARAMETER_NAME, false);
-		fDefinitionDuplicates = new ParameterDefinitionBoolean(DUPLICATES_PARAMETER_NAME, false);
-		fDefinitionLength = new ParameterDefinitionInteger(LENGTH_PARAMETER_NAME, DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE, 0, Integer.MAX_VALUE);
+		if(fDefinitionAdaptive==null)
+			fDefinitionAdaptive = new ParameterDefinitionBoolean(ADAPTIVE_PARAMETER_NAME, false);
+		if(fDefinitionDuplicates==null)
+			fDefinitionDuplicates = new ParameterDefinitionBoolean(DUPLICATES_PARAMETER_NAME, false);
+		if(fDefinitionLength==null)
+			fDefinitionLength = new ParameterDefinitionInteger(LENGTH_PARAMETER_NAME, DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE, 0, Integer.MAX_VALUE);
 		addParameterDefinition( fDefinitionDuplicates);
 		addParameterDefinition(fDefinitionAdaptive);
 		addParameterDefinition(fDefinitionLength);

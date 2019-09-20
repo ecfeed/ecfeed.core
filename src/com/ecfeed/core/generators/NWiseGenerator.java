@@ -31,9 +31,11 @@ public class NWiseGenerator<E> extends AbstractGenerator<E>{
 
 
 	public NWiseGenerator() throws GeneratorException{
-		fDefinitionN = new ParameterDefinitionInteger(N_PARAMETER_NAME,  2, 1, Integer.MAX_VALUE);
+		if(fDefinitionN == null)
+			fDefinitionN = new ParameterDefinitionInteger(N_PARAMETER_NAME,  2, 1, Integer.MAX_VALUE);
 		addParameterDefinition(fDefinitionN);
-		fDefinitionCoverage = new ParameterDefinitionInteger(COVERAGE_PARAMETER_NAME,  100, 1, 100);
+		if(fDefinitionCoverage == null)
+			fDefinitionCoverage = new ParameterDefinitionInteger(COVERAGE_PARAMETER_NAME,  100, 1, 100);
 		addParameterDefinition(fDefinitionCoverage);
 	}
 

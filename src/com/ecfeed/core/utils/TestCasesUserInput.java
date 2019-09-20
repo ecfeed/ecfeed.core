@@ -133,10 +133,10 @@ public class TestCasesUserInput {
 		return fProperties;
 	}
 
-	@JsonAnySetter
-	public void setProperties(String key, String value)
+	@JsonSetter("properties")
+	public void setProperties(Object properties)
 	{
-		fProperties.put(key, value);
+		fProperties = (Map<String,String>) properties;
 	}
 
 }
