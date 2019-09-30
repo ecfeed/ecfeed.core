@@ -1,4 +1,6 @@
 .project
+.idea
+
 # Compiled class file
 *.class
 
