@@ -36,6 +36,10 @@ public class ExceptionDescription {
 
 		String rawMessage = throwable.getMessage();
 
+		if (rawMessage == null) {
+			return "No exception message.";
+		}
+
 		int index = rawMessage.lastIndexOf(EXCEPTION_TAG);
 
 		if (index == -1) {
