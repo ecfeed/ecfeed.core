@@ -44,7 +44,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
 
     public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
-        //       fArgEqualChoiceID = new HashMap<>();
+
         fArgLessEqChoiceID = new HashMap<>();
         fArgLessThChoiceID = new HashMap<>();
         fArgChoiceID = new HashMap<>();
@@ -62,17 +62,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (fMethod == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
+        
         if (initConstraints != null && !initConstraints.isEmpty()) {
             fNoConstraints = false;
-            List<MethodParameterNode> params = fMethod.getMethodParameters();
-            for (MethodParameterNode p : params) {
-                Set<ChoiceNode> hset = new HashSet<>();
-                for (ChoiceNode c : p.getLeafChoicesWithCopies())
-                    hset.add(c.getOrigChoiceNode());
-                fArgAllInputValues.put(p, hset);
-            }
 
-
+            collectParametersWithChoices(fMethod);
             collectRelationStatements(initConstraints);
 
             for (MethodParameterNode arg : fArgAllInputValues.keySet()) {
@@ -138,6 +132,20 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             System.out.println("variables: " + maxVar + " clauses: " + nbClauses);
         } catch (ContradictionException e) {
             fIsContradicting = true;
+        }
+    }
+
+    private void collectParametersWithChoices(MethodNode methodNode) {
+
+        List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
+
+        for (MethodParameterNode methodParameterNode : methodParameterNodes) {
+
+            Set<ChoiceNode> hset = new HashSet<>();
+            for (ChoiceNode choiceNode : methodParameterNode.getLeafChoicesWithCopies())
+                hset.add(choiceNode.getOrigChoiceNode());
+
+            fArgAllInputValues.put(methodParameterNode, hset);
         }
     }
 
@@ -431,7 +439,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private void collectRelationStatements(Collection<Constraint> initConstraints) {
         for (Constraint constraint : initConstraints) {
-            collectRelationStatements(constraint); //this fills fArgAllInputValues
+            collectRelationStatements(constraint);
         }
     }
     
