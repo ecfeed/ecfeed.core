@@ -74,9 +74,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
 
 
-            for (Constraint constraint : initConstraints) {
-                preParse(constraint); //this fills fArgAllInputValues
-            }
+            preParse(initConstraints);
 
             for(MethodParameterNode arg : fArgAllInputValues.keySet()) {
                 Set<ChoiceNode> setCopy = new HashSet<>(fArgAllInputValues.get(arg));
@@ -462,6 +460,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgChoiceID.put(arg, choiceID);
     }
 
+    private void preParse(Collection<Constraint> initConstraints) {
+        for (Constraint constraint : initConstraints) {
+            preParse(constraint); //this fills fArgAllInputValues
+        }
+    }
+    
     private void preParse(Constraint constraint) {
         if(constraint != null) {
             AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
