@@ -62,12 +62,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (fMethod == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
-        
+
         if (initConstraints != null && !initConstraints.isEmpty()) {
             fNoConstraints = false;
 
-            collectParametersWithChoices(fMethod);
             collectRelationStatements(initConstraints);
+
+            fArgAllInputValues = collectParametersWithChoices(fMethod); // TODO - unify names
 
             for (MethodParameterNode arg : fArgAllInputValues.keySet()) {
                 Set<ChoiceNode> setCopy = new HashSet<>(fArgAllInputValues.get(arg));
@@ -135,18 +136,23 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private void collectParametersWithChoices(MethodNode methodNode) {
+    private static Map<MethodParameterNode, Set<ChoiceNode>> collectParametersWithChoices(
+            MethodNode methodNode) {
+
+        Map<MethodParameterNode, Set<ChoiceNode>> inputValues = new HashMap<>();
 
         List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
 
         for (MethodParameterNode methodParameterNode : methodParameterNodes) {
 
-            Set<ChoiceNode> hset = new HashSet<>();
+            Set<ChoiceNode> choiceNodeSet = new HashSet<>();
             for (ChoiceNode choiceNode : methodParameterNode.getLeafChoicesWithCopies())
-                hset.add(choiceNode.getOrigChoiceNode());
+                choiceNodeSet.add(choiceNode.getOrigChoiceNode());
 
-            fArgAllInputValues.put(methodParameterNode, hset);
+            inputValues.put(methodParameterNode, choiceNodeSet);
         }
+
+        return inputValues;
     }
 
     @Override
