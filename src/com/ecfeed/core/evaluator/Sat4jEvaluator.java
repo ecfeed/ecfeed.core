@@ -12,7 +12,6 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
-import com.ecfeed.core.utils.*;
 
 import java.util.*;
 import java.util.List;
@@ -36,7 +35,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessEqChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessThChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID;
-    private List<RelationStatement> fAllRelationConditions;
+    private List<RelationStatement> fAllRelationStatements;
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
     private MethodNode fMethod;
     private ISolver fSolver;
@@ -56,7 +55,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fSanitizedValToInputVal = new HashMap<>();
         fAtomicValToSanitizedVal = new HashMap<>();
         fExpectedValConstraints = new ArrayList<>();
-        fAllRelationConditions = new ArrayList<>();
+        fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
         fSanitizedValToAtomicVal = HashMultimap.create();
         fMethod = method;
@@ -74,7 +73,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
 
 
-            preParse(initConstraints);
+            collectRelationStatements(initConstraints);
 
             for (MethodParameterNode arg : fArgAllInputValues.keySet()) {
                 Set<ChoiceNode> setCopy = new HashSet<>(fArgAllInputValues.get(arg));
@@ -85,7 +84,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             while (true) {
                 Boolean anyChange = false;
-                for (RelationStatement rel : fAllRelationConditions) {
+                for (RelationStatement rel : fAllRelationStatements) {
                     if (SanitizeValsWithRelation(rel))
                         anyChange = true;
                 }
@@ -430,25 +429,25 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgChoiceID.put(arg, choiceID);
     }
 
-    private void preParse(Collection<Constraint> initConstraints) {
+    private void collectRelationStatements(Collection<Constraint> initConstraints) {
         for (Constraint constraint : initConstraints) {
-            preParse(constraint); //this fills fArgAllInputValues
+            collectRelationStatements(constraint); //this fills fArgAllInputValues
         }
     }
     
-    private void preParse(Constraint constraint) {
+    private void collectRelationStatements(Constraint constraint) {
         if (constraint != null) {
             AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
             if (consequence instanceof ExpectedValueStatement) {
                 try {
-                    premise.accept(new PreParseVisitor());
+                    premise.accept(new CollectingStatementVisitor());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
                 try {
-                    premise.accept(new PreParseVisitor());
-                    consequence.accept(new PreParseVisitor());
+                    premise.accept(new CollectingStatementVisitor());
+                    consequence.accept(new CollectingStatementVisitor());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -456,13 +455,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
+    class CollectingStatementVisitor implements IStatementVisitor {
 
-    class PreParseVisitor implements IStatementVisitor {
         @Override
         public Object visit(StatementArray statement) {
             for (AbstractStatement child : statement.getChildren()) {
                 try {
-                    child.accept(new PreParseVisitor());
+                    child.accept(new CollectingStatementVisitor());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -472,7 +471,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         @Override
         public Object visit(RelationStatement statement) {
-            fAllRelationConditions.add(statement);
+            fAllRelationStatements.add(statement);
             return null;
         }
 
@@ -483,33 +482,38 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         @Override
         public Object visit(ExpectedValueStatement statement) {
-            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+            reportUnexpectedTypeException();
             return null;
         }
 
         @Override
         public Object visit(LabelCondition statement) {
-            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
-            return null; //this will never happen
+            reportUnexpectedTypeException();
+            return null;
         }
 
         @Override
         public Object visit(ChoiceCondition statement) {
-            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
-            return null; //this will never happen
+            reportUnexpectedTypeException();
+            return null;
         }
 
         @Override
         public Object visit(ParameterCondition statement) {
-            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
-            return null; //this will never happen
+            reportUnexpectedTypeException();
+            return null;
         }
 
         @Override
         public Object visit(ValueCondition statement) {
-            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
-            return null; //this will never happen
+            reportUnexpectedTypeException();
+            return null;
         }
+
+        private void reportUnexpectedTypeException() {
+            ExceptionHelper.reportRuntimeException("Unexpected type.");
+        }
+
     }
 
 
