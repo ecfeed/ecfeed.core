@@ -32,7 +32,7 @@ public class TestCase {
 		fChoices.add(choiceNode);
 	}
 
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getListOfChoiceNodes() {
 		return fChoices;
 	}
 

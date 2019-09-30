@@ -10,12 +10,14 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class GenWebServiceClient implements IWebServiceClient {
@@ -33,6 +35,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 	public GenWebServiceClient(
 			String serverUrl,
+			String endpoint,
 			String clientType,
 			Optional<String> keyStorePath) {
 
@@ -40,13 +43,21 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 		fClient = createClient(fCommunicationProtocol, keyStorePath);
 		
-		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, "testCaseService");
+		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, endpoint);
 
 		fWebTarget = fClient.target(targetStr);
 	}
 
+	public static String getTestCasesEndPoint() {
+		return "testCaseService";
+	}
+
+	public static String getGenServiceVersionEndPoint() {
+		return "genServiceVersion";
+	}
+
 	@Override
-	public WebServiceResponse postRequest(
+	public WebServiceResponse sendPostRequest(
 			String requestType, String requestJson) {
 		
 		Response response = fWebTarget
@@ -65,10 +76,30 @@ public class GenWebServiceClient implements IWebServiceClient {
 	}
 
 	@Override
-	public void close() {
+	public WebServiceResponse sendGetRequest() {
 
+		Response response = fWebTarget
+//				.queryParam(TAG_CLIENT_TYPE, fClientType)
+//				.queryParam(TAG_CLIENT_VERSION, fClientVersion)
+				//.queryParam(TAG_REQUEST_TYPE, requestType)
+				.request()
+				.get();
+
+		int responseStatus = response.getStatus();
+
+		BufferedReader responseBufferedReader =
+				new BufferedReader(new InputStreamReader(response.readEntity(InputStream.class)));
+
+		return new WebServiceResponse(responseStatus, responseBufferedReader);
+	}
+
+	@Override
+	public void close() {
+		
 		if (fClient != null) {
 			fClient.close();
+			System.out.println(LocalDateTime.now().toString() + " Remote connection closed");
+			fClient = null;
 		}
 	}
 
@@ -82,7 +113,9 @@ public class GenWebServiceClient implements IWebServiceClient {
 		return client.build();
 	}
 
-	private static SSLContext createSslContext(String communicationProtocol, Optional<String> keyStorePath) {
+	private static SSLContext createSslContext(
+			String communicationProtocol,
+			Optional<String> keyStorePath) {
 
 		SSLContext securityContext = null;
 

@@ -34,9 +34,9 @@ public class NWiseGenerator<E> extends AbstractGenerator<E>{
 			Map<String, IGeneratorArgument> parameters,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
 		super.initialize(inputDomain, constraints, parameters, generatorProgressMonitor);
+
 		int N = getIntParameter(new GeneratorParameterN().getName());
 		int coverage = getIntParameter(new GeneratorParameterCoverage().getName());
-//		setAlgorithm(new OptimalNWiseAlgorithm<E>(N, coverage));
 		setAlgorithm(new RandomizedNWiseAlgorithm<E>(N, coverage));
 	}
 

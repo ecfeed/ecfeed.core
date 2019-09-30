@@ -25,18 +25,27 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 	private MethodNode fMethodNode;
 	private TestCaseNode fTestCase;
 	private int fIndex;
-	private ITypeAdapterProvider fAdapterProvider;
+	private ITypeAdapterProvider fTypeAdapterProvider;
 
-	public MethodOperationAddTestCase(MethodNode target, TestCaseNode testCase, ITypeAdapterProvider adapterProvider, int index) {
+	public MethodOperationAddTestCase(
+			MethodNode target, 
+			TestCaseNode testCase, 
+			ITypeAdapterProvider typeAdapterProvider, 
+			int index) {
+
 		super(OperationNames.ADD_TEST_CASE);
 		fMethodNode = target;
 		fTestCase = testCase;
 		fIndex = index;
-		fAdapterProvider = adapterProvider;
+		fTypeAdapterProvider = typeAdapterProvider;
 	}
 
-	public MethodOperationAddTestCase(MethodNode target, TestCaseNode testCase, ITypeAdapterProvider adapterProvider) {
-		this(target, testCase, adapterProvider, -1);
+	public MethodOperationAddTestCase(
+			MethodNode target, 
+			TestCaseNode testCase, 
+			ITypeAdapterProvider typeAdapterProvider) {
+
+		this(target, testCase, typeAdapterProvider, -1);
 	}
 
 	@Override
@@ -53,13 +62,17 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 		if(fTestCase.updateReferences(fMethodNode) == false){
 			ModelOperationException.report(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
 		}
+
 		//following must be done AFTER references are updated
 		fTestCase.setParent(fMethodNode);
-		for(ChoiceNode choice : fTestCase.getTestData()){
+
+		for(ChoiceNode choice : fTestCase.getTestData()) {
+
 			MethodParameterNode parameter = fTestCase.getMethodParameter(choice);
+
 			if(parameter.isExpected()){
 				String type = parameter.getType();
-				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(type);
+				ITypeAdapter<?> adapter = fTypeAdapterProvider.getAdapter(type);
 				String newValue = 
 						adapter.convert(
 								choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);

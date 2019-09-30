@@ -67,7 +67,7 @@ public class ClassNode extends GlobalParametersParentNode {
 	public ClassNode(
 			String qualifiedName, IModelChangeRegistrator modelChangeRegistrator, 
 			boolean runOnAndroid, String androidBaseRunner) {
-		
+
 		super(qualifiedName, modelChangeRegistrator);
 
 		setRunOnAndroid(runOnAndroid);
@@ -77,6 +77,28 @@ public class ClassNode extends GlobalParametersParentNode {
 		}
 
 		fMethods = new ArrayList<MethodNode>();
+	}
+
+	public int getMyClassIndex() {
+
+		if (getParent() == null) {
+			return -1;
+		}
+
+		int index = -1;
+
+		for (AbstractNode abstractNode : getParent().getChildren()) {
+
+			if (abstractNode instanceof ClassNode) {
+				index++;
+			}
+
+			if (abstractNode.equals(this)) {
+				return index;
+			}
+		}
+
+		return -1;
 	}
 
 	public String getAndroidRunner() {
@@ -134,20 +156,20 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	public boolean removeMethod(MethodNode method) {
-		
+
 		boolean result = fMethods.remove(method);
 		registerChange();
-		
+
 		return result;
 	}
 
 	public Set<String> getTestCaseNames() {
 		Set<String> suites = new HashSet<String>();
-		
+
 		for(MethodNode method : getMethods()){
 			suites.addAll(method.getTestCaseNames());
 		}
-		
+
 		return suites;
 	}
 
@@ -190,7 +212,7 @@ public class ClassNode extends GlobalParametersParentNode {
 		}
 		return result;
 	}
-	
+
 	public String getSimpleName() {
 		String[] nameNodeSplit = getFullName().split("\\.");
 		return nameNodeSplit[nameNodeSplit.length - 1];

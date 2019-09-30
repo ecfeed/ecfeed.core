@@ -18,8 +18,15 @@ public class ExceptionDescription {
 
 	public ExceptionDescription(Throwable throwable) {
 
-		fFullMessage = throwable.getMessage();
 		fShortMessage = createMessageDescr(throwable);
+		
+		String fullMessage = throwable.getMessage();
+		
+		if (fullMessage == null) {
+			fullMessage = throwable.getClass().toString();
+		}
+		
+		fFullMessage = fullMessage;
 	}
 
 	public String getShortMessage() {
@@ -34,7 +41,15 @@ public class ExceptionDescription {
 
 	private String createMessageDescr(Throwable throwable) {
 
+		if (throwable == null) {
+			return ("Invalid throwable: null");
+		}
+		
 		String rawMessage = throwable.getMessage();
+		
+		if (rawMessage == null) {
+			return throwable.getClass().toString();
+		}
 
 		if (rawMessage == null) {
 			return "No exception message.";
