@@ -14,23 +14,18 @@ public class HomebrewConstraintEvaluator<E> implements IConstraintEvaluator<E> {
     private List<IConstraint<E>> fConstraints = null;
 
 
-    public HomebrewConstraintEvaluator(Collection<IConstraint<E>> constraints)
-    {
+    public HomebrewConstraintEvaluator(Collection<IConstraint<E>> constraints) {
         fConstraints = new ArrayList<IConstraint<E>>(constraints);
     }
 
     @Override
-    public void excludeAssignment(List<E> toExclude)
-    {
+    public void excludeAssignment(List<E> toExclude) {
         ExceptionHelper.reportRuntimeException("this evaluator does not handle excludeAssignment()");
     }
 
     @Override
-    public void initialize(List<List<E>> input)
-    {
-//        ExceptionHelper.reportRuntimeException("this evaluator does not handle excludeAssignment()");
+    public void initialize(List<List<E>> input) {
     }
-
 
     @Override
     public EvaluationResult evaluate(List<E> valueAssignment) {
@@ -59,10 +54,9 @@ public class HomebrewConstraintEvaluator<E> implements IConstraintEvaluator<E> {
     }
 
     @Override
-    public List<E> adapt(List<E> valueAssignment)
-    {
-        if(valueAssignment != null){
-            for(IConstraint<E> constraint : fConstraints){
+    public List<E> adapt(List<E> valueAssignment) {
+        if (valueAssignment != null) {
+            for (IConstraint<E> constraint : fConstraints) {
                 constraint.adapt(valueAssignment);
             }
         }
