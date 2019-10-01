@@ -645,7 +645,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                 fArgAllSanitizedValues,
                                 fSanitizedValToAtomicVal,
                                 fArgAllInputValues,
-                                fArgInputValToSanitizedVal));
+                                fArgInputValToSanitizedVal,
+                                fArgLessEqChoiceID,
+                                fArgLessThChoiceID,
+                                fArgChoiceID));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
@@ -662,7 +665,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                 fArgAllSanitizedValues,
                                 fSanitizedValToAtomicVal,
                                 fArgAllInputValues,
-                                fArgInputValToSanitizedVal));
+                                fArgInputValToSanitizedVal,
+                                fArgLessEqChoiceID,
+                                fArgLessThChoiceID,
+                                fArgChoiceID));
 
                 consequenceID =
                         (Integer) consequence.accept(
@@ -673,7 +679,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                         fArgAllSanitizedValues,
                                         fSanitizedValToAtomicVal,
                                         fArgAllInputValues,
-                                        fArgInputValToSanitizedVal));
+                                        fArgInputValToSanitizedVal,
+                                        fArgLessEqChoiceID,
+                                        fArgLessThChoiceID,
+                                        fArgChoiceID));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -694,6 +703,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         private ParamsWithChoices fArgAllInputValues;
         private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
 
+        private ParamsWithChInts fArgLessEqChoiceID;
+        private ParamsWithChInts fArgLessThChoiceID;
+        private ParamsWithChInts fArgChoiceID;
+
+
         public ParseConstraintToSATVisitor(
                 IntegerHolder firstFreeIDHolder,
                 Sat4Clauses sat4Clauses,
@@ -701,7 +715,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 ParamsWithChoices allSanitizedValues,
                 Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal,
                 ParamsWithChoices allInputValues,
-                Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal) {
+                Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal,
+                ParamsWithChInts lessEqChoiceID,
+                ParamsWithChInts lessThChoiceID,
+                ParamsWithChInts choiceID
+                ) {
 
             fFirstFreeIDHolder = firstFreeIDHolder;
             fSat4Clauses = sat4Clauses;
@@ -710,6 +728,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             fSanitizedValToAtomicVal = sanitizedValToAtomicVal;
             fArgAllInputValues = allInputValues;
             fArgInputValToSanitizedVal = inputValToSanitizedVal;
+
+            fArgLessEqChoiceID = lessEqChoiceID;
+            fArgLessThChoiceID = lessThChoiceID;
+            fArgChoiceID = choiceID;
         }
 
         @Override
@@ -730,7 +752,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                             fArgAllSanitizedValues,
                                             fSanitizedValToAtomicVal,
                                             fArgAllInputValues,
-                                            fArgInputValToSanitizedVal));
+                                            fArgInputValToSanitizedVal,
+                                            fArgLessEqChoiceID,
+                                            fArgLessThChoiceID,
+                                            fArgChoiceID));
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -756,7 +781,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                             fArgAllSanitizedValues,
                                             fSanitizedValToAtomicVal,
                                             fArgAllInputValues,
-                                            fArgInputValToSanitizedVal));
+                                            fArgInputValToSanitizedVal,
+                                            fArgLessEqChoiceID,
+                                            fArgLessThChoiceID,
+                                            fArgChoiceID));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -843,7 +871,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fSanitizedValToAtomicVal,
                     fSat4Clauses,
                     fArgAllInputValues,
-                    fArgInputValToSanitizedVal,  // XYX
+                    fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
                     fArgLessThChoiceID,
                     fArgChoiceID
