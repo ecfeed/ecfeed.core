@@ -643,7 +643,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                 fSat4Clauses,
                                 fArgAllAtomicValues,
                                 fArgAllSanitizedValues,
-                                fSanitizedValToAtomicVal));
+                                fSanitizedValToAtomicVal,
+                                fArgAllInputValues));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
@@ -658,7 +659,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                 fSat4Clauses,
                                 fArgAllAtomicValues,
                                 fArgAllSanitizedValues,
-                                fSanitizedValToAtomicVal));
+                                fSanitizedValToAtomicVal,
+                                fArgAllInputValues));
 
                 consequenceID =
                         (Integer) consequence.accept(
@@ -667,7 +669,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                         fSat4Clauses,
                                         fArgAllAtomicValues,
                                         fArgAllSanitizedValues,
-                                        fSanitizedValToAtomicVal));
+                                        fSanitizedValToAtomicVal,
+                                        fArgAllInputValues));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -685,19 +688,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         private ParamsWithChoices fArgAllAtomicValues;
         private ParamsWithChoices fArgAllSanitizedValues;
         private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
+        private ParamsWithChoices fArgAllInputValues;
 
         public ParseConstraintToSATVisitor(
                 IntegerHolder firstFreeIDHolder,
                 Sat4Clauses sat4Clauses,
                 ParamsWithChoices allAtomicValues,
                 ParamsWithChoices allSanitizedValues,
-                Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal) {
+                Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal,
+                ParamsWithChoices allInputValues) {
 
             fFirstFreeIDHolder = firstFreeIDHolder;
             fSat4Clauses = sat4Clauses;
             fArgAllAtomicValues = allAtomicValues;
             fArgAllSanitizedValues = allSanitizedValues;
             fSanitizedValToAtomicVal = sanitizedValToAtomicVal;
+            fArgAllInputValues = allInputValues;
         }
 
         @Override
@@ -716,7 +722,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                             fSat4Clauses,
                                             fArgAllAtomicValues,
                                             fArgAllSanitizedValues,
-                                            fSanitizedValToAtomicVal));
+                                            fSanitizedValToAtomicVal,
+                                            fArgAllInputValues));
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -740,7 +747,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                             fSat4Clauses,
                                             fArgAllAtomicValues,
                                             fArgAllSanitizedValues,
-                                            fSanitizedValToAtomicVal));
+                                            fSanitizedValToAtomicVal,
+                                            fArgAllInputValues));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -824,9 +832,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgAllAtomicValues,
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
-                    fSanitizedValToAtomicVal,  // XYX
+                    fSanitizedValToAtomicVal,
                     fSat4Clauses,
-                    fArgAllInputValues,
+                    fArgAllInputValues, // XYX
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
                     fArgLessThChoiceID,
