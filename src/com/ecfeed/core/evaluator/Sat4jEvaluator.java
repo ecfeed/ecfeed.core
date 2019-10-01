@@ -66,7 +66,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (initConstraints != null && !initConstraints.isEmpty()) {
             fNoConstraints = false;
 
-            collectRelationStatements(initConstraints);
+            fAllRelationStatements = collectRelationStatements(initConstraints);
 
             fArgAllInputValues = collectParametersWithChoices(fMethod); // TODO - unify names
 
@@ -443,39 +443,56 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgChoiceID.put(arg, choiceID);
     }
 
-    private void collectRelationStatements(Collection<Constraint> initConstraints) {
+    private static List<RelationStatement> collectRelationStatements(
+            Collection<Constraint> initConstraints) {
+
+        List<RelationStatement> result = new ArrayList<>();;
+
         for (Constraint constraint : initConstraints) {
-            collectRelationStatements(constraint);
+            collectRelationStatements(constraint, result);
         }
+
+        return result;
     }
-    
-    private void collectRelationStatements(Constraint constraint) {
-        if (constraint != null) {
-            AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
-            if (consequence instanceof ExpectedValueStatement) {
-                try {
-                    premise.accept(new CollectingStatementVisitor());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    premise.accept(new CollectingStatementVisitor());
-                    consequence.accept(new CollectingStatementVisitor());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+    private static void collectRelationStatements(
+            Constraint constraint,
+            List<RelationStatement> inOutRelationStatements) {
+
+        if (constraint == null) {
+            return;
+        }
+
+        AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
+        if (consequence instanceof ExpectedValueStatement) {
+            try {
+                premise.accept(new CollectingStatementVisitor(inOutRelationStatements));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                premise.accept(new CollectingStatementVisitor(inOutRelationStatements));
+                consequence.accept(new CollectingStatementVisitor(inOutRelationStatements));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
 
-    class CollectingStatementVisitor implements IStatementVisitor {
+    static class CollectingStatementVisitor implements IStatementVisitor {
+
+        private List<RelationStatement> fInOutRelationStatements;
+
+        public CollectingStatementVisitor(List<RelationStatement> inOutRelationStatements) {
+            fInOutRelationStatements = inOutRelationStatements;
+        }
 
         @Override
         public Object visit(StatementArray statement) {
             for (AbstractStatement child : statement.getChildren()) {
                 try {
-                    child.accept(new CollectingStatementVisitor());
+                    child.accept(new CollectingStatementVisitor(fInOutRelationStatements));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -485,7 +502,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         @Override
         public Object visit(RelationStatement statement) {
-            fAllRelationStatements.add(statement);
+            fInOutRelationStatements.add(statement);
             return null;
         }
 
