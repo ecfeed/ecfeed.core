@@ -32,8 +32,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
 
     private ParamsWithChInts fArgLessEqChoiceID;
-    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessThChoiceID;
-    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID;
+    private ParamsWithChInts fArgLessThChoiceID;
+    private ParamsWithChInts fArgChoiceID;
 
     private List<RelationStatement> fAllRelationStatements;
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
@@ -46,8 +46,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
         fArgLessEqChoiceID = new ParamsWithChInts("LEQ");
-        fArgLessThChoiceID = new HashMap<>();
-        fArgChoiceID = new HashMap<>();
+        fArgLessThChoiceID = new ParamsWithChInts("LES");
+        fArgChoiceID = new ParamsWithChInts("EQ"); // TODO - equal ?
         fSat4Clauses = new Sat4Clauses();
         fArgAllInputValues = new ParamsWithChoices("ALL");
         fArgAllSanitizedValues = new ParamsWithChoices("SAN");
@@ -393,7 +393,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
-            Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID,
+            ParamsWithChInts fArgChoiceID,
             ParamsWithChoices fArgAllAtomicValues,
             IntegerHolder fFirstFreeIDHolder,
             ParamsWithChoices fArgAllSanitizedValues,
@@ -402,7 +402,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             ParamsWithChoices fArgAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal,
             ParamsWithChInts fArgLessEqChoiceID,
-            Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessThChoiceID) {
+            ParamsWithChInts fArgLessThChoiceID) {
 
         if (fArgChoiceID.containsKey(methodParameterNode))
             return;

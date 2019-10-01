@@ -30,4 +30,8 @@ public class ParamsWithChInts {
         return fMap.get(methodParameterNode);
     }
 
+    public boolean containsKey(MethodParameterNode methodParameterNode) {
+
+        return fMap.containsKey(methodParameterNode);
+    }
 }
