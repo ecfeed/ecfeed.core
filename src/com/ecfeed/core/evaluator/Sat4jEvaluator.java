@@ -25,7 +25,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private ParamsWithChoices fArgAllInputValues;
     private ParamsWithChoices fArgAllSanitizedValues;
-    private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllAtomicValues;
+    private ParamsWithChoices fArgAllAtomicValues;
     private Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal;
     private Map<ChoiceNode, ChoiceNode> fAtomicValToSanitizedVal;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
@@ -51,7 +51,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fClausesVecInt = new ArrayList<>();
         fArgAllInputValues = new ParamsWithChoices();
         fArgAllSanitizedValues = new ParamsWithChoices();
-        fArgAllAtomicValues = new HashMap<>();
+        fArgAllAtomicValues = new ParamsWithChoices();
         fSanitizedValToInputVal = new HashMap<>();
         fAtomicValToSanitizedVal = new HashMap<>();
         fExpectedValConstraints = new ArrayList<>();
@@ -390,7 +390,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
             Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID,
-            Map<MethodParameterNode, Set<ChoiceNode>> fArgAllAtomicValues,
+            ParamsWithChoices fArgAllAtomicValues,
             IntegerHolder fFirstFreeIDHolder,
             ParamsWithChoices fArgAllSanitizedValues,
             Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal,
