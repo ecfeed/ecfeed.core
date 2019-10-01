@@ -21,7 +21,7 @@ import static com.ecfeed.core.utils.EMathRelation.*;
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private List<VecInt> fClausesVecInt; //internal type for Sat4j
-    private int fFirstFreeID = 1;
+    private IntegerHolder fFirstFreeIDHolder = new IntegerHolder(1);
 
     private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllInputValues;
     private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllSanitizedValues;
@@ -80,7 +80,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             parseConstraintsToSat(initConstraints, fExpectedValConstraints, fClausesVecInt);
         }
-        final int maxVar = fFirstFreeID;
+        final int maxVar = fFirstFreeIDHolder.get();
         final int nbClauses = fClausesVecInt.size();
         fSolver = SolverFactory.newDefault();
 
@@ -381,7 +381,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     }
 
     private int newID() {
-        return fFirstFreeID++;
+        fFirstFreeIDHolder.increment();
+        return fFirstFreeIDHolder.get();
     }
 
     private void variablesForParameter(MethodParameterNode arg) {
@@ -970,7 +971,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             variablesForParameter(p);
 
         VecInt excludeClause = new VecInt(assumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
-        final int maxVar = fFirstFreeID;
+        final int maxVar = fFirstFreeIDHolder.get();
 
         try {
             fSolver.newVar(maxVar);
