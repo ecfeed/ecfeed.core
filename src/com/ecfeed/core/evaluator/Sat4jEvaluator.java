@@ -72,7 +72,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             fAllRelationStatements = collectRelationStatements(initConstraints);
 
-            sanitizeRelationStatementsWithRelation();
+            sanitizeRelationStatementsWithRelation(fAllRelationStatements, fArgAllSanitizedValues);
 
 
             for (MethodParameterNode param : fArgAllSanitizedValues.keySet()) {
@@ -187,11 +187,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private void sanitizeRelationStatementsWithRelation() {
+    private void sanitizeRelationStatementsWithRelation(
+            List<RelationStatement> fAllRelationStatements,
+            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues) {
+
         while (true) {
             Boolean anyChange = false;
             for (RelationStatement relationStatement : fAllRelationStatements) {
-                if (sanitizeValsWithRelation(relationStatement))
+                if (sanitizeValsWithRelation(relationStatement, inOutSanitizedValues))
                     anyChange = true;
             }
             if (!anyChange)
@@ -199,23 +202,26 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private Boolean sanitizeValsWithRelation(RelationStatement relation) {
-        IStatementCondition condition = relation.getCondition();
+    private Boolean sanitizeValsWithRelation(
+            RelationStatement relationStatement,
+            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues) {
+
+        IStatementCondition condition = relationStatement.getCondition();
         if (condition instanceof LabelCondition)
             return false;
 
-        MethodParameterNode lParam = relation.getLeftParameter();
+        MethodParameterNode lParam = relationStatement.getLeftParameter();
 
         if (!JavaTypeHelper.isExtendedIntTypeName(lParam.getType())
                 && !JavaTypeHelper.isFloatingPointTypeName(lParam.getType()))
             return false;
 
-        List<ChoiceNode> allLVals = new ArrayList<>(fArgAllSanitizedValues.get(lParam));
+        List<ChoiceNode> allLVals = new ArrayList<>(inOutSanitizedValues.get(lParam));
 
 
         if (condition instanceof ParameterCondition) {
             MethodParameterNode rParam = ((ParameterCondition) condition).getRightParameterNode();
-            List<ChoiceNode> allRVals = new ArrayList<>(fArgAllSanitizedValues.get(rParam));
+            List<ChoiceNode> allRVals = new ArrayList<>(inOutSanitizedValues.get(rParam));
 
             boolean anyChange = false;
             List<ChoiceNode> allLValsCopy = new ArrayList<>(allLVals);
@@ -232,9 +238,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 allRValsCopy = changeResult.getSecond();
             }
 
-            fArgAllSanitizedValues.put(lParam, new HashSet<>(allLValsCopy));
+            inOutSanitizedValues.put(lParam, new HashSet<>(allLValsCopy));
 
-            fArgAllSanitizedValues.put(rParam, new HashSet<>(allRValsCopy));
+            inOutSanitizedValues.put(rParam, new HashSet<>(allRValsCopy));
 
             return anyChange;
         }
@@ -253,7 +259,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             Pair<Boolean, List<ChoiceNode>> changeResult = SplitListWithChoiceNode(allLVals, it);
 
-            fArgAllSanitizedValues.put(lParam, new HashSet<>(changeResult.getSecond()));
+            inOutSanitizedValues.put(lParam, new HashSet<>(changeResult.getSecond()));
             return changeResult.getFirst();
         }
 
