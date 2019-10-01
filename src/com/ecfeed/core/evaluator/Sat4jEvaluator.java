@@ -226,14 +226,17 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             boolean anyChange = false;
             List<ChoiceNode> allLValsCopy = new ArrayList<>(allLVals);
             for (ChoiceNode it : allRVals) {
-                Pair<Boolean, List<ChoiceNode>> changeResult = SplitListWithChoiceNode(allLValsCopy, it);
+                Pair<Boolean, List<ChoiceNode>> changeResult =
+                        SplitListWithChoiceNode(allLValsCopy, it, fSanitizedValToInputVal);
+
                 anyChange = anyChange || changeResult.getFirst();
                 allLValsCopy = changeResult.getSecond();
             }
 
             List<ChoiceNode> allRValsCopy = new ArrayList<>(allRVals);
             for (ChoiceNode it : allLVals) {
-                Pair<Boolean, List<ChoiceNode>> changeResult = SplitListWithChoiceNode(allRValsCopy, it);
+                Pair<Boolean, List<ChoiceNode>> changeResult =
+                        SplitListWithChoiceNode(allRValsCopy, it, fSanitizedValToInputVal);
                 anyChange = anyChange || changeResult.getFirst();
                 allRValsCopy = changeResult.getSecond();
             }
@@ -257,7 +260,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 it = ((ChoiceCondition) condition).getRightChoice();
             }
 
-            Pair<Boolean, List<ChoiceNode>> changeResult = SplitListWithChoiceNode(allLVals, it);
+            Pair<Boolean, List<ChoiceNode>> changeResult =
+                    SplitListWithChoiceNode(allLVals, it, fSanitizedValToInputVal);
 
             inOutSanitizedValues.put(lParam, new HashSet<>(changeResult.getSecond()));
             return changeResult.getFirst();
@@ -273,7 +277,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         RIGHT_ENDPOINT
     }
 
-    private Pair<Boolean, List<ChoiceNode>> SplitListWithChoiceNode(List<ChoiceNode> toSplit, ChoiceNode val) {
+    private Pair<Boolean, List<ChoiceNode>> SplitListWithChoiceNode(
+            List<ChoiceNode> toSplit,
+            ChoiceNode val,
+            Map<ChoiceNode, ChoiceNode> inOutSanitizedValToInputVal) {
+
         ChoiceNode start, end;
         if (val.isRandomizedValue()) {
             Pair<ChoiceNode, ChoiceNode> startEnd = ChoiceNodeHelper.rangeSplit(val);
@@ -283,13 +291,29 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             start = val;
             end = val;
         }
-        Pair<Boolean, List<ChoiceNode>> changeResultLeft = SplitListByValue(toSplit, start, TypeOfEndpoint.LEFT_ENDPOINT);
-        Pair<Boolean, List<ChoiceNode>> changeResultRight = SplitListByValue(changeResultLeft.getSecond(), end, TypeOfEndpoint.RIGHT_ENDPOINT);
+        Pair<Boolean, List<ChoiceNode>> changeResultLeft =
+                SplitListByValue(
+                        toSplit,
+                        start,
+                        TypeOfEndpoint.LEFT_ENDPOINT,
+                        inOutSanitizedValToInputVal);
+
+        Pair<Boolean, List<ChoiceNode>> changeResultRight =
+                SplitListByValue(
+                        changeResultLeft.getSecond(),
+                        end,
+                        TypeOfEndpoint.RIGHT_ENDPOINT,
+                        inOutSanitizedValToInputVal);
 
         return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
     }
 
-    private Pair<Boolean, List<ChoiceNode>> SplitListByValue(List<ChoiceNode> toSplit, ChoiceNode val, TypeOfEndpoint type) {
+    private Pair<Boolean, List<ChoiceNode>> SplitListByValue(
+            List<ChoiceNode> toSplit,
+            ChoiceNode val,
+            TypeOfEndpoint type,
+            Map<ChoiceNode, ChoiceNode> inOutSanitizedValToInputVal) {
+
         Boolean anyChange = false;
         List<ChoiceNode> newList = new ArrayList<>();
         for (ChoiceNode it : toSplit)
@@ -342,8 +366,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
                 anyChange = true;
 
-                fSanitizedValToInputVal.put(it1, fSanitizedValToInputVal.get(it));
-                fSanitizedValToInputVal.put(it2, fSanitizedValToInputVal.get(it));
+                // TODO - side effect - extract
+                inOutSanitizedValToInputVal.put(it1, inOutSanitizedValToInputVal.get(it));
+                inOutSanitizedValToInputVal.put(it2, inOutSanitizedValToInputVal.get(it));
                 newList.add(it1);
                 newList.add(it2);
             }
