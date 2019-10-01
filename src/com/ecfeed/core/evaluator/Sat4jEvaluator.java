@@ -16,8 +16,6 @@ import org.sat4j.specs.TimeoutException;
 import java.util.*;
 import java.util.List;
 
-import static com.ecfeed.core.utils.EMathRelation.*;
-
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private Sat4Clauses fSat4Clauses;
@@ -38,15 +36,15 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private List<RelationStatement> fAllRelationStatements;
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
     private MethodNode fMethodNode;
-    private ISolver fSolver;
-    private Boolean fIsContradicting = false;
-    private Boolean fNoConstraints = true;
+//    private ISolver fSolver;
+//    private Boolean fIsContradicting = false;
+//    private Boolean fNoConstraints = true;
+    private SatSolver fSatSolver;
 
     private enum TypeOfEndpoint {
         LEFT_ENDPOINT,
         RIGHT_ENDPOINT
     }
-
 
     public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
@@ -64,12 +62,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgInputValToSanitizedVal = new HashMap<>();
         fSanitizedValToAtomicVal = HashMultimap.create();
         fMethodNode = method;
+        fSatSolver = new SatSolver();
+
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
-            fNoConstraints = false;
+            fSatSolver.fNoConstraints = false;
 
             fArgAllInputValues = collectParametersWithChoices(fMethodNode); // TODO - unify names
 
@@ -85,30 +85,43 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             parseConstraintsToSat(initConstraints, fExpectedValConstraints, fSat4Clauses);
         }
-        final int maxVar = fFirstFreeIDHolder.get();
-        final int nbClauses = fSat4Clauses.getSize();
-        fSolver = SolverFactory.newDefault();
 
-
-        try {
-            fSolver.newVar(maxVar);
-            fSolver.setExpectedNumberOfClauses(nbClauses);
-
-            for (int index = 0; index < fSat4Clauses.getSize(); index++) {
-                VecInt clause = fSat4Clauses.getClause(index);
-                fSolver.addClause(clause);
-            }
-
-            System.out.println("variables: " + maxVar + " clauses: " + nbClauses);
-        } catch (ContradictionException e) {
-            fIsContradicting = true;
-        }
+        fSatSolver.initialize(
+                fFirstFreeIDHolder.get(),
+                fSat4Clauses.getSize(),
+                fSat4Clauses);
     }
+
+//    private
+////    static
+//    void createAndInitializeSolver(
+//            final int maxVar,
+//            final int countOfClauses
+//            ) {
+//
+//        fSolver = SolverFactory.newDefault();
+//
+//        try {
+//            fSolver.newVar(maxVar);
+//            fSolver.setExpectedNumberOfClauses(countOfClauses);
+//
+//            for (int index = 0; index < fSat4Clauses.getSize(); index++) {
+//                VecInt clause = fSat4Clauses.getClause(index);
+//                fSolver.addClause(clause);
+//            }
+//
+//            System.out.println("variables: " + maxVar + " clauses: " + countOfClauses);
+//        } catch (ContradictionException e) {
+//            fIsContradicting = true;
+//        }
+//    }
 
     @Override
     public void initialize(List<List<ChoiceNode>> input) {
-        if (fNoConstraints)
+
+        if (fSatSolver.fNoConstraints)
             return;
+
         List<MethodParameterNode> params = fMethodNode.getMethodParameters();
 
         //iterate params and valueAssignment simultanously
@@ -127,19 +140,15 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
             VecInt clause = new VecInt(vars.stream().mapToInt(Integer::intValue).toArray()); //one of the input values has to be taken, for each variable
             fSat4Clauses.add(clause);
-            try {
-                fSolver.addClause(clause);
-            } catch (ContradictionException e) {
-                fIsContradicting = true;
-            }
+            fSatSolver.addClause(clause);
         }
     }
 
     @Override
     public void excludeAssignment(List<ChoiceNode> toExclude) {
-        if (fNoConstraints)
+        if (fSatSolver.fNoConstraints)
             return;
-        if (fIsContradicting)
+        if (fSatSolver.fIsContradicting)
             return;
 
         List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
@@ -162,28 +171,25 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         VecInt excludeClause = new VecInt(assumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
         final int maxVar = fFirstFreeIDHolder.get();
 
-        try {
-            fSolver.newVar(maxVar);
-            fSolver.addClause(excludeClause);
-        } catch (ContradictionException e) {
-            fIsContradicting = true;
-        }
+        fSatSolver.newVar(maxVar);
 
+        fSatSolver.addClause(excludeClause);
     }
 
     @Override
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment) {
-        if (fNoConstraints) {
+        if (fSatSolver.fNoConstraints) {
             return EvaluationResult.TRUE; //no method so there were no constraints
         }
 
-        if (fIsContradicting)
+        if (fSatSolver.fIsContradicting)
             return EvaluationResult.FALSE;
 
 
         try {
-            IProblem problem = fSolver;
-            if (problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray()))) {
+            IProblem problem = fSatSolver.getSolver();
+            if (problem.isSatisfiable(
+                    new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray()))) {
                 return EvaluationResult.TRUE;
             } else {
                 return EvaluationResult.FALSE;
@@ -197,11 +203,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) {
-        if (fNoConstraints)
+
+        if (fSatSolver.fNoConstraints)
             return valueAssignment;
 
         try {
-            IProblem problem = fSolver;
+            IProblem problem = fSatSolver.getSolver();
             boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
             if (!b) {
                 ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
@@ -600,7 +607,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignment) {
 
-        if (fNoConstraints)
+        if (fSatSolver.fNoConstraints)
             return new ArrayList<>();
         List<MethodParameterNode> params = fMethodNode.getMethodParameters();
 
