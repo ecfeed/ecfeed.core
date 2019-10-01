@@ -76,38 +76,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fAllRelationStatements,
                     fArgAllSanitizedValues, fSanitizedValToInputVal);
 
+            todo();
 
-            for (MethodParameterNode param : fArgAllSanitizedValues.keySet()) {
-                fArgInputValToSanitizedVal.put(param, HashMultimap.create());
-                for (ChoiceNode sanitizedChoice : fArgAllSanitizedValues.get(param)) { //build InputVal -> SanitizedVal mapping
-                    ChoiceNode inputChoice = fSanitizedValToInputVal.get(sanitizedChoice);
-                    fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
-                }
-
-
-                fArgAllAtomicValues.put(param, new HashSet<>());
-                for (ChoiceNode it : fArgAllSanitizedValues.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
-                    if (it.isRandomizedValue() &&
-                            (JavaTypeHelper.isExtendedIntTypeName(param.getType())
-                                    || JavaTypeHelper.isFloatingPointTypeName(param.getType())
-                            )) {
-                        List<ChoiceNode> interleaved = ChoiceNodeHelper.interleavedValues(it, fArgAllSanitizedValues.size());
-                        fArgAllAtomicValues.get(param).addAll(interleaved);
-                        for (ChoiceNode c : interleaved) {
-                            fAtomicValToSanitizedVal.put(c, it);
-                            fSanitizedValToAtomicVal.put(it, c);
-                        }
-                    } else {
-                        fArgAllAtomicValues.get(param).add(it);
-                        fAtomicValToSanitizedVal.put(it, it);
-                        fSanitizedValToAtomicVal.put(it, it);
-                    }
-            }
-
-
-            for (Constraint constraint : initConstraints) {
-                ParseConstraintToSAT(constraint);
-            }
+            parseConstraintsToSat(initConstraints, fExpectedValConstraints, fClausesVecInt);
         }
         final int maxVar = fFirstFreeID;
         final int nbClauses = fClausesVecInt.size();
@@ -122,6 +93,35 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             System.out.println("variables: " + maxVar + " clauses: " + nbClauses);
         } catch (ContradictionException e) {
             fIsContradicting = true;
+        }
+    }
+
+    private void todo() {
+        for (MethodParameterNode param : fArgAllSanitizedValues.keySet()) {
+            fArgInputValToSanitizedVal.put(param, HashMultimap.create());
+            for (ChoiceNode sanitizedChoice : fArgAllSanitizedValues.get(param)) { //build InputVal -> SanitizedVal mapping
+                ChoiceNode inputChoice = fSanitizedValToInputVal.get(sanitizedChoice);
+                fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
+            }
+
+
+            fArgAllAtomicValues.put(param, new HashSet<>());
+            for (ChoiceNode it : fArgAllSanitizedValues.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
+                if (it.isRandomizedValue() &&
+                        (JavaTypeHelper.isExtendedIntTypeName(param.getType())
+                                || JavaTypeHelper.isFloatingPointTypeName(param.getType())
+                        )) {
+                    List<ChoiceNode> interleaved = ChoiceNodeHelper.interleavedValues(it, fArgAllSanitizedValues.size());
+                    fArgAllAtomicValues.get(param).addAll(interleaved);
+                    for (ChoiceNode c : interleaved) {
+                        fAtomicValToSanitizedVal.put(c, it);
+                        fSanitizedValToAtomicVal.put(it, c);
+                    }
+                } else {
+                    fArgAllAtomicValues.get(param).add(it);
+                    fAtomicValToSanitizedVal.put(it, it);
+                    fSanitizedValToAtomicVal.put(it, it);
+                }
         }
     }
 
@@ -596,28 +596,43 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     }
 
+    private void parseConstraintsToSat(
+            Collection<Constraint> initConstraints,
+            List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
+            List<VecInt> fClausesVecInt) {
 
-    private void ParseConstraintToSAT(Constraint constraint) {
-        if (constraint != null) {
-            AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
-            if (consequence instanceof ExpectedValueStatement) {
-                Integer premiseID = null;
-                try {
-                    premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
-                    fExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Integer premiseID = null, consequenceID = null;
-                try {
-                    premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
-                    consequenceID = (Integer) consequence.accept(new ParseConstraintToSATVisitor());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                fClausesVecInt.add(new VecInt(new int[]{-premiseID, consequenceID}));
+        for (Constraint constraint : initConstraints) {
+            parseConstraintToSat(constraint, outExpectedValConstraints, fClausesVecInt);
+        }
+    }
+
+    private void parseConstraintToSat(
+            Constraint constraint,
+            List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
+            List<VecInt> fClausesVecInt) {
+
+        if (constraint == null) {
+            return;
+        }
+
+        AbstractStatement premise = constraint.getPremise(), consequence = constraint.getConsequence();
+        if (consequence instanceof ExpectedValueStatement) {
+            Integer premiseID = null;
+            try {
+                premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
+                outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+        } else {
+            Integer premiseID = null, consequenceID = null;
+            try {
+                premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
+                consequenceID = (Integer) consequence.accept(new ParseConstraintToSATVisitor());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            fClausesVecInt.add(new VecInt(new int[]{-premiseID, consequenceID}));
         }
     }
 
