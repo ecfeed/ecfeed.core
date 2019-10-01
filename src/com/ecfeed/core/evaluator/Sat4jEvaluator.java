@@ -227,7 +227,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             List<ChoiceNode> allLValsCopy = new ArrayList<>(allLVals);
             for (ChoiceNode it : allRVals) {
                 Pair<Boolean, List<ChoiceNode>> changeResult =
-                        SplitListWithChoiceNode(allLValsCopy, it, fSanitizedValToInputVal);
+                        splitListWithChoiceNode(allLValsCopy, it, fSanitizedValToInputVal);
 
                 anyChange = anyChange || changeResult.getFirst();
                 allLValsCopy = changeResult.getSecond();
@@ -236,7 +236,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             List<ChoiceNode> allRValsCopy = new ArrayList<>(allRVals);
             for (ChoiceNode it : allLVals) {
                 Pair<Boolean, List<ChoiceNode>> changeResult =
-                        SplitListWithChoiceNode(allRValsCopy, it, fSanitizedValToInputVal);
+                        splitListWithChoiceNode(allRValsCopy, it, fSanitizedValToInputVal);
                 anyChange = anyChange || changeResult.getFirst();
                 allRValsCopy = changeResult.getSecond();
             }
@@ -261,7 +261,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
 
             Pair<Boolean, List<ChoiceNode>> changeResult =
-                    SplitListWithChoiceNode(allLVals, it, fSanitizedValToInputVal);
+                    splitListWithChoiceNode(allLVals, it, fSanitizedValToInputVal);
 
             inOutSanitizedValues.put(lParam, new HashSet<>(changeResult.getSecond()));
             return changeResult.getFirst();
@@ -277,7 +277,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         RIGHT_ENDPOINT
     }
 
-    private Pair<Boolean, List<ChoiceNode>> SplitListWithChoiceNode(
+    private static Pair<Boolean, List<ChoiceNode>> splitListWithChoiceNode(
             List<ChoiceNode> toSplit,
             ChoiceNode val,
             Map<ChoiceNode, ChoiceNode> inOutSanitizedValToInputVal) {
@@ -292,14 +292,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             end = val;
         }
         Pair<Boolean, List<ChoiceNode>> changeResultLeft =
-                SplitListByValue(
+                splitListByValue(
                         toSplit,
                         start,
                         TypeOfEndpoint.LEFT_ENDPOINT,
                         inOutSanitizedValToInputVal);
 
         Pair<Boolean, List<ChoiceNode>> changeResultRight =
-                SplitListByValue(
+                splitListByValue(
                         changeResultLeft.getSecond(),
                         end,
                         TypeOfEndpoint.RIGHT_ENDPOINT,
@@ -308,7 +308,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
     }
 
-    private Pair<Boolean, List<ChoiceNode>> SplitListByValue(
+    private static Pair<Boolean, List<ChoiceNode>> splitListByValue(
             List<ChoiceNode> toSplit,
             ChoiceNode val,
             TypeOfEndpoint type,
@@ -323,7 +323,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 Pair<ChoiceNode, ChoiceNode> startEnd = ChoiceNodeHelper.rangeSplit(it);
                 ChoiceNode start = startEnd.getFirst();
                 ChoiceNode end = startEnd.getSecond();
-//                if((new ChoiceNodeComparator().compare(start,val))<0 && (new ChoiceNodeComparator().compare(val,end))<0)
 
                 ChoiceNode val1, val2;
                 val1 = start.makeCloneUnlink();
@@ -342,9 +341,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         val2 = ChoiceNodeHelper.followingVal(val2);
                 }
 
-
-                if (new ChoiceNodeComparator().compare(val1, val2) == 0) //only happens if one was too extreme to be further moved, as in Long.MAX_VALUE or so
-                {
+                if (new ChoiceNodeComparator().compare(val1, val2) == 0) { //only happens if one was too extreme to be further moved, as in Long.MAX_VALUE or so
                     newList.add(it);
                     continue;
                 }
@@ -354,6 +351,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     newList.add(it);
                     continue;
                 }
+
                 ChoiceNode it1, it2;
                 if (cmp1 < 0)
                     it1 = ChoiceNodeHelper.toRangeFromFirst(start, val1);
@@ -372,8 +370,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 newList.add(it1);
                 newList.add(it2);
             }
-        return new Pair<>(anyChange, newList);
 
+        return new Pair<>(anyChange, newList);
     }
 
     private int newID() {
