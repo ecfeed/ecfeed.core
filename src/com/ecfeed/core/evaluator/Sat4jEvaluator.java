@@ -636,7 +636,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (consequence instanceof ExpectedValueStatement) {
             Integer premiseID = null;
             try {
-                premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
+                premiseID =
+                        (Integer) premise.accept(
+                        new ParseConstraintToSATVisitor(
+                                fFirstFreeIDHolder,
+                                fSat4Clauses));
+
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -644,16 +649,39 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         } else {
             Integer premiseID = null, consequenceID = null;
             try {
-                premiseID = (Integer) premise.accept(new ParseConstraintToSATVisitor());
-                consequenceID = (Integer) consequence.accept(new ParseConstraintToSATVisitor());
+                premiseID = (Integer) premise.accept(
+                        new ParseConstraintToSATVisitor(
+                                fFirstFreeIDHolder,
+                                fSat4Clauses));
+
+                consequenceID =
+                        (Integer) consequence.accept(
+                                new ParseConstraintToSATVisitor(
+                                        fFirstFreeIDHolder,
+                                        fSat4Clauses));
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             clausesVecInt.add(new VecInt(new int[]{-premiseID, consequenceID}));
         }
     }
 
+    // TODO
+//    static
     class ParseConstraintToSATVisitor implements IStatementVisitor {
+
+        private IntegerHolder fFirstFreeIDHolder;
+        private Sat4Clauses fSat4Clauses;
+
+        public ParseConstraintToSATVisitor(
+                IntegerHolder firstFreeIDHolder,
+                Sat4Clauses sat4Clauses) {
+
+            fFirstFreeIDHolder = firstFreeIDHolder;
+            fSat4Clauses = sat4Clauses;
+        }
+
         @Override
         public Object visit(StatementArray statement) {
             Integer myID = newID(fFirstFreeIDHolder);
@@ -664,7 +692,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     for (AbstractStatement child : statement.getChildren()) {
                         Integer childID = null;
                         try {
-                            childID = (Integer) child.accept(new ParseConstraintToSATVisitor());
+                            childID = (Integer) child.accept(
+                                    new ParseConstraintToSATVisitor(
+                                            fFirstFreeIDHolder,
+                                            fSat4Clauses));
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -681,7 +713,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     for (AbstractStatement child : statement.getChildren()) {
                         Integer childID = null;
                         try {
-                            childID = (Integer) child.accept(new ParseConstraintToSATVisitor());
+                            childID = (Integer) child.accept(
+                                    new ParseConstraintToSATVisitor(
+                                            fFirstFreeIDHolder,
+                                            fSat4Clauses));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -959,7 +994,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         @Override
         public Object visit(LabelCondition statement) {
-            ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+            ExceptionHelper.reportRuntimeException("You shouldn't be here!"); // TODO
             return null; //this will never happen
         }
 
