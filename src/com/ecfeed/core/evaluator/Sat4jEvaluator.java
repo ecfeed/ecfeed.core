@@ -641,7 +641,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         new ParseConstraintToSATVisitor(
                                 fFirstFreeIDHolder,
                                 fSat4Clauses,
-                                fArgAllAtomicValues));
+                                fArgAllAtomicValues,
+                                fArgAllSanitizedValues));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
@@ -654,14 +655,16 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         new ParseConstraintToSATVisitor(
                                 fFirstFreeIDHolder,
                                 fSat4Clauses,
-                                fArgAllAtomicValues));
+                                fArgAllAtomicValues,
+                                fArgAllSanitizedValues));
 
                 consequenceID =
                         (Integer) consequence.accept(
                                 new ParseConstraintToSATVisitor(
                                         fFirstFreeIDHolder,
                                         fSat4Clauses,
-                                        fArgAllAtomicValues));
+                                        fArgAllAtomicValues,
+                                        fArgAllSanitizedValues));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -677,15 +680,18 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         private IntegerHolder fFirstFreeIDHolder;
         private Sat4Clauses fSat4Clauses;
         private ParamsWithChoices fArgAllAtomicValues;
+        private ParamsWithChoices fArgAllSanitizedValues;
 
         public ParseConstraintToSATVisitor(
                 IntegerHolder firstFreeIDHolder,
                 Sat4Clauses sat4Clauses,
-                ParamsWithChoices allAtomicValues) {
+                ParamsWithChoices allAtomicValues,
+                ParamsWithChoices allSanitizedValues) {
 
             fFirstFreeIDHolder = firstFreeIDHolder;
             fSat4Clauses = sat4Clauses;
             fArgAllAtomicValues = allAtomicValues;
+            fArgAllSanitizedValues = allSanitizedValues;
         }
 
         @Override
@@ -702,7 +708,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                     new ParseConstraintToSATVisitor(
                                             fFirstFreeIDHolder,
                                             fSat4Clauses,
-                                            fArgAllAtomicValues));
+                                            fArgAllAtomicValues,
+                                            fArgAllSanitizedValues));
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -724,7 +731,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                     new ParseConstraintToSATVisitor(
                                             fFirstFreeIDHolder,
                                             fSat4Clauses,
-                                            fArgAllAtomicValues));
+                                            fArgAllAtomicValues,
+                                            fArgAllSanitizedValues));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -805,9 +813,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             prepareVariablesForParameter(
                     leftMethodParameterNode,
-                    fArgAllAtomicValues, // XYX
+                    fArgAllAtomicValues,
                     fFirstFreeIDHolder,
-                    fArgAllSanitizedValues,
+                    fArgAllSanitizedValues, // XYX
                     fSanitizedValToAtomicVal,
                     fSat4Clauses,
                     fArgAllInputValues,
