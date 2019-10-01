@@ -66,21 +66,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (initConstraints != null && !initConstraints.isEmpty()) {
             fNoConstraints = false;
 
-            fAllRelationStatements = collectRelationStatements(initConstraints);
-
             fArgAllInputValues = collectParametersWithChoices(fMethod); // TODO - unify names
 
             collectSanitizedValues(fArgAllInputValues, fArgAllSanitizedValues, fSanitizedValToInputVal);
 
-            while (true) {
-                Boolean anyChange = false;
-                for (RelationStatement rel : fAllRelationStatements) {
-                    if (SanitizeValsWithRelation(rel))
-                        anyChange = true;
-                }
-                if (!anyChange)
-                    break;
-            }
+            fAllRelationStatements = collectRelationStatements(initConstraints);
+
+            sanitizeRelationStatementsWithRelation();
 
 
             for (MethodParameterNode param : fArgAllSanitizedValues.keySet()) {
@@ -137,10 +129,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             Map<ChoiceNode, ChoiceNode> outSanitizedValToInputVal) {
 
         for (MethodParameterNode methodParameterNode : inputValues.keySet()) {
-            
+
             Set<ChoiceNode> copy = new HashSet<>(inputValues.get(methodParameterNode));
             outAllSanitizedValues.put(methodParameterNode, copy);
-            
+
             for (ChoiceNode choiceNode : copy) //maintaining the dependencies
                 outSanitizedValToInputVal.put(choiceNode, choiceNode);
         }
@@ -195,8 +187,19 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
+    private void sanitizeRelationStatementsWithRelation() {
+        while (true) {
+            Boolean anyChange = false;
+            for (RelationStatement relationStatement : fAllRelationStatements) {
+                if (sanitizeValsWithRelation(relationStatement))
+                    anyChange = true;
+            }
+            if (!anyChange)
+                break;
+        }
+    }
 
-    private Boolean SanitizeValsWithRelation(RelationStatement relation) {
+    private Boolean sanitizeValsWithRelation(RelationStatement relation) {
         IStatementCondition condition = relation.getCondition();
         if (condition instanceof LabelCondition)
             return false;
@@ -254,7 +257,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             return changeResult.getFirst();
         }
 
-        ExceptionHelper.reportRuntimeException("We shouldn't be here.");
+        ExceptionHelper.reportRuntimeException("Invalid condition type.");
         return true;
     }
 
@@ -456,7 +459,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private static List<RelationStatement> collectRelationStatements(
             Collection<Constraint> initConstraints) {
 
-        List<RelationStatement> result = new ArrayList<>();;
+        List<RelationStatement> result = new ArrayList<>();
+        ;
 
         for (Constraint constraint : initConstraints) {
             collectRelationStatements(constraint, result);
