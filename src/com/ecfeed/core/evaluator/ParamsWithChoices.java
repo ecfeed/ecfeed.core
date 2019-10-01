@@ -27,4 +27,8 @@ public class ParamsWithChoices {
         return fParamsWithChoices.keySet();
     }
 
+    public int getSize() {
+        return fParamsWithChoices.size();
+    }
+
 }

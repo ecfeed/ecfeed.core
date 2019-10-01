@@ -24,7 +24,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private IntegerHolder fFirstFreeIDHolder = new IntegerHolder(1);
 
     private ParamsWithChoices fArgAllInputValues;
-    private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllSanitizedValues;
+    private ParamsWithChoices fArgAllSanitizedValues;
     private Map<MethodParameterNode, Set<ChoiceNode>> fArgAllAtomicValues;
     private Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal;
     private Map<ChoiceNode, ChoiceNode> fAtomicValToSanitizedVal;
@@ -50,7 +50,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgChoiceID = new HashMap<>();
         fClausesVecInt = new ArrayList<>();
         fArgAllInputValues = new ParamsWithChoices();
-        fArgAllSanitizedValues = new HashMap<>();
+        fArgAllSanitizedValues = new ParamsWithChoices();
         fArgAllAtomicValues = new HashMap<>();
         fSanitizedValToInputVal = new HashMap<>();
         fAtomicValToSanitizedVal = new HashMap<>();
@@ -97,7 +97,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     }
 
     private void todo() {
-        for (MethodParameterNode param : fArgAllSanitizedValues.keySet()) {
+        for (MethodParameterNode param : fArgAllSanitizedValues.getKeySet()) {
             fArgInputValToSanitizedVal.put(param, HashMultimap.create());
             for (ChoiceNode sanitizedChoice : fArgAllSanitizedValues.get(param)) { //build InputVal -> SanitizedVal mapping
                 ChoiceNode inputChoice = fSanitizedValToInputVal.get(sanitizedChoice);
@@ -111,7 +111,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         (JavaTypeHelper.isExtendedIntTypeName(param.getType())
                                 || JavaTypeHelper.isFloatingPointTypeName(param.getType())
                         )) {
-                    List<ChoiceNode> interleaved = ChoiceNodeHelper.interleavedValues(it, fArgAllSanitizedValues.size());
+                    List<ChoiceNode> interleaved =
+                            ChoiceNodeHelper.interleavedValues(it, fArgAllSanitizedValues.getSize());
+
                     fArgAllAtomicValues.get(param).addAll(interleaved);
                     for (ChoiceNode c : interleaved) {
                         fAtomicValToSanitizedVal.put(c, it);
@@ -127,7 +129,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private static void collectSanitizedValues(
             ParamsWithChoices inputValues,
-            Map<MethodParameterNode, Set<ChoiceNode>> outAllSanitizedValues,
+            ParamsWithChoices outAllSanitizedValues,
             Map<ChoiceNode, ChoiceNode> outSanitizedValToInputVal) {
 
         for (MethodParameterNode methodParameterNode : inputValues.getKeySet()) {
@@ -191,7 +193,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private static void sanitizeRelationStatementsWithRelation(
             List<RelationStatement> fAllRelationStatements,
-            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues,
+            ParamsWithChoices inOutSanitizedValues,
             Map<ChoiceNode, ChoiceNode> inOutSanitizedValToInputVal) {
 
         while (true) {
@@ -209,7 +211,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private static Boolean sanitizeValsWithRelation(
             RelationStatement relationStatement,
-            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues,
+            ParamsWithChoices inOutSanitizedValues,
             Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal) {
 
         IStatementCondition condition = relationStatement.getCondition();
@@ -390,7 +392,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID,
             Map<MethodParameterNode, Set<ChoiceNode>> fArgAllAtomicValues,
             IntegerHolder fFirstFreeIDHolder,
-            Map<MethodParameterNode, Set<ChoiceNode>> fArgAllSanitizedValues,
+            ParamsWithChoices fArgAllSanitizedValues,
             Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal,
             List<VecInt> fClausesVecInt,
             ParamsWithChoices fArgAllInputValues,
@@ -754,7 +756,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         private Integer singleChoiceParamConstraints(RelationStatement statement) {
             MethodParameterNode leftMethodParameterNode = statement.getLeftParameter();
 
-            prepareVariablesForParameter(leftMethodParameterNode,
+            prepareVariablesForParameter(
+                    leftMethodParameterNode,
                     fArgChoiceID,
                     fArgAllAtomicValues,
                     fFirstFreeIDHolder,
