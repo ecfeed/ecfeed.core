@@ -158,25 +158,23 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment) {
 
         if (!fSatSolver.hasConstraints()) {
-            return EvaluationResult.TRUE; //no method so there were no constraints
+            return EvaluationResult.TRUE;
         }
 
         if (fSatSolver.isContradicting())
             return EvaluationResult.FALSE;
 
-        try {
-            IProblem problem = fSatSolver.getSolver();
-            if (problem.isSatisfiable(
-                    new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray()))) {
-                return EvaluationResult.TRUE;
-            } else {
-                return EvaluationResult.FALSE;
-            }
-        } catch (TimeoutException e) {
-            ExceptionHelper.reportRuntimeException("Timeout, sorry!");
-            return null;
-        }
+        final VecInt assumps =
+                new VecInt(assumptionsFromValues(valueAssignment).
+                stream().
+                mapToInt(Integer::intValue).
+                toArray());
 
+        if (fSatSolver.isProblemSatisfiable(assumps)) {
+            return EvaluationResult.TRUE;
+        } else {
+            return EvaluationResult.FALSE;
+        }
     }
 
     @Override

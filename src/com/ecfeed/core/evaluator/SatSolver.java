@@ -1,9 +1,12 @@
 package com.ecfeed.core.evaluator;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
+import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
+import org.sat4j.specs.TimeoutException;
 
 public class SatSolver {
 
@@ -54,6 +57,18 @@ public class SatSolver {
 
     public ISolver getSolver() { // TODO - REMOVE
         return fSolver;
+    }
+
+    public boolean isProblemSatisfiable(final VecInt assumps) {
+
+        IProblem problem = fSolver;
+        try {
+            return problem.isSatisfiable(assumps);
+        }
+        catch (TimeoutException e) {
+            ExceptionHelper.reportRuntimeException("Timeout occured. Can not check if problem is satisfiable.");
+            return false;
+        }
     }
 
     public Boolean isContradicting() {
