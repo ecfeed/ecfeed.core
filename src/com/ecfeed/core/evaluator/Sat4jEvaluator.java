@@ -37,7 +37,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private List<RelationStatement> fAllRelationStatements;
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
-    private MethodNode fMethod;
+    private MethodNode fMethodNode;
     private ISolver fSolver;
     private Boolean fIsContradicting = false;
     private Boolean fNoConstraints = true;
@@ -58,15 +58,15 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
         fSanitizedValToAtomicVal = HashMultimap.create();
-        fMethod = method;
-        if (fMethod == null && !initConstraints.isEmpty()) {
+        fMethodNode = method;
+        if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("No method but there were constraints!");
         }
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
             fNoConstraints = false;
 
-            fArgAllInputValues = collectParametersWithChoices(fMethod); // TODO - unify names
+            fArgAllInputValues = collectParametersWithChoices(fMethodNode); // TODO - unify names
 
             collectSanitizedValues(fArgAllInputValues, fArgAllSanitizedValues, fSanitizedValToInputVal);
 
@@ -169,7 +169,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     public void initialize(List<List<ChoiceNode>> input) {
         if (fNoConstraints)
             return;
-        List<MethodParameterNode> params = fMethod.getMethodParameters();
+        List<MethodParameterNode> params = fMethodNode.getMethodParameters();
 
         //iterate params and valueAssignment simultanously
         if (input.size() != params.size()) {
@@ -638,17 +638,18 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             try {
                 premiseID =
                         (Integer) premise.accept(
-                        new ParseConstraintToSATVisitor(
-                                fFirstFreeIDHolder,
-                                fSat4Clauses,
-                                fArgAllAtomicValues,
-                                fArgAllSanitizedValues,
-                                fSanitizedValToAtomicVal,
-                                fArgAllInputValues,
-                                fArgInputValToSanitizedVal,
-                                fArgLessEqChoiceID,
-                                fArgLessThChoiceID,
-                                fArgChoiceID));
+                                new ParseConstraintToSATVisitor(
+                                        fMethodNode,
+                                        fFirstFreeIDHolder,
+                                        fSat4Clauses,
+                                        fArgAllAtomicValues,
+                                        fArgAllSanitizedValues,
+                                        fSanitizedValToAtomicVal,
+                                        fArgAllInputValues,
+                                        fArgInputValToSanitizedVal,
+                                        fArgLessEqChoiceID,
+                                        fArgLessThChoiceID,
+                                        fArgChoiceID));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
@@ -659,6 +660,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             try {
                 premiseID = (Integer) premise.accept(
                         new ParseConstraintToSATVisitor(
+                                fMethodNode,
                                 fFirstFreeIDHolder,
                                 fSat4Clauses,
                                 fArgAllAtomicValues,
@@ -673,6 +675,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 consequenceID =
                         (Integer) consequence.accept(
                                 new ParseConstraintToSATVisitor(
+                                        fMethodNode,
                                         fFirstFreeIDHolder,
                                         fSat4Clauses,
                                         fArgAllAtomicValues,
@@ -691,9 +694,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    // TODO
-//    static
-    class ParseConstraintToSATVisitor implements IStatementVisitor {
+    static class ParseConstraintToSATVisitor implements IStatementVisitor {
+
+        private MethodNode fMethodNode;
 
         private IntegerHolder fFirstFreeIDHolder;
         private Sat4Clauses fSat4Clauses;
@@ -709,6 +712,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
 
         public ParseConstraintToSATVisitor(
+                MethodNode methodNode,
                 IntegerHolder firstFreeIDHolder,
                 Sat4Clauses sat4Clauses,
                 ParamsWithChoices allAtomicValues,
@@ -719,8 +723,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 ParamsWithChInts lessEqChoiceID,
                 ParamsWithChInts lessThChoiceID,
                 ParamsWithChInts choiceID
-                ) {
+        ) {
 
+            fMethodNode = methodNode;
             fFirstFreeIDHolder = firstFreeIDHolder;
             fSat4Clauses = sat4Clauses;
             fArgAllAtomicValues = allAtomicValues;
@@ -746,6 +751,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         try {
                             childID = (Integer) child.accept(
                                     new ParseConstraintToSATVisitor(
+                                            fMethodNode,
                                             fFirstFreeIDHolder,
                                             fSat4Clauses,
                                             fArgAllAtomicValues,
@@ -775,6 +781,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         try {
                             childID = (Integer) child.accept(
                                     new ParseConstraintToSATVisitor(
+                                            fMethodNode,
                                             fFirstFreeIDHolder,
                                             fSat4Clauses,
                                             fArgAllAtomicValues,
@@ -879,12 +886,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             Integer myID = newID(fFirstFreeIDHolder);
 
-            int lParamIndex = fMethod.getMethodParameters().indexOf(leftMethodParameterNode);
+            int lParamIndex = fMethodNode.getMethodParameters().indexOf(leftMethodParameterNode);
             if (lParamIndex == -1) {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
             for (ChoiceNode lChoice : fArgAllAtomicValues.get(leftMethodParameterNode)) {
-                List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethod.getParametersCount(), null));
+                List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethodNode.getParametersCount(), null));
                 dummyValues.set(lParamIndex, lChoice);
                 EvaluationResult result = statement.evaluate(dummyValues);
                 Integer idOfLeftArgChoice = fArgChoiceID.get(leftMethodParameterNode).get(lChoice);
@@ -918,7 +925,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             Integer myID = newID(fFirstFreeIDHolder);
 
-            int lParamIndex = fMethod.getMethodParameters().indexOf(lParam);
+            int lParamIndex = fMethodNode.getMethodParameters().indexOf(lParam);
             if (lParamIndex == -1) {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
@@ -938,7 +945,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgChoiceID
             );
 
-            int rParamIndex = fMethod.getMethodParameters().indexOf(rParam);
+            int rParamIndex = fMethodNode.getMethodParameters().indexOf(rParam);
             if (rParamIndex == -1) {
                 ExceptionHelper.reportRuntimeException("Parameter not in method!");
             }
@@ -1092,7 +1099,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         if (fNoConstraints)
             return new ArrayList<>();
-        List<MethodParameterNode> params = fMethod.getMethodParameters();
+        List<MethodParameterNode> params = fMethodNode.getMethodParameters();
 
         List<Integer> assumptions = new ArrayList<>();
 
@@ -1122,7 +1129,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (fIsContradicting)
             return;
 
-        List<MethodParameterNode> methodParameterNodes = fMethod.getMethodParameters();
+        List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
 
         for (MethodParameterNode methodParameterNode : methodParameterNodes)
             prepareVariablesForParameter(
@@ -1197,7 +1204,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
             for (int i = 0; i < valueAssignment.size(); i++) {
                 ChoiceNode p = valueAssignment.get(i);
-                MethodParameterNode parameter = fMethod.getMethodParameters().get(i);
+                MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
                 if (parameter.isExpected()) {
                     valueAssignment.set(i, p.makeClone());
                 }
