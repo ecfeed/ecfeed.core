@@ -119,7 +119,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public void initialize(List<List<ChoiceNode>> input) {
 
-        if (fSatSolver.getNoConstraintsFlag())
+        if (!fSatSolver.hasConstraints())
             return;
 
         List<MethodParameterNode> params = fMethodNode.getMethodParameters();
@@ -146,8 +146,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     @Override
     public void excludeAssignment(List<ChoiceNode> toExclude) {
-        if (fSatSolver.getNoConstraintsFlag())
+
+        if (!fSatSolver.hasConstraints())
             return;
+
         if (fSatSolver.isContradicting())
             return;
 
@@ -178,7 +180,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     @Override
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment) {
-        if (fSatSolver.getNoConstraintsFlag()) {
+
+        if (!fSatSolver.hasConstraints()) {
             return EvaluationResult.TRUE; //no method so there were no constraints
         }
 
@@ -203,7 +206,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) {
 
-        if (fSatSolver.getNoConstraintsFlag())
+        if (!fSatSolver.hasConstraints())
             return valueAssignment;
 
         try {
@@ -606,7 +609,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignment) {
 
-        if (fSatSolver.getNoConstraintsFlag())
+        if (!fSatSolver.hasConstraints())
             return new ArrayList<>();
 
         List<MethodParameterNode> params = fMethodNode.getMethodParameters();

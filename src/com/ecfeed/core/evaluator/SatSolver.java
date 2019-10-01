@@ -64,8 +64,8 @@ public class SatSolver {
         fNoConstraints = flag;
     }
 
-    public Boolean getNoConstraintsFlag() {
-        return fNoConstraints;
+    public Boolean hasConstraints() {
+        return (!fNoConstraints);
     }
 
 }
