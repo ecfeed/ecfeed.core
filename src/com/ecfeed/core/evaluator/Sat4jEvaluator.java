@@ -31,7 +31,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
     private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
 
-    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessEqChoiceID;
+    private ParamsWithChInts fArgLessEqChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessThChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID;
 
@@ -45,7 +45,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
-        fArgLessEqChoiceID = new HashMap<>();
+        fArgLessEqChoiceID = new ParamsWithChInts("LEQ");
         fArgLessThChoiceID = new HashMap<>();
         fArgChoiceID = new HashMap<>();
         fSat4Clauses = new Sat4Clauses();
@@ -401,7 +401,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             Sat4Clauses sat4Clauses,
             ParamsWithChoices fArgAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal,
-            Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessEqChoiceID,
+            ParamsWithChInts fArgLessEqChoiceID,
             Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessThChoiceID) {
 
         if (fArgChoiceID.containsKey(methodParameterNode))
