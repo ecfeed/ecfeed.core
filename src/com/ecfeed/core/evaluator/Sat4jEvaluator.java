@@ -70,12 +70,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             fArgAllInputValues = collectParametersWithChoices(fMethod); // TODO - unify names
 
-            for (MethodParameterNode arg : fArgAllInputValues.keySet()) {
-                Set<ChoiceNode> setCopy = new HashSet<>(fArgAllInputValues.get(arg));
-                fArgAllSanitizedValues.put(arg, setCopy);
-                for (ChoiceNode node : setCopy) //maintaining the dependencies
-                    fSanitizedValToInputVal.put(node, node);
-            }
+            collectSanitizedValues(fArgAllInputValues, fArgAllSanitizedValues, fSanitizedValToInputVal);
 
             while (true) {
                 Boolean anyChange = false;
@@ -133,6 +128,21 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             System.out.println("variables: " + maxVar + " clauses: " + nbClauses);
         } catch (ContradictionException e) {
             fIsContradicting = true;
+        }
+    }
+
+    private static void collectSanitizedValues(
+            Map<MethodParameterNode, Set<ChoiceNode>> inputValues,
+            Map<MethodParameterNode, Set<ChoiceNode>> outAllSanitizedValues,
+            Map<ChoiceNode, ChoiceNode> outSanitizedValToInputVal) {
+
+        for (MethodParameterNode methodParameterNode : inputValues.keySet()) {
+            
+            Set<ChoiceNode> copy = new HashSet<>(inputValues.get(methodParameterNode));
+            outAllSanitizedValues.put(methodParameterNode, copy);
+            
+            for (ChoiceNode choiceNode : copy) //maintaining the dependencies
+                outSanitizedValToInputVal.put(choiceNode, choiceNode);
         }
     }
 
