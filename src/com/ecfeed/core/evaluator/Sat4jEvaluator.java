@@ -69,7 +69,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
-            fSatSolver.fNoConstraints = false;
+            fSatSolver.setNoConstraintsFlag(false);
 
             fArgAllInputValues = collectParametersWithChoices(fMethodNode); // TODO - unify names
 
@@ -119,7 +119,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public void initialize(List<List<ChoiceNode>> input) {
 
-        if (fSatSolver.fNoConstraints)
+        if (fSatSolver.getNoConstraintsFlag())
             return;
 
         List<MethodParameterNode> params = fMethodNode.getMethodParameters();
@@ -146,9 +146,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     @Override
     public void excludeAssignment(List<ChoiceNode> toExclude) {
-        if (fSatSolver.fNoConstraints)
+        if (fSatSolver.getNoConstraintsFlag())
             return;
-        if (fSatSolver.fIsContradicting)
+        if (fSatSolver.isContradicting())
             return;
 
         List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
@@ -178,13 +178,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     @Override
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment) {
-        if (fSatSolver.fNoConstraints) {
+        if (fSatSolver.getNoConstraintsFlag()) {
             return EvaluationResult.TRUE; //no method so there were no constraints
         }
 
-        if (fSatSolver.fIsContradicting)
+        if (fSatSolver.isContradicting())
             return EvaluationResult.FALSE;
-
 
         try {
             IProblem problem = fSatSolver.getSolver();
@@ -204,7 +203,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) {
 
-        if (fSatSolver.fNoConstraints)
+        if (fSatSolver.getNoConstraintsFlag())
             return valueAssignment;
 
         try {
@@ -607,8 +606,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignment) {
 
-        if (fSatSolver.fNoConstraints)
+        if (fSatSolver.getNoConstraintsFlag())
             return new ArrayList<>();
+
         List<MethodParameterNode> params = fMethodNode.getMethodParameters();
 
         List<Integer> assumptions = new ArrayList<>();

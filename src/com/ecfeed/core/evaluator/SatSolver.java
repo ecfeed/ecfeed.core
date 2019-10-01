@@ -8,8 +8,8 @@ import org.sat4j.specs.ISolver;
 public class SatSolver {
 
     private ISolver fSolver;
-    public Boolean fIsContradicting;
-    public Boolean fNoConstraints;
+    private Boolean fIsContradicting;
+    private Boolean fNoConstraints;
 
     public SatSolver() {
         fSolver = SolverFactory.newDefault();
@@ -55,4 +55,17 @@ public class SatSolver {
     public ISolver getSolver() { // TODO - REMOVE
         return fSolver;
     }
+
+    public Boolean isContradicting() {
+        return fIsContradicting;
+    }
+
+    public void setNoConstraintsFlag(boolean flag) {
+        fNoConstraints = flag;
+    }
+
+    public Boolean getNoConstraintsFlag() {
+        return fNoConstraints;
+    }
+
 }
