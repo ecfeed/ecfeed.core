@@ -380,7 +380,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         return new Pair<>(anyChange, newList);
     }
 
-    private int newID() {
+    private static int newID(IntegerHolder fFirstFreeIDHolder) {
         fFirstFreeIDHolder.increment();
         return fFirstFreeIDHolder.get();
     }
@@ -407,7 +407,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         if (!JavaTypeHelper.isNumericTypeName(arg.getType())) {
             for (int i = 0; i < n; i++) {
-                choiceVars.add(newID());
+                choiceVars.add(newID(fFirstFreeIDHolder));
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
             fArgChoiceID.put(arg, choiceID);
@@ -418,16 +418,16 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
 
 
-        prefixVars.add(newID());
+        prefixVars.add(newID(fFirstFreeIDHolder));
         for (int i = 0; i < n; i++) {
-            choiceVars.add(newID());
-            prefixVars.add(newID());
+            choiceVars.add(newID(fFirstFreeIDHolder));
+            prefixVars.add(newID(fFirstFreeIDHolder));
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
         for (ChoiceNode sanitizedValue : fArgAllSanitizedValues.get(arg))
             if (!choiceID.containsKey(sanitizedValue)) {
-                Integer sanitizedID = newID();
+                Integer sanitizedID = newID(fFirstFreeIDHolder);
                 choiceID.put(sanitizedValue, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
@@ -442,7 +442,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         for (ChoiceNode inputValue : fArgAllInputValues.get(arg))
             if (!choiceID.containsKey(inputValue)) {
-                Integer inputID = newID();
+                Integer inputID = newID(fFirstFreeIDHolder);
                 choiceID.put(inputValue, inputID);
 
                 List<Integer> bigClause = new ArrayList<>();
@@ -640,7 +640,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     class ParseConstraintToSATVisitor implements IStatementVisitor {
         @Override
         public Object visit(StatementArray statement) {
-            Integer myID = newID();
+            Integer myID = newID(fFirstFreeIDHolder);
             switch (statement.getOperator()) {
                 case OR: // y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
                 {
@@ -722,7 +722,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         Integer statementLowID = singleChoiceParamConstraints(statementLow);
                         Integer statementHighID = singleChoiceParamConstraints(statementHigh);
 
-                        Integer myID = newID();
+                        Integer myID = newID(fFirstFreeIDHolder);
 
                         fClausesVecInt.add(new VecInt(new int[]{-statementLowID, -statementHighID, myID}));
                         fClausesVecInt.add(new VecInt(new int[]{-myID, statementLowID}));
@@ -745,7 +745,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             MethodParameterNode lParam = statement.getLeftParameter();
 
             variablesForParameter(lParam);
-            Integer myID = newID();
+            Integer myID = newID(fFirstFreeIDHolder);
 
             int lParamIndex = fMethod.getMethodParameters().indexOf(lParam);
             if (lParamIndex == -1) {
@@ -772,7 +772,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         private Integer doubleChoiceParamConstraints(RelationStatement statement) {
             MethodParameterNode lParam = statement.getLeftParameter();
             variablesForParameter(lParam);
-            Integer myID = newID();
+            Integer myID = newID(fFirstFreeIDHolder);
 
             int lParamIndex = fMethod.getMethodParameters().indexOf(lParam);
             if (lParamIndex == -1) {
@@ -899,7 +899,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         @Override
         public Object visit(StaticStatement statement) {
-            Integer myID = newID();
+            Integer myID = newID(fFirstFreeIDHolder);
             if (statement.getValue() == EvaluationResult.TRUE)
                 fClausesVecInt.add(new VecInt(new int[]{myID}));
             else
