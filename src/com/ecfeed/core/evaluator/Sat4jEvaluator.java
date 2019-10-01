@@ -194,8 +194,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         while (true) {
             Boolean anyChange = false;
             for (RelationStatement relationStatement : fAllRelationStatements) {
-                if (sanitizeValsWithRelation(relationStatement, inOutSanitizedValues))
+                if (sanitizeValsWithRelation(
+                        relationStatement, inOutSanitizedValues, fSanitizedValToInputVal)) {
                     anyChange = true;
+                }
             }
             if (!anyChange)
                 break;
@@ -204,7 +206,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private Boolean sanitizeValsWithRelation(
             RelationStatement relationStatement,
-            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues) {
+            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues,
+            Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal) {
 
         IStatementCondition condition = relationStatement.getCondition();
         if (condition instanceof LabelCondition)
