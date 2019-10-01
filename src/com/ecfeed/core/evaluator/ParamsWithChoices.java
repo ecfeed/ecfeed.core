@@ -9,9 +9,12 @@ import java.util.Set;
 
 public class ParamsWithChoices {
 
+    private String fDebugCode;
     private Map<MethodParameterNode, Set<ChoiceNode>> fParamsWithChoices;
 
-    public ParamsWithChoices() {
+    public ParamsWithChoices(String debugCode) {
+
+        fDebugCode = debugCode;
         fParamsWithChoices = new HashMap<>();
     }
 

@@ -20,7 +20,7 @@ import static com.ecfeed.core.utils.EMathRelation.*;
 
 public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
-    private List<VecInt> fClausesVecInt; //internal type for Sat4j
+    private Sat4Clauses fSat4Clauses;
     private IntegerHolder fFirstFreeIDHolder = new IntegerHolder(1);
 
     private ParamsWithChoices fArgAllInputValues;
@@ -31,10 +31,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
     private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
 
-    //    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgEqualChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessEqChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessThChoiceID;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgChoiceID;
+
     private List<RelationStatement> fAllRelationStatements;
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
     private MethodNode fMethod;
@@ -48,10 +48,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgLessEqChoiceID = new HashMap<>();
         fArgLessThChoiceID = new HashMap<>();
         fArgChoiceID = new HashMap<>();
-        fClausesVecInt = new ArrayList<>();
-        fArgAllInputValues = new ParamsWithChoices();
-        fArgAllSanitizedValues = new ParamsWithChoices();
-        fArgAllAtomicValues = new ParamsWithChoices();
+        fSat4Clauses = new Sat4Clauses();
+        fArgAllInputValues = new ParamsWithChoices("ALL");
+        fArgAllSanitizedValues = new ParamsWithChoices("SAN");
+        fArgAllAtomicValues = new ParamsWithChoices("ATM");
         fSanitizedValToInputVal = new HashMap<>();
         fAtomicValToSanitizedVal = new HashMap<>();
         fExpectedValConstraints = new ArrayList<>();
@@ -78,18 +78,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             todo();
 
-            parseConstraintsToSat(initConstraints, fExpectedValConstraints, fClausesVecInt);
+            parseConstraintsToSat(initConstraints, fExpectedValConstraints, fSat4Clauses);
         }
         final int maxVar = fFirstFreeIDHolder.get();
-        final int nbClauses = fClausesVecInt.size();
+        final int nbClauses = fSat4Clauses.getSize();
         fSolver = SolverFactory.newDefault();
 
 
         try {
             fSolver.newVar(maxVar);
             fSolver.setExpectedNumberOfClauses(nbClauses);
-            for (VecInt clause : fClausesVecInt)
+
+            for (int index = 0; index < fSat4Clauses.getSize(); index++) {
+                VecInt clause = fSat4Clauses.getClause(index);
                 fSolver.addClause(clause);
+            }
+
             System.out.println("variables: " + maxVar + " clauses: " + nbClauses);
         } catch (ContradictionException e) {
             fIsContradicting = true;
@@ -145,7 +149,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private static ParamsWithChoices collectParametersWithChoices(
             MethodNode methodNode) {
 
-        ParamsWithChoices inputValues = new ParamsWithChoices();
+        ParamsWithChoices inputValues = new ParamsWithChoices("TMP");
 
         List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
 
@@ -182,7 +186,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 vars.add(idOfParamChoiceVar);
             }
             VecInt clause = new VecInt(vars.stream().mapToInt(Integer::intValue).toArray()); //one of the input values has to be taken, for each variable
-            fClausesVecInt.add(clause);
+            fSat4Clauses.add(clause);
             try {
                 fSolver.addClause(clause);
             } catch (ContradictionException e) {
@@ -394,7 +398,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             IntegerHolder fFirstFreeIDHolder,
             ParamsWithChoices fArgAllSanitizedValues,
             Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal,
-            List<VecInt> fClausesVecInt,
+            Sat4Clauses sat4Clauses,
             ParamsWithChoices fArgAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal,
             Map<MethodParameterNode, Map<ChoiceNode, Integer>> fArgLessEqChoiceID,
@@ -447,11 +451,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 List<Integer> bigClause = new ArrayList<>();
                 for (ChoiceNode atomicValue : fSanitizedValToAtomicVal.get(sanitizedValue)) {
                     Integer atomicID = choiceID.get(atomicValue);
-                    fClausesVecInt.add(new VecInt(new int[]{-atomicID, sanitizedID})); // atomicID => sanitizedID
+                    sat4Clauses.add(new VecInt(new int[]{-atomicID, sanitizedID})); // atomicID => sanitizedID
                     bigClause.add(atomicID);
                 }
                 bigClause.add(-sanitizedID);
-                fClausesVecInt.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
+                sat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
             }
 
         for (ChoiceNode inputValue : fArgAllInputValues.get(methodParameterNode))
@@ -462,23 +466,23 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 List<Integer> bigClause = new ArrayList<>();
                 for (ChoiceNode sanitizedValue : fArgInputValToSanitizedVal.get(methodParameterNode).get(inputValue)) {
                     Integer sanitizedID = choiceID.get(sanitizedValue);
-                    fClausesVecInt.add(new VecInt(new int[]{-sanitizedID, inputID})); // sanitizedID => inputID
+                    sat4Clauses.add(new VecInt(new int[]{-sanitizedID, inputID})); // sanitizedID => inputID
                     bigClause.add(sanitizedID);
                 }
                 bigClause.add(-inputID);
-                fClausesVecInt.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
+                sat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
             }
 
 
-        fClausesVecInt.add(new VecInt(new int[]{-prefixVars.get(0)}));
-        fClausesVecInt.add(new VecInt(new int[]{prefixVars.get(n)})); //at least one value should be taken
+        sat4Clauses.add(new VecInt(new int[]{-prefixVars.get(0)}));
+        sat4Clauses.add(new VecInt(new int[]{prefixVars.get(n)})); //at least one value should be taken
         for (int i = 0; i < n; i++) {
             // prefixVars[i+1] == prefixVars[i] OR choiceVars[i]
-            fClausesVecInt.add(new VecInt(new int[]{-choiceVars.get(i), prefixVars.get(i + 1)})); // choiceVars[i] => prefixVars[i];
-            fClausesVecInt.add(new VecInt(new int[]{-prefixVars.get(i), prefixVars.get(i + 1)})); // prefixVars[i] => prefixVars[i+1];
-            fClausesVecInt.add(new VecInt(new int[]{choiceVars.get(i), prefixVars.get(i), -prefixVars.get(i + 1)})); // enforcing that last one is true only when at least one of first+second is true
+            sat4Clauses.add(new VecInt(new int[]{-choiceVars.get(i), prefixVars.get(i + 1)})); // choiceVars[i] => prefixVars[i];
+            sat4Clauses.add(new VecInt(new int[]{-prefixVars.get(i), prefixVars.get(i + 1)})); // prefixVars[i] => prefixVars[i+1];
+            sat4Clauses.add(new VecInt(new int[]{choiceVars.get(i), prefixVars.get(i), -prefixVars.get(i + 1)})); // enforcing that last one is true only when at least one of first+second is true
 
-            fClausesVecInt.add(new VecInt(new int[]{-choiceVars.get(i), -prefixVars.get(i)})); // NOT( choiceVars[i] AND prefixVars[i] ), to guarantee uniqueness
+            sat4Clauses.add(new VecInt(new int[]{-choiceVars.get(i), -prefixVars.get(i)})); // NOT( choiceVars[i] AND prefixVars[i] ), to guarantee uniqueness
         }
 
         for (int i = 0; i < n; i++) {
@@ -612,17 +616,17 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private void parseConstraintsToSat(
             Collection<Constraint> initConstraints,
             List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
-            List<VecInt> fClausesVecInt) {
+            Sat4Clauses clausesVecInt) {
 
         for (Constraint constraint : initConstraints) {
-            parseConstraintToSat(constraint, outExpectedValConstraints, fClausesVecInt);
+            parseConstraintToSat(constraint, outExpectedValConstraints, clausesVecInt);
         }
     }
 
     private void parseConstraintToSat(
             Constraint constraint,
             List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
-            List<VecInt> fClausesVecInt) {
+            Sat4Clauses clausesVecInt) {
 
         if (constraint == null) {
             return;
@@ -645,7 +649,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            fClausesVecInt.add(new VecInt(new int[]{-premiseID, consequenceID}));
+            clausesVecInt.add(new VecInt(new int[]{-premiseID, consequenceID}));
         }
     }
 
@@ -665,10 +669,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                             e.printStackTrace();
                         }
                         bigClause.add(childID);
-                        fClausesVecInt.add(new VecInt(new int[]{-childID, myID})); //small fClauses
+                        fSat4Clauses.add(new VecInt(new int[]{-childID, myID})); //small fClauses
                     }
                     bigClause.add(-myID);
-                    fClausesVecInt.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
+                    fSat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
                     break;
                 }
                 case AND: // y = (x1 AND x2 AND .. AND xn) compiles to: (x1 OR NOT y) AND ... AND (xn OR NOT y) AND (NOT x1 OR ... OR NOT xn OR y)
@@ -682,10 +686,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                             e.printStackTrace();
                         }
                         bigClause.add(-childID);
-                        fClausesVecInt.add(new VecInt(new int[]{childID, -myID})); //small fClauses
+                        fSat4Clauses.add(new VecInt(new int[]{childID, -myID})); //small fClauses
                     }
                     bigClause.add(myID);
-                    fClausesVecInt.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
+                    fSat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
                     break;
                 }
             }
@@ -736,9 +740,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
                         Integer myID = newID(fFirstFreeIDHolder);
 
-                        fClausesVecInt.add(new VecInt(new int[]{-statementLowID, -statementHighID, myID}));
-                        fClausesVecInt.add(new VecInt(new int[]{-myID, statementLowID}));
-                        fClausesVecInt.add(new VecInt(new int[]{-myID, statementHighID}));
+                        fSat4Clauses.add(new VecInt(new int[]{-statementLowID, -statementHighID, myID}));
+                        fSat4Clauses.add(new VecInt(new int[]{-myID, statementLowID}));
+                        fSat4Clauses.add(new VecInt(new int[]{-myID, statementHighID}));
                         if (statement.getRelation() == EQUAL)
                             return myID; //myID == (statementLowID AND statementHighID)
                         else //NOT_EQUAL
@@ -763,7 +767,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
                     fSanitizedValToAtomicVal,
-                    fClausesVecInt,
+                    fSat4Clauses,
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
@@ -781,9 +785,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 EvaluationResult result = statement.evaluate(dummyValues);
                 Integer idOfLeftArgChoice = fArgChoiceID.get(leftMethodParameterNode).get(lChoice);
                 if (result == EvaluationResult.TRUE) {
-                    fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice, myID})); // thisChoice => me
+                    fSat4Clauses.add(new VecInt(new int[]{-idOfLeftArgChoice, myID})); // thisChoice => me
                 } else if (result == EvaluationResult.FALSE) {
-                    fClausesVecInt.add(new VecInt(new int[]{-idOfLeftArgChoice, -myID})); // thisChoice => NOT me
+                    fSat4Clauses.add(new VecInt(new int[]{-idOfLeftArgChoice, -myID})); // thisChoice => NOT me
                 } else //INSUFFICIENT_DATA
                 {
                     ExceptionHelper.reportRuntimeException("INSUFFICIENT_DATA: You shouldn't be here!");
@@ -801,7 +805,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
                     fSanitizedValToAtomicVal,
-                    fClausesVecInt,
+                    fSat4Clauses,
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
@@ -822,7 +826,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
                     fSanitizedValToAtomicVal,
-                    fClausesVecInt,
+                    fSat4Clauses,
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
@@ -860,23 +864,23 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     {
                         if (j == n) {
                             // NOT(i<x) IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -myID}));
 
                             break;
                         } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
 
                             // NOT(i<x) AND i<=x IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -myID}));
                         } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
                         {
                             // NOT(i<x) AND i<=x AND NOT(j<y) AND j<=y IMPLIES myID
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, -rightLessEq, myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, -rightLessEq, myID}));
 
                             // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
 
                             // NOT(i<x) AND i<=x AND NOT(j<=y) IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, -myID}));
                         }
                         break;
                     }
@@ -886,22 +890,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     {
                         if (j == n) {
                             // NOT(i<x) IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -myID}));
 
                             break;
                         } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
                             // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
                             // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
                         } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
                         {
                             // NOT(i<x) AND i<=x AND NOT(j<=y) IMPLIES myID
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, myID}));
 
                             // NOT(i<x) AND i<=x AND j<=y IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessEq, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessEq, -myID}));
                         }
                         break;
                     }
@@ -910,22 +914,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     {
                         if (j == n) {
                             // NOT(i<x) IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -myID}));
 
                             break;
                         } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
                             // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
                             // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
                         } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
                         {
                             // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
                             // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                            fClausesVecInt.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                            fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
                         }
                         break;
                     }
@@ -947,9 +951,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         public Object visit(StaticStatement statement) {
             Integer myID = newID(fFirstFreeIDHolder);
             if (statement.getValue() == EvaluationResult.TRUE)
-                fClausesVecInt.add(new VecInt(new int[]{myID}));
+                fSat4Clauses.add(new VecInt(new int[]{myID}));
             else
-                fClausesVecInt.add(new VecInt(new int[]{-myID}));
+                fSat4Clauses.add(new VecInt(new int[]{-myID}));
             return myID;
         }
 
@@ -1022,7 +1026,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
                     fSanitizedValToAtomicVal,
-                    fClausesVecInt,
+                    fSat4Clauses,
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
