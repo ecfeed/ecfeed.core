@@ -72,7 +72,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             fAllRelationStatements = collectRelationStatements(initConstraints);
 
-            sanitizeRelationStatementsWithRelation(fAllRelationStatements, fArgAllSanitizedValues);
+            sanitizeRelationStatementsWithRelation(
+                    fAllRelationStatements,
+                    fArgAllSanitizedValues, fSanitizedValToInputVal);
 
 
             for (MethodParameterNode param : fArgAllSanitizedValues.keySet()) {
@@ -187,15 +189,16 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private void sanitizeRelationStatementsWithRelation(
+    private static void sanitizeRelationStatementsWithRelation(
             List<RelationStatement> fAllRelationStatements,
-            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues) {
+            Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues,
+            Map<ChoiceNode, ChoiceNode> inOutSanitizedValToInputVal) {
 
         while (true) {
             Boolean anyChange = false;
             for (RelationStatement relationStatement : fAllRelationStatements) {
                 if (sanitizeValsWithRelation(
-                        relationStatement, inOutSanitizedValues, fSanitizedValToInputVal)) {
+                        relationStatement, inOutSanitizedValues, inOutSanitizedValToInputVal)) {
                     anyChange = true;
                 }
             }
@@ -204,7 +207,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private Boolean sanitizeValsWithRelation(
+    private static Boolean sanitizeValsWithRelation(
             RelationStatement relationStatement,
             Map<MethodParameterNode, Set<ChoiceNode>> inOutSanitizedValues,
             Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal) {
