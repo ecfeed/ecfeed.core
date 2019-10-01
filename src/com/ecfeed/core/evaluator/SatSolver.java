@@ -9,12 +9,12 @@ public class SatSolver {
 
     private ISolver fSolver;
     private Boolean fIsContradicting;
-    private Boolean fNoConstraints;
+    private Boolean fHasConstraints;
 
     public SatSolver() {
         fSolver = SolverFactory.newDefault();
         fIsContradicting = false;
-        fNoConstraints = true;
+        fHasConstraints = false;
     }
 
     public void initialize(
@@ -60,12 +60,12 @@ public class SatSolver {
         return fIsContradicting;
     }
 
-    public void setNoConstraintsFlag(boolean flag) {
-        fNoConstraints = flag;
+    public void setHasConstraints() {
+        fHasConstraints = true;
     }
 
     public Boolean hasConstraints() {
-        return (!fNoConstraints);
+        return fHasConstraints;
     }
 
 }

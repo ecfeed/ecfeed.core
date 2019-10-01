@@ -69,7 +69,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
-            fSatSolver.setNoConstraintsFlag(false);
+            fSatSolver.setHasConstraints();
 
             fArgAllInputValues = collectParametersWithChoices(fMethodNode); // TODO - unify names
 
@@ -91,30 +91,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 fSat4Clauses.getSize(),
                 fSat4Clauses);
     }
-
-//    private
-////    static
-//    void createAndInitializeSolver(
-//            final int maxVar,
-//            final int countOfClauses
-//            ) {
-//
-//        fSolver = SolverFactory.newDefault();
-//
-//        try {
-//            fSolver.newVar(maxVar);
-//            fSolver.setExpectedNumberOfClauses(countOfClauses);
-//
-//            for (int index = 0; index < fSat4Clauses.getSize(); index++) {
-//                VecInt clause = fSat4Clauses.getClause(index);
-//                fSolver.addClause(clause);
-//            }
-//
-//            System.out.println("variables: " + maxVar + " clauses: " + countOfClauses);
-//        } catch (ContradictionException e) {
-//            fIsContradicting = true;
-//        }
-//    }
 
     @Override
     public void initialize(List<List<ChoiceNode>> input) {
