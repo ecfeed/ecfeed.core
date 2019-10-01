@@ -393,7 +393,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
-            ParamsWithChInts fArgChoiceID,
             ParamsWithChoices fArgAllAtomicValues,
             IntegerHolder fFirstFreeIDHolder,
             ParamsWithChoices fArgAllSanitizedValues,
@@ -402,7 +401,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             ParamsWithChoices fArgAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal,
             ParamsWithChInts fArgLessEqChoiceID,
-            ParamsWithChInts fArgLessThChoiceID) {
+            ParamsWithChInts fArgLessThChoiceID,
+            ParamsWithChInts fArgChoiceID) {
 
         if (fArgChoiceID.containsKey(methodParameterNode))
             return;
@@ -797,7 +797,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             prepareVariablesForParameter(
                     leftMethodParameterNode,
-                    fArgChoiceID,
                     fArgAllAtomicValues,
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
@@ -806,7 +805,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
-                    fArgLessThChoiceID);
+                    fArgLessThChoiceID,
+                    fArgChoiceID
+            );
 
             Integer myID = newID(fFirstFreeIDHolder);
 
@@ -835,7 +836,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         private Integer doubleChoiceParamConstraints(RelationStatement statement) {
             MethodParameterNode lParam = statement.getLeftParameter();
             prepareVariablesForParameter(lParam,
-                    fArgChoiceID,
                     fArgAllAtomicValues,
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
@@ -844,7 +844,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
-                    fArgLessThChoiceID);
+                    fArgLessThChoiceID,
+                    fArgChoiceID
+            );
 
             Integer myID = newID(fFirstFreeIDHolder);
 
@@ -856,7 +858,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             prepareVariablesForParameter(
                     rParam,
-                    fArgChoiceID,
                     fArgAllAtomicValues,
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
@@ -865,7 +866,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
-                    fArgLessThChoiceID);
+                    fArgLessThChoiceID,
+                    fArgChoiceID
+            );
 
             int rParamIndex = fMethod.getMethodParameters().indexOf(rParam);
             if (rParamIndex == -1) {
@@ -1056,7 +1059,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         for (MethodParameterNode methodParameterNode : methodParameterNodes)
             prepareVariablesForParameter(
                     methodParameterNode,
-                    fArgChoiceID,
                     fArgAllAtomicValues,
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
@@ -1065,7 +1067,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgAllInputValues,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
-                    fArgLessThChoiceID);
+                    fArgLessThChoiceID,
+                    fArgChoiceID
+            );
 
         VecInt excludeClause = new VecInt(assumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
         final int maxVar = fFirstFreeIDHolder.get();
