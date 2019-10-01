@@ -42,6 +42,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private Boolean fIsContradicting = false;
     private Boolean fNoConstraints = true;
 
+    private enum TypeOfEndpoint {
+        LEFT_ENDPOINT,
+        RIGHT_ENDPOINT
+    }
+
 
     public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
@@ -98,6 +103,130 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         } catch (ContradictionException e) {
             fIsContradicting = true;
         }
+    }
+
+    @Override
+    public void initialize(List<List<ChoiceNode>> input) {
+        if (fNoConstraints)
+            return;
+        List<MethodParameterNode> params = fMethodNode.getMethodParameters();
+
+        //iterate params and valueAssignment simultanously
+        if (input.size() != params.size()) {
+            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
+            return;
+        }
+        for (int i = 0; i < input.size(); i++) {
+            List<Integer> vars = new ArrayList<>();
+            MethodParameterNode p = params.get(i);
+            if (p.isExpected())
+                continue;
+            for (ChoiceNode c : input.get(i)) {
+                Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c.getOrigChoiceNode());
+                vars.add(idOfParamChoiceVar);
+            }
+            VecInt clause = new VecInt(vars.stream().mapToInt(Integer::intValue).toArray()); //one of the input values has to be taken, for each variable
+            fSat4Clauses.add(clause);
+            try {
+                fSolver.addClause(clause);
+            } catch (ContradictionException e) {
+                fIsContradicting = true;
+            }
+        }
+    }
+
+    @Override
+    public void excludeAssignment(List<ChoiceNode> toExclude) {
+        if (fNoConstraints)
+            return;
+        if (fIsContradicting)
+            return;
+
+        List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
+
+        for (MethodParameterNode methodParameterNode : methodParameterNodes)
+            EvaluatorHelper.prepareVariablesForParameter(
+                    methodParameterNode,
+                    fArgAllAtomicValues,
+                    fFirstFreeIDHolder,
+                    fArgAllSanitizedValues,
+                    fSanitizedValToAtomicVal,
+                    fSat4Clauses,
+                    fArgAllInputValues,
+                    fArgInputValToSanitizedVal,
+                    fArgLessEqChoiceID,
+                    fArgLessThChoiceID,
+                    fArgChoiceID
+            );
+
+        VecInt excludeClause = new VecInt(assumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
+        final int maxVar = fFirstFreeIDHolder.get();
+
+        try {
+            fSolver.newVar(maxVar);
+            fSolver.addClause(excludeClause);
+        } catch (ContradictionException e) {
+            fIsContradicting = true;
+        }
+
+    }
+
+    @Override
+    public EvaluationResult evaluate(List<ChoiceNode> valueAssignment) {
+        if (fNoConstraints) {
+            return EvaluationResult.TRUE; //no method so there were no constraints
+        }
+
+        if (fIsContradicting)
+            return EvaluationResult.FALSE;
+
+
+        try {
+            IProblem problem = fSolver;
+            if (problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray()))) {
+                return EvaluationResult.TRUE;
+            } else {
+                return EvaluationResult.FALSE;
+            }
+        } catch (TimeoutException e) {
+            ExceptionHelper.reportRuntimeException("Timeout, sorry!");
+            return null;
+        }
+
+    }
+
+    @Override
+    public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) {
+        if (fNoConstraints)
+            return valueAssignment;
+
+        try {
+            IProblem problem = fSolver;
+            boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
+            if (!b) {
+                ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
+                return null;
+            }
+
+            Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
+            for (Pair<Integer, ExpectedValueStatement> p : fExpectedValConstraints) {
+                if (vars.contains(p.getFirst())) {
+                    p.getSecond().adapt(valueAssignment);
+                }
+            }
+            for (int i = 0; i < valueAssignment.size(); i++) {
+                ChoiceNode p = valueAssignment.get(i);
+                MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
+                if (parameter.isExpected()) {
+                    valueAssignment.set(i, p.makeClone());
+                }
+            }
+
+        } catch (TimeoutException e) {
+            ExceptionHelper.reportRuntimeException("Timeout, sorry!");
+            return null;
+        }
+        return valueAssignment;
     }
 
     private void todo() {
@@ -163,36 +292,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
 
         return inputValues;
-    }
-
-    @Override
-    public void initialize(List<List<ChoiceNode>> input) {
-        if (fNoConstraints)
-            return;
-        List<MethodParameterNode> params = fMethodNode.getMethodParameters();
-
-        //iterate params and valueAssignment simultanously
-        if (input.size() != params.size()) {
-            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
-            return;
-        }
-        for (int i = 0; i < input.size(); i++) {
-            List<Integer> vars = new ArrayList<>();
-            MethodParameterNode p = params.get(i);
-            if (p.isExpected())
-                continue;
-            for (ChoiceNode c : input.get(i)) {
-                Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c.getOrigChoiceNode());
-                vars.add(idOfParamChoiceVar);
-            }
-            VecInt clause = new VecInt(vars.stream().mapToInt(Integer::intValue).toArray()); //one of the input values has to be taken, for each variable
-            fSat4Clauses.add(clause);
-            try {
-                fSolver.addClause(clause);
-            } catch (ContradictionException e) {
-                fIsContradicting = true;
-            }
-        }
     }
 
     private static void sanitizeRelationStatementsWithRelation(
@@ -281,12 +380,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         ExceptionHelper.reportRuntimeException("Invalid condition type.");
         return true;
-    }
-
-
-    private enum TypeOfEndpoint {
-        LEFT_ENDPOINT,
-        RIGHT_ENDPOINT
     }
 
     private static Pair<Boolean, List<ChoiceNode>> splitListWithChoiceNode(
@@ -530,101 +623,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
 
         return assumptions;
-    }
-
-    @Override
-    public void excludeAssignment(List<ChoiceNode> toExclude) {
-        if (fNoConstraints)
-            return;
-        if (fIsContradicting)
-            return;
-
-        List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
-
-        for (MethodParameterNode methodParameterNode : methodParameterNodes)
-            EvaluatorHelper.prepareVariablesForParameter(
-                    methodParameterNode,
-                    fArgAllAtomicValues,
-                    fFirstFreeIDHolder,
-                    fArgAllSanitizedValues,
-                    fSanitizedValToAtomicVal,
-                    fSat4Clauses,
-                    fArgAllInputValues,
-                    fArgInputValToSanitizedVal,
-                    fArgLessEqChoiceID,
-                    fArgLessThChoiceID,
-                    fArgChoiceID
-            );
-
-        VecInt excludeClause = new VecInt(assumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
-        final int maxVar = fFirstFreeIDHolder.get();
-
-        try {
-            fSolver.newVar(maxVar);
-            fSolver.addClause(excludeClause);
-        } catch (ContradictionException e) {
-            fIsContradicting = true;
-        }
-
-    }
-
-    @Override
-    public EvaluationResult evaluate(List<ChoiceNode> valueAssignment) {
-        if (fNoConstraints) {
-            return EvaluationResult.TRUE; //no method so there were no constraints
-        }
-
-        if (fIsContradicting)
-            return EvaluationResult.FALSE;
-
-
-        try {
-            IProblem problem = fSolver;
-            if (problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray()))) {
-                return EvaluationResult.TRUE;
-            } else {
-                return EvaluationResult.FALSE;
-            }
-        } catch (TimeoutException e) {
-            ExceptionHelper.reportRuntimeException("Timeout, sorry!");
-            return null;
-        }
-
-    }
-
-
-    @Override
-    public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) {
-        if (fNoConstraints)
-            return valueAssignment;
-
-        try {
-            IProblem problem = fSolver;
-            boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
-            if (!b) {
-                ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
-                return null;
-            }
-
-            Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
-            for (Pair<Integer, ExpectedValueStatement> p : fExpectedValConstraints) {
-                if (vars.contains(p.getFirst())) {
-                    p.getSecond().adapt(valueAssignment);
-                }
-            }
-            for (int i = 0; i < valueAssignment.size(); i++) {
-                ChoiceNode p = valueAssignment.get(i);
-                MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
-                if (parameter.isExpected()) {
-                    valueAssignment.set(i, p.makeClone());
-                }
-            }
-
-        } catch (TimeoutException e) {
-            ExceptionHelper.reportRuntimeException("Timeout, sorry!");
-            return null;
-        }
-        return valueAssignment;
     }
 
 }
