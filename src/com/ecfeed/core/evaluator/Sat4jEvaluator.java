@@ -640,7 +640,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         (Integer) premise.accept(
                         new ParseConstraintToSATVisitor(
                                 fFirstFreeIDHolder,
-                                fSat4Clauses));
+                                fSat4Clauses,
+                                fArgAllAtomicValues));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
@@ -652,13 +653,15 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 premiseID = (Integer) premise.accept(
                         new ParseConstraintToSATVisitor(
                                 fFirstFreeIDHolder,
-                                fSat4Clauses));
+                                fSat4Clauses,
+                                fArgAllAtomicValues));
 
                 consequenceID =
                         (Integer) consequence.accept(
                                 new ParseConstraintToSATVisitor(
                                         fFirstFreeIDHolder,
-                                        fSat4Clauses));
+                                        fSat4Clauses,
+                                        fArgAllAtomicValues));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -673,13 +676,16 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         private IntegerHolder fFirstFreeIDHolder;
         private Sat4Clauses fSat4Clauses;
+        private ParamsWithChoices fArgAllAtomicValues;
 
         public ParseConstraintToSATVisitor(
                 IntegerHolder firstFreeIDHolder,
-                Sat4Clauses sat4Clauses) {
+                Sat4Clauses sat4Clauses,
+                ParamsWithChoices allAtomicValues) {
 
             fFirstFreeIDHolder = firstFreeIDHolder;
             fSat4Clauses = sat4Clauses;
+            fArgAllAtomicValues = allAtomicValues;
         }
 
         @Override
@@ -695,7 +701,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                             childID = (Integer) child.accept(
                                     new ParseConstraintToSATVisitor(
                                             fFirstFreeIDHolder,
-                                            fSat4Clauses));
+                                            fSat4Clauses,
+                                            fArgAllAtomicValues));
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -716,7 +723,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                             childID = (Integer) child.accept(
                                     new ParseConstraintToSATVisitor(
                                             fFirstFreeIDHolder,
-                                            fSat4Clauses));
+                                            fSat4Clauses,
+                                            fArgAllAtomicValues));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -797,7 +805,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             prepareVariablesForParameter(
                     leftMethodParameterNode,
-                    fArgAllAtomicValues,
+                    fArgAllAtomicValues, // XYX
                     fFirstFreeIDHolder,
                     fArgAllSanitizedValues,
                     fSanitizedValToAtomicVal,
