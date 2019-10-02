@@ -31,7 +31,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private ParamsWithChInts fArgChoiceID;
 
     private List<RelationStatement> fAllRelationStatements;
-    private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
+//    private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
+    private ExpectedConstraintsData fExpectedValConstraints;
 
     private MethodNode fMethodNode;
     private SatSolver fSatSolver;
@@ -52,7 +53,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fAtomicChoices = new ParamsWithChoices("ATM");
         fSanitizedToInputMappings = new ChoiceMappings("STI");
         fAtomicToSanitizedMappings = new ChoiceMappings("ATS");
-        fExpectedValConstraints = new ArrayList<>();
+        fExpectedValConstraints = new ExpectedConstraintsData();
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
         fSanitizedValToAtomicVal = new ChoiceMultiMappings("STA");
@@ -203,7 +204,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         Set<Integer> model = new HashSet<>(Ints.asList(fSatSolver.getModel()));
 
-        for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValConstraints) {
+        for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValConstraints.getList()) {
             if (model.contains(expectedValConstraint.getFirst())) {
                 expectedValConstraint.getSecond().adapt(valueAssignment);
             }
@@ -561,7 +562,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private void parseConstraintsToSat(
             Collection<Constraint> initConstraints,
-            List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
+            ExpectedConstraintsData outExpectedValConstraints,
             Sat4Clauses clausesVecInt) { // TODO - input / output
 
         for (Constraint constraint : initConstraints) {
@@ -571,7 +572,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private void parseConstraintToSat(
             Constraint constraint,
-            List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
+            ExpectedConstraintsData outExpectedValConstraints,
             Sat4Clauses clausesVecInt) { // TODO - input / output
 
         if (constraint == null) {
