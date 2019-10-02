@@ -36,9 +36,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private List<RelationStatement> fAllRelationStatements;
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
     private MethodNode fMethodNode;
-//    private ISolver fSolver;
-//    private Boolean fIsContradicting = false;
-//    private Boolean fNoConstraints = true;
     private SatSolver fSatSolver;
 
     private enum TypeOfEndpoint {
@@ -88,7 +85,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         fSatSolver.initialize(
                 fFirstFreeIDHolder.get(),
-                fSat4Clauses.getSize(),
                 fSat4Clauses);
     }
 
@@ -213,15 +209,18 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     }
 
     private void todo() {
+
         for (MethodParameterNode param : fArgAllSanitizedValues.getKeySet()) {
+
             fArgInputValToSanitizedVal.put(param, HashMultimap.create());
+
             for (ChoiceNode sanitizedChoice : fArgAllSanitizedValues.get(param)) { //build InputVal -> SanitizedVal mapping
                 ChoiceNode inputChoice = fSanitizedValToInputVal.get(sanitizedChoice);
                 fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
             }
 
-
             fArgAllAtomicValues.put(param, new HashSet<>());
+
             for (ChoiceNode it : fArgAllSanitizedValues.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
                 if (it.isRandomizedValue() &&
                         (JavaTypeHelper.isExtendedIntTypeName(param.getType())

@@ -22,14 +22,13 @@ public class SatSolver {
 
     public void initialize(
             final int maxVar,
-            final int countOfClauses,
             Sat4Clauses fSat4Clauses) {
 
         fSolver = SolverFactory.newDefault();
 
         try {
             fSolver.newVar(maxVar);
-            fSolver.setExpectedNumberOfClauses(countOfClauses);
+            fSolver.setExpectedNumberOfClauses(fSat4Clauses.getSize());
 
             for (int index = 0; index < fSat4Clauses.getSize(); index++) {
                 VecInt clause = fSat4Clauses.getClause(index);
