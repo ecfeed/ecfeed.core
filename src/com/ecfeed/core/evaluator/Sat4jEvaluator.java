@@ -22,7 +22,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private ParamsWithChoices fArgAllSanitizedValues;
     private ParamsWithChoices fArgAllAtomicValues;
     private ChoiceMappings fSanitizedToInputMappings;
-    private Map<ChoiceNode, ChoiceNode> fAtomicValToSanitizedVal;
+    private ChoiceMappings fAtomicValToSanitizedVal;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
     private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
 
@@ -50,7 +50,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgAllSanitizedValues = new ParamsWithChoices("SAN");
         fArgAllAtomicValues = new ParamsWithChoices("ATM");
         fSanitizedToInputMappings = new ChoiceMappings("STI");
-        fAtomicValToSanitizedVal = new HashMap<>();
+        fAtomicValToSanitizedVal = new ChoiceMappings("ATS");
         fExpectedValConstraints = new ArrayList<>();
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
