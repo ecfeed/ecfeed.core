@@ -79,12 +79,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fSanitizedChoices,
                     fSanitizedToInputMappings);
 
-            todo1(fSanitizedChoices,
-                    fArgInputValToSanitizedVal,
-                    fSanitizedToInputMappings,
-                    fAtomicChoices,
-                    fAtomicToSanitizedMappings,
-                    fSanitizedValToAtomicVal);
+            createInputToSanitizedMapping(fSanitizedChoices,
+                    fSanitizedToInputMappings, fArgInputValToSanitizedVal
+            );
 
             todo2(fSanitizedChoices,
                     fArgInputValToSanitizedVal,
@@ -221,22 +218,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         return valueAssignment;
     }
 
-    private static void todo1(
+    private static void createInputToSanitizedMapping(
             ParamsWithChoices sanitizedChoices,
-            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal,
-            ChoiceMappings sanitizedToInputMappings,
-            ParamsWithChoices atomicChoices,
-            ChoiceMappings atomicToSanitizedMappings,
-            Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal
-    ) { // TODO - input / output
+            ChoiceMappings sanitizedToInputMappings, Map<MethodParameterNode,
+            Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal) {
 
         for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
 
             inOutInputValToSanitizedVal.put(methodParameterNode, HashMultimap.create());
 
-            for (ChoiceNode sanitizedChoice : sanitizedChoices.get(methodParameterNode)) { //build InputVal -> SanitizedVal mapping
+            for (ChoiceNode sanitizedChoice : sanitizedChoices.get(methodParameterNode)) {
+
                 ChoiceNode inputChoice = sanitizedToInputMappings.get(sanitizedChoice);
-                inOutInputValToSanitizedVal.get(methodParameterNode).put(inputChoice, sanitizedChoice);
+
+                inOutInputValToSanitizedVal.
+                        get(methodParameterNode).
+                        put(inputChoice, sanitizedChoice);
             }
         }
     }
