@@ -76,9 +76,22 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
             sanitizeRelationStatementsWithRelation(
                     fAllRelationStatements,
-                    fSanitizedChoices, fSanitizedToInputMappings);
+                    fSanitizedChoices,
+                    fSanitizedToInputMappings);
 
-            todo();
+            todo1(fSanitizedChoices,
+                    fArgInputValToSanitizedVal,
+                    fSanitizedToInputMappings,
+                    fAtomicChoices,
+                    fAtomicToSanitizedMappings,
+                    fSanitizedValToAtomicVal);
+
+            todo2(fSanitizedChoices,
+                    fArgInputValToSanitizedVal,
+                    fSanitizedToInputMappings,
+                    fAtomicChoices,
+                    fAtomicToSanitizedMappings,
+                    fSanitizedValToAtomicVal);
 
             parseConstraintsToSat(initConstraints, fExpectedValConstraints, fSat4Clauses);
         }
@@ -208,38 +221,56 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         return valueAssignment;
     }
 
-    private
-//    static
-    void todo() {
+    private static void todo1(
+            ParamsWithChoices sanitizedChoices,
+            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal,
+            ChoiceMappings sanitizedToInputMappings,
+            ParamsWithChoices atomicChoices,
+            ChoiceMappings atomicToSanitizedMappings,
+            Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal
+    ) { // TODO - input / output
 
-        for (MethodParameterNode param : fSanitizedChoices.getKeySet()) {
+        for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
 
-            fArgInputValToSanitizedVal.put(param, HashMultimap.create());
+            inOutInputValToSanitizedVal.put(methodParameterNode, HashMultimap.create());
 
-            for (ChoiceNode sanitizedChoice : fSanitizedChoices.get(param)) { //build InputVal -> SanitizedVal mapping
-                ChoiceNode inputChoice = fSanitizedToInputMappings.get(sanitizedChoice);
-                fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
+            for (ChoiceNode sanitizedChoice : sanitizedChoices.get(methodParameterNode)) { //build InputVal -> SanitizedVal mapping
+                ChoiceNode inputChoice = sanitizedToInputMappings.get(sanitizedChoice);
+                inOutInputValToSanitizedVal.get(methodParameterNode).put(inputChoice, sanitizedChoice);
             }
+        }
+    }
 
-            fAtomicChoices.put(param, new HashSet<>());
+    private static void todo2(
+            ParamsWithChoices sanitizedChoices,
+            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal,
+            ChoiceMappings sanitizedToInputMappings,
+            ParamsWithChoices atomicChoices,
+            ChoiceMappings atomicToSanitizedMappings,
+            Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal
+    ) { // TODO - input / output
 
-            for (ChoiceNode it : fSanitizedChoices.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
+        for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
+
+            atomicChoices.put(methodParameterNode, new HashSet<>());
+
+            for (ChoiceNode it : sanitizedChoices.get(methodParameterNode)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
                 if (it.isRandomizedValue() &&
-                        (JavaTypeHelper.isExtendedIntTypeName(param.getType())
-                                || JavaTypeHelper.isFloatingPointTypeName(param.getType())
+                        (JavaTypeHelper.isExtendedIntTypeName(methodParameterNode.getType())
+                                || JavaTypeHelper.isFloatingPointTypeName(methodParameterNode.getType())
                         )) {
                     List<ChoiceNode> interleaved =
-                            ChoiceNodeHelper.interleavedValues(it, fSanitizedChoices.getSize());
+                            ChoiceNodeHelper.interleavedValues(it, sanitizedChoices.getSize());
 
-                    fAtomicChoices.get(param).addAll(interleaved);
+                    atomicChoices.get(methodParameterNode).addAll(interleaved);
                     for (ChoiceNode c : interleaved) {
-                        fAtomicToSanitizedMappings.put(c, it);
-                        fSanitizedValToAtomicVal.put(it, c);
+                        atomicToSanitizedMappings.put(c, it);
+                        sanitizedValToAtomicVal.put(it, c);
                     }
                 } else {
-                    fAtomicChoices.get(param).add(it);
-                    fAtomicToSanitizedMappings.put(it, it);
-                    fSanitizedValToAtomicVal.put(it, it);
+                    atomicChoices.get(methodParameterNode).add(it);
+                    atomicToSanitizedMappings.put(it, it);
+                    sanitizedValToAtomicVal.put(it, it);
                 }
         }
     }
@@ -506,7 +537,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private void parseConstraintsToSat(
             Collection<Constraint> initConstraints,
             List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
-            Sat4Clauses clausesVecInt) {
+            Sat4Clauses clausesVecInt) { // TODO - input / output
 
         for (Constraint constraint : initConstraints) {
             parseConstraintToSat(constraint, outExpectedValConstraints, clausesVecInt);
@@ -516,7 +547,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private void parseConstraintToSat(
             Constraint constraint,
             List<Pair<Integer, ExpectedValueStatement>> outExpectedValConstraints,
-            Sat4Clauses clausesVecInt) {
+            Sat4Clauses clausesVecInt) { // TODO - input / output
 
         if (constraint == null) {
             return;
