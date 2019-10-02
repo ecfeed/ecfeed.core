@@ -8,21 +8,21 @@ import java.util.Map;
 public class ChoiceMappings {
 
     private String fDebugCode;
-    private Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal;
+    private Map<ChoiceNode, ChoiceNode> fMap;
 
     public ChoiceMappings(String debugCode) {
 
         fDebugCode = debugCode;
-        fSanitizedValToInputVal = new HashMap<>();
+        fMap = new HashMap<>();
     }
 
     public void put(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
 
-        fSanitizedValToInputVal.put(keyChoiceNode, valueChoiceNode);
+        fMap.put(keyChoiceNode, valueChoiceNode);
     }
 
     public ChoiceNode get(ChoiceNode keyChoiceNode) {
 
-        return fSanitizedValToInputVal.get(keyChoiceNode);
+        return fMap.get(keyChoiceNode);
     }
 }

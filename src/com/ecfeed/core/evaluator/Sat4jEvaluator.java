@@ -7,10 +7,7 @@ import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 import org.sat4j.core.VecInt;
-import org.sat4j.minisat.SolverFactory;
-import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IProblem;
-import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
 import java.util.*;
@@ -24,7 +21,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private ParamsWithChoices fArgAllInputValues;
     private ParamsWithChoices fArgAllSanitizedValues;
     private ParamsWithChoices fArgAllAtomicValues;
-    private ChoiceMappings fSanitizedValToInputVal;
+    private ChoiceMappings fSanitizedToInputMappings;
     private Map<ChoiceNode, ChoiceNode> fAtomicValToSanitizedVal;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
     private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
@@ -52,7 +49,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgAllInputValues = new ParamsWithChoices("ALL");
         fArgAllSanitizedValues = new ParamsWithChoices("SAN");
         fArgAllAtomicValues = new ParamsWithChoices("ATM");
-        fSanitizedValToInputVal = new ChoiceMappings("STI");
+        fSanitizedToInputMappings = new ChoiceMappings("STI");
         fAtomicValToSanitizedVal = new HashMap<>();
         fExpectedValConstraints = new ArrayList<>();
         fAllRelationStatements = new ArrayList<>();
@@ -73,13 +70,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             collectSanitizedValues(
                     fArgAllInputValues,
                     fArgAllSanitizedValues,
-                    fSanitizedValToInputVal);
+                    fSanitizedToInputMappings);
 
             fAllRelationStatements = collectRelationStatements(initConstraints);
 
             sanitizeRelationStatementsWithRelation(
                     fAllRelationStatements,
-                    fArgAllSanitizedValues, fSanitizedValToInputVal);
+                    fArgAllSanitizedValues, fSanitizedToInputMappings);
 
             todo();
 
@@ -218,7 +215,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             fArgInputValToSanitizedVal.put(param, HashMultimap.create());
 
             for (ChoiceNode sanitizedChoice : fArgAllSanitizedValues.get(param)) { //build InputVal -> SanitizedVal mapping
-                ChoiceNode inputChoice = fSanitizedValToInputVal.get(sanitizedChoice);
+                ChoiceNode inputChoice = fSanitizedToInputMappings.get(sanitizedChoice);
                 fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
             }
 
@@ -248,7 +245,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private static void collectSanitizedValues(
             ParamsWithChoices inputValues,
             ParamsWithChoices outAllSanitizedValues,
-            ChoiceMappings outSanitizedValToInputVal) {
+            ChoiceMappings outSanitizedToValMappings) {
 
         for (MethodParameterNode methodParameterNode : inputValues.getKeySet()) {
 
@@ -256,7 +253,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             outAllSanitizedValues.put(methodParameterNode, copy);
 
             for (ChoiceNode choiceNode : copy) //maintaining the dependencies
-                outSanitizedValToInputVal.put(choiceNode, choiceNode);
+                outSanitizedToValMappings.put(choiceNode, choiceNode);
         }
     }
 
@@ -282,7 +279,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private static void sanitizeRelationStatementsWithRelation(
             List<RelationStatement> fAllRelationStatements,
             ParamsWithChoices inOutSanitizedValues,
-            ChoiceMappings inOutSanitizedValToInputVal) {
+            ChoiceMappings inOutSanitizedToInputMappings) {
 
         while (true) {
             Boolean anyChange = false;
@@ -290,7 +287,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 if (sanitizeValsWithRelation(
                         relationStatement,
                         inOutSanitizedValues,
-                        inOutSanitizedValToInputVal)) {
+                        inOutSanitizedToInputMappings)) {
                     anyChange = true;
                 }
             }
@@ -302,7 +299,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private static Boolean sanitizeValsWithRelation(
             RelationStatement relationStatement,
             ParamsWithChoices inOutSanitizedValues,
-            ChoiceMappings fSanitizedValToInputVal) {
+            ChoiceMappings inOutSanitizedToInputMappings) {
 
         IStatementCondition condition = relationStatement.getCondition();
         if (condition instanceof LabelCondition)
@@ -325,7 +322,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             List<ChoiceNode> allLValsCopy = new ArrayList<>(allLVals);
             for (ChoiceNode it : allRVals) {
                 Pair<Boolean, List<ChoiceNode>> changeResult =
-                        splitListWithChoiceNode(allLValsCopy, it, fSanitizedValToInputVal);
+                        splitListWithChoiceNode(allLValsCopy, it, inOutSanitizedToInputMappings);
 
                 anyChange = anyChange || changeResult.getFirst();
                 allLValsCopy = changeResult.getSecond();
@@ -334,7 +331,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             List<ChoiceNode> allRValsCopy = new ArrayList<>(allRVals);
             for (ChoiceNode it : allLVals) {
                 Pair<Boolean, List<ChoiceNode>> changeResult =
-                        splitListWithChoiceNode(allRValsCopy, it, fSanitizedValToInputVal);
+                        splitListWithChoiceNode(allRValsCopy, it, inOutSanitizedToInputMappings);
                 anyChange = anyChange || changeResult.getFirst();
                 allRValsCopy = changeResult.getSecond();
             }
@@ -359,7 +356,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
 
             Pair<Boolean, List<ChoiceNode>> changeResult =
-                    splitListWithChoiceNode(allLVals, it, fSanitizedValToInputVal);
+                    splitListWithChoiceNode(allLVals, it, inOutSanitizedToInputMappings);
 
             inOutSanitizedValues.put(lParam, new HashSet<>(changeResult.getSecond()));
             return changeResult.getFirst();
@@ -372,7 +369,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private static Pair<Boolean, List<ChoiceNode>> splitListWithChoiceNode(
             List<ChoiceNode> toSplit,
             ChoiceNode val,
-            ChoiceMappings inOutSanitizedValToInputVal) {
+            ChoiceMappings inOutSanitizedToInputMappings) {
 
         ChoiceNode start, end;
         if (val.isRandomizedValue()) {
@@ -388,14 +385,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                         toSplit,
                         start,
                         TypeOfEndpoint.LEFT_ENDPOINT,
-                        inOutSanitizedValToInputVal);
+                        inOutSanitizedToInputMappings);
 
         Pair<Boolean, List<ChoiceNode>> changeResultRight =
                 splitListByValue(
                         changeResultLeft.getSecond(),
                         end,
                         TypeOfEndpoint.RIGHT_ENDPOINT,
-                        inOutSanitizedValToInputVal);
+                        inOutSanitizedToInputMappings);
 
         return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
     }
@@ -404,7 +401,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             List<ChoiceNode> toSplit,
             ChoiceNode val,
             TypeOfEndpoint type,
-            ChoiceMappings inOutSanitizedValToInputVal) {
+            ChoiceMappings inOutSanitizedToInputMappings) {
 
         Boolean anyChange = false;
         List<ChoiceNode> newList = new ArrayList<>();
@@ -457,8 +454,8 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 anyChange = true;
 
                 // TODO - side effect - extract
-                inOutSanitizedValToInputVal.put(it1, inOutSanitizedValToInputVal.get(it));
-                inOutSanitizedValToInputVal.put(it2, inOutSanitizedValToInputVal.get(it));
+                inOutSanitizedToInputMappings.put(it1, inOutSanitizedToInputMappings.get(it));
+                inOutSanitizedToInputMappings.put(it2, inOutSanitizedToInputMappings.get(it));
                 newList.add(it1);
                 newList.add(it2);
             }
