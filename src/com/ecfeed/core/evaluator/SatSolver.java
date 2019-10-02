@@ -8,8 +8,11 @@ import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
+import java.util.List;
+
 public class SatSolver {
 
+    // TODO - what else could be included in this class
     private ISolver fSolver;
     private Boolean fIsContradicting;
     private Boolean fHasConstraints;
@@ -54,10 +57,17 @@ public class SatSolver {
         fSolver.newVar(var);
     }
 
-    public boolean isProblemSatisfiable(int[] assumps) {
+    public boolean isProblemSatisfiable(final List<Integer> assumptionsList) {
+
+        final int[] assumps =
+                assumptionsList
+                        .stream()
+                        .mapToInt(Integer::intValue)
+                        .toArray();
 
         IProblem problem = fSolver;
         VecInt vecInt = new VecInt(assumps);
+
         try {
             return problem.isSatisfiable(vecInt);
         } catch (TimeoutException e) {
@@ -65,7 +75,6 @@ public class SatSolver {
             return false;
         }
     }
-
 
     public int[] getModel() {
 

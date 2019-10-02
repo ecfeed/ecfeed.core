@@ -187,13 +187,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (fSatSolver.isContradicting())
             return EvaluationResult.FALSE;
 
-        final int[] assumps =
-                getAssumptionsFromValues(valueAssignment, fSatSolver, fMethodNode, fArgChoiceID)
-                .stream()
-                .mapToInt(Integer::intValue)
-                .toArray();
+        final List<Integer> assumptionsFromValues = getAssumptionsFromValues(valueAssignment, fSatSolver, fMethodNode, fArgChoiceID);
 
-        if (fSatSolver.isProblemSatisfiable(assumps)) {
+        if (fSatSolver.isProblemSatisfiable(assumptionsFromValues)) {
             return EvaluationResult.TRUE;
         } else {
             return EvaluationResult.FALSE;
@@ -206,13 +202,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (!fSatSolver.hasConstraints())
             return valueAssignment;
 
-        final int[] assumptions =
-                getAssumptionsFromValues(valueAssignment, fSatSolver, fMethodNode, fArgChoiceID)
-                .stream()
-                .mapToInt(Integer::intValue)
-                .toArray();
+        final List<Integer> assumptionsFromValues = getAssumptionsFromValues(valueAssignment, fSatSolver, fMethodNode, fArgChoiceID);
 
-        boolean isSatisfiable = fSatSolver.isProblemSatisfiable(assumptions);
+        boolean isSatisfiable = fSatSolver.isProblemSatisfiable(assumptionsFromValues);
 
         if (!isSatisfiable) {
             ExceptionHelper.reportRuntimeException("Problem is unsatisfiable. Cannot adapt expected choice.");
