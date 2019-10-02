@@ -124,7 +124,14 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c.getOrigChoiceNode());
                 vars.add(idOfParamChoiceVar);
             }
-            VecInt clause = new VecInt(vars.stream().mapToInt(Integer::intValue).toArray()); //one of the input values has to be taken, for each variable
+
+            //one of the input values has to be taken, for each variable
+            final int[] clauseValues = vars
+                    .stream()
+                    .mapToInt(Integer::intValue)
+                    .toArray();
+
+            VecInt clause = new VecInt(clauseValues);
             fSat4Clauses.add(clause);
             fSatSolver.addClause(clause);
         }
@@ -156,11 +163,17 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgChoiceID
             );
 
-        VecInt excludeClause = new VecInt(getAssumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
         final int maxVar = fFirstFreeIDHolder.get();
-
         fSatSolver.newVar(maxVar);
 
+        final int[] assumptions =
+                getAssumptionsFromValues(toExclude, fSatSolver, fMethodNode, fArgChoiceID)
+                        .stream()
+                        .map(x -> -x)
+                        .mapToInt(Integer::intValue)
+                        .toArray();
+
+        VecInt excludeClause = new VecInt(assumptions);
         fSatSolver.addClause(excludeClause);
     }
 
@@ -174,13 +187,13 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (fSatSolver.isContradicting())
             return EvaluationResult.FALSE;
 
-        final VecInt assumps =
-                new VecInt(getAssumptionsFromValues(valueAssignment).
-                        stream().
-                        mapToInt(Integer::intValue).
-                        toArray());
+        final int[] assumps =
+                getAssumptionsFromValues(valueAssignment, fSatSolver, fMethodNode, fArgChoiceID)
+                .stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
 
-        if (fSatSolver.isProblemSatisfiable(assumps)) {
+        if (fSatSolver.isProblemSatisfiable(new VecInt(assumps))) {
             return EvaluationResult.TRUE;
         } else {
             return EvaluationResult.FALSE;
@@ -193,7 +206,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (!fSatSolver.hasConstraints())
             return valueAssignment;
 
-        final int[] assumptions = getAssumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray();
+        final int[] assumptions =
+                getAssumptionsFromValues(valueAssignment, fSatSolver, fMethodNode, fArgChoiceID)
+                .stream()
+                .mapToInt(Integer::intValue)
+                .toArray();
 
         boolean isSatisfiable = fSatSolver.isProblemSatisfiable(new VecInt(assumptions));
 
@@ -641,12 +658,16 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private List<Integer> getAssumptionsFromValues(List<ChoiceNode> valueAssignments) {
+    private static List<Integer> getAssumptionsFromValues(
+            List<ChoiceNode> valueAssignments,
+            SatSolver satSolver,
+            MethodNode methodNode,
+            ParamsWithChInts argChoiceID) {
 
-        if (!fSatSolver.hasConstraints())
+        if (!satSolver.hasConstraints())
             return new ArrayList<>();
 
-        List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
+        List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
 
         List<Integer> assumptions = new ArrayList<>();
 
@@ -659,9 +680,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             MethodParameterNode p = methodParameterNodes.get(i);
             ChoiceNode c = valueAssignments.get(i);
             if (c != null) {
-                if (fArgChoiceID.get(p) == null)
+                if (argChoiceID.get(p) == null)
                     continue; //no constraint on this method parameter
-                Integer idOfParamChoiceVar = fArgChoiceID.get(p).get(c.getOrigChoiceNode());
+                Integer idOfParamChoiceVar = argChoiceID.get(p).get(c.getOrigChoiceNode());
                 assumptions.add(idOfParamChoiceVar);
             }
         }

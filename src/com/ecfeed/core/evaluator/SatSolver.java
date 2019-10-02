@@ -65,6 +65,11 @@ public class SatSolver {
         }
     }
 
+    // TODO - add
+    //public boolean isProblemSatisfiable(final VecInt assumps)
+    // TODO - remove (VecInt should be in this file only)
+    // public boolean isProblemSatisfiable(final VecInt assumps)
+
     public int[] getModel() {
 
         IProblem problem = fSolver;
