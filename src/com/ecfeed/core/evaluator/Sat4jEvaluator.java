@@ -18,11 +18,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private Sat4Clauses fSat4Clauses;
     private IntegerHolder fFirstFreeIDHolder = new IntegerHolder(1);
 
-    private ParamsWithChoices fArgAllInputValues;
-    private ParamsWithChoices fArgAllSanitizedValues;
-    private ParamsWithChoices fArgAllAtomicValues;
+    private ParamsWithChoices fInputChoices;
+    private ParamsWithChoices fSanitizedChoices;
+    private ParamsWithChoices fAtomicChoices;
     private ChoiceMappings fSanitizedToInputMappings;
-    private ChoiceMappings fAtomicValToSanitizedVal;
+    private ChoiceMappings fAtomicToSanitizedMappings;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
     private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
 
@@ -46,11 +46,11 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgLessThChoiceID = new ParamsWithChInts("LES");
         fArgChoiceID = new ParamsWithChInts("EQ"); // TODO - equal ?
         fSat4Clauses = new Sat4Clauses();
-        fArgAllInputValues = new ParamsWithChoices("ALL");
-        fArgAllSanitizedValues = new ParamsWithChoices("SAN");
-        fArgAllAtomicValues = new ParamsWithChoices("ATM");
+        fInputChoices = new ParamsWithChoices("ALL");
+        fSanitizedChoices = new ParamsWithChoices("SAN");
+        fAtomicChoices = new ParamsWithChoices("ATM");
         fSanitizedToInputMappings = new ChoiceMappings("STI");
-        fAtomicValToSanitizedVal = new ChoiceMappings("ATS");
+        fAtomicToSanitizedMappings = new ChoiceMappings("ATS");
         fExpectedValConstraints = new ArrayList<>();
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
@@ -65,18 +65,18 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (initConstraints != null && !initConstraints.isEmpty()) {
             fSatSolver.setHasConstraints();
 
-            fArgAllInputValues = collectParametersWithChoices(fMethodNode); // TODO - unify names
+            fInputChoices = collectParametersWithChoices(fMethodNode); // TODO - unify names
 
             collectSanitizedValues(
-                    fArgAllInputValues,
-                    fArgAllSanitizedValues,
+                    fInputChoices,
+                    fSanitizedChoices,
                     fSanitizedToInputMappings);
 
             fAllRelationStatements = collectRelationStatements(initConstraints);
 
             sanitizeRelationStatementsWithRelation(
                     fAllRelationStatements,
-                    fArgAllSanitizedValues, fSanitizedToInputMappings);
+                    fSanitizedChoices, fSanitizedToInputMappings);
 
             todo();
 
@@ -130,12 +130,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         for (MethodParameterNode methodParameterNode : methodParameterNodes)
             EvaluatorHelper.prepareVariablesForParameter(
                     methodParameterNode,
-                    fArgAllAtomicValues,
+                    fAtomicChoices,
                     fFirstFreeIDHolder,
-                    fArgAllSanitizedValues,
+                    fSanitizedChoices,
                     fSanitizedValToAtomicVal,
                     fSat4Clauses,
-                    fArgAllInputValues,
+                    fInputChoices,
                     fArgInputValToSanitizedVal,
                     fArgLessEqChoiceID,
                     fArgLessThChoiceID,
@@ -208,35 +208,37 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         return valueAssignment;
     }
 
-    private void todo() {
+    private
+//    static
+    void todo() {
 
-        for (MethodParameterNode param : fArgAllSanitizedValues.getKeySet()) {
+        for (MethodParameterNode param : fSanitizedChoices.getKeySet()) {
 
             fArgInputValToSanitizedVal.put(param, HashMultimap.create());
 
-            for (ChoiceNode sanitizedChoice : fArgAllSanitizedValues.get(param)) { //build InputVal -> SanitizedVal mapping
+            for (ChoiceNode sanitizedChoice : fSanitizedChoices.get(param)) { //build InputVal -> SanitizedVal mapping
                 ChoiceNode inputChoice = fSanitizedToInputMappings.get(sanitizedChoice);
                 fArgInputValToSanitizedVal.get(param).put(inputChoice, sanitizedChoice);
             }
 
-            fArgAllAtomicValues.put(param, new HashSet<>());
+            fAtomicChoices.put(param, new HashSet<>());
 
-            for (ChoiceNode it : fArgAllSanitizedValues.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
+            for (ChoiceNode it : fSanitizedChoices.get(param)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
                 if (it.isRandomizedValue() &&
                         (JavaTypeHelper.isExtendedIntTypeName(param.getType())
                                 || JavaTypeHelper.isFloatingPointTypeName(param.getType())
                         )) {
                     List<ChoiceNode> interleaved =
-                            ChoiceNodeHelper.interleavedValues(it, fArgAllSanitizedValues.getSize());
+                            ChoiceNodeHelper.interleavedValues(it, fSanitizedChoices.getSize());
 
-                    fArgAllAtomicValues.get(param).addAll(interleaved);
+                    fAtomicChoices.get(param).addAll(interleaved);
                     for (ChoiceNode c : interleaved) {
-                        fAtomicValToSanitizedVal.put(c, it);
+                        fAtomicToSanitizedMappings.put(c, it);
                         fSanitizedValToAtomicVal.put(it, c);
                     }
                 } else {
-                    fArgAllAtomicValues.get(param).add(it);
-                    fAtomicValToSanitizedVal.put(it, it);
+                    fAtomicChoices.get(param).add(it);
+                    fAtomicToSanitizedMappings.put(it, it);
                     fSanitizedValToAtomicVal.put(it, it);
                 }
         }
@@ -530,10 +532,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                         fMethodNode,
                                         fFirstFreeIDHolder,
                                         fSat4Clauses,
-                                        fArgAllAtomicValues,
-                                        fArgAllSanitizedValues,
+                                        fAtomicChoices,
+                                        fSanitizedChoices,
                                         fSanitizedValToAtomicVal,
-                                        fArgAllInputValues,
+                                        fInputChoices,
                                         fArgInputValToSanitizedVal,
                                         fArgLessEqChoiceID,
                                         fArgLessThChoiceID,
@@ -551,10 +553,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                 fMethodNode,
                                 fFirstFreeIDHolder,
                                 fSat4Clauses,
-                                fArgAllAtomicValues,
-                                fArgAllSanitizedValues,
+                                fAtomicChoices,
+                                fSanitizedChoices,
                                 fSanitizedValToAtomicVal,
-                                fArgAllInputValues,
+                                fInputChoices,
                                 fArgInputValToSanitizedVal,
                                 fArgLessEqChoiceID,
                                 fArgLessThChoiceID,
@@ -566,10 +568,10 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                                         fMethodNode,
                                         fFirstFreeIDHolder,
                                         fSat4Clauses,
-                                        fArgAllAtomicValues,
-                                        fArgAllSanitizedValues,
+                                        fAtomicChoices,
+                                        fSanitizedChoices,
                                         fSanitizedValToAtomicVal,
-                                        fArgAllInputValues,
+                                        fInputChoices,
                                         fArgInputValToSanitizedVal,
                                         fArgLessEqChoiceID,
                                         fArgLessThChoiceID,
