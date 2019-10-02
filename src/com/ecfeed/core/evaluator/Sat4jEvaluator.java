@@ -193,7 +193,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 .mapToInt(Integer::intValue)
                 .toArray();
 
-        if (fSatSolver.isProblemSatisfiable(new VecInt(assumps))) {
+        if (fSatSolver.isProblemSatisfiable(assumps)) {
             return EvaluationResult.TRUE;
         } else {
             return EvaluationResult.FALSE;
@@ -212,7 +212,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 .mapToInt(Integer::intValue)
                 .toArray();
 
-        boolean isSatisfiable = fSatSolver.isProblemSatisfiable(new VecInt(assumptions));
+        boolean isSatisfiable = fSatSolver.isProblemSatisfiable(assumptions);
 
         if (!isSatisfiable) {
             ExceptionHelper.reportRuntimeException("Problem is unsatisfiable. Cannot adapt expected choice.");

@@ -54,21 +54,18 @@ public class SatSolver {
         fSolver.newVar(var);
     }
 
-    public boolean isProblemSatisfiable(final VecInt assumps) {
+    public boolean isProblemSatisfiable(int[] assumps) {
 
         IProblem problem = fSolver;
+        VecInt vecInt = new VecInt(assumps);
         try {
-            return problem.isSatisfiable(assumps);
+            return problem.isSatisfiable(vecInt);
         } catch (TimeoutException e) {
             ExceptionHelper.reportRuntimeException("Timeout occured. Can not check if problem is satisfiable.");
             return false;
         }
     }
 
-    // TODO - add
-    //public boolean isProblemSatisfiable(final VecInt assumps)
-    // TODO - remove (VecInt should be in this file only)
-    // public boolean isProblemSatisfiable(final VecInt assumps)
 
     public int[] getModel() {
 
