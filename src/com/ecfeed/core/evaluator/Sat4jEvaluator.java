@@ -21,10 +21,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private ParamsWithChoices fInputChoices;
     private ParamsWithChoices fSanitizedChoices;
     private ParamsWithChoices fAtomicChoices;
+
     private ChoiceMappings fSanitizedToInputMappings;
     private ChoiceMappings fAtomicToSanitizedMappings;
+    private ChoiceMultiMappings fSanitizedValToAtomicVal;
+
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
-    private Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal;
 
     private ParamsWithChInts fArgLessEqChoiceID;
     private ParamsWithChInts fArgLessThChoiceID;
@@ -54,12 +56,12 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fExpectedValConstraints = new ArrayList<>();
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
-        fSanitizedValToAtomicVal = HashMultimap.create();
+        fSanitizedValToAtomicVal = new ChoiceMultiMappings("STA");
         fMethodNode = method;
         fSatSolver = new SatSolver();
 
         if (fMethodNode == null && !initConstraints.isEmpty()) {
-            ExceptionHelper.reportRuntimeException("No method but there were constraints!");
+            ExceptionHelper.reportRuntimeException("Constraints without method.");
         }
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
@@ -110,7 +112,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         //iterate params and valueAssignment simultanously
         if (input.size() != params.size()) {
-            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
+            ExceptionHelper.reportRuntimeException("Input data and parameters should have the same length.");
             return;
         }
         for (int i = 0; i < input.size(); i++) {
@@ -195,6 +197,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             IProblem problem = fSatSolver.getSolver();
             boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
             if (!b) {
+                // TODO - exception messages
                 ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
                 return null;
             }
@@ -244,7 +247,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         ParamsWithChoices sanitizedChoices,
         ParamsWithChoices atomicChoices,
         ChoiceMappings atomicToSanitizedMappings,
-        Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal ) {
+        ChoiceMultiMappings sanitizedValToAtomicVal ) {
 
         for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
 
@@ -264,27 +267,29 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             ParamsWithChoices sanitizedChoices,
             ParamsWithChoices atomicChoices,
             ChoiceMappings outAtomicToSanitizedMappings,
-            Multimap<ChoiceNode, ChoiceNode> outSanitizedValToAtomicVal) {
+            ChoiceMultiMappings outSanitizedValToAtomicVal) {
 
         //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
-        for (ChoiceNode it : sanitizedChoices.get(methodParameterNode)) {
+        for (ChoiceNode sanitizedChoiceNode : sanitizedChoices.get(methodParameterNode)) {
 
-            if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), it)) {
+            if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), sanitizedChoiceNode)) {
 
-                List<ChoiceNode> interleaved =
-                        ChoiceNodeHelper.interleavedValues(it, sanitizedChoices.getSize());
+                List<ChoiceNode> interleavedChoices =
+                        ChoiceNodeHelper.interleavedValues(
+                                sanitizedChoiceNode, sanitizedChoices.getSize());
 
-                atomicChoices.get(methodParameterNode).addAll(interleaved);
-                for (ChoiceNode c : interleaved) {
-                    outAtomicToSanitizedMappings.put(c, it);
-                    outSanitizedValToAtomicVal.put(it, c);
+                atomicChoices.get(methodParameterNode).addAll(interleavedChoices);
+
+                for (ChoiceNode interleavedChoiceNode : interleavedChoices) {
+                    outAtomicToSanitizedMappings.put(interleavedChoiceNode, sanitizedChoiceNode);
+                    outSanitizedValToAtomicVal.put(sanitizedChoiceNode, interleavedChoiceNode);
                 }
 
             } else {
 
-                atomicChoices.get(methodParameterNode).add(it);
-                outAtomicToSanitizedMappings.put(it, it);
-                outSanitizedValToAtomicVal.put(it, it);
+                atomicChoices.get(methodParameterNode).add(sanitizedChoiceNode);
+                outAtomicToSanitizedMappings.put(sanitizedChoiceNode, sanitizedChoiceNode);
+                outSanitizedValToAtomicVal.put(sanitizedChoiceNode, sanitizedChoiceNode);
             }
         }
     }

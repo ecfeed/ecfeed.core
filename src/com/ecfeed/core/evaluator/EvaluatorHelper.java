@@ -22,7 +22,7 @@ public class EvaluatorHelper {
             ParamsWithChoices fArgAllAtomicValues,
             IntegerHolder fFirstFreeIDHolder,
             ParamsWithChoices fArgAllSanitizedValues,
-            Multimap<ChoiceNode, ChoiceNode> fSanitizedValToAtomicVal,
+            ChoiceMultiMappings fSanitizedValToAtomicVal,
             Sat4Clauses sat4Clauses,
             ParamsWithChoices fArgAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal,
@@ -69,13 +69,13 @@ public class EvaluatorHelper {
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
-        for (ChoiceNode sanitizedValue : fArgAllSanitizedValues.get(methodParameterNode))
-            if (!choiceID.containsKey(sanitizedValue)) {
+        for (ChoiceNode sanitizedChoiceNode : fArgAllSanitizedValues.get(methodParameterNode))
+            if (!choiceID.containsKey(sanitizedChoiceNode)) {
                 Integer sanitizedID = EvaluatorHelper.newId(fFirstFreeIDHolder);
-                choiceID.put(sanitizedValue, sanitizedID);
+                choiceID.put(sanitizedChoiceNode, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode atomicValue : fSanitizedValToAtomicVal.get(sanitizedValue)) {
+                for (ChoiceNode atomicValue : fSanitizedValToAtomicVal.get(sanitizedChoiceNode)) {
                     Integer atomicID = choiceID.get(atomicValue);
                     sat4Clauses.add(new VecInt(new int[]{-atomicID, sanitizedID})); // atomicID => sanitizedID
                     bigClause.add(atomicID);
