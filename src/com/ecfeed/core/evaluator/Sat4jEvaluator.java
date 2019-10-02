@@ -67,7 +67,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         if (initConstraints != null && !initConstraints.isEmpty()) {
             fSatSolver.setHasConstraints();
 
-            fInputChoices = collectParametersWithChoices(fMethodNode); // TODO - unify names
+            fInputChoices = createInputChoices(fMethodNode);
 
             collectSanitizedValues(
                     fInputChoices,
@@ -188,7 +188,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     }
 
     @Override
-    public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) {
+    public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) { // TODO - rename adapt to adaptExpectedChoice
 
         if (!fSatSolver.hasConstraints())
             return valueAssignment;
@@ -198,7 +198,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
             if (!b) {
                 // TODO - exception messages
-                ExceptionHelper.reportRuntimeException("Cannot adapt, it's unsatisfiable!");
+                ExceptionHelper.reportRuntimeException("Problem is unsatisfiable. Cannot adapt expected choice.");
                 return null;
             }
 
@@ -217,7 +217,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             }
 
         } catch (TimeoutException e) {
-            ExceptionHelper.reportRuntimeException("Timeout, sorry!");
+            ExceptionHelper.reportRuntimeException("Timeout occured. Cannot adapt expected choice.");
             return null;
         }
         return valueAssignment;
@@ -318,7 +318,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private static ParamsWithChoices collectParametersWithChoices(
+    private static ParamsWithChoices createInputChoices(
             MethodNode methodNode) {
 
         ParamsWithChoices inputValues = new ParamsWithChoices("TMP");
@@ -643,23 +643,23 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignment) {
+    private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignments) {
 
         if (!fSatSolver.hasConstraints())
             return new ArrayList<>();
 
-        List<MethodParameterNode> params = fMethodNode.getMethodParameters();
+        List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
 
         List<Integer> assumptions = new ArrayList<>();
 
         //iterate params and valueAssignment simultanously
-        if (valueAssignment.size() != params.size()) {
-            ExceptionHelper.reportRuntimeException("Lists were supposed to be of equal length!");
+        if (valueAssignments.size() != methodParameterNodes.size()) {
+            ExceptionHelper.reportRuntimeException("Value assignment list and parameters list should be of equal size.");
             return null;
         }
-        for (int i = 0; i < params.size(); i++) {
-            MethodParameterNode p = params.get(i);
-            ChoiceNode c = valueAssignment.get(i);
+        for (int i = 0; i < methodParameterNodes.size(); i++) {
+            MethodParameterNode p = methodParameterNodes.get(i);
+            ChoiceNode c = valueAssignments.get(i);
             if (c != null) {
                 if (fArgChoiceID.get(p) == null)
                     continue; //no constraint on this method parameter

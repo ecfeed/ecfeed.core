@@ -185,7 +185,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             //we need only to iterate over all choices of single lParam
             return singleChoiceParamConstraints(statement);
         }
-        ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+        ExceptionHelper.reportRuntimeException("Invalid relation type.");
         return null;
     }
 
@@ -210,7 +210,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         int lParamIndex = fMethodNode.getMethodParameters().indexOf(leftMethodParameterNode);
         if (lParamIndex == -1) {
-            ExceptionHelper.reportRuntimeException("Parameter not in method!");
+            reportParamWithoutMethodException();
         }
         for (ChoiceNode lChoice : fArgAllAtomicValues.get(leftMethodParameterNode)) {
             List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethodNode.getParametersCount(), null));
@@ -223,7 +223,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fSat4Clauses.add(new VecInt(new int[]{-idOfLeftArgChoice, -myID})); // thisChoice => NOT me
             } else //INSUFFICIENT_DATA
             {
-                ExceptionHelper.reportRuntimeException("INSUFFICIENT_DATA: You shouldn't be here!");
+                ExceptionHelper.reportRuntimeException("Insufficient data.");
             }
         }
 
@@ -249,7 +249,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         int lParamIndex = fMethodNode.getMethodParameters().indexOf(lParam);
         if (lParamIndex == -1) {
-            ExceptionHelper.reportRuntimeException("Parameter not in method!");
+            reportParamWithoutMethodException();
         }
         MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
 
@@ -269,7 +269,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         int rParamIndex = fMethodNode.getMethodParameters().indexOf(rParam);
         if (rParamIndex == -1) {
-            ExceptionHelper.reportRuntimeException("Parameter not in method!");
+            reportParamWithoutMethodException();
         }
 
         List<ChoiceNode> sortedLChoices = new ArrayList<>(fArgAllAtomicValues.get(lParam));
@@ -394,25 +394,34 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     @Override
     public Object visit(LabelCondition statement) {
-        ExceptionHelper.reportRuntimeException("You shouldn't be here!"); // TODO
+        reportInvalidConditionTypeException();
         return null; //this will never happen
     }
 
     @Override
     public Object visit(ChoiceCondition statement) {
-        ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+        reportInvalidConditionTypeException();
         return null; //this will never happen
     }
 
     @Override
     public Object visit(ParameterCondition statement) {
-        ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+        reportInvalidConditionTypeException();
         return null; //this will never happen
     }
 
     @Override
     public Object visit(ValueCondition statement) {
-        ExceptionHelper.reportRuntimeException("You shouldn't be here!");
+        reportInvalidConditionTypeException();
         return null; //this will never happen
     }
+
+    private void reportInvalidConditionTypeException() {
+        ExceptionHelper.reportRuntimeException("Invalid condition type.");
+    }
+
+    private void reportParamWithoutMethodException() {
+        ExceptionHelper.reportRuntimeException("Parameter without method found.");
+    }
+
 }
