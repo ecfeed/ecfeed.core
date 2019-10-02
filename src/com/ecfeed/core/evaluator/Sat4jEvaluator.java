@@ -79,18 +79,20 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fSanitizedChoices,
                     fSanitizedToInputMappings);
 
-            createInputToSanitizedMapping(fSanitizedChoices,
-                    fSanitizedToInputMappings, fArgInputValToSanitizedVal
-            );
-
-            todo2(fSanitizedChoices,
-                    fArgInputValToSanitizedVal,
+            createInputToSanitizedMapping(
+                    fSanitizedChoices,
                     fSanitizedToInputMappings,
+                    fArgInputValToSanitizedVal);
+
+            createSanitizedAndAtomicMappings(fSanitizedChoices,
                     fAtomicChoices,
                     fAtomicToSanitizedMappings,
                     fSanitizedValToAtomicVal);
 
-            parseConstraintsToSat(initConstraints, fExpectedValConstraints, fSat4Clauses);
+            parseConstraintsToSat(
+                    initConstraints,
+                    fExpectedValConstraints,
+                    fSat4Clauses);
         }
 
         fSatSolver.initialize(
@@ -172,9 +174,9 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
         final VecInt assumps =
                 new VecInt(assumptionsFromValues(valueAssignment).
-                stream().
-                mapToInt(Integer::intValue).
-                toArray());
+                        stream().
+                        mapToInt(Integer::intValue).
+                        toArray());
 
         if (fSatSolver.isProblemSatisfiable(assumps)) {
             return EvaluationResult.TRUE;
@@ -238,38 +240,62 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private static void todo2(
-            ParamsWithChoices sanitizedChoices,
-            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal,
-            ChoiceMappings sanitizedToInputMappings,
-            ParamsWithChoices atomicChoices,
-            ChoiceMappings atomicToSanitizedMappings,
-            Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal
-    ) { // TODO - input / output
+    private static void createSanitizedAndAtomicMappings(
+        ParamsWithChoices sanitizedChoices,
+        ParamsWithChoices atomicChoices,
+        ChoiceMappings atomicToSanitizedMappings,
+        Multimap<ChoiceNode, ChoiceNode> sanitizedValToAtomicVal ) {
 
         for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
 
+            // TODO - why do we need an empty set ?
             atomicChoices.put(methodParameterNode, new HashSet<>());
 
-            for (ChoiceNode it : sanitizedChoices.get(methodParameterNode)) //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
-                if (it.isRandomizedValue() &&
-                        (JavaTypeHelper.isExtendedIntTypeName(methodParameterNode.getType())
-                                || JavaTypeHelper.isFloatingPointTypeName(methodParameterNode.getType())
-                        )) {
-                    List<ChoiceNode> interleaved =
-                            ChoiceNodeHelper.interleavedValues(it, sanitizedChoices.getSize());
-
-                    atomicChoices.get(methodParameterNode).addAll(interleaved);
-                    for (ChoiceNode c : interleaved) {
-                        atomicToSanitizedMappings.put(c, it);
-                        sanitizedValToAtomicVal.put(it, c);
-                    }
-                } else {
-                    atomicChoices.get(methodParameterNode).add(it);
-                    atomicToSanitizedMappings.put(it, it);
-                    sanitizedValToAtomicVal.put(it, it);
-                }
+            createSanitizedAndAtomicMappingsForParam(methodParameterNode, sanitizedChoices,
+                    atomicChoices,
+                    atomicToSanitizedMappings,
+                    sanitizedValToAtomicVal
+            );
         }
+    }
+
+    private static void createSanitizedAndAtomicMappingsForParam(
+            MethodParameterNode methodParameterNode,
+            ParamsWithChoices sanitizedChoices,
+            ParamsWithChoices atomicChoices,
+            ChoiceMappings outAtomicToSanitizedMappings,
+            Multimap<ChoiceNode, ChoiceNode> outSanitizedValToAtomicVal) {
+
+        //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
+        for (ChoiceNode it : sanitizedChoices.get(methodParameterNode)) {
+
+            if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), it)) {
+
+                List<ChoiceNode> interleaved =
+                        ChoiceNodeHelper.interleavedValues(it, sanitizedChoices.getSize());
+
+                atomicChoices.get(methodParameterNode).addAll(interleaved);
+                for (ChoiceNode c : interleaved) {
+                    outAtomicToSanitizedMappings.put(c, it);
+                    outSanitizedValToAtomicVal.put(it, c);
+                }
+
+            } else {
+
+                atomicChoices.get(methodParameterNode).add(it);
+                outAtomicToSanitizedMappings.put(it, it);
+                outSanitizedValToAtomicVal.put(it, it);
+            }
+        }
+    }
+
+    private static boolean isRandomizedExtIntOrFloat(
+            String methodParameterType,
+            ChoiceNode choiceNode) {
+
+        return choiceNode.isRandomizedValue() &&
+                (JavaTypeHelper.isExtendedIntTypeName(methodParameterType)
+                        || JavaTypeHelper.isFloatingPointTypeName(methodParameterType));
     }
 
     private static void collectSanitizedValues(
