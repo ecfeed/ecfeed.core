@@ -7,8 +7,6 @@ import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 import org.sat4j.core.VecInt;
-import org.sat4j.specs.IProblem;
-import org.sat4j.specs.TimeoutException;
 
 import java.util.*;
 import java.util.List;
@@ -34,6 +32,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private List<RelationStatement> fAllRelationStatements;
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
+
     private MethodNode fMethodNode;
     private SatSolver fSatSolver;
 
@@ -156,7 +155,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                     fArgChoiceID
             );
 
-        VecInt excludeClause = new VecInt(assumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
+        VecInt excludeClause = new VecInt(getAssumptionsFromValues(toExclude).stream().map(x -> -x).mapToInt(Integer::intValue).toArray());
         final int maxVar = fFirstFreeIDHolder.get();
 
         fSatSolver.newVar(maxVar);
@@ -175,7 +174,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             return EvaluationResult.FALSE;
 
         final VecInt assumps =
-                new VecInt(assumptionsFromValues(valueAssignment).
+                new VecInt(getAssumptionsFromValues(valueAssignment).
                         stream().
                         mapToInt(Integer::intValue).
                         toArray());
@@ -188,38 +187,36 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     }
 
     @Override
-    public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) { // TODO - rename adapt to adaptExpectedChoice
+    public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) { // TODO - rename adapt to adaptExpectedChoices
 
         if (!fSatSolver.hasConstraints())
             return valueAssignment;
 
-        try {
-            IProblem problem = fSatSolver.getSolver();
-            boolean b = problem.isSatisfiable(new VecInt(assumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray())); //necessary to make a call so solver can prepare a model
-            if (!b) {
-                // TODO - exception messages
-                ExceptionHelper.reportRuntimeException("Problem is unsatisfiable. Cannot adapt expected choice.");
-                return null;
-            }
+        final int[] assumptions = getAssumptionsFromValues(valueAssignment).stream().mapToInt(Integer::intValue).toArray();
 
-            Set<Integer> vars = new HashSet<>(Ints.asList(problem.model()));
-            for (Pair<Integer, ExpectedValueStatement> p : fExpectedValConstraints) {
-                if (vars.contains(p.getFirst())) {
-                    p.getSecond().adapt(valueAssignment);
-                }
-            }
-            for (int i = 0; i < valueAssignment.size(); i++) {
-                ChoiceNode p = valueAssignment.get(i);
-                MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
-                if (parameter.isExpected()) {
-                    valueAssignment.set(i, p.makeClone());
-                }
-            }
+        boolean isSatisfiable = fSatSolver.isProblemSatisfiable(new VecInt(assumptions));
 
-        } catch (TimeoutException e) {
-            ExceptionHelper.reportRuntimeException("Timeout occured. Cannot adapt expected choice.");
+        if (!isSatisfiable) {
+            ExceptionHelper.reportRuntimeException("Problem is unsatisfiable. Cannot adapt expected choice.");
             return null;
         }
+
+        Set<Integer> model = new HashSet<>(Ints.asList(fSatSolver.getModel()));
+
+        for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValConstraints) {
+            if (model.contains(expectedValConstraint.getFirst())) {
+                expectedValConstraint.getSecond().adapt(valueAssignment);
+            }
+        }
+
+        for (int i = 0; i < valueAssignment.size(); i++) {
+            ChoiceNode p = valueAssignment.get(i);
+            MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
+            if (parameter.isExpected()) {
+                valueAssignment.set(i, p.makeClone());
+            }
+        }
+
         return valueAssignment;
     }
 
@@ -643,7 +640,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         }
     }
 
-    private List<Integer> assumptionsFromValues(List<ChoiceNode> valueAssignments) {
+    private List<Integer> getAssumptionsFromValues(List<ChoiceNode> valueAssignments) {
 
         if (!fSatSolver.hasConstraints())
             return new ArrayList<>();

@@ -54,20 +54,22 @@ public class SatSolver {
         fSolver.newVar(var);
     }
 
-    public ISolver getSolver() { // TODO - REMOVE
-        return fSolver;
-    }
-
     public boolean isProblemSatisfiable(final VecInt assumps) {
 
         IProblem problem = fSolver;
         try {
             return problem.isSatisfiable(assumps);
-        }
-        catch (TimeoutException e) {
+        } catch (TimeoutException e) {
             ExceptionHelper.reportRuntimeException("Timeout occured. Can not check if problem is satisfiable.");
             return false;
         }
+    }
+
+    public int[] getModel() {
+
+        IProblem problem = fSolver;
+
+        return problem.model();
     }
 
     public Boolean isContradicting() {
