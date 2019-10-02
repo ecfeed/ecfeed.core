@@ -46,6 +46,11 @@ public class SatSolver {
 
     public void addClause(VecInt clause) {
 
+        // clause consists of positive or negative ints
+        // if int is negative then it translates to logical negation
+        // absolute value of int translates to index of variable in some user tab
+        // e.g. ~A1 v A2 v ~A3 translates to -1, 2, -3
+
         try {
             fSolver.addClause(clause);
         } catch (ContradictionException e) {
@@ -58,6 +63,10 @@ public class SatSolver {
     }
 
     public boolean isProblemSatisfiable(final List<Integer> assumptionsList) {
+
+        // list of assumptions consists of positive of negative integers
+        // it sets values (true or false) to variables
+        // e.g. [ 1, -3 ] means set A1 to true to and set A3 to false
 
         final int[] assumps =
                 assumptionsList

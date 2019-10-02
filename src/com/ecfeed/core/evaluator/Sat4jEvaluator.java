@@ -31,7 +31,6 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private ParamsWithChInts fArgChoiceID;
 
     private List<RelationStatement> fAllRelationStatements;
-//    private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints; //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
     private ExpectedConstraintsData fExpectedValConstraints;
 
     private MethodNode fMethodNode;
