@@ -27,14 +27,14 @@ public class DimensionedItem<E> implements Comparable<DimensionedItem<E>>{
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object other) {
 
-		if (!(obj instanceof DimensionedItem))
+		if (!(other instanceof DimensionedItem))
 			return false;
 
-		DimensionedItem<?> var = (DimensionedItem<?>) obj;
+		DimensionedItem<?> otherItem = (DimensionedItem<?>) other;
 
-		if (var.fDimension == this.fDimension && this.fItem.equals(var.fItem)) {
+		if (otherItem.fDimension == this.fDimension && this.fItem.equals(otherItem.fItem)) {
 			return true;
 		}
 
@@ -49,7 +49,6 @@ public class DimensionedItem<E> implements Comparable<DimensionedItem<E>>{
 		sb.append(fDimension);
 		sb.append(", item:");
 		sb.append(fItem);
-		//sb.append("]");
 
 		return sb.toString();
 	}
@@ -65,7 +64,8 @@ public class DimensionedItem<E> implements Comparable<DimensionedItem<E>>{
 	public int hashCode()
 	{
 		if(fItem == null)
-			return (17*fDimension + fDimension*fDimension);
+			return (17*fDimension + fDimension*fDimension); // TODO RVW - magic number, why such way
+
 		return (17*fDimension) ^ fItem.hashCode();
 	}
 
