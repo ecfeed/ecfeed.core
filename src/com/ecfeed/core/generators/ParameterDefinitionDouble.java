@@ -101,7 +101,7 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 			return retValue;
 		else
 		{
-			GeneratorException.report("Double value is illegal.");
+			GeneratorException.report("Illegal value Double type parameter.");
 			return null;
 		}
 

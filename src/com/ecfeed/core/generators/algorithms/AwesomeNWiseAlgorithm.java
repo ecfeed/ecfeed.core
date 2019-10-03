@@ -1,4 +1,3 @@
-package com.ecfeed.core.generators.algorithms;
 /*******************************************************************************
  *
  * Copyright (c) 2016 ecFeed AS.
@@ -8,6 +7,8 @@ package com.ecfeed.core.generators.algorithms;
  * http://www.eclipse.org/legal/epl-v10.html
  *
  *******************************************************************************/
+
+package com.ecfeed.core.generators.algorithms;
 
 import java.util.*;
 
@@ -40,7 +41,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     @Override
     public void reset() {
+
         fDimCount = getInput().size();
+
         try {
             fAllValues = new ArrayList<>();
             for (int i = 0; i < fDimCount; i++)
@@ -50,11 +53,10 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             List<SortedMap<Integer,E>> remainingTuples = getAllNTuples();
             fLeftTuples = remainingTuples.size();
             setTaskBegin(fLeftTuples*getCoverage()/100);
-//            System.out.println(fLeftTuples);
 
             fPartialTuplesCounter = HashMultiset.create();
             for(SortedMap<Integer,E> it : remainingTuples)
-                for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.AllSublists(new ArrayList<>(it.entrySet())))
+                for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(it.entrySet())))
                     fPartialTuplesCounter.add(new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build() );
 
 
@@ -66,8 +68,6 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
         super.reset();
     }
-
-
 
     @Override
     public List<E> getNext() throws GeneratorException {
@@ -177,7 +177,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 dTuple.put(d, nTuple.get(d));
             if (fPartialTuplesCounter.contains(dTuple)) {
                 fLeftTuples--;
-                for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.AllSublists(new ArrayList<>(dTuple.entrySet())))
+                for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(dTuple.entrySet())))
                     fPartialTuplesCounter.remove(new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build(), 1);
             }
         }

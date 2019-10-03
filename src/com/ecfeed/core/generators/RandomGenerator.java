@@ -30,9 +30,6 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 	private static IParameterDefinition fDefinitionDuplicates;
 	private static IParameterDefinition fDefinitionLength;
 
-
-
-
 	public RandomGenerator() throws GeneratorException{
 
 		if(fDefinitionAdaptive==null)
@@ -45,6 +42,7 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		addParameterDefinition(fDefinitionAdaptive);
 		addParameterDefinition(fDefinitionLength);
 	}
+
 	public static IParameterDefinition getDefinitionAdaptive()
 	{
 		return fDefinitionAdaptive;

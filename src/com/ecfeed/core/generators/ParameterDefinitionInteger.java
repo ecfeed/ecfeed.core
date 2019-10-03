@@ -5,7 +5,7 @@
  * are made available under the terms of the Eclipse Public License v1.0         
  * which accompanies this distribution, and is available at                      
  * http://www.eclipse.org/legal/epl-v10.html 
- *  
+ *
  *******************************************************************************/
 
 package com.ecfeed.core.generators;
@@ -54,7 +54,6 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 		}
 	}
 
-	
 	public int getMin()
 	{
 		return fMinValue;
@@ -85,10 +84,10 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 		}
 
 		fDefaultValue = (int)tmpDefaultValue;
-	}	
+	}
 
 	@Override
-	public boolean test(Object value){
+	public boolean test(Object value) {
 		if (value instanceof Integer == false){
 			return false;
 		}
@@ -106,8 +105,7 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 	}
 
 	@Override
-	public Object parse(String value) throws GeneratorException
-	{
+	public Object parse(String value) throws GeneratorException	{
 		Integer retValue;
 		if(value == null)
 			retValue = fDefaultValue;
@@ -127,6 +125,5 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 			GeneratorException.report("Integer value not allowed.");
 			return null;
 		}
-
 	}
 }
