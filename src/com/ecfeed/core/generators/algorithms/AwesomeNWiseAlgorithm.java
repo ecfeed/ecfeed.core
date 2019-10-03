@@ -15,9 +15,7 @@ import java.util.*;
 import javax.management.RuntimeErrorException;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.IEcfProgressMonitor;
-import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 
 
@@ -45,28 +43,49 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         fDimCount = getInput().size();
 
         try {
-            fAllValues = new ArrayList<>();
-            for (int i = 0; i < fDimCount; i++)
-                for (E v : getInput().get(i))
-                    fAllValues.add(new Pair<>(i, v));
+            fAllValues = createAllValues(fDimCount, getInput());
 
             List<SortedMap<Integer,E>> remainingTuples = getAllNTuples();
+
             fLeftTuples = remainingTuples.size();
-            setTaskBegin(fLeftTuples*getCoverage()/100);
 
-            fPartialTuplesCounter = HashMultiset.create();
-            for(SortedMap<Integer,E> it : remainingTuples)
-                for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(it.entrySet())))
-                    fPartialTuplesCounter.add(new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build() );
-
+            fPartialTuplesCounter = createPartialTuplesCounter(remainingTuples);
 
             fIgnoreCount = fLeftTuples * (100 - getCoverage()) / 100;
 
         } catch (GeneratorException e) {
-            e.printStackTrace();
-            throw new RuntimeErrorException(new Error(e));
+
+            SystemLogger.logCatch(e);
+
+            ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
         }
+
+        setTaskBegin(fLeftTuples*getCoverage()/100);
         super.reset();
+    }
+
+    private Multiset<SortedMap<Integer,E>> createPartialTuplesCounter(List<SortedMap<Integer, E>> remainingTuples) {
+
+        Multiset<SortedMap<Integer,E>> fPartialTuplesCounter = HashMultiset.create();
+
+        for (SortedMap<Integer,E> remainingTuple : remainingTuples)
+            for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(remainingTuple.entrySet())))
+                fPartialTuplesCounter.add(new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build() );
+
+        return fPartialTuplesCounter;
+    }
+
+    private List<Pair<Integer,E>> createAllValues(int dimCount, List<List<E>> input) {
+
+        List<Pair<Integer,E>> result = new ArrayList<>();
+
+        for (int dimension = 0; dimension < dimCount; dimension++) {
+            for (E value : input.get(dimension)) {
+                result.add(new Pair<>(dimension, value));
+            }
+        }
+
+        return result;
     }
 
     @Override
