@@ -17,6 +17,7 @@ public class EvaluatorHelper {
         return fFirstFreeIDHolder.get();
     }
 
+    // TODO - where is the output ?
     public static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
             ParamsWithChoices fArgAllAtomicValues,
@@ -133,6 +134,5 @@ public class EvaluatorHelper {
         fArgLessThChoiceID.put(methodParameterNode, inverseLThVars);
         fArgChoiceID.put(methodParameterNode, choiceID);
     }
-
 
 }

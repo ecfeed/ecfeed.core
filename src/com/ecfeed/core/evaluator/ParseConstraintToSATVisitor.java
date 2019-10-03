@@ -30,7 +30,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     private ParamsWithChInts fArgLessEqChoiceID;
     private ParamsWithChInts fArgLessThChoiceID;
-    private ParamsWithChInts fArgChoiceID;
+    private ParamsWithChInts fChoiceToSolverIdMappings;
 
 
     public ParseConstraintToSATVisitor(
@@ -44,7 +44,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal,
             ParamsWithChInts lessEqChoiceID,
             ParamsWithChInts lessThChoiceID,
-            ParamsWithChInts choiceID
+            ParamsWithChInts choiceToSolverIdMappings
     ) {
 
         fMethodNode = methodNode;
@@ -58,7 +58,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         fArgLessEqChoiceID = lessEqChoiceID;
         fArgLessThChoiceID = lessThChoiceID;
-        fArgChoiceID = choiceID;
+        fChoiceToSolverIdMappings = choiceToSolverIdMappings;
     }
 
     @Override
@@ -83,7 +83,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fArgInputValToSanitizedVal,
                                         fArgLessEqChoiceID,
                                         fArgLessThChoiceID,
-                                        fArgChoiceID));
+                                        fChoiceToSolverIdMappings));
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -113,7 +113,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fArgInputValToSanitizedVal,
                                         fArgLessEqChoiceID,
                                         fArgLessThChoiceID,
-                                        fArgChoiceID));
+                                        fChoiceToSolverIdMappings));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -203,7 +203,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fArgInputValToSanitizedVal,
                 fArgLessEqChoiceID,
                 fArgLessThChoiceID,
-                fArgChoiceID
+                fChoiceToSolverIdMappings
         );
 
         Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
@@ -216,7 +216,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethodNode.getParametersCount(), null));
             dummyValues.set(lParamIndex, lChoice);
             EvaluationResult result = statement.evaluate(dummyValues);
-            Integer idOfLeftArgChoice = fArgChoiceID.get(leftMethodParameterNode).get(lChoice);
+            Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.get(leftMethodParameterNode).get(lChoice);
             if (result == EvaluationResult.TRUE) {
                 fSat4Clauses.add(new VecInt(new int[]{-idOfLeftArgChoice, myID})); // thisChoice => me
             } else if (result == EvaluationResult.FALSE) {
@@ -242,7 +242,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fArgInputValToSanitizedVal,
                 fArgLessEqChoiceID,
                 fArgLessThChoiceID,
-                fArgChoiceID
+                fChoiceToSolverIdMappings
         );
 
         Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
@@ -264,7 +264,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fArgInputValToSanitizedVal,
                 fArgLessEqChoiceID,
                 fArgLessThChoiceID,
-                fArgChoiceID
+                fChoiceToSolverIdMappings
         );
 
         int rParamIndex = fMethodNode.getMethodParameters().indexOf(rParam);
