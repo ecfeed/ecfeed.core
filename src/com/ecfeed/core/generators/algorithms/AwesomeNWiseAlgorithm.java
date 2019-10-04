@@ -12,6 +12,7 @@ package com.ecfeed.core.generators.algorithms;
 
 import java.util.*;
 
+import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
@@ -21,7 +22,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private Multiset<SortedMap<Integer, E>> fPartialTuplesCounter = null;
 
-    private List<Pair<Integer, E>> fAllValues = null;  // TODO holds pairs dimension-value
+    private List<DimensionedItem<E>> fAllValues = null;  // TODO holds pairs dimension-value
 
     private IntegerHolder fIgnoreCount;
 
@@ -78,15 +79,15 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return fPartialTuplesCounter;
     }
 
-    private List<Pair<Integer, E>> createAllValues(List<List<E>> input) {
+    private List<DimensionedItem<E>> createAllValues(List<List<E>> input) {
 
         int dimCount = getInput().size();
 
-        List<Pair<Integer, E>> result = new ArrayList<>();
+        List<DimensionedItem<E>> result = new ArrayList<>();
 
         for (int dimension = 0; dimension < dimCount; dimension++) {
             for (E value : input.get(dimension)) {
-                result.add(new Pair<>(dimension, value));
+                result.add(new DimensionedItem<>(dimension, value));
             }
         }
 
@@ -198,23 +199,25 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
         for (int i = 0; i < Math.min(N, fDimCount); i++) {
             Collections.shuffle(fAllValues);
-            Pair<Integer, E> bestItem = null;
+            DimensionedItem<E> bestItem = null;
             int bestItemScore = -1;
-            for (Pair<Integer, E> dItem : fAllValues) {
-                Integer d = dItem.getFirst();
-                if (nTuple.containsKey(d))
+            for (DimensionedItem<E> dItem : fAllValues) {
+                Integer dimension = dItem.getDimension();
+                if (nTuple.containsKey(dimension))
                     continue;
 
-                nTuple.put(d, dItem.getSecond());
+                nTuple.put(dimension, dItem.getItem());
                 if (fPartialTuplesCounter.count(nTuple) > bestItemScore) {
                     bestItem = dItem;
                     bestItemScore = fPartialTuplesCounter.count(nTuple);
                 }
-                nTuple.remove(d);
+                nTuple.remove(dimension);
             }
-            Integer d = bestItem.getFirst();
-            filledDimensions.add(d);
-            nTuple.put(d, bestItem.getSecond());
+
+            Integer dimension = bestItem.getDimension();
+            filledDimensions.add(dimension);
+
+            nTuple.put(dimension, bestItem.getItem());
         }
     }
 
