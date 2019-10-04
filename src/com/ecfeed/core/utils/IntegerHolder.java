@@ -20,4 +20,8 @@ public class IntegerHolder extends ItemHolder<Integer> {
 		set(get()+1);
 	}
 
+	public void decrement() {
+		set(get()-1);
+	}
+
 }

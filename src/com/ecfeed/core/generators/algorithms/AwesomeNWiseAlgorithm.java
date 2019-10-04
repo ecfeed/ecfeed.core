@@ -23,9 +23,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private List<Pair<Integer,E>> fAllValues = null;
 
-    private int fIgnoreCount = 0;
+    private IntegerHolder fIgnoreCount;
 
-    private int fLeftTuplesCount; // TODO - check name
+    private IntegerHolder fRemainingTuplesCount; // TODO - check name
 
     private int fDimCount;
 
@@ -38,18 +38,19 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     @Override
     public void reset() {
 
+        fIgnoreCount = new IntegerHolder(0);
         fDimCount = getInput().size();
 
         try {
             fAllValues = createAllValues(fDimCount, getInput());
 
-            List<SortedMap<Integer,E>> remainingTuples = getAllNTuples();
+            List<SortedMap<Integer,E>> remainingTuples = getAllNTuples(N, fDimCount, getInput());
 
-            fLeftTuplesCount = remainingTuples.size();
+            fRemainingTuplesCount = new IntegerHolder(remainingTuples.size());
 
             fPartialTuplesCounter = createPartialTuplesCounter(remainingTuples);
 
-            fIgnoreCount = fLeftTuplesCount * (100 - getCoverage()) / 100;
+            fIgnoreCount.set(fRemainingTuplesCount.get() * (100 - getCoverage()) / 100);
 
         } catch (GeneratorException e) {
 
@@ -58,7 +59,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
         }
 
-        setTaskBegin(fLeftTuplesCount *getCoverage()/100);
+        setTaskBegin(fRemainingTuplesCount.get() * getCoverage() / 100); // TODO - repeated setTaskBegin
         super.reset();
     }
 
@@ -105,7 +106,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             SortedMap<Integer, E> bestTuple = null;
             int bestTupleScore = -1;
 
-            for (int dummy=0;dummy<NUM_OF_REPETITIONS;dummy++) {
+            for (int repetition = 0; repetition < NUM_OF_REPETITIONS; repetition ++) {
 
                 if (generatorProgressMonitor != null) {
                     if (generatorProgressMonitor.isCanceled()) {
@@ -113,7 +114,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                     }
                 }
 
-                if (fLeftTuplesCount <= fIgnoreCount) {
+                if (fRemainingTuplesCount.get() <= fIgnoreCount.get()) {
                     setTaskEnd();
                     return null;
                 }
@@ -131,8 +132,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
                 int nTupleScore = countAffectedTuples(nTuple);
 
-                if(nTupleScore > bestTupleScore)
-                {
+                if(nTupleScore > bestTupleScore) {
                     bestTupleScore = nTupleScore;
                     bestTuple = nTuple;
                 }
@@ -241,7 +241,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 dTuple.put(dimension, nTuple.get(dimension));
 
             if (outPartialTuplesCounter.contains(dTuple)) {
-                fLeftTuplesCount--;
+                fRemainingTuplesCount.decrement();
 
                 for ( List<Map.Entry<Integer,E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(dTuple.entrySet())))
                     outPartialTuplesCounter.remove(createOneCounter(sublist), 1);
@@ -276,36 +276,48 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return (new Tuples<>(dimensions, Math.min(fDimCount,N))).getAll();
     }
 
-    private List<SortedMap<Integer,E>> getAllNTuples() throws GeneratorException {
+    private List<SortedMap<Integer,E>> getAllNTuples(int argN, int dimensionCount, List<List<E>> input) throws GeneratorException {
 
         List<SortedMap<Integer,E>> allValidTuples = new ArrayList<>();
         allValidTuples.add(Maps.newTreeMap());
 
-        for(int c = 0; c<N; c++)
-        {
+        for (int tupleSize = 0; tupleSize < argN; tupleSize++) {
+
             List<SortedMap<Integer,E>> newValidTuples = new ArrayList<>();
-            if(c==N-1)
-                setTaskBegin(allValidTuples.size());
-            for(SortedMap<Integer,E> tuple : allValidTuples)
-            {
-                Integer maxD = -1;
-                if(!tuple.isEmpty())
-                    maxD = tuple.lastKey();
-                for(int d = maxD+1; d < fDimCount - (N-1-c); d++)
-                {
-                    for(E v : getInput().get(d))
-                    {
-                        tuple.put(d,v);
-                        if(checkConstraints(AlgorithmHelper.Uncompress(tuple, fDimCount)) == EvaluationResult.TRUE)
-                        {
+
+            if (tupleSize == argN-1) {
+                setTaskBegin(allValidTuples.size()); // TODO - repeated setTaskBegin
+            }
+
+            for (SortedMap<Integer,E> tuple : allValidTuples) {
+
+                Integer maxDimension = -1;
+
+                if(!tuple.isEmpty()) {
+                    maxDimension = tuple.lastKey();
+                }
+
+                for (int dimension = maxDimension+1; dimension < dimensionCount - (argN-1-tupleSize); dimension++) {
+
+//                    final List<List<E>> input = getInput();
+                    final List<E> inputForOneDimension = input.get(dimension);
+
+                    for (E v : inputForOneDimension) {
+
+                        tuple.put(dimension,v);
+
+                        if (checkConstraints(AlgorithmHelper.Uncompress(tuple, dimensionCount)) == EvaluationResult.TRUE) {
                             SortedMap<Integer,E> newTuple = new TreeMap<>(tuple);
                             newValidTuples.add(newTuple);
                         }
                     }
-                    tuple.remove(d);
+
+                    tuple.remove(dimension);
                 }
-                incrementProgress(1);
+
+                incrementProgress(1); // TODO - repeated progress
             }
+
             allValidTuples = newValidTuples;
         }
 
