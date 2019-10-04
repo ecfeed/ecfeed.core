@@ -134,7 +134,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 }
             }
 
-            removeAffectedTuples(bestTuple, fPartialTuples);
+            removeAffectedTuples(bestTuple, fPartialTuples, fRemainingTuplesCount);
             incrementProgress(bestTupleScore);  // TODO - by score ?
 
             return AlgorithmHelper.Uncompress(bestTuple, fDimCount);
@@ -147,12 +147,12 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
         List<Integer> filledDimensions = new ArrayList<>();
 
-        fillDimensionsAndTuples(nTuple, filledDimensions);
-
+        fillDimensionsAndTuples(nTuple, filledDimensions); // XYX
 
         List<Integer> randomDimensions = createRandomDimensions(fDimCount);
 
         todo(fPartialTuples, nTuple, filledDimensions, randomDimensions);
+
         return nTuple;
     }
 
@@ -209,20 +209,29 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private void fillDimensionsAndTuples(SortedMap<Integer, E> nTuple, List<Integer> filledDimensions) {
 
-        for (int i = 0; i < Math.min(N, fDimCount); i++) {
+        final int countOfDimensions = Math.min(N, fDimCount);
+
+        for (int dim = 0; dim < countOfDimensions; dim++) {
+
             Collections.shuffle(fAllDimensionedItems);
             DimensionedItem<E> bestItem = null;
+
             int bestItemScore = -1;
+
             for (DimensionedItem<E> dItem : fAllDimensionedItems) {
+
                 Integer dimension = dItem.getDimension();
+
                 if (nTuple.containsKey(dimension))
                     continue;
 
                 nTuple.put(dimension, dItem.getItem());
+
                 if (fPartialTuples.count(nTuple) > bestItemScore) {
                     bestItem = dItem;
                     bestItemScore = fPartialTuples.count(nTuple);
                 }
+
                 nTuple.remove(dimension);
             }
 
@@ -245,21 +254,22 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     }
 
     private void removeAffectedTuples(
-            SortedMap<Integer, E> nTuple,
-            Multiset<SortedMap<Integer, E>> outPartialTuplesCounter
-    ) {
+            SortedMap<Integer, E> affectingTuple,
+            Multiset<SortedMap<Integer, E>> outPartialTuples,
+            IntegerHolder outRemainingTuplesCount) {
+
         for (List<Integer> dimCombinations : getAllDimensionCombinations(fDimCount, N)) {
 
             SortedMap<Integer, E> dTuple = Maps.newTreeMap();
 
             for (Integer dimension : dimCombinations)
-                dTuple.put(dimension, nTuple.get(dimension));
+                dTuple.put(dimension, affectingTuple.get(dimension));
 
-            if (outPartialTuplesCounter.contains(dTuple)) {
-                fRemainingTuplesCount.decrement();
+            if (outPartialTuples.contains(dTuple)) {
+                outRemainingTuplesCount.decrement();
 
                 for (List<Map.Entry<Integer, E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(dTuple.entrySet())))
-                    outPartialTuplesCounter.remove(createOneCounter(sublist), 1);
+                    outPartialTuples.remove(createOneCounter(sublist), 1);
             }
         }
     }
