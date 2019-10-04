@@ -20,7 +20,7 @@ import com.google.common.collect.*;
 
 public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
-    private Multiset<SortedMap<Integer, E>> fPartialTuplesCounter = null;
+    private Multiset<SortedMap<Integer, E>> fPartialTuples = null;
 
     private List<DimensionedItem<E>> fAllDimensionedItems = null;
 
@@ -49,7 +49,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             fRemainingTuplesCount = new IntegerHolder(remainingTuples.size());
 
-            fPartialTuplesCounter = createPartialTuplesCounter(remainingTuples);
+            fPartialTuples = createPartialTuples(remainingTuples);
 
             fIgnoreCount.set(fRemainingTuplesCount.get() * (100 - getCoverage()) / 100);
 
@@ -61,6 +61,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
 
         setTaskBegin(fRemainingTuplesCount.get() * getCoverage() / 100); // TODO - repeated setTaskBegin
+
         super.reset();
     }
 
@@ -72,7 +73,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return getBestTuple(generatorProgressMonitor);
     }
 
-    private Multiset<SortedMap<Integer, E>> createPartialTuplesCounter(List<SortedMap<Integer, E>> remainingTuples) {
+    private Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
 
         Multiset<SortedMap<Integer, E>> fPartialTuplesCounter = HashMultiset.create();
 
@@ -133,7 +134,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
                 todo(nTuple, filledDimensions, randomDimensions);
 
-                int nTupleScore = countAffectedTuples(nTuple);
+                int nTupleScore = calculateScoreForNTuple(nTuple);
 
                 if (nTupleScore > bestTupleScore) {
                     bestTupleScore = nTupleScore;
@@ -142,7 +143,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             }
 
-            removeAffectedTuples(bestTuple, fPartialTuplesCounter);
+            removeAffectedTuples(bestTuple, fPartialTuples);
             incrementProgress(bestTupleScore);
 
             return AlgorithmHelper.Uncompress(bestTuple, fDimCount);
@@ -180,7 +181,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
                         tmpObject.put(d, val);
 
-                        if (fPartialTuplesCounter.contains(tmpObject))
+                        if (fPartialTuples.contains(tmpObject))
                             score++;
                     }
 
@@ -208,9 +209,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                     continue;
 
                 nTuple.put(dimension, dItem.getItem());
-                if (fPartialTuplesCounter.count(nTuple) > bestItemScore) {
+                if (fPartialTuples.count(nTuple) > bestItemScore) {
                     bestItem = dItem;
-                    bestItemScore = fPartialTuplesCounter.count(nTuple);
+                    bestItemScore = fPartialTuples.count(nTuple);
                 }
                 nTuple.remove(dimension);
             }
@@ -237,7 +238,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             SortedMap<Integer, E> nTuple,
             Multiset<SortedMap<Integer, E>> outPartialTuplesCounter
     ) {
-        for (List<Integer> dimCombinations : getAllDimensionCombinations(fDimCount)) {
+        for (List<Integer> dimCombinations : getAllDimensionCombinations(fDimCount, N)) {
 
             SortedMap<Integer, E> dTuple = Maps.newTreeMap();
 
@@ -258,25 +259,34 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build();
     }
 
-    private int countAffectedTuples(SortedMap<Integer, E> nTuple) {
+    private int calculateScoreForNTuple(SortedMap<Integer, E> nTuple) {
+
         int score = 0;
-        for (List<Integer> dimComb : getAllDimensionCombinations(fDimCount)) {
+
+        final Set<List<Integer>> allDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
+
+        for (List<Integer> combinationOfDimensions : allDimensionCombinations) {
+
             SortedMap<Integer, E> dTuple = Maps.newTreeMap();
-            for (Integer d : dimComb)
-                dTuple.put(d, nTuple.get(d));
-            if (fPartialTuplesCounter.contains(dTuple))
+
+            for (Integer dimension : combinationOfDimensions)
+                dTuple.put(dimension, nTuple.get(dimension));
+
+            if (fPartialTuples.contains(dTuple))
                 score++;
         }
+
         return score;
     }
 
-    private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount) {
+    private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount, int argN) {
 
         List<Integer> dimensions = new ArrayList<>();
+
         for (int i = 0; i < dimensionCount; i++)
             dimensions.add(i);
 
-        return (new Tuples<>(dimensions, Math.min(dimensionCount, N))).getAll();
+        return (new Tuples<>(dimensions, Math.min(dimensionCount, argN))).getAll();
     }
 
     private List<SortedMap<Integer, E>> getAllNTuples(List<List<E>> input, int argN) {
