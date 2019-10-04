@@ -143,11 +143,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private SortedMap<Integer, E> createNTuple() {
 
-        SortedMap<Integer, E> nTuple = Maps.newTreeMap();
-
         List<Integer> filledDimensions = new ArrayList<>();
 
-        fillDimensionsAndTuples(nTuple, filledDimensions); // XYX
+        SortedMap<Integer, E> nTuple = createTuple(filledDimensions);
 
         List<Integer> randomDimensions = createRandomDimensions(fDimCount);
 
@@ -207,7 +205,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
     }
 
-    private void fillDimensionsAndTuples(SortedMap<Integer, E> nTuple, List<Integer> filledDimensions) {
+    private SortedMap<Integer, E> createTuple(List<Integer> outFilledDimensions) {
+
+        SortedMap<Integer, E> tuple = Maps.newTreeMap();
 
         final int countOfDimensions = Math.min(N, fDimCount);
 
@@ -216,30 +216,34 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             Collections.shuffle(fAllDimensionedItems);
             DimensionedItem<E> bestItem = null;
 
-            int bestItemScore = -1;
+            int bestTupleScore = -1;
 
             for (DimensionedItem<E> dItem : fAllDimensionedItems) {
 
                 Integer dimension = dItem.getDimension();
 
-                if (nTuple.containsKey(dimension))
+                if (tuple.containsKey(dimension))
                     continue;
 
-                nTuple.put(dimension, dItem.getItem());
+                tuple.put(dimension, dItem.getItem());
 
-                if (fPartialTuples.count(nTuple) > bestItemScore) {
+                final int tupleScore = fPartialTuples.count(tuple);
+
+                if (tupleScore > bestTupleScore) {
                     bestItem = dItem;
-                    bestItemScore = fPartialTuples.count(nTuple);
+                    bestTupleScore = tupleScore;
                 }
 
-                nTuple.remove(dimension);
+                tuple.remove(dimension);
             }
 
             Integer dimension = bestItem.getDimension();
-            filledDimensions.add(dimension);
+            outFilledDimensions.add(dimension);
 
-            nTuple.put(dimension, bestItem.getItem());
+            tuple.put(dimension, bestItem.getItem());
         }
+
+        return tuple;
     }
 
     private List<Integer> createRandomDimensions(int fDimCount) {
