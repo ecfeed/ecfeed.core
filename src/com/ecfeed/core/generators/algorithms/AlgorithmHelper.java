@@ -29,7 +29,7 @@ public class AlgorithmHelper {
     }
 
 
-    public static <E> List<E> Uncompress(SortedMap<Integer,E> inpList,int dimension)
+    public static <E> List<E> uncompressTuple(SortedMap<Integer,E> inpList, int dimension)
     {
         ArrayList<E> ret = new ArrayList<>(Collections.nCopies(dimension, null));
 

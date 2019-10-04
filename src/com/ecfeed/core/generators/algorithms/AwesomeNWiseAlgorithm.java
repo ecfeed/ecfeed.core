@@ -137,13 +137,20 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             removeAffectedTuples(bestTuple, fPartialTuples, fRemainingTuplesCount);
             incrementProgress(bestTupleScore);  // TODO - by score ?
 
-            return AlgorithmHelper.Uncompress(bestTuple, fDimCount);
+            return AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
         }
     }
 
     private SortedMap<Integer, E> createNTuple() {
 
         SortedMap<Integer, E> nTuple = createTupleWithBestScores();
+
+        findBestTupleAfterConstraints(nTuple);
+
+        return nTuple;
+    }
+
+    private void findBestTupleAfterConstraints(SortedMap<Integer, E> nTuple) {
 
         List<Integer> tupleDimensions = createTupleDimensions(nTuple);
 
@@ -154,55 +161,67 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             if (nTuple.containsKey(dimension))
                 continue;
 
-            E bestElement = findBestElementForDimension(dimension, nTuple, tupleDimensions);
+            E bestElement = findBestItemWithConstraintCheck(dimension, nTuple, tupleDimensions);
 
             nTuple.put(dimension, bestElement);
             tupleDimensions.add(dimension);
         }
-
-        return nTuple;
     }
 
-    private E findBestElementForDimension(
+    private E findBestItemWithConstraintCheck(
             Integer dimension,
             SortedMap<Integer, E> nTuple,
             List<Integer> tupleDimensions) {
 
-        List<E> currentDimInput = new ArrayList<>(getInput().get(dimension));
-        Collections.shuffle(currentDimInput);
+        List<E> inputForOneDimension = new ArrayList<>(getInput().get(dimension));
+        Collections.shuffle(inputForOneDimension);
 
-        Set<List<Integer>> dimensionsToCountScore =
+        Set<List<Integer>> dimensionsToCountScores =
                 (new Tuples<>(tupleDimensions, Math.min(tupleDimensions.size(), N - 1))).getAll();
 
         int bestScore = -1;
-        E bestElement = null;
+        E bestItem = null;
 
-        for (E val : currentDimInput) {
+        for (E item : inputForOneDimension) {
 
-            nTuple.put(dimension, val);
+            nTuple.put(dimension, item);
 
-            if (checkConstraints(AlgorithmHelper.Uncompress(nTuple, fDimCount)) == EvaluationResult.TRUE) {
-                int score = 0;
+            if (checkConstraints(AlgorithmHelper.uncompressTuple(nTuple, fDimCount)) == EvaluationResult.TRUE) {
 
-                for (List<Integer> dScore : dimensionsToCountScore) {
-                    SortedMap<Integer, E> tmpObject = Maps.newTreeMap();
-
-                    for (Integer sD : dScore)
-                        tmpObject.put(sD, nTuple.get(sD));
-
-                    tmpObject.put(dimension, val);
-
-                    if (fPartialTuples.contains(tmpObject))
-                        score++;
-                }
+                int score = calculateTupleScoreForOneDimension(nTuple, dimension, dimensionsToCountScores, item);
 
                 if (score > bestScore) {
                     bestScore = score;
-                    bestElement = val;
+                    bestItem = item;
                 }
             }
         }
-        return bestElement;
+
+        return bestItem;
+    }
+
+    private int calculateTupleScoreForOneDimension(
+            SortedMap<Integer, E> nTuple,
+            Integer dimension,
+            Set<List<Integer>> dimensionsToCountScores,
+            E item) {
+
+        int score = 0;
+
+        for (List<Integer> dimensionScores : dimensionsToCountScores) {
+
+            SortedMap<Integer, E> tmpObject = Maps.newTreeMap();
+
+            for (Integer sD : dimensionScores) // TODO - names ?
+                tmpObject.put(sD, nTuple.get(sD));
+
+            tmpObject.put(dimension, item);
+
+            if (fPartialTuples.contains(tmpObject))
+                score++;
+        }
+
+        return score;
     }
 
     private SortedMap<Integer, E> createTupleWithBestScores() {
@@ -355,7 +374,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
                         tuple.put(dimension, v);
 
-                        if (checkConstraints(AlgorithmHelper.Uncompress(tuple, dimensionCount)) == EvaluationResult.TRUE) {
+                        if (checkConstraints(AlgorithmHelper.uncompressTuple(tuple, dimensionCount)) == EvaluationResult.TRUE) {
                             SortedMap<Integer, E> newTuple = new TreeMap<>(tuple);
                             newValidTuples.add(newTuple);
                         }
