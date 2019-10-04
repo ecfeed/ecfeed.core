@@ -143,15 +143,27 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private SortedMap<Integer, E> createNTuple() {
 
-        List<Integer> filledDimensions = new ArrayList<>();
+        SortedMap<Integer, E> nTuple = createTuple();
 
-        SortedMap<Integer, E> nTuple = createTuple(filledDimensions);
+        List<Integer> filledDimensions = createTupleDimensions(nTuple);
 
         List<Integer> randomDimensions = createRandomDimensions(fDimCount);
 
         todo(fPartialTuples, nTuple, filledDimensions, randomDimensions);
 
         return nTuple;
+    }
+
+    List<Integer> createTupleDimensions(SortedMap<Integer, E> nTuple) {
+
+        List<Integer> dimensions = new ArrayList<>();
+
+        for (Map.Entry<Integer, E> entry : nTuple.entrySet()) {
+
+            dimensions.add(entry.getKey());
+        }
+
+        return dimensions;
     }
 
     private void todo(
@@ -205,7 +217,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
     }
 
-    private SortedMap<Integer, E> createTuple(List<Integer> outFilledDimensions) {
+    private SortedMap<Integer, E> createTuple() {
 
         SortedMap<Integer, E> tuple = Maps.newTreeMap();
 
@@ -238,7 +250,6 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
 
             Integer dimension = bestItem.getDimension();
-            outFilledDimensions.add(dimension);
 
             tuple.put(dimension, bestItem.getItem());
         }
