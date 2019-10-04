@@ -43,7 +43,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         fDimCount = getInput().size();
 
         try {
-            fAllDimensionedItems = createAllDimensionedItems(getInput());
+            fAllDimensionedItems = createDimensionedItems(getInput());
 
             List<SortedMap<Integer, E>> remainingTuples = getAllNTuples(getInput(), N);
 
@@ -91,7 +91,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return fPartialTuplesCounter;
     }
 
-    private List<DimensionedItem<E>> createAllDimensionedItems(List<List<E>> input) {
+    private List<DimensionedItem<E>> createDimensionedItems(List<List<E>> input) {
 
         int dimCount = getInput().size();
 
