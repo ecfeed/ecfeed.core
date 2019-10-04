@@ -149,51 +149,60 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
         List<Integer> randomDimensions = createRandomDimensions(fDimCount);
 
-        for (Integer d : randomDimensions) {
+        for (Integer dimension : randomDimensions) {
 
-            if (nTuple.containsKey(d))
+            if (nTuple.containsKey(dimension))
                 continue;
 
-            List<E> currentDimInput = new ArrayList<>(getInput().get(d));
-            Collections.shuffle(currentDimInput);
+            E bestElement = findBestElementForDimension(dimension, nTuple, tupleDimensions);
 
-            Set<List<Integer>> dimensionsToCountScore =
-                    (new Tuples<>(tupleDimensions, Math.min(tupleDimensions.size(), N - 1))).getAll();
-
-            int bestScore = -1;
-            E bestElement = null;
-
-            for (E val : currentDimInput) {
-
-                nTuple.put(d, val);
-
-                if (checkConstraints(AlgorithmHelper.Uncompress(nTuple, fDimCount)) == EvaluationResult.TRUE) {
-                    int score = 0;
-
-                    for (List<Integer> dScore : dimensionsToCountScore) {
-                        SortedMap<Integer, E> tmpObject = Maps.newTreeMap();
-
-                        for (Integer sD : dScore)
-                            tmpObject.put(sD, nTuple.get(sD));
-
-                        tmpObject.put(d, val);
-
-                        if (fPartialTuples.contains(tmpObject))
-                            score++;
-                    }
-
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestElement = val;
-                    }
-                }
-            }
-
-            nTuple.put(d, bestElement);
-            tupleDimensions.add(d);
+            nTuple.put(dimension, bestElement);
+            tupleDimensions.add(dimension);
         }
 
         return nTuple;
+    }
+
+    private E findBestElementForDimension(
+            Integer dimension,
+            SortedMap<Integer, E> nTuple,
+            List<Integer> tupleDimensions) {
+
+        List<E> currentDimInput = new ArrayList<>(getInput().get(dimension));
+        Collections.shuffle(currentDimInput);
+
+        Set<List<Integer>> dimensionsToCountScore =
+                (new Tuples<>(tupleDimensions, Math.min(tupleDimensions.size(), N - 1))).getAll();
+
+        int bestScore = -1;
+        E bestElement = null;
+
+        for (E val : currentDimInput) {
+
+            nTuple.put(dimension, val);
+
+            if (checkConstraints(AlgorithmHelper.Uncompress(nTuple, fDimCount)) == EvaluationResult.TRUE) {
+                int score = 0;
+
+                for (List<Integer> dScore : dimensionsToCountScore) {
+                    SortedMap<Integer, E> tmpObject = Maps.newTreeMap();
+
+                    for (Integer sD : dScore)
+                        tmpObject.put(sD, nTuple.get(sD));
+
+                    tmpObject.put(dimension, val);
+
+                    if (fPartialTuples.contains(tmpObject))
+                        score++;
+                }
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestElement = val;
+                }
+            }
+        }
+        return bestElement;
     }
 
     private SortedMap<Integer, E> createTupleWithBestScores() {
