@@ -22,11 +22,11 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private Multiset<SortedMap<Integer, E>> fPartialTuplesCounter = null;
 
-    private List<DimensionedItem<E>> fAllValues = null;  // TODO holds pairs dimension-value
+    private List<DimensionedItem<E>> fAllDimensionedItems = null;
 
     private IntegerHolder fIgnoreCount;
 
-    private IntegerHolder fRemainingTuplesCount; // TODO - check name
+    private IntegerHolder fRemainingTuplesCount;
 
     private int fDimCount;
 
@@ -43,7 +43,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         fDimCount = getInput().size();
 
         try {
-            fAllValues = createAllValues(getInput());
+            fAllDimensionedItems = createAllDimensionedItems(getInput());
 
             List<SortedMap<Integer, E>> remainingTuples = getAllNTuples(getInput(), N);
 
@@ -64,6 +64,14 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         super.reset();
     }
 
+    @Override
+    public List<E> getNext() throws GeneratorException {
+
+        IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
+
+        return getBestTuple(generatorProgressMonitor);
+    }
+
     private Multiset<SortedMap<Integer, E>> createPartialTuplesCounter(List<SortedMap<Integer, E>> remainingTuples) {
 
         Multiset<SortedMap<Integer, E>> fPartialTuplesCounter = HashMultiset.create();
@@ -79,7 +87,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return fPartialTuplesCounter;
     }
 
-    private List<DimensionedItem<E>> createAllValues(List<List<E>> input) {
+    private List<DimensionedItem<E>> createAllDimensionedItems(List<List<E>> input) {
 
         int dimCount = getInput().size();
 
@@ -92,14 +100,6 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
 
         return result;
-    }
-
-    @Override
-    public List<E> getNext() throws GeneratorException {
-
-        IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
-
-        return getBestTuple(generatorProgressMonitor);
     }
 
     private List<E> getBestTuple(IEcfProgressMonitor generatorProgressMonitor) {
@@ -198,10 +198,10 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     private void fillDimensionsAndTuples(SortedMap<Integer, E> nTuple, List<Integer> filledDimensions) {
 
         for (int i = 0; i < Math.min(N, fDimCount); i++) {
-            Collections.shuffle(fAllValues);
+            Collections.shuffle(fAllDimensionedItems);
             DimensionedItem<E> bestItem = null;
             int bestItemScore = -1;
-            for (DimensionedItem<E> dItem : fAllValues) {
+            for (DimensionedItem<E> dItem : fAllDimensionedItems) {
                 Integer dimension = dItem.getDimension();
                 if (nTuple.containsKey(dimension))
                     continue;
@@ -269,8 +269,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return score;
     }
 
-
     private Set<List<Integer>> getAllDimensionCombinations() {
+
         List<Integer> dimensions = new ArrayList<>();
         for (int i = 0; i < fDimCount; i++)
             dimensions.add(i);
@@ -327,5 +327,3 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return allValidTuples;
     }
 }
-
-
