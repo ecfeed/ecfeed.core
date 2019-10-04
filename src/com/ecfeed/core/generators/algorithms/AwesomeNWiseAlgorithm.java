@@ -129,9 +129,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 fillDimensionsAndTuples(nTuple, filledDimensions);
 
 
-                List<Integer> randomDimension = createRandomDimensions();
+                List<Integer> randomDimensions = createRandomDimensions(fDimCount);
 
-                todo(nTuple, filledDimensions, randomDimension);
+                todo(nTuple, filledDimensions, randomDimensions);
 
                 int nTupleScore = countAffectedTuples(nTuple);
 
@@ -149,17 +149,18 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
     }
 
-    private void todo(SortedMap<Integer, E> outNTuple, List<Integer> filledDimensions, List<Integer> randomDimension) {
+    private void todo(SortedMap<Integer, E> outNTuple, List<Integer> outFilledDimensions, List<Integer> randomDimensions) {
 
-        for (Integer d : randomDimension) {
+        for (Integer d : randomDimensions) {
 
             if (outNTuple.containsKey(d))
                 continue;
+
             List<E> currentDimInput = new ArrayList<>(getInput().get(d));
             Collections.shuffle(currentDimInput);
 
             Set<List<Integer>> dimensionsToCountScore =
-                    (new Tuples<>(filledDimensions, Math.min(filledDimensions.size(), N - 1))).getAll();
+                    (new Tuples<>(outFilledDimensions, Math.min(outFilledDimensions.size(), N - 1))).getAll();
 
             int bestScore = -1;
             E bestElement = null;
@@ -191,7 +192,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
 
             outNTuple.put(d, bestElement);
-            filledDimensions.add(d);
+            outFilledDimensions.add(d);
         }
     }
 
@@ -221,22 +222,22 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
     }
 
-    private List<Integer> createRandomDimensions() {
+    private List<Integer> createRandomDimensions(int fDimCount) {
 
-        List<Integer> randomDimension = new ArrayList<>();
+        List<Integer> randomDimensions = new ArrayList<>();
 
         for (int i = 0; i < fDimCount; i++)
-            randomDimension.add(i);
+            randomDimensions.add(i);
 
-        Collections.shuffle(randomDimension);
-        return randomDimension;
+        Collections.shuffle(randomDimensions);
+        return randomDimensions;
     }
 
     private void removeAffectedTuples(
             SortedMap<Integer, E> nTuple,
             Multiset<SortedMap<Integer, E>> outPartialTuplesCounter
     ) {
-        for (List<Integer> dimCombinations : getAllDimensionCombinations()) {
+        for (List<Integer> dimCombinations : getAllDimensionCombinations(fDimCount)) {
 
             SortedMap<Integer, E> dTuple = Maps.newTreeMap();
 
@@ -259,7 +260,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private int countAffectedTuples(SortedMap<Integer, E> nTuple) {
         int score = 0;
-        for (List<Integer> dimComb : getAllDimensionCombinations()) {
+        for (List<Integer> dimComb : getAllDimensionCombinations(fDimCount)) {
             SortedMap<Integer, E> dTuple = Maps.newTreeMap();
             for (Integer d : dimComb)
                 dTuple.put(d, nTuple.get(d));
@@ -269,13 +270,13 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return score;
     }
 
-    private Set<List<Integer>> getAllDimensionCombinations() {
+    private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount) {
 
         List<Integer> dimensions = new ArrayList<>();
-        for (int i = 0; i < fDimCount; i++)
+        for (int i = 0; i < dimensionCount; i++)
             dimensions.add(i);
 
-        return (new Tuples<>(dimensions, Math.min(fDimCount, N))).getAll();
+        return (new Tuples<>(dimensions, Math.min(dimensionCount, N))).getAll();
     }
 
     private List<SortedMap<Integer, E>> getAllNTuples(List<List<E>> input, int argN) {
