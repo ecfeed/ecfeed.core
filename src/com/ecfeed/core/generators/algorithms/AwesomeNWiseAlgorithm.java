@@ -366,30 +366,51 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                     maxDimension = tuple.lastKey();
                 }
 
-                for (int dimension = maxDimension + 1; dimension < dimensionCount - (argN - 1 - tupleSize); dimension++) {
-
-                    final List<E> inputForOneDimension = input.get(dimension);
-
-                    for (E v : inputForOneDimension) {
-
-                        tuple.put(dimension, v);
-
-                        if (checkConstraints(AlgorithmHelper.uncompressTuple(tuple, dimensionCount)) == EvaluationResult.TRUE) {
-                            SortedMap<Integer, E> newTuple = new TreeMap<>(tuple);
-                            newValidTuples.add(newTuple);
-                        }
-                    }
-
-                    tuple.remove(dimension);
-                }
+                addValidTuples(input, argN, dimensionCount, tupleSize, maxDimension, tuple, newValidTuples);
 
                 incrementProgress(1); // TODO - repeated progress
             }
 
-            allValidTuples = newValidTuples;
+            allValidTuples = newValidTuples; // TODO - do we need 2 variables ? why do we assign (what for did we calculate previous result ?)
         }
 
         return allValidTuples;
+    }
+
+    private void addValidTuples(
+            List<List<E>> input,
+            int argN, int dimensionCount,
+            int tupleSize,
+            Integer maxDimension,
+            SortedMap<Integer, E> tuple,
+            List<SortedMap<Integer, E>> inOutValidTuples) {
+
+        for (int dimension = maxDimension + 1; dimension < dimensionCount - (argN - 1 - tupleSize); dimension++) {
+
+            final List<E> inputForOneDimension = input.get(dimension);
+
+            addTuplesForOneDimension(dimension, inputForOneDimension, tuple, dimensionCount, inOutValidTuples);
+
+            tuple.remove(dimension);
+        }
+    }
+
+    private void addTuplesForOneDimension(
+            int dimension,
+            List<E> inputForOneDimension,
+            SortedMap<Integer, E> tuple,
+            int dimensionCount,
+            List<SortedMap<Integer, E>> inOutTuples) {
+
+        for (E v : inputForOneDimension) {
+
+            tuple.put(dimension, v);
+
+            if (checkConstraints(AlgorithmHelper.uncompressTuple(tuple, dimensionCount)) == EvaluationResult.TRUE) {
+                SortedMap<Integer, E> newTuple = new TreeMap<>(tuple);
+                inOutTuples.add(newTuple);
+            }
+        }
     }
 
     private boolean isGenerationCancelled(IEcfProgressMonitor generatorProgressMonitor) {
