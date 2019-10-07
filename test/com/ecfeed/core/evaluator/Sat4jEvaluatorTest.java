@@ -1337,7 +1337,7 @@ public class Sat4jEvaluatorTest {
             "    </Class>\n" +
             "</Model>\n";
 
-    private int CountSatisfying(String xmlModel)
+    private int countGeneratedTestCases(String xmlModel)
     {
         RootNode model = ModelTestHelper.createModel(xmlModel);
 
@@ -1377,100 +1377,100 @@ public class Sat4jEvaluatorTest {
     @Test
     public void TestOrderOfInts()
     {
-        assertEquals(9*8*7*6/2/3/4, CountSatisfying(xmlOrderOfInts));
+        assertEquals(9*8*7*6/2/3/4, countGeneratedTestCases(xmlOrderOfInts));
     }
 
     @Test
     public void TestInequalityOfInts()
     {
-        assertEquals(6*3*3*3*3*3, CountSatisfying(xmlInequalityOfInts));
+        assertEquals(6*3*3*3*3*3, countGeneratedTestCases(xmlInequalityOfInts));
     }
 
     @Test
     public void TestNondistinctValuesInts()
     {
-        assertEquals(4*3*3*3*3, CountSatisfying(xmlNondistinctValuesInts));
+        assertEquals(4*3*3*3*3, countGeneratedTestCases(xmlNondistinctValuesInts));
     }
 
     @Test
     public void TestDeeperConstraints1()
     {
-        assertEquals(4*3*2, CountSatisfying(xmlDeeperConstraints1));
+        assertEquals(4*3*2, countGeneratedTestCases(xmlDeeperConstraints1));
     }
 
     @Test
     public void TestDeeperConstraints2()
     {
-        assertEquals(4*4*4*4-4*3*2, CountSatisfying(xmlDeeperConstraints2));
+        assertEquals(4*4*4*4-4*3*2, countGeneratedTestCases(xmlDeeperConstraints2));
     }
 
     @Test
     public void TestDeeperConstraints3()
     {
-        assertEquals(4*3*2, CountSatisfying(xmlDeeperConstraints3));
+        assertEquals(4*3*2, countGeneratedTestCases(xmlDeeperConstraints3));
     }
 
     @Test
     public void TestExpectedValue1()
     {
-        assertEquals(2, CountSatisfying(xmlExpectedValue1));
+        assertEquals(2, countGeneratedTestCases(xmlExpectedValue1));
     }
 
     @Test
     public void TestExpectedValue2()
     {
-        assertEquals(4, CountSatisfying(xmlExpectedValue2));
+        assertEquals(4, countGeneratedTestCases(xmlExpectedValue2));
     }
 
     @Test
     public void TestRanges1()
     {
-        assertEquals(4, CountSatisfying(xmlRanges1));
+        assertEquals(4, countGeneratedTestCases(xmlRanges1));
     }
 
     @Test
     public void TestRanges2()
     {
-        assertEquals(6, CountSatisfying(xmlRanges2));
+        assertEquals(6, countGeneratedTestCases(xmlRanges2));
     }
 
     @Test
     public void TestRanges3()
     {
-        assertEquals(4, CountSatisfying(xmlRanges3));
+        assertEquals(4, countGeneratedTestCases(xmlRanges3));
     }
 
     @Test
     public void TestRangesDouble()
     {
-        assertEquals(7, CountSatisfying(xmlRangesDouble));
+        assertEquals(7, countGeneratedTestCases(xmlRangesDouble));
     }
 
     @Test
     public void TestRangesDoubleSmall()
     {
-        assertEquals(0, CountSatisfying(xmlRangesDoubleSmall));
+        assertEquals(0, countGeneratedTestCases(xmlRangesDoubleSmall));
     }
 
     @Test
-    public void TestMixedTypeOrder() { assertEquals(10, CountSatisfying(xmlMixedTypeOrder)); }
+    public void TestMixedTypeOrder() { assertEquals(10, countGeneratedTestCases(xmlMixedTypeOrder)); }
 
     @Test
-    public void TestNastyRanges() { assertEquals(2, CountSatisfying(xmlNastyRanges)); }
+    public void TestNastyRanges() { assertEquals(2, countGeneratedTestCases(xmlNastyRanges)); }
 
     @Test
-    public void TestMixedTypeEq1() { assertEquals(1, CountSatisfying(xmlMixedTypeEq1)); }
+    public void TestMixedTypeEq1() { assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq1)); }
 
     @Test
-    public void TestMixedTypeEq2() { assertEquals(1, CountSatisfying(xmlMixedTypeEq2)); }
+    public void TestMixedTypeEq2() { assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq2)); }
 
     @Test
-    public void TestMixedTypeEq3() { assertEquals(1, CountSatisfying(xmlMixedTypeEq3)); }
+    public void TestMixedTypeEq3() { assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq3)); }
 
     @Test
-    public void TestMixedTypeOverflow() { assertEquals(0, CountSatisfying(xmlMixedTypeOverflow)); }
+    public void TestMixedTypeOverflow() { assertEquals(0, countGeneratedTestCases(xmlMixedTypeOverflow)); }
 
     @Test
-    public void TestCmpFixedVsRange() { assertEquals(3, CountSatisfying(xmlCmpFixedVsRange) ); }
+    public void TestCmpFixedVsRange() { assertEquals(3, countGeneratedTestCases(xmlCmpFixedVsRange) ); }
 
 }
