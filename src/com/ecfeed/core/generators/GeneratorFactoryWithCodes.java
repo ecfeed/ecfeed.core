@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.generators;
 
-import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;

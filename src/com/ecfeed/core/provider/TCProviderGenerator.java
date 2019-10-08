@@ -12,9 +12,7 @@ package com.ecfeed.core.provider;
 
 import java.util.List;
 
-
 import com.ecfeed.core.evaluator.Sat4jEvaluator;
-import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;

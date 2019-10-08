@@ -26,8 +26,6 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	private IConstraintEvaluator<E> fConstraintEvaluator;
 	private IEcfProgressMonitor fGeneratorProgressMonitor;
 	
-	private boolean fInitialized = false;
-	
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
@@ -56,8 +54,6 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		fInput = inputDomain;
 		fConstraintEvaluator = constraintEvaluator;
 		fGeneratorProgressMonitor = generatorProgressMonitor;
-	
-		fInitialized = true; 
 	}
 
 	@Override
@@ -147,15 +143,6 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 
 	protected Object getParameterValue(IParameterDefinition definition) {
 		return fArguments.get(definition).getValue();
-	}
-
-	private Object getProvidedValue(IGeneratorValue generatorArgument) {
-
-		if (generatorArgument == null) {
-			return null;
-		}
-
-		return generatorArgument.getValue();
 	}
 
 }

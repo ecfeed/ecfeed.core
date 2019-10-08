@@ -11,7 +11,6 @@
 package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -19,8 +18,6 @@ import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.model.IConstraint;
-import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {

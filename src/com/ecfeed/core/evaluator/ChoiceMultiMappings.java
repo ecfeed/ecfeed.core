@@ -1,21 +1,19 @@
 package com.ecfeed.core.evaluator;
 
+import java.util.Collection;
+
 import com.ecfeed.core.model.ChoiceNode;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 public class ChoiceMultiMappings {
 
-    private String fDebugCode;
+	//    private String fDebugCode;
     private Multimap<ChoiceNode, ChoiceNode> fMap;
 
     public ChoiceMultiMappings(String debugCode) {
 
-        fDebugCode = debugCode;
+    	//        fDebugCode = debugCode;
         fMap = HashMultimap.create();
     }
 

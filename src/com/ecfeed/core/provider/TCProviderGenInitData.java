@@ -2,7 +2,6 @@ package com.ecfeed.core.provider;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.model.ChoiceNode;

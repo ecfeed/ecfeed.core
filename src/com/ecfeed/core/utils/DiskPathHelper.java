@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.utils;
 
-import java.io.File;
 import java.nio.file.Paths;
 
 public class DiskPathHelper { // TODO - rename to DiskPathHelper

@@ -11,10 +11,13 @@
 package com.ecfeed.core.generators;
 
 import java.util.List;
-import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
-import com.ecfeed.core.generators.api.*;
+import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
+import com.ecfeed.core.generators.api.IGenerator;
+import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 

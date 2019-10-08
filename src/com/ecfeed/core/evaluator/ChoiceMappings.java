@@ -7,12 +7,12 @@ import java.util.Map;
 
 public class ChoiceMappings {
 
-    private String fDebugCode;
+	//    private String fDebugCode;
     private Map<ChoiceNode, ChoiceNode> fMap;
 
     public ChoiceMappings(String debugCode) {
 
-        fDebugCode = debugCode;
+    	//        fDebugCode = debugCode;
         fMap = new HashMap<>();
     }
 

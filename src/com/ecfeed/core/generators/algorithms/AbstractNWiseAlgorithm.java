@@ -10,13 +10,11 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 

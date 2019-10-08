@@ -132,6 +132,7 @@ public class TestCasesUserInput {
 		return fProperties;
 	}
 
+	@SuppressWarnings("unchecked")
 	@JsonSetter("properties")
 	public void setProperties(Object properties)
 	{

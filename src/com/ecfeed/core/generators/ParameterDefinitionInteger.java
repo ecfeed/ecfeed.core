@@ -13,7 +13,6 @@ package com.ecfeed.core.generators;
 import java.util.Arrays;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.utils.ExceptionHelper;
 
 public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 

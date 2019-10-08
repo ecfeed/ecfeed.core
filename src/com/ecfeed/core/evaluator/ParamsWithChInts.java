@@ -1,20 +1,19 @@
 package com.ecfeed.core.evaluator;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodParameterNode;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 public class ParamsWithChInts {
 
-    private String fDebugCode;
+	//    private String fDebugCode;
     private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fMap;
 
     public ParamsWithChInts(String debugCode) {
 
-        fDebugCode = debugCode;
+    	//        fDebugCode = debugCode;
         fMap = new HashMap<>();
     }
 

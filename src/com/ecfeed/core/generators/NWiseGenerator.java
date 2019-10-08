@@ -11,7 +11,6 @@
 package com.ecfeed.core.generators;
 
 import java.util.List;
-import java.util.Map;
 
 import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
