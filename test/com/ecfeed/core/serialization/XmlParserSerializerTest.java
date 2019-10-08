@@ -60,20 +60,9 @@ import com.ecfeed.core.utils.JavaTypeHelper;
 public class XmlParserSerializerTest {
 	private final int TEST_RUNS = 10;
 
-	//	private final int MAX_CLASSES = 1;
-	//	private final int MAX_METHODS = 1;
-	//	private final int MAX_PARAMETERS = 3;
-	//	private final int MAX_EXPECTED_PARAMETERS = 3;
-	//	private final int MAX_PARTITIONS = 1;
-	//	private final int MAX_PARTITION_LEVELS = 1;
-	//	private final int MAX_PARTITION_LABELS = 1;
-	//	private final int MAX_CONSTRAINTS = 5;
-	//	private final int MAX_TEST_CASES = 1;
-
 	private final int MAX_CLASSES = 5;
 	private final int MAX_METHODS = 5;
 	private final int MAX_PARAMETERS = 5;
-	//	private final int MAX_EXPECTED_PARAMETERS = 3;
 	private final int MAX_PARTITIONS = 10;
 	private final int MAX_PARTITION_LEVELS = 5;
 	private final int MAX_PARTITION_LABELS = 5;
@@ -242,10 +231,6 @@ public class XmlParserSerializerTest {
 		ClassNode classNode = new ClassNode("com.example." + randomName(), null);
 		for(int i = 0; i < methods; ++i){
 			int numOfParameters = rand.nextInt(MAX_PARAMETERS) + 1;
-			//			int numOfExpParameters = rand.nextInt(MAX_EXPECTED_PARAMETERS);
-			//			if(numOfParameters + numOfExpParameters == 0){
-			//				numOfParameters = 1;
-			//			}
 			int numOfConstraints = rand.nextInt(MAX_CONSTRAINTS) + 1;
 			int numOfTestCases = rand.nextInt(MAX_TEST_CASES);
 			classNode.addMethod(createMethodNode(numOfParameters, 0, numOfConstraints, numOfTestCases));
@@ -393,8 +378,7 @@ public class XmlParserSerializerTest {
 		while(consequence == null){
 			if(rand.nextBoolean()){
 				consequence = createChoicesParentStatement(choicesParentParameters);
-			}
-			else{
+			} else {
 				consequence = createExpectedStatement(expectedParameters);
 			}
 		}
@@ -612,7 +596,6 @@ public class XmlParserSerializerTest {
 		compareNames(constraint1.getFullName(), constraint2.getFullName());
 		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
-
 
 	private void compareConstraints(Constraint constraint1, Constraint constraint2) {
 		compareBasicStatements(constraint1.getPremise(), constraint2.getPremise());
