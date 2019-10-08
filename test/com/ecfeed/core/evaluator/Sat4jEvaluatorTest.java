@@ -1,3 +1,4 @@
+
 package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
@@ -16,6 +17,141 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class Sat4jEvaluatorTest {
+
+    @Test
+    public void TestOrderOfInts() {
+        assertEquals(9 * 8 * 7 * 6 / 2 / 3 / 4, countGeneratedTestCases(xmlOrderOfInts));
+    }
+
+    @Test
+    public void TestInequalityOfInts() {
+        assertEquals(6 * 3 * 3 * 3 * 3 * 3, countGeneratedTestCases(xmlInequalityOfInts));
+    }
+
+    @Test
+    public void TestNondistinctValuesInts() {
+        assertEquals(4 * 3 * 3 * 3 * 3, countGeneratedTestCases(xmlNondistinctValuesInts));
+    }
+
+    @Test
+    public void TestDeeperConstraints1() {
+        assertEquals(4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints1));
+    }
+
+    @Test
+    public void TestDeeperConstraints2() {
+        assertEquals(4 * 4 * 4 * 4 - 4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints2));
+    }
+
+    @Test
+    public void TestDeeperConstraints3() {
+        assertEquals(4 * 3 * 2, countGeneratedTestCases(xmlDeeperConstraints3));
+    }
+
+    @Test
+    public void TestExpectedValue1() {
+        assertEquals(2, countGeneratedTestCases(xmlExpectedValue1));
+    }
+
+    @Test
+    public void TestExpectedValue2() {
+        assertEquals(4, countGeneratedTestCases(xmlExpectedValue2));
+    }
+
+    @Test
+    public void TestRanges1() {
+        assertEquals(4, countGeneratedTestCases(xmlRanges1));
+    }
+
+    @Test
+    public void TestRanges2() {
+        assertEquals(6, countGeneratedTestCases(xmlRanges2));
+    }
+
+    @Test
+    public void TestRanges3() {
+        assertEquals(4, countGeneratedTestCases(xmlRanges3));
+    }
+
+    @Test
+    public void TestRangesDouble() {
+        assertEquals(7, countGeneratedTestCases(xmlRangesDouble));
+    }
+
+    @Test
+    public void TestRangesDoubleSmall() {
+        assertEquals(0, countGeneratedTestCases(xmlRangesDoubleSmall));
+    }
+
+    @Test
+    public void TestMixedTypeOrder() {
+        assertEquals(10, countGeneratedTestCases(xmlMixedTypeOrder));
+    }
+
+    @Test
+    public void TestNastyRanges() {
+        assertEquals(2, countGeneratedTestCases(xmlNastyRanges));
+    }
+
+    @Test
+    public void TestMixedTypeEq1() {
+        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq1));
+    }
+
+    @Test
+    public void TestMixedTypeEq2() {
+        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq2));
+    }
+
+    @Test
+    public void TestMixedTypeEq3() {
+        assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq3));
+    }
+
+    @Test
+    public void TestMixedTypeOverflow() {
+        assertEquals(0, countGeneratedTestCases(xmlMixedTypeOverflow));
+    }
+
+    @Test
+    public void TestCmpFixedVsRange() {
+        assertEquals(3, countGeneratedTestCases(xmlCmpFixedVsRange));
+    }
+
+    private int countGeneratedTestCases(String xmlModel) {
+        RootNode model = ModelTestHelper.createModel(xmlModel);
+
+        ClassNode classNode = model.getClasses().get(0);
+        MethodNode methodNode = classNode.getMethods().get(0);
+
+        List<List<ChoiceNode>> input = new ArrayList<>();
+        for (MethodParameterNode arg : methodNode.getMethodParameters())
+            if (arg.isExpected()) {
+                input.add(Collections.singletonList(null));
+            } else
+                input.add(arg.getLeafChoicesWithCopies());
+
+
+        IConstraintEvaluator<ChoiceNode> evaluator = new Sat4jEvaluator(methodNode.getAllConstraints(), methodNode);
+
+        IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
+//        IAlgorithm<ChoiceNode> algorithm = new AwesomeNWiseAlgorithm<>(2,100);
+
+
+        int cnt = 0;
+        try {
+            algorithm.initialize(input, evaluator, new SimpleProgressMonitor());
+
+            while (algorithm.getNext() != null)
+                cnt++;
+
+        } catch (GeneratorException e) {
+            fail("Unexpected generator exception: " + e.getMessage());
+        }
+
+        return cnt;
+    }
+
     private String xmlOrderOfInts = "<?xml version='1.0' encoding='UTF-8'?>\n" +
             "<Model name='n0000wEct25656' version='2'>\n" +
             "    <Class name='com.ecfeed.core.junit5.EcFeedModelTest'>\n" +
@@ -1071,7 +1207,7 @@ public class Sat4jEvaluatorTest {
             "    </Class>\n" +
             "</Model>\n";
 
-    private String xmlMixedTypeEq1 ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+    private String xmlMixedTypeEq1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<Model name=\"Untitled_1\" version=\"2\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
@@ -1336,141 +1472,5 @@ public class Sat4jEvaluatorTest {
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
-
-    private int countGeneratedTestCases(String xmlModel)
-    {
-        RootNode model = ModelTestHelper.createModel(xmlModel);
-
-        ClassNode classNode = model.getClasses().get(0);
-        MethodNode methodNode = classNode.getMethods().get(0);
-
-        List<List<ChoiceNode>> input = new ArrayList<>();
-        for(MethodParameterNode arg : methodNode.getMethodParameters())
-            if(arg.isExpected()) {
-                input.add(Collections.singletonList(null));
-            }
-            else
-                input.add(arg.getLeafChoicesWithCopies());
-
-
-        IConstraintEvaluator<ChoiceNode> evaluator = new Sat4jEvaluator(methodNode.getAllConstraints(), methodNode);
-
-        IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
-//        IAlgorithm<ChoiceNode> algorithm = new AwesomeNWiseAlgorithm<>(2,100);
-
-
-        int cnt=0;
-        try {
-            algorithm.initialize(input, evaluator, new SimpleProgressMonitor());
-
-            while(algorithm.getNext() != null)
-                cnt++;
-
-        }
-        catch (GeneratorException e) {
-            fail("Unexpected generator exception: " + e.getMessage());
-        }
-
-        return cnt;
-    }
-
-    @Test
-    public void TestOrderOfInts()
-    {
-        assertEquals(9*8*7*6/2/3/4, countGeneratedTestCases(xmlOrderOfInts));
-    }
-
-    @Test
-    public void TestInequalityOfInts()
-    {
-        assertEquals(6*3*3*3*3*3, countGeneratedTestCases(xmlInequalityOfInts));
-    }
-
-    @Test
-    public void TestNondistinctValuesInts()
-    {
-        assertEquals(4*3*3*3*3, countGeneratedTestCases(xmlNondistinctValuesInts));
-    }
-
-    @Test
-    public void TestDeeperConstraints1()
-    {
-        assertEquals(4*3*2, countGeneratedTestCases(xmlDeeperConstraints1));
-    }
-
-    @Test
-    public void TestDeeperConstraints2()
-    {
-        assertEquals(4*4*4*4-4*3*2, countGeneratedTestCases(xmlDeeperConstraints2));
-    }
-
-    @Test
-    public void TestDeeperConstraints3()
-    {
-        assertEquals(4*3*2, countGeneratedTestCases(xmlDeeperConstraints3));
-    }
-
-    @Test
-    public void TestExpectedValue1()
-    {
-        assertEquals(2, countGeneratedTestCases(xmlExpectedValue1));
-    }
-
-    @Test
-    public void TestExpectedValue2()
-    {
-        assertEquals(4, countGeneratedTestCases(xmlExpectedValue2));
-    }
-
-    @Test
-    public void TestRanges1()
-    {
-        assertEquals(4, countGeneratedTestCases(xmlRanges1));
-    }
-
-    @Test
-    public void TestRanges2()
-    {
-        assertEquals(6, countGeneratedTestCases(xmlRanges2));
-    }
-
-    @Test
-    public void TestRanges3()
-    {
-        assertEquals(4, countGeneratedTestCases(xmlRanges3));
-    }
-
-    @Test
-    public void TestRangesDouble()
-    {
-        assertEquals(7, countGeneratedTestCases(xmlRangesDouble));
-    }
-
-    @Test
-    public void TestRangesDoubleSmall()
-    {
-        assertEquals(0, countGeneratedTestCases(xmlRangesDoubleSmall));
-    }
-
-    @Test
-    public void TestMixedTypeOrder() { assertEquals(10, countGeneratedTestCases(xmlMixedTypeOrder)); }
-
-    @Test
-    public void TestNastyRanges() { assertEquals(2, countGeneratedTestCases(xmlNastyRanges)); }
-
-    @Test
-    public void TestMixedTypeEq1() { assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq1)); }
-
-    @Test
-    public void TestMixedTypeEq2() { assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq2)); }
-
-    @Test
-    public void TestMixedTypeEq3() { assertEquals(1, countGeneratedTestCases(xmlMixedTypeEq3)); }
-
-    @Test
-    public void TestMixedTypeOverflow() { assertEquals(0, countGeneratedTestCases(xmlMixedTypeOverflow)); }
-
-    @Test
-    public void TestCmpFixedVsRange() { assertEquals(3, countGeneratedTestCases(xmlCmpFixedVsRange) ); }
 
 }

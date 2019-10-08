@@ -26,8 +26,8 @@ public class MethodNode extends ParametersParentNode {
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
 		super(name, modelChangeRegistrator);
 
-		fTestCases = new ArrayList<TestCaseNode>();
-		fConstraints = new ArrayList<ConstraintNode>();
+		fTestCases = new ArrayList<>();
+		fConstraints = new ArrayList<>();
 
 		setDefaultPropertyValues();
 	}

@@ -113,7 +113,9 @@ public class ConstraintNode extends AbstractNode{
 		if (parameter instanceof MethodParameterNode) {
 			MethodParameterNode param = (MethodParameterNode)parameter;
 			return fConstraint.mentions(param);
-		} else if (parameter instanceof GlobalParameterNode) {
+		}
+
+		if (parameter instanceof GlobalParameterNode) {
 			GlobalParameterNode global = (GlobalParameterNode)parameter;
 			for (MethodParameterNode methodParam: global.getLinkers()) {
 				return fConstraint.mentions(methodParam);

@@ -127,7 +127,6 @@ public class TestCasesUserInput {
 		fChoices = choices;
 	}
 
-
 	@JsonAnyGetter
 	public Map<String, String> getProperties() {
 		return fProperties;

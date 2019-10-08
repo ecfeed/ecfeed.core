@@ -267,7 +267,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 			return referenced;
 		} catch(Exception e) {
-			return new HashSet<String>();
+			return new HashSet<>();
 		}
 	}
 
