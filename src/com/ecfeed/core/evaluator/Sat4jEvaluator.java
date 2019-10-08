@@ -286,7 +286,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
             if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), sanitizedChoiceNode)) {
 
                 List<ChoiceNode> interleavedChoices =
-                        ChoiceNodeHelper.interleavedValues(
+                        ChoiceNodeHelper.getInterleavedValues(
                                 sanitizedChoiceNode, sanitizedChoices.getSize());
 
                 atomicChoices.get(methodParameterNode).addAll(interleavedChoices);
@@ -497,7 +497,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
                 }
                 if (new ChoiceNodeComparator().compare(val1, val2) == 0) {
                     if (type == TypeOfEndpoint.LEFT_ENDPOINT)
-                        val1 = ChoiceNodeHelper.precedingVal(val1);
+                        val1 = ChoiceNodeHelper.getPrecedingValue(val1);
                     else //RIGHT_ENDPOINT
                         val2 = ChoiceNodeHelper.followingVal(val2);
                 }

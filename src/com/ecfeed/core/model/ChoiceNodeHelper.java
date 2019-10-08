@@ -13,9 +13,7 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
-import com.ecfeed.core.utils.SimpleTypeHelper;
 
-import java.awt.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +25,8 @@ import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_
 import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 public class ChoiceNodeHelper {
+
+	private static final double eps = 0.000001;
 
 	public static ChoiceNode createSubstitutePath(ChoiceNode choice, MethodParameterNode parameter) {
 		List<ChoiceNode> copies = createListOfCopies(choice);
@@ -57,6 +57,7 @@ public class ChoiceNodeHelper {
 	}
 
 	private static void setParentsOfChoices(List<ChoiceNode> copies, MethodParameterNode parameter) {
+
 		int copiesSize = copies.size();
 		int lastIndex = copiesSize - 1;
 
@@ -101,53 +102,70 @@ public class ChoiceNodeHelper {
 		return choiceNames;
 	}
 
-	public static Pair<ChoiceNode,ChoiceNode> rangeSplit(ChoiceNode choice)
-	{
-		if(!choice.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("rangeStart on non-random choice node");
+	public static Pair<ChoiceNode,ChoiceNode> rangeSplit(ChoiceNode choice)	{
+
+		if(!choice.isRandomizedValue()) {
+			ExceptionHelper.reportRuntimeException("Attempt do split range on non-randomized choice node.");
+		}
+
 		ChoiceNode first = choice.makeClone();
 		ChoiceNode second = choice.makeClone();
 
 		first.setRandomizedValue(false);
 		second.setRandomizedValue(false);
 		String[] parts = choice.getValueString().split(":");
-		if(parts.length != 2)
-			ExceptionHelper.reportRuntimeException("expected two values here");
+
+		if (parts.length != 2) {
+			ExceptionHelper.reportRuntimeException("Two values are expected during range splitting.");
+		}
+
 		first.setValueString(parts[0]);
 		second.setValueString(parts[1]);
+
 		return new Pair<>(first,second);
 	}
 
-	public static ChoiceNode toRangeFromFirst(ChoiceNode first, ChoiceNode second)
-	{
-		if(first.isRandomizedValue() || second.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("gluing already randomized values");
+	public static ChoiceNode toRangeFromFirst(ChoiceNode first, ChoiceNode second) {
+
+		assertChoicesNotRandomized(first, second);
+
 		ChoiceNode ret = first.makeClone();
+
 		ret.setRandomizedValue(true);
 		ret.setValueString(first.getValueString()+":"+second.getValueString());
+
 		return ret;
 	}
 
-	public static ChoiceNode toRangeFromSecond(ChoiceNode first, ChoiceNode second)
-	{
-		if(first.isRandomizedValue() || second.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("gluing already randomized values");
+	public static ChoiceNode toRangeFromSecond(ChoiceNode first, ChoiceNode second)	{
+
+		assertChoicesNotRandomized(first, second);
+
 		ChoiceNode ret = second.makeClone();
+
 		ret.setRandomizedValue(true);
 		ret.setValueString(first.getValueString()+":"+second.getValueString());
+
 		return ret;
 	}
 
-	private static final double eps = 0.000001;
-	public static ChoiceNode precedingVal(ChoiceNode choice)
-	{
-		if(choice.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("is randomized value");
+	private static void assertChoicesNotRandomized(ChoiceNode first, ChoiceNode second) {
+
+		if (first.isRandomizedValue() || second.isRandomizedValue()) {
+			ExceptionHelper.reportRuntimeException("Choices should not be randomized.");
+		}
+	}
+
+	public static ChoiceNode getPrecedingValue(ChoiceNode choice) {
+
+		assertChoiceNotRandomized(choice);
+
 		String type = choice.getParameter().getType();
 		ChoiceNode clone = choice.makeClone();
+
 		choice = convertValueToNumeric(choice);
-		switch(type)
-		{
+
+		switch(type) {
 			case TYPE_NAME_DOUBLE:
 			case TYPE_NAME_FLOAT: {
 				double val = Double.parseDouble(choice.getValueString());
@@ -160,6 +178,7 @@ public class ChoiceNodeHelper {
 				clone.setValueString(String.valueOf(val));
 				return clone;
 			}
+
 			case TYPE_NAME_BYTE:
 			case TYPE_NAME_INT:
 			case TYPE_NAME_SHORT:
@@ -170,22 +189,24 @@ public class ChoiceNodeHelper {
 				clone.setValueString(String.valueOf(val));
 				return clone;
 			}
-			default:
-			{
-				ExceptionHelper.reportRuntimeException("unhandled type");
+
+			default: {
+				reportExceptionUnhandledType();
 				return null;
 			}
 		}
 	}
-	public static ChoiceNode followingVal(ChoiceNode choice)
-	{
-		if(choice.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("is randomized value");
+
+	public static ChoiceNode followingVal(ChoiceNode choice) {
+
+		assertChoiceNotRandomized(choice);
+
 		String type = choice.getParameter().getType();
 		ChoiceNode clone = choice.makeClone();
+
 		choice = convertValueToNumeric(choice);
-		switch(type)
-		{
+
+		switch(type) {
 			case TYPE_NAME_DOUBLE:
 			case TYPE_NAME_FLOAT: {
 				double val = Double.parseDouble(choice.getValueString());
@@ -210,17 +231,17 @@ public class ChoiceNodeHelper {
 			}
 			default:
 			{
-				ExceptionHelper.reportRuntimeException("unhandled type");
+				reportExceptionUnhandledType();
 				return null;
 			}
 		}
 	}
 
-	public static ChoiceNode roundValueDown(ChoiceNode choiceInput)
-	{
+	public static ChoiceNode roundValueDown(ChoiceNode choiceInput)	{
+
 		ChoiceNode choice = choiceInput.makeClone();
-		if(choice.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("is randomized value");
+
+		assertChoiceNotRandomized(choice);
 
 		double v = Double.parseDouble(choice.getValueString());
 		long w = (long) Math.floor(v);
@@ -228,26 +249,28 @@ public class ChoiceNodeHelper {
 		return choice;
 	}
 
-	public static ChoiceNode roundValueUp(ChoiceNode choiceInput)
-	{
+	public static ChoiceNode roundValueUp(ChoiceNode choiceInput) {
+
 		ChoiceNode choice = choiceInput.makeClone();
-		if(choice.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("is randomized value");
+
+		assertChoiceNotRandomized(choice);
 
 		double v = Double.parseDouble(choice.getValueString());
 		long w = (long) Math.ceil(v);
 		choice.setValueString(String.valueOf(w));
+
 		return choice;
 	}
 
+	public static ChoiceNode convertValueToNumeric(ChoiceNode choiceInput) {
 
-	public static ChoiceNode convertValueToNumeric(ChoiceNode choiceInput)
-	{
 		ChoiceNode choice = choiceInput.makeClone();
-		if(choice.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("is randomized value");
+
+		assertChoiceNotRandomized(choice);
+
 		String type = choice.getParameter().getType();
 		String valueString = choice.getValueString();
+
 		switch(type) {
 			case TYPE_NAME_DOUBLE:
 			{
@@ -321,26 +344,38 @@ public class ChoiceNodeHelper {
 			}
 			default:
 			{
-				ExceptionHelper.reportRuntimeException("unhandled type");
+				reportExceptionUnhandledType();
 			}
 		}
 		return choice;
 	}
 
-	public static List<ChoiceNode> interleavedValues(ChoiceNode choice, int N)
+	private static void assertChoiceNotRandomized(ChoiceNode choice) {
+
+		if (choice.isRandomizedValue()) {
+			ExceptionHelper.reportRuntimeException("Choice should not be randomized.");
+		}
+	}
+
+	public static List<ChoiceNode> getInterleavedValues(ChoiceNode choice, int N)
 	{
-		if(! choice.isRandomizedValue())
-			ExceptionHelper.reportRuntimeException("should be randomized");
+		if (! choice.isRandomizedValue()) {
+			ExceptionHelper.reportRuntimeException("Choice should be randomized.");
+		}
+
 		Pair<ChoiceNode,ChoiceNode> startEnd = rangeSplit(choice);
 		ChoiceNode start = convertValueToNumeric(startEnd.getFirst());
 		ChoiceNode end = convertValueToNumeric(startEnd.getSecond());
-		if(N<2)
-			N=2;
+
+		if (N < 2) {
+			N = 2;
+		}
+
 		List<ChoiceNode> ret = new ArrayList<>();
 
 		String type = choice.getParameter().getType();
-		switch(type)
-		{
+
+		switch(type) {
 			case TYPE_NAME_DOUBLE:
 			case TYPE_NAME_FLOAT: {
 				double v1 = Double.parseDouble(start.getValueString());
@@ -359,7 +394,7 @@ public class ChoiceNodeHelper {
 				long w2 = (long) Math.floor(v2);
 				if(w1 <= w2)
 				{
-					for(String val : interleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
+					for(String val : getInterleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
 					{
 						ChoiceNode tmp = start.makeClone();
 						tmp.setValueString(val);
@@ -368,6 +403,7 @@ public class ChoiceNodeHelper {
 				}
 				return ret;
 			}
+
 			case TYPE_NAME_BYTE:
 			case TYPE_NAME_INT:
 			case TYPE_NAME_SHORT:
@@ -375,7 +411,7 @@ public class ChoiceNodeHelper {
 				String v1 = start.getValueString();
 				String v2 = end.getValueString();
 
-				for(String val : interleavedBigIntegers(v1,v2,N))
+				for(String val : getInterleavedBigIntegers(v1,v2,N))
 				{
 					ChoiceNode tmp = start.makeClone();
 					tmp.setValueString(val);
@@ -383,22 +419,28 @@ public class ChoiceNodeHelper {
 				}
 				return ret;
 			}
+
 			default:
 			{
-				ExceptionHelper.reportRuntimeException("unhandled type");
+				reportExceptionUnhandledType();
 				return null;
 			}
 		}
 	}
 
-	private static List<String> interleavedBigIntegers(String start, String end, int N)
-	{
+	private static void reportExceptionUnhandledType() {
+		ExceptionHelper.reportRuntimeException("An unnhandled type found.");
+	}
+
+	private static List<String> getInterleavedBigIntegers(String start, String end, int N)	{
+
 		BigInteger v1 = new BigInteger(start);
 		BigInteger v2 = new BigInteger(end);
+
 		String oldval = "";
 		List<String> ret = new ArrayList<>();
-		for(int i=0;i<N;i++)
-		{
+
+		for (int i=0;i<N;i++) {
 			BigInteger v = v1.multiply(BigInteger.valueOf(N-1-i)).add(v2.multiply(BigInteger.valueOf(i))).divide(BigInteger.valueOf(N-1));
 			String newval = String.valueOf(v);
 			if(! oldval.equals(newval)) {
@@ -406,6 +448,7 @@ public class ChoiceNodeHelper {
 				oldval= newval;
 			}
 		}
+
 		return ret;
 	}
 

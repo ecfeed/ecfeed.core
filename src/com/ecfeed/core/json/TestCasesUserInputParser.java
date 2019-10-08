@@ -11,6 +11,8 @@ public final class TestCasesUserInputParser {
 
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+
+			// TODO - remove if not needed
 			// mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 //			mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
 			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

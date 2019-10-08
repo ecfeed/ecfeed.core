@@ -16,6 +16,9 @@ import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public interface IGenerator<E> {
+
+	// TODO - remove unused
+
 	/*
 	 * returns list of parameters used by this generator.
 	 */

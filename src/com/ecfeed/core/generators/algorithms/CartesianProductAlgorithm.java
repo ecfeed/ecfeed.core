@@ -22,6 +22,7 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
+
 	private boolean fInitialized;
 	protected List<Integer> fLastGenerated;
 

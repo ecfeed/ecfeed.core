@@ -39,7 +39,7 @@ public class ChoiceNode extends ChoicesParentNode{
 	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value, boolean isRandomized) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
-		fLabels = new LinkedHashSet<String>();
+		fLabels = new LinkedHashSet<>();
 		fIsRandomizedValue = isRandomized;
 	}
 
