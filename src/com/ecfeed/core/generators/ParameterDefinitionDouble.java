@@ -86,9 +86,10 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 	public Object parse(String value) throws GeneratorException
 	{
 		Double retValue;
-		if(value == null)
+
+		if (value == null) {
 			retValue = fDefaultValue;
-		else {
+		} else {
 			try {
 				retValue = Double.parseDouble(value);
 			} catch (Exception e) {
@@ -97,10 +98,9 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 			}
 		}
 
-		if(test(retValue))
+		if (test(retValue)) {
 			return retValue;
-		else
-		{
+		} else {
 			GeneratorException.report("Illegal value Double type parameter.");
 			return null;
 		}
