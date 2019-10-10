@@ -51,7 +51,7 @@ public class TCProviderGenerator implements ITCProvider {
                     new Sat4jEvaluator(genInitData.getConstraints(),genInitData.getMethodNode()),
                     genInitData.getGeneratorArguments(),
                     progressMonitor);
-        } catch (GeneratorException e) {
+        } catch (Exception e) {
 
             ExceptionHelper.reportRuntimeException("Cannot initalize generator.", e);
         }
