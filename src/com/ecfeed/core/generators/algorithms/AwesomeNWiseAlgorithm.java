@@ -70,7 +70,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     private int calculateIgnoreCount() {
 
         int result = fNTuplesCount.get() * (100 - getCoverage()) / 100;
-        log("Ignore count", result, 1, fLogLevel);
+        AlgoLogger.log("Ignore count", result, 1, fLogLevel);
 
         return result;
     }
@@ -78,7 +78,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     private IntegerHolder calculateNTuplesCount(List<SortedMap<Integer, E>> remainingTuples) {
 
         IntegerHolder result = new IntegerHolder(remainingTuples.size());
-        log("nTuplesCount", result.get(), 1, fLogLevel);
+        AlgoLogger.log("nTuplesCount", result.get(), 1, fLogLevel);
 
         return result;
     }
@@ -86,14 +86,14 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     @Override
     public List<E> getNext() throws GeneratorException {
 
-        log(fLogLevel, 1, "========== getNext test case ==========");
+        AlgoLogger.log("========== getNext test case ==========", 1, fLogLevel);
 
         IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
         List<E> tuple = getBestMaxTuple(generatorProgressMonitor);
 
         if (tuple == null) {
-            log(fLogLevel, 1, "Tuple is null");
+            AlgoLogger.log("Tuple is null", 1, fLogLevel);
         }
 
         return tuple;
@@ -114,7 +114,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
         }
 
-        log("partialNTo0Tuples", result, 1, fLogLevel);
+        AlgoLogger.log("partialNTo0Tuples", result, 1, fLogLevel);
         return result;
     }
 
@@ -130,7 +130,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
         }
 
-        log("Dimensioned items", result, 1, fLogLevel);
+        AlgoLogger.log("Dimensioned items", result, 1, fLogLevel);
         return result;
     }
 
@@ -160,14 +160,14 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
         }
 
-        log("Best max tuple", bestTuple, 1, fLogLevel);
+        AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
 
         removeAffectedTuples(bestTuple, fPartialNTo0Tuples, fNTuplesCount);
         incrementProgress(bestTupleScore);  // TODO - by score ?
 
         final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
 
-        log("Result of getNext - best max tuple", result, 1, fLogLevel);
+        AlgoLogger.log("Result of getNext - best max tuple", result, 1, fLogLevel);
         return result;
     }
 
@@ -341,7 +341,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
         }
 
-        log("partialNTo0Tuples after removal of best tuple", outPartialNTo0Tuples, 1, fLogLevel);
+        AlgoLogger.log("partialNTo0Tuples after removal of best tuple", outPartialNTo0Tuples, 1, fLogLevel);
     }
 
     private ImmutableSortedMap<Integer, E> createOneCounter(List<Map.Entry<Integer, E>> sublist) {
@@ -410,7 +410,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             allValidTuples = newValidTuples; // TODO - do we need 2 variables ? why do we assign (what for did we calculate previous result ?)
         }
 
-        log("All N tuples", allValidTuples, 1, fLogLevel);
+        AlgoLogger.log("All N tuples", allValidTuples, 1, fLogLevel);
         return allValidTuples;
     }
 
@@ -461,60 +461,6 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         }
 
         return false;
-    }
-
-    private void log(int controllingVariable, int logLevel, String message) {
-
-        if (logLevel <= controllingVariable) {
-            SystemLogger.logLine("[ALG-LOG] " + message);
-            SystemLogger.logLine();
-        }
-    }
-
-    private void log(String message, Object o, int logLevel, int controllingVariable) {
-
-        if (logLevel <= controllingVariable) {
-            SystemLogger.logLine("[ALG-LOG] " + message);
-            SystemLogger.logLine("  " + o.toString());
-            SystemLogger.logLine();
-        }
-    }
-
-
-    private void log(String message, List<?> o, int logLevel, int controllingVariable) {
-
-        if (logLevel > controllingVariable) {
-            return;
-        }
-
-        SystemLogger.logLine("[ALG-LOG] " + message);
-
-        int counter = 0;
-
-        for (Object element : o) {
-            SystemLogger.logLine("  [ " + counter + " ] [ " + element.toString() + " ]");
-            counter++;
-        }
-
-        SystemLogger.logLine();
-    }
-
-    private void log(String message, Multiset<?> o, int logLevel, int controllingVariable) {
-
-        if (logLevel > controllingVariable) {
-            return;
-        }
-
-        SystemLogger.logLine("[ALG-LOG] " + message);
-
-        int counter = 0;
-
-        for (Object element : Multisets.copyHighestCountFirst(o).elementSet()) {
-            SystemLogger.logLine("  [ " + counter + " ] [ " + element.toString() + " ]");
-            counter++;
-        }
-
-        SystemLogger.logLine();
     }
 
 }
