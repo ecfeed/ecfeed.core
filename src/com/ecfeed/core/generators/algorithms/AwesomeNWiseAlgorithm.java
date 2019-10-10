@@ -111,7 +111,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         SortedMap<Integer, E> bestTuple = null;
         int bestTupleScore = -1;
 
-        for (int repetition = 0; repetition < NUM_OF_REPETITIONS; repetition++) {
+        for (int repetition = 0; repetition < NUM_OF_REPETITIONS; repetition++) { // TODO - limit number of repetitions for small tuples table
 
             if (isGenerationCancelled(generatorProgressMonitor)) {
                 return null;
@@ -140,29 +140,33 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private SortedMap<Integer, E> createNTuple() {
 
-        SortedMap<Integer, E> nTuple = createTupleWithBestScores();
+        SortedMap<Integer, E> nTuple = createNTupleWithBestScores();
 
-        findBestTupleAfterConstraints(nTuple);
+        SortedMap<Integer, E> maxTuple = findBestMaxTupleAfterConstraints(nTuple);
 
-        return nTuple;
+        return maxTuple;
     }
 
-    private void findBestTupleAfterConstraints(SortedMap<Integer, E> nTuple) {
+    private SortedMap<Integer, E> findBestMaxTupleAfterConstraints(SortedMap<Integer, E> nTuple) {
 
-        List<Integer> tupleDimensions = createTupleDimensions(nTuple);
+        SortedMap<Integer, E> resultMaxTuple = nTuple;
+
+        List<Integer> tupleDimensions = createTupleDimensions(resultMaxTuple);
 
         List<Integer> randomDimensions = createRandomDimensions(fDimCount);
 
         for (Integer dimension : randomDimensions) {
 
-            if (nTuple.containsKey(dimension))
+            if (resultMaxTuple.containsKey(dimension))
                 continue;
 
-            E bestElement = findBestItemWithConstraintCheck(dimension, nTuple, tupleDimensions);
+            E bestElement = findBestItemWithConstraintCheck(dimension, resultMaxTuple, tupleDimensions);
 
-            nTuple.put(dimension, bestElement);
+            resultMaxTuple.put(dimension, bestElement);
             tupleDimensions.add(dimension);
         }
+
+        return resultMaxTuple;
     }
 
     private E findBestItemWithConstraintCheck(
@@ -221,7 +225,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return score;
     }
 
-    private SortedMap<Integer, E> createTupleWithBestScores() {
+    private SortedMap<Integer, E> createNTupleWithBestScores() {
 
         SortedMap<Integer, E> tuple = Maps.newTreeMap();
 
