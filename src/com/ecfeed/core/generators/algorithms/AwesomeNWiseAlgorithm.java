@@ -20,13 +20,13 @@ import com.google.common.collect.*;
 
 public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
-    private Multiset<SortedMap<Integer, E>> fPartialTuples = null;
+    private Multiset<SortedMap<Integer, E>> fPartialNTuples = null;
 
     private List<DimensionedItem<E>> fAllDimensionedItems = null;
 
     private IntegerHolder fIgnoreCount;
 
-    private IntegerHolder fRemainingTuplesCount;
+    private IntegerHolder fPartialNTuplesCount;
 
     private int fDimCount;
 
@@ -47,11 +47,11 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             List<SortedMap<Integer, E>> remainingTuples = getAllNTuples(getInput(), N);
 
-            fRemainingTuplesCount = new IntegerHolder(remainingTuples.size());
+            fPartialNTuplesCount = new IntegerHolder(remainingTuples.size());
 
-            fPartialTuples = createPartialTuples(remainingTuples);
+            fPartialNTuples = createPartialTuples(remainingTuples);
 
-            fIgnoreCount.set(fRemainingTuplesCount.get() * (100 - getCoverage()) / 100);
+            fIgnoreCount.set(fPartialNTuplesCount.get() * (100 - getCoverage()) / 100);
 
         } catch (Exception e) {
 
@@ -60,7 +60,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
         }
 
-        setTaskBegin(fRemainingTuplesCount.get() * getCoverage() / 100); // TODO - repeated setTaskBegin
+        setTaskBegin(fPartialNTuplesCount.get() * getCoverage() / 100); // TODO - repeated setTaskBegin
 
         super.reset();
     }
@@ -70,7 +70,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
         IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
-        return getBestTuple(generatorProgressMonitor);
+        return getBestMaxTuple(generatorProgressMonitor);
     }
 
     private Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
@@ -106,39 +106,36 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return result;
     }
 
-    private List<E> getBestTuple(IEcfProgressMonitor generatorProgressMonitor) {
+    private List<E> getBestMaxTuple(IEcfProgressMonitor generatorProgressMonitor) {
 
-        while (true) {
+        SortedMap<Integer, E> bestTuple = null;
+        int bestTupleScore = -1;
 
-            SortedMap<Integer, E> bestTuple = null;
-            int bestTupleScore = -1;
+        for (int repetition = 0; repetition < NUM_OF_REPETITIONS; repetition++) {
 
-            for (int repetition = 0; repetition < NUM_OF_REPETITIONS; repetition++) {
-
-                if (isGenerationCancelled(generatorProgressMonitor)) {
-                    return null;
-                }
-
-                if (fRemainingTuplesCount.get() <= fIgnoreCount.get()) {
-                    setTaskEnd();
-                    return null;
-                }
-
-                SortedMap<Integer, E> nTuple = createNTuple();
-
-                int nTupleScore = calculateScoreForNTuple(nTuple);
-
-                if (nTupleScore > bestTupleScore) {
-                    bestTupleScore = nTupleScore;
-                    bestTuple = nTuple;
-                }
+            if (isGenerationCancelled(generatorProgressMonitor)) {
+                return null;
             }
 
-            removeAffectedTuples(bestTuple, fPartialTuples, fRemainingTuplesCount);
-            incrementProgress(bestTupleScore);  // TODO - by score ?
+            if (fPartialNTuplesCount.get() <= fIgnoreCount.get()) {
+                setTaskEnd();
+                return null;
+            }
 
-            return AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
+            SortedMap<Integer, E> nTuple = createNTuple();
+
+            int nTupleScore = calculateScoreForNTuple(nTuple);
+
+            if (nTupleScore > bestTupleScore) {
+                bestTupleScore = nTupleScore;
+                bestTuple = nTuple;
+            }
         }
+
+        removeAffectedTuples(bestTuple, fPartialNTuples, fPartialNTuplesCount);
+        incrementProgress(bestTupleScore);  // TODO - by score ?
+
+        return AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
     }
 
     private SortedMap<Integer, E> createNTuple() {
@@ -217,7 +214,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             tmpObject.put(dimension, item);
 
-            if (fPartialTuples.contains(tmpObject))
+            if (fPartialNTuples.contains(tmpObject))
                 score++;
         }
 
@@ -246,7 +243,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
                 tuple.put(dimension, dItem.getItem());
 
-                final int tupleScore = fPartialTuples.count(tuple);
+                final int tupleScore = fPartialNTuples.count(tuple);
 
                 if (tupleScore > bestTupleScore) {
                     bestItem = dItem;
@@ -326,7 +323,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             for (Integer dimension : combinationOfDimensions)
                 dTuple.put(dimension, nTuple.get(dimension));
 
-            if (fPartialTuples.contains(dTuple))
+            if (fPartialNTuples.contains(dTuple))
                 score++;
         }
 
