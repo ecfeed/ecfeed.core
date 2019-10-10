@@ -100,7 +100,11 @@ public class SystemLogger {
 		
 		logLine("WARNING! " + line);
 	}
-	
+
+	public static void logLine() {
+		logLine("");
+	}
+
 	public static void logLine(String line) {
 		System.out.println(line);
 
