@@ -212,7 +212,7 @@ public class ExceptionHelper {
 
 		StackTraceElement[] stackElements = throwable.getStackTrace();
 
-		for (int index = stackElements.length - 1; index >= 0 ; index--) {
+		for (int index = 0; index < stackElements.length; index++) {
 
 			StackTraceElement element = stackElements[index];
 
