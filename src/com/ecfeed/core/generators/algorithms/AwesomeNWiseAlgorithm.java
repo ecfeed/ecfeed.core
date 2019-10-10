@@ -20,19 +20,19 @@ import com.google.common.collect.*;
 
 public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
-    static final int NUM_OF_REPETITIONS = 100; // TODO - calculate
+    static final int MAX_REPETITIONS = 100; // TODO - calculate ? could be smaller for small number of dimensions or N ?
 
-    private Multiset<SortedMap<Integer, E>> fPartialNTuples = null;
+    private Multiset<SortedMap<Integer, E>> fPartialNTo0Tuples = null;
 
     private List<DimensionedItem<E>> fAllDimensionedItems = null;
 
     private IntegerHolder fIgnoreCount;
 
-    private IntegerHolder fPartialNTuplesCount;
+    private IntegerHolder fNTuplesCount;
 
     private int fDimCount;
 
-    static final int fLogLevel = 1;
+    static final int fLogLevel = 0;
 
     public AwesomeNWiseAlgorithm(int n, int coverage) {
         super(n, coverage);
@@ -47,11 +47,11 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         try {
             fAllDimensionedItems = createDimensionedItems(getInput());
 
-            List<SortedMap<Integer, E>> remainingTuples = getAllNTuples(getInput(), N);
+            List<SortedMap<Integer, E>> allNTuples = getAllNTuples(getInput(), N);
 
-            fPartialNTuplesCount = calculatePartialNTuplesCount(remainingTuples);
+            fNTuplesCount = calculateNTuplesCount(allNTuples);
 
-            fPartialNTuples = createPartialTuples(remainingTuples);
+            fPartialNTo0Tuples = createPartialNTo0Tuples(allNTuples);
 
             fIgnoreCount.set(calculateIgnoreCount());
 
@@ -62,23 +62,23 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
         }
 
-        setTaskBegin(fPartialNTuplesCount.get() * getCoverage() / 100); // TODO - repeated setTaskBegin
+        setTaskBegin(fNTuplesCount.get() * getCoverage() / 100); // TODO - repeated setTaskBegin
 
         super.reset();
     }
 
     private int calculateIgnoreCount() {
 
-        int result = fPartialNTuplesCount.get() * (100 - getCoverage()) / 100;
-        log(1, "Ignore count", result);
+        int result = fNTuplesCount.get() * (100 - getCoverage()) / 100;
+        log("Ignore count", result, 1, fLogLevel);
 
         return result;
     }
 
-    private IntegerHolder calculatePartialNTuplesCount(List<SortedMap<Integer, E>> remainingTuples) {
+    private IntegerHolder calculateNTuplesCount(List<SortedMap<Integer, E>> remainingTuples) {
 
         IntegerHolder result = new IntegerHolder(remainingTuples.size());
-        log(1, "partialNTuplesCount", result.get());
+        log("nTuplesCount", result.get(), 1, fLogLevel);
 
         return result;
     }
@@ -86,14 +86,22 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
     @Override
     public List<E> getNext() throws GeneratorException {
 
+        log(fLogLevel, 1, "========== getNext test case ==========");
+
         IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
-        return getBestMaxTuple(generatorProgressMonitor);
+        List<E> tuple = getBestMaxTuple(generatorProgressMonitor);
+
+        if (tuple == null) {
+            log(fLogLevel, 1, "Tuple is null");
+        }
+
+        return tuple;
     }
 
-    private Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
+    private Multiset<SortedMap<Integer, E>> createPartialNTo0Tuples(List<SortedMap<Integer, E>> remainingTuples) {
 
-        Multiset<SortedMap<Integer, E>> partialTuples = HashMultiset.create();
+        Multiset<SortedMap<Integer, E>> result = HashMultiset.create();
 
         for (SortedMap<Integer, E> remainingTuple : remainingTuples) {
 
@@ -102,12 +110,12 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             for (List<Map.Entry<Integer, E>> sublist : allSublists) {
 
-                partialTuples.add(createOneCounter((List<Map.Entry<Integer, E>>) sublist));
+                result.add(createOneCounter((List<Map.Entry<Integer, E>>) sublist));
             }
         }
 
-        log(1, "partialTuples", partialTuples);
-        return partialTuples;
+        log("partialNTo0Tuples", result, 1, fLogLevel);
+        return result;
     }
 
     private List<DimensionedItem<E>> createDimensionedItems(List<List<E>> input) {
@@ -122,7 +130,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
         }
 
-        log(1, "Dimensioned items", result);
+        log("Dimensioned items", result, 1, fLogLevel);
         return result;
     }
 
@@ -131,13 +139,13 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         SortedMap<Integer, E> bestTuple = null;
         int bestTupleScore = -1;
 
-        for (int repetition = 0; repetition < NUM_OF_REPETITIONS; repetition++) { // TODO - limit number of repetitions for small tuples table
+        for (int repetition = 0; repetition < MAX_REPETITIONS; repetition++) {
 
             if (isGenerationCancelled(generatorProgressMonitor)) {
                 return null;
             }
 
-            if (fPartialNTuplesCount.get() <= fIgnoreCount.get()) {
+            if (fNTuplesCount.get() <= fIgnoreCount.get()) {
                 setTaskEnd();
                 return null;
             }
@@ -152,13 +160,14 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             }
         }
 
-        removeAffectedTuples(bestTuple, fPartialNTuples, fPartialNTuplesCount);
-        incrementProgress(bestTupleScore);  // TODO - by score ?
+        log("Best max tuple", bestTuple, 1, fLogLevel);
 
+        removeAffectedTuples(bestTuple, fPartialNTo0Tuples, fNTuplesCount);
+        incrementProgress(bestTupleScore);  // TODO - by score ?
 
         final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
 
-        log(1, "Get next - best max tuple", result);
+        log("Result of getNext - best max tuple", result, 1, fLogLevel);
         return result;
     }
 
@@ -242,7 +251,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             tmpTuple.put(dimension, item);
 
-            if (fPartialNTuples.contains(tmpTuple))
+            if (fPartialNTo0Tuples.contains(tmpTuple))
                 score++;
         }
 
@@ -271,7 +280,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
                 tuple.put(dimension, dItem.getItem());
 
-                final int tupleScore = fPartialNTuples.count(tuple);
+                final int tupleScore = fPartialNTo0Tuples.count(tuple);
 
                 if (tupleScore > bestTupleScore) {
                     bestItem = dItem;
@@ -314,7 +323,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
     private void removeAffectedTuples(
             SortedMap<Integer, E> affectingTuple,
-            Multiset<SortedMap<Integer, E>> outPartialTuples,
+            Multiset<SortedMap<Integer, E>> outPartialNTo0Tuples,
             IntegerHolder outRemainingTuplesCount) {
 
         for (List<Integer> dimCombinations : getAllDimensionCombinations(fDimCount, N)) {
@@ -324,13 +333,15 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             for (Integer dimension : dimCombinations)
                 dTuple.put(dimension, affectingTuple.get(dimension));
 
-            if (outPartialTuples.contains(dTuple)) {
+            if (outPartialNTo0Tuples.contains(dTuple)) {
                 outRemainingTuplesCount.decrement();
 
                 for (List<Map.Entry<Integer, E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(dTuple.entrySet())))
-                    outPartialTuples.remove(createOneCounter(sublist), 1);
+                    outPartialNTo0Tuples.remove(createOneCounter(sublist), 1);
             }
         }
+
+        log("partialNTo0Tuples after removal of best tuple", outPartialNTo0Tuples, 1, fLogLevel);
     }
 
     private ImmutableSortedMap<Integer, E> createOneCounter(List<Map.Entry<Integer, E>> sublist) {
@@ -351,7 +362,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             for (Integer dimension : combinationOfDimensions)
                 dTuple.put(dimension, nTuple.get(dimension));
 
-            if (fPartialNTuples.contains(dTuple))
+            if (fPartialNTo0Tuples.contains(dTuple))
                 score++;
         }
 
@@ -399,7 +410,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             allValidTuples = newValidTuples; // TODO - do we need 2 variables ? why do we assign (what for did we calculate previous result ?)
         }
 
-        log(1, "All N tuples", allValidTuples);
+        log("All N tuples", allValidTuples, 1, fLogLevel);
         return allValidTuples;
     }
 
@@ -452,13 +463,58 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         return false;
     }
 
-    private void log(int logLevel, String message, Object o) {
+    private void log(int controllingVariable, int logLevel, String message) {
 
-        if (logLevel <= fLogLevel) {
+        if (logLevel <= controllingVariable) {
             SystemLogger.logLine("[ALG-LOG] " + message);
-            SystemLogger.logLine(o.toString());
             SystemLogger.logLine();
         }
+    }
+
+    private void log(String message, Object o, int logLevel, int controllingVariable) {
+
+        if (logLevel <= controllingVariable) {
+            SystemLogger.logLine("[ALG-LOG] " + message);
+            SystemLogger.logLine("  " + o.toString());
+            SystemLogger.logLine();
+        }
+    }
+
+
+    private void log(String message, List<?> o, int logLevel, int controllingVariable) {
+
+        if (logLevel > controllingVariable) {
+            return;
+        }
+
+        SystemLogger.logLine("[ALG-LOG] " + message);
+
+        int counter = 0;
+
+        for (Object element : o) {
+            SystemLogger.logLine("  [ " + counter + " ] [ " + element.toString() + " ]");
+            counter++;
+        }
+
+        SystemLogger.logLine();
+    }
+
+    private void log(String message, Multiset<?> o, int logLevel, int controllingVariable) {
+
+        if (logLevel > controllingVariable) {
+            return;
+        }
+
+        SystemLogger.logLine("[ALG-LOG] " + message);
+
+        int counter = 0;
+
+        for (Object element : Multisets.copyHighestCountFirst(o).elementSet()) {
+            SystemLogger.logLine("  [ " + counter + " ] [ " + element.toString() + " ]");
+            counter++;
+        }
+
+        SystemLogger.logLine();
     }
 
 }
