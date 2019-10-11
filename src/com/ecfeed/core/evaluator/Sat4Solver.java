@@ -17,6 +17,8 @@ public class Sat4Solver {
     private Boolean fIsContradicting;
     private Boolean fHasConstraints;
 
+    public Sat4Clauses fSat4Clauses;
+
     public Sat4Solver() {
         fSolver = SolverFactory.newDefault();
         fIsContradicting = false;

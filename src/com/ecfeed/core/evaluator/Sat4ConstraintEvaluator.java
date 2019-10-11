@@ -13,7 +13,6 @@ import java.util.List;
 
 public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
-    private Sat4Clauses fSat4Clauses;
     private IntegerHolder fFirstFreeIDHolder = new IntegerHolder(1);
 
     private ParamsWithChoices fInputChoices;
@@ -54,8 +53,10 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
         fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
         Sat4Logger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
 
-        fSat4Clauses = new Sat4Clauses();
-        Sat4Logger.log("fSat4Clauses", fSat4Clauses, 1, fLogLevel);
+        fSat4Solver = new Sat4Solver();
+        
+        fSat4Solver.fSat4Clauses = new Sat4Clauses();
+        Sat4Logger.log("fSat4Clauses", fSat4Solver.fSat4Clauses, 1, fLogLevel);
 
         fInputChoices = new ParamsWithChoices("ALL");
         fSanitizedChoices = new ParamsWithChoices("SAN");
@@ -69,7 +70,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
         fSanitizedValToAtomicVal = new ChoiceMultiMappings("STA");
 
         fMethodNode = method;
-        fSat4Solver = new Sat4Solver();
+
 
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("Constraints without method.");
@@ -81,7 +82,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
 
         fSat4Solver.initialize(
                 fFirstFreeIDHolder.get(),
-                fSat4Clauses);
+                fSat4Solver.fSat4Clauses);
     }
 
     private void initializeForConstraints(Collection<Constraint> initConstraints) {
@@ -126,9 +127,9 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
         parseConstraintsToSat(
                 initConstraints,
                 fExpectedValConstraints,
-                fSat4Clauses);
+                fSat4Solver.fSat4Clauses);
         Sat4Logger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
-        Sat4Logger.log("fSat4Clauses", fSat4Clauses, 1, fLogLevel);
+        Sat4Logger.log("fSat4Clauses", fSat4Solver.fSat4Clauses, 1, fLogLevel);
     }
 
     @Override
@@ -160,7 +161,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                     .toArray();
 
             VecInt clause = new VecInt(clauseValues);
-            fSat4Clauses.add(clause);
+            fSat4Solver.fSat4Clauses.add(clause);
             fSat4Solver.addClause(clause);
         }
     }
@@ -192,7 +193,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                     fFirstFreeIDHolder,
                     fSanitizedChoices,
                     fSanitizedValToAtomicVal,
-                    fSat4Clauses,
+                    fSat4Solver.fSat4Clauses,
                     fInputChoices,
                     fArgInputValToSanitizedVal,
                     fChoiceToSolverIdLessEqMappings,
@@ -640,7 +641,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
                                         fFirstFreeIDHolder,
-                                        fSat4Clauses,
+                                        fSat4Solver.fSat4Clauses,
                                         fAtomicChoices,
                                         fSanitizedChoices,
                                         fSanitizedValToAtomicVal,
@@ -661,7 +662,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                         new ParseConstraintToSATVisitor(
                                 fMethodNode,
                                 fFirstFreeIDHolder,
-                                fSat4Clauses,
+                                fSat4Solver.fSat4Clauses,
                                 fAtomicChoices,
                                 fSanitizedChoices,
                                 fSanitizedValToAtomicVal,
@@ -676,7 +677,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
                                         fFirstFreeIDHolder,
-                                        fSat4Clauses,
+                                        fSat4Solver.fSat4Clauses,
                                         fAtomicChoices,
                                         fSanitizedChoices,
                                         fSanitizedValToAtomicVal,
