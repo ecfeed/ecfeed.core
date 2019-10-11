@@ -33,4 +33,9 @@ public class ParamsWithChInts {
 
         return fMap.containsKey(methodParameterNode);
     }
+
+    Map<MethodParameterNode, Map<ChoiceNode, Integer>> getInternalMap() {
+
+        return fMap;
+    }
 }

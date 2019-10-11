@@ -28,13 +28,15 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
 
     private ParamsWithChInts fChoiceToSolverIdLessEqMappings;
     private ParamsWithChInts fChoiceToSolverIdLessThMappings;
-    private ParamsWithChInts fChoiceToSolverIdMappings;
+    private ParamsWithChInts fChoiceToSolverIdEqualMappings;
 
     private List<RelationStatement> fAllRelationStatements;
     private ExpectedConstraintsData fExpectedValConstraints;
 
     private MethodNode fMethodNode;
-    private Sat4Solver fSatSolver;
+    private Sat4Solver fSat4Solver;
+
+    static final int fLogLevel = 0;
 
     private enum TypeOfEndpoint {
         LEFT_ENDPOINT,
@@ -44,105 +46,140 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     public Sat4ConstraintEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
         fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
+        Sat4Logger.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
+
         fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");
-        fChoiceToSolverIdMappings = new ParamsWithChInts("EQ"); // TODO - equal ?
+        Sat4Logger.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
+
+        fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
+        Sat4Logger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
+
         fSat4Clauses = new Sat4Clauses();
+        Sat4Logger.log("fSat4Clauses", fSat4Clauses, 1, fLogLevel);
+
         fInputChoices = new ParamsWithChoices("ALL");
         fSanitizedChoices = new ParamsWithChoices("SAN");
         fAtomicChoices = new ParamsWithChoices("ATM");
+
         fSanitizedToInputMappings = new ChoiceMappings("STI");
         fAtomicToSanitizedMappings = new ChoiceMappings("ATS");
         fExpectedValConstraints = new ExpectedConstraintsData();
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
         fSanitizedValToAtomicVal = new ChoiceMultiMappings("STA");
+
         fMethodNode = method;
-        fSatSolver = new Sat4Solver();
+        fSat4Solver = new Sat4Solver();
 
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("Constraints without method.");
         }
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
-            fSatSolver.setHasConstraints();
-
-            fInputChoices = createInputChoices(fMethodNode);
-
-            collectSanitizedValues(
-                    fInputChoices,
-                    fSanitizedChoices,
-                    fSanitizedToInputMappings);
-
-            fAllRelationStatements = collectRelationStatements(initConstraints);
-
-            sanitizeRelationStatementsWithRelation(
-                    fAllRelationStatements,
-                    fSanitizedChoices,
-                    fSanitizedToInputMappings);
-
-            createInputToSanitizedMapping(
-                    fSanitizedChoices,
-                    fSanitizedToInputMappings,
-                    fArgInputValToSanitizedVal);
-
-            createSanitizedAndAtomicMappings(fSanitizedChoices,
-                    fAtomicChoices,
-                    fAtomicToSanitizedMappings,
-                    fSanitizedValToAtomicVal);
-
-            parseConstraintsToSat(
-                    initConstraints,
-                    fExpectedValConstraints,
-                    fSat4Clauses);
+            initializeForConstraints(initConstraints);
         }
 
-        fSatSolver.initialize(
+        fSat4Solver.initialize(
                 fFirstFreeIDHolder.get(),
                 fSat4Clauses);
+    }
+
+    private void initializeForConstraints(Collection<Constraint> initConstraints) {
+
+        fSat4Solver.setHasConstraints();
+
+        fInputChoices = createInputChoices(fMethodNode);
+
+        collectSanitizedValues(
+                fInputChoices,
+                fSanitizedChoices,
+                fSanitizedToInputMappings);
+        Sat4Logger.log("fSanitizedChoices", fSanitizedChoices, 1, fLogLevel);
+        Sat4Logger.log("fSanitizedToInputMappings", fSanitizedToInputMappings, 1, fLogLevel);
+
+
+        fAllRelationStatements = collectRelationStatements(initConstraints);
+        Sat4Logger.log("fAllRelationStatements", fAllRelationStatements, 1, fLogLevel);
+
+        sanitizeRelationStatementsWithRelation(
+                fAllRelationStatements,
+                fSanitizedChoices,
+                fSanitizedToInputMappings);
+        Sat4Logger.log("fSanitizedChoices after sanitize", fSanitizedChoices, 1, fLogLevel);
+        Sat4Logger.log("fSanitizedToInputMappings after sanitize", fSanitizedToInputMappings, 1, fLogLevel);
+
+
+        createInputToSanitizedMapping(
+                fSanitizedChoices,
+                fSanitizedToInputMappings,
+                fArgInputValToSanitizedVal);
+        Sat4Logger.log("fArgInputValToSanitizedVal", fArgInputValToSanitizedVal, 1, fLogLevel);
+
+
+        createSanitizedAndAtomicMappings(fSanitizedChoices,
+                fAtomicChoices,
+                fAtomicToSanitizedMappings,
+                fSanitizedValToAtomicVal);
+        Sat4Logger.log("fAtomicToSanitizedMappings", fAtomicToSanitizedMappings, 1, fLogLevel);
+        Sat4Logger.log("fSanitizedValToAtomicVal", fSanitizedValToAtomicVal, 1, fLogLevel);
+
+        parseConstraintsToSat(
+                initConstraints,
+                fExpectedValConstraints,
+                fSat4Clauses);
+        Sat4Logger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
+        Sat4Logger.log("fSat4Clauses", fSat4Clauses, 1, fLogLevel);
     }
 
     @Override
     public void initialize(List<List<ChoiceNode>> input) {
 
-        if (!fSatSolver.hasConstraints())
+        if (!fSat4Solver.hasConstraints())
             return;
 
-        List<MethodParameterNode> params = fMethodNode.getMethodParameters();
+        List<MethodParameterNode> methodParameters = fMethodNode.getMethodParameters();
+        assertEqualSizes(input, methodParameters);
 
-        //iterate params and valueAssignment simultanously
-        if (input.size() != params.size()) {
-            ExceptionHelper.reportRuntimeException("Input data and parameters should have the same length.");
-            return;
-        }
-        for (int i = 0; i < input.size(); i++) {
-            List<Integer> vars = new ArrayList<>();
-            MethodParameterNode p = params.get(i);
+        for (int parameterIndex = 0; parameterIndex < methodParameters.size(); parameterIndex++) {
+
+            List<Integer> sat4Indexes = new ArrayList<>();
+            MethodParameterNode p = methodParameters.get(parameterIndex);
+
             if (p.isExpected())
                 continue;
-            for (ChoiceNode c : input.get(i)) {
-                Integer idOfParamChoiceVar = fChoiceToSolverIdMappings.get(p).get(c.getOrigChoiceNode());
-                vars.add(idOfParamChoiceVar);
+
+            for (ChoiceNode c : input.get(parameterIndex)) {
+                Integer idOfParamChoiceVar = fChoiceToSolverIdEqualMappings.get(p).get(c.getOrigChoiceNode());
+                sat4Indexes.add(idOfParamChoiceVar);
             }
 
             //one of the input values has to be taken, for each variable
-            final int[] clauseValues = vars
+            final int[] clauseValues = sat4Indexes
                     .stream()
                     .mapToInt(Integer::intValue)
                     .toArray();
 
             VecInt clause = new VecInt(clauseValues);
             fSat4Clauses.add(clause);
-            fSatSolver.addClause(clause);
+            fSat4Solver.addClause(clause);
+        }
+    }
+
+    private void assertEqualSizes(
+            List<List<ChoiceNode>> input, List<MethodParameterNode> parameterNodes) {
+
+        if (input.size() != parameterNodes.size()) {
+            ExceptionHelper.reportRuntimeException("Input data and parameters should have the same length.");
         }
     }
 
     @Override
     public void excludeAssignment(List<ChoiceNode> choicesToExclude) {
 
-        if (!fSatSolver.hasConstraints())
+        if (!fSat4Solver.hasConstraints())
             return;
 
-        if (fSatSolver.isContradicting())
+        if (fSat4Solver.isContradicting())
             return;
 
         List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
@@ -160,38 +197,38 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                     fArgInputValToSanitizedVal,
                     fChoiceToSolverIdLessEqMappings,
                     fChoiceToSolverIdLessThMappings,
-                    fChoiceToSolverIdMappings
+                    fChoiceToSolverIdEqualMappings
             );
 
         final int maxVar = fFirstFreeIDHolder.get();
-        fSatSolver.newVar(maxVar);
+        fSat4Solver.newVar(maxVar);
 
         final int[] assumptions =
-                createSolverAssumptions(choicesToExclude, fSatSolver, fMethodNode, fChoiceToSolverIdMappings)
+                createSolverAssumptions(choicesToExclude, fSat4Solver, fMethodNode, fChoiceToSolverIdEqualMappings)
                         .stream()
                         .map(x -> -x)
                         .mapToInt(Integer::intValue)
                         .toArray();
 
         VecInt excludeClause = new VecInt(assumptions);
-        fSatSolver.addClause(excludeClause);
+        fSat4Solver.addClause(excludeClause);
     }
 
     @Override
     public EvaluationResult evaluate(List<ChoiceNode> valueAssignment) {
 
-        if (!fSatSolver.hasConstraints()) {
+        if (!fSat4Solver.hasConstraints()) {
             return EvaluationResult.TRUE;
         }
 
-        if (fSatSolver.isContradicting())
+        if (fSat4Solver.isContradicting())
             return EvaluationResult.FALSE;
 
         final List<Integer> assumptionsFromValues =
                 createSolverAssumptions(
-                        valueAssignment, fSatSolver, fMethodNode, fChoiceToSolverIdMappings);
+                        valueAssignment, fSat4Solver, fMethodNode, fChoiceToSolverIdEqualMappings);
 
-        if (fSatSolver.isProblemSatisfiable(assumptionsFromValues)) {
+        if (fSat4Solver.isProblemSatisfiable(assumptionsFromValues)) {
             return EvaluationResult.TRUE;
         } else {
             return EvaluationResult.FALSE;
@@ -201,21 +238,21 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     @Override
     public List<ChoiceNode> adapt(List<ChoiceNode> valueAssignment) { // TODO - rename adapt to adaptExpectedChoices
 
-        if (!fSatSolver.hasConstraints())
+        if (!fSat4Solver.hasConstraints())
             return valueAssignment;
 
         final List<Integer> assumptionsFromValues =
                 createSolverAssumptions(
-                        valueAssignment, fSatSolver, fMethodNode, fChoiceToSolverIdMappings);
+                        valueAssignment, fSat4Solver, fMethodNode, fChoiceToSolverIdEqualMappings);
 
-        boolean isSatisfiable = fSatSolver.isProblemSatisfiable(assumptionsFromValues);
+        boolean isSatisfiable = fSat4Solver.isProblemSatisfiable(assumptionsFromValues);
 
         if (!isSatisfiable) {
             ExceptionHelper.reportRuntimeException("Problem is unsatisfiable. Cannot adapt expected choice.");
             return null;
         }
 
-        Set<Integer> model = new HashSet<>(Ints.asList(fSatSolver.getModel()));
+        Set<Integer> model = new HashSet<>(Ints.asList(fSat4Solver.getModel()));
 
         for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValConstraints.getList()) {
             if (model.contains(expectedValConstraint.getFirst())) {
@@ -257,18 +294,20 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     private static void createSanitizedAndAtomicMappings(
         ParamsWithChoices sanitizedChoices,
         ParamsWithChoices atomicChoices,
-        ChoiceMappings atomicToSanitizedMappings,
-        ChoiceMultiMappings sanitizedValToAtomicVal ) {
+        ChoiceMappings outAtomicToSanitizedMappings,
+        ChoiceMultiMappings outSanitizedValToAtomicVal ) {
 
         for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
 
             // TODO - why do we need an empty set ?
             atomicChoices.put(methodParameterNode, new HashSet<>());
 
-            createSanitizedAndAtomicMappingsForParam(methodParameterNode, sanitizedChoices,
+            createSanitizedAndAtomicMappingsForParam(
+                    methodParameterNode,
+                    sanitizedChoices,
                     atomicChoices,
-                    atomicToSanitizedMappings,
-                    sanitizedValToAtomicVal
+                    outAtomicToSanitizedMappings,
+                    outSanitizedValToAtomicVal
             );
         }
     }
@@ -576,17 +615,17 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     private void parseConstraintsToSat(
             Collection<Constraint> initConstraints,
             ExpectedConstraintsData outExpectedValConstraints,
-            Sat4Clauses clausesVecInt) { // TODO - input / output
+            Sat4Clauses outClausesVecInt) { // TODO - input / output
 
         for (Constraint constraint : initConstraints) {
-            parseConstraintToSat(constraint, outExpectedValConstraints, clausesVecInt);
+            parseConstraintToSat(constraint, outExpectedValConstraints, outClausesVecInt);
         }
     }
 
     private void parseConstraintToSat(
             Constraint constraint,
             ExpectedConstraintsData outExpectedValConstraints,
-            Sat4Clauses clausesVecInt) { // TODO - input / output
+            Sat4Clauses inOutClausesVecInt) {
 
         if (constraint == null) {
             return;
@@ -609,7 +648,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                                         fArgInputValToSanitizedVal,
                                         fChoiceToSolverIdLessEqMappings,
                                         fChoiceToSolverIdLessThMappings,
-                                        fChoiceToSolverIdMappings));
+                                        fChoiceToSolverIdEqualMappings));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
@@ -630,7 +669,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                                 fArgInputValToSanitizedVal,
                                 fChoiceToSolverIdLessEqMappings,
                                 fChoiceToSolverIdLessThMappings,
-                                fChoiceToSolverIdMappings));
+                                fChoiceToSolverIdEqualMappings));
 
                 consequenceID =
                         (Integer) consequence.accept(
@@ -645,12 +684,12 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
                                         fArgInputValToSanitizedVal,
                                         fChoiceToSolverIdLessEqMappings,
                                         fChoiceToSolverIdLessThMappings,
-                                        fChoiceToSolverIdMappings));
+                                        fChoiceToSolverIdEqualMappings));
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            clausesVecInt.add(new VecInt(new int[]{-premiseID, consequenceID}));
+            inOutClausesVecInt.add(new VecInt(new int[]{-premiseID, consequenceID}));
         }
     }
 

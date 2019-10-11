@@ -1,5 +1,6 @@
 package com.ecfeed.core.generators.blackbox;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -7,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class GeneratorBlackBoxTest {
 
     @Test
+    @Disabled
     void nullPointerExceptionTest() {
 
         NWiseGeneratorTester tester = new NWiseGeneratorTester(getModel1Xml());

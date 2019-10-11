@@ -7,25 +7,29 @@ import java.util.List;
 
 public class Sat4Clauses {
 
-    private List<VecInt> fClausesVecInt;
+    private List<VecInt> fClauses;
 
     public Sat4Clauses() {
 
-        fClausesVecInt = new ArrayList<>();
+        fClauses = new ArrayList<>();
     }
 
     public void add(VecInt clause) {
 
-        fClausesVecInt.add(clause);
+        fClauses.add(clause);
     }
 
     public int getSize() {
 
-        return fClausesVecInt.size();
+        return fClauses.size();
     }
 
     public VecInt getClause(int index) {
 
-        return fClausesVecInt.get(index);
+        return fClauses.get(index);
+    }
+
+    List<VecInt> getInternalList() {
+        return fClauses;
     }
 }
