@@ -1,17 +1,6 @@
 package com.ecfeed.core.generators.blackbox;
 
-import com.ecfeed.core.evaluator.Sat4jEvaluator;
-import com.ecfeed.core.generators.GeneratorValue;
-import com.ecfeed.core.generators.NWiseGenerator;
-import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorValue;
-import com.ecfeed.core.model.*;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 

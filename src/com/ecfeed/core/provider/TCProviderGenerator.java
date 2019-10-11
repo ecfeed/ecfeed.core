@@ -12,7 +12,7 @@ package com.ecfeed.core.provider;
 
 import java.util.List;
 
-import com.ecfeed.core.evaluator.Sat4jEvaluator;
+import com.ecfeed.core.evaluator.Sat4ConstraintEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;
@@ -48,7 +48,7 @@ public class TCProviderGenerator implements ITCProvider {
         try {
             fGenerator.initialize(
                     genInitData.getChoiceInput(),
-                    new Sat4jEvaluator(genInitData.getConstraints(),genInitData.getMethodNode()),
+                    new Sat4ConstraintEvaluator(genInitData.getConstraints(),genInitData.getMethodNode()),
                     genInitData.getGeneratorArguments(),
                     progressMonitor);
         } catch (Exception e) {

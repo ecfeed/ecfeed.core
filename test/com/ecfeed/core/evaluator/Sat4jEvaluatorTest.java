@@ -132,7 +132,7 @@ public class Sat4jEvaluatorTest {
                 input.add(arg.getLeafChoicesWithCopies());
 
 
-        IConstraintEvaluator<ChoiceNode> evaluator = new Sat4jEvaluator(methodNode.getAllConstraints(), methodNode);
+        IConstraintEvaluator<ChoiceNode> evaluator = new Sat4ConstraintEvaluator(methodNode.getAllConstraints(), methodNode);
 
         IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
 //        IAlgorithm<ChoiceNode> algorithm = new AwesomeNWiseAlgorithm<>(2,100);

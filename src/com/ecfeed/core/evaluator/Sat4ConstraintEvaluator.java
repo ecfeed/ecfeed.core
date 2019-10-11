@@ -11,7 +11,7 @@ import org.sat4j.core.VecInt;
 import java.util.*;
 import java.util.List;
 
-public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
+public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private Sat4Clauses fSat4Clauses;
     private IntegerHolder fFirstFreeIDHolder = new IntegerHolder(1);
@@ -41,7 +41,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         RIGHT_ENDPOINT
     }
 
-    public Sat4jEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
+    public Sat4ConstraintEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
         fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
         fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");

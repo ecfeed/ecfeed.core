@@ -1,6 +1,6 @@
 package com.ecfeed.core.generators.blackbox;
 
-import com.ecfeed.core.evaluator.Sat4jEvaluator;
+import com.ecfeed.core.evaluator.Sat4ConstraintEvaluator;
 import com.ecfeed.core.generators.GeneratorValue;
 import com.ecfeed.core.generators.NWiseGenerator;
 import com.ecfeed.core.generators.api.GeneratorException;
@@ -97,7 +97,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
 
         Collection<Constraint> constraints = methodNode.getAllConstraints();
 
-        Sat4jEvaluator sat4jEvaluator = new Sat4jEvaluator(constraints, methodNode);
+        Sat4ConstraintEvaluator sat4jEvaluator = new Sat4ConstraintEvaluator(constraints, methodNode);
 
         generator.initialize(
                 generatorInput,
