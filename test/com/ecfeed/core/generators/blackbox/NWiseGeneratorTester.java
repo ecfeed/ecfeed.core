@@ -1,7 +1,6 @@
 package com.ecfeed.core.generators.blackbox;
 
 import com.ecfeed.core.evaluator.Sat4jEvaluator;
-import com.ecfeed.core.generators.AbstractGenerator;
 import com.ecfeed.core.generators.GeneratorValue;
 import com.ecfeed.core.generators.NWiseGenerator;
 import com.ecfeed.core.generators.api.GeneratorException;
@@ -21,13 +20,41 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
     MethodNode fMethodNode;
 
     NWiseGenerator<ChoiceNode> fGenerator;
+    List<List<ChoiceNode>> fGenResults;
 
     public NWiseGeneratorTester(String modelXml) {
 
         try {
             initializeTester(modelXml);
+
         } catch (GeneratorException e) {
             ExceptionHelper.reportRuntimeException("Generator initialisation failed.", e);
+        }
+    }
+
+    public void runGeneration() {
+
+        try {
+            runGenerationIntr();
+
+        } catch (Exception e) {
+            ExceptionHelper.reportRuntimeException("Generation failed.", e);
+        }
+    }
+
+    private void runGenerationIntr() throws GeneratorException {
+
+        fGenResults = new ArrayList<>();
+
+        while (true) {
+
+            List<ChoiceNode> testCase = fGenerator.next();
+
+            if (testCase == null) {
+                break;
+            }
+
+            fGenResults.add(testCase);
         }
     }
 
@@ -35,47 +62,53 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
 
         fRootNode = ModelTestHelper.createModel(modelXml);
 
-        if (fRootNode.getClasses().size() > 1) {
-            ExceptionHelper.reportRuntimeException("Too many classes. Only one allowed for test.");
-        }
+        fClassNode = getClassNode(fRootNode);
 
-        fClassNode = fRootNode.getClasses().get(0);
+        fMethodNode = getMethodNode(fClassNode);
 
-        if (fClassNode.getMethods().size() > 1) {
+        fGenerator = createGenerator(fMethodNode);
+    }
+
+    private static MethodNode getMethodNode(ClassNode classNode) {
+
+        if (classNode.getMethods().size() > 1) {
             ExceptionHelper.reportRuntimeException("Too many methods. Only one allowed for test.");
         }
 
-        fMethodNode = fClassNode.getMethods().get(0);
+        return classNode.getMethods().get(0);
+    }
 
-        List<List<ChoiceNode>> generatorInput = getAlgorithmInput(fMethodNode);
+    private static ClassNode getClassNode(RootNode rootNode) {
 
-        fGenerator = new NWiseGenerator<>();
+        if (rootNode.getClasses().size() > 1) {
+            ExceptionHelper.reportRuntimeException("Too many classes. Only one allowed for test.");
+        }
 
-        List<IGeneratorValue> generatorParameters = createGeneratorDefaultParameters(fGenerator);
+        return rootNode.getClasses().get(0);
+    }
 
-        Collection<Constraint> constraints = fMethodNode.getAllConstraints();
+    private static NWiseGenerator<ChoiceNode> createGenerator(MethodNode methodNode) throws GeneratorException {
 
-        Sat4jEvaluator sat4jEvaluator = new Sat4jEvaluator(constraints, fMethodNode);
+        List<List<ChoiceNode>> generatorInput = getAlgorithmInput(methodNode);
 
-        fGenerator.initialize(
+        NWiseGenerator<ChoiceNode> generator = new NWiseGenerator<>();
+
+        List<IGeneratorValue> generatorParameters = createGeneratorDefaultParameters(generator);
+
+        Collection<Constraint> constraints = methodNode.getAllConstraints();
+
+        Sat4jEvaluator sat4jEvaluator = new Sat4jEvaluator(constraints, methodNode);
+
+        generator.initialize(
                 generatorInput,
                 sat4jEvaluator,
                 generatorParameters,
                 null);
+
+        return generator;
     }
 
-    public void runGeneration() {
-
-        try {
-            while (fGenerator.next() != null) {
-            }
-
-        } catch (GeneratorException e){
-
-        }
-    }
-
-    private List<List<ChoiceNode>> getAlgorithmInput(MethodNode methodNode) {
+    private static List<List<ChoiceNode>> getAlgorithmInput(MethodNode methodNode) {
 
         List<List<ChoiceNode>> input = new ArrayList<>();
 
@@ -89,7 +122,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
         return input;
     }
 
-    private List<IGeneratorValue> createGeneratorDefaultParameters(
+    private static List<IGeneratorValue> createGeneratorDefaultParameters(
             NWiseGenerator<ChoiceNode> nWiseGenerator) throws GeneratorException {
 
         List<IGeneratorValue> result = new ArrayList<>();

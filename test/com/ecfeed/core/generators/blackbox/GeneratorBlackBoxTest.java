@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class GeneratorBlackBoxTest2 {
+public class GeneratorBlackBoxTest {
 
     @Test
     void nullPointerExceptionTest() {
