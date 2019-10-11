@@ -10,14 +10,14 @@ import org.sat4j.specs.TimeoutException;
 
 import java.util.List;
 
-public class SatSolver {
+public class Sat4Solver {
 
     // TODO - what else could be included in this class
     private ISolver fSolver;
     private Boolean fIsContradicting;
     private Boolean fHasConstraints;
 
-    public SatSolver() {
+    public Sat4Solver() {
         fSolver = SolverFactory.newDefault();
         fIsContradicting = false;
         fHasConstraints = false;

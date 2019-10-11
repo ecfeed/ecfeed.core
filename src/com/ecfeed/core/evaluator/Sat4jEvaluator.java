@@ -34,7 +34,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
     private ExpectedConstraintsData fExpectedValConstraints;
 
     private MethodNode fMethodNode;
-    private SatSolver fSatSolver;
+    private Sat4Solver fSatSolver;
 
     private enum TypeOfEndpoint {
         LEFT_ENDPOINT,
@@ -57,7 +57,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
         fArgInputValToSanitizedVal = new HashMap<>();
         fSanitizedValToAtomicVal = new ChoiceMultiMappings("STA");
         fMethodNode = method;
-        fSatSolver = new SatSolver();
+        fSatSolver = new Sat4Solver();
 
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("Constraints without method.");
@@ -656,7 +656,7 @@ public class Sat4jEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
     private static List<Integer> createSolverAssumptions(
             List<ChoiceNode> currentArgumentAssignments, // main input parameter
-            SatSolver satSolver,
+            Sat4Solver satSolver,
             MethodNode methodNode,
             ParamsWithChInts argChoiceID) {
 
