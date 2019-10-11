@@ -22,31 +22,18 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class NWiseGenerator<E> extends AbstractGenerator<E> {
 
-    public final static String COVERAGE_PARAMETER_NAME = "coverage";
-    public final static String N_PARAMETER_NAME = "n";
-
-    private static IParameterDefinition fDefinitionN;
-    private static IParameterDefinition fDefinitionCoverage;
+    public final static String PARAMETER_NAME_COVERAGE = "coverage";
+    public final static String PARAMETER_NAME_N = "n";
 
     public NWiseGenerator() throws GeneratorException {
 
-        if (fDefinitionN == null)
-            fDefinitionN = new ParameterDefinitionInteger(N_PARAMETER_NAME, 2, 1, Integer.MAX_VALUE);
+        addParameterDefinition(
+                new ParameterDefinitionInteger(
+                        PARAMETER_NAME_N, 2, 1, Integer.MAX_VALUE));
 
-        addParameterDefinition(fDefinitionN);
-
-        if (fDefinitionCoverage == null)
-            fDefinitionCoverage = new ParameterDefinitionInteger(COVERAGE_PARAMETER_NAME, 100, 1, 100);
-
-        addParameterDefinition(fDefinitionCoverage);
-    }
-
-    public static IParameterDefinition getDefinitionN() {
-        return fDefinitionN;
-    }
-
-    public static IParameterDefinition getDefinitionCoverage() {
-        return fDefinitionCoverage;
+        addParameterDefinition(
+                new ParameterDefinitionInteger(
+                        PARAMETER_NAME_COVERAGE, 100, 1, 100));
     }
 
     @Override
@@ -66,4 +53,15 @@ public class NWiseGenerator<E> extends AbstractGenerator<E> {
 
         return GeneratorType.N_WISE;
     }
+
+    public IParameterDefinition getDefinitionN() throws GeneratorException {
+
+        return getParameterDefinition(PARAMETER_NAME_N);
+    }
+
+    public IParameterDefinition getDefinitionCoverage() throws GeneratorException {
+
+        return getParameterDefinition(PARAMETER_NAME_COVERAGE);
+    }
+
 }

@@ -84,6 +84,19 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 
+	@Override
+	public IParameterDefinition getParameterDefinition(String name) throws GeneratorException {
+
+		for(IParameterDefinition parameter : fParameterDefinitions){
+			if(parameter.getName().equals(name)){
+				return parameter;
+			}
+		}
+
+		GeneratorException.report("Parameter " + name + " is not defined for " + this.getClass().getName());
+		return null;
+	}
+
 
 	@Override
 	public IConstraintEvaluator<E> getConstraintEvaluator() {
@@ -116,17 +129,6 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		}
 		fParameterDefinitions.add(definition);
 	}
-
-	protected IParameterDefinition getParameterDefinition(String name) throws GeneratorException{
-		for(IParameterDefinition parameter : fParameterDefinitions){
-			if(parameter.getName().equals(name)){
-				return parameter;
-			}
-		}
-		GeneratorException.report("Parameter " + name + " is not defined for " + this.getClass().getName());
-		return null;
-	}
-
 
 	protected List<E> adapt(List<E> values)
 	{

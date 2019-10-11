@@ -10,15 +10,10 @@
 
 package com.ecfeed.core.generators;
 
-import static com.ecfeed.core.generators.NWiseGenerator.COVERAGE_PARAMETER_NAME;
-import static com.ecfeed.core.generators.NWiseGenerator.N_PARAMETER_NAME;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
@@ -29,7 +24,6 @@ import com.ecfeed.core.generators.algorithms.AbstractNWiseAlgorithm;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
-import com.ecfeed.core.model.IConstraint;
 
 public class NWiseGeneratorTest {
 

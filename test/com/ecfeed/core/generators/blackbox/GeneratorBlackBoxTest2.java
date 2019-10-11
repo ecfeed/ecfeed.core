@@ -8,74 +8,21 @@ import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.model.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class GeneratorBlackBoxTest {
+public class GeneratorBlackBoxTest2 {
 
     @Test
     void nullPointerExceptionTest() {
 
-        RootNode model = ModelTestHelper.createModel(getModel1Xml());
-
-        ClassNode classNode = model.getClasses().get(0);
-        MethodNode methodNode = classNode.getMethods().get(0);
-
-        try {
-            NWiseGenerator<ChoiceNode> nWiseGenerator = new NWiseGenerator<ChoiceNode>();
-
-            Collection<Constraint> initConstraints = methodNode.getAllConstraints();
-
-            List<List<ChoiceNode>> input = getAlgorithmInput(methodNode);
-
-            Sat4jEvaluator sat4jEvaluator =
-                    new Sat4jEvaluator(
-                            initConstraints,
-                            methodNode);
-
-            List<IGeneratorValue> generatorParameters = createGeneratorParameters();
-
-            nWiseGenerator.initialize(
-                    input,
-                    sat4jEvaluator,
-                    generatorParameters,
-                    null);
-
-            while(nWiseGenerator.next() != null) {
-
-            }
-
-
-        } catch (GeneratorException e) {
-            fail();
-        }
+        NWiseGeneratorTester tester = new NWiseGeneratorTester(getModel1Xml());
+        tester.runGeneration();
     }
-
-    private List<IGeneratorValue> createGeneratorParameters() throws GeneratorException {
-
-        List<IGeneratorValue> result = new ArrayList<>();
-
-        result.add(new GeneratorValue(NWiseGenerator.getDefinitionN(), "2"));
-        result.add(new GeneratorValue(NWiseGenerator.getDefinitionCoverage(), "100"));
-
-        return result;
-    }
-
-    private List<List<ChoiceNode>> getAlgorithmInput(MethodNode methodNode) {
-
-        List<List<ChoiceNode>> input = new ArrayList<>();
-
-        for (MethodParameterNode arg : methodNode.getMethodParameters())
-            if (arg.isExpected()) {
-                input.add(Collections.singletonList(null));
-            } else {
-                input.add(arg.getLeafChoicesWithCopies());
-            }
-
-            return input;
-    }
-
 
     private String getModel1Xml() {
 

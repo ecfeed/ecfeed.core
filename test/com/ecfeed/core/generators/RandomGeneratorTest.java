@@ -10,17 +10,12 @@
 
 package com.ecfeed.core.generators;
 
-import static com.ecfeed.core.generators.RandomGenerator.DUPLICATES_PARAMETER_NAME;
-import static com.ecfeed.core.generators.RandomGenerator.LENGTH_PARAMETER_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
@@ -31,7 +26,6 @@ import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
-import com.ecfeed.core.model.IConstraint;
 
 public class RandomGeneratorTest {
 	@Test

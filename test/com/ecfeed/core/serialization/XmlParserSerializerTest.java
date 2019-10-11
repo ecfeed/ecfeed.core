@@ -10,8 +10,6 @@
 
 package com.ecfeed.core.serialization;
 
-import static com.ecfeed.core.generators.RandomGenerator.DUPLICATES_PARAMETER_NAME;
-import static com.ecfeed.core.generators.RandomGenerator.LENGTH_PARAMETER_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -21,9 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 

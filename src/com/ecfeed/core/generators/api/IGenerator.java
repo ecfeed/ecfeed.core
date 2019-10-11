@@ -23,9 +23,9 @@ public interface IGenerator<E> {
 	 * returns list of parameters used by this generator.
 	 */
 	public List<IParameterDefinition> getParameterDefinitions();
-	/*
-	 * Should be called prior to first call of next()
-	 */
+
+	public IParameterDefinition getParameterDefinition(String parameterName) throws GeneratorException;
+
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
 		    List<IGeneratorValue> arguments,

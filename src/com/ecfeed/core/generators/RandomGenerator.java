@@ -24,41 +24,27 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		IGenerator<E> {
 
-	public final static String ADAPTIVE_PARAMETER_NAME = "adaptive";
-	public static final String DUPLICATES_PARAMETER_NAME = "duplicates";
-	public static final String LENGTH_PARAMETER_NAME = "length";
+	public final static String PARAMETER_NAME_ADAPTIVE = "adaptive";
+	public static final String PARAMETER_NAME_DUPLICATES = "duplicates";
+	public static final String PARAMETER_NAME_LENGTH = "length";
+
 	public static final int DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE = 100;
 
-	private static IParameterDefinition fDefinitionAdaptive;
-	private static IParameterDefinition fDefinitionDuplicates;
-	private static IParameterDefinition fDefinitionLength;
 
 	public RandomGenerator() throws GeneratorException{
 
-		if(fDefinitionAdaptive==null)
-			fDefinitionAdaptive = new ParameterDefinitionBoolean(ADAPTIVE_PARAMETER_NAME, false);
-		if(fDefinitionDuplicates==null)
-			fDefinitionDuplicates = new ParameterDefinitionBoolean(DUPLICATES_PARAMETER_NAME, false);
-		if(fDefinitionLength==null)
-			fDefinitionLength = new ParameterDefinitionInteger(LENGTH_PARAMETER_NAME, DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE, 0, Integer.MAX_VALUE);
-		addParameterDefinition( fDefinitionDuplicates);
-		addParameterDefinition(fDefinitionAdaptive);
-		addParameterDefinition(fDefinitionLength);
-	}
+		addParameterDefinition(
+				new ParameterDefinitionBoolean(
+						PARAMETER_NAME_ADAPTIVE, false));
 
-	public static IParameterDefinition getDefinitionAdaptive()
-	{
-		return fDefinitionAdaptive;
-	}
+		addParameterDefinition(
+				new ParameterDefinitionBoolean(
+						PARAMETER_NAME_DUPLICATES, false));
 
-	public static IParameterDefinition getDefinitionDuplicates()
-	{
-		return fDefinitionDuplicates;
-	}
-
-	public static IParameterDefinition getDefinitionLength()
-	{
-		return fDefinitionLength;
+		addParameterDefinition(
+				new ParameterDefinitionInteger(
+						PARAMETER_NAME_LENGTH, DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE,
+						0, Integer.MAX_VALUE));
 	}
 
 	@Override
@@ -79,4 +65,17 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		
 		return GeneratorType.RANDOM;
 	}
+
+	public IParameterDefinition getDefinitionAdaptive() throws GeneratorException {
+		return getParameterDefinition(PARAMETER_NAME_ADAPTIVE);
+	}
+
+	public IParameterDefinition getDefinitionDuplicates() throws GeneratorException {
+		return getParameterDefinition(PARAMETER_NAME_DUPLICATES);
+	}
+
+	public IParameterDefinition getDefinitionLength() throws GeneratorException {
+		return getParameterDefinition(PARAMETER_NAME_LENGTH);
+	}
+
 }
