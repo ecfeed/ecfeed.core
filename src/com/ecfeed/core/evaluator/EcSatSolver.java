@@ -49,11 +49,18 @@ public class EcSatSolver {
         }
     }
 
-    public void addSat4Clause(VecInt clause) {
-        fSat4Clauses.add(clause);
+    public void addSat4Clause(int[] clause) {
+
+        // clause consists of positive or negative ints
+        // if int is negative then it translates to logical negation
+        // absolute value of int translates to index of variable in some user tab
+        // e.g. ~A1 v A2 v ~A3 translates to -1, 2, -3
+
+        VecInt vClause = new VecInt(clause);
+        fSat4Clauses.add(vClause);
     }
 
-    public void addClause(VecInt clause) { // TODO - why do we need this ?
+    public void addClause(int[] clause) { // TODO - why do we need this ?
 
         // clause consists of positive or negative ints
         // if int is negative then it translates to logical negation
@@ -61,7 +68,9 @@ public class EcSatSolver {
         // e.g. ~A1 v A2 v ~A3 translates to -1, 2, -3
 
         try {
-            fSolver.addClause(clause);
+            VecInt vClause = new VecInt(clause);
+
+            fSolver.addClause(vClause);
         } catch (ContradictionException e) {
             fIsContradicting = true;
         }

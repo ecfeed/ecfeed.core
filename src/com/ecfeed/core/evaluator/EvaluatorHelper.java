@@ -73,11 +73,12 @@ public class EvaluatorHelper {
                 List<Integer> bigClause = new ArrayList<>();
                 for (ChoiceNode atomicValue : sanitizedValToAtomicVal.get(sanitizedChoiceNode)) {
                     Integer atomicID = choiceID.get(atomicValue);
-                    satSolver.addSat4Clause(new VecInt(new int[]{-atomicID, sanitizedID})); // atomicID => sanitizedID
+                    final int[] clause = {-atomicID, sanitizedID};
+                    satSolver.addSat4Clause(clause); // atomicID => sanitizedID
                     bigClause.add(atomicID);
                 }
                 bigClause.add(-sanitizedID);
-                satSolver.addSat4Clause(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
+                satSolver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray()); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
             }
 
         for (ChoiceNode inputValue : argAllInputValues.get(methodParameterNode))
@@ -88,23 +89,23 @@ public class EvaluatorHelper {
                 List<Integer> bigClause = new ArrayList<>();
                 for (ChoiceNode sanitizedValue : argInputValToSanitizedVal.get(methodParameterNode).get(inputValue)) {
                     Integer sanitizedID = choiceID.get(sanitizedValue);
-                    satSolver.addSat4Clause(new VecInt(new int[]{-sanitizedID, inputID})); // sanitizedID => inputID
+                    satSolver.addSat4Clause(new int[]{-sanitizedID, inputID}); // sanitizedID => inputID
                     bigClause.add(sanitizedID);
                 }
                 bigClause.add(-inputID);
-                satSolver.addSat4Clause(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
+                satSolver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray()); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
             }
 
 
-        satSolver.addSat4Clause(new VecInt(new int[]{-prefixVars.get(0)}));
-        satSolver.addSat4Clause(new VecInt(new int[]{prefixVars.get(n)})); //at least one value should be taken
+        satSolver.addSat4Clause(new int[]{-prefixVars.get(0)});
+        satSolver.addSat4Clause(new int[]{prefixVars.get(n)}); //at least one value should be taken
         for (int i = 0; i < n; i++) {
             // prefixVars[i+1] == prefixVars[i] OR choiceVars[i]
-            satSolver.addSat4Clause(new VecInt(new int[]{-choiceVars.get(i), prefixVars.get(i + 1)})); // choiceVars[i] => prefixVars[i];
-            satSolver.addSat4Clause(new VecInt(new int[]{-prefixVars.get(i), prefixVars.get(i + 1)})); // prefixVars[i] => prefixVars[i+1];
-            satSolver.addSat4Clause(new VecInt(new int[]{choiceVars.get(i), prefixVars.get(i), -prefixVars.get(i + 1)})); // enforcing that last one is true only when at least one of first+second is true
+            satSolver.addSat4Clause(new int[]{-choiceVars.get(i), prefixVars.get(i + 1)}); // choiceVars[i] => prefixVars[i];
+            satSolver.addSat4Clause(new int[]{-prefixVars.get(i), prefixVars.get(i + 1)}); // prefixVars[i] => prefixVars[i+1];
+            satSolver.addSat4Clause(new int[]{choiceVars.get(i), prefixVars.get(i), -prefixVars.get(i + 1)}); // enforcing that last one is true only when at least one of first+second is true
 
-            satSolver.addSat4Clause(new VecInt(new int[]{-choiceVars.get(i), -prefixVars.get(i)})); // NOT( choiceVars[i] AND prefixVars[i] ), to guarantee uniqueness
+            satSolver.addSat4Clause(new int[]{-choiceVars.get(i), -prefixVars.get(i)}); // NOT( choiceVars[i] AND prefixVars[i] ), to guarantee uniqueness
         }
 
         for (int i = 0; i < n; i++) {

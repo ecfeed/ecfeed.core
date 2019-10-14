@@ -6,7 +6,6 @@ import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
-import org.sat4j.core.VecInt;
 
 import java.util.*;
 import java.util.List;
@@ -156,9 +155,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     .mapToInt(Integer::intValue)
                     .toArray();
 
-            VecInt clause = new VecInt(clauseValues);
-            fSat4Solver.addSat4Clause(clause);
-            fSat4Solver.addClause(clause);
+            fSat4Solver.addSat4Clause(clauseValues);
+            fSat4Solver.addClause(clauseValues);
         }
     }
 
@@ -205,8 +203,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                         .mapToInt(Integer::intValue)
                         .toArray();
 
-        VecInt excludeClause = new VecInt(assumptions);
-        fSat4Solver.addClause(excludeClause);
+        fSat4Solver.addClause(assumptions);
     }
 
     @Override
@@ -681,7 +678,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                 e.printStackTrace();
             }
 
-            fSat4Solver.addSat4Clause(new VecInt(new int[]{-premiseID, consequenceID}));
+            fSat4Solver.addSat4Clause(new int[]{-premiseID, consequenceID});
         }
     }
 
