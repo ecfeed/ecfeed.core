@@ -21,7 +21,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     private MethodNode fMethodNode;
 
     private IntegerHolder fFirstFreeIDHolder;
-    private Sat4Clauses fSat4Clauses;
+    private Sat4Solver fSat4Solver;
     private ParamsWithChoices fArgAllAtomicValues;
     private ParamsWithChoices fArgAllSanitizedValues;
     private ChoiceMultiMappings fSanitizedValToAtomicVal;
@@ -36,7 +36,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     public ParseConstraintToSATVisitor(
             MethodNode methodNode,
             IntegerHolder firstFreeIDHolder,
-            Sat4Clauses sat4Clauses,
+            Sat4Solver sat4Solver,
             ParamsWithChoices allAtomicValues,
             ParamsWithChoices allSanitizedValues,
             ChoiceMultiMappings sanitizedValToAtomicVal,
@@ -49,7 +49,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         fMethodNode = methodNode;
         fFirstFreeIDHolder = firstFreeIDHolder;
-        fSat4Clauses = sat4Clauses;
+        fSat4Solver = sat4Solver;
         fArgAllAtomicValues = allAtomicValues;
         fArgAllSanitizedValues = allSanitizedValues;
         fSanitizedValToAtomicVal = sanitizedValToAtomicVal;
@@ -75,7 +75,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
                                         fFirstFreeIDHolder,
-                                        fSat4Clauses,
+                                        fSat4Solver,
                                         fArgAllAtomicValues,
                                         fArgAllSanitizedValues,
                                         fSanitizedValToAtomicVal,
@@ -89,10 +89,10 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                         e.printStackTrace();
                     }
                     bigClause.add(childID);
-                    fSat4Clauses.add(new VecInt(new int[]{-childID, myID})); //small fClauses
+                    fSat4Solver.addSat4Clause(new VecInt(new int[]{-childID, myID})); //small fClauses
                 }
                 bigClause.add(-myID);
-                fSat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
+                fSat4Solver.addSat4Clause(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
                 break;
             }
             case AND: // y = (x1 AND x2 AND .. AND xn) compiles to: (x1 OR NOT y) AND ... AND (xn OR NOT y) AND (NOT x1 OR ... OR NOT xn OR y)
@@ -105,7 +105,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
                                         fFirstFreeIDHolder,
-                                        fSat4Clauses,
+                                        fSat4Solver,
                                         fArgAllAtomicValues,
                                         fArgAllSanitizedValues,
                                         fSanitizedValToAtomicVal,
@@ -118,10 +118,10 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                         e.printStackTrace();
                     }
                     bigClause.add(-childID);
-                    fSat4Clauses.add(new VecInt(new int[]{childID, -myID})); //small fClauses
+                    fSat4Solver.addSat4Clause(new VecInt(new int[]{childID, -myID})); //small fClauses
                 }
                 bigClause.add(myID);
-                fSat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
+                fSat4Solver.addSat4Clause(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray()));
                 break;
             }
         }
@@ -172,9 +172,9 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
                     Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
 
-                    fSat4Clauses.add(new VecInt(new int[]{-statementLowID, -statementHighID, myID}));
-                    fSat4Clauses.add(new VecInt(new int[]{-myID, statementLowID}));
-                    fSat4Clauses.add(new VecInt(new int[]{-myID, statementHighID}));
+                    fSat4Solver.addSat4Clause(new VecInt(new int[]{-statementLowID, -statementHighID, myID}));
+                    fSat4Solver.addSat4Clause(new VecInt(new int[]{-myID, statementLowID}));
+                    fSat4Solver.addSat4Clause(new VecInt(new int[]{-myID, statementHighID}));
                     if (statement.getRelation() == EQUAL)
                         return myID; //myID == (statementLowID AND statementHighID)
                     else //NOT_EQUAL
@@ -198,7 +198,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fFirstFreeIDHolder,
                 fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
-                fSat4Clauses,
+                fSat4Solver,
                 fArgAllInputValues,
                 fArgInputValToSanitizedVal,
                 fArgLessEqChoiceID,
@@ -218,9 +218,9 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             EvaluationResult result = statement.evaluate(dummyValues);
             Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.get(leftMethodParameterNode).get(lChoice);
             if (result == EvaluationResult.TRUE) {
-                fSat4Clauses.add(new VecInt(new int[]{-idOfLeftArgChoice, myID})); // thisChoice => me
+                fSat4Solver.addSat4Clause(new VecInt(new int[]{-idOfLeftArgChoice, myID})); // thisChoice => me
             } else if (result == EvaluationResult.FALSE) {
-                fSat4Clauses.add(new VecInt(new int[]{-idOfLeftArgChoice, -myID})); // thisChoice => NOT me
+                fSat4Solver.addSat4Clause(new VecInt(new int[]{-idOfLeftArgChoice, -myID})); // thisChoice => NOT me
             } else //INSUFFICIENT_DATA
             {
                 ExceptionHelper.reportRuntimeException("Insufficient data.");
@@ -237,7 +237,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fFirstFreeIDHolder,
                 fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
-                fSat4Clauses,
+                fSat4Solver,
                 fArgAllInputValues,
                 fArgInputValToSanitizedVal,
                 fArgLessEqChoiceID,
@@ -259,7 +259,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fFirstFreeIDHolder,
                 fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
-                fSat4Clauses,
+                fSat4Solver,
                 fArgAllInputValues,
                 fArgInputValToSanitizedVal,
                 fArgLessEqChoiceID,
@@ -299,23 +299,23 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 {
                     if (j == n) {
                         // NOT(i<x) IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -myID}));
 
                         break;
                     } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
 
                         // NOT(i<x) AND i<=x IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, -myID}));
                     } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
                     {
                         // NOT(i<x) AND i<=x AND NOT(j<y) AND j<=y IMPLIES myID
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, -rightLessEq, myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, -rightLessEq, myID}));
 
                         // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
 
                         // NOT(i<x) AND i<=x AND NOT(j<=y) IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, -myID}));
                     }
                     break;
                 }
@@ -325,22 +325,22 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 {
                     if (j == n) {
                         // NOT(i<x) IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -myID}));
 
                         break;
                     } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
                         // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
                         // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
                     } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
                     {
                         // NOT(i<x) AND i<=x AND NOT(j<=y) IMPLIES myID
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessEq, myID}));
 
                         // NOT(i<x) AND i<=x AND j<=y IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessEq, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessEq, -myID}));
                     }
                     break;
                 }
@@ -349,22 +349,22 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 {
                     if (j == n) {
                         // NOT(i<x) IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -myID}));
 
                         break;
                     } else if (new ChoiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) < 0) {
                         // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
                         // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
                     } else // new choiceNodeComparator().compare(sortedLChoices.get(i), sortedRChoices.get(j)) == 0
                     {
                         // NOT(i<x) AND i<=x AND NOT(j<y) IMPLIES myID
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, rightLessTh, myID}));
 
                         // NOT(i<x) AND i<=x AND j<y IMPLIES NOT(myID)
-                        fSat4Clauses.add(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
+                        fSat4Solver.addSat4Clause(new VecInt(new int[]{leftLessTh, -leftLessEq, -rightLessTh, -myID}));
                     }
                     break;
                 }
@@ -386,9 +386,9 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     public Object visit(StaticStatement statement) {
         Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
         if (statement.getValue() == EvaluationResult.TRUE)
-            fSat4Clauses.add(new VecInt(new int[]{myID}));
+            fSat4Solver.addSat4Clause(new VecInt(new int[]{myID}));
         else
-            fSat4Clauses.add(new VecInt(new int[]{-myID}));
+            fSat4Solver.addSat4Clause(new VecInt(new int[]{-myID}));
         return myID;
     }
 

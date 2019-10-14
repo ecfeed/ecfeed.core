@@ -21,17 +21,17 @@ public class EvaluatorHelper {
     public static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
             ParamsWithChoices fArgAllAtomicValues,
-            IntegerHolder fFirstFreeIDHolder,
-            ParamsWithChoices fArgAllSanitizedValues,
-            ChoiceMultiMappings fSanitizedValToAtomicVal,
-            Sat4Clauses sat4Clauses,
-            ParamsWithChoices fArgAllInputValues,
-            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal,
-            ParamsWithChInts fArgLessEqChoiceID,
-            ParamsWithChInts fArgLessThChoiceID,
-            ParamsWithChInts fArgChoiceID) {
+            IntegerHolder firstFreeIDHolder,
+            ParamsWithChoices argAllSanitizedValues,
+            ChoiceMultiMappings sanitizedValToAtomicVal,
+            Sat4Solver satSolver,
+            ParamsWithChoices argAllInputValues,
+            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
+            ParamsWithChInts argLessEqChoiceID,
+            ParamsWithChInts argLessThChoiceID,
+            ParamsWithChInts argChoiceID) {
 
-        if (fArgChoiceID.containsKey(methodParameterNode))
+        if (argChoiceID.containsKey(methodParameterNode))
             return;
 
         //we need to create new set of variables, as we are seeing this parameter for the first time
@@ -52,10 +52,10 @@ public class EvaluatorHelper {
 
         if (!JavaTypeHelper.isNumericTypeName(methodParameterNode.getType())) {
             for (int i = 0; i < n; i++) {
-                choiceVars.add(EvaluatorHelper.newId(fFirstFreeIDHolder));
+                choiceVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
-            fArgChoiceID.put(methodParameterNode, choiceID);
+            argChoiceID.put(methodParameterNode, choiceID);
             return;
         }
 
@@ -63,53 +63,53 @@ public class EvaluatorHelper {
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
 
 
-        prefixVars.add(EvaluatorHelper.newId(fFirstFreeIDHolder));
+        prefixVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
         for (int i = 0; i < n; i++) {
-            choiceVars.add(EvaluatorHelper.newId(fFirstFreeIDHolder));
-            prefixVars.add(EvaluatorHelper.newId(fFirstFreeIDHolder));
+            choiceVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
+            prefixVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
-        for (ChoiceNode sanitizedChoiceNode : fArgAllSanitizedValues.get(methodParameterNode))
+        for (ChoiceNode sanitizedChoiceNode : argAllSanitizedValues.get(methodParameterNode))
             if (!choiceID.containsKey(sanitizedChoiceNode)) {
-                Integer sanitizedID = EvaluatorHelper.newId(fFirstFreeIDHolder);
+                Integer sanitizedID = EvaluatorHelper.newId(firstFreeIDHolder);
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode atomicValue : fSanitizedValToAtomicVal.get(sanitizedChoiceNode)) {
+                for (ChoiceNode atomicValue : sanitizedValToAtomicVal.get(sanitizedChoiceNode)) {
                     Integer atomicID = choiceID.get(atomicValue);
-                    sat4Clauses.add(new VecInt(new int[]{-atomicID, sanitizedID})); // atomicID => sanitizedID
+                    satSolver.addSat4Clause(new VecInt(new int[]{-atomicID, sanitizedID})); // atomicID => sanitizedID
                     bigClause.add(atomicID);
                 }
                 bigClause.add(-sanitizedID);
-                sat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
+                satSolver.addSat4Clause(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
             }
 
-        for (ChoiceNode inputValue : fArgAllInputValues.get(methodParameterNode))
+        for (ChoiceNode inputValue : argAllInputValues.get(methodParameterNode))
             if (!choiceID.containsKey(inputValue)) {
-                Integer inputID = EvaluatorHelper.newId(fFirstFreeIDHolder);
+                Integer inputID = EvaluatorHelper.newId(firstFreeIDHolder);
                 choiceID.put(inputValue, inputID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode sanitizedValue : fArgInputValToSanitizedVal.get(methodParameterNode).get(inputValue)) {
+                for (ChoiceNode sanitizedValue : argInputValToSanitizedVal.get(methodParameterNode).get(inputValue)) {
                     Integer sanitizedID = choiceID.get(sanitizedValue);
-                    sat4Clauses.add(new VecInt(new int[]{-sanitizedID, inputID})); // sanitizedID => inputID
+                    satSolver.addSat4Clause(new VecInt(new int[]{-sanitizedID, inputID})); // sanitizedID => inputID
                     bigClause.add(sanitizedID);
                 }
                 bigClause.add(-inputID);
-                sat4Clauses.add(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
+                satSolver.addSat4Clause(new VecInt(bigClause.stream().mapToInt(Integer::intValue).toArray())); //inputID => (sanitizedID1 OR ... OR sanitizedIDn)
             }
 
 
-        sat4Clauses.add(new VecInt(new int[]{-prefixVars.get(0)}));
-        sat4Clauses.add(new VecInt(new int[]{prefixVars.get(n)})); //at least one value should be taken
+        satSolver.addSat4Clause(new VecInt(new int[]{-prefixVars.get(0)}));
+        satSolver.addSat4Clause(new VecInt(new int[]{prefixVars.get(n)})); //at least one value should be taken
         for (int i = 0; i < n; i++) {
             // prefixVars[i+1] == prefixVars[i] OR choiceVars[i]
-            sat4Clauses.add(new VecInt(new int[]{-choiceVars.get(i), prefixVars.get(i + 1)})); // choiceVars[i] => prefixVars[i];
-            sat4Clauses.add(new VecInt(new int[]{-prefixVars.get(i), prefixVars.get(i + 1)})); // prefixVars[i] => prefixVars[i+1];
-            sat4Clauses.add(new VecInt(new int[]{choiceVars.get(i), prefixVars.get(i), -prefixVars.get(i + 1)})); // enforcing that last one is true only when at least one of first+second is true
+            satSolver.addSat4Clause(new VecInt(new int[]{-choiceVars.get(i), prefixVars.get(i + 1)})); // choiceVars[i] => prefixVars[i];
+            satSolver.addSat4Clause(new VecInt(new int[]{-prefixVars.get(i), prefixVars.get(i + 1)})); // prefixVars[i] => prefixVars[i+1];
+            satSolver.addSat4Clause(new VecInt(new int[]{choiceVars.get(i), prefixVars.get(i), -prefixVars.get(i + 1)})); // enforcing that last one is true only when at least one of first+second is true
 
-            sat4Clauses.add(new VecInt(new int[]{-choiceVars.get(i), -prefixVars.get(i)})); // NOT( choiceVars[i] AND prefixVars[i] ), to guarantee uniqueness
+            satSolver.addSat4Clause(new VecInt(new int[]{-choiceVars.get(i), -prefixVars.get(i)})); // NOT( choiceVars[i] AND prefixVars[i] ), to guarantee uniqueness
         }
 
         for (int i = 0; i < n; i++) {
@@ -130,9 +130,9 @@ public class EvaluatorHelper {
             inverseLThVars.put(choice, lessThVars.get(i));
         }
 
-        fArgLessEqChoiceID.put(methodParameterNode, inverseLEqVars);
-        fArgLessThChoiceID.put(methodParameterNode, inverseLThVars);
-        fArgChoiceID.put(methodParameterNode, choiceID);
+        argLessEqChoiceID.put(methodParameterNode, inverseLEqVars);
+        argLessThChoiceID.put(methodParameterNode, inverseLThVars);
+        argChoiceID.put(methodParameterNode, choiceID);
     }
 
 }

@@ -12,22 +12,23 @@ import java.util.List;
 
 public class Sat4Solver {
 
-    // TODO - what else could be included in this class
     private ISolver fSolver;
     private Boolean fIsContradicting;
     private Boolean fHasConstraints;
 
-    public Sat4Clauses fSat4Clauses;
+    private Sat4Clauses fSat4Clauses;
 
     public Sat4Solver() {
         fSolver = SolverFactory.newDefault();
         fIsContradicting = false;
         fHasConstraints = false;
+
+        fSat4Clauses = new Sat4Clauses();
     }
 
     public void initialize(
             final int maxVar,
-            Sat4Clauses fSat4Clauses) {
+            Sat4Solver sat4Solver) {
 
         fSolver = SolverFactory.newDefault();
 
@@ -46,7 +47,11 @@ public class Sat4Solver {
         }
     }
 
-    public void addClause(VecInt clause) {
+    public void addSat4Clause(VecInt clause) {
+        fSat4Clauses.add(clause);
+    }
+
+    public void addClause(VecInt clause) { // TODO - why do we need this ?
 
         // clause consists of positive or negative ints
         // if int is negative then it translates to logical negation
