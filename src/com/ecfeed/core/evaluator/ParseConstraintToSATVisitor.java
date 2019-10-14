@@ -3,10 +3,8 @@ package com.ecfeed.core.evaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.IntegerHolder;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.google.common.collect.Multimap;
-import org.sat4j.core.VecInt;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +24,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     private ChoiceMultiMappings fSanitizedValToAtomicVal;
     private ParamsWithChoices fArgAllInputValues;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
-    private CMappings fChoiceToSolverIdMappings;
+    private ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
 
     public ParseConstraintToSATVisitor(
@@ -37,7 +35,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             ChoiceMultiMappings sanitizedValToAtomicVal,
             ParamsWithChoices allInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal,
-            CMappings choiceToSolverIdMappings) {
+            ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         fMethodNode = methodNode;
         fSat4Solver = sat4Solver;

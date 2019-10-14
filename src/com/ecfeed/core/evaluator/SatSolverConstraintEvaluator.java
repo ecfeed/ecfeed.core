@@ -22,7 +22,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
 
-    CMappings fChoiceToSolverIdMappings;
+    ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
     private List<RelationStatement> fAllRelationStatements;
     private ExpectedConstraintsData fExpectedValConstraints;
@@ -39,8 +39,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     public SatSolverConstraintEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
-        fChoiceToSolverIdMappings = new CMappings();
-
+        fChoiceToSolverIdMappings = new ChoiceToSolverIdMappings();
 
         fInputChoices = new ParamsWithChoices("ALL");
         fSanitizedChoices = new ParamsWithChoices("SAN");
@@ -48,7 +47,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         fSanitizedToInputMappings = new ChoiceMappings("STI");
         fAtomicToSanitizedMappings = new ChoiceMappings("ATS");
+
         fExpectedValConstraints = new ExpectedConstraintsData();
+
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
         fSanitizedValToAtomicVal = new ChoiceMultiMappings("STA");
@@ -685,7 +686,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             List<ChoiceNode> currentArgumentAssignments, // main input parameter
             EcSatSolver satSolver,
             MethodNode methodNode,
-            CMappings choiceToSolverIdMappings) {
+            ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         if (!satSolver.hasConstraints())
             return new ArrayList<>();

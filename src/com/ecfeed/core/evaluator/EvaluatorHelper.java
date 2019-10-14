@@ -3,10 +3,8 @@ package com.ecfeed.core.evaluator;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeComparator;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.utils.IntegerHolder;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.google.common.collect.Multimap;
-import org.sat4j.core.VecInt;
 
 import java.util.*;
 
@@ -21,7 +19,7 @@ public class EvaluatorHelper {
             EcSatSolver satSolver,
             ParamsWithChoices argAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
-            CMappings choiceToSolverIdMappings) {
+            ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         if (choiceToSolverIdMappings.eQContainsKey(methodParameterNode))
             return;

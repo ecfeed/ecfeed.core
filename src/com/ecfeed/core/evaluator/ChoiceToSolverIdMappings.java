@@ -6,7 +6,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CMappings {
+public class ChoiceToSolverIdMappings {
 
     private ParamsWithChInts fChoiceToSolverIdLessEqMappings;
     private ParamsWithChInts fChoiceToSolverIdLessThMappings;
@@ -14,7 +14,7 @@ public class CMappings {
 
     final int fLogLevel = 0;
 
-    public CMappings() {
+    public ChoiceToSolverIdMappings() {
 
         fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
         Sat4Logger.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
