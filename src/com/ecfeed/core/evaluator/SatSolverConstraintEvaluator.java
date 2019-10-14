@@ -45,14 +45,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         fChoiceToSolverIdMappings = new CMappings();
 
-        fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
-//        Sat4Logger.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
-
-        fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");
-//        Sat4Logger.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
-
-        fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
-//        Sat4Logger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
 
         fInputChoices = new ParamsWithChoices("ALL");
         fSanitizedChoices = new ParamsWithChoices("SAN");
@@ -143,13 +135,18 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         for (int parameterIndex = 0; parameterIndex < methodParameters.size(); parameterIndex++) {
 
             List<Integer> sat4Indexes = new ArrayList<>();
-            MethodParameterNode p = methodParameters.get(parameterIndex);
+            MethodParameterNode methodParameterNode = methodParameters.get(parameterIndex);
 
-            if (p.isExpected())
+            if (methodParameterNode.isExpected())
                 continue;
 
-            for (ChoiceNode c : input.get(parameterIndex)) {
-                Integer idOfParamChoiceVar = fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings.get(p).get(c.getOrigChoiceNode());
+            for (ChoiceNode choiceNode : input.get(parameterIndex)) {
+
+                final Map<ChoiceNode, Integer> choiceNodeIntegerMap =
+                        fChoiceToSolverIdMappings.getEqMapping(methodParameterNode);
+
+                Integer idOfParamChoiceVar = choiceNodeIntegerMap.get(choiceNode.getOrigChoiceNode());
+
                 sat4Indexes.add(idOfParamChoiceVar);
             }
 
@@ -195,17 +192,21 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     fArgInputValToSanitizedVal,
                     fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                     fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
-                    fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings
+                    fChoiceToSolverIdMappings
             );
 
         fSat4Solver.setNewVar();
 
         final int[] assumptions =
-                createSolverAssumptions(choicesToExclude, fSat4Solver, fMethodNode, fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings)
-                        .stream()
-                        .map(x -> -x)
-                        .mapToInt(Integer::intValue)
-                        .toArray();
+                createSolverAssumptions(
+                        choicesToExclude,
+                        fSat4Solver,
+                        fMethodNode,
+                        fChoiceToSolverIdMappings)
+                            .stream()
+                            .map(x -> -x)
+                            .mapToInt(Integer::intValue)
+                            .toArray();
 
         fSat4Solver.addClause(assumptions);
     }
@@ -222,7 +223,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         final List<Integer> assumptionsFromValues =
                 createSolverAssumptions(
-                        valueAssignment, fSat4Solver, fMethodNode, fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings);
+                        valueAssignment,
+                        fSat4Solver,
+                        fMethodNode,
+                        fChoiceToSolverIdMappings);
 
         if (fSat4Solver.isProblemSatisfiable(assumptionsFromValues)) {
             return EvaluationResult.TRUE;
@@ -239,7 +243,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         final List<Integer> assumptionsFromValues =
                 createSolverAssumptions(
-                        valueAssignment, fSat4Solver, fMethodNode, fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings);
+                        valueAssignment,
+                        fSat4Solver,
+                        fMethodNode,
+                        fChoiceToSolverIdMappings);
 
         boolean isSatisfiable = fSat4Solver.isProblemSatisfiable(assumptionsFromValues);
 
@@ -643,7 +650,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fArgInputValToSanitizedVal,
                                         fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                                         fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
-                                        fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings));
+                                        fChoiceToSolverIdMappings));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
             } catch (Exception e) {
@@ -663,7 +670,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                 fArgInputValToSanitizedVal,
                                 fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                                 fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
-                                fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings));
+                                fChoiceToSolverIdMappings));
 
                 consequenceID =
                         (Integer) consequence.accept(
@@ -677,7 +684,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fArgInputValToSanitizedVal,
                                         fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                                         fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
-                                        fChoiceToSolverIdMappings.fChoiceToSolverIdEqualMappings));
+                                        fChoiceToSolverIdMappings));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -690,7 +697,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             List<ChoiceNode> currentArgumentAssignments, // main input parameter
             EcSatSolver satSolver,
             MethodNode methodNode,
-            ParamsWithChInts argChoiceID) {
+            CMappings choiceToSolverIdMappings) {
 
         if (!satSolver.hasConstraints())
             return new ArrayList<>();
@@ -712,7 +719,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             if (choiceAssignedToParameter != null) {
 
                 final Map<ChoiceNode, Integer> choiceNodeIntegerMap =
-                        argChoiceID.get(methodParameterNode);
+                        choiceToSolverIdMappings.eqGet(methodParameterNode);
 
                 if (choiceNodeIntegerMap == null)
                     continue; //no constraint on this method parameter

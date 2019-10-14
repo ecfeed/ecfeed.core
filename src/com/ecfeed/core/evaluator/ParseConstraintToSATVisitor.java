@@ -30,12 +30,11 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     private ParamsWithChInts fArgLessEqChoiceID;
     private ParamsWithChInts fArgLessThChoiceID;
-    private ParamsWithChInts fChoiceToSolverIdMappings;
+    private CMappings fChoiceToSolverIdMappings;
 
 
     public ParseConstraintToSATVisitor(
             MethodNode methodNode,
-//            IntegerHolder firstFreeIDHolder,
             EcSatSolver sat4Solver,
             ParamsWithChoices allAtomicValues,
             ParamsWithChoices allSanitizedValues,
@@ -44,11 +43,10 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal,
             ParamsWithChInts lessEqChoiceID,
             ParamsWithChInts lessThChoiceID,
-            ParamsWithChInts choiceToSolverIdMappings
+            CMappings choiceToSolverIdMappings
     ) {
 
         fMethodNode = methodNode;
-//        fFirstFreeIDHolder = firstFreeIDHolder;
         fSat4Solver = sat4Solver;
         fArgAllAtomicValues = allAtomicValues;
         fArgAllSanitizedValues = allSanitizedValues;
@@ -213,7 +211,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethodNode.getParametersCount(), null));
             dummyValues.set(lParamIndex, lChoice);
             EvaluationResult result = statement.evaluate(dummyValues);
-            Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.get(leftMethodParameterNode).get(lChoice);
+            Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.eqGet(leftMethodParameterNode).get(lChoice);
             if (result == EvaluationResult.TRUE) {
                 fSat4Solver.addSat4Clause(new int[]{-idOfLeftArgChoice, myID}); // thisChoice => me
             } else if (result == EvaluationResult.FALSE) {

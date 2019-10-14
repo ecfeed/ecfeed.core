@@ -23,9 +23,9 @@ public class EvaluatorHelper {
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
             ParamsWithChInts argLessEqChoiceID,
             ParamsWithChInts argLessThChoiceID,
-            ParamsWithChInts argChoiceID) {
+            CMappings choiceToSolverIdMappings) {
 
-        if (argChoiceID.containsKey(methodParameterNode))
+        if (choiceToSolverIdMappings.eQContainsKey(methodParameterNode))
             return;
 
         //we need to create new set of variables, as we are seeing this parameter for the first time
@@ -49,7 +49,7 @@ public class EvaluatorHelper {
                 choiceVars.add(satSolver.newId());
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
-            argChoiceID.put(methodParameterNode, choiceID);
+            choiceToSolverIdMappings.eqPut(methodParameterNode, choiceID);
             return;
         }
 
@@ -128,7 +128,7 @@ public class EvaluatorHelper {
 
         argLessEqChoiceID.put(methodParameterNode, inverseLEqVars);
         argLessThChoiceID.put(methodParameterNode, inverseLThVars);
-        argChoiceID.put(methodParameterNode, choiceID);
+        choiceToSolverIdMappings.eqPut(methodParameterNode, choiceID);
     }
 
 }
