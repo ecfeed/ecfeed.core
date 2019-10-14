@@ -12,10 +12,9 @@ import java.util.List;
 
 public class SatSolverConstraintEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
-    private ParamsWithChoices fInputChoices;
-    private ParamsWithChoices fSanitizedChoices;
-//    private ParamsWithChoices fAtomicChoices;
     ParamChoiceSets fParamChoiceSets;
+    private ParamsWithChoices fInputChoices;
+    //private ParamsWithChoices fSanitizedChoices;
 
     private ChoiceMappings fSanitizedToInputMappings;
     private ChoiceMappings fAtomicToSanitizedMappings;
@@ -45,7 +44,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 
         fInputChoices = new ParamsWithChoices("ALL");
-        fSanitizedChoices = new ParamsWithChoices("SAN");
+
 
         fSanitizedToInputMappings = new ChoiceMappings("STI");
         fAtomicToSanitizedMappings = new ChoiceMappings("ATS");
@@ -83,10 +82,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         fInputChoices = createInputChoices(fMethodNode);
 
         collectSanitizedValues(
+                fParamChoiceSets,
                 fInputChoices,
-                fSanitizedChoices,
                 fSanitizedToInputMappings);
-        Sat4Logger.log("fSanitizedChoices", fSanitizedChoices, 1, fLogLevel);
         Sat4Logger.log("fSanitizedToInputMappings", fSanitizedToInputMappings, 1, fLogLevel);
 
 
@@ -95,14 +93,13 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         sanitizeRelationStatementsWithRelation(
                 fAllRelationStatements,
-                fSanitizedChoices,
+                fParamChoiceSets,
                 fSanitizedToInputMappings);
-        Sat4Logger.log("fSanitizedChoices after sanitize", fSanitizedChoices, 1, fLogLevel);
         Sat4Logger.log("fSanitizedToInputMappings after sanitize", fSanitizedToInputMappings, 1, fLogLevel);
 
 
         createInputToSanitizedMapping(
-                fSanitizedChoices,
+                fParamChoiceSets,
                 fSanitizedToInputMappings,
                 fArgInputValToSanitizedVal);
         Sat4Logger.log("fArgInputValToSanitizedVal", fArgInputValToSanitizedVal, 1, fLogLevel);
@@ -110,7 +107,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         createSanitizedAndAtomicMappings(
                 fParamChoiceSets,
-                fSanitizedChoices,
                 fAtomicToSanitizedMappings,
                 fSanitizedValToAtomicVal);
         Sat4Logger.log("fAtomicToSanitizedMappings", fAtomicToSanitizedMappings, 1, fLogLevel);
@@ -185,7 +181,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             EvaluatorHelper.prepareVariablesForParameter(
                     methodParameterNode,
                     fParamChoiceSets,
-                    fSanitizedChoices,
                     fSanitizedValToAtomicVal,
                     fSat4Solver,
                     fInputChoices,
@@ -273,15 +268,15 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     }
 
     private static void createInputToSanitizedMapping(
-            ParamsWithChoices sanitizedChoices,
+            ParamChoiceSets paramChoiceSets,
             ChoiceMappings sanitizedToInputMappings, Map<MethodParameterNode,
             Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal) {
 
-        for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
+        for (MethodParameterNode methodParameterNode : paramChoiceSets.sanitizedGetKeySet()) {
 
             inOutInputValToSanitizedVal.put(methodParameterNode, HashMultimap.create());
 
-            for (ChoiceNode sanitizedChoice : sanitizedChoices.get(methodParameterNode)) {
+            for (ChoiceNode sanitizedChoice : paramChoiceSets.sainitizedGet(methodParameterNode)) {
 
                 ChoiceNode inputChoice = sanitizedToInputMappings.get(sanitizedChoice);
 
@@ -294,11 +289,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void createSanitizedAndAtomicMappings(
             ParamChoiceSets fParamChoiceSets,
-        ParamsWithChoices sanitizedChoices,
         ChoiceMappings outAtomicToSanitizedMappings,
         ChoiceMultiMappings outSanitizedValToAtomicVal ) {
 
-        for (MethodParameterNode methodParameterNode : sanitizedChoices.getKeySet()) {
+        for (MethodParameterNode methodParameterNode : fParamChoiceSets.sanitizedGetKeySet()) {
 
             // TODO - why do we need an empty set ?
             fParamChoiceSets.atomicPut(methodParameterNode, new HashSet<>());
@@ -306,7 +300,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             createSanitizedAndAtomicMappingsForParam(
                     methodParameterNode,
                     fParamChoiceSets,
-                    sanitizedChoices,
                     outAtomicToSanitizedMappings,
                     outSanitizedValToAtomicVal
             );
@@ -315,21 +308,20 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void createSanitizedAndAtomicMappingsForParam(
             MethodParameterNode methodParameterNode,
-            ParamChoiceSets fParamChoiceSets,
-            ParamsWithChoices sanitizedChoices,
+            ParamChoiceSets paramChoiceSets,
             ChoiceMappings outAtomicToSanitizedMappings,
             ChoiceMultiMappings outSanitizedValToAtomicVal) {
 
         //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
-        for (ChoiceNode sanitizedChoiceNode : sanitizedChoices.get(methodParameterNode)) {
+        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sainitizedGet(methodParameterNode)) {
 
             if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), sanitizedChoiceNode)) {
 
                 List<ChoiceNode> interleavedChoices =
                         ChoiceNodeHelper.getInterleavedValues(
-                                sanitizedChoiceNode, sanitizedChoices.getSize());
+                                sanitizedChoiceNode, paramChoiceSets.sanitizedGetSize());
 
-                fParamChoiceSets.atomicGet(methodParameterNode).addAll(interleavedChoices);
+                paramChoiceSets.atomicGet(methodParameterNode).addAll(interleavedChoices);
 
                 for (ChoiceNode interleavedChoiceNode : interleavedChoices) {
                     outAtomicToSanitizedMappings.put(interleavedChoiceNode, sanitizedChoiceNode);
@@ -338,7 +330,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
             } else {
 
-                fParamChoiceSets.atomicGet(methodParameterNode).add(sanitizedChoiceNode);
+                paramChoiceSets.atomicGet(methodParameterNode).add(sanitizedChoiceNode);
                 outAtomicToSanitizedMappings.put(sanitizedChoiceNode, sanitizedChoiceNode);
                 outSanitizedValToAtomicVal.put(sanitizedChoiceNode, sanitizedChoiceNode);
             }
@@ -355,14 +347,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     }
 
     private static void collectSanitizedValues(
+            ParamChoiceSets paramChoiceSets,
             ParamsWithChoices inputValues,
-            ParamsWithChoices outAllSanitizedValues,
             ChoiceMappings outSanitizedToValMappings) {
 
         for (MethodParameterNode methodParameterNode : inputValues.getKeySet()) {
 
             Set<ChoiceNode> copy = new HashSet<>(inputValues.get(methodParameterNode));
-            outAllSanitizedValues.put(methodParameterNode, copy);
+            paramChoiceSets.sainitizedPut(methodParameterNode, copy);
 
             for (ChoiceNode choiceNode : copy) //maintaining the dependencies
                 outSanitizedToValMappings.put(choiceNode, choiceNode);
@@ -390,7 +382,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void sanitizeRelationStatementsWithRelation(
             List<RelationStatement> fAllRelationStatements,
-            ParamsWithChoices inOutSanitizedValues,
+            ParamChoiceSets paramChoiceSets,
             ChoiceMappings inOutSanitizedToInputMappings) {
 
         while (true) {
@@ -398,7 +390,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             for (RelationStatement relationStatement : fAllRelationStatements) {
                 if (sanitizeValsWithRelation(
                         relationStatement,
-                        inOutSanitizedValues,
+                        paramChoiceSets,
                         inOutSanitizedToInputMappings)) {
                     anyChange = true;
                 }
@@ -410,7 +402,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static Boolean sanitizeValsWithRelation(
             RelationStatement relationStatement,
-            ParamsWithChoices inOutSanitizedValues,
+            ParamChoiceSets paramChoiceSets,
             ChoiceMappings inOutSanitizedToInputMappings) {
 
         IStatementCondition condition = relationStatement.getCondition();
@@ -423,12 +415,12 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                 && !JavaTypeHelper.isFloatingPointTypeName(lParam.getType()))
             return false;
 
-        List<ChoiceNode> allLVals = new ArrayList<>(inOutSanitizedValues.get(lParam));
+        List<ChoiceNode> allLVals = new ArrayList<>(paramChoiceSets.sainitizedGet(lParam));
 
 
         if (condition instanceof ParameterCondition) {
             MethodParameterNode rParam = ((ParameterCondition) condition).getRightParameterNode();
-            List<ChoiceNode> allRVals = new ArrayList<>(inOutSanitizedValues.get(rParam));
+            List<ChoiceNode> allRVals = new ArrayList<>(paramChoiceSets.sainitizedGet(rParam));
 
             boolean anyChange = false;
             List<ChoiceNode> allLValsCopy = new ArrayList<>(allLVals);
@@ -448,9 +440,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                 allRValsCopy = changeResult.getSecond();
             }
 
-            inOutSanitizedValues.put(lParam, new HashSet<>(allLValsCopy));
+            paramChoiceSets.sainitizedPut(lParam, new HashSet<>(allLValsCopy));
 
-            inOutSanitizedValues.put(rParam, new HashSet<>(allRValsCopy));
+            paramChoiceSets.sainitizedPut(rParam, new HashSet<>(allRValsCopy));
 
             return anyChange;
         }
@@ -470,7 +462,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             Pair<Boolean, List<ChoiceNode>> changeResult =
                     splitListWithChoiceNode(allLVals, it, inOutSanitizedToInputMappings);
 
-            inOutSanitizedValues.put(lParam, new HashSet<>(changeResult.getSecond()));
+            paramChoiceSets.sainitizedPut(lParam, new HashSet<>(changeResult.getSecond()));
             return changeResult.getFirst();
         }
 
@@ -642,7 +634,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fMethodNode,
                                         fSat4Solver,
                                         fParamChoiceSets,
-                                        fSanitizedChoices,
                                         fSanitizedValToAtomicVal,
                                         fInputChoices,
                                         fArgInputValToSanitizedVal,
@@ -660,7 +651,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                 fMethodNode,
                                 fSat4Solver,
                                 fParamChoiceSets,
-                                fSanitizedChoices,
                                 fSanitizedValToAtomicVal,
                                 fInputChoices,
                                 fArgInputValToSanitizedVal,
@@ -672,7 +662,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fMethodNode,
                                         fSat4Solver,
                                         fParamChoiceSets,
-                                        fSanitizedChoices,
                                         fSanitizedValToAtomicVal,
                                         fInputChoices,
                                         fArgInputValToSanitizedVal,

@@ -20,7 +20,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     private EcSatSolver fSat4Solver;
     private ParamChoiceSets fParamChoiceSets;
-    private ParamsWithChoices fArgAllSanitizedValues;
     private ChoiceMultiMappings fSanitizedValToAtomicVal;
     private ParamsWithChoices fArgAllInputValues;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
@@ -31,7 +30,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             MethodNode methodNode,
             EcSatSolver sat4Solver,
             ParamChoiceSets paramChoiceSets,
-            ParamsWithChoices allSanitizedValues,
             ChoiceMultiMappings sanitizedValToAtomicVal,
             ParamsWithChoices allInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal,
@@ -40,7 +38,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         fMethodNode = methodNode;
         fSat4Solver = sat4Solver;
         fParamChoiceSets = paramChoiceSets;
-        fArgAllSanitizedValues = allSanitizedValues;
         fSanitizedValToAtomicVal = sanitizedValToAtomicVal;
         fArgAllInputValues = allInputValues;
         fArgInputValToSanitizedVal = inputValToSanitizedVal;
@@ -63,7 +60,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fMethodNode,
                                         fSat4Solver,
                                         fParamChoiceSets,
-                                        fArgAllSanitizedValues,
                                         fSanitizedValToAtomicVal,
                                         fArgAllInputValues,
                                         fArgInputValToSanitizedVal,
@@ -90,7 +86,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fMethodNode,
                                         fSat4Solver,
                                         fParamChoiceSets,
-                                        fArgAllSanitizedValues,
                                         fSanitizedValToAtomicVal,
                                         fArgAllInputValues,
                                         fArgInputValToSanitizedVal,
@@ -176,7 +171,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         EvaluatorHelper.prepareVariablesForParameter(
                 leftMethodParameterNode,
                 fParamChoiceSets,
-                fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
                 fArgAllInputValues,
@@ -212,7 +206,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         EvaluatorHelper.prepareVariablesForParameter(
                 lParam,
                 fParamChoiceSets,
-                fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
                 fArgAllInputValues,
@@ -230,7 +223,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         EvaluatorHelper.prepareVariablesForParameter(
                 rParam,
                 fParamChoiceSets,
-                fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
                 fArgAllInputValues,

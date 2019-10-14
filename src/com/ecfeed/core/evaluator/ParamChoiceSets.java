@@ -15,6 +15,7 @@ public class ParamChoiceSets {
     public ParamChoiceSets() {
 
         fAtomicChoices = new ParamsWithChoices("ATM");
+        fSanitizedChoices = new ParamsWithChoices("SAN");
     }
 
     public void atomicPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {
@@ -26,6 +27,26 @@ public class ParamChoiceSets {
 
         return fAtomicChoices.get(methodParameterNode);
     }
+
+    public void sainitizedPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {
+
+        fSanitizedChoices.put(methodParameterNode, setOfChoices);
+    }
+
+    public Set<ChoiceNode> sainitizedGet(MethodParameterNode methodParameterNode) {
+
+        return fSanitizedChoices.get(methodParameterNode);
+    }
+
+    public Set<MethodParameterNode> sanitizedGetKeySet() {
+
+        return fSanitizedChoices.getKeySet();
+    }
+
+    public int sanitizedGetSize() {
+        return fSanitizedChoices.getSize();
+    }
+
 }
 
 

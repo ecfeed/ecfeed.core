@@ -14,7 +14,6 @@ public class EvaluatorHelper {
     public static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
             ParamChoiceSets paramChoiceSets,
-            ParamsWithChoices argAllSanitizedValues,
             ChoiceMultiMappings sanitizedValToAtomicVal,
             EcSatSolver satSolver,
             ParamsWithChoices argAllInputValues,
@@ -62,7 +61,7 @@ public class EvaluatorHelper {
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
-        for (ChoiceNode sanitizedChoiceNode : argAllSanitizedValues.get(methodParameterNode))
+        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sainitizedGet(methodParameterNode))
             if (!choiceID.containsKey(sanitizedChoiceNode)) {
                 Integer sanitizedID = satSolver.newId();
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
