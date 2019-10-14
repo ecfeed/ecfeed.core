@@ -54,7 +54,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
         Sat4Logger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
 
         fSat4Solver = new Sat4Solver();
-        
+
         fInputChoices = new ParamsWithChoices("ALL");
         fSanitizedChoices = new ParamsWithChoices("SAN");
         fAtomicChoices = new ParamsWithChoices("ATM");
@@ -77,7 +77,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
             initializeForConstraints(initConstraints);
         }
 
-        fSat4Solver.initialize(fFirstFreeIDHolder.get(), fSat4Solver);
+        fSat4Solver.initialize(fFirstFreeIDHolder.get());
     }
 
     private void initializeForConstraints(Collection<Constraint> initConstraints) {

@@ -26,9 +26,7 @@ public class Sat4Solver {
         fSat4Clauses = new Sat4Clauses();
     }
 
-    public void initialize(
-            final int maxVar,
-            Sat4Solver sat4Solver) {
+    public void initialize(final int maxVar) {
 
         fSolver = SolverFactory.newDefault();
 
