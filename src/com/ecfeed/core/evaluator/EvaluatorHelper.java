@@ -16,7 +16,6 @@ public class EvaluatorHelper {
             ParamChoiceSets paramChoiceSets,
             ChoiceMultiMappings sanitizedValToAtomicVal,
             EcSatSolver satSolver,
-            ParamsWithChoices argAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
@@ -77,7 +76,7 @@ public class EvaluatorHelper {
                 satSolver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray()); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
             }
 
-        for (ChoiceNode inputValue : argAllInputValues.get(methodParameterNode))
+        for (ChoiceNode inputValue : paramChoiceSets.inputGet(methodParameterNode))
             if (!choiceID.containsKey(inputValue)) {
                 Integer inputID = satSolver.newId();
                 choiceID.put(inputValue, inputID);
