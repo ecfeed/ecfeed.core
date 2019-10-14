@@ -21,7 +21,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     private MethodNode fMethodNode;
 
     private IntegerHolder fFirstFreeIDHolder;
-    private Sat4Solver fSat4Solver;
+    private EcSatSolver fSat4Solver;
     private ParamsWithChoices fArgAllAtomicValues;
     private ParamsWithChoices fArgAllSanitizedValues;
     private ChoiceMultiMappings fSanitizedValToAtomicVal;
@@ -36,7 +36,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     public ParseConstraintToSATVisitor(
             MethodNode methodNode,
             IntegerHolder firstFreeIDHolder,
-            Sat4Solver sat4Solver,
+            EcSatSolver sat4Solver,
             ParamsWithChoices allAtomicValues,
             ParamsWithChoices allSanitizedValues,
             ChoiceMultiMappings sanitizedValToAtomicVal,

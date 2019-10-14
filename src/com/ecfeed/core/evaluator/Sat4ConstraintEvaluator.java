@@ -33,7 +33,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     private ExpectedConstraintsData fExpectedValConstraints;
 
     private MethodNode fMethodNode;
-    private Sat4Solver fSat4Solver;
+    private EcSatSolver fSat4Solver;
 
     static final int fLogLevel = 0;
 
@@ -70,12 +70,12 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     }
 
     private void prepareSat4Solver(Collection<Constraint> initConstraints) {
-        
+
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("Constraints without method.");
         }
 
-        fSat4Solver = new Sat4Solver();
+        fSat4Solver = new EcSatSolver();
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
             prepareSolversClauses(initConstraints, fSat4Solver);
@@ -84,7 +84,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
         fSat4Solver.packClauses(fFirstFreeIDHolder.get());
     }
 
-    private void prepareSolversClauses(Collection<Constraint> initConstraints, Sat4Solver sat4Solver) {
+    private void prepareSolversClauses(Collection<Constraint> initConstraints, EcSatSolver sat4Solver) {
 
         sat4Solver.setHasConstraints();
 
@@ -614,7 +614,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     private void parseConstraintsToSat(
             Collection<Constraint> initConstraints,
             ExpectedConstraintsData outExpectedValConstraints,
-            Sat4Solver sat4Solver) { // TODO - input / output
+            EcSatSolver sat4Solver) { // TODO - input / output
 
         for (Constraint constraint : initConstraints) {
             parseConstraintToSat(constraint, outExpectedValConstraints, sat4Solver);
@@ -624,7 +624,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
     private void parseConstraintToSat(
             Constraint constraint,
             ExpectedConstraintsData outExpectedValConstraints,
-            Sat4Solver sat4Solver) {
+            EcSatSolver sat4Solver) {
 
         if (constraint == null) {
             return;
@@ -694,7 +694,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
 
     private static List<Integer> createSolverAssumptions(
             List<ChoiceNode> currentArgumentAssignments, // main input parameter
-            Sat4Solver satSolver,
+            EcSatSolver satSolver,
             MethodNode methodNode,
             ParamsWithChInts argChoiceID) {
 

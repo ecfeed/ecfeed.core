@@ -10,7 +10,7 @@ import org.sat4j.specs.TimeoutException;
 
 import java.util.List;
 
-public class Sat4Solver {
+public class EcSatSolver {
 
     private ISolver fSolver;
     private Boolean fIsContradicting;
@@ -18,7 +18,7 @@ public class Sat4Solver {
 
     private Sat4Clauses fSat4Clauses;
 
-    public Sat4Solver() {
+    public EcSatSolver() {
 
         fSolver = SolverFactory.newDefault();
         fSat4Clauses = new Sat4Clauses();
@@ -96,14 +96,17 @@ public class Sat4Solver {
     }
 
     public Boolean isContradicting() {
+
         return fIsContradicting;
     }
 
     public void setHasConstraints() {
+
         fHasConstraints = true;
     }
 
     public Boolean hasConstraints() {
+        
         return fHasConstraints;
     }
 

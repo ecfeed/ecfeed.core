@@ -24,7 +24,7 @@ public class EvaluatorHelper {
             IntegerHolder firstFreeIDHolder,
             ParamsWithChoices argAllSanitizedValues,
             ChoiceMultiMappings sanitizedValToAtomicVal,
-            Sat4Solver satSolver,
+            EcSatSolver satSolver,
             ParamsWithChoices argAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
             ParamsWithChInts argLessEqChoiceID,
