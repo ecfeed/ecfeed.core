@@ -53,8 +53,6 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
         fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
         Sat4Logger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
 
-        fSat4Solver = new Sat4Solver();
-
         fInputChoices = new ParamsWithChoices("ALL");
         fSanitizedChoices = new ParamsWithChoices("SAN");
         fAtomicChoices = new ParamsWithChoices("ATM");
@@ -68,21 +66,27 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
 
         fMethodNode = method;
 
+        prepareSat4Solver(initConstraints);
+    }
 
+    private void prepareSat4Solver(Collection<Constraint> initConstraints) {
+        
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("Constraints without method.");
         }
 
+        fSat4Solver = new Sat4Solver();
+
         if (initConstraints != null && !initConstraints.isEmpty()) {
-            initializeForConstraints(initConstraints);
+            prepareSolversClauses(initConstraints, fSat4Solver);
         }
 
         fSat4Solver.packClauses(fFirstFreeIDHolder.get());
     }
 
-    private void initializeForConstraints(Collection<Constraint> initConstraints) {
+    private void prepareSolversClauses(Collection<Constraint> initConstraints, Sat4Solver sat4Solver) {
 
-        fSat4Solver.setHasConstraints();
+        sat4Solver.setHasConstraints();
 
         fInputChoices = createInputChoices(fMethodNode);
 
@@ -122,7 +126,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
         parseConstraintsToSat(
                 initConstraints,
                 fExpectedValConstraints,
-                fSat4Solver);
+                sat4Solver);
         Sat4Logger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
     }
 
