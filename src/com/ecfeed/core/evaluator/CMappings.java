@@ -9,7 +9,7 @@ import java.util.Map;
 public class CMappings {
 
     public ParamsWithChInts fChoiceToSolverIdLessEqMappings;
-    public ParamsWithChInts fChoiceToSolverIdLessThMappings;
+    private ParamsWithChInts fChoiceToSolverIdLessThMappings;
     private ParamsWithChInts fChoiceToSolverIdEqualMappings;
 
     final int fLogLevel = 0;
@@ -39,7 +39,7 @@ public class CMappings {
     public void eqPut(
             MethodParameterNode methodParameterNode,
             HashMap<ChoiceNode, Integer> choiceID // TODO - name
-    ) {
+            ) {
 
         fChoiceToSolverIdEqualMappings.put(methodParameterNode, choiceID);
     }
@@ -47,6 +47,20 @@ public class CMappings {
     public Map<ChoiceNode, Integer> eqGet(MethodParameterNode methodParameterNode) {
 
         return fChoiceToSolverIdEqualMappings.get(methodParameterNode);
+    }
+
+
+    public void ltPut(
+            MethodParameterNode methodParameterNode,
+            HashMap<ChoiceNode, Integer> choiceID // TODO - name
+    ) {
+
+        fChoiceToSolverIdLessThMappings.put(methodParameterNode, choiceID);
+    }
+
+    public Map<ChoiceNode, Integer> ltGet(MethodParameterNode methodParameterNode) {
+
+        return fChoiceToSolverIdLessThMappings.get(methodParameterNode);
     }
 }
 

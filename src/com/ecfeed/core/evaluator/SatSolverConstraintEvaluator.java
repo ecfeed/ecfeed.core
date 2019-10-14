@@ -191,7 +191,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     fInputChoices,
                     fArgInputValToSanitizedVal,
                     fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
-                    fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
                     fChoiceToSolverIdMappings
             );
 
@@ -649,7 +648,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fInputChoices,
                                         fArgInputValToSanitizedVal,
                                         fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
-                                        fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
                                         fChoiceToSolverIdMappings));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
@@ -669,7 +667,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                 fInputChoices,
                                 fArgInputValToSanitizedVal,
                                 fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
-                                fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
                                 fChoiceToSolverIdMappings));
 
                 consequenceID =
@@ -683,7 +680,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fInputChoices,
                                         fArgInputValToSanitizedVal,
                                         fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
-                                        fChoiceToSolverIdMappings.fChoiceToSolverIdLessThMappings,
                                         fChoiceToSolverIdMappings));
             } catch (Exception e) {
                 e.printStackTrace();

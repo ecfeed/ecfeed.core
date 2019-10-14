@@ -22,7 +22,6 @@ public class EvaluatorHelper {
             ParamsWithChoices argAllInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
             ParamsWithChInts argLessEqChoiceID,
-            ParamsWithChInts argLessThChoiceID,
             CMappings choiceToSolverIdMappings) {
 
         if (choiceToSolverIdMappings.eQContainsKey(methodParameterNode))
@@ -127,7 +126,7 @@ public class EvaluatorHelper {
         }
 
         argLessEqChoiceID.put(methodParameterNode, inverseLEqVars);
-        argLessThChoiceID.put(methodParameterNode, inverseLThVars);
+        choiceToSolverIdMappings.ltPut(methodParameterNode, inverseLThVars);
         choiceToSolverIdMappings.eqPut(methodParameterNode, choiceID);
     }
 
