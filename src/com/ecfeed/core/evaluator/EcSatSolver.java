@@ -15,7 +15,7 @@ public class EcSatSolver {
 
     private ISolver fSolver;
     private Sat4Clauses fSat4Clauses;
-    public IntegerHolder fFirstFreeIDHolder;
+    private IntegerHolder fFirstFreeIDHolder;
 
     private Boolean fIsContradicting;
     private Boolean fHasConstraints;
@@ -25,14 +25,15 @@ public class EcSatSolver {
 
         fSolver = SolverFactory.newDefault();
         fSat4Clauses = new Sat4Clauses();
-
         fFirstFreeIDHolder = new IntegerHolder(1);
 
         fIsContradicting = false;
         fHasConstraints = false;
     }
 
-    public void packClauses(final int maxVar) {
+    public void packClauses() {
+
+        final int maxVar = fFirstFreeIDHolder.get();
 
         try {
             fSolver.newVar(maxVar);
@@ -113,6 +114,15 @@ public class EcSatSolver {
     public Boolean hasConstraints() {
 
         return fHasConstraints;
+    }
+
+    public static int newId(IntegerHolder fFirstFreeIDHolder) { // TODO - remove
+        fFirstFreeIDHolder.increment();
+        return fFirstFreeIDHolder.get();
+    }
+
+    public IntegerHolder getFirstFreeIDHolder() { // TODO - remove
+        return fFirstFreeIDHolder;
     }
 
 }

@@ -12,16 +12,10 @@ import java.util.*;
 
 public class EvaluatorHelper {
 
-    public static int newId(IntegerHolder fFirstFreeIDHolder) {
-        fFirstFreeIDHolder.increment();
-        return fFirstFreeIDHolder.get();
-    }
-
     // TODO - where is the output ?
     public static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
             ParamsWithChoices fArgAllAtomicValues,
-            IntegerHolder firstFreeIDHolder,
             ParamsWithChoices argAllSanitizedValues,
             ChoiceMultiMappings sanitizedValToAtomicVal,
             EcSatSolver satSolver,
@@ -52,7 +46,7 @@ public class EvaluatorHelper {
 
         if (!JavaTypeHelper.isNumericTypeName(methodParameterNode.getType())) {
             for (int i = 0; i < n; i++) {
-                choiceVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
+                choiceVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
             argChoiceID.put(methodParameterNode, choiceID);
@@ -63,16 +57,17 @@ public class EvaluatorHelper {
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
 
 
-        prefixVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
+        prefixVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
+
         for (int i = 0; i < n; i++) {
-            choiceVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
-            prefixVars.add(EvaluatorHelper.newId(firstFreeIDHolder));
+            choiceVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
+            prefixVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
         for (ChoiceNode sanitizedChoiceNode : argAllSanitizedValues.get(methodParameterNode))
             if (!choiceID.containsKey(sanitizedChoiceNode)) {
-                Integer sanitizedID = EvaluatorHelper.newId(firstFreeIDHolder);
+                Integer sanitizedID = EcSatSolver.newId(satSolver.getFirstFreeIDHolder());
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
@@ -87,7 +82,7 @@ public class EvaluatorHelper {
 
         for (ChoiceNode inputValue : argAllInputValues.get(methodParameterNode))
             if (!choiceID.containsKey(inputValue)) {
-                Integer inputID = EvaluatorHelper.newId(firstFreeIDHolder);
+                Integer inputID = EcSatSolver.newId(satSolver.getFirstFreeIDHolder());
                 choiceID.put(inputValue, inputID);
 
                 List<Integer> bigClause = new ArrayList<>();

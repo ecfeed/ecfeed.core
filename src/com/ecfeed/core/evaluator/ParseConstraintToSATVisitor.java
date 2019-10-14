@@ -20,7 +20,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     private MethodNode fMethodNode;
 
-    private IntegerHolder fFirstFreeIDHolder;
+//    private IntegerHolder fFirstFreeIDHolder;
     private EcSatSolver fSat4Solver;
     private ParamsWithChoices fArgAllAtomicValues;
     private ParamsWithChoices fArgAllSanitizedValues;
@@ -35,7 +35,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     public ParseConstraintToSATVisitor(
             MethodNode methodNode,
-            IntegerHolder firstFreeIDHolder,
+//            IntegerHolder firstFreeIDHolder,
             EcSatSolver sat4Solver,
             ParamsWithChoices allAtomicValues,
             ParamsWithChoices allSanitizedValues,
@@ -48,7 +48,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     ) {
 
         fMethodNode = methodNode;
-        fFirstFreeIDHolder = firstFreeIDHolder;
+//        fFirstFreeIDHolder = firstFreeIDHolder;
         fSat4Solver = sat4Solver;
         fArgAllAtomicValues = allAtomicValues;
         fArgAllSanitizedValues = allSanitizedValues;
@@ -63,7 +63,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     @Override
     public Object visit(StatementArray statement) {
-        Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
+        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
         switch (statement.getOperator()) {
             case OR: // y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
             {
@@ -74,7 +74,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                         childID = (Integer) child.accept(
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
-                                        fFirstFreeIDHolder,
                                         fSat4Solver,
                                         fArgAllAtomicValues,
                                         fArgAllSanitizedValues,
@@ -104,7 +103,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                         childID = (Integer) child.accept(
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
-                                        fFirstFreeIDHolder,
                                         fSat4Solver,
                                         fArgAllAtomicValues,
                                         fArgAllSanitizedValues,
@@ -170,7 +168,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                     Integer statementLowID = singleChoiceParamConstraints(statementLow);
                     Integer statementHighID = singleChoiceParamConstraints(statementHigh);
 
-                    Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
+                    Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
 
                     fSat4Solver.addSat4Clause(new VecInt(new int[]{-statementLowID, -statementHighID, myID}));
                     fSat4Solver.addSat4Clause(new VecInt(new int[]{-myID, statementLowID}));
@@ -195,7 +193,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         EvaluatorHelper.prepareVariablesForParameter(
                 leftMethodParameterNode,
                 fArgAllAtomicValues,
-                fFirstFreeIDHolder,
                 fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
@@ -206,7 +203,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fChoiceToSolverIdMappings
         );
 
-        Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
+        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
 
         int lParamIndex = fMethodNode.getMethodParameters().indexOf(leftMethodParameterNode);
         if (lParamIndex == -1) {
@@ -234,7 +231,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         MethodParameterNode lParam = statement.getLeftParameter();
         EvaluatorHelper.prepareVariablesForParameter(lParam,
                 fArgAllAtomicValues,
-                fFirstFreeIDHolder,
                 fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
@@ -245,7 +241,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fChoiceToSolverIdMappings
         );
 
-        Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
+        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
 
         int lParamIndex = fMethodNode.getMethodParameters().indexOf(lParam);
         if (lParamIndex == -1) {
@@ -256,7 +252,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         EvaluatorHelper.prepareVariablesForParameter(
                 rParam,
                 fArgAllAtomicValues,
-                fFirstFreeIDHolder,
                 fArgAllSanitizedValues,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
@@ -384,7 +379,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     @Override
     public Object visit(StaticStatement statement) {
-        Integer myID = EvaluatorHelper.newId(fFirstFreeIDHolder);
+        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
         if (statement.getValue() == EvaluationResult.TRUE)
             fSat4Solver.addSat4Clause(new VecInt(new int[]{myID}));
         else
