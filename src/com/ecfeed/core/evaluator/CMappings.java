@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class CMappings {
 
-    public ParamsWithChInts fChoiceToSolverIdLessEqMappings;
+    private ParamsWithChInts fChoiceToSolverIdLessEqMappings;
     private ParamsWithChInts fChoiceToSolverIdLessThMappings;
     private ParamsWithChInts fChoiceToSolverIdEqualMappings;
 
@@ -39,7 +39,7 @@ public class CMappings {
     public void eqPut(
             MethodParameterNode methodParameterNode,
             HashMap<ChoiceNode, Integer> choiceID // TODO - name
-            ) {
+    ) {
 
         fChoiceToSolverIdEqualMappings.put(methodParameterNode, choiceID);
     }
@@ -49,18 +49,29 @@ public class CMappings {
         return fChoiceToSolverIdEqualMappings.get(methodParameterNode);
     }
 
-
     public void ltPut(
             MethodParameterNode methodParameterNode,
-            HashMap<ChoiceNode, Integer> choiceID // TODO - name
-    ) {
+            HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
 
-        fChoiceToSolverIdLessThMappings.put(methodParameterNode, choiceID);
+        fChoiceToSolverIdLessThMappings.put(methodParameterNode, choiceNodeIntegerMap);
     }
 
     public Map<ChoiceNode, Integer> ltGet(MethodParameterNode methodParameterNode) {
 
         return fChoiceToSolverIdLessThMappings.get(methodParameterNode);
     }
+
+    public void lePut(
+            MethodParameterNode methodParameterNode,
+            HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
+
+        fChoiceToSolverIdLessEqMappings.put(methodParameterNode, choiceNodeIntegerMap);
+    }
+
+    public Map<ChoiceNode, Integer> leGet(MethodParameterNode methodParameterNode) {
+
+        return fChoiceToSolverIdLessEqMappings.get(methodParameterNode);
+    }
+
 }
 

@@ -22,10 +22,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
 
-//    private ParamsWithChInts fChoiceToSolverIdLessEqMappings;
-//    private ParamsWithChInts fChoiceToSolverIdLessThMappings;
-//    private ParamsWithChInts fChoiceToSolverIdEqualMappings;
-
     CMappings fChoiceToSolverIdMappings;
 
     private List<RelationStatement> fAllRelationStatements;
@@ -190,7 +186,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     fSat4Solver,
                     fInputChoices,
                     fArgInputValToSanitizedVal,
-                    fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                     fChoiceToSolverIdMappings
             );
 
@@ -647,7 +642,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fSanitizedValToAtomicVal,
                                         fInputChoices,
                                         fArgInputValToSanitizedVal,
-                                        fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                                         fChoiceToSolverIdMappings));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
@@ -666,7 +660,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                 fSanitizedValToAtomicVal,
                                 fInputChoices,
                                 fArgInputValToSanitizedVal,
-                                fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                                 fChoiceToSolverIdMappings));
 
                 consequenceID =
@@ -679,7 +672,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fSanitizedValToAtomicVal,
                                         fInputChoices,
                                         fArgInputValToSanitizedVal,
-                                        fChoiceToSolverIdMappings.fChoiceToSolverIdLessEqMappings,
                                         fChoiceToSolverIdMappings));
             } catch (Exception e) {
                 e.printStackTrace();

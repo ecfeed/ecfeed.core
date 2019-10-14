@@ -20,15 +20,12 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     private MethodNode fMethodNode;
 
-//    private IntegerHolder fFirstFreeIDHolder;
     private EcSatSolver fSat4Solver;
     private ParamsWithChoices fArgAllAtomicValues;
     private ParamsWithChoices fArgAllSanitizedValues;
     private ChoiceMultiMappings fSanitizedValToAtomicVal;
     private ParamsWithChoices fArgAllInputValues;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
-
-    private ParamsWithChInts fArgLessEqChoiceID;
     private CMappings fChoiceToSolverIdMappings;
 
 
@@ -40,7 +37,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             ChoiceMultiMappings sanitizedValToAtomicVal,
             ParamsWithChoices allInputValues,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal,
-            ParamsWithChInts lessEqChoiceID,
             CMappings choiceToSolverIdMappings) {
 
         fMethodNode = methodNode;
@@ -51,7 +47,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         fArgAllInputValues = allInputValues;
         fArgInputValToSanitizedVal = inputValToSanitizedVal;
 
-        fArgLessEqChoiceID = lessEqChoiceID;
         fChoiceToSolverIdMappings = choiceToSolverIdMappings;
     }
 
@@ -74,7 +69,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fSanitizedValToAtomicVal,
                                         fArgAllInputValues,
                                         fArgInputValToSanitizedVal,
-                                        fArgLessEqChoiceID,
                                         fChoiceToSolverIdMappings));
 
                     } catch (Exception e) {
@@ -102,7 +96,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fSanitizedValToAtomicVal,
                                         fArgAllInputValues,
                                         fArgInputValToSanitizedVal,
-                                        fArgLessEqChoiceID,
                                         fChoiceToSolverIdMappings));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -190,9 +183,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fSat4Solver,
                 fArgAllInputValues,
                 fArgInputValToSanitizedVal,
-                fArgLessEqChoiceID,
-                fChoiceToSolverIdMappings
-        );
+                fChoiceToSolverIdMappings);
 
         Integer myID = fSat4Solver.newId();
 
@@ -227,9 +218,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fSat4Solver,
                 fArgAllInputValues,
                 fArgInputValToSanitizedVal,
-                fArgLessEqChoiceID,
-                fChoiceToSolverIdMappings
-        );
+                fChoiceToSolverIdMappings);
 
         Integer myID = fSat4Solver.newId();
 
@@ -247,7 +236,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fSat4Solver,
                 fArgAllInputValues,
                 fArgInputValToSanitizedVal,
-                fArgLessEqChoiceID,
                 fChoiceToSolverIdMappings
         );
 
@@ -269,12 +257,12 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             }
 
             Integer leftLessTh = fChoiceToSolverIdMappings.ltGet(lParam).get(sortedLChoices.get(i));
-            Integer leftLessEq = fArgLessEqChoiceID.get(lParam).get(sortedLChoices.get(i));
+            Integer leftLessEq = fChoiceToSolverIdMappings.leGet(lParam).get(sortedLChoices.get(i));
             Integer rightLessTh = null;
             Integer rightLessEq = null;
             if (j < n) {
                 rightLessTh = fChoiceToSolverIdMappings.ltGet(rParam).get(sortedRChoices.get(j));
-                rightLessEq = fArgLessEqChoiceID.get(rParam).get(sortedRChoices.get(j));
+                rightLessEq = fChoiceToSolverIdMappings.leGet(rParam).get(sortedRChoices.get(j));
             }
 
             switch (statement.getRelation()) {
