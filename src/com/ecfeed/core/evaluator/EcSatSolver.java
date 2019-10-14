@@ -13,10 +13,11 @@ import java.util.List;
 public class EcSatSolver {
 
     private ISolver fSolver;
+    private Sat4Clauses fSat4Clauses;
+
     private Boolean fIsContradicting;
     private Boolean fHasConstraints;
 
-    private Sat4Clauses fSat4Clauses;
 
     public EcSatSolver() {
 
@@ -106,7 +107,7 @@ public class EcSatSolver {
     }
 
     public Boolean hasConstraints() {
-        
+
         return fHasConstraints;
     }
 

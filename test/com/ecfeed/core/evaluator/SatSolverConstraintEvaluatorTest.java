@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class Sat4jEvaluatorTest {
+public class SatSolverConstraintEvaluatorTest {
 
     @Test
     public void TestOrderOfInts() {
@@ -132,7 +132,7 @@ public class Sat4jEvaluatorTest {
                 input.add(arg.getLeafChoicesWithCopies());
 
 
-        IConstraintEvaluator<ChoiceNode> evaluator = new Sat4ConstraintEvaluator(methodNode.getAllConstraints(), methodNode);
+        IConstraintEvaluator<ChoiceNode> evaluator = new SatSolverConstraintEvaluator(methodNode.getAllConstraints(), methodNode);
 
         IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
 //        IAlgorithm<ChoiceNode> algorithm = new AwesomeNWiseAlgorithm<>(2,100);
