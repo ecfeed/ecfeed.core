@@ -77,7 +77,7 @@ public class Sat4ConstraintEvaluator implements IConstraintEvaluator<ChoiceNode>
             initializeForConstraints(initConstraints);
         }
 
-        fSat4Solver.initialize(fFirstFreeIDHolder.get());
+        fSat4Solver.packClauses(fFirstFreeIDHolder.get());
     }
 
     private void initializeForConstraints(Collection<Constraint> initConstraints) {

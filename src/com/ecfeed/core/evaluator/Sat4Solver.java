@@ -19,16 +19,15 @@ public class Sat4Solver {
     private Sat4Clauses fSat4Clauses;
 
     public Sat4Solver() {
+
         fSolver = SolverFactory.newDefault();
+        fSat4Clauses = new Sat4Clauses();
+
         fIsContradicting = false;
         fHasConstraints = false;
-
-        fSat4Clauses = new Sat4Clauses();
     }
 
-    public void initialize(final int maxVar) {
-
-        fSolver = SolverFactory.newDefault();
+    public void packClauses(final int maxVar) {
 
         try {
             fSolver.newVar(maxVar);
@@ -39,7 +38,6 @@ public class Sat4Solver {
                 fSolver.addClause(clause);
             }
 
-            //System.out.println("variables: " + maxVar + " clauses: " + countOfClauses);
         } catch (ContradictionException e) {
             fIsContradicting = true;
         }
