@@ -46,7 +46,7 @@ public class EvaluatorHelper {
 
         if (!JavaTypeHelper.isNumericTypeName(methodParameterNode.getType())) {
             for (int i = 0; i < n; i++) {
-                choiceVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
+                choiceVars.add(satSolver.newId());
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
             argChoiceID.put(methodParameterNode, choiceID);
@@ -57,17 +57,17 @@ public class EvaluatorHelper {
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
 
 
-        prefixVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
+        prefixVars.add(satSolver.newId());
 
         for (int i = 0; i < n; i++) {
-            choiceVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
-            prefixVars.add(EcSatSolver.newId(satSolver.getFirstFreeIDHolder()));
+            choiceVars.add(satSolver.newId());
+            prefixVars.add(satSolver.newId());
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
         for (ChoiceNode sanitizedChoiceNode : argAllSanitizedValues.get(methodParameterNode))
             if (!choiceID.containsKey(sanitizedChoiceNode)) {
-                Integer sanitizedID = EcSatSolver.newId(satSolver.getFirstFreeIDHolder());
+                Integer sanitizedID = satSolver.newId();
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
@@ -82,7 +82,7 @@ public class EvaluatorHelper {
 
         for (ChoiceNode inputValue : argAllInputValues.get(methodParameterNode))
             if (!choiceID.containsKey(inputValue)) {
-                Integer inputID = EcSatSolver.newId(satSolver.getFirstFreeIDHolder());
+                Integer inputID = satSolver.newId();
                 choiceID.put(inputValue, inputID);
 
                 List<Integer> bigClause = new ArrayList<>();

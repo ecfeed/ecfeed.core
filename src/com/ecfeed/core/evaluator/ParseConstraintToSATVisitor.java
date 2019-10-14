@@ -63,7 +63,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     @Override
     public Object visit(StatementArray statement) {
-        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
+        Integer myID = fSat4Solver.newId();
         switch (statement.getOperator()) {
             case OR: // y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
             {
@@ -168,7 +168,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                     Integer statementLowID = singleChoiceParamConstraints(statementLow);
                     Integer statementHighID = singleChoiceParamConstraints(statementHigh);
 
-                    Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
+                    Integer myID = fSat4Solver.newId();
 
                     fSat4Solver.addSat4Clause(new VecInt(new int[]{-statementLowID, -statementHighID, myID}));
                     fSat4Solver.addSat4Clause(new VecInt(new int[]{-myID, statementLowID}));
@@ -203,7 +203,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fChoiceToSolverIdMappings
         );
 
-        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
+        Integer myID = fSat4Solver.newId();
 
         int lParamIndex = fMethodNode.getMethodParameters().indexOf(leftMethodParameterNode);
         if (lParamIndex == -1) {
@@ -241,7 +241,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fChoiceToSolverIdMappings
         );
 
-        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
+        Integer myID = fSat4Solver.newId();
 
         int lParamIndex = fMethodNode.getMethodParameters().indexOf(lParam);
         if (lParamIndex == -1) {
@@ -379,7 +379,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
     @Override
     public Object visit(StaticStatement statement) {
-        Integer myID = EcSatSolver.newId(fSat4Solver.getFirstFreeIDHolder());
+        Integer myID = fSat4Solver.newId();
         if (statement.getValue() == EvaluationResult.TRUE)
             fSat4Solver.addSat4Clause(new VecInt(new int[]{myID}));
         else

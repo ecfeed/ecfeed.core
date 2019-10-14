@@ -67,7 +67,9 @@ public class EcSatSolver {
         }
     }
 
-    public void newVar(int var) {
+    public void setNewVar() { // TODO - name ?
+
+        final int var = fFirstFreeIDHolder.get();
         fSolver.newVar(var);
     }
 
@@ -116,13 +118,10 @@ public class EcSatSolver {
         return fHasConstraints;
     }
 
-    public static int newId(IntegerHolder fFirstFreeIDHolder) { // TODO - remove
+    public int newId() {
+
         fFirstFreeIDHolder.increment();
         return fFirstFreeIDHolder.get();
-    }
-
-    public IntegerHolder getFirstFreeIDHolder() { // TODO - remove
-        return fFirstFreeIDHolder;
     }
 
 }

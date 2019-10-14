@@ -196,8 +196,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     fChoiceToSolverIdEqualMappings
             );
 
-        final int maxVar = fSat4Solver.getFirstFreeIDHolder().get();
-        fSat4Solver.newVar(maxVar);
+        fSat4Solver.setNewVar();
 
         final int[] assumptions =
                 createSolverAssumptions(choicesToExclude, fSat4Solver, fMethodNode, fChoiceToSolverIdEqualMappings)
