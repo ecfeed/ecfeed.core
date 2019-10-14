@@ -5,12 +5,12 @@ import com.ecfeed.core.model.ChoiceNode;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChoiceMappings {
+public class SimpleChoiceMapping {
 
 	//    private String fDebugCode;
     private Map<ChoiceNode, ChoiceNode> fMap;
 
-    public ChoiceMappings(String debugCode) {
+    public SimpleChoiceMapping(String debugCode) {
 
     	//        fDebugCode = debugCode;
         fMap = new HashMap<>();

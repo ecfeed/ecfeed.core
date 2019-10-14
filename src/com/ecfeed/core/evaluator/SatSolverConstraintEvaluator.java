@@ -14,9 +14,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     ParamChoiceSets fParamChoiceSets;
 
-    private ChoiceMappings fSanitizedToInputMappings;
-    private ChoiceMappings fAtomicToSanitizedMappings;
-    private ChoiceMultiMappings fSanitizedValToAtomicVal;
+    private SimpleChoiceMapping fSanitizedToInputMappings;
+    private SimpleChoiceMapping fAtomicToSanitizedMappings;
+    private ChoiceMultiMapping fSanitizedValToAtomicVal;
     private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
 
     ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
@@ -41,14 +41,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         fChoiceToSolverIdMappings = new ChoiceToSolverIdMappings();
         fParamChoiceSets = new ParamChoiceSets(method);
 
-        fSanitizedToInputMappings = new ChoiceMappings("STI");
-        fAtomicToSanitizedMappings = new ChoiceMappings("ATS");
+        fSanitizedToInputMappings = new SimpleChoiceMapping("STI");
+        fAtomicToSanitizedMappings = new SimpleChoiceMapping("ATS");
 
         fExpectedValConstraints = new ExpectedConstraintsData();
 
         fAllRelationStatements = new ArrayList<>();
         fArgInputValToSanitizedVal = new HashMap<>();
-        fSanitizedValToAtomicVal = new ChoiceMultiMappings("STA");
+        fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
 
         prepareSat4Solver(initConstraints);
     }
@@ -260,7 +260,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void createInputToSanitizedMapping(
             ParamChoiceSets paramChoiceSets,
-            ChoiceMappings sanitizedToInputMappings, Map<MethodParameterNode,
+            SimpleChoiceMapping sanitizedToInputMappings, Map<MethodParameterNode,
             Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal) {
 
         for (MethodParameterNode methodParameterNode : paramChoiceSets.sanitizedGetKeySet()) {
@@ -280,8 +280,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void createSanitizedAndAtomicMappings(
             ParamChoiceSets fParamChoiceSets,
-        ChoiceMappings outAtomicToSanitizedMappings,
-        ChoiceMultiMappings outSanitizedValToAtomicVal ) {
+        SimpleChoiceMapping outAtomicToSanitizedMappings,
+        ChoiceMultiMapping outSanitizedValToAtomicVal ) {
 
         for (MethodParameterNode methodParameterNode : fParamChoiceSets.sanitizedGetKeySet()) {
 
@@ -300,8 +300,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     private static void createSanitizedAndAtomicMappingsForParam(
             MethodParameterNode methodParameterNode,
             ParamChoiceSets paramChoiceSets,
-            ChoiceMappings outAtomicToSanitizedMappings,
-            ChoiceMultiMappings outSanitizedValToAtomicVal) {
+            SimpleChoiceMapping outAtomicToSanitizedMappings,
+            ChoiceMultiMapping outSanitizedValToAtomicVal) {
 
         //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
         for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sainitizedGet(methodParameterNode)) {
@@ -339,7 +339,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void collectSanitizedValues(
             ParamChoiceSets paramChoiceSets,
-            ChoiceMappings outSanitizedToValMappings) {
+            SimpleChoiceMapping outSanitizedToValMappings) {
 
         for (MethodParameterNode methodParameterNode : paramChoiceSets.inputGetKeySet()) {
 
@@ -354,7 +354,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     private static void sanitizeRelationStatementsWithRelation(
             List<RelationStatement> fAllRelationStatements,
             ParamChoiceSets paramChoiceSets,
-            ChoiceMappings inOutSanitizedToInputMappings) {
+            SimpleChoiceMapping inOutSanitizedToInputMappings) {
 
         while (true) {
             Boolean anyChange = false;
@@ -374,7 +374,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     private static Boolean sanitizeValsWithRelation(
             RelationStatement relationStatement,
             ParamChoiceSets paramChoiceSets,
-            ChoiceMappings inOutSanitizedToInputMappings) {
+            SimpleChoiceMapping inOutSanitizedToInputMappings) {
 
         IStatementCondition condition = relationStatement.getCondition();
         if (condition instanceof LabelCondition)
@@ -444,7 +444,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     private static Pair<Boolean, List<ChoiceNode>> splitListWithChoiceNode(
             List<ChoiceNode> toSplit,
             ChoiceNode val,
-            ChoiceMappings inOutSanitizedToInputMappings) {
+            SimpleChoiceMapping inOutSanitizedToInputMappings) {
 
         ChoiceNode start, end;
         if (val.isRandomizedValue()) {
@@ -476,7 +476,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             List<ChoiceNode> toSplit,
             ChoiceNode val,
             TypeOfEndpoint type,
-            ChoiceMappings inOutSanitizedToInputMappings) {
+            SimpleChoiceMapping inOutSanitizedToInputMappings) {
 
         Boolean anyChange = false;
         List<ChoiceNode> newList = new ArrayList<>();

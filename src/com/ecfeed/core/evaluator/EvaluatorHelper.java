@@ -14,7 +14,7 @@ public class EvaluatorHelper {
     public static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
             ParamChoiceSets paramChoiceSets,
-            ChoiceMultiMappings sanitizedValToAtomicVal,
+            ChoiceMultiMapping sanitizedValToAtomicVal,
             EcSatSolver satSolver,
             Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {

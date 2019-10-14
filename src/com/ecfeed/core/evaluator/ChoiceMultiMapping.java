@@ -6,12 +6,12 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-public class ChoiceMultiMappings {
+public class ChoiceMultiMapping {
 
 	//    private String fDebugCode;
     private Multimap<ChoiceNode, ChoiceNode> fMap;
 
-    public ChoiceMultiMappings(String debugCode) {
+    public ChoiceMultiMapping(String debugCode) {
 
     	//        fDebugCode = debugCode;
         fMap = HashMultimap.create();
