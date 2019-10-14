@@ -13,7 +13,7 @@ public class EvaluatorHelper {
     // TODO - where is the output ?
     public static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
-            ParamsWithChoices fArgAllAtomicValues,
+            ParamChoiceSets paramChoiceSets,
             ParamsWithChoices argAllSanitizedValues,
             ChoiceMultiMappings sanitizedValToAtomicVal,
             EcSatSolver satSolver,
@@ -37,7 +37,8 @@ public class EvaluatorHelper {
         HashMap<ChoiceNode, Integer> choiceID = new HashMap<>();
 
 
-        List<ChoiceNode> sortedChoices = new ArrayList<>(fArgAllAtomicValues.get(methodParameterNode));
+        List<ChoiceNode> sortedChoices = new ArrayList<>(paramChoiceSets.atomicGet(methodParameterNode));
+
         int n = sortedChoices.size();
 
         if (!JavaTypeHelper.isNumericTypeName(methodParameterNode.getType())) {
