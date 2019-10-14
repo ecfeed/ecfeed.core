@@ -1,6 +1,7 @@
 package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IntegerHolder;
 import org.sat4j.core.VecInt;
 import org.sat4j.minisat.SolverFactory;
 import org.sat4j.specs.ContradictionException;
@@ -14,6 +15,7 @@ public class EcSatSolver {
 
     private ISolver fSolver;
     private Sat4Clauses fSat4Clauses;
+    public IntegerHolder fFirstFreeIDHolder;
 
     private Boolean fIsContradicting;
     private Boolean fHasConstraints;
@@ -23,6 +25,8 @@ public class EcSatSolver {
 
         fSolver = SolverFactory.newDefault();
         fSat4Clauses = new Sat4Clauses();
+
+        fFirstFreeIDHolder = new IntegerHolder(1);
 
         fIsContradicting = false;
         fHasConstraints = false;

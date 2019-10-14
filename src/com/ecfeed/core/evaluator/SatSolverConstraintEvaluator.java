@@ -13,8 +13,6 @@ import java.util.List;
 
 public class SatSolverConstraintEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
-    private IntegerHolder fFirstFreeIDHolder = new IntegerHolder(1);
-
     private ParamsWithChoices fInputChoices;
     private ParamsWithChoices fSanitizedChoices;
     private ParamsWithChoices fAtomicChoices;
@@ -81,7 +79,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             prepareSolversClauses(initConstraints, fSat4Solver);
         }
 
-        fSat4Solver.packClauses(fFirstFreeIDHolder.get());
+        fSat4Solver.packClauses(fSat4Solver.fFirstFreeIDHolder.get());
     }
 
     private void prepareSolversClauses(Collection<Constraint> initConstraints, EcSatSolver sat4Solver) {
@@ -188,7 +186,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             EvaluatorHelper.prepareVariablesForParameter(
                     methodParameterNode,
                     fAtomicChoices,
-                    fFirstFreeIDHolder,
+                    fSat4Solver.fFirstFreeIDHolder,
                     fSanitizedChoices,
                     fSanitizedValToAtomicVal,
                     fSat4Solver,
@@ -199,7 +197,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     fChoiceToSolverIdEqualMappings
             );
 
-        final int maxVar = fFirstFreeIDHolder.get();
+        final int maxVar = fSat4Solver.fFirstFreeIDHolder.get();
         fSat4Solver.newVar(maxVar);
 
         final int[] assumptions =
@@ -638,7 +636,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                         (Integer) premise.accept(
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
-                                        fFirstFreeIDHolder,
+                                        fSat4Solver.fFirstFreeIDHolder,
                                         fSat4Solver,
                                         fAtomicChoices,
                                         fSanitizedChoices,
@@ -659,7 +657,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                 premiseID = (Integer) premise.accept(
                         new ParseConstraintToSATVisitor(
                                 fMethodNode,
-                                fFirstFreeIDHolder,
+                                fSat4Solver.fFirstFreeIDHolder,
                                 fSat4Solver,
                                 fAtomicChoices,
                                 fSanitizedChoices,
@@ -674,7 +672,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                         (Integer) consequence.accept(
                                 new ParseConstraintToSATVisitor(
                                         fMethodNode,
-                                        fFirstFreeIDHolder,
+                                        fSat4Solver.fFirstFreeIDHolder,
                                         fSat4Solver,
                                         fAtomicChoices,
                                         fSanitizedChoices,
