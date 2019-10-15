@@ -21,7 +21,8 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     private EcSatSolver fSat4Solver;
     private ParamChoiceSets fParamChoiceSets;
     private ChoiceMultiMapping fSanitizedValToAtomicVal;
-    private ParamChoiceMappings fArgInputValToSanitizedVal;
+//    private ParamChoiceMappings fArgInputValToSanitizedVal;
+    private ChoicesMappingsBucket fChoicesMappingBucket;
     private ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
 
@@ -30,14 +31,14 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             EcSatSolver sat4Solver,
             ParamChoiceSets paramChoiceSets,
             ChoiceMultiMapping sanitizedValToAtomicVal,
-            ParamChoiceMappings inputValToSanitizedVal,
+            ChoicesMappingsBucket choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         fMethodNode = methodNode;
         fSat4Solver = sat4Solver;
         fParamChoiceSets = paramChoiceSets;
         fSanitizedValToAtomicVal = sanitizedValToAtomicVal;
-        fArgInputValToSanitizedVal = inputValToSanitizedVal;
+        fChoicesMappingBucket = choicesMappingsBucket;
 
         fChoiceToSolverIdMappings = choiceToSolverIdMappings;
     }
@@ -58,7 +59,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fSat4Solver,
                                         fParamChoiceSets,
                                         fSanitizedValToAtomicVal,
-                                        fArgInputValToSanitizedVal,
+                                        fChoicesMappingBucket,
                                         fChoiceToSolverIdMappings));
 
                     } catch (Exception e) {
@@ -83,7 +84,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                                         fSat4Solver,
                                         fParamChoiceSets,
                                         fSanitizedValToAtomicVal,
-                                        fArgInputValToSanitizedVal,
+                                        fChoicesMappingBucket,
                                         fChoiceToSolverIdMappings));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -168,7 +169,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fParamChoiceSets,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
-                fArgInputValToSanitizedVal,
+                fChoicesMappingBucket,
                 fChoiceToSolverIdMappings);
 
         Integer myID = fSat4Solver.newId();
@@ -202,7 +203,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fParamChoiceSets,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
-                fArgInputValToSanitizedVal,
+                fChoicesMappingBucket,
                 fChoiceToSolverIdMappings);
 
         Integer myID = fSat4Solver.newId();
@@ -218,7 +219,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fParamChoiceSets,
                 fSanitizedValToAtomicVal,
                 fSat4Solver,
-                fArgInputValToSanitizedVal,
+                fChoicesMappingBucket,
                 fChoiceToSolverIdMappings
         );
 

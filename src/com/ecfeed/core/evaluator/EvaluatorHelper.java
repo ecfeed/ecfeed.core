@@ -16,7 +16,7 @@ public class EvaluatorHelper {
             ParamChoiceSets paramChoiceSets,
             ChoiceMultiMapping sanitizedValToAtomicVal,
             EcSatSolver satSolver,
-            ParamChoiceMappings argInputValToSanitizedVal,
+            ChoicesMappingsBucket choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         if (choiceToSolverIdMappings.eQContainsKey(methodParameterNode))
@@ -82,7 +82,7 @@ public class EvaluatorHelper {
                 choiceID.put(inputValue, inputID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode sanitizedValue : argInputValToSanitizedVal.get(methodParameterNode).get(inputValue)) {
+                for (ChoiceNode sanitizedValue : choicesMappingsBucket.inputToSanGet(methodParameterNode).get(inputValue)) {
                     Integer sanitizedID = choiceID.get(sanitizedValue);
                     satSolver.addSat4Clause(new int[]{-sanitizedID, inputID}); // sanitizedID => inputID
                     bigClause.add(sanitizedID);

@@ -18,7 +18,7 @@ public class ParamChoiceMappings {
 
     }
 
-    public void put(MethodParameterNode methodParameterNode, HashMultimap<ChoiceNode, ChoiceNode> value) {
+    public void put(MethodParameterNode methodParameterNode, Multimap<ChoiceNode, ChoiceNode> value) {
 
         fArgInputValToSanitizedVal.put(methodParameterNode, value);
     }

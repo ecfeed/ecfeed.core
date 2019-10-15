@@ -17,8 +17,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     private SimpleChoiceMapping fSanitizedToInputMappings;
     private SimpleChoiceMapping fAtomicToSanitizedMappings;
     private ChoiceMultiMapping fSanitizedValToAtomicVal;
-//    private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
-    private ParamChoiceMappings fArgInputValToSanitizedVal;
+//    private ParamChoiceMappings fArgInputValToSanitizedVal;
+    private ChoicesMappingsBucket fChoiceMappingsBucket;
 
     ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
@@ -48,7 +48,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         fExpectedValConstraints = new ExpectedConstraintsData();
 
         fAllRelationStatements = new ArrayList<>();
-        fArgInputValToSanitizedVal = new ParamChoiceMappings();
+        fChoiceMappingsBucket = new ChoicesMappingsBucket();
         fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
 
         prepareSat4Solver(initConstraints);
@@ -94,8 +94,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         createInputToSanitizedMapping(
                 fParamChoiceSets,
                 fSanitizedToInputMappings,
-                fArgInputValToSanitizedVal);
-        Sat4Logger.log("fArgInputValToSanitizedVal", fArgInputValToSanitizedVal, 1, fLogLevel);
+                fChoiceMappingsBucket);
+//        Sat4Logger.log("fArgInputValToSanitizedVal", fArgInputValToSanitizedVal, 1, fLogLevel);
 
 
         createSanitizedAndAtomicMappings(
@@ -176,7 +176,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     fParamChoiceSets,
                     fSanitizedValToAtomicVal,
                     fSat4Solver,
-                    fArgInputValToSanitizedVal,
+                    fChoiceMappingsBucket,
                     fChoiceToSolverIdMappings
             );
 
@@ -262,17 +262,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     private static void createInputToSanitizedMapping(
             ParamChoiceSets paramChoiceSets,
             SimpleChoiceMapping sanitizedToInputMappings,
-            ParamChoiceMappings inOutInputValToSanitizedVal) {
+            ChoicesMappingsBucket choicesMappingsBucket) {
 
         for (MethodParameterNode methodParameterNode : paramChoiceSets.sanitizedGetKeySet()) {
 
-            inOutInputValToSanitizedVal.put(methodParameterNode, HashMultimap.create());
+            choicesMappingsBucket.inputToSanPut(methodParameterNode, HashMultimap.create());
 
             for (ChoiceNode sanitizedChoice : paramChoiceSets.sainitizedGet(methodParameterNode)) {
 
                 ChoiceNode inputChoice = sanitizedToInputMappings.get(sanitizedChoice);
 
-                inOutInputValToSanitizedVal.get(methodParameterNode).
+                choicesMappingsBucket.inputToSanGet(methodParameterNode).
                         put(inputChoice, sanitizedChoice);
             }
         }
@@ -606,7 +606,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fSat4Solver,
                                         fParamChoiceSets,
                                         fSanitizedValToAtomicVal,
-                                        fArgInputValToSanitizedVal,
+                                        fChoiceMappingsBucket,
                                         fChoiceToSolverIdMappings));
 
                 outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
@@ -622,7 +622,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                 fSat4Solver,
                                 fParamChoiceSets,
                                 fSanitizedValToAtomicVal,
-                                fArgInputValToSanitizedVal,
+                                fChoiceMappingsBucket,
                                 fChoiceToSolverIdMappings));
 
                 consequenceID =
@@ -632,7 +632,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fSat4Solver,
                                         fParamChoiceSets,
                                         fSanitizedValToAtomicVal,
-                                        fArgInputValToSanitizedVal,
+                                        fChoiceMappingsBucket,
                                         fChoiceToSolverIdMappings));
             } catch (Exception e) {
                 e.printStackTrace();
