@@ -8,11 +8,13 @@ import java.util.Collection;
 
 public class ChoicesMappingsBucket { // TODO - rename
 
+    private SimpleChoiceMapping fSanitizedToInputMappings;
     private ChoiceMultiMapping fSanitizedValToAtomicVal;
     private ParamChoiceMappings fArgInputValToSanitizedVal;
 
     public ChoicesMappingsBucket() {
 
+        fSanitizedToInputMappings = new SimpleChoiceMapping("STI");
         fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
         fArgInputValToSanitizedVal = new ParamChoiceMappings();
     }
@@ -38,6 +40,17 @@ public class ChoicesMappingsBucket { // TODO - rename
     public Collection<ChoiceNode> sanToAtmGet(ChoiceNode keyChoiceNode) {
 
         return fSanitizedValToAtomicVal.get(keyChoiceNode);
+    }
+
+
+    public void sanToInputPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
+
+        fSanitizedToInputMappings.put(keyChoiceNode, valueChoiceNode);
+    }
+
+    public ChoiceNode sanToInputGet(ChoiceNode keyChoiceNode) {
+
+        return fSanitizedToInputMappings.get(keyChoiceNode);
     }
 
 }
