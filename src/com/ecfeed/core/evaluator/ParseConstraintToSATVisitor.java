@@ -21,7 +21,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     private EcSatSolver fSat4Solver;
     private ParamChoiceSets fParamChoiceSets;
     private ChoiceMultiMapping fSanitizedValToAtomicVal;
-    private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
+    private ParamChoiceMappings fArgInputValToSanitizedVal;
     private ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
 
@@ -30,7 +30,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             EcSatSolver sat4Solver,
             ParamChoiceSets paramChoiceSets,
             ChoiceMultiMapping sanitizedValToAtomicVal,
-            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> inputValToSanitizedVal,
+            ParamChoiceMappings inputValToSanitizedVal,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         fMethodNode = methodNode;

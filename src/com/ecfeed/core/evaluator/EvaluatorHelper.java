@@ -16,7 +16,7 @@ public class EvaluatorHelper {
             ParamChoiceSets paramChoiceSets,
             ChoiceMultiMapping sanitizedValToAtomicVal,
             EcSatSolver satSolver,
-            Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> argInputValToSanitizedVal,
+            ParamChoiceMappings argInputValToSanitizedVal,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         if (choiceToSolverIdMappings.eQContainsKey(methodParameterNode))

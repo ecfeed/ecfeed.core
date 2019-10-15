@@ -17,7 +17,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     private SimpleChoiceMapping fSanitizedToInputMappings;
     private SimpleChoiceMapping fAtomicToSanitizedMappings;
     private ChoiceMultiMapping fSanitizedValToAtomicVal;
-    private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
+//    private Map<MethodParameterNode, Multimap<ChoiceNode, ChoiceNode>> fArgInputValToSanitizedVal;
+    private ParamChoiceMappings fArgInputValToSanitizedVal;
 
     ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
@@ -47,7 +48,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         fExpectedValConstraints = new ExpectedConstraintsData();
 
         fAllRelationStatements = new ArrayList<>();
-        fArgInputValToSanitizedVal = new HashMap<>();
+        fArgInputValToSanitizedVal = new ParamChoiceMappings();
         fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
 
         prepareSat4Solver(initConstraints);
@@ -260,8 +261,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void createInputToSanitizedMapping(
             ParamChoiceSets paramChoiceSets,
-            SimpleChoiceMapping sanitizedToInputMappings, Map<MethodParameterNode,
-            Multimap<ChoiceNode, ChoiceNode>> inOutInputValToSanitizedVal) {
+            SimpleChoiceMapping sanitizedToInputMappings,
+            ParamChoiceMappings inOutInputValToSanitizedVal) {
 
         for (MethodParameterNode methodParameterNode : paramChoiceSets.sanitizedGetKeySet()) {
 
@@ -271,8 +272,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
                 ChoiceNode inputChoice = sanitizedToInputMappings.get(sanitizedChoice);
 
-                inOutInputValToSanitizedVal.
-                        get(methodParameterNode).
+                inOutInputValToSanitizedVal.get(methodParameterNode).
                         put(inputChoice, sanitizedChoice);
             }
         }
