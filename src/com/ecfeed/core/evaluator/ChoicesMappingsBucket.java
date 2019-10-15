@@ -4,12 +4,16 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.google.common.collect.Multimap;
 
+import java.util.Collection;
+
 public class ChoicesMappingsBucket { // TODO - rename
 
-    public ParamChoiceMappings fArgInputValToSanitizedVal;
+    private ChoiceMultiMapping fSanitizedValToAtomicVal;
+    private ParamChoiceMappings fArgInputValToSanitizedVal;
 
     public ChoicesMappingsBucket() {
 
+        fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
         fArgInputValToSanitizedVal = new ParamChoiceMappings();
     }
 
@@ -25,4 +29,15 @@ public class ChoicesMappingsBucket { // TODO - rename
 
         return fArgInputValToSanitizedVal.get(methodParameterNode);
     }
+
+    public void sanToAtmPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
+
+        fSanitizedValToAtomicVal.put(keyChoiceNode, valueChoiceNode);
+    }
+
+    public Collection<ChoiceNode> sanToAtmGet(ChoiceNode keyChoiceNode) {
+
+        return fSanitizedValToAtomicVal.get(keyChoiceNode);
+    }
+
 }

@@ -14,7 +14,6 @@ public class EvaluatorHelper {
     public static void prepareVariablesForParameter(
             MethodParameterNode methodParameterNode,
             ParamChoiceSets paramChoiceSets,
-            ChoiceMultiMapping sanitizedValToAtomicVal,
             EcSatSolver satSolver,
             ChoicesMappingsBucket choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
@@ -66,7 +65,7 @@ public class EvaluatorHelper {
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode atomicValue : sanitizedValToAtomicVal.get(sanitizedChoiceNode)) {
+                for (ChoiceNode atomicValue : choicesMappingsBucket.sanToAtmGet(sanitizedChoiceNode)) {
                     Integer atomicID = choiceID.get(atomicValue);
                     final int[] clause = {-atomicID, sanitizedID};
                     satSolver.addSat4Clause(clause); // atomicID => sanitizedID

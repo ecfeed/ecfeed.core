@@ -16,8 +16,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private SimpleChoiceMapping fSanitizedToInputMappings;
     private SimpleChoiceMapping fAtomicToSanitizedMappings;
-    private ChoiceMultiMapping fSanitizedValToAtomicVal;
-//    private ParamChoiceMappings fArgInputValToSanitizedVal;
     private ChoicesMappingsBucket fChoiceMappingsBucket;
 
     ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
@@ -49,7 +47,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         fAllRelationStatements = new ArrayList<>();
         fChoiceMappingsBucket = new ChoicesMappingsBucket();
-        fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
+
 
         prepareSat4Solver(initConstraints);
     }
@@ -101,9 +99,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         createSanitizedAndAtomicMappings(
                 fParamChoiceSets,
                 fAtomicToSanitizedMappings,
-                fSanitizedValToAtomicVal);
+                fChoiceMappingsBucket);
         Sat4Logger.log("fAtomicToSanitizedMappings", fAtomicToSanitizedMappings, 1, fLogLevel);
-        Sat4Logger.log("fSanitizedValToAtomicVal", fSanitizedValToAtomicVal, 1, fLogLevel);
+//        Sat4Logger.log("fSanitizedValToAtomicVal", fSanitizedValToAtomicVal, 1, fLogLevel);
 
         parseConstraintsToSat(
                 initConstraints,
@@ -174,7 +172,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             EvaluatorHelper.prepareVariablesForParameter(
                     methodParameterNode,
                     fParamChoiceSets,
-                    fSanitizedValToAtomicVal,
                     fSat4Solver,
                     fChoiceMappingsBucket,
                     fChoiceToSolverIdMappings
@@ -188,10 +185,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                         fSat4Solver,
                         fMethodNode,
                         fChoiceToSolverIdMappings)
-                            .stream()
-                            .map(x -> -x)
-                            .mapToInt(Integer::intValue)
-                            .toArray();
+                        .stream()
+                        .map(x -> -x)
+                        .mapToInt(Integer::intValue)
+                        .toArray();
 
         fSat4Solver.addClause(assumptions);
     }
@@ -280,8 +277,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
     private static void createSanitizedAndAtomicMappings(
             ParamChoiceSets fParamChoiceSets,
-        SimpleChoiceMapping outAtomicToSanitizedMappings,
-        ChoiceMultiMapping outSanitizedValToAtomicVal ) {
+            SimpleChoiceMapping outAtomicToSanitizedMappings,
+            ChoicesMappingsBucket choicesMappingsBucket) {
 
         for (MethodParameterNode methodParameterNode : fParamChoiceSets.sanitizedGetKeySet()) {
 
@@ -292,7 +289,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                     methodParameterNode,
                     fParamChoiceSets,
                     outAtomicToSanitizedMappings,
-                    outSanitizedValToAtomicVal
+                    choicesMappingsBucket
             );
         }
     }
@@ -301,7 +298,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             MethodParameterNode methodParameterNode,
             ParamChoiceSets paramChoiceSets,
             SimpleChoiceMapping outAtomicToSanitizedMappings,
-            ChoiceMultiMapping outSanitizedValToAtomicVal) {
+            ChoicesMappingsBucket choicesMappingsBucket) {
 
         //build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
         for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sainitizedGet(methodParameterNode)) {
@@ -316,14 +313,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
                 for (ChoiceNode interleavedChoiceNode : interleavedChoices) {
                     outAtomicToSanitizedMappings.put(interleavedChoiceNode, sanitizedChoiceNode);
-                    outSanitizedValToAtomicVal.put(sanitizedChoiceNode, interleavedChoiceNode);
+                    choicesMappingsBucket.sanToAtmPut(sanitizedChoiceNode, interleavedChoiceNode);
                 }
 
             } else {
 
                 paramChoiceSets.atomicGet(methodParameterNode).add(sanitizedChoiceNode);
                 outAtomicToSanitizedMappings.put(sanitizedChoiceNode, sanitizedChoiceNode);
-                outSanitizedValToAtomicVal.put(sanitizedChoiceNode, sanitizedChoiceNode);
+                choicesMappingsBucket.sanToAtmPut(sanitizedChoiceNode, sanitizedChoiceNode);
             }
         }
     }
@@ -605,7 +602,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fMethodNode,
                                         fSat4Solver,
                                         fParamChoiceSets,
-                                        fSanitizedValToAtomicVal,
                                         fChoiceMappingsBucket,
                                         fChoiceToSolverIdMappings));
 
@@ -621,7 +617,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                 fMethodNode,
                                 fSat4Solver,
                                 fParamChoiceSets,
-                                fSanitizedValToAtomicVal,
                                 fChoiceMappingsBucket,
                                 fChoiceToSolverIdMappings));
 
@@ -631,7 +626,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                                         fMethodNode,
                                         fSat4Solver,
                                         fParamChoiceSets,
-                                        fSanitizedValToAtomicVal,
                                         fChoiceMappingsBucket,
                                         fChoiceToSolverIdMappings));
             } catch (Exception e) {
