@@ -9,12 +9,14 @@ import java.util.Collection;
 public class ChoicesMappingsBucket { // TODO - rename
 
     private SimpleChoiceMapping fSanitizedToInputMappings;
+    private SimpleChoiceMapping fAtomicToSanitizedMappings;
     private ChoiceMultiMapping fSanitizedValToAtomicVal;
     private ParamChoiceMappings fArgInputValToSanitizedVal;
 
     public ChoicesMappingsBucket() {
 
         fSanitizedToInputMappings = new SimpleChoiceMapping("STI");
+        fAtomicToSanitizedMappings = new SimpleChoiceMapping("ATS");
         fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
         fArgInputValToSanitizedVal = new ParamChoiceMappings();
     }
@@ -42,15 +44,24 @@ public class ChoicesMappingsBucket { // TODO - rename
         return fSanitizedValToAtomicVal.get(keyChoiceNode);
     }
 
-
-    public void sanToInputPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
+    public void sanToInpPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
 
         fSanitizedToInputMappings.put(keyChoiceNode, valueChoiceNode);
     }
 
-    public ChoiceNode sanToInputGet(ChoiceNode keyChoiceNode) {
+    public ChoiceNode sanToInpGet(ChoiceNode keyChoiceNode) {
 
         return fSanitizedToInputMappings.get(keyChoiceNode);
+    }
+
+    public void atmToSanPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
+
+        fAtomicToSanitizedMappings.put(keyChoiceNode, valueChoiceNode);
+    }
+
+    public ChoiceNode atmToSanGet(ChoiceNode keyChoiceNode) { // TODO - get not used !!
+
+        return fAtomicToSanitizedMappings.get(keyChoiceNode);
     }
 
 }
