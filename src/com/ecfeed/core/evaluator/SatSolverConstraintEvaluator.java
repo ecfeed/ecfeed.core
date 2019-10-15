@@ -296,14 +296,12 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                 paramChoiceSets.atomicGet(methodParameterNode).addAll(interleavedChoices);
 
                 for (ChoiceNode interleavedChoiceNode : interleavedChoices) {
-                    choicesMappingsBucket.atmToSanPut(interleavedChoiceNode, sanitizedChoiceNode);
                     choicesMappingsBucket.sanToAtmPut(sanitizedChoiceNode, interleavedChoiceNode);
                 }
 
             } else {
 
                 paramChoiceSets.atomicGet(methodParameterNode).add(sanitizedChoiceNode);
-                choicesMappingsBucket.atmToSanPut(sanitizedChoiceNode, sanitizedChoiceNode);
                 choicesMappingsBucket.sanToAtmPut(sanitizedChoiceNode, sanitizedChoiceNode);
             }
         }
