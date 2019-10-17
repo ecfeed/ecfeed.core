@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+
 public class MethodNode extends ParametersParentNode {
 
 	private List<TestCaseNode> fTestCases;
@@ -159,6 +160,8 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		copy.setParent(getParent());
+//		if(!copy.isMatch(this))
+//			assert copy.isMatch(this);
 		return copy;
 	}
 

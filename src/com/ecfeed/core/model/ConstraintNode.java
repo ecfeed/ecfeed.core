@@ -147,8 +147,10 @@ public class ConstraintNode extends AbstractNode{
 		
 		if (copy.updateReferences(method))
 			return copy;
-		else
+		else {
+
 			return null;
+		}
 	}
 
 	@Override
