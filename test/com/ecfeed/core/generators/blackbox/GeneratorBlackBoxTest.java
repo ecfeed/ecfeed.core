@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class GeneratorBlackBoxTest {
 
     @Test
-    @Disabled
     void nullPointerExceptionTest() {
 
         NWiseGeneratorTester tester = new NWiseGeneratorTester(getModel1Xml());
@@ -21,9 +20,9 @@ public class GeneratorBlackBoxTest {
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                         "<Model name=\"Untitled\" version=\"3\">\n" +
                         "    <Class name=\"com.example.test.TestClass1\">\n" +
-                        "        <Properties>\n" +
-                        "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
-                        "        </Properties>\n" +
+//                        "        <Properties>\n" +
+//                        "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
+//                        "        </Properties>\n" +
                         "        <Method name=\"testMethod1\">\n" +
                         "            <Properties>\n" +
                         "                <Property name=\"methodRunner\" type=\"String\" value=\"Java Runner\"/>\n" +
