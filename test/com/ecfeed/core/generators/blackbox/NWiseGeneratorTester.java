@@ -7,6 +7,7 @@ import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -103,7 +104,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
                 generatorInput,
                 sat4jEvaluator,
                 generatorParameters,
-                null);
+                new SimpleProgressMonitor());
 
         return generator;
     }

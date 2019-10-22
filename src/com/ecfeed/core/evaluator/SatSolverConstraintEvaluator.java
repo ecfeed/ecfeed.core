@@ -6,6 +6,8 @@ import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
+import com.ecfeed.core.model.MethodParameterNode;
+
 
 import java.util.*;
 import java.util.List;
@@ -45,10 +47,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         fChoiceMappingsBucket = new ChoicesMappingsBucket();
 
 
-        prepareSat4Solver(initConstraints);
+        prepareSat4Solver(initConstraints, method);
     }
 
-    private void prepareSat4Solver(Collection<Constraint> initConstraints) {
+    private void prepareSat4Solver(Collection<Constraint> initConstraints, MethodNode method) {
 
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("Constraints without method.");
@@ -57,13 +59,13 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         fSat4Solver = new EcSatSolver();
 
         if (initConstraints != null && !initConstraints.isEmpty()) {
-            prepareSolversClauses(initConstraints, fSat4Solver);
+            prepareSolversClauses(initConstraints, fSat4Solver, method);
         }
 
         fSat4Solver.packClauses();
     }
 
-    private void prepareSolversClauses(Collection<Constraint> initConstraints, EcSatSolver sat4Solver) {
+    private void prepareSolversClauses(Collection<Constraint> initConstraints, EcSatSolver sat4Solver, MethodNode method) {
 
         sat4Solver.setHasConstraints();
 
@@ -95,6 +97,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                 initConstraints,
                 fExpectedValConstraints,
                 sat4Solver);
+
+
+
+        for(MethodParameterNode parameterNode : method.getMethodParameters())
+            if(! parameterNode.isExpected())
+                EvaluatorHelper.prepareVariablesForParameter(parameterNode,
+                        fParamChoiceSets,
+                        sat4Solver,
+                        fChoiceMappingsBucket,
+                        fChoiceToSolverIdMappings);
+
         Sat4Logger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
     }
 
