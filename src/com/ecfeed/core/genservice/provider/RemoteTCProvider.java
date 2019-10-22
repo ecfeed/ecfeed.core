@@ -119,7 +119,7 @@ public class RemoteTCProvider implements ITCProvider {
     public void processInitialTags() {
 
         fBufferedLine = null;
-
+        
         while(true) {
 
             if (fEcfProgressMonitor.isCanceled()) {
@@ -140,8 +140,7 @@ public class RemoteTCProvider implements ITCProvider {
 
             fGenServiceProtocolState = processProtocolState(mainSchema, fGenServiceProtocolState);
 
-            if (mainSchema instanceof ResultTestCaseSchema) {
-                fBufferedLine = line;
+            if (fGenServiceProtocolState == GenServiceProtocolState.AFTER_BEG_CHUNK) {
                 return;
             }
         }
