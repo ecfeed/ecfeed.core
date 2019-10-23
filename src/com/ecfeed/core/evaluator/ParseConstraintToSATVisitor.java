@@ -1,18 +1,32 @@
 package com.ecfeed.core.evaluator;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.google.common.collect.Multimap;
+import static com.ecfeed.core.utils.EMathRelation.EQUAL;
+import static com.ecfeed.core.utils.EMathRelation.GREATER_EQUAL;
+import static com.ecfeed.core.utils.EMathRelation.LESS_EQUAL;
+import static com.ecfeed.core.utils.EMathRelation.LESS_THAN;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import static com.ecfeed.core.utils.EMathRelation.*;
-import static com.ecfeed.core.utils.EMathRelation.LESS_EQUAL;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.ChoiceCondition;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ChoiceNodeComparator;
+import com.ecfeed.core.model.ChoiceNodeHelper;
+import com.ecfeed.core.model.ExpectedValueStatement;
+import com.ecfeed.core.model.IStatementVisitor;
+import com.ecfeed.core.model.LabelCondition;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.ParameterCondition;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.model.ValueCondition;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaTypeHelper;
 
 class ParseConstraintToSATVisitor implements IStatementVisitor {
 

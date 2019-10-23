@@ -1,12 +1,11 @@
 package com.ecfeed.core.evaluator;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.MethodParameterNode;
+import com.google.common.collect.Multimap;
 
 public class ParamChoiceMappings {
 
