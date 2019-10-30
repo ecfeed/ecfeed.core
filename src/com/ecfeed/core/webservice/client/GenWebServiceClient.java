@@ -43,7 +43,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 		fClient = createClient(fCommunicationProtocol, keyStorePath);
 		
-		String targetStr = DiskPathHelper.joinSubdirectory(serverUrl, endpoint);
+		String targetStr = serverUrl + "/" +  endpoint;
 
 		fWebTarget = fClient.target(targetStr);
 	}
