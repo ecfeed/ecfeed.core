@@ -58,10 +58,19 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	}
 
 	public List<MethodParameterNode> getLinkers(){
+		
 		List<MethodParameterNode> result = new ArrayList<>();
-		for(MethodNode method : getMethods()){
+		List<MethodNode> methods = getMethods();
+		
+		if (methods == null) {
+			return new ArrayList<>();
+					
+		}
+		
+		for(MethodNode method : methods) {
 			result.addAll(method.getLinkers(this));
 		}
+		
 		return result;
 	}
 
