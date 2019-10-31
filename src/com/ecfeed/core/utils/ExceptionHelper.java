@@ -46,8 +46,9 @@ public class ExceptionHelper {
 
 	public static void reportRuntimeException(Exception e) {
 
-		String exceptionName = e.getClass().getName();
-		reportRuntimeException(exceptionName, e);
+		//		String exceptionName = e.getClass().getName();
+		//		reportRuntimeException(exceptionName, e);
+		throw new RuntimeException(e);
 	}
 
 	public static void reportRuntimeExceptionCanNotCreateObject() {
