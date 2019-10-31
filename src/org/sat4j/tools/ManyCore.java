@@ -113,6 +113,7 @@ public class ManyCore<S extends ISolver> extends
      * @param solverObjects
      *            the solvers
      */
+    @SuppressWarnings("all")
     public ManyCore(String[] names, S... solverObjects) {
         this(solverObjects);
         for (int i = 0; i < names.length; i++) {
@@ -120,6 +121,7 @@ public class ManyCore<S extends ISolver> extends
         }
     }
 
+    @SuppressWarnings("all")
     public ManyCore(S... solverObjects) {
         this.availableSolvers = new String[solverObjects.length];
         for (int i = 0; i < solverObjects.length; i++) {
@@ -224,6 +226,7 @@ public class ManyCore<S extends ISolver> extends
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void printStat(PrintWriter out, String prefix) {
         for (int i = 0; i < this.numberOfSolvers; i++) {
             out.printf(
@@ -369,6 +372,7 @@ public class ManyCore<S extends ISolver> extends
         return this.solvers.get(0).nVars();
     }
 
+    @SuppressWarnings("deprecation")
     public void printInfos(PrintWriter out, String prefix) {
         for (int i = 0; i < this.numberOfSolvers; i++) {
             out.printf("%s>>>>>>>>>> Solver number %d <<<<<<<<<<<<<<<<<<%n",

@@ -77,6 +77,7 @@ public class AllMUSes {
      * 
      * @return the instance of ISolver to which the clauses will be added
      */
+    @SuppressWarnings("unchecked")
     public <T extends ISolver> T getSolverInstance() {
         return (T) this.css;
     }

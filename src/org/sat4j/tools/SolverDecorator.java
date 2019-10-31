@@ -80,6 +80,7 @@ public abstract class SolverDecorator<T extends ISolver> implements ISolver {
      * @see org.sat4j.specs.IProblem#printInfos(java.io.PrintWriter,
      * java.lang.String)
      */
+    @SuppressWarnings("deprecation")
     public void printInfos(PrintWriter out, String prefix) {
         this.solver.printInfos(out, prefix);
     }
@@ -195,6 +196,7 @@ public abstract class SolverDecorator<T extends ISolver> implements ISolver {
         this.solver.printStat(out, prefix);
     }
 
+    @SuppressWarnings("deprecation")
     public void printStat(PrintWriter out, String prefix) {
         this.solver.printStat(out, prefix);
     }

@@ -104,6 +104,7 @@ public class Xplain<T extends ISolver> extends FullClauseSelectorSolver<T>
      * @return
      * @throws TimeoutException
      */
+    @SuppressWarnings("unchecked")
     private IVecInt explanationKeys() throws TimeoutException {
         assert !isSatisfiable(this.assump);
         ISolver solver = decorated();

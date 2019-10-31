@@ -56,6 +56,7 @@ public class MultiTracing<T extends ISolverService> implements
 
     private final Collection<SearchListener<T>> listeners = new ArrayList<SearchListener<T>>();
 
+    @SuppressWarnings("all")
     public MultiTracing(SearchListener<T>... listeners) {
         this.listeners.addAll(Arrays.asList(listeners));
     }

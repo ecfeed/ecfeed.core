@@ -389,6 +389,7 @@ public final class SolverFactory extends ASolverFactory<ISolver> {
         return new StatisticsSolver();
     }
 
+    @SuppressWarnings("all")
     public static ISolver newParallel() {
         return new ManyCore(newSAT(), newUNSAT(),
                 newMiniLearningHeapRsatExpSimpLuby(),
@@ -403,6 +404,7 @@ public final class SolverFactory extends ASolverFactory<ISolver> {
      * 
      * @return a parallel solver for both SAT and UNSAT problems.
      */
+    @SuppressWarnings("all")
     public static ISolver newSATUNSAT() {
         return new ManyCore(newSAT(), newUNSAT());
     }
@@ -412,6 +414,7 @@ public final class SolverFactory extends ASolverFactory<ISolver> {
      * 
      * @return a solver for satisfiable benchmarks.
      */
+    @SuppressWarnings("all")
     public static Solver newSAT() {
         Solver solver = (Solver) newGlucose21();
         solver.setRestartStrategy(new LubyRestarts(100));
@@ -424,6 +427,7 @@ public final class SolverFactory extends ASolverFactory<ISolver> {
      * 
      * @return a solver for unsatisfiable benchmarks.
      */
+    @SuppressWarnings("all")
     public static Solver newUNSAT() {
         Solver solver = (Solver) newGlucose21();
         solver.setRestartStrategy(new NoRestarts());

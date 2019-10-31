@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+@SuppressWarnings("all")
 public class FileBasedVisualizationTool implements IVisualizationTool {
 
     private String filename;

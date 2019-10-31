@@ -86,6 +86,7 @@ public class HighLevelXplain<T extends ISolver> extends
      * @return
      * @throws TimeoutException
      */
+    @SuppressWarnings("unchecked")
     private IVecInt explanationKeys() throws TimeoutException {
         assert !isSatisfiable(this.assump);
         ISolver solver = decorated();

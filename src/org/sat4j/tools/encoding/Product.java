@@ -62,6 +62,7 @@ public class Product extends EncodingStrategyAdapter {
      */
     private static final long serialVersionUID = 1L;
 
+    @SuppressWarnings("unchecked")
     public IConstr addAtMostNonOpt(ISolver solver, IVecInt literals, int k)
             throws ContradictionException {
 

@@ -64,6 +64,7 @@ public class MUSLauncher extends AbstractLauncher {
     }
 
     @Override
+    @SuppressWarnings("all")
     protected Reader createReader(ISolver theSolver, String problemname) {
         if (this.highLevel) {
             return new GroupedCNFReader((HighLevelXplain<ISolver>) theSolver);
@@ -80,6 +81,7 @@ public class MUSLauncher extends AbstractLauncher {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected ISolver configureSolver(String[] args) {
         String problemName = args[args.length - 1];
         if (problemName.endsWith(".gcnf")) {

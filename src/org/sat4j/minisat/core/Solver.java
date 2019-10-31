@@ -148,6 +148,7 @@ public class Solver<D extends DataStructureFactory> implements ISolverService,
 
     private final IVecInt __dimacs_out = new VecInt();
 
+    @SuppressWarnings("all")
     protected SearchListener slistener = new VoidTracing();
 
     private RestartStrategy restarter;
@@ -261,6 +262,7 @@ public class Solver<D extends DataStructureFactory> implements ISolverService,
      * 
      * @see org.sat4j.minisat.core.ICDCL#getSearchListener()
      */
+    @SuppressWarnings("all")
     public <S extends ISolverService> SearchListener<S> getSearchListener() {
         return this.slistener;
     }
@@ -1040,6 +1042,7 @@ public class Solver<D extends DataStructureFactory> implements ISolverService,
     /**
      * @return null if not conflict is found, else a conflicting constraint.
      */
+    @SuppressWarnings("all")
     public final Constr propagate() {
         IVecInt ltrail = this.trail;
         SolverStats lstats = this.stats;
@@ -1877,6 +1880,7 @@ public class Solver<D extends DataStructureFactory> implements ISolverService,
 
     private boolean lastConflictMeansUnsat;
 
+    @SuppressWarnings("all")
     public boolean isSatisfiable(IVecInt assumps, boolean global)
             throws TimeoutException {
         Lbool status = Lbool.UNDEFINED;

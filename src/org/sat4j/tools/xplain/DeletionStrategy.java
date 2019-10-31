@@ -58,6 +58,7 @@ public class DeletionStrategy implements MinimizationStrategy {
         this.computationCanceled = true;
     }
 
+    @SuppressWarnings("deprecation")
     public IVecInt explain(ISolver solver, Map<Integer, ?> constrs,
             IVecInt assumps) throws TimeoutException {
         this.computationCanceled = false;
