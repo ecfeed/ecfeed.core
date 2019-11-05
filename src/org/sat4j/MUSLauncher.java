@@ -81,7 +81,7 @@ public class MUSLauncher extends AbstractLauncher {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
+//    @SuppressWarnings("deprecation")
     protected ISolver configureSolver(String[] args) {
         String problemName = args[args.length - 1];
         if (problemName.endsWith(".gcnf")) {

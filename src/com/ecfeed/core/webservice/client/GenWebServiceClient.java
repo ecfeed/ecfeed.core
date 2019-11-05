@@ -1,7 +1,13 @@
 package com.ecfeed.core.webservice.client;
 
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.DiskPathHelper;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
@@ -11,14 +17,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.util.Optional;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.UrlHelper;
 
 public class GenWebServiceClient implements IWebServiceClient {
 
@@ -42,8 +42,8 @@ public class GenWebServiceClient implements IWebServiceClient {
 		fClientType = clientType;
 
 		fClient = createClient(fCommunicationProtocol, keyStorePath);
-		
-		String targetStr = serverUrl + "/" +  endpoint;
+
+		String targetStr = UrlHelper.merge(serverUrl, endpoint);
 
 		fWebTarget = fClient.target(targetStr);
 	}
@@ -59,7 +59,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 	@Override
 	public WebServiceResponse sendPostRequest(
 			String requestType, String requestJson) {
-		
+
 		Response response = fWebTarget
 				.queryParam(TAG_CLIENT_TYPE, fClientType)
 				.queryParam(TAG_CLIENT_VERSION, fClientVersion)
@@ -79,8 +79,8 @@ public class GenWebServiceClient implements IWebServiceClient {
 	public WebServiceResponse sendGetRequest() {
 
 		Response response = fWebTarget
-//				.queryParam(TAG_CLIENT_TYPE, fClientType)
-//				.queryParam(TAG_CLIENT_VERSION, fClientVersion)
+				//				.queryParam(TAG_CLIENT_TYPE, fClientType)
+				//				.queryParam(TAG_CLIENT_VERSION, fClientVersion)
 				//.queryParam(TAG_REQUEST_TYPE, requestType)
 				.request()
 				.get();
@@ -95,7 +95,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 	@Override
 	public void close() {
-		
+
 		if (fClient != null) {
 			fClient.close();
 			System.out.println(LocalDateTime.now().toString() + " Remote connection closed");
