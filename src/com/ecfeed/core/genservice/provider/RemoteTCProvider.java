@@ -171,6 +171,7 @@ public class RemoteTCProvider implements ITCProvider {
 
             ResultTotalProgressSchema resultTotalProgressSchema = (ResultTotalProgressSchema)mainSchema;
             fTotalProgress = resultTotalProgressSchema.getTotalProgress();
+            fEcfProgressMonitor.setTotalProgress(fTotalProgress);
             return true;
         }
 
