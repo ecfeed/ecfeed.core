@@ -19,7 +19,6 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public abstract class AbstractGenerator<E> implements IGenerator<E> {
 
-	private List<IParameterDefinition> fParameterDefinitions = new ArrayList<IParameterDefinition>();
 	private Map<IParameterDefinition, IGeneratorValue> fArguments = null;
 	private IAlgorithm<E> fAlgorithm = null;
 	private List<List<E>> fInput;
@@ -39,12 +38,12 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		for(IGeneratorValue val : arguments)
 			fArguments.put(val.getDefinition(), val);
 
-		for(IParameterDefinition paramDef : fParameterDefinitions )
+		for(IParameterDefinition paramDef : getParameterDefinitions() )
 			if(!fArguments.containsKey(paramDef))
 				fArguments.put( paramDef, new GeneratorValue(paramDef, null));
 
 		Set<IParameterDefinition> keyset = new HashSet<>(fArguments.keySet());
-		for(IParameterDefinition paramDef : fParameterDefinitions)
+		for(IParameterDefinition paramDef : getParameterDefinitions() )
 			if(keyset.contains(paramDef))
 				keyset.remove(paramDef);
 		if(!keyset.isEmpty())
@@ -78,16 +77,13 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		fAlgorithm.reset();
 	}
 
-	@Override
-	public List<IParameterDefinition> getParameterDefinitions() {
-		return fParameterDefinitions;
-	}
+
 
 
 	@Override
 	public IParameterDefinition getParameterDefinition(String name) throws GeneratorException {
 
-		for(IParameterDefinition parameter : fParameterDefinitions){
+		for(IParameterDefinition parameter : getParameterDefinitions() ){
 			if(parameter.getName().equals(name)){
 				return parameter;
 			}
@@ -122,12 +118,12 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	}
 	
 	protected void addParameterDefinition(IParameterDefinition definition){
-		for(int i = 0; i < fParameterDefinitions.size(); i++){
-			if(fParameterDefinitions.get(i).getName().equals(definition.getName())){
+		for(int i = 0; i < getParameterDefinitions().size(); i++){
+			if(getParameterDefinitions().get(i).getName().equals(definition.getName())){
 				ExceptionHelper.reportRuntimeException("Repeated name in parameter definition.");
 			}
 		}
-		fParameterDefinitions.add(definition);
+		getParameterDefinitions().add(definition);
 	}
 
 	protected List<E> adapt(List<E> values)

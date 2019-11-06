@@ -58,9 +58,19 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         fSat4Solver = new EcSatSolver();
 
-        if (initConstraints != null && !initConstraints.isEmpty()) {
-            prepareSolversClauses(initConstraints, fSat4Solver, method);
-        }
+        if(initConstraints == null)
+            initConstraints = new ArrayList<>();
+
+        prepareSolversClauses(initConstraints, fSat4Solver, method);
+
+        for(MethodParameterNode parameterNode : method.getMethodParameters())
+            if(! parameterNode.isExpected())
+                EvaluatorHelper.prepareVariablesForParameter(parameterNode,
+                        fParamChoiceSets,
+                        fSat4Solver,
+                        fChoiceMappingsBucket,
+                        fChoiceToSolverIdMappings);
+
 
         fSat4Solver.packClauses();
     }
@@ -100,13 +110,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 
 
-        for(MethodParameterNode parameterNode : method.getMethodParameters())
-            if(! parameterNode.isExpected())
-                EvaluatorHelper.prepareVariablesForParameter(parameterNode,
-                        fParamChoiceSets,
-                        sat4Solver,
-                        fChoiceMappingsBucket,
-                        fChoiceToSolverIdMappings);
 
         Sat4Logger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
     }
@@ -160,8 +163,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     @Override
     public void excludeAssignment(List<ChoiceNode> choicesToExclude) {
 
-        if (!fSat4Solver.hasConstraints())
-            return;
+        fSat4Solver.setHasConstraints();
 
         if (fSat4Solver.isContradicting())
             return;

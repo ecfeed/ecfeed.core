@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.generators;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
@@ -22,18 +23,23 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class NWiseGenerator<E> extends AbstractGenerator<E> {
 
+    private static List<IParameterDefinition> fParameterDefinitions = null;
+
     public final static String PARAMETER_NAME_COVERAGE = "coverage";
     public final static String PARAMETER_NAME_N = "n";
 
     public NWiseGenerator() throws GeneratorException {
 
-        addParameterDefinition(
-                new ParameterDefinitionInteger(
-                        PARAMETER_NAME_N, 2, 1, Integer.MAX_VALUE));
+        if(fParameterDefinitions==null) {
+            fParameterDefinitions = new ArrayList<>();
+            addParameterDefinition(
+                    new ParameterDefinitionInteger(
+                            PARAMETER_NAME_N, 2, 1, Integer.MAX_VALUE));
 
-        addParameterDefinition(
-                new ParameterDefinitionInteger(
-                        PARAMETER_NAME_COVERAGE, 100, 1, 100));
+            addParameterDefinition(
+                    new ParameterDefinitionInteger(
+                            PARAMETER_NAME_COVERAGE, 100, 1, 100));
+        }
     }
 
     @Override
@@ -63,5 +69,10 @@ public class NWiseGenerator<E> extends AbstractGenerator<E> {
 
         return getParameterDefinition(PARAMETER_NAME_COVERAGE);
     }
+
+    public List<IParameterDefinition> getParameterDefinitions() {
+        return fParameterDefinitions;
+    }
+
 
 }

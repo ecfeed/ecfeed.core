@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.generators;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
@@ -24,6 +25,8 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		IGenerator<E> {
 
+	private static List<IParameterDefinition> fParameterDefinitions = null;
+
 	public final static String PARAMETER_NAME_ADAPTIVE = "adaptive";
 	public static final String PARAMETER_NAME_DUPLICATES = "duplicates";
 	public static final String PARAMETER_NAME_LENGTH = "length";
@@ -33,18 +36,22 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 
 	public RandomGenerator() throws GeneratorException{
 
-		addParameterDefinition(
-				new ParameterDefinitionBoolean(
-						PARAMETER_NAME_ADAPTIVE, false));
+		if(fParameterDefinitions==null) {
+			fParameterDefinitions = new ArrayList<>();
 
-		addParameterDefinition(
-				new ParameterDefinitionBoolean(
-						PARAMETER_NAME_DUPLICATES, false));
+			addParameterDefinition(
+					new ParameterDefinitionBoolean(
+							PARAMETER_NAME_ADAPTIVE, false));
 
-		addParameterDefinition(
-				new ParameterDefinitionInteger(
-						PARAMETER_NAME_LENGTH, DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE,
-						0, Integer.MAX_VALUE));
+			addParameterDefinition(
+					new ParameterDefinitionBoolean(
+							PARAMETER_NAME_DUPLICATES, false));
+
+			addParameterDefinition(
+					new ParameterDefinitionInteger(
+							PARAMETER_NAME_LENGTH, DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE,
+							0, Integer.MAX_VALUE));
+		}
 	}
 
 	@Override
@@ -76,6 +83,10 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 
 	public IParameterDefinition getDefinitionLength() throws GeneratorException {
 		return getParameterDefinition(PARAMETER_NAME_LENGTH);
+	}
+
+	public List<IParameterDefinition> getParameterDefinitions() {
+		return fParameterDefinitions;
 	}
 
 }

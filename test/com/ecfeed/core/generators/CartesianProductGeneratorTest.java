@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
@@ -31,7 +32,14 @@ import com.ecfeed.core.model.IConstraint;
 public class CartesianProductGeneratorTest{
 	@Test
 	public void initializeTest(){
-		CartesianProductGenerator<String> generator = new CartesianProductGenerator<String>();
+		CartesianProductGenerator<String> generator = null;
+		try {
+			generator = new CartesianProductGenerator<String>();
+		}
+		catch (GeneratorException e)
+		{
+
+		}
 		
 		List<List<String>> inputDomain = GeneratorTestUtils.prepareInput(3, 3);
 
@@ -43,4 +51,5 @@ public class CartesianProductGeneratorTest{
 		}
 		assertTrue(generator.getAlgorithm() instanceof CartesianProductAlgorithm);
 	}
+
 }

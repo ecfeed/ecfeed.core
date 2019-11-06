@@ -21,6 +21,7 @@ import java.util.Random;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.GeneratorType;
 import org.junit.Before;
 import org.junit.Test;
@@ -354,10 +355,25 @@ public class AbstractGeneratorTest {
 
 	private static class TestAbstractGenerator extends AbstractGenerator<String> {
 
+		private List<IParameterDefinition> fParameterDefinitions = null;
+
 		@Override
-		public GeneratorType getGeneratorType() {
+		public GeneratorType getGeneratorType()
+		{
 			return null;
 		}
+
+		public TestAbstractGenerator()
+		{
+			if (fParameterDefinitions == null) {
+				fParameterDefinitions = new ArrayList<>();
+			}
+		}
+
+		public List<IParameterDefinition> getParameterDefinitions() {
+			return fParameterDefinitions;
+		}
+
 	}
 //		
 //	@Test
