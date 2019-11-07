@@ -20,7 +20,8 @@ public class ParamChoiceSets {
         fSanitizedChoices = new ParamsWithChoices("SAN");
         fInputChoices = new ParamsWithChoices("ALL");
 
-        fInputChoices = createInputChoices(methodNode);
+        if(methodNode != null)
+            fInputChoices = createInputChoices(methodNode);
     }
 
     public void atomicPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {

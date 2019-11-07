@@ -64,11 +64,11 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 		if(fHistory.size() >= fLength){
 			return null;
 		}
-		if(!fHistory.isEmpty())
+		if(!fHistory.isEmpty() && fDuplicates == false)
 			getConstraintEvaluator().excludeAssignment(fHistory.get(fHistory.size()-1));
 		List<List<E>> candidates = getCandidates();
 		List<E> optimalCandidate = getOptimalCandidate(candidates, fHistory);
-		if(optimalCandidate == null)
+		if(optimalCandidate == null && fDuplicates == false)
 			return null;
 		fHistory.add(optimalCandidate);
 		incrementProgress(1);

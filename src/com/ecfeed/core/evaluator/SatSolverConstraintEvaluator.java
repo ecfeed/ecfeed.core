@@ -63,13 +63,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         prepareSolversClauses(initConstraints, fSat4Solver, method);
 
-        for(MethodParameterNode parameterNode : method.getMethodParameters())
-            if(! parameterNode.isExpected())
-                EvaluatorHelper.prepareVariablesForParameter(parameterNode,
-                        fParamChoiceSets,
-                        fSat4Solver,
-                        fChoiceMappingsBucket,
-                        fChoiceToSolverIdMappings);
+        if(method != null)
+            for(MethodParameterNode parameterNode : method.getMethodParameters())
+                if(! parameterNode.isExpected())
+                    EvaluatorHelper.prepareVariablesForParameter(parameterNode,
+                            fParamChoiceSets,
+                            fSat4Solver,
+                            fChoiceMappingsBucket,
+                            fChoiceToSolverIdMappings);
 
 
         fSat4Solver.packClauses();
@@ -118,6 +119,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     public void initialize(List<List<ChoiceNode>> input) {
 
         if (!fSat4Solver.hasConstraints())
+            return;
+
+        if(fMethodNode == null)
             return;
 
         List<MethodParameterNode> methodParameters = fMethodNode.getMethodParameters();
