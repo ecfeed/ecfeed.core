@@ -25,7 +25,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ImplicationConstraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
@@ -181,7 +181,7 @@ public class ModelSerializerTest {
 		MethodNode methodNode = new MethodNode("testMethod1", null);
 		methodNode.addParameter(parameter);
 
-		Constraint constraint = new Constraint(
+		ImplicationConstraint constraint = new ImplicationConstraint(
 				"constraint",
 				null, RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice),
 				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice));

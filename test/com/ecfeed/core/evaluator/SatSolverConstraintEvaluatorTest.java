@@ -190,7 +190,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value='true'/>\n" +
             "                </Premise>\n" +
@@ -202,7 +202,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                        <ParameterStatement rightParameter='arg4' parameter='arg5' relation='&gt;='/>\n" +
             "                    </StatementArray>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Parameter name='arg1' type='int'>\n" +
@@ -263,7 +263,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value='true'/>\n" +
             "                </Premise>\n" +
@@ -276,7 +276,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                        <ParameterStatement rightParameter='arg6' parameter='arg5' relation='≠'/>\n" +
             "                    </StatementArray>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Parameter name='arg1' type='int'>\n" +
@@ -328,30 +328,30 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value='true'/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter='arg2' parameter='arg1' relation='='/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value='true'/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter='arg3' parameter='arg1' relation='&lt;'/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value='true'/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter='arg4' parameter='arg2' relation='&gt;='/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Parameter name='arg1' type='int'>\n" +
@@ -406,7 +406,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value='true'/>\n" +
             "                </Premise>\n" +
@@ -438,7 +438,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                        </StatementArray>\n" +
             "                    </StatementArray>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Parameter name='arg1' type='int'>\n" +
@@ -488,7 +488,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StatementArray operator='and'>\n" +
             "                        <StatementArray operator='or'>\n" +
@@ -520,7 +520,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                <Consequence>\n" +
             "                    <StaticStatement value='false'/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Parameter name='arg1' type='int'>\n" +
@@ -570,7 +570,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name='constraint'>\n" +
+            "            <ImplicationConstraint name='constraint'>\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value='true'/>\n" +
             "                </Premise>\n" +
@@ -632,7 +632,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                        </StatementArray>\n" +
             "                    </StatementArray>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Parameter name='arg1' type='int'>\n" +
@@ -715,22 +715,22 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <TypeComments/>\n" +
             "                </Comments>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <Statement choice=\"choice1\" parameter=\"arg2\" relation=\"=\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ExpectedValueStatement parameter=\"arg8\" value=\"1\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <Statement choice=\"choice1\" parameter=\"arg1\" relation=\"=\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ExpectedValueStatement parameter=\"arg8\" value=\"0\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "        <Parameter name=\"arg1\" type=\"int\">\n" +
             "            <Properties>\n" +
@@ -768,14 +768,14 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "        <Parameter name=\"arg1\" type=\"int\">\n" +
             "            <Properties>\n" +
@@ -836,22 +836,22 @@ public class SatSolverConstraintEvaluatorTest {
             "                <Choice name=\"choice4\" value=\"6\" isRandomized=\"false\"/>\n" +
             "                <Choice name=\"choice5\" value=\"11\" isRandomized=\"false\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&gt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&gt;\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <Statement choice=\"choice2\" parameter=\"arg3\" relation=\"≠\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -902,22 +902,22 @@ public class SatSolverConstraintEvaluatorTest {
             "                <Choice name=\"choice4\" value=\"6\" isRandomized=\"false\"/>\n" +
             "                <Choice name=\"choice5\" value=\"11\" isRandomized=\"false\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg3\" relation=\"&gt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg3\" parameter=\"arg1\" relation=\"&gt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -968,22 +968,22 @@ public class SatSolverConstraintEvaluatorTest {
             "                <Choice name=\"choice4\" value=\"6.0\" isRandomized=\"false\"/>\n" +
             "                <Choice name=\"choice5\" value=\"11.0\" isRandomized=\"false\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg3\" relation=\"&gt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg3\" parameter=\"arg1\" relation=\"&gt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -1029,30 +1029,30 @@ public class SatSolverConstraintEvaluatorTest {
             "                </Comments>\n" +
             "                <Choice name=\"choice1\" value=\"3.0:6.0\" isRandomized=\"true\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg3\" parameter=\"arg2\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg1\" parameter=\"arg3\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -1083,14 +1083,14 @@ public class SatSolverConstraintEvaluatorTest {
             "                    <Property name=\"wbIsOptional\" type=\"boolean\" value=\"false\"/>\n" +
             "                </Properties>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Parameter name=\"arg1\" type=\"int\">\n" +
@@ -1190,7 +1190,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                <Choice name=\"choice2\" value=\"127\" isRandomized=\"false\"/>\n" +
             "                <Choice name=\"choice3\" value=\"0:0\" isRandomized=\"true\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
@@ -1202,7 +1202,7 @@ public class SatSolverConstraintEvaluatorTest {
             "                        <ParameterStatement rightParameter=\"arg5\" parameter=\"arg4\" relation=\"=\"/>\n" +
             "                    </StatementArray>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -1256,30 +1256,30 @@ public class SatSolverConstraintEvaluatorTest {
             "                </Comments>\n" +
             "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"=\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg3\" parameter=\"arg2\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg4\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -1324,22 +1324,22 @@ public class SatSolverConstraintEvaluatorTest {
             "                </Comments>\n" +
             "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"=\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            </ImplicationConstraint>\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg3\" parameter=\"arg2\" relation=\"&lt;\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -1375,14 +1375,14 @@ public class SatSolverConstraintEvaluatorTest {
             "                </Comments>\n" +
             "                <Choice name=\"choice1\" value=\"0:10\" isRandomized=\"true\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg2\" parameter=\"arg1\" relation=\"=\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -1423,14 +1423,14 @@ public class SatSolverConstraintEvaluatorTest {
             "                <Choice name=\"choice2\" value=\"1.0E21:1.0E22\" isRandomized=\"true\"/>\n" +
             "                <Choice name=\"choice2\" value=\"1.0E22:9.0E22\" isRandomized=\"true\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <ParameterStatement rightParameter=\"arg1\" parameter=\"arg2\" relation=\"&lt;=\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";
@@ -1461,14 +1461,14 @@ public class SatSolverConstraintEvaluatorTest {
             "                <Choice name=\"choice4\" value=\"0\" isRandomized=\"false\"/>\n" +
             "                <Choice name=\"choice5\" value=\"11\" isRandomized=\"false\"/>\n" +
             "            </Parameter>\n" +
-            "            <Constraint name=\"constraint\">\n" +
+            "            <ImplicationConstraint name=\"constraint\">\n" +
             "                <Premise>\n" +
             "                    <StaticStatement value=\"true\"/>\n" +
             "                </Premise>\n" +
             "                <Consequence>\n" +
             "                    <Statement choice=\"choice1\" parameter=\"arg1\" relation=\"&lt;=\"/>\n" +
             "                </Consequence>\n" +
-            "            </Constraint>\n" +
+            "            </ImplicationConstraint>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "</Model>\n";

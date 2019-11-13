@@ -15,26 +15,26 @@ import java.util.List;
 
 public class ConstraintHelper {
 	
-	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {
+	public static List<String> createListOfConstraintNames(List<AbstractConstraint> constraints) {
 		
 		List<String> constraintNames = new ArrayList<>();
 		
-		for (IConstraint<ChoiceNode> iConstraint : constraints) {
+		for (AbstractConstraint iConstraint : constraints) {
 			
-			if (iConstraint instanceof Constraint) {
-				
-				Constraint constraint = (Constraint)iConstraint;
+			if (iConstraint instanceof ImplicationConstraint) {
+
+				ImplicationConstraint constraint = (ImplicationConstraint)iConstraint;
 				constraintNames.add(constraint.getName());
 			}
 		}
 		return constraintNames;
 	}
 	
-	public static boolean containsConstraints(List<Constraint> iConstraints) {
+	public static boolean containsConstraints(List<AbstractConstraint> iConstraints) {
 
 		for (IConstraint<ChoiceNode> iConstraint : iConstraints) {
 			
-			if (iConstraint instanceof Constraint) {
+			if (iConstraint instanceof ImplicationConstraint) {
 				return true;
 			}
 		}

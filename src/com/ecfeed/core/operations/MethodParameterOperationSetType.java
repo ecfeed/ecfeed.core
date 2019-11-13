@@ -16,27 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceCondition;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
-import com.ecfeed.core.model.ClassNodeHelper;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.IChoicesParentVisitor;
-import com.ecfeed.core.model.IStatementVisitor;
-import com.ecfeed.core.model.LabelCondition;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.model.ParameterCondition;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.ValueCondition;
+import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.ImplicationConstraint;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -366,24 +347,30 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			while (methodNode.hasNextConstraint(constraintItr)) {
 
 				ConstraintNode constraintNode = methodNode.getNextConstraint(constraintItr);
-				Constraint constraint = constraintNode.getConstraint();
-				
-				if (isRelevantConstraint(constraint)) {
+				AbstractConstraint constraint = constraintNode.getConstraint();
+				if(constraint instanceof ImplicationConstraint) {
 
-					IStatementVisitor statementAdapter = new StatementAdapter();
-					try {
-						if (!(boolean) constraint.getPremise().accept(statementAdapter)
-								|| !(boolean) constraint.getConsequence().accept(statementAdapter)) {
+					if (isRelevantConstraint((ImplicationConstraint)constraint)) {
+
+						IStatementVisitor statementAdapter = new StatementAdapter();
+						try {
+							if (!(boolean) ((ImplicationConstraint)constraint).getPremise().accept(statementAdapter)
+									|| !(boolean) ((ImplicationConstraint)constraint).getConsequence().accept(statementAdapter)) {
+								methodNode.removeConstraint(constraintItr);
+							}
+						} catch (Exception e) {
 							methodNode.removeConstraint(constraintItr);
 						}
-					} catch (Exception e) {
-						methodNode.removeConstraint(constraintItr);
 					}
+				}
+				else
+				{
+					//TODO
 				}
 			}
 		}
 		
-		private boolean isRelevantConstraint(Constraint constraint) {
+		private boolean isRelevantConstraint(ImplicationConstraint constraint) {
 			if (constraint.getConsequence() instanceof ExpectedValueStatement) {
 				ExpectedValueStatement expectedValueStatement = (ExpectedValueStatement)constraint.getConsequence();
 				MethodParameterNode methodParameterNode = expectedValueStatement.getParameter();

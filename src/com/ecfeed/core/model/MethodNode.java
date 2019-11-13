@@ -259,16 +259,16 @@ public class MethodNode extends ParametersParentNode {
 		return fConstraints;
 	}
 
-	public List<Constraint> getAllConstraints(){
-		List<Constraint> constraints = new ArrayList<Constraint>();
+	public List<AbstractConstraint> getAllConstraints(){
+		List<AbstractConstraint> constraints = new ArrayList<>();
 		for(ConstraintNode node : fConstraints){
 			constraints.add(node.getConstraint());
 		}
 		return constraints;
 	}
 
-	public List<Constraint> getConstraints(String name) {
-		List<Constraint> constraints = new ArrayList<Constraint>();
+	public List<IConstraint<ChoiceNode>> getConstraints(String name) {
+		List<IConstraint<ChoiceNode>> constraints = new ArrayList<>();
 		for(ConstraintNode node : fConstraints){
 			if(node.getFullName().equals(name)){
 				constraints.add(node.getConstraint());

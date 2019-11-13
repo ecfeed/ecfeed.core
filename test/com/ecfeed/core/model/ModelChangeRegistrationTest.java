@@ -131,7 +131,7 @@ public class ModelChangeRegistrationTest {
 		classNode.addMethod(methodNode);
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
-		Constraint constraint1 = new Constraint("name1", changeCounter, new StaticStatement(true, changeCounter), new StaticStatement(false, changeCounter));
+		ImplicationConstraint constraint1 = new ImplicationConstraint("name1", changeCounter, new StaticStatement(true, changeCounter), new StaticStatement(false, changeCounter));
 		ConstraintNode constraintNode1 = new ConstraintNode("name1", null, constraint1);
 
 		changeCounter.registerModelSaved();

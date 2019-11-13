@@ -35,7 +35,7 @@ public class OperationMessages {
 
 	public static final String CATEGORY_DEFAULT_VALUE_REGEX_PROBLEM = "The entered value is not compatible with parameter type";
 
-	public static final String CONSTRAINT_NAME_REGEX_PROBLEM = "Constraint name not allowed";
+	public static final String CONSTRAINT_NAME_REGEX_PROBLEM = "ImplicationConstraint name not allowed";
 	public static final String TEST_CASE_NAME_REGEX_PROBLEM = "Test case name not allowed";
 	public static final String INCOMPATIBLE_CONSTRAINT_PROBLEM = "The added constraint does not match the method model";
 	public static final String DIALOG_UNALLOWED_RELATION_MESSAGE = "This relation is not allowed for given statement";

@@ -43,8 +43,8 @@ import org.sat4j.specs.IVecInt;
  * For the "at most one" case, this encoding is equivalent to the one referred
  * to in the literature as the pair-wise or naive encoding. For the "at most k"
  * case, the previous encoding is generalized with binomial selection (see A. M.
- * Frisch and P. A. Giannaros, "SAT Encodings of the At-Most-k Constraint", in
- * International Workshop on Modelling and Reformulating Constraint Satisfaction
+ * Frisch and P. A. Giannaros, "SAT Encodings of the At-Most-k ImplicationConstraint", in
+ * International Workshop on Modelling and Reformulating ImplicationConstraint Satisfaction
  * Problems, 2010 for details).
  * 
  * @author stephanieroussel

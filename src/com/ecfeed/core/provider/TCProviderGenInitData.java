@@ -4,20 +4,20 @@ import java.util.Collection;
 import java.util.List;
 
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.AbstractConstraint;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.MethodNode;
 
 public class TCProviderGenInitData implements ITCProviderInitData {
 
 	private List<List<ChoiceNode>> fChoiceInput;
-	private Collection<Constraint> fConstraints;
+	private Collection<AbstractConstraint> fConstraints;
 	private List<IGeneratorValue> fGeneratorArguments;
 	private MethodNode fMethodNode;
 	
 	public TCProviderGenInitData(
 			List<List<ChoiceNode>> choiceInput,
-			Collection<Constraint> constraints,
+			Collection<AbstractConstraint> constraints,
 			List<IGeneratorValue> generatorArguments,
 			MethodNode methodNode) {
 		
@@ -35,7 +35,7 @@ public class TCProviderGenInitData implements ITCProviderInitData {
 		return fChoiceInput;
 	}
 	
-	public Collection<Constraint> getConstraints() {
+	public Collection<AbstractConstraint> getConstraints() {
 		return fConstraints;
 	}
 	

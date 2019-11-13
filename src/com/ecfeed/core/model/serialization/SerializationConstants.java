@@ -20,7 +20,7 @@ public class SerializationConstants {
 	public static final String TEST_CASE_NODE_NAME = "TestCase";
 	public static final String TEST_PARAMETER_NODE_NAME = "TestParameter";
 	public static final String EXPECTED_PARAMETER_NODE_NAME = "ExpectedValue";
-	public static final String CONSTRAINT_NODE_NAME = "Constraint";
+	public static final String CONSTRAINT_NODE_NAME = "ImplicationConstraint";
 	public static final String CONSTRAINT_PREMISE_NODE_NAME = "Premise";
 	public static final String CONSTRAINT_CONSEQUENCE_NODE_NAME = "Consequence";
 	public static final String CONSTRAINT_CHOICE_STATEMENT_NODE_NAME = "Statement";

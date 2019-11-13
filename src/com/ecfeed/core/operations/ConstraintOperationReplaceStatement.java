@@ -11,7 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ImplicationConstraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ModelOperationException;
 
@@ -32,7 +32,7 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 	public void execute() throws ModelOperationException {
 
 		setOneNodeToSelect(fTarget);
-		Constraint constraint = fTarget.getConstraint();
+		ImplicationConstraint constraint = fTarget.getConstraint();
 
 		if (constraint.getPremise() == fCurrentStatement) {
 			constraint.setPremise(fNewStatement);

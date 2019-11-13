@@ -44,7 +44,7 @@ import org.sat4j.specs.TimeoutException;
  * 
  * @inproceedings{ junker01:quickxplain:inp, author={Ulrich Junker},
  *                 title={QUICKXPLAIN: Conflict Detection for Arbitrary
- *                 Constraint Propagation Algorithms}, booktitle={IJCAI'01
+ *                 ImplicationConstraint Propagation Algorithms}, booktitle={IJCAI'01
  *                 Workshop on Modelling and Solving problems with constraints
  *                 (CONS-1)}, year={2001}, month={August}, address={Seattle, WA,
  *                 USA}, url={citeseer.ist.psu.edu/junker01quickxplain.html},

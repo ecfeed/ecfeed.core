@@ -43,7 +43,7 @@ import org.sat4j.specs.IVecInt;
  * For the cases "at most k", we can use the sequential encoding described in:
  * C. Sinz,
  * "Towards an Optimal CNF Encoding of Boolean Cardinality Constraints", in
- * International Conference on Principles and Practices of Constraint
+ * International Conference on Principles and Practices of ImplicationConstraint
  * Programming , 2005
  * 
  * @author sroussel

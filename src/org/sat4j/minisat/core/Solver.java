@@ -1083,7 +1083,7 @@ public class Solver<D extends DataStructureFactory> implements ISolverService,
             // continue;
             // }
             if (!lwatched.get(i).propagate(this, p)) {
-                // Constraint is conflicting: copy remaining watches to
+                // ImplicationConstraint is conflicting: copy remaining watches to
                 // watches[p]
                 // and return constraint
                 final int sizew = lwatched.size();

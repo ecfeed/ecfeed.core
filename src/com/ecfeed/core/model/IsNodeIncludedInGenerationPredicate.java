@@ -50,7 +50,7 @@ public class IsNodeIncludedInGenerationPredicate {
 		List<ChoiceNode> listOfChoices = new ArrayList<ChoiceNode>();
 
 		for (IConstraint<ChoiceNode> iconstraint : allowedConstraints) {
-			Constraint constraint = (Constraint)iconstraint;
+			ImplicationConstraint constraint = (ImplicationConstraint)iconstraint;
 			List<ChoiceNode> referencedConstraints = constraint.getListOfChoices();
 			listOfChoices.addAll(referencedConstraints);
 		}
@@ -158,7 +158,7 @@ public class IsNodeIncludedInGenerationPredicate {
 			List<IConstraint<ChoiceNode>> allowedConstraints) {
 
 		ConstraintNode constraintNode = (ConstraintNode)abstractNode;
-		Constraint constraintFromNode = constraintNode.getConstraint();
+		ImplicationConstraint constraintFromNode = constraintNode.getConstraint();
 
 		for (IConstraint<ChoiceNode> constraint : allowedConstraints) {
 			if (constraint.equals(constraintFromNode)) {

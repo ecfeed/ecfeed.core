@@ -14,16 +14,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.StaticStatement;
-
 public class ConstraintNodeTest {
 
 	@Test
 	public void compare(){
-		ConstraintNode c1 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ConstraintNode c2 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode c1 = new ConstraintNode("c", null, new ImplicationConstraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode c2 = new ConstraintNode("c", null, new ImplicationConstraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
 
 		assertTrue(c1.isMatch(c2));
 

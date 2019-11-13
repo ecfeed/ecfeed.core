@@ -26,25 +26,12 @@ import java.util.Set;
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.*;
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.EStatementOperator;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.ImplicationConstraint;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.serialization.ParserException;
@@ -164,21 +151,21 @@ public class XmlParserSerializerTest {
 			testData.add(choice1);
 			testData.add(choice2);
 			TestCaseNode testCase = new TestCaseNode("test", null, testData);
-			Constraint choiceConstraint = new Constraint(
+			ImplicationConstraint choiceConstraint = new ImplicationConstraint(
 					"constraint",
 					null, new StaticStatement(true, null),
 					RelationStatement.createStatementWithChoiceCondition(
 							choicesParentParameter, EMathRelation.EQUAL, choice1));
 
-			Constraint labelConstraint = 
-					new Constraint(
+			ImplicationConstraint labelConstraint =
+					new ImplicationConstraint(
 							"constraint",
 							null, new StaticStatement(true, null),
 							RelationStatement.createStatementWithLabelCondition(
 									choicesParentParameter, EMathRelation.EQUAL, "label"));
 
-			Constraint expectedConstraint = 
-					new Constraint(
+			ImplicationConstraint expectedConstraint =
+					new ImplicationConstraint(
 							"constraint",
 							null, new StaticStatement(true, null),
 							new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", null, "n"), new JavaPrimitiveTypePredicate()));
@@ -366,8 +353,8 @@ public class XmlParserSerializerTest {
 		return constraints;
 	}
 
-	private Constraint createConstraint(List<MethodParameterNode> choicesParentParameters,
-			List<MethodParameterNode> expectedParameters) {
+	private ImplicationConstraint createConstraint(List<MethodParameterNode> choicesParentParameters,
+												   List<MethodParameterNode> expectedParameters) {
 
 		AbstractStatement premise = createChoicesParentStatement(choicesParentParameters);
 		AbstractStatement consequence = null;
@@ -379,7 +366,7 @@ public class XmlParserSerializerTest {
 			}
 		}
 
-		return new Constraint("constraint", null, premise, consequence);
+		return new ImplicationConstraint("constraint", null, premise, consequence);
 	}
 
 	private AbstractStatement createChoicesParentStatement(List<MethodParameterNode> parameters) {
@@ -593,7 +580,7 @@ public class XmlParserSerializerTest {
 		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
 
-	private void compareConstraints(Constraint constraint1, Constraint constraint2) {
+	private void compareConstraints(ImplicationConstraint constraint1, ImplicationConstraint constraint2) {
 		compareBasicStatements(constraint1.getPremise(), constraint2.getPremise());
 		compareBasicStatements(constraint1.getConsequence(), constraint2.getConsequence());
 	}

@@ -76,7 +76,7 @@ public class ConditionHelper {
 	public static void addConstraintNameToMesageStack(
 			String constraintName, MessageStack messageStack) {
 
-		messageStack.addMessage(createMessage("Constraint", constraintName.toString()));
+		messageStack.addMessage(createMessage("ImplicationConstraint", constraintName.toString()));
 	}
 
 	public static String createMessage(String name, String value) {

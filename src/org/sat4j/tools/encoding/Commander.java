@@ -45,8 +45,8 @@ import org.sat4j.specs.IVecInt;
  * Constraints in Formal Verification, 2007.
  * 
  * The generalization to the "at most k" case is described in A. M. Frisch and P
- * . A. Giannaros, "SAT Encodings of the At-Most-k Constraint", in International
- * Workshop on Modelling and Reformulating Constraint Satisfaction Problems,
+ * . A. Giannaros, "SAT Encodings of the At-Most-k ImplicationConstraint", in International
+ * Workshop on Modelling and Reformulating ImplicationConstraint Satisfaction Problems,
  * 2010
  * 
  * @author sroussel

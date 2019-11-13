@@ -18,18 +18,17 @@ import java.util.Set;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.MessageStack;
 
-public class Constraint implements IConstraint<ChoiceNode> {
+public class ImplicationConstraint extends AbstractConstraint {
 
-	private String fName;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
 	private AbstractStatement fPremise;
 	private AbstractStatement fConsequence;
 
 
-	public Constraint(String name,
-			IModelChangeRegistrator modelChangeRegistrator,
-			AbstractStatement premise, 
-			AbstractStatement consequence) {
+	public ImplicationConstraint(String name,
+								 IModelChangeRegistrator modelChangeRegistrator,
+								 AbstractStatement premise,
+								 AbstractStatement consequence) {
 
 		if (name == null) {
 			fName = "constraint";
@@ -41,13 +40,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fConsequence = consequence;
 	}
 
-	public String getName() {
-		return fName;
-	}
-
-	public void setName(String name) {
-		fName = name;
-	}	
 
 	public boolean isAmbiguous(
 			List<List<ChoiceNode>> testDomain, 
@@ -212,12 +204,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
-	public Constraint getCopy(){
+	public ImplicationConstraint getCopy(){
 
 		AbstractStatement premise = fPremise.getCopy();
 		AbstractStatement consequence = fConsequence.getCopy();
 
-		return new Constraint(new String(fName), fModelChangeRegistrator, premise, consequence);
+		return new ImplicationConstraint(new String(fName), fModelChangeRegistrator, premise, consequence);
 	}
 
 	public boolean updateReferences(MethodNode method) {

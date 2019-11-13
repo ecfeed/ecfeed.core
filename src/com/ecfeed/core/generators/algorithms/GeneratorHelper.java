@@ -31,7 +31,7 @@ public abstract class GeneratorHelper {
         List<List<ChoiceNode>> choicesForParameters =
                 GeneratorHelper.getPossibleChoicesForMethodParameters(methodNode);
 
-        Collection<Constraint> constraints = methodNode.getAllConstraints();
+        Collection<AbstractConstraint> constraints = methodNode.getAllConstraints();
         IConstraintEvaluator<ChoiceNode> constraintEvaluator = new SatSolverConstraintEvaluator(constraints, methodNode);
         algorithm.initialize(choicesForParameters, constraintEvaluator, null);
 

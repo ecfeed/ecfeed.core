@@ -19,14 +19,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 
@@ -62,8 +54,8 @@ public class MethodNodeTest {
 	@Test
 	public void testAddConstraint(){
 		MethodNode method = new MethodNode("name", null);
-		Constraint constraint1 = new Constraint("name1", null, new StaticStatement(true, null), new StaticStatement(false, null));
-		Constraint constraint2 = new Constraint("name2", null, new StaticStatement(true, null), new StaticStatement(false, null));
+		ImplicationConstraint constraint1 = new ImplicationConstraint("name1", null, new StaticStatement(true, null), new StaticStatement(false, null));
+		ImplicationConstraint constraint2 = new ImplicationConstraint("name2", null, new StaticStatement(true, null), new StaticStatement(false, null));
 		ConstraintNode constraintNode1 = new ConstraintNode("name1", null, constraint1);
 		ConstraintNode constraintNode2 = new ConstraintNode("name2", null, constraint2);
 		assertEquals(0, method.getConstraintNodes().size());
@@ -135,7 +127,7 @@ public class MethodNodeTest {
 		MethodNode method = new MethodNode("name", null);
 		TestCaseNode testCase = new TestCaseNode("test case", null, new ArrayList<ChoiceNode>());
 		ConstraintNode constraint = new ConstraintNode("constraint",
-				null, new Constraint("constraint", null, new StaticStatement(false, null), new StaticStatement(false, null)));
+				null, new ImplicationConstraint("constraint", null, new StaticStatement(false, null), new StaticStatement(false, null)));
 		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "type", "0", false);
 		MethodParameterNode expCat = new MethodParameterNode("expCat", null, "type", "0", true);
 
@@ -171,11 +163,11 @@ public class MethodNodeTest {
 		//		TestCaseNode testCase3 = new TestCaseNode("test case", new ArrayList<ChoiceNode>());
 		//
 		//		ConstraintNode constraint1 = new ConstraintNode("constraint",
-		//				new Constraint(new StaticStatement(false), new StaticStatement(false)));
+		//				new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false)));
 		//		ConstraintNode constraint2 = new ConstraintNode("constraint",
-		//				new Constraint(new StaticStatement(false), new StaticStatement(false)));
+		//				new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false)));
 		//		ConstraintNode constraint3 = new ConstraintNode("constraint",
-		//				new Constraint(new StaticStatement(false), new StaticStatement(false)));
+		//				new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false)));
 		//
 		//		method.addParameter(parameter1);
 		//		method.addParameter(parameter2);
@@ -260,8 +252,8 @@ public class MethodNodeTest {
 		//		MethodNode method = new MethodNode("method");
 		//		ParameterNode parameter = new ParameterNode("parameter", "type", "0", false);
 		//		ChoiceNode choice = new ChoiceNode("choice", "0");
-		//		Constraint mentioningConstraint = new Constraint(new DecomposedParameterStatement(parameter, Relation.EQUAL, choice), new StaticStatement(false));
-		//		Constraint notMentioningConstraint = new Constraint(new StaticStatement(false), new StaticStatement(false));
+		//		ImplicationConstraint mentioningConstraint = new ImplicationConstraint(new DecomposedParameterStatement(parameter, Relation.EQUAL, choice), new StaticStatement(false));
+		//		ImplicationConstraint notMentioningConstraint = new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false));
 		//		ConstraintNode mentioningConstraintNode = new ConstraintNode("constraint", mentioningConstraint);
 		//		ConstraintNode notMentioningConstraintNode = new ConstraintNode("constraint", notMentioningConstraint);
 		//		TestCaseNode testCaseNode = new TestCaseNode("name", new ArrayList<ChoiceNode>());
@@ -291,8 +283,8 @@ public class MethodNodeTest {
 		//		ParameterNode parameter = new ParameterNode("parameter", "type", "0", true);
 		//		parameter.setDefaultValueString("value");
 		//		ChoiceNode choice = new ChoiceNode("choice", "value2");
-		//		Constraint mentioningConstraint = new Constraint(new ExpectedValueStatement(parameter, choice), new StaticStatement(false));
-		//		Constraint notMentioningConstraint = new Constraint(new StaticStatement(false), new StaticStatement(false));
+		//		ImplicationConstraint mentioningConstraint = new ImplicationConstraint(new ExpectedValueStatement(parameter, choice), new StaticStatement(false));
+		//		ImplicationConstraint notMentioningConstraint = new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false));
 		//		ConstraintNode mentioningConstraintNode = new ConstraintNode("constraint", mentioningConstraint);
 		//		ConstraintNode notMentioningConstraintNode = new ConstraintNode("constraint", notMentioningConstraint);
 		//		TestCaseNode testCaseNode = new TestCaseNode("name", new ArrayList<ChoiceNode>());
@@ -347,8 +339,8 @@ public class MethodNodeTest {
 		//		MethodNode method = new MethodNode("method");
 		//		ParameterNode parameter = new ParameterNode("parameter", "type","0",  false);
 		//		ChoiceNode choice = new ChoiceNode("choice", "value");
-		//		Constraint mentioningConstraint = new Constraint(new DecomposedParameterStatement(parameter, Relation.EQUAL, choice), new StaticStatement(false));
-		//		Constraint notMentioningConstraint = new Constraint(new StaticStatement(false), new StaticStatement(false));
+		//		ImplicationConstraint mentioningConstraint = new ImplicationConstraint(new DecomposedParameterStatement(parameter, Relation.EQUAL, choice), new StaticStatement(false));
+		//		ImplicationConstraint notMentioningConstraint = new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false));
 		//		ConstraintNode mentioningConstraintNode = new ConstraintNode("constraint", mentioningConstraint);
 		//		ConstraintNode notMentioningConstraintNode = new ConstraintNode("constraint", notMentioningConstraint);
 		//		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
@@ -380,8 +372,8 @@ public class MethodNodeTest {
 		//		MethodNode method = new MethodNode("method");
 		//		ParameterNode parameter = new ParameterNode("parameter", "type", "0", true);
 		//		ChoiceNode choice = new ChoiceNode("choice", "value");
-		//		Constraint mentioningConstraint = new Constraint(new ExpectedValueStatement(parameter, choice), new StaticStatement(false));
-		//		Constraint notMentioningConstraint = new Constraint(new StaticStatement(false), new StaticStatement(false));
+		//		ImplicationConstraint mentioningConstraint = new ImplicationConstraint(new ExpectedValueStatement(parameter, choice), new StaticStatement(false));
+		//		ImplicationConstraint notMentioningConstraint = new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false));
 		//		ConstraintNode mentioningConstraintNode = new ConstraintNode("constraint", mentioningConstraint);
 		//		ConstraintNode notMentioningConstraintNode = new ConstraintNode("constraint", notMentioningConstraint);
 		//		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
@@ -411,8 +403,8 @@ public class MethodNodeTest {
 	//		MethodNode method = new MethodNode("method");
 	//		ParameterNode parameter = new ParameterNode("parameter", "type", false);
 	//		ChoiceNode choice = new ChoiceNode("choice", "value");
-	//		Constraint mentioningConstraint = new Constraint(new DecomposedParameterStatement(parameter, Relation.EQUAL, choice), new StaticStatement(false));
-	//		Constraint notMentioningConstraint = new Constraint(new StaticStatement(false), new StaticStatement(false));
+	//		ImplicationConstraint mentioningConstraint = new ImplicationConstraint(new DecomposedParameterStatement(parameter, Relation.EQUAL, choice), new StaticStatement(false));
+	//		ImplicationConstraint notMentioningConstraint = new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false));
 	//		ConstraintNode mentioningConstraintNode = new ConstraintNode("constraint", mentioningConstraint);
 	//		ConstraintNode notMentioningConstraintNode = new ConstraintNode("constraint", notMentioningConstraint);
 	//		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
@@ -439,8 +431,8 @@ public class MethodNodeTest {
 	//		MethodNode method = new MethodNode("method");
 	//		ParameterNode parameter = new ParameterNode("parameter", "type", true);
 	//		ChoiceNode choice = new ChoiceNode("choice", "value");
-	//		Constraint mentioningConstraint = new Constraint(new ExpectedValueStatement(parameter, choice), new StaticStatement(false));
-	//		Constraint notMentioningConstraint = new Constraint(new StaticStatement(false), new StaticStatement(false));
+	//		ImplicationConstraint mentioningConstraint = new ImplicationConstraint(new ExpectedValueStatement(parameter, choice), new StaticStatement(false));
+	//		ImplicationConstraint notMentioningConstraint = new ImplicationConstraint(new StaticStatement(false), new StaticStatement(false));
 	//		ConstraintNode mentioningConstraintNode = new ConstraintNode("constraint", mentioningConstraint);
 	//		ConstraintNode notMentioningConstraintNode = new ConstraintNode("constraint", notMentioningConstraint);
 	//		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
@@ -466,13 +458,13 @@ public class MethodNodeTest {
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "type", "0", false);
 		ChoiceNode choice = new ChoiceNode("choice", null, "value");
-		Constraint mentioningConstraint = 
-				new Constraint(
+		ImplicationConstraint mentioningConstraint =
+				new ImplicationConstraint(
 						"constraint",
 						null, RelationStatement.createStatementWithChoiceCondition(
 								parameter, EMathRelation.EQUAL, choice), new StaticStatement(false, null));
 
-		Constraint notMentioningConstraint = new Constraint("constraint", null, new StaticStatement(false, null), new StaticStatement(false, null));
+		ImplicationConstraint notMentioningConstraint = new ImplicationConstraint("constraint", null, new StaticStatement(false, null), new StaticStatement(false, null));
 		ConstraintNode mentioningConstraintNode = new ConstraintNode("constraint", null, mentioningConstraint);
 		ConstraintNode notMentioningConstraintNode = new ConstraintNode("constraint", null, notMentioningConstraint);
 		List<ChoiceNode> mentioningTestData = new ArrayList<ChoiceNode>();
@@ -545,8 +537,8 @@ public class MethodNodeTest {
 		MethodNode m1 = new MethodNode("m", null);
 		MethodNode m2 = new MethodNode("m", null);
 
-		ConstraintNode c1 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ConstraintNode c2 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode c1 = new ConstraintNode("c", null, new ImplicationConstraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode c2 = new ConstraintNode("c", null, new ImplicationConstraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
 
 		m1.addConstraint(c1);
 		assertFalse(m1.isMatch(m2));

@@ -47,8 +47,8 @@ import org.sat4j.specs.IVecInt;
  * Reasoning, vol. 35, n 1-3, 2005.
  * 
  * The approach is generalized for the "at most k" case in A. M. Frisch and P.
- * A. Giannaros, "SAT Encodings of the At-Most-k Constraint", in International
- * Workshop on Modelling and Reformulating Constraint Satisfaction Problems,
+ * A. Giannaros, "SAT Encodings of the At-Most-k ImplicationConstraint", in International
+ * Workshop on Modelling and Reformulating ImplicationConstraint Satisfaction Problems,
  * 2010
  * 
  * @author sroussel

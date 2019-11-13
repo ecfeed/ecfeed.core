@@ -2,7 +2,7 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
-import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ImplicationConstraint;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
@@ -34,7 +34,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         RIGHT_ENDPOINT
     }
 
-    public SatSolverConstraintEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
+    public SatSolverConstraintEvaluator(Collection<AbstractConstraint> initConstraints, MethodNode method) {
 
         fMethodNode = method;
 
@@ -50,7 +50,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         prepareSat4Solver(initConstraints, method);
     }
 
-    private void prepareSat4Solver(Collection<Constraint> initConstraints, MethodNode method) {
+    private void prepareSat4Solver(Collection<AbstractConstraint> initConstraints, MethodNode method) {
 
         if (fMethodNode == null && !initConstraints.isEmpty()) {
             ExceptionHelper.reportRuntimeException("Constraints without method.");
@@ -76,7 +76,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
         fSat4Solver.packClauses();
     }
 
-    private void prepareSolversClauses(Collection<Constraint> initConstraints, EcSatSolver sat4Solver, MethodNode method) {
+    private void prepareSolversClauses(Collection<AbstractConstraint> initConstraints, EcSatSolver sat4Solver, MethodNode method) {
 
         sat4Solver.setHasConstraints();
 
@@ -537,12 +537,12 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     }
 
     private static List<RelationStatement> collectRelationStatements(
-            Collection<Constraint> initConstraints) {
+            Collection<ImplicationConstraint> initConstraints) {
 
         List<RelationStatement> result = new ArrayList<>();
         ;
 
-        for (Constraint constraint : initConstraints) {
+        for (ImplicationConstraint constraint : initConstraints) {
             collectRelationStatements(constraint, result);
         }
 
@@ -550,7 +550,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     }
 
     private static void collectRelationStatements(
-            Constraint constraint,
+            ImplicationConstraint constraint,
             List<RelationStatement> inOutRelationStatements) {
 
         if (constraint == null) {
@@ -575,17 +575,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
     }
 
     private void parseConstraintsToSat(
-            Collection<Constraint> initConstraints,
+            Collection<ImplicationConstraint> initConstraints,
             ExpectedConstraintsData outExpectedValConstraints,
             EcSatSolver sat4Solver) { // TODO - input / output
 
-        for (Constraint constraint : initConstraints) {
+        for (ImplicationConstraint constraint : initConstraints) {
             parseConstraintToSat(constraint, outExpectedValConstraints, sat4Solver);
         }
     }
 
     private void parseConstraintToSat(
-            Constraint constraint,
+            ImplicationConstraint constraint,
             ExpectedConstraintsData outExpectedValConstraints,
             EcSatSolver sat4Solver) {
 

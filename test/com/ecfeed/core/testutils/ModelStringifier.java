@@ -140,7 +140,7 @@ public class ModelStringifier {
 
 	public String stringify(ConstraintNode node, int indent){
 		String result = intendentString(indent);
-		result += "Constraint " + node.getFullName() + "\n";
+		result += "ImplicationConstraint " + node.getFullName() + "\n";
 		for(int i = 0; i < indent + 2; i++){
 			result += " ";
 		}

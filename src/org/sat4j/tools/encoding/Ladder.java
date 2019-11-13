@@ -43,7 +43,7 @@ import org.sat4j.specs.IVecInt;
  * 
  * The ladder encoding described in: I. P. Gent and P. Nightingale,
  * "A new encoding for AllDifferent into SAT", in International Workshop on
- * Modeling and Reformulating Constraint Satisfaction Problems, 2004
+ * Modeling and Reformulating ImplicationConstraint Satisfaction Problems, 2004
  * 
  * @author sroussel
  * @since 2.3.1
@@ -75,7 +75,7 @@ public class Ladder extends EncodingStrategyAdapter {
 
         IVecInt clause = new VecInt();
 
-        // Constraint \bigwedge_{i=1}{n-2} (\neg y_{i+1} \vee y_i)
+        // ImplicationConstraint \bigwedge_{i=1}{n-2} (\neg y_{i+1} \vee y_i)
         for (int i = 1; i <= n - 2; i++) {
             clause.push(-y[i]);
             clause.push(y[i - 1]);
@@ -83,7 +83,7 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint \bigwedge_{i=2}{n-1} (\neg y_{i-1} \vee y_i \vee x_i)
+        // ImplicationConstraint \bigwedge_{i=2}{n-1} (\neg y_{i-1} \vee y_i \vee x_i)
         for (int i = 2; i <= n - 1; i++) {
             clause.push(-y[i - 2]);
             clause.push(y[i - 1]);
@@ -92,7 +92,7 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint \bigwedge_{i=2}{n-1} (\neg x_i \vee y_{i-1)})
+        // ImplicationConstraint \bigwedge_{i=2}{n-1} (\neg x_i \vee y_{i-1)})
         for (int i = 2; i <= n - 1; i++) {
             clause.push(-literals.get(i - 1));
             clause.push(y[i - 2]);
@@ -100,7 +100,7 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint \bigwedge_{i=2}{n-1} (\neg x_i \vee \neg y_i)
+        // ImplicationConstraint \bigwedge_{i=2}{n-1} (\neg x_i \vee \neg y_i)
         for (int i = 2; i <= n - 1; i++) {
             clause.push(-literals.get(i - 1));
             clause.push(-y[i - 1]);
@@ -108,25 +108,25 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint y_1 \vee x_1
+        // ImplicationConstraint y_1 \vee x_1
         clause.push(y[0]);
         clause.push(literals.get(0));
         group.add(solver.addClause(clause));
         clause.clear();
 
-        // Constraint \neg y_1 \vee \neg x_1
+        // ImplicationConstraint \neg y_1 \vee \neg x_1
         clause.push(-y[0]);
         clause.push(-literals.get(0));
         group.add(solver.addClause(clause));
         clause.clear();
 
-        // Constraint \neg y_{n-1} \vee x_n
+        // ImplicationConstraint \neg y_{n-1} \vee x_n
         clause.push(-y[n - 2]);
         clause.push(xN);
         group.add(solver.addClause(clause));
         clause.clear();
 
-        // Constraint y_{n-1} \vee \neg x_n
+        // ImplicationConstraint y_{n-1} \vee \neg x_n
         clause.push(y[n - 2]);
         clause.push(-xN);
         group.add(solver.addClause(clause));
@@ -160,7 +160,7 @@ public class Ladder extends EncodingStrategyAdapter {
             y[i] = solver.nextFreeVarId(true);
         }
 
-        // Constraint \bigwedge_{i=1}{n-2} (\neg y_{i+1} \vee y_i)
+        // ImplicationConstraint \bigwedge_{i=1}{n-2} (\neg y_{i+1} \vee y_i)
         for (int i = 1; i <= n - 2; i++) {
             clause.push(-y[i]);
             clause.push(y[i - 1]);
@@ -168,7 +168,7 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint \bigwedge_{i=2}{n-1} (\neg y_{i-1} \vee y_i \vee x_i)
+        // ImplicationConstraint \bigwedge_{i=2}{n-1} (\neg y_{i-1} \vee y_i \vee x_i)
         for (int i = 2; i <= n - 1; i++) {
             clause.push(-y[i - 2]);
             clause.push(y[i - 1]);
@@ -177,7 +177,7 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint \bigwedge_{i=2}{n-1} (\neg x_i \vee y_{i-1)})
+        // ImplicationConstraint \bigwedge_{i=2}{n-1} (\neg x_i \vee y_{i-1)})
         for (int i = 2; i <= n - 1; i++) {
             clause.push(-literals.get(i - 1));
             clause.push(y[i - 2]);
@@ -185,7 +185,7 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint \bigwedge_{i=2}{n-1} (\neg x_i \vee \neg y_i)
+        // ImplicationConstraint \bigwedge_{i=2}{n-1} (\neg x_i \vee \neg y_i)
         for (int i = 2; i <= n - 1; i++) {
             clause.push(-literals.get(i - 1));
             clause.push(-y[i - 1]);
@@ -193,25 +193,25 @@ public class Ladder extends EncodingStrategyAdapter {
             clause.clear();
         }
 
-        // Constraint y_1 \vee x_1
+        // ImplicationConstraint y_1 \vee x_1
         clause.push(y[0]);
         clause.push(literals.get(0));
         group.add(solver.addClause(clause));
         clause.clear();
 
-        // Constraint \neg y_1 \vee \neg x_1
+        // ImplicationConstraint \neg y_1 \vee \neg x_1
         clause.push(-y[0]);
         clause.push(-literals.get(0));
         group.add(solver.addClause(clause));
         clause.clear();
 
-        // Constraint \neg y_{n-1} \vee x_n
+        // ImplicationConstraint \neg y_{n-1} \vee x_n
         clause.push(-y[n - 2]);
         clause.push(literals.get(n - 1));
         group.add(solver.addClause(clause));
         clause.clear();
 
-        // Constraint y_{n-1} \vee \neg x_n
+        // ImplicationConstraint y_{n-1} \vee \neg x_n
         clause.push(y[n - 2]);
         clause.push(-literals.get(n - 1));
         group.add(solver.addClause(clause));

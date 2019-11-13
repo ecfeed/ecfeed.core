@@ -60,14 +60,14 @@ public class GeneratorBlackBoxTest {
                         "                <Choice name=\"choice1\" value=\"1\" isRandomized=\"false\"/>\n" +
                         "                <Choice name=\"choice2\" value=\"2\" isRandomized=\"false\"/>\n" +
                         "            </Parameter>\n" +
-                        "            <Constraint name=\"constraint\">\n" +
+                        "            <ImplicationConstraint name=\"constraint\">\n" +
                         "                <Premise>\n" +
                         "                    <StaticStatement value=\"true\"/>\n" +
                         "                </Premise>\n" +
                         "                <Consequence>\n" +
                         "                    <Statement choice=\"choice1\" parameter=\"arg1\" relation=\"notequal\"/>\n" +
                         "                </Consequence>\n" +
-                        "            </Constraint>\n" +
+                        "            </ImplicationConstraint>\n" +
                         "        </Method>\n" +
                         "    </Class>\n" +
                         "</Model>\n";

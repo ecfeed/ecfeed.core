@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaTypeHelper;
 
 public class ConstraintNode extends AbstractNode{
 
-	private Constraint fConstraint;
+	private AbstractConstraint fConstraint;
 
 	@Override
 	public int getMyIndex() {
@@ -50,13 +50,13 @@ public class ConstraintNode extends AbstractNode{
 		return copy;
 	}
 	
-	public ConstraintNode(String name, IModelChangeRegistrator modelChangeRegistrator, Constraint constraint) {
+	public ConstraintNode(String name, IModelChangeRegistrator modelChangeRegistrator, AbstractConstraint constraint) {
 		
 		super(name, modelChangeRegistrator);
 		fConstraint = constraint;
 	}
 
-	public Constraint getConstraint() {
+	public AbstractConstraint getConstraint() {
 		
 		return fConstraint;
 	}
