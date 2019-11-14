@@ -83,26 +83,26 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         collectSanitizedValues(fParamChoiceSets,fChoiceMappingsBucket);
 
-//        Sat4Logger.log("fSanitizedToInputMappings", fSanitizedToInputMappings, 1, fLogLevel);
+//        Sat4jLogger.log("fSanitizedToInputMappings", fSanitizedToInputMappings, 1, fLogLevel);
 
 
         fAllRelationStatements = collectRelationStatements(initConstraints);
-        Sat4Logger.log("fAllRelationStatements", fAllRelationStatements, 1, fLogLevel);
+        Sat4jLogger.log("fAllRelationStatements", fAllRelationStatements, 1, fLogLevel);
 
         sanitizeRelationStatementsWithRelation(
                 fAllRelationStatements,
                 fParamChoiceSets,
                 fChoiceMappingsBucket);
-//        Sat4Logger.log("fSanitizedToInputMappings after sanitize", fSanitizedToInputMappings, 1, fLogLevel);
+//        Sat4jLogger.log("fSanitizedToInputMappings after sanitize", fSanitizedToInputMappings, 1, fLogLevel);
 
 
         createInputToSanitizedMapping(fParamChoiceSets, fChoiceMappingsBucket);
-//        Sat4Logger.log("fArgInputValToSanitizedVal", fArgInputValToSanitizedVal, 1, fLogLevel);
+//        Sat4jLogger.log("fArgInputValToSanitizedVal", fArgInputValToSanitizedVal, 1, fLogLevel);
 
 
         createSanitizedAndAtomicMappings(fParamChoiceSets, fChoiceMappingsBucket);
-//        Sat4Logger.log("fAtomicToSanitizedMappings", fAtomicToSanitizedMappings, 1, fLogLevel);
-//        Sat4Logger.log("fSanitizedValToAtomicVal", fSanitizedValToAtomicVal, 1, fLogLevel);
+//        Sat4jLogger.log("fAtomicToSanitizedMappings", fAtomicToSanitizedMappings, 1, fLogLevel);
+//        Sat4jLogger.log("fSanitizedValToAtomicVal", fSanitizedValToAtomicVal, 1, fLogLevel);
 
         parseConstraintsToSat(
                 initConstraints,
@@ -112,7 +112,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 
 
-        Sat4Logger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
+        Sat4jLogger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
     }
 
     @Override

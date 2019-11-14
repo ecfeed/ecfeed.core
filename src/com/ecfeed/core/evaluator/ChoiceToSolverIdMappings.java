@@ -17,13 +17,13 @@ public class ChoiceToSolverIdMappings {
     public ChoiceToSolverIdMappings() {
 
         fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
-        Sat4Logger.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
+        Sat4jLogger.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
 
         fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");
-        Sat4Logger.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
+        Sat4jLogger.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
 
         fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
-        Sat4Logger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
+        Sat4jLogger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
     }
 
     Map<ChoiceNode, Integer> getEqMapping(MethodParameterNode methodParameterNode) {

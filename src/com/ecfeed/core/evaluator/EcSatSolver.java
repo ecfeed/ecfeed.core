@@ -14,7 +14,7 @@ import java.util.List;
 public class EcSatSolver {
 
     private ISolver fSolver;
-    private Sat4Clauses fSat4Clauses;
+    private Sat4jClauses fSat4JClauses;
     private IntegerHolder fFirstFreeIDHolder;
 
     private Boolean fIsContradicting;
@@ -24,7 +24,7 @@ public class EcSatSolver {
     public EcSatSolver() {
 
         fSolver = SolverFactory.newDefault();
-        fSat4Clauses = new Sat4Clauses();
+        fSat4JClauses = new Sat4jClauses();
         fFirstFreeIDHolder = new IntegerHolder(1);
 
         fIsContradicting = false;
@@ -37,10 +37,10 @@ public class EcSatSolver {
 
         try {
             fSolver.newVar(maxVar);
-            fSolver.setExpectedNumberOfClauses(fSat4Clauses.getSize());
+            fSolver.setExpectedNumberOfClauses(fSat4JClauses.getSize());
 
-            for (int index = 0; index < fSat4Clauses.getSize(); index++) {
-                VecInt clause = fSat4Clauses.getClause(index);
+            for (int index = 0; index < fSat4JClauses.getSize(); index++) {
+                VecInt clause = fSat4JClauses.getClause(index);
                 fSolver.addClause(clause);
             }
 
@@ -57,7 +57,7 @@ public class EcSatSolver {
         // e.g. ~A1 v A2 v ~A3 translates to -1, 2, -3
 
         VecInt vClause = new VecInt(clause);
-        fSat4Clauses.add(vClause);
+        fSat4JClauses.add(vClause);
     }
 
     public void addClause(int[] clause) { // TODO - why do we need this ?
