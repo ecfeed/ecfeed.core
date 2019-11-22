@@ -163,7 +163,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
         AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
 
         removeAffectedTuples(bestTuple, fPartialNTo0Tuples, fNTuplesCount);
-        incrementProgress(bestTupleScore);  // TODO - by score ?
+        incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
         final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
 

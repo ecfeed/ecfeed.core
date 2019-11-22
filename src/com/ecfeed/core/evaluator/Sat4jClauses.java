@@ -5,11 +5,11 @@ import org.sat4j.core.VecInt;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sat4Clauses {
+public class Sat4jClauses {
 
     private List<VecInt> fClauses;
 
-    public Sat4Clauses() {
+    public Sat4jClauses() {
 
         fClauses = new ArrayList<>();
     }
