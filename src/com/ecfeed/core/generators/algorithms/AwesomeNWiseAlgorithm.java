@@ -20,7 +20,7 @@ import com.google.common.collect.*;
 
 public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
-    static final int MAX_REPETITIONS = 100; // TODO - calculate ? could be smaller for small number of dimensions or N ?
+    static final int MAX_REPETITIONS = 20; // TODO - calculate ? could be smaller for small number of dimensions or N ?
 
     private Multiset<SortedMap<Integer, E>> fPartialNTo0Tuples = null;
 
