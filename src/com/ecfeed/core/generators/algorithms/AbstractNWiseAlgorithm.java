@@ -58,6 +58,13 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 		super.reset();
 	}
 
+	public void reset(int value){
+		fCartesianAlgorithm.reset();
+		fTuplesToGenerate = value;
+		setTaskBegin(fTuplesToGenerate);
+		super.reset();
+	}
+
 	@Override
 	public void cancel() {
 		fCartesianAlgorithm.cancel();
