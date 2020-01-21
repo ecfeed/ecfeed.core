@@ -61,7 +61,6 @@ public class RemoteTCProvider implements ITCProvider {
             return;
         }
 
-        fEcfProgressMonitor.setTaskBegin("Generating test cases", fTotalProgress);
     }
 
     @Override
@@ -172,6 +171,7 @@ public class RemoteTCProvider implements ITCProvider {
             ResultTotalProgressSchema resultTotalProgressSchema = (ResultTotalProgressSchema)mainSchema;
             fTotalProgress = resultTotalProgressSchema.getTotalProgress();
             fEcfProgressMonitor.setTotalProgress(fTotalProgress);
+            fEcfProgressMonitor.setTaskBegin("Generating test cases", fTotalProgress);
             return true;
         }
 
