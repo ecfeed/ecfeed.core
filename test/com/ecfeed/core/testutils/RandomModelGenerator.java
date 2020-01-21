@@ -291,7 +291,9 @@ public class RandomModelGenerator {
 
 		String value = randomChoiceValue(parameter.getType());
 		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
-		return new ExpectedValueStatement(parameter, new ChoiceNode(name, null, value), new JavaPrimitiveTypePredicate());
+		ChoiceNode choice = new ChoiceNode(name, null, value);
+		parameter.addChoice(choice);
+		return new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
 	}
 
 	public StatementArray generateStatementArray(MethodNode method, int depth) {

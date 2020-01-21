@@ -5,35 +5,34 @@
  * are made available under the terms of the Eclipse Public License v1.0         
  * which accompanies this distribution, and is available at                      
  * http://www.eclipse.org/legal/epl-v10.html 
- *  
+ *
  *******************************************************************************/
 
 package com.ecfeed.core.generators.algorithms;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
 
 	private CartesianProductAlgorithm<E> fCartesianAlgorithm;
-	protected int N  = -1;
+	protected int N;
 	private int fTuplesToGenerate;
-	protected int fProgress;
+	protected int fProgress; // TODO - remove ?
 	protected int fCoverage;
 
 	public AbstractNWiseAlgorithm(int n, int coverage) {
 		fCoverage = coverage;
 		N = n;
 	}
-	
-	public void initialize(List<List<E>> input, 
-			Collection<IConstraint<E>> constraints,
+
+	public void initialize(List<List<E>> input,
+						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 		if(N < 1 || N > input.size()){
@@ -45,12 +44,12 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 
 		fCartesianAlgorithm = new CartesianProductAlgorithm<E>();
 		SimpleProgressMonitor notUsedProgressMonitor = new SimpleProgressMonitor();
-		fCartesianAlgorithm.initialize(input, constraints, notUsedProgressMonitor);
+		fCartesianAlgorithm.initialize(input, constraintEvaluator, notUsedProgressMonitor);
 
-		super.initialize(input, constraints, generatorProgressMonitor);
+		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 		generatorProgressMonitor.setTotalProgress((int)tuplesToGenerate());
 	}
-	
+
 	@Override
 	public void reset(){
 		fCartesianAlgorithm.reset();
@@ -58,11 +57,27 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 		setTaskBegin(fTuplesToGenerate);
 		super.reset();
 	}
-	
+
+	public void reset(int value){
+		fCartesianAlgorithm.reset();
+		fTuplesToGenerate = value;
+		setTaskBegin(fTuplesToGenerate);
+		super.reset();
+	}
+
+	@Override
+	public void cancel() {
+		fCartesianAlgorithm.cancel();
+	}
+
 	public int getN(){
 		return N;
 	}
-	
+
+	public int getCoverage() {
+		return fCoverage;
+	}
+
 	protected List<E> cartesianNext() throws GeneratorException{
 		return fCartesianAlgorithm.getNext();
 	}
@@ -70,7 +85,7 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 	protected int maxTuples(List<List<E>> input, int n){
 		return (new Tuples<List<E>>(input, n)).getAll().size();
 	}
-	
+
 	protected Set<List<E>> getTuples(List<E> vector){
 		return (new Tuples<E>(vector, N)).getAll();
 	}
@@ -78,7 +93,7 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 	protected long tuplesToGenerate() {
 		return fTuplesToGenerate;
 	}
-	
+
 	protected void cartesianReset(){
 		fCartesianAlgorithm.reset();
 	}
@@ -95,17 +110,6 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 			totalWork += combinations;
 		}
 		return (int) Math.ceil(((double) (fCoverage * totalWork)) / 100);
-	}
-	
-
-	
-	@Override
-	public void cancel() {
-		fCartesianAlgorithm.cancel();
-	}
-
-	public int getCoverage() {
-		return fCoverage;
 	}
 
 }

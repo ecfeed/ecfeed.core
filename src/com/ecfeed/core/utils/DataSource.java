@@ -6,7 +6,6 @@ public enum DataSource {
     STATIC("static"),
     GEN_N_WISE(GeneratorType.N_WISE.toString()),
     GEN_CARTESIAN(GeneratorType.CARTESIAN.toString()),
-    GEN_ADAPTIVE_RANDOM(GeneratorType.ADAPTIVE_RANDOM.toString()),
     GEN_RANDOM(GeneratorType.RANDOM.toString());
 
     private final String fDataSource;
@@ -35,16 +34,28 @@ public enum DataSource {
             return GEN_CARTESIAN;
         }
 
-        if (dataSourceStr.equals(GEN_ADAPTIVE_RANDOM.toString())) {
-            return GEN_ADAPTIVE_RANDOM;
-        }
-
         if (dataSourceStr.equals(GEN_RANDOM.toString())) {
             return GEN_RANDOM;
         }
 
         ExceptionHelper.reportRuntimeException("Can not convert string: " + dataSourceStr + " to data source." );
         return null;
+    }
+
+    public GeneratorType toGeneratorType()
+    {
+        switch(this)
+        {
+            case GEN_CARTESIAN:
+                return GeneratorType.CARTESIAN;
+            case GEN_N_WISE:
+                return GeneratorType.N_WISE;
+            case GEN_RANDOM:
+                return GeneratorType.RANDOM;
+            default:
+                RuntimeException exception = new RuntimeException("Invalid generator name");
+                throw exception;
+        }
     }
 
 }

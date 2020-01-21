@@ -21,13 +21,13 @@ public class GeneratorParameterDoubleTest {
 	public void constructorWithAllowedValuesTest() {
 		try {
 			@SuppressWarnings("unused")
-            GeneratorParameterDouble parameter = new GeneratorParameterDouble("parameter", true, 0.0f, new Double[]{-1.0, 0.0, 1.0});
+            ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  0.0f, new Double[]{-1.0, 0.0, 1.0});
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException");
 		}
 		try {
 			@SuppressWarnings("unused")
-            GeneratorParameterDouble parameter = new GeneratorParameterDouble("parameter", true, 5.0f, new Double[]{-1.0, 0.0, 1.0});
+            ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  5.0f, new Double[]{-1.0, 0.0, 1.0});
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}
@@ -37,13 +37,13 @@ public class GeneratorParameterDoubleTest {
 	public void constructorWithBoundsTest() {
 		try {
 			@SuppressWarnings("unused")
-            GeneratorParameterDouble parameter = new GeneratorParameterDouble("parameter", true, 0.0, -1.0, 1.0);
+            ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  0.0, -1.0, 1.0);
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException");
 		}
 		try {
 			@SuppressWarnings("unused")
-            GeneratorParameterDouble parameter = new GeneratorParameterDouble("parameter", true, 2.0, -1.0, 1.0);
+            ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  2.0, -1.0, 1.0);
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}
@@ -52,11 +52,11 @@ public class GeneratorParameterDoubleTest {
 	@Test
 	public void allowedValuesTest(){
 		try {
-			GeneratorParameterDouble parameter = new GeneratorParameterDouble("parameter", true, 0.0, -1.0, 1.0);
-			assertArrayEquals(null, parameter.allowedValues());
+			ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  0.0, -1.0, 1.0);
+			assertArrayEquals(null, parameter.getAllowedValues());
 			Double[] allowed = new Double[]{0.0, 1.0, 2.0};
-			parameter = new GeneratorParameterDouble("parameter", true, 0.0, allowed);
-			assertArrayEquals(allowed, parameter.allowedValues());
+			parameter = new ParameterDefinitionDouble("parameter",  0.0, allowed);
+			assertArrayEquals(allowed, parameter.getAllowedValues());
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException");
 		}
@@ -64,15 +64,15 @@ public class GeneratorParameterDoubleTest {
 
 	@Test
 	public void testTest(){
-		GeneratorParameterDouble boundedParameter;
+		ParameterDefinitionDouble boundedParameter;
 		try {
-			boundedParameter = new GeneratorParameterDouble("parameter", true, 0.0, -1.0, 1.0);
+			boundedParameter = new ParameterDefinitionDouble("parameter",  0.0, -1.0, 1.0);
 			assertTrue(boundedParameter.test(0.00));
 			assertTrue(boundedParameter.test(-1.00));
 			assertTrue(boundedParameter.test(1.00));
 			assertFalse(boundedParameter.test(3.0));
 
-			boundedParameter = new GeneratorParameterDouble("parameter", true, 0.0, new Double[]{-1.0, 0.0, 1.0});
+			boundedParameter = new ParameterDefinitionDouble("parameter",  0.0, new Double[]{-1.0, 0.0, 1.0});
 			assertTrue(boundedParameter.test(0.0));
 			assertTrue(boundedParameter.test(-1.0));
 			assertTrue(boundedParameter.test(1.0));

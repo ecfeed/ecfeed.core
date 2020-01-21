@@ -58,11 +58,11 @@ public abstract class AbstractNode{
 		return result;
 	}
 
-	public String getFullName() {
+	public String getFullName() { // TODO - rename to getName
 		return fName;
 	}
 
-	public void setFullName(String name) {
+	public void setFullName(String name) { // TODO - rename to setName
 
 		fName = name;
 		registerChange();

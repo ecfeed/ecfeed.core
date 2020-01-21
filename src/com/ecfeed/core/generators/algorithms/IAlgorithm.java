@@ -10,28 +10,25 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public interface IAlgorithm<E> {
 	
-	public void initialize(List<List<E>> input, 
-			Collection<IConstraint<E>> constraints,
+	public void initialize(List<List<E>> input,
+						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException;
 	
+	public List<E> getNext() throws GeneratorException;
 	public void setTaskBegin(int totalWork);
 	public void setTaskEnd();
 	public void reset();
 	public void incrementProgress(int progressIncrement);
+	public IConstraintEvaluator<E> getConstraintEvaluator();
+
 	public void cancel();
 	public boolean isCancelled();
-	
-	public List<E> getNext() throws GeneratorException;
-	public void addConstraint(IConstraint<E> constraint);
-	public void removeConstraint(IConstraint<E> constraint);
-	public Collection<? extends IConstraint<E>> getConstraints();
 }

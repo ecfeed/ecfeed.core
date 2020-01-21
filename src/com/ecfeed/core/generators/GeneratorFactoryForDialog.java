@@ -17,7 +17,6 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 
 	private static final String N_WISE = "N-wise generator";
 	private static final String CARTESIAN = "Cartesian Product generator";
-	private static final String ADAPTIVE = "Adaptive random generator";
 	private static final String RANDOM = "Random generator";
 	
 	public IGenerator<E> createGenerator(String code) throws GeneratorException {
@@ -30,10 +29,6 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 			return new CartesianProductGenerator<E>();
 		}
 
-		if (code.equals(ADAPTIVE)) {
-			return new AdaptiveRandomGenerator<E>();
-		}
-
 		if (code.equals(RANDOM)) {
 			return new RandomGenerator<E>();
 		}
@@ -44,11 +39,11 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 
 	public String[] getGeneratorNames() {
 		
-		return new String[] { N_WISE, CARTESIAN, ADAPTIVE, RANDOM };
+		return new String[] { N_WISE, CARTESIAN, RANDOM };
 	}
 	
 	public int getGeneratorCount() {
-		return 4;
+		return 3;
 	}
 
 	public boolean isGenWiseGenerator(String generatorName) {

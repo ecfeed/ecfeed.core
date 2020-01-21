@@ -18,11 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.generators.api.IGeneratorArgument;
+import com.ecfeed.core.evaluator.DummyEvaluator;
+import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.CartesianProductGenerator;
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
@@ -31,24 +32,24 @@ import com.ecfeed.core.model.IConstraint;
 public class CartesianProductGeneratorTest{
 	@Test
 	public void initializeTest(){
-		CartesianProductGenerator<String> generator = new CartesianProductGenerator<String>();
+		CartesianProductGenerator<String> generator = null;
+		try {
+			generator = new CartesianProductGenerator<String>();
+		}
+		catch (GeneratorException e)
+		{
+
+		}
 		
 		List<List<String>> inputDomain = GeneratorTestUtils.prepareInput(3, 3);
-		Collection<IConstraint<String>> constraints = new ArrayList<IConstraint<String>>();
 
+		List<IGeneratorValue> parameters = new ArrayList<>();
 		try {
-			generator.initialize(inputDomain, constraints, null, new SimpleProgressMonitor());
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
-		}
-		assertTrue(generator.getAlgorithm() instanceof CartesianProductAlgorithm);
-		
-		Map<String, IGeneratorArgument> parameters = new HashMap<>();
-		try {
-			generator.initialize(inputDomain, constraints, parameters, new SimpleProgressMonitor());
+			generator.initialize(inputDomain, new DummyEvaluator<>(), parameters, new SimpleProgressMonitor());
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException: " + e.getMessage());
 		}
 		assertTrue(generator.getAlgorithm() instanceof CartesianProductAlgorithm);
 	}
+
 }

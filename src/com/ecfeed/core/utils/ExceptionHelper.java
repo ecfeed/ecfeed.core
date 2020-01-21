@@ -30,7 +30,7 @@ public class ExceptionHelper {
 		FULL
 	};
 
-	private static final int fMaxDepth = 5;
+	private static final int fMaxDepth = 100;
 	private static final String causedBy = "Caused by: ";
 	private static final String fNoException = "NO-EXCEPTION";
 
@@ -46,8 +46,9 @@ public class ExceptionHelper {
 
 	public static void reportRuntimeException(Exception e) {
 
-		String exceptionName = e.getClass().getName();
-		reportRuntimeException(exceptionName, e);
+		//		String exceptionName = e.getClass().getName();
+		//		reportRuntimeException(exceptionName, e);
+		throw new RuntimeException(e);
 	}
 
 	public static void reportRuntimeExceptionCanNotCreateObject() {
@@ -212,7 +213,7 @@ public class ExceptionHelper {
 
 		StackTraceElement[] stackElements = throwable.getStackTrace();
 
-		for (int index = stackElements.length - 1; index >= 0 ; index--) {
+		for (int index = 0; index < stackElements.length; index++) {
 
 			StackTraceElement element = stackElements[index];
 

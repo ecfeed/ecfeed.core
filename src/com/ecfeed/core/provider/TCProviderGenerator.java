@@ -12,6 +12,7 @@ package com.ecfeed.core.provider;
 
 import java.util.List;
 
+import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;
@@ -47,10 +48,10 @@ public class TCProviderGenerator implements ITCProvider {
         try {
             fGenerator.initialize(
                     genInitData.getChoiceInput(),
-                    genInitData.getConstraints(),
+                    new SatSolverConstraintEvaluator(genInitData.getConstraints(),genInitData.getMethodNode()),
                     genInitData.getGeneratorArguments(),
                     progressMonitor);
-        } catch (GeneratorException e) {
+        } catch (Exception e) {
 
             ExceptionHelper.reportRuntimeException("Cannot initalize generator.", e);
         }

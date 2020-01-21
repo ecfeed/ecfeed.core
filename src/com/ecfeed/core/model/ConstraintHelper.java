@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ConstraintHelper {
 	
-	public static List<String> createListOfConstraintNames(List<IConstraint<ChoiceNode>> constraints) {
+	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {
 		
 		List<String> constraintNames = new ArrayList<>();
 		
@@ -30,7 +30,7 @@ public class ConstraintHelper {
 		return constraintNames;
 	}
 	
-	public static boolean containsConstraints(List<IConstraint<ChoiceNode>> iConstraints) {
+	public static boolean containsConstraints(List<Constraint> iConstraints) {
 
 		for (IConstraint<ChoiceNode> iConstraint : iConstraints) {
 			

@@ -10,32 +10,32 @@
 
 package com.ecfeed.core.generators.api;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
-import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public interface IGenerator<E> {
+
+	// TODO - remove unused
+
 	/*
 	 * returns list of parameters used by this generator.
 	 */
-	public List<IGeneratorParamDefinition> getParameterDefinitions();
-	/*
-	 * Should be called prior to first call of next()
-	 */
-	public void initialize(List<List<E>> inputDomain, 
-			Collection<IConstraint<E>> constraints,
-		    Map<String, IGeneratorArgument> arguments,
+	public List<IParameterDefinition> getParameterDefinitions();
+
+	public IParameterDefinition getParameterDefinition(String parameterName) throws GeneratorException;
+
+	public void initialize(List<List<E>> inputDomain,
+						   IConstraintEvaluator<E> constraintEvaluator,
+		    List<IGeneratorValue> arguments,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException;
 	
-	public void addConstraint(IConstraint<E> constraint);
-
-	public void removeConstraint(IConstraint<E> constraint);
+//	public void addConstraint(IConstraint<E> constraint);
+//
+//	public void removeConstraint(IConstraint<E> constraint);
 	
-	public Collection<? extends IConstraint<E>> getConstraints();
+	public IConstraintEvaluator<E> getConstraintEvaluator();
 	
 	/*
 	 * Returns null if no more data can be generated, e.g.if the test generation should end 

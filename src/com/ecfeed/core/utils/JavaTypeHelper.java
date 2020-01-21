@@ -215,6 +215,8 @@ public final class JavaTypeHelper {
 		}
 		
 	}
+
+
 	
 	private static String isConvertableToTypeHidden(Set<ChoiceNode> choiceNodeSet, String nodeTypeHidden) {
 		switch(nodeTypeHidden) {

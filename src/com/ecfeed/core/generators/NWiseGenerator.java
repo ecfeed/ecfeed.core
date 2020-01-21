@@ -5,44 +5,74 @@
  * are made available under the terms of the Eclipse Public License v1.0         
  * which accompanies this distribution, and is available at                      
  * http://www.eclipse.org/legal/epl-v10.html 
- *  
+ *
  *******************************************************************************/
 
 package com.ecfeed.core.generators;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.ecfeed.core.generators.algorithms.RandomizedNWiseAlgorithm;
+import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.api.IGeneratorArgument;
-import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
+import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.GeneratorType;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
-public class NWiseGenerator<E> extends AbstractGenerator<E>{
+public class NWiseGenerator<E> extends AbstractGenerator<E> {
 
-	public NWiseGenerator() throws GeneratorException{
-		addParameterDefinition(new GeneratorParameterN());
-		addParameterDefinition(new GeneratorParameterCoverage());
-	}
-	
-	@Override
-	public void initialize(List<List<E>> inputDomain,
-			Collection<IConstraint<E>> constraints,
-			Map<String, IGeneratorArgument> parameters,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
-		super.initialize(inputDomain, constraints, parameters, generatorProgressMonitor);
+    private static List<IParameterDefinition> fParameterDefinitions = null;
 
-		int N = getIntParameter(new GeneratorParameterN().getName());
-		int coverage = getIntParameter(new GeneratorParameterCoverage().getName());
-		setAlgorithm(new RandomizedNWiseAlgorithm<E>(N, coverage));
-	}
+    public final static String PARAMETER_NAME_COVERAGE = "coverage";
+    public final static String PARAMETER_NAME_N = "n";
 
-	@Override
-	public GeneratorType getGeneratorType() {
-		
-		return GeneratorType.N_WISE;
-	}
+    public NWiseGenerator() throws GeneratorException {
+
+        if(fParameterDefinitions==null) {
+            fParameterDefinitions = new ArrayList<>();
+            addParameterDefinition(
+                    new ParameterDefinitionInteger(
+                            PARAMETER_NAME_N, 2, 1, Integer.MAX_VALUE));
+
+            addParameterDefinition(
+                    new ParameterDefinitionInteger(
+                            PARAMETER_NAME_COVERAGE, 100, 1, 100));
+        }
+    }
+
+    @Override
+    public void initialize(List<List<E>> inputDomain,
+                           IConstraintEvaluator<E> constraintEvaluator,
+                           List<IGeneratorValue> parameters,
+                           IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+
+        super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
+        int N = (int) getParameterValue(getDefinitionN());
+        int coverage = (int) getParameterValue(getDefinitionCoverage());
+        setAlgorithm(new AwesomeNWiseAlgorithm<>(N, coverage));
+    }
+
+    @Override
+    public GeneratorType getGeneratorType() {
+
+        return GeneratorType.N_WISE;
+    }
+
+    public IParameterDefinition getDefinitionN() throws GeneratorException {
+
+        return getParameterDefinition(PARAMETER_NAME_N);
+    }
+
+    public IParameterDefinition getDefinitionCoverage() throws GeneratorException {
+
+        return getParameterDefinition(PARAMETER_NAME_COVERAGE);
+    }
+
+    public List<IParameterDefinition> getParameterDefinitions() {
+        return fParameterDefinitions;
+    }
+
+
 }

@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.ecfeed.core.generators.GeneratorParameterInteger;
 import com.ecfeed.core.generators.api.GeneratorException;
 
 public class IntegerParameterTest {
@@ -22,13 +21,13 @@ public class IntegerParameterTest {
 	public void constructorWithAllowedValuesTest() {
 		try {
 			@SuppressWarnings("unused")
-			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 0, new Integer[]{-1, 0, 1});
+            ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  0, new Integer[]{-1, 0, 1});
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException");
 		}
 		try {
 			@SuppressWarnings("unused")
-			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 5, new Integer[]{-1, 0, 1});
+            ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  5, new Integer[]{-1, 0, 1});
 			fail("GeneratorException expected");
 		} catch (GeneratorException e) {
 		}
@@ -38,14 +37,14 @@ public class IntegerParameterTest {
 	@SuppressWarnings("unused")
 	public void constructorWithBoundsTest() {
 		try {
-			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 0, -1, 1);
-			parameter = new GeneratorParameterInteger("parameter", true, -1, -1, 1);
-			parameter = new GeneratorParameterInteger("parameter", true, 1, -1, 1);
+			ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  0, -1, 1);
+			parameter = new ParameterDefinitionInteger("parameter",  -1, -1, 1);
+			parameter = new ParameterDefinitionInteger("parameter",  1, -1, 1);
 		} catch (Exception e) {
 			fail("Unexpected GeneratorException");
 		}
 		try {
-			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 2, -1, 1);
+			ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  2, -1, 1);
 			fail("GeneratorException expected");
 		} catch (Exception e) {
 		}
@@ -54,11 +53,11 @@ public class IntegerParameterTest {
 	@Test
 	public void allowedValuesTest(){
 		try {
-			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 0, -1, 1);
-			assertArrayEquals(null, parameter.allowedValues());
+			ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  0, -1, 1);
+			assertArrayEquals(null, parameter.getAllowedValues());
 			Integer[] allowed = new Integer[]{0, 1, 2};
-			parameter = new GeneratorParameterInteger("parameter", true, 0, allowed);
-			assertArrayEquals(allowed, parameter.allowedValues());
+			parameter = new ParameterDefinitionInteger("parameter",  0, allowed);
+			assertArrayEquals(allowed, parameter.getAllowedValues());
 		} catch (GeneratorException e) {
 			fail("Unexpected GeneratorException");
 		}
@@ -67,15 +66,15 @@ public class IntegerParameterTest {
 	@Test
 	public void testTest(){
 		try {
-			GeneratorParameterInteger boundedParameter;
-			boundedParameter = new GeneratorParameterInteger("parameter", true, 0, -1, 1);
+			ParameterDefinitionInteger boundedParameter;
+			boundedParameter = new ParameterDefinitionInteger("parameter",  0, -1, 1);
 			assertTrue(boundedParameter.test(0));
 			assertTrue(boundedParameter.test(-1));
 			assertTrue(boundedParameter.test(1));
 			assertFalse(boundedParameter.test(3));
 			assertFalse(boundedParameter.test(1.0));
 			
-			GeneratorParameterInteger parameter = new GeneratorParameterInteger("parameter", true, 0, new Integer[]{-1, 0, 1});
+			ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  0, new Integer[]{-1, 0, 1});
 			assertTrue(parameter.test(0));
 			assertFalse(parameter.test(5));
 		} catch (GeneratorException e) {

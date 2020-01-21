@@ -220,7 +220,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(new String(fName), fModelChangeRegistrator, premise, consequence);
 	}
 
-	public boolean updateRefrences(MethodNode method) {
+	public boolean updateReferences(MethodNode method) {
 
 		if (fPremise.updateReferences(method) && fConsequence.updateReferences(method)) {
 			return true;
@@ -267,7 +267,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 			return referenced;
 		} catch(Exception e) {
-			return new HashSet<String>();
+			return new HashSet<>();
 		}
 	}
 

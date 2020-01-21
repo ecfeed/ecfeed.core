@@ -10,41 +10,49 @@
 
 package com.ecfeed.core.generators;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.api.*;
-import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public abstract class AbstractGenerator<E> implements IGenerator<E> {
 
-	private List<IGeneratorParamDefinition> fParameterDefinitions = new ArrayList<IGeneratorParamDefinition>();
-	private Map<String, IGeneratorArgument> fArguments = null;
+	private Map<IParameterDefinition, IGeneratorValue> fArguments = null;
 	private IAlgorithm<E> fAlgorithm = null;
 	private List<List<E>> fInput;
-	private Collection<IConstraint<E>> fConstraints;
+	private IConstraintEvaluator<E> fConstraintEvaluator;
 	private IEcfProgressMonitor fGeneratorProgressMonitor;
-	
-	private boolean fInitialized = false;
 	
 	@Override
 	public void initialize(List<List<E>> inputDomain,
-			Collection<IConstraint<E>> constraints,
-            Map<String, IGeneratorArgument> arguments,
+						   IConstraintEvaluator<E> constraintEvaluator,
+						   List<IGeneratorValue> arguments,
 			IEcfProgressMonitor generatorProgressMonitor)
 			throws GeneratorException {
 		validateInput(inputDomain);
-		validateArguments(arguments);
-		fArguments = arguments;
+//		validateArguments(arguments);
+
+		fArguments = new HashMap<>();
+		for(IGeneratorValue val : arguments)
+			fArguments.put(val.getDefinition(), val);
+
+		for(IParameterDefinition paramDef : getParameterDefinitions() )
+			if(!fArguments.containsKey(paramDef))
+				fArguments.put( paramDef, new GeneratorValue(paramDef, null));
+
+		Set<IParameterDefinition> keyset = new HashSet<>(fArguments.keySet());
+		for(IParameterDefinition paramDef : getParameterDefinitions() )
+			if(keyset.contains(paramDef))
+				keyset.remove(paramDef);
+		if(!keyset.isEmpty())
+			GeneratorException.report("Unknown parameters for generator: " + keyset);
+
+
 		fInput = inputDomain;
-		fConstraints = constraints;
+		fConstraintEvaluator = constraintEvaluator;
 		fGeneratorProgressMonitor = generatorProgressMonitor;
-	
-		fInitialized = true; 
 	}
 
 	@Override
@@ -69,62 +77,31 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		fAlgorithm.reset();
 	}
 
-	@Override
-	public List<IGeneratorParamDefinition> getParameterDefinitions() {
-		return fParameterDefinitions;
-	}
+
+
 
 	@Override
-	public void addConstraint(IConstraint<E> constraint) {
-		fAlgorithm.addConstraint(constraint);
-	}
+	public IParameterDefinition getParameterDefinition(String name) throws GeneratorException {
 
-	@Override
-	public void removeConstraint(IConstraint<E> constraint) {
-		fAlgorithm.removeConstraint(constraint);
-	}
-
-	@Override
-	public Collection<? extends IConstraint<E>> getConstraints() {
-		return fAlgorithm.getConstraints();
-	}
-
-	protected void validateArguments(Map<String, IGeneratorArgument> arguments) throws GeneratorException {
-		int requiredParameters = 0;
-		
-		for(IGeneratorParamDefinition definition : fParameterDefinitions){
-			IGeneratorArgument generatorArgument = arguments.get(definition.getName());
-			Object providedValue = getProvidedValue(generatorArgument);
-			if(providedValue == null){
-				if(definition.isRequired()){
-					GeneratorException.report("Value of required parameret " + definition.getName() + " is not provided");
-				}
-			}
-			else if(!definition.test(providedValue)){
-				GeneratorException.report("Value " + providedValue + " is not allowed for parameter " + definition.getName());
-			}
-			
-			if(definition.isRequired()){
-				++requiredParameters;
+		for(IParameterDefinition parameter : getParameterDefinitions() ){
+			if(parameter.getName().equals(name)){
+				return parameter;
 			}
 		}
-		
-		if(arguments != null){
-			for(String parameterName : arguments.keySet()){
-				IGeneratorParamDefinition definition = getParameterDefinition(parameterName);
-				if(definition == null){
-					GeneratorException.report("Unknown parameter " + parameterName);
-				}
-			}
-		}
-		else if(requiredParameters > 0){
-			GeneratorException.report("Unexpected null value");
-		}
+
+		GeneratorException.report("Parameter " + name + " is not defined for " + this.getClass().getName());
+		return null;
+	}
+
+
+	@Override
+	public IConstraintEvaluator<E> getConstraintEvaluator() {
+		return fAlgorithm.getConstraintEvaluator();
 	}
 
 	protected void setAlgorithm(IAlgorithm<E> algorithm) throws GeneratorException{
 		fAlgorithm = algorithm;
-		fAlgorithm.initialize(fInput, fConstraints, fGeneratorProgressMonitor);
+		fAlgorithm.initialize(fInput, fConstraintEvaluator, fGeneratorProgressMonitor);
 	}
 
 	protected IAlgorithm<E> getAlgorithm(){
@@ -140,69 +117,18 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		
 	}
 	
-	protected void addParameterDefinition(IGeneratorParamDefinition definition){
-		for(int i = 0; i < fParameterDefinitions.size(); i++){
-			if(fParameterDefinitions.get(i).getName().equals(definition.getName())){
-				fParameterDefinitions.set(i, definition);
+	protected void addParameterDefinition(IParameterDefinition definition){
+		for(int i = 0; i < getParameterDefinitions().size(); i++){
+			if(getParameterDefinitions().get(i).getName().equals(definition.getName())){
+				ExceptionHelper.reportRuntimeException("Repeated name in parameter definition.");
 			}
 		}
-		fParameterDefinitions.add(definition);
+		getParameterDefinitions().add(definition);
 	}
 
-	protected IGeneratorParamDefinition getParameterDefinition(String name) throws GeneratorException{
-		for(IGeneratorParamDefinition parameter : fParameterDefinitions){
-			if(parameter.getName().equals(name)){
-				return parameter;
-			}
-		}
-		GeneratorException.report("Parameter " + name + " is not defined for " + this.getClass().getName());
-		return null;
-	}
-
-
-	protected int getIntParameter(String name) throws GeneratorException {
-		if(!fInitialized){
-			GeneratorException.report("Parameter values can be obtained after the generator is initialized");
-		}
-		Object value = getParameterValue(name, fArguments);
-		if(value instanceof Integer == false){
-			GeneratorException.report("Parameter type must be integer: " + name);
-		}
-		return (int)value;
-	}
-
-	protected boolean getBooleanParameter(String name) throws GeneratorException {
-		Object value = getParameterValue(name, fArguments);
-		if(value instanceof Boolean == false){
-			GeneratorException.report("Parameter type must be boolean: " + name);
-		}
-		return (boolean)value;
-	}
-
-	protected double getDoubleParameter(String name) throws GeneratorException {
-		Object value = getParameterValue(name, fArguments);
-		if(value instanceof Double == false){
-			GeneratorException.report("Parameter type must be double: " + name);
-		}
-		return (double)value;
-	}
-	
-	protected String getStringParameter(String name) throws GeneratorException {
-		Object value = getParameterValue(name, fArguments);
-		if(value instanceof String == false){
-			GeneratorException.report("Parameter type must be integer: " + name);
-		}
-		return (String)value;
-	}
-
-
-	protected List<E> adapt(List<E> values){
-		if(values != null){
-			for(IConstraint<E> constraint : getConstraints()){
-				constraint.adapt(values);
-			}
-		}
-		return values;
+	protected List<E> adapt(List<E> values)
+	{
+		return fConstraintEvaluator.adapt(values);
 	}
 
 	private void validateInput(List<? extends List<E>> inputDomain) throws GeneratorException {
@@ -213,49 +139,8 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		}
 	}
 
-	private Object getParameterValue(String name, Map<String, IGeneratorArgument> arguments) throws GeneratorException {
-
-		IGeneratorParamDefinition definition = null;
-		for(IGeneratorParamDefinition def : fParameterDefinitions){
-			if(def.getName().equals(name)){
-				definition = def;
-			}
-		}
-		if(definition == null){
-			GeneratorException.report("Unknown parameter: " + name);
-		}
-		Object value = getProvidedValue(arguments.get(name));
-		if(value == null){
-			if(definition.isRequired()){
-				GeneratorException.report("Required parameter not defined: " + name);
-			}
-			else{
-				return definition.defaultValue();
-			}
-		}
-		
-		if(definition.allowedValues() != null){
-			Object[] allowedValues = definition.allowedValues();
-			boolean valueAllowed = false;
-			for(Object allowed : allowedValues){
-				if(value.equals(allowed)){
-					valueAllowed = true;
-				}
-			}
-			if(!valueAllowed){
-				GeneratorException.report("Value " + value + " is not allowed for parameter " + name);
-			}
-		}
-		return value;
-	}
-
-	private Object getProvidedValue(IGeneratorArgument generatorArgument) {
-
-		if (generatorArgument == null) {
-			return null;
-		}
-
-		return generatorArgument.getValue();
+	protected Object getParameterValue(IParameterDefinition definition) {
+		return fArguments.get(definition).getValue();
 	}
 
 }

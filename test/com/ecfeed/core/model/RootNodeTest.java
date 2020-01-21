@@ -128,12 +128,11 @@ public class RootNodeTest{
 	@Test
 	public void getCopyTest(){
 		RandomModelGenerator generator = new RandomModelGenerator();
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < 100; i++){
 			RootNode root = generator.generateModel(3);
 			RootNode copy = root.makeClone();
-
 			assertTrue(copy.isMatch(root));
 		}
 	}
-	
+
 }

@@ -11,12 +11,24 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TestCasesRequest {
 
-	private String fUserData;
+	private String fSessionId;
 	private String fMethod;
 	private String fModel;
 
+	private String fUserData;
+
 	public TestCasesRequest() {};
 
+	@JsonGetter("sessionId")
+	public String getSessionId() {
+		return fSessionId;
+	}
+
+	@JsonSetter("sessionId")
+	public void setSessionId(String sessionId) {
+		fSessionId = sessionId;
+	}
+	
 	@JsonGetter("method")
 	public String getMethod() {
 		return fMethod;

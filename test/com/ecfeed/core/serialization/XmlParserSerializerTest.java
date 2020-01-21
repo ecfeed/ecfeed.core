@@ -19,19 +19,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import com.ecfeed.core.generators.GeneratorArgumentDuplicates;
-import com.ecfeed.core.generators.GeneratorArgumentLength;
-import com.ecfeed.core.generators.api.IGeneratorArgument;
+import com.ecfeed.core.evaluator.DummyEvaluator;
+import com.ecfeed.core.generators.*;
+import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.RandomGenerator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
@@ -40,7 +37,6 @@ import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.EStatementOperator;
 import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
@@ -60,20 +56,9 @@ import com.ecfeed.core.utils.JavaTypeHelper;
 public class XmlParserSerializerTest {
 	private final int TEST_RUNS = 10;
 
-	//	private final int MAX_CLASSES = 1;
-	//	private final int MAX_METHODS = 1;
-	//	private final int MAX_PARAMETERS = 3;
-	//	private final int MAX_EXPECTED_PARAMETERS = 3;
-	//	private final int MAX_PARTITIONS = 1;
-	//	private final int MAX_PARTITION_LEVELS = 1;
-	//	private final int MAX_PARTITION_LABELS = 1;
-	//	private final int MAX_CONSTRAINTS = 5;
-	//	private final int MAX_TEST_CASES = 1;
-
 	private final int MAX_CLASSES = 5;
 	private final int MAX_METHODS = 5;
 	private final int MAX_PARAMETERS = 5;
-	//	private final int MAX_EXPECTED_PARAMETERS = 3;
 	private final int MAX_PARTITIONS = 10;
 	private final int MAX_PARTITION_LEVELS = 5;
 	private final int MAX_PARTITION_LABELS = 5;
@@ -242,10 +227,6 @@ public class XmlParserSerializerTest {
 		ClassNode classNode = new ClassNode("com.example." + randomName(), null);
 		for(int i = 0; i < methods; ++i){
 			int numOfParameters = rand.nextInt(MAX_PARAMETERS) + 1;
-			//			int numOfExpParameters = rand.nextInt(MAX_EXPECTED_PARAMETERS);
-			//			if(numOfParameters + numOfExpParameters == 0){
-			//				numOfParameters = 1;
-			//			}
 			int numOfConstraints = rand.nextInt(MAX_CONSTRAINTS) + 1;
 			int numOfTestCases = rand.nextInt(MAX_TEST_CASES);
 			classNode.addMethod(createMethodNode(numOfParameters, 0, numOfConstraints, numOfTestCases));
@@ -393,8 +374,7 @@ public class XmlParserSerializerTest {
 		while(consequence == null){
 			if(rand.nextBoolean()){
 				consequence = createChoicesParentStatement(choicesParentParameters);
-			}
-			else{
+			} else {
 				consequence = createExpectedStatement(expectedParameters);
 			}
 		}
@@ -496,18 +476,17 @@ public class XmlParserSerializerTest {
 			List<MethodParameterNode> parameters, int numOfTestCases) {
 		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
 		try {
-			List<IConstraint<ChoiceNode>> constraints = new ArrayList<IConstraint<ChoiceNode>>();
 			RandomGenerator<ChoiceNode> generator = new RandomGenerator<ChoiceNode>();
 			List<List<ChoiceNode>> input = getGeneratorInput(parameters);
-			Map<String, IGeneratorArgument> genArguments = new HashMap<>();
+			List<IGeneratorValue> genArguments = new ArrayList<>();
 
-			GeneratorArgumentLength generatorArgumentLength = new GeneratorArgumentLength(numOfTestCases);
-			genArguments.put(generatorArgumentLength.getName(), generatorArgumentLength);
+			GeneratorValue generatorArgumentLength = new GeneratorValue(generator.getDefinitionLength(), String.valueOf(numOfTestCases));
+			genArguments.add(generatorArgumentLength);
 
-			GeneratorArgumentDuplicates generatorArgumentDuplicates = new GeneratorArgumentDuplicates(true);
-			genArguments.put(generatorArgumentDuplicates.getName(), generatorArgumentDuplicates);
+			GeneratorValue generatorArgumentDuplicates = new GeneratorValue(generator.getDefinitionDuplicates(), "true");
+			genArguments.add(generatorArgumentDuplicates);
 
-			generator.initialize(input, constraints, genArguments, new SimpleProgressMonitor());
+			generator.initialize(input, new DummyEvaluator<>(), genArguments, new SimpleProgressMonitor());
 			List<ChoiceNode> next;
 			while((next = generator.next()) != null){
 				result.add(new TestCaseNode(randomName(), null, next));
@@ -613,7 +592,6 @@ public class XmlParserSerializerTest {
 		compareNames(constraint1.getFullName(), constraint2.getFullName());
 		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
-
 
 	private void compareConstraints(Constraint constraint1, Constraint constraint2) {
 		compareBasicStatements(constraint1.getPremise(), constraint2.getPremise());

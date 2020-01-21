@@ -216,7 +216,7 @@ public final class SecurityHelper {
 
 	private static void loadKeyStoreFromPath(Optional<String> path) throws IllegalArgumentException {
 
-		if (path.isPresent()) {
+		if (path.isPresent() && !path.get().equalsIgnoreCase("")) {
 			fLoadedStore = prepareLoadedStore(prepareStoreUsingProvidedPath(path.get()));
 		} else {
 			fLoadedStore = prepareLoadedStore(prepareStoreUsingDefaultLocation());

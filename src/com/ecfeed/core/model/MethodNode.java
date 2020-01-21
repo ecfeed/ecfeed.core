@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+
 public class MethodNode extends ParametersParentNode {
 
 	private List<TestCaseNode> fTestCases;
@@ -26,8 +27,8 @@ public class MethodNode extends ParametersParentNode {
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
 		super(name, modelChangeRegistrator);
 
-		fTestCases = new ArrayList<TestCaseNode>();
-		fConstraints = new ArrayList<ConstraintNode>();
+		fTestCases = new ArrayList<>();
+		fConstraints = new ArrayList<>();
 
 		setDefaultPropertyValues();
 	}
@@ -159,7 +160,31 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		copy.setParent(getParent());
+//		if(!copy.isMatch(this))
+//			assert copy.isMatch(this);
 		return copy;
+	}
+
+	public int getMyMethodIndex() {
+
+		if (getParent() == null) {
+			return -1;
+		}
+
+		int index = -1;
+
+		for (AbstractNode abstractNode : getParent().getChildren()) {
+
+			if (abstractNode instanceof MethodNode) {
+				index++;
+			}
+
+			if (abstractNode.equals(this)) {
+				return index;
+			}
+		}
+
+		return -1;
 	}
 
 	public MethodNode getSibling(List<String> argTypes){
@@ -234,16 +259,16 @@ public class MethodNode extends ParametersParentNode {
 		return fConstraints;
 	}
 
-	public List<IConstraint<ChoiceNode>> getAllConstraints(){
-		List<IConstraint<ChoiceNode>> constraints = new ArrayList<IConstraint<ChoiceNode>>();
+	public List<Constraint> getAllConstraints(){
+		List<Constraint> constraints = new ArrayList<Constraint>();
 		for(ConstraintNode node : fConstraints){
 			constraints.add(node.getConstraint());
 		}
 		return constraints;
 	}
 
-	public List<IConstraint<ChoiceNode>> getConstraints(String name) {
-		List<IConstraint<ChoiceNode>> constraints = new ArrayList<IConstraint<ChoiceNode>>();
+	public List<Constraint> getConstraints(String name) {
+		List<Constraint> constraints = new ArrayList<Constraint>();
 		for(ConstraintNode node : fConstraints){
 			if(node.getFullName().equals(name)){
 				constraints.add(node.getConstraint());
@@ -267,7 +292,7 @@ public class MethodNode extends ParametersParentNode {
 		int parameterCount = getParametersCount();
 
 		for (int parameterIndex = 0; parameterIndex < parameterCount; parameterIndex++) {
-            testDomain.add(getTestDomainProcessAbstractParameterNode(parameterIndex));
+			testDomain.add(getTestDomainProcessAbstractParameterNode(parameterIndex));
 		}
 
 		return testDomain;
@@ -275,40 +300,40 @@ public class MethodNode extends ParametersParentNode {
 
 	private List<ChoiceNode> getTestDomainProcessAbstractParameterNode(int parameterIndex) {
 
-        AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);
+		AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);
 
-        if (abstractParameterNode instanceof MethodParameterNode) {
-            return getTestDomainProcessMethodParameterNode(abstractParameterNode);
-        } else {
-            return abstractParameterNode.getLeafChoicesWithCopies();
-        }
+		if (abstractParameterNode instanceof MethodParameterNode) {
+			return getTestDomainProcessMethodParameterNode(abstractParameterNode);
+		} else {
+			return abstractParameterNode.getLeafChoicesWithCopies();
+		}
 
-    }
+	}
 
-    private List<ChoiceNode> getTestDomainProcessMethodParameterNode(AbstractParameterNode abstractParameterNode) {
-        MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
-        List<ChoiceNode> choicesForParameter;
+	private List<ChoiceNode> getTestDomainProcessMethodParameterNode(AbstractParameterNode abstractParameterNode) {
+		MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
+		List<ChoiceNode> choicesForParameter;
 
-        if (methodParameterNode.isExpected()) {
-            ChoiceNode choiceNode = getTestDomainCreateExpectedChoiceNode(methodParameterNode);
+		if (methodParameterNode.isExpected()) {
+			ChoiceNode choiceNode = getTestDomainCreateExpectedChoiceNode(methodParameterNode);
 
-            choicesForParameter = new ArrayList<>();
-            choicesForParameter.add(choiceNode);
-        } else {
-            choicesForParameter = abstractParameterNode.getLeafChoicesWithCopies();
-        }
+			choicesForParameter = new ArrayList<>();
+			choicesForParameter.add(choiceNode);
+		} else {
+			choicesForParameter = abstractParameterNode.getLeafChoicesWithCopies();
+		}
 
-        return choicesForParameter;
-    }
+		return choicesForParameter;
+	}
 
-    private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
-        String defaultValue = methodParameterNode.getDefaultValue();
+	private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
+		String defaultValue = methodParameterNode.getDefaultValue();
 
-	    ChoiceNode choiceNode = new ChoiceNode(defaultValue,null, defaultValue);
-        choiceNode.setParent(methodParameterNode);
+		ChoiceNode choiceNode = new ChoiceNode("@expected", methodParameterNode.getModelChangeRegistrator(), defaultValue);
+		choiceNode.setParent(methodParameterNode);
 
-        return choiceNode;
-    }
+		return choiceNode;
+	}
 
 	public List<TestCaseNode> getTestCases(){
 		return fTestCases;

@@ -27,10 +27,6 @@ public class GeneratorFactoryWithCodes {
 			return new CartesianProductGenerator<ChoiceNode>();
 		}
 
-		if (type == GeneratorType.ADAPTIVE_RANDOM) {
-			return new AdaptiveRandomGenerator<ChoiceNode>();
-		}
-
 		if (type == GeneratorType.RANDOM) {
 			return new RandomGenerator<ChoiceNode>();
 		}

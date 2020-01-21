@@ -26,6 +26,8 @@ public class ChoiceNode extends ChoicesParentNode{
 	private Set<String> fLabels;
 	private boolean fIsRandomizedValue;
 
+	private ChoiceNode fOrigChoiceNode = null;
+
 	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
@@ -36,7 +38,7 @@ public class ChoiceNode extends ChoicesParentNode{
 	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value, boolean isRandomized) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
-		fLabels = new LinkedHashSet<String>();
+		fLabels = new LinkedHashSet<>();
 		fIsRandomizedValue = isRandomized;
 	}
 
@@ -76,8 +78,34 @@ public class ChoiceNode extends ChoicesParentNode{
 	}
 
 
+	public boolean isClone()
+	{
+		return fOrigChoiceNode==null;
+	}
+
+	public void setOrigChoiceNode(ChoiceNode node)
+	{
+		fOrigChoiceNode = node;
+	}
+
+	public ChoiceNode getOrigChoiceNode()
+	{
+		if(fOrigChoiceNode==null)
+			return this;
+		return fOrigChoiceNode;
+	}
+
 	@Override
 	public ChoiceNode makeClone(){
+		ChoiceNode copy = makeCloneUnlink();
+		if(isClone())
+			copy.setOrigChoiceNode(getOrigChoiceNode());
+		else
+			copy.setOrigChoiceNode(this);
+		return copy;
+	}
+
+	public ChoiceNode makeCloneUnlink() {
 		ChoiceNode copy = new ChoiceNode(getFullName(), getModelChangeRegistrator(), fValueString);
 
 		copy.setProperties(getProperties());
@@ -91,7 +119,6 @@ public class ChoiceNode extends ChoicesParentNode{
 		}
 
 		copy.setRandomizedValue(fIsRandomizedValue);
-
 		return copy;
 	}
 

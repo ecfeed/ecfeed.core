@@ -161,13 +161,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean compare(IStatement statement) {
 
-		if (statement instanceof RelationStatement == false) {
+		if ( !(statement instanceof RelationStatement) ) {
 			return false;
 		}
 
 		RelationStatement compared = (RelationStatement)statement;
 
-		if (getLeftParameter().getFullName().equals(compared.getLeftParameter().getFullName()) == false) {
+		if ( !(getLeftParameter().getFullName().equals(compared.getLeftParameter().getFullName())) ) {
 			return false;
 		}
 
