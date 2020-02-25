@@ -71,11 +71,11 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 
 		StringBuilder template = new StringBuilder();
 
-		template.append("\t\t{ \"index\":\"%index\", ");
+		template.append("\t\t{\n\t\t\t\"index\":\"%index\", \n");
 
 		template.append(createParametersTemplate(parameters));
 
-		template.append( " },");
+		template.append( "\t\t},");
 
 		return template.toString();
 	}
@@ -95,7 +95,7 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 
 	private static String createParameterString(int counter) {
 
-		return "\"$" + counter + ".name\":\"$" + counter + ".value\", ";
+		return "\t\t\t\"$" + counter + ".name\":\"$" + counter + ".value\", \n";
 	}
 
 }
