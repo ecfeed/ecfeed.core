@@ -20,7 +20,8 @@ import com.google.common.collect.*;
 
 public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
-    static final int MAX_REPETITIONS = 20; // TODO - calculate ? could be smaller for small number of dimensions or N ?
+    static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
+    static final int MAX_TUPLES = 250000;
 
     private Multiset<SortedMap<Integer, E>> fPartialNTo0Tuples = null;
 
@@ -43,18 +44,12 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
         fIgnoreCount = new IntegerHolder(0);
         fDimCount = getInput().size();
-
         try {
             fAllDimensionedItems = createDimensionedItems(getInput());
-
             List<SortedMap<Integer, E>> allNTuples = getAllNTuples(getInput(), N);
-
             fNTuplesCount = calculateNTuplesCount(allNTuples);
-
             fPartialNTo0Tuples = createPartialNTo0Tuples(allNTuples);
-
             fIgnoreCount.set(calculateIgnoreCount());
-
         } catch (Exception e) {
 
             SystemLogger.logCatch(e);
@@ -62,9 +57,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
             ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
         }
 
-        setTaskBegin(fNTuplesCount.get() * getCoverage() / 100); // TODO - repeated setTaskBegin
-
-        super.reset();
+        super.reset(fNTuplesCount.get() * getCoverage() / 100);
     }
 
     private int calculateIgnoreCount() {
@@ -390,10 +383,6 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
             List<SortedMap<Integer, E>> newValidTuples = new ArrayList<>();
 
-            if (tupleSize == argN - 1) {
-                setTaskBegin(allValidTuples.size()); // TODO - repeated setTaskBegin
-            }
-
             for (SortedMap<Integer, E> tuple : allValidTuples) {
 
                 Integer maxDimension = -1;
@@ -404,9 +393,16 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
                 addValidTuples(input, argN, dimensionCount, tupleSize, maxDimension, tuple, newValidTuples);
 
-                incrementProgress(1); // TODO - repeated progress
+                if (newValidTuples.size() > MAX_TUPLES) {
+                    ExceptionHelper.reportRuntimeException(
+                            "The number of tuples is limited to " + MAX_TUPLES + ". " +
+                            "The current value is: " + newValidTuples.size() + ". " +
+                            "To fix this issue, limit the number of arguments, choices or include additional constraint."
+                    );
+                }
             }
 
+            System.out.println("Tuple size: " + tupleSize + ". Generated tuples: " + newValidTuples.size());
             allValidTuples = newValidTuples; // TODO - do we need 2 variables ? why do we assign (what for did we calculate previous result ?)
         }
 
