@@ -71,7 +71,7 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 
 		StringBuilder template = new StringBuilder();
 
-		template.append("\t\t{\n\t\t\t\"index\":\"%index\", \n");
+		template.append("\t\t{\n\t\t\t\"index\": %index, \n");
 
 		template.append(createParametersTemplate(parameters));
 
