@@ -17,10 +17,6 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class JsonExportTemplate extends AbstractExportTemplate {
 
-//	public static final String HEADER_MARKER = "[Header]";
-//	public static final String TEST_CASE_MARKER = "[TestCase]";
-//	public static final String FOOTER_MARKER = "[Footer]";
-
 	public JsonExportTemplate(MethodNode methodNode) {
 		super(methodNode, createDefaultTemplateText(methodNode));
 	}

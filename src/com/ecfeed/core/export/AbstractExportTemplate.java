@@ -26,8 +26,6 @@ import com.ecfeed.core.utils.StringHolder;
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
 
-	private String fDefaultTemplateText; // TODO - remove ?
-
 	private MethodNode fMethodNode;
 
 	private TemplateText fTemplateText;
@@ -37,13 +35,6 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		fMethodNode = methodNode;
 		fTemplateText = new TemplateText(initialTemplateText);
 	}
-
-//	@Override
-//	public void initialize() {
-//
-//		String defaultTemplateText = createDefaultTemplateText();
-//		setTemplateText(defaultTemplateText);
-//	}
 
 	@Override
 	public void setTemplateText(String templateText) {
@@ -198,30 +189,8 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return choiceNode;
 	}
 
-	// TODO - remove
-//	protected void setDefaultTemplateText(String defaultTemplateText) {
-//		fDefaultTemplateText = defaultTemplateText;
-//	}
-
 	protected MethodNode getMethodNode() {
 		return fMethodNode;
 	}
 
-//	@Override
-//	public void setFooterTemplate(String template) {
-//
-//		fTemplateText.setfFooterTemplate.set(template);
-//	}
-//
-//	@Override
-//	public void setHeaderTemplate(String template) {
-//
-//		fHeaderTemplate.set(template);
-//	}
-//
-//	@Override
-//	public void setTestCaseTemplate(String template) {
-//
-//		fTestCaseTemplate.set(template);
-//	}
 }

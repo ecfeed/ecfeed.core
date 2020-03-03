@@ -18,6 +18,11 @@ public class TemplateText {
     public TemplateText(String completeTemplateText) {
 
         fInitialTemplateText = completeTemplateText;
+
+        fHeaderTemplateText = new StringHolder();
+        fTestCaseTemplateText = new StringHolder();
+        fFooterTemplateText = new StringHolder();
+
         setTemplateText(completeTemplateText);
     }
 
@@ -28,6 +33,8 @@ public class TemplateText {
                 fHeaderTemplateText,
                 fTestCaseTemplateText,
                 fFooterTemplateText);
+
+        fCompleteTemplateText = completeTemplateText;
     }
 
     public boolean isTemplateTextModified() {
@@ -77,6 +84,7 @@ public class TemplateText {
 
             if (isSectionMarker(line)) {
                 currentSectionMarker.set(getMarker(line));
+                continue;
             }
 
             if (currentSectionMarker.isNull()) {
@@ -167,17 +175,6 @@ public class TemplateText {
         int sectionTitleStop = line.indexOf(']') + 1;
 
         return line.substring(sectionTitleStart, sectionTitleStop);
-    }
-
-    private static boolean setCurrentSectionMarker(String line, StringHolder currentMarker) {
-
-        if (!isSectionMarker(line)) {
-            return false;
-        }
-
-        currentMarker.set(getMarker(line));
-
-        return true;
     }
 
 }
