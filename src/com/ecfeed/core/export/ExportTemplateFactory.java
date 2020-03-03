@@ -24,6 +24,15 @@ public class ExportTemplateFactory {
 		return createTemplate(getDefaultFormat());
 	}
 
+	public IExportTemplate createDefaultTemplate(String format) {
+
+		if (format == null) {
+			return null;
+		}
+
+		return createTemplate(format);
+	}
+
 	public IExportTemplate createTemplate(String formatName) {
 
 		IExportTemplate exportTemplate = createTemplateIntr(formatName);

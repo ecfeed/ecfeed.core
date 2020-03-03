@@ -26,10 +26,6 @@ import com.ecfeed.core.utils.StringHolder;
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
 
-	private static final String HEADER_MARKER = "[Header]";
-	private static final String TEST_CASE_MARKER = "[TestCase]";
-	private static final String FOOTER_MARKER = "[Footer]";
-
 	private StringHolder fHeaderTemplate = new StringHolder();
 	private StringHolder fTestCaseTemplate = new StringHolder();
 	private StringHolder fFooterTemplate = new StringHolder();
@@ -63,7 +59,12 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		fFooterTemplate.reset();
 
 		fTemplateText = templateText;
-		divideIntoSubtemplates(templateText);
+
+		TemplateText.divideIntoSubtemplates(
+				templateText,
+				fHeaderTemplate,
+				fTestCaseTemplate,
+				fFooterTemplate);
 	}
 
 	@Override
@@ -207,104 +208,6 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	protected MethodNode getMethodNode() {
 		return fMethodNode;
-	}
-
-	protected void divideIntoSubtemplates(String templateText) {
-
-		StringHolder currentSectionMarker = new StringHolder();
-
-		String[] lines = templateText.split("\n");
-
-		for (String line : lines) {
-
-			if (isCommentLine(line)) {
-				continue;
-			}
-
-			if (setSectionMarker(line, currentSectionMarker)) {
-				continue;
-			}
-
-			if (currentSectionMarker.isNull()) {
-				continue;
-			}
-
-			updateTemplatePart(currentSectionMarker.get(), line);
-		}
-	}
-
-	private void updateTemplatePart(String marker, String line) {
-
-		StringHolder templatePart = getCurrentTemplatePart(marker);
-
-		if (StringHelper.isNullOrEmpty(templatePart.get())) {
-			templatePart.set(line);
-			return;
-		}
-
-		templatePart.append(StringHelper.newLine() + line);
-	}
-
-	private StringHolder getCurrentTemplatePart(String marker) {
-
-		if (marker.equals(HEADER_MARKER)) {
-			return fHeaderTemplate;
-		}
-		if (marker.equals(TEST_CASE_MARKER)) {
-			return fTestCaseTemplate;
-		}
-		if (marker.equals(FOOTER_MARKER)) {
-			return fFooterTemplate;
-		}
-		return null;
-	}
-
-	private static boolean isCommentLine(String line) {
-
-		final String COMMENTED_LINE_REGEX = "^\\s*#.*";
-
-		if (line.matches(COMMENTED_LINE_REGEX)) {
-			return true;
-		}
-		return false;
-	}
-
-	private static boolean setSectionMarker(String line, StringHolder currentMarker) {
-
-		if (!isSectionMarker(line)) {
-			return false;
-		}
-
-		currentMarker.set(getMarker(line));
-
-		return true;
-	}
-
-	private static boolean isSectionMarker(String line) {
-
-		String trimmedLine = line.trim();
-
-		if (trimmedLine.equals(HEADER_MARKER)) {
-			return true;
-		}
-
-		if (trimmedLine.equals(TEST_CASE_MARKER)) {
-			return true;
-		}
-
-		if (trimmedLine.equals(FOOTER_MARKER)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private static String getMarker(String line) {
-
-		int sectionTitleStart = line.indexOf('[');
-		int sectionTitleStop = line.indexOf(']') + 1;
-
-		return line.substring(sectionTitleStart, sectionTitleStop);
 	}
 
 	@Override
