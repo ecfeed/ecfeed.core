@@ -14,27 +14,19 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class CsvExportTemplate extends AbstractExportTemplate {
 
-	public static final String HEADER_MARKER = "[Header]";
-	public static final String TEST_CASE_MARKER = "[TestCase]";
-	public static final String FOOTER_MARKER = "[Footer]";
-
 	public CsvExportTemplate(MethodNode methodNode) {
-		super(methodNode);
+
+		super(methodNode, createDefaultTemplateText(methodNode.getParametersCount()));
 	}
 
-	@Override
-	public String createDefaultTemplateText() {
+	private static String createDefaultTemplateText(int methodParametersCount) {
 
-		int methodParametersCount = getMethodNode().getParametersCount();
-
-		String defaultTemplateText = 
-				StringHelper.appendNewline(HEADER_MARKER)
+		String defaultTemplateText =
+				StringHelper.appendNewline(TemplateText.HEADER_MARKER)
 				+ StringHelper.appendNewline(createDefaultHeaderTemplate(methodParametersCount))
-				+ StringHelper.appendNewline(TEST_CASE_MARKER)
+				+ StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
 				+ StringHelper.appendNewline(createDefaultTestCaseTemplate(methodParametersCount))
-				+ StringHelper.appendNewline(FOOTER_MARKER);
-
-		setDefaultTemplateText(defaultTemplateText);
+				+ StringHelper.appendNewline(TemplateText.FOOTER_MARKER);
 
 		return defaultTemplateText;
 	}

@@ -20,25 +20,18 @@ import com.ecfeed.core.utils.JavaTypeHelper;
 
 public class GherkinExportTemplate extends AbstractExportTemplate {
 
-	public static final String HEADER_MARKER = "[Header]";
-	public static final String TEST_CASE_MARKER = "[TestCase]";
-	public static final String FOOTER_MARKER = "[Footer]";
-
 	public GherkinExportTemplate(MethodNode methodNode) {
-		super(methodNode);
+		super(methodNode, createDefaultTemplateText(methodNode));
 	}
 
-	@Override
-	public String createDefaultTemplateText() {
+	private static String createDefaultTemplateText(MethodNode methodNode) {
 
-		String defaultTemplateText = 
-				StringHelper.appendNewline(HEADER_MARKER)
-				+ StringHelper.appendNewline(createDefaultHeaderTemplate())
-				+ StringHelper.appendNewline(TEST_CASE_MARKER)
-				+ StringHelper.appendNewline(createDefaultTestCaseTemplate())
-				+ StringHelper.appendNewline(FOOTER_MARKER);
-
-		setDefaultTemplateText(defaultTemplateText);
+		String defaultTemplateText =
+				StringHelper.appendNewline(TemplateText.HEADER_MARKER)
+				+ StringHelper.appendNewline(createDefaultHeaderTemplate(methodNode))
+				+ StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
+				+ StringHelper.appendNewline(createDefaultTestCaseTemplate(methodNode))
+				+ StringHelper.appendNewline(TemplateText.FOOTER_MARKER);
 
 		return defaultTemplateText;
 	}
@@ -58,11 +51,10 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		return FORMAT_GHERKIN;
 	}
 
-	private String createDefaultHeaderTemplate() {
+	private static String createDefaultHeaderTemplate(MethodNode methodNode) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
-		MethodNode methodNode = getMethodNode();
 		stringBuilder.append("Scenario: executing " + methodNode.getFullName() + "\n");
 		stringBuilder.append(createInputParametersSection(methodNode));
 		stringBuilder.append(createExecuteSection(methodNode));
@@ -195,9 +187,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		return "\tWhen " + methodNode.getFullName() + " is executed\n";
 	}
 
-	private String createDefaultTestCaseTemplate() {
-
-		MethodNode methodNode = getMethodNode();
+	private static String createDefaultTestCaseTemplate(MethodNode methodNode) {
 
 		int methodParametersCount = methodNode.getParametersCount();
 		StringBuilder stringBuilder = new StringBuilder();

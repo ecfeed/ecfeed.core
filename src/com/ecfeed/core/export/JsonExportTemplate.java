@@ -17,30 +17,25 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class JsonExportTemplate extends AbstractExportTemplate {
 
-	public static final String HEADER_MARKER = "[Header]";
-	public static final String TEST_CASE_MARKER = "[TestCase]";
-	public static final String FOOTER_MARKER = "[Footer]";
+//	public static final String HEADER_MARKER = "[Header]";
+//	public static final String TEST_CASE_MARKER = "[TestCase]";
+//	public static final String FOOTER_MARKER = "[Footer]";
 
 	public JsonExportTemplate(MethodNode methodNode) {
-		super(methodNode);
+		super(methodNode, createDefaultTemplateText(methodNode));
 	}
 
-	@Override
-	public String createDefaultTemplateText() {
-
-		MethodNode methodNode = getMethodNode();
+	private static String createDefaultTemplateText(MethodNode methodNode) {
 
 		String defaultTemplateText =
-				StringHelper.appendNewline(HEADER_MARKER)
+				StringHelper.appendNewline(TemplateText.HEADER_MARKER)
 				+ StringHelper.appendNewline(createDefaultHeaderTemplate())
-				+ StringHelper.appendNewline(TEST_CASE_MARKER)
+				+ StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
 				+ StringHelper.appendNewline(createDefaultTestCaseTemplate(methodNode.getParameters()))
-				+ StringHelper.appendNewline(FOOTER_MARKER)
+				+ StringHelper.appendNewline(TemplateText.FOOTER_MARKER)
 				+ StringHelper.appendNewline(createDefaultFooterTemplate());
 
-		setDefaultTemplateText(defaultTemplateText);
-
-		return defaultTemplateText;		
+		return defaultTemplateText;
 	}
 
 	@Override

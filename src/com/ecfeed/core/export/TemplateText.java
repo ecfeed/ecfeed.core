@@ -5,11 +5,61 @@ import com.ecfeed.core.utils.StringHolder;
 
 public class TemplateText {
 
-    private static final String HEADER_MARKER = "[Header]";
-    private static final String TEST_CASE_MARKER = "[TestCase]";
-    private static final String FOOTER_MARKER = "[Footer]";
+    public static final String HEADER_MARKER = "[Header]";
+    public static final String TEST_CASE_MARKER = "[TestCase]";
+    public static final String FOOTER_MARKER = "[Footer]";
 
-    public static void divideIntoSubtemplates(
+    String fInitialTemplateText;
+    String fCompleteTemplateText;
+    StringHolder fHeaderTemplateText;
+    StringHolder fTestCaseTemplateText;
+    StringHolder fFooterTemplateText;
+
+    public TemplateText(String completeTemplateText) {
+
+        fInitialTemplateText = completeTemplateText;
+        setTemplateText(completeTemplateText);
+    }
+
+    public void setTemplateText(String completeTemplateText) {
+
+        divideIntoSubtemplates(
+                completeTemplateText,
+                fHeaderTemplateText,
+                fTestCaseTemplateText,
+                fFooterTemplateText);
+    }
+
+    public boolean isTemplateTextModified() {
+
+        if (fCompleteTemplateText.equals(fInitialTemplateText)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public String getCompleteTemplateText() {
+
+        return fCompleteTemplateText;
+    }
+
+    public String getHeaderTemplateText() {
+
+        return fHeaderTemplateText.get();
+    }
+
+    public String getTestCaseTemplateText() {
+
+        return fTestCaseTemplateText.get();
+    }
+
+    public String getFooterTemplateText() {
+
+        return fFooterTemplateText.get();
+    }
+
+    private static void divideIntoSubtemplates(
             String templateText,
             StringHolder fHeaderTemplate,
             StringHolder fTestCaseTemplate,

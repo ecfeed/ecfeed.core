@@ -26,26 +26,24 @@ import com.ecfeed.core.utils.StringHolder;
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
 
-	private StringHolder fHeaderTemplate = new StringHolder();
-	private StringHolder fTestCaseTemplate = new StringHolder();
-	private StringHolder fFooterTemplate = new StringHolder();
-
-	private String fDefaultTemplateText;
-	private String fTemplateText;
+	private String fDefaultTemplateText; // TODO - remove ?
 
 	private MethodNode fMethodNode;
 
-	public AbstractExportTemplate(MethodNode methodNode) {
+	private TemplateText fTemplateText;
+
+	public AbstractExportTemplate(MethodNode methodNode, String initialTemplateText) {
 
 		fMethodNode = methodNode;
+		fTemplateText = new TemplateText(initialTemplateText);
 	}
 
-	@Override
-	public void initialize() {
-
-		String defaultTemplateText = createDefaultTemplateText();
-		setTemplateText(defaultTemplateText);
-	}
+//	@Override
+//	public void initialize() {
+//
+//		String defaultTemplateText = createDefaultTemplateText();
+//		setTemplateText(defaultTemplateText);
+//	}
 
 	@Override
 	public void setTemplateText(String templateText) {
@@ -54,51 +52,37 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 			ExceptionHelper.reportRuntimeException("Template text must not be empty.");
 		}
 
-		fHeaderTemplate.reset();
-		fTestCaseTemplate.reset();
-		fFooterTemplate.reset();
-
-		fTemplateText = templateText;
-
-		TemplateText.divideIntoSubtemplates(
-				templateText,
-				fHeaderTemplate,
-				fTestCaseTemplate,
-				fFooterTemplate);
+		fTemplateText.setTemplateText(templateText);
 	}
 
 	@Override
 	public String getTemplateText() {
 
-		return fTemplateText;
+		return fTemplateText.getCompleteTemplateText();
 	}
 
 	@Override
 	public String getHeaderTemplate() {
 
-		return fHeaderTemplate.get();
+		return fTemplateText.getHeaderTemplateText();
 	}
 
 	@Override
 	public String getTestCaseTemplate() {
 
-		return fTestCaseTemplate.get();
+		return fTemplateText.getTestCaseTemplateText();
 	}
 
 	@Override
 	public String getFooterTemplate() {
 
-		return fFooterTemplate.get();
+		return fTemplateText.getFooterTemplateText();
 	}
 
 	@Override
 	public boolean isTemplateTextModified() {
 
-		if (StringHelper.isEqual(fTemplateText, fDefaultTemplateText)) {
-			return false;
-		}
-
-		return true;
+		return fTemplateText.isTemplateTextModified();
 	}
 
 	@Override
@@ -106,12 +90,20 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
-		stringBuilder.append(TestCasesExportHelper.generateSection(fMethodNode, fHeaderTemplate.get()));
+		stringBuilder.append(
+				TestCasesExportHelper.generateSection(
+					fMethodNode,
+					fTemplateText.getHeaderTemplateText()));
+
 		stringBuilder.append("\n");
 
 		appendPreviewOfTestCases(selectedTestCases, stringBuilder);
 
-		stringBuilder.append(TestCasesExportHelper.generateSection(fMethodNode, fFooterTemplate.get()));
+		stringBuilder.append(
+				TestCasesExportHelper.generateSection(
+						fMethodNode,
+						fTemplateText.getFooterTemplateText()));
+
 		stringBuilder.append("\n");
 
 		String result = stringBuilder.toString();
@@ -120,7 +112,9 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return result;
 	}
 
-	private void appendPreviewOfTestCases(Collection<TestCaseNode> selectedTestCases, StringBuilder inOutStringBuilder) {
+	private void appendPreviewOfTestCases(
+			Collection<TestCaseNode> selectedTestCases,
+			StringBuilder inOutStringBuilder) {
 
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
 		int sequenceIndex = 0;
@@ -129,7 +123,9 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 			inOutStringBuilder.append(
 					TestCasesExportHelper.generateTestCaseString(
-							sequenceIndex++, testCase, fTestCaseTemplate.get()));
+							sequenceIndex++,
+							testCase,
+							fTemplateText.getTestCaseTemplateText()));
 
 			inOutStringBuilder.append("\n");
 		}
@@ -202,29 +198,30 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return choiceNode;
 	}
 
-	protected void setDefaultTemplateText(String defaultTemplateText) {
-		fDefaultTemplateText = defaultTemplateText;
-	}
+	// TODO - remove
+//	protected void setDefaultTemplateText(String defaultTemplateText) {
+//		fDefaultTemplateText = defaultTemplateText;
+//	}
 
 	protected MethodNode getMethodNode() {
 		return fMethodNode;
 	}
 
-	@Override
-	public void setFooterTemplate(String template) {
-
-		fFooterTemplate.set(template);
-	}
-
-	@Override
-	public void setHeaderTemplate(String template) {
-
-		fHeaderTemplate.set(template);
-	}
-
-	@Override
-	public void setTestCaseTemplate(String template) {
-
-		fTestCaseTemplate.set(template);
-	}
+//	@Override
+//	public void setFooterTemplate(String template) {
+//
+//		fTemplateText.setfFooterTemplate.set(template);
+//	}
+//
+//	@Override
+//	public void setHeaderTemplate(String template) {
+//
+//		fHeaderTemplate.set(template);
+//	}
+//
+//	@Override
+//	public void setTestCaseTemplate(String template) {
+//
+//		fTestCaseTemplate.set(template);
+//	}
 }

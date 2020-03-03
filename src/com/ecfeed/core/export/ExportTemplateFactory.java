@@ -36,7 +36,6 @@ public class ExportTemplateFactory {
 	public IExportTemplate createTemplate(String formatName) {
 
 		IExportTemplate exportTemplate = createTemplateIntr(formatName);
-		exportTemplate.initialize();
 
 		return exportTemplate;
 	}

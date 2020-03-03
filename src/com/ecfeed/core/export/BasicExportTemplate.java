@@ -13,14 +13,8 @@ import com.ecfeed.core.model.MethodNode;
 
 public class BasicExportTemplate extends AbstractExportTemplate {
 
-	public BasicExportTemplate(MethodNode methodNode) {
-		super(methodNode);
-	}
-
-	@Override
-	public String createDefaultTemplateText() {
-
-		return null;
+	public BasicExportTemplate(MethodNode methodNode, String templateText) {
+		super(methodNode, templateText);
 	}
 
 	@Override
