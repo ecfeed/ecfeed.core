@@ -53,6 +53,8 @@ public class TestCasesExportHelper {
 		result = replaceParameterNameSequences(method, result);
 		result = evaluateExpressions(result);
 
+		result = evaluateMinWidthOperators(result);
+
 		return result;
 	}
 
@@ -67,6 +69,8 @@ public class TestCasesExportHelper {
 		result = result.replace(TEST_SUITE_NAME_SEQUENCE, testCase.getFullName());
 
 		result = evaluateExpressions(result);
+
+		result = evaluateMinWidthOperators(result);
 
 		return result;
 	}	

@@ -47,8 +47,6 @@ public class BaseTestCasesExporter {
 				TestCasesExportHelper.generateSection(
 						method, fExportTemplate.getHeaderTemplate()) + StringHelper.newLine();
 
-		section = TestCasesExportHelper.evaluateMinWidthOperators(section);
-
 		outputStream.write(section.getBytes());
 	}
 
@@ -58,8 +56,6 @@ public class BaseTestCasesExporter {
 				TestCasesExportHelper.generateTestCaseString(
 						fExportedTestCases, testCase, fExportTemplate.getTestCaseTemplate())
 				+ StringHelper.newLine();
-
-		testCaseText = TestCasesExportHelper.evaluateMinWidthOperators(testCaseText);
 
 		outputStream.write(testCaseText.getBytes());
 		++fExportedTestCases;
@@ -74,8 +70,6 @@ public class BaseTestCasesExporter {
 		String section = 
 				TestCasesExportHelper.generateSection(
 						method, fExportTemplate.getFooterTemplate()) + StringHelper.newLine();
-
-		section = TestCasesExportHelper.evaluateMinWidthOperators(section);
 
 		outputStream.write(section.getBytes());
 	}
