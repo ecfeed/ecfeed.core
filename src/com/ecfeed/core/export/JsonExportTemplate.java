@@ -24,12 +24,10 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 	private static String createDefaultTemplateText(MethodNode methodNode) {
 
 		String defaultTemplateText =
-				StringHelper.appendNewline(TemplateText.HEADER_MARKER)
-				+ StringHelper.appendNewline(createDefaultHeaderTemplate())
-				+ StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
-				+ StringHelper.appendNewline(createDefaultTestCaseTemplate(methodNode.getParameters()))
-				+ StringHelper.appendNewline(TemplateText.FOOTER_MARKER)
-				+ StringHelper.appendNewline(createDefaultFooterTemplate());
+				TemplateText.createTemplateText(
+						createDefaultHeaderTemplate(),
+						createDefaultTestCaseTemplate(methodNode.getParameters()),
+						createDefaultFooterTemplate());
 
 		return defaultTemplateText;
 	}

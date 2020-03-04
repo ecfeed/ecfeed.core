@@ -46,11 +46,11 @@ public class CsvExportTemplateTest {
     public void ShouldParseForTwoParamsTemplateRepeatedly() {
 
         String templateText =
-                StringHelper.appendNewline(TemplateText.HEADER_MARKER)
-                        + StringHelper.appendNewline("$1.name,$2.name")
-                        + StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
-                        + StringHelper.appendNewline("$1.value,$2.value")
-                        + StringHelper.appendNewline(TemplateText.FOOTER_MARKER);
+                TemplateText.createTemplateText(
+                        "$1.name,$2.name",
+                        "$1.value,$2.value",
+                        "");
+
 
         CsvExportTemplate csvExportTemplate =
                 new CsvExportTemplate(createMethodNode());
@@ -81,18 +81,24 @@ public class CsvExportTemplateTest {
     @Test
     public void ShouldParseMultiLineSectionsTemplate() {
 
+//        String templateText =
+//                StringHelper.appendNewline(TemplateText.HEADER_MARKER)
+//                        + StringHelper.appendNewline("HEADER")
+//                        + StringHelper.appendNewline("$1.name,$2.name")
+//
+//                        + StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
+//                        + StringHelper.appendNewline("TEST CASE")
+//                        + StringHelper.appendNewline("$1.value,$2.value")
+//
+//                        + StringHelper.appendNewline(TemplateText.FOOTER_MARKER)
+//                        + StringHelper.appendNewline("FOOTER 1")
+//                        + StringHelper.appendNewline("FOOTER 2");
+
         String templateText =
-                StringHelper.appendNewline(TemplateText.HEADER_MARKER)
-                        + StringHelper.appendNewline("HEADER")
-                        + StringHelper.appendNewline("$1.name,$2.name")
-
-                        + StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
-                        + StringHelper.appendNewline("TEST CASE")
-                        + StringHelper.appendNewline("$1.value,$2.value")
-
-                        + StringHelper.appendNewline(TemplateText.FOOTER_MARKER)
-                        + StringHelper.appendNewline("FOOTER 1")
-                        + StringHelper.appendNewline("FOOTER 2");
+                TemplateText.createTemplateText(
+                        "HEADER\n$1.name,$2.name",
+                        "TEST CASE\n$1.value,$2.value",
+                        "FOOTER 1\nFOOTER 2");
 
         CsvExportTemplate csvExportTemplate =
                 new CsvExportTemplate(createMethodNode());
@@ -136,8 +142,8 @@ public class CsvExportTemplateTest {
     public void ShouldIgnoreInvalidMarker() {
 
         String templateText = "[Xxx]" + "\n" + "$1.name\n"
-                + TemplateText.TEST_CASE_MARKER + "\n" + "$1.value\n"
-                + TemplateText.FOOTER_MARKER;
+                + "[TestCase]" + "\n" + "$1.value\n"
+                + "[Footer]";
 
         CsvExportTemplate csvExportTemplate =
                 new CsvExportTemplate(createMethodNode());

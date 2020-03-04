@@ -27,11 +27,10 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 	private static String createDefaultTemplateText(MethodNode methodNode) {
 
 		String defaultTemplateText =
-				StringHelper.appendNewline(TemplateText.HEADER_MARKER)
-				+ StringHelper.appendNewline(createDefaultHeaderTemplate(methodNode))
-				+ StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
-				+ StringHelper.appendNewline(createDefaultTestCaseTemplate(methodNode))
-				+ StringHelper.appendNewline(TemplateText.FOOTER_MARKER);
+				TemplateText.createTemplateText(
+						createDefaultHeaderTemplate(methodNode),
+						createDefaultTestCaseTemplate(methodNode),
+						"");
 
 		return defaultTemplateText;
 	}

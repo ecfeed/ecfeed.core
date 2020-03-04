@@ -5,10 +5,9 @@ import com.ecfeed.core.utils.StringHolder;
 
 public class TemplateText {
 
-    // TODO - make private
-    public static final String HEADER_MARKER = "[Header]";
-    public static final String TEST_CASE_MARKER = "[TestCase]";
-    public static final String FOOTER_MARKER = "[Footer]";
+    private static final String HEADER_MARKER = "[Header]";
+    private static final String TEST_CASE_MARKER = "[TestCase]";
+    private static final String FOOTER_MARKER = "[Footer]";
 
     String fInitialTemplateText;
     String fCompleteTemplateText;
@@ -65,6 +64,22 @@ public class TemplateText {
     public String getFooterTemplateText() {
 
         return fFooterTemplateText.get();
+    }
+
+    public static String createTemplateText(
+            String headerTemplate,
+            String testCaseTemplate,
+            String footerTemplate) {
+
+        String defaultTemplateText =
+                StringHelper.appendNewline(HEADER_MARKER)
+                        + StringHelper.appendNewline(headerTemplate)
+                        + StringHelper.appendNewline(TEST_CASE_MARKER)
+                        + StringHelper.appendNewline(testCaseTemplate)
+                        + StringHelper.appendNewline(FOOTER_MARKER)
+                        + StringHelper.appendNewline(footerTemplate);
+
+        return defaultTemplateText;
     }
 
     private static void divideIntoSubtemplates(

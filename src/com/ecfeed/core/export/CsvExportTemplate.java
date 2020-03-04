@@ -22,11 +22,10 @@ public class CsvExportTemplate extends AbstractExportTemplate {
 	private static String createDefaultTemplateText(int methodParametersCount) {
 
 		String defaultTemplateText =
-				StringHelper.appendNewline(TemplateText.HEADER_MARKER)
-				+ StringHelper.appendNewline(createDefaultHeaderTemplate(methodParametersCount))
-				+ StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
-				+ StringHelper.appendNewline(createDefaultTestCaseTemplate(methodParametersCount))
-				+ StringHelper.appendNewline(TemplateText.FOOTER_MARKER);
+				TemplateText.createTemplateText(
+						createDefaultHeaderTemplate(methodParametersCount),
+						createDefaultTestCaseTemplate(methodParametersCount),
+						"");
 
 		return defaultTemplateText;
 	}
