@@ -1,5 +1,6 @@
 package com.ecfeed.core.export;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.StringHolder;
 
@@ -27,6 +28,8 @@ public class TemplateText {
     }
 
     public void setTemplateText(String completeTemplateText) {
+
+        verifyTemplateText(completeTemplateText);
 
         divideIntoSubtemplates(
                 completeTemplateText,
@@ -64,6 +67,63 @@ public class TemplateText {
     public String getFooterTemplateText() {
 
         return fFooterTemplateText.get();
+    }
+
+    public static void verifyTemplateText(String templateText) {
+
+        int headerTagIndex = getTagIndex(HEADER_MARKER, templateText);
+
+        if (headerTagIndex < 0) {
+            ExceptionHelper.reportRuntimeException("Header tag not found.");
+        }
+
+        int testCaseTagIndex = getTagIndex(TEST_CASE_MARKER, templateText);
+
+        if (testCaseTagIndex < 0) {
+            ExceptionHelper.reportRuntimeException("Test case tag not found.");
+        }
+
+        int footerTagIndex = getTagIndex(TEST_CASE_MARKER, templateText);
+
+        if (footerTagIndex < 0) {
+            ExceptionHelper.reportRuntimeException("Footer tag not found.");
+        }
+    }
+
+    private static int getTagIndex(String sectionMarker, String templateText) {
+
+        String[] lines = templateText.split(System.getProperty("line.separator"));
+
+        int tagIndex = -1;
+
+        for (String line : lines) {
+
+            tagIndex = line.indexOf(sectionMarker);
+
+            if (tagIndex < 0) {
+                continue;
+            }
+
+            String trimmedLine = line.trim();
+
+            if (trimmedLine.equals(sectionMarker)) {
+                return tagIndex;
+            }
+
+            reportExceptionInvalidShortLine(line);
+        }
+
+        return -1;
+    }
+
+    private static void reportExceptionInvalidShortLine(String line) {
+
+        String shortLine = line.substring(0, 100);
+        if (shortLine.length() < line.length()) {
+            shortLine += "...";
+        }
+
+        ExceptionHelper.reportRuntimeException("Invalid tag line: " + shortLine);
     }
 
     public static String createTemplateText(
