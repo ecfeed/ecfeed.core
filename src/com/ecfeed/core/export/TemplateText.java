@@ -5,6 +5,7 @@ import com.ecfeed.core.utils.StringHolder;
 
 public class TemplateText {
 
+    // TODO - make private
     public static final String HEADER_MARKER = "[Header]";
     public static final String TEST_CASE_MARKER = "[TestCase]";
     public static final String FOOTER_MARKER = "[Footer]";
@@ -73,6 +74,10 @@ public class TemplateText {
             StringHolder fFooterTemplate) {
 
         StringHolder currentSectionMarker = new StringHolder();
+
+        fHeaderTemplate.reset();
+        fTestCaseTemplate.reset();
+        fFooterTemplate.reset();
 
         String[] lines = templateText.split("\n");
 
