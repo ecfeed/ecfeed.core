@@ -6,15 +6,24 @@ import com.ecfeed.core.utils.StringHolder;
 
 public class TemplateText {
 
-    private static final String HEADER_MARKER = "[Header]";
-    private static final String TEST_CASE_MARKER = "[TestCase]";
-    private static final String FOOTER_MARKER = "[Footer]";
+    private static final String HEADER_TAG = "[Header]";
+    private static final String FOOTER_TAG = "[Footer]";
+    private static final String TEST_CASE_TAG = "[TestCase]";
 
-    String fInitialTemplateText;
-    String fCompleteTemplateText;
-    StringHolder fHeaderTemplateText;
-    StringHolder fTestCaseTemplateText;
-    StringHolder fFooterTemplateText;
+    public static final String TEMPLATE_EMPTY = "Template is empty.";
+    public static final String MISSING_TEST_CASE_TAG = "Missing " + TEST_CASE_TAG + " tag.";
+    public static final String INVALID_TEMPLATE_TAG_LINE = "Invalid template tag line: ";
+    public static final String EMPTY_TEST_CASE_SECTION = "Empty test case section.";
+    public static final String INVALID_TAG_SEQUENCE = "Invalid tag sequence.";
+    public static final String INVALID_LINE = "Invalid line.";
+
+    private String fInitialTemplateText;
+    private String fCurrentTemplateText;
+    private StringHolder fHeaderTemplateText;
+    private StringHolder fTestCaseTemplateText;
+    private StringHolder fFooterTemplateText;
+    private boolean fIsCorrect;
+    private String fErrorMessage;
 
     public TemplateText(String completeTemplateText) {
 
@@ -24,25 +33,124 @@ public class TemplateText {
         fTestCaseTemplateText = new StringHolder();
         fFooterTemplateText = new StringHolder();
 
+        if (completeTemplateText == null || completeTemplateText.isEmpty() || completeTemplateText.isBlank()) {
+            markTemplateAsFaulty(TEMPLATE_EMPTY);
+            return;
+        }
+
         setTemplateText(completeTemplateText);
     }
 
     public void setTemplateText(String completeTemplateText) {
 
-        verifyTemplateText(completeTemplateText);
+        fCurrentTemplateText = completeTemplateText;
 
-        divideIntoSubtemplates(
-                completeTemplateText,
-                fHeaderTemplateText,
-                fTestCaseTemplateText,
-                fFooterTemplateText);
+        try {
+            divideIntoSubtemplates(
+                    completeTemplateText,
+                    fHeaderTemplateText,
+                    fTestCaseTemplateText,
+                    fFooterTemplateText);
 
-        fCompleteTemplateText = completeTemplateText;
+        } catch (Exception e) {
+
+            markTemplateAsFaulty(e.getMessage());
+        }
+    }
+
+    private void divideIntoSubtemplates(
+            String templateText,
+            StringHolder fHeaderTemplate,
+            StringHolder fTestCaseTemplate,
+            StringHolder fFooterTemplate) {
+
+        String currentSectionTag = null;
+
+        fHeaderTemplate.reset();
+        fTestCaseTemplate.reset();
+        fFooterTemplate.reset();
+
+        fIsCorrect = true;
+        fErrorMessage = null;
+
+        String[] lines = templateText.split("\n");
+
+        int lineNumber = 0;
+        boolean wasTestCaseTag = false;
+        boolean wasFooterTag = false;
+        boolean wasTestCaseContent = false;
+
+        for (String line : lines) {
+
+            lineNumber++;
+
+            if (isCommentLine(line)) {
+                continue;
+            }
+
+            String tmpSectionTag = getSectionTag(line, lineNumber);
+
+            if (tmpSectionTag == null) {
+
+                if (currentSectionTag == null) {
+                    reportLineException(INVALID_LINE, lineNumber, line);
+                }
+
+            } else {
+
+                if (isFooterTag(tmpSectionTag)) {
+
+                    if (!wasTestCaseTag) {
+                        reportLineException(MISSING_TEST_CASE_TAG, lineNumber, line);
+                    }
+                }
+
+                if (isHeaderTag(tmpSectionTag)) {
+
+                    if (wasTestCaseTag || wasFooterTag) {
+                        reportLineException(INVALID_TAG_SEQUENCE, lineNumber, line);
+                    }
+                }
+
+                if (isTestCaseTag(tmpSectionTag)) {
+                    wasTestCaseTag = true;
+                }
+
+                if (isFooterTag(tmpSectionTag)) {
+                    wasFooterTag = true;
+                }
+
+            }
+
+            if (tmpSectionTag != null) {
+                currentSectionTag = tmpSectionTag;
+                continue;
+            }
+
+            if (isTestCaseTag(currentSectionTag)) {
+                wasTestCaseContent = true;
+            }
+
+            updateTemplatePart(
+                    currentSectionTag,
+                    line,
+                    fHeaderTemplate,
+                    fTestCaseTemplate,
+                    fFooterTemplate);
+        }
+
+        if (!wasTestCaseTag) {
+            ExceptionHelper.reportRuntimeException(MISSING_TEST_CASE_TAG);
+        }
+
+        if (!wasTestCaseContent) {
+            ExceptionHelper.reportRuntimeException(EMPTY_TEST_CASE_SECTION);
+        }
     }
 
     public boolean isTemplateTextModified() {
 
-        if (fCompleteTemplateText.equals(fInitialTemplateText)) {
+        if (fCurrentTemplateText.equals(fInitialTemplateText)) {
             return false;
         }
 
@@ -51,7 +159,7 @@ public class TemplateText {
 
     public String getCompleteTemplateText() {
 
-        return fCompleteTemplateText;
+        return fCurrentTemplateText;
     }
 
     public String getHeaderTemplateText() {
@@ -69,52 +177,16 @@ public class TemplateText {
         return fFooterTemplateText.get();
     }
 
-    public static void verifyTemplateText(String templateText) {
+    public boolean isCorrect() {
 
-        int headerTagIndex = getTagIndex(HEADER_MARKER, templateText);
-
-        if (headerTagIndex < 0) {
-            ExceptionHelper.reportRuntimeException("Header tag not found.");
-        }
-
-        int testCaseTagIndex = getTagIndex(TEST_CASE_MARKER, templateText);
-
-        if (testCaseTagIndex < 0) {
-            ExceptionHelper.reportRuntimeException("Test case tag not found.");
-        }
-
-        int footerTagIndex = getTagIndex(TEST_CASE_MARKER, templateText);
-
-        if (footerTagIndex < 0) {
-            ExceptionHelper.reportRuntimeException("Footer tag not found.");
-        }
+        return fIsCorrect;
     }
 
-    private static int getTagIndex(String sectionMarker, String templateText) {
+    public String getErrorMessage() {
 
-        String[] lines = templateText.split(System.getProperty("line.separator"));
-
-        int tagIndex = -1;
-
-        for (String line : lines) {
-
-            tagIndex = line.indexOf(sectionMarker);
-
-            if (tagIndex < 0) {
-                continue;
-            }
-
-            String trimmedLine = line.trim();
-
-            if (trimmedLine.equals(sectionMarker)) {
-                return tagIndex;
-            }
-
-            reportExceptionInvalidShortLine(line);
-        }
-
-        return -1;
+        return fErrorMessage;
     }
+
 
     private static void reportExceptionInvalidShortLine(String line) {
 
@@ -132,56 +204,18 @@ public class TemplateText {
             String footerTemplate) {
 
         String defaultTemplateText =
-                StringHelper.appendNewline(HEADER_MARKER)
+                StringHelper.appendNewline(HEADER_TAG)
                         + StringHelper.appendNewline(headerTemplate)
-                        + StringHelper.appendNewline(TEST_CASE_MARKER)
+                        + StringHelper.appendNewline(TEST_CASE_TAG)
                         + StringHelper.appendNewline(testCaseTemplate)
-                        + StringHelper.appendNewline(FOOTER_MARKER)
+                        + StringHelper.appendNewline(FOOTER_TAG)
                         + StringHelper.appendNewline(footerTemplate);
 
         return defaultTemplateText;
     }
 
-    private static void divideIntoSubtemplates(
-            String templateText,
-            StringHolder fHeaderTemplate,
-            StringHolder fTestCaseTemplate,
-            StringHolder fFooterTemplate) {
-
-        StringHolder currentSectionMarker = new StringHolder();
-
-        fHeaderTemplate.reset();
-        fTestCaseTemplate.reset();
-        fFooterTemplate.reset();
-
-        String[] lines = templateText.split("\n");
-
-        for (String line : lines) {
-
-            if (isCommentLine(line)) {
-                continue;
-            }
-
-            if (isSectionMarker(line)) {
-                currentSectionMarker.set(getMarker(line));
-                continue;
-            }
-
-            if (currentSectionMarker.isNull()) {
-                continue;
-            }
-
-            updateTemplatePart(
-                    currentSectionMarker.get(),
-                    line,
-                    fHeaderTemplate,
-                    fTestCaseTemplate,
-                    fFooterTemplate);
-        }
-    }
-
     private static void updateTemplatePart(
-            String marker,
+            String templateTag,
             String line,
             StringHolder fHeaderTemplate,
             StringHolder fTestCaseTemplate,
@@ -189,7 +223,7 @@ public class TemplateText {
 
         StringHolder templatePart =
                 getCurrentTemplatePart(
-                        marker,
+                        templateTag,
                         fHeaderTemplate,
                         fTestCaseTemplate,
                         fFooterTemplate);
@@ -203,20 +237,18 @@ public class TemplateText {
     }
 
     private static StringHolder getCurrentTemplatePart(
-            String marker,
+            String templateTag,
             StringHolder headerTemplate,
             StringHolder testCaseTemplate,
             StringHolder footerTemplate) {
 
-        if (marker.equals(HEADER_MARKER)) {
+        if (isHeaderTag(templateTag))
             return headerTemplate;
-        }
-        if (marker.equals(TEST_CASE_MARKER)) {
+
+        if (isTestCaseTag(templateTag))
             return testCaseTemplate;
-        }
-        if (marker.equals(FOOTER_MARKER)) {
-            return footerTemplate;
-        }
+
+        if (isFooterTag(templateTag)) return footerTemplate;
         return null;
     }
 
@@ -230,31 +262,98 @@ public class TemplateText {
         return false;
     }
 
-    private static boolean isSectionMarker(String line) {
+    private static String getSectionTag(String line, int lineNumber) {
 
-        String trimmedLine = line.trim();
+        line = line.trim();
 
-        if (trimmedLine.equals(HEADER_MARKER)) {
-            return true;
+        String tag = extractTemplateTag(line);
+
+        if (tag == null) {
+            return null;
         }
 
-        if (trimmedLine.equals(TEST_CASE_MARKER)) {
-            return true;
+        if (!line.equals(tag)) {
+            reportLineException(INVALID_TEMPLATE_TAG_LINE + tag + ".", lineNumber, line);
         }
 
-        if (trimmedLine.equals(FOOTER_MARKER)) {
+        return tag;
+    }
+
+    private static String extractTemplateTag(String line) {
+
+        if (line.indexOf(HEADER_TAG) >= 0) {
+            return HEADER_TAG;
+        }
+
+        if (line.indexOf(TEST_CASE_TAG) >= 0) {
+            return TEST_CASE_TAG;
+        }
+
+        if (line.indexOf(FOOTER_TAG) >= 0) {
+            return FOOTER_TAG;
+        }
+
+        return null;
+    }
+
+    private static boolean isTemplateSectionTag(String tag) {
+
+        if (isHeaderTag(tag))
+            return true;
+
+        if (isTestCaseTag(tag))
+            return true;
+
+        if (isFooterTag(tag))
+            return true;
+
+        return false;
+    }
+
+    private static boolean isFooterTag(String tag) {
+
+        if (tag.equals(FOOTER_TAG)) {
             return true;
         }
 
         return false;
     }
 
-    private static String getMarker(String line) {
+    private static boolean isTestCaseTag(String tag) {
 
-        int sectionTitleStart = line.indexOf('[');
-        int sectionTitleStop = line.indexOf(']') + 1;
+        if (tag == null) {
+            return false;
+        }
 
-        return line.substring(sectionTitleStart, sectionTitleStop);
+        if (tag.equals(TEST_CASE_TAG)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static boolean isHeaderTag(String tag) {
+
+        if (tag.equals(HEADER_TAG)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void reportLineException(String message, int lineNumber, String line) {
+
+        String completeMessage = message + " Line: " + lineNumber + ", " + line;
+        ExceptionHelper.reportRuntimeException(completeMessage);
+    }
+
+    private void markTemplateAsFaulty(String errorMessage) {
+        fIsCorrect = false;
+        fErrorMessage = errorMessage;
+        fHeaderTemplateText.reset();
+        fTestCaseTemplateText.reset();
+        fFooterTemplateText.reset();
     }
 
 }
+

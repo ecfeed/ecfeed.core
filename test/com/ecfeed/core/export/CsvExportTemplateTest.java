@@ -81,19 +81,6 @@ public class CsvExportTemplateTest {
     @Test
     public void ShouldParseMultiLineSectionsTemplate() {
 
-//        String templateText =
-//                StringHelper.appendNewline(TemplateText.HEADER_MARKER)
-//                        + StringHelper.appendNewline("HEADER")
-//                        + StringHelper.appendNewline("$1.name,$2.name")
-//
-//                        + StringHelper.appendNewline(TemplateText.TEST_CASE_MARKER)
-//                        + StringHelper.appendNewline("TEST CASE")
-//                        + StringHelper.appendNewline("$1.value,$2.value")
-//
-//                        + StringHelper.appendNewline(TemplateText.FOOTER_MARKER)
-//                        + StringHelper.appendNewline("FOOTER 1")
-//                        + StringHelper.appendNewline("FOOTER 2");
-
         String templateText =
                 TemplateText.createTemplateText(
                         "HEADER\n$1.name,$2.name",
@@ -136,25 +123,6 @@ public class CsvExportTemplateTest {
         assertTrue(StringHelper.isNullOrEmpty(csvExportTemplate.getHeaderTemplate()));
         assertTrue(StringHelper.isNullOrEmpty(csvExportTemplate.getTestCaseTemplate()));
         assertTrue(StringHelper.isNullOrEmpty(csvExportTemplate.getFooterTemplate()));
-    }
-
-    @Test
-    public void ShouldIgnoreInvalidMarker() {
-
-        String templateText = "[Xxx]" + "\n" + "$1.name\n"
-                + "[TestCase]" + "\n" + "$1.value\n"
-                + "[Footer]";
-
-        CsvExportTemplate csvExportTemplate =
-                new CsvExportTemplate(createMethodNode());
-
-        try {
-            csvExportTemplate.setTemplateText(templateText);
-        } catch (Exception e) {
-            fail("Exception thrown during export.");
-        }
-
-        assertEquals("$1.value", csvExportTemplate.getTestCaseTemplate());
     }
 
     private MethodNode createMethodNode() {
