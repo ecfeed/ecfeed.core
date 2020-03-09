@@ -4,6 +4,10 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.StringHolder;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+
 public class TemplateText {
 
     private static final String HEADER_TAG = "[Header]";
@@ -62,7 +66,7 @@ public class TemplateText {
             String templateText,
             StringHolder fHeaderTemplate,
             StringHolder fTestCaseTemplate,
-            StringHolder fFooterTemplate) {
+            StringHolder fFooterTemplate) throws IOException {
 
         String currentSectionTag = null;
 
@@ -73,14 +77,23 @@ public class TemplateText {
         fIsCorrect = true;
         fErrorMessage = null;
 
-        String[] lines = templateText.split("\n");
-
         int lineNumber = 0;
         boolean wasTestCaseTag = false;
         boolean wasFooterTag = false;
         boolean wasTestCaseContent = false;
 
-        for (String line : lines) {
+        StringReader stringReader = new StringReader(templateText);
+        BufferedReader bufferedReader = new BufferedReader(stringReader);
+        String line;
+
+
+        for (;;) {
+
+            line = bufferedReader.readLine();
+
+            if (line == null) {
+                break;
+            }
 
             lineNumber++;
 
