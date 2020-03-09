@@ -10,7 +10,6 @@
 package com.ecfeed.core.export;
 
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.StringHelper;
 
 public class CsvExportTemplate extends AbstractExportTemplate {
 

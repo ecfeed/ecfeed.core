@@ -16,6 +16,7 @@ import com.ecfeed.core.model.TestCaseNode;
 
 public interface IExportTemplate {
 
+	String getDefaultTemplateText();
 	void setTemplateText(String summaryTemplate);
 	String getTemplateText();
 	boolean isTemplateTextModified();

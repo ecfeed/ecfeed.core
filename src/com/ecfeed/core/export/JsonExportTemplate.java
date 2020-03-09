@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.StringHelper;
 
 public class JsonExportTemplate extends AbstractExportTemplate {
 

@@ -20,8 +20,6 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.StringHolder;
 
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
@@ -30,12 +28,17 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private TemplateText fTemplateText;
 
-	public AbstractExportTemplate(MethodNode methodNode, String initialTemplateText) {
+	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText) {
 
 		fMethodNode = methodNode;
-		fTemplateText = new TemplateText(initialTemplateText);
+		fTemplateText = new TemplateText(defaultlTemplateText);
 	}
 
+	@Override
+	public String getDefaultTemplateText() {
+		
+		return fTemplateText.getInitialTemplateText();
+	}
 	@Override
 	public void setTemplateText(String templateText) {
 

@@ -170,6 +170,11 @@ public class TemplateText {
         return true;
     }
 
+    public String getInitialTemplateText() {
+
+        return fInitialTemplateText;
+    }
+    
     public String getCompleteTemplateText() {
 
         return fCurrentTemplateText;
@@ -198,17 +203,6 @@ public class TemplateText {
     public String getErrorMessage() {
 
         return fErrorMessage;
-    }
-
-
-    private static void reportExceptionInvalidShortLine(String line) {
-
-        String shortLine = line.substring(0, 100);
-        if (shortLine.length() < line.length()) {
-            shortLine += "...";
-        }
-
-        ExceptionHelper.reportRuntimeException("Invalid tag line: " + shortLine);
     }
 
     public static String createTemplateText(
@@ -316,20 +310,6 @@ public class TemplateText {
         }
 
         return null;
-    }
-
-    private static boolean isTemplateSectionTag(String tag) {
-
-        if (isHeaderTag(tag))
-            return true;
-
-        if (isTestCaseTag(tag))
-            return true;
-
-        if (isFooterTag(tag))
-            return true;
-
-        return false;
     }
 
     private static boolean isFooterTag(String tag) {
