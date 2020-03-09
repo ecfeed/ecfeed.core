@@ -30,7 +30,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 				TemplateText.createTemplateText(
 						createDefaultHeaderTemplate(methodNode),
 						createDefaultTestCaseTemplate(methodNode),
-						"");
+						null);
 
 		return defaultTemplateText;
 	}

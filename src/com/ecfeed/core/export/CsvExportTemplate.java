@@ -25,7 +25,7 @@ public class CsvExportTemplate extends AbstractExportTemplate {
 				TemplateText.createTemplateText(
 						createDefaultHeaderTemplate(methodParametersCount),
 						createDefaultTestCaseTemplate(methodParametersCount),
-						"");
+						null);
 
 		return defaultTemplateText;
 	}

@@ -216,15 +216,24 @@ public class TemplateText {
             String testCaseTemplate,
             String footerTemplate) {
 
-        String defaultTemplateText =
-                StringHelper.appendNewline(HEADER_TAG)
-                        + StringHelper.appendNewline(headerTemplate)
-                        + StringHelper.appendNewline(TEST_CASE_TAG)
-                        + StringHelper.appendNewline(testCaseTemplate)
-                        + StringHelper.appendNewline(FOOTER_TAG)
-                        + StringHelper.appendNewline(footerTemplate);
+        String templateText = "";
 
-        return defaultTemplateText;
+        if (headerTemplate != null) {
+            templateText += StringHelper.appendNewline(HEADER_TAG)
+                    + StringHelper.appendNewline(headerTemplate);
+        }
+
+        if (testCaseTemplate != null) {
+            templateText += StringHelper.appendNewline(TEST_CASE_TAG)
+                    + StringHelper.appendNewline(testCaseTemplate);
+        }
+
+        if (footerTemplate != null) {
+            templateText += StringHelper.appendNewline(FOOTER_TAG)
+                    + StringHelper.appendNewline(footerTemplate);
+        }
+
+        return templateText;
     }
 
     private static void updateTemplatePart(
