@@ -13,34 +13,22 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.StringHelper;
 
 public class JsonExportTemplate extends AbstractExportTemplate {
 
-	public static final String HEADER_MARKER = "[Header]";
-	public static final String TEST_CASE_MARKER = "[TestCase]";
-	public static final String FOOTER_MARKER = "[Footer]";
-
 	public JsonExportTemplate(MethodNode methodNode) {
-		super(methodNode);
+		super(methodNode, createDefaultTemplateText(methodNode));
 	}
 
-	@Override
-	public String createDefaultTemplateText() {
-
-		MethodNode methodNode = getMethodNode();
+	private static String createDefaultTemplateText(MethodNode methodNode) {
 
 		String defaultTemplateText =
-				StringHelper.appendNewline(HEADER_MARKER)
-				+ StringHelper.appendNewline(createDefaultHeaderTemplate())
-				+ StringHelper.appendNewline(TEST_CASE_MARKER)
-				+ StringHelper.appendNewline(createDefaultTestCaseTemplate(methodNode.getParameters()))
-				+ StringHelper.appendNewline(FOOTER_MARKER)
-				+ StringHelper.appendNewline(createDefaultFooterTemplate());
+				TemplateText.createTemplateText(
+						createDefaultHeaderTemplate(),
+						createDefaultTestCaseTemplate(methodNode.getParameters()),
+						createDefaultFooterTemplate());
 
-		setDefaultTemplateText(defaultTemplateText);
-
-		return defaultTemplateText;		
+		return defaultTemplateText;
 	}
 
 	@Override
@@ -71,7 +59,7 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 
 		StringBuilder template = new StringBuilder();
 
-		template.append("\t\t{\n\t\t\t\"index\":\"%index\", \n");
+		template.append("\t\t{\n\t\t\t\"index\": %index, \n");
 
 		template.append(createParametersTemplate(parameters));
 
