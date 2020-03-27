@@ -228,8 +228,15 @@ public class StringHelper {
 	    String signatureWithoutModifiers = methodSignature
                 .replaceAll("public", "")
                 .replaceAll("void", "");
-	    String simplifiedSignature = signatureWithoutModifiers
-                .substring(0, signatureWithoutModifiers.indexOf('('));
+
+	    String simplifiedSignature;
+
+	    if (signatureWithoutModifiers.contains("(")) {
+			simplifiedSignature = signatureWithoutModifiers.substring(0, signatureWithoutModifiers.indexOf('('));
+		} else {
+			simplifiedSignature = signatureWithoutModifiers;
+		}
+
 	    String packageWithClass = simplifiedSignature
                 .substring(0, simplifiedSignature.lastIndexOf('.'));
 
@@ -238,8 +245,14 @@ public class StringHelper {
 
     public static String getMethodShortSignature(String methodSignature) {
 
-	    String simplifiedSignature = methodSignature
-                .substring(0, methodSignature.indexOf('('));
+	    String simplifiedSignature;
+
+	    if (methodSignature.contains("(")) {
+			simplifiedSignature = methodSignature.substring(0, methodSignature.indexOf('('));
+		} else {
+	    	simplifiedSignature = methodSignature;
+		}
+
 	    int indexOfLastDot = simplifiedSignature.lastIndexOf('.') + 1;
 	    String methodShortSignature = methodSignature.substring(indexOfLastDot);
 
