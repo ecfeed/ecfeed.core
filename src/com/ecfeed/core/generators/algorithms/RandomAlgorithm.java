@@ -33,10 +33,11 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 
 
 	public RandomAlgorithm(int length, boolean duplicates, boolean adaptive) {
-		if(adaptive)
+		if(adaptive) {
 			fCandidatesSize = NUMBER_OF_CANDIDATES;
-		else
+		} else {
 			fCandidatesSize = 1;
+		}
 		fLength = length;
 		fDuplicates = duplicates;
 
@@ -56,6 +57,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 
 		fCartesianAlgorithm.initialize(input, constraintEvaluator, generatorProgressMonitor);
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
+
 		setTaskBegin(fLength);
 	}
 
@@ -99,13 +101,26 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 
 	protected List<List<E>> getCandidates() throws GeneratorException {
 		Set<List<E>> candidates = new HashSet<List<E>>();
-		while(candidates.size() < fCandidatesSize){
+
+		int idleCounter = 0;
+		int idleCounterMax = 100;
+
+		while (candidates.size() < fCandidatesSize && idleCounter < idleCounterMax) {
 			List<E> candidate = getCandidate();
-			if(candidate == null){
+
+			if (candidate == null) {
 				break;
 			}
-			candidates.add(candidate);
+
+			boolean conclusion = candidates.add(candidate);
+
+			if (conclusion) {
+				idleCounter = 0;
+			} else {
+				idleCounter++;
+			}
 		}
+
 		return new ArrayList<List<E>>(candidates);
 	}
 
