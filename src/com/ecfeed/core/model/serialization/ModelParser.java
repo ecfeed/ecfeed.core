@@ -73,7 +73,8 @@ public class ModelParser {
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
-		} catch (IOException e) {e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 			ParserException.report(Messages.IO_EXCEPTION(e));
 			return null;
 		}

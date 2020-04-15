@@ -24,10 +24,18 @@ public class ExportTemplateFactory {
 		return createTemplate(getDefaultFormat());
 	}
 
+	public IExportTemplate createDefaultTemplate(String format) {
+
+		if (format == null) {
+			return null;
+		}
+
+		return createTemplate(format);
+	}
+
 	public IExportTemplate createTemplate(String formatName) {
 
 		IExportTemplate exportTemplate = createTemplateIntr(formatName);
-		exportTemplate.initialize();
 
 		return exportTemplate;
 	}
@@ -42,16 +50,23 @@ public class ExportTemplateFactory {
 		}
 		if (formatName.equals(GherkinExportTemplate.getTemplateFormatSt())) {
 			return new GherkinExportTemplate(fMethodNode);
+		}
+		if (formatName.equals(JsonExportTemplate.getTemplateFormatSt())) {
+			return new JsonExportTemplate(fMethodNode);
 		}		
+		
 		return null;
 	}
 
 	public static String[] getAvailableExportFormats() {
-		String[] formats = 
-			{ 
+
+		String[] formats = { 
 				CsvExportTemplate.getTemplateFormatSt(), 
 				XmlExportTemplate.getTemplateFormatSt(), 
-				GherkinExportTemplate.getTemplateFormatSt() };
+				GherkinExportTemplate.getTemplateFormatSt(),
+				JsonExportTemplate.getTemplateFormatSt()
+		};
+
 		return formats;
 	}
 

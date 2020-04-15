@@ -16,18 +16,12 @@ import com.ecfeed.core.model.TestCaseNode;
 
 public interface IExportTemplate {
 
-	void initialize();
-
-	String createDefaultTemplateText();
+	String getDefaultTemplateText();
 	void setTemplateText(String summaryTemplate);
 	String getTemplateText();
 	boolean isTemplateTextModified();
 	String getFileExtension();
 	String getTemplateFormat();
-
-	void setHeaderTemplate(String headerTemplate);
-	void setTestCaseTemplate(String testCaseTemplate);
-	void setFooterTemplate(String footerTemplate);
 
 	String getFooterTemplate();
 	String getHeaderTemplate();

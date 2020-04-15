@@ -14,9 +14,9 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.MethodNode;
 
-public class XmlExportTemplate extends AbstractExportTemplate {
+public class JsonExportTemplate extends AbstractExportTemplate {
 
-	public XmlExportTemplate(MethodNode methodNode) {
+	public JsonExportTemplate(MethodNode methodNode) {
 		super(methodNode, createDefaultTemplateText(methodNode));
 	}
 
@@ -33,7 +33,7 @@ public class XmlExportTemplate extends AbstractExportTemplate {
 
 	@Override
 	public String getFileExtension() {
-		return "xml";
+		return "json";
 	}
 
 	@Override 
@@ -42,24 +42,28 @@ public class XmlExportTemplate extends AbstractExportTemplate {
 	}
 
 	public static String getTemplateFormatSt() {
-		final String FORMAT_XML = "XML";
-		return FORMAT_XML;
+
+		final String FORMAT_JSON = "JSON";
+		return FORMAT_JSON;
 	}	
+
 	private static String createDefaultHeaderTemplate() {
-		return "<TestCases>";
+		return "{ \n\t\"testCases\" : [";
 	}
 
 	private static String createDefaultFooterTemplate() {
-		return "</TestCases>";
+		return "\t]\n} ";
 	}
 
 	private static String createDefaultTestCaseTemplate(List<AbstractParameterNode> parameters) {
 
 		StringBuilder template = new StringBuilder();
-		template.append("\t<TestCase ");
-		template.append("testSuite=\"%suite\" ");
+
+		template.append("\t\t{\n\t\t\t\"index\": %index, \n");
+
 		template.append(createParametersTemplate(parameters));
-		template.append("/>");
+
+		template.append( "\t\t},");
 
 		return template.toString();
 	}
@@ -67,18 +71,19 @@ public class XmlExportTemplate extends AbstractExportTemplate {
 	private static String createParametersTemplate(List<AbstractParameterNode> parameters) {
 
 		StringBuilder template = new StringBuilder();
-		int counter = 0;
 
-		for (AbstractParameterNode node : parameters) {
-			counter++;
-			template.append(createParameterString(node.getFullName(), counter));
+		int parametersSize = parameters.size();
+
+		for (int index = 0; index < parametersSize; index++) {
+			template.append(createParameterString(index+1));			
 		}
 
 		return template.toString();
 	}
 
-	private static String createParameterString(String name, int counter) {
-		return name + "=" + "\"$" + counter + "." + "value" + "\" ";
+	private static String createParameterString(int counter) {
+
+		return "\t\t\t\"$" + counter + ".name\":\"$" + counter + ".value\", \n";
 	}
 
 }

@@ -247,7 +247,6 @@ public class AllMUSes {
         } catch (TimeoutException e) {
             e.printStackTrace();
         } catch (ContradictionException e) {
-
         }
         if (css.isVerbose()) {
             System.out.println(css.getLogPrefix() + "... done.");

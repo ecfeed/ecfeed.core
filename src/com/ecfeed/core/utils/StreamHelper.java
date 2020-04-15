@@ -48,7 +48,7 @@ public class StreamHelper {
 		try {
 			outputStream = new FileOutputStream(pathWithFileName);
 		} catch (FileNotFoundException e) {
-			ExceptionHelper.reportRuntimeException("Can not create output stream." + e.getMessage());
+			ExceptionHelper.reportServerException("Can not create output stream." + e.getMessage());
 		}
 		return outputStream;
 	}
@@ -80,6 +80,16 @@ public class StreamHelper {
 		outputStream.write(strg.getBytes());
 		outputStream.write("\n".getBytes());
 		outputStream.flush();
-	}	
+	}
+
+	public static void writeStringToStream(String str, OutputStream outputStream) { // TODO - similar code in export streaming response body
+
+		try {
+			outputStream.write(str.getBytes());
+			outputStream.flush();
+		} catch (IOException e) {
+			ExceptionHelper.reportServerException("", e);
+		}
+	}
 
 }

@@ -20,37 +20,25 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.StringHolder;
 
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
 
-	private static final String HEADER_MARKER = "[Header]";
-	private static final String TEST_CASE_MARKER = "[TestCase]";
-	private static final String FOOTER_MARKER = "[Footer]";
-
-	private StringHolder fHeaderTemplate = new StringHolder();
-	private StringHolder fTestCaseTemplate = new StringHolder();
-	private StringHolder fFooterTemplate = new StringHolder();
-
-	private String fDefaultTemplateText;
-	private String fTemplateText;
-
 	private MethodNode fMethodNode;
 
-	public AbstractExportTemplate(MethodNode methodNode) {
+	private TemplateText fTemplateText;
+
+	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText) {
 
 		fMethodNode = methodNode;
+		fTemplateText = new TemplateText(defaultlTemplateText);
 	}
 
 	@Override
-	public void initialize() {
-
-		String defaultTemplateText = createDefaultTemplateText();
-		setTemplateText(defaultTemplateText);
+	public String getDefaultTemplateText() {
+		
+		return fTemplateText.getInitialTemplateText();
 	}
-
 	@Override
 	public void setTemplateText(String templateText) {
 
@@ -58,46 +46,37 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 			ExceptionHelper.reportRuntimeException("Template text must not be empty.");
 		}
 
-		fHeaderTemplate.reset();
-		fTestCaseTemplate.reset();
-		fFooterTemplate.reset();
-
-		fTemplateText = templateText;
-		divideIntoSubtemplates(templateText);
+		fTemplateText.setTemplateText(templateText);
 	}
 
 	@Override
 	public String getTemplateText() {
 
-		return fTemplateText;
+		return fTemplateText.getCompleteTemplateText();
 	}
 
 	@Override
 	public String getHeaderTemplate() {
 
-		return fHeaderTemplate.get();
+		return fTemplateText.getHeaderTemplateText();
 	}
 
 	@Override
 	public String getTestCaseTemplate() {
 
-		return fTestCaseTemplate.get();
+		return fTemplateText.getTestCaseTemplateText();
 	}
 
 	@Override
 	public String getFooterTemplate() {
 
-		return fFooterTemplate.get();
+		return fTemplateText.getFooterTemplateText();
 	}
 
 	@Override
 	public boolean isTemplateTextModified() {
 
-		if (StringHelper.isEqual(fTemplateText, fDefaultTemplateText)) {
-			return false;
-		}
-
-		return true;
+		return fTemplateText.isTemplateTextModified();
 	}
 
 	@Override
@@ -105,12 +84,20 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
-		stringBuilder.append(TestCasesExportHelper.generateSection(fMethodNode, fHeaderTemplate.get()));
+		stringBuilder.append(
+				TestCasesExportHelper.generateSection(
+					fMethodNode,
+					fTemplateText.getHeaderTemplateText()));
+
 		stringBuilder.append("\n");
 
 		appendPreviewOfTestCases(selectedTestCases, stringBuilder);
 
-		stringBuilder.append(TestCasesExportHelper.generateSection(fMethodNode, fFooterTemplate.get()));
+		stringBuilder.append(
+				TestCasesExportHelper.generateSection(
+						fMethodNode,
+						fTemplateText.getFooterTemplateText()));
+
 		stringBuilder.append("\n");
 
 		String result = stringBuilder.toString();
@@ -119,7 +106,9 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return result;
 	}
 
-	private void appendPreviewOfTestCases(Collection<TestCaseNode> selectedTestCases, StringBuilder inOutStringBuilder) {
+	private void appendPreviewOfTestCases(
+			Collection<TestCaseNode> selectedTestCases,
+			StringBuilder inOutStringBuilder) {
 
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
 		int sequenceIndex = 0;
@@ -128,7 +117,9 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 			inOutStringBuilder.append(
 					TestCasesExportHelper.generateTestCaseString(
-							sequenceIndex++, testCase, fTestCaseTemplate.get()));
+							sequenceIndex++,
+							testCase,
+							fTemplateText.getTestCaseTemplateText()));
 
 			inOutStringBuilder.append("\n");
 		}
@@ -201,127 +192,8 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		return choiceNode;
 	}
 
-	protected void setDefaultTemplateText(String defaultTemplateText) {
-		fDefaultTemplateText = defaultTemplateText;
-	}
-
 	protected MethodNode getMethodNode() {
 		return fMethodNode;
 	}
 
-	protected void divideIntoSubtemplates(String templateText) {
-
-		StringHolder currentSectionMarker = new StringHolder();
-
-		String[] lines = templateText.split("\n");
-
-		for (String line : lines) {
-
-			if (isCommentLine(line)) {
-				continue;
-			}
-
-			if (setSectionMarker(line, currentSectionMarker)) {
-				continue;
-			}
-
-			if (currentSectionMarker.isNull()) {
-				continue;
-			}
-
-			updateTemplatePart(currentSectionMarker.get(), line);
-		}
-	}
-
-	private void updateTemplatePart(String marker, String line) {
-
-		StringHolder templatePart = getCurrentTemplatePart(marker);
-
-		if (StringHelper.isNullOrEmpty(templatePart.get())) {
-			templatePart.set(line);
-			return;
-		}
-
-		templatePart.append(StringHelper.newLine() + line);
-	}
-
-	private StringHolder getCurrentTemplatePart(String marker) {
-
-		if (marker.equals(HEADER_MARKER)) {
-			return fHeaderTemplate;
-		}
-		if (marker.equals(TEST_CASE_MARKER)) {
-			return fTestCaseTemplate;
-		}
-		if (marker.equals(FOOTER_MARKER)) {
-			return fFooterTemplate;
-		}
-		return null;
-	}
-
-	private static boolean isCommentLine(String line) {
-
-		final String COMMENTED_LINE_REGEX = "^\\s*#.*";
-
-		if (line.matches(COMMENTED_LINE_REGEX)) {
-			return true;
-		}
-		return false;
-	}
-
-	private static boolean setSectionMarker(String line, StringHolder currentMarker) {
-
-		if (!isSectionMarker(line)) {
-			return false;
-		}
-
-		currentMarker.set(getMarker(line));
-
-		return true;
-	}
-
-	private static boolean isSectionMarker(String line) {
-
-		String trimmedLine = line.trim();
-
-		if (trimmedLine.equals(HEADER_MARKER)) {
-			return true;
-		}
-
-		if (trimmedLine.equals(TEST_CASE_MARKER)) {
-			return true;
-		}
-
-		if (trimmedLine.equals(FOOTER_MARKER)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	private static String getMarker(String line) {
-
-		int sectionTitleStart = line.indexOf('[');
-		int sectionTitleStop = line.indexOf(']') + 1;
-
-		return line.substring(sectionTitleStart, sectionTitleStop);
-	}
-
-	@Override
-	public void setFooterTemplate(String template) {
-
-		fFooterTemplate.set(template);
-	}
-
-	@Override
-	public void setHeaderTemplate(String template) {
-
-		fHeaderTemplate.set(template);
-	}
-
-	@Override
-	public void setTestCaseTemplate(String template) {
-
-		fTestCaseTemplate.set(template);
-	}
 }

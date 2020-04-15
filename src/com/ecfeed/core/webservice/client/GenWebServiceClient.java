@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import javax.net.ssl.SSLContext;
@@ -98,7 +97,7 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 		if (fClient != null) {
 			fClient.close();
-			System.out.println(LocalDateTime.now().toString() + " Remote connection closed");
+//			System.out.println(LocalDateTime.now().toString() + " Remote connection closed");
 			fClient = null;
 		}
 	}

@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.exception.GeneratorExceptionClient;
+import com.ecfeed.core.exception.GeneratorExceptionServer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +36,26 @@ public class ExceptionHelper {
 	private static final int fMaxDepth = 100;
 	private static final String causedBy = "Caused by: ";
 	private static final String fNoException = "NO-EXCEPTION";
+
+	public static void reportClientException(String message) {
+
+		throw new GeneratorExceptionClient(message);
+	}
+
+	public static void reportClientException(String message, Throwable e) {
+
+		throw new GeneratorExceptionClient(message, e);
+	}
+
+	public static void reportServerException(String message) {
+
+		throw new GeneratorExceptionServer(message);
+	}
+
+	public static void reportServerException(String message, Throwable e) {
+
+		throw new GeneratorExceptionServer(message, e);
+	}
 
 	public static void reportRuntimeException(String message) {
 

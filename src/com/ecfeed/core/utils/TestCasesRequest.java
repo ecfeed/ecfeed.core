@@ -14,6 +14,7 @@ public class TestCasesRequest {
 	private String fSessionId;
 	private String fMethod;
 	private String fModel;
+	private String fExportTemplate;
 
 	private String fUserData;
 
@@ -45,7 +46,6 @@ public class TestCasesRequest {
 	}
 
 	@JsonSetter("model")
-
 	public void setModelName(String model) {
 		fModel = model;
 	}
@@ -58,6 +58,16 @@ public class TestCasesRequest {
 	@JsonSetter("userData")
 	public void setUserData(String userData) {
 		fUserData = userData;
+	}
+
+	@JsonGetter("template")
+	public String getExportTemplate() {
+		return fExportTemplate;
+	}
+
+	@JsonSetter("template")
+	public void setExportTemplate(String exportTemplate) {
+		fExportTemplate = exportTemplate;
 	}
 
 }
