@@ -168,7 +168,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 	}
 
 	public static String generateNewParameterName(ParametersParentNode fParametersParentNode, String startParameterName) {
-System.out.println(startParameterName);
+
 		if (!fParametersParentNode.parameterExists(startParameterName)) {
 			return startParameterName;
 		}
