@@ -61,7 +61,7 @@ public class ClassNodeHelper {
 	}
 
 	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes) {
-
+System.out.println(startMethodName);
 		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes)) {
 			return startMethodName;
 		}
