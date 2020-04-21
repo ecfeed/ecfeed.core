@@ -239,15 +239,10 @@ public class ChoiceCondition implements IStatementCondition {
 		if (ConditionHelper.isRandomizedChoiceAmbiguous(
 				leftChoiceNode, fRightChoice.getValueString(), 
 				fParentRelationStatement, relation, substituteType)) {
-			
-//			if (leftChoiceNode.getParent().getFullName().equals(fRightChoice.getParent().getFullName())) {
-//				return false;
-//			}
-//			
+				
 			if (leftChoiceNode.equals(fRightChoice)) {
 				return false;
 			}
-			
 			
 			ConditionHelper.addValuesMessageToStack(
 					leftChoiceNode.toString(), relation, fRightChoice.toString(), messageStack);
