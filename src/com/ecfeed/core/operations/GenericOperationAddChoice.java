@@ -17,7 +17,6 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.StringHelper;
 
 public class GenericOperationAddChoice extends BulkOperation {
 	
@@ -85,10 +84,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 
 		private void generateUniqueChoiceName(ChoiceNode choiceNode) {
 
-			String oldName = choiceNode.getFullName();
-			String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
-			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, oldNameCore);
-
+			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, choiceNode.getFullName());
 			choiceNode.setFullName(newName);
 		}
 
