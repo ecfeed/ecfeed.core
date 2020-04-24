@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.List;
 
 import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ClassNodeHelper {
 
@@ -61,9 +62,15 @@ public class ClassNodeHelper {
 
 	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes) {
 
+		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes)) {
+			return startMethodName;
+		}
+		
+		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
+		
 		for (int i = 1;   ; i++) {
 
-			String newMethodName = startMethodName + String.valueOf(i);
+			String newMethodName = oldNameCore + String.valueOf(i);
 
 			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes)) {
 				return newMethodName;

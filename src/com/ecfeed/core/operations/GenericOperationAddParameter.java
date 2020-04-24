@@ -13,7 +13,6 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
-import com.ecfeed.core.utils.StringHelper;
 
 public class GenericOperationAddParameter extends AbstractModelOperation {
 
@@ -64,9 +63,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	private void generateUniqueParameterName(AbstractParameterNode abstractParameterNode) {
 
-		String oldName = abstractParameterNode.getFullName();
-		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
-		String newName = ParametersParentNode.generateNewParameterName(fParametersParentNode, oldNameCore);
+		String newName = ParametersParentNode.generateNewParameterName(fParametersParentNode, abstractParameterNode.getFullName());
 		abstractParameterNode.setFullName(newName);
 	}
 

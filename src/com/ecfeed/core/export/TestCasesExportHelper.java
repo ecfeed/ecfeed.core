@@ -52,7 +52,6 @@ public class TestCasesExportHelper {
 
 		result = replaceParameterNameSequences(method, result);
 		result = evaluateExpressions(result);
-
 		result = evaluateMinWidthOperators(result);
 
 		return result;
@@ -62,14 +61,18 @@ public class TestCasesExportHelper {
 
 		MethodNode method = testCase.getMethod();
 
-		String result = generateSection(method, template);
-		result = replaceParameterSequences(testCase, result);
+		if (template == null) {
+			return new String();
+		}
 
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getSimpleName(method.getClassNode()));
+		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode()));
+		result = result.replace(METHOD_NAME_SEQUENCE, method.getFullName());
 		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
 		result = result.replace(TEST_SUITE_NAME_SEQUENCE, testCase.getFullName());
 
+		result = replaceParameterSequences(testCase, result);
 		result = evaluateExpressions(result);
-
 		result = evaluateMinWidthOperators(result);
 
 		return result;
@@ -152,8 +155,7 @@ public class TestCasesExportHelper {
 
 	public static String evaluateMinWidthOperators(String template) {
 
-		final String MIN_WIDTH_OPERATOR_PATTERN = 
-				"\\(\\s*\\<?\\-?\\w*(\\.\\w)*\\>?\\s*\\)\\.min_width((\\(\\s*\\-?\\d*\\s*\\))|(\\(\\s*\\d+\\s*\\,\\s*\\w*\\s*\\)))";
+		final String MIN_WIDTH_OPERATOR_PATTERN = "\\((.*?)\\)\\.min_width((\\(\\s*\\-?\\d*\\s*\\))|(\\(\\s*\\d+\\s*\\,\\s*\\w*\\s*\\)))";
 
 		String result = template;
 		Matcher matcher = Pattern.compile(MIN_WIDTH_OPERATOR_PATTERN).matcher(template);

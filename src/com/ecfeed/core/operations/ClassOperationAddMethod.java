@@ -63,9 +63,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 	}
 
 	private void generateUniqeMethodName(MethodNode methodNode) {
-		String oldName = methodNode.getFullName();
-		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
-		String newName = ClassNodeHelper.generateNewMethodName(fClassNode, oldNameCore, methodNode.getParameterTypes());
+		String newName = ClassNodeHelper.generateNewMethodName(fClassNode, methodNode.getFullName(), methodNode.getParameterTypes());
 		methodNode.setFullName(newName);
 	}
 

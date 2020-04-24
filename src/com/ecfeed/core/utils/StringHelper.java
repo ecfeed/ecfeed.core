@@ -106,15 +106,11 @@ public class StringHelper {
 			return null;
 		}
 
-		for (int index = lastIndex; index >= 0; index--) {
-			Character character = fromStr.charAt(index);
-
-			if (Character.isDigit(character)) {
-				return fromStr.substring(index);
-			}
-		}
-
-		return fromStr;
+		while (lastIndex > 0 && Character.isDigit(fromStr.charAt(lastIndex - 1))) {
+			lastIndex--;
+	    }
+		
+	    return fromStr.substring(lastIndex);
 	}
 
 	public static String removeStrgAtEnd(String pattern, String strg) {

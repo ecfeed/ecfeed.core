@@ -231,15 +231,19 @@ public class ChoiceCondition implements IStatementCondition {
 			EMathRelation relation,
 			String substituteType,
 			MessageStack messageStack) {
-
+		
 		if (!leftChoiceNode.isRandomizedValue()) {
 			return false;
 		}
-
+		
 		if (ConditionHelper.isRandomizedChoiceAmbiguous(
 				leftChoiceNode, fRightChoice.getValueString(), 
 				fParentRelationStatement, relation, substituteType)) {
-
+				
+			if (leftChoiceNode.equals(fRightChoice)) {
+				return false;
+			}
+			
 			ConditionHelper.addValuesMessageToStack(
 					leftChoiceNode.toString(), relation, fRightChoice.toString(), messageStack);
 

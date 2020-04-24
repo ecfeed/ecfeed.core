@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public abstract class ParametersParentNode extends AbstractNode {
 
@@ -168,9 +169,15 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 	public static String generateNewParameterName(ParametersParentNode fParametersParentNode, String startParameterName) {
 
+		if (!fParametersParentNode.parameterExists(startParameterName)) {
+			return startParameterName;
+		}
+		
+		String oldNameCore = StringHelper.removeFromNumericPostfix(startParameterName);
+		
 		for (int i = 1;   ; i++) {
 
-			String newParameterName = startParameterName + String.valueOf(i);
+			String newParameterName = oldNameCore + String.valueOf(i);
 
 			if (!fParametersParentNode.parameterExists(newParameterName)) {
 				return newParameterName;

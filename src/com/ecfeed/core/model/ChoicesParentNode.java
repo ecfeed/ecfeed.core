@@ -16,6 +16,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.StringHelper;
+
 public abstract class ChoicesParentNode extends AbstractNode{
 
 	protected List<ChoiceNode> fChoices;
@@ -243,8 +245,14 @@ public abstract class ChoicesParentNode extends AbstractNode{
 
 	public static String generateNewChoiceName(ChoicesParentNode fChoicesParentNode, String startChoiceName) {
 
+		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
+			return startChoiceName;
+		}
+		
+		String oldNameCore = StringHelper.removeFromNumericPostfix(startChoiceName);
+		
 		for (int i = 1;   ; i++) {
-			String newParameterName = startChoiceName + String.valueOf(i);
+			String newParameterName = oldNameCore + String.valueOf(i);
 
 			if (!fChoicesParentNode.choiceExistsAsDirectChild(newParameterName)) {
 				return newParameterName;

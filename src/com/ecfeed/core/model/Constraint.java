@@ -52,7 +52,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public boolean isAmbiguous(
 			List<List<ChoiceNode>> testDomain, 
 			MessageStack outWhyAmbiguous) {
-
+		
 		if (isAmbiguousForPremiseOrConsequence(testDomain, outWhyAmbiguous)) {
 			ConditionHelper.addConstraintNameToMesageStack(getName(), outWhyAmbiguous);
 			return true;
