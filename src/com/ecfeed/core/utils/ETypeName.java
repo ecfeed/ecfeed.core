@@ -9,8 +9,6 @@
  *******************************************************************************/
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
-
 public enum ETypeName {  // TODO - move to JavaTypeHelper ?
 	BOOLEAN(JavaTypeHelper.TYPE_NAME_BOOLEAN), 
 	BYTE(JavaTypeHelper.TYPE_NAME_BYTE), 
