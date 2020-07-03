@@ -1,9 +1,11 @@
 package com.ecfeed.core.utils;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.MethodNode;
 
 public final class SimpleTypeHelper {
 
@@ -37,40 +39,115 @@ public final class SimpleTypeHelper {
 		return SUPPORTED_SIMPLE_TYPES;
 	}
 	
-	public static void convertTypeJavaToSimple(AbstractParameterNode node) {
-		String nodeType = node.getType();
+	public static String getSimpleType(String javaType) {
 		
-		if (isSimpleType(nodeType)) {
-			return;
-		}
+		if (javaType.equals(JavaTypeHelper.TYPE_NAME_BYTE)) {
+			return TYPE_NAME_NUMBER;
+		} 
 		
-		node.setSuggestedType(nodeType);
-		if (nodeType.equals(JavaTypeHelper.TYPE_NAME_BYTE)) {
-			node.setType(TYPE_NAME_NUMBER);
-			convertSpecialChoicesJavaToSimpleByte(node);
-		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_SHORT)) {
-			node.setType(TYPE_NAME_NUMBER);
-			convertSpecialChoicesJavaToSimpleShort(node);
-		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_INT)) {
-			node.setType(TYPE_NAME_NUMBER);
-			convertSpecialChoicesJavaToSimpleInt(node);
-		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_LONG)) {
-			node.setType(TYPE_NAME_NUMBER);
-			convertSpecialChoicesJavaToSimpleLong(node);
-		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_FLOAT)) {
-			node.setType(TYPE_NAME_NUMBER);
-			convertSpecialChoicesJavaToSimpleFloat(node);
-		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_DOUBLE)) {
-			node.setType(TYPE_NAME_NUMBER);
-			convertSpecialChoicesJavaToSimpleDouble(node);
-		} else if (JavaTypeHelper.isTypeWithChars(nodeType)) {
-			node.setType(TYPE_NAME_TEXT);
-		} else if (JavaTypeHelper.isBooleanTypeName(nodeType)) {
-			node.setType(TYPE_NAME_LOGICAL);
+		if (javaType.equals(JavaTypeHelper.TYPE_NAME_SHORT)) {
+			return TYPE_NAME_NUMBER;
+		} 
+		
+		if (javaType.equals(JavaTypeHelper.TYPE_NAME_INT)) {
+			return TYPE_NAME_NUMBER;
+		} 
+		
+		if (javaType.equals(JavaTypeHelper.TYPE_NAME_LONG)) {
+			return TYPE_NAME_NUMBER;
 		} 
 
+		if (javaType.equals(JavaTypeHelper.TYPE_NAME_FLOAT)) {
+			return TYPE_NAME_NUMBER;
+		} 
+		
+		if (javaType.equals(JavaTypeHelper.TYPE_NAME_DOUBLE)) {
+			return TYPE_NAME_NUMBER;
+		} 
+		
+		if (JavaTypeHelper.isTypeWithChars(javaType)) {
+			return TYPE_NAME_TEXT;
+		} 
+		
+		if (JavaTypeHelper.isBooleanTypeName(javaType)) {
+			return TYPE_NAME_LOGICAL;
+		} 
+		
+		return null;
 	}
 	
+	public static String createMethodSimpleSignature(MethodNode methodNode) {
+		
+		return methodNode.getFullName() + "(" + getSimpleParameters(methodNode) + ")";
+	}
+	
+	private static String getSimpleParameters(MethodNode methodNode) {
+		
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
+		
+		String result = ""; 
+		
+		int countOfParameters = parameters.size();
+				
+		for (int index = 0; index < countOfParameters; index++) {
+			
+			AbstractParameterNode abstractParameterNode = parameters.get(index);
+			
+			result += createSimpleParameterSignature(abstractParameterNode);
+			
+			if (index < countOfParameters - 1) {
+				result += ", ";
+			}
+		}
+		
+		return result;
+	}
+	
+	private static String createSimpleParameterSignature(AbstractParameterNode abstractParameterNode) {
+		
+		String result = abstractParameterNode.getFullName();
+		
+		result += " ";
+		result += getSimpleType(abstractParameterNode.getType());
+		
+		return result;
+	}
+	
+//	public static void convertTypeJavaToSimple(AbstractParameterNode node) {
+//		String nodeType = node.getType();
+//		
+//		if (isSimpleType(nodeType)) {
+//			return;
+//		}
+//		
+//		node.setSuggestedType(nodeType);
+//		if (nodeType.equals(JavaTypeHelper.TYPE_NAME_BYTE)) {
+//			node.setType(TYPE_NAME_NUMBER);
+//			convertSpecialChoicesJavaToSimpleByte(node);
+//		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_SHORT)) {
+//			node.setType(TYPE_NAME_NUMBER);
+//			convertSpecialChoicesJavaToSimpleShort(node);
+//		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_INT)) {
+//			node.setType(TYPE_NAME_NUMBER);
+//			convertSpecialChoicesJavaToSimpleInt(node);
+//		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_LONG)) {
+//			node.setType(TYPE_NAME_NUMBER);
+//			convertSpecialChoicesJavaToSimpleLong(node);
+//		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_FLOAT)) {
+//			node.setType(TYPE_NAME_NUMBER);
+//			convertSpecialChoicesJavaToSimpleFloat(node);
+//		} else if (nodeType.equals(JavaTypeHelper.TYPE_NAME_DOUBLE)) {
+//			node.setType(TYPE_NAME_NUMBER);
+//			convertSpecialChoicesJavaToSimpleDouble(node);
+//		} else if (JavaTypeHelper.isTypeWithChars(nodeType)) {
+//			node.setType(TYPE_NAME_TEXT);
+//		} else if (JavaTypeHelper.isBooleanTypeName(nodeType)) {
+//			node.setType(TYPE_NAME_LOGICAL);
+//		} 
+//
+//	}
+	
+	// TODO SIMPLE-VIEW
 	public static void convertSpecialChoicesJavaToSimpleByte(AbstractParameterNode node) {
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
