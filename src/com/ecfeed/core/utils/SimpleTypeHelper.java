@@ -105,10 +105,9 @@ public final class SimpleTypeHelper {
 	
 	private static String createSimpleParameterSignature(AbstractParameterNode abstractParameterNode) {
 		
-		String result = abstractParameterNode.getFullName();
-		
+		String result = getSimpleType(abstractParameterNode.getType()); 
 		result += " ";
-		result += getSimpleType(abstractParameterNode.getType());
+		result += abstractParameterNode.getFullName();
 		
 		return result;
 	}
