@@ -16,18 +16,21 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
 public class MethodNode extends ParametersParentNode {
 
 	private List<TestCaseNode> fTestCases;
+	private List<TestSuiteNode> fTestSuites;
 	private List<ConstraintNode> fConstraints;
 
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
 		super(name, modelChangeRegistrator);
 
 		fTestCases = new ArrayList<>();
+		fTestSuites = new ArrayList<>();
 		fConstraints = new ArrayList<>();
 
 		setDefaultPropertyValues();
@@ -128,13 +131,14 @@ public class MethodNode extends ParametersParentNode {
 		List<AbstractNode> children = new ArrayList<AbstractNode>(super.getChildren());
 		children.addAll(fConstraints);
 		children.addAll(fTestCases);
+		children.addAll(fTestSuites);
 
 		return children;
 	}
 
 	@Override
 	public boolean hasChildren(){
-		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0);
+		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0 || fTestSuites.size() != 0);
 	}
 
 	@Override
@@ -147,6 +151,12 @@ public class MethodNode extends ParametersParentNode {
 			copy.addParameter(parameter.makeClone());
 		}
 
+		for(TestSuiteNode testSuite : fTestSuites){
+			TestSuiteNode tcase = testSuite.getCopy(copy);
+			if(tcase != null)
+				copy.addTestSuite(tcase);
+		}
+		
 		for(TestCaseNode testcase : fTestCases){
 			TestCaseNode tcase = testcase.getCopy(copy);
 			if(tcase != null)
@@ -213,16 +223,26 @@ public class MethodNode extends ParametersParentNode {
 		registerChange();
 	}
 
+	public void addTestSuite(TestSuiteNode testSuite){
+		addTestSuite(testSuite, fTestSuites.size());
+	}
+
+	public void addTestSuite(TestSuiteNode testCase, int index){
+		fTestSuites.add(index, testCase);
+//		testCase.setParent(this);
+		registerChange();
+	}
+	
 	public void addTestCase(TestCaseNode testCase){
 		addTestCase(testCase, fTestCases.size());
 	}
 
-	public void addTestCase(TestCaseNode testCase, int index){
+	public void addTestCase(TestCaseNode testCase, int index) {
 		fTestCases.add(index, testCase);
 		testCase.setParent(this);
 		registerChange();
 	}
-
+	
 	public ClassNode getClassNode() {
 		return (ClassNode)getParent();
 	}
@@ -335,8 +355,25 @@ public class MethodNode extends ParametersParentNode {
 		return choiceNode;
 	}
 
-	public List<TestCaseNode> getTestCases(){
+	public List<TestCaseNode> getTestCases() {
+		
 		return fTestCases;
+	}
+	
+	public List<TestSuiteNode> getTestSuites() {
+		
+		return fTestSuites;
+	}
+	
+	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) {
+		
+		for (TestSuiteNode testSuite : fTestSuites) {
+			if (testSuite.getFullName().equalsIgnoreCase(testSuiteName)) {
+				return Optional.of(testSuite);
+			}
+		}
+		
+		return Optional.empty();
 	}
 
 	public boolean hasParameters() {
@@ -346,6 +383,13 @@ public class MethodNode extends ParametersParentNode {
 		return true;
 	}
 
+	public boolean hasTestSuites() {
+		if (fTestSuites.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+	
 	public boolean hasTestCases() {
 		if (fTestCases.isEmpty()) {
 			return false;
@@ -367,14 +411,26 @@ public class MethodNode extends ParametersParentNode {
 
 		Set<String> names = new HashSet<String>();
 
-		for(TestCaseNode testCase : getTestCases()){
+		for(TestCaseNode testCase : getTestCases()) {
 			names.add(testCase.getFullName());
 		}
 
 		return names;
 	}
 
-	public boolean removeTestCase(TestCaseNode testCase){
+	public boolean removeTestSuite(TestSuiteNode testSuite) {
+		testSuite.setParent(null);
+		
+		for (TestCaseNode testCase : testSuite.getTestCaseNodes()) {
+			removeTestCase(testCase);
+		}
+		
+		boolean result = fTestSuites.remove(testSuite);
+		registerChange();
+		return result;
+	}
+	
+	public boolean removeTestCase(TestCaseNode testCase) {
 		testCase.setParent(null);
 		boolean result = fTestCases.remove(testCase);
 		registerChange();

@@ -23,6 +23,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -187,6 +188,12 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		return null;
 	}
 
+	@Override
+	public Object visit(TestSuiteNode node) throws Exception {
+		reportOperationNotSupportedException();
+		return null;
+	}
+	
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
 		reportOperationNotSupportedException();

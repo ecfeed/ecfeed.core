@@ -32,12 +32,14 @@ public interface OperationNames {
 	public static final String ADD_CONSTRAINT = "Add constraint";
 	public static final String ADD_PARAMETER = "Add parameter";
 	public static final String ADD_TEST_CASE = "Add test case";
+	public static final String ADD_TEST_SUITES = "Add test suites";
 	public static final String ADD_TEST_CASES = "Add test cases";
 	public static final String CONVERT_METHOD = "Convert method";
 	public static final String MAKE_CONSISTENT = "Make method consistent";
 	public static final String REMOVE_CONSTRAINT = "Remove constraint";
 	public static final String REMOVE_METHOD_PARAMETER = "Remove method parameter";
 	public static final String REMOVE_GLOBAL_PARAMETER = "Remove global parameter";
+	public static final String REMOVE_TEST_SUITE = "Remove test suite";
 	public static final String REMOVE_TEST_CASE = "Remove test case";
 	public static final String RENAME_TEST_CASE = "Rename test case";
 	public static final String ADD_PARTITION_LABEL = "Add choice label";

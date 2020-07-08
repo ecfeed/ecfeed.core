@@ -21,6 +21,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -58,6 +59,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 			return OperationMessages.CATEGORY_NAME_REGEX_PROBLEM;
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM;
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM;
@@ -101,6 +107,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
