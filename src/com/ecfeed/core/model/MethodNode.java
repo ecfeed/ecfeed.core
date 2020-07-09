@@ -150,12 +150,6 @@ public class MethodNode extends ParametersParentNode {
 		for(MethodParameterNode parameter : getMethodParameters()){
 			copy.addParameter(parameter.makeClone());
 		}
-
-//		for(TestSuiteNode testSuite : fTestSuites){
-//			TestSuiteNode tcase = testSuite.getCopy(copy);
-//			if(tcase != null)
-//				copy.addTestSuite(tcase);
-//		}
 		
 		for(TestCaseNode testcase : fTestCases){
 			TestCaseNode tcase = testcase.getCopy(copy);

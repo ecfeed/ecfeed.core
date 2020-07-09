@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +22,8 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 
 public class GenericMoveOperation extends BulkOperation {
@@ -41,6 +45,30 @@ public class GenericMoveOperation extends BulkOperation {
 			//all nodes have parents other than newParent
 			if(externalNodes(moved, newParent)){
 				for(AbstractNode node : moved){
+					
+					if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
+						
+						Collection<TestCaseNode> element = new ArrayList<>();
+						
+						if (node.getParent() == newParent.getParent()) {
+							element.add((TestCaseNode) node);
+							addOperation(new MethodOperationRenameTestCases(element, ((TestSuiteNode) newParent).getSuiteName()));
+						} else {
+							TestCaseNode nodeCopy = (TestCaseNode) node.makeClone();
+							element.add(nodeCopy);
+							
+							addOperation(new MethodOperationRenameTestCases(element, ((TestSuiteNode) newParent).getSuiteName()));
+							addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false)));
+							addOperation((IModelOperation)newParent.getParent().accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false)));
+						}
+						
+						continue;
+					}
+					
+//					if (node instanceof TestSuiteNode && newParent instanceof MethodNode) {
+//						
+//					}
+					
 					if(node instanceof ChoicesParentNode){
 						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
 					}
@@ -50,12 +78,13 @@ public class GenericMoveOperation extends BulkOperation {
 						GlobalParameterNode parameter = (GlobalParameterNode)node;
 						node = new MethodParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
 					}
+					
 					if(newIndex != -1){
 						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, newIndex, adapterProvider, false)));
-					}
-					else{
+					} else{
 						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, adapterProvider, false)));
 					}
+					
 					for(MethodNode method : methodsInvolved){
 						addOperation(new MethodOperationMakeConsistent(method));
 					}

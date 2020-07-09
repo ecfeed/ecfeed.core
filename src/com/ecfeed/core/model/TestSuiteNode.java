@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class TestSuiteNode extends AbstractNode {
 	List<TestCaseNode> fTestCase;
+	String fSuiteName;
 
 	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<TestCaseNode> testData) {
 		super(name, modelChangeRegistrator);
@@ -53,6 +54,15 @@ public class TestSuiteNode extends AbstractNode {
 	public List<? extends AbstractNode> getChildren() {
 
 		return fTestCase;
+	}
+	
+
+	public void setSuiteName(String suiteName) {
+		fSuiteName = suiteName;
+	}
+	
+	public String getSuiteName() {
+		return fSuiteName;
 	}
 	
 	public TestSuiteNode getCopy(MethodNode method){
