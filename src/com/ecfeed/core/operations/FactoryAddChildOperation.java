@@ -151,6 +151,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			}
 			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex);
 		}
+		if(fChild instanceof TestSuiteNode) {
+			return new MethodOperationAddTestSuite(node, ((TestSuiteNode) fChild).getTestCaseNodes(), fAdapterProvider);
+		}
 		if(fChild instanceof TestCaseNode){
 			if(fIndex == -1){
 				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider);

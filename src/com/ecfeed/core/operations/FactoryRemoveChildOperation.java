@@ -65,6 +65,9 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 		if(fChild instanceof ConstraintNode){
 			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild);
 		}
+		if(fChild instanceof TestSuiteNode) {
+			return new MethodOperationRemoveTestSuite(node, (TestSuiteNode)fChild);
+		}
 		if(fChild instanceof TestCaseNode){
 			return new MethodOperationRemoveTestCase(node, (TestCaseNode)fChild);
 		}

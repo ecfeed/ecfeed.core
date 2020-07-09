@@ -65,9 +65,23 @@ public class GenericMoveOperation extends BulkOperation {
 						continue;
 					}
 					
-//					if (node instanceof TestSuiteNode && newParent instanceof MethodNode) {
-//						
-//					}
+					if (node instanceof TestSuiteNode && newParent instanceof MethodNode) {
+						
+						if (node.getParent() == newParent) {
+							continue;
+						} else {
+							Collection<TestCaseNode> element = new ArrayList<>();
+							
+							TestSuiteNode nodeCopy = (TestSuiteNode) node.makeClone();
+							element.addAll(nodeCopy.getTestCaseNodes());
+							
+							addOperation(new MethodOperationRenameTestCases(element, ((TestSuiteNode) node).getSuiteName()));
+							addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false)));
+							addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false)));
+						}
+						
+						continue;
+					}
 					
 					if(node instanceof ChoicesParentNode){
 						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
