@@ -138,7 +138,7 @@ public class MethodNode extends ParametersParentNode {
 
 	@Override
 	public boolean hasChildren(){
-		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0 || fTestSuites.size() != 0);
+		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0);// || fTestSuites.size() != 0);
 	}
 
 	@Override
@@ -223,7 +223,6 @@ public class MethodNode extends ParametersParentNode {
 
 	public void addTestSuite(TestSuiteNode testCase, int index){
 		fTestSuites.add(index, testCase);
-//		testCase.setParent(this);
 		registerChange();
 	}
 	
@@ -362,7 +361,7 @@ public class MethodNode extends ParametersParentNode {
 	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) {
 		
 		for (TestSuiteNode testSuite : fTestSuites) {
-			if (testSuite.getFullName().equalsIgnoreCase(testSuiteName)) {
+			if (testSuite.getSuiteName().equalsIgnoreCase(testSuiteName)) {
 				return Optional.of(testSuite);
 			}
 		}
@@ -416,7 +415,9 @@ public class MethodNode extends ParametersParentNode {
 		testSuite.setParent(null);
 		
 		for (TestCaseNode testCase : testSuite.getTestCaseNodes()) {
-			removeTestCase(testCase);
+			testCase.setParent(null);
+			fTestCases.remove(testCase);
+			registerChange();
 		}
 		
 		boolean result = fTestSuites.remove(testSuite);
