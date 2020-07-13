@@ -48,38 +48,14 @@ public class GenericMoveOperation extends BulkOperation {
 					
 					if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
 						
-						Collection<TestCaseNode> element = new ArrayList<>();
-						
-						if (node.getParent() == newParent.getParent()) {
-							element.add((TestCaseNode) node);
-							addOperation(new MethodOperationRenameTestCases(element, ((TestSuiteNode) newParent).getSuiteName()));
-						} else {
-							TestCaseNode nodeCopy = (TestCaseNode) node.makeClone();
-							element.add(nodeCopy);
-							
-							addOperation(new MethodOperationRenameTestCases(element, ((TestSuiteNode) newParent).getSuiteName()));
-							addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false)));
-							addOperation((IModelOperation)newParent.getParent().accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false)));
-						}
-						
+						processTestCaseNode((TestCaseNode) node, (TestSuiteNode) newParent, adapterProvider);
 						continue;
 					}
 					
+					
 					if (node instanceof TestSuiteNode && newParent instanceof MethodNode) {
 						
-						if (node.getParent() == newParent) {
-							continue;
-						} else {
-							Collection<TestCaseNode> element = new ArrayList<>();
-							
-							TestSuiteNode nodeCopy = (TestSuiteNode) node.makeClone();
-							element.addAll(nodeCopy.getTestCaseNodes());
-							
-							addOperation(new MethodOperationRenameTestCases(element, ((TestSuiteNode) node).getSuiteName()));
-							addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false)));
-							addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false)));
-						}
-						
+						processTestSuiteNode((TestSuiteNode) node, (MethodNode) newParent, adapterProvider);
 						continue;
 					}
 					
@@ -113,6 +89,38 @@ public class GenericMoveOperation extends BulkOperation {
 		}
 
 		setOneNodeToSelect(newParent);
+	}
+	
+	private void processTestCaseNode(TestCaseNode node, TestSuiteNode newParent, ITypeAdapterProvider adapterProvider) throws Exception {
+			Collection<TestCaseNode> element = new ArrayList<>();
+			
+			if (node.getParent() == newParent.getParent()) {
+				element.add(node);
+				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName()));
+			} else {
+				TestCaseNode nodeCopy = node.makeClone();
+				element.add(nodeCopy);
+				
+				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName()));
+				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false)));
+				addOperation((IModelOperation)newParent.getParent().accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false)));
+			}
+	}
+	
+	private void processTestSuiteNode(TestSuiteNode node, MethodNode newParent, ITypeAdapterProvider adapterProvider) throws Exception {
+			
+			if (node.getParent() == newParent) {
+				return;
+			} else {
+				Collection<TestCaseNode> element = new ArrayList<>();
+				
+				TestSuiteNode nodeCopy = node.makeClone();
+				element.addAll(nodeCopy.getTestCaseNodes());
+				
+				addOperation(new MethodOperationRenameTestCases(element, node.getSuiteName()));
+				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false)));
+				addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false)));
+			}
 	}
 
 	protected boolean externalNodes(List<? extends AbstractNode> moved, AbstractNode newParent){
