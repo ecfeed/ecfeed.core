@@ -138,7 +138,7 @@ public class MethodNode extends ParametersParentNode {
 
 	@Override
 	public boolean hasChildren(){
-		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0);// || fTestSuites.size() != 0);
+		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0);
 	}
 
 	@Override
@@ -217,11 +217,11 @@ public class MethodNode extends ParametersParentNode {
 		registerChange();
 	}
 
-	public void addTestSuite(TestSuiteNode testSuite){
+	public void addTestSuite(TestSuiteNode testSuite) {
 		addTestSuite(testSuite, fTestSuites.size());
 	}
 
-	public void addTestSuite(TestSuiteNode testCase, int index){
+	public void addTestSuite(TestSuiteNode testCase, int index) {
 		fTestSuites.add(index, testCase);
 		registerChange();
 	}
