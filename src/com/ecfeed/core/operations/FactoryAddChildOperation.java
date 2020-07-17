@@ -24,6 +24,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.NodeNamingConvention;
 import com.ecfeed.core.utils.StringHelper;
 
 public class FactoryAddChildOperation implements IModelVisitor{
@@ -32,25 +33,29 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	private int fIndex;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
+	private NodeNamingConvention fNodeNamingConvention;
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate) {
+			boolean validate,
+			NodeNamingConvention nodeNamingConvention) {
 
 		fChild = child;
 		fIndex = index;
 		fValidate = validate;
 		fAdapterProvider = adapterProvider;
+		fNodeNamingConvention  = nodeNamingConvention;
 	}
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate) {
+			boolean validate,
+			NodeNamingConvention nodeNamingConvention) {
 
-		this(child, -1, adapterProvider, validate);
+		this(child, -1, adapterProvider, validate, nodeNamingConvention);
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if (fChild instanceof ClassNode) {
 
-			return createOperationAddClass(rootNode);
+			return createOperationAddClass(rootNode, fNodeNamingConvention);
 
 		} else if (fChild instanceof AbstractParameterNode) {
 
@@ -84,17 +89,17 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true);
 	}
 
-	private Object createOperationAddClass(RootNode rootNode) {
+	private Object createOperationAddClass(RootNode rootNode, NodeNamingConvention nodeNamingConvention) {
 
 		ClassNode classNode = (ClassNode)fChild;
 
 		generateUniqueNameForClass(rootNode, classNode);
 
 		if (fIndex == -1) {
-			return new RootOperationAddNewClass(rootNode, classNode);
+			return new RootOperationAddNewClass(rootNode, classNode, nodeNamingConvention);
 		}
 
-		return new RootOperationAddNewClass(rootNode, classNode, fIndex);
+		return new RootOperationAddNewClass(rootNode, classNode, fIndex, nodeNamingConvention);
 	}
 
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {

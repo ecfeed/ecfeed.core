@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -35,6 +36,15 @@ public class ClassNodeHelper {
 		return ModelHelper.getPackageName(classNode.getFullName());
 	}
 
+	public static boolean classNameCompliesWithNamingRules(String className) {
+		
+		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public static boolean isNewMethodSignatureValid(ClassNode parent, String methodName, List<String> argTypes) {
 
 		return isNewMethodSignatureValid(parent, methodName, argTypes, null);

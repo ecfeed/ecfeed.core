@@ -14,12 +14,19 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.NodeNamingConvention;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class GenericAddChildrenOperation extends BulkOperation {
 
-	public GenericAddChildrenOperation(AbstractNode target, Collection<? extends AbstractNode> children, ITypeAdapterProvider adapterProvider, boolean validate) {
-		this(target, children, -1, adapterProvider, validate);
+	public GenericAddChildrenOperation(
+			AbstractNode target, 
+			Collection<? extends AbstractNode> children, 
+			ITypeAdapterProvider adapterProvider, 
+			boolean validate,
+			NodeNamingConvention nodeNamingConvention) {
+		
+		this(target, children, -1, adapterProvider, validate, nodeNamingConvention);
 	}
 
 	public GenericAddChildrenOperation(
@@ -27,7 +34,8 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			Collection<? extends AbstractNode> children, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate) {
+			boolean validate,
+			NodeNamingConvention nodeNamingConvention) {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target);
 
@@ -35,9 +43,9 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			IModelOperation operation;
 			try {
 				if (index != -1) {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate));
+					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate, nodeNamingConvention));
 				} else {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate));
+					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate, nodeNamingConvention));
 				}
 				if (operation != null) {
 					addOperation(operation);

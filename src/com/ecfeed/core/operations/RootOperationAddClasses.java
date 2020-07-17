@@ -14,12 +14,13 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.utils.NodeNamingConvention;
 
 public class RootOperationAddClasses extends BulkOperation {
-	public RootOperationAddClasses(RootNode target, Collection<ClassNode> classes, int index) {
+	public RootOperationAddClasses(RootNode target, Collection<ClassNode> classes, int index, NodeNamingConvention nodeNamingConvention) {
 		super(OperationNames.ADD_CLASSES, false, target, target);
 		for(ClassNode classNode : classes){
-			addOperation(new RootOperationAddNewClass(target, classNode, index++));
+			addOperation(new RootOperationAddNewClass(target, classNode, index++, nodeNamingConvention));
 		}
 	}
 }

@@ -11,25 +11,29 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.NodeNamingConvention;
 
 public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	private RootNode fRootNode;
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
+	private NodeNamingConvention fNodeNamingConvention;
 
-	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd) {
-		this(target, classToAdd, -1);
+	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, NodeNamingConvention nodeNamingConvention) {
+		this(target, classToAdd, -1, nodeNamingConvention);
 	}
 	
-	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex) {
+	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, NodeNamingConvention nodeNamingConvention) {
 		super(OperationNames.ADD_CLASS);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
 		fAddIndex = addIndex;
+		fNodeNamingConvention = nodeNamingConvention;
 	}
 
 	@Override
@@ -40,19 +44,24 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 		if(fAddIndex == -1){
 			fAddIndex = fRootNode.getClasses().size();
 		}
-		if(name.matches(RegexHelper.REGEX_CLASS_NODE_NAME) == false){
-			ModelOperationException.report(RegexHelper.CLASS_NAME_REGEX_PROBLEM);
+		
+		if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
+			if(!ClassNodeHelper.classNameCompliesWithNamingRules(name)){
+				ModelOperationException.report(RegexHelper.CLASS_NAME_REGEX_PROBLEM);
+			}
 		}
+		
 		if(fRootNode.getClass(name) != null){
 			ModelOperationException.report(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
 		}
+		
 		fRootNode.addClass(fclassToAdd, fAddIndex);
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationRemoveClass(fRootNode, fclassToAdd);
+		return new RootOperationRemoveClass(fRootNode, fclassToAdd, fNodeNamingConvention);
 	}
 
 }

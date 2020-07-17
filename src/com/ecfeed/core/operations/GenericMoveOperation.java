@@ -21,18 +21,29 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.NodeNamingConvention;
 
 public class GenericMoveOperation extends BulkOperation {
 
-	public GenericMoveOperation(List<? extends AbstractNode> moved, AbstractNode newParent, ITypeAdapterProvider adapterProvider) throws ModelOperationException {
-		this(moved, newParent, adapterProvider, -1);
+	NodeNamingConvention fNodeNamingConvention;
+	
+	public GenericMoveOperation(
+			List<? extends AbstractNode> moved, 
+			AbstractNode newParent, 
+			ITypeAdapterProvider adapterProvider,
+			NodeNamingConvention nodeNamingConvention) throws ModelOperationException {
+		
+		this(moved, newParent, adapterProvider, -1, nodeNamingConvention);
+		
+		fNodeNamingConvention = nodeNamingConvention;
 	}
 
 	public GenericMoveOperation(
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
-			int newIndex) throws ModelOperationException {
+			int newIndex,
+			NodeNamingConvention nodeNamingConvention) throws ModelOperationException {
 
 		super(OperationNames.MOVE, true, newParent, getParent(moved));
 
@@ -44,17 +55,18 @@ public class GenericMoveOperation extends BulkOperation {
 					if(node instanceof ChoicesParentNode){
 						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
 					}
-					addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false)));
+					addOperation((IModelOperation)node.getParent().accept(
+							new FactoryRemoveChildOperation(node, adapterProvider, false, nodeNamingConvention)));
 
 					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
 						GlobalParameterNode parameter = (GlobalParameterNode)node;
 						node = new MethodParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
 					}
 					if(newIndex != -1){
-						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, newIndex, adapterProvider, false)));
+						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, newIndex, adapterProvider, false, fNodeNamingConvention)));
 					}
 					else{
-						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, adapterProvider, false)));
+						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, adapterProvider, false, fNodeNamingConvention)));
 					}
 					for(MethodNode method : methodsInvolved){
 						addOperation(new MethodOperationMakeConsistent(method));
