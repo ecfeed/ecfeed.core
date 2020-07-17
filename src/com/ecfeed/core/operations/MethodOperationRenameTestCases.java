@@ -15,13 +15,15 @@ import java.util.Collection;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.NodeNamingConvention;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodOperationRenameTestCases extends BulkOperation {
 
 	public MethodOperationRenameTestCases(
 			Collection<TestCaseNode> testCases, 
-			String newName) throws ModelOperationException {
+			String newName,
+			NodeNamingConvention nodeNamingConvention) throws ModelOperationException {
 
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases));
 
@@ -30,7 +32,7 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 		}
 
 		for(TestCaseNode testCase : testCases){
-			addOperation(FactoryRenameOperation.getRenameOperation(testCase, newName));
+			addOperation(FactoryRenameOperation.getRenameOperation(testCase, newName, nodeNamingConvention));
 		}
 	}
 

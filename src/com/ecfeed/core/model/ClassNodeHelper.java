@@ -36,7 +36,7 @@ public class ClassNodeHelper {
 		return ModelHelper.getPackageName(classNode.getFullName());
 	}
 
-	public static boolean classNameCompliesWithNamingRules(String className) {
+	public static boolean classNameCompliesWithJavaNamingRules(String className) {
 		
 		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
 			return true;

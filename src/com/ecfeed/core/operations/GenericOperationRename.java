@@ -21,6 +21,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.NodeNamingConvention;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -30,6 +31,17 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fNewName;
 	private String fOriginalName;
 	private String fNameRegex;
+	private NodeNamingConvention fNodeNamingConvention;
+	
+	public GenericOperationRename(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention){
+		
+		super(OperationNames.RENAME);
+		fTarget = target;
+		fNewName = newName;
+		fOriginalName = target.getFullName();
+		fNameRegex = getJavaNameRegex(target);
+		fNodeNamingConvention = nodeNamingConvention;
+	}
 
 	private class RegexProblemMessageProvider implements IModelVisitor {
 
@@ -74,7 +86,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 	}
 
-	private class NameRegexProvider implements IModelVisitor {
+	private class JavaNameRegexProvider implements IModelVisitor {
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
@@ -117,26 +129,24 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 	}
 
-	public GenericOperationRename(AbstractNode target, String newName){
-		super(OperationNames.RENAME);
-		fTarget = target;
-		fNewName = newName;
-		fOriginalName = target.getFullName();
-		fNameRegex = getNameRegex(target);
-	}
-
 	@Override
-	public void execute() throws ModelOperationException{
+	public void execute() throws ModelOperationException {
+		
 		setOneNodeToSelect(fTarget);
-		verifyNameWithRegex();
+		
+		if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
+			verifyNameWithJavaRegex();
+		}
+		
 		verifyNewName(fNewName);
+		
 		fTarget.setFullName(fNewName);
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericOperationRename(getOwnNode(), getOriginalName());
+		return new GenericOperationRename(getOwnNode(), getOriginalName(), fNodeNamingConvention);
 	}
 
 	protected AbstractNode getOwnNode(){
@@ -154,16 +164,16 @@ public class GenericOperationRename extends AbstractModelOperation {
 	protected void verifyNewName(String newName) throws ModelOperationException{
 	}
 
-	protected void verifyNameWithRegex() throws ModelOperationException {
+	protected void verifyNameWithJavaRegex() throws ModelOperationException {
 
 		if (fNewName.matches(fNameRegex) == false) {
 			ModelOperationException.report(getRegexProblemMessage());
 		}
 	}
 
-	private String getNameRegex(AbstractNode target) {
+	private String getJavaNameRegex(AbstractNode target) {
 		try{
-			return (String)fTarget.accept(new NameRegexProvider());
+			return (String)fTarget.accept(new JavaNameRegexProvider());
 		}catch(Exception e){SystemLogger.logCatch(e);}
 		return "*";
 	}
