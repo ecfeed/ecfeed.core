@@ -43,6 +43,62 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fNodeNamingConvention = nodeNamingConvention;
 	}
 
+	@Override
+	public void execute() throws ModelOperationException {
+		
+		setOneNodeToSelect(fTarget);
+		
+		if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
+			verifyNameWithJavaRegex();
+		}
+		
+		verifyNewName(fNewName);
+		
+		fTarget.setFullName(fNewName);
+		markModelUpdated();
+	}
+
+	@Override
+	public IModelOperation getReverseOperation() {
+		return new GenericOperationRename(getOwnNode(), getOriginalName(), fNodeNamingConvention);
+	}
+
+	protected AbstractNode getOwnNode(){
+		return fTarget;
+	}
+
+	protected String getOriginalName(){
+		return fOriginalName;
+	}
+
+	protected String getNewName(){
+		return fNewName;
+	}
+
+	protected void verifyNewName(String newName) throws ModelOperationException{
+	}
+
+	protected void verifyNameWithJavaRegex() throws ModelOperationException {
+
+		if (fNewName.matches(fNameRegex) == false) {
+			ModelOperationException.report(getRegexProblemMessage());
+		}
+	}
+
+	private String getJavaNameRegex(AbstractNode target) {
+		try{
+			return (String)fTarget.accept(new JavaNameRegexProvider());
+		}catch(Exception e){SystemLogger.logCatch(e);}
+		return "*";
+	}
+
+	private String getRegexProblemMessage(){
+		try{
+			return (String)fTarget.accept(new RegexProblemMessageProvider());
+		}catch(Exception e){SystemLogger.logCatch(e);}
+		return "";
+	}
+	
 	private class RegexProblemMessageProvider implements IModelVisitor {
 
 		@Override
@@ -128,61 +184,6 @@ public class GenericOperationRename extends AbstractModelOperation {
 			return RegexHelper.REGEX_PARTITION_NODE_NAME;
 		}
 	}
-
-	@Override
-	public void execute() throws ModelOperationException {
-		
-		setOneNodeToSelect(fTarget);
-		
-		if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
-			verifyNameWithJavaRegex();
-		}
-		
-		verifyNewName(fNewName);
-		
-		fTarget.setFullName(fNewName);
-		markModelUpdated();
-	}
-
-	@Override
-	public IModelOperation getReverseOperation() {
-		return new GenericOperationRename(getOwnNode(), getOriginalName(), fNodeNamingConvention);
-	}
-
-	protected AbstractNode getOwnNode(){
-		return fTarget;
-	}
-
-	protected String getOriginalName(){
-		return fOriginalName;
-	}
-
-	protected String getNewName(){
-		return fNewName;
-	}
-
-	protected void verifyNewName(String newName) throws ModelOperationException{
-	}
-
-	protected void verifyNameWithJavaRegex() throws ModelOperationException {
-
-		if (fNewName.matches(fNameRegex) == false) {
-			ModelOperationException.report(getRegexProblemMessage());
-		}
-	}
-
-	private String getJavaNameRegex(AbstractNode target) {
-		try{
-			return (String)fTarget.accept(new JavaNameRegexProvider());
-		}catch(Exception e){SystemLogger.logCatch(e);}
-		return "*";
-	}
-
-	private String getRegexProblemMessage(){
-		try{
-			return (String)fTarget.accept(new RegexProblemMessageProvider());
-		}catch(Exception e){SystemLogger.logCatch(e);}
-		return "";
-	}
+	
 
 }
