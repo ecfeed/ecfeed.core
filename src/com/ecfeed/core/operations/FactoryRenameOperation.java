@@ -83,9 +83,13 @@ public class FactoryRenameOperation {
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			List<String> problems = new ArrayList<String>();
 			MethodNode target = (MethodNode)getOwnNode();
-			if(ClassNodeHelper.isNewMethodSignatureValid(target.getClassNode(), getNewName(), target.getParameterTypes(), problems) == false) {
-				ClassNodeHelper.updateNewMethodsSignatureProblemList(target.getClassNode(), getNewName(), target.getParameterTypes(), problems);
-				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
+
+			if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
+				
+				if (!ClassNodeHelper.isNewMethodSignatureValid(target.getClassNode(), getNewName(), target.getParameterTypes(), problems)) {
+					ClassNodeHelper.updateNewMethodsSignatureProblemList(target.getClassNode(), getNewName(), target.getParameterTypes(), problems);
+					ModelOperationException.report(StringHelper.convertToMultilineString(problems));
+				}
 			}
 		}
 	}
@@ -93,11 +97,11 @@ public class FactoryRenameOperation {
 	private static class GlobalParameterOperationRename extends GenericOperationRename {
 
 		NodeNamingConvention fNodeNamingConvention;
-		
+
 		public GlobalParameterOperationRename(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention) {
-			
+
 			super(target, newName, nodeNamingConvention);
-			
+
 			fNodeNamingConvention = nodeNamingConvention;
 		}
 
@@ -121,7 +125,7 @@ public class FactoryRenameOperation {
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
 		NodeNamingConvention fNodeNamingConvention;
-		
+
 		public MethodParameterOperationRename(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention) {
 			super(target, newName, nodeNamingConvention);
 			fNodeNamingConvention = nodeNamingConvention;
@@ -147,7 +151,7 @@ public class FactoryRenameOperation {
 	private static class ChoiceOperationRename extends GenericOperationRename {
 
 		NodeNamingConvention fNodeNamingConvention;
-		
+
 		public ChoiceOperationRename(ChoiceNode target, String newName, NodeNamingConvention nodeNamingConvention) {
 			super(target, newName, nodeNamingConvention);
 			fNodeNamingConvention = nodeNamingConvention;
