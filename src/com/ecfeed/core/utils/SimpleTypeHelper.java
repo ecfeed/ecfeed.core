@@ -259,7 +259,7 @@ public final class SimpleTypeHelper {
 		return false;
 	}	
 	
-	public static String parseToSimpleView(String text) {
+	public static String parseToSimpleView(String text) { // TODO SIMPLE-VIEW - remove ?
 		String returnText = text;
 		
 		if (returnText.equals("")) {

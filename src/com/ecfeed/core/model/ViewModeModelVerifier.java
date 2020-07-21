@@ -19,12 +19,9 @@ import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 
 
-public class ViewModeModelVerifier {
+public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 	private static final String TITLE_NON_UNIQUE_CLASS_NAMES = "Non-unique class names";
-	private static final String TITLE_AMBIGUOUS_GLOBAL_PARAMETER_NAMES = "Ambiguous global parameter names";	
-
-	private static final String GLOBAL_PARAMETERS_WITH_THE_SAME_NAME = "There are some global parameters in the model that would have the same name in the simple view mode. Please edit the model before proceeding:";
 	private static final String THE_SAME_CLASSES = "There are some classes in the model that have the same name. Please edit the model before proceeding:";
 
 	public static String isNewClassNameValid(ClassNode classNode, String className) {
@@ -56,12 +53,14 @@ public class ViewModeModelVerifier {
 			}
 		}
 		
-		return null; // TODO SIMPLE-VIEW
+		// TODO SIMPLE-VIEW - check other types of nodes
+		
+		return null; 
 	}
 	
 	public static String checkIsModelCompatibleWithSimpleMode(RootNode rootNode) {
 
-		String message = checkIsGlobalParameterOfRootDuplicated(rootNode);  // TODO SIMPLE-VIEW when global parameter is duplicated ? names are unique already in model (editor checks this)
+		String message = checkIsGlobalParameterOfRootDuplicated(rootNode);
 		
 		if (message != null) {
 			return message;
@@ -73,7 +72,7 @@ public class ViewModeModelVerifier {
 			return message;
 		}
 
-		message = checkIsGlobalParameterOfClassDuplicated(rootNode); // TODO SIMPLE-VIEW when global parameter is duplicated ? names are unique already in model (editor checks this)
+		message = checkIsGlobalParameterOfClassDuplicated(rootNode);
 		
 		if (message != null) {
 			return message;
@@ -90,18 +89,26 @@ public class ViewModeModelVerifier {
 			return null;
 		}
 
-		List<String> parametersForSimpleView = createParametersForSimpleView(rootNode);
+		List<Pair<String, String>> parameterPairs = createParametersForSimpleView(rootNode);
 
+		return checkIsParamNameDuplicated(parameterPairs);
+	}
+
+	private static String checkIsParamNameDuplicated(List<Pair<String, String>> parametersForSimpleView) {
 		for (int i = 0 ; i < parametersForSimpleView.size() - 1 ; i++) {
 
-			if (parametersForSimpleView.get(i).equals(parametersForSimpleView.get(i + 1))) {
+			Pair<String, String> currentPair = parametersForSimpleView.get(i);
+			Pair<String, String> nextPair = parametersForSimpleView.get(i + 1);
+			
+			String currentSimpleName = currentPair.getFirst();
+			String nextSimpleName = nextPair.getFirst();
+			
+			if (currentSimpleName.equals(nextSimpleName)) {
 
-				String errorMessage = GLOBAL_PARAMETERS_WITH_THE_SAME_NAME 
-						+ System.lineSeparator() 
-						+ System.lineSeparator() 
-						+ parametersForSimpleView.get(i);
+				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + currentPair.getSecond() + " and " + nextPair.getSecond()
+						+ " would have the same name in the simple view mode.";
 
-				return TITLE_AMBIGUOUS_GLOBAL_PARAMETER_NAMES + " " + errorMessage;
+				return errorMessage;
 			}
 
 		}
@@ -109,15 +116,21 @@ public class ViewModeModelVerifier {
 		return null;
 	}
 
-	private static List<String> createParametersForSimpleView(RootNode rootNode) {
+	private static List<Pair<String, String>> createParametersForSimpleView(RootNode rootNode) { 
 
-		List<String> parameters = new ArrayList<>();
+		List<Pair<String, String>> parameters = new ArrayList<>();
 
 		for (AbstractParameterNode element : rootNode.getParameters()) {
-			parameters.add(SimpleTypeHelper.parseToSimpleView(element.getFullName())); // TODO SIMPLE-VIEW what parseToSimpleView does ?
+			
+			String simpleName = element.getFullName();
+			String javaName = element.getType() + " " + element.getFullName();
+			
+			Pair<String, String> pair = new Pair<String, String>(simpleName, javaName);
+			parameters.add(pair);
 		}
 
-		Collections.sort(parameters);
+		Collections.sort(parameters, new CompareBySimpleSignature());
+		
 		return parameters;
 	}
 
@@ -140,7 +153,7 @@ public class ViewModeModelVerifier {
 			if (currentSimpleClass.equals(nextSimpleClass)) {
 
 				String errorMessage =
-						"Cannot switch to simple mode because classes: "
+						"Model is not compatible with simple view mode because classes: " 
 								+ System.lineSeparator()
 								+ System.lineSeparator()
 								+ currentClass.getSecond()
@@ -152,7 +165,7 @@ public class ViewModeModelVerifier {
 								+ currentSimpleClass
 								+ " .";						
 
-				return "Duplicate class signatures. " + errorMessage;
+				return errorMessage;
 			}		
 		}
 
@@ -201,33 +214,24 @@ public class ViewModeModelVerifier {
 			return null;
 		}
 
-		List<String> parametersForSimpleView = createListOfSimpleViewParameters(classNode);
+		List<Pair<String, String>> parametersForSimpleView = createListOfSimpleViewParameters(classNode);
 
-		for (int i = 0 ; i < parametersForSimpleView.size() - 1 ; i++) {
-
-			if (parametersForSimpleView.get(i).equals(parametersForSimpleView.get(i + 1))) {
-
-				String errorMessage = GLOBAL_PARAMETERS_WITH_THE_SAME_NAME 
-						+ System.lineSeparator() 
-						+ System.lineSeparator() 
-						+ parametersForSimpleView.get(i);
-
-				return TITLE_AMBIGUOUS_GLOBAL_PARAMETER_NAMES + " " + errorMessage;
-			}
-		}
-
-		return null;
+		return checkIsParamNameDuplicated(parametersForSimpleView);
 	}
 
-	private static List<String> createListOfSimpleViewParameters(ClassNode classNode) {
+	private static List<Pair<String, String>> createListOfSimpleViewParameters(ClassNode classNode) {
 
-		List<String> parameters = new ArrayList<>();
+		List<Pair<String, String>> parameters = new ArrayList<>();
 
 		for (AbstractParameterNode element : classNode.getParameters()) {
-			parameters.add(SimpleTypeHelper.parseToSimpleView(element.getFullName()));
+			
+			
+			Pair<String, String> pair = new Pair<String, String>(element.getFullName(), element.getType() + " " + element.getFullName());
+			
+			parameters.add(pair);
 		}
 
-		Collections.sort(parameters);
+		Collections.sort(parameters, new CompareBySimpleSignature());
 		return parameters;
 	}  
 
@@ -271,7 +275,7 @@ public class ViewModeModelVerifier {
 			if (simpleSignature1.equals(simpleSignature2)) {
 
 				String errorMessage =
-						"Cannot switch to simple mode because methods: "
+						"Model is not compatible with simple mode because methods: "
 								+ System.lineSeparator()
 								+ System.lineSeparator()
 								+ signaturesPair1.getSecond()
@@ -321,118 +325,5 @@ public class ViewModeModelVerifier {
 			return signature1.compareTo(signature2);
 		}
 	}
-
-	//	private static boolean isMethodDuplicatedForClass(ClassNode classNode) {
-	//		
-	//		if (classNode.getMethods().size() <= 1) {
-	//			return false;
-	//		}
-	//		
-	//		List<MethodNode> methods = classNode.getMethods();
-	//		List<String> methodsForSimpleView = createMethodsForSimpleView(methods);
-	//		
-	//		for (int i = 0 ; i < methodsForSimpleView.size() - 1 ; i++) {
-	//				
-	//			String currentMethodSV = methodsForSimpleView.get(i);
-	//			String nextMethodSV = methodsForSimpleView.get(i + 1);
-	//			
-	//			if (!currentMethodSV.equals(nextMethodSV)) {
-	//				continue;
-	//			}
-	//			
-	//			MethodNode currentMethod = methods.get(i);
-	//			MethodNode nextMethod = methods.get(i + 1);
-	//			
-	//			if (isMethodParameterDuplicated2(currentMethod, nextMethod)) {
-	//				String errorMessage = Messages.DIALOG_DUPLICATE_METHOD_NAME_SWITCH_MESSAGE 
-	//						+ System.lineSeparator() 
-	//						+ System.lineSeparator() 
-	//						+ MethodNodeHelper.getSimpleName(currentMethod)
-	//						+ System.lineSeparator() 
-	//						+ MethodNodeHelper.getSimpleName(nextMethod);
-	//				
-	//				ErrorDialog.open(Messages.DIALOG_DUPLICATE_METHOD_NAME_TITLE, errorMessage);
-	//				return true;
-	//			}
-	//		}
-	//		
-	//		return false;
-	//	}
-
-	//	private static List<String> createMethodsForSimpleView(List<MethodNode> methods) {
-	//		
-	//		List<String> methodsForSimpleView = new ArrayList<>();
-	//		
-	//		for (MethodNode element : methods) {
-	//			methodsForSimpleView.add(SimpleTypeHelper.parseToSimpleView(element.getFullName()));
-	//		}
-	//		
-	//		// Collections.sort(methodsForSimpleView);
-	//		return methodsForSimpleView;
-	//	}
-
-	//	private static boolean isMethodParameterDuplicated2(MethodNode method1, MethodNode method2) {
-	//		
-	//		if (method1.getParameters().size() != method2.getParameters().size()) {
-	//			return false;
-	//		}
-	//		
-	//		List<String> serializedParams1 = createSerializedParameters(method1.getParameters());
-	//		List<String> serializedParams2 = createSerializedParameters(method2.getParameters());
-	//		
-	//		for (int index = 0 ; index < serializedParams1.size() ; index++) {
-	//			
-	//			
-	//			
-	//		}
-
-
-	//		Collections.sort(parametersMethod1, new CompareMethodParameter());
-	//		Collections.sort(parametersMethod2, new CompareMethodParameter());
-	//		
-	//		for (int i = 0 ; i < parametersMethod1.size() ; i++) {
-	//			AbstractParameterNode parameterNode1 = (AbstractParameterNode) parametersMethod1.get(i).makeClone();
-	//			AbstractParameterNode parameterNode2 = (AbstractParameterNode) parametersMethod2.get(i).makeClone();
-	//			SimpleTypeHelper.convertTypeJavaToSimple(parameterNode1);
-	//			SimpleTypeHelper.convertTypeJavaToSimple(parameterNode2);
-	//			
-	//			if (parameterNode1.getType().equals(parameterNode2.getType())) {
-	//				return true;
-	//			}
-	//		}
-	//		
-	//		return false;
-	//	}
-
-	//	private static List<String> createSerializedParameters(List<AbstractParameterNode> parameters) {
-	//		
-	//		List<String> serializedParameters = new ArrayList<String>();
-	//		
-	//		String serializedParameter;
-	//		
-	//		for (int index = 0; index < parameters.size(); index++) {
-	//		
-	//			AbstractParameterNode abstractParameterNode = parameters.get(index);
-	//			
-	//			serializedParameter = 
-	//					abstractParameterNode.getFullName() + 
-	//					SimpleTypeHelper.getSimpleType(abstractParameterNode.getType());
-	//			
-	//			serializedParameters.add(serializedParameter);
-	//		}
-	//		
-	//		Collections.sort(serializedParameters);
-	//		
-	//		return serializedParameters;
-	//	}
-
-	//	private static class CompareMethodParameter implements Comparator<AbstractParameterNode> {
-	//
-	//		@Override
-	//		public int compare(AbstractParameterNode parameter1, AbstractParameterNode parameter2) {
-	//			return parameter1.getMyIndex() - parameter2.getMyIndex();
-	//		}
-	//		
-	//	}
 
 }
