@@ -114,7 +114,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	
 	private void verifyType(String type) {
 		
-		if (type.equals("Text") || type.equals("Number")) {
+		if (type.equals("Text") || type.equals("Number")) { // TODO SIMPLE-VIEW
 			ExceptionHelper.reportRuntimeException("Invalid type of parameter: " + type);
 		}
 	}

@@ -52,14 +52,6 @@ public class ModelHelper {
 		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
-	public static String convertParameterToSimplifiedString(AbstractParameterNode parameter) {
-		String result = parameter.toString();
-		String type = parameter.getType();
-
-		result.replace(type, ModelHelper.getSimpleName(type));
-		return result;
-	}
-
 	public static RootNode findRoot(AbstractNode startNode) { 
 
 		AbstractNode node = startNode;

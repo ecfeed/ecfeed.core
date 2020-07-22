@@ -283,6 +283,7 @@ public abstract class AbstractNode{
 	}
 
 	public abstract AbstractNode makeClone();
+	
 	public abstract Object accept(IModelVisitor visitor) throws Exception;
 
 	public void setProperties(NodeProperties nodeProperties) {
