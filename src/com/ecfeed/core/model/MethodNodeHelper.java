@@ -20,7 +20,8 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodNodeHelper {
 
-	public static String getSimpleName(MethodNode method) {
+	public static String createSimpleSignature(MethodNode method) {
+		
 		String result = method.toString();
 
 		for (AbstractParameterNode parameter : method.getParameters()) {
