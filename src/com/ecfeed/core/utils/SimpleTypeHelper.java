@@ -39,7 +39,7 @@ public final class SimpleTypeHelper {
 		return SUPPORTED_SIMPLE_TYPES;
 	}
 
-	public static String getSimpleType(String javaType) {
+	public static String convertJavaTypeToSimpleType(String javaType) {
 
 		if (javaType.equals(JavaTypeHelper.TYPE_NAME_BYTE)) {
 			return TYPE_NAME_NUMBER;
@@ -105,7 +105,7 @@ public final class SimpleTypeHelper {
 
 	private static String createSimpleParameterSignature(AbstractParameterNode abstractParameterNode) {
 
-		String result = getSimpleType(abstractParameterNode.getType()); 
+		String result = convertJavaTypeToSimpleType(abstractParameterNode.getType()); 
 		result += " ";
 		result += abstractParameterNode.getFullName();
 

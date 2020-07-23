@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.SimpleTypeHelper;
+
 
 public class MethodNode extends ParametersParentNode {
 
@@ -31,6 +33,11 @@ public class MethodNode extends ParametersParentNode {
 		fConstraints = new ArrayList<>();
 
 		setDefaultPropertyValues();
+	}
+	
+	public enum DisplayTypeOfParameter {
+		JAVA,
+		SIMPLE
 	}
 
 	private void setDefaultPropertyValues() {
@@ -78,44 +85,56 @@ public class MethodNode extends ParametersParentNode {
 	}	
 
 	@Override
-	public String toString(){
-		String result = new String(getFullName()) + "(";
-		List<String> types = getParameterTypes();
-		List<String> names = getParametersNames();
-		for(int i = 0; i < types.size(); i++){
-			if(getMethodParameters().get(i).isExpected()){
-				result += "[e]";
-			}
-			result += types.get(i);
-			result += " ";
-			result += names.get(i);
-			if(i < types.size() - 1) result += ", ";
-		}
-		result += ")";
-		return result;
+	public String toString() {
+
+		return createSignature(DisplayTypeOfParameter.JAVA, true); 
+	}
+
+	public String getShortSignatureForDisplayOnly(DisplayTypeOfParameter displayTypeOfParameter) {
+
+		return createSignature(displayTypeOfParameter, true);
 	}
 
 	public String getShortSignature() {
 
+		return createSignature(DisplayTypeOfParameter.JAVA, false);
+	}
+
+	private String createSignature(DisplayTypeOfParameter displayTypeOfParameter, boolean isExpectedDecorationAdded) {
+
+		List<MethodParameterNode> methodParameters = getMethodParameters();
 		List<String> types = getParameterTypes();
 		List<String> names = getParametersNames();
 
-		String result = new String(getFullName()) + "(";
+		String signature = new String(getFullName()) + "(";
+		String type;
 
-		for (int i = 0; i < types.size(); i++) {
+		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {
 
-			result += types.get(i);
-			result += " ";
-			result += names.get(i);
+			if (isExpectedDecorationAdded) {
+				if (methodParameters.get(paramIndex).isExpected()) {
+					signature += "[e]";
+				}
+			}
 
-			if (i < types.size() - 1) {
-				result += ", ";
+			type = types.get(paramIndex);
+
+			if (displayTypeOfParameter == DisplayTypeOfParameter.SIMPLE) {
+				type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
+			}
+
+			signature += type;
+			signature += " ";
+			signature += names.get(paramIndex);
+
+			if (paramIndex < types.size() - 1) {
+				signature += ", ";
 			}
 		}
 
-		result += ")";
+		signature += ")";
 
-		return result;
+		return signature;
 	}
 
 	public String getLongSignature() {
@@ -160,8 +179,8 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		copy.setParent(getParent());
-//		if(!copy.isMatch(this))
-//			assert copy.isMatch(this);
+		//		if(!copy.isMatch(this))
+		//			assert copy.isMatch(this);
 		return copy;
 	}
 

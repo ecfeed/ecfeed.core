@@ -20,19 +20,6 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodNodeHelper {
 
-	public static String createSimpleSignature(MethodNode method) {
-		
-		String result = method.toString();
-
-		for (AbstractParameterNode parameter : method.getParameters()) {
-			String type = parameter.getType();
-			String newType = ModelHelper.getSimpleName(type);
-			result = result.replaceAll(type, newType);
-		}
-
-		return result;
-	}
-
 	public static boolean validateMethodName(String name) {
 
 		return validateMethodName(name, null);
@@ -53,7 +40,7 @@ public class MethodNodeHelper {
 
 	private static boolean isValid(String name) {
 
-		
+
 		if (!name.matches(RegexHelper.REGEX_METHOD_NODE_NAME)) {
 			return false;
 		}
