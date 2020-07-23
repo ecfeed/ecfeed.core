@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 
 public class MethodNode extends ParametersParentNode {
@@ -35,11 +36,6 @@ public class MethodNode extends ParametersParentNode {
 		setDefaultPropertyValues();
 	}
 	
-	public enum DisplayTypeOfParameter {
-		JAVA,
-		SIMPLE
-	}
-
 	private void setDefaultPropertyValues() {
 
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER);
@@ -87,20 +83,20 @@ public class MethodNode extends ParametersParentNode {
 	@Override
 	public String toString() {
 
-		return createSignature(DisplayTypeOfParameter.JAVA, true); 
+		return createSignature(ViewMode.JAVA, true); 
 	}
 
-	public String getShortSignatureForDisplayOnly(DisplayTypeOfParameter displayTypeOfParameter) {
+	public String getShortSignatureForDisplayOnly(ViewMode viewMode) {
 
-		return createSignature(displayTypeOfParameter, true);
+		return createSignature(viewMode, true);
 	}
 
 	public String getShortSignature() {
 
-		return createSignature(DisplayTypeOfParameter.JAVA, false);
+		return createSignature(ViewMode.JAVA, false);
 	}
 
-	private String createSignature(DisplayTypeOfParameter displayTypeOfParameter, boolean isExpectedDecorationAdded) {
+	private String createSignature(ViewMode viewMode, boolean isExpectedDecorationAdded) {
 
 		List<MethodParameterNode> methodParameters = getMethodParameters();
 		List<String> types = getParameterTypes();
@@ -119,7 +115,7 @@ public class MethodNode extends ParametersParentNode {
 
 			type = types.get(paramIndex);
 
-			if (displayTypeOfParameter == DisplayTypeOfParameter.SIMPLE) {
+			if (viewMode == ViewMode.SIMPLE) {
 				type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
 			}
 

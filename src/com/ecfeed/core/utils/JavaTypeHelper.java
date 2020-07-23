@@ -88,6 +88,12 @@ public final class JavaTypeHelper {
 		TYPE_NAME_CHAR,
 		TYPE_NAME_BOOLEAN
 	};	
+
+	private static final String[] SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW = new String[] {
+			TYPE_NAME_DOUBLE,
+			TYPE_NAME_STRING,
+			TYPE_NAME_BOOLEAN
+		};	
 	
 	public static String getTypeName(String cannonicalName) {
 
@@ -142,6 +148,11 @@ public final class JavaTypeHelper {
 	public static String[] getSupportedJavaTypes() {
 		return SUPPORTED_JAVA_TYPES;
 	}
+	
+	public static String[] getSupportedJavaTypesForSimpleView() {
+		return SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW;
+	}
+	
 	
 	// TODO - move to another package Utils should not see AbstractParameterNode
 	public static void convertTypeSimpleToJava(AbstractParameterNode node) {

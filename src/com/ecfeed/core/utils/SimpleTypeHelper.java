@@ -20,7 +20,7 @@ public final class SimpleTypeHelper {
 	public static final String SPECIAL_VALUE_NEGATIVE_INF_SIMPLE = "-Infinity";
 	public static final String SPECIAL_VALUE_POSITIVE_INF_SIMPLE = "Infinity";
 
-	private static final String[] SUPPORTED_SIMPLE_TYPES = new String[] {
+	private static final String[] SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW = new String[] {
 			TYPE_NAME_TEXT,
 			TYPE_NAME_NUMBER,
 			TYPE_NAME_LOGICAL
@@ -32,11 +32,7 @@ public final class SimpleTypeHelper {
 			return false;
 		}
 
-		return Arrays.asList(SUPPORTED_SIMPLE_TYPES).contains(typeName);
-	}
-
-	public static String[] getSupportedSimpleTypes() {
-		return SUPPORTED_SIMPLE_TYPES;
+		return Arrays.asList(SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW).contains(typeName);
 	}
 
 	public static String convertJavaTypeToSimpleType(String javaType) {
