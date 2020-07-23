@@ -20,7 +20,7 @@ public final class SimpleTypeHelper {
 	public static final String SPECIAL_VALUE_NEGATIVE_INF_SIMPLE = "-Infinity";
 	public static final String SPECIAL_VALUE_POSITIVE_INF_SIMPLE = "Infinity";
 
-	private static final String[] SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW = new String[] {
+	private static final String[] SUPPORTED_SIMPLE_VIEW_TYPES = new String[] {
 			TYPE_NAME_TEXT,
 			TYPE_NAME_NUMBER,
 			TYPE_NAME_LOGICAL
@@ -32,9 +32,14 @@ public final class SimpleTypeHelper {
 			return false;
 		}
 
-		return Arrays.asList(SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW).contains(typeName);
+		return Arrays.asList(SUPPORTED_SIMPLE_VIEW_TYPES).contains(typeName);
 	}
 
+	public static String[] getSupportedSimpleViewTypes() {
+		
+		return SUPPORTED_SIMPLE_VIEW_TYPES;
+	}
+	
 	public static String convertJavaTypeToSimpleType(String javaType) {
 
 		if (javaType.equals(JavaTypeHelper.TYPE_NAME_BYTE)) {
@@ -72,6 +77,23 @@ public final class SimpleTypeHelper {
 		return null;
 	}
 
+	public static String convertSimpleTypeToJavaType(String javaType) {
+
+		if (javaType.equals(TYPE_NAME_NUMBER)) {
+			return JavaTypeHelper.TYPE_NAME_DOUBLE;
+		}
+		
+		if (javaType.equals(TYPE_NAME_LOGICAL)) {
+			return JavaTypeHelper.getBooleanTypeName();
+		}
+		
+		if (javaType.equals(TYPE_NAME_TEXT)) {
+			return JavaTypeHelper.getStringTypeName();
+		}
+		
+		return null;
+	}
+	
 	public static String createMethodSimpleSignature(MethodNode methodNode) {
 
 		return methodNode.getFullName() + "(" + getSimpleParameters(methodNode) + ")";
