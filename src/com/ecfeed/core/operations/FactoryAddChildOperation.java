@@ -116,9 +116,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if(fChild instanceof MethodNode){
 			if(fIndex == -1){
-				return new ClassOperationAddMethod(node, (MethodNode)fChild);
+				return new ClassOperationAddMethod(node, (MethodNode)fChild, fModelCompatibility);
 			}
-			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex);
+			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fModelCompatibility);
 		}else if(fChild instanceof AbstractParameterNode){
 			GlobalParameterNode globalParameter = new GlobalParameterNode((AbstractParameterNode)fChild);
 			if(fIndex == -1){

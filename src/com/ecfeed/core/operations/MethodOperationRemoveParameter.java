@@ -19,6 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
@@ -26,6 +27,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
+		private ModelCompatibility fModelCompatibility;
 
 		private class ReverseOperation extends AbstractReverseOperation {
 			public ReverseOperation() {
@@ -42,18 +44,25 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter());
+				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), fModelCompatibility);
 			}
 
 		}
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter) {
+		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ModelCompatibility modelCompatibility) {
 			super(target, parameter);
 			fOriginalTestCases = new ArrayList<>();
+			fModelCompatibility = modelCompatibility;
 		}
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, boolean ignoreDuplicates){
-			this(target, parameter);
+		public RemoveMethodParameterOperation(
+				MethodNode target, 
+				MethodParameterNode parameter, 
+				boolean ignoreDuplicates, 
+				ModelCompatibility modelCompatibility) {
+			
+			this(target, parameter, modelCompatibility);
+			
 			fIgnoreDuplicates = ignoreDuplicates;
 		}
 
@@ -86,24 +95,34 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			List<String> types = getMethodTarget().getParameterTypes();
 			int index = getParameter().getMyIndex();
 			types.remove(index);
-			return ClassNodeHelper.isNewMethodSignatureValid(getMethodTarget().getClassNode(), getMethodTarget().getFullName(), types);
+			
+			return ClassNodeHelper.isNewMethodSignatureValid(
+					getMethodTarget().getClassNode(), getMethodTarget().getFullName(), types, fModelCompatibility);
 		}
 	}
 
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, boolean validate) {
+	public MethodOperationRemoveParameter(
+			MethodNode target, MethodParameterNode parameter, boolean validate, ModelCompatibility modelCompatibility) {
+		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
-		addOperation(new RemoveMethodParameterOperation(target, parameter));
+		
+		addOperation(new RemoveMethodParameterOperation(target, parameter, modelCompatibility));
+		
 		if(validate){
 			addOperation(new MethodOperationMakeConsistent(target));
 		}
 	}
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter) {
-		this(target, parameter, true);
+	
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ModelCompatibility modelCompatibility) {
+		this(target, parameter, true, modelCompatibility);
 	}
 
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, boolean validate, boolean ignoreDuplicates){
+	public MethodOperationRemoveParameter(
+			MethodNode target, MethodParameterNode parameter, boolean validate, boolean ignoreDuplicates, ModelCompatibility modelCompatibility){
+		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
-		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates));
+		
+		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, modelCompatibility));
 		if(validate){
 			addOperation(new MethodOperationMakeConsistent(target));
 		}

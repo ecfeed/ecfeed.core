@@ -52,7 +52,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(ClassNode node) throws Exception {
 		if(fChild instanceof MethodNode){
-			return new ClassOperationRemoveMethod(node, (MethodNode)fChild);
+			return new ClassOperationRemoveMethod(node, (MethodNode)fChild, fModelCompatibility);
 		}
 		if(fChild instanceof GlobalParameterNode){
 			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild);
@@ -63,7 +63,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(MethodNode node) throws Exception {
 		if(fChild instanceof MethodParameterNode){
-			return new MethodOperationRemoveParameter(node, (MethodParameterNode)fChild);
+			return new MethodOperationRemoveParameter(node, (MethodParameterNode)fChild, fModelCompatibility);
 		}
 		if(fChild instanceof ConstraintNode){
 			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild);

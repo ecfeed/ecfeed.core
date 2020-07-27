@@ -13,18 +13,23 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class ClassOperationRemoveMethod extends AbstractModelOperation {
 
 	private ClassNode fTarget;
 	private MethodNode fMethod;
 	private int fCurrentIndex;
+	private ModelCompatibility fModelCompatibility;
 
-	public ClassOperationRemoveMethod(ClassNode target, MethodNode method) {
+	public ClassOperationRemoveMethod(ClassNode target, MethodNode method, ModelCompatibility modelCompatibility) {
+		
 		super(OperationNames.REMOVE_METHOD);
+		
 		fTarget = target;
 		fMethod = method;
 		fCurrentIndex = fMethod.getMyMethodIndex();
+		fModelCompatibility = modelCompatibility;
 	}
 
 	@Override
@@ -42,7 +47,7 @@ public class ClassOperationRemoveMethod extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationAddMethod(fTarget, fMethod, fCurrentIndex);
+		return new ClassOperationAddMethod(fTarget, fMethod, fCurrentIndex, fModelCompatibility);
 	}
 
 }

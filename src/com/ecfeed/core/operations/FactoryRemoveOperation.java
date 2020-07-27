@@ -86,17 +86,17 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node);
+			return new ClassOperationRemoveMethod(node.getClassNode(), node, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate);
+			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node);
+			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node, fModelCompatibility);
 		}
 
 		@Override

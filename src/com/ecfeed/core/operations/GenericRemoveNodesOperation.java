@@ -244,9 +244,19 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes);
 								if (node instanceof MethodParameterNode) {
-									addOperation(new MethodOperationRemoveParameter(method, (MethodParameterNode)node, validate, true));
+									
+									addOperation(
+											new MethodOperationRemoveParameter(
+													method, (MethodParameterNode)node, validate, true, fModelCompatibility));
+									
 								} else if (node instanceof GlobalParameterNode) {
-									addOperation(new GenericOperationRemoveGlobalParameter(((GlobalParameterNode)node).getParametersParent(), (GlobalParameterNode)node, true));
+									
+									addOperation(
+											new GenericOperationRemoveGlobalParameter(
+													((GlobalParameterNode)node).getParametersParent(), 
+													(GlobalParameterNode)node, 
+													true, 
+													fModelCompatibility));
 								}
 							}
 						}

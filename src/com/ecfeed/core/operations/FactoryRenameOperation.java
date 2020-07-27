@@ -81,15 +81,22 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
+			
 			List<String> problems = new ArrayList<String>();
-			MethodNode target = (MethodNode)getOwnNode();
+			
+			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			if (fModelCompatibility == ModelCompatibility.JAVA_VIEW) {
+			if (!ClassNodeHelper.isNewMethodSignatureValid(
+					targetMethodNode.getClassNode(), 
+					getNewName(), 
+					targetMethodNode.getParameterTypes(),
+					fModelCompatibility,
+					problems)) {
 				
-				if (!ClassNodeHelper.isNewMethodSignatureValid(target.getClassNode(), getNewName(), target.getParameterTypes(), problems)) {
-					ClassNodeHelper.updateNewMethodsSignatureProblemList(target.getClassNode(), getNewName(), target.getParameterTypes(), problems);
-					ModelOperationException.report(StringHelper.convertToMultilineString(problems));
-				}
+				ClassNodeHelper.updateNewMethodsSignatureProblemList(
+						targetMethodNode.getClassNode(), getNewName(), targetMethodNode.getParameterTypes(), problems);
+				
+				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 			}
 		}
 	}

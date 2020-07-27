@@ -13,22 +13,31 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.GlobalParametersParentNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 
-	public GenericOperationRemoveGlobalParameter(GlobalParametersParentNode target, GlobalParameterNode parameter) {
+	public GenericOperationRemoveGlobalParameter(
+			GlobalParametersParentNode target, GlobalParameterNode parameter, ModelCompatibility modelCompatibility) {
+		
 		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target);
+		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, modelCompatibility));
 		}
+		
 		addOperation(new GenericOperationRemoveParameter(target, parameter));
 	}
 
-	public GenericOperationRemoveGlobalParameter(GlobalParametersParentNode target, GlobalParameterNode parameter, boolean ignoreDuplicates) {
+	public GenericOperationRemoveGlobalParameter(
+			GlobalParametersParentNode target, GlobalParameterNode parameter, boolean ignoreDuplicates, ModelCompatibility modelCompatibility) {
+		
 		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target);
+		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates, modelCompatibility));
 		}
+		
 		addOperation(new GenericOperationRemoveParameter(target, parameter));
 	}
 
