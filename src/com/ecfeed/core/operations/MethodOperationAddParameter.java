@@ -22,35 +22,18 @@ import com.ecfeed.core.model.TestCaseNode;
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	List<TestCaseNode> fRemovedTestCases;
-	MethodNode fTarget;
-	MethodParameterNode fParameter;
+	MethodNode fMethodNode;
+	MethodParameterNode fMethodParameterNode;
 	private int fNewIndex;
 
-	private class MethodReverseOperation extends ReverseOperation{
-
-		public MethodReverseOperation() {
-			super(fTarget, fParameter);
-		}
-
-		@Override
-		public void execute() throws ModelOperationException {
-			fTarget.replaceTestCases(fRemovedTestCases);
-			super.execute();
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new MethodOperationAddParameter(fTarget, fParameter);
-		}
-
-	}
-
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, int index) {
-		super(target, parameter, index, true);
-		fRemovedTestCases = new ArrayList<TestCaseNode>(target.getTestCases());
-		fTarget = target;
-		fParameter = parameter;
-		fNewIndex = index != -1 ? index : target.getParameters().size();
+	public MethodOperationAddParameter(MethodNode methodNode, MethodParameterNode methodParameterNode, int index) {
+		
+		super(methodNode, methodParameterNode, index, true);
+		
+		fRemovedTestCases = new ArrayList<TestCaseNode>(methodNode.getTestCases());
+		fMethodNode = methodNode;
+		fMethodParameterNode = methodParameterNode;
+		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
 	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter) {
@@ -59,19 +42,41 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	@Override
 	public void execute() throws ModelOperationException {
-		List<String> types = fTarget.getParameterTypes();
-		types.add(fNewIndex, fParameter.getType());
-		if(fTarget.getClassNode() != null && fTarget.getClassNode().getMethod(fTarget.getFullName(), types) != null){
-			String methodName =  fTarget.getClassNode().getMethod(fTarget.getFullName(), types).getFullName();
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(fTarget.getClassNode(), methodName));
+		
+		List<String> types = fMethodNode.getParameterTypes();
+		types.add(fNewIndex, fMethodParameterNode.getType());
+		
+		if (fMethodNode.getClassNode() != null && fMethodNode.getClassNode().getMethod(fMethodNode.getFullName(), types) != null) {
+			String methodName =  fMethodNode.getClassNode().getMethod(fMethodNode.getFullName(), types).getFullName();
+			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(fMethodNode.getClassNode(), methodName));
 		}
-		fTarget.removeTestCases();
+		
+		fMethodNode.removeTestCases();
 		super.execute();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
 		return new MethodReverseOperation();
+	}
+	
+	private class MethodReverseOperation extends ReverseOperation{
+
+		public MethodReverseOperation() {
+			super(fMethodNode, fMethodParameterNode);
+		}
+
+		@Override
+		public void execute() throws ModelOperationException {
+			fMethodNode.replaceTestCases(fRemovedTestCases);
+			super.execute();
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new MethodOperationAddParameter(fMethodNode, fMethodParameterNode);
+		}
+
 	}
 
 }
