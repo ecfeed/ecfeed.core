@@ -40,6 +40,7 @@ import com.ecfeed.core.model.ValueCondition;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -95,7 +96,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			public Object visit(ExpectedValueStatement statement) throws Exception {
 
 				boolean success = true;
-				
+
 				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
 				String newValue = 
 						adapter.convert(
@@ -231,6 +232,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		public SetTypeOperation(MethodParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
 			super(target, newType, adapterProvider);
+
 			fMethodParameterNode = target;
 			fOriginalStatementValues = new HashMap<>();
 		}
@@ -294,7 +296,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			String newType = getNewType();
 
 			fOriginalDefaultValue = fMethodParameterNode.getDefaultValue();
-			
+
 			ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
 			String newDefaultValue = 
 					adapter.convert(fMethodParameterNode.getDefaultValue(), false, ERunMode.QUIET);
@@ -333,7 +335,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				Iterator<TestCaseNode> tcIt = method.getTestCases().iterator();
 
 				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
-				
+
 				while (tcIt.hasNext()) {
 					ChoiceNode expectedValue = tcIt.next().getTestData().get(fMethodParameterNode.getMyIndex());
 					String newValue = 
@@ -367,7 +369,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 				ConstraintNode constraintNode = methodNode.getNextConstraint(constraintItr);
 				Constraint constraint = constraintNode.getConstraint();
-				
+
 				if (isRelevantConstraint(constraint)) {
 
 					IStatementVisitor statementAdapter = new StatementAdapter();
@@ -382,7 +384,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				}
 			}
 		}
-		
+
 		private boolean isRelevantConstraint(Constraint constraint) {
 			if (constraint.getConsequence() instanceof ExpectedValueStatement) {
 				ExpectedValueStatement expectedValueStatement = (ExpectedValueStatement)constraint.getConsequence();
@@ -394,13 +396,21 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			return false;
 		}
 	}
-	
-
 
 	public MethodParameterOperationSetType(MethodParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
 
 		super(OperationNames.SET_TYPE, true, target, target);
+
+		if (newType == null) {
+			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
+		}
+
+		if (!JavaTypeHelper.isJavaType(newType)) {
+			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
+		}
+
 		addOperation(new SetTypeOperation(target, newType, adapterProvider));
+
 		if (target.getMethod() != null) {
 			addOperation(new MethodOperationMakeConsistent(target.getMethod()));
 		}
