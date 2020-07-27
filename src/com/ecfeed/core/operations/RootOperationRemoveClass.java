@@ -13,21 +13,21 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.utils.NodeNamingConvention;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	private ClassNode fRemovedClass;
 	private RootNode fTarget;
 	private int fCurrentIndex;
-	private NodeNamingConvention fNodeNamingConvention;
+	private ModelCompatibility fModelCompatibility;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, NodeNamingConvention nodeNamingConvention) {
+	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, ModelCompatibility modelCompatibility) {
 		super(OperationNames.REMOVE_CLASS);
 		fTarget = target;
 		fRemovedClass = removedClass;
 		fCurrentIndex = removedClass.getMyClassIndex();
-		fNodeNamingConvention = nodeNamingConvention;
+		fModelCompatibility = modelCompatibility;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationAddNewClass(fTarget, fRemovedClass, fCurrentIndex, fNodeNamingConvention);
+		return new RootOperationAddNewClass(fTarget, fRemovedClass, fCurrentIndex, fModelCompatibility);
 	}
 
 }

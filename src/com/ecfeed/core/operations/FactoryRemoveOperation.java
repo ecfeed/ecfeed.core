@@ -25,7 +25,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.NodeNamingConvention;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class FactoryRemoveOperation {
 
@@ -66,12 +66,12 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
-		private NodeNamingConvention fNodeNamingConvention;
+		private ModelCompatibility fModelCompatibility;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, NodeNamingConvention nodeNamingConvention){
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ModelCompatibility modelCompatibility){
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
-			fNodeNamingConvention = nodeNamingConvention;
+			fModelCompatibility = modelCompatibility;
 		}
 
 		@Override
@@ -81,7 +81,7 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node, fNodeNamingConvention);
+			return new RootOperationRemoveClass(node.getRoot(), node, fModelCompatibility);
 		}
 
 		@Override
@@ -116,9 +116,9 @@ public class FactoryRemoveOperation {
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, NodeNamingConvention nodeNamingConvention){
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ModelCompatibility modelCompatibility){
 		try {
-			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, nodeNamingConvention));
+			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, modelCompatibility));
 		} catch (Exception e) {
 			return new UnsupportedModelOperation();
 		}

@@ -21,7 +21,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.NodeNamingConvention;
+import com.ecfeed.core.utils.ModelCompatibility;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -31,16 +31,16 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fNewName;
 	private String fOriginalName;
 	private String fNameRegex;
-	private NodeNamingConvention fNodeNamingConvention;
+	private ModelCompatibility fModelCompatibility;
 	
-	public GenericOperationRename(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention){
+	public GenericOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility){
 		
 		super(OperationNames.RENAME);
 		fTarget = target;
 		fNewName = newName;
 		fOriginalName = target.getFullName();
 		fNameRegex = getJavaNameRegex(target);
-		fNodeNamingConvention = nodeNamingConvention;
+		fModelCompatibility = modelCompatibility;
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		
 		setOneNodeToSelect(fTarget);
 		
-		if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
+		if (fModelCompatibility == ModelCompatibility.JAVA_VIEW) {
 			verifyNameWithJavaRegex();
 		}
 		
@@ -60,7 +60,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericOperationRename(getOwnNode(), getOriginalName(), fNodeNamingConvention);
+		return new GenericOperationRename(getOwnNode(), getOriginalName(), fModelCompatibility);
 	}
 
 	protected AbstractNode getOwnNode(){

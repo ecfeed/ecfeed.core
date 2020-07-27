@@ -26,7 +26,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.NodeNamingConvention;
+import com.ecfeed.core.utils.ModelCompatibility;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -37,16 +37,16 @@ public class FactoryRenameOperation {
 
 	private static class ClassOperationRename extends GenericOperationRename {
 
-		NodeNamingConvention fNodeNamingConvention;
+		ModelCompatibility fModelCompatibility;
 
-		public ClassOperationRename(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention) {
-			super(target, newName, nodeNamingConvention);
-			fNodeNamingConvention = nodeNamingConvention;
+		public ClassOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility) {
+			super(target, newName, modelCompatibility);
+			fModelCompatibility = modelCompatibility;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ClassOperationRename(getOwnNode(), getOriginalName(), fNodeNamingConvention);
+			return new ClassOperationRename(getOwnNode(), getOriginalName(), fModelCompatibility);
 		}
 
 		@Override
@@ -64,19 +64,19 @@ public class FactoryRenameOperation {
 
 	private static class MethodOperationRename extends GenericOperationRename {
 
-		NodeNamingConvention fNodeNamingConvention;
+		ModelCompatibility fModelCompatibility;
 
-		public MethodOperationRename(MethodNode target, String newName, NodeNamingConvention nodeNamingConvention) {
+		public MethodOperationRename(MethodNode target, String newName, ModelCompatibility modelCompatibility) {
 
-			super(target, newName, nodeNamingConvention);
+			super(target, newName, modelCompatibility);
 
-			fNodeNamingConvention = nodeNamingConvention;
+			fModelCompatibility = modelCompatibility;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
 
-			return new MethodOperationRename((MethodNode)getOwnNode(), getOriginalName(), fNodeNamingConvention);
+			return new MethodOperationRename((MethodNode)getOwnNode(), getOriginalName(), fModelCompatibility);
 		}
 
 		@Override
@@ -84,7 +84,7 @@ public class FactoryRenameOperation {
 			List<String> problems = new ArrayList<String>();
 			MethodNode target = (MethodNode)getOwnNode();
 
-			if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
+			if (fModelCompatibility == ModelCompatibility.JAVA_VIEW) {
 				
 				if (!ClassNodeHelper.isNewMethodSignatureValid(target.getClassNode(), getNewName(), target.getParameterTypes(), problems)) {
 					ClassNodeHelper.updateNewMethodsSignatureProblemList(target.getClassNode(), getNewName(), target.getParameterTypes(), problems);
@@ -96,18 +96,18 @@ public class FactoryRenameOperation {
 
 	private static class GlobalParameterOperationRename extends GenericOperationRename {
 
-		NodeNamingConvention fNodeNamingConvention;
+		ModelCompatibility fModelCompatibility;
 
-		public GlobalParameterOperationRename(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention) {
+		public GlobalParameterOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility) {
 
-			super(target, newName, nodeNamingConvention);
+			super(target, newName, modelCompatibility);
 
-			fNodeNamingConvention = nodeNamingConvention;
+			fModelCompatibility = modelCompatibility;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new GlobalParameterOperationRename(getOwnNode(), getOriginalName(), fNodeNamingConvention);
+			return new GlobalParameterOperationRename(getOwnNode(), getOriginalName(), fModelCompatibility);
 		}
 
 		@Override
@@ -124,16 +124,16 @@ public class FactoryRenameOperation {
 
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
-		NodeNamingConvention fNodeNamingConvention;
+		ModelCompatibility fModelCompatibility;
 
-		public MethodParameterOperationRename(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention) {
-			super(target, newName, nodeNamingConvention);
-			fNodeNamingConvention = nodeNamingConvention;
+		public MethodParameterOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility) {
+			super(target, newName, modelCompatibility);
+			fModelCompatibility = modelCompatibility;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodParameterOperationRename(getOwnNode(), getOriginalName(), fNodeNamingConvention);
+			return new MethodParameterOperationRename(getOwnNode(), getOriginalName(), fModelCompatibility);
 		}
 
 		@Override
@@ -150,16 +150,16 @@ public class FactoryRenameOperation {
 
 	private static class ChoiceOperationRename extends GenericOperationRename {
 
-		NodeNamingConvention fNodeNamingConvention;
+		ModelCompatibility fModelCompatibility;
 
-		public ChoiceOperationRename(ChoiceNode target, String newName, NodeNamingConvention nodeNamingConvention) {
-			super(target, newName, nodeNamingConvention);
-			fNodeNamingConvention = nodeNamingConvention;
+		public ChoiceOperationRename(ChoiceNode target, String newName, ModelCompatibility modelCompatibility) {
+			super(target, newName, modelCompatibility);
+			fModelCompatibility = modelCompatibility;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationRename((ChoiceNode)getOwnNode(), getOriginalName(), fNodeNamingConvention);
+			return new ChoiceOperationRename((ChoiceNode)getOwnNode(), getOriginalName(), fModelCompatibility);
 		}
 
 		@Override
@@ -173,58 +173,58 @@ public class FactoryRenameOperation {
 	private static class RenameOperationProvider implements IModelVisitor{
 
 		private String fNewName;
-		private NodeNamingConvention fNodeNamingConvention;
+		private ModelCompatibility fModelCompatibility;
 
-		public RenameOperationProvider(String newName, NodeNamingConvention nodeNamingConvention) {
+		public RenameOperationProvider(String newName, ModelCompatibility modelCompatibility) {
 			fNewName = newName;
-			fNodeNamingConvention = nodeNamingConvention;
+			fModelCompatibility = modelCompatibility;
 		}
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName, fNodeNamingConvention);
+			return new GenericOperationRename(node, fNewName, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new ClassOperationRename(node, fNewName, fNodeNamingConvention);
+			return new ClassOperationRename(node, fNewName, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new MethodOperationRename(node, fNewName, fNodeNamingConvention);
+			return new MethodOperationRename(node, fNewName, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodParameterOperationRename(node, fNewName, fNodeNamingConvention);
+			return new MethodParameterOperationRename(node, fNewName, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GlobalParameterOperationRename(node, fNewName, fNodeNamingConvention);
+			return new GlobalParameterOperationRename(node, fNewName, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName,fNodeNamingConvention);
+			return new GenericOperationRename(node, fNewName,fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName, fNodeNamingConvention);
+			return new GenericOperationRename(node, fNewName, fModelCompatibility);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return new ChoiceOperationRename(node, fNewName, fNodeNamingConvention);
+			return new ChoiceOperationRename(node, fNewName, fModelCompatibility);
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newName, NodeNamingConvention nodeNamingConvention){
+	public static IModelOperation getRenameOperation(AbstractNode target, String newName, ModelCompatibility modelCompatibility){
 
 		try{
-			return (IModelOperation)target.accept(new RenameOperationProvider(newName, nodeNamingConvention));
+			return (IModelOperation)target.accept(new RenameOperationProvider(newName, modelCompatibility));
 		} catch(Exception e) {
 			SystemLogger.logCatch(e);
 		}

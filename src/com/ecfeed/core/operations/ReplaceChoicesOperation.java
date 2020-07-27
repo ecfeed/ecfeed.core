@@ -16,7 +16,7 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.NodeNamingConvention;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class ReplaceChoicesOperation extends BulkOperation {
 
@@ -24,7 +24,7 @@ public class ReplaceChoicesOperation extends BulkOperation {
 			AbstractParameterNode target, 
 			List<ChoiceNode> choices, 
 			ITypeAdapterProvider adapterProvider,
-			NodeNamingConvention nodeNamingConvention) {
+			ModelCompatibility modelCompatibility) {
 
 		super("Replace choices", true, target, target);
 
@@ -40,7 +40,7 @@ public class ReplaceChoicesOperation extends BulkOperation {
 
 		addOperation(
 				new GenericRemoveNodesOperation(
-						target.getChoices(), adapterProvider, true, target, target, nodeNamingConvention));
+						target.getChoices(), adapterProvider, true, target, target, modelCompatibility));
 
 		for(ChoiceNode choice : skipped){
 			addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true));

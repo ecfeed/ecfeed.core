@@ -15,25 +15,25 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.NodeNamingConvention;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	private RootNode fRootNode;
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
-	private NodeNamingConvention fNodeNamingConvention;
+	private ModelCompatibility fModelCompatibility;
 
-	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, NodeNamingConvention nodeNamingConvention) {
-		this(target, classToAdd, -1, nodeNamingConvention);
+	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, ModelCompatibility modelCompatibility) {
+		this(target, classToAdd, -1, modelCompatibility);
 	}
 	
-	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, NodeNamingConvention nodeNamingConvention) {
+	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, ModelCompatibility modelCompatibility) {
 		super(OperationNames.ADD_CLASS);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
 		fAddIndex = addIndex;
-		fNodeNamingConvention = nodeNamingConvention;
+		fModelCompatibility = modelCompatibility;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 			fAddIndex = fRootNode.getClasses().size();
 		}
 		
-		if (fNodeNamingConvention == NodeNamingConvention.JAVA) {
+		if (fModelCompatibility == ModelCompatibility.JAVA_VIEW) {
 			if(!ClassNodeHelper.classNameCompliesWithJavaNamingRules(name)){
 				ModelOperationException.report(RegexHelper.CLASS_NAME_REGEX_PROBLEM);
 			}
@@ -61,7 +61,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationRemoveClass(fRootNode, fclassToAdd, fNodeNamingConvention);
+		return new RootOperationRemoveClass(fRootNode, fclassToAdd, fModelCompatibility);
 	}
 
 }

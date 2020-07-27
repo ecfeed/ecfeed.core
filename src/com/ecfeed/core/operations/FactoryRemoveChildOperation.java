@@ -22,26 +22,26 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.NodeNamingConvention;
+import com.ecfeed.core.utils.ModelCompatibility;
 
 public class FactoryRemoveChildOperation implements IModelVisitor{
 
 	private AbstractNode fChild;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private NodeNamingConvention fNodeNamingConvention;
+	private ModelCompatibility fModelCompatibility;
 
 	public FactoryRemoveChildOperation(
-			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, NodeNamingConvention nodeNamingConvention) {
+			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ModelCompatibility modelCompatibility) {
 		fChild = child;
 		fValidate = validate;
-		fNodeNamingConvention = nodeNamingConvention;
+		fModelCompatibility = modelCompatibility;
 	}
 
 	@Override
 	public Object visit(RootNode node) throws Exception {
 		if(fChild instanceof ClassNode){
-			return new RootOperationRemoveClass(node, (ClassNode)fChild, fNodeNamingConvention);
+			return new RootOperationRemoveClass(node, (ClassNode)fChild, fModelCompatibility);
 		}
 		if(fChild instanceof GlobalParameterNode){
 			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild);
