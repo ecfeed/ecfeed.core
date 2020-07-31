@@ -24,6 +24,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 
 public class FactoryRemoveOperation {
@@ -94,6 +95,11 @@ public class FactoryRemoveOperation {
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
 			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node);
+		}
+		
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return new MethodOperationRemoveTestSuite(node.getMethod(), node);
 		}
 
 		@Override

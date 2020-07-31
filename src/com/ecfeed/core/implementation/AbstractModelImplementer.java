@@ -23,6 +23,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.EcException;
 import com.ecfeed.core.utils.StrgList;
 import com.ecfeed.core.utils.SystemLogger;
@@ -59,6 +60,11 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 			return isImplementableNode(node);
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return isImplementableNode(node);
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return isImplementableNode(node);
@@ -102,6 +108,11 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 			return implement(node);
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return implement(node);
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return implement(node);
@@ -316,6 +327,10 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		return hasImplementableNode(node.getChoices());
 	}
 
+	protected boolean isImplementableNode(TestSuiteNode node){
+		return hasImplementableNode(node.getTestCaseNodes());
+	}
+	
 	protected boolean isImplementableNode(TestCaseNode node){
 		return hasImplementableNode(node.getTestData());
 	}

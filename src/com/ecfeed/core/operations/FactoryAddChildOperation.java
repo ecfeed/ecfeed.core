@@ -23,6 +23,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -150,6 +151,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			}
 			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex);
 		}
+		if(fChild instanceof TestSuiteNode) {
+			return new MethodOperationAddTestSuite(node, ((TestSuiteNode) fChild).getTestCaseNodes(), fAdapterProvider);
+		}
 		if(fChild instanceof TestCaseNode){
 			if(fIndex == -1){
 				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider);
@@ -187,6 +191,12 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		return null;
 	}
 
+	@Override
+	public Object visit(TestSuiteNode node) throws Exception {
+		reportOperationNotSupportedException();
+		return null;
+	}
+	
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
 		reportOperationNotSupportedException();

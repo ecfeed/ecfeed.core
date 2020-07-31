@@ -23,6 +23,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -114,6 +115,13 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 			return null;
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+
+			fCache.remove(node);
+			return null;
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 
