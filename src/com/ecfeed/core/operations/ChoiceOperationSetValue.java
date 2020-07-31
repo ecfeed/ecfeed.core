@@ -31,6 +31,60 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	private ITypeAdapterProvider fAdapterProvider;
 
+	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider){
+		super(OperationNames.SET_PARTITION_VALUE);
+		fTarget = target;
+		fNewValue = newValue;
+		fOriginalValue = fTarget.getValueString();
+		fAdapterProvider = adapterProvider;
+	}
+
+	@Override
+	public void execute() throws ModelOperationException {
+
+		String convertedValue = adaptChoiceValue(fTarget.getParameter().getType(), fNewValue);
+		if(convertedValue == null){
+			ModelOperationException.report(OperationMessages.PARTITION_VALUE_PROBLEM(fNewValue));
+		}
+		fTarget.setValueString(convertedValue);
+		adaptParameter(fTarget.getParameter());
+		markModelUpdated();
+	}
+
+	private void adaptParameter(AbstractParameterNode parameter) {
+		try{
+			parameter.accept(new ParameterAdapter());
+		}catch(Exception e){SystemLogger.logCatch(e);}
+	}
+
+	@Override
+	public IModelOperation getReverseOperation() {
+		return new ReverseOperation();
+	}
+
+	@Override
+	public String toString(){
+		return "setValue[" + fTarget + "](" + fNewValue + ")";
+	}
+
+	private String adaptChoiceValue(String type, String value) throws ModelOperationException {
+
+		final int MAX_PARTITION_VALUE_STRING_LENGTH = 512;
+
+		if (value.length() > MAX_PARTITION_VALUE_STRING_LENGTH) {
+			return null;
+		}
+
+		ITypeAdapter<?> typeAdapter = fAdapterProvider.getAdapter(type); 
+
+		try {
+			return typeAdapter.convert(value, fTarget.isRandomizedValue(), ERunMode.WITH_EXCEPTION);
+		} catch (RuntimeException ex) {
+			ModelOperationException.report(ex.getMessage());
+		}
+		return null;
+	}
+
 	private class ParameterAdapter implements IParameterVisitor{
 
 		@Override
@@ -91,57 +145,5 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		}
 	}
 
-	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider){
-		super(OperationNames.SET_PARTITION_VALUE);
-		fTarget = target;
-		fNewValue = newValue;
-		fOriginalValue = fTarget.getValueString();
-		fAdapterProvider = adapterProvider;
-	}
 
-	@Override
-	public void execute() throws ModelOperationException {
-
-		String convertedValue = adaptChoiceValue(fTarget.getParameter().getType(), fNewValue);
-		if(convertedValue == null){
-			ModelOperationException.report(OperationMessages.PARTITION_VALUE_PROBLEM(fNewValue));
-		}
-		fTarget.setValueString(convertedValue);
-		adaptParameter(fTarget.getParameter());
-		markModelUpdated();
-	}
-
-	private void adaptParameter(AbstractParameterNode parameter) {
-		try{
-			parameter.accept(new ParameterAdapter());
-		}catch(Exception e){SystemLogger.logCatch(e);}
-	}
-
-	@Override
-	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
-	}
-
-	@Override
-	public String toString(){
-		return "setValue[" + fTarget + "](" + fNewValue + ")";
-	}
-
-	private String adaptChoiceValue(String type, String value) throws ModelOperationException {
-
-		final int MAX_PARTITION_VALUE_STRING_LENGTH = 512;
-		
-		if (value.length() > MAX_PARTITION_VALUE_STRING_LENGTH) {
-			return null;
-		}
-
-		ITypeAdapter<?> typeAdapter = fAdapterProvider.getAdapter(type); 
-
-		try {
-			return typeAdapter.convert(value, fTarget.isRandomizedValue(), ERunMode.WITH_EXCEPTION);
-		} catch (RuntimeException ex) {
-			ModelOperationException.report(ex.getMessage());
-		}
-		return null;
-	}
 }
