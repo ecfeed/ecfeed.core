@@ -372,7 +372,7 @@ public class StringHelper {
 		return source.replace(substr, strToReplace);
 	}
 
-	public static Byte convertToByte(String str) throws NumberFormatException {
+	public static Byte convertToByte(String str) throws NumberFormatException { // TODO SIMPLE-VIEW move to java type helper + other methods
 
 		Long result = convertToLong(str);
 

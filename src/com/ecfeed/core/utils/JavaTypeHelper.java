@@ -995,4 +995,158 @@ public final class JavaTypeHelper {
 		
 		return returnText;
 	}
+	
+	public static String getCompatibleNumericType(String value) { // TODO SIMPLE-VIEW tests
+		
+		try {
+			StringHelper.convertToByte(value);
+			return TYPE_NAME_BYTE;
+		} catch (NumberFormatException e) {
+		}
+		
+		try {
+			StringHelper.convertToShort(value);
+			return TYPE_NAME_SHORT;
+		} catch (NumberFormatException e) {
+		}
+		
+		try {
+			StringHelper.convertToShort(value);
+			return TYPE_NAME_SHORT;
+		} catch (NumberFormatException e) {
+		}
+
+		try {
+			StringHelper.convertToInteger(value);
+			return TYPE_NAME_INT;
+		} catch (NumberFormatException e) {
+		}
+		
+		try {
+			StringHelper.convertToLong(value);
+			return TYPE_NAME_LONG;
+		} catch (NumberFormatException e) {
+		}
+
+		try {
+			Float.parseFloat(value);
+			return TYPE_NAME_FLOAT;
+		} catch (NumberFormatException e) {
+		}
+		
+		try {
+			Double.parseDouble(value);
+			return TYPE_NAME_DOUBLE;
+		} catch (NumberFormatException e) {
+		}
+		
+		return null;
+	}
+	
+	public static boolean isNumericTypeLarger(String numericTypeToCompare, String currentNumericType) {  // TODO SIMPLE-VIEW tests
+		
+		if (!isNumericTypeName(currentNumericType)) {
+			ExceptionHelper.reportRuntimeException("Current type is not numeric.");
+		}
+		
+		if (!isNumericTypeName(numericTypeToCompare)) {
+			ExceptionHelper.reportRuntimeException("Type to compare is not numeric.");
+		}
+		
+		if (StringHelper.isEqual(currentNumericType, numericTypeToCompare)) {
+			return false;
+		}
+		
+		if (isByteTypeName(currentNumericType)) {
+			return true;
+		}
+		
+		if (isShortTypeName(currentNumericType)) {
+			
+			if (isByteTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			return true;
+		}
+		
+		if (isIntTypeName(currentNumericType)) {
+			
+			if (isByteTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isShortTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			return true;
+		}
+		
+		if (isLongTypeName(currentNumericType)) {
+			
+			if (isByteTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isShortTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isIntTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			return true;
+		}
+		
+		if (isFloatTypeName(currentNumericType)) {
+			
+			if (isByteTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isShortTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isIntTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isLongTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			return true;
+		}
+		
+
+		if (isDoubleTypeName(currentNumericType)) {
+			
+			if (isByteTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isShortTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isIntTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isLongTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			if (isFloatTypeName(numericTypeToCompare)) {
+				return false;
+			}
+			
+			return true;
+		}
+		
+		return true;
+	}
 }

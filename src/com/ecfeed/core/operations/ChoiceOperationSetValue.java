@@ -27,27 +27,31 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 	private String fNewValue;
 	private String fOriginalValue;
 	private String fOriginalDefaultValue;
-	private ChoiceNode fTarget;
+	private ChoiceNode fOwnChoiceNode;
 
 	private ITypeAdapterProvider fAdapterProvider;
 
 	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider){
+		
 		super(OperationNames.SET_PARTITION_VALUE);
-		fTarget = target;
+		
+		fOwnChoiceNode = target;
 		fNewValue = newValue;
-		fOriginalValue = fTarget.getValueString();
+		fOriginalValue = fOwnChoiceNode.getValueString();
 		fAdapterProvider = adapterProvider;
 	}
 
 	@Override
 	public void execute() throws ModelOperationException {
 
-		String convertedValue = adaptChoiceValue(fTarget.getParameter().getType(), fNewValue);
+		String convertedValue = adaptChoiceValue(fOwnChoiceNode.getParameter().getType(), fNewValue);
+		
 		if(convertedValue == null){
 			ModelOperationException.report(OperationMessages.PARTITION_VALUE_PROBLEM(fNewValue));
 		}
-		fTarget.setValueString(convertedValue);
-		adaptParameter(fTarget.getParameter());
+		
+		fOwnChoiceNode.setValueString(convertedValue);
+		adaptParameter(fOwnChoiceNode.getParameter());
 		markModelUpdated();
 	}
 
@@ -64,7 +68,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	@Override
 	public String toString(){
-		return "setValue[" + fTarget + "](" + fNewValue + ")";
+		return "setValue[" + fOwnChoiceNode + "](" + fNewValue + ")";
 	}
 
 	private String adaptChoiceValue(String type, String value) throws ModelOperationException {
@@ -78,7 +82,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		ITypeAdapter<?> typeAdapter = fAdapterProvider.getAdapter(type); 
 
 		try {
-			return typeAdapter.convert(value, fTarget.isRandomizedValue(), ERunMode.WITH_EXCEPTION);
+			return typeAdapter.convert(value, fOwnChoiceNode.isRandomizedValue(), ERunMode.WITH_EXCEPTION);
 		} catch (RuntimeException ex) {
 			ModelOperationException.report(ex.getMessage());
 		}
@@ -128,8 +132,8 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		@Override
 		public void execute() throws ModelOperationException {
-			fTarget.setValueString(fOriginalValue);
-			adaptParameter(fTarget.getParameter());
+			fOwnChoiceNode.setValueString(fOriginalValue);
+			adaptParameter(fOwnChoiceNode.getParameter());
 			markModelUpdated();
 		}
 
@@ -141,7 +145,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetValue(fTarget, fNewValue, fAdapterProvider);
+			return new ChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider);
 		}
 	}
 
