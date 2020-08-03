@@ -49,7 +49,7 @@ public class ClassNodeHelper {
 	public static boolean isNewMethodSignatureValid(
 			ClassNode parent, String methodName, List<String> argTypes, ModelCompatibility modelCompatibility) {
 
-		return isNewMethodSignatureValid(parent, methodName, argTypes, null);
+		return isNewMethodSignatureValid(parent, methodName, argTypes, modelCompatibility, null);
 	}
 
 	public static boolean isNewMethodSignatureValid(
