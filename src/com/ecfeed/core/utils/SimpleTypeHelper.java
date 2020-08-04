@@ -19,6 +19,8 @@ public final class SimpleTypeHelper {
 
 	public static final String SPECIAL_VALUE_NEGATIVE_INF_SIMPLE = "-Infinity";
 	public static final String SPECIAL_VALUE_POSITIVE_INF_SIMPLE = "Infinity";
+	
+	public static String DEFAULT_PACKAGE = "(default package)";
 
 	private static final String[] SUPPORTED_SIMPLE_VIEW_TYPES = new String[] {
 			TYPE_NAME_TEXT,
@@ -246,9 +248,9 @@ public final class SimpleTypeHelper {
 	public static String parseToSimpleView(String text) { // TODO SIMPLE-VIEW - remove ?
 		String returnText = text;
 
-		if (returnText.equals("")) {
-			return "(default package)";
-		}
+//		if (returnText.equals("")) {
+//			return DEFAULT_PACKAGE;
+//		}
 
 		returnText = returnText.replaceAll("_", " ");
 
