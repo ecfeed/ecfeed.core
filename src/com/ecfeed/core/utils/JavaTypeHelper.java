@@ -492,6 +492,10 @@ public final class JavaTypeHelper {
 
 	public static boolean isByteTypeName(String typeName) {
 
+		if (typeName == null) {
+			ExceptionHelper.reportRuntimeException("Emty type name is not allowed.");
+		}
+		
 		if (typeName.equals(TYPE_NAME_BYTE)) {
 			return true;
 		}
