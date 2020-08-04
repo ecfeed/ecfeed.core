@@ -126,7 +126,7 @@ public abstract class AbstractNode{
 
 	public AbstractNode getRoot() {
 
-		if(getParent() == null){
+		if (getParent() == null) {
 			return this;
 		}
 

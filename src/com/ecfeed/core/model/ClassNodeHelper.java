@@ -24,7 +24,7 @@ public class ClassNodeHelper {
 	
 	public static String getSimpleName(ClassNode classNode) {
 
-		return ModelHelper.getSimpleName(classNode.getFullName());
+		return ModelHelper.getNonQualifiedName(classNode.getFullName());
 	}
 
 	public static String getQualifiedName(ClassNode classNode) {

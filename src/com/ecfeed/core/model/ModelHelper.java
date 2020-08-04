@@ -15,7 +15,8 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
 
-	public static String getSimpleName(String qualifiedName) {
+	public static String getNonQualifiedName(String qualifiedName) {
+		
 		int lastDotIndex = qualifiedName.lastIndexOf('.');
 
 		if (lastDotIndex == -1) {
