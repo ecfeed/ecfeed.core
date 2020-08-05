@@ -12,6 +12,7 @@ package com.ecfeed.core.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -97,36 +98,17 @@ public final class JavaTypeHelper {
 			TYPE_NAME_BOOLEAN
 		};	
 	
-	
-	public static String getDefaultExpectedValue(String type) {
-		switch(type){
-		case JavaTypeHelper.TYPE_NAME_BYTE:
-			return JavaTypeHelper.DEFAULT_EXPECTED_BYTE_VALUE;
-		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
-			return JavaTypeHelper.DEFAULT_EXPECTED_BOOLEAN_VALUE;
-		case SimpleTypeHelper.TYPE_NAME_LOGICAL:
-			return SimpleTypeHelper.DEFAULT_EXPECTED_LOGICAL_VALUE;
-		case JavaTypeHelper.TYPE_NAME_CHAR:
-			return JavaTypeHelper.DEFAULT_EXPECTED_CHAR_VALUE;
-		case JavaTypeHelper.TYPE_NAME_DOUBLE:
-			return JavaTypeHelper.DEFAULT_EXPECTED_DOUBLE_VALUE;
-		case JavaTypeHelper.TYPE_NAME_FLOAT:
-			return JavaTypeHelper.DEFAULT_EXPECTED_FLOAT_VALUE;
-		case JavaTypeHelper.TYPE_NAME_INT:
-			return JavaTypeHelper.DEFAULT_EXPECTED_INT_VALUE;
-		case JavaTypeHelper.TYPE_NAME_LONG:
-			return JavaTypeHelper.DEFAULT_EXPECTED_LONG_VALUE;
-		case JavaTypeHelper.TYPE_NAME_SHORT:
-			return JavaTypeHelper.DEFAULT_EXPECTED_SHORT_VALUE;
-		case SimpleTypeHelper.TYPE_NAME_NUMBER:
-			return SimpleTypeHelper.DEFAULT_EXPECTED_NUMBER_VALUE;
-		case JavaTypeHelper.TYPE_NAME_STRING:
-			return JavaTypeHelper.DEFAULT_EXPECTED_STRING_VALUE;
-		case SimpleTypeHelper.TYPE_NAME_TEXT:
-			return SimpleTypeHelper.DEFAULT_EXPECTED_TEXT_VALUE;
-		default:
-			return "VALUE";
+	public static Set<String> getSpecialValues(String typeName, ViewMode viewMode) {
+		
+		Set<String> items;
+		
+		if (viewMode == ViewMode.JAVA) {
+			items = new LinkedHashSet<String>(getSpecialValues(typeName));
+		} else {
+			items = new LinkedHashSet<String>();
 		}
+		
+		return items;
 	}
 	
 	public static List<String> getSpecialValues(String typeName) {
@@ -157,6 +139,37 @@ public final class JavaTypeHelper {
 			break;
 		}
 		return result;
+	}
+	
+	public static String getDefaultExpectedValue(String type) {
+		switch(type){
+		case JavaTypeHelper.TYPE_NAME_BYTE:
+			return JavaTypeHelper.DEFAULT_EXPECTED_BYTE_VALUE;
+		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
+			return JavaTypeHelper.DEFAULT_EXPECTED_BOOLEAN_VALUE;
+		case SimpleTypeHelper.TYPE_NAME_LOGICAL:
+			return SimpleTypeHelper.DEFAULT_EXPECTED_LOGICAL_VALUE;
+		case JavaTypeHelper.TYPE_NAME_CHAR:
+			return JavaTypeHelper.DEFAULT_EXPECTED_CHAR_VALUE;
+		case JavaTypeHelper.TYPE_NAME_DOUBLE:
+			return JavaTypeHelper.DEFAULT_EXPECTED_DOUBLE_VALUE;
+		case JavaTypeHelper.TYPE_NAME_FLOAT:
+			return JavaTypeHelper.DEFAULT_EXPECTED_FLOAT_VALUE;
+		case JavaTypeHelper.TYPE_NAME_INT:
+			return JavaTypeHelper.DEFAULT_EXPECTED_INT_VALUE;
+		case JavaTypeHelper.TYPE_NAME_LONG:
+			return JavaTypeHelper.DEFAULT_EXPECTED_LONG_VALUE;
+		case JavaTypeHelper.TYPE_NAME_SHORT:
+			return JavaTypeHelper.DEFAULT_EXPECTED_SHORT_VALUE;
+		case SimpleTypeHelper.TYPE_NAME_NUMBER:
+			return SimpleTypeHelper.DEFAULT_EXPECTED_NUMBER_VALUE;
+		case JavaTypeHelper.TYPE_NAME_STRING:
+			return JavaTypeHelper.DEFAULT_EXPECTED_STRING_VALUE;
+		case SimpleTypeHelper.TYPE_NAME_TEXT:
+			return SimpleTypeHelper.DEFAULT_EXPECTED_TEXT_VALUE;
+		default:
+			return "VALUE";
+		}
 	}
 	
 	public static String convertConditionallySpecialValue(String typeName, String value) { // TODO SIMPLE-VIEW test
