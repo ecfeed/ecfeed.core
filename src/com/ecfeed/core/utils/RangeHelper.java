@@ -14,6 +14,10 @@ public class RangeHelper {
 	public static final String DELIMITER = ":";
 
 	public static boolean isRange(String value) {
+		
+		if (value == null) {
+			ExceptionHelper.reportRuntimeException("Invalid value during range checking.");
+		}
 
 		String[] values = value.split(DELIMITER);
 

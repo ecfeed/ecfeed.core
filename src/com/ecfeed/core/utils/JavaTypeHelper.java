@@ -151,7 +151,7 @@ public final class JavaTypeHelper {
 			return SPECIAL_VALUE_NEGATIVE_INF;
 		} 
 		
-		return null;
+		return valueString;
 	}
 
 	private static String convertConditionallySpecialValueToFloatTxt(String valueString) {
@@ -180,7 +180,7 @@ public final class JavaTypeHelper {
 			return SPECIAL_VALUE_NEGATIVE_INF;
 		} 
 		
-		return null;
+		return valueString;
 	}
 
 	private static String convertConditionallySpecialValueToLongTxt(String valueString) {
@@ -206,7 +206,7 @@ public final class JavaTypeHelper {
 			return Integer.MAX_VALUE + "";
 		} 
 
-		return null;
+		return valueString;
 	}
 
 	private static String convertConditionallySpecialValueToShortTxt(String valueString) {
@@ -219,7 +219,7 @@ public final class JavaTypeHelper {
 			return Short.MAX_VALUE + "";
 		} 
 
-		return null;
+		return valueString;
 	}
 
 	public static String convertConditionallySpecialValueToByteTxt(String valueString) {
@@ -232,7 +232,7 @@ public final class JavaTypeHelper {
 			return Byte.MAX_VALUE + "";
 		} 
 
-		return null;
+		return valueString;
 	}
 
 	public static String getTypeName(String cannonicalName) {
