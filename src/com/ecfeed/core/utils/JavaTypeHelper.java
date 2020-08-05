@@ -95,6 +95,146 @@ public final class JavaTypeHelper {
 			TYPE_NAME_BOOLEAN
 		};	
 	
+	public static String convertConditionallySpecialValue(String typeName, String value) { // TODO SIMPLE-VIEW test
+		
+		if (isByteTypeName(typeName)) {
+			return convertConditionallySpecialValueToByteTxt(value);
+		}
+		
+		if (isShortTypeName(typeName)) {
+			return convertConditionallySpecialValueToShortTxt(value);
+		}
+		
+		if (isIntTypeName(typeName)) {
+			return convertConditionallySpecialValueToIntTxt(value);
+		}
+		
+		if (isLongTypeName(typeName)) {
+			return convertConditionallySpecialValueToLongTxt(value);
+		}
+		
+		if (isFloatTypeName(typeName)) {
+			return convertConditionallySpecialValueToFloatTxt(value);
+		}
+		
+		if (isDoubleTypeName(typeName)) {
+			return convertConditionallySpecialValueToDoubleTxt(value);
+		}
+		
+		ExceptionHelper.reportRuntimeException("Conversion of special value to numeric - type not supported.");
+		return null;
+	}
+	
+	private static String convertConditionallySpecialValueToDoubleTxt(String valueString) {
+		
+		if (valueString.equals(SPECIAL_VALUE_MIN)) {
+			return (Double.MIN_VALUE + "");
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MAX)) {
+			return (Double.MAX_VALUE + "");
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MINUS_MIN)) {
+			return ("-" + Double.MIN_VALUE);
+		} 
+		
+		if (valueString.equals(SPECIAL_VALUE_MINUS_MAX)) {
+			return ("-" + Double.MAX_VALUE);
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_POSITIVE_INF)) {
+			return SPECIAL_VALUE_POSITIVE_INF;
+		} 
+		
+		if (valueString.equals(SPECIAL_VALUE_NEGATIVE_INF)) {
+			return SPECIAL_VALUE_NEGATIVE_INF;
+		} 
+		
+		return null;
+	}
+
+	private static String convertConditionallySpecialValueToFloatTxt(String valueString) {
+		
+		if (valueString.equals(SPECIAL_VALUE_MIN)) {
+			return (Float.MIN_VALUE + "");
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MAX)) {
+			return (Float.MAX_VALUE + "");
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MINUS_MIN)) {
+			return ("-" + Float.MIN_VALUE);
+		} 
+		
+		if (valueString.equals(SPECIAL_VALUE_MINUS_MAX)) {
+			return ("-" + Float.MAX_VALUE);
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_POSITIVE_INF)) {
+			return SPECIAL_VALUE_POSITIVE_INF;
+		} 
+		
+		if (valueString.equals(SPECIAL_VALUE_NEGATIVE_INF)) {
+			return SPECIAL_VALUE_NEGATIVE_INF;
+		} 
+		
+		return null;
+	}
+
+	private static String convertConditionallySpecialValueToLongTxt(String valueString) {
+		
+		if (valueString.equals(SPECIAL_VALUE_MIN)) {
+			return Long.MIN_VALUE + "";
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MAX)) {
+			return Long.MAX_VALUE + "";
+		} 
+
+		return null;
+	}
+
+	private static String convertConditionallySpecialValueToIntTxt(String valueString) {
+		
+		if (valueString.equals(SPECIAL_VALUE_MIN)) {
+			return Integer.MIN_VALUE + "";
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MAX)) {
+			return Integer.MAX_VALUE + "";
+		} 
+
+		return null;
+	}
+
+	private static String convertConditionallySpecialValueToShortTxt(String valueString) {
+		
+		if (valueString.equals(SPECIAL_VALUE_MIN)) {
+			return Short.MIN_VALUE + "";
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MAX)) {
+			return Short.MAX_VALUE + "";
+		} 
+
+		return null;
+	}
+
+	public static String convertConditionallySpecialValueToByteTxt(String valueString) {
+		
+		if (valueString.equals(SPECIAL_VALUE_MIN)) {
+			return Byte.MIN_VALUE + "";
+		} 
+
+		if (valueString.equals(SPECIAL_VALUE_MAX)) {
+			return Byte.MAX_VALUE + "";
+		} 
+
+		return null;
+	}
+
 	public static String getTypeName(String cannonicalName) {
 
 		if (cannonicalName.equals(boolean.class.getName())) {
@@ -348,7 +488,7 @@ public final class JavaTypeHelper {
 		return TYPE_NAME_BOOLEAN;
 	}
 	
-	private static void convertSpecialChoicesSimpleToJavaByte(AbstractParameterNode node) {
+	private static void convertSpecialChoicesSimpleToJavaByte(AbstractParameterNode node) { // TODO SIMPLE-VIEW remove ?
 		
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
 			String valueString = choiceNode.getValueString();
@@ -361,7 +501,7 @@ public final class JavaTypeHelper {
 		}
 		
 	}
-	
+
 	private static void convertSpecialChoicesSimpleToJavaShort(AbstractParameterNode node) {
 		
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
@@ -375,7 +515,7 @@ public final class JavaTypeHelper {
 		}
 		
 	}
-	
+
 	private static void convertSpecialChoicesSimpleToJavaInt(AbstractParameterNode node) {
 	
 		for (ChoiceNode choiceNode : node.getAllChoices()) {
@@ -493,7 +633,7 @@ public final class JavaTypeHelper {
 	public static boolean isByteTypeName(String typeName) {
 
 		if (typeName == null) {
-			ExceptionHelper.reportRuntimeException("Emty type name is not allowed.");
+			ExceptionHelper.reportRuntimeException("Empty type name is not allowed.");
 		}
 		
 		if (typeName.equals(TYPE_NAME_BYTE)) {
