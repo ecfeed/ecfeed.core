@@ -10,7 +10,9 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -94,6 +96,68 @@ public final class JavaTypeHelper {
 			TYPE_NAME_STRING,
 			TYPE_NAME_BOOLEAN
 		};	
+	
+	
+	public static String getDefaultExpectedValue(String type) {
+		switch(type){
+		case JavaTypeHelper.TYPE_NAME_BYTE:
+			return JavaTypeHelper.DEFAULT_EXPECTED_BYTE_VALUE;
+		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
+			return JavaTypeHelper.DEFAULT_EXPECTED_BOOLEAN_VALUE;
+		case SimpleTypeHelper.TYPE_NAME_LOGICAL:
+			return SimpleTypeHelper.DEFAULT_EXPECTED_LOGICAL_VALUE;
+		case JavaTypeHelper.TYPE_NAME_CHAR:
+			return JavaTypeHelper.DEFAULT_EXPECTED_CHAR_VALUE;
+		case JavaTypeHelper.TYPE_NAME_DOUBLE:
+			return JavaTypeHelper.DEFAULT_EXPECTED_DOUBLE_VALUE;
+		case JavaTypeHelper.TYPE_NAME_FLOAT:
+			return JavaTypeHelper.DEFAULT_EXPECTED_FLOAT_VALUE;
+		case JavaTypeHelper.TYPE_NAME_INT:
+			return JavaTypeHelper.DEFAULT_EXPECTED_INT_VALUE;
+		case JavaTypeHelper.TYPE_NAME_LONG:
+			return JavaTypeHelper.DEFAULT_EXPECTED_LONG_VALUE;
+		case JavaTypeHelper.TYPE_NAME_SHORT:
+			return JavaTypeHelper.DEFAULT_EXPECTED_SHORT_VALUE;
+		case SimpleTypeHelper.TYPE_NAME_NUMBER:
+			return SimpleTypeHelper.DEFAULT_EXPECTED_NUMBER_VALUE;
+		case JavaTypeHelper.TYPE_NAME_STRING:
+			return JavaTypeHelper.DEFAULT_EXPECTED_STRING_VALUE;
+		case SimpleTypeHelper.TYPE_NAME_TEXT:
+			return SimpleTypeHelper.DEFAULT_EXPECTED_TEXT_VALUE;
+		default:
+			return "VALUE";
+		}
+	}
+	
+	public static List<String> getSpecialValues(String typeName) {
+		
+		List<String> result = new ArrayList<String>();
+
+		switch(typeName){
+		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
+			result.addAll(Arrays.asList(JavaTypeHelper.SPECIAL_VALUES_FOR_BOOLEAN));
+			break;
+		case JavaTypeHelper.TYPE_NAME_CHAR:
+			result.addAll(Arrays.asList(JavaTypeHelper.DEFAULT_EXPECTED_CHAR_VALUE));
+			break;
+		case JavaTypeHelper.TYPE_NAME_BYTE:
+		case JavaTypeHelper.TYPE_NAME_INT:
+		case JavaTypeHelper.TYPE_NAME_LONG:
+		case JavaTypeHelper.TYPE_NAME_SHORT:
+			result.addAll(Arrays.asList(JavaTypeHelper.SPECIAL_VALUES_FOR_INTEGER));
+			break;
+		case JavaTypeHelper.TYPE_NAME_DOUBLE:
+		case JavaTypeHelper.TYPE_NAME_FLOAT:
+			result.addAll(Arrays.asList(JavaTypeHelper.SPECIAL_VALUES_FOR_FLOAT));
+			break;
+		case JavaTypeHelper.TYPE_NAME_STRING:
+			result.addAll(Arrays.asList(com.ecfeed.core.utils.CommonConstants.STRING_SPECIAL_VALUES));
+			break;
+		default:
+			break;
+		}
+		return result;
+	}
 	
 	public static String convertConditionallySpecialValue(String typeName, String value) { // TODO SIMPLE-VIEW test
 		

@@ -40,7 +40,7 @@ public class TypeAdapterHelper {
 	public static String handleConversionError(String value, String type, ERunMode conversionMode) {
 
 		if (conversionMode == ERunMode.QUIET) {
-			return EclipseTypeHelper.getDefaultExpectedValue(type);
+			return JavaTypeHelper.getDefaultExpectedValue(type);
 		}
 
 		TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, type);
