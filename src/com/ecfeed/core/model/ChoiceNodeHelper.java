@@ -10,9 +10,14 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.Pair;
+import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_BYTE;
+import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_DOUBLE;
+import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_FLOAT;
+import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_INT;
+import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_LONG;
+import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_SHORT;
+import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
+import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -20,14 +25,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.ecfeed.core.utils.JavaTypeHelper.*;
-import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
-import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+	public static String createLabel(ChoiceNode choiceNode, ViewMode viewMode) {
+		
+		String qualifiedName = choiceNode.getQualifiedName();
+		
+		if (choiceNode.isAbstract()) {
+			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
+		}
+		
+		String value = getValueString(choiceNode, viewMode);
+		
+		return qualifiedName + " [" + value + "]";
+	}
+
+	public static String getValueString(ChoiceNode choiceNode, ViewMode viewMode) {
+		
+		String type = choiceNode.getParameter().getType();
+		
+		String value = choiceNode.getValueString();
+		
+		if (viewMode == ViewMode.SIMPLE) {
+			value = JavaTypeHelper.convertConditionallySpecialValue(type, value);
+		}
+		
+		return value;
+	}
+	
 	public static ChoiceNode createSubstitutePath(ChoiceNode choice, MethodParameterNode parameter) {
 		List<ChoiceNode> copies = createListOfCopies(choice);
 		setParentsOfChoices(copies, parameter);

@@ -18,7 +18,7 @@ import java.util.Set;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.ViewMode;
 
-public class ChoiceNode extends ChoicesParentNode{
+public class ChoiceNode extends ChoicesParentNode {
 
 	public static final String ABSTRACT_CHOICE_MARKER = "[ABSTRACT]";
 
@@ -70,20 +70,6 @@ public class ChoiceNode extends ChoicesParentNode{
 		return getQualifiedName() + " [" + getValueString() + "]";
 	}
 	
-	public String createSignature(ViewMode viewMode) {
-		
-		String qualifiedName = getQualifiedName();
-		
-		if (isAbstract()) {
-			return qualifiedName + ABSTRACT_CHOICE_MARKER;
-		}
-		
-		String valueString = getValueString(viewMode);
-		
-		return qualifiedName + " [" + valueString + "]";
-		
-	}
-
 	public String toStringWithParenthesis() {
 
 		if(isAbstract()){
