@@ -16,6 +16,8 @@ import java.util.List;
 import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 
 public class MethodNodeHelper {
@@ -63,12 +65,19 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static List<String> getArgTypes(MethodNode method) {
+	public static List<String> getArgTypes(MethodNode method, ViewMode viewMode) {
 
 		List<String> result = new ArrayList<String>();
 
 		for (AbstractParameterNode parameter : method.getParameters()) {
-			result.add(parameter.getType());
+			
+			String type = parameter.getType();
+			
+			if (viewMode == ViewMode.SIMPLE) {
+				type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
+			}
+				
+			result.add(type);
 		}
 
 		return result;
