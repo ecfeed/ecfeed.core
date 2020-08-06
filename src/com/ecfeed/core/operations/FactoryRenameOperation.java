@@ -103,7 +103,7 @@ public class FactoryRenameOperation {
 			}
 		}
 	}
-
+	
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
 		public MethodParameterOperationRename(AbstractNode target, String newName) {

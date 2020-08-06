@@ -130,10 +130,17 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	public GenericOperationRename(AbstractNode target, String newName){
 		super(OperationNames.RENAME);
+		
 		fTarget = target;
 		fNewName = newName;
-		fOriginalName = target.getFullName();
 		fNameRegex = getNameRegex(target);
+		
+		if (fTarget instanceof TestSuiteNode) {
+			fOriginalName = ((TestSuiteNode) fTarget).getSuiteName();
+		} else {
+			fOriginalName = target.getFullName();
+		}
+	
 	}
 
 	@Override
@@ -141,7 +148,13 @@ public class GenericOperationRename extends AbstractModelOperation {
 		setOneNodeToSelect(fTarget);
 		verifyNameWithRegex();
 		verifyNewName(fNewName);
-		fTarget.setFullName(fNewName);
+		
+		if (fTarget instanceof TestSuiteNode) {
+			((TestSuiteNode) fTarget).getTestCaseNodes().stream().forEach(e -> e.setFullName(fNewName));
+		} else {
+			fTarget.setFullName(fNewName);
+		}
+		
 		markModelUpdated();
 	}
 
