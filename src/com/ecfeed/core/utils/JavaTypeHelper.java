@@ -22,6 +22,8 @@ import com.ecfeed.core.model.ChoiceNode;
 
 public final class JavaTypeHelper {
 
+	// TODO SIMPLE-VIEW - remove any "simple" from this file
+	
 	public static final String TYPE_NAME_BOOLEAN = "boolean";
 	public static final String TYPE_NAME_BYTE = "byte";
 	public static final String TYPE_NAME_CHAR = "char";
@@ -92,7 +94,7 @@ public final class JavaTypeHelper {
 		TYPE_NAME_BOOLEAN
 	};	
 
-	private static final String[] SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW = new String[] {
+	private static final String[] SUPPORTED_JAVA_TYPES_FOR_SIMPLE_VIEW = new String[] { // TODO SIMPLE-VIEW delete ?
 			TYPE_NAME_DOUBLE,
 			TYPE_NAME_STRING,
 			TYPE_NAME_BOOLEAN
@@ -371,7 +373,7 @@ public final class JavaTypeHelper {
 	}
 	
 	
-	// TODO - move to another package Utils should not see AbstractParameterNode
+	// TODO SIMPLE-VIEW move to another package Utils should not see AbstractParameterNode
 	public static void convertTypeSimpleToJava(AbstractParameterNode node) {
 		if (isJavaType(node.getType())) {
 			return;

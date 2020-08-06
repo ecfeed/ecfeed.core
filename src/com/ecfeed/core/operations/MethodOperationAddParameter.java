@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -46,9 +47,17 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		List<String> types = fMethodNode.getParameterTypes();
 		types.add(fNewIndex, fMethodParameterNode.getType());
 		
-		if (fMethodNode.getClassNode() != null && fMethodNode.getClassNode().getMethod(fMethodNode.getFullName(), types) != null) {
-			String methodName =  fMethodNode.getClassNode().getMethod(fMethodNode.getFullName(), types).getFullName();
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(fMethodNode.getClassNode(), methodName));
+		ClassNode parentClassNode = fMethodNode.getClassNode();
+		
+		if (parentClassNode != null) { 
+				
+			MethodNode existingMethodNode = parentClassNode.getMethod(fMethodNode.getFullName(), types);
+			
+			if (existingMethodNode != null) {
+				ModelOperationException.report(
+						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+								parentClassNode, existingMethodNode.getFullName()));
+			}
 		}
 		
 		fMethodNode.removeTestCases();
