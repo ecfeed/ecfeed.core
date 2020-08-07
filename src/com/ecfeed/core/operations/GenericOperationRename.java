@@ -55,6 +55,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 		String newName = fNewName;
 		
 		if (fSourceViewMode == SourceViewMode.SIMPLE_VIEW) {
+			
+			if (newName.contains("_")) {
+				ModelOperationException.report("Underline chars are not allowed in simple view.");
+			}
+			
 			newName = newName.replace(" ", "_");
 		}
 		
