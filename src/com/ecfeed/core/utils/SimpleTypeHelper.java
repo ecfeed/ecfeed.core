@@ -245,23 +245,19 @@ public final class SimpleTypeHelper {
 		return false;
 	}	
 
-	public static String parseToSimpleView(String text) { // TODO SIMPLE-VIEW - remove ?
-		String returnText = text;
+	public static String convertTextFromJavaToSimpleConvention(String text) {
+		
+		String result = text.replaceAll("_", " ");
 
-//		if (returnText.equals("")) {
-//			return DEFAULT_PACKAGE;
-//		}
-
-		returnText = returnText.replaceAll("_", " ");
-
-		while (returnText.contains("  ")) {
-			returnText = returnText.replaceAll("  ", " ");
-		}
-
-		returnText = returnText.replaceAll(RegexHelper.REGEX_SPECIAL_CHARACTER, "_");
-		returnText = returnText.trim();
-
-		return returnText;
+		return result;
 	}
 
+	
+	public static String convertTextFromSimpleToJavaConvention(String text1) {
+		
+		String result = text1.replace(" ", "_");
+		
+		return result;
+	}
+	
 }

@@ -99,9 +99,9 @@ public class ClassNodeHelper {
 	
 		if (isHiddenTypeAvailable(classNode)) {
 			return  "The class: '" 
-					+ SimpleTypeHelper.parseToSimpleView(classNode.getSimpleName()) 
+					+ SimpleTypeHelper.convertTextFromJavaToSimpleConvention(classNode.getSimpleName()) 
 					+ "' already contains model of a method: '" 
-					+ SimpleTypeHelper.parseToSimpleView(methodName) 
+					+ SimpleTypeHelper.convertTextFromJavaToSimpleConvention(methodName) 
 					+ "' with identical signature";
 		} else {
 			return  "The class: '" 
