@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ModelCompatibility;
+import com.ecfeed.core.utils.SourceViewMode;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class GenericAddChildrenOperation extends BulkOperation {
@@ -24,7 +24,7 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			Collection<? extends AbstractNode> children, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ModelCompatibility modelCompatibility) {
+			SourceViewMode modelCompatibility) {
 		
 		this(target, children, -1, adapterProvider, validate, modelCompatibility);
 	}
@@ -35,7 +35,7 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ModelCompatibility modelCompatibility) {
+			SourceViewMode modelCompatibility) {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target);
 

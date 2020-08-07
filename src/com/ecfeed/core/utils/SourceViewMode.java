@@ -1,6 +1,6 @@
 package com.ecfeed.core.utils;
 
-public enum ModelCompatibility {
+public enum SourceViewMode {
 	
 	SIMPLE_VIEW,
 	JAVA_VIEW,

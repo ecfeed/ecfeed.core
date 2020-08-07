@@ -22,17 +22,17 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ModelCompatibility;
+import com.ecfeed.core.utils.SourceViewMode;
 
 public class FactoryRemoveChildOperation implements IModelVisitor{
 
 	private AbstractNode fChild;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private ModelCompatibility fModelCompatibility;
+	private SourceViewMode fModelCompatibility;
 
 	public FactoryRemoveChildOperation(
-			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ModelCompatibility modelCompatibility) {
+			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, SourceViewMode modelCompatibility) {
 		fChild = child;
 		fValidate = validate;
 		fModelCompatibility = modelCompatibility;

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.BooleanHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
 
 public abstract class AbstractNode{
 	private String fName;
@@ -64,6 +65,10 @@ public abstract class AbstractNode{
 
 	public void setFullName(String name) { // TODO - rename to setName
 
+		if (name.contains(" ")) {
+			ExceptionHelper.reportRuntimeException("Node name should not contain spaces.");
+		}
+		
 		fName = name;
 		registerChange();
 	}

@@ -26,7 +26,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.ModelCompatibility;
+import com.ecfeed.core.utils.SourceViewMode;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -37,9 +37,9 @@ public class FactoryRenameOperation {
 
 	private static class ClassOperationRename extends GenericOperationRename {
 
-		ModelCompatibility fModelCompatibility;
+		SourceViewMode fModelCompatibility;
 
-		public ClassOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility) {
+		public ClassOperationRename(AbstractNode target, String newName, SourceViewMode modelCompatibility) {
 			super(target, newName, modelCompatibility);
 			fModelCompatibility = modelCompatibility;
 		}
@@ -64,9 +64,9 @@ public class FactoryRenameOperation {
 
 	private static class MethodOperationRename extends GenericOperationRename {
 
-		ModelCompatibility fModelCompatibility;
+		SourceViewMode fModelCompatibility;
 
-		public MethodOperationRename(MethodNode target, String newName, ModelCompatibility modelCompatibility) {
+		public MethodOperationRename(MethodNode target, String newName, SourceViewMode modelCompatibility) {
 
 			super(target, newName, modelCompatibility);
 
@@ -103,9 +103,9 @@ public class FactoryRenameOperation {
 
 	private static class GlobalParameterOperationRename extends GenericOperationRename {
 
-		ModelCompatibility fModelCompatibility;
+		SourceViewMode fModelCompatibility;
 
-		public GlobalParameterOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility) {
+		public GlobalParameterOperationRename(AbstractNode target, String newName, SourceViewMode modelCompatibility) {
 
 			super(target, newName, modelCompatibility);
 
@@ -131,9 +131,9 @@ public class FactoryRenameOperation {
 
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
-		ModelCompatibility fModelCompatibility;
+		SourceViewMode fModelCompatibility;
 
-		public MethodParameterOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility) {
+		public MethodParameterOperationRename(AbstractNode target, String newName, SourceViewMode modelCompatibility) {
 			super(target, newName, modelCompatibility);
 			fModelCompatibility = modelCompatibility;
 		}
@@ -157,9 +157,9 @@ public class FactoryRenameOperation {
 
 	private static class ChoiceOperationRename extends GenericOperationRename {
 
-		ModelCompatibility fModelCompatibility;
+		SourceViewMode fModelCompatibility;
 
-		public ChoiceOperationRename(ChoiceNode target, String newName, ModelCompatibility modelCompatibility) {
+		public ChoiceOperationRename(ChoiceNode target, String newName, SourceViewMode modelCompatibility) {
 			super(target, newName, modelCompatibility);
 			fModelCompatibility = modelCompatibility;
 		}
@@ -180,9 +180,9 @@ public class FactoryRenameOperation {
 	private static class RenameOperationProvider implements IModelVisitor{
 
 		private String fNewName;
-		private ModelCompatibility fModelCompatibility;
+		private SourceViewMode fModelCompatibility;
 
-		public RenameOperationProvider(String newName, ModelCompatibility modelCompatibility) {
+		public RenameOperationProvider(String newName, SourceViewMode modelCompatibility) {
 			fNewName = newName;
 			fModelCompatibility = modelCompatibility;
 		}
@@ -228,7 +228,7 @@ public class FactoryRenameOperation {
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newName, ModelCompatibility modelCompatibility){
+	public static IModelOperation getRenameOperation(AbstractNode target, String newName, SourceViewMode modelCompatibility){
 
 		try{
 			return (IModelOperation)target.accept(new RenameOperationProvider(newName, modelCompatibility));

@@ -15,20 +15,20 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.ModelCompatibility;
+import com.ecfeed.core.utils.SourceViewMode;
 
 public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	private RootNode fRootNode;
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
-	private ModelCompatibility fModelCompatibility;
+	private SourceViewMode fModelCompatibility;
 
-	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, ModelCompatibility modelCompatibility) {
+	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, SourceViewMode modelCompatibility) {
 		this(target, classToAdd, -1, modelCompatibility);
 	}
 	
-	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, ModelCompatibility modelCompatibility) {
+	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, SourceViewMode modelCompatibility) {
 		super(OperationNames.ADD_CLASS);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
@@ -45,7 +45,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 			fAddIndex = fRootNode.getClasses().size();
 		}
 		
-		if (fModelCompatibility == ModelCompatibility.JAVA_VIEW) {
+		if (fModelCompatibility == SourceViewMode.JAVA_VIEW) {
 			if(!ClassNodeHelper.classNameCompliesWithJavaNamingRules(name)){
 				ModelOperationException.report(RegexHelper.CLASS_NAME_REGEX_PROBLEM);
 			}

@@ -21,7 +21,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ModelCompatibility;
+import com.ecfeed.core.utils.SourceViewMode;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -30,17 +30,21 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private AbstractNode fTarget;
 	private String fNewName;
 	private String fOriginalName;
-	private String fNameRegex;
-	private ModelCompatibility fModelCompatibility;
+	private String fJavaNameRegex;
+	private SourceViewMode fSourceViewMode;
 	
-	public GenericOperationRename(AbstractNode target, String newName, ModelCompatibility modelCompatibility){
+	public GenericOperationRename(
+			AbstractNode target, 
+			String newName, 
+			SourceViewMode modelCompatibility // TODO SIMPLE-VIEW remove
+			) {
 		
 		super(OperationNames.RENAME);
 		fTarget = target;
 		fNewName = newName;
 		fOriginalName = target.getFullName();
-		fNameRegex = getJavaNameRegex(target);
-		fModelCompatibility = modelCompatibility;
+		fJavaNameRegex = getJavaNameRegex(target);
+		fSourceViewMode = modelCompatibility;
 	}
 
 	@Override
@@ -48,19 +52,23 @@ public class GenericOperationRename extends AbstractModelOperation {
 		
 		setOneNodeToSelect(fTarget);
 		
-		if (fModelCompatibility == ModelCompatibility.JAVA_VIEW) {
-			verifyNameWithJavaRegex();
+		String newName = fNewName;
+		
+		if (fSourceViewMode == SourceViewMode.SIMPLE_VIEW) {
+			newName = newName.replace(" ", "_");
 		}
 		
-		verifyNewName(fNewName);
+		verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget); // TODO SIMPLE-VIEW for source view simple error messages should be different
 		
-		fTarget.setFullName(fNewName);
+		verifyNewName(newName);
+		
+		fTarget.setFullName(newName);
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericOperationRename(getOwnNode(), getOriginalName(), fModelCompatibility);
+		return new GenericOperationRename(getOwnNode(), getOriginalName(), fSourceViewMode);
 	}
 
 	protected AbstractNode getOwnNode(){
@@ -78,10 +86,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 	protected void verifyNewName(String newName) throws ModelOperationException{
 	}
 
-	protected void verifyNameWithJavaRegex() throws ModelOperationException {
+	private static void verifyNameWithJavaRegex(String name, String regex, AbstractNode targetNode) throws ModelOperationException {
 
-		if (fNewName.matches(fNameRegex) == false) {
-			ModelOperationException.report(getRegexProblemMessage());
+		if (name.matches(regex) == false) {
+			ModelOperationException.report(getRegexProblemMessage(targetNode));
 		}
 	}
 
@@ -92,14 +100,14 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return "*";
 	}
 
-	private String getRegexProblemMessage(){
+	private static String getRegexProblemMessage(AbstractNode abstractNode){
 		try{
-			return (String)fTarget.accept(new RegexProblemMessageProvider());
+			return (String)abstractNode.accept(new RegexProblemMessageProvider());
 		}catch(Exception e){SystemLogger.logCatch(e);}
 		return "";
 	}
 	
-	private class RegexProblemMessageProvider implements IModelVisitor {
+	private static class RegexProblemMessageProvider implements IModelVisitor {
 
 		@Override
 		public Object visit(RootNode node) throws Exception {

@@ -29,12 +29,12 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ModelCompatibility;
+import com.ecfeed.core.utils.SourceViewMode;
 
 public class GenericRemoveNodesOperation extends BulkOperation {
 
 	private final Set<AbstractNode> fSelectedNodes;
-	private final ModelCompatibility fModelCompatibility;
+	private final SourceViewMode fModelCompatibility;
 
 	private final Set<AbstractNode> fAffectedNodes = new HashSet<>();
 	private final Set<TestCaseNode> fAffectedTestCases = new HashSet<>();
@@ -46,7 +46,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			boolean validate,
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation,
-			ModelCompatibility modelCompatibility) {
+			SourceViewMode modelCompatibility) {
 
 		super(OperationNames.REMOVE_NODES, 
 				false,
