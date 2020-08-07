@@ -86,7 +86,7 @@ public class MethodNode extends ParametersParentNode {
 		return createSignature(ViewMode.JAVA, true); 
 	}
 
-	public String getShortSignatureForDisplayOnly(ViewMode viewMode) {
+	public String getMethodLabel(ViewMode viewMode) {
 
 		return createSignature(viewMode, true);
 	}
@@ -102,7 +102,13 @@ public class MethodNode extends ParametersParentNode {
 		List<String> types = getParameterTypes();
 		List<String> names = getParametersNames();
 
-		String signature = new String(getFullName()) + "(";
+		String fullName = getFullName();
+		
+		if (viewMode == ViewMode.SIMPLE) {
+			fullName = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(fullName);
+		}
+		
+		String signature = new String(fullName) + "(";
 		String type;
 
 		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {

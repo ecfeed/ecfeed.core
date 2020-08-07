@@ -51,12 +51,12 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
-			for(String token : getNewName().split("\\.")){
+			for(String token : getNewNameInJavaConvention().split("\\.")){
 				if(JavaLanguageHelper.isJavaKeyword(token)){
 					ModelOperationException.report(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
 				}
 			}
-			if(getOwnNode().getSibling(getNewName()) != null){
+			if(getOwnNode().getSibling(getNewNameInJavaConvention()) != null){
 				ModelOperationException.report(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
 			}
 		}
@@ -88,13 +88,13 @@ public class FactoryRenameOperation {
 
 			if (!ClassNodeHelper.isNewMethodSignatureValid(
 					targetMethodNode.getClassNode(), 
-					getNewName(), 
+					getNewNameInJavaConvention(), 
 					targetMethodNode.getParameterTypes(),
 					fModelCompatibility,
 					problems)) {
 				
 				ClassNodeHelper.updateNewMethodsSignatureProblemList(
-						targetMethodNode.getClassNode(), getNewName(), targetMethodNode.getParameterTypes(), problems);
+						targetMethodNode.getClassNode(), getNewNameInJavaConvention(), targetMethodNode.getParameterTypes(), problems);
 				
 				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 			}
@@ -171,7 +171,7 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName)throws ModelOperationException{
-			if(getOwnNode().getSibling(getNewName()) != null){
+			if(getOwnNode().getSibling(getNewNameInJavaConvention()) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}
 		}

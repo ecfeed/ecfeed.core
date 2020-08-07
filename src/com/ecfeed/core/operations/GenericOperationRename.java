@@ -23,6 +23,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.SourceViewMode;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class GenericOperationRename extends AbstractModelOperation {
@@ -84,7 +85,15 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return fOriginalName;
 	}
 
-	protected String getNewName(){
+	protected String getNewNameInJavaConvention(){
+		
+		if (fSourceViewMode == SourceViewMode.SIMPLE_VIEW) {
+			
+			String result = SimpleTypeHelper.convertTextFromSimpleToJavaConvention(fNewName);
+			
+			return result; 
+		}
+		
 		return fNewName;
 	}
 
