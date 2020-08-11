@@ -28,6 +28,7 @@ import java.util.Map;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 public class ChoiceNodeHelper {
@@ -37,6 +38,10 @@ public class ChoiceNodeHelper {
 	public static String createLabel(ChoiceNode choiceNode, ViewMode viewMode) {
 		
 		String qualifiedName = choiceNode.getQualifiedName();
+		
+		if ( viewMode == ViewMode.SIMPLE) {
+			qualifiedName = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(qualifiedName);
+		}
 		
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
