@@ -100,7 +100,7 @@ public class MethodNode extends ParametersParentNode {
 
 		List<MethodParameterNode> methodParameters = getMethodParameters();
 		List<String> types = getParameterTypes();
-		List<String> names = getParametersNames();
+		List<String> parameterNames = getParametersNames();
 
 		String fullName = getFullName();
 		
@@ -127,7 +127,13 @@ public class MethodNode extends ParametersParentNode {
 
 			signature += type;
 			signature += " ";
-			signature += names.get(paramIndex);
+			String parameterName = parameterNames.get(paramIndex);
+			
+			if (viewMode == ViewMode.SIMPLE) {
+				parameterName = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(parameterName);
+			}
+			
+			signature += parameterName;
 
 			if (paramIndex < types.size() - 1) {
 				signature += ", ";
