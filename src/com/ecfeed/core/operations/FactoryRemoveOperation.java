@@ -66,12 +66,12 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
-		private ViewMode fModelCompatibility;
+		private ViewMode fViewMode;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ViewMode modelCompatibility){
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode){
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
-			fModelCompatibility = modelCompatibility;
+			fViewMode = viewMode;
 		}
 
 		@Override
@@ -81,22 +81,22 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node, fModelCompatibility);
+			return new RootOperationRemoveClass(node.getRoot(), node, fViewMode);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node, fModelCompatibility);
+			return new ClassOperationRemoveMethod(node.getClassNode(), node, fViewMode);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fModelCompatibility);
+			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fViewMode);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node, fModelCompatibility);
+			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node, fViewMode);
 		}
 
 		@Override
@@ -116,9 +116,9 @@ public class FactoryRemoveOperation {
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode modelCompatibility){
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode){
 		try {
-			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, modelCompatibility));
+			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, viewMode));
 		} catch (Exception e) {
 			return new UnsupportedModelOperation();
 		}

@@ -25,17 +25,17 @@ import com.ecfeed.core.utils.ViewMode;
 
 public class GenericMoveOperation extends BulkOperation {
 
-	ViewMode fModelCompatibility;
+	ViewMode fViewMode;
 	
 	public GenericMoveOperation(
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider,
-			ViewMode modelCompatibility) throws ModelOperationException {
+			ViewMode viewMode) throws ModelOperationException {
 		
-		this(moved, newParent, adapterProvider, -1, modelCompatibility);
+		this(moved, newParent, adapterProvider, -1, viewMode);
 		
-		fModelCompatibility = modelCompatibility;
+		fViewMode = viewMode;
 	}
 
 	public GenericMoveOperation(
@@ -43,7 +43,7 @@ public class GenericMoveOperation extends BulkOperation {
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
 			int newIndex,
-			ViewMode modelCompatibility) throws ModelOperationException {
+			ViewMode viewMode) throws ModelOperationException {
 
 		super(OperationNames.MOVE, true, newParent, getParent(moved));
 
@@ -56,17 +56,17 @@ public class GenericMoveOperation extends BulkOperation {
 						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
 					}
 					addOperation((IModelOperation)node.getParent().accept(
-							new FactoryRemoveChildOperation(node, adapterProvider, false, modelCompatibility)));
+							new FactoryRemoveChildOperation(node, adapterProvider, false, viewMode)));
 
 					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
 						GlobalParameterNode parameter = (GlobalParameterNode)node;
 						node = new MethodParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
 					}
 					if(newIndex != -1){
-						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, newIndex, adapterProvider, false, fModelCompatibility)));
+						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, newIndex, adapterProvider, false, fViewMode)));
 					}
 					else{
-						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, adapterProvider, false, fModelCompatibility)));
+						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, adapterProvider, false, fViewMode)));
 					}
 					for(MethodNode method : methodsInvolved){
 						addOperation(new MethodOperationMakeConsistent(method));

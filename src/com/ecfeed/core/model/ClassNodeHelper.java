@@ -47,16 +47,16 @@ public class ClassNodeHelper {
 	}
 	
 	public static boolean isNewMethodSignatureValid(
-			ClassNode parent, String methodName, List<String> argTypes, ViewMode modelCompatibility) {
+			ClassNode parent, String methodName, List<String> argTypes, ViewMode viewMode) {
 
-		return isNewMethodSignatureValid(parent, methodName, argTypes, modelCompatibility, null);
+		return isNewMethodSignatureValid(parent, methodName, argTypes, viewMode, null);
 	}
 
 	public static boolean isNewMethodSignatureValid(
 			ClassNode parent, 
 			String methodName, 
 			List<String> argTypes,
-			ViewMode modelCompatibility,
+			ViewMode viewMode,
 			List<String> problems) {
 
 		if (parent.getMethod(methodName, argTypes) != null) {
@@ -77,9 +77,9 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes, ViewMode modelCompatibility) {
+	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes, ViewMode viewMode) {
 
-		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes, modelCompatibility)) {
+		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes, viewMode)) {
 			return startMethodName;
 		}
 		
@@ -89,7 +89,7 @@ public class ClassNodeHelper {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes, modelCompatibility)) {
+			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes, viewMode)) {
 				return newMethodName;
 			}
 		}

@@ -24,7 +24,7 @@ public class ReplaceChoicesOperation extends BulkOperation {
 			AbstractParameterNode target, 
 			List<ChoiceNode> choices, 
 			ITypeAdapterProvider adapterProvider,
-			ViewMode modelCompatibility) {
+			ViewMode viewMode) {
 
 		super("Replace choices", true, target, target);
 
@@ -40,7 +40,7 @@ public class ReplaceChoicesOperation extends BulkOperation {
 
 		addOperation(
 				new GenericRemoveNodesOperation(
-						target.getChoices(), adapterProvider, true, target, target, modelCompatibility));
+						target.getChoices(), adapterProvider, true, target, target, viewMode));
 
 		for(ChoiceNode choice : skipped){
 			addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true));

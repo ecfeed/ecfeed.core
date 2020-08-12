@@ -20,14 +20,14 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 	private ClassNode fRemovedClass;
 	private RootNode fTarget;
 	private int fCurrentIndex;
-	private ViewMode fModelCompatibility;
+	private ViewMode fViewMode;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, ViewMode modelCompatibility) {
+	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, ViewMode viewMode) {
 		super(OperationNames.REMOVE_CLASS);
 		fTarget = target;
 		fRemovedClass = removedClass;
 		fCurrentIndex = removedClass.getMyClassIndex();
-		fModelCompatibility = modelCompatibility;
+		fViewMode = viewMode;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationAddNewClass(fTarget, fRemovedClass, fCurrentIndex, fModelCompatibility);
+		return new RootOperationAddNewClass(fTarget, fRemovedClass, fCurrentIndex, fViewMode);
 	}
 
 }

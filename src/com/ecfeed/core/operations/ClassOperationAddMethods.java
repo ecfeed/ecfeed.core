@@ -18,12 +18,12 @@ import com.ecfeed.core.utils.ViewMode;
 
 public class ClassOperationAddMethods extends BulkOperation{
 
-	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, ViewMode modelCompatibility) {
+	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, ViewMode viewMode) {
 		
 		super(OperationNames.ADD_METHODS, false, target, target);
 		
 		for(MethodNode method : methods){
-			addOperation(new ClassOperationAddMethod(target, method, index++, modelCompatibility));
+			addOperation(new ClassOperationAddMethod(target, method, index++, viewMode));
 		}
 	}
 }

@@ -37,7 +37,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public GenericOperationRename(
 			AbstractNode target, 
 			String newName, 
-			ViewMode modelCompatibility // TODO SIMPLE-VIEW remove
+			ViewMode viewMode // TODO SIMPLE-VIEW remove
 			) {
 		
 		super(OperationNames.RENAME);
@@ -45,7 +45,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fNewName = newName;
 		fOriginalName = target.getFullName();
 		fJavaNameRegex = getJavaNameRegex(target);
-		fSourceViewMode = modelCompatibility;
+		fSourceViewMode = viewMode;
 	}
 
 	@Override

@@ -33,29 +33,29 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	private int fIndex;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private ViewMode fModelCompatibility;
+	private ViewMode fViewMode;
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ViewMode modelCompatibility) {
+			ViewMode viewMode) {
 
 		fChild = child;
 		fIndex = index;
 		fValidate = validate;
 		fAdapterProvider = adapterProvider;
-		fModelCompatibility  = modelCompatibility;
+		fViewMode  = viewMode;
 	}
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ViewMode modelCompatibility) {
+			ViewMode viewMode) {
 
-		this(child, -1, adapterProvider, validate, modelCompatibility);
+		this(child, -1, adapterProvider, validate, viewMode);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if (fChild instanceof ClassNode) {
 
-			return createOperationAddClass(rootNode, fModelCompatibility);
+			return createOperationAddClass(rootNode, fViewMode);
 
 		} else if (fChild instanceof AbstractParameterNode) {
 
@@ -89,17 +89,17 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true);
 	}
 
-	private Object createOperationAddClass(RootNode rootNode, ViewMode modelCompatibility) {
+	private Object createOperationAddClass(RootNode rootNode, ViewMode viewMode) {
 
 		ClassNode classNode = (ClassNode)fChild;
 
 		generateUniqueNameForClass(rootNode, classNode);
 
 		if (fIndex == -1) {
-			return new RootOperationAddNewClass(rootNode, classNode, modelCompatibility);
+			return new RootOperationAddNewClass(rootNode, classNode, viewMode);
 		}
 
-		return new RootOperationAddNewClass(rootNode, classNode, fIndex, modelCompatibility);
+		return new RootOperationAddNewClass(rootNode, classNode, fIndex, viewMode);
 	}
 
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
@@ -116,9 +116,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if(fChild instanceof MethodNode){
 			if(fIndex == -1){
-				return new ClassOperationAddMethod(node, (MethodNode)fChild, fModelCompatibility);
+				return new ClassOperationAddMethod(node, (MethodNode)fChild, fViewMode);
 			}
-			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fModelCompatibility);
+			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fViewMode);
 		}else if(fChild instanceof AbstractParameterNode){
 			GlobalParameterNode globalParameter = new GlobalParameterNode((AbstractParameterNode)fChild);
 			if(fIndex == -1){

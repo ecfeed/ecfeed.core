@@ -29,19 +29,19 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	private AbstractNode fChild;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private ViewMode fModelCompatibility;
+	private ViewMode fViewMode;
 
 	public FactoryRemoveChildOperation(
-			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode modelCompatibility) {
+			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode) {
 		fChild = child;
 		fValidate = validate;
-		fModelCompatibility = modelCompatibility;
+		fViewMode = viewMode;
 	}
 
 	@Override
 	public Object visit(RootNode node) throws Exception {
 		if(fChild instanceof ClassNode){
-			return new RootOperationRemoveClass(node, (ClassNode)fChild, fModelCompatibility);
+			return new RootOperationRemoveClass(node, (ClassNode)fChild, fViewMode);
 		}
 		if(fChild instanceof GlobalParameterNode){
 			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild);
@@ -52,7 +52,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(ClassNode node) throws Exception {
 		if(fChild instanceof MethodNode){
-			return new ClassOperationRemoveMethod(node, (MethodNode)fChild, fModelCompatibility);
+			return new ClassOperationRemoveMethod(node, (MethodNode)fChild, fViewMode);
 		}
 		if(fChild instanceof GlobalParameterNode){
 			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild);
@@ -63,7 +63,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(MethodNode node) throws Exception {
 		if(fChild instanceof MethodParameterNode){
-			return new MethodOperationRemoveParameter(node, (MethodParameterNode)fChild, fModelCompatibility);
+			return new MethodOperationRemoveParameter(node, (MethodParameterNode)fChild, fViewMode);
 		}
 		if(fChild instanceof ConstraintNode){
 			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild);

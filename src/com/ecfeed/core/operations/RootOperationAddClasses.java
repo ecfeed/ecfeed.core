@@ -17,10 +17,10 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.ViewMode;
 
 public class RootOperationAddClasses extends BulkOperation {
-	public RootOperationAddClasses(RootNode target, Collection<ClassNode> classes, int index, ViewMode modelCompatibility) {
+	public RootOperationAddClasses(RootNode target, Collection<ClassNode> classes, int index, ViewMode viewMode) {
 		super(OperationNames.ADD_CLASSES, false, target, target);
 		for(ClassNode classNode : classes){
-			addOperation(new RootOperationAddNewClass(target, classNode, index++, modelCompatibility));
+			addOperation(new RootOperationAddNewClass(target, classNode, index++, viewMode));
 		}
 	}
 }

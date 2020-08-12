@@ -24,9 +24,9 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			Collection<? extends AbstractNode> children, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ViewMode modelCompatibility) {
+			ViewMode viewMode) {
 		
-		this(target, children, -1, adapterProvider, validate, modelCompatibility);
+		this(target, children, -1, adapterProvider, validate, viewMode);
 	}
 
 	public GenericAddChildrenOperation(
@@ -35,7 +35,7 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ViewMode modelCompatibility) {
+			ViewMode viewMode) {
 
 		super(OperationNames.ADD_CHILDREN, false, target, target);
 
@@ -43,9 +43,9 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			IModelOperation operation;
 			try {
 				if (index != -1) {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate, modelCompatibility));
+					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate, viewMode));
 				} else {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate, modelCompatibility));
+					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate, viewMode));
 				}
 				if (operation != null) {
 					addOperation(operation);

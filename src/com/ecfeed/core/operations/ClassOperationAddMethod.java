@@ -25,20 +25,20 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 	private ClassNode fClassNode;
 	private MethodNode fMethod;
 	private int fIndex;
-	private ViewMode fModelCompatibility;
+	private ViewMode fViewMode;
 	
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ViewMode modelCompatibility) {
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ViewMode viewMode) {
 		super(OperationNames.ADD_METHOD);
 		fClassNode = target;
 		fMethod = method;
 		fIndex = index;
-		fModelCompatibility = modelCompatibility;
+		fViewMode = viewMode;
 	}
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, ViewMode modelCompatibility) {
-		this(target, method, -1, modelCompatibility);
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, ViewMode viewMode) {
+		this(target, method, -1, viewMode);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 				fClassNode, 
 				fMethod.getFullName(), 
 				fMethod.getParameterTypes(),
-				fModelCompatibility,
+				fViewMode,
 				problems) == false){
 			
 			ClassNodeHelper.updateNewMethodsSignatureProblemList(
@@ -77,14 +77,14 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		
 		String newName = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNode.getFullName(), methodNode.getParameterTypes(), fModelCompatibility);
+						fClassNode, methodNode.getFullName(), methodNode.getParameterTypes(), fViewMode);
 		
 		methodNode.setFullName(newName);
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationRemoveMethod(fClassNode, fMethod, fModelCompatibility);
+		return new ClassOperationRemoveMethod(fClassNode, fMethod, fViewMode);
 	}
 
 }

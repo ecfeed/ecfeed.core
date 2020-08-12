@@ -23,7 +23,7 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 	public MethodOperationRenameTestCases(
 			Collection<TestCaseNode> testCases, 
 			String newName,
-			ViewMode modelCompatibility) throws ModelOperationException {
+			ViewMode viewMode) throws ModelOperationException {
 
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases));
 
@@ -32,7 +32,7 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 		}
 
 		for(TestCaseNode testCase : testCases){
-			addOperation(FactoryRenameOperation.getRenameOperation(testCase, newName, modelCompatibility));
+			addOperation(FactoryRenameOperation.getRenameOperation(testCase, newName, viewMode));
 		}
 	}
 

@@ -20,16 +20,16 @@ public class ClassOperationRemoveMethod extends AbstractModelOperation {
 	private ClassNode fTarget;
 	private MethodNode fMethod;
 	private int fCurrentIndex;
-	private ViewMode fModelCompatibility;
+	private ViewMode fViewMode;
 
-	public ClassOperationRemoveMethod(ClassNode target, MethodNode method, ViewMode modelCompatibility) {
+	public ClassOperationRemoveMethod(ClassNode target, MethodNode method, ViewMode viewMode) {
 		
 		super(OperationNames.REMOVE_METHOD);
 		
 		fTarget = target;
 		fMethod = method;
 		fCurrentIndex = fMethod.getMyMethodIndex();
-		fModelCompatibility = modelCompatibility;
+		fViewMode = viewMode;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class ClassOperationRemoveMethod extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationAddMethod(fTarget, fMethod, fCurrentIndex, fModelCompatibility);
+		return new ClassOperationAddMethod(fTarget, fMethod, fCurrentIndex, fViewMode);
 	}
 
 }

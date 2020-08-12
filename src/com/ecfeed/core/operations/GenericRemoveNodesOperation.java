@@ -34,7 +34,7 @@ import com.ecfeed.core.utils.ViewMode;
 public class GenericRemoveNodesOperation extends BulkOperation {
 
 	private final Set<AbstractNode> fSelectedNodes;
-	private final ViewMode fModelCompatibility;
+	private final ViewMode fViewMode;
 
 	private final Set<AbstractNode> fAffectedNodes = new HashSet<>();
 	private final Set<TestCaseNode> fAffectedTestCases = new HashSet<>();
@@ -46,7 +46,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			boolean validate,
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation,
-			ViewMode modelCompatibility) {
+			ViewMode viewMode) {
 
 		super(OperationNames.REMOVE_NODES, 
 				false,
@@ -54,7 +54,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				nodeToSelectAfterReverseOperation);
 
 		fSelectedNodes = new HashSet<>(nodes);
-		fModelCompatibility = modelCompatibility;
+		fViewMode = viewMode;
 
 		Iterator<AbstractNode> iterator = fSelectedNodes.iterator();
 		while(iterator.hasNext()){
@@ -247,7 +247,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 									
 									addOperation(
 											new MethodOperationRemoveParameter(
-													method, (MethodParameterNode)node, validate, true, fModelCompatibility));
+													method, (MethodParameterNode)node, validate, true, fViewMode));
 									
 								} else if (node instanceof GlobalParameterNode) {
 									
@@ -256,7 +256,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 													((GlobalParameterNode)node).getParametersParent(), 
 													(GlobalParameterNode)node, 
 													true, 
-													fModelCompatibility));
+													fViewMode));
 								}
 							}
 						}
@@ -270,13 +270,13 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		}
 
 		fAffectedConstraints.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, fModelCompatibility)));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, fViewMode)));
 
 		fAffectedTestCases.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, fModelCompatibility)));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, fViewMode)));
 
 		fAffectedNodes.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, fModelCompatibility)));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, fViewMode)));
 	}
 
 	private Set<ConstraintNode> getAllConstraintNodes() {
