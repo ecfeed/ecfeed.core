@@ -27,7 +27,7 @@ public final class SimpleTypeHelper {
 			TYPE_NAME_NUMBER,
 			TYPE_NAME_LOGICAL
 	};
-
+	
 	public static boolean isSimpleType(String typeName) {
 
 		if (typeName == null) {
@@ -261,3 +261,297 @@ public final class SimpleTypeHelper {
 	}
 	
 }
+
+
+//public static void convertTypeSimpleToJava(AbstractParameterNode node) {
+//if (isJavaType(node.getType())) {
+//	return;
+//}
+//
+//Set<ChoiceNode> choiceNodeSet = node.getAllChoices();
+//
+//Optional<String> nodeTypeHidden = node.getSuggestedType();
+//node.setSuggestedType(null);
+//
+//if (nodeTypeHidden.isPresent()) {
+//	String newType = isConvertableToTypeHidden(choiceNodeSet, nodeTypeHidden.get());
+//	
+//	if (!newType.equals("")) {
+//		switch (newType) {
+//			case TYPE_NAME_BYTE : 
+//				convertSpecialChoicesSimpleToJavaByte(node);
+//				break;
+//			case TYPE_NAME_SHORT : 
+//				convertSpecialChoicesSimpleToJavaShort(node);
+//				break;
+//			case TYPE_NAME_INT : 
+//				convertSpecialChoicesSimpleToJavaInt(node);
+//				break;
+//			case TYPE_NAME_LONG : 
+//				convertSpecialChoicesSimpleToJavaLong(node);
+//				break;
+//			case TYPE_NAME_FLOAT : 
+//				convertSpecialChoicesSimpleToJavaFloat(node);
+//				break;
+//			case TYPE_NAME_DOUBLE : 
+//				convertSpecialChoicesSimpleToJavaDouble(node);
+//				break;
+//		}
+//		
+//		node.setType(newType);
+//		return;
+//	}		
+//}
+//
+//if (node.getType().equals(SimpleTypeHelper.TYPE_NAME_NUMBER)) {
+//	if (choiceNodeSet.size() == 0) {
+//		node.setType(TYPE_NAME_INT);
+//		return;
+//	}
+//	
+//	if (!isConvertableToInt(choiceNodeSet).equals("")) {
+//		node.setType(TYPE_NAME_INT);
+//		return;
+//	}
+//	if (!isConvertableToLong(choiceNodeSet).equals("")) {
+//		node.setType(TYPE_NAME_LONG);
+//		return;
+//	}
+//	if (!isConvertableToDouble(choiceNodeSet).equals("")) {
+//		node.setType(TYPE_NAME_DOUBLE);
+//		return;
+//	}
+//}
+//
+//if (node.getType().equals(SimpleTypeHelper.TYPE_NAME_TEXT)) {
+//	node.setType(TYPE_NAME_STRING);
+//	return;
+//}
+//
+//if (node.getType().equals(SimpleTypeHelper.TYPE_NAME_LOGICAL)) {
+//	node.setType(TYPE_NAME_BOOLEAN);
+//	return;
+//}
+//
+//}
+
+
+
+//private static String isConvertableToTypeHidden(Set<ChoiceNode> choiceNodeSet, String nodeTypeHidden) {
+//switch(nodeTypeHidden) {
+//	case TYPE_NAME_BYTE : return isConvertableToByte(choiceNodeSet);
+//	case TYPE_NAME_SHORT : return isConvertableToShort(choiceNodeSet);
+//	case TYPE_NAME_INT : return isConvertableToInt(choiceNodeSet);
+//	case TYPE_NAME_LONG : return isConvertableToLong(choiceNodeSet);
+//	case TYPE_NAME_FLOAT : return isConvertableToFloat(choiceNodeSet);
+//	case TYPE_NAME_DOUBLE : return isConvertableToDouble(choiceNodeSet);
+//	case TYPE_NAME_CHAR : return isConvertableToChar(choiceNodeSet);
+//	case TYPE_NAME_BOOLEAN : return isConvertableToBoolean(choiceNodeSet);
+//	case TYPE_NAME_STRING : return TYPE_NAME_STRING;
+//	default : return "";
+//}
+//}
+
+//private static String isConvertableToByte(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	try {
+//		Byte.parseByte(choice.getValueString());
+//	} catch (NumberFormatException e) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_BYTE;
+//}
+
+//private static String isConvertableToShort(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	try {
+//		Short.parseShort(choice.getValueString());
+//	} catch (NumberFormatException e) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_SHORT;
+//}
+
+//private static String isConvertableToInt(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	try {
+//		Integer.parseInt(choice.getValueString());
+//	} catch (NumberFormatException e) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_INT;
+//}
+
+//private static String isConvertableToLong(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	try {
+//		Long.parseLong(choice.getValueString());
+//	} catch (NumberFormatException e) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_LONG;
+//}
+
+//private static String isConvertableToFloat(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	String choiceValue = choice.getValueString();
+//	
+//	try {
+//		if (choiceValue.equals(SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE) || choiceValue.equals(SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE)) {
+//			continue;
+//		}
+//		
+//		Float.parseFloat(choiceValue);
+//	} catch (NumberFormatException e) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_FLOAT;
+//}
+
+//private static String isConvertableToDouble(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	String choiceValue = choice.getValueString();
+//	
+//	try {
+//		if (choiceValue.equals(SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE) || choiceValue.equals(SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE)) {
+//			continue;
+//		}
+//		
+//		Double.parseDouble(choice.getValueString());
+//	} catch (NumberFormatException e) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_DOUBLE;
+//}
+
+//private static String isConvertableToChar(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	if (choice.getValueString().length() > 1) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_CHAR;
+//}
+
+//private static String isConvertableToBoolean(Set<ChoiceNode> choiceNodeSet) {
+//for (ChoiceNode choice : choiceNodeSet) {
+//	if (!choice.toString().equals(SPECIAL_VALUE_TRUE) && !choice.toString().equals(SPECIAL_VALUE_FALSE)) {
+//		return "";
+//	}
+//}
+//
+//return TYPE_NAME_BOOLEAN;
+//}
+
+//private static void convertSpecialChoicesSimpleToJavaByte(AbstractParameterNode node) { // TODO SIMPLE-VIEW remove ?
+//
+//for (ChoiceNode choiceNode : node.getAllChoices()) {
+//	String valueString = choiceNode.getValueString();
+//	
+//	if (valueString.equals(Byte.MIN_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MIN);
+//	} else if (valueString.equals(Byte.MAX_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MAX);
+//	} 
+//}
+//
+//}
+
+//private static void convertSpecialChoicesSimpleToJavaShort(AbstractParameterNode node) {
+//
+//for (ChoiceNode choiceNode : node.getAllChoices()) {
+//	String valueString = choiceNode.getValueString();
+//	
+//	if (valueString.equals(Short.MIN_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MIN);
+//	} else if (valueString.equals(Short.MAX_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MAX);
+//	} 
+//}
+//
+//}
+
+//private static void convertSpecialChoicesSimpleToJavaInt(AbstractParameterNode node) {
+//
+//for (ChoiceNode choiceNode : node.getAllChoices()) {
+//	String valueString = choiceNode.getValueString();
+//	
+//	if (valueString.equals(Integer.MIN_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MIN);
+//	} else if (valueString.equals(Integer.MAX_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MAX);
+//	} 
+//}
+//
+//}
+
+//private static void convertSpecialChoicesSimpleToJavaLong(AbstractParameterNode node) {
+//
+//for (ChoiceNode choiceNode : node.getAllChoices()) {
+//	String valueString = choiceNode.getValueString();
+//	
+//	if (valueString.equals(Long.MIN_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MIN);
+//	} else if (valueString.equals(Long.MAX_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MAX);
+//	} 
+//}
+//
+//}
+
+//private static void convertSpecialChoicesSimpleToJavaFloat(AbstractParameterNode node) {
+//
+//for (ChoiceNode choiceNode : node.getAllChoices()) {
+//	String valueString = choiceNode.getValueString();
+//	
+//	if (valueString.equals(Float.MIN_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MIN);
+//	} else if (valueString.equals(Float.MAX_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MAX);
+//	} else if (valueString.equals("-" + Float.MIN_VALUE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MINUS_MIN);
+//	} else if (valueString.equals("-" + Float.MAX_VALUE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MINUS_MAX);
+//	} else if (valueString.equals(SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_NEGATIVE_INF);
+//	} else if (valueString.equals(SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_POSITIVE_INF);
+//	} 
+//}
+//
+//}
+
+//private static void convertSpecialChoicesSimpleToJavaDouble(AbstractParameterNode node) {
+//
+//for (ChoiceNode choiceNode : node.getAllChoices()) {
+//	String valueString = choiceNode.getValueString();
+//	
+//	if (valueString.equals(Double.MIN_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MIN);
+//	} else if (valueString.equals(Double.MAX_VALUE + "")) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MAX);
+//	} else if (valueString.equals("-" + Double.MIN_VALUE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MINUS_MIN);
+//	} else if (valueString.equals("-" + Double.MAX_VALUE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_MINUS_MAX);
+//	} else if (valueString.equals(SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_NEGATIVE_INF);
+//	} else if (valueString.equals(SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE)) {
+//		choiceNode.setValueString(SPECIAL_VALUE_POSITIVE_INF);
+//	} 
+//}
+//
+//}
