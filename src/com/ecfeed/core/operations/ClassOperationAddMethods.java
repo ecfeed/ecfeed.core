@@ -14,16 +14,15 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ViewMode;
 
 public class ClassOperationAddMethods extends BulkOperation{
 
-	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, ViewMode viewMode) {
+	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index) {
 		
 		super(OperationNames.ADD_METHODS, false, target, target);
 		
 		for(MethodNode method : methods){
-			addOperation(new ClassOperationAddMethod(target, method, index++, viewMode));
+			addOperation(new ClassOperationAddMethod(target, method, index++));
 		}
 	}
 }

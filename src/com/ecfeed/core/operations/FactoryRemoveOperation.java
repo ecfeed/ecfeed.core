@@ -25,7 +25,6 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ViewMode;
 
 public class FactoryRemoveOperation {
 
@@ -66,12 +65,10 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
-		private ViewMode fViewMode;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode){
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate){
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
-			fViewMode = viewMode;
 		}
 
 		@Override
@@ -86,17 +83,17 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node, fViewMode);
+			return new ClassOperationRemoveMethod(node.getClassNode(), node);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fViewMode);
+			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node, fViewMode);
+			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node);
 		}
 
 		@Override
@@ -116,9 +113,9 @@ public class FactoryRemoveOperation {
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode){
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate){
 		try {
-			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, viewMode));
+			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate));
 		} catch (Exception e) {
 			return new UnsupportedModelOperation();
 		}

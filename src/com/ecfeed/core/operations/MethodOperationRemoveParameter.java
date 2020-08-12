@@ -19,7 +19,6 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
@@ -27,7 +26,6 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
-		private ViewMode fViewMode;
 
 		private class ReverseOperation extends AbstractReverseOperation {
 			public ReverseOperation() {
@@ -44,24 +42,22 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), fViewMode);
+				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter());
 			}
 
 		}
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
+		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter) {
 			super(target, parameter);
 			fOriginalTestCases = new ArrayList<>();
-			fViewMode = viewMode;
 		}
 
 		public RemoveMethodParameterOperation(
 				MethodNode target, 
 				MethodParameterNode parameter, 
-				boolean ignoreDuplicates, 
-				ViewMode viewMode) {
+				boolean ignoreDuplicates) {
 			
-			this(target, parameter, viewMode);
+			this(target, parameter);
 			
 			fIgnoreDuplicates = ignoreDuplicates;
 		}
@@ -97,32 +93,32 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			types.remove(index);
 			
 			return ClassNodeHelper.isNewMethodSignatureValid(
-					getMethodTarget().getClassNode(), getMethodTarget().getFullName(), types, fViewMode);
+					getMethodTarget().getClassNode(), getMethodTarget().getFullName(), types);
 		}
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, ViewMode viewMode) {
+			MethodNode target, MethodParameterNode parameter, boolean validate) {
 		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
 		
-		addOperation(new RemoveMethodParameterOperation(target, parameter, viewMode));
+		addOperation(new RemoveMethodParameterOperation(target, parameter));
 		
 		if(validate){
 			addOperation(new MethodOperationMakeConsistent(target));
 		}
 	}
 	
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
-		this(target, parameter, true, viewMode);
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter) {
+		this(target, parameter, true);
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, boolean ignoreDuplicates, ViewMode viewMode){
+			MethodNode target, MethodParameterNode parameter, boolean validate, boolean ignoreDuplicates){
 		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
 		
-		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, viewMode));
+		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates));
 		if(validate){
 			addOperation(new MethodOperationMakeConsistent(target));
 		}

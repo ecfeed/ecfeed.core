@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.ViewMode;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -47,16 +46,15 @@ public class ClassNodeHelper {
 	}
 	
 	public static boolean isNewMethodSignatureValid(
-			ClassNode parent, String methodName, List<String> argTypes, ViewMode viewMode) {
+			ClassNode parent, String methodName, List<String> argTypes) {
 
-		return isNewMethodSignatureValid(parent, methodName, argTypes, viewMode, null);
+		return isNewMethodSignatureValid(parent, methodName, argTypes, null);
 	}
 
 	public static boolean isNewMethodSignatureValid(
 			ClassNode parent, 
 			String methodName, 
 			List<String> argTypes,
-			ViewMode viewMode,
 			List<String> problems) {
 
 		if (parent.getMethod(methodName, argTypes) != null) {
@@ -77,9 +75,9 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes, ViewMode viewMode) {
+	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes) {
 
-		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes, viewMode)) {
+		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes)) {
 			return startMethodName;
 		}
 		
@@ -89,7 +87,7 @@ public class ClassNodeHelper {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes, viewMode)) {
+			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes)) {
 				return newMethodName;
 			}
 		}

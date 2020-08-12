@@ -24,7 +24,6 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ViewMode;
 import com.ecfeed.core.utils.StringHelper;
 
 public class FactoryAddChildOperation implements IModelVisitor{
@@ -33,29 +32,25 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	private int fIndex;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private ViewMode fViewMode;
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate,
-			ViewMode viewMode) {
+			boolean validate) {
 
 		fChild = child;
 		fIndex = index;
 		fValidate = validate;
 		fAdapterProvider = adapterProvider;
-		fViewMode  = viewMode;
 	}
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate,
-			ViewMode viewMode) {
+			boolean validate) {
 
-		this(child, -1, adapterProvider, validate, viewMode);
+		this(child, -1, adapterProvider, validate);
 	}
 
 	@Override
@@ -63,7 +58,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if (fChild instanceof ClassNode) {
 
-			return createOperationAddClass(rootNode, fViewMode);
+			return createOperationAddClass(rootNode);
 
 		} else if (fChild instanceof AbstractParameterNode) {
 
@@ -89,7 +84,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true);
 	}
 
-	private Object createOperationAddClass(RootNode rootNode, ViewMode viewMode) { // TODO - SIMPLE-VIEW is viewMode needed
+	private Object createOperationAddClass(RootNode rootNode) {
 
 		ClassNode classNode = (ClassNode)fChild;
 
@@ -101,7 +96,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		return new RootOperationAddNewClass(rootNode, classNode, fIndex);
 	}
-
+	
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
 
 		String oldName = classNode.getFullName();
@@ -116,9 +111,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if(fChild instanceof MethodNode){
 			if(fIndex == -1){
-				return new ClassOperationAddMethod(node, (MethodNode)fChild, fViewMode);
+				return new ClassOperationAddMethod(node, (MethodNode)fChild);
 			}
-			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fViewMode);
+			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex);
 		}else if(fChild instanceof AbstractParameterNode){
 			GlobalParameterNode globalParameter = new GlobalParameterNode((AbstractParameterNode)fChild);
 			if(fIndex == -1){

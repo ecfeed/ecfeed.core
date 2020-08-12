@@ -90,7 +90,6 @@ public class FactoryRenameOperation {
 					targetMethodNode.getClassNode(), 
 					getNewNameInJavaConvention(), 
 					targetMethodNode.getParameterTypes(),
-					fViewMode,
 					problems)) {
 				
 				ClassNodeHelper.updateNewMethodsSignatureProblemList(

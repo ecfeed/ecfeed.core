@@ -13,29 +13,28 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.GlobalParametersParentNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.utils.ViewMode;
 
 public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 
 	public GenericOperationRemoveGlobalParameter(
-			GlobalParametersParentNode target, GlobalParameterNode parameter, ViewMode viewMode) {
+			GlobalParametersParentNode target, GlobalParameterNode parameter) {
 		
 		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target);
 		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, viewMode));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker));
 		}
 		
 		addOperation(new GenericOperationRemoveParameter(target, parameter));
 	}
 
 	public GenericOperationRemoveGlobalParameter(
-			GlobalParametersParentNode target, GlobalParameterNode parameter, boolean ignoreDuplicates, ViewMode viewMode) {
+			GlobalParametersParentNode target, GlobalParameterNode parameter, boolean ignoreDuplicates) {
 		
 		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target);
 		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates, viewMode));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates));
 		}
 		
 		addOperation(new GenericOperationRemoveParameter(target, parameter));

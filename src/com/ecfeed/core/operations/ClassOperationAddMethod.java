@@ -17,7 +17,6 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ViewMode;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ClassOperationAddMethod extends AbstractModelOperation{
@@ -25,20 +24,18 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 	private ClassNode fClassNode;
 	private MethodNode fMethod;
 	private int fIndex;
-	private ViewMode fViewMode;
 	
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ViewMode viewMode) {
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index) {
 		super(OperationNames.ADD_METHOD);
 		fClassNode = target;
 		fMethod = method;
 		fIndex = index;
-		fViewMode = viewMode;
 	}
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, ViewMode viewMode) {
-		this(target, method, -1, viewMode);
+	public ClassOperationAddMethod(ClassNode target, MethodNode method) {
+		this(target, method, -1);
 	}
 
 	@Override
@@ -57,7 +54,6 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 				fClassNode, 
 				fMethod.getFullName(), 
 				fMethod.getParameterTypes(),
-				fViewMode,
 				problems) == false){
 			
 			ClassNodeHelper.updateNewMethodsSignatureProblemList(
@@ -77,14 +73,14 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		
 		String newName = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNode.getFullName(), methodNode.getParameterTypes(), fViewMode);
+						fClassNode, methodNode.getFullName(), methodNode.getParameterTypes());
 		
 		methodNode.setFullName(newName);
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationRemoveMethod(fClassNode, fMethod, fViewMode);
+		return new ClassOperationRemoveMethod(fClassNode, fMethod);
 	}
 
 }

@@ -32,20 +32,19 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fNewName;
 	private String fOriginalName;
 	private String fJavaNameRegex;
-	private ViewMode fSourceViewMode;
+	private ViewMode fViewMode;
 	
 	public GenericOperationRename(
 			AbstractNode target, 
 			String newName, 
-			ViewMode viewMode // TODO SIMPLE-VIEW remove
-			) {
+			ViewMode viewMode) {
 		
 		super(OperationNames.RENAME);
 		fTarget = target;
 		fNewName = newName;
 		fOriginalName = target.getFullName();
 		fJavaNameRegex = getJavaNameRegex(target);
-		fSourceViewMode = viewMode;
+		fViewMode = viewMode;
 	}
 
 	@Override
@@ -55,7 +54,8 @@ public class GenericOperationRename extends AbstractModelOperation {
 		
 		String newName = fNewName;
 		
-		if (fSourceViewMode == ViewMode.SIMPLE) {
+		if (fViewMode == ViewMode.SIMPLE) 
+		{
 			
 			if (newName.contains("_")) {
 				ModelOperationException.report("Underline chars are not allowed in simple view.");
@@ -74,7 +74,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericOperationRename(getOwnNode(), getOriginalName(), fSourceViewMode);
+		return new GenericOperationRename(
+				getOwnNode(), 
+				getOriginalName(), 
+				fViewMode);
 	}
 
 	protected AbstractNode getOwnNode(){
@@ -87,7 +90,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	protected String getNewNameInJavaConvention(){
 		
-		if (fSourceViewMode == ViewMode.SIMPLE) {
+		if (fViewMode == ViewMode.SIMPLE) {
 			
 			String result = SimpleTypeHelper.convertTextFromSimpleToJavaConvention(fNewName);
 			

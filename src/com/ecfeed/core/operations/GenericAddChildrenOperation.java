@@ -43,9 +43,9 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			IModelOperation operation;
 			try {
 				if (index != -1) {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate, viewMode));
+					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate));
 				} else {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate, viewMode));
+					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate));
 				}
 				if (operation != null) {
 					addOperation(operation);
