@@ -81,7 +81,7 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node, fViewMode);
+			return new RootOperationRemoveClass(node.getRoot(), node);
 		}
 
 		@Override

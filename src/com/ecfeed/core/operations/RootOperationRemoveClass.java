@@ -13,21 +13,18 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.utils.ViewMode;
 
 public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	private ClassNode fRemovedClass;
 	private RootNode fTarget;
 	private int fCurrentIndex;
-	private ViewMode fViewMode;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, ViewMode viewMode) {
+	public RootOperationRemoveClass(RootNode target, ClassNode removedClass) {
 		super(OperationNames.REMOVE_CLASS);
 		fTarget = target;
 		fRemovedClass = removedClass;
 		fCurrentIndex = removedClass.getMyClassIndex();
-		fViewMode = viewMode;
 	}
 
 	@Override
@@ -40,7 +37,7 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationAddNewClass(fTarget, fRemovedClass, fCurrentIndex, fViewMode);
+		return new RootOperationAddNewClass(fTarget, fRemovedClass, fCurrentIndex);
 	}
 
 }

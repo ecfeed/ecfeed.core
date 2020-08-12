@@ -35,13 +35,13 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode) {
 		fChild = child;
 		fValidate = validate;
-		fViewMode = viewMode;
+		fViewMode = viewMode; // TODO SIMPLE-VIEW remove viewMode
 	}
 
 	@Override
 	public Object visit(RootNode node) throws Exception {
 		if(fChild instanceof ClassNode){
-			return new RootOperationRemoveClass(node, (ClassNode)fChild, fViewMode);
+			return new RootOperationRemoveClass(node, (ClassNode)fChild);
 		}
 		if(fChild instanceof GlobalParameterNode){
 			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild);

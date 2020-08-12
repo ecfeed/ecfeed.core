@@ -15,25 +15,22 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.ViewMode;
 
 public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	private RootNode fRootNode;
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
-	private ViewMode fViewMode;
 
-	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, ViewMode viewMode) {
-		this(target, classToAdd, -1, viewMode);
+	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd) {
+		this(target, classToAdd, -1);
 	}
 	
-	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, ViewMode viewMode) {
+	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex) {
 		super(OperationNames.ADD_CLASS);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
 		fAddIndex = addIndex;
-		fViewMode = viewMode;
 	}
 
 	@Override
@@ -45,10 +42,8 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 			fAddIndex = fRootNode.getClasses().size();
 		}
 		
-		if (fViewMode == ViewMode.JAVA) {
-			if(!ClassNodeHelper.classNameCompliesWithJavaNamingRules(name)){
-				ModelOperationException.report(RegexHelper.CLASS_NAME_REGEX_PROBLEM);
-			}
+		if(!ClassNodeHelper.classNameCompliesWithJavaNamingRules(name)){
+			ModelOperationException.report(RegexHelper.CLASS_NAME_REGEX_PROBLEM);
 		}
 		
 		if(fRootNode.getClass(name) != null){
@@ -61,7 +56,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationRemoveClass(fRootNode, fclassToAdd, fViewMode);
+		return new RootOperationRemoveClass(fRootNode, fclassToAdd);
 	}
 
 }

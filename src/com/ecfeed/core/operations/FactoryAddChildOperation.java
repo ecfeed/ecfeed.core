@@ -89,17 +89,17 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true);
 	}
 
-	private Object createOperationAddClass(RootNode rootNode, ViewMode viewMode) {
+	private Object createOperationAddClass(RootNode rootNode, ViewMode viewMode) { // TODO - SIMPLE-VIEW is viewMode needed
 
 		ClassNode classNode = (ClassNode)fChild;
 
 		generateUniqueNameForClass(rootNode, classNode);
 
 		if (fIndex == -1) {
-			return new RootOperationAddNewClass(rootNode, classNode, viewMode);
+			return new RootOperationAddNewClass(rootNode, classNode);
 		}
 
-		return new RootOperationAddNewClass(rootNode, classNode, fIndex, viewMode);
+		return new RootOperationAddNewClass(rootNode, classNode, fIndex);
 	}
 
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
