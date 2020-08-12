@@ -13,16 +13,16 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.utils.SourceViewMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	private ClassNode fRemovedClass;
 	private RootNode fTarget;
 	private int fCurrentIndex;
-	private SourceViewMode fModelCompatibility;
+	private ViewMode fModelCompatibility;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, SourceViewMode modelCompatibility) {
+	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, ViewMode modelCompatibility) {
 		super(OperationNames.REMOVE_CLASS);
 		fTarget = target;
 		fRemovedClass = removedClass;

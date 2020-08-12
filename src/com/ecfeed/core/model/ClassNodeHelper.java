@@ -12,7 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.SourceViewMode;
+import com.ecfeed.core.utils.ViewMode;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -47,7 +47,7 @@ public class ClassNodeHelper {
 	}
 	
 	public static boolean isNewMethodSignatureValid(
-			ClassNode parent, String methodName, List<String> argTypes, SourceViewMode modelCompatibility) {
+			ClassNode parent, String methodName, List<String> argTypes, ViewMode modelCompatibility) {
 
 		return isNewMethodSignatureValid(parent, methodName, argTypes, modelCompatibility, null);
 	}
@@ -56,7 +56,7 @@ public class ClassNodeHelper {
 			ClassNode parent, 
 			String methodName, 
 			List<String> argTypes,
-			SourceViewMode modelCompatibility,
+			ViewMode modelCompatibility,
 			List<String> problems) {
 
 		if (parent.getMethod(methodName, argTypes) != null) {
@@ -77,7 +77,7 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes, SourceViewMode modelCompatibility) {
+	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes, ViewMode modelCompatibility) {
 
 		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes, modelCompatibility)) {
 			return startMethodName;

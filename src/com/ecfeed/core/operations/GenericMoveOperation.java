@@ -21,17 +21,17 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.SourceViewMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class GenericMoveOperation extends BulkOperation {
 
-	SourceViewMode fModelCompatibility;
+	ViewMode fModelCompatibility;
 	
 	public GenericMoveOperation(
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider,
-			SourceViewMode modelCompatibility) throws ModelOperationException {
+			ViewMode modelCompatibility) throws ModelOperationException {
 		
 		this(moved, newParent, adapterProvider, -1, modelCompatibility);
 		
@@ -43,7 +43,7 @@ public class GenericMoveOperation extends BulkOperation {
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
 			int newIndex,
-			SourceViewMode modelCompatibility) throws ModelOperationException {
+			ViewMode modelCompatibility) throws ModelOperationException {
 
 		super(OperationNames.MOVE, true, newParent, getParent(moved));
 

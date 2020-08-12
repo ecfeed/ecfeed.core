@@ -19,7 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.SourceViewMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
@@ -27,7 +27,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
-		private SourceViewMode fModelCompatibility;
+		private ViewMode fModelCompatibility;
 
 		private class ReverseOperation extends AbstractReverseOperation {
 			public ReverseOperation() {
@@ -49,7 +49,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		}
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, SourceViewMode modelCompatibility) {
+		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ViewMode modelCompatibility) {
 			super(target, parameter);
 			fOriginalTestCases = new ArrayList<>();
 			fModelCompatibility = modelCompatibility;
@@ -59,7 +59,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 				MethodNode target, 
 				MethodParameterNode parameter, 
 				boolean ignoreDuplicates, 
-				SourceViewMode modelCompatibility) {
+				ViewMode modelCompatibility) {
 			
 			this(target, parameter, modelCompatibility);
 			
@@ -102,7 +102,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, SourceViewMode modelCompatibility) {
+			MethodNode target, MethodParameterNode parameter, boolean validate, ViewMode modelCompatibility) {
 		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
 		
@@ -113,12 +113,12 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		}
 	}
 	
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, SourceViewMode modelCompatibility) {
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ViewMode modelCompatibility) {
 		this(target, parameter, true, modelCompatibility);
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, boolean ignoreDuplicates, SourceViewMode modelCompatibility){
+			MethodNode target, MethodParameterNode parameter, boolean validate, boolean ignoreDuplicates, ViewMode modelCompatibility){
 		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
 		

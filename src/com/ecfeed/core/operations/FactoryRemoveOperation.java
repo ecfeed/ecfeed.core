@@ -25,7 +25,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.SourceViewMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class FactoryRemoveOperation {
 
@@ -66,9 +66,9 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
-		private SourceViewMode fModelCompatibility;
+		private ViewMode fModelCompatibility;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, SourceViewMode modelCompatibility){
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ViewMode modelCompatibility){
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
 			fModelCompatibility = modelCompatibility;
@@ -116,7 +116,7 @@ public class FactoryRemoveOperation {
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, SourceViewMode modelCompatibility){
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode modelCompatibility){
 		try {
 			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, modelCompatibility));
 		} catch (Exception e) {

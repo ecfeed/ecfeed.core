@@ -24,7 +24,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.SourceViewMode;
+import com.ecfeed.core.utils.ViewMode;
 import com.ecfeed.core.utils.StringHelper;
 
 public class FactoryAddChildOperation implements IModelVisitor{
@@ -33,14 +33,14 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	private int fIndex;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private SourceViewMode fModelCompatibility;
+	private ViewMode fModelCompatibility;
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			SourceViewMode modelCompatibility) {
+			ViewMode modelCompatibility) {
 
 		fChild = child;
 		fIndex = index;
@@ -53,7 +53,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			AbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			SourceViewMode modelCompatibility) {
+			ViewMode modelCompatibility) {
 
 		this(child, -1, adapterProvider, validate, modelCompatibility);
 	}
@@ -89,7 +89,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true);
 	}
 
-	private Object createOperationAddClass(RootNode rootNode, SourceViewMode modelCompatibility) {
+	private Object createOperationAddClass(RootNode rootNode, ViewMode modelCompatibility) {
 
 		ClassNode classNode = (ClassNode)fChild;
 
