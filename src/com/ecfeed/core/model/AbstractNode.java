@@ -59,11 +59,11 @@ public abstract class AbstractNode{
 		return result;
 	}
 
-	public String getFullName() { // TODO - rename to getName
+	public String getFullName() { // TODO SIMPLE-VIEW - rename to getName
 		return fName;
 	}
 
-	public void setFullName(String name) { // TODO - rename to setName
+	public void setFullName(String name) { // TODO SIMPLE-VIEW - rename to setName
 
 		if (name.contains(" ")) {
 			ExceptionHelper.reportRuntimeException("Node name should not contain spaces.");
