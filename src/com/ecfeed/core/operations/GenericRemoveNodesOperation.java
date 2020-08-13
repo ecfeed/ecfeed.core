@@ -142,7 +142,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			for (MethodParameterNode param : linkers) {
 				MethodNode method = param.getMethod();
 				if (addMethodToMap(method, duplicatesMap, methods)) {
-					duplicatesMap.get(method.getClassNode()).get(method.getFullName()).get(method).set(param.getMyIndex(), null);
+					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					isDependent = true;
 					if (!parameterMap.containsKey(method)) {
 						parameterMap.put(method, new ArrayList<AbstractParameterNode>());
@@ -177,7 +177,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			MethodNode method = param.getMethod();
 
 			if (addMethodToMap(method, duplicatesMap, methods)) {
-				duplicatesMap.get(method.getClassNode()).get(method.getFullName()).get(method).set(param.getMyIndex(), null);
+				duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 				if (!parameterMap.containsKey(method)) {
 					parameterMap.put(method, new ArrayList<AbstractParameterNode>());
 				}
@@ -318,19 +318,19 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		ClassNode clazz = method.getClassNode();
 		boolean hasDuplicate = false;
 		for(MethodNode classMethod : clazz.getMethods()){
-			if(classMethod != method && classMethod.getFullName().equals(method.getFullName()) && !removedMethods.contains(classMethod)){
+			if(classMethod != method && classMethod.getName().equals(method.getName()) && !removedMethods.contains(classMethod)){
 				if(duplicatesMap.get(clazz) == null){
 					duplicatesMap.put(clazz, new HashMap<String, HashMap<MethodNode, List<String>>>());
 				}
-				if(!(duplicatesMap.get(clazz).containsKey(classMethod.getFullName()))){
-					duplicatesMap.get(clazz).put(classMethod.getFullName(), new HashMap<MethodNode, List<String>>());
+				if(!(duplicatesMap.get(clazz).containsKey(classMethod.getName()))){
+					duplicatesMap.get(clazz).put(classMethod.getName(), new HashMap<MethodNode, List<String>>());
 				}
-				if(!duplicatesMap.get(clazz).get(classMethod.getFullName()).containsKey(classMethod)){
-					duplicatesMap.get(clazz).get(classMethod.getFullName())
+				if(!duplicatesMap.get(clazz).get(classMethod.getName()).containsKey(classMethod)){
+					duplicatesMap.get(clazz).get(classMethod.getName())
 					.put(classMethod, new ArrayList<String>(classMethod.getParameterTypes()));
 				}
-				if(!duplicatesMap.get(clazz).get(classMethod.getFullName()).containsKey(method)){
-					duplicatesMap.get(clazz).get(classMethod.getFullName()).put(method, new ArrayList<String>(method.getParameterTypes()));
+				if(!duplicatesMap.get(clazz).get(classMethod.getName()).containsKey(method)){
+					duplicatesMap.get(clazz).get(classMethod.getName()).put(method, new ArrayList<String>(method.getParameterTypes()));
 				}
 				hasDuplicate = true;
 			}

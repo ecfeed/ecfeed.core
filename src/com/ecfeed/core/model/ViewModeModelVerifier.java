@@ -48,7 +48,7 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 		
 		for (ClassNode element : rootNode.getClasses()) {
 			
-			if (!ClassNodeHelper.classNameCompliesWithJavaNamingRules(element.getFullName())) {
+			if (!ClassNodeHelper.classNameCompliesWithJavaNamingRules(element.getName())) {
 				return "Class name cannot be converted to java identifier. Class: " + element.getFullNamePath() + ".";
 			}
 		}
@@ -122,8 +122,8 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 		for (AbstractParameterNode element : rootNode.getParameters()) {
 			
-			String simpleName = element.getFullName();
-			String javaName = element.getType() + " " + element.getFullName();
+			String simpleName = element.getName();
+			String javaName = element.getType() + " " + element.getName();
 			
 			Pair<String, String> pair = new Pair<String, String>(simpleName, javaName);
 			parameters.add(pair);
@@ -180,7 +180,7 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 
 			String simpleSignature = element.getSimpleName();
-			String fullSignature = element.getFullName();
+			String fullSignature = element.getName();
 
 			Pair<String, String> classSignaturesPair = new Pair<String, String>(simpleSignature, fullSignature);
 
@@ -226,7 +226,7 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 		for (AbstractParameterNode element : classNode.getParameters()) {
 			
 			
-			Pair<String, String> pair = new Pair<String, String>(element.getFullName(), element.getType() + " " + element.getFullName());
+			Pair<String, String> pair = new Pair<String, String>(element.getName(), element.getType() + " " + element.getName());
 			
 			parameters.add(pair);
 		}

@@ -17,7 +17,7 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String createLabel(AbstractParameterNode abstractParameterNode, ViewMode viewMode) {
 		
-		String name = abstractParameterNode.getFullName();
+		String name = abstractParameterNode.getName();
 		String type = abstractParameterNode.getType();
 		
 		if (viewMode == ViewMode.SIMPLE) {

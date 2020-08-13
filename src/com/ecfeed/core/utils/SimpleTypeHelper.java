@@ -98,7 +98,7 @@ public final class SimpleTypeHelper {
 	
 	public static String createMethodSimpleSignature(MethodNode methodNode) {
 
-		return methodNode.getFullName() + "(" + getSimpleParameters(methodNode) + ")";
+		return methodNode.getName() + "(" + getSimpleParameters(methodNode) + ")";
 	}
 
 	private static String getSimpleParameters(MethodNode methodNode) {
@@ -127,7 +127,7 @@ public final class SimpleTypeHelper {
 
 		String result = convertJavaTypeToSimpleType(abstractParameterNode.getType()); 
 		result += " ";
-		result += abstractParameterNode.getFullName();
+		result += abstractParameterNode.getName();
 
 		return result;
 	}

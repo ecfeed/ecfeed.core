@@ -137,7 +137,7 @@ public abstract class GeneratorHelper {
 
         for (MethodNode methodNode : methods) {
 
-            if (methodName.equals(methodNode.getFullName())) {
+            if (methodName.equals(methodNode.getName())) {
                 return methodNode;
             }
         }

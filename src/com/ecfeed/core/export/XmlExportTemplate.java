@@ -71,7 +71,7 @@ public class XmlExportTemplate extends AbstractExportTemplate {
 
 		for (AbstractParameterNode node : parameters) {
 			counter++;
-			template.append(createParameterString(node.getFullName(), counter));
+			template.append(createParameterString(node.getName(), counter));
 		}
 
 		return template.toString();

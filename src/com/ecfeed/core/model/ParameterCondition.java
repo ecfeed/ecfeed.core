@@ -158,7 +158,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fRightParameterNode.getFullName());
+		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fRightParameterNode.getName());
 		if (tmpParameterNode == null) {
 			return false;
 		}
@@ -202,7 +202,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getFullName());
+		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getName());
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	public void execute() throws ModelOperationException {
 		MethodNode method = ((MethodParameterNode)fParameters.get(0)).getMethod();
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getFullName()));
+			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getName()));
 		}
 		List<Integer> indices = indices(fParameters, getShiftedElements());
 		shiftElements(fParameters, indices, getShift());
@@ -65,7 +65,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		List<String> parameterTypes = method.getParameterTypes();
 		List<Integer> indices = indices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);
-		MethodNode sibling = method.getClassNode().getMethod(method.getFullName(), parameterTypes);
+		MethodNode sibling = method.getClassNode().getMethod(method.getName(), parameterTypes);
 		if(sibling != null && sibling != method){
 			return false;
 		}

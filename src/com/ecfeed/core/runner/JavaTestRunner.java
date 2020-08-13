@@ -44,7 +44,7 @@ public class JavaTestRunner {
 
 	public void createTestClassAndMethod(MethodNode methodNode) throws RunnerException {
 		ClassNode classNode = methodNode.getClassNode();
-		fTestClass = getTestClass(classNode.getFullName());
+		fTestClass = getTestClass(classNode.getName());
 		fTestMethod = getTestMethod(fTestClass, fMethodNode);
 	}	
 
@@ -106,7 +106,7 @@ public class JavaTestRunner {
 		for(Class<?> type : parameterTypes){
 			types.add(JavaTypeHelper.getTypeName(type.getCanonicalName()));
 		}
-		return methodName.equals(methodModel.getFullName()) && types.equals(methodModel.getParameterTypes());
+		return methodName.equals(methodModel.getName()) && types.equals(methodModel.getParameterTypes());
 	}
 
 	protected Object[] getArguments(List<ChoiceNode> testData) throws RunnerException {
@@ -133,7 +133,7 @@ public class JavaTestRunner {
 		List<String> args = new ArrayList<String>();
 
 		for(ChoiceNode choice : testData){
-			args.add(choice.getFullName());
+			args.add(choice.getName());
 		}
 		return args.toArray();
 	}	

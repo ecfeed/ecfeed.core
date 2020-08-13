@@ -66,7 +66,7 @@ public class ModelLogger {
 				getIsFieldStr(fieldName) + 
 				abstractNode.getClass().getSimpleName() +
 				getFieldStr(fieldName) +
-				", " + abstractNode.getFullName()+ 
+				", " + abstractNode.getName()+ 
 				", #" + abstractNode.hashCode(), indent);
 	}
 

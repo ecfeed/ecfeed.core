@@ -99,7 +99,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
 
-		String oldName = classNode.getFullName();
+		String oldName = classNode.getName();
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
 		String newName = RootNodeHelper.generateNewClassName(rootNode, oldNameCore);
 

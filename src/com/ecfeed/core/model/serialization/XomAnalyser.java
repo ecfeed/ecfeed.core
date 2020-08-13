@@ -441,7 +441,7 @@ public abstract class XomAnalyser {
 				
 				testValue = parameter.getChoice(choiceName);
 				if (testValue == null) {
-					errorList.add(Messages.PARTITION_DOES_NOT_EXIST(parameter.getFullName(), choiceName));
+					errorList.add(Messages.PARTITION_DOES_NOT_EXIST(parameter.getName(), choiceName));
 					return Optional.empty();
 				}
 				
@@ -489,7 +489,7 @@ public abstract class XomAnalyser {
 		if ((getIterableChildren(element, SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME).size() != 1) ||
 				(getIterableChildren(element, SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME).size() != 1)) {
 			
-			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 			return Optional.empty();
 		}
 		
@@ -500,7 +500,7 @@ public abstract class XomAnalyser {
 					//a single statement or statement array
 					premise = parseStatement(child.getChildElements().get(0), method, errorList);
 				} else {
-					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 					return Optional.empty();
 				}
 			}
@@ -511,17 +511,17 @@ public abstract class XomAnalyser {
 				if (getIterableChildren(child).size() == 1) {
 					consequence = parseStatement(child.getChildElements().get(0), method, errorList);
 				} else {
-					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 					return Optional.empty();
 				}
 			} else {
-				errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+				errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 				return Optional.empty();
 			}
 		}
 		
 		if (!premise.isPresent() || !consequence.isPresent()) {
-			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getFullName(), name));
+			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 			return Optional.empty();
 		}
 
@@ -585,7 +585,7 @@ public abstract class XomAnalyser {
 				statementArray = new StatementArray(EStatementOperator.AND, method.getModelChangeRegistrator());
 				break;
 			default:
-				errorList.add(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(method.getFullName(), operatorValue));
+				errorList.add(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(method.getName(), operatorValue));
 				return null;
 		}
 		
@@ -627,14 +627,14 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode parameter = (MethodParameterNode)method.getParameter(parameterName);
 		if (parameter == null || parameter.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
 
 		String choiceName = getAttributeValue(element, getStatementChoiceAttributeName(), errorList);
 		ChoiceNode choice = parameter.getChoice(choiceName);
 		if (choice == null) {
-			errorList.add(Messages.WRONG_PARTITION_NAME(choiceName, parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARTITION_NAME(choiceName, parameterName, method.getName()));
 			return null;
 		}
 
@@ -653,7 +653,7 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.getParameter(parameterName);
 		if (leftParameterNode == null || leftParameterNode.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
 
@@ -661,7 +661,7 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode rightParameterNode = (MethodParameterNode)method.getParameter(rightParameterName);
 		if (rightParameterNode == null) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, method.getName()));
 			return null;
 		}
 
@@ -680,7 +680,7 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.getParameter(parameterName);
 		if (leftParameterNode == null || leftParameterNode.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
 
@@ -703,7 +703,7 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode parameter = method.getMethodParameter(parameterName);
 		if (parameter == null || parameter.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
 		EMathRelation relation = getRelation(relationName, errorList);
@@ -721,7 +721,7 @@ public abstract class XomAnalyser {
 		MethodParameterNode parameter = method.getMethodParameter(parameterName);
 		
 		if (parameter == null || !parameter.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getFullName()));
+			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
 		

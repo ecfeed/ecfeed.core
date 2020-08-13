@@ -31,8 +31,8 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 		setOneNodeToSelect(fTarget);
 
-		if(fTarget.getClassNode().getMethod(fSource.getFullName(), fSource.getParameterTypes()) != null){
-			String methodName = fSource.getFullName();
+		if(fTarget.getClassNode().getMethod(fSource.getName(), fSource.getParameterTypes()) != null){
+			String methodName = fSource.getName();
 			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(fTarget.getClassNode(), methodName));
 		}
 
@@ -40,13 +40,13 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 			ModelOperationException.report(ClassNodeHelper.METHODS_INCOMPATIBLE_PROBLEM);
 		}
 
-		fTarget.setFullName(fSource.getFullName());
+		fTarget.setFullName(fSource.getName());
 
 		for(int i = 0; i < fTarget.getParameters().size(); i++){
 			MethodParameterNode targetParameter = fTarget.getMethodParameters().get(i);
 			MethodParameterNode sourceParameter = fSource.getMethodParameters().get(i);
 
-			targetParameter.setFullName(sourceParameter.getFullName());
+			targetParameter.setFullName(sourceParameter.getName());
 		}
 
 		markModelUpdated();

@@ -59,7 +59,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 			types.set(fTarget.getMyIndex(), fNewLink.getType());
 
 			if(method.checkDuplicate(fTarget.getMyIndex(), fNewLink.getType())){
-				ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getFullName()));
+				ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getName()));
 			}
 
 			fCurrentLink = fTarget.getLink();

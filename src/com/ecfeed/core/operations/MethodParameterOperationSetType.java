@@ -264,7 +264,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			List<String> types = oldMethodNode.getParameterTypes();
 			types.set(fMethodParameterNode.getMyIndex(), getNewType());
 
-			MethodNode newMethodNode = oldMethodNode.getClassNode().getMethod(oldMethodNode.getFullName(), types);
+			MethodNode newMethodNode = oldMethodNode.getClassNode().getMethod(oldMethodNode.getName(), types);
 
 			if ( newMethodNode == null) {
 				return;
@@ -274,7 +274,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				return;
 			}
 
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(oldMethodNode.getClassNode(), oldMethodNode.getFullName()));
+			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(oldMethodNode.getClassNode(), oldMethodNode.getName()));
 		}
 
 		@Override

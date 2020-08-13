@@ -23,17 +23,17 @@ public class ClassNodeHelper {
 	
 	public static String getSimpleName(ClassNode classNode) {
 
-		return ModelHelper.getNonQualifiedName(classNode.getFullName());
+		return ModelHelper.getNonQualifiedName(classNode.getName());
 	}
 
 	public static String getQualifiedName(ClassNode classNode) {
 
-		return classNode.getFullName();
+		return classNode.getName();
 	}
 	
 	public static String getPackageName(ClassNode classNode) {
 
-		return ModelHelper.getPackageName(classNode.getFullName());
+		return ModelHelper.getPackageName(classNode.getName());
 	}
 
 	public static boolean classNameCompliesWithJavaNamingRules(String className) {
@@ -103,7 +103,7 @@ public class ClassNodeHelper {
 					+ "' with identical signature";
 		} else {
 			return  "The class: '" 
-					+ classNode.getFullName() 
+					+ classNode.getName() 
 					+ "' already contains model of a method: '" 
 					+ methodName 
 					+ "' with identical signature";

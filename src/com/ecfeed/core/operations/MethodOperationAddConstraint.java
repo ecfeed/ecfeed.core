@@ -40,7 +40,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 		if(fIndex == -1){
 			fIndex = fMethodNode.getConstraintNodes().size();
 		}
-		if(fConstraint.getFullName().matches(RegexHelper.REGEX_CONSTRAINT_NODE_NAME) == false){
+		if(fConstraint.getName().matches(RegexHelper.REGEX_CONSTRAINT_NODE_NAME) == false){
 			ModelOperationException.report(OperationMessages.CONSTRAINT_NAME_REGEX_PROBLEM);
 		}
 		if(fConstraint.updateReferences(fMethodNode) == false){

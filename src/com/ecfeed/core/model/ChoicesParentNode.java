@@ -101,7 +101,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
 
 		for (ChoiceNode choiceNode : fChoices) {
-			if (choiceNode.getFullName().equals(choiceNameToFind)) {
+			if (choiceNode.getName().equals(choiceNameToFind)) {
 				return true;
 			}
 		}

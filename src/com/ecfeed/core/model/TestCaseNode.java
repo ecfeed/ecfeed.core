@@ -29,9 +29,9 @@ public class TestCaseNode extends AbstractNode {
 	public String toString(){
 		String methodName = null;
 		if (getParent() != null){
-			methodName = getParent().getFullName();
+			methodName = getParent().getName();
 		}
-		String result = "[" + getFullName() + "]";
+		String result = "[" + getName() + "]";
 
 		if(methodName != null){
 			result += ": " + methodName + "(";
@@ -48,7 +48,7 @@ public class TestCaseNode extends AbstractNode {
 		for(ChoiceNode choice : fTestData){
 			testdata.add(choice);
 		}
-		TestCaseNode copy = new TestCaseNode(this.getFullName(), getModelChangeRegistrator(), testdata);
+		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
 		copy.setProperties(getProperties());
 		return copy;
 	}
@@ -143,7 +143,7 @@ public class TestCaseNode extends AbstractNode {
 		for(int i = 0; i < parameters.size(); i++){
 			MethodParameterNode parameter = parameters.get(i);
 			if(parameter.isExpected()){
-				String name = getTestData().get(i).getFullName();
+				String name = getTestData().get(i).getName();
 				String value = getTestData().get(i).getValueString();
 				ChoiceNode newChoice = new ChoiceNode(name, parameter.getModelChangeRegistrator(), value);
 				newChoice.setParent(parameter);

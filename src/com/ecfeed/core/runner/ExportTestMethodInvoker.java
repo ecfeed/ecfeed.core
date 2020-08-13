@@ -66,7 +66,7 @@ public class ExportTestMethodInvoker implements ITestMethodInvoker {
 
 			ChoiceNode choiceNode = 
 					new ChoiceNode(
-							methodParameterNode.getFullName(), methodParameterNode.getModelChangeRegistrator(), 
+							methodParameterNode.getName(), methodParameterNode.getModelChangeRegistrator(), 
 							arguments[cnt].toString());
 			
 			choiceNodes.add(choiceNode);

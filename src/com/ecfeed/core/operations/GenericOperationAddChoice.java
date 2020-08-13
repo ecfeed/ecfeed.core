@@ -66,8 +66,8 @@ public class GenericOperationAddChoice extends BulkOperation {
 			if(fIndex == -1) {
 				fIndex = fChoicesParentNode.getChoices().size();
 			}
-			if(fChoicesParentNode.getChoiceNames().contains(fChoice.getFullName())){
-				ModelOperationException.report(CHOICE_NAME_DUPLICATE_PROBLEM(fChoicesParentNode.getFullName(), fChoice.getFullName()));
+			if(fChoicesParentNode.getChoiceNames().contains(fChoice.getName())){
+				ModelOperationException.report(CHOICE_NAME_DUPLICATE_PROBLEM(fChoicesParentNode.getName(), fChoice.getName()));
 			}
 			if(fIndex < 0){
 				ModelOperationException.report(OperationMessages.NEGATIVE_INDEX_PROBLEM);
@@ -84,7 +84,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 
 		private void generateUniqueChoiceName(ChoiceNode choiceNode) {
 
-			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, choiceNode.getFullName());
+			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, choiceNode.getName());
 			choiceNode.setFullName(newName);
 		}
 

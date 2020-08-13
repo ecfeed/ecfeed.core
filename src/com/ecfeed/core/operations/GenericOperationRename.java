@@ -42,7 +42,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		super(OperationNames.RENAME);
 		fTarget = target;
 		fNewName = newName;
-		fOriginalName = target.getFullName();
+		fOriginalName = target.getName();
 		fJavaNameRegex = getJavaNameRegex(target);
 		fViewMode = viewMode;
 	}

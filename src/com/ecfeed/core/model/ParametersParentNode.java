@@ -36,7 +36,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
 		if (parameterExists(parameter)) {
-			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getFullName() + " already exists.");
+			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
 		}
 
 		fParameters.add(index, parameter);
@@ -55,7 +55,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 	public AbstractParameterNode getParameter(String parameterName) {
 
 		for (AbstractParameterNode parameter : fParameters) {
-			if (parameter.getFullName().equals(parameterName)) {
+			if (parameter.getName().equals(parameterName)) {
 				return parameter;
 			}
 		}
@@ -72,7 +72,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 		int index = 0;
 
 		for (AbstractParameterNode parameter : fParameters) {
-			if (parameter.getFullName().equals(parameterName)) {
+			if (parameter.getName().equals(parameterName)) {
 				return index;
 			}
 			index++;
@@ -91,7 +91,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 	public boolean parameterExists(AbstractParameterNode abstractParameterNode) {
 
-		if (parameterExists(abstractParameterNode.getFullName())) {
+		if (parameterExists(abstractParameterNode.getName())) {
 			return true;
 		}
 
@@ -114,7 +114,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 		List<String> names = new ArrayList<String>();
 
 		for(AbstractParameterNode parameter : fParameters){
-			names.add(parameter.getFullName());
+			names.add(parameter.getName());
 		}
 
 		return names;

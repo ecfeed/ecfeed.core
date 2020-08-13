@@ -115,7 +115,7 @@ public class Culprit {
 			StringBuilder builder = new StringBuilder();
 			for (DimensionedString element : fTestInput) {
 				builder.append("{");
-				builder.append(fMethodNode.getMethodParameter(element.fDimension).getFullName());
+				builder.append(fMethodNode.getMethodParameter(element.fDimension).getName());
 				builder.append(", ");
 				builder.append(element.getItem());
 				builder.append("} ");

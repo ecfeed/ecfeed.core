@@ -65,7 +65,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		@Override
 		public void execute() throws ModelOperationException{
 			if(!fIgnoreDuplicates && validateNewSignature() == false){
-				String methodName = getOwnNode().getFullName();
+				String methodName = getOwnNode().getName();
 				ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage((ClassNode) getOwnNode().getParent(), methodName));
 			}
 			fOriginalTestCases.clear();
@@ -93,7 +93,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			types.remove(index);
 			
 			return ClassNodeHelper.isNewMethodSignatureValid(
-					getMethodTarget().getClassNode(), getMethodTarget().getFullName(), types);
+					getMethodTarget().getClassNode(), getMethodTarget().getName(), types);
 		}
 	}
 

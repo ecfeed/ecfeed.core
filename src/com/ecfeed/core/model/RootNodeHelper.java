@@ -54,7 +54,7 @@ public class RootNodeHelper {
 	private static boolean isUniqueAcrossPackages(RootNode rootNode, String newClassName) {
 		
 		for (ClassNode node : rootNode.getClasses()) {
-			if (node.getFullName().endsWith(newClassName)) {
+			if (node.getName().endsWith(newClassName)) {
 				return false;
 			}
 		}

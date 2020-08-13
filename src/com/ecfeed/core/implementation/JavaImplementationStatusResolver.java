@@ -133,7 +133,7 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 			if(Modifier.isPublic(m.getModifiers()) == false){
 				continue;
 			}
-			if(m.getName().equals(methodModel.getFullName()) == false){
+			if(m.getName().equals(methodModel.getName()) == false){
 				continue;
 			}
 			List<String> typeNames = getArgTypes(m);

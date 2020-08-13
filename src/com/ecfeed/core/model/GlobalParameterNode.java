@@ -26,7 +26,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	//copy constructor creating a global parameter instance from other types, eg. MethodParameterNode
 	public GlobalParameterNode(AbstractParameterNode source) {
 
-		this(source.getFullName(), source.getModelChangeRegistrator(), source.getType());
+		this(source.getName(), source.getModelChangeRegistrator(), source.getType());
 		for(ChoiceNode choice : source.getChoices()){
 			addChoice(choice.makeClone());
 		}
@@ -35,7 +35,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	@Override
 	public GlobalParameterNode makeClone() {
 
-		GlobalParameterNode copy = new GlobalParameterNode(getFullName(), getModelChangeRegistrator(), getType());
+		GlobalParameterNode copy = new GlobalParameterNode(getName(), getModelChangeRegistrator(), getType());
 
 		copy.setProperties(getProperties());
 
@@ -91,14 +91,14 @@ public class GlobalParameterNode extends AbstractParameterNode {
 
 	public String getQualifiedName() {
 		if(getParent() == getRoot() || getParent() == null){
-			return getFullName();
+			return getName();
 		}
-		return getParent().getFullName() + ":" + getFullName();
+		return getParent().getName() + ":" + getName();
 	}
 
 	@Override
 	public String toString(){
-		return getFullName() + ": " + getType();
+		return getName() + ": " + getType();
 	}
 
 	@Override

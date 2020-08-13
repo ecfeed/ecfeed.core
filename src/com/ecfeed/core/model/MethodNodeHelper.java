@@ -59,7 +59,7 @@ public class MethodNodeHelper {
 		List<String> result = new ArrayList<String>();
 
 		for(AbstractParameterNode parameter : method.getParameters()){
-			result.add(parameter.getFullName());
+			result.add(parameter.getName());
 		}
 
 		return result;

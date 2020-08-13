@@ -108,7 +108,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public ChoiceNode makeCloneUnlink() {
-		ChoiceNode copy = new ChoiceNode(getFullName(), getModelChangeRegistrator(), fValueString);
+		ChoiceNode copy = new ChoiceNode(getName(), getModelChangeRegistrator(), fValueString);
 
 		copy.setProperties(getProperties());
 		copy.setParent(fParent);
@@ -130,9 +130,9 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	public String getQualifiedName(){
 		if(parentChoice() != null){
-			return parentChoice().getQualifiedName() + ":" + getFullName();
+			return parentChoice().getQualifiedName() + ":" + getName();
 		}
-		return getFullName();
+		return getName();
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
@@ -209,7 +209,7 @@ public class ChoiceNode extends ChoicesParentNode {
 		List<String> names = new ArrayList<String>();
 
 		for (ChoiceNode choice : existingChoices) {
-			names.add(choice.getFullName());
+			names.add(choice.getName());
 		}
 
 		return names;

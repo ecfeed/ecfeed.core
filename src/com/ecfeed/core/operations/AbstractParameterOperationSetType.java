@@ -123,7 +123,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 				HashMap<MethodNode, List<String>> methods = new HashMap<>();
 				//searching for methods with same name as currently investigated
 				for(MethodNode methodNode: classNode.getMethods()){
-					if(methodNode.getFullName().equals(testedMethod.getFullName())
+					if(methodNode.getName().equals(testedMethod.getName())
 							&& methodNode.getParameters().size() == testedMethod.getParameters().size()){
 						// if method links edited global parameter - replace types before matching
 						if(target.getMethods().contains(methodNode)){
@@ -156,7 +156,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 						for(int k = n+1; k < remainingMethods.size(); k++){
 							if(methods.get(method).equals(methods.get(remainingMethods.get(k)))){
 								ModelOperationException.report(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
-										method.getClassNode().getFullName(), method.getFullName(), method.getParameters().toString(),
+										method.getClassNode().getName(), method.getName(), method.getParameters().toString(),
 										remainingMethods.get(k).getParameters().toString()));
 							}
 						}

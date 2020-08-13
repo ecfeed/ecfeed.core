@@ -122,7 +122,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String getLeftOperandName() {
 
-		return getLeftParameter().getFullName();
+		return getLeftParameter().getName();
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fLeftParameter.getFullName());
+		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fLeftParameter.getName());
 
 		if (tmpParameterNode != null && !tmpParameterNode.isExpected()) {
 
@@ -167,7 +167,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		RelationStatement compared = (RelationStatement)statement;
 
-		if ( !(getLeftParameter().getFullName().equals(compared.getLeftParameter().getFullName())) ) {
+		if ( !(getLeftParameter().getName().equals(compared.getLeftParameter().getName())) ) {
 			return false;
 		}
 

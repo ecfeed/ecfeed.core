@@ -32,7 +32,7 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public String toString() {
-		return getFullName() + ": " + getConstraint().toString();
+		return getName() + ": " + getConstraint().toString();
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class ConstraintNode extends AbstractNode{
 	@Override
 	public ConstraintNode makeClone() {
 		
-		ConstraintNode copy = new ConstraintNode(getFullName(), getModelChangeRegistrator(), fConstraint.getCopy() );
+		ConstraintNode copy = new ConstraintNode(getName(), getModelChangeRegistrator(), fConstraint.getCopy() );
 		copy.setProperties(getProperties());
 		return copy;
 	}

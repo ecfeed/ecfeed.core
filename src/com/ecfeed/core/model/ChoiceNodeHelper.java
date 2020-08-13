@@ -78,7 +78,7 @@ public class ChoiceNodeHelper {
 		for(;;) {
 			ChoiceNode copy = 
 					new ChoiceNode(
-							orgChoice.getFullName(), orgChoice.getModelChangeRegistrator(), orgChoice.getValueString());
+							orgChoice.getName(), orgChoice.getModelChangeRegistrator(), orgChoice.getValueString());
 			
 			copies.add(copy);
 
@@ -117,7 +117,7 @@ public class ChoiceNodeHelper {
 		
 		for (int parameterIndex = 0;  parameterIndex < parametersCount;  parameterIndex++) {
 			
-			String parameterName = methodNode.getParameter(parameterIndex).getFullName();
+			String parameterName = methodNode.getParameter(parameterIndex).getName();
 			List<ChoiceNode> choicesForParameter = algorithmInput.get(parameterIndex);
 			
 			paramAndChoiceNames.put(parameterName, getChoiceNames(choicesForParameter));

@@ -37,7 +37,7 @@ public abstract class AbstractNode{
 	@Override
 	public String toString() {
 
-		return getFullName();
+		return getName();
 	}
 
 	public int getMyIndex() {
@@ -53,13 +53,13 @@ public abstract class AbstractNode{
 
 		List<String> result = new ArrayList<String>();
 		for(AbstractNode node : nodes){
-			result.add(node.getFullName());
+			result.add(node.getName());
 		}
 
 		return result;
 	}
 
-	public String getFullName() { // TODO SIMPLE-VIEW - rename to getName
+	public String getName() { // TODO SIMPLE-VIEW - rename to getName
 		return fName;
 	}
 
@@ -152,7 +152,7 @@ public abstract class AbstractNode{
 
 		if(tokens.length == 1){
 			for(AbstractNode child : getChildren()){
-				if(child.getFullName().equals(tokens[0])){
+				if(child.getName().equals(tokens[0])){
 					return child;
 				}
 			}
@@ -174,7 +174,7 @@ public abstract class AbstractNode{
 
 		for (AbstractNode sibling : getParent().getChildren()) {
 
-			if (sibling.getFullName().equals(name) && sibling != this) {
+			if (sibling.getName().equals(name) && sibling != this) {
 				return sibling;
 			}
 		}
@@ -232,7 +232,7 @@ public abstract class AbstractNode{
 
 		for (;;) {
 
-			path.add(currentNode.getFullName());
+			path.add(currentNode.getName());
 
 			AbstractNode parentNode = currentNode.getParent();
 
@@ -272,7 +272,7 @@ public abstract class AbstractNode{
 
 	public boolean isMatch(AbstractNode node) {
 
-		if (!getFullName().equals(node.getFullName())) {
+		if (!getName().equals(node.getName())) {
 			return false;
 		}
 

@@ -52,12 +52,12 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 		if(ClassNodeHelper.isNewMethodSignatureValid(
 				fClassNode, 
-				fMethod.getFullName(), 
+				fMethod.getName(), 
 				fMethod.getParameterTypes(),
 				problems) == false){
 			
 			ClassNodeHelper.updateNewMethodsSignatureProblemList(
-					fClassNode, fMethod.getFullName(), fMethod.getParameterTypes(), problems);
+					fClassNode, fMethod.getName(), fMethod.getParameterTypes(), problems);
 			
 			ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 		}
@@ -73,7 +73,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		
 		String newName = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNode.getFullName(), methodNode.getParameterTypes());
+						fClassNode, methodNode.getName(), methodNode.getParameterTypes());
 		
 		methodNode.setFullName(newName);
 	}

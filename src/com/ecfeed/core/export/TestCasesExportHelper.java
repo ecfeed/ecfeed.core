@@ -48,7 +48,7 @@ public class TestCasesExportHelper {
 
 		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getSimpleName(method.getClassNode()));
 		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode()));
-		result = result.replace(METHOD_NAME_SEQUENCE, method.getFullName());
+		result = result.replace(METHOD_NAME_SEQUENCE, method.getName());
 
 		result = replaceParameterNameSequences(method, result);
 		result = evaluateExpressions(result);
@@ -67,9 +67,9 @@ public class TestCasesExportHelper {
 
 		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getSimpleName(method.getClassNode()));
 		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode()));
-		result = result.replace(METHOD_NAME_SEQUENCE, method.getFullName());
+		result = result.replace(METHOD_NAME_SEQUENCE, method.getName());
 		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
-		result = result.replace(TEST_SUITE_NAME_SEQUENCE, testCase.getFullName());
+		result = result.replace(TEST_SUITE_NAME_SEQUENCE, testCase.getName());
 
 		result = replaceParameterSequences(testCase, result);
 		result = evaluateExpressions(result);
@@ -113,7 +113,7 @@ public class TestCasesExportHelper {
 		String result = command;
 		switch(command){
 		case PARAMETER_COMMAND_NAME:
-			result = parameter.getFullName();
+			result = parameter.getName();
 			break;
 		case PARAMETER_COMMAND_TYPE:
 			result = parameter.getType();
@@ -325,7 +325,7 @@ public class TestCasesExportHelper {
 		String result = command;
 		switch(command){
 		case CHOICE_COMMAND_SHORT_NAME:
-			result = choice.getFullName();
+			result = choice.getName();
 			break;
 		case CHOICE_COMMAND_FULL_NAME:
 			result = choice.getQualifiedName();

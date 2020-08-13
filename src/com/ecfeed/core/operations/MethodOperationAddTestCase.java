@@ -56,7 +56,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 		if(fIndex == -1){
 			fIndex = fMethodNode.getTestCases().size();
 		}
-		if(fTestCase.getFullName().matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false){
+		if(fTestCase.getName().matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false){
 			ModelOperationException.report(OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM);
 		}
 		if(fTestCase.updateReferences(fMethodNode) == false){

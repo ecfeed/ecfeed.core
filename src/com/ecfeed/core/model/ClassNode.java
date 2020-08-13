@@ -31,7 +31,7 @@ public class ClassNode extends GlobalParametersParentNode {
 
 	@Override
 	public ClassNode makeClone(){
-		ClassNode copy = new ClassNode(getFullName(), getModelChangeRegistrator());
+		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 
@@ -144,7 +144,7 @@ public class ClassNode extends GlobalParametersParentNode {
 			for (AbstractParameterNode arg : methodNode.getParameters()){
 				args.add(arg.getType());
 			}
-			if (methodNode.getFullName().equals(name) && args.equals(argTypes)){
+			if (methodNode.getName().equals(name) && args.equals(argTypes)){
 				return methodNode;
 			}
 		}
@@ -214,7 +214,7 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	public String getSimpleName() {
-		String[] nameNodeSplit = getFullName().split("\\.");
+		String[] nameNodeSplit = getName().split("\\.");
 		return nameNodeSplit[nameNodeSplit.length - 1];
 	}
 }

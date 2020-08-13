@@ -49,7 +49,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 			GlobalParameterNode link) {
 
 		this(
-				source.getFullName(),
+				source.getName(),
 				source.getModelChangeRegistrator(),
 				source.getType(), 
 				defaultValue, expected, linked, link);
@@ -68,13 +68,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 			return super.toString() + "(" + getDefaultValue() + "): "
 					+ getType();
 		}
-		return new String(getFullName() + ": " + getType());
+		return new String(getName() + ": " + getType());
 	}
 
 	@Override
 	public MethodParameterNode makeClone() {
 		MethodParameterNode copy = 
-				new MethodParameterNode(getFullName(), getModelChangeRegistrator(),
+				new MethodParameterNode(getName(), getModelChangeRegistrator(),
 						getType(), getDefaultValue(), isExpected());
 
 		copy.fLinked = fLinked;
@@ -159,7 +159,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		if(list1.size() != list2.size())
 			return false;
 		for(int i=0; i< list1.size(); i++)
-			if(list1.get(i).getFullName() != list2.get(i).getFullName() || list1.get(i).getValueString() != list2.get(i).getValueString())
+			if(list1.get(i).getName() != list2.get(i).getName() || list1.get(i).getValueString() != list2.get(i).getValueString())
 				return false;
 		return true;
 	}

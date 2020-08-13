@@ -115,7 +115,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {
 
-		String parameterName = statement.getLeftParameter().getFullName();
+		String parameterName = statement.getLeftParameter().getName();
 
 		Attribute parameterAttribute =
 				new Attribute(fStatementParameterAttributeName, parameterName);
@@ -167,7 +167,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		XomBuilder.encodeAndAddAttribute(
 				targetParameterElement, 
-				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, rightMethodParameterNode.getFullName()), 
+				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, rightMethodParameterNode.getName()), 
 				fWhiteCharConverter);
 
 		return targetParameterElement;

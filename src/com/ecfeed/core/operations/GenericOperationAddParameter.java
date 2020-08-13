@@ -45,7 +45,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			generateUniqueParameterName(fAbstractParameterNode);
 		}
 		
-		String parameterName = fAbstractParameterNode.getFullName();
+		String parameterName = fAbstractParameterNode.getName();
 
 		if(fNewIndex < 0){
 			ModelOperationException.report(OperationMessages.NEGATIVE_INDEX_PROBLEM);
@@ -63,7 +63,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	private void generateUniqueParameterName(AbstractParameterNode abstractParameterNode) {
 
-		String newName = ParametersParentNode.generateNewParameterName(fParametersParentNode, abstractParameterNode.getFullName());
+		String newName = ParametersParentNode.generateNewParameterName(fParametersParentNode, abstractParameterNode.getName());
 		abstractParameterNode.setFullName(newName);
 	}
 
