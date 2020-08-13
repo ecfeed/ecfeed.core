@@ -85,7 +85,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 		private void generateUniqueChoiceName(ChoiceNode choiceNode) {
 
 			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, choiceNode.getName());
-			choiceNode.setFullName(newName);
+			choiceNode.setName(newName);
 		}
 
 		@Override

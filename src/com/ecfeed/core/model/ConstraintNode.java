@@ -36,9 +36,9 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	@Override
-	public void setFullName(String name) {
+	public void setName(String name) {
 		
-		super.setFullName(name);
+		super.setName(name);
 		fConstraint.setName(name);
 	}
 

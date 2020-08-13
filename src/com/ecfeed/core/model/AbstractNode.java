@@ -59,11 +59,11 @@ public abstract class AbstractNode{
 		return result;
 	}
 
-	public String getName() { // TODO SIMPLE-VIEW - rename to getName
+	public String getName() {
 		return fName;
 	}
 
-	public void setFullName(String name) { // TODO SIMPLE-VIEW - rename to setName
+	public void setName(String name) {
 
 		setName(name, true);
 	}

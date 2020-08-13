@@ -40,13 +40,13 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 			ModelOperationException.report(ClassNodeHelper.METHODS_INCOMPATIBLE_PROBLEM);
 		}
 
-		fTarget.setFullName(fSource.getName());
+		fTarget.setName(fSource.getName());
 
 		for(int i = 0; i < fTarget.getParameters().size(); i++){
 			MethodParameterNode targetParameter = fTarget.getMethodParameters().get(i);
 			MethodParameterNode sourceParameter = fSource.getMethodParameters().get(i);
 
-			targetParameter.setFullName(sourceParameter.getName());
+			targetParameter.setName(sourceParameter.getName());
 		}
 
 		markModelUpdated();

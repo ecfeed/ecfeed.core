@@ -64,7 +64,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	private void generateUniqueParameterName(AbstractParameterNode abstractParameterNode) {
 
 		String newName = ParametersParentNode.generateNewParameterName(fParametersParentNode, abstractParameterNode.getName());
-		abstractParameterNode.setFullName(newName);
+		abstractParameterNode.setName(newName);
 	}
 
 	@Override

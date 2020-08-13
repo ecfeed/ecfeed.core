@@ -68,7 +68,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		
 		verifyNewName(newName);
 		
-		fTarget.setFullName(newName);
+		fTarget.setName(newName);
 		markModelUpdated();
 	}
 

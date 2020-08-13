@@ -75,7 +75,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 				ClassNodeHelper.generateNewMethodName(
 						fClassNode, methodNode.getName(), methodNode.getParameterTypes());
 		
-		methodNode.setFullName(newName);
+		methodNode.setName(newName);
 	}
 
 	@Override

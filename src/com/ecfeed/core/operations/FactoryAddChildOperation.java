@@ -103,7 +103,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
 		String newName = RootNodeHelper.generateNewClassName(rootNode, oldNameCore);
 
-		classNode.setFullName(newName);
+		classNode.setName(newName);
 	}
 
 	@Override
