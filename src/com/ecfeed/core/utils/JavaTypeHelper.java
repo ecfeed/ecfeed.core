@@ -186,6 +186,10 @@ public final class JavaTypeHelper {
 			return value;
 		}
 		
+		if (isBooleanTypeName(typeName)) {
+			return value;
+		}
+		
 		ExceptionHelper.reportRuntimeException("Conversion of special value to numeric - type not supported.");
 		return null;
 	}
