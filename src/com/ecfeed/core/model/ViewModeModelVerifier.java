@@ -44,20 +44,6 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 		return null;
 	}
 
-	public static String checkIsModelCompatibleWithJavaMode(RootNode rootNode) {
-		
-		for (ClassNode element : rootNode.getClasses()) {
-			
-			if (!ClassNodeHelper.classNameCompliesWithJavaNamingRules(element.getName())) {
-				return "Class name cannot be converted to java identifier. Class: " + element.getFullNamePath() + ".";
-			}
-		}
-		
-		// TODO SIMPLE-VIEW - check other types of nodes
-		
-		return null; 
-	}
-	
 	public static String checkIsModelCompatibleWithSimpleMode(RootNode rootNode) {
 
 		String message = checkIsGlobalParameterOfRootDuplicated(rootNode);
