@@ -43,6 +43,15 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 		return null;
 	}
+	
+	public static String checkIsModelCompatibleWithSimpleMode(AbstractNode anyNode) {
+		
+		RootNode rootNode = ModelHelper.findRoot(anyNode);
+		
+		String result = checkIsModelCompatibleWithSimpleMode(rootNode);
+		
+		return result;
+	}
 
 	public static String checkIsModelCompatibleWithSimpleMode(RootNode rootNode) {
 

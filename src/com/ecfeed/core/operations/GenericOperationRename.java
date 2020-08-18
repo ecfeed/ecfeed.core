@@ -21,6 +21,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.ViewModeModelVerifier;
 import com.ecfeed.core.utils.ViewMode;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
@@ -54,8 +55,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		
 		String newName = fNewName;
 		
-		if (fViewMode == ViewMode.SIMPLE) 
-		{
+		if (fViewMode == ViewMode.SIMPLE) {
 			
 			if (newName.contains("_")) {
 				ModelOperationException.report("Underline chars are not allowed in simple view.");
@@ -68,7 +68,23 @@ public class GenericOperationRename extends AbstractModelOperation {
 		
 		verifyNewName(newName);
 		
+		String oldName = fTarget.getName();
+		
 		fTarget.setName(newName);
+		
+		if (fViewMode == ViewMode.SIMPLE) {
+			
+			String errorMessage = ViewModeModelVerifier.checkIsModelCompatibleWithSimpleMode(fTarget);
+			
+			if (errorMessage != null) {
+				
+				fTarget.setName(oldName);
+				ModelOperationException.report(errorMessage);
+			}
+			
+		}
+		
+		
 		markModelUpdated();
 	}
 
