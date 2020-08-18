@@ -44,6 +44,7 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 		return null;
 	}
 	
+	// TODO SIMPLE-VIEW check actions which make model incompatible with simple mode - fun(Number a),  fun(Number a, Number b) > deleting Number b
 	public static String checkIsModelCompatibleWithSimpleMode(AbstractNode anyNode) {
 		
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
