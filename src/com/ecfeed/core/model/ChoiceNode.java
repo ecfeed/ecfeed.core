@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.ViewMode;
 
 public class ChoiceNode extends ChoicesParentNode {
 
@@ -160,11 +159,6 @@ public class ChoiceNode extends ChoicesParentNode {
 		return fValueString;
 	}
 	
-	public String getValueString(ViewMode viewMode) {
-		
-		return fValueString; // TODO SIMPLE-VIEW
-	}
-
 	public void setValueString(String value) {
 		fValueString = value;
 	}
