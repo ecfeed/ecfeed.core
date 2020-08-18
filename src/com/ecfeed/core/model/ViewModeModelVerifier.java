@@ -246,8 +246,6 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 			return null;
 		}
 
-		// TODO - SIMPLE-VIEW what if there are methods method1(int arg1) and method1(byte arg2) ?
-
 		List<Pair<String, String>> signaturePairs = createSignaturePairs(methods, methodsSize);
 
 		for (int index = 0; index < methodsSize - 1; index++) {

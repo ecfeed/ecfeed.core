@@ -126,8 +126,8 @@ public final class SimpleTypeHelper {
 	private static String createSimpleParameterSignature(AbstractParameterNode abstractParameterNode) {
 
 		String result = convertJavaTypeToSimpleType(abstractParameterNode.getType()); 
-		result += " ";
-		result += abstractParameterNode.getName();
+//		result += " ";
+//		result += abstractParameterNode.getName();
 
 		return result;
 	}
