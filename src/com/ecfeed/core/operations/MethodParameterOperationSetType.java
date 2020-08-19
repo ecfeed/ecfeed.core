@@ -413,12 +413,12 @@ public class MethodParameterOperationSetType extends BulkOperation {
 	}
 
 	public MethodParameterOperationSetType(
-			MethodParameterNode target, 
+			MethodParameterNode targetMethodParameterNode, 
 			String newType, 
 			ViewMode viewMode,
 			ITypeAdapterProvider adapterProvider) {
 
-		super(OperationNames.SET_TYPE, true, target, target);
+		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode);
 
 		fViewMode = viewMode;
 		
@@ -430,10 +430,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
 		}
 
-		addOperation(new SetTypeOperation(target, newType, adapterProvider));
+		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider));
 
-		if (target.getMethod() != null) {
-			addOperation(new MethodOperationMakeConsistent(target.getMethod()));
+		if (targetMethodParameterNode.getMethod() != null) {
+			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod()));
 		}
 	}
 }
