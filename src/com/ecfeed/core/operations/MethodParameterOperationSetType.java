@@ -20,6 +20,7 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
@@ -29,6 +30,7 @@ import com.ecfeed.core.model.IChoicesParentVisitor;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParameterCondition;
@@ -42,9 +44,13 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodParameterOperationSetType extends BulkOperation {
+	
+	private ViewMode fViewMode;
 
 	private class SetTypeOperation extends AbstractParameterOperationSetType{
 
@@ -261,12 +267,21 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
 
-			List<String> types = oldMethodNode.getParameterTypes();
-			types.set(fMethodParameterNode.getMyIndex(), getNewType());
+			List<String> types = MethodNodeHelper.getArgTypes(oldMethodNode, fViewMode);
+			
+			String newType = getNewType();
+			
+			if (fViewMode == ViewMode.SIMPLE) {
+				newType = SimpleTypeHelper.convertJavaTypeToSimpleType(newType);
+			}
+			
+			types.set(fMethodParameterNode.getMyIndex(), newType);
 
-			MethodNode newMethodNode = oldMethodNode.getClassNode().getMethod(oldMethodNode.getName(), types);
+			ClassNode classNode = oldMethodNode.getClassNode();
+			
+			MethodNode newMethodNode = ClassNodeHelper.findMethod(classNode, oldMethodNode.getName(), types, fViewMode);
 
-			if ( newMethodNode == null) {
+			if (newMethodNode == null) {
 				return;
 			}
 
@@ -274,7 +289,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				return;
 			}
 
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(oldMethodNode.getClassNode(), oldMethodNode.getName()));
+			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(classNode, oldMethodNode.getName()));
 		}
 
 		@Override
@@ -397,10 +412,16 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		}
 	}
 
-	public MethodParameterOperationSetType(MethodParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
+	public MethodParameterOperationSetType(
+			MethodParameterNode target, 
+			String newType, 
+			ViewMode viewMode,
+			ITypeAdapterProvider adapterProvider) {
 
 		super(OperationNames.SET_TYPE, true, target, target);
 
+		fViewMode = viewMode;
+		
 		if (newType == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
 		}

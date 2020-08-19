@@ -15,6 +15,7 @@ import java.util.List;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ClassNodeHelper {
 
@@ -119,5 +120,28 @@ public class ClassNodeHelper {
 		}
 		
 	}
+	
+	public static MethodNode findMethod(
+			ClassNode classNode, 
+			String methodNameToFind, 
+			List<String> parameterTypesToFind, 
+			ViewMode viewMode) {
+		
+		List<MethodNode> methods = classNode.getMethods();
+		
+		for (MethodNode methodNode : methods) {
+			
+			List<String> currentParameterTypes = MethodNodeHelper.getArgTypes(methodNode, viewMode);
+			
+			String currentMethodName = methodNode.getName();
+			
+			if (currentMethodName.equals(methodNameToFind) && currentParameterTypes.equals(parameterTypesToFind)){
+				return methodNode;
+			}
+		}
+		
+		return null;
+	}
+	
 
 }

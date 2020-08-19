@@ -138,7 +138,7 @@ public class ClassNode extends GlobalParametersParentNode {
 		return false;
 	}
 
-	public MethodNode getMethod(String name, List<String> argTypes) {
+	public MethodNode getMethod(String name, List<String> argTypes) { //TODO - simple view > findMethod or delete (use from classNodeHelper)
 		for (MethodNode methodNode : getMethods()) {
 			List<String> args = new ArrayList<String>();
 			for (AbstractParameterNode arg : methodNode.getParameters()){
