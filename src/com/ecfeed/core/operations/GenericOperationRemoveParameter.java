@@ -58,7 +58,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		return fViewMode;
 	}
 	
-	private static void verifyIfMethodSignatureIsUnique(
+	private static void verifyIfMethodSignatureIsUnique( // TODO SIMPLE-VIEW mode this to RemoveMethodParameterOperation
 			MethodNode methodNode, 
 			int indexOfParameterToRemove, 
 			ViewMode viewMode) throws ModelOperationException {

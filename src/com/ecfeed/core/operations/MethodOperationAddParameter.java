@@ -16,9 +16,11 @@ import java.util.List;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
@@ -49,14 +51,23 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 	@Override
 	public void execute() throws ModelOperationException {
 		
-		List<String> types = fMethodNode.getParameterTypes();
-		types.add(fNewIndex, fMethodParameterNode.getType());
+		ViewMode viewMode = getViewMode();
+		
+		List<String> types = MethodNodeHelper.getMethodParameterTypes(fMethodNode, viewMode);
+		
+		String parameterType = fMethodParameterNode.getType();
+		
+		if (viewMode == ViewMode.SIMPLE) {
+			parameterType = SimpleTypeHelper.convertJavaTypeToSimpleType(parameterType);
+		}
+		
+		types.add(fNewIndex, parameterType);
 		
 		ClassNode parentClassNode = fMethodNode.getClassNode();
 		
 		if (parentClassNode != null) { 
 				
-			MethodNode existingMethodNode = parentClassNode.getMethod(fMethodNode.getName(), types);
+			MethodNode existingMethodNode = ClassNodeHelper.findMethod(parentClassNode, fMethodNode.getName(), types, viewMode);
 			
 			if (existingMethodNode != null) {
 				ModelOperationException.report(
