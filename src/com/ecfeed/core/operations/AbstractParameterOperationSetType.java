@@ -30,6 +30,7 @@ import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
@@ -42,8 +43,8 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	protected class ReverseOperation extends AbstractReverseOperation {
 
-		public ReverseOperation() {
-			super(AbstractParameterOperationSetType.this);
+		public ReverseOperation(ViewMode viewMode) {
+			super(AbstractParameterOperationSetType.this, viewMode);
 		}
 
 		@Override
@@ -59,7 +60,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new AbstractParameterOperationSetType(fTarget, fNewType, fAdapterProvider);
+			return new AbstractParameterOperationSetType(fTarget, fNewType, fAdapterProvider, getViewMode());
 		}
 
 		protected void restoreOriginalChoices(ChoicesParentNode parent) {
@@ -80,8 +81,14 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	}
 
-	public AbstractParameterOperationSetType(AbstractParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
-		super(OperationNames.SET_TYPE);
+	public AbstractParameterOperationSetType(
+			AbstractParameterNode target, 
+			String newType, 
+			ITypeAdapterProvider adapterProvider, 
+			ViewMode viewMode) {
+		
+		super(OperationNames.SET_TYPE, viewMode);
+		
 		fTarget = target;
 		fNewType = newType;
 		fAdapterProvider = adapterProvider;
@@ -171,7 +178,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getViewMode());
 	}
 
 	protected void saveChoices(ChoicesParentNode parent){

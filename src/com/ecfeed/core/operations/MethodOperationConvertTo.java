@@ -14,14 +14,17 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationConvertTo extends AbstractModelOperation {
 
 	private MethodNode fTarget;
 	private MethodNode fSource;
 
-	public MethodOperationConvertTo(MethodNode target, MethodNode source) {
-		super(OperationNames.CONVERT_METHOD);
+	public MethodOperationConvertTo(MethodNode target, MethodNode source, ViewMode viewMode) {
+		
+		super(OperationNames.CONVERT_METHOD, viewMode);
+		
 		fTarget = target;
 		fSource = source;
 	}
@@ -54,7 +57,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationConvertTo(fSource, fTarget);
+		return new MethodOperationConvertTo(fSource, fTarget, getViewMode());
 	}
 
 }

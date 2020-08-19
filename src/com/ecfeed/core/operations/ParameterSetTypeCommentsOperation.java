@@ -12,6 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
@@ -19,8 +20,8 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 	private AbstractParameterNode fTarget;
 	private String fCurrentComments;
 
-	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments) {
-		super(OperationNames.SET_COMMENTS);
+	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments, ViewMode viewMode) {
+		super(OperationNames.SET_COMMENTS, viewMode);
 		fTarget = target;
 		fComments = comments;
 	}
@@ -35,7 +36,7 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterSetTypeCommentsOperation(fTarget, fCurrentComments);
+		return new ParameterSetTypeCommentsOperation(fTarget, fCurrentComments, getViewMode());
 	}
 
 }

@@ -14,6 +14,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 
@@ -22,8 +23,8 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 	private String fNewValue;
 	private String fOriginalValue;
 
-	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter) {
-		super(OperationNames.SET_DEFAULT_VALUE);
+	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, ViewMode viewMode) {
+		super(OperationNames.SET_DEFAULT_VALUE, viewMode);
 		fTarget = target;
 		fNewValue = newValue;
 		fOriginalValue = target.getDefaultValue();
@@ -43,7 +44,7 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter);
+		return new ParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter, getViewMode());
 	}
 
 }

@@ -15,6 +15,7 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 public class RootOperationAddNewClass extends AbstractModelOperation {
 
@@ -22,12 +23,12 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
 
-	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd) {
-		this(target, classToAdd, -1);
+	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, ViewMode viewMode) {
+		this(target, classToAdd, -1, viewMode);
 	}
 	
-	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex) {
-		super(OperationNames.ADD_CLASS);
+	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, ViewMode viewMode) {
+		super(OperationNames.ADD_CLASS, viewMode);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
 		fAddIndex = addIndex;
@@ -56,7 +57,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationRemoveClass(fRootNode, fclassToAdd);
+		return new RootOperationRemoveClass(fRootNode, fclassToAdd, getViewMode());
 	}
 
 }

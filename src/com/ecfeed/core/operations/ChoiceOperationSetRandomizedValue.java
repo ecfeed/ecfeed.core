@@ -5,6 +5,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation { 
 
@@ -15,9 +16,12 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 
 	public ChoiceOperationSetRandomizedValue(
-			ChoiceNode choiceNode, boolean newRandomized, ITypeAdapterProvider adapterProvider) {
+			ChoiceNode choiceNode, 
+			boolean newRandomized, 
+			ITypeAdapterProvider adapterProvider,
+			ViewMode viewMode) {
 
-		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG);
+		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG, viewMode);
 
 		fNewRandomized = newRandomized;
 		fChoiceNode = choiceNode;
@@ -58,12 +62,12 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getViewMode());
 	}
 
 	private class ReverseOperation extends AbstractModelOperation {
-		public ReverseOperation() {
-			super(ChoiceOperationSetRandomizedValue.this.getName());
+		public ReverseOperation(ViewMode viewMode) {
+			super(ChoiceOperationSetRandomizedValue.this.getName(), viewMode);
 		}
 
 		@Override
@@ -74,7 +78,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider);
+			return new ChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider, getViewMode());
 		}
 
 		@Override

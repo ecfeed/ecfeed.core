@@ -16,15 +16,17 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ReplaceChoicesOperation extends BulkOperation {
 
 	public ReplaceChoicesOperation(
 			AbstractParameterNode target, 
 			List<ChoiceNode> choices, 
-			ITypeAdapterProvider adapterProvider) {
+			ITypeAdapterProvider adapterProvider,
+			ViewMode viewMode) {
 
-		super("Replace choices", true, target, target);
+		super("Replace choices", true, target, target, viewMode);
 
 		List<ChoiceNode> skipped = new ArrayList<ChoiceNode>();
 
@@ -32,16 +34,16 @@ public class ReplaceChoicesOperation extends BulkOperation {
 			if (target.getChoiceNames().contains(choice.getName())) {
 				skipped.add(choice);
 			} else {
-				addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true));
+				addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true, viewMode));
 			}
 		}
 
 		addOperation(
 				new GenericRemoveNodesOperation(
-						target.getChoices(), adapterProvider, true, target, target));
+						target.getChoices(), adapterProvider, true, target, target, viewMode));
 
 		for(ChoiceNode choice : skipped){
-			addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true));
+			addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true, viewMode));
 		}
 	}
 

@@ -20,22 +20,36 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	private List<AbstractParameterNode> fParameters;
 
-	public MethodParameterShiftOperation(List<AbstractParameterNode> parameters, AbstractNode shifted, boolean up) {
-		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up);
+	public MethodParameterShiftOperation(
+			List<AbstractParameterNode> parameters, 
+			AbstractNode shifted, 
+			boolean up,
+			ViewMode viewMode) {
+		
+		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up, viewMode);
 	}
 
-	public MethodParameterShiftOperation(List<AbstractParameterNode> parameters, List<? extends AbstractNode> shifted, boolean up) {
-		this(parameters, shifted, 0);
+	public MethodParameterShiftOperation(
+			List<AbstractParameterNode> parameters, 
+			List<? extends AbstractNode> shifted, 
+			boolean up, 
+			ViewMode viewMode) {
+		this(parameters, shifted, 0, viewMode);
 		setShift(minAllowedShift(shifted, up));
 	}
 
-	public MethodParameterShiftOperation(List<AbstractParameterNode> parameters, List<? extends AbstractNode> shifted, int shift) {
-		super(parameters, shifted, shift);
+	public MethodParameterShiftOperation(
+			List<AbstractParameterNode> parameters, 
+			List<? extends AbstractNode> shifted, 
+			int shift,
+			ViewMode viewMode) {
+		super(parameters, shifted, shift, viewMode);
 		fParameters = parameters;
 	}
 
@@ -54,7 +68,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift());
+		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getViewMode());
 	}
 
 	@Override

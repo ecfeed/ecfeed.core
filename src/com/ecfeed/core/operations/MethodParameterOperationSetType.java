@@ -147,6 +147,11 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		}
 
 		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
+			
+			public ReverseSetTypeOperation(ViewMode viewMode) {
+				
+				super(viewMode);
+			}
 
 			private class StatementValueRestorer implements IStatementVisitor{
 
@@ -218,7 +223,8 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			@Override
 			public IModelOperation getReverseOperation() {
 
-				return new SetTypeOperation(fMethodParameterNode, getNewType(), getTypeAdapterProvider());
+				return new SetTypeOperation(
+						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getViewMode());
 			}
 
 			private void restoreStatementValues() {
@@ -236,8 +242,13 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private MethodParameterNode fMethodParameterNode;
 
-		public SetTypeOperation(MethodParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
-			super(target, newType, adapterProvider);
+		public SetTypeOperation(
+				MethodParameterNode target, 
+				String newType, 
+				ITypeAdapterProvider adapterProvider, 
+				ViewMode viewMode) {
+			
+			super(target, newType, adapterProvider, viewMode);
 
 			fMethodParameterNode = target;
 			fOriginalStatementValues = new HashMap<>();
@@ -294,7 +305,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseSetTypeOperation();
+			return new ReverseSetTypeOperation(getViewMode());
 		}
 
 		@SuppressWarnings("unchecked")
@@ -418,7 +429,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ViewMode viewMode,
 			ITypeAdapterProvider adapterProvider) {
 
-		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode);
+		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, viewMode);
 
 		fViewMode = viewMode;
 		
@@ -430,10 +441,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
 		}
 
-		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider));
+		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getViewMode()));
 
 		if (targetMethodParameterNode.getMethod() != null) {
-			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod()));
+			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getViewMode()));
 		}
 	}
 }

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import com.ecfeed.core.model.IRelationalStatement;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ViewMode;
 
 public class StatementOperationSetRelation extends AbstractModelOperation {
 
@@ -22,8 +23,8 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 	private EMathRelation fNewRelation;
 	private EMathRelation fCurrentRelation;
 
-	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation) {
-		super(OperationNames.SET_STATEMENT_RELATION);
+	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, ViewMode viewMode) {
+		super(OperationNames.SET_STATEMENT_RELATION, viewMode);
 		fTarget = target;
 		fNewRelation = relation;
 		fCurrentRelation = target.getRelation();
@@ -40,7 +41,7 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationSetRelation(fTarget, fCurrentRelation);
+		return new StatementOperationSetRelation(fTarget, fCurrentRelation, getViewMode());
 	}
 
 }

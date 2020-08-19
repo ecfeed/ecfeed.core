@@ -19,6 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
@@ -27,9 +28,13 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 	MethodParameterNode fMethodParameterNode;
 	private int fNewIndex;
 
-	public MethodOperationAddParameter(MethodNode methodNode, MethodParameterNode methodParameterNode, int index) {
+	public MethodOperationAddParameter(
+			MethodNode methodNode, 
+			MethodParameterNode methodParameterNode, 
+			int index,
+			ViewMode viewMode) {
 		
-		super(methodNode, methodParameterNode, index, true);
+		super(methodNode, methodParameterNode, index, true, viewMode);
 		
 		fRemovedTestCases = new ArrayList<TestCaseNode>(methodNode.getTestCases());
 		fMethodNode = methodNode;
@@ -37,8 +42,8 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter) {
-		this(target, parameter, -1);
+	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
+		this(target, parameter, -1, viewMode);
 	}
 
 	@Override
@@ -66,13 +71,13 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodReverseOperation();
+		return new MethodReverseOperation(getViewMode());
 	}
 	
 	private class MethodReverseOperation extends ReverseOperation{
 
-		public MethodReverseOperation() {
-			super(fMethodNode, fMethodParameterNode);
+		public MethodReverseOperation(ViewMode viewMode) {
+			super(fMethodNode, fMethodParameterNode, viewMode);
 		}
 
 		@Override
@@ -83,7 +88,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodOperationAddParameter(fMethodNode, fMethodParameterNode);
+			return new MethodOperationAddParameter(fMethodNode, fMethodParameterNode, getViewMode());
 		}
 
 	}

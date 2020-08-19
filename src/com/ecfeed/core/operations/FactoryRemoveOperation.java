@@ -25,6 +25,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ViewMode;
 
 public class FactoryRemoveOperation {
 
@@ -65,10 +66,12 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
+		ViewMode fViewMode;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate){
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode) {
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
+			fViewMode = viewMode;
 		}
 
 		@Override
@@ -78,44 +81,47 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node);
+			return new RootOperationRemoveClass(node.getRoot(), node, fViewMode);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node);
+			return new ClassOperationRemoveMethod(node.getClassNode(), node, fViewMode);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate);
+			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fViewMode);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node);
+			return new GenericOperationRemoveGlobalParameter(
+					(GlobalParametersParentNode)node.getParametersParent(), 
+					node,
+					fViewMode);
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new MethodOperationRemoveTestCase(node.getMethod(), node);
+			return new MethodOperationRemoveTestCase(node.getMethod(), node, fViewMode);
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new MethodOperationRemoveConstraint(node.getMethod(), node);
+			return new MethodOperationRemoveConstraint(node.getMethod(), node, fViewMode);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate);
+			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fViewMode);
 		}
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate){
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ViewMode viewMode){
 		try {
-			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate));
+			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, viewMode));
 		} catch (Exception e) {
 			return new UnsupportedModelOperation();
 		}

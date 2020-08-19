@@ -24,6 +24,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.ViewMode;
 
 public class GenericOperationRemoveChoice extends BulkOperation {
 
@@ -52,8 +53,8 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 			}
 
-			public ReverseOperation() {
-				super(RemoveChoiceOperation.this.getName());
+			public ReverseOperation(ViewMode viewMode) {
+				super(RemoveChoiceOperation.this.getName(), viewMode);
 			}
 
 			@Override
@@ -67,7 +68,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new RemoveChoiceOperation(fTarget, fChoice, fAdapterProvider);
+				return new RemoveChoiceOperation(fTarget, fChoice, fAdapterProvider, getViewMode());
 			}
 
 			private void reverseAdaptParameter() {
@@ -124,8 +125,13 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		}
 
-		public RemoveChoiceOperation(ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider){
-			super(OperationNames.REMOVE_PARTITION);
+		public RemoveChoiceOperation(
+				ChoicesParentNode target, 
+				ChoiceNode choice, 
+				ITypeAdapterProvider adapterProvider, 
+				ViewMode viewMode){
+			
+			super(OperationNames.REMOVE_PARTITION, viewMode);
 			fAdapterProvider = adapterProvider;
 			fTarget = target;
 			fChoice = choice;
@@ -179,7 +185,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseOperation();
+			return new ReverseOperation(getViewMode());
 		}
 
 	}
@@ -188,15 +194,16 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 			ChoicesParentNode target, 
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate) {
+			boolean validate,
+			ViewMode viewMode) {
 
-		super(OperationNames.REMOVE_PARTITION, true, target, target);
+		super(OperationNames.REMOVE_PARTITION, true, target, target, viewMode);
 
-		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider));
+		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider, viewMode));
 
 		if (validate) {
 			for (MethodNode method : target.getParameter().getMethods()) {
-				addOperation(new MethodOperationMakeConsistent(method));
+				addOperation(new MethodOperationMakeConsistent(method, viewMode));
 			}
 		}
 	}

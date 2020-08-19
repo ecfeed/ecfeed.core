@@ -19,6 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
@@ -28,8 +29,9 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		private boolean fIgnoreDuplicates;
 
 		private class ReverseOperation extends AbstractReverseOperation {
-			public ReverseOperation() {
-				super(RemoveMethodParameterOperation.this);
+			
+			public ReverseOperation(ViewMode viewMode) {
+				super(RemoveMethodParameterOperation.this, viewMode);
 			}
 
 			@Override
@@ -42,22 +44,23 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter());
+				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), getViewMode());
 			}
 
 		}
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter) {
-			super(target, parameter);
+		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
+			super(target, parameter, viewMode);
 			fOriginalTestCases = new ArrayList<>();
 		}
 
 		public RemoveMethodParameterOperation(
 				MethodNode target, 
 				MethodParameterNode parameter, 
-				boolean ignoreDuplicates) {
+				boolean ignoreDuplicates,
+				ViewMode viewMode) {
 			
-			this(target, parameter);
+			this(target, parameter, viewMode);
 			
 			fIgnoreDuplicates = ignoreDuplicates;
 		}
@@ -80,7 +83,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		@Override
 		public IModelOperation getReverseOperation(){
-			return new ReverseOperation();
+			return new ReverseOperation(getViewMode());
 		}
 
 		private MethodNode getMethodTarget(){
@@ -98,29 +101,33 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate) {
+			MethodNode target, MethodParameterNode parameter, boolean validate, ViewMode viewMode) {
 		
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
+		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, viewMode);
 		
-		addOperation(new RemoveMethodParameterOperation(target, parameter));
+		addOperation(new RemoveMethodParameterOperation(target, parameter, viewMode));
 		
 		if(validate){
-			addOperation(new MethodOperationMakeConsistent(target));
+			addOperation(new MethodOperationMakeConsistent(target, viewMode));
 		}
 	}
 	
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter) {
-		this(target, parameter, true);
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
+		this(target, parameter, true, viewMode);
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, boolean ignoreDuplicates){
+			MethodNode target, 
+			MethodParameterNode parameter, 
+			boolean validate, 
+			boolean ignoreDuplicates, 
+			ViewMode viewMode){
 		
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target);
+		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, viewMode);
 		
-		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates));
+		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, viewMode));
 		if(validate){
-			addOperation(new MethodOperationMakeConsistent(target));
+			addOperation(new MethodOperationMakeConsistent(target, viewMode));
 		}
 	}
 

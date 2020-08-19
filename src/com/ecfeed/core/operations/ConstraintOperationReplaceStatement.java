@@ -14,6 +14,7 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 
@@ -21,8 +22,14 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 	private AbstractStatement fCurrentStatement;
 	private ConstraintNode fTarget;
 
-	public ConstraintOperationReplaceStatement(ConstraintNode target, AbstractStatement current, AbstractStatement newStatement) {
-		super(OperationNames.REPLACE_STATEMENT);
+	public ConstraintOperationReplaceStatement(
+			ConstraintNode target, 
+			AbstractStatement current, 
+			AbstractStatement newStatement,
+			ViewMode viewMode) {
+		
+		super(OperationNames.REPLACE_STATEMENT, viewMode);
+		
 		fTarget = target;
 		fCurrentStatement = current;
 		fNewStatement = newStatement;
@@ -48,7 +55,7 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement);
+		return new ConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement, getViewMode());
 	}
 
 }

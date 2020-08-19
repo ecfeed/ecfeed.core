@@ -22,6 +22,7 @@ import com.ecfeed.core.model.ModelConstants;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ParameterOperationSetExpected extends AbstractModelOperation {
 
@@ -34,8 +35,8 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation() {
-			super(ParameterOperationSetExpected.this.getName());
+		public ReverseOperation(ViewMode viewMode) {
+			super(ParameterOperationSetExpected.this.getName(), viewMode);
 		}
 
 		@Override
@@ -55,13 +56,13 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ParameterOperationSetExpected(fTarget, fExpected);
+			return new ParameterOperationSetExpected(fTarget, fExpected, getViewMode());
 		}
 
 	}
 
-	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected){
-		super(OperationNames.SET_EXPECTED_STATUS);
+	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected, ViewMode viewMode){
+		super(OperationNames.SET_EXPECTED_STATUS, viewMode);
 		fTarget = target;
 		fExpected = expected;
 
@@ -139,7 +140,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getViewMode());
 	}
 
 	protected MethodParameterNode getOwnNode(){

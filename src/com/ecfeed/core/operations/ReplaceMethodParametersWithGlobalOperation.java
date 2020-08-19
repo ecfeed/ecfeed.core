@@ -20,27 +20,32 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 
 	private class ReplaceParameterWithLink extends BulkOperation{
 
-		public ReplaceParameterWithLink(MethodParameterNode target, GlobalParametersParentNode parent, ITypeAdapterProvider adapterProvider) {
-			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target);
+		public ReplaceParameterWithLink(
+				MethodParameterNode target, 
+				GlobalParametersParentNode parent, 
+				ITypeAdapterProvider adapterProvider,
+				ViewMode viewMode) {
+			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, viewMode);
 			MethodNode method = target.getMethod();
 			GlobalParameterNode global = new GlobalParameterNode(target);
-			addOperation(new GenericOperationAddParameter(parent, global, true));
-			addOperation(new MethodParameterOperationSetLink(target, global));
-			addOperation(new MethodParameterOperationSetLinked(target, true));
+			addOperation(new GenericOperationAddParameter(parent, global, true, viewMode));
+			addOperation(new MethodParameterOperationSetLink(target, global, viewMode));
+			addOperation(new MethodParameterOperationSetLinked(target, true, viewMode));
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
 					ConstraintNode copy = constraint.makeClone();
-					addOperation(new MethodOperationAddConstraint(method, copy, constraint.getMyIndex()));
+					addOperation(new MethodOperationAddConstraint(method, copy, constraint.getMyIndex(), viewMode));
 				}
 			}
 			for(TestCaseNode tc : method.getTestCases()){
 				TestCaseNode copy = tc.makeClone();
-				addOperation(new MethodOperationAddTestCase(method, copy, adapterProvider, tc.getMyIndex()));
+				addOperation(new MethodOperationAddTestCase(method, copy, adapterProvider, tc.getMyIndex(), viewMode));
 			}
 		}
 
@@ -55,10 +60,16 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 
 	}
 
-	public ReplaceMethodParametersWithGlobalOperation(GlobalParametersParentNode parent, List<MethodParameterNode> originals, ITypeAdapterProvider adapterProvider){
-		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent);
+	public ReplaceMethodParametersWithGlobalOperation(
+			GlobalParametersParentNode parent, 
+			List<MethodParameterNode> originals, 
+			ITypeAdapterProvider adapterProvider,
+			ViewMode viewMode) {
+		
+		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, viewMode);
+		
 		for(MethodParameterNode parameter : originals){
-			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider));
+			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, viewMode));
 		}
 	}
 

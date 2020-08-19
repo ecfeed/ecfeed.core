@@ -17,25 +17,36 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class GenericOperationAddChoice extends BulkOperation {
 	
 	public GenericOperationAddChoice(
-			ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, boolean validate) {
+			ChoicesParentNode target, 
+			ChoiceNode choice, 
+			ITypeAdapterProvider adapterProvider, 
+			int index, 
+			boolean validate, 
+			ViewMode viewMode) {
 
-		super(OperationNames.ADD_PARTITION, true, target, target);
-		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index));
+		super(OperationNames.ADD_PARTITION, true, target, target, viewMode);
+		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index, viewMode));
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if((method != null) && validate){
-				addOperation(new MethodOperationMakeConsistent(method));
+				addOperation(new MethodOperationMakeConsistent(method, getViewMode()));
 			}
 		}
 	}
 
-	public GenericOperationAddChoice(ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, boolean validate) {
+	public GenericOperationAddChoice(
+			ChoicesParentNode target, 
+			ChoiceNode choice, 
+			ITypeAdapterProvider adapterProvider, 
+			boolean validate,
+			ViewMode viewMode) {
 
-		this(target, choice, adapterProvider, -1, validate);
+		this(target, choice, adapterProvider, -1, validate, viewMode);
 	}
 
 	private class AddChoiceOperation extends AbstractModelOperation {
@@ -44,9 +55,10 @@ public class GenericOperationAddChoice extends BulkOperation {
 		private int fIndex;
 		private ITypeAdapterProvider fAdapterProvider;
 
-		public AddChoiceOperation(ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index) {
+		public AddChoiceOperation(
+				ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, ViewMode viewMode) {
 
-			super(OperationNames.ADD_PARTITION);
+			super(OperationNames.ADD_PARTITION, viewMode);
 			fChoicesParentNode = target;
 			fChoice = choice;
 			fIndex = index;
@@ -91,7 +103,9 @@ public class GenericOperationAddChoice extends BulkOperation {
 		@Override
 		public IModelOperation getReverseOperation() {
 
-			return new GenericOperationRemoveChoice(fChoicesParentNode, fChoice, fAdapterProvider, false);
+			return 
+					new GenericOperationRemoveChoice(
+							fChoicesParentNode, fChoice, fAdapterProvider, false, getViewMode());
 		}
 
 		public final String PARTITION_VALUE_PROBLEM(String value){

@@ -25,32 +25,37 @@ import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 public class FactoryAddChildOperation implements IModelVisitor{
 
 	private AbstractNode fChild;
 	private int fIndex;
 	private boolean fValidate;
+	ViewMode fViewMode;
 	private ITypeAdapterProvider fAdapterProvider;
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate) {
+			boolean validate,
+			ViewMode viewMode) {
 
 		fChild = child;
 		fIndex = index;
 		fValidate = validate;
+		fViewMode = viewMode;
 		fAdapterProvider = adapterProvider;
 	}
 
 	public FactoryAddChildOperation(
 			AbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate) {
+			boolean validate,
+			ViewMode viewMode) {
 
-		this(child, -1, adapterProvider, validate);
+		this(child, -1, adapterProvider, validate, viewMode);
 	}
 
 	@Override
@@ -78,10 +83,10 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		GlobalParameterNode globalParameter = new GlobalParameterNode(abstractParameterNode);
 
 		if(fIndex == -1) {
-			return new GenericOperationAddParameter(rootNode, globalParameter, true);
+			return new GenericOperationAddParameter(rootNode, globalParameter, true, fViewMode);
 		}
 
-		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true);
+		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fViewMode);
 	}
 
 	private Object createOperationAddClass(RootNode rootNode) {
@@ -91,10 +96,10 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		generateUniqueNameForClass(rootNode, classNode);
 
 		if (fIndex == -1) {
-			return new RootOperationAddNewClass(rootNode, classNode);
+			return new RootOperationAddNewClass(rootNode, classNode, fViewMode);
 		}
 
-		return new RootOperationAddNewClass(rootNode, classNode, fIndex);
+		return new RootOperationAddNewClass(rootNode, classNode, fIndex, fViewMode);
 	}
 	
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
@@ -111,15 +116,15 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if(fChild instanceof MethodNode){
 			if(fIndex == -1){
-				return new ClassOperationAddMethod(node, (MethodNode)fChild);
+				return new ClassOperationAddMethod(node, (MethodNode)fChild, fViewMode);
 			}
-			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex);
+			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fViewMode);
 		}else if(fChild instanceof AbstractParameterNode){
 			GlobalParameterNode globalParameter = new GlobalParameterNode((AbstractParameterNode)fChild);
 			if(fIndex == -1){
-				return new GenericOperationAddParameter(node, globalParameter, true);
+				return new GenericOperationAddParameter(node, globalParameter, true, fViewMode);
 			}
-			return new GenericOperationAddParameter(node, globalParameter, fIndex, true);
+			return new GenericOperationAddParameter(node, globalParameter, fIndex, true, fViewMode);
 		}
 
 		reportOperationNotSupportedException();
@@ -134,27 +139,27 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			MethodParameterNode parameter = new MethodParameterNode(globalParameter, defaultValue, false);
 
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node,parameter);
+				return new MethodOperationAddParameter(node,parameter, fViewMode);
 			}
-			return new MethodOperationAddParameter(node, parameter, fIndex);
+			return new MethodOperationAddParameter(node, parameter, fIndex, fViewMode);
 		}
 		if(fChild instanceof MethodParameterNode){
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node, (MethodParameterNode)fChild);
+				return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fViewMode);
 			}
-			return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fIndex);
+			return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fIndex, fViewMode);
 		}
 		if(fChild instanceof ConstraintNode){
 			if(fIndex == -1){
-				return new MethodOperationAddConstraint(node, (ConstraintNode)fChild);
+				return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fViewMode);
 			}
-			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex);
+			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex, fViewMode);
 		}
 		if(fChild instanceof TestCaseNode){
 			if(fIndex == -1){
-				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider);
+				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fViewMode);
 			}
-			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fIndex);
+			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fViewMode);
 		}
 
 		reportOperationNotSupportedException();
@@ -165,9 +170,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	public Object visit(MethodParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fViewMode);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate);
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fViewMode);
 		}
 
 		reportOperationNotSupportedException();
@@ -178,9 +183,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	public Object visit(GlobalParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fViewMode);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate);
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fViewMode);
 		}
 
 		reportOperationNotSupportedException();
@@ -203,9 +208,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	public Object visit(ChoiceNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fViewMode);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate);
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fViewMode);
 		}
 
 		reportOperationNotSupportedException();

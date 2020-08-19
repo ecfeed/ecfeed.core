@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class GenericOperationAddParameter extends AbstractModelOperation {
 
@@ -22,9 +23,13 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	private boolean fGenerateUniqueName;
 
 	public GenericOperationAddParameter(
-			ParametersParentNode target, AbstractParameterNode parameter, int index, boolean generateUniqueName) {
+			ParametersParentNode target, 
+			AbstractParameterNode parameter, 
+			int index, 
+			boolean generateUniqueName,
+			ViewMode viewMode) {
 		
-		super(OperationNames.ADD_PARAMETER);
+		super(OperationNames.ADD_PARAMETER, viewMode);
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
 		fNewIndex = (index == -1)? target.getParameters().size() : index;
@@ -32,8 +37,11 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	}
 
 	public GenericOperationAddParameter(
-			ParametersParentNode target, AbstractParameterNode parameter, boolean generateUniqueName) {
-		this(target, parameter, -1, generateUniqueName);
+			ParametersParentNode target, 
+			AbstractParameterNode parameter, 
+			boolean generateUniqueName,
+			ViewMode viewMode) {
+		this(target, parameter, -1, generateUniqueName, viewMode);
 	}
 
 	@Override
@@ -69,7 +77,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(fParametersParentNode, fAbstractParameterNode);
+		return new ReverseOperation(fParametersParentNode, fAbstractParameterNode, getViewMode());
 	}
 
 	protected class ReverseOperation extends AbstractModelOperation{
@@ -78,8 +86,8 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		private AbstractParameterNode fReversedParameter;
 		private ParametersParentNode fReversedTarget;
 
-		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter) {
-			super("reverse " + OperationNames.ADD_PARAMETER);
+		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter, ViewMode viewMode) {
+			super("reverse " + OperationNames.ADD_PARAMETER, viewMode);
 			fReversedTarget = target;
 			fReversedParameter = parameter;
 		}
@@ -94,7 +102,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new GenericOperationAddParameter(fReversedTarget, fReversedParameter, fOriginalIndex, true);
+			return new GenericOperationAddParameter(fReversedTarget, fReversedParameter, fOriginalIndex, true, getViewMode());
 		}
 	}
 	

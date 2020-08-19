@@ -16,6 +16,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
@@ -66,8 +67,10 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
 	}
 
-	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase) {
-		super(OperationNames.REMOVE_TEST_CASE);
+	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase, ViewMode viewMode) {
+		
+		super(OperationNames.REMOVE_TEST_CASE, viewMode);
+		
 		fMethodNode = target;
 		fTestCase = testCase;
 		fIndex = testCase.getMyIndex();
@@ -83,7 +86,7 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationAddTestCase(fMethodNode, fTestCase, new DummyAdapterProvider(), fIndex);
+		return new MethodOperationAddTestCase(fMethodNode, fTestCase, new DummyAdapterProvider(), fIndex, getViewMode());
 	}
 
 }

@@ -16,6 +16,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCase;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationAddTestSuite extends BulkOperation {
 
@@ -23,9 +24,10 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 			MethodNode methodNode, 
 			String testSuiteName, 
 			List<TestCase> testCases, 
-			ITypeAdapterProvider typeAdapterProvider) {
+			ITypeAdapterProvider typeAdapterProvider,
+			ViewMode viewMode) {
 
-		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode);
+		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode, viewMode);
 
 		for (TestCase testCase : testCases) {
 
@@ -39,7 +41,8 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 					new MethodOperationAddTestCase(
 							methodNode, 
 							testCaseNode, 
-							typeAdapterProvider));
+							typeAdapterProvider,
+							viewMode));
 		}
 	}
 

@@ -21,6 +21,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ChoiceOperationSetValue extends AbstractModelOperation {
 
@@ -31,9 +32,9 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	private ITypeAdapterProvider fAdapterProvider;
 
-	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider){
+	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, ViewMode viewMode){
 		
-		super(OperationNames.SET_PARTITION_VALUE);
+		super(OperationNames.SET_PARTITION_VALUE, viewMode);
 		
 		fOwnChoiceNode = target;
 		fNewValue = newValue;
@@ -63,7 +64,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getViewMode());
 	}
 
 	@Override
@@ -126,8 +127,8 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		}
 
-		public ReverseOperation() {
-			super(ChoiceOperationSetValue.this.getName());
+		public ReverseOperation(ViewMode viewMode) {
+			super(ChoiceOperationSetValue.this.getName(), viewMode);
 		}
 
 		@Override
@@ -145,7 +146,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider);
+			return new ChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider, getViewMode());
 		}
 	}
 

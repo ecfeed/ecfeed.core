@@ -21,24 +21,27 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ViewMode;
 
 public class GenericMoveOperation extends BulkOperation {
 
 	public GenericMoveOperation(
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
-			ITypeAdapterProvider adapterProvider) throws ModelOperationException {
+			ITypeAdapterProvider adapterProvider,
+			ViewMode viewMode) throws ModelOperationException {
 		
-		this(moved, newParent, adapterProvider, -1);
+		this(moved, newParent, adapterProvider, -1, viewMode);
 	}
 
 	public GenericMoveOperation(
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
-			int newIndex) throws ModelOperationException {
+			int newIndex,
+			ViewMode viewMode) throws ModelOperationException {
 
-		super(OperationNames.MOVE, true, newParent, getParent(moved));
+		super(OperationNames.MOVE, true, newParent, getParent(moved), viewMode);
 
 		Set<MethodNode> methodsInvolved = new HashSet<>();
 		try {
@@ -49,25 +52,29 @@ public class GenericMoveOperation extends BulkOperation {
 						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
 					}
 					addOperation((IModelOperation)node.getParent().accept(
-							new FactoryRemoveChildOperation(node, adapterProvider, false)));
+							new FactoryRemoveChildOperation(node, adapterProvider, false, viewMode)));
 
 					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
 						GlobalParameterNode parameter = (GlobalParameterNode)node;
 						node = new MethodParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
 					}
 					if(newIndex != -1){
-						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, newIndex, adapterProvider, false)));
+						addOperation(
+								(IModelOperation)newParent.accept(
+										new FactoryAddChildOperation(node, newIndex, adapterProvider, false, viewMode)));
 					}
 					else{
-						addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(node, adapterProvider, false)));
+						addOperation(
+								(IModelOperation)newParent.accept(
+										new FactoryAddChildOperation(node, adapterProvider, false, viewMode)));
 					}
 					for(MethodNode method : methodsInvolved){
-						addOperation(new MethodOperationMakeConsistent(method));
+						addOperation(new MethodOperationMakeConsistent(method, viewMode));
 					}
 				}
 			}
 			else if(internalNodes(moved, newParent)){
-				GenericShiftOperation operation = FactoryShiftOperation.getShiftOperation(moved, newIndex);
+				GenericShiftOperation operation = FactoryShiftOperation.getShiftOperation(moved, newIndex, viewMode);
 				addOperation(operation);
 			}
 		} catch (Exception e) {

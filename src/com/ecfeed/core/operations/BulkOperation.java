@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ViewMode;
 
 public class BulkOperation extends AbstractModelOperation {
 
@@ -36,10 +37,11 @@ public class BulkOperation extends AbstractModelOperation {
 			String name, 
 			boolean atomic,
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToSelectAfterReverseOperation) {
+			AbstractNode nodeToSelectAfterReverseOperation,
+			ViewMode viewMode) {
 
 		this(name, new ArrayList<IModelOperation>(), atomic, 
-				nodeToSelect, nodeToSelectAfterReverseOperation);
+				nodeToSelect, nodeToSelectAfterReverseOperation, viewMode);
 	}
 
 	public BulkOperation(
@@ -47,9 +49,10 @@ public class BulkOperation extends AbstractModelOperation {
 			List<IModelOperation> operations, 
 			boolean atomic, 
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToelectAfterReverseOperation) {
+			AbstractNode nodeToelectAfterReverseOperation, 
+			ViewMode viewMode) {
 
-		super(name);
+		super(name, viewMode);
 
 		fOperations = operations;
 		fExecutedOperations = new ArrayList<IModelOperation>();
@@ -116,8 +119,12 @@ public class BulkOperation extends AbstractModelOperation {
 	@Override
 	public IModelOperation getReverseOperation() {
 		return new BulkOperation(
-				"reverse " + getName(), reverseOperations(), 
-				fAtomic, fNodeToSelectAfterReverseOperation, null);
+				"reverse " + getName(), 
+				reverseOperations(), 
+				fAtomic, 
+				fNodeToSelectAfterReverseOperation, 
+				null, 
+				getViewMode());
 	}
 
 

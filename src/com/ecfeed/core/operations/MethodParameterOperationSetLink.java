@@ -17,6 +17,7 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodParameterOperationSetLink extends BulkOperation {
 
@@ -27,8 +28,8 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		private class ReverseOperation extends AbstractReverseOperation{
 
-			public ReverseOperation() {
-				super(MethodParameterOperationSetLink.this);
+			public ReverseOperation(ViewMode viewMode) {
+				super(MethodParameterOperationSetLink.this, viewMode);
 			}
 
 			@Override
@@ -39,13 +40,13 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new SetLinkOperation(fTarget, fNewLink);
+				return new SetLinkOperation(fTarget, fNewLink, getViewMode());
 			}
 
 		}
 
-		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link) {
-			super(OperationNames.SET_LINK);
+		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link, ViewMode viewMode) {
+			super(OperationNames.SET_LINK, viewMode);
 			fTarget = target;
 			fNewLink = link;
 		}
@@ -68,14 +69,14 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseOperation();
+			return new ReverseOperation(getViewMode());
 		}
 
 	}
 
-	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link) {
-		super(OperationNames.SET_LINK, true, target, target);
-		addOperation(new SetLinkOperation(target, link));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod()));
+	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link, ViewMode viewMode) {
+		super(OperationNames.SET_LINK, true, target, target, viewMode);
+		addOperation(new SetLinkOperation(target, link, viewMode));
+		addOperation(new MethodOperationMakeConsistent(target.getMethod(), viewMode));
 	}
 }

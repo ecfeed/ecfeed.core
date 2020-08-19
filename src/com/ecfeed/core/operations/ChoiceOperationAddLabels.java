@@ -14,20 +14,22 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class ChoiceOperationAddLabels extends BulkOperation {
 	public ChoiceOperationAddLabels(
 			ChoiceNode target, 
 			Collection<String> labels, 
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToSelectAfterReverseOperation) {
+			AbstractNode nodeToSelectAfterReverseOperation, 
+			ViewMode viewMode) {
 
 		super(OperationNames.ADD_PARTITION_LABELS, false, 
-				nodeToSelect, nodeToSelectAfterReverseOperation);
+				nodeToSelect, nodeToSelectAfterReverseOperation, viewMode);
 
 		for(String label : labels){
 			if(target.getInheritedLabels().contains(label) == false){
-				addOperation(new ChoiceOperationAddLabel(target, label));
+				addOperation(new ChoiceOperationAddLabel(target, label, viewMode));
 			}
 		}
 	}

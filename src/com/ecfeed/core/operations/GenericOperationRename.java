@@ -40,7 +40,8 @@ public class GenericOperationRename extends AbstractModelOperation {
 			String newName, 
 			ViewMode viewMode) {
 		
-		super(OperationNames.RENAME);
+		super(OperationNames.RENAME, viewMode);
+		
 		fTarget = target;
 		fNewName = newName;
 		fOriginalName = target.getName();

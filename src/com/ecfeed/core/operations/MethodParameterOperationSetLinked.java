@@ -19,6 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodParameterOperationSetLinked extends BulkOperation{
 
@@ -31,8 +32,8 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 		private class ReverseSetLinkedOperation extends AbstractReverseOperation{
 
-			public ReverseSetLinkedOperation() {
-				super(SetLinkedOperation.this);
+			public ReverseSetLinkedOperation(ViewMode viewMode) {
+				super(SetLinkedOperation.this, viewMode);
 			}
 
 			@Override
@@ -56,13 +57,13 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new SetLinkedOperation(fTarget, fLinked);
+				return new SetLinkedOperation(fTarget, fLinked, getViewMode());
 			}
 
 		}
 
-		public SetLinkedOperation(MethodParameterNode target, boolean linked) {
-			super(OperationNames.SET_LINKED);
+		public SetLinkedOperation(MethodParameterNode target, boolean linked, ViewMode viewMode) {
+			super(OperationNames.SET_LINKED, viewMode);
 			fTarget = target;
 			fLinked = linked;
 		}
@@ -98,15 +99,15 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseSetLinkedOperation();
+			return new ReverseSetLinkedOperation(getViewMode());
 		}
 
 	}
 
-	public MethodParameterOperationSetLinked(MethodParameterNode target, boolean linked) {
-		super(OperationNames.SET_LINKED, true, target, target);
-		addOperation(new SetLinkedOperation(target, linked));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod())); 
+	public MethodParameterOperationSetLinked(MethodParameterNode target, boolean linked, ViewMode viewMode) {
+		super(OperationNames.SET_LINKED, true, target, target, viewMode);
+		addOperation(new SetLinkedOperation(target, linked, viewMode));
+		addOperation(new MethodOperationMakeConsistent(target.getMethod(), viewMode)); 
 	}
 
 	public void addOperation(int index, IModelOperation operation){

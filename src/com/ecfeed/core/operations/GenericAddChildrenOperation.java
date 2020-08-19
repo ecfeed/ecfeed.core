@@ -37,15 +37,20 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			boolean validate,
 			ViewMode viewMode) {
 
-		super(OperationNames.ADD_CHILDREN, false, target, target);
+		super(OperationNames.ADD_CHILDREN, false, target, target, viewMode);
 
 		for (AbstractNode child : children) {
 			IModelOperation operation;
 			try {
 				if (index != -1) {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate));
+					operation = 
+							(IModelOperation)target.accept(
+									new FactoryAddChildOperation(
+											child, index++, adapterProvider, validate, getViewMode()));
 				} else {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate));
+					operation = 
+							(IModelOperation)target.accept(
+									new FactoryAddChildOperation(child, adapterProvider, validate, getViewMode()));
 				}
 				if (operation != null) {
 					addOperation(operation);

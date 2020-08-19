@@ -14,6 +14,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationAddConstraint extends AbstractModelOperation {
 
@@ -21,15 +22,17 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
-	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index){
-		super(OperationNames.ADD_CONSTRAINT);
+	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index, ViewMode viewMode){
+		
+		super(OperationNames.ADD_CONSTRAINT, viewMode);
+		
 		fMethodNode = methodNode;
 		fConstraint = constraint;
 		fIndex = index;
 	}
 
-	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint){
-		this(target, constraint, -1);
+	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint, ViewMode viewMode){
+		this(target, constraint, -1, viewMode);
 	}
 
 	@Override
@@ -52,7 +55,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationRemoveConstraint(fMethodNode, fConstraint);
+		return new MethodOperationRemoveConstraint(fMethodNode, fConstraint, getViewMode());
 	}
 
 }

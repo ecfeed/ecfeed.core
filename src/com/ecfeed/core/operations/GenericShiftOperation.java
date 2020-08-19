@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ViewMode;
 
 public class GenericShiftOperation extends AbstractModelOperation {
 
@@ -24,17 +25,21 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	private int fShiftSize;
 	private List<? extends AbstractNode> fCollection;
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up){
-		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up);
+	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, ViewMode viewMode){
+		
+		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up, viewMode);
 	}
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up){
-		this(collection, shifted, 0);
+	public GenericShiftOperation(
+			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, ViewMode viewMode){
+		
+		this(collection, shifted, 0, viewMode);
+		
 		fShiftSize = minAllowedShift(shifted, up);
 	}
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift){
-		super(OperationNames.MOVE);
+	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, ViewMode viewMode){
+		super(OperationNames.MOVE, viewMode);
 		shift = shiftAllowed(shifted, shift) ? shift : 0;
 		fToBeShifted = new ArrayList<>(shifted);
 		fCollection = collection;
@@ -51,7 +56,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericShiftOperation(fCollection, fToBeShifted, -fShiftSize);
+		return new GenericShiftOperation(fCollection, fToBeShifted, -fShiftSize, getViewMode());
 	}
 
 	public int getShift(){
