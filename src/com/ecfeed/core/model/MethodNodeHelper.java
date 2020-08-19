@@ -65,7 +65,7 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static List<String> getArgTypes(MethodNode method, ViewMode viewMode) {
+	public static List<String> getMethodParameterTypes(MethodNode method, ViewMode viewMode) {
 
 		List<String> result = new ArrayList<String>();
 

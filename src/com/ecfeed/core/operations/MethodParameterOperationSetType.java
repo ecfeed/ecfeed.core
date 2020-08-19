@@ -267,19 +267,19 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
 
-			List<String> types = MethodNodeHelper.getArgTypes(oldMethodNode, fViewMode);
+			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, fViewMode);
 			
-			String newType = getNewType();
+			String newParameterType = getNewType();
 			
 			if (fViewMode == ViewMode.SIMPLE) {
-				newType = SimpleTypeHelper.convertJavaTypeToSimpleType(newType);
+				newParameterType = SimpleTypeHelper.convertJavaTypeToSimpleType(newParameterType);
 			}
 			
-			types.set(fMethodParameterNode.getMyIndex(), newType);
+			parameterTypes.set(fMethodParameterNode.getMyIndex(), newParameterType);
 
 			ClassNode classNode = oldMethodNode.getClassNode();
 			
-			MethodNode newMethodNode = ClassNodeHelper.findMethod(classNode, oldMethodNode.getName(), types, fViewMode);
+			MethodNode newMethodNode = ClassNodeHelper.findMethod(classNode, oldMethodNode.getName(), parameterTypes, fViewMode);
 
 			if (newMethodNode == null) {
 				return;

@@ -131,7 +131,7 @@ public class ClassNodeHelper {
 		
 		for (MethodNode methodNode : methods) {
 			
-			List<String> currentParameterTypes = MethodNodeHelper.getArgTypes(methodNode, viewMode);
+			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, viewMode);
 			
 			String currentMethodName = methodNode.getName();
 			
