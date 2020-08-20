@@ -34,9 +34,12 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 		setOneNodeToSelect(fTarget);
 
+		// TODO SIMPLE-VIEW  check - use method from helper instead of getMethod
 		if(fTarget.getClassNode().getMethod(fSource.getName(), fSource.getParameterTypes()) != null){
-			String methodName = fSource.getName();
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(fTarget.getClassNode(), methodName));
+			
+			ModelOperationException.report(
+					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+							fTarget.getClassNode(), fTarget, getViewMode()));
 		}
 
 		if(fTarget.getParameterTypes().equals(fSource.getParameterTypes()) == false){

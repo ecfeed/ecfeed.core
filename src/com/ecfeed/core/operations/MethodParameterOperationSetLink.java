@@ -55,12 +55,17 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 		public void execute() throws ModelOperationException {
 
 			setOneNodeToSelect(fTarget);
+			
+			// TODO SIMPLE-VIEW  check - use method from helper instead of getMethod
 			MethodNode method = fTarget.getMethod();
 			List<String> types = method.getParameterTypes();
 			types.set(fTarget.getMyIndex(), fNewLink.getType());
 
 			if(method.checkDuplicate(fTarget.getMyIndex(), fNewLink.getType())){
-				ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getName()));
+				
+				ModelOperationException.report(
+						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+								method.getClassNode(), method, getViewMode()));
 			}
 
 			fCurrentLink = fTarget.getLink();

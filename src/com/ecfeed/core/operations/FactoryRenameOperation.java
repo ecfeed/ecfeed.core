@@ -93,7 +93,11 @@ public class FactoryRenameOperation {
 					problems)) {
 				
 				ClassNodeHelper.updateNewMethodsSignatureProblemList(
-						targetMethodNode.getClassNode(), getNewNameInJavaConvention(), targetMethodNode.getParameterTypes(), problems);
+						targetMethodNode.getClassNode(), 
+						getNewNameInJavaConvention(), 
+						targetMethodNode.getParameterTypes(), 
+						problems,
+						getViewMode());
 				
 				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 			}

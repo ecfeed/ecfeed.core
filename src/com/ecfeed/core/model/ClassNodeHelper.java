@@ -21,7 +21,7 @@ public class ClassNodeHelper {
 
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
-	
+
 	public static String getSimpleName(ClassNode classNode) {
 
 		return ModelHelper.getNonQualifiedName(classNode.getName());
@@ -31,21 +31,21 @@ public class ClassNodeHelper {
 
 		return classNode.getName();
 	}
-	
+
 	public static String getPackageName(ClassNode classNode) {
 
 		return ModelHelper.getPackageName(classNode.getName());
 	}
 
 	public static boolean classNameCompliesWithJavaNamingRules(String className) {
-		
+
 		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	public static boolean isNewMethodSignatureValid(
 			ClassNode parent, String methodName, List<String> argTypes) {
 
@@ -61,18 +61,22 @@ public class ClassNodeHelper {
 		if (parent.getMethod(methodName, argTypes) != null) {
 			return false;
 		}
-		
+
 		return MethodNodeHelper.validateMethodName(methodName, problems);
 	}
-	
-	public static void updateNewMethodsSignatureProblemList(ClassNode parent, String methodName, List<String> argTypes, List<String> problems) {
-		
-		if (parent.getMethod(methodName, argTypes) != null) {
+
+	public static void updateNewMethodsSignatureProblemList(
+			ClassNode parent, String methodName, List<String> argTypes, List<String> problems, ViewMode viewMode) {
+
+		// TODO SIMPLE-VIEW check
+		MethodNode methodNode = parent.getMethod(methodName, argTypes);
+
+		if (methodNode != null) {
 
 			if (problems != null) {
-				problems.add(generateMethodSignatureDuplicateMessage(parent, methodName));
+				problems.add(generateMethodSignatureDuplicateMessage(parent, methodNode, viewMode));
 			}
-			
+
 		}
 	}
 
@@ -81,9 +85,9 @@ public class ClassNodeHelper {
 		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes)) {
 			return startMethodName;
 		}
-		
+
 		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
-		
+
 		for (int i = 1;   ; i++) {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
@@ -93,55 +97,70 @@ public class ClassNodeHelper {
 			}
 		}
 	}
-	
-	public static String generateMethodSignatureDuplicateMessage(ClassNode classNode, String methodName) {
-	
-		if (isHiddenTypeAvailable(classNode)) {
-			return  "The class: '" 
-					+ SimpleTypeHelper.convertTextFromJavaToSimpleConvention(classNode.getSimpleName()) 
-					+ "' already contains model of a method: '" 
-					+ SimpleTypeHelper.convertTextFromJavaToSimpleConvention(methodName) 
-					+ "' with identical signature";
-		} else {
-			return  "The class: '" 
-					+ classNode.getName() 
-					+ "' already contains model of a method: '" 
-					+ methodName 
-					+ "' with identical signature";
+
+	public static String getSignature(ClassNode classNode, ViewMode viewMode) {
+
+		String classSignature = classNode.getName();
+
+		if (viewMode == ViewMode.SIMPLE) {
+			classSignature = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(classSignature);
 		}
+
+		return classSignature;
 	}
-	
-	private static boolean isHiddenTypeAvailable(ClassNode classNode) {
+
+
+	public static String generateMethodSignatureDuplicateMessage(
+			ClassNode classNode, 
+			MethodNode duplicateMethodNode,
+			ViewMode viewMode) {
+
 		
-		try {
-			return classNode.getMethods().get(0).getParameters().get(0).getSuggestedType().isPresent();
-		} catch (Exception e) {
-			return false;
-		}
+		String classSignature = getSignature(classNode, viewMode);
 		
+		//  TODO SIMPLE-VIEW move to MethodNodeHelper
+		String methodSignature = duplicateMethodNode.getMethodLabel(viewMode);
+
+		String message =
+				"Class: " 
+						+ classSignature 
+						+ " already contains method with identical signature: " + methodSignature + ".";
+
+		return message;
 	}
-	
+
+	// TODO SIMPLE-VIEW remove
+//	private static boolean isHiddenTypeAvailable(ClassNode classNode) {
+//
+//		try {
+//			return classNode.getMethods().get(0).getParameters().get(0).getSuggestedType().isPresent();
+//		} catch (Exception e) {
+//			return false;
+//		}
+//
+//	}
+
 	public static MethodNode findMethod(
 			ClassNode classNode, 
 			String methodNameToFind, 
 			List<String> parameterTypesToFind, 
 			ViewMode viewMode) {
-		
+
 		List<MethodNode> methods = classNode.getMethods();
-		
+
 		for (MethodNode methodNode : methods) {
-			
+
 			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, viewMode);
-			
+
 			String currentMethodName = methodNode.getName();
-			
+
 			if (currentMethodName.equals(methodNameToFind) && currentParameterTypes.equals(parameterTypesToFind)){
 				return methodNode;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 
 }

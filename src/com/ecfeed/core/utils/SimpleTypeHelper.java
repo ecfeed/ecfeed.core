@@ -28,6 +28,16 @@ public final class SimpleTypeHelper {
 			TYPE_NAME_LOGICAL
 	};
 	
+	public static String convertConditionallyJavaTypeToSimpleType(String javaType, ViewMode viewMode) {
+		
+		if (viewMode == ViewMode.JAVA) {
+			return javaType;
+		} 
+		
+		String result = SimpleTypeHelper.convertJavaTypeToSimpleType(javaType);
+		return result;
+	}
+	
 	public static boolean isSimpleType(String typeName) {
 
 		if (typeName == null) {

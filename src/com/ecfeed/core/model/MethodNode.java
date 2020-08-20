@@ -86,6 +86,7 @@ public class MethodNode extends ParametersParentNode {
 		return createSignature(ViewMode.JAVA, true); 
 	}
 
+	// TODO SIMPLE-VIEW - move creation of signature to MethodNodeHelper
 	public String getMethodLabel(ViewMode viewMode) {
 
 		return createSignature(viewMode, true);

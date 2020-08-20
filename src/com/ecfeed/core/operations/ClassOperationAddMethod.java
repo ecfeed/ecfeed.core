@@ -58,7 +58,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 				problems) == false){
 			
 			ClassNodeHelper.updateNewMethodsSignatureProblemList(
-					fClassNode, fMethod.getName(), fMethod.getParameterTypes(), problems);
+					fClassNode, fMethod.getName(), fMethod.getParameterTypes(), problems, getViewMode());
 			
 			ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 		}

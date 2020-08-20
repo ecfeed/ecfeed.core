@@ -56,8 +56,12 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	@Override
 	public void execute() throws ModelOperationException {
 		MethodNode method = ((MethodParameterNode)fParameters.get(0)).getMethod();
+		
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getName()));
+
+			ModelOperationException.report(
+					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+							method.getClassNode(),  method, getViewMode()));
 		}
 		List<Integer> indices = indices(fParameters, getShiftedElements());
 		shiftElements(fParameters, indices, getShift());

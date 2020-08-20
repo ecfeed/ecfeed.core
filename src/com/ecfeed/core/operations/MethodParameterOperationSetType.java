@@ -280,27 +280,29 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, fViewMode);
 			
-			String newParameterType = getNewType();
-			
-			if (fViewMode == ViewMode.SIMPLE) {
-				newParameterType = SimpleTypeHelper.convertJavaTypeToSimpleType(newParameterType);
-			}
+			String newParameterType = SimpleTypeHelper.convertConditionallyJavaTypeToSimpleType(getNewType(), fViewMode);
 			
 			parameterTypes.set(fMethodParameterNode.getMyIndex(), newParameterType);
 
 			ClassNode classNode = oldMethodNode.getClassNode();
 			
-			MethodNode newMethodNode = ClassNodeHelper.findMethod(classNode, oldMethodNode.getName(), parameterTypes, fViewMode);
+			MethodNode foundMethodNode = 
+					ClassNodeHelper.findMethod(
+							classNode, oldMethodNode.getName(), parameterTypes, fViewMode);
 
-			if (newMethodNode == null) {
+			if (foundMethodNode == null) {
 				return;
 			}
 
-			if (newMethodNode == oldMethodNode) {
+			if (foundMethodNode == oldMethodNode) {
 				return;
 			}
-
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(classNode, oldMethodNode.getName()));
+			
+			String message = 
+					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+							classNode, foundMethodNode, getViewMode());
+			
+			ModelOperationException.report(message);
 		}
 
 		@Override

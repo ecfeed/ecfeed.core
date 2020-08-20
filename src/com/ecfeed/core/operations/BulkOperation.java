@@ -74,7 +74,7 @@ public class BulkOperation extends AbstractModelOperation {
 
 	public static final String PROBLEM_WITH_BULK_OPERATION(String operation) {
 
-		return "Cannot perform operation: " + operation;
+		return "Cannot perform operation: " + operation + ".";
 	}	
 
 	@Override

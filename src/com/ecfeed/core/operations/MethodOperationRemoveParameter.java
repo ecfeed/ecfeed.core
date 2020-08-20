@@ -68,8 +68,12 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		@Override
 		public void execute() throws ModelOperationException{
 			if(!fIgnoreDuplicates && validateNewSignature() == false){
-				String methodName = getOwnNode().getName();
-				ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage((ClassNode) getOwnNode().getParent(), methodName));
+				
+				MethodNode methodNode = (MethodNode) getOwnNode();
+				
+				ModelOperationException.report(
+						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+								(ClassNode) getOwnNode().getParent(), methodNode, getViewMode()));
 			}
 			fOriginalTestCases.clear();
 			for(TestCaseNode tcase : getMethodTarget().getTestCases()){
