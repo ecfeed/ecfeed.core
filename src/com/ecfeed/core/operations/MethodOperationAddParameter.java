@@ -67,12 +67,12 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		
 		if (parentClassNode != null) { 
 				
-			MethodNode existingMethodNode = ClassNodeHelper.findMethod(parentClassNode, fMethodNode.getName(), types, viewMode);
+			MethodNode foundMethodNode = ClassNodeHelper.findMethod(parentClassNode, fMethodNode.getName(), types, viewMode);
 			
-			if (existingMethodNode != null) {
+			if (foundMethodNode != null) {
 				ModelOperationException.report(
 						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-								parentClassNode, existingMethodNode.getName()));
+								parentClassNode, foundMethodNode.getName()));
 			}
 		}
 		
