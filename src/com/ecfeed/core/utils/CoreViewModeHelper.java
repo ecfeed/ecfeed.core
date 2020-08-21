@@ -40,5 +40,24 @@ public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
 
 		return newName;
 	}
+
+	// TODO SIMPLE-VIEW rename
+	public static String convertTextToConvention(String text, ViewMode viewMode) {
+		
+		if (viewMode == ViewMode.SIMPLE) {
+			text = SimpleTypeHelper.convertJavaTypeToSimpleType(text);
+		}
+		
+		return text;
+	}
+	
+	public static String convertTypeToConvention(String type, ViewMode viewMode) {
+		
+		if (viewMode == ViewMode.SIMPLE) {
+			type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
+		}
+		
+		return type;
+	}
 	
 }

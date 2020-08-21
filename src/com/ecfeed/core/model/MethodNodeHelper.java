@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 
@@ -70,17 +70,16 @@ public class MethodNodeHelper {
 		List<String> result = new ArrayList<String>();
 
 		for (AbstractParameterNode parameter : method.getParameters()) {
-			
+
 			String type = parameter.getType();
-			
-			if (viewMode == ViewMode.SIMPLE) {
-				type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
-			}
-				
+
+			type = CoreViewModeHelper.convertTextToConvention(type, viewMode);
+
 			result.add(type);
 		}
 
 		return result;
 	}
+
 
 }

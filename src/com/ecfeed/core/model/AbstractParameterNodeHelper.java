@@ -10,31 +10,27 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 public abstract class AbstractParameterNodeHelper {
 
 	public static String createLabel(AbstractParameterNode abstractParameterNode, ViewMode viewMode) {
-		
+
 		String name = abstractParameterNode.getName();
+		name = CoreViewModeHelper.convertTextToConvention(name, viewMode);
+
 		String type = abstractParameterNode.getType();
-		
-		if (viewMode == ViewMode.SIMPLE) {
-			name = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(name);
-			type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
-		}
-		
+		type = createTypeLabel(type, viewMode);
+
 		String label = name + ": " + type;
 		return label;
 	}
-	
+
+
 	public static String createTypeLabel(String javaType, ViewMode viewMode) {
-		
-		if (viewMode == ViewMode.SIMPLE) {
-			return SimpleTypeHelper.convertJavaTypeToSimpleType(javaType);
-		}
-		
-		return javaType;
+
+		String type = CoreViewModeHelper.convertTypeToConvention(javaType, viewMode);
+		return type;
 	}
 }
