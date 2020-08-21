@@ -22,10 +22,10 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.ViewModeModelVerifier;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.ViewMode;
 
 public class GenericOperationRename extends AbstractModelOperation {
 
@@ -34,14 +34,14 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fOriginalName;
 	private String fJavaNameRegex;
 	private ViewMode fViewMode;
-	
+
 	public GenericOperationRename(
 			AbstractNode target, 
 			String newName, 
 			ViewMode viewMode) {
-		
+
 		super(OperationNames.RENAME, viewMode);
-		
+
 		fTarget = target;
 		fNewName = newName;
 		fOriginalName = target.getName();
@@ -51,39 +51,28 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	@Override
 	public void execute() throws ModelOperationException {
-		
+
 		setOneNodeToSelect(fTarget);
-		
+
 		String newName = fNewName;
-		
-		if (fViewMode == ViewMode.SIMPLE) {
-			
-			if (newName.contains("_")) {
-				ModelOperationException.report("Underline chars are not allowed in simple view.");
-			}
-			
-			newName = newName.replace(" ", "_");
-		}
-		
+
+		newName = CoreViewModeHelper.adjustTextToConvention(newName, fViewMode);
+
 		verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget); // TODO SIMPLE-VIEW for source view simple error messages should be different
-		
+
 		verifyNewName(newName);
-		
+
 		String oldName = fTarget.getName();
-		
+
 		fTarget.setName(newName);
-		
-		if (fViewMode == ViewMode.SIMPLE) {
-			
-			String errorMessage = ViewModeModelVerifier.checkIsModelCompatibleWithSimpleMode(fTarget);
-			
-			if (errorMessage != null) {
-				
-				fTarget.setName(oldName);
-				ModelOperationException.report(errorMessage);
-			}
+
+		String errorMessage = ViewModeModelVerifier.checkIsModelCompatibleWithViewMode(fTarget, fViewMode);
+
+		if (errorMessage != null) {
+			fTarget.setName(oldName);
+			ModelOperationException.report(errorMessage);
 		}
-		
+
 		markModelUpdated();
 	}
 
@@ -101,18 +90,6 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	protected String getOriginalName(){
 		return fOriginalName;
-	}
-
-	protected String getNewNameInJavaConvention(){
-		
-		if (fViewMode == ViewMode.SIMPLE) {
-			
-			String result = SimpleTypeHelper.convertTextFromSimpleToJavaConvention(fNewName);
-			
-			return result; 
-		}
-		
-		return fNewName;
 	}
 
 	protected void verifyNewName(String newName) throws ModelOperationException{
@@ -138,7 +115,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}catch(Exception e){SystemLogger.logCatch(e);}
 		return "";
 	}
-	
+
 	private static class RegexProblemMessageProvider implements IModelVisitor {
 
 		@Override
@@ -224,6 +201,6 @@ public class GenericOperationRename extends AbstractModelOperation {
 			return RegexHelper.REGEX_PARTITION_NODE_NAME;
 		}
 	}
-	
+
 
 }

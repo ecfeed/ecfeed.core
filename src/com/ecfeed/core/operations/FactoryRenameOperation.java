@@ -25,10 +25,11 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.ViewMode;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.ViewMode;
 
 public class FactoryRenameOperation {
 
@@ -38,10 +39,12 @@ public class FactoryRenameOperation {
 	private static class ClassOperationRename extends GenericOperationRename {
 
 		ViewMode fViewMode;
+		String fNewName;
 
 		public ClassOperationRename(AbstractNode target, String newName, ViewMode viewMode) {
 			super(target, newName, viewMode);
 			fViewMode = viewMode;
+			fNewName = newName;
 		}
 
 		@Override
@@ -51,12 +54,17 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
-			for(String token : getNewNameInJavaConvention().split("\\.")){
+			
+			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fViewMode);
+			
+			String[] tokens = newNameInJavaConvention.split("\\.");
+			
+			for (String token : tokens) {
 				if(JavaLanguageHelper.isJavaKeyword(token)){
 					ModelOperationException.report(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
 				}
 			}
-			if(getOwnNode().getSibling(getNewNameInJavaConvention()) != null){
+			if(getOwnNode().getSibling(newNameInJavaConvention) != null){
 				ModelOperationException.report(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
 			}
 		}
@@ -65,12 +73,14 @@ public class FactoryRenameOperation {
 	private static class MethodOperationRename extends GenericOperationRename {
 
 		ViewMode fViewMode;
+		String fNewName;
 
 		public MethodOperationRename(MethodNode target, String newName, ViewMode viewMode) {
 
 			super(target, newName, viewMode);
 
 			fViewMode = viewMode;
+			fNewName = newName;
 		}
 
 		@Override
@@ -86,15 +96,17 @@ public class FactoryRenameOperation {
 			
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
+			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fViewMode);
+			
 			if (!ClassNodeHelper.isNewMethodSignatureValid(
 					targetMethodNode.getClassNode(), 
-					getNewNameInJavaConvention(), 
+					newNameInJavaConvention, 
 					targetMethodNode.getParameterTypes(),
 					problems)) {
 				
 				ClassNodeHelper.updateNewMethodsSignatureProblemList(
 						targetMethodNode.getClassNode(), 
-						getNewNameInJavaConvention(), 
+						newNameInJavaConvention, 
 						targetMethodNode.getParameterTypes(), 
 						problems,
 						getViewMode());
@@ -163,7 +175,9 @@ public class FactoryRenameOperation {
 		ViewMode fViewMode;
 
 		public ChoiceOperationRename(ChoiceNode target, String newName, ViewMode viewMode) {
+			
 			super(target, newName, viewMode);
+			
 			fViewMode = viewMode;
 		}
 
@@ -174,7 +188,10 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName)throws ModelOperationException{
-			if(getOwnNode().getSibling(getNewNameInJavaConvention()) != null){
+			
+			newName = CoreViewModeHelper.getNewNameInJavaConvention(newName, fViewMode);
+			
+			if(getOwnNode().getSibling(newName) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}
 		}

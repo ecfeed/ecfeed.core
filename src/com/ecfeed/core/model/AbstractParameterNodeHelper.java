@@ -28,4 +28,13 @@ public abstract class AbstractParameterNodeHelper {
 		String label = name + ": " + type;
 		return label;
 	}
+	
+	public static String createTypeLabel(String javaType, ViewMode viewMode) {
+		
+		if (viewMode == ViewMode.SIMPLE) {
+			return SimpleTypeHelper.convertJavaTypeToSimpleType(javaType);
+		}
+		
+		return javaType;
+	}
 }

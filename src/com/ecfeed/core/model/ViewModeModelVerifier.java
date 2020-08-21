@@ -17,6 +17,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.ViewMode;
 
 
 public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
@@ -45,13 +46,17 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 	}
 	
 	// TODO SIMPLE-VIEW check actions which make model incompatible with simple mode - fun(Number a),  fun(Number a, Number b) > deleting Number b
-	public static String checkIsModelCompatibleWithSimpleMode(AbstractNode anyNode) {
+	
+	public static String checkIsModelCompatibleWithViewMode(AbstractNode anyNode, ViewMode viewMode) {
 		
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
+
+		if (viewMode == ViewMode.SIMPLE) {
+			String result = checkIsModelCompatibleWithSimpleMode(rootNode);
+			return result;
+		}
 		
-		String result = checkIsModelCompatibleWithSimpleMode(rootNode);
-		
-		return result;
+		return null;
 	}
 
 	public static String checkIsModelCompatibleWithSimpleMode(RootNode rootNode) {

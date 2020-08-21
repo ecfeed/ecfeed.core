@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
@@ -20,7 +21,6 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
@@ -55,11 +55,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		
 		List<String> types = MethodNodeHelper.getMethodParameterTypes(fMethodNode, viewMode);
 		
-		String parameterType = fMethodParameterNode.getType();
-		
-		if (viewMode == ViewMode.SIMPLE) {
-			parameterType = SimpleTypeHelper.convertJavaTypeToSimpleType(parameterType);
-		}
+		String parameterType = AbstractParameterNodeHelper.createTypeLabel(fMethodParameterNode.getType(), viewMode);
 		
 		types.add(fNewIndex, parameterType);
 		
