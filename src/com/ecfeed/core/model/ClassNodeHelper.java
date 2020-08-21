@@ -116,7 +116,7 @@ public class ClassNodeHelper {
 		String classSignature = getSignature(classNode, viewMode);
 
 		//  TODO SIMPLE-VIEW move to MethodNodeHelper
-		String methodSignature = duplicateMethodNode.getMethodLabel(viewMode);
+		String methodSignature = duplicateMethodNode.createShortSignature(viewMode);
 
 		String message =
 				"Class: " 
@@ -125,17 +125,6 @@ public class ClassNodeHelper {
 
 		return message;
 	}
-
-	// TODO SIMPLE-VIEW remove
-	//	private static boolean isHiddenTypeAvailable(ClassNode classNode) {
-	//
-	//		try {
-	//			return classNode.getMethods().get(0).getParameters().get(0).getSuggestedType().isPresent();
-	//		} catch (Exception e) {
-	//			return false;
-	//		}
-	//
-	//	}
 
 	public static MethodNode findMethod(
 			ClassNode classNode, 

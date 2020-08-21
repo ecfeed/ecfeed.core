@@ -22,6 +22,46 @@ import com.ecfeed.core.utils.ViewMode;
 
 public class MethodNodeHelper {
 
+	public static String createSignature(
+			String fullName,
+			List<MethodParameterNode> methodParameters,
+			List<String> types, // TODO SIMPLE-VIEW take types from method parameters
+			List<String> parameterNames, // TODO SIMPLE-VIEW take names from method parameters
+			ViewMode viewMode, boolean isExpectedDecorationAdded) {
+
+		fullName = CoreViewModeHelper.convertTextToConvention(fullName, viewMode);
+
+		String signature = new String(fullName) + "(";
+		String type;
+
+		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {
+
+			if (isExpectedDecorationAdded) {
+				if (methodParameters.get(paramIndex).isExpected()) {
+					signature += "[e]";
+				}
+			}
+
+			type = types.get(paramIndex);
+			type = CoreViewModeHelper.convertTypeToConvention(type, viewMode);
+
+			signature += type;
+			signature += " ";
+			String parameterName = parameterNames.get(paramIndex);
+			parameterName = CoreViewModeHelper.convertTextToConvention(parameterName, viewMode);
+
+			signature += parameterName;
+
+			if (paramIndex < types.size() - 1) {
+				signature += ", ";
+			}
+		}
+
+		signature += ")";
+
+		return signature;
+	}
+	
 	public static boolean validateMethodName(String name) {
 
 		return validateMethodName(name, null);

@@ -303,8 +303,8 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 			Pair<String,String> pairOfSignatures = 
 					new Pair<String, String>(
-							SimpleTypeHelper.createMethodSimpleSignature(methodNode), 
-							methodNode.getShortSignature());
+							SimpleTypeHelper.createMethodSimpleSignature(methodNode),  // TODO SIMPLE-VIEW should be similar as line below
+							methodNode.createShortSignature(ViewMode.JAVA));
 
 			signaturePairs.add(pairOfSignatures);
 		}

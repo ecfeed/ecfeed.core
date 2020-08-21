@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 
@@ -83,64 +82,32 @@ public class MethodNode extends ParametersParentNode {
 	@Override
 	public String toString() {
 
-		return createSignature(ViewMode.JAVA, true); 
+		return createSignatureIntr(ViewMode.JAVA, true); 
 	}
 
-	// TODO SIMPLE-VIEW - move creation of signature to MethodNodeHelper
-	public String getMethodLabel(ViewMode viewMode) {
+	public String createSignatureWithExpectedDecorations(ViewMode viewMode) {
 
-		return createSignature(viewMode, true);
+		return createSignatureIntr(viewMode, true);
 	}
 
-	public String getShortSignature() {
-
-		return createSignature(ViewMode.JAVA, false);
+	public String createShortSignature(ViewMode viewMode) {
+		
+		return createSignatureIntr(ViewMode.JAVA, false);
+	}
+	
+	private String createSignatureIntr(ViewMode viewMode, boolean isExpectedDecorationAdded) {
+		
+		return MethodNodeHelper.createSignature(
+				getName(),
+				getMethodParameters(),
+				getParameterTypes(),
+				getParametersNames(),
+				viewMode, isExpectedDecorationAdded);
 	}
 
-	//   TODO SIMPLE-VIEW move to method node helper ?
-	public String createSignature(ViewMode viewMode, boolean isExpectedDecorationAdded) {
+	public String createLongSignature(ViewMode viewMode) {
 
-		List<MethodParameterNode> methodParameters = getMethodParameters();
-		List<String> types = getParameterTypes();
-		List<String> parameterNames = getParametersNames();
-
-		String fullName = getName();
-		fullName = CoreViewModeHelper.convertTextToConvention(fullName, viewMode);
-
-		String signature = new String(fullName) + "(";
-		String type;
-
-		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {
-
-			if (isExpectedDecorationAdded) {
-				if (methodParameters.get(paramIndex).isExpected()) {
-					signature += "[e]";
-				}
-			}
-
-			type = types.get(paramIndex);
-			type = CoreViewModeHelper.convertTypeToConvention(type, viewMode);
-
-			signature += type;
-			signature += " ";
-			String parameterName = parameterNames.get(paramIndex);
-			parameterName = CoreViewModeHelper.convertTextToConvention(parameterName, viewMode);
-
-			signature += parameterName;
-
-			if (paramIndex < types.size() - 1) {
-				signature += ", ";
-			}
-		}
-
-		signature += ")";
-
-		return signature;
-	}
-
-	public String getLongSignature() {
-
-		return getParent().getName() + "." + getShortSignature();
+		return getParent().getName() + "." + createShortSignature(viewMode);
 	}
 
 	@Override
