@@ -60,4 +60,13 @@ public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
 		return type;
 	}
 
+	public static String convertSpecialValueToConvention(String value, String type, ViewMode viewMode) {
+		
+		if (viewMode == ViewMode.SIMPLE) {
+			value = JavaTypeHelper.convertConditionallySpecialValue(type, value);
+		}
+		
+		return value;
+	}
+	
 }

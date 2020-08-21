@@ -25,10 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
-import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 public class ChoiceNodeHelper {
@@ -36,35 +36,29 @@ public class ChoiceNodeHelper {
 	private static final double eps = 0.000001;
 
 	public static String createLabel(ChoiceNode choiceNode, ViewMode viewMode) {
-		
+
 		String qualifiedName = choiceNode.getQualifiedName();
-		
-		if ( viewMode == ViewMode.SIMPLE) {
-			qualifiedName = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(qualifiedName);
-		}
-		
+		qualifiedName =  CoreViewModeHelper.convertTextToConvention(qualifiedName, viewMode);
+
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
 		}
-		
+
 		String value = getValueString(choiceNode, viewMode);
-		
+
 		return qualifiedName + " [" + value + "]";
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, ViewMode viewMode) {
-		
+
 		String type = choiceNode.getParameter().getType();
-		
+
 		String value = choiceNode.getValueString();
-		
-		if (viewMode == ViewMode.SIMPLE) {
-			value = JavaTypeHelper.convertConditionallySpecialValue(type, value);
-		}
-		
+		value = CoreViewModeHelper.convertSpecialValueToConvention(value, type, viewMode);
+
 		return value;
 	}
-	
+
 	public static ChoiceNode createSubstitutePath(ChoiceNode choice, MethodParameterNode parameter) {
 		List<ChoiceNode> copies = createListOfCopies(choice);
 		setParentsOfChoices(copies, parameter);
@@ -79,7 +73,7 @@ public class ChoiceNodeHelper {
 			ChoiceNode copy = 
 					new ChoiceNode(
 							orgChoice.getName(), orgChoice.getModelChangeRegistrator(), orgChoice.getValueString());
-			
+
 			copies.add(copy);
 
 			AbstractNode orgParent = orgChoice.getParent();
@@ -110,32 +104,32 @@ public class ChoiceNodeHelper {
 	}
 
 	public static Map<String, List<String>> convertToParamAndChoiceNames(MethodNode methodNode, List<List<ChoiceNode>> algorithmInput) {
-		
+
 		Map<String, List<String>> paramAndChoiceNames = new HashMap<String, List<String>>();
-		
+
 		int parametersCount = methodNode.getParametersCount();
-		
+
 		for (int parameterIndex = 0;  parameterIndex < parametersCount;  parameterIndex++) {
-			
+
 			String parameterName = methodNode.getParameter(parameterIndex).getName();
 			List<ChoiceNode> choicesForParameter = algorithmInput.get(parameterIndex);
-			
+
 			paramAndChoiceNames.put(parameterName, getChoiceNames(choicesForParameter));
 		}
-		
+
 		return paramAndChoiceNames;
 	}
-	
+
 	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes) {
-		
+
 		List<String> choiceNames = new ArrayList<>();
-		
+
 		for (ChoiceNode choiceNode : choiceNodes) {
-			
+
 			String choiceName = choiceNode.getQualifiedName();
 			choiceNames.add(choiceName);
 		}
-		
+
 		return choiceNames;
 	}
 
@@ -203,34 +197,34 @@ public class ChoiceNodeHelper {
 		choice = convertValueToNumeric(choice);
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			case TYPE_NAME_FLOAT: {
-				double val = Double.parseDouble(choice.getValueString());
-				if(val==0.0)
-					val = -eps;
-				else if(val<0.0)
-					val *= 1+eps;
-				else
-					val /= 1+eps;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
+		case TYPE_NAME_DOUBLE:
+		case TYPE_NAME_FLOAT: {
+			double val = Double.parseDouble(choice.getValueString());
+			if(val==0.0)
+				val = -eps;
+			else if(val<0.0)
+				val *= 1+eps;
+			else
+				val /= 1+eps;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
 
-			case TYPE_NAME_BYTE:
-			case TYPE_NAME_INT:
-			case TYPE_NAME_SHORT:
-			case TYPE_NAME_LONG: {
-				long val = Long.parseLong(choice.getValueString());
-				if(val!=Long.MIN_VALUE)
-					val--;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
+		case TYPE_NAME_BYTE:
+		case TYPE_NAME_INT:
+		case TYPE_NAME_SHORT:
+		case TYPE_NAME_LONG: {
+			long val = Long.parseLong(choice.getValueString());
+			if(val!=Long.MIN_VALUE)
+				val--;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
 
-			default: {
-				reportExceptionUnhandledType();
-				return null;
-			}
+		default: {
+			reportExceptionUnhandledType();
+			return null;
+		}
 		}
 	}
 
@@ -244,33 +238,33 @@ public class ChoiceNodeHelper {
 		choice = convertValueToNumeric(choice);
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			case TYPE_NAME_FLOAT: {
-				double val = Double.parseDouble(choice.getValueString());
-				if(val==0.0)
-					val = eps;
-				else if(val<0.0)
-					val /= 1+eps;
-				else
-					val *= 1+eps;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
-			case TYPE_NAME_BYTE:
-			case TYPE_NAME_INT:
-			case TYPE_NAME_SHORT:
-			case TYPE_NAME_LONG: {
-				long val = Long.parseLong(choice.getValueString());
-				if(val != Long.MAX_VALUE)
-					val++;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
-			default:
-			{
-				reportExceptionUnhandledType();
-				return null;
-			}
+		case TYPE_NAME_DOUBLE:
+		case TYPE_NAME_FLOAT: {
+			double val = Double.parseDouble(choice.getValueString());
+			if(val==0.0)
+				val = eps;
+			else if(val<0.0)
+				val /= 1+eps;
+			else
+				val *= 1+eps;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
+		case TYPE_NAME_BYTE:
+		case TYPE_NAME_INT:
+		case TYPE_NAME_SHORT:
+		case TYPE_NAME_LONG: {
+			long val = Long.parseLong(choice.getValueString());
+			if(val != Long.MAX_VALUE)
+				val++;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
+		default:
+		{
+			reportExceptionUnhandledType();
+			return null;
+		}
 		}
 	}
 
@@ -309,80 +303,80 @@ public class ChoiceNodeHelper {
 		String valueString = choice.getValueString();
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Double.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Double.MAX_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
-					choice.setValueString("-" + Double.MIN_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
-					choice.setValueString("-" + Double.MAX_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
-				}
-				break;
+		case TYPE_NAME_DOUBLE:
+		{
+			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Double.MIN_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Double.MAX_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
+				choice.setValueString("-" + Double.MIN_VALUE);
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
+				choice.setValueString("-" + Double.MAX_VALUE);
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
 			}
-			case TYPE_NAME_FLOAT:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Float.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Float.MAX_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
-					choice.setValueString("-" + Float.MIN_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
-					choice.setValueString("-" + Float.MAX_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_FLOAT:
+		{
+			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Float.MIN_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Float.MAX_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
+				choice.setValueString("-" + Float.MIN_VALUE);
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
+				choice.setValueString("-" + Float.MAX_VALUE);
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
 			}
-			case TYPE_NAME_BYTE:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Byte.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Byte.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_BYTE:
+		{
+			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Byte.MIN_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Byte.MAX_VALUE + "");
 			}
-			case TYPE_NAME_INT:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Integer.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Integer.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_INT:
+		{
+			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Integer.MIN_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Integer.MAX_VALUE + "");
 			}
-			case TYPE_NAME_SHORT:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Short.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Short.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_SHORT:
+		{
+			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Short.MIN_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Short.MAX_VALUE + "");
 			}
-			case TYPE_NAME_LONG:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Long.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Long.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_LONG:
+		{
+			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Long.MIN_VALUE + "");
+			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Long.MAX_VALUE + "");
 			}
-			default:
-			{
-				reportExceptionUnhandledType();
-			}
+			break;
+		}
+		default:
+		{
+			reportExceptionUnhandledType();
+		}
 		}
 		return choice;
 	}
@@ -413,55 +407,55 @@ public class ChoiceNodeHelper {
 		String type = choice.getParameter().getType();
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			case TYPE_NAME_FLOAT: {
-				double v1 = Double.parseDouble(start.getValueString());
-				double v2 = Double.parseDouble(end.getValueString());
-				for(int i=0;i<N;i++)
-				{
-					double v = (v1*(N-1-i)+v2*i)/(N-1);
-					ChoiceNode tmp = start.makeClone();
-					tmp.setValueString(String.valueOf(v));
-					ret.add(tmp);
-				}
-
-				if(v2 > Long.MAX_VALUE || v1 < Long.MIN_VALUE)
-					return ret;
-				long w1 = (long) Math.ceil(v1);
-				long w2 = (long) Math.floor(v2);
-				if(w1 <= w2)
-				{
-					for(String val : getInterleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
-					{
-						ChoiceNode tmp = start.makeClone();
-						tmp.setValueString(val);
-						ret.add(tmp);
-					}
-				}
-				return ret;
+		case TYPE_NAME_DOUBLE:
+		case TYPE_NAME_FLOAT: {
+			double v1 = Double.parseDouble(start.getValueString());
+			double v2 = Double.parseDouble(end.getValueString());
+			for(int i=0;i<N;i++)
+			{
+				double v = (v1*(N-1-i)+v2*i)/(N-1);
+				ChoiceNode tmp = start.makeClone();
+				tmp.setValueString(String.valueOf(v));
+				ret.add(tmp);
 			}
 
-			case TYPE_NAME_BYTE:
-			case TYPE_NAME_INT:
-			case TYPE_NAME_SHORT:
-			case TYPE_NAME_LONG: {
-				String v1 = start.getValueString();
-				String v2 = end.getValueString();
-
-				for(String val : getInterleavedBigIntegers(v1,v2,N))
+			if(v2 > Long.MAX_VALUE || v1 < Long.MIN_VALUE)
+				return ret;
+			long w1 = (long) Math.ceil(v1);
+			long w2 = (long) Math.floor(v2);
+			if(w1 <= w2)
+			{
+				for(String val : getInterleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
 				{
 					ChoiceNode tmp = start.makeClone();
 					tmp.setValueString(val);
 					ret.add(tmp);
 				}
-				return ret;
 			}
+			return ret;
+		}
 
-			default:
+		case TYPE_NAME_BYTE:
+		case TYPE_NAME_INT:
+		case TYPE_NAME_SHORT:
+		case TYPE_NAME_LONG: {
+			String v1 = start.getValueString();
+			String v2 = end.getValueString();
+
+			for(String val : getInterleavedBigIntegers(v1,v2,N))
 			{
-				reportExceptionUnhandledType();
-				return null;
+				ChoiceNode tmp = start.makeClone();
+				tmp.setValueString(val);
+				ret.add(tmp);
 			}
+			return ret;
+		}
+
+		default:
+		{
+			reportExceptionUnhandledType();
+			return null;
+		}
 		}
 	}
 
