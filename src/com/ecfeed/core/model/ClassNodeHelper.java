@@ -12,8 +12,8 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.ViewMode;
 
@@ -101,10 +101,7 @@ public class ClassNodeHelper {
 	public static String getSignature(ClassNode classNode, ViewMode viewMode) {
 
 		String classSignature = classNode.getName();
-
-		if (viewMode == ViewMode.SIMPLE) {
-			classSignature = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(classSignature);
-		}
+		classSignature = CoreViewModeHelper.convertTextToConvention(classSignature, viewMode);
 
 		return classSignature;
 	}
@@ -115,9 +112,9 @@ public class ClassNodeHelper {
 			MethodNode duplicateMethodNode,
 			ViewMode viewMode) {
 
-		
+
 		String classSignature = getSignature(classNode, viewMode);
-		
+
 		//  TODO SIMPLE-VIEW move to MethodNodeHelper
 		String methodSignature = duplicateMethodNode.getMethodLabel(viewMode);
 
@@ -130,15 +127,15 @@ public class ClassNodeHelper {
 	}
 
 	// TODO SIMPLE-VIEW remove
-//	private static boolean isHiddenTypeAvailable(ClassNode classNode) {
-//
-//		try {
-//			return classNode.getMethods().get(0).getParameters().get(0).getSuggestedType().isPresent();
-//		} catch (Exception e) {
-//			return false;
-//		}
-//
-//	}
+	//	private static boolean isHiddenTypeAvailable(ClassNode classNode) {
+	//
+	//		try {
+	//			return classNode.getMethods().get(0).getParameters().get(0).getSuggestedType().isPresent();
+	//		} catch (Exception e) {
+	//			return false;
+	//		}
+	//
+	//	}
 
 	public static MethodNode findMethod(
 			ClassNode classNode, 
