@@ -15,16 +15,16 @@ import com.ecfeed.core.model.ModelOperationException;
 public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
 
 	public static String adjustTextToConvention(String text, ViewMode viewMode) throws ModelOperationException { // use in operations only
-		
+
 		if (viewMode == ViewMode.SIMPLE) {
-			
+
 			if (text.contains("_")) {
 				ModelOperationException.report("Underline chars are not allowed in simple view.");
 			}
-			
+
 			text = text.replace(" ", "_");
 		}
-		
+
 		return text;
 	}
 
@@ -43,21 +43,21 @@ public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
 
 	// TODO SIMPLE-VIEW rename
 	public static String convertTextToConvention(String text, ViewMode viewMode) {
-		
+
 		if (viewMode == ViewMode.SIMPLE) {
-			text = SimpleTypeHelper.convertJavaTypeToSimpleType(text);
+			text = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(text);
 		}
-		
+
 		return text;
 	}
-	
+
 	public static String convertTypeToConvention(String type, ViewMode viewMode) {
-		
+
 		if (viewMode == ViewMode.SIMPLE) {
 			type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
 		}
-		
+
 		return type;
 	}
-	
+
 }

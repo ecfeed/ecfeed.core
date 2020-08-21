@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.ViewMode;
 
 
@@ -35,7 +35,7 @@ public class MethodNode extends ParametersParentNode {
 
 		setDefaultPropertyValues();
 	}
-	
+
 	private void setDefaultPropertyValues() {
 
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER);
@@ -97,18 +97,16 @@ public class MethodNode extends ParametersParentNode {
 		return createSignature(ViewMode.JAVA, false);
 	}
 
-	private String createSignature(ViewMode viewMode, boolean isExpectedDecorationAdded) {
+	//   TODO SIMPLE-VIEW move to method node helper ?
+	public String createSignature(ViewMode viewMode, boolean isExpectedDecorationAdded) {
 
 		List<MethodParameterNode> methodParameters = getMethodParameters();
 		List<String> types = getParameterTypes();
 		List<String> parameterNames = getParametersNames();
 
 		String fullName = getName();
-		
-		if (viewMode == ViewMode.SIMPLE) {
-			fullName = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(fullName);
-		}
-		
+		fullName = CoreViewModeHelper.convertTextToConvention(fullName, viewMode);
+
 		String signature = new String(fullName) + "(";
 		String type;
 
@@ -121,19 +119,13 @@ public class MethodNode extends ParametersParentNode {
 			}
 
 			type = types.get(paramIndex);
-
-			if (viewMode == ViewMode.SIMPLE) {
-				type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
-			}
+			type = CoreViewModeHelper.convertTypeToConvention(type, viewMode);
 
 			signature += type;
 			signature += " ";
 			String parameterName = parameterNames.get(paramIndex);
-			
-			if (viewMode == ViewMode.SIMPLE) {
-				parameterName = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(parameterName);
-			}
-			
+			parameterName = CoreViewModeHelper.convertTextToConvention(parameterName, viewMode);
+
 			signature += parameterName;
 
 			if (paramIndex < types.size() - 1) {
