@@ -55,7 +55,7 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement, getViewMode());
+		return new ConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement, getExtLanguage());
 	}
 
 }

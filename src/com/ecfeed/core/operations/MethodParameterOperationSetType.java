@@ -224,7 +224,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			public IModelOperation getReverseOperation() {
 
 				return new SetTypeOperation(
-						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getViewMode());
+						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getExtLanguage());
 			}
 
 			private void restoreStatementValues() {
@@ -300,14 +300,14 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			
 			String message = 
 					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-							classNode, foundMethodNode, getViewMode());
+							classNode, foundMethodNode, getExtLanguage());
 			
 			ModelOperationException.report(message);
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseSetTypeOperation(getViewMode());
+			return new ReverseSetTypeOperation(getExtLanguage());
 		}
 
 		@SuppressWarnings("unchecked")
@@ -443,10 +443,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
 		}
 
-		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getViewMode()));
+		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguage()));
 
 		if (targetMethodParameterNode.getMethod() != null) {
-			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getViewMode()));
+			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getExtLanguage()));
 		}
 	}
 }

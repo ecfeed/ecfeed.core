@@ -57,7 +57,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationRemoveClass(fRootNode, fclassToAdd, getViewMode());
+		return new RootOperationRemoveClass(fRootNode, fclassToAdd, getExtLanguage());
 	}
 
 }

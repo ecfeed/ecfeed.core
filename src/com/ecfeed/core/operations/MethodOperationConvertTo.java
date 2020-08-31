@@ -39,7 +39,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 			
 			ModelOperationException.report(
 					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-							fTarget.getClassNode(), fTarget, getViewMode()));
+							fTarget.getClassNode(), fTarget, getExtLanguage()));
 		}
 
 		if(fTarget.getParameterTypes().equals(fSource.getParameterTypes()) == false){
@@ -60,7 +60,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationConvertTo(fSource, fTarget, getViewMode());
+		return new MethodOperationConvertTo(fSource, fTarget, getExtLanguage());
 	}
 
 }

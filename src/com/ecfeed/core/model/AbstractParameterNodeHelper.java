@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.CoreViewModeHelper;
+import com.ecfeed.core.utils.CoreExtLanguageHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
 public abstract class AbstractParameterNodeHelper {
@@ -18,7 +18,7 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
 		String name = abstractParameterNode.getName();
-		name = CoreViewModeHelper.convertTextToConvention(name, extLanguage);
+		name = CoreExtLanguageHelper.convertTextToConvention(name, extLanguage);
 
 		String type = abstractParameterNode.getType();
 		type = createTypeLabel(type, extLanguage);
@@ -30,7 +30,7 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String createTypeLabel(String javaType, ExtLanguage extLanguage) {
 
-		String type = CoreViewModeHelper.convertTypeToConvention(javaType, extLanguage);
+		String type = CoreExtLanguageHelper.convertTypeToConvention(javaType, extLanguage);
 		return type;
 	}
 }

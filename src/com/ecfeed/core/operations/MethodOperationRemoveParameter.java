@@ -44,7 +44,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), getViewMode());
+				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), getExtLanguage());
 			}
 
 		}
@@ -73,7 +73,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 				
 				ModelOperationException.report(
 						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-								(ClassNode) getOwnNode().getParent(), methodNode, getViewMode()));
+								(ClassNode) getOwnNode().getParent(), methodNode, getExtLanguage()));
 			}
 			fOriginalTestCases.clear();
 			for(TestCaseNode tcase : getMethodTarget().getTestCases()){
@@ -87,7 +87,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		@Override
 		public IModelOperation getReverseOperation(){
-			return new ReverseOperation(getViewMode());
+			return new ReverseOperation(getExtLanguage());
 		}
 
 		private MethodNode getMethodTarget(){

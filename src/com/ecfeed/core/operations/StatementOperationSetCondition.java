@@ -36,7 +36,7 @@ public class StatementOperationSetCondition extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationSetCondition(fTarget, fCurrentCondition, getViewMode());
+		return new StatementOperationSetCondition(fTarget, fCurrentCondition, getExtLanguage());
 	}
 
 }

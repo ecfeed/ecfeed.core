@@ -58,7 +58,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 				problems) == false){
 			
 			ClassNodeHelper.updateNewMethodsSignatureProblemList(
-					fClassNode, fMethod.getName(), fMethod.getParameterTypes(), problems, getViewMode());
+					fClassNode, fMethod.getName(), fMethod.getParameterTypes(), problems, getExtLanguage());
 			
 			ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 		}
@@ -81,7 +81,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationRemoveMethod(fClassNode, fMethod, getViewMode());
+		return new ClassOperationRemoveMethod(fClassNode, fMethod, getExtLanguage());
 	}
 
 }

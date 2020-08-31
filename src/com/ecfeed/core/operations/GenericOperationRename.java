@@ -21,8 +21,8 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.ViewModeModelVerifier;
-import com.ecfeed.core.utils.CoreViewModeHelper;
+import com.ecfeed.core.model.ExtLanguageModelVerifier;
+import com.ecfeed.core.utils.CoreExtLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -56,7 +56,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		String newName = fNewName;
 
-		newName = CoreViewModeHelper.adjustTextToConvention(newName, fExtLanguage);
+		newName = CoreExtLanguageHelper.adjustTextToConvention(newName, fExtLanguage);
 
 		verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget); // TODO SIMPLE-VIEW for source view simple error messages should be different
 
@@ -66,7 +66,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		fTarget.setName(newName);
 
-		String errorMessage = ViewModeModelVerifier.checkIsModelCompatibleWithViewMode(fTarget, fExtLanguage);
+		String errorMessage = ExtLanguageModelVerifier.checkIsModelCompatibleWithExtLanguage(fTarget, fExtLanguage);
 
 		if (errorMessage != null) {
 			fTarget.setName(oldName);

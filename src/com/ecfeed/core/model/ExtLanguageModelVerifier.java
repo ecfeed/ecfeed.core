@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
 
-public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
+public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 	private static final String TITLE_NON_UNIQUE_CLASS_NAMES = "Non-unique class names";
 	private static final String THE_SAME_CLASSES = "There are some classes in the model that have the same name. Please edit the model before proceeding:";
@@ -47,7 +47,7 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 	
 	// TODO SIMPLE-VIEW check actions which make model incompatible with simple mode - fun(Number a),  fun(Number a, Number b) > deleting Number b
 	
-	public static String checkIsModelCompatibleWithViewMode(AbstractNode anyNode, ExtLanguage extLanguage) {
+	public static String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode, ExtLanguage extLanguage) {
 		
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
 

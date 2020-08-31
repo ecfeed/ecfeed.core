@@ -124,7 +124,7 @@ public class BulkOperation extends AbstractModelOperation {
 				fAtomic, 
 				fNodeToSelectAfterReverseOperation, 
 				null, 
-				getViewMode());
+				getExtLanguage());
 	}
 
 

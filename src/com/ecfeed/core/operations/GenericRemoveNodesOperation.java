@@ -246,7 +246,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 									
 									addOperation(
 											new MethodOperationRemoveParameter(
-													method, (MethodParameterNode)node, validate, true, getViewMode()));
+													method, (MethodParameterNode)node, validate, true, getExtLanguage()));
 									
 								} else if (node instanceof GlobalParameterNode) {
 									
@@ -255,7 +255,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 													((GlobalParameterNode)node).getParametersParent(), 
 													(GlobalParameterNode)node, 
 													true,
-													getViewMode()));	
+													getExtLanguage()));	
 								}
 							}
 						}
@@ -269,13 +269,13 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		}
 
 		fAffectedConstraints.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getViewMode())));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguage())));
 
 		fAffectedTestCases.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getViewMode())));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguage())));
 
 		fAffectedNodes.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getViewMode())));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguage())));
 	}
 
 	private Set<ConstraintNode> getAllConstraintNodes() {

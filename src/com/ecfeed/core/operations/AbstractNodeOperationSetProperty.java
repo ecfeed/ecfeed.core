@@ -48,7 +48,7 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new AbstractNodeOperationSetProperty(fPropertyId, fOriginalValue, fAbstractNode, getViewMode());
+		return new AbstractNodeOperationSetProperty(fPropertyId, fOriginalValue, fAbstractNode, getExtLanguage());
 	}
 
 }

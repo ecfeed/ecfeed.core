@@ -12,7 +12,7 @@ package com.ecfeed.core.utils;
 
 import com.ecfeed.core.model.ModelOperationException;
 
-public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
+public class CoreExtLanguageHelper { // TODO - SIMPLE-VIEW rename
 
 	public static String adjustTextToConvention(String text, ExtLanguage extLanguage) throws ModelOperationException { // use in operations only
 

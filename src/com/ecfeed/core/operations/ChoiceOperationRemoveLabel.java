@@ -37,7 +37,7 @@ public class ChoiceOperationRemoveLabel extends BulkOperation{
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationAddLabel(fTarget, fLabel, getViewMode());
+			return new ChoiceOperationAddLabel(fTarget, fLabel, getExtLanguage());
 		}
 
 	}

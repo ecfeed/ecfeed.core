@@ -54,7 +54,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		fNodesToSelect = nodesToSelect;
 	}
 
-	public ExtLanguage getViewMode() {
+	public ExtLanguage getExtLanguage() {
 		return fExtLanguage;
 	}
 	

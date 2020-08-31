@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.utils.CoreViewModeHelper;
+import com.ecfeed.core.utils.CoreExtLanguageHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
@@ -38,7 +38,7 @@ public class ChoiceNodeHelper {
 	public static String createLabel(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String qualifiedName = choiceNode.getQualifiedName();
-		qualifiedName =  CoreViewModeHelper.convertTextToConvention(qualifiedName, extLanguage);
+		qualifiedName =  CoreExtLanguageHelper.convertTextToConvention(qualifiedName, extLanguage);
 
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
@@ -54,7 +54,7 @@ public class ChoiceNodeHelper {
 		String type = choiceNode.getParameter().getType();
 
 		String value = choiceNode.getValueString();
-		value = CoreViewModeHelper.convertSpecialValueToConvention(value, type, extLanguage);
+		value = CoreExtLanguageHelper.convertSpecialValueToConvention(value, type, extLanguage);
 
 		return value;
 	}

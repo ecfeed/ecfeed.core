@@ -41,7 +41,7 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationSetRelation(fTarget, fCurrentRelation, getViewMode());
+		return new StatementOperationSetRelation(fTarget, fCurrentRelation, getExtLanguage());
 	}
 
 }

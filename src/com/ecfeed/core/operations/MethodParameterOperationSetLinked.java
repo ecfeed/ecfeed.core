@@ -57,7 +57,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new SetLinkedOperation(fTarget, fLinked, getViewMode());
+				return new SetLinkedOperation(fTarget, fLinked, getExtLanguage());
 			}
 
 		}
@@ -90,7 +90,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 				ModelOperationException.report(
 						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-								method.getClassNode(), method, getViewMode()));
+								method.getClassNode(), method, getExtLanguage()));
 			}
 
 			fTarget.setLinked(fLinked);
@@ -103,7 +103,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseSetLinkedOperation(getViewMode());
+			return new ReverseSetLinkedOperation(getExtLanguage());
 		}
 
 	}

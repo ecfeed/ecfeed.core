@@ -77,7 +77,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(fParametersParentNode, fAbstractParameterNode, getViewMode());
+		return new ReverseOperation(fParametersParentNode, fAbstractParameterNode, getExtLanguage());
 	}
 
 	protected class ReverseOperation extends AbstractModelOperation{
@@ -102,7 +102,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new GenericOperationAddParameter(fReversedTarget, fReversedParameter, fOriginalIndex, true, getViewMode());
+			return new GenericOperationAddParameter(fReversedTarget, fReversedParameter, fOriginalIndex, true, getExtLanguage());
 		}
 	}
 	

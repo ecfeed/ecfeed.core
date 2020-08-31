@@ -25,7 +25,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.CoreViewModeHelper;
+import com.ecfeed.core.utils.CoreExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.SystemLogger;
@@ -55,7 +55,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			
-			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
+			String newNameInJavaConvention = CoreExtLanguageHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
 			
 			String[] tokens = newNameInJavaConvention.split("\\.");
 			
@@ -96,7 +96,7 @@ public class FactoryRenameOperation {
 			
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
+			String newNameInJavaConvention = CoreExtLanguageHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
 			
 			if (!ClassNodeHelper.isNewMethodSignatureValid(
 					targetMethodNode.getClassNode(), 
@@ -109,7 +109,7 @@ public class FactoryRenameOperation {
 						newNameInJavaConvention, 
 						targetMethodNode.getParameterTypes(), 
 						problems,
-						getViewMode());
+						getExtLanguage());
 				
 				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 			}
@@ -189,7 +189,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName)throws ModelOperationException{
 			
-			newName = CoreViewModeHelper.getNewNameInJavaConvention(newName, fExtLanguage);
+			newName = CoreExtLanguageHelper.getNewNameInJavaConvention(newName, fExtLanguage);
 			
 			if(getOwnNode().getSibling(newName) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);

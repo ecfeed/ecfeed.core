@@ -43,7 +43,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationAddLabel(fTarget, fLabel, getViewMode());
+			return new ChoiceOperationAddLabel(fTarget, fLabel, getExtLanguage());
 		}
 
 	}
@@ -70,7 +70,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(getViewMode());
+		return new ReverseOperation(getExtLanguage());
 	}
 
 }

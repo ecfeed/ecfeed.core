@@ -44,7 +44,7 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter, getViewMode());
+		return new ParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter, getExtLanguage());
 	}
 
 }

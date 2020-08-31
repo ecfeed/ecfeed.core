@@ -43,7 +43,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodOperationMakeConsistent(fMethodNode, getViewMode());
+			return new MethodOperationMakeConsistent(fMethodNode, getExtLanguage());
 		}
 
 	}
@@ -87,7 +87,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(getViewMode());
+		return new ReverseOperation(getExtLanguage());
 	}
 
 }

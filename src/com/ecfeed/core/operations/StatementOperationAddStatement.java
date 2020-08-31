@@ -36,7 +36,7 @@ public class StatementOperationAddStatement extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationRemoveStatement(fTarget, fStatement, getViewMode());
+		return new StatementOperationRemoveStatement(fTarget, fStatement, getExtLanguage());
 	}
 
 }

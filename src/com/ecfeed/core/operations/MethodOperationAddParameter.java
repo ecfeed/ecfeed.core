@@ -51,7 +51,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 	@Override
 	public void execute() throws ModelOperationException {
 		
-		ExtLanguage extLanguage = getViewMode();
+		ExtLanguage extLanguage = getExtLanguage();
 		
 		List<String> types = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
 		
@@ -79,7 +79,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodReverseOperation(getViewMode());
+		return new MethodReverseOperation(getExtLanguage());
 	}
 	
 	private class MethodReverseOperation extends ReverseOperation{
@@ -96,7 +96,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodOperationAddParameter(fMethodNode, fMethodParameterNode, getViewMode());
+			return new MethodOperationAddParameter(fMethodNode, fMethodParameterNode, getExtLanguage());
 		}
 
 	}

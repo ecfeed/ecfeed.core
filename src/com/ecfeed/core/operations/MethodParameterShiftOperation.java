@@ -61,7 +61,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 			ModelOperationException.report(
 					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-							method.getClassNode(),  method, getViewMode()));
+							method.getClassNode(),  method, getExtLanguage()));
 		}
 		List<Integer> indices = indices(fParameters, getShiftedElements());
 		shiftElements(fParameters, indices, getShift());
@@ -72,7 +72,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getViewMode());
+		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguage());
 	}
 
 	@Override

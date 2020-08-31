@@ -53,7 +53,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		markModelUpdated();
 	}
 
-	public ExtLanguage getViewMode() {
+	public ExtLanguage getExtLanguage() {
 		
 		return fExtLanguage;
 	}
@@ -84,7 +84,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericOperationAddParameter(fParametersParentNode, fAbstractParameterNode, fOriginalIndex, false, getViewMode());
+		return new GenericOperationAddParameter(fParametersParentNode, fAbstractParameterNode, fOriginalIndex, false, getExtLanguage());
 	}
 
 	protected ParametersParentNode getOwnNode(){
