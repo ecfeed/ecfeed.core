@@ -14,11 +14,11 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ClassOperationAddMethods extends BulkOperation{
 
-	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, ViewMode viewMode) {
+	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, ExtLanguage viewMode) {
 		
 		super(OperationNames.ADD_METHODS, false, target, target, viewMode);
 		

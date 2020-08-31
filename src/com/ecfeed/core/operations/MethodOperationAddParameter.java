@@ -21,7 +21,7 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
@@ -34,7 +34,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 			MethodNode methodNode, 
 			MethodParameterNode methodParameterNode, 
 			int index,
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 		
 		super(methodNode, methodParameterNode, index, true, viewMode);
 		
@@ -44,14 +44,14 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
+	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage viewMode) {
 		this(target, parameter, -1, viewMode);
 	}
 
 	@Override
 	public void execute() throws ModelOperationException {
 		
-		ViewMode viewMode = getViewMode();
+		ExtLanguage viewMode = getViewMode();
 		
 		List<String> types = MethodNodeHelper.getMethodParameterTypes(fMethodNode, viewMode);
 		
@@ -84,7 +84,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 	
 	private class MethodReverseOperation extends ReverseOperation{
 
-		public MethodReverseOperation(ViewMode viewMode) {
+		public MethodReverseOperation(ExtLanguage viewMode) {
 			super(fMethodNode, fMethodParameterNode, viewMode);
 		}
 

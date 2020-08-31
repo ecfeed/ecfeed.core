@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ChoiceOperationRemoveLabel extends BulkOperation{
 
@@ -22,7 +22,7 @@ public class ChoiceOperationRemoveLabel extends BulkOperation{
 		private ChoiceNode fTarget;
 		private String fLabel;
 
-		public RemoveLabelOperation(ChoiceNode target, String label, ViewMode viewMode) {
+		public RemoveLabelOperation(ChoiceNode target, String label, ExtLanguage viewMode) {
 			super(ChoiceOperationRemoveLabel.this.getName(), viewMode);
 			fTarget = target;
 			fLabel = label;
@@ -42,7 +42,7 @@ public class ChoiceOperationRemoveLabel extends BulkOperation{
 
 	}
 
-	public ChoiceOperationRemoveLabel(ChoiceNode target, String label, ViewMode viewMode) {
+	public ChoiceOperationRemoveLabel(ChoiceNode target, String label, ExtLanguage viewMode) {
 
 		super(OperationNames.REMOVE_PARTITION_LABEL, true, target, target, viewMode);
 		

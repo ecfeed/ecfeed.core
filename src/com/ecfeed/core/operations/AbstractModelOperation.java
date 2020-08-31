@@ -14,17 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public abstract class AbstractModelOperation implements IModelOperation {
 
 	private boolean fModelUpdated;
 	private String fName;
-	private ViewMode fViewMode;
+	private ExtLanguage fViewMode;
 
 	private List<AbstractNode> fNodesToSelect;
 
-	public AbstractModelOperation(String name, ViewMode viewMode){
+	public AbstractModelOperation(String name, ExtLanguage viewMode){
 		fName = name;
 		fViewMode = viewMode;
 		fNodesToSelect = new ArrayList<AbstractNode>();
@@ -54,7 +54,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		fNodesToSelect = nodesToSelect;
 	}
 
-	public ViewMode getViewMode() {
+	public ExtLanguage getViewMode() {
 		return fViewMode;
 	}
 	

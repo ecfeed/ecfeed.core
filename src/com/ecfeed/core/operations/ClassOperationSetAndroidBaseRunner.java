@@ -11,7 +11,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ClassOperationSetAndroidBaseRunner extends AbstractModelOperation {
 
@@ -19,7 +19,7 @@ public class ClassOperationSetAndroidBaseRunner extends AbstractModelOperation {
 	private String fNewValue;
 	private String fOriginalValue;
 
-	public ClassOperationSetAndroidBaseRunner(ClassNode target, String newValue, ViewMode viewMode) {
+	public ClassOperationSetAndroidBaseRunner(ClassNode target, String newValue, ExtLanguage viewMode) {
 		super(OperationNames.SET_ANDROID_BASE_RUNNER, viewMode);
 		fTarget = target;
 		fNewValue = newValue;

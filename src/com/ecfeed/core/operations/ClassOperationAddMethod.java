@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ClassOperationAddMethod extends AbstractModelOperation{
 
@@ -28,14 +28,14 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 	
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ViewMode viewMode) {
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ExtLanguage viewMode) {
 		super(OperationNames.ADD_METHOD, viewMode);
 		fClassNode = target;
 		fMethod = method;
 		fIndex = index;
 	}
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, ViewMode viewMode) {
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, ExtLanguage viewMode) {
 		this(target, method, -1, viewMode);
 	}
 

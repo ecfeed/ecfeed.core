@@ -22,7 +22,7 @@ import com.ecfeed.core.model.ModelConstants;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ParameterOperationSetExpected extends AbstractModelOperation {
 
@@ -35,7 +35,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation(ViewMode viewMode) {
+		public ReverseOperation(ExtLanguage viewMode) {
 			super(ParameterOperationSetExpected.this.getName(), viewMode);
 		}
 
@@ -61,7 +61,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	}
 
-	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected, ViewMode viewMode){
+	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected, ExtLanguage viewMode){
 		super(OperationNames.SET_EXPECTED_STATUS, viewMode);
 		fTarget = target;
 		fExpected = expected;

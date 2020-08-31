@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public abstract class AbstractReverseOperation extends AbstractModelOperation {
 
-	public AbstractReverseOperation(AbstractModelOperation baseOperation, ViewMode viewMode) {
+	public AbstractReverseOperation(AbstractModelOperation baseOperation, ExtLanguage viewMode) {
 		super("reverse " + baseOperation, viewMode);
 	}
 }

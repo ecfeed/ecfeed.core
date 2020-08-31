@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class StatementOperationRemoveStatement extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class StatementOperationRemoveStatement extends AbstractModelOperation {
 	private AbstractStatement fStatement;
 	private int fIndex;
 
-	public StatementOperationRemoveStatement(StatementArray target, AbstractStatement statement, ViewMode viewMode){
+	public StatementOperationRemoveStatement(StatementArray target, AbstractStatement statement, ExtLanguage viewMode){
 		super(OperationNames.REMOVE_STATEMENT, viewMode);
 		fTarget = target;
 		fStatement = statement;

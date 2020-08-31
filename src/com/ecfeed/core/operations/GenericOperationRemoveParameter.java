@@ -19,16 +19,16 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 	private ParametersParentNode fParametersParentNode;
 	private AbstractParameterNode fAbstractParameterNode;
 	private int fOriginalIndex;
-	private ViewMode fViewMode;
+	private ExtLanguage fViewMode;
 
-	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ViewMode viewMode) {
+	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage viewMode) {
 		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, viewMode);
 		
@@ -53,7 +53,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		markModelUpdated();
 	}
 
-	public ViewMode getViewMode() {
+	public ExtLanguage getViewMode() {
 		
 		return fViewMode;
 	}
@@ -61,7 +61,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	private static void verifyIfMethodSignatureIsUnique( // TODO SIMPLE-VIEW mode this to RemoveMethodParameterOperation
 			MethodNode methodNode, 
 			int indexOfParameterToRemove, 
-			ViewMode viewMode) throws ModelOperationException {
+			ExtLanguage viewMode) throws ModelOperationException {
 
 		ClassNode classNode = methodNode.getClassNode();
 

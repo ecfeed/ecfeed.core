@@ -17,7 +17,7 @@ import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 
 public class MethodNodeHelper {
@@ -27,7 +27,7 @@ public class MethodNodeHelper {
 			List<MethodParameterNode> methodParameters,
 			List<String> types, // TODO SIMPLE-VIEW take types from method parameters
 			List<String> parameterNames, // TODO SIMPLE-VIEW take names from method parameters
-			ViewMode viewMode, boolean isExpectedDecorationAdded) {
+			ExtLanguage viewMode, boolean isExpectedDecorationAdded) {
 
 		fullName = CoreViewModeHelper.convertTextToConvention(fullName, viewMode);
 
@@ -105,7 +105,7 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static List<String> getMethodParameterTypes(MethodNode method, ViewMode viewMode) {
+	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguage viewMode) {
 
 		List<String> result = new ArrayList<String>();
 

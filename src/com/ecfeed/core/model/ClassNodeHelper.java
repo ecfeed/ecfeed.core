@@ -15,7 +15,7 @@ import java.util.List;
 import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ClassNodeHelper {
 
@@ -66,7 +66,7 @@ public class ClassNodeHelper {
 	}
 
 	public static void updateNewMethodsSignatureProblemList(
-			ClassNode parent, String methodName, List<String> argTypes, List<String> problems, ViewMode viewMode) {
+			ClassNode parent, String methodName, List<String> argTypes, List<String> problems, ExtLanguage viewMode) {
 
 		// TODO SIMPLE-VIEW check
 		MethodNode methodNode = parent.getMethod(methodName, argTypes);
@@ -98,7 +98,7 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String getSignature(ClassNode classNode, ViewMode viewMode) {
+	public static String getSignature(ClassNode classNode, ExtLanguage viewMode) {
 
 		String classSignature = classNode.getName();
 		classSignature = CoreViewModeHelper.convertTextToConvention(classSignature, viewMode);
@@ -110,7 +110,7 @@ public class ClassNodeHelper {
 	public static String generateMethodSignatureDuplicateMessage(
 			ClassNode classNode, 
 			MethodNode duplicateMethodNode,
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 
 
 		String classSignature = getSignature(classNode, viewMode);
@@ -130,7 +130,7 @@ public class ClassNodeHelper {
 			ClassNode classNode, 
 			String methodNameToFind, 
 			List<String> parameterTypesToFind, 
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 
 		List<MethodNode> methods = classNode.getMethods();
 

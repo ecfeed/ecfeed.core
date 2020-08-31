@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class GenericShiftOperation extends AbstractModelOperation {
 
@@ -25,20 +25,20 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	private int fShiftSize;
 	private List<? extends AbstractNode> fCollection;
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, ViewMode viewMode){
+	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, ExtLanguage viewMode){
 		
 		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up, viewMode);
 	}
 
 	public GenericShiftOperation(
-			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, ViewMode viewMode){
+			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, ExtLanguage viewMode){
 		
 		this(collection, shifted, 0, viewMode);
 		
 		fShiftSize = minAllowedShift(shifted, up);
 	}
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, ViewMode viewMode){
+	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, ExtLanguage viewMode){
 		super(OperationNames.MOVE, viewMode);
 		shift = shiftAllowed(shifted, shift) ? shift : 0;
 		fToBeShifted = new ArrayList<>(shifted);

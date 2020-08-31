@@ -21,7 +21,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ChoiceOperationSetValue extends AbstractModelOperation {
 
@@ -32,7 +32,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	private ITypeAdapterProvider fAdapterProvider;
 
-	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, ViewMode viewMode){
+	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, ExtLanguage viewMode){
 		
 		super(OperationNames.SET_PARTITION_VALUE, viewMode);
 		
@@ -127,7 +127,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		}
 
-		public ReverseOperation(ViewMode viewMode) {
+		public ReverseOperation(ExtLanguage viewMode) {
 			super(ChoiceOperationSetValue.this.getName(), viewMode);
 		}
 

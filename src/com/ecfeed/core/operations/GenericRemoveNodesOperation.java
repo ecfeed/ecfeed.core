@@ -29,7 +29,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class GenericRemoveNodesOperation extends BulkOperation {
 
@@ -45,7 +45,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			boolean validate,
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation,
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 
 		super(OperationNames.REMOVE_NODES, 
 				false,

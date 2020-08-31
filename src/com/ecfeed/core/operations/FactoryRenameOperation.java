@@ -29,7 +29,7 @@ import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class FactoryRenameOperation {
 
@@ -38,10 +38,10 @@ public class FactoryRenameOperation {
 
 	private static class ClassOperationRename extends GenericOperationRename {
 
-		ViewMode fViewMode;
+		ExtLanguage fViewMode;
 		String fNewName;
 
-		public ClassOperationRename(AbstractNode target, String newName, ViewMode viewMode) {
+		public ClassOperationRename(AbstractNode target, String newName, ExtLanguage viewMode) {
 			super(target, newName, viewMode);
 			fViewMode = viewMode;
 			fNewName = newName;
@@ -72,10 +72,10 @@ public class FactoryRenameOperation {
 
 	private static class MethodOperationRename extends GenericOperationRename {
 
-		ViewMode fViewMode;
+		ExtLanguage fViewMode;
 		String fNewName;
 
-		public MethodOperationRename(MethodNode target, String newName, ViewMode viewMode) {
+		public MethodOperationRename(MethodNode target, String newName, ExtLanguage viewMode) {
 
 			super(target, newName, viewMode);
 
@@ -118,9 +118,9 @@ public class FactoryRenameOperation {
 
 	private static class GlobalParameterOperationRename extends GenericOperationRename {
 
-		ViewMode fViewMode;
+		ExtLanguage fViewMode;
 
-		public GlobalParameterOperationRename(AbstractNode target, String newName, ViewMode viewMode) {
+		public GlobalParameterOperationRename(AbstractNode target, String newName, ExtLanguage viewMode) {
 
 			super(target, newName, viewMode);
 
@@ -146,9 +146,9 @@ public class FactoryRenameOperation {
 
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
-		ViewMode fViewMode;
+		ExtLanguage fViewMode;
 
-		public MethodParameterOperationRename(AbstractNode target, String newName, ViewMode viewMode) {
+		public MethodParameterOperationRename(AbstractNode target, String newName, ExtLanguage viewMode) {
 			super(target, newName, viewMode);
 			fViewMode = viewMode;
 		}
@@ -172,9 +172,9 @@ public class FactoryRenameOperation {
 
 	private static class ChoiceOperationRename extends GenericOperationRename {
 
-		ViewMode fViewMode;
+		ExtLanguage fViewMode;
 
-		public ChoiceOperationRename(ChoiceNode target, String newName, ViewMode viewMode) {
+		public ChoiceOperationRename(ChoiceNode target, String newName, ExtLanguage viewMode) {
 			
 			super(target, newName, viewMode);
 			
@@ -200,9 +200,9 @@ public class FactoryRenameOperation {
 	private static class RenameOperationProvider implements IModelVisitor{
 
 		private String fNewName;
-		private ViewMode fViewMode;
+		private ExtLanguage fViewMode;
 
-		public RenameOperationProvider(String newName, ViewMode viewMode) {
+		public RenameOperationProvider(String newName, ExtLanguage viewMode) {
 			fNewName = newName;
 			fViewMode = viewMode;
 		}
@@ -248,7 +248,7 @@ public class FactoryRenameOperation {
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newName, ViewMode viewMode){
+	public static IModelOperation getRenameOperation(AbstractNode target, String newName, ExtLanguage viewMode){
 
 		try{
 			return (IModelOperation)target.accept(new RenameOperationProvider(newName, viewMode));

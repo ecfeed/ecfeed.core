@@ -23,7 +23,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class FactoryShiftOperation {
 	
@@ -31,12 +31,12 @@ public class FactoryShiftOperation {
 
 		private List<? extends AbstractNode> fShifted;
 		private boolean fUp;
-		private ViewMode fViewMode;
+		private ExtLanguage fViewMode;
 
 		public MoveUpDownOperationProvider(
 				List<? extends AbstractNode> shifted, 
 				boolean up,
-				ViewMode viewMode) {
+				ExtLanguage viewMode) {
 			fShifted = shifted;
 			fUp = up;
 			fViewMode = viewMode;
@@ -125,9 +125,9 @@ public class FactoryShiftOperation {
 
 		private List<? extends AbstractNode> fShifted;
 		private int fShift;
-		private ViewMode fViewMode;
+		private ExtLanguage fViewMode;
 
-		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, ViewMode viewMode){
+		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, ExtLanguage viewMode){
 			fShifted = shifted;
 			fShift = calculateShift(shifted, index);
 			fViewMode = viewMode;
@@ -215,7 +215,7 @@ public class FactoryShiftOperation {
 	public static GenericShiftOperation getShiftOperation(
 			List<? extends AbstractNode> shifted, 
 			boolean up,
-			ViewMode viewMode) throws ModelOperationException{
+			ExtLanguage viewMode) throws ModelOperationException{
 		
 		AbstractNode parent = getParent(shifted);
 		
@@ -224,7 +224,7 @@ public class FactoryShiftOperation {
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, ViewMode viewMode) throws ModelOperationException {
+			List<? extends AbstractNode> shifted, int newIndex, ExtLanguage viewMode) throws ModelOperationException {
 		AbstractNode parent = getParent(shifted);
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, viewMode));
 	}

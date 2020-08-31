@@ -14,14 +14,14 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodOperationConvertTo extends AbstractModelOperation {
 
 	private MethodNode fTarget;
 	private MethodNode fSource;
 
-	public MethodOperationConvertTo(MethodNode target, MethodNode source, ViewMode viewMode) {
+	public MethodOperationConvertTo(MethodNode target, MethodNode source, ExtLanguage viewMode) {
 		
 		super(OperationNames.CONVERT_METHOD, viewMode);
 		

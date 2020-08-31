@@ -29,13 +29,13 @@ import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
-	public static String createLabel(ChoiceNode choiceNode, ViewMode viewMode) {
+	public static String createLabel(ChoiceNode choiceNode, ExtLanguage viewMode) {
 
 		String qualifiedName = choiceNode.getQualifiedName();
 		qualifiedName =  CoreViewModeHelper.convertTextToConvention(qualifiedName, viewMode);
@@ -49,7 +49,7 @@ public class ChoiceNodeHelper {
 		return qualifiedName + " [" + value + "]";
 	}
 
-	public static String getValueString(ChoiceNode choiceNode, ViewMode viewMode) {
+	public static String getValueString(ChoiceNode choiceNode, ExtLanguage viewMode) {
 
 		String type = choiceNode.getParameter().getType();
 

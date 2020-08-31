@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.IStatementCondition;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class StatementOperationSetCondition extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class StatementOperationSetCondition extends AbstractModelOperation {
 	private IStatementCondition fCurrentCondition;
 	private IStatementCondition fNewCondition;
 
-	public StatementOperationSetCondition(RelationStatement target, IStatementCondition condition, ViewMode viewMode) {
+	public StatementOperationSetCondition(RelationStatement target, IStatementCondition condition, ExtLanguage viewMode) {
 		super(OperationNames.SET_STATEMENT_CONDITION, viewMode);
 		fTarget = target;
 		fNewCondition = condition;

@@ -15,7 +15,7 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class RootOperationAddNewClass extends AbstractModelOperation {
 
@@ -23,11 +23,11 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
 
-	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, ViewMode viewMode) {
+	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, ExtLanguage viewMode) {
 		this(target, classToAdd, -1, viewMode);
 	}
 	
-	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, ViewMode viewMode) {
+	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, ExtLanguage viewMode) {
 		super(OperationNames.ADD_CLASS, viewMode);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;

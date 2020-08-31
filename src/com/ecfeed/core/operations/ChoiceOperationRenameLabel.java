@@ -11,11 +11,11 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ChoiceOperationRenameLabel extends BulkOperation {
 
-	public ChoiceOperationRenameLabel(ChoiceNode target, String currentLabel, String newLabel, ViewMode viewMode) {
+	public ChoiceOperationRenameLabel(ChoiceNode target, String currentLabel, String newLabel, ExtLanguage viewMode) {
 		super(OperationNames.RENAME_LABEL, true, target, target, viewMode);
 		addOperation(new ChoiceOperationRemoveLabel(target, currentLabel, viewMode));
 		addOperation(new ChoiceOperationAddLabel(target, newLabel, viewMode));

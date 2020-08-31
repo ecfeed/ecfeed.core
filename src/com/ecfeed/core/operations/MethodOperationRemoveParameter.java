@@ -19,7 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
@@ -30,7 +30,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		private class ReverseOperation extends AbstractReverseOperation {
 			
-			public ReverseOperation(ViewMode viewMode) {
+			public ReverseOperation(ExtLanguage viewMode) {
 				super(RemoveMethodParameterOperation.this, viewMode);
 			}
 
@@ -49,7 +49,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		}
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
+		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ExtLanguage viewMode) {
 			super(target, parameter, viewMode);
 			fOriginalTestCases = new ArrayList<>();
 		}
@@ -58,7 +58,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 				MethodNode target, 
 				MethodParameterNode parameter, 
 				boolean ignoreDuplicates,
-				ViewMode viewMode) {
+				ExtLanguage viewMode) {
 			
 			this(target, parameter, viewMode);
 			
@@ -105,7 +105,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, ViewMode viewMode) {
+			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguage viewMode) {
 		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, viewMode);
 		
@@ -116,7 +116,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		}
 	}
 	
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ViewMode viewMode) {
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage viewMode) {
 		this(target, parameter, true, viewMode);
 	}
 
@@ -125,7 +125,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			MethodParameterNode parameter, 
 			boolean validate, 
 			boolean ignoreDuplicates, 
-			ViewMode viewMode){
+			ExtLanguage viewMode){
 		
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, viewMode);
 		

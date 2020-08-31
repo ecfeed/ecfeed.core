@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleTypeHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 
 public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
@@ -47,11 +47,11 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 	
 	// TODO SIMPLE-VIEW check actions which make model incompatible with simple mode - fun(Number a),  fun(Number a, Number b) > deleting Number b
 	
-	public static String checkIsModelCompatibleWithViewMode(AbstractNode anyNode, ViewMode viewMode) {
+	public static String checkIsModelCompatibleWithViewMode(AbstractNode anyNode, ExtLanguage viewMode) {
 		
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
 
-		if (viewMode == ViewMode.SIMPLE) {
+		if (viewMode == ExtLanguage.SIMPLE) {
 			String result = checkIsModelCompatibleWithSimpleMode(rootNode);
 			return result;
 		}
@@ -304,7 +304,7 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 			Pair<String,String> pairOfSignatures = 
 					new Pair<String, String>(
 							SimpleTypeHelper.createMethodSimpleSignature(methodNode),  // TODO SIMPLE-VIEW should be similar as line below
-							methodNode.createShortSignature(ViewMode.JAVA));
+							methodNode.createShortSignature(ExtLanguage.JAVA));
 
 			signaturePairs.add(pairOfSignatures);
 		}

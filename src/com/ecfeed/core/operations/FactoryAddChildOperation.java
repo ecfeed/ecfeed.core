@@ -25,14 +25,14 @@ import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class FactoryAddChildOperation implements IModelVisitor{
 
 	private AbstractNode fChild;
 	private int fIndex;
 	private boolean fValidate;
-	ViewMode fViewMode;
+	ExtLanguage fViewMode;
 	private ITypeAdapterProvider fAdapterProvider;
 
 	public FactoryAddChildOperation(
@@ -40,7 +40,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 
 		fChild = child;
 		fIndex = index;
@@ -53,7 +53,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			AbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 
 		this(child, -1, adapterProvider, validate, viewMode);
 	}

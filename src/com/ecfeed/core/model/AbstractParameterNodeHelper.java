@@ -11,11 +11,11 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.CoreViewModeHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String createLabel(AbstractParameterNode abstractParameterNode, ViewMode viewMode) {
+	public static String createLabel(AbstractParameterNode abstractParameterNode, ExtLanguage viewMode) {
 
 		String name = abstractParameterNode.getName();
 		name = CoreViewModeHelper.convertTextToConvention(name, viewMode);
@@ -28,7 +28,7 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 
-	public static String createTypeLabel(String javaType, ViewMode viewMode) {
+	public static String createTypeLabel(String javaType, ExtLanguage viewMode) {
 
 		String type = CoreViewModeHelper.convertTypeToConvention(javaType, viewMode);
 		return type;

@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 
@@ -22,7 +22,7 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 	private int fIndex;
 	private TestCaseNode fTarget;
 
-	public TestCaseOperationUpdateTestData(TestCaseNode target, int index, ChoiceNode value, ViewMode viewMode) {
+	public TestCaseOperationUpdateTestData(TestCaseNode target, int index, ChoiceNode value, ExtLanguage viewMode) {
 		super(OperationNames.UPDATE_TEST_DATA, viewMode);
 		fTarget = target;
 		fIndex = index;

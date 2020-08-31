@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodOperationRemoveConstraint extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class MethodOperationRemoveConstraint extends AbstractModelOperation {
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
-	public MethodOperationRemoveConstraint(MethodNode target, ConstraintNode constraint, ViewMode viewMode){
+	public MethodOperationRemoveConstraint(MethodNode target, ConstraintNode constraint, ExtLanguage viewMode){
 		super(OperationNames.REMOVE_CONSTRAINT, viewMode);
 		fMethodNode = target;
 		fConstraint = constraint;

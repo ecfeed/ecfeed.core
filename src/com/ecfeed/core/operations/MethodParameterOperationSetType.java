@@ -46,11 +46,11 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodParameterOperationSetType extends BulkOperation {
 	
-	private ViewMode fViewMode;
+	private ExtLanguage fViewMode;
 
 	private class SetTypeOperation extends AbstractParameterOperationSetType{
 
@@ -148,7 +148,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
 			
-			public ReverseSetTypeOperation(ViewMode viewMode) {
+			public ReverseSetTypeOperation(ExtLanguage viewMode) {
 				
 				super(viewMode);
 			}
@@ -246,7 +246,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				MethodParameterNode target, 
 				String newType, 
 				ITypeAdapterProvider adapterProvider, 
-				ViewMode viewMode) {
+				ExtLanguage viewMode) {
 			
 			super(target, newType, adapterProvider, viewMode);
 
@@ -428,7 +428,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 	public MethodParameterOperationSetType(
 			MethodParameterNode targetMethodParameterNode, 
 			String newType, 
-			ViewMode viewMode,
+			ExtLanguage viewMode,
 			ITypeAdapterProvider adapterProvider) {
 
 		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, viewMode);

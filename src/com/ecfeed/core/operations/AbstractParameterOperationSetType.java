@@ -30,7 +30,7 @@ import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
@@ -43,7 +43,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	protected class ReverseOperation extends AbstractReverseOperation {
 
-		public ReverseOperation(ViewMode viewMode) {
+		public ReverseOperation(ExtLanguage viewMode) {
 			super(AbstractParameterOperationSetType.this, viewMode);
 		}
 
@@ -85,7 +85,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			AbstractParameterNode target, 
 			String newType, 
 			ITypeAdapterProvider adapterProvider, 
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 		
 		super(OperationNames.SET_TYPE, viewMode);
 		

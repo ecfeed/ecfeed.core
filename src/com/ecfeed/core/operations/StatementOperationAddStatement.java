@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class StatementOperationAddStatement extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class StatementOperationAddStatement extends AbstractModelOperation {
 	private StatementArray fTarget;
 	private int fIndex;
 
-	public StatementOperationAddStatement(StatementArray parent, AbstractStatement statement, int index, ViewMode viewMode) {
+	public StatementOperationAddStatement(StatementArray parent, AbstractStatement statement, int index, ExtLanguage viewMode) {
 		super(OperationNames.ADD_STATEMENT, viewMode);
 		fTarget = parent;
 		fStatement = statement;

@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 
 public class MethodNode extends ParametersParentNode {
@@ -82,20 +82,20 @@ public class MethodNode extends ParametersParentNode {
 	@Override
 	public String toString() {
 
-		return createSignatureIntr(ViewMode.JAVA, true); 
+		return createSignatureIntr(ExtLanguage.JAVA, true); 
 	}
 
-	public String createSignatureWithExpectedDecorations(ViewMode viewMode) {
+	public String createSignatureWithExpectedDecorations(ExtLanguage viewMode) {
 
 		return createSignatureIntr(viewMode, true);
 	}
 
-	public String createShortSignature(ViewMode viewMode) {
+	public String createShortSignature(ExtLanguage viewMode) {
 		
-		return createSignatureIntr(ViewMode.JAVA, false);
+		return createSignatureIntr(ExtLanguage.JAVA, false);
 	}
 	
-	private String createSignatureIntr(ViewMode viewMode, boolean isExpectedDecorationAdded) {
+	private String createSignatureIntr(ExtLanguage viewMode, boolean isExpectedDecorationAdded) {
 		
 		return MethodNodeHelper.createSignature(
 				getName(),
@@ -105,7 +105,7 @@ public class MethodNode extends ParametersParentNode {
 				viewMode, isExpectedDecorationAdded);
 	}
 
-	public String createLongSignature(ViewMode viewMode) {
+	public String createLongSignature(ExtLanguage viewMode) {
 
 		return getParent().getName() + "." + createShortSignature(viewMode);
 	}

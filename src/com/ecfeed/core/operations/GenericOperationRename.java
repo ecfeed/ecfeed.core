@@ -25,7 +25,7 @@ import com.ecfeed.core.model.ViewModeModelVerifier;
 import com.ecfeed.core.utils.CoreViewModeHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class GenericOperationRename extends AbstractModelOperation {
 
@@ -33,12 +33,12 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fNewName;
 	private String fOriginalName;
 	private String fJavaNameRegex;
-	private ViewMode fViewMode;
+	private ExtLanguage fViewMode;
 
 	public GenericOperationRename(
 			AbstractNode target, 
 			String newName, 
-			ViewMode viewMode) {
+			ExtLanguage viewMode) {
 
 		super(OperationNames.RENAME, viewMode);
 

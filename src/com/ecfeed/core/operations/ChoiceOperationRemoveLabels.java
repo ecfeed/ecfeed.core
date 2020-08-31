@@ -13,11 +13,11 @@ package com.ecfeed.core.operations;
 import java.util.Collection;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class ChoiceOperationRemoveLabels extends BulkOperation {
 
-	public ChoiceOperationRemoveLabels(ChoiceNode target, Collection<String> labels, ViewMode viewMode) {
+	public ChoiceOperationRemoveLabels(ChoiceNode target, Collection<String> labels, ExtLanguage viewMode) {
 		super(OperationNames.REMOVE_PARTITION_LABELS, false, target, target, viewMode);
 		for(String label : labels){
 			if(target.getInheritedLabels().contains(label) == false){

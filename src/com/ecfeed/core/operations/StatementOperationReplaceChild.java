@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.utils.ViewMode;
+import com.ecfeed.core.utils.ExtLanguage;
 
 public class StatementOperationReplaceChild extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class StatementOperationReplaceChild extends AbstractModelOperation {
 	private AbstractStatement fCurrentChild;
 	private StatementArray fTarget;
 
-	public StatementOperationReplaceChild(StatementArray target, AbstractStatement child, AbstractStatement newStatement, ViewMode viewMode) {
+	public StatementOperationReplaceChild(StatementArray target, AbstractStatement child, AbstractStatement newStatement, ExtLanguage viewMode) {
 		super(OperationNames.REPLACE_STATEMENT, viewMode);
 		fTarget = target;
 		fCurrentChild = child;
