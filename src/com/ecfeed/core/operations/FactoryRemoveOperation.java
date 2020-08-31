@@ -66,12 +66,12 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
-		ExtLanguage fViewMode;
+		ExtLanguage fExtLanguage;
 
 		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguage extLanguage) {
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
-			fViewMode = extLanguage;
+			fExtLanguage = extLanguage;
 		}
 
 		@Override
@@ -81,17 +81,17 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node, fViewMode);
+			return new RootOperationRemoveClass(node.getRoot(), node, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node, fViewMode);
+			return new ClassOperationRemoveMethod(node.getClassNode(), node, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fViewMode);
+			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguage);
 		}
 
 		@Override
@@ -99,22 +99,22 @@ public class FactoryRemoveOperation {
 			return new GenericOperationRemoveGlobalParameter(
 					(GlobalParametersParentNode)node.getParametersParent(), 
 					node,
-					fViewMode);
+					fExtLanguage);
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new MethodOperationRemoveTestCase(node.getMethod(), node, fViewMode);
+			return new MethodOperationRemoveTestCase(node.getMethod(), node, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new MethodOperationRemoveConstraint(node.getMethod(), node, fViewMode);
+			return new MethodOperationRemoveConstraint(node.getMethod(), node, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fViewMode);
+			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fExtLanguage);
 		}
 	}
 

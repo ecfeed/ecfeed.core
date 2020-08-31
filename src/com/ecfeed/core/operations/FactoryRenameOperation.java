@@ -38,24 +38,24 @@ public class FactoryRenameOperation {
 
 	private static class ClassOperationRename extends GenericOperationRename {
 
-		ExtLanguage fViewMode;
+		ExtLanguage fExtLanguage;
 		String fNewName;
 
 		public ClassOperationRename(AbstractNode target, String newName, ExtLanguage extLanguage) {
 			super(target, newName, extLanguage);
-			fViewMode = extLanguage;
+			fExtLanguage = extLanguage;
 			fNewName = newName;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ClassOperationRename(getOwnNode(), getOriginalName(), fViewMode);
+			return new ClassOperationRename(getOwnNode(), getOriginalName(), fExtLanguage);
 		}
 
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			
-			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fViewMode);
+			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
 			
 			String[] tokens = newNameInJavaConvention.split("\\.");
 			
@@ -72,21 +72,21 @@ public class FactoryRenameOperation {
 
 	private static class MethodOperationRename extends GenericOperationRename {
 
-		ExtLanguage fViewMode;
+		ExtLanguage fExtLanguage;
 		String fNewName;
 
 		public MethodOperationRename(MethodNode target, String newName, ExtLanguage extLanguage) {
 
 			super(target, newName, extLanguage);
 
-			fViewMode = extLanguage;
+			fExtLanguage = extLanguage;
 			fNewName = newName;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
 
-			return new MethodOperationRename((MethodNode)getOwnNode(), getOriginalName(), fViewMode);
+			return new MethodOperationRename((MethodNode)getOwnNode(), getOriginalName(), fExtLanguage);
 		}
 
 		@Override
@@ -96,7 +96,7 @@ public class FactoryRenameOperation {
 			
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fViewMode);
+			String newNameInJavaConvention = CoreViewModeHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
 			
 			if (!ClassNodeHelper.isNewMethodSignatureValid(
 					targetMethodNode.getClassNode(), 
@@ -118,18 +118,18 @@ public class FactoryRenameOperation {
 
 	private static class GlobalParameterOperationRename extends GenericOperationRename {
 
-		ExtLanguage fViewMode;
+		ExtLanguage fExtLanguage;
 
 		public GlobalParameterOperationRename(AbstractNode target, String newName, ExtLanguage extLanguage) {
 
 			super(target, newName, extLanguage);
 
-			fViewMode = extLanguage;
+			fExtLanguage = extLanguage;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new GlobalParameterOperationRename(getOwnNode(), getOriginalName(), fViewMode);
+			return new GlobalParameterOperationRename(getOwnNode(), getOriginalName(), fExtLanguage);
 		}
 
 		@Override
@@ -146,16 +146,16 @@ public class FactoryRenameOperation {
 
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
-		ExtLanguage fViewMode;
+		ExtLanguage fExtLanguage;
 
 		public MethodParameterOperationRename(AbstractNode target, String newName, ExtLanguage extLanguage) {
 			super(target, newName, extLanguage);
-			fViewMode = extLanguage;
+			fExtLanguage = extLanguage;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodParameterOperationRename(getOwnNode(), getOriginalName(), fViewMode);
+			return new MethodParameterOperationRename(getOwnNode(), getOriginalName(), fExtLanguage);
 		}
 
 		@Override
@@ -172,24 +172,24 @@ public class FactoryRenameOperation {
 
 	private static class ChoiceOperationRename extends GenericOperationRename {
 
-		ExtLanguage fViewMode;
+		ExtLanguage fExtLanguage;
 
 		public ChoiceOperationRename(ChoiceNode target, String newName, ExtLanguage extLanguage) {
 			
 			super(target, newName, extLanguage);
 			
-			fViewMode = extLanguage;
+			fExtLanguage = extLanguage;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationRename((ChoiceNode)getOwnNode(), getOriginalName(), fViewMode);
+			return new ChoiceOperationRename((ChoiceNode)getOwnNode(), getOriginalName(), fExtLanguage);
 		}
 
 		@Override
 		protected void verifyNewName(String newName)throws ModelOperationException{
 			
-			newName = CoreViewModeHelper.getNewNameInJavaConvention(newName, fViewMode);
+			newName = CoreViewModeHelper.getNewNameInJavaConvention(newName, fExtLanguage);
 			
 			if(getOwnNode().getSibling(newName) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
@@ -200,51 +200,51 @@ public class FactoryRenameOperation {
 	private static class RenameOperationProvider implements IModelVisitor{
 
 		private String fNewName;
-		private ExtLanguage fViewMode;
+		private ExtLanguage fExtLanguage;
 
 		public RenameOperationProvider(String newName, ExtLanguage extLanguage) {
 			fNewName = newName;
-			fViewMode = extLanguage;
+			fExtLanguage = extLanguage;
 		}
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName, fViewMode);
+			return new GenericOperationRename(node, fNewName, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new ClassOperationRename(node, fNewName, fViewMode);
+			return new ClassOperationRename(node, fNewName, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new MethodOperationRename(node, fNewName, fViewMode);
+			return new MethodOperationRename(node, fNewName, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodParameterOperationRename(node, fNewName, fViewMode);
+			return new MethodParameterOperationRename(node, fNewName, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GlobalParameterOperationRename(node, fNewName, fViewMode);
+			return new GlobalParameterOperationRename(node, fNewName, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName,fViewMode);
+			return new GenericOperationRename(node, fNewName,fExtLanguage);
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName, fViewMode);
+			return new GenericOperationRename(node, fNewName, fExtLanguage);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return new ChoiceOperationRename(node, fNewName, fViewMode);
+			return new ChoiceOperationRename(node, fNewName, fExtLanguage);
 		}
 	}
 

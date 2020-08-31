@@ -26,7 +26,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	private ParametersParentNode fParametersParentNode;
 	private AbstractParameterNode fAbstractParameterNode;
 	private int fOriginalIndex;
-	private ExtLanguage fViewMode;
+	private ExtLanguage fExtLanguage;
 
 	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage extLanguage) {
 		
@@ -34,7 +34,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
-		fViewMode = extLanguage;
+		fExtLanguage = extLanguage;
 	}
 
 	@Override
@@ -46,7 +46,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		if (fParametersParentNode instanceof MethodNode) {
 			
 			MethodNode methodNode = (MethodNode)fParametersParentNode;
-			verifyIfMethodSignatureIsUnique(methodNode, fOriginalIndex, fViewMode);
+			verifyIfMethodSignatureIsUnique(methodNode, fOriginalIndex, fExtLanguage);
 		}
 		
 		fParametersParentNode.removeParameter(fAbstractParameterNode);
@@ -55,7 +55,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 	public ExtLanguage getViewMode() {
 		
-		return fViewMode;
+		return fExtLanguage;
 	}
 	
 	private static void verifyIfMethodSignatureIsUnique( // TODO SIMPLE-VIEW mode this to RemoveMethodParameterOperation

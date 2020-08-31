@@ -33,7 +33,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fNewName;
 	private String fOriginalName;
 	private String fJavaNameRegex;
-	private ExtLanguage fViewMode;
+	private ExtLanguage fExtLanguage;
 
 	public GenericOperationRename(
 			AbstractNode target, 
@@ -46,7 +46,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fNewName = newName;
 		fOriginalName = target.getName();
 		fJavaNameRegex = getJavaNameRegex(target);
-		fViewMode = extLanguage;
+		fExtLanguage = extLanguage;
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		String newName = fNewName;
 
-		newName = CoreViewModeHelper.adjustTextToConvention(newName, fViewMode);
+		newName = CoreViewModeHelper.adjustTextToConvention(newName, fExtLanguage);
 
 		verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget); // TODO SIMPLE-VIEW for source view simple error messages should be different
 
@@ -66,7 +66,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		fTarget.setName(newName);
 
-		String errorMessage = ViewModeModelVerifier.checkIsModelCompatibleWithViewMode(fTarget, fViewMode);
+		String errorMessage = ViewModeModelVerifier.checkIsModelCompatibleWithViewMode(fTarget, fExtLanguage);
 
 		if (errorMessage != null) {
 			fTarget.setName(oldName);
@@ -81,7 +81,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return new GenericOperationRename(
 				getOwnNode(), 
 				getOriginalName(), 
-				fViewMode);
+				fExtLanguage);
 	}
 
 	protected AbstractNode getOwnNode(){

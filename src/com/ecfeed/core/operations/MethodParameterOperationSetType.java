@@ -50,7 +50,7 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodParameterOperationSetType extends BulkOperation {
 	
-	private ExtLanguage fViewMode;
+	private ExtLanguage fExtLanguage;
 
 	private class SetTypeOperation extends AbstractParameterOperationSetType{
 
@@ -278,9 +278,9 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
 
-			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, fViewMode);
+			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, fExtLanguage);
 			
-			String newParameterType = SimpleTypeHelper.convertConditionallyJavaTypeToSimpleType(getNewType(), fViewMode);
+			String newParameterType = SimpleTypeHelper.convertConditionallyJavaTypeToSimpleType(getNewType(), fExtLanguage);
 			
 			parameterTypes.set(fMethodParameterNode.getMyIndex(), newParameterType);
 
@@ -288,7 +288,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethod(
-							classNode, oldMethodNode.getName(), parameterTypes, fViewMode);
+							classNode, oldMethodNode.getName(), parameterTypes, fExtLanguage);
 
 			if (foundMethodNode == null) {
 				return;
@@ -433,7 +433,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguage);
 
-		fViewMode = extLanguage;
+		fExtLanguage = extLanguage;
 		
 		if (newType == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
