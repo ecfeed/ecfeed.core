@@ -33,9 +33,9 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			TestCaseNode testCase, 
 			ITypeAdapterProvider typeAdapterProvider, 
 			int index,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		super(OperationNames.ADD_TEST_CASE, viewMode);
+		super(OperationNames.ADD_TEST_CASE, extLanguage);
 		fMethodNode = target;
 		fTestCase = testCase;
 		fIndex = index;
@@ -46,9 +46,9 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			MethodNode target, 
 			TestCaseNode testCase, 
 			ITypeAdapterProvider typeAdapterProvider, 
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		this(target, testCase, typeAdapterProvider, -1, viewMode);
+		this(target, testCase, typeAdapterProvider, -1, extLanguage);
 	}
 
 	@Override

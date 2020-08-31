@@ -28,9 +28,9 @@ public final class SimpleTypeHelper {
 			TYPE_NAME_LOGICAL
 	};
 	
-	public static String convertConditionallyJavaTypeToSimpleType(String javaType, ExtLanguage viewMode) {
+	public static String convertConditionallyJavaTypeToSimpleType(String javaType, ExtLanguage extLanguage) {
 		
-		if (viewMode == ExtLanguage.JAVA) {
+		if (extLanguage == ExtLanguage.JAVA) {
 			return javaType;
 		} 
 		

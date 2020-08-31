@@ -35,26 +35,26 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
-	public static String createLabel(ChoiceNode choiceNode, ExtLanguage viewMode) {
+	public static String createLabel(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String qualifiedName = choiceNode.getQualifiedName();
-		qualifiedName =  CoreViewModeHelper.convertTextToConvention(qualifiedName, viewMode);
+		qualifiedName =  CoreViewModeHelper.convertTextToConvention(qualifiedName, extLanguage);
 
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
 		}
 
-		String value = getValueString(choiceNode, viewMode);
+		String value = getValueString(choiceNode, extLanguage);
 
 		return qualifiedName + " [" + value + "]";
 	}
 
-	public static String getValueString(ChoiceNode choiceNode, ExtLanguage viewMode) {
+	public static String getValueString(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String type = choiceNode.getParameter().getType();
 
 		String value = choiceNode.getValueString();
-		value = CoreViewModeHelper.convertSpecialValueToConvention(value, type, viewMode);
+		value = CoreViewModeHelper.convertSpecialValueToConvention(value, type, extLanguage);
 
 		return value;
 	}

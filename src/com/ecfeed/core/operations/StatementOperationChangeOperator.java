@@ -21,8 +21,8 @@ public class StatementOperationChangeOperator extends AbstractModelOperation {
 	private EStatementOperator fNewOperator;
 	private EStatementOperator fCurrentOperator;
 
-	public StatementOperationChangeOperator(StatementArray target, EStatementOperator operator, ExtLanguage viewMode) {
-		super(OperationNames.CHANGE_STATEMENT_OPERATOR, viewMode);
+	public StatementOperationChangeOperator(StatementArray target, EStatementOperator operator, ExtLanguage extLanguage) {
+		super(OperationNames.CHANGE_STATEMENT_OPERATOR, extLanguage);
 		fTarget = target;
 		fNewOperator = operator;
 		fCurrentOperator = target.getOperator();

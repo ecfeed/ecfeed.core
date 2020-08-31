@@ -20,8 +20,8 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 	private AbstractParameterNode fTarget;
 	private String fCurrentComments;
 
-	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments, ExtLanguage viewMode) {
-		super(OperationNames.SET_COMMENTS, viewMode);
+	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments, ExtLanguage extLanguage) {
+		super(OperationNames.SET_COMMENTS, extLanguage);
 		fTarget = target;
 		fComments = comments;
 	}

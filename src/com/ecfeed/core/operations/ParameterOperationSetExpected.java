@@ -35,8 +35,8 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation(ExtLanguage viewMode) {
-			super(ParameterOperationSetExpected.this.getName(), viewMode);
+		public ReverseOperation(ExtLanguage extLanguage) {
+			super(ParameterOperationSetExpected.this.getName(), extLanguage);
 		}
 
 		@Override
@@ -61,8 +61,8 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	}
 
-	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected, ExtLanguage viewMode){
-		super(OperationNames.SET_EXPECTED_STATUS, viewMode);
+	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected, ExtLanguage extLanguage){
+		super(OperationNames.SET_EXPECTED_STATUS, extLanguage);
 		fTarget = target;
 		fExpected = expected;
 

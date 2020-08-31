@@ -41,9 +41,9 @@ public class FactoryRenameOperation {
 		ExtLanguage fViewMode;
 		String fNewName;
 
-		public ClassOperationRename(AbstractNode target, String newName, ExtLanguage viewMode) {
-			super(target, newName, viewMode);
-			fViewMode = viewMode;
+		public ClassOperationRename(AbstractNode target, String newName, ExtLanguage extLanguage) {
+			super(target, newName, extLanguage);
+			fViewMode = extLanguage;
 			fNewName = newName;
 		}
 
@@ -75,11 +75,11 @@ public class FactoryRenameOperation {
 		ExtLanguage fViewMode;
 		String fNewName;
 
-		public MethodOperationRename(MethodNode target, String newName, ExtLanguage viewMode) {
+		public MethodOperationRename(MethodNode target, String newName, ExtLanguage extLanguage) {
 
-			super(target, newName, viewMode);
+			super(target, newName, extLanguage);
 
-			fViewMode = viewMode;
+			fViewMode = extLanguage;
 			fNewName = newName;
 		}
 
@@ -120,11 +120,11 @@ public class FactoryRenameOperation {
 
 		ExtLanguage fViewMode;
 
-		public GlobalParameterOperationRename(AbstractNode target, String newName, ExtLanguage viewMode) {
+		public GlobalParameterOperationRename(AbstractNode target, String newName, ExtLanguage extLanguage) {
 
-			super(target, newName, viewMode);
+			super(target, newName, extLanguage);
 
-			fViewMode = viewMode;
+			fViewMode = extLanguage;
 		}
 
 		@Override
@@ -148,9 +148,9 @@ public class FactoryRenameOperation {
 
 		ExtLanguage fViewMode;
 
-		public MethodParameterOperationRename(AbstractNode target, String newName, ExtLanguage viewMode) {
-			super(target, newName, viewMode);
-			fViewMode = viewMode;
+		public MethodParameterOperationRename(AbstractNode target, String newName, ExtLanguage extLanguage) {
+			super(target, newName, extLanguage);
+			fViewMode = extLanguage;
 		}
 
 		@Override
@@ -174,11 +174,11 @@ public class FactoryRenameOperation {
 
 		ExtLanguage fViewMode;
 
-		public ChoiceOperationRename(ChoiceNode target, String newName, ExtLanguage viewMode) {
+		public ChoiceOperationRename(ChoiceNode target, String newName, ExtLanguage extLanguage) {
 			
-			super(target, newName, viewMode);
+			super(target, newName, extLanguage);
 			
-			fViewMode = viewMode;
+			fViewMode = extLanguage;
 		}
 
 		@Override
@@ -202,9 +202,9 @@ public class FactoryRenameOperation {
 		private String fNewName;
 		private ExtLanguage fViewMode;
 
-		public RenameOperationProvider(String newName, ExtLanguage viewMode) {
+		public RenameOperationProvider(String newName, ExtLanguage extLanguage) {
 			fNewName = newName;
-			fViewMode = viewMode;
+			fViewMode = extLanguage;
 		}
 
 		@Override
@@ -248,10 +248,10 @@ public class FactoryRenameOperation {
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newName, ExtLanguage viewMode){
+	public static IModelOperation getRenameOperation(AbstractNode target, String newName, ExtLanguage extLanguage){
 
 		try{
-			return (IModelOperation)target.accept(new RenameOperationProvider(newName, viewMode));
+			return (IModelOperation)target.accept(new RenameOperationProvider(newName, extLanguage));
 		} catch(Exception e) {
 			SystemLogger.logCatch(e);
 		}

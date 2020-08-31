@@ -47,11 +47,11 @@ public class ViewModeModelVerifier { // TODO - SIMPLE MODE - unit tests
 	
 	// TODO SIMPLE-VIEW check actions which make model incompatible with simple mode - fun(Number a),  fun(Number a, Number b) > deleting Number b
 	
-	public static String checkIsModelCompatibleWithViewMode(AbstractNode anyNode, ExtLanguage viewMode) {
+	public static String checkIsModelCompatibleWithViewMode(AbstractNode anyNode, ExtLanguage extLanguage) {
 		
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
 
-		if (viewMode == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguage.SIMPLE) {
 			String result = checkIsModelCompatibleWithSimpleMode(rootNode);
 			return result;
 		}

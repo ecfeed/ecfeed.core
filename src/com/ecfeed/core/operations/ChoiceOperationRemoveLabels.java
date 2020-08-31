@@ -17,11 +17,11 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public class ChoiceOperationRemoveLabels extends BulkOperation {
 
-	public ChoiceOperationRemoveLabels(ChoiceNode target, Collection<String> labels, ExtLanguage viewMode) {
-		super(OperationNames.REMOVE_PARTITION_LABELS, false, target, target, viewMode);
+	public ChoiceOperationRemoveLabels(ChoiceNode target, Collection<String> labels, ExtLanguage extLanguage) {
+		super(OperationNames.REMOVE_PARTITION_LABELS, false, target, target, extLanguage);
 		for(String label : labels){
 			if(target.getInheritedLabels().contains(label) == false){
-				addOperation(new ChoiceOperationRemoveLabel(target, label, viewMode));
+				addOperation(new ChoiceOperationRemoveLabel(target, label, extLanguage));
 			}
 		}
 	}

@@ -88,11 +88,11 @@ public final class JavaTypeHelper {
 		TYPE_NAME_BOOLEAN
 	};	
 
-	public static Set<String> getSpecialValues(String typeName, ExtLanguage viewMode) {
+	public static Set<String> getSpecialValues(String typeName, ExtLanguage extLanguage) {
 		
 		Set<String> items;
 		
-		if (viewMode == ExtLanguage.JAVA) {
+		if (extLanguage == ExtLanguage.JAVA) {
 			items = new LinkedHashSet<String>(getSpecialValues(typeName));
 		} else {
 			items = new LinkedHashSet<String>();

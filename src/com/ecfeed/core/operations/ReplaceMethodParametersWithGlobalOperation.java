@@ -30,22 +30,22 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 				MethodParameterNode target, 
 				GlobalParametersParentNode parent, 
 				ITypeAdapterProvider adapterProvider,
-				ExtLanguage viewMode) {
-			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, viewMode);
+				ExtLanguage extLanguage) {
+			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguage);
 			MethodNode method = target.getMethod();
 			GlobalParameterNode global = new GlobalParameterNode(target);
-			addOperation(new GenericOperationAddParameter(parent, global, true, viewMode));
-			addOperation(new MethodParameterOperationSetLink(target, global, viewMode));
-			addOperation(new MethodParameterOperationSetLinked(target, true, viewMode));
+			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguage));
+			addOperation(new MethodParameterOperationSetLink(target, global, extLanguage));
+			addOperation(new MethodParameterOperationSetLinked(target, true, extLanguage));
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
 					ConstraintNode copy = constraint.makeClone();
-					addOperation(new MethodOperationAddConstraint(method, copy, constraint.getMyIndex(), viewMode));
+					addOperation(new MethodOperationAddConstraint(method, copy, constraint.getMyIndex(), extLanguage));
 				}
 			}
 			for(TestCaseNode tc : method.getTestCases()){
 				TestCaseNode copy = tc.makeClone();
-				addOperation(new MethodOperationAddTestCase(method, copy, adapterProvider, tc.getMyIndex(), viewMode));
+				addOperation(new MethodOperationAddTestCase(method, copy, adapterProvider, tc.getMyIndex(), extLanguage));
 			}
 		}
 
@@ -64,12 +64,12 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 			GlobalParametersParentNode parent, 
 			List<MethodParameterNode> originals, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, viewMode);
+		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguage);
 		
 		for(MethodParameterNode parameter : originals){
-			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, viewMode));
+			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, extLanguage));
 		}
 	}
 

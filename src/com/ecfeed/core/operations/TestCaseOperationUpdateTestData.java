@@ -22,8 +22,8 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 	private int fIndex;
 	private TestCaseNode fTarget;
 
-	public TestCaseOperationUpdateTestData(TestCaseNode target, int index, ChoiceNode value, ExtLanguage viewMode) {
-		super(OperationNames.UPDATE_TEST_DATA, viewMode);
+	public TestCaseOperationUpdateTestData(TestCaseNode target, int index, ChoiceNode value, ExtLanguage extLanguage) {
+		super(OperationNames.UPDATE_TEST_DATA, extLanguage);
 		fTarget = target;
 		fIndex = index;
 		fNewValue = value;

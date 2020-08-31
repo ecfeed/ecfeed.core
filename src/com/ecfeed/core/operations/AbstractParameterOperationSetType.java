@@ -43,8 +43,8 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	protected class ReverseOperation extends AbstractReverseOperation {
 
-		public ReverseOperation(ExtLanguage viewMode) {
-			super(AbstractParameterOperationSetType.this, viewMode);
+		public ReverseOperation(ExtLanguage extLanguage) {
+			super(AbstractParameterOperationSetType.this, extLanguage);
 		}
 
 		@Override
@@ -85,9 +85,9 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			AbstractParameterNode target, 
 			String newType, 
 			ITypeAdapterProvider adapterProvider, 
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		super(OperationNames.SET_TYPE, viewMode);
+		super(OperationNames.SET_TYPE, extLanguage);
 		
 		fTarget = target;
 		fNewType = newType;

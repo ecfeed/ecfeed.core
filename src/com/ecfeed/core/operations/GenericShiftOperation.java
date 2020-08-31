@@ -25,21 +25,21 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	private int fShiftSize;
 	private List<? extends AbstractNode> fCollection;
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, ExtLanguage viewMode){
+	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, ExtLanguage extLanguage){
 		
-		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up, viewMode);
+		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguage);
 	}
 
 	public GenericShiftOperation(
-			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, ExtLanguage viewMode){
+			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, ExtLanguage extLanguage){
 		
-		this(collection, shifted, 0, viewMode);
+		this(collection, shifted, 0, extLanguage);
 		
 		fShiftSize = minAllowedShift(shifted, up);
 	}
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, ExtLanguage viewMode){
-		super(OperationNames.MOVE, viewMode);
+	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, ExtLanguage extLanguage){
+		super(OperationNames.MOVE, extLanguage);
 		shift = shiftAllowed(shifted, shift) ? shift : 0;
 		fToBeShifted = new ArrayList<>(shifted);
 		fCollection = collection;

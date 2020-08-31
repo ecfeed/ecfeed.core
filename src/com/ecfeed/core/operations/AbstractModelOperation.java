@@ -24,9 +24,9 @@ public abstract class AbstractModelOperation implements IModelOperation {
 
 	private List<AbstractNode> fNodesToSelect;
 
-	public AbstractModelOperation(String name, ExtLanguage viewMode){
+	public AbstractModelOperation(String name, ExtLanguage extLanguage){
 		fName = name;
-		fViewMode = viewMode;
+		fViewMode = extLanguage;
 		fNodesToSelect = new ArrayList<AbstractNode>();
 	}
 

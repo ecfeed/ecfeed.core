@@ -21,8 +21,8 @@ public class StatementOperationAddStatement extends AbstractModelOperation {
 	private StatementArray fTarget;
 	private int fIndex;
 
-	public StatementOperationAddStatement(StatementArray parent, AbstractStatement statement, int index, ExtLanguage viewMode) {
-		super(OperationNames.ADD_STATEMENT, viewMode);
+	public StatementOperationAddStatement(StatementArray parent, AbstractStatement statement, int index, ExtLanguage extLanguage) {
+		super(OperationNames.ADD_STATEMENT, extLanguage);
 		fTarget = parent;
 		fStatement = statement;
 		fIndex = index;

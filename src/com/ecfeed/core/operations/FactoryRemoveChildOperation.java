@@ -32,10 +32,10 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	private ExtLanguage fViewMode;
 
 	public FactoryRemoveChildOperation(
-			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguage viewMode) {
+			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguage extLanguage) {
 		fChild = child;
 		fValidate = validate;
-		fViewMode = viewMode;
+		fViewMode = extLanguage;
 	}
 
 	@Override

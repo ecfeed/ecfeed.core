@@ -26,9 +26,9 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 			NodePropertyDefs.PropertyId propertyId, 
 			String value,
 			AbstractNode abstractNode,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		super(OperationNames.SET_PROPERTY, viewMode);
+		super(OperationNames.SET_PROPERTY, extLanguage);
 		
 		fPropertyId = propertyId;
 		fNewValue = value;

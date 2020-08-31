@@ -85,29 +85,29 @@ public class MethodNode extends ParametersParentNode {
 		return createSignatureIntr(ExtLanguage.JAVA, true); 
 	}
 
-	public String createSignatureWithExpectedDecorations(ExtLanguage viewMode) {
+	public String createSignatureWithExpectedDecorations(ExtLanguage extLanguage) {
 
-		return createSignatureIntr(viewMode, true);
+		return createSignatureIntr(extLanguage, true);
 	}
 
-	public String createShortSignature(ExtLanguage viewMode) {
+	public String createShortSignature(ExtLanguage extLanguage) {
 		
 		return createSignatureIntr(ExtLanguage.JAVA, false);
 	}
 	
-	private String createSignatureIntr(ExtLanguage viewMode, boolean isExpectedDecorationAdded) {
+	private String createSignatureIntr(ExtLanguage extLanguage, boolean isExpectedDecorationAdded) {
 		
 		return MethodNodeHelper.createSignature(
 				getName(),
 				getMethodParameters(),
 				getParameterTypes(),
 				getParametersNames(),
-				viewMode, isExpectedDecorationAdded);
+				extLanguage, isExpectedDecorationAdded);
 	}
 
-	public String createLongSignature(ExtLanguage viewMode) {
+	public String createLongSignature(ExtLanguage extLanguage) {
 
-		return getParent().getName() + "." + createShortSignature(viewMode);
+		return getParent().getName() + "." + createShortSignature(extLanguage);
 	}
 
 	@Override

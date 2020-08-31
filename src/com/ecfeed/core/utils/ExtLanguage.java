@@ -38,7 +38,7 @@ public enum ExtLanguage {
 
 	private static void reportExceptionInvalidModeName() {
 		
-		ExceptionHelper.reportRuntimeException("Invalid view mode name.");
+		ExceptionHelper.reportRuntimeException("Invalid external language name.");
 	}
 
 }

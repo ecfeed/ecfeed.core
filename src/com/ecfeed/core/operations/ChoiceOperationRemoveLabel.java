@@ -22,8 +22,8 @@ public class ChoiceOperationRemoveLabel extends BulkOperation{
 		private ChoiceNode fTarget;
 		private String fLabel;
 
-		public RemoveLabelOperation(ChoiceNode target, String label, ExtLanguage viewMode) {
-			super(ChoiceOperationRemoveLabel.this.getName(), viewMode);
+		public RemoveLabelOperation(ChoiceNode target, String label, ExtLanguage extLanguage) {
+			super(ChoiceOperationRemoveLabel.this.getName(), extLanguage);
 			fTarget = target;
 			fLabel = label;
 		}
@@ -42,15 +42,15 @@ public class ChoiceOperationRemoveLabel extends BulkOperation{
 
 	}
 
-	public ChoiceOperationRemoveLabel(ChoiceNode target, String label, ExtLanguage viewMode) {
+	public ChoiceOperationRemoveLabel(ChoiceNode target, String label, ExtLanguage extLanguage) {
 
-		super(OperationNames.REMOVE_PARTITION_LABEL, true, target, target, viewMode);
+		super(OperationNames.REMOVE_PARTITION_LABEL, true, target, target, extLanguage);
 		
-		addOperation(new RemoveLabelOperation(target, label, viewMode));
+		addOperation(new RemoveLabelOperation(target, label, extLanguage));
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if (method != null) {
-				addOperation(new MethodOperationMakeConsistent(method, viewMode));
+				addOperation(new MethodOperationMakeConsistent(method, extLanguage));
 			}
 		}
 	}

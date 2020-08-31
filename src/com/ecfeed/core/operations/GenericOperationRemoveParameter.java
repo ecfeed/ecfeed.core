@@ -28,13 +28,13 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	private int fOriginalIndex;
 	private ExtLanguage fViewMode;
 
-	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage viewMode) {
+	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage extLanguage) {
 		
-		super(OperationNames.REMOVE_METHOD_PARAMETER, viewMode);
+		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguage);
 		
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
-		fViewMode = viewMode;
+		fViewMode = extLanguage;
 	}
 
 	@Override
@@ -61,14 +61,14 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	private static void verifyIfMethodSignatureIsUnique( // TODO SIMPLE-VIEW mode this to RemoveMethodParameterOperation
 			MethodNode methodNode, 
 			int indexOfParameterToRemove, 
-			ExtLanguage viewMode) throws ModelOperationException {
+			ExtLanguage extLanguage) throws ModelOperationException {
 
 		ClassNode classNode = methodNode.getClassNode();
 
-		List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, viewMode);
+		List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
 		parameterTypes.remove(indexOfParameterToRemove);
 
-		MethodNode foundMethodNode = ClassNodeHelper.findMethod(classNode, methodNode.getName(), parameterTypes, viewMode);
+		MethodNode foundMethodNode = ClassNodeHelper.findMethod(classNode, methodNode.getName(), parameterTypes, extLanguage);
 
 		if (foundMethodNode == null) {
 			return;
@@ -79,7 +79,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		}
 
 		ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-				classNode, foundMethodNode, viewMode));
+				classNode, foundMethodNode, extLanguage));
 	}
 
 	@Override

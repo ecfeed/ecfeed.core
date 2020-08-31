@@ -20,30 +20,30 @@ public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 	public GenericOperationRemoveGlobalParameter(
 			GlobalParametersParentNode target, 
 			GlobalParameterNode parameter,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, viewMode);
+		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguage);
 		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, viewMode));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, extLanguage));
 		}
 		
-		addOperation(new GenericOperationRemoveParameter(target, parameter, viewMode));
+		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguage));
 	}
 
 	public GenericOperationRemoveGlobalParameter(
 			GlobalParametersParentNode target, 
 			GlobalParameterNode parameter, 
 			boolean ignoreDuplicates,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, viewMode);
+		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguage);
 		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates, viewMode));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates, extLanguage));
 		}
 		
-		addOperation(new GenericOperationRemoveParameter(target, parameter, viewMode));
+		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguage));
 	}
 
 }

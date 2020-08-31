@@ -22,14 +22,14 @@ public class GlobalParameterOperationSetType extends BulkOperation {
 			GlobalParameterNode target, 
 			String newType, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		super(OperationNames.SET_TYPE, true, target, target, viewMode);
+		super(OperationNames.SET_TYPE, true, target, target, extLanguage);
 
-		addOperation(new AbstractParameterOperationSetType(target, newType, adapterProvider, viewMode));
+		addOperation(new AbstractParameterOperationSetType(target, newType, adapterProvider, extLanguage));
 
 		for (MethodNode method : target.getMethods()) {
-			addOperation(new MethodOperationMakeConsistent(method, viewMode));
+			addOperation(new MethodOperationMakeConsistent(method, extLanguage));
 		}
 	}
 

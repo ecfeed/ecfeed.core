@@ -22,12 +22,12 @@ public class RootOperationAddClasses extends BulkOperation {
 			RootNode target, 
 			Collection<ClassNode> classes, 
 			int index,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		super(OperationNames.ADD_CLASSES, false, target, target, viewMode);
+		super(OperationNames.ADD_CLASSES, false, target, target, extLanguage);
 		
 		for(ClassNode classNode : classes){
-			addOperation(new RootOperationAddNewClass(target, classNode, index++, viewMode));
+			addOperation(new RootOperationAddNewClass(target, classNode, index++, extLanguage));
 		}
 	}
 }

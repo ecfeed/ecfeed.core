@@ -28,15 +28,15 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 	
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ExtLanguage viewMode) {
-		super(OperationNames.ADD_METHOD, viewMode);
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ExtLanguage extLanguage) {
+		super(OperationNames.ADD_METHOD, extLanguage);
 		fClassNode = target;
 		fMethod = method;
 		fIndex = index;
 	}
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, ExtLanguage viewMode) {
-		this(target, method, -1, viewMode);
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, ExtLanguage extLanguage) {
+		this(target, method, -1, extLanguage);
 	}
 
 	@Override

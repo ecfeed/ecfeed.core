@@ -27,9 +27,9 @@ public class MethodNodeHelper {
 			List<MethodParameterNode> methodParameters,
 			List<String> types, // TODO SIMPLE-VIEW take types from method parameters
 			List<String> parameterNames, // TODO SIMPLE-VIEW take names from method parameters
-			ExtLanguage viewMode, boolean isExpectedDecorationAdded) {
+			ExtLanguage extLanguage, boolean isExpectedDecorationAdded) {
 
-		fullName = CoreViewModeHelper.convertTextToConvention(fullName, viewMode);
+		fullName = CoreViewModeHelper.convertTextToConvention(fullName, extLanguage);
 
 		String signature = new String(fullName) + "(";
 		String type;
@@ -43,12 +43,12 @@ public class MethodNodeHelper {
 			}
 
 			type = types.get(paramIndex);
-			type = CoreViewModeHelper.convertTypeToConvention(type, viewMode);
+			type = CoreViewModeHelper.convertTypeToConvention(type, extLanguage);
 
 			signature += type;
 			signature += " ";
 			String parameterName = parameterNames.get(paramIndex);
-			parameterName = CoreViewModeHelper.convertTextToConvention(parameterName, viewMode);
+			parameterName = CoreViewModeHelper.convertTextToConvention(parameterName, extLanguage);
 
 			signature += parameterName;
 
@@ -105,7 +105,7 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguage viewMode) {
+	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguage extLanguage) {
 
 		List<String> result = new ArrayList<String>();
 
@@ -113,7 +113,7 @@ public class MethodNodeHelper {
 
 			String type = parameter.getType();
 
-			type = CoreViewModeHelper.convertTextToConvention(type, viewMode);
+			type = CoreViewModeHelper.convertTextToConvention(type, extLanguage);
 
 			result.add(type);
 		}

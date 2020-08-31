@@ -53,8 +53,8 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 			}
 
-			public ReverseOperation(ExtLanguage viewMode) {
-				super(RemoveChoiceOperation.this.getName(), viewMode);
+			public ReverseOperation(ExtLanguage extLanguage) {
+				super(RemoveChoiceOperation.this.getName(), extLanguage);
 			}
 
 			@Override
@@ -129,9 +129,9 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 				ChoicesParentNode target, 
 				ChoiceNode choice, 
 				ITypeAdapterProvider adapterProvider, 
-				ExtLanguage viewMode){
+				ExtLanguage extLanguage){
 			
-			super(OperationNames.REMOVE_PARTITION, viewMode);
+			super(OperationNames.REMOVE_PARTITION, extLanguage);
 			fAdapterProvider = adapterProvider;
 			fTarget = target;
 			fChoice = choice;
@@ -195,15 +195,15 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		super(OperationNames.REMOVE_PARTITION, true, target, target, viewMode);
+		super(OperationNames.REMOVE_PARTITION, true, target, target, extLanguage);
 
-		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider, viewMode));
+		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider, extLanguage));
 
 		if (validate) {
 			for (MethodNode method : target.getParameter().getMethods()) {
-				addOperation(new MethodOperationMakeConsistent(method, viewMode));
+				addOperation(new MethodOperationMakeConsistent(method, extLanguage));
 			}
 		}
 	}

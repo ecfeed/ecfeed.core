@@ -30,17 +30,17 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 			List<AbstractParameterNode> parameters, 
 			AbstractNode shifted, 
 			boolean up,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up, viewMode);
+		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguage);
 	}
 
 	public MethodParameterShiftOperation(
 			List<AbstractParameterNode> parameters, 
 			List<? extends AbstractNode> shifted, 
 			boolean up, 
-			ExtLanguage viewMode) {
-		this(parameters, shifted, 0, viewMode);
+			ExtLanguage extLanguage) {
+		this(parameters, shifted, 0, extLanguage);
 		setShift(minAllowedShift(shifted, up));
 	}
 
@@ -48,8 +48,8 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 			List<AbstractParameterNode> parameters, 
 			List<? extends AbstractNode> shifted, 
 			int shift,
-			ExtLanguage viewMode) {
-		super(parameters, shifted, shift, viewMode);
+			ExtLanguage extLanguage) {
+		super(parameters, shifted, shift, extLanguage);
 		fParameters = parameters;
 	}
 

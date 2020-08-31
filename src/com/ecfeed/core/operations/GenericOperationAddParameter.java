@@ -27,9 +27,9 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			AbstractParameterNode parameter, 
 			int index, 
 			boolean generateUniqueName,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		super(OperationNames.ADD_PARAMETER, viewMode);
+		super(OperationNames.ADD_PARAMETER, extLanguage);
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
 		fNewIndex = (index == -1)? target.getParameters().size() : index;
@@ -40,8 +40,8 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			ParametersParentNode target, 
 			AbstractParameterNode parameter, 
 			boolean generateUniqueName,
-			ExtLanguage viewMode) {
-		this(target, parameter, -1, generateUniqueName, viewMode);
+			ExtLanguage extLanguage) {
+		this(target, parameter, -1, generateUniqueName, extLanguage);
 	}
 
 	@Override
@@ -86,8 +86,8 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		private AbstractParameterNode fReversedParameter;
 		private ParametersParentNode fReversedTarget;
 
-		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage viewMode) {
-			super("reverse " + OperationNames.ADD_PARAMETER, viewMode);
+		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage extLanguage) {
+			super("reverse " + OperationNames.ADD_PARAMETER, extLanguage);
 			fReversedTarget = target;
 			fReversedParameter = parameter;
 		}

@@ -36,10 +36,10 @@ public class FactoryShiftOperation {
 		public MoveUpDownOperationProvider(
 				List<? extends AbstractNode> shifted, 
 				boolean up,
-				ExtLanguage viewMode) {
+				ExtLanguage extLanguage) {
 			fShifted = shifted;
 			fUp = up;
-			fViewMode = viewMode;
+			fViewMode = extLanguage;
 		}
 
 		@Override
@@ -127,10 +127,10 @@ public class FactoryShiftOperation {
 		private int fShift;
 		private ExtLanguage fViewMode;
 
-		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, ExtLanguage viewMode){
+		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, ExtLanguage extLanguage){
 			fShifted = shifted;
 			fShift = calculateShift(shifted, index);
-			fViewMode = viewMode;
+			fViewMode = extLanguage;
 		}
 
 		@Override
@@ -215,18 +215,18 @@ public class FactoryShiftOperation {
 	public static GenericShiftOperation getShiftOperation(
 			List<? extends AbstractNode> shifted, 
 			boolean up,
-			ExtLanguage viewMode) throws ModelOperationException{
+			ExtLanguage extLanguage) throws ModelOperationException{
 		
 		AbstractNode parent = getParent(shifted);
 		
 		return getShiftOperation(
-				parent, shifted, new MoveUpDownOperationProvider(shifted, up, viewMode));
+				parent, shifted, new MoveUpDownOperationProvider(shifted, up, extLanguage));
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, ExtLanguage viewMode) throws ModelOperationException {
+			List<? extends AbstractNode> shifted, int newIndex, ExtLanguage extLanguage) throws ModelOperationException {
 		AbstractNode parent = getParent(shifted);
-		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, viewMode));
+		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguage));
 	}
 
 	private static GenericShiftOperation getShiftOperation(AbstractNode parent, List<? extends AbstractNode> shifted, IModelVisitor provider) throws ModelOperationException{

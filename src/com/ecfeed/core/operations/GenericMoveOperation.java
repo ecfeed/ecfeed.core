@@ -29,9 +29,9 @@ public class GenericMoveOperation extends BulkOperation {
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguage viewMode) throws ModelOperationException {
+			ExtLanguage extLanguage) throws ModelOperationException {
 		
-		this(moved, newParent, adapterProvider, -1, viewMode);
+		this(moved, newParent, adapterProvider, -1, extLanguage);
 	}
 
 	public GenericMoveOperation(
@@ -39,9 +39,9 @@ public class GenericMoveOperation extends BulkOperation {
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
 			int newIndex,
-			ExtLanguage viewMode) throws ModelOperationException {
+			ExtLanguage extLanguage) throws ModelOperationException {
 
-		super(OperationNames.MOVE, true, newParent, getParent(moved), viewMode);
+		super(OperationNames.MOVE, true, newParent, getParent(moved), extLanguage);
 
 		Set<MethodNode> methodsInvolved = new HashSet<>();
 		try {
@@ -52,7 +52,7 @@ public class GenericMoveOperation extends BulkOperation {
 						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
 					}
 					addOperation((IModelOperation)node.getParent().accept(
-							new FactoryRemoveChildOperation(node, adapterProvider, false, viewMode)));
+							new FactoryRemoveChildOperation(node, adapterProvider, false, extLanguage)));
 
 					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
 						GlobalParameterNode parameter = (GlobalParameterNode)node;
@@ -61,20 +61,20 @@ public class GenericMoveOperation extends BulkOperation {
 					if(newIndex != -1){
 						addOperation(
 								(IModelOperation)newParent.accept(
-										new FactoryAddChildOperation(node, newIndex, adapterProvider, false, viewMode)));
+										new FactoryAddChildOperation(node, newIndex, adapterProvider, false, extLanguage)));
 					}
 					else{
 						addOperation(
 								(IModelOperation)newParent.accept(
-										new FactoryAddChildOperation(node, adapterProvider, false, viewMode)));
+										new FactoryAddChildOperation(node, adapterProvider, false, extLanguage)));
 					}
 					for(MethodNode method : methodsInvolved){
-						addOperation(new MethodOperationMakeConsistent(method, viewMode));
+						addOperation(new MethodOperationMakeConsistent(method, extLanguage));
 					}
 				}
 			}
 			else if(internalNodes(moved, newParent)){
-				GenericShiftOperation operation = FactoryShiftOperation.getShiftOperation(moved, newIndex, viewMode);
+				GenericShiftOperation operation = FactoryShiftOperation.getShiftOperation(moved, newIndex, extLanguage);
 				addOperation(operation);
 			}
 		} catch (Exception e) {

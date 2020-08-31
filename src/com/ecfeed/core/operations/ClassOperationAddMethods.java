@@ -18,12 +18,12 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public class ClassOperationAddMethods extends BulkOperation{
 
-	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, ExtLanguage viewMode) {
+	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, ExtLanguage extLanguage) {
 		
-		super(OperationNames.ADD_METHODS, false, target, target, viewMode);
+		super(OperationNames.ADD_METHODS, false, target, target, extLanguage);
 		
 		for(MethodNode method : methods){
-			addOperation(new ClassOperationAddMethod(target, method, index++, viewMode));
+			addOperation(new ClassOperationAddMethod(target, method, index++, extLanguage));
 		}
 	}
 }

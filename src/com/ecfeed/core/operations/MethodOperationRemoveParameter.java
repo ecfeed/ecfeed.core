@@ -30,8 +30,8 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		private class ReverseOperation extends AbstractReverseOperation {
 			
-			public ReverseOperation(ExtLanguage viewMode) {
-				super(RemoveMethodParameterOperation.this, viewMode);
+			public ReverseOperation(ExtLanguage extLanguage) {
+				super(RemoveMethodParameterOperation.this, extLanguage);
 			}
 
 			@Override
@@ -49,8 +49,8 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		}
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ExtLanguage viewMode) {
-			super(target, parameter, viewMode);
+		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
+			super(target, parameter, extLanguage);
 			fOriginalTestCases = new ArrayList<>();
 		}
 
@@ -58,9 +58,9 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 				MethodNode target, 
 				MethodParameterNode parameter, 
 				boolean ignoreDuplicates,
-				ExtLanguage viewMode) {
+				ExtLanguage extLanguage) {
 			
-			this(target, parameter, viewMode);
+			this(target, parameter, extLanguage);
 			
 			fIgnoreDuplicates = ignoreDuplicates;
 		}
@@ -105,19 +105,19 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 	}
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguage viewMode) {
+			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguage extLanguage) {
 		
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, viewMode);
+		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
 		
-		addOperation(new RemoveMethodParameterOperation(target, parameter, viewMode));
+		addOperation(new RemoveMethodParameterOperation(target, parameter, extLanguage));
 		
 		if(validate){
-			addOperation(new MethodOperationMakeConsistent(target, viewMode));
+			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
 		}
 	}
 	
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage viewMode) {
-		this(target, parameter, true, viewMode);
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
+		this(target, parameter, true, extLanguage);
 	}
 
 	public MethodOperationRemoveParameter(
@@ -125,13 +125,13 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			MethodParameterNode parameter, 
 			boolean validate, 
 			boolean ignoreDuplicates, 
-			ExtLanguage viewMode){
+			ExtLanguage extLanguage){
 		
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, viewMode);
+		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
 		
-		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, viewMode));
+		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, extLanguage));
 		if(validate){
-			addOperation(new MethodOperationMakeConsistent(target, viewMode));
+			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
 		}
 	}
 

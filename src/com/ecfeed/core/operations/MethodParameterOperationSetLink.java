@@ -28,8 +28,8 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		private class ReverseOperation extends AbstractReverseOperation{
 
-			public ReverseOperation(ExtLanguage viewMode) {
-				super(MethodParameterOperationSetLink.this, viewMode);
+			public ReverseOperation(ExtLanguage extLanguage) {
+				super(MethodParameterOperationSetLink.this, extLanguage);
 			}
 
 			@Override
@@ -45,8 +45,8 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		}
 
-		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link, ExtLanguage viewMode) {
-			super(OperationNames.SET_LINK, viewMode);
+		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link, ExtLanguage extLanguage) {
+			super(OperationNames.SET_LINK, extLanguage);
 			fTarget = target;
 			fNewLink = link;
 		}
@@ -79,9 +79,9 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 	}
 
-	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link, ExtLanguage viewMode) {
-		super(OperationNames.SET_LINK, true, target, target, viewMode);
-		addOperation(new SetLinkOperation(target, link, viewMode));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod(), viewMode));
+	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link, ExtLanguage extLanguage) {
+		super(OperationNames.SET_LINK, true, target, target, extLanguage);
+		addOperation(new SetLinkOperation(target, link, extLanguage));
+		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguage));
 	}
 }

@@ -23,8 +23,8 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 	private EMathRelation fNewRelation;
 	private EMathRelation fCurrentRelation;
 
-	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, ExtLanguage viewMode) {
-		super(OperationNames.SET_STATEMENT_RELATION, viewMode);
+	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, ExtLanguage extLanguage) {
+		super(OperationNames.SET_STATEMENT_RELATION, extLanguage);
 		fTarget = target;
 		fNewRelation = relation;
 		fCurrentRelation = target.getRelation();

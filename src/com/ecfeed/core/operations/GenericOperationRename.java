@@ -38,15 +38,15 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public GenericOperationRename(
 			AbstractNode target, 
 			String newName, 
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		super(OperationNames.RENAME, viewMode);
+		super(OperationNames.RENAME, extLanguage);
 
 		fTarget = target;
 		fNewName = newName;
 		fOriginalName = target.getName();
 		fJavaNameRegex = getJavaNameRegex(target);
-		fViewMode = viewMode;
+		fViewMode = extLanguage;
 	}
 
 	@Override

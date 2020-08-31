@@ -21,8 +21,8 @@ public class MethodOperationRemoveConstraint extends AbstractModelOperation {
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
-	public MethodOperationRemoveConstraint(MethodNode target, ConstraintNode constraint, ExtLanguage viewMode){
-		super(OperationNames.REMOVE_CONSTRAINT, viewMode);
+	public MethodOperationRemoveConstraint(MethodNode target, ConstraintNode constraint, ExtLanguage extLanguage){
+		super(OperationNames.REMOVE_CONSTRAINT, extLanguage);
 		fMethodNode = target;
 		fConstraint = constraint;
 		fIndex = fConstraint.getMyIndex();

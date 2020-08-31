@@ -40,12 +40,12 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
 		fChild = child;
 		fIndex = index;
 		fValidate = validate;
-		fViewMode = viewMode;
+		fViewMode = extLanguage;
 		fAdapterProvider = adapterProvider;
 	}
 
@@ -53,9 +53,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			AbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		this(child, -1, adapterProvider, validate, viewMode);
+		this(child, -1, adapterProvider, validate, extLanguage);
 	}
 
 	@Override

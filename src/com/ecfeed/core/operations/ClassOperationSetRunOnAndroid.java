@@ -19,8 +19,8 @@ public class ClassOperationSetRunOnAndroid extends AbstractModelOperation {
 	private boolean fNewValue;
 	private boolean fOriginalValue;
 
-	public ClassOperationSetRunOnAndroid(ClassNode classNode, boolean newValue, ExtLanguage viewMode) {
-		super(OperationNames.SET_ANDROID_BASE_RUNNER, viewMode);
+	public ClassOperationSetRunOnAndroid(ClassNode classNode, boolean newValue, ExtLanguage extLanguage) {
+		super(OperationNames.SET_ANDROID_BASE_RUNNER, extLanguage);
 		fClassNode = classNode;
 		fNewValue = newValue;
 		fOriginalValue = classNode.getRunOnAndroid();

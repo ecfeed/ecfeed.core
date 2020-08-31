@@ -15,22 +15,22 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String createLabel(AbstractParameterNode abstractParameterNode, ExtLanguage viewMode) {
+	public static String createLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
 		String name = abstractParameterNode.getName();
-		name = CoreViewModeHelper.convertTextToConvention(name, viewMode);
+		name = CoreViewModeHelper.convertTextToConvention(name, extLanguage);
 
 		String type = abstractParameterNode.getType();
-		type = createTypeLabel(type, viewMode);
+		type = createTypeLabel(type, extLanguage);
 
 		String label = name + ": " + type;
 		return label;
 	}
 
 
-	public static String createTypeLabel(String javaType, ExtLanguage viewMode) {
+	public static String createTypeLabel(String javaType, ExtLanguage extLanguage) {
 
-		String type = CoreViewModeHelper.convertTypeToConvention(javaType, viewMode);
+		String type = CoreViewModeHelper.convertTypeToConvention(javaType, extLanguage);
 		return type;
 	}
 }

@@ -66,7 +66,7 @@ public class ClassNodeHelper {
 	}
 
 	public static void updateNewMethodsSignatureProblemList(
-			ClassNode parent, String methodName, List<String> argTypes, List<String> problems, ExtLanguage viewMode) {
+			ClassNode parent, String methodName, List<String> argTypes, List<String> problems, ExtLanguage extLanguage) {
 
 		// TODO SIMPLE-VIEW check
 		MethodNode methodNode = parent.getMethod(methodName, argTypes);
@@ -74,7 +74,7 @@ public class ClassNodeHelper {
 		if (methodNode != null) {
 
 			if (problems != null) {
-				problems.add(generateMethodSignatureDuplicateMessage(parent, methodNode, viewMode));
+				problems.add(generateMethodSignatureDuplicateMessage(parent, methodNode, extLanguage));
 			}
 
 		}
@@ -98,10 +98,10 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String getSignature(ClassNode classNode, ExtLanguage viewMode) {
+	public static String getSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String classSignature = classNode.getName();
-		classSignature = CoreViewModeHelper.convertTextToConvention(classSignature, viewMode);
+		classSignature = CoreViewModeHelper.convertTextToConvention(classSignature, extLanguage);
 
 		return classSignature;
 	}
@@ -110,13 +110,13 @@ public class ClassNodeHelper {
 	public static String generateMethodSignatureDuplicateMessage(
 			ClassNode classNode, 
 			MethodNode duplicateMethodNode,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
 
-		String classSignature = getSignature(classNode, viewMode);
+		String classSignature = getSignature(classNode, extLanguage);
 
 		//  TODO SIMPLE-VIEW move to MethodNodeHelper
-		String methodSignature = duplicateMethodNode.createShortSignature(viewMode);
+		String methodSignature = duplicateMethodNode.createShortSignature(extLanguage);
 
 		String message =
 				"Class: " 
@@ -130,13 +130,13 @@ public class ClassNodeHelper {
 			ClassNode classNode, 
 			String methodNameToFind, 
 			List<String> parameterTypesToFind, 
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
 		List<MethodNode> methods = classNode.getMethods();
 
 		for (MethodNode methodNode : methods) {
 
-			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, viewMode);
+			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
 
 			String currentMethodName = methodNode.getName();
 

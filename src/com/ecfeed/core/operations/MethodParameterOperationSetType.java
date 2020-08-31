@@ -148,9 +148,9 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
 			
-			public ReverseSetTypeOperation(ExtLanguage viewMode) {
+			public ReverseSetTypeOperation(ExtLanguage extLanguage) {
 				
-				super(viewMode);
+				super(extLanguage);
 			}
 
 			private class StatementValueRestorer implements IStatementVisitor{
@@ -246,9 +246,9 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				MethodParameterNode target, 
 				String newType, 
 				ITypeAdapterProvider adapterProvider, 
-				ExtLanguage viewMode) {
+				ExtLanguage extLanguage) {
 			
-			super(target, newType, adapterProvider, viewMode);
+			super(target, newType, adapterProvider, extLanguage);
 
 			fMethodParameterNode = target;
 			fOriginalStatementValues = new HashMap<>();
@@ -428,12 +428,12 @@ public class MethodParameterOperationSetType extends BulkOperation {
 	public MethodParameterOperationSetType(
 			MethodParameterNode targetMethodParameterNode, 
 			String newType, 
-			ExtLanguage viewMode,
+			ExtLanguage extLanguage,
 			ITypeAdapterProvider adapterProvider) {
 
-		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, viewMode);
+		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguage);
 
-		fViewMode = viewMode;
+		fViewMode = extLanguage;
 		
 		if (newType == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");

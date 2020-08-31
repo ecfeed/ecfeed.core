@@ -24,9 +24,9 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			Collection<? extends AbstractNode> children, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		this(target, children, -1, adapterProvider, validate, viewMode);
+		this(target, children, -1, adapterProvider, validate, extLanguage);
 	}
 
 	public GenericAddChildrenOperation(
@@ -35,9 +35,9 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 
-		super(OperationNames.ADD_CHILDREN, false, target, target, viewMode);
+		super(OperationNames.ADD_CHILDREN, false, target, target, extLanguage);
 
 		for (AbstractNode child : children) {
 			IModelOperation operation;

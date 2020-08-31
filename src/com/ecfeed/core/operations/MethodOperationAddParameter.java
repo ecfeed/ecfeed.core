@@ -34,9 +34,9 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 			MethodNode methodNode, 
 			MethodParameterNode methodParameterNode, 
 			int index,
-			ExtLanguage viewMode) {
+			ExtLanguage extLanguage) {
 		
-		super(methodNode, methodParameterNode, index, true, viewMode);
+		super(methodNode, methodParameterNode, index, true, extLanguage);
 		
 		fRemovedTestCases = new ArrayList<TestCaseNode>(methodNode.getTestCases());
 		fMethodNode = methodNode;
@@ -44,18 +44,18 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage viewMode) {
-		this(target, parameter, -1, viewMode);
+	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
+		this(target, parameter, -1, extLanguage);
 	}
 
 	@Override
 	public void execute() throws ModelOperationException {
 		
-		ExtLanguage viewMode = getViewMode();
+		ExtLanguage extLanguage = getViewMode();
 		
-		List<String> types = MethodNodeHelper.getMethodParameterTypes(fMethodNode, viewMode);
+		List<String> types = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
 		
-		String parameterType = AbstractParameterNodeHelper.createTypeLabel(fMethodParameterNode.getType(), viewMode);
+		String parameterType = AbstractParameterNodeHelper.createTypeLabel(fMethodParameterNode.getType(), extLanguage);
 		
 		types.add(fNewIndex, parameterType);
 		
@@ -63,13 +63,13 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		
 		if (parentClassNode != null) { 
 				
-			MethodNode foundMethodNode = ClassNodeHelper.findMethod(parentClassNode, fMethodNode.getName(), types, viewMode);
+			MethodNode foundMethodNode = ClassNodeHelper.findMethod(parentClassNode, fMethodNode.getName(), types, extLanguage);
 			
 			if (foundMethodNode != null) {
 				
 				ModelOperationException.report(
 						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
-								parentClassNode, foundMethodNode, viewMode));
+								parentClassNode, foundMethodNode, extLanguage));
 			}
 		}
 		
@@ -84,8 +84,8 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 	
 	private class MethodReverseOperation extends ReverseOperation{
 
-		public MethodReverseOperation(ExtLanguage viewMode) {
-			super(fMethodNode, fMethodParameterNode, viewMode);
+		public MethodReverseOperation(ExtLanguage extLanguage) {
+			super(fMethodNode, fMethodParameterNode, extLanguage);
 		}
 
 		@Override

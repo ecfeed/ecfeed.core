@@ -14,9 +14,9 @@ import com.ecfeed.core.model.ModelOperationException;
 
 public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
 
-	public static String adjustTextToConvention(String text, ExtLanguage viewMode) throws ModelOperationException { // use in operations only
+	public static String adjustTextToConvention(String text, ExtLanguage extLanguage) throws ModelOperationException { // use in operations only
 
-		if (viewMode == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguage.SIMPLE) {
 
 			if (text.contains("_")) {
 				ModelOperationException.report("Underline chars are not allowed in simple view.");
@@ -29,9 +29,9 @@ public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
 	}
 
 	// TODO SIMPLE-VIEW - make method more general
-	public static String getNewNameInJavaConvention(String newName, ExtLanguage viewMode)  {
+	public static String getNewNameInJavaConvention(String newName, ExtLanguage extLanguage)  {
 
-		if (viewMode == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguage.SIMPLE) {
 
 			String result = SimpleTypeHelper.convertTextFromSimpleToJavaConvention(newName);
 
@@ -42,27 +42,27 @@ public class CoreViewModeHelper { // TODO - SIMPLE-VIEW rename
 	}
 
 	// TODO SIMPLE-VIEW rename
-	public static String convertTextToConvention(String text, ExtLanguage viewMode) {
+	public static String convertTextToConvention(String text, ExtLanguage extLanguage) {
 
-		if (viewMode == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguage.SIMPLE) {
 			text = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(text);
 		}
 
 		return text;
 	}
 
-	public static String convertTypeToConvention(String type, ExtLanguage viewMode) {
+	public static String convertTypeToConvention(String type, ExtLanguage extLanguage) {
 
-		if (viewMode == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguage.SIMPLE) {
 			type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
 		}
 
 		return type;
 	}
 
-	public static String convertSpecialValueToConvention(String value, String type, ExtLanguage viewMode) {
+	public static String convertSpecialValueToConvention(String value, String type, ExtLanguage extLanguage) {
 		
-		if (viewMode == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguage.SIMPLE) {
 			value = JavaTypeHelper.convertConditionallySpecialValue(type, value);
 		}
 		

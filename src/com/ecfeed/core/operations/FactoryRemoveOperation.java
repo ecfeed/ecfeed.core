@@ -68,10 +68,10 @@ public class FactoryRemoveOperation {
 		private ITypeAdapterProvider fAdapterProvider;
 		ExtLanguage fViewMode;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguage viewMode) {
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguage extLanguage) {
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
-			fViewMode = viewMode;
+			fViewMode = extLanguage;
 		}
 
 		@Override
@@ -119,9 +119,9 @@ public class FactoryRemoveOperation {
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguage viewMode){
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguage extLanguage){
 		try {
-			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, viewMode));
+			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, extLanguage));
 		} catch (Exception e) {
 			return new UnsupportedModelOperation();
 		}
