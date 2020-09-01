@@ -55,7 +55,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			
-			String newNameInJavaConvention = ExtLanguageHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
+			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
 			
 			String[] tokens = newNameInJavaConvention.split("\\.");
 			
@@ -96,7 +96,7 @@ public class FactoryRenameOperation {
 			
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			String newNameInJavaConvention = ExtLanguageHelper.getNewNameInJavaConvention(fNewName, fExtLanguage);
+			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
 			
 			if (!ClassNodeHelper.isNewMethodSignatureValid(
 					targetMethodNode.getClassNode(), 
@@ -189,7 +189,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName)throws ModelOperationException{
 			
-			newName = ExtLanguageHelper.getNewNameInJavaConvention(newName, fExtLanguage);
+			newName = ExtLanguageHelper.convertTextFromExtToIntrLanguage(newName, fExtLanguage);
 			
 			if(getOwnNode().getSibling(newName) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);

@@ -38,7 +38,7 @@ public class ChoiceNodeHelper {
 	public static String createLabel(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String qualifiedName = choiceNode.getQualifiedName();
-		qualifiedName =  ExtLanguageHelper.convertTextToConvention(qualifiedName, extLanguage);
+		qualifiedName =  ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
 
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;

@@ -14,6 +14,7 @@ import com.ecfeed.core.model.ModelOperationException;
 
 public class ExtLanguageHelper {
 
+	// TODO SIMPLE-VIEW ??
 	public static String adjustTextToConvention(String text, ExtLanguage extLanguage) throws ModelOperationException { // use in operations only
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -28,21 +29,16 @@ public class ExtLanguageHelper {
 		return text;
 	}
 
-	// TODO SIMPLE-VIEW - make method more general
-	public static String getNewNameInJavaConvention(String newName, ExtLanguage extLanguage)  {
+	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-
-			String result = SimpleTypeHelper.convertTextFromSimpleToJavaConvention(newName);
-
-			return result; 
+			text = SimpleTypeHelper.convertTextFromSimpleToJavaConvention(text);
 		}
 
-		return newName;
+		return text;
 	}
 
-	// TODO SIMPLE-VIEW rename
-	public static String convertTextToConvention(String text, ExtLanguage extLanguage) {
+	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			text = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(text);
@@ -51,7 +47,7 @@ public class ExtLanguageHelper {
 		return text;
 	}
 
-	public static String convertTypeToConvention(String type, ExtLanguage extLanguage) {
+	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
@@ -60,10 +56,11 @@ public class ExtLanguageHelper {
 		return type;
 	}
 
+	// TODO SIMPLE-VIEW rename
 	public static String convertSpecialValueToConvention(String value, String type, ExtLanguage extLanguage) {
 		
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			value = JavaTypeHelper.convertConditionallySpecialValue(type, value);
+			value = JavaTypeHelper.convertSpecialValueToSimpleLanguage(type, value);
 		}
 		
 		return value;

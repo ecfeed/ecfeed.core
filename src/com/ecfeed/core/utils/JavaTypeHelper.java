@@ -156,7 +156,7 @@ public final class JavaTypeHelper {
 		}
 	}
 	
-	public static String convertConditionallySpecialValue(String typeName, String value) { // TODO SIMPLE-VIEW test
+	public static String convertSpecialValueToSimpleLanguage(String typeName, String value) { // TODO SIMPLE-VIEW test
 		
 		if (isByteTypeName(typeName)) {
 			return convertConditionallySpecialValueToByteTxt(value);

@@ -102,7 +102,7 @@ public class ClassNodeHelper {
 	public static String getSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String classSignature = classNode.getName();
-		classSignature = ExtLanguageHelper.convertTextToConvention(classSignature, extLanguage);
+		classSignature = ExtLanguageHelper.convertTextFromIntrToExtLanguage(classSignature, extLanguage);
 
 		return classSignature;
 	}

@@ -29,7 +29,7 @@ public class MethodNodeHelper {
 			List<String> parameterNames, // TODO SIMPLE-VIEW take names from method parameters
 			ExtLanguage extLanguage, boolean isExpectedDecorationAdded) {
 
-		fullName = ExtLanguageHelper.convertTextToConvention(fullName, extLanguage);
+		fullName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(fullName, extLanguage);
 
 		String signature = new String(fullName) + "(";
 		String type;
@@ -43,12 +43,12 @@ public class MethodNodeHelper {
 			}
 
 			type = types.get(paramIndex);
-			type = ExtLanguageHelper.convertTypeToConvention(type, extLanguage);
+			type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 
 			signature += type;
 			signature += " ";
 			String parameterName = parameterNames.get(paramIndex);
-			parameterName = ExtLanguageHelper.convertTextToConvention(parameterName, extLanguage);
+			parameterName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterName, extLanguage);
 
 			signature += parameterName;
 
@@ -113,7 +113,7 @@ public class MethodNodeHelper {
 
 			String type = parameter.getType();
 
-			type = ExtLanguageHelper.convertTextToConvention(type, extLanguage);
+			type = ExtLanguageHelper.convertTextFromIntrToExtLanguage(type, extLanguage);
 
 			result.add(type);
 		}

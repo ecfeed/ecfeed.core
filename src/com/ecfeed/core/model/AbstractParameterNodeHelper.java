@@ -18,7 +18,7 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
 		String name = abstractParameterNode.getName();
-		name = ExtLanguageHelper.convertTextToConvention(name, extLanguage);
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
 
 		String type = abstractParameterNode.getType();
 		type = createTypeLabel(type, extLanguage);
@@ -30,7 +30,7 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String createTypeLabel(String javaType, ExtLanguage extLanguage) {
 
-		String type = ExtLanguageHelper.convertTypeToConvention(javaType, extLanguage);
+		String type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(javaType, extLanguage);
 		return type;
 	}
 }
