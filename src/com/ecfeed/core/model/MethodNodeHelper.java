@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.operations.OperationMessages;
-import com.ecfeed.core.utils.CoreExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -29,7 +29,7 @@ public class MethodNodeHelper {
 			List<String> parameterNames, // TODO SIMPLE-VIEW take names from method parameters
 			ExtLanguage extLanguage, boolean isExpectedDecorationAdded) {
 
-		fullName = CoreExtLanguageHelper.convertTextToConvention(fullName, extLanguage);
+		fullName = ExtLanguageHelper.convertTextToConvention(fullName, extLanguage);
 
 		String signature = new String(fullName) + "(";
 		String type;
@@ -43,12 +43,12 @@ public class MethodNodeHelper {
 			}
 
 			type = types.get(paramIndex);
-			type = CoreExtLanguageHelper.convertTypeToConvention(type, extLanguage);
+			type = ExtLanguageHelper.convertTypeToConvention(type, extLanguage);
 
 			signature += type;
 			signature += " ";
 			String parameterName = parameterNames.get(paramIndex);
-			parameterName = CoreExtLanguageHelper.convertTextToConvention(parameterName, extLanguage);
+			parameterName = ExtLanguageHelper.convertTextToConvention(parameterName, extLanguage);
 
 			signature += parameterName;
 
@@ -113,7 +113,7 @@ public class MethodNodeHelper {
 
 			String type = parameter.getType();
 
-			type = CoreExtLanguageHelper.convertTextToConvention(type, extLanguage);
+			type = ExtLanguageHelper.convertTextToConvention(type, extLanguage);
 
 			result.add(type);
 		}

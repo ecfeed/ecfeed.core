@@ -12,7 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.CoreExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -101,7 +101,7 @@ public class ClassNodeHelper {
 	public static String getSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String classSignature = classNode.getName();
-		classSignature = CoreExtLanguageHelper.convertTextToConvention(classSignature, extLanguage);
+		classSignature = ExtLanguageHelper.convertTextToConvention(classSignature, extLanguage);
 
 		return classSignature;
 	}

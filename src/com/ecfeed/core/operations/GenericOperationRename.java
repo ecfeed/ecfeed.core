@@ -22,7 +22,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.ExtLanguageModelVerifier;
-import com.ecfeed.core.utils.CoreExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -56,7 +56,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		String newName = fNewName;
 
-		newName = CoreExtLanguageHelper.adjustTextToConvention(newName, fExtLanguage);
+		newName = ExtLanguageHelper.adjustTextToConvention(newName, fExtLanguage);
 
 		verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget); // TODO SIMPLE-VIEW for source view simple error messages should be different
 
