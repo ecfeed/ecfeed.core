@@ -90,7 +90,7 @@ public class MethodNode extends ParametersParentNode {
 		return createSignatureIntr(extLanguage, true);
 	}
 
-	public String createShortSignature(ExtLanguage extLanguage) {
+	public String createShortSignature(ExtLanguage extLanguage) { // TODO SIMPLE-VIEW - rename to createSignature 
 		
 		return createSignatureIntr(ExtLanguage.JAVA, false);
 	}

@@ -98,6 +98,7 @@ public class ClassNodeHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW - inconsistent - creating method signature is in MethodNode class
 	public static String getSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String classSignature = classNode.getName();
