@@ -99,10 +99,27 @@ public class MethodNode extends ParametersParentNode {
 		
 		return MethodNodeHelper.createSignature(
 				getName(),
-				getMethodParameters(),
 				getParameterTypes(),
 				getParametersNames(),
-				extLanguage, isExpectedDecorationAdded);
+				getExpectedParametersFlags(getMethodParameters()),
+				isExpectedDecorationAdded, extLanguage);
+	}
+
+	private List<Boolean> getExpectedParametersFlags(List<MethodParameterNode> methodParameters) {
+		
+		List<Boolean> expectedFlags = new ArrayList<Boolean>();
+		
+		for(MethodParameterNode methodParameter : methodParameters) {
+			
+			if (methodParameter.isExpected()) {
+				expectedFlags.add(true);
+			} else {
+				expectedFlags.add(false);
+			}
+			
+		}
+		
+		return expectedFlags;
 	}
 
 	public String createLongSignature(ExtLanguage extLanguage) {

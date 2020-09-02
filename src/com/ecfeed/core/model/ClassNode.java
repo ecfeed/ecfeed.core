@@ -128,17 +128,21 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	public boolean addMethod(MethodNode method, int index) {
-		if(index >= 0 && index <= fMethods.size()){
+		
+		// TODO SIMPLE-VIEW - check if signature is duplicated and throw
+		
+		if (index >= 0 && index <= fMethods.size()) {
 			fMethods.add(index, method);
 			method.setParent(this);
 			boolean result = fMethods.indexOf(method) == index;
 			registerChange();
 			return result;
 		}
+		
 		return false;
 	}
 
-	public MethodNode getMethod(String name, List<String> argTypes) { //TODO - simple view > findMethod or delete (use from classNodeHelper)
+	public MethodNode getMethod(String name, List<String> argTypes) { //TODO - SIMPLE-VIEW > findMethod or delete (use from classNodeHelper)
 		for (MethodNode methodNode : getMethods()) {
 			List<String> args = new ArrayList<String>();
 			for (AbstractParameterNode arg : methodNode.getParameters()){

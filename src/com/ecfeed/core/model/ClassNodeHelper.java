@@ -53,18 +53,21 @@ public class ClassNodeHelper {
 	}
 
 	public static boolean isNewMethodSignatureValid(
-			ClassNode parent, 
+			ClassNode classNode, 
 			String methodName, 
 			List<String> argTypes,
 			List<String> problems) {
 
-		if (parent.getMethod(methodName, argTypes) != null) {
+		if (classNode.getMethod(methodName, argTypes) != null) {
+			// TODO SIMPLE-VIEW add problem duplicate signature
+			// problems.add(createMethodSignatureDuplicateMessage(classNode, methodNode, extLanguage));
 			return false;
 		}
 
 		return MethodNodeHelper.validateMethodName(methodName, problems);
 	}
 
+	// TODO SIMPLE-VIEW remove ??
 	public static void conditionallyAddDuplicateMethodSignatureProblem(
 			ClassNode classNode, String methodName, List<String> argTypes, List<String> problems, ExtLanguage extLanguage) {
 
@@ -107,6 +110,7 @@ public class ClassNodeHelper {
 	}
 
 
+	// TODO SIMPLE-VIEW remove ?
 	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode, 
 			MethodNode duplicateMethodNode,

@@ -257,10 +257,6 @@ public final class SimpleTypeHelper {
 
 	public static String convertTextFromJavaToSimpleConvention(String text) {
 
-		if (text.contains(" ")) {
-			ExceptionHelper.reportRuntimeException("Space chars are not allowed.");
-		}
-
 		String result = text.replaceAll("_", " ");
 
 		return result;

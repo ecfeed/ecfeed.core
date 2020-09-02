@@ -24,10 +24,10 @@ public class MethodNodeHelper {
 
 	public static String createSignature(
 			String fullName,
-			List<MethodParameterNode> methodParameters,
-			List<String> types, // TODO SIMPLE-VIEW take types from method parameters
-			List<String> parameterNames, // TODO SIMPLE-VIEW take names from method parameters
-			ExtLanguage extLanguage, boolean isExpectedDecorationAdded) {
+			List<String> types,
+			List<String> parameterNames, 
+			List<Boolean> expectedFlags, 
+			boolean isExpectedDecorationAdded, ExtLanguage extLanguage) {
 
 		fullName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(fullName, extLanguage);
 
@@ -37,7 +37,7 @@ public class MethodNodeHelper {
 		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {
 
 			if (isExpectedDecorationAdded) {
-				if (methodParameters.get(paramIndex).isExpected()) {
+				if (expectedFlags.get(paramIndex) == true) {
 					signature += "[e]";
 				}
 			}
