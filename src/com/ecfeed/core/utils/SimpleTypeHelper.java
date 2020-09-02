@@ -19,7 +19,7 @@ public final class SimpleTypeHelper {
 
 	public static final String SPECIAL_VALUE_NEGATIVE_INF_SIMPLE = "-Infinity";
 	public static final String SPECIAL_VALUE_POSITIVE_INF_SIMPLE = "Infinity";
-	
+
 	public static String DEFAULT_PACKAGE = "(default package)";
 
 	private static final String[] SUPPORTED_SIMPLE_VIEW_TYPES = new String[] {
@@ -27,17 +27,17 @@ public final class SimpleTypeHelper {
 			TYPE_NAME_NUMBER,
 			TYPE_NAME_LOGICAL
 	};
-	
+
 	public static String convertConditionallyJavaTypeToSimpleType(String javaType, ExtLanguage extLanguage) {
-		
+
 		if (extLanguage == ExtLanguage.JAVA) {
 			return javaType;
 		} 
-		
+
 		String result = SimpleTypeHelper.convertJavaTypeToSimpleType(javaType);
 		return result;
 	}
-	
+
 	public static boolean isSimpleType(String typeName) {
 
 		if (typeName == null) {
@@ -48,10 +48,10 @@ public final class SimpleTypeHelper {
 	}
 
 	public static String[] getSupportedSimpleViewTypes() {
-		
+
 		return SUPPORTED_SIMPLE_VIEW_TYPES;
 	}
-	
+
 	public static String convertJavaTypeToSimpleType(String javaType) {
 
 		if (javaType.equals(JavaTypeHelper.TYPE_NAME_BYTE)) {
@@ -94,18 +94,18 @@ public final class SimpleTypeHelper {
 		if (javaType.equals(TYPE_NAME_NUMBER)) {
 			return JavaTypeHelper.TYPE_NAME_DOUBLE;
 		}
-		
+
 		if (javaType.equals(TYPE_NAME_LOGICAL)) {
 			return JavaTypeHelper.getBooleanTypeName();
 		}
-		
+
 		if (javaType.equals(TYPE_NAME_TEXT)) {
 			return JavaTypeHelper.getStringTypeName();
 		}
-		
+
 		return null;
 	}
-	
+
 	public static String createMethodSimpleSignature(MethodNode methodNode) {
 
 		return methodNode.getName() + "(" + getSimpleParameters(methodNode) + ")";
@@ -136,8 +136,8 @@ public final class SimpleTypeHelper {
 	private static String createSimpleParameterSignature(AbstractParameterNode abstractParameterNode) {
 
 		String result = convertJavaTypeToSimpleType(abstractParameterNode.getType()); 
-//		result += " ";
-//		result += abstractParameterNode.getName();
+		//		result += " ";
+		//		result += abstractParameterNode.getName();
 
 		return result;
 	}
@@ -256,20 +256,28 @@ public final class SimpleTypeHelper {
 	}	
 
 	public static String convertTextFromJavaToSimpleConvention(String text) {
-		
+
+		if (text.contains(" ")) {
+			ExceptionHelper.reportRuntimeException("Space chars are not allowed.");
+		}
+
 		String result = text.replaceAll("_", " ");
 
 		return result;
 	}
 
-	
+
 	public static String convertTextFromSimpleToJavaConvention(String text1) {
-		
+
+		if (text1.contains("_")) {
+			ExceptionHelper.reportRuntimeException("Underline chars are not allowed in simple view.");
+		}
+
 		String result = text1.replace(" ", "_");
-		
+
 		return result;
 	}
-	
+
 }
 
 

@@ -54,7 +54,7 @@ public class ChoiceNodeHelper {
 		String type = choiceNode.getParameter().getType();
 
 		String value = choiceNode.getValueString();
-		value = ExtLanguageHelper.convertSpecialValueToConvention(value, type, extLanguage);
+		value = ExtLanguageHelper.convertSpecialValueFromIntrToExtLanguage(value, type, extLanguage);
 
 		return value;
 	}

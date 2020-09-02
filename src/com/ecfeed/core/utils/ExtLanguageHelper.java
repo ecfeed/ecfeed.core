@@ -10,24 +10,7 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.ModelOperationException;
-
 public class ExtLanguageHelper {
-
-	// TODO SIMPLE-VIEW ??
-	public static String adjustTextToConvention(String text, ExtLanguage extLanguage) throws ModelOperationException { // use in operations only
-
-		if (extLanguage == ExtLanguage.SIMPLE) {
-
-			if (text.contains("_")) {
-				ModelOperationException.report("Underline chars are not allowed in simple view.");
-			}
-
-			text = text.replace(" ", "_");
-		}
-
-		return text;
-	}
 
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
@@ -56,14 +39,13 @@ public class ExtLanguageHelper {
 		return type;
 	}
 
-	// TODO SIMPLE-VIEW rename
-	public static String convertSpecialValueToConvention(String value, String type, ExtLanguage extLanguage) {
-		
+	public static String convertSpecialValueFromIntrToExtLanguage(String value, String type, ExtLanguage extLanguage) {
+
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			value = JavaTypeHelper.convertSpecialValueToSimpleLanguage(type, value);
 		}
-		
+
 		return value;
 	}
-	
+
 }
