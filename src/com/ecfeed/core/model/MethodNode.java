@@ -79,6 +79,21 @@ public class MethodNode extends ParametersParentNode {
 		registerChange();
 	}	
 
+	public List<String> getParameterTypes() {
+		
+		List<String> parameterTypes = new ArrayList<String>();
+		
+		List<AbstractParameterNode> parameters = getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+			
+			String parameterType = abstractParameterNode.getType();
+			parameterTypes.add(parameterType);
+		}
+		
+		return parameterTypes;
+	}
+	
 	@Override
 	public String toString() {
 
@@ -192,12 +207,18 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public MethodNode getSibling(List<String> argTypes){
-		ClassNode parent = getClassNode();
-		if(parent == null) return null;
-		MethodNode sibling = parent.getMethod(getName(), argTypes);
-		if(sibling == null || sibling == this){
+		
+		ClassNode classNode = getClassNode();
+		
+		if (classNode == null) 
+			return null;
+		
+		MethodNode sibling = classNode.findMethodWithTheSameSignature(getName(), argTypes);
+		
+		if (sibling == null || sibling == this) {
 			return null;
 		}
+		
 		return sibling;
 	}
 

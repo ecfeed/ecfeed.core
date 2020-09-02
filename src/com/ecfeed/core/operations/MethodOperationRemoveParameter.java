@@ -100,7 +100,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			types.remove(index);
 			
 			return ClassNodeHelper.isNewMethodSignatureValid(
-					getMethodTarget().getClassNode(), getMethodTarget().getName(), types);
+					getMethodTarget().getClassNode(), getMethodTarget().getName(), types, getExtLanguage());
 		}
 	}
 

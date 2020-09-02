@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.BooleanHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ClassNode extends GlobalParametersParentNode {
@@ -128,9 +129,12 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	public boolean addMethod(MethodNode method, int index) {
+
+		if (findMethodWithTheSameSignature(method.getName(), method.getParameterTypes()) != null) {
 		
-		// TODO SIMPLE-VIEW - check if signature is duplicated and throw
-		
+			ExceptionHelper.reportRuntimeException("Cannot add method. Method with identical signature already exists.");
+		}
+
 		if (index >= 0 && index <= fMethods.size()) {
 			fMethods.add(index, method);
 			method.setParent(this);
@@ -138,11 +142,12 @@ public class ClassNode extends GlobalParametersParentNode {
 			registerChange();
 			return result;
 		}
-		
+
 		return false;
 	}
 
-	public MethodNode getMethod(String name, List<String> argTypes) { //TODO - SIMPLE-VIEW > findMethod or delete (use from classNodeHelper)
+	public MethodNode findMethodWithTheSameSignature(String name, List<String> argTypes) {
+
 		for (MethodNode methodNode : getMethods()) {
 			List<String> args = new ArrayList<String>();
 			for (AbstractParameterNode arg : methodNode.getParameters()){

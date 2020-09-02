@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.operations;
 
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -34,12 +35,12 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 		setOneNodeToSelect(fTarget);
 
-		// TODO SIMPLE-VIEW  check - use method from helper instead of getMethod
-		if(fTarget.getClassNode().getMethod(fSource.getName(), fSource.getParameterTypes()) != null){
+		ClassNode classNode = fTarget.getClassNode();
+		if(ClassNodeHelper.findMethod(classNode, fSource.getName(), fSource.getParameterTypes(), getExtLanguage()) != null){
 			
 			ModelOperationException.report(
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
-							fTarget.getClassNode(), fTarget, getExtLanguage()));
+							classNode, fTarget, getExtLanguage()));
 		}
 
 		if(fTarget.getParameterTypes().equals(fSource.getParameterTypes()) == false){

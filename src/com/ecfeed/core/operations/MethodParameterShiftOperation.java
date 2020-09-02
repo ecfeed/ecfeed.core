@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -83,7 +84,11 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		List<String> parameterTypes = method.getParameterTypes();
 		List<Integer> indices = indices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);
-		MethodNode sibling = method.getClassNode().getMethod(method.getName(), parameterTypes);
+		
+		ClassNode classNode = method.getClassNode();
+		
+		MethodNode sibling = ClassNodeHelper.findMethod(classNode, method.getName(), parameterTypes, getExtLanguage());
+		
 		if(sibling != null && sibling != method){
 			return false;
 		}

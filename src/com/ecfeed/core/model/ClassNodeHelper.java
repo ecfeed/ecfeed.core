@@ -47,18 +47,19 @@ public class ClassNodeHelper {
 	}
 
 	public static boolean isNewMethodSignatureValid(
-			ClassNode parent, String methodName, List<String> argTypes) {
+			ClassNode parent, String methodName, List<String> argTypes, ExtLanguage extLanguage) {
 
-		return isNewMethodSignatureValid(parent, methodName, argTypes, null);
+		return isNewMethodSignatureValid(parent, methodName, argTypes, null, extLanguage);
 	}
 
 	public static boolean isNewMethodSignatureValid(
 			ClassNode classNode, 
 			String methodName, 
 			List<String> argTypes,
-			List<String> problems) {
+			List<String> problems,
+			ExtLanguage extLanguage) {
 
-		if (classNode.getMethod(methodName, argTypes) != null) {
+		if (findMethod(classNode, methodName, argTypes, extLanguage) != null) {
 			// TODO SIMPLE-VIEW add problem duplicate signature
 			// problems.add(createMethodSignatureDuplicateMessage(classNode, methodNode, extLanguage));
 			return false;
@@ -71,7 +72,7 @@ public class ClassNodeHelper {
 	public static void conditionallyAddDuplicateMethodSignatureProblem(
 			ClassNode classNode, String methodName, List<String> argTypes, List<String> problems, ExtLanguage extLanguage) {
 
-		MethodNode methodNode = classNode.getMethod(methodName, argTypes);
+		MethodNode methodNode = findMethod(classNode, methodName, argTypes, extLanguage);
 
 		if (methodNode != null) {
 
@@ -82,9 +83,10 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String generateNewMethodName(ClassNode classNode, String startMethodName, List<String> argTypes) {
+	public static String generateNewMethodName(
+			ClassNode classNode, String startMethodName, List<String> argTypes, ExtLanguage extLanguage) {
 
-		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes)) {
+		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes, extLanguage)) {
 			return startMethodName;
 		}
 
@@ -94,7 +96,7 @@ public class ClassNodeHelper {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes)) {
+			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes, extLanguage)) {
 				return newMethodName;
 			}
 		}

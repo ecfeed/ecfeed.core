@@ -52,7 +52,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		generateUniqeMethodName(fMethod);
 
 		if (!ClassNodeHelper.isNewMethodSignatureValid(
-				fClassNode, fMethod.getName(), fMethod.getParameterTypes(), problems)){
+				fClassNode, fMethod.getName(), fMethod.getParameterTypes(), problems, getExtLanguage())){
 			
 			// TODO SIMPLE-VIEW is method really duplicated ?? - error should be different
 			ClassNodeHelper.conditionallyAddDuplicateMethodSignatureProblem(
@@ -72,7 +72,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		
 		String newName = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNode.getName(), methodNode.getParameterTypes());
+						fClassNode, methodNode.getName(), methodNode.getParameterTypes(), getExtLanguage());
 		
 		methodNode.setName(newName);
 	}
