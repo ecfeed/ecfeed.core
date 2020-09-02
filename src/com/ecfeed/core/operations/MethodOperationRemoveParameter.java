@@ -72,7 +72,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 				MethodNode methodNode = (MethodNode) getOwnNode();
 				
 				ModelOperationException.report(
-						ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+						ClassNodeHelper.createMethodSignatureDuplicateMessage(
 								(ClassNode) getOwnNode().getParent(), methodNode, getExtLanguage()));
 			}
 			fOriginalTestCases.clear();

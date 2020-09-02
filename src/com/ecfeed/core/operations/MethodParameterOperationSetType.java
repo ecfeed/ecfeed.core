@@ -299,7 +299,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			}
 			
 			String message = 
-					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+					ClassNodeHelper.createMethodSignatureDuplicateMessage(
 							classNode, foundMethodNode, getExtLanguage());
 			
 			ModelOperationException.report(message);

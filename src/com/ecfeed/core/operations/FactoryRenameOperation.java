@@ -104,7 +104,8 @@ public class FactoryRenameOperation {
 					targetMethodNode.getParameterTypes(),
 					problems)) {
 				
-				ClassNodeHelper.updateNewMethodsSignatureProblemList(
+				// TODO SIMPLE-VIEW is method really duplicated ?? - error should be different
+				ClassNodeHelper.conditionallyAddDuplicateMethodSignatureProblem(
 						targetMethodNode.getClassNode(), 
 						newNameInJavaConvention, 
 						targetMethodNode.getParameterTypes(), 

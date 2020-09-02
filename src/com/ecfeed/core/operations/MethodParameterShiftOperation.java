@@ -60,7 +60,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
 
 			ModelOperationException.report(
-					ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+					ClassNodeHelper.createMethodSignatureDuplicateMessage(
 							method.getClassNode(),  method, getExtLanguage()));
 		}
 		List<Integer> indices = indices(fParameters, getShiftedElements());

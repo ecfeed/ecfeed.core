@@ -78,7 +78,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 			return;
 		}
 
-		ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(
+		ModelOperationException.report(ClassNodeHelper.createMethodSignatureDuplicateMessage(
 				classNode, foundMethodNode, extLanguage));
 	}
 

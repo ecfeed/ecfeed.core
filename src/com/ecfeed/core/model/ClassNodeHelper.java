@@ -65,16 +65,15 @@ public class ClassNodeHelper {
 		return MethodNodeHelper.validateMethodName(methodName, problems);
 	}
 
-	public static void updateNewMethodsSignatureProblemList(
-			ClassNode parent, String methodName, List<String> argTypes, List<String> problems, ExtLanguage extLanguage) {
+	public static void conditionallyAddDuplicateMethodSignatureProblem(
+			ClassNode classNode, String methodName, List<String> argTypes, List<String> problems, ExtLanguage extLanguage) {
 
-		// TODO SIMPLE-VIEW check
-		MethodNode methodNode = parent.getMethod(methodName, argTypes);
+		MethodNode methodNode = classNode.getMethod(methodName, argTypes);
 
 		if (methodNode != null) {
 
 			if (problems != null) {
-				problems.add(generateMethodSignatureDuplicateMessage(parent, methodNode, extLanguage));
+				problems.add(createMethodSignatureDuplicateMessage(classNode, methodNode, extLanguage));
 			}
 
 		}
@@ -108,7 +107,7 @@ public class ClassNodeHelper {
 	}
 
 
-	public static String generateMethodSignatureDuplicateMessage(
+	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode, 
 			MethodNode duplicateMethodNode,
 			ExtLanguage extLanguage) {
