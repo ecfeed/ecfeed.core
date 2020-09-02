@@ -107,7 +107,7 @@ public class MethodNode extends ParametersParentNode {
 
 	public String createShortSignature(ExtLanguage extLanguage) { // TODO SIMPLE-VIEW - rename to createSignature 
 		
-		return createSignatureIntr(ExtLanguage.JAVA, false);
+		return createSignatureIntr(extLanguage, false);
 	}
 	
 	private String createSignatureIntr(ExtLanguage extLanguage, boolean isExpectedDecorationAdded) {
