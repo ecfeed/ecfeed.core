@@ -39,6 +39,15 @@ public class ExtLanguageHelper {
 		return type;
 	}
 
+	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			type = SimpleTypeHelper.convertSimpleTypeToJavaType(type);
+		}
+
+		return type;
+	}
+	
 	public static String convertSpecialValueFromIntrToExtLanguage(String value, String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
