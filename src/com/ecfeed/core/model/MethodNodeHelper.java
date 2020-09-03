@@ -64,7 +64,7 @@ public class MethodNodeHelper {
 
 	public static String createSignature(
 			String fullName,
-			List<String> types,
+			List<String> parameterTypes,
 			List<String> parameterNames, 
 			List<Boolean> expectedFlags, 
 			boolean isExpectedDecorationAdded, ExtLanguage extLanguage) {
@@ -75,7 +75,7 @@ public class MethodNodeHelper {
 
 		String signaturesOfParameters = 
 				createSignaturesOfParameters(
-						types, parameterNames, expectedFlags, 
+						parameterTypes, parameterNames, expectedFlags, 
 						isExpectedDecorationAdded, extLanguage);
 
 		signature += signaturesOfParameters;
@@ -85,6 +85,7 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
+	// TODO SIMPLE-VIEW refactor
 	private static String createSignaturesOfParameters(
 			List<String> types, 
 			List<String> parameterNames,
@@ -97,7 +98,7 @@ public class MethodNodeHelper {
 
 		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {
 
-			if (isExpectedDecorationAdded) {
+			if (isExpectedDecorationAdded && expectedFlags != null) {
 				if (expectedFlags.get(paramIndex) == true) {
 					signature += "[e]";
 				}
@@ -107,11 +108,15 @@ public class MethodNodeHelper {
 			type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 
 			signature += type;
-			signature += " ";
-			String parameterName = parameterNames.get(paramIndex);
-			parameterName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterName, extLanguage);
 
-			signature += parameterName;
+			if (parameterNames != null) {
+
+				signature += " ";
+				String parameterName = parameterNames.get(paramIndex);
+				parameterName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterName, extLanguage);
+
+				signature += parameterName;
+			}
 
 			if (paramIndex < types.size() - 1) {
 				signature += ", ";

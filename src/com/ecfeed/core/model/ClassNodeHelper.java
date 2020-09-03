@@ -55,13 +55,31 @@ public class ClassNodeHelper {
 	public static boolean isNewMethodSignatureValid(
 			ClassNode classNode, 
 			String methodName, 
-			List<String> argTypes,
+			List<String> parameterTypes,
 			List<String> problems,
 			ExtLanguage extLanguage) {
 
-		if (findMethod(classNode, methodName, argTypes, extLanguage) != null) {
-			// TODO SIMPLE-VIEW add problem duplicate signature
-			// problems.add(createMethodSignatureDuplicateMessage(classNode, methodNode, extLanguage));
+		if (findMethod(classNode, methodName, parameterTypes, extLanguage) != null) {
+
+			String newMethodSignature =  
+
+					MethodNodeHelper.createSignature(
+							methodName,
+							parameterTypes,
+							null, 
+							null,
+							false, 
+							extLanguage);
+
+
+			String classSignature = createSignature(classNode, extLanguage);
+
+			String message =
+					"Class: " 
+							+ classSignature 
+							+ " already contains method with identical signature: " + newMethodSignature + ".";
+
+			problems.add(message);
 			return false;
 		}
 
