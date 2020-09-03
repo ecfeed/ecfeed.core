@@ -49,8 +49,33 @@ import com.ecfeed.core.utils.SystemLogger;
 import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodParameterOperationSetType extends BulkOperation {
-	
+
 	private ExtLanguage fExtLanguage;
+
+	public MethodParameterOperationSetType(
+			MethodParameterNode targetMethodParameterNode, 
+			String newType, 
+			ExtLanguage extLanguage,
+			ITypeAdapterProvider adapterProvider) {
+
+		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguage);
+
+		fExtLanguage = extLanguage;
+
+		if (newType == null) {
+			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
+		}
+
+		if (!JavaTypeHelper.isJavaType(newType)) {
+			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
+		}
+
+		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguage()));
+
+		if (targetMethodParameterNode.getMethod() != null) {
+			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getExtLanguage()));
+		}
+	}
 
 	private class SetTypeOperation extends AbstractParameterOperationSetType{
 
@@ -147,9 +172,9 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		}
 
 		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
-			
+
 			public ReverseSetTypeOperation(ExtLanguage extLanguage) {
-				
+
 				super(extLanguage);
 			}
 
@@ -247,7 +272,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				String newType, 
 				ITypeAdapterProvider adapterProvider, 
 				ExtLanguage extLanguage) {
-			
+
 			super(target, newType, adapterProvider, extLanguage);
 
 			fMethodParameterNode = target;
@@ -279,13 +304,13 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
 
 			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, fExtLanguage);
-			
+
 			String newParameterType = SimpleTypeHelper.convertConditionallyJavaTypeToSimpleType(getNewType(), fExtLanguage);
-			
+
 			parameterTypes.set(fMethodParameterNode.getMyIndex(), newParameterType);
 
 			ClassNode classNode = oldMethodNode.getClassNode();
-			
+
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethod(
 							classNode, oldMethodNode.getName(), parameterTypes, fExtLanguage);
@@ -297,11 +322,11 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			if (foundMethodNode == oldMethodNode) {
 				return;
 			}
-			
+
 			String message = 
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
 							classNode, foundMethodNode, getExtLanguage());
-			
+
 			ModelOperationException.report(message);
 		}
 
@@ -425,28 +450,4 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		}
 	}
 
-	public MethodParameterOperationSetType(
-			MethodParameterNode targetMethodParameterNode, 
-			String newType, 
-			ExtLanguage extLanguage,
-			ITypeAdapterProvider adapterProvider) {
-
-		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguage);
-
-		fExtLanguage = extLanguage;
-		
-		if (newType == null) {
-			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
-		}
-
-		if (!JavaTypeHelper.isJavaType(newType)) {
-			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
-		}
-
-		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguage()));
-
-		if (targetMethodParameterNode.getMethod() != null) {
-			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getExtLanguage()));
-		}
-	}
 }
