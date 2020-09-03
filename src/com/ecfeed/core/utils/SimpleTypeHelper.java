@@ -1,11 +1,6 @@
 package com.ecfeed.core.utils;
 
 import java.util.Arrays;
-import java.util.List;
-
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodNode;
 
 public final class SimpleTypeHelper {
 
@@ -28,16 +23,7 @@ public final class SimpleTypeHelper {
 			TYPE_NAME_LOGICAL
 	};
 
-	// TODO SIMPLE-VIEW remove and use method from ExtLanguageHelper
-	public static String convertConditionallyJavaTypeToSimpleType(String javaType, ExtLanguage extLanguage) {
-
-		if (extLanguage == ExtLanguage.JAVA) {
-			return javaType;
-		} 
-
-		String result = SimpleTypeHelper.convertJavaTypeToSimpleType(javaType);
-		return result;
-	}
+	// TODO SIMPLE-VIEW test
 
 	public static boolean isSimpleType(String typeName) {
 
@@ -105,133 +91,6 @@ public final class SimpleTypeHelper {
 		}
 
 		return null;
-	}
-
-	// TODO SIMPLE-VIEW remove all types of nodes from this file
-	
-	public static String createMethodSimpleSignature(MethodNode methodNode) {
-
-		return methodNode.getName() + "(" + getSimpleParameters(methodNode) + ")";
-	}
-
-	private static String getSimpleParameters(MethodNode methodNode) {
-
-		List<AbstractParameterNode> parameters = methodNode.getParameters();
-
-		String result = ""; 
-
-		int countOfParameters = parameters.size();
-
-		for (int index = 0; index < countOfParameters; index++) {
-
-			AbstractParameterNode abstractParameterNode = parameters.get(index);
-
-			result += createSimpleParameterSignature(abstractParameterNode);
-
-			if (index < countOfParameters - 1) {
-				result += ", ";
-			}
-		}
-
-		return result;
-	}
-
-	private static String createSimpleParameterSignature(AbstractParameterNode abstractParameterNode) {
-
-		String result = convertJavaTypeToSimpleType(abstractParameterNode.getType()); 
-		//		result += " ";
-		//		result += abstractParameterNode.getName();
-
-		return result;
-	}
-
-	// TODO SIMPLE-VIEW
-	public static void convertSpecialChoicesJavaToSimpleByte(AbstractParameterNode node) {
-		for (ChoiceNode choiceNode : node.getAllChoices()) {
-			String valueString = choiceNode.getValueString();
-
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-				choiceNode.setValueString(Byte.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-				choiceNode.setValueString(Byte.MAX_VALUE + "");
-			} 
-		}
-	}
-
-	public static void convertSpecialChoicesJavaToSimpleShort(AbstractParameterNode node) {
-		for (ChoiceNode choiceNode : node.getAllChoices()) {
-			String valueString = choiceNode.getValueString();
-
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-				choiceNode.setValueString(Short.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-				choiceNode.setValueString(Short.MAX_VALUE + "");
-			} 
-		}
-	}
-
-	public static void convertSpecialChoicesJavaToSimpleInt(AbstractParameterNode node) {
-		for (ChoiceNode choiceNode : node.getAllChoices()) {
-			String valueString = choiceNode.getValueString();
-
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-				choiceNode.setValueString(Integer.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-				choiceNode.setValueString(Integer.MAX_VALUE + "");
-			} 
-		}
-	}
-
-	public static void convertSpecialChoicesJavaToSimpleLong(AbstractParameterNode node) {
-		for (ChoiceNode choiceNode : node.getAllChoices()) {
-			String valueString = choiceNode.getValueString();
-
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-				choiceNode.setValueString(Long.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-				choiceNode.setValueString(Long.MAX_VALUE + "");
-			} 
-		}
-	}
-
-	public static void convertSpecialChoicesJavaToSimpleFloat(AbstractParameterNode node) {
-		for (ChoiceNode choiceNode : node.getAllChoices()) {
-			String valueString = choiceNode.getValueString();
-
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-				choiceNode.setValueString(Float.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-				choiceNode.setValueString(Float.MAX_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
-				choiceNode.setValueString("-" + Float.MIN_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
-				choiceNode.setValueString("-" + Float.MAX_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
-				choiceNode.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
-				choiceNode.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
-			} 
-		}
-	}
-
-	public static void convertSpecialChoicesJavaToSimpleDouble(AbstractParameterNode node) {
-		for (ChoiceNode choiceNode : node.getAllChoices()) {
-			String valueString = choiceNode.getValueString();
-
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-				choiceNode.setValueString(Double.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-				choiceNode.setValueString(Double.MAX_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
-				choiceNode.setValueString("-" + Double.MIN_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
-				choiceNode.setValueString("-" + Double.MAX_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
-				choiceNode.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
-				choiceNode.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
-			} 
-		}
 	}
 
 	public static boolean isTextTypeName(String typeName) {

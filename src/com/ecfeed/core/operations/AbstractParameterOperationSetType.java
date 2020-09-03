@@ -112,8 +112,6 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveChoices(fTarget);
 		saveValues(fTarget);
 
-		
-		// TODO SIMPLE-VIEW - check
 		if (!JavaTypeHelper.isJavaType(fNewType) && !SimpleTypeHelper.isSimpleType(fNewType) 
 				&& !JavaLanguageHelper.isValidTypeName(fNewType)) {
 			
