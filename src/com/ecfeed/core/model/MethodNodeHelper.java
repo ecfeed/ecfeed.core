@@ -25,7 +25,7 @@ import com.ecfeed.core.utils.ExtLanguage;
 public class MethodNodeHelper {
 
 
-	public static String createShortSignature(MethodNode methodNode, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW - rename to createSignature 
+	public static String createSignature(MethodNode methodNode, ExtLanguage extLanguage) { 
 
 		return MethodNodeHelper.createSignature(
 				methodNode,
@@ -51,7 +51,7 @@ public class MethodNodeHelper {
 
 	public static String createLongSignature(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		String shortSignature = createShortSignature(methodNode, extLanguage);
+		String shortSignature = createSignature(methodNode, extLanguage);
 
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
