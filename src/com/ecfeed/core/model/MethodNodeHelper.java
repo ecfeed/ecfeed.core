@@ -20,6 +20,8 @@ import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
 
+// TODO SIMPLE-VIEW unit tests
+
 public class MethodNodeHelper {
 
 
@@ -195,7 +197,7 @@ public class MethodNodeHelper {
 
 			String type = parameter.getType();
 
-			type = ExtLanguageHelper.convertTextFromIntrToExtLanguage(type, extLanguage);
+			type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 
 			result.add(type);
 		}

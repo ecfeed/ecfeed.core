@@ -16,6 +16,8 @@ import com.ecfeed.core.exception.GeneratorExceptionServer;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO SIMPLE-VIEW remove from code: ExceptionHelper.reportRuntimeException(e.getMessage()); and replace with ExceptionHelper.reportRuntimeException(e.getMessage()); or ExceptionHelper.reportRuntimeException(message2, e);
+
 public class ExceptionHelper {
 
 	public enum LineSeparationType {

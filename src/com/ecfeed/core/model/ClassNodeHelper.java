@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExtLanguageHelper;
@@ -46,10 +47,13 @@ public class ClassNodeHelper {
 		return false;
 	}
 
-	public static boolean isNewMethodSignatureValid(
-			ClassNode parent, String methodName, List<String> argTypes, ExtLanguage extLanguage) {
+	public static boolean isNewMethodSignatureValidAndUnique(
+			ClassNode classNode, 
+			String methodName, 
+			List<String> parameterTypes, 
+			ExtLanguage extLanguage) {
 
-		return isNewMethodSignatureValidAndUnique(parent, methodName, argTypes, null, extLanguage);
+		return isNewMethodSignatureValidAndUnique(classNode, methodName, parameterTypes, null, extLanguage);
 	}
 
 	public static boolean isNewMethodSignatureValidAndUnique(
@@ -61,25 +65,28 @@ public class ClassNodeHelper {
 
 		if (findMethod(classNode, methodName, parameterTypes, extLanguage) != null) {
 
-			String newMethodSignature =  
+			if (problems != null) {
+				String newMethodSignature =  
 
-					MethodNodeHelper.createSignature(
-							methodName,
-							parameterTypes,
-							null, 
-							null,
-							false, 
-							extLanguage);
+						MethodNodeHelper.createSignature(
+								methodName,
+								parameterTypes,
+								null, 
+								null,
+								false, 
+								extLanguage);
 
 
-			String classSignature = createSignature(classNode, extLanguage);
+				String classSignature = createSignature(classNode, extLanguage);
 
-			String message =
-					"Class: " 
-							+ classSignature 
-							+ " already contains method with identical signature: " + newMethodSignature + ".";
+				String message =
+						"Class: " 
+								+ classSignature 
+								+ " already contains method with identical signature: " + newMethodSignature + ".";
 
-			problems.add(message);
+				problems.add(message);
+			}
+
 			return false;
 		}
 
@@ -89,7 +96,7 @@ public class ClassNodeHelper {
 	public static String generateNewMethodName(
 			ClassNode classNode, String startMethodName, List<String> argTypes, ExtLanguage extLanguage) {
 
-		if (isNewMethodSignatureValid(classNode, startMethodName, argTypes, extLanguage)) {
+		if (isNewMethodSignatureValidAndUnique(classNode, startMethodName, argTypes, extLanguage)) {
 			return startMethodName;
 		}
 
@@ -99,13 +106,12 @@ public class ClassNodeHelper {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			if (isNewMethodSignatureValid(classNode, newMethodName, argTypes, extLanguage)) {
+			if (isNewMethodSignatureValidAndUnique(classNode, newMethodName, argTypes, extLanguage)) {
 				return newMethodName;
 			}
 		}
 	}
 
-	// TODO SIMPLE-VIEW - inconsistent - creating method signature is in MethodNode class
 	public static String createSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String classSignature = classNode.getName();
@@ -138,6 +144,8 @@ public class ClassNodeHelper {
 			List<String> parameterTypesToFind, 
 			ExtLanguage extLanguage) {
 
+		parameterTypesToFind = convertParameterTypesToExtLanguage(parameterTypesToFind, extLanguage);
+
 		List<MethodNode> methods = classNode.getMethods();
 
 		for (MethodNode methodNode : methods) {
@@ -154,5 +162,19 @@ public class ClassNodeHelper {
 		return null;
 	}
 
+	private static List<String> convertParameterTypesToExtLanguage(
+			List<String> parameterTypes,
+			ExtLanguage extLanguage) {
+
+		List<String> result = new ArrayList<String>();
+
+		for (String parameterType : parameterTypes) {
+
+			parameterType = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(parameterType, extLanguage);
+			result.add(parameterType);
+		}
+
+		return result;
+	}
 
 }

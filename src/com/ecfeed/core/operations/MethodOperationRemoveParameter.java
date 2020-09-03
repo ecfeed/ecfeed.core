@@ -13,13 +13,13 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.StringHelper;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
@@ -29,7 +29,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		private boolean fIgnoreDuplicates;
 
 		private class ReverseOperation extends AbstractReverseOperation {
-			
+
 			public ReverseOperation(ExtLanguage extLanguage) {
 				super(RemoveMethodParameterOperation.this, extLanguage);
 			}
@@ -59,30 +59,63 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 				MethodParameterNode parameter, 
 				boolean ignoreDuplicates,
 				ExtLanguage extLanguage) {
-			
+
 			this(target, parameter, extLanguage);
-			
+
 			fIgnoreDuplicates = ignoreDuplicates;
 		}
 
 		@Override
-		public void execute() throws ModelOperationException{
-			if(!fIgnoreDuplicates && validateNewSignature() == false){
-				
-				MethodNode methodNode = (MethodNode) getOwnNode();
-				
-				ModelOperationException.report(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
-								(ClassNode) getOwnNode().getParent(), methodNode, getExtLanguage()));
+		public void execute() throws ModelOperationException {
+
+			List<String> types = getMethodTarget().getParameterTypes();
+			int index = getParameter().getMyIndex();
+			types.remove(index);
+
+			List<String> problems = new ArrayList<String>();
+
+			if (!fIgnoreDuplicates && validateNewSignature(types, problems) == false) {
+
+				String message = createErrorMessage(problems);
+
+				ModelOperationException.report(message);
 			}
+
 			fOriginalTestCases.clear();
+
 			for(TestCaseNode tcase : getMethodTarget().getTestCases()){
 				fOriginalTestCases.add(tcase.getCopy(getMethodTarget()));
 			}
+
 			for(TestCaseNode tc : getMethodTarget().getTestCases()){
 				tc.getTestData().remove(getParameter().getMyIndex());
 			}
+
 			super.execute();
+		}
+
+		private String createErrorMessage(List<String> problems) {
+
+			String errorMessage = "";
+			boolean firstTime = true;
+
+
+			for (String problem : problems) {
+
+				if (!firstTime) {
+
+					errorMessage += " \n";
+					firstTime = false;
+				}
+
+				errorMessage += problem;
+			}
+
+			if (StringHelper.isNullOrEmpty(errorMessage)) {
+				errorMessage += "Unknown problem.";
+			}
+
+			return errorMessage;
 		}
 
 		@Override
@@ -94,28 +127,25 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			return (MethodNode) getOwnNode();
 		}
 
-		private boolean validateNewSignature() {
-			List<String> types = getMethodTarget().getParameterTypes();
-			int index = getParameter().getMyIndex();
-			types.remove(index);
-			
-			return ClassNodeHelper.isNewMethodSignatureValid(
-					getMethodTarget().getClassNode(), getMethodTarget().getName(), types, getExtLanguage());
+		private boolean validateNewSignature(List<String> newTypes, List<String> problems) {
+
+			return ClassNodeHelper.isNewMethodSignatureValidAndUnique(
+					getMethodTarget().getClassNode(), getMethodTarget().getName(), newTypes, problems, getExtLanguage());
 		}
 	}
 
 	public MethodOperationRemoveParameter(
 			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguage extLanguage) {
-		
+
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
-		
+
 		addOperation(new RemoveMethodParameterOperation(target, parameter, extLanguage));
-		
+
 		if(validate){
 			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
 		}
 	}
-	
+
 	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
 		this(target, parameter, true, extLanguage);
 	}
@@ -126,9 +156,9 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			boolean validate, 
 			boolean ignoreDuplicates, 
 			ExtLanguage extLanguage){
-		
+
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
-		
+
 		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, extLanguage));
 		if(validate){
 			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
