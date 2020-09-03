@@ -62,12 +62,12 @@ public class ClassNodeHelper {
 			List<String> parameterTypes,
 			List<String> problems,
 			ExtLanguage extLanguage) {
-		
+
 		if (findMethod(classNode, methodName, parameterTypes, extLanguage) != null) {
 
 			if (problems != null) {
 				String newMethodSignature =  
-	
+
 						MethodNodeHelper.createSignature(
 								methodName,
 								parameterTypes,
@@ -75,18 +75,18 @@ public class ClassNodeHelper {
 								null,
 								false, 
 								extLanguage);
-	
-	
+
+
 				String classSignature = createSignature(classNode, extLanguage);
-	
+
 				String message =
 						"Class: " 
 								+ classSignature 
 								+ " already contains method with identical signature: " + newMethodSignature + ".";
-	
+
 				problems.add(message);
 			}
-			
+
 			return false;
 		}
 
@@ -115,11 +115,9 @@ public class ClassNodeHelper {
 	public static String createSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String className = classNode.getName();
-		
-		if (extLanguage == ExtLanguage.SIMPLE) { // TODO SIMPLE-VIEW move check to ext language helper
-			className = StringHelper.getLastToken(className, ".");
-		}
-		
+
+		className = ExtLanguageHelper.convertClassFromIntrToExtLanguage(className, extLanguage);
+
 		String classSignature = ExtLanguageHelper.convertTextFromIntrToExtLanguage(className, extLanguage);
 
 		return classSignature;
@@ -172,9 +170,9 @@ public class ClassNodeHelper {
 			ExtLanguage extLanguage) {
 
 		List<String> result = new ArrayList<String>();
-		
+
 		for (String parameterType : parameterTypes) {
-			
+
 			parameterType = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(parameterType, extLanguage);
 			result.add(parameterType);
 		}
