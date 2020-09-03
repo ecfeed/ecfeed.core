@@ -84,187 +84,6 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		private ArrayList<TestCaseNode> fOriginalTestCases;
 		private ArrayList<ConstraintNode> fOriginalConstraints;
 
-		private class RealChoicesProvider implements IChoicesParentVisitor{
-
-			@Override
-			public Object visit(MethodParameterNode node) throws Exception {
-				return node.getRealChoices();
-			}
-
-			@Override
-			public Object visit(GlobalParameterNode node) throws Exception {
-				return node.getChoices();
-			}
-
-			@Override
-			public Object visit(ChoiceNode node) throws Exception {
-				return node.getChoices();
-			}
-
-		}
-
-		private class StatementAdapter implements IStatementVisitor{
-
-			@Override
-			public Object visit(StaticStatement statement) throws Exception {
-				return true;
-			}
-
-			@Override
-			public Object visit(StatementArray statement) throws Exception {
-				boolean success = true;
-				for(AbstractStatement child : statement.getChildren()) {
-					try {
-						success &= (boolean)child.accept(this);
-					} catch(Exception e) {
-						success = false;
-					}
-				}
-				return success;
-			}
-
-			@Override
-			public Object visit(ExpectedValueStatement statement) throws Exception {
-
-				boolean success = true;
-
-				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
-				String newValue = 
-						adapter.convert(
-								statement.getCondition().getValueString(), false, ERunMode.QUIET);
-
-				fOriginalStatementValues.put(statement, statement.getCondition().getValueString());
-				statement.getCondition().setValueString(newValue);
-				if (JavaTypeHelper.isUserType(getNewType())) {
-					success = newValue != null && fMethodParameterNode.getLeafChoiceValues().contains(newValue);
-				}
-				else{
-					success = newValue != null;
-				}
-				return success;
-			}
-
-			@Override
-			public Object visit(RelationStatement statement)
-					throws Exception {
-				return true;
-			}
-
-			@Override
-			public Object visit(LabelCondition condition) throws Exception {
-				return true;
-			}
-
-			@Override
-			public Object visit(ChoiceCondition condition) throws Exception {
-				return true;
-			}
-
-			@Override
-			public Object visit(ParameterCondition condition) throws Exception {
-				return true;
-			}
-
-			@Override
-			public Object visit(ValueCondition condition) throws Exception {
-				return null;
-			}
-		}
-
-		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
-
-			public ReverseSetTypeOperation(ExtLanguage extLanguage) {
-
-				super(extLanguage);
-			}
-
-			private class StatementValueRestorer implements IStatementVisitor{
-
-				@Override
-				public Object visit(StaticStatement statement) throws Exception {
-					return null;
-				}
-
-				@Override
-				public Object visit(StatementArray statement) throws Exception {
-
-					for(AbstractStatement child : statement.getChildren()) {
-						try {
-							child.accept(this);
-						} catch(Exception e) {SystemLogger.logCatch(e);}
-					}
-					return null;
-				}
-
-				@Override
-				public Object visit(ExpectedValueStatement statement)
-						throws Exception {
-					if (fOriginalStatementValues.containsKey(statement)) {
-						statement.getCondition().setValueString(fOriginalStatementValues.get(statement));
-					}
-					return null;
-				}
-
-				@Override
-				public Object visit(RelationStatement statement)
-						throws Exception {
-					return null;
-				}
-
-				@Override
-				public Object visit(LabelCondition condition) throws Exception {
-					return null;
-				}
-
-				@Override
-				public Object visit(ChoiceCondition condition)
-						throws Exception {
-					return null;
-				}
-
-				@Override
-				public Object visit(ParameterCondition condition)
-						throws Exception {
-					return null;
-				}
-
-				@Override
-				public Object visit(ValueCondition condition) throws Exception {
-					return null;
-				}
-			}
-
-			@Override
-			public void execute() throws ModelOperationException{
-
-				super.execute();
-				fMethodParameterNode.getMethod().replaceTestCases(fOriginalTestCases);
-				fMethodParameterNode.getMethod().replaceConstraints(fOriginalConstraints);
-				fMethodParameterNode.setDefaultValueString(fOriginalDefaultValue);
-				restoreStatementValues();
-				markModelUpdated();
-			}
-
-			@Override
-			public IModelOperation getReverseOperation() {
-
-				return new SetTypeOperation(
-						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getExtLanguage());
-			}
-
-			private void restoreStatementValues() {
-
-				IStatementVisitor valueRestorer = new StatementValueRestorer();
-				for(ConstraintNode constraint : fMethodParameterNode.getMethod().getConstraintNodes()) {
-					try {
-						constraint.getConstraint().getPremise().accept(valueRestorer);
-						constraint.getConstraint().getConsequence().accept(valueRestorer);
-					} catch(Exception e) {SystemLogger.logCatch(e);}
-				}
-			}
-
-		}
-
 		private MethodParameterNode fMethodParameterNode;
 
 		public SetTypeOperation(
@@ -448,6 +267,188 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			}
 			return false;
 		}
+
+		private class RealChoicesProvider implements IChoicesParentVisitor{
+
+			@Override
+			public Object visit(MethodParameterNode node) throws Exception {
+				return node.getRealChoices();
+			}
+
+			@Override
+			public Object visit(GlobalParameterNode node) throws Exception {
+				return node.getChoices();
+			}
+
+			@Override
+			public Object visit(ChoiceNode node) throws Exception {
+				return node.getChoices();
+			}
+
+		}
+
+		private class StatementAdapter implements IStatementVisitor{
+
+			@Override
+			public Object visit(StaticStatement statement) throws Exception {
+				return true;
+			}
+
+			@Override
+			public Object visit(StatementArray statement) throws Exception {
+				boolean success = true;
+				for(AbstractStatement child : statement.getChildren()) {
+					try {
+						success &= (boolean)child.accept(this);
+					} catch(Exception e) {
+						success = false;
+					}
+				}
+				return success;
+			}
+
+			@Override
+			public Object visit(ExpectedValueStatement statement) throws Exception {
+
+				boolean success = true;
+
+				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
+				String newValue = 
+						adapter.convert(
+								statement.getCondition().getValueString(), false, ERunMode.QUIET);
+
+				fOriginalStatementValues.put(statement, statement.getCondition().getValueString());
+				statement.getCondition().setValueString(newValue);
+				if (JavaTypeHelper.isUserType(getNewType())) {
+					success = newValue != null && fMethodParameterNode.getLeafChoiceValues().contains(newValue);
+				}
+				else{
+					success = newValue != null;
+				}
+				return success;
+			}
+
+			@Override
+			public Object visit(RelationStatement statement)
+					throws Exception {
+				return true;
+			}
+
+			@Override
+			public Object visit(LabelCondition condition) throws Exception {
+				return true;
+			}
+
+			@Override
+			public Object visit(ChoiceCondition condition) throws Exception {
+				return true;
+			}
+
+			@Override
+			public Object visit(ParameterCondition condition) throws Exception {
+				return true;
+			}
+
+			@Override
+			public Object visit(ValueCondition condition) throws Exception {
+				return null;
+			}
+		}
+
+		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
+
+			public ReverseSetTypeOperation(ExtLanguage extLanguage) {
+
+				super(extLanguage);
+			}
+
+			private class StatementValueRestorer implements IStatementVisitor{
+
+				@Override
+				public Object visit(StaticStatement statement) throws Exception {
+					return null;
+				}
+
+				@Override
+				public Object visit(StatementArray statement) throws Exception {
+
+					for(AbstractStatement child : statement.getChildren()) {
+						try {
+							child.accept(this);
+						} catch(Exception e) {SystemLogger.logCatch(e);}
+					}
+					return null;
+				}
+
+				@Override
+				public Object visit(ExpectedValueStatement statement)
+						throws Exception {
+					if (fOriginalStatementValues.containsKey(statement)) {
+						statement.getCondition().setValueString(fOriginalStatementValues.get(statement));
+					}
+					return null;
+				}
+
+				@Override
+				public Object visit(RelationStatement statement)
+						throws Exception {
+					return null;
+				}
+
+				@Override
+				public Object visit(LabelCondition condition) throws Exception {
+					return null;
+				}
+
+				@Override
+				public Object visit(ChoiceCondition condition)
+						throws Exception {
+					return null;
+				}
+
+				@Override
+				public Object visit(ParameterCondition condition)
+						throws Exception {
+					return null;
+				}
+
+				@Override
+				public Object visit(ValueCondition condition) throws Exception {
+					return null;
+				}
+			}
+
+			@Override
+			public void execute() throws ModelOperationException{
+
+				super.execute();
+				fMethodParameterNode.getMethod().replaceTestCases(fOriginalTestCases);
+				fMethodParameterNode.getMethod().replaceConstraints(fOriginalConstraints);
+				fMethodParameterNode.setDefaultValueString(fOriginalDefaultValue);
+				restoreStatementValues();
+				markModelUpdated();
+			}
+
+			@Override
+			public IModelOperation getReverseOperation() {
+
+				return new SetTypeOperation(
+						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getExtLanguage());
+			}
+
+			private void restoreStatementValues() {
+
+				IStatementVisitor valueRestorer = new StatementValueRestorer();
+				for(ConstraintNode constraint : fMethodParameterNode.getMethod().getConstraintNodes()) {
+					try {
+						constraint.getConstraint().getPremise().accept(valueRestorer);
+						constraint.getConstraint().getConsequence().accept(valueRestorer);
+					} catch(Exception e) {SystemLogger.logCatch(e);}
+				}
+			}
+
+		}
+
 	}
 
 }
