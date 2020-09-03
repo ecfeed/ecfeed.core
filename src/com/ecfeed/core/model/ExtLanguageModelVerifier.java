@@ -304,7 +304,7 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 			Pair<String,String> pairOfSignatures = 
 					new Pair<String, String>(
 							SimpleTypeHelper.createMethodSimpleSignature(methodNode),  // TODO SIMPLE-VIEW should be similar as line below
-							methodNode.createShortSignature(ExtLanguage.JAVA));
+							MethodNodeHelper.createShortSignature(methodNode, ExtLanguage.JAVA));
 
 			signaturePairs.add(pairOfSignatures);
 		}

@@ -111,8 +111,6 @@ public class ClassNodeHelper {
 		return classSignature;
 	}
 
-
-	// TODO SIMPLE-VIEW remove ?
 	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode, 
 			MethodNode duplicateMethodNode,
@@ -121,8 +119,7 @@ public class ClassNodeHelper {
 
 		String classSignature = getSignature(classNode, extLanguage);
 
-		//  TODO SIMPLE-VIEW move to MethodNodeHelper
-		String methodSignature = duplicateMethodNode.createShortSignature(extLanguage);
+		String methodSignature = MethodNodeHelper.createShortSignature(duplicateMethodNode, extLanguage);
 
 		String message =
 				"Class: " 

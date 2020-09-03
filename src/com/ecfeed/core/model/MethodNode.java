@@ -80,66 +80,26 @@ public class MethodNode extends ParametersParentNode {
 	}	
 
 	public List<String> getParameterTypes() {
-		
+
 		List<String> parameterTypes = new ArrayList<String>();
-		
+
 		List<AbstractParameterNode> parameters = getParameters();
-		
+
 		for (AbstractParameterNode abstractParameterNode : parameters) {
-			
+
 			String parameterType = abstractParameterNode.getType();
 			parameterTypes.add(parameterType);
 		}
-		
+
 		return parameterTypes;
 	}
-	
+
 	@Override
 	public String toString() {
 
-		return createSignatureIntr(ExtLanguage.JAVA, true); 
-	}
-
-	public String createSignatureWithExpectedDecorations(ExtLanguage extLanguage) {
-
-		return createSignatureIntr(extLanguage, true);
-	}
-
-	public String createShortSignature(ExtLanguage extLanguage) { // TODO SIMPLE-VIEW - rename to createSignature 
-		
-		return createSignatureIntr(extLanguage, false);
-	}
-	
-	private String createSignatureIntr(ExtLanguage extLanguage, boolean isExpectedDecorationAdded) {
-		
 		return MethodNodeHelper.createSignature(
-				getName(),
-				getParameterTypes(),
-				getParametersNames(),
-				getExpectedParametersFlags(getMethodParameters()),
-				isExpectedDecorationAdded, extLanguage);
-	}
-
-	private List<Boolean> getExpectedParametersFlags(List<MethodParameterNode> methodParameters) {
-		
-		List<Boolean> expectedFlags = new ArrayList<Boolean>();
-		
-		for(MethodParameterNode methodParameter : methodParameters) {
-			
-			if (methodParameter.isExpected()) {
-				expectedFlags.add(true);
-			} else {
-				expectedFlags.add(false);
-			}
-			
-		}
-		
-		return expectedFlags;
-	}
-
-	public String createLongSignature(ExtLanguage extLanguage) {
-
-		return getParent().getName() + "." + createShortSignature(extLanguage);
+		this,
+		true, ExtLanguage.JAVA); 
 	}
 
 	@Override
@@ -207,18 +167,18 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public MethodNode getSibling(List<String> argTypes){
-		
+
 		ClassNode classNode = getClassNode();
-		
+
 		if (classNode == null) 
 			return null;
-		
+
 		MethodNode sibling = classNode.findMethodWithTheSameSignature(getName(), argTypes);
-		
+
 		if (sibling == null || sibling == this) {
 			return null;
 		}
-		
+
 		return sibling;
 	}
 

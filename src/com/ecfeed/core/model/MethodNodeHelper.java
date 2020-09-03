@@ -22,6 +22,46 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodNodeHelper {
 
+
+	public static String createShortSignature(MethodNode methodNode, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW - rename to createSignature 
+
+		return MethodNodeHelper.createSignature(
+				methodNode,
+				false, extLanguage);
+	}
+
+	public static String createSignature(
+			MethodNode methodNode,
+			boolean isExpectedDecorationAdded, 
+			ExtLanguage extLanguage) {
+
+		String signature = 
+				createSignature(
+						methodNode.getName(),
+						methodNode.getParameterTypes(),
+						methodNode.getParametersNames(),
+						getExpectedParametersFlags(methodNode.getMethodParameters()),
+						isExpectedDecorationAdded,
+						extLanguage);
+
+		return signature;
+	}
+	
+	public static String createLongSignature(MethodNode methodNode, ExtLanguage extLanguage) {
+
+		String shortSignature = createShortSignature(methodNode, extLanguage);
+		
+		return methodNode.getParent().getName() + "." + shortSignature;
+	}
+	
+	public String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguage extLanguage) {
+
+		String signature = createSignature(methodNode, true, extLanguage);
+		
+		return signature;
+	}
+	
+
 	public static String createSignature(
 			String fullName,
 			List<String> types,
@@ -61,7 +101,25 @@ public class MethodNodeHelper {
 
 		return signature;
 	}
-	
+
+	private static List<Boolean> getExpectedParametersFlags(List<MethodParameterNode> methodParameters) {
+
+		List<Boolean> expectedFlags = new ArrayList<Boolean>();
+
+		for(MethodParameterNode methodParameter : methodParameters) {
+
+			if (methodParameter.isExpected()) {
+				expectedFlags.add(true);
+			} else {
+				expectedFlags.add(false);
+			}
+
+		}
+
+		return expectedFlags;
+	}
+
+
 	public static boolean validateMethodName(String name) {
 
 		return validateMethodName(name, null);
