@@ -246,7 +246,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 									
 									addOperation(
 											new MethodOperationRemoveParameter(
-													method, (MethodParameterNode)node, validate, true, getExtLanguage()));
+													method, (MethodParameterNode)node, validate, false, getExtLanguage()));
 									
 								} else if (node instanceof GlobalParameterNode) {
 									

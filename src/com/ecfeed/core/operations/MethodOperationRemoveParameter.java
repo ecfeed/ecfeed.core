@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -129,8 +130,12 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		private boolean validateNewSignature(List<String> newTypes, List<String> problems) {
 
+			ClassNode classNode = getMethodTarget().getClassNode();
+			
+			String methodName = getMethodTarget().getName();
+			
 			return ClassNodeHelper.isNewMethodSignatureValidAndUnique(
-					getMethodTarget().getClassNode(), getMethodTarget().getName(), newTypes, problems, getExtLanguage());
+					classNode, methodName, newTypes, problems, getExtLanguage());
 		}
 	}
 
