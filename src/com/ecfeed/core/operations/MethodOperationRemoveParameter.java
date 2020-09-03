@@ -131,9 +131,9 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		private boolean validateNewSignature(List<String> newTypes, List<String> problems) {
 
 			ClassNode classNode = getMethodTarget().getClassNode();
-			
+
 			String methodName = getMethodTarget().getName();
-			
+
 			return ClassNodeHelper.isNewMethodSignatureValidAndUnique(
 					classNode, methodName, newTypes, problems, getExtLanguage());
 		}
