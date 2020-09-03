@@ -103,7 +103,7 @@ public class ClassNodeHelper {
 	}
 
 	// TODO SIMPLE-VIEW - inconsistent - creating method signature is in MethodNode class
-	public static String getSignature(ClassNode classNode, ExtLanguage extLanguage) {
+	public static String createSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String classSignature = classNode.getName();
 		classSignature = ExtLanguageHelper.convertTextFromIntrToExtLanguage(classSignature, extLanguage);
@@ -117,7 +117,7 @@ public class ClassNodeHelper {
 			ExtLanguage extLanguage) {
 
 
-		String classSignature = getSignature(classNode, extLanguage);
+		String classSignature = createSignature(classNode, extLanguage);
 
 		String methodSignature = MethodNodeHelper.createShortSignature(duplicateMethodNode, extLanguage);
 

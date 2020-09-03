@@ -46,21 +46,21 @@ public class MethodNodeHelper {
 
 		return signature;
 	}
-	
+
 	public static String createLongSignature(MethodNode methodNode, ExtLanguage extLanguage) {
 
 		String shortSignature = createShortSignature(methodNode, extLanguage);
-		
+
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
-	
+
 	public String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguage extLanguage) {
 
 		String signature = createSignature(methodNode, true, extLanguage);
-		
+
 		return signature;
 	}
-	
+
 
 	public static String createSignature(
 			String fullName,
@@ -72,6 +72,27 @@ public class MethodNodeHelper {
 		fullName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(fullName, extLanguage);
 
 		String signature = new String(fullName) + "(";
+
+		String signaturesOfParameters = 
+				createSignaturesOfParameters(
+						types, parameterNames, expectedFlags, 
+						isExpectedDecorationAdded, extLanguage);
+
+		signature += signaturesOfParameters;
+
+		signature += ")";
+
+		return signature;
+	}
+
+	private static String createSignaturesOfParameters(
+			List<String> types, 
+			List<String> parameterNames,
+			List<Boolean> expectedFlags, 
+			boolean isExpectedDecorationAdded, 
+			ExtLanguage extLanguage) {
+
+		String signature = "";
 		String type;
 
 		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {
@@ -96,8 +117,6 @@ public class MethodNodeHelper {
 				signature += ", ";
 			}
 		}
-
-		signature += ")";
 
 		return signature;
 	}
