@@ -49,10 +49,10 @@ public class ClassNodeHelper {
 	public static boolean isNewMethodSignatureValid(
 			ClassNode parent, String methodName, List<String> argTypes, ExtLanguage extLanguage) {
 
-		return isNewMethodSignatureValid(parent, methodName, argTypes, null, extLanguage);
+		return isNewMethodSignatureValidAndUnique(parent, methodName, argTypes, null, extLanguage);
 	}
 
-	public static boolean isNewMethodSignatureValid(
+	public static boolean isNewMethodSignatureValidAndUnique(
 			ClassNode classNode, 
 			String methodName, 
 			List<String> parameterTypes,
@@ -84,21 +84,6 @@ public class ClassNodeHelper {
 		}
 
 		return MethodNodeHelper.validateMethodName(methodName, problems);
-	}
-
-	// TODO SIMPLE-VIEW remove ??
-	public static void conditionallyAddDuplicateMethodSignatureProblem(
-			ClassNode classNode, String methodName, List<String> argTypes, List<String> problems, ExtLanguage extLanguage) {
-
-		MethodNode methodNode = findMethod(classNode, methodName, argTypes, extLanguage);
-
-		if (methodNode != null) {
-
-			if (problems != null) {
-				problems.add(createMethodSignatureDuplicateMessage(classNode, methodNode, extLanguage));
-			}
-
-		}
 	}
 
 	public static String generateNewMethodName(

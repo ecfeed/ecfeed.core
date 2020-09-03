@@ -98,20 +98,12 @@ public class FactoryRenameOperation {
 
 			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
 			
-			if (!ClassNodeHelper.isNewMethodSignatureValid(
+			if (!ClassNodeHelper.isNewMethodSignatureValidAndUnique(
 					targetMethodNode.getClassNode(), 
 					newNameInJavaConvention, 
 					targetMethodNode.getParameterTypes(),
 					problems, 
 					getExtLanguage())) {
-				
-				// TODO SIMPLE-VIEW is method really duplicated ?? - error should be different
-				ClassNodeHelper.conditionallyAddDuplicateMethodSignatureProblem(
-						targetMethodNode.getClassNode(), 
-						newNameInJavaConvention, 
-						targetMethodNode.getParameterTypes(), 
-						problems,
-						getExtLanguage());
 				
 				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 			}
