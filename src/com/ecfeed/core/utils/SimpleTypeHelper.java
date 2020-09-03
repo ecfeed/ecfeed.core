@@ -107,6 +107,8 @@ public final class SimpleTypeHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW remove all types of nodes from this file
+	
 	public static String createMethodSimpleSignature(MethodNode methodNode) {
 
 		return methodNode.getName() + "(" + getSimpleParameters(methodNode) + ")";

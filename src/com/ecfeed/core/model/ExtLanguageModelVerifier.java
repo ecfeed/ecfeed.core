@@ -36,7 +36,7 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 							+ System.lineSeparator() 
 							+ System.lineSeparator() 
 							+ SimpleTypeHelper.convertTextFromJavaToSimpleConvention(node.getSimpleName());
-					
+
 					return TITLE_NON_UNIQUE_CLASS_NAMES + " " + errorMessage;
 				}
 			}
@@ -44,43 +44,41 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 		return null;
 	}
-	
-	// TODO SIMPLE-VIEW check actions which make model incompatible with simple mode - fun(Number a),  fun(Number a, Number b) > deleting Number b
-	
+
 	public static String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode, ExtLanguage extLanguage) {
-		
+
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			String result = checkIsModelCompatibleWithSimpleMode(rootNode);
 			return result;
 		}
-		
+
 		return null;
 	}
 
 	public static String checkIsModelCompatibleWithSimpleMode(RootNode rootNode) {
 
 		String message = checkIsGlobalParameterOfRootDuplicated(rootNode);
-		
+
 		if (message != null) {
 			return message;
 		}
-		
+
 		message = checkClassDuplicated(rootNode);
-		
+
 		if (message != null) {
 			return message;
 		}
 
 		message = checkIsGlobalParameterOfClassDuplicated(rootNode);
-		
+
 		if (message != null) {
 			return message;
 		}
 
 		message = checkIsMethodDuplicated(rootNode);
-		
+
 		return message;
 	}
 
@@ -100,14 +98,14 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 			Pair<String, String> currentPair = parametersForSimpleView.get(i);
 			Pair<String, String> nextPair = parametersForSimpleView.get(i + 1);
-			
+
 			String currentSimpleName = currentPair.getFirst();
 			String nextSimpleName = nextPair.getFirst();
-			
+
 			if (currentSimpleName.equals(nextSimpleName)) {
 
 				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + currentPair.getSecond() + " and " + nextPair.getSecond()
-						+ " would have the same name in the simple view mode.";
+				+ " would have the same name in the simple view mode.";
 
 				return errorMessage;
 			}
@@ -122,16 +120,16 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 		List<Pair<String, String>> parameters = new ArrayList<>();
 
 		for (AbstractParameterNode element : rootNode.getParameters()) {
-			
+
 			String simpleName = element.getName();
 			String javaName = element.getType() + " " + element.getName();
-			
+
 			Pair<String, String> pair = new Pair<String, String>(simpleName, javaName);
 			parameters.add(pair);
 		}
 
 		Collections.sort(parameters, new CompareBySimpleSignature());
-		
+
 		return parameters;
 	}
 
@@ -196,11 +194,11 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 	private static String checkIsGlobalParameterOfClassDuplicated(RootNode rootNode) {
 
 		String message = "";
-		
+
 		for (ClassNode classNode : rootNode.getClasses()) {
-			
+
 			message = checkIsClassParameterDuplicatedInOneClass(classNode);
-			
+
 			if (message != null) {
 				return message;
 			}
@@ -225,10 +223,10 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 		List<Pair<String, String>> parameters = new ArrayList<>();
 
 		for (AbstractParameterNode element : classNode.getParameters()) {
-			
-			
+
+
 			Pair<String, String> pair = new Pair<String, String>(element.getName(), element.getType() + " " + element.getName());
-			
+
 			parameters.add(pair);
 		}
 
@@ -239,9 +237,9 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 	private static String checkIsMethodDuplicated(RootNode rootNode) {
 
 		String message = "";
-		
+
 		for (ClassNode classNode : rootNode.getClasses()) {
-			
+
 			message = isMethodDuplicatedForClass(classNode);
 			if (message != null) {
 				return message;
@@ -303,7 +301,7 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 			Pair<String,String> pairOfSignatures = 
 					new Pair<String, String>(
-							SimpleTypeHelper.createMethodSimpleSignature(methodNode),  // TODO SIMPLE-VIEW should be similar as line below
+							MethodNodeHelper.createShortSignature(methodNode, ExtLanguage.SIMPLE),
 							MethodNodeHelper.createShortSignature(methodNode, ExtLanguage.JAVA));
 
 			signaturePairs.add(pairOfSignatures);
