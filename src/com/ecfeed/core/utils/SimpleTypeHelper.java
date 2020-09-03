@@ -28,6 +28,7 @@ public final class SimpleTypeHelper {
 			TYPE_NAME_LOGICAL
 	};
 
+	// TODO SIMPLE-VIEW remove and use method from ExtLanguageHelper
 	public static String convertConditionallyJavaTypeToSimpleType(String javaType, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {

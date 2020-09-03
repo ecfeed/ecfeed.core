@@ -47,6 +47,7 @@ import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class MethodParameterOperationSetType extends BulkOperation {
 
@@ -122,10 +123,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
 
-			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, fExtLanguage);
+			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, ExtLanguage.JAVA);
 
-			String newParameterType = SimpleTypeHelper.convertConditionallyJavaTypeToSimpleType(getNewType(), fExtLanguage);
-
+			String newParameterType = getNewType();
+			
 			parameterTypes.set(fMethodParameterNode.getMyIndex(), newParameterType);
 
 			ClassNode classNode = oldMethodNode.getClassNode();

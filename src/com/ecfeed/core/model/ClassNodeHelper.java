@@ -144,10 +144,10 @@ public class ClassNodeHelper {
 	public static MethodNode findMethod(
 			ClassNode classNode, 
 			String methodNameToFind, 
-			List<String> parameterTypesToFind, 
+			List<String> intrLanguageParameterTypesToFind, 
 			ExtLanguage extLanguage) {
 
-		parameterTypesToFind = convertParameterTypesToExtLanguage(parameterTypesToFind, extLanguage);
+		List<String> extLanguageParameterTypesToFind = convertParameterTypesToExtLanguage(intrLanguageParameterTypesToFind, extLanguage);
 
 		List<MethodNode> methods = classNode.getMethods();
 
@@ -157,7 +157,7 @@ public class ClassNodeHelper {
 
 			String currentMethodName = methodNode.getName();
 
-			if (currentMethodName.equals(methodNameToFind) && currentParameterTypes.equals(parameterTypesToFind)){
+			if (currentMethodName.equals(methodNameToFind) && currentParameterTypes.equals(extLanguageParameterTypesToFind)){
 				return methodNode;
 			}
 		}
