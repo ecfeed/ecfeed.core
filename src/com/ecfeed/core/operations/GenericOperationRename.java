@@ -57,7 +57,9 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		newName = convertTextFromExtToIntrLanguage(newName, fExtLanguage);
 
-		verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget); // TODO SIMPLE-VIEW for source view simple error messages should be different
+		if (!(fTarget instanceof RootNode)) {
+			verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget, fExtLanguage);
+		}
 
 		verifyNewName(newName);
 
@@ -94,10 +96,14 @@ public class GenericOperationRename extends AbstractModelOperation {
 	protected void verifyNewName(String newName) throws ModelOperationException{
 	}
 
-	private static void verifyNameWithJavaRegex(String name, String regex, AbstractNode targetNode) throws ModelOperationException {
+	private static void verifyNameWithJavaRegex(
+			String name, 
+			String regex, 
+			AbstractNode targetNode,
+			ExtLanguage extLanguage) throws ModelOperationException {
 
 		if (name.matches(regex) == false) {
-			ModelOperationException.report(getRegexProblemMessage(targetNode));
+			ModelOperationException.report(getRegexProblemMessage(targetNode, extLanguage));
 		}
 	}
 
@@ -108,53 +114,61 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return "*";
 	}
 
-	private static String getRegexProblemMessage(AbstractNode abstractNode){
+	private static String getRegexProblemMessage(AbstractNode abstractNode, ExtLanguage extLanguage){
 		try{
-			return (String)abstractNode.accept(new RegexProblemMessageProvider());
+			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguage));
 		}catch(Exception e){SystemLogger.logCatch(e);}
 		return "";
 	}
 
 	private static class RegexProblemMessageProvider implements IModelVisitor {
 
+		// TODO SIMPLE-VIEW for source view simple error messages should be different
+		
+		private ExtLanguage fExtLanguage;
+		
+		public RegexProblemMessageProvider(ExtLanguage extLanguage) {
+			fExtLanguage = extLanguage;
+		}
+		
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return RegexHelper.MODEL_NAME_REGEX_PROBLEM;
+			return RegexHelper.JAVA_MODEL_NAME_REGEX_PROBLEM;
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return RegexHelper.CLASS_NAME_REGEX_PROBLEM;
+			return RegexHelper.createMessageAllowedCharsInClass(fExtLanguage);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return OperationMessages.METHOD_NAME_REGEX_PROBLEM;
+			return OperationMessages.JAVA_METHOD_NAME_REGEX_PROBLEM; // TODO SIMPLE-VIEW move to regex helper
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return OperationMessages.CATEGORY_NAME_REGEX_PROBLEM;
+			return OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM; // TODO SIMPLE-VIEW move to regex helper
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return OperationMessages.CATEGORY_NAME_REGEX_PROBLEM;
+			return OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM;    // TODO SIMPLE-VIEW move to regex helper
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM;
+			return OperationMessages.JAVA_TEST_CASE_NAME_REGEX_PROBLEM;  // TODO SIMPLE-VIEW move to regex helper
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return OperationMessages.CONSTRAINT_NAME_REGEX_PROBLEM;
+			return OperationMessages.JAVA_CONSTRAINT_NAME_REGEX_PROBLEM;  // TODO SIMPLE-VIEW move to regex helper
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return RegexHelper.PARTITION_NAME_REGEX_PROBLEM;
+			return RegexHelper.JAVA_CHOICE_NAME_REGEX_PROBLEM;    // TODO SIMPLE-VIEW move to regex helper
 		}
 	}
 

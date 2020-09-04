@@ -28,7 +28,7 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguage);
 
 		if (newName.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false) {
-			ModelOperationException.report(OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM);
+			ModelOperationException.report(OperationMessages.JAVA_TEST_CASE_NAME_REGEX_PROBLEM);
 		}
 
 		for(TestCaseNode testCase : testCases){

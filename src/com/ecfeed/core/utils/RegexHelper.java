@@ -37,9 +37,28 @@ public class RegexHelper {
 	public static final String REGEX_STRING_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]{0,1024}";
 	public static final String REGEX_CHAR_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]";
 	
-	public static final String PARTITION_NAME_REGEX_PROBLEM = "Choice name must be 1 to 64 characters long.\nIt should contain alphanumeric characters, spaces, or -_ .\nIt must not start with space.";
-	public static final String MODEL_NAME_REGEX_PROBLEM = "Model name must contain between 1 and 64 alphanumeric characters or spaces.\n The model name must not start with space.";
-	public static final String CLASS_NAME_REGEX_PROBLEM = "The provided name must fulfill all rules for a qualified name of a class in Java";	
+	public static final String JAVA_CHOICE_NAME_REGEX_PROBLEM = 
+			"Choice name must be 1 to 64 characters long.\n"
+			+ "It should contain alphanumeric characters, spaces, or -_ .\n"
+			+ "It must not start with space.";
+	
+	public static final String JAVA_MODEL_NAME_REGEX_PROBLEM = 
+			"Model name must contain between 1 and 64 alphanumeric characters or spaces.\n"
+			+ " The model name must not start with space.";
+	
+	public static String createMessageAllowedCharsInClass(ExtLanguage extLanguage) {
+
+		String separator;
+		
+		if (extLanguage == ExtLanguage.JAVA) {
+			separator = "_";
+		} else {
+			separator = "[SPACE]";
+		}
+		
+		String message = "Class name must contain alphanumeric charactes or: " + separator	+ " $ .";	
+		return message;
+	}
 
 	public static List<String> getMatchingSubstrings(String sourceString, String regexPattern) {
 

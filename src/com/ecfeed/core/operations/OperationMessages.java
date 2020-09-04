@@ -23,20 +23,20 @@ public class OperationMessages {
 
 	public static final String CLASS_NAME_DUPLICATE_PROBLEM = "The model already contains a class with this name";
 
-	public static final String METHOD_NAME_REGEX_PROBLEM = "The method name should fulfill all rules for naming method in Java";
+	public static final String JAVA_METHOD_NAME_REGEX_PROBLEM = "The method name should fulfill all rules for naming method in Java";
 
 	public static final String UNEXPECTED_PROBLEM_WHILE_REMOVING_ELEMENT = "Element could not be removed from the model";
 
 	public static final String CATEGORY_NAME_DUPLICATE_PROBLEM = "A parameter with this name already exists in the element.";
 
-	public static final String CATEGORY_NAME_REGEX_PROBLEM = "Parameter name must be a valid Java identifier (only alphanumeric characters or underscore, no spaces, should not begin with a digit).";
+	public static final String JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM = "Parameter name must be a valid Java identifier (only alphanumeric characters or underscore, no spaces, should not begin with a digit).";
 
 	public static final String CATEGORY_TYPE_REGEX_PROBLEM = "Parameter type must be a valid type identifier in Java, i.e. it must be either a primitive type name or String or a valid qualified type name of user type";
 
 	public static final String CATEGORY_DEFAULT_VALUE_REGEX_PROBLEM = "The entered value is not compatible with parameter type";
 
-	public static final String CONSTRAINT_NAME_REGEX_PROBLEM = "Constraint name not allowed";
-	public static final String TEST_CASE_NAME_REGEX_PROBLEM = "Test case name not allowed";
+	public static final String JAVA_CONSTRAINT_NAME_REGEX_PROBLEM = "Constraint name not allowed";
+	public static final String JAVA_TEST_CASE_NAME_REGEX_PROBLEM = "Test case name not allowed";
 	public static final String INCOMPATIBLE_CONSTRAINT_PROBLEM = "The added constraint does not match the method model";
 	public static final String DIALOG_UNALLOWED_RELATION_MESSAGE = "This relation is not allowed for given statement";
 	public static final String NULL_POINTER_TARGET = "The target of operation is invalid";

@@ -130,7 +130,7 @@ public class FactoryRenameOperation {
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newName)){
-				ModelOperationException.report(OperationMessages.CATEGORY_NAME_REGEX_PROBLEM);
+				ModelOperationException.report(OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM);
 			}
 			if(target.getParametersParent().getParameter(newName) != null){
 				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
@@ -156,7 +156,7 @@ public class FactoryRenameOperation {
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			MethodParameterNode target = (MethodParameterNode)getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newName)){
-				ModelOperationException.report(OperationMessages.CATEGORY_NAME_REGEX_PROBLEM);
+				ModelOperationException.report(OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM);
 			}
 			if(target.getMethod().getParameter(newName) != null){
 				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);

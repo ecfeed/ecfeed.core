@@ -44,7 +44,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 			fIndex = fMethodNode.getConstraintNodes().size();
 		}
 		if(fConstraint.getName().matches(RegexHelper.REGEX_CONSTRAINT_NODE_NAME) == false){
-			ModelOperationException.report(OperationMessages.CONSTRAINT_NAME_REGEX_PROBLEM);
+			ModelOperationException.report(OperationMessages.JAVA_CONSTRAINT_NAME_REGEX_PROBLEM);
 		}
 		if(fConstraint.updateReferences(fMethodNode) == false){
 			ModelOperationException.report(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);

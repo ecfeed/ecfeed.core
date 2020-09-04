@@ -60,7 +60,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			fIndex = fMethodNode.getTestCases().size();
 		}
 		if(fTestCase.getName().matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false){
-			ModelOperationException.report(OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM);
+			ModelOperationException.report(OperationMessages.JAVA_TEST_CASE_NAME_REGEX_PROBLEM);
 		}
 		if(fTestCase.updateReferences(fMethodNode) == false){
 			ModelOperationException.report(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);

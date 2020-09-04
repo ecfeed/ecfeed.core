@@ -192,7 +192,7 @@ public class MethodNodeHelper {
 		}
 
 		if(problems != null){
-			problems.add(OperationMessages.METHOD_NAME_REGEX_PROBLEM);
+			problems.add(OperationMessages.JAVA_METHOD_NAME_REGEX_PROBLEM);
 		}
 
 		return false;
