@@ -23,7 +23,7 @@ public final class SimpleTypeHelper {
 			TYPE_NAME_LOGICAL
 	};
 
-	// TODO SIMPLE-VIEW test
+	// TODO SIMPLE-VIEW unit test
 
 	public static boolean isSimpleType(String typeName) {
 

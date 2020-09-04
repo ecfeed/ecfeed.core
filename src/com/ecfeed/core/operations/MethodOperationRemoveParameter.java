@@ -24,31 +24,41 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
+	public MethodOperationRemoveParameter(
+			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguage extLanguage) {
+
+		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
+
+		addOperation(new RemoveMethodParameterOperation(target, parameter, extLanguage));
+
+		if (validate) {
+			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
+		}
+	}
+
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
+		this(target, parameter, true, extLanguage);
+	}
+
+	public MethodOperationRemoveParameter(
+			MethodNode target, 
+			MethodParameterNode parameter, 
+			boolean validate, 
+			boolean ignoreDuplicates, 
+			ExtLanguage extLanguage){
+
+		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
+
+		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, extLanguage));
+		if(validate){
+			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
+		}
+	}
+
 	private class RemoveMethodParameterOperation extends GenericOperationRemoveParameter{
 
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
-
-		private class ReverseOperation extends AbstractReverseOperation {
-
-			public ReverseOperation(ExtLanguage extLanguage) {
-				super(RemoveMethodParameterOperation.this, extLanguage);
-			}
-
-			@Override
-			public void execute() throws ModelOperationException {
-
-				setOneNodeToSelect(getMethodTarget());
-				getMethodTarget().replaceTestCases(fOriginalTestCases);
-				RemoveMethodParameterOperation.super.getReverseOperation().execute();
-			}
-
-			@Override
-			public IModelOperation getReverseOperation() {
-				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), getExtLanguage());
-			}
-
-		}
 
 		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
 			super(target, parameter, extLanguage);
@@ -137,37 +147,30 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			return ClassNodeHelper.isNewMethodSignatureValidAndUnique(
 					classNode, methodName, newTypes, problems, getExtLanguage());
 		}
-	}
 
-	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguage extLanguage) {
 
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
+		private class ReverseOperation extends AbstractReverseOperation {
 
-		addOperation(new RemoveMethodParameterOperation(target, parameter, extLanguage));
+			public ReverseOperation(ExtLanguage extLanguage) {
+				super(RemoveMethodParameterOperation.this, extLanguage);
+			}
 
-		if(validate){
-			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
+			@Override
+			public void execute() throws ModelOperationException {
+
+				setOneNodeToSelect(getMethodTarget());
+				getMethodTarget().replaceTestCases(fOriginalTestCases);
+				RemoveMethodParameterOperation.super.getReverseOperation().execute();
+			}
+
+			@Override
+			public IModelOperation getReverseOperation() {
+				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), getExtLanguage());
+			}
+
 		}
+
 	}
 
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
-		this(target, parameter, true, extLanguage);
-	}
-
-	public MethodOperationRemoveParameter(
-			MethodNode target, 
-			MethodParameterNode parameter, 
-			boolean validate, 
-			boolean ignoreDuplicates, 
-			ExtLanguage extLanguage){
-
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
-
-		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, extLanguage));
-		if(validate){
-			addOperation(new MethodOperationMakeConsistent(target, extLanguage));
-		}
-	}
 
 }
