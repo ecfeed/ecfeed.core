@@ -10,13 +10,7 @@
 
 package com.ecfeed.core.operations;
 
-import java.util.List;
-
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ClassNodeHelper;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -29,9 +23,9 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	private ExtLanguage fExtLanguage;
 
 	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage extLanguage) {
-		
+
 		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguage);
-		
+
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
 		fExtLanguage = extLanguage;
@@ -42,44 +36,14 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 		setOneNodeToSelect(fParametersParentNode);
 		fOriginalIndex = fParametersParentNode.getParameters().indexOf(fAbstractParameterNode);
-		
-		if (fParametersParentNode instanceof MethodNode) {
-			
-			MethodNode methodNode = (MethodNode)fParametersParentNode;
-			verifyIfMethodSignatureIsUnique(methodNode, fOriginalIndex, fExtLanguage);
-		}
-		
+
 		fParametersParentNode.removeParameter(fAbstractParameterNode);
 		markModelUpdated();
 	}
 
 	public ExtLanguage getExtLanguage() {
-		
+
 		return fExtLanguage;
-	}
-	
-	private static void verifyIfMethodSignatureIsUnique( // TODO SIMPLE-VIEW mode this to RemoveMethodParameterOperation
-			MethodNode methodNode, 
-			int indexOfParameterToRemove, 
-			ExtLanguage extLanguage) throws ModelOperationException {
-
-		ClassNode classNode = methodNode.getClassNode();
-
-		List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
-		parameterTypes.remove(indexOfParameterToRemove);
-
-		MethodNode foundMethodNode = ClassNodeHelper.findMethod(classNode, methodNode.getName(), parameterTypes, extLanguage);
-
-		if (foundMethodNode == null) {
-			return;
-		}
-
-		if (foundMethodNode == methodNode) {
-			return;
-		}
-
-		ModelOperationException.report(ClassNodeHelper.createMethodSignatureDuplicateMessage(
-				classNode, foundMethodNode, extLanguage));
 	}
 
 	@Override
