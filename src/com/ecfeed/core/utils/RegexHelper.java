@@ -46,7 +46,7 @@ public class RegexHelper {
 			"Model name must contain between 1 and 64 alphanumeric characters or spaces.\n"
 					+ " The model name must not start with space.";
 
-	public static String createMessageAllowedCharsInClass(ExtLanguage extLanguage) {
+	public static String createMessageAllowedCharsForClass(ExtLanguage extLanguage) {
 
 		return createMessageAllowedCharsForNode("Class", extLanguage);
 	}
@@ -56,6 +56,11 @@ public class RegexHelper {
 		return createMessageAllowedCharsForNode("Method", extLanguage);
 	}
 
+	public static String createMessageAllowedCharsForParameter(ExtLanguage extLanguage) {
+
+		return createMessageAllowedCharsForNode("Parameter", extLanguage);
+	}
+	
 	public static String createMessageAllowedCharsForNode(String nodeName, ExtLanguage extLanguage) {
 
 		String separator;
@@ -66,7 +71,7 @@ public class RegexHelper {
 			separator = "[SPACE]";
 		}
 
-		String message = nodeName + " name should contain alphanumeric charactes or: " + separator	+ " $ .";	
+		String message = nodeName + " name should contain alphanumeric charactes or: " + separator	+ " $ . Name should not start with digits.";	
 		return message;
 	}
 

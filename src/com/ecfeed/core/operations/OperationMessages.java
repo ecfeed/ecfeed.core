@@ -27,8 +27,6 @@ public class OperationMessages {
 
 	public static final String CATEGORY_NAME_DUPLICATE_PROBLEM = "A parameter with this name already exists in the element.";
 
-	public static final String JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM = "Parameter name must be a valid Java identifier (only alphanumeric characters or underscore, no spaces, should not begin with a digit).";
-
 	public static final String CATEGORY_TYPE_REGEX_PROBLEM = "Parameter type must be a valid type identifier in Java, i.e. it must be either a primitive type name or String or a valid qualified type name of user type";
 
 	public static final String CATEGORY_DEFAULT_VALUE_REGEX_PROBLEM = "The entered value is not compatible with parameter type";

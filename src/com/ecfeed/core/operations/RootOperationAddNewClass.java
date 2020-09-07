@@ -44,7 +44,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 		}
 		
 		if(!ClassNodeHelper.classNameCompliesWithJavaNamingRules(name)){
-			ModelOperationException.report(RegexHelper.createMessageAllowedCharsInClass(getExtLanguage()));
+			ModelOperationException.report(RegexHelper.createMessageAllowedCharsForClass(getExtLanguage()));
 		}
 		
 		if(fRootNode.getClass(name) != null){

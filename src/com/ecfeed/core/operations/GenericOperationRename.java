@@ -138,7 +138,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return RegexHelper.createMessageAllowedCharsInClass(fExtLanguage);
+			return RegexHelper.createMessageAllowedCharsForClass(fExtLanguage);
 		}
 
 		@Override
@@ -148,12 +148,12 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM; // TODO SIMPLE-VIEW move to regex helper
+			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguage);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM;    // TODO SIMPLE-VIEW move to regex helper
+			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguage);
 		}
 
 		@Override
