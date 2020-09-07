@@ -34,7 +34,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 		}
 
 		try {
-			return String.valueOf(StringHelper.convertToShort(value));
+			return String.valueOf(JavaTypeHelper.convertToShort(value));
 		} catch (NumberFormatException e) {
 			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
 		}

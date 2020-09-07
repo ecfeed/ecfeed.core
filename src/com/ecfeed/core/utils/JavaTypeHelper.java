@@ -45,15 +45,15 @@ public final class JavaTypeHelper {
 	public static final String VALUE_REPRESENTATION_NULL = "/null";
 
 	public static final String[] SPECIAL_VALUES_FOR_BOOLEAN = {
-		SPECIAL_VALUE_TRUE, SPECIAL_VALUE_FALSE};
+			SPECIAL_VALUE_TRUE, SPECIAL_VALUE_FALSE};
 
 	public static final String[] SPECIAL_VALUES_FOR_INTEGER = {
-		SPECIAL_VALUE_MIN, SPECIAL_VALUE_MAX};
+			SPECIAL_VALUE_MIN, SPECIAL_VALUE_MAX};
 
 	public static final String[] SPECIAL_VALUES_FOR_FLOAT = {
-		SPECIAL_VALUE_NEGATIVE_INF, SPECIAL_VALUE_POSITIVE_INF,
-		SPECIAL_VALUE_MIN, SPECIAL_VALUE_MAX,
-		SPECIAL_VALUE_MINUS_MIN, SPECIAL_VALUE_MINUS_MAX };
+			SPECIAL_VALUE_NEGATIVE_INF, SPECIAL_VALUE_POSITIVE_INF,
+			SPECIAL_VALUE_MIN, SPECIAL_VALUE_MAX,
+			SPECIAL_VALUE_MINUS_MIN, SPECIAL_VALUE_MINUS_MAX };
 
 	public static final String[] SPECIAL_VALUES_FOR_STRING = {SPECIAL_VALUE_NULL};
 
@@ -79,32 +79,32 @@ public final class JavaTypeHelper {
 	public static final String DEFAULT_EXPECTED_ENUM_VALUE = "VALUE";
 
 	private static final String[] SUPPORTED_JAVA_TYPES = new String[] {
-		TYPE_NAME_INT,
-		TYPE_NAME_BYTE,
-		TYPE_NAME_SHORT,
-		TYPE_NAME_LONG,
-		TYPE_NAME_FLOAT,
-		TYPE_NAME_DOUBLE,
-		TYPE_NAME_STRING,
-		TYPE_NAME_CHAR,
-		TYPE_NAME_BOOLEAN
+			TYPE_NAME_INT,
+			TYPE_NAME_BYTE,
+			TYPE_NAME_SHORT,
+			TYPE_NAME_LONG,
+			TYPE_NAME_FLOAT,
+			TYPE_NAME_DOUBLE,
+			TYPE_NAME_STRING,
+			TYPE_NAME_CHAR,
+			TYPE_NAME_BOOLEAN
 	};	
 
 	public static Set<String> getSpecialValues(String typeName, ExtLanguage extLanguage) {
-		
+
 		Set<String> items;
-		
+
 		if (extLanguage == ExtLanguage.JAVA) {
 			items = new LinkedHashSet<String>(getSpecialValues(typeName));
 		} else {
 			items = new LinkedHashSet<String>();
 		}
-		
+
 		return items;
 	}
-	
+
 	public static List<String> getSpecialValues(String typeName) {
-		
+
 		List<String> result = new ArrayList<String>();
 
 		switch(typeName){
@@ -132,7 +132,7 @@ public final class JavaTypeHelper {
 		}
 		return result;
 	}
-	
+
 	public static String getDefaultExpectedValue(String type) {
 		switch(type){
 		case JavaTypeHelper.TYPE_NAME_BYTE:
@@ -157,47 +157,47 @@ public final class JavaTypeHelper {
 			return "VALUE";
 		}
 	}
-	
+
 	public static String convertSpecialValueToSimpleLanguage(String typeName, String value) {
-		
+
 		if (isByteTypeName(typeName)) {
 			return convertConditionallySpecialValueToByteTxt(value);
 		}
-		
+
 		if (isShortTypeName(typeName)) {
 			return convertConditionallySpecialValueToShortTxt(value);
 		}
-		
+
 		if (isIntTypeName(typeName)) {
 			return convertConditionallySpecialValueToIntTxt(value);
 		}
-		
+
 		if (isLongTypeName(typeName)) {
 			return convertConditionallySpecialValueToLongTxt(value);
 		}
-		
+
 		if (isFloatTypeName(typeName)) {
 			return convertConditionallySpecialValueToFloatTxt(value);
 		}
-		
+
 		if (isDoubleTypeName(typeName)) {
 			return convertConditionallySpecialValueToDoubleTxt(value);
 		}
-		
+
 		if (isTypeWithChars(typeName)) {
 			return value;
 		}
-		
+
 		if (isBooleanTypeName(typeName)) {
 			return value;
 		}
-		
+
 		ExceptionHelper.reportRuntimeException("Conversion of special value to numeric - type not supported.");
 		return null;
 	}
-	
+
 	private static String convertConditionallySpecialValueToDoubleTxt(String valueString) {
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
 			return (Double.MIN_VALUE + "");
 		} 
@@ -209,7 +209,7 @@ public final class JavaTypeHelper {
 		if (valueString.equals(SPECIAL_VALUE_MINUS_MIN)) {
 			return ("-" + Double.MIN_VALUE);
 		} 
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MINUS_MAX)) {
 			return ("-" + Double.MAX_VALUE);
 		} 
@@ -217,16 +217,16 @@ public final class JavaTypeHelper {
 		if (valueString.equals(SPECIAL_VALUE_POSITIVE_INF)) {
 			return SPECIAL_VALUE_POSITIVE_INF;
 		} 
-		
+
 		if (valueString.equals(SPECIAL_VALUE_NEGATIVE_INF)) {
 			return SPECIAL_VALUE_NEGATIVE_INF;
 		} 
-		
+
 		return valueString;
 	}
 
 	private static String convertConditionallySpecialValueToFloatTxt(String valueString) {
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
 			return (Float.MIN_VALUE + "");
 		} 
@@ -238,7 +238,7 @@ public final class JavaTypeHelper {
 		if (valueString.equals(SPECIAL_VALUE_MINUS_MIN)) {
 			return ("-" + Float.MIN_VALUE);
 		} 
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MINUS_MAX)) {
 			return ("-" + Float.MAX_VALUE);
 		} 
@@ -246,16 +246,16 @@ public final class JavaTypeHelper {
 		if (valueString.equals(SPECIAL_VALUE_POSITIVE_INF)) {
 			return SPECIAL_VALUE_POSITIVE_INF;
 		} 
-		
+
 		if (valueString.equals(SPECIAL_VALUE_NEGATIVE_INF)) {
 			return SPECIAL_VALUE_NEGATIVE_INF;
 		} 
-		
+
 		return valueString;
 	}
 
 	private static String convertConditionallySpecialValueToLongTxt(String valueString) {
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
 			return Long.MIN_VALUE + "";
 		} 
@@ -268,7 +268,7 @@ public final class JavaTypeHelper {
 	}
 
 	private static String convertConditionallySpecialValueToIntTxt(String valueString) {
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
 			return Integer.MIN_VALUE + "";
 		} 
@@ -281,7 +281,7 @@ public final class JavaTypeHelper {
 	}
 
 	private static String convertConditionallySpecialValueToShortTxt(String valueString) {
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
 			return Short.MIN_VALUE + "";
 		} 
@@ -294,7 +294,7 @@ public final class JavaTypeHelper {
 	}
 
 	public static String convertConditionallySpecialValueToByteTxt(String valueString) {
-		
+
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
 			return Byte.MIN_VALUE + "";
 		} 
@@ -346,21 +346,21 @@ public final class JavaTypeHelper {
 		}
 		return true;
 	}
-	
+
 	public static boolean isJavaType(String typeName) {
-		
+
 		if (typeName == null) {
 			return false;
 		}
-		
+
 		return Arrays.asList(SUPPORTED_JAVA_TYPES).contains(typeName);
 	}
-		
+
 	public static String[] getSupportedJavaTypes() {
 		return SUPPORTED_JAVA_TYPES;
 	}
-	
-	
+
+
 	public static String getStringTypeName() {
 		return TYPE_NAME_STRING;
 	}
@@ -408,7 +408,7 @@ public final class JavaTypeHelper {
 		if (typeName == null) {
 			ExceptionHelper.reportRuntimeException("Empty type name is not allowed.");
 		}
-		
+
 		if (typeName.equals(TYPE_NAME_BYTE)) {
 			return true;
 		}
@@ -780,9 +780,9 @@ public final class JavaTypeHelper {
 			return Short.parseShort(valueString);
 		}
 	}
-	
+
 	public static Number parseNumberValue(String valueString, String type, ERunMode conversionMode) {
-		
+
 		if (type.equals(TYPE_NAME_INT)) {
 			if (conversionMode == ERunMode.QUIET) {
 				try {
@@ -794,7 +794,7 @@ public final class JavaTypeHelper {
 				return Integer.parseInt(valueString);
 			}
 		}
-		
+
 		if (type.equals(TYPE_NAME_LONG)) {
 			if (conversionMode == ERunMode.QUIET) {
 				try {
@@ -806,7 +806,7 @@ public final class JavaTypeHelper {
 				return Long.parseLong(valueString);
 			}
 		}
-		
+
 		if (type.equals(TYPE_NAME_DOUBLE)) {
 			if (conversionMode == ERunMode.QUIET) {
 				try {
@@ -818,7 +818,7 @@ public final class JavaTypeHelper {
 				return Double.parseDouble(valueString);
 			}
 		}
-		
+
 		return 0;
 	}
 
@@ -891,56 +891,50 @@ public final class JavaTypeHelper {
 
 	public static String parseToJavaView(String text) {
 		String returnText = text;
-		
+
 		returnText = returnText.trim();
-		
+
 		if (JavaLanguageHelper.isJavaKeyword(returnText)) {
 			return "_" + returnText;
 		}
-		
+
 		returnText = returnText.replaceAll("_", RegexHelper.REGEX_SPECIAL_CHARACTER);
-		
+
 		if (returnText.matches("^[0-9].*")) {
 			returnText = "_" + returnText;
 		}
-		
+
 		while (returnText.contains("  ")) {
 			returnText = returnText.replaceAll("  ", " ");
 		}
-		
+
 		returnText = returnText.replaceAll(" ", "_");
-		
+
 		return returnText;
 	}
-	
+
 	public static String getCompatibleNumericType(String value) {
-		
+
 		try {
-			StringHelper.convertToByte(value);
+			convertToByte(value);
 			return TYPE_NAME_BYTE;
 		} catch (NumberFormatException e) {
 		}
-		
+
 		try {
-			StringHelper.convertToShort(value);
-			return TYPE_NAME_SHORT;
-		} catch (NumberFormatException e) {
-		}
-		
-		try {
-			StringHelper.convertToShort(value);
+			convertToShort(value);
 			return TYPE_NAME_SHORT;
 		} catch (NumberFormatException e) {
 		}
 
 		try {
-			StringHelper.convertToInteger(value);
+			convertToInteger(value);
 			return TYPE_NAME_INT;
 		} catch (NumberFormatException e) {
 		}
-		
+
 		try {
-			StringHelper.convertToLong(value);
+			convertToLong(value);
 			return TYPE_NAME_LONG;
 		} catch (NumberFormatException e) {
 		}
@@ -950,120 +944,209 @@ public final class JavaTypeHelper {
 			return TYPE_NAME_FLOAT;
 		} catch (NumberFormatException e) {
 		}
-		
+
 		try {
 			Double.parseDouble(value);
 			return TYPE_NAME_DOUBLE;
 		} catch (NumberFormatException e) {
 		}
-		
+
 		return null;
 	}
-	
+
+	public static Short convertToShort(String str) throws NumberFormatException {
+
+		Long result = convertToLong(str);
+
+		Long maxIntValue = new Long(Short.MAX_VALUE);
+		if (result > maxIntValue) {
+			throw new NumberFormatException();
+		}
+
+		Long minIntValue = new Long(Short.MIN_VALUE);
+		if (result < minIntValue) {
+			throw new NumberFormatException();
+		}		
+
+		return result.shortValue(); 
+	}	
+
+	public static Integer convertToInteger(String str) throws NumberFormatException {
+
+		Long result = convertToLong(str);
+
+		Long maxIntValue = new Long(Integer.MAX_VALUE);
+		if (result > maxIntValue) {
+			throw new NumberFormatException();
+		}
+
+		Long minIntValue = new Long(Integer.MIN_VALUE);
+		if (result < minIntValue) {
+			throw new NumberFormatException();
+		}		
+
+		return result.intValue(); 
+	}
+
+
+	public static Byte convertToByte(String str) throws NumberFormatException { 
+
+		Long result = convertToLong(str);
+
+		Long maxIntValue = new Long(Byte.MAX_VALUE);
+		if (result > maxIntValue) {
+			throw new NumberFormatException();
+		}
+
+		Long minIntValue = new Long(Byte.MIN_VALUE);
+		if (result < minIntValue) {
+			throw new NumberFormatException();
+		}		
+
+		return result.byteValue(); 
+	}
+
+	public static Long convertToLong(String str) throws NumberFormatException {
+
+		Long result = convertToLongDirectly(str);
+
+		if (result != null) {
+			return result;
+		}
+
+		return convertToLongViaDouble(str);
+	}
+
+	private static Long convertToLongViaDouble(String str) throws NumberFormatException {
+
+		Double dblResult = null;
+
+		dblResult = Double.parseDouble(str);
+
+		if (dblResult != Math.floor(dblResult)) {
+			throw new NumberFormatException();
+		}
+
+		return dblResult.longValue();
+	}
+
+	public static Long convertToLongDirectly(String str) {
+
+		Long result = null;
+
+		try {
+			result = Long.parseLong(str);
+		} catch (NumberFormatException e){
+			return null;
+		}
+
+		return result;
+	}
+
 	public static boolean isNumericTypeLarger(String numericTypeToCompare, String currentNumericType) {
-		
+
 		if (!isNumericTypeName(currentNumericType)) {
 			ExceptionHelper.reportRuntimeException("Current type is not numeric.");
 		}
-		
+
 		if (!isNumericTypeName(numericTypeToCompare)) {
 			ExceptionHelper.reportRuntimeException("Type to compare is not numeric.");
 		}
-		
+
 		if (StringHelper.isEqual(currentNumericType, numericTypeToCompare)) {
 			return false;
 		}
-		
+
 		if (isByteTypeName(currentNumericType)) {
 			return true;
 		}
-		
+
 		if (isShortTypeName(currentNumericType)) {
-			
+
 			if (isByteTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			return true;
 		}
-		
+
 		if (isIntTypeName(currentNumericType)) {
-			
+
 			if (isByteTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isShortTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			return true;
 		}
-		
+
 		if (isLongTypeName(currentNumericType)) {
-			
+
 			if (isByteTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isShortTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isIntTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			return true;
 		}
-		
+
 		if (isFloatTypeName(currentNumericType)) {
-			
+
 			if (isByteTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isShortTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isIntTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isLongTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			return true;
 		}
-		
+
 
 		if (isDoubleTypeName(currentNumericType)) {
-			
+
 			if (isByteTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isShortTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isIntTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isLongTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			if (isFloatTypeName(numericTypeToCompare)) {
 				return false;
 			}
-			
+
 			return true;
 		}
-		
+
 		return true;
 	}
 }

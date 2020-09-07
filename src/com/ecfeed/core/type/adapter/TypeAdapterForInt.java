@@ -33,7 +33,7 @@ public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
 		}
 
 		try {
-			Integer integer = StringHelper.convertToInteger(value);
+			Integer integer = JavaTypeHelper.convertToInteger(value);
 			return String.valueOf(integer);
 		} catch (NumberFormatException e) {
 

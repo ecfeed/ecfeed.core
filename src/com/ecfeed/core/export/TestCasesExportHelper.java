@@ -21,6 +21,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.JustifyType;
 
 public class TestCasesExportHelper {
@@ -250,7 +251,7 @@ public class TestCasesExportHelper {
 		String repetitionsStr = getRepetitionsStr(parameters);
 
 		try {
-			return StringHelper.convertToInteger(repetitionsStr);
+			return JavaTypeHelper.convertToInteger(repetitionsStr);
 		} catch (NumberFormatException e) {
 			return null;
 		}

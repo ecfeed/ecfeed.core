@@ -34,7 +34,7 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 		}
 
 		try {
-			return String.valueOf(StringHelper.convertToByte(value));
+			return String.valueOf(JavaTypeHelper.convertToByte(value));
 		} catch (NumberFormatException e) {
 			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
 		}
