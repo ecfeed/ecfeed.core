@@ -13,11 +13,10 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.ExtLanguage;
 
 
 // TODO SIMPLE-VIEW unit tests
@@ -180,19 +179,19 @@ public class MethodNodeHelper {
 	}
 
 
-	public static boolean validateMethodName(String name) {
+	public static boolean validateMethodName(String name, ExtLanguage extLanguage) {
 
 		return validateMethodName(name, null);
 	}
 
-	public static boolean validateMethodName(String name, List<String> problems) {
+	public static boolean validateMethodName(String name, List<String> problems, ExtLanguage extLanguage) {
 
 		if (isValid(name)) {
 			return true;
 		}
 
 		if(problems != null){
-			problems.add(OperationMessages.JAVA_METHOD_NAME_REGEX_PROBLEM);
+			problems.add(RegexHelper.createMessageAllowedCharsForMethod(extLanguage));
 		}
 
 		return false;

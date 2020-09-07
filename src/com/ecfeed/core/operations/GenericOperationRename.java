@@ -143,7 +143,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return OperationMessages.JAVA_METHOD_NAME_REGEX_PROBLEM; // TODO SIMPLE-VIEW move to regex helper
+			return RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage);
 		}
 
 		@Override

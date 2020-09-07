@@ -23,8 +23,6 @@ public class OperationMessages {
 
 	public static final String CLASS_NAME_DUPLICATE_PROBLEM = "The model already contains a class with this name";
 
-	public static final String JAVA_METHOD_NAME_REGEX_PROBLEM = "The method name should fulfill all rules for naming method in Java";
-
 	public static final String UNEXPECTED_PROBLEM_WHILE_REMOVING_ELEMENT = "Element could not be removed from the model";
 
 	public static final String CATEGORY_NAME_DUPLICATE_PROBLEM = "A parameter with this name already exists in the element.";

@@ -46,7 +46,7 @@ public class RegexHelper {
 			"Model name must contain between 1 and 64 alphanumeric characters or spaces.\n"
 			+ " The model name must not start with space.";
 	
-	public static String createMessageAllowedCharsInClass(ExtLanguage extLanguage) {
+	public static String createMessageAllowedCharsInClass(ExtLanguage extLanguage) { // TODO SIMPLE-VIEW - refactor similar methods
 
 		String separator;
 		
@@ -56,10 +56,24 @@ public class RegexHelper {
 			separator = "[SPACE]";
 		}
 		
-		String message = "Class name must contain alphanumeric charactes or: " + separator	+ " $ .";	
+		String message = "Class name should contain alphanumeric charactes or: " + separator	+ " $ .";	
 		return message;
 	}
 
+	public static String createMessageAllowedCharsForMethod(ExtLanguage extLanguage) {
+
+		String separator;
+		
+		if (extLanguage == ExtLanguage.JAVA) {
+			separator = "_";
+		} else {
+			separator = "[SPACE]";
+		}
+		
+		String message = "Method name should contain alphanumeric charactes or: " + separator	+ " $ .";	
+		return message;
+	}
+	
 	public static List<String> getMatchingSubstrings(String sourceString, String regexPattern) {
 
 		List<String> substrings = new ArrayList<String>();

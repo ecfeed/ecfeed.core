@@ -90,7 +90,7 @@ public class ClassNodeHelper {
 			return false;
 		}
 
-		return MethodNodeHelper.validateMethodName(methodName, problems);
+		return MethodNodeHelper.validateMethodName(methodName, problems, extLanguage);
 	}
 
 	public static String generateNewMethodName(
