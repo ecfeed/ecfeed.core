@@ -17,9 +17,9 @@ import java.util.regex.Pattern;
 
 
 public class RegexHelper {
-	
+
 	public static final String REGEX_SPECIAL_CHARACTER = "\u039B";
-	
+
 	public static final String REGEX_JAVA_IDENTIFIER = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z_$][" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_$]*";
 	public static final String REGEX_ALPHANUMERIC_WITH_SPACES_64 = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_\\-][" + REGEX_SPECIAL_CHARACTER + "A-Za-z0-9_\\- ]{0,63}";	
 	public static final String REGEX_ROOT_NODE_NAME = REGEX_ALPHANUMERIC_WITH_SPACES_64;
@@ -36,44 +36,40 @@ public class RegexHelper {
 	public static final String REGEX_USER_TYPE_VALUE = REGEX_JAVA_IDENTIFIER;
 	public static final String REGEX_STRING_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]{0,1024}";
 	public static final String REGEX_CHAR_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]";
-	
+
 	public static final String JAVA_CHOICE_NAME_REGEX_PROBLEM = 
 			"Choice name must be 1 to 64 characters long.\n"
-			+ "It should contain alphanumeric characters, spaces, or -_ .\n"
-			+ "It must not start with space.";
-	
+					+ "It should contain alphanumeric characters, spaces, or -_ .\n"
+					+ "It must not start with space.";
+
 	public static final String JAVA_MODEL_NAME_REGEX_PROBLEM = 
 			"Model name must contain between 1 and 64 alphanumeric characters or spaces.\n"
-			+ " The model name must not start with space.";
-	
-	public static String createMessageAllowedCharsInClass(ExtLanguage extLanguage) { // TODO SIMPLE-VIEW - refactor similar methods
+					+ " The model name must not start with space.";
 
-		String separator;
-		
-		if (extLanguage == ExtLanguage.JAVA) {
-			separator = "_";
-		} else {
-			separator = "[SPACE]";
-		}
-		
-		String message = "Class name should contain alphanumeric charactes or: " + separator	+ " $ .";	
-		return message;
+	public static String createMessageAllowedCharsInClass(ExtLanguage extLanguage) {
+
+		return createMessageAllowedCharsForNode("Class", extLanguage);
 	}
 
 	public static String createMessageAllowedCharsForMethod(ExtLanguage extLanguage) {
 
+		return createMessageAllowedCharsForNode("Method", extLanguage);
+	}
+
+	public static String createMessageAllowedCharsForNode(String nodeName, ExtLanguage extLanguage) {
+
 		String separator;
-		
+
 		if (extLanguage == ExtLanguage.JAVA) {
 			separator = "_";
 		} else {
 			separator = "[SPACE]";
 		}
-		
-		String message = "Method name should contain alphanumeric charactes or: " + separator	+ " $ .";	
+
+		String message = nodeName + " name should contain alphanumeric charactes or: " + separator	+ " $ .";	
 		return message;
 	}
-	
+
 	public static List<String> getMatchingSubstrings(String sourceString, String regexPattern) {
 
 		List<String> substrings = new ArrayList<String>();
