@@ -101,7 +101,7 @@ public class RootNodeTest{
 		r2.addClass(class2);
 		assertTrue(r1.isMatch(r2));
 
-		class2.setName("new name");
+		class2.setName("new_name");
 		assertFalse(r1.isMatch(r2));
 
 		class2.setName("name");
