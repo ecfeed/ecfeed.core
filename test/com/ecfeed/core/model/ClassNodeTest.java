@@ -72,8 +72,8 @@ public class ClassNodeTest extends ClassNode {
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 
-		assertEquals(method1, classNode.getMethod("method", method1Types));
-		assertEquals(method2, classNode.getMethod("method", method2Types));
+		assertEquals(method1, classNode.findMethodWithTheSameSignature("method", method1Types));
+		assertEquals(method2, classNode.findMethodWithTheSameSignature("method", method2Types));
 	}
 
 	@Test
@@ -122,7 +122,7 @@ public class ClassNodeTest extends ClassNode {
 
 		assertFalse(c1.isMatch(c2));
 
-		c2.setFullName("c1");
+		c2.setName("c1");
 		assertTrue(c1.isMatch(c2));
 
 		MethodNode m1 = new MethodNode("m1", null);
@@ -134,7 +134,7 @@ public class ClassNodeTest extends ClassNode {
 		c2.addMethod(m2);
 		assertFalse(c1.isMatch(c2));
 
-		m2.setFullName("m1");
+		m2.setName("m1");
 		assertTrue(c1.isMatch(c2));
 
 		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", null, "int");
@@ -143,9 +143,9 @@ public class ClassNodeTest extends ClassNode {
 		GlobalParameterNode parameter2 = new GlobalParameterNode("parameter1", null, "int");
 		c2.addParameter(parameter2);
 		assertTrue(c1.isMatch(c2));
-		parameter1.setFullName("newName");
+		parameter1.setName("newName");
 		assertFalse(c1.isMatch(c2));
-		parameter2.setFullName("newName");
+		parameter2.setName("newName");
 		assertTrue(c1.isMatch(c2));
 		parameter1.setType("float");
 		assertFalse(c1.isMatch(c2));

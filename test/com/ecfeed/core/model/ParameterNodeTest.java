@@ -271,9 +271,9 @@ public class ParameterNodeTest{
 
 		assertTrue(c1.isMatch(c2));
 
-		c1.setFullName("c1");
+		c1.setName("c1");
 		assertFalse(c1.isMatch(c2));
-		c2.setFullName("c1");
+		c2.setName("c1");
 		assertTrue(c1.isMatch(c2));
 	}
 
@@ -331,9 +331,9 @@ public class ParameterNodeTest{
 		c2.addChoice(p2);
 		assertTrue(c1.isMatch(c2));
 
-		p1.setFullName("p1");
+		p1.setName("p1");
 		assertFalse(c1.isMatch(c2));
-		p2.setFullName("p1");
+		p2.setName("p1");
 		assertTrue(c1.isMatch(c2));
 	}
 
@@ -361,7 +361,7 @@ public class ParameterNodeTest{
 		assertFalse(c1.isMatch(c2));
 		c2.addChoice(new ChoiceNode("p1", null, "x"));
 		assertFalse(c1.isMatch(c2));
-		c2.getChoice("p1").setFullName("p");
+		c2.getChoice("p1").setName("p");
 		assertTrue(c1.isMatch(c2));
 	}
 }

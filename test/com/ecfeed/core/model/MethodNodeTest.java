@@ -509,9 +509,9 @@ public class MethodNodeTest {
 		MethodNode m2 = new MethodNode("m", null);
 
 		assertTrue(m1.isMatch(m2));
-		m1.setFullName("m1");
+		m1.setName("m1");
 		assertFalse(m1.isMatch(m2));
-		m2.setFullName("m1");
+		m2.setName("m1");
 		assertTrue(m1.isMatch(m2));
 	}
 
@@ -521,9 +521,9 @@ public class MethodNodeTest {
 		MethodNode m2 = new MethodNode("m", null);
 
 		assertTrue(m1.isMatch(m2));
-		m1.setFullName("m1");
+		m1.setName("m1");
 		assertFalse(m1.isMatch(m2));
-		m2.setFullName("m1");
+		m2.setName("m1");
 		assertTrue(m1.isMatch(m2));
 
 		MethodParameterNode c1 = new MethodParameterNode("c", null, "type", "0", true);
@@ -534,9 +534,9 @@ public class MethodNodeTest {
 		m2.addParameter(c2);
 		assertTrue(m1.isMatch(m2));
 
-		c1.setFullName("c1");
+		c1.setName("c1");
 		assertFalse(m1.isMatch(m2));
-		c2.setFullName("c1");
+		c2.setName("c1");
 		assertTrue(m1.isMatch(m2));
 	}
 
@@ -553,9 +553,9 @@ public class MethodNodeTest {
 		m2.addConstraint(c2);
 		assertTrue(m1.isMatch(m2));
 
-		c1.setFullName("c1");
+		c1.setName("c1");
 		assertFalse(m1.isMatch(m2));
-		c2.setFullName("c1");
+		c2.setName("c1");
 		assertTrue(m1.isMatch(m2));
 	}
 
@@ -572,9 +572,9 @@ public class MethodNodeTest {
 		m2.addTestCase(tc2);
 		assertTrue(m1.isMatch(m2));
 
-		tc1.setFullName("tc1");
+		tc1.setName("tc1");
 		assertFalse(m1.isMatch(m2));
-		tc2.setFullName("tc1");
+		tc2.setName("tc1");
 		assertTrue(m1.isMatch(m2));
 	}
 

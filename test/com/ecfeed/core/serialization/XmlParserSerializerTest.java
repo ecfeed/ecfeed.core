@@ -511,7 +511,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareModels(RootNode model1, RootNode model2) {
-		compareNames(model1.getFullName(), model2.getFullName());
+		compareNames(model1.getName(), model2.getName());
 		compareSizes(model1.getClasses(), model2.getClasses());
 		for(int i = 0; i < model1.getClasses().size(); ++i){
 			compareClasses(model1.getClasses().get(i), model2.getClasses().get(i));
@@ -519,7 +519,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareClasses(ClassNode classNode1, ClassNode classNode2) {
-		compareNames(classNode1.getFullName(), classNode2.getFullName());
+		compareNames(classNode1.getName(), classNode2.getName());
 		compareSizes(classNode1.getMethods(), classNode2.getMethods());
 
 		for(int i = 0; i < classNode1.getMethods().size(); ++i){
@@ -528,7 +528,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareMethods(MethodNode method1, MethodNode method2) {
-		compareNames(method1.getFullName(), method2.getFullName());
+		compareNames(method1.getName(), method2.getName());
 		compareSizes(method1.getParameters(), method2.getParameters());
 		compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes());
 		compareSizes(method1.getTestCases(), method2.getTestCases());
@@ -545,7 +545,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareParameters(MethodParameterNode parameter1, MethodParameterNode parameter2) {
-		compareNames(parameter1.getFullName(), parameter2.getFullName());
+		compareNames(parameter1.getName(), parameter2.getName());
 		compareNames(parameter1.getType(), parameter2.getType());
 		compareSizes(parameter1.getChoices(), parameter2.getChoices());
 		if(parameter1 instanceof MethodParameterNode || parameter2 instanceof MethodParameterNode){
@@ -559,7 +559,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
-		compareNames(choice1.getFullName(), choice2.getFullName());
+		compareNames(choice1.getName(), choice2.getName());
 		compareValues(choice1.getValueString(),choice2.getValueString());
 		compareLabels(choice1.getLabels(), choice2.getLabels());
 		assertEquals(choice1.getChoices().size(), choice2.getChoices().size());
@@ -589,7 +589,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
-		compareNames(constraint1.getFullName(), constraint2.getFullName());
+		compareNames(constraint1.getName(), constraint2.getName());
 		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
 
@@ -662,7 +662,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareTestCases(TestCaseNode testCase1, TestCaseNode testCase2) {
-		compareNames(testCase1.getFullName(), testCase2.getFullName());
+		compareNames(testCase1.getName(), testCase2.getName());
 		compareSizes(testCase1.getTestData(), testCase2.getTestData());
 		for(int i = 0; i < testCase1.getTestData().size(); i++){
 			ChoiceNode testValue1 = testCase1.getTestData().get(i);

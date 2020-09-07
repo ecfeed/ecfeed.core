@@ -199,7 +199,7 @@ public class ChoiceNodeTest{
 
 		p.addChoice(q);
 
-		assertEquals(p.getFullName() + ":" + q.getFullName(), q.getQualifiedName());
+		assertEquals(p.getName() + ":" + q.getName(), q.getQualifiedName());
 	}
 
 	@Test
@@ -326,9 +326,9 @@ public class ChoiceNodeTest{
 
 		assertTrue(p1.isMatch(p2));
 
-		p1.setFullName("p1");
+		p1.setName("p1");
 		assertFalse(p1.isMatch(p2));
-		p2.setFullName("p1");
+		p2.setName("p1");
 		assertTrue(p1.isMatch(p2));
 	}
 
@@ -378,9 +378,9 @@ public class ChoiceNodeTest{
 		p2.addChoice(p21);
 		assertTrue(p1.isMatch(p2));
 
-		p11.setFullName("p11");
+		p11.setName("p11");
 		assertFalse(p1.isMatch(p2));
-		p21.setFullName("p11");
+		p21.setName("p11");
 		assertTrue(p1.isMatch(p2));
 	}
 

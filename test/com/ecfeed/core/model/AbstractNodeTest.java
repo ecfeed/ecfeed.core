@@ -51,9 +51,9 @@ public class AbstractNodeTest{
 	@Test
 	public void testName() {
 		AbstractNode node = new AbstractNodeImpl("name");
-		assertEquals("name", node.getFullName());
-		node.setFullName("new name");
-		assertEquals("new name", node.getFullName());
+		assertEquals("name", node.getName());
+		node.setName("new name");
+		assertEquals("new name", node.getName());
 	}
 
 	@Test
@@ -253,10 +253,10 @@ public class AbstractNodeTest{
 
 		assertTrue(n1.isMatch(n2));
 
-		n2.setFullName("nn");
+		n2.setName("nn");
 		assertFalse(n1.isMatch(n2));
 
-		n1.setFullName("nn");
+		n1.setName("nn");
 		assertTrue(n1.isMatch(n2));
 
 	}
