@@ -182,11 +182,11 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newName)throws ModelOperationException{
+		protected void verifyNewName(String newNameInIntrLanguage)throws ModelOperationException{
 
-			newName = ExtLanguageHelper.convertTextFromExtToIntrLanguage(newName, fExtLanguage);
+			//			newNameInIntrLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(newNameInIntrLanguage, fExtLanguage);
 
-			if(getOwnNode().getSibling(newName) != null){
+			if(getOwnNode().getSibling(newNameInIntrLanguage) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}
 		}

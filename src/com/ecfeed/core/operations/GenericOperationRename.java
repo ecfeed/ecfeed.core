@@ -53,19 +53,17 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		setOneNodeToSelect(fTarget);
 
-		String newName = fNewName;
-
-		newName = convertTextFromExtToIntrLanguage(newName, fExtLanguage);
+		String newNameInIntrLanguage = convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
 
 		if (!(fTarget instanceof RootNode)) {
-			verifyNameWithJavaRegex(newName, fJavaNameRegex, fTarget, fExtLanguage);
+			verifyNameWithJavaRegex(newNameInIntrLanguage, fJavaNameRegex, fTarget, ExtLanguage.JAVA);
 		}
 
-		verifyNewName(newName);
+		verifyNewName(newNameInIntrLanguage);
 
 		String oldName = fTarget.getName();
 
-		fTarget.setName(newName);
+		fTarget.setName(newNameInIntrLanguage);
 
 		String errorMessage = ExtLanguageModelVerifier.checkIsModelCompatibleWithExtLanguage(fTarget, fExtLanguage);
 
@@ -93,7 +91,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return fOriginalName;
 	}
 
-	protected void verifyNewName(String newName) throws ModelOperationException{
+	protected void verifyNewName(String newNameInIntrLanguage) throws ModelOperationException{
 	}
 
 	private static void verifyNameWithJavaRegex(
@@ -122,8 +120,6 @@ public class GenericOperationRename extends AbstractModelOperation {
 	}
 
 	private static class RegexProblemMessageProvider implements IModelVisitor {
-
-		// TODO SIMPLE-VIEW for source view simple error messages should be different
 
 		private ExtLanguage fExtLanguage;
 

@@ -90,7 +90,7 @@ public class RegexHelper {
 
 		String message = 
 				nodeName
-				+ " name should contain between 1 and 64 alphanumeric characters or spaces.\n"
+				+ " name should contain between 1 and 64 alphanumeric characters or spaces."
 				+ " It should not start with space.";
 
 		return message;

@@ -56,7 +56,6 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 			setOneNodeToSelect(fTarget);
 			
-			// TODO SIMPLE-VIEW  check - use method from helper instead of getMethod
 			MethodNode method = fTarget.getMethod();
 			List<String> types = method.getParameterTypes();
 			types.set(fTarget.getMyIndex(), fNewLink.getType());

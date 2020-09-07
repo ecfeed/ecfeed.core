@@ -73,7 +73,6 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 			setOneNodeToSelect(fTarget);
 
-			// TODO SIMPLE-VIEW  check - use method from helper instead of getMethod
 			MethodNode method = fTarget.getMethod();
 			String newType;
 			if(fLinked){

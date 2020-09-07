@@ -16,6 +16,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+// TODO SIMPLE-VIEW unit tests
+
 public final class JavaTypeHelper {
 
 	public static final String TYPE_NAME_BOOLEAN = "boolean";
@@ -156,7 +158,7 @@ public final class JavaTypeHelper {
 		}
 	}
 	
-	public static String convertSpecialValueToSimpleLanguage(String typeName, String value) { // TODO SIMPLE-VIEW test
+	public static String convertSpecialValueToSimpleLanguage(String typeName, String value) {
 		
 		if (isByteTypeName(typeName)) {
 			return convertConditionallySpecialValueToByteTxt(value);
@@ -911,7 +913,7 @@ public final class JavaTypeHelper {
 		return returnText;
 	}
 	
-	public static String getCompatibleNumericType(String value) { // TODO SIMPLE-VIEW tests
+	public static String getCompatibleNumericType(String value) {
 		
 		try {
 			StringHelper.convertToByte(value);
@@ -958,7 +960,7 @@ public final class JavaTypeHelper {
 		return null;
 	}
 	
-	public static boolean isNumericTypeLarger(String numericTypeToCompare, String currentNumericType) {  // TODO SIMPLE-VIEW tests
+	public static boolean isNumericTypeLarger(String numericTypeToCompare, String currentNumericType) {
 		
 		if (!isNumericTypeName(currentNumericType)) {
 			ExceptionHelper.reportRuntimeException("Current type is not numeric.");
