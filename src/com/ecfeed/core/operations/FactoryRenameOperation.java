@@ -27,6 +27,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.SystemLogger;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -54,11 +55,11 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
-			
+
 			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
-			
+
 			String[] tokens = newNameInJavaConvention.split("\\.");
-			
+
 			for (String token : tokens) {
 				if(JavaLanguageHelper.isJavaKeyword(token)){
 					ModelOperationException.report(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
@@ -91,20 +92,20 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
-			
+
 			List<String> problems = new ArrayList<String>();
-			
+
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
 			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
-			
+
 			if (!ClassNodeHelper.isNewMethodSignatureValidAndUnique(
 					targetMethodNode.getClassNode(), 
 					newNameInJavaConvention, 
 					targetMethodNode.getParameterTypes(),
 					problems, 
 					getExtLanguage())) {
-				
+
 				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 			}
 		}
@@ -130,7 +131,7 @@ public class FactoryRenameOperation {
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newName)){
-				ModelOperationException.report(OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM);
+				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage));
 			}
 			if(target.getParametersParent().getParameter(newName) != null){
 				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
@@ -156,7 +157,7 @@ public class FactoryRenameOperation {
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			MethodParameterNode target = (MethodParameterNode)getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newName)){
-				ModelOperationException.report(OperationMessages.JAVA_METHOD_PARAMETER_NAME_REGEX_PROBLEM);
+				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage));
 			}
 			if(target.getMethod().getParameter(newName) != null){
 				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
@@ -169,9 +170,9 @@ public class FactoryRenameOperation {
 		ExtLanguage fExtLanguage;
 
 		public ChoiceOperationRename(ChoiceNode target, String newName, ExtLanguage extLanguage) {
-			
+
 			super(target, newName, extLanguage);
-			
+
 			fExtLanguage = extLanguage;
 		}
 
@@ -182,9 +183,9 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newName)throws ModelOperationException{
-			
+
 			newName = ExtLanguageHelper.convertTextFromExtToIntrLanguage(newName, fExtLanguage);
-			
+
 			if(getOwnNode().getSibling(newName) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}

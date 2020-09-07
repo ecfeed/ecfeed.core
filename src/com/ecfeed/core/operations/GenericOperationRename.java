@@ -124,16 +124,17 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private static class RegexProblemMessageProvider implements IModelVisitor {
 
 		// TODO SIMPLE-VIEW for source view simple error messages should be different
-		
+
 		private ExtLanguage fExtLanguage;
-		
+
 		public RegexProblemMessageProvider(ExtLanguage extLanguage) {
 			fExtLanguage = extLanguage;
 		}
-		
+
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return RegexHelper.JAVA_MODEL_NAME_REGEX_PROBLEM;
+
+			return RegexHelper.createMessageAllowedCharsForModel(fExtLanguage);
 		}
 
 		@Override
@@ -157,19 +158,20 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 
 		@Override
+		public Object visit(ChoiceNode node) throws Exception {
+			return RegexHelper.createMessageAllowedCharsForChoice(fExtLanguage);
+		}
+
+		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return OperationMessages.JAVA_TEST_CASE_NAME_REGEX_PROBLEM;  // TODO SIMPLE-VIEW move to regex helper
+			return OperationMessages.TEST_CASE_NOT_ALLOWED;
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return OperationMessages.JAVA_CONSTRAINT_NAME_REGEX_PROBLEM;  // TODO SIMPLE-VIEW move to regex helper
+			return OperationMessages.CONSTRAINT_NOT_ALLOWED;
 		}
 
-		@Override
-		public Object visit(ChoiceNode node) throws Exception {
-			return RegexHelper.JAVA_CHOICE_NAME_REGEX_PROBLEM;    // TODO SIMPLE-VIEW move to regex helper
-		}
 	}
 
 	private class JavaNameRegexProvider implements IModelVisitor {

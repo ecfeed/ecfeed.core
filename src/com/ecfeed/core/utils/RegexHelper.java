@@ -37,15 +37,6 @@ public class RegexHelper {
 	public static final String REGEX_STRING_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]{0,1024}";
 	public static final String REGEX_CHAR_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]";
 
-	public static final String JAVA_CHOICE_NAME_REGEX_PROBLEM = 
-			"Choice name must be 1 to 64 characters long.\n"
-					+ "It should contain alphanumeric characters, spaces, or -_ .\n"
-					+ "It must not start with space.";
-
-	public static final String JAVA_MODEL_NAME_REGEX_PROBLEM = 
-			"Model name must contain between 1 and 64 alphanumeric characters or spaces.\n"
-					+ " The model name must not start with space.";
-
 	public static String createMessageAllowedCharsForClass(ExtLanguage extLanguage) {
 
 		return createMessageAllowedCharsForNode("Class", extLanguage);
@@ -60,7 +51,7 @@ public class RegexHelper {
 
 		return createMessageAllowedCharsForNode("Parameter", extLanguage);
 	}
-	
+
 	public static String createMessageAllowedCharsForNode(String nodeName, ExtLanguage extLanguage) {
 
 		String separator;
@@ -72,6 +63,36 @@ public class RegexHelper {
 		}
 
 		String message = nodeName + " name should contain alphanumeric charactes or: " + separator	+ " $ . Name should not start with digits.";	
+		return message;
+	}
+
+	public static String createMessageAllowedCharsForModel(ExtLanguage extLanguage) {
+
+		return createMessageAllowedCharsForNonJavaNode("Model", extLanguage);
+	}
+
+	public static String createMessageAllowedCharsForChoice(ExtLanguage extLanguage) {
+
+		return createMessageAllowedCharsForNonJavaNode("Choice", extLanguage);
+	}
+
+	public static String createMessageAllowedCharsForNonJavaNode(String nodeName, ExtLanguage extLanguage) {
+
+		//		String separator;
+
+		//		if (extLanguage == ExtLanguage.JAVA) {
+		//			separator = "_";
+		//		} else {
+		//			separator = "[SPACE]";
+		//		}
+
+		// TODO SIMPLE-VIEW check space char
+
+		String message = 
+				nodeName
+				+ " name should contain between 1 and 64 alphanumeric characters or spaces.\n"
+				+ " It should not start with space.";
+
 		return message;
 	}
 
