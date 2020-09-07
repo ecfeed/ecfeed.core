@@ -66,27 +66,17 @@ public class RegexHelper {
 		return message;
 	}
 
-	public static String createMessageAllowedCharsForModel(ExtLanguage extLanguage) {
+	public static String createMessageAllowedCharsForModel() {
 
-		return createMessageAllowedCharsForNonJavaNode("Model", extLanguage);
+		return createMessageAllowedCharsForNonJavaNode("Model");
 	}
 
-	public static String createMessageAllowedCharsForChoice(ExtLanguage extLanguage) {
+	public static String createMessageAllowedCharsForChoice() {
 
-		return createMessageAllowedCharsForNonJavaNode("Choice", extLanguage);
+		return createMessageAllowedCharsForNonJavaNode("Choice");
 	}
 
-	public static String createMessageAllowedCharsForNonJavaNode(String nodeName, ExtLanguage extLanguage) {
-
-		//		String separator;
-
-		//		if (extLanguage == ExtLanguage.JAVA) {
-		//			separator = "_";
-		//		} else {
-		//			separator = "[SPACE]";
-		//		}
-
-		// TODO SIMPLE-VIEW check space char
+	public static String createMessageAllowedCharsForNonJavaNode(String nodeName) {
 
 		String message = 
 				nodeName
