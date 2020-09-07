@@ -218,7 +218,7 @@ public class ModelSerializerTest {
 		RootNode convertedModel = null;
 		try {
 			convertedModel = ModelConverter.convertToCurrentVersion(createModel(0));
-		} catch (ModelOperationException e) {
+		} catch (Exception e) {
 			fail();
 		}
 		String convertedString = getSerializedString(convertedModel);

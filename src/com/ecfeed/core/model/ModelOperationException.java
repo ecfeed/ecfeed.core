@@ -15,7 +15,7 @@ import java.util.Stack;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
-public class ModelOperationException extends Exception {
+public class ModelOperationException extends Exception { // TODO SIMPLE-VIEW - delete ?
 
 	/**
 	 * 

@@ -53,7 +53,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 		public void execute() throws ModelOperationException{
 			try {
 				super.execute();
-			} catch (ModelOperationException e) {
+			} catch (Exception e) {
 				throw e;
 			}
 		}

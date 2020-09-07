@@ -87,7 +87,7 @@ public class BulkOperation extends AbstractModelOperation {
 			try {
 				operation.execute();
 				fExecutedOperations.add(operation);
-			} catch(ModelOperationException e) {
+			} catch(Exception e) {
 				errors.add(e.getMessage());
 				if(fAtomic) {
 					getReverseOperation().execute();
@@ -99,7 +99,7 @@ public class BulkOperation extends AbstractModelOperation {
 		for (ICheckOperation operation : fCheckOperations) {
 			try {
 				operation.check();
-			} catch(ModelOperationException e) {
+			} catch(Exception e) {
 				errors.add(e.getMessage());
 				getReverseOperation().execute();
 				break;
