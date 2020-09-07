@@ -35,7 +35,7 @@ public class ClassNodeTest extends ClassNode {
 	public void getChildrenTest(){
 		ClassNode classNode = new ClassNode("com.example.ClassName", null);
 		MethodNode method1 = new MethodNode("method1", null);
-		MethodNode method2 = new MethodNode("method1", null);
+		MethodNode method2 = new MethodNode("method2", null);
 
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
@@ -79,8 +79,8 @@ public class ClassNodeTest extends ClassNode {
 	@Test
 	public void getMethodsTest() {
 		ClassNode classNode = new ClassNode("com.example.ClassName", null);
-		MethodNode method1 = new MethodNode("method", null);
-		MethodNode method2 = new MethodNode("method", null);
+		MethodNode method1 = new MethodNode("method1", null);
+		MethodNode method2 = new MethodNode("method2", null);
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 
@@ -91,8 +91,8 @@ public class ClassNodeTest extends ClassNode {
 	@Test
 	public void getTestSuitesTest(){
 		ClassNode classNode = new ClassNode("com.example.ClassName", null);
-		MethodNode method1 = new MethodNode("method", null);
-		MethodNode method2 = new MethodNode("method", null);
+		MethodNode method1 = new MethodNode("method1", null);
+		MethodNode method2 = new MethodNode("method2", null);
 
 		method1.addTestCase(new TestCaseNode("suite 1", null, null));
 		method1.addTestCase(new TestCaseNode("suite 2", null, null));
