@@ -52,8 +52,8 @@ public class AbstractNodeTest{
 	public void testName() {
 		AbstractNode node = new AbstractNodeImpl("name");
 		assertEquals("name", node.getName());
-		node.setName("new name");
-		assertEquals("new name", node.getName());
+		node.setName("new_name");
+		assertEquals("new_name", node.getName());
 	}
 
 	@Test
