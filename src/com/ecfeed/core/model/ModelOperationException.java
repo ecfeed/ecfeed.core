@@ -10,43 +10,23 @@
 
 package com.ecfeed.core.model;
 
-import java.util.Stack;
-
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
-public class ModelOperationException extends Exception { // TODO SIMPLE-VIEW - delete ?
+public class ModelOperationException extends Exception { // TODO - delete ? we have to catch every exception - not only ModelOperationException 
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2841889790004375884L;
-	private static Boolean fLoggingEnabledState = true;
-	private static Stack<Boolean> fLoggingStates = new Stack<Boolean>();
 
 
 	protected ModelOperationException(String message) {
 		super(message);
-		if (fLoggingEnabledState) {
-			SystemLogger.logThrow(message);
-		}
+		SystemLogger.logThrow(message);
 	}
 
 	public static void report(String message) throws ModelOperationException {
 		throw new ModelOperationException(message);
 	}
 
-	public static void pushLoggingState(boolean newLoggingEnabledState) {
-		fLoggingStates.push(fLoggingEnabledState);
-		fLoggingEnabledState = newLoggingEnabledState;
-	}
-
-	public static void popLoggingState() {
-		if (fLoggingStates.isEmpty()) {
-			ExceptionHelper.reportRuntimeException("Invalid remove of logging state.");
-		}
-
-		fLoggingEnabledState = fLoggingStates.peek();
-		fLoggingStates.pop();
-	}
 }
