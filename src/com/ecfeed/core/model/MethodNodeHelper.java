@@ -175,6 +175,7 @@ public class MethodNodeHelper {
 		return expectedFlags;
 	}
 
+	// TODO SIMPLE-VIEW similar methods for other types of nodes exist (extract common code)
 	public static boolean validateMethodName(String nameInExternalLanguage, List<String> problems, ExtLanguage extLanguage) {
 
 		try {
@@ -199,10 +200,6 @@ public class MethodNodeHelper {
 
 	private static boolean isValid(String name) {
 
-		if (!name.matches(RegexHelper.REGEX_METHOD_NODE_NAME)) {
-			return false;
-		}
-
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
 			return false;
 		}
@@ -210,7 +207,7 @@ public class MethodNodeHelper {
 		return true;
 	}
 
-	public static List<String> getArgNames(MethodNode method) {
+	public static List<String> getParameterNames(MethodNode method) {
 
 		List<String> result = new ArrayList<String>();
 

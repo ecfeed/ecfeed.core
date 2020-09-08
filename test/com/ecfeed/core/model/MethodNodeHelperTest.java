@@ -10,8 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.testutils.RandomModelGenerator;
-import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguage;
 import org.junit.Test;
 
@@ -163,6 +161,24 @@ public class MethodNodeHelperTest {
 		problems = new ArrayList<>();
 		MethodNodeHelper.validateMethodName(" a", problems, ExtLanguage.SIMPLE);
 		assertEquals(1, problems.size());
+	}
+
+	@Test
+	public void getArgNamesTest(){
+
+		ClassNode classNode = new ClassNode("class1", null);
+
+		MethodNode methodNode = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode);
+
+		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		methodNode.addParameter(param1);
+
+		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
+		methodNode.addParameter(param2);
+
+		List<String> paramNames = MethodNodeHelper.getParameterNames(methodNode);
+		System.out.println(paramNames);
 	}
 
 }
