@@ -146,14 +146,14 @@ public class ClassNode extends GlobalParametersParentNode {
 		return false;
 	}
 
-	public MethodNode findMethodWithTheSameSignature(String name, List<String> argTypes) {
+	public MethodNode findMethodWithTheSameSignature(String name, List<String> parameterTypes) {
 
 		for (MethodNode methodNode : getMethods()) {
 			List<String> args = new ArrayList<String>();
 			for (AbstractParameterNode arg : methodNode.getParameters()){
 				args.add(arg.getType());
 			}
-			if (methodNode.getName().equals(name) && args.equals(argTypes)){
+			if (methodNode.getName().equals(name) && args.equals(parameterTypes)){
 				return methodNode;
 			}
 		}
