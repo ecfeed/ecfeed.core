@@ -99,13 +99,15 @@ public class FactoryRenameOperation {
 
 			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
 
-			if (!ClassNodeHelper.isNewMethodSignatureValidAndUnique(
-					targetMethodNode.getClassNode(), 
-					newNameInJavaConvention, 
+			String errorMessage =
+					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+					targetMethodNode.getClassNode(),
+					newNameInJavaConvention,
 					targetMethodNode.getParameterTypes(),
-					problems, 
-					getExtLanguage())) {
+					getExtLanguage());
 
+			if (errorMessage != null) {
+				problems.add(errorMessage);
 				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
 			}
 		}

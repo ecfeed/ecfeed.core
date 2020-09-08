@@ -71,51 +71,51 @@ public class ClassNodeHelper {
 			List<String> parameterTypes, 
 			ExtLanguage extLanguage) {
 
-		return isNewMethodSignatureValidAndUnique(classNode, methodName, parameterTypes, null, extLanguage);
+		String errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, methodName, parameterTypes, extLanguage);
+
+		if (errorMessage == null) {
+			return true;
+		}
+
+		return false;
 	}
 
-	public static boolean isNewMethodSignatureValidAndUnique(
+	public static String verifyNewMethodSignatureIsValidAndUnique(
 			ClassNode classNode, 
 			String methodName, 
 			List<String> parameterTypes,
-			List<String> problems,
 			ExtLanguage extLanguage) {
 
 		if (findMethod(classNode, methodName, parameterTypes, extLanguage) != null) {
 
-			if (problems != null) {
-				String newMethodSignature =  
+			String newMethodSignature =
 
-						MethodNodeHelper.createSignature(
-								methodName,
-								parameterTypes,
-								null, 
-								null,
-								false, 
-								extLanguage);
+					MethodNodeHelper.createSignature(
+							methodName,
+							parameterTypes,
+							null,
+							null,
+							false,
+							extLanguage);
 
 
-				String classSignature = createSignature(classNode, extLanguage);
+			String classSignature = createSignature(classNode, extLanguage);
 
-				String message =
-						"Class: " 
-								+ classSignature 
-								+ " already contains method with identical signature: " + newMethodSignature + ".";
+			String errorMessage =
+					"Class: "
+							+ classSignature
+							+ " already contains method with identical signature: " + newMethodSignature + ".";
 
-				problems.add(message);
-			}
-
-			return false;
+			return errorMessage;
 		}
 
 		String errorMessage = MethodNodeHelper.validateMethodName(methodName, extLanguage);
 
 		if (errorMessage != null) {
-			problems.add(errorMessage);
-			return false;
+			return errorMessage;
 		}
 
-		return true;
+		return null;
 	}
 
 	public static String generateNewMethodName(

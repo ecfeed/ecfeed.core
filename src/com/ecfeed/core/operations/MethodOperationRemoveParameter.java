@@ -144,8 +144,16 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			String methodName = getMethodTarget().getName();
 
-			return ClassNodeHelper.isNewMethodSignatureValidAndUnique(
-					classNode, methodName, newTypes, problems, getExtLanguage());
+			String errorMessage =
+					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodName, newTypes, getExtLanguage());
+
+			if (errorMessage != null) {
+				problems.add(errorMessage);
+				return false;
+			}
+
+			return true;
 		}
 
 
