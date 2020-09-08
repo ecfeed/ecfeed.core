@@ -28,15 +28,17 @@ public class JavaLanguageHelper {
 		"final", "interface", "static", "void", "class", "finally", "long", "strictfp", "volatile", "const", "float",
 		"native", "super", "while", "null", "true", "false" };
 
-	public static void verifySeparatorsInName(String name) {
+	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains(" ")) {
-			ExceptionHelper.reportRuntimeException("Spaces are not allowed in name.");
+			return ("Spaces are not allowed in name.");
 		}
 
 		if (name.startsWith("_")) {
-			ExceptionHelper.reportRuntimeException("Name should not begin with underline char.");
+			return("Name should not begin with underline char.");
 		}
+
+		return null;
 	}
 
 	public static boolean isJavaKeyword(String word) {

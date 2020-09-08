@@ -72,95 +72,87 @@ public class MethodNodeHelperTest {
 	@Test
 	public void validateMethodNameTest() {
 
-		List<String> problems;
-
-
 		// valid without separator
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("f1", problems, ExtLanguage.JAVA);
-		assertEquals(0, problems.size());
+		String errorMessage;
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("f1", problems, ExtLanguage.SIMPLE);
-		assertEquals(0, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("f1", ExtLanguage.JAVA);
+		assertNull(errorMessage);
+
+		errorMessage = MethodNodeHelper.validateMethodName("f1", ExtLanguage.SIMPLE);
+		assertNull(errorMessage);
 
 
 		// valid with separator
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("f_1", problems, ExtLanguage.JAVA);
-		assertEquals(0, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("f_1", ExtLanguage.JAVA);
+		assertNull(errorMessage);
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("f 1", problems, ExtLanguage.SIMPLE);
-		assertEquals(0, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("f 1", ExtLanguage.SIMPLE);
+		assertNull(errorMessage);
 
 
 		// all allowed characters
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_$", problems, ExtLanguage.JAVA);
-		assertEquals(0, problems.size());
+		errorMessage =
+				MethodNodeHelper.validateMethodName(
+						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_$",
+						ExtLanguage.JAVA);
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 $", problems, ExtLanguage.SIMPLE);
-		assertEquals(0, problems.size());
+		assertNull(errorMessage);
+
+
+		errorMessage =
+				MethodNodeHelper.validateMethodName(
+						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 $",
+						ExtLanguage.SIMPLE);
+
+		assertNull(errorMessage);
 
 
 		// just dolar
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("$", problems, ExtLanguage.JAVA);
-		assertEquals(0, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("$", ExtLanguage.JAVA);
+		assertNull(errorMessage);
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("$", problems, ExtLanguage.SIMPLE);
-		assertEquals(0, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("$", ExtLanguage.SIMPLE);
+		assertNull(errorMessage);
 
 
 		// invalid separator
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("f 1", problems, ExtLanguage.JAVA);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("f 1", ExtLanguage.JAVA);
+		assertNotNull(errorMessage);
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("f_1", problems, ExtLanguage.SIMPLE);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("f_1", ExtLanguage.SIMPLE);
+		assertNotNull(errorMessage);
 
 
 		// invalid char
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("#", problems, ExtLanguage.JAVA);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("#", ExtLanguage.JAVA);
+		assertNotNull(errorMessage);
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("#", problems, ExtLanguage.SIMPLE);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("#", ExtLanguage.SIMPLE);
+		assertNotNull(errorMessage);
 
 
 		// number at the front
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("1a", problems, ExtLanguage.JAVA);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("1a", ExtLanguage.JAVA);
+		assertNotNull(errorMessage);
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("1a", problems, ExtLanguage.SIMPLE);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("1a", ExtLanguage.SIMPLE);
+		assertNotNull(errorMessage);
 
 
 		// just separator
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName("_a", problems, ExtLanguage.JAVA);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName("_a", ExtLanguage.JAVA);
+		assertNotNull(errorMessage);
 
-		problems = new ArrayList<>();
-		MethodNodeHelper.validateMethodName(" a", problems, ExtLanguage.SIMPLE);
-		assertEquals(1, problems.size());
+		errorMessage = MethodNodeHelper.validateMethodName(" a", ExtLanguage.SIMPLE);
+		assertNotNull(errorMessage);
 	}
 
 	@Test

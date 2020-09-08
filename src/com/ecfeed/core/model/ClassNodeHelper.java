@@ -39,6 +39,12 @@ public class ClassNodeHelper {
 		return ModelHelper.getPackageName(classNode.getName());
 	}
 
+	public static String validateClassName(String className) {
+
+		// TODO SIMPLE-VIEW
+		return null;
+	}
+
 	public static boolean classNameCompliesWithJavaNamingRules(String className) {
 
 		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
@@ -91,7 +97,14 @@ public class ClassNodeHelper {
 			return false;
 		}
 
-		return MethodNodeHelper.validateMethodName(methodName, problems, extLanguage);
+		String errorMessage = MethodNodeHelper.validateMethodName(methodName, extLanguage);
+
+		if (errorMessage != null) {
+			problems.add(errorMessage);
+			return false;
+		}
+
+		return true;
 	}
 
 	public static String generateNewMethodName(

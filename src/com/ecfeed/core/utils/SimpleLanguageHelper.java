@@ -14,15 +14,17 @@ package com.ecfeed.core.utils;
 
 public class SimpleLanguageHelper {
 
-	public static void verifySeparatorsInName(String name) {
+	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains("_")) {
-			ExceptionHelper.reportRuntimeException("Underline chars are not allowed in name.");
+			return "Underline chars are not allowed in name.";
 		}
 
 		if (name.startsWith(" ")) {
-			ExceptionHelper.reportRuntimeException("Name should not begin with space char.");
+			return "Name should not begin with space char.";
 		}
+
+		return null;
 	}
 
 }

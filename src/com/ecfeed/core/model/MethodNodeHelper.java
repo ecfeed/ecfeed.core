@@ -173,26 +173,21 @@ public class MethodNodeHelper {
 	}
 
 	// TODO SIMPLE-VIEW similar methods for other types of nodes exist (extract common code)
-	public static boolean validateMethodName(String nameInExternalLanguage, List<String> problems, ExtLanguage extLanguage) {
+	public static String validateMethodName(String nameInExternalLanguage, ExtLanguage extLanguage) {
 
-		try {
-			ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
-		} catch (Exception e) {
-			problems.add(e.getMessage());
-			return false;
+		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
 		}
 
 		String nameInIntrernalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
 
 		if (isValid(nameInIntrernalLanguage)) {
-			return true;
+			return null;
 		}
 
-		if(problems != null){
-			problems.add(RegexHelper.createMessageAllowedCharsForMethod(extLanguage));
-		}
-
-		return false;
+		return RegexHelper.createMessageAllowedCharsForMethod(extLanguage);
 	}
 
 	private static boolean isValid(String name) {

@@ -14,16 +14,18 @@ package com.ecfeed.core.utils;
 
 public class ExtLanguageHelper {
 
-	public static void verifySeparatorsInName(String name, ExtLanguage extLanguage) {
+	public static String verifySeparatorsInName(String name, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {
-			JavaLanguageHelper.verifySeparatorsInName(name);
+			return JavaLanguageHelper.verifySeparatorsInName(name);
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			SimpleLanguageHelper.verifySeparatorsInName(name);
+			return SimpleLanguageHelper.verifySeparatorsInName(name);
 		}
 
+		ExceptionHelper.reportRuntimeException("Invalid external language.");
+		return null;
 	}
 
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
