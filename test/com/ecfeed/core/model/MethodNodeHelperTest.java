@@ -164,7 +164,7 @@ public class MethodNodeHelperTest {
 	}
 
 	@Test
-	public void getArgNamesTest(){
+	public void getParameterNamesAndTypesTest(){
 
 		ClassNode classNode = new ClassNode("class1", null);
 
@@ -179,6 +179,21 @@ public class MethodNodeHelperTest {
 
 		List<String> paramNames = MethodNodeHelper.getParameterNames(methodNode);
 		System.out.println(paramNames);
+		assertEquals(2, paramNames.size());
+		assertEquals("param1", paramNames.get(0));
+		assertEquals("param2", paramNames.get(1));
+
+		List<String> paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.JAVA);
+		System.out.println(paramTypes);
+		assertEquals(2, paramTypes.size());
+		assertEquals("int", paramTypes.get(0));
+		assertEquals("double", paramTypes.get(1));
+
+		paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.SIMPLE);
+		System.out.println(paramTypes);
+		assertEquals(2, paramTypes.size());
+		assertEquals("Number", paramTypes.get(0));
+		assertEquals("Number", paramTypes.get(1));
 	}
 
 }
