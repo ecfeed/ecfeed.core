@@ -39,13 +39,24 @@ public class ClassNodeHelper {
 		return ModelHelper.getPackageName(classNode.getName());
 	}
 
-	public static String validateClassName(String className) {
+	public static String validateClassName(String nameInExternalLanguage, ExtLanguage extLanguage) {
 
-		// TODO SIMPLE-VIEW
+		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		String nameInInternalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
+
+		if (!classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
+			return RegexHelper.createMessageAllowedCharsForClass(extLanguage);
+		}
+
 		return null;
 	}
 
-	public static boolean classNameCompliesWithJavaNamingRules(String className) {
+	private static boolean classNameCompliesWithJavaNamingRules(String className) {
 
 		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
 			return true;

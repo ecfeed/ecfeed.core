@@ -181,9 +181,9 @@ public class MethodNodeHelper {
 			return errorMessage;
 		}
 
-		String nameInIntrernalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
+		String nameInInternalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
 
-		if (isValid(nameInIntrernalLanguage)) {
+		if (isValid(nameInInternalLanguage)) {
 			return null;
 		}
 

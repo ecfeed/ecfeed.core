@@ -42,9 +42,11 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 		if(fAddIndex == -1){
 			fAddIndex = fRootNode.getClasses().size();
 		}
-		
-		if(!ClassNodeHelper.classNameCompliesWithJavaNamingRules(name)){
-			ModelOperationException.report(RegexHelper.createMessageAllowedCharsForClass(getExtLanguage()));
+
+		String errorMessage = ClassNodeHelper.validateClassName(name, getExtLanguage());
+
+		if (errorMessage != null) {
+			ModelOperationException.report(errorMessage);
 		}
 		
 		if(fRootNode.getClass(name) != null){
