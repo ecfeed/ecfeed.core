@@ -12,6 +12,18 @@ package com.ecfeed.core.utils;
 
 public class ExtLanguageHelper {
 
+	public static void verifySeparatorsInName(String name, ExtLanguage extLanguage) {
+
+		if (extLanguage == ExtLanguage.JAVA) {
+			JavaLanguageHelper.verifySeparatorsInName(name);
+		}
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			SimpleLanguageHelper.verifySeparatorsInName(name);
+		}
+
+	}
+
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {

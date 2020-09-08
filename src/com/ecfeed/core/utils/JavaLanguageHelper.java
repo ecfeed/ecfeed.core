@@ -25,7 +25,18 @@ public class JavaLanguageHelper {
 		"throws", "case", "enum", "instanceof", "return", "transient", "catch", "extends", "int", "short", "try", "char",
 		"final", "interface", "static", "void", "class", "finally", "long", "strictfp", "volatile", "const", "float",
 		"native", "super", "while", "null", "true", "false" };
-	
+
+	public static void verifySeparatorsInName(String name) {
+
+		if (name.contains(" ")) {
+			ExceptionHelper.reportRuntimeException("Spaces are not allowed in name.");
+		}
+
+		if (name.startsWith("_")) {
+			ExceptionHelper.reportRuntimeException("Name should not begin with underline char.");
+		}
+	}
+
 	public static boolean isJavaKeyword(String word) {
 		return Arrays.asList(JAVA_KEYWORDS).contains(word);
 	}

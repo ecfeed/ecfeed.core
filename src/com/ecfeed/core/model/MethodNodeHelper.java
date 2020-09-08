@@ -13,10 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.ExtLanguageHelper;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.*;
 
 
 // TODO SIMPLE-VIEW unit tests
@@ -178,15 +175,18 @@ public class MethodNodeHelper {
 		return expectedFlags;
 	}
 
+	public static boolean validateMethodName(String nameInExternalLanguage, List<String> problems, ExtLanguage extLanguage) {
 
-	public static boolean validateMethodName(String name, ExtLanguage extLanguage) {
+		try {
+			ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+		} catch (Exception e) {
+			problems.add(e.getMessage());
+			return false;
+		}
 
-		return validateMethodName(name, null);
-	}
+		String nameInIntrernalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
 
-	public static boolean validateMethodName(String name, List<String> problems, ExtLanguage extLanguage) {
-
-		if (isValid(name)) {
+		if (isValid(nameInIntrernalLanguage)) {
 			return true;
 		}
 
@@ -198,7 +198,6 @@ public class MethodNodeHelper {
 	}
 
 	private static boolean isValid(String name) {
-
 
 		if (!name.matches(RegexHelper.REGEX_METHOD_NODE_NAME)) {
 			return false;

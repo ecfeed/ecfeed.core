@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
 public class MethodNodeHelperTest {
 
 	@Test
-	public void test1(){
+	public void signatureCreateTest(){
 
 		ClassNode classNode = new ClassNode("class1", null);
 
@@ -56,7 +56,7 @@ public class MethodNodeHelperTest {
 		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, ExtLanguage.JAVA);
 		assertEquals("method_1(int param1, [e]double param2)", signature);
 
-		
+
 		signature = MethodNodeHelper.createSignature(methodNode, false, ExtLanguage.SIMPLE);
 		assertEquals("method 1(Number param1, Number param2)", signature);
 
@@ -69,6 +69,100 @@ public class MethodNodeHelperTest {
 
 		signature = MethodNodeHelper.createLongSignature(methodNode, ExtLanguage.SIMPLE);
 		assertEquals("class1.method 1(Number param1, Number param2)", signature);
+	}
+
+	@Test
+	public void validateMethodNameTest() {
+
+		List<String> problems;
+
+
+		// valid without separator
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("f1", problems, ExtLanguage.JAVA);
+		assertEquals(0, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("f1", problems, ExtLanguage.SIMPLE);
+		assertEquals(0, problems.size());
+
+
+		// valid with separator
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("f_1", problems, ExtLanguage.JAVA);
+		assertEquals(0, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("f 1", problems, ExtLanguage.SIMPLE);
+		assertEquals(0, problems.size());
+
+
+		// all allowed characters
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_$", problems, ExtLanguage.JAVA);
+		assertEquals(0, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 $", problems, ExtLanguage.SIMPLE);
+		assertEquals(0, problems.size());
+
+
+		// just dolar
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("$", problems, ExtLanguage.JAVA);
+		assertEquals(0, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("$", problems, ExtLanguage.SIMPLE);
+		assertEquals(0, problems.size());
+
+
+		// invalid separator
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("f 1", problems, ExtLanguage.JAVA);
+		assertEquals(1, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("f_1", problems, ExtLanguage.SIMPLE);
+		assertEquals(1, problems.size());
+
+
+		// invalid char
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("#", problems, ExtLanguage.JAVA);
+		assertEquals(1, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("#", problems, ExtLanguage.SIMPLE);
+		assertEquals(1, problems.size());
+
+
+		// number at the front
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("1a", problems, ExtLanguage.JAVA);
+		assertEquals(1, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("1a", problems, ExtLanguage.SIMPLE);
+		assertEquals(1, problems.size());
+
+
+		// just separator
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName("_a", problems, ExtLanguage.JAVA);
+		assertEquals(1, problems.size());
+
+		problems = new ArrayList<>();
+		MethodNodeHelper.validateMethodName(" a", problems, ExtLanguage.SIMPLE);
+		assertEquals(1, problems.size());
 	}
 
 }
