@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 
+// TODO SIMPLE-VIEW unit tests
+
 public class JavaLanguageHelper {
 
 	private static final String[] JAVA_KEYWORDS = new String[] { 

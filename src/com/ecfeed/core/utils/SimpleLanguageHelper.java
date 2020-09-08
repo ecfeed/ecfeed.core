@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.utils;
 
+// TODO SIMPLE-VIEW unit tests
+
 public class SimpleLanguageHelper {
 
 	public static void verifySeparatorsInName(String name) {

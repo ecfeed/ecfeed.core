@@ -18,6 +18,7 @@ import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
+// TODO SIMPLE-VIEW unit tests
 public class ClassNodeHelper {
 
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";

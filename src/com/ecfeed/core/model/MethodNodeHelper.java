@@ -15,9 +15,6 @@ import java.util.List;
 
 import com.ecfeed.core.utils.*;
 
-
-// TODO SIMPLE-VIEW unit tests
-
 public class MethodNodeHelper {
 
 
