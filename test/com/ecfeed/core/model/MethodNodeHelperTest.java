@@ -25,13 +25,50 @@ public class MethodNodeHelperTest {
 	@Test
 	public void test1(){
 
-		MethodNode m1 = new MethodNode("method_1", null);
+		ClassNode classNode = new ClassNode("class1", null);
 
-		String signature = MethodNodeHelper.createSignature(m1, ExtLanguage.JAVA);
+		MethodNode methodNode = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode);
+
+		String signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.JAVA);
 		assertEquals("method_1()", signature);
 
-		signature = MethodNodeHelper.createSignature(m1, ExtLanguage.SIMPLE);
+		signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.SIMPLE);
 		assertEquals("method 1()", signature);
+
+
+		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		methodNode.addParameter(param1);
+
+		signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.JAVA);
+		assertEquals("method_1(int param1)", signature);
+
+		signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.SIMPLE);
+		assertEquals("method 1(Number param1)", signature);
+
+
+		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
+		methodNode.addParameter(param2);
+
+		signature = MethodNodeHelper.createSignature(methodNode, false, ExtLanguage.JAVA);
+		assertEquals("method_1(int param1, double param2)", signature);
+
+		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, ExtLanguage.JAVA);
+		assertEquals("method_1(int param1, [e]double param2)", signature);
+
+		
+		signature = MethodNodeHelper.createSignature(methodNode, false, ExtLanguage.SIMPLE);
+		assertEquals("method 1(Number param1, Number param2)", signature);
+
+		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, ExtLanguage.SIMPLE);
+		assertEquals("method 1(Number param1, [e]Number param2)", signature);
+
+
+		signature = MethodNodeHelper.createLongSignature(methodNode, ExtLanguage.JAVA);
+		assertEquals("class1.method_1(int param1, double param2)", signature);
+
+		signature = MethodNodeHelper.createLongSignature(methodNode, ExtLanguage.SIMPLE);
+		assertEquals("class1.method 1(Number param1, Number param2)", signature);
 	}
 
 }

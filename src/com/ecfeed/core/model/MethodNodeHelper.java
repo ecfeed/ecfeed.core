@@ -55,7 +55,7 @@ public class MethodNodeHelper {
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
 
-	public String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguage extLanguage) {
+	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguage extLanguage) {
 
 		String signature = createSignature(methodNode, true, extLanguage);
 
