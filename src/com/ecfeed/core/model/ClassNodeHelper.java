@@ -86,15 +86,14 @@ public class ClassNodeHelper {
 			List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
 
-		if (findMethod(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage) != null) {
+		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage) != null) {
 
 			String newMethodSignature =
-					MethodNodeHelper.createSignature(
+					MethodNodeHelper.createSignatureByExtLanguage(
 							methodNameInExtLanguage,
 							parameterTypesInExtLanguage,
 							null,
-							null,
-							extLanguage);
+							null);
 
 
 			String classSignature = createSignature(classNode, extLanguage);
@@ -139,11 +138,13 @@ public class ClassNodeHelper {
 
 		String className = classNode.getName();
 
-		className = ExtLanguageHelper.convertClassFromIntrToExtLanguage(className, extLanguage);
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			className = StringHelper.getLastTokenOrInputString(className, ".");
+		}
 
-		String classSignature = ExtLanguageHelper.convertTextFromIntrToExtLanguage(className, extLanguage);
+		className = ExtLanguageHelper.convertTextFromIntrToExtLanguage(className, extLanguage);
 
-		return classSignature;
+		return className;
 	}
 
 	public static String createMethodSignatureDuplicateMessage(
@@ -154,7 +155,7 @@ public class ClassNodeHelper {
 
 		String classSignature = createSignature(classNode, extLanguage);
 
-		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, extLanguage);
+		String methodSignature = MethodNodeHelper.createSignatureByIntrLanguage(duplicateMethodNode, extLanguage);
 
 		String message =
 				"Class: " 
@@ -165,11 +166,12 @@ public class ClassNodeHelper {
 	}
 
 
-	public static MethodNode findMethod( // TODO SIMPLE-VIEW check usages
-			ClassNode classNode, 
-			String methodNameInExternalLanguage,
-			List<String> parameterTypesInExternalLanguage,
-			ExtLanguage extLanguage) {
+	public static MethodNode findMethodByExtLanguage(
+			// TODO SIMPLE-VIEW check usages
+					  ClassNode classNode,
+					  String methodNameInExternalLanguage,
+					  List<String> parameterTypesInExternalLanguage,
+					  ExtLanguage extLanguage) {
 
 		List<MethodNode> methods = classNode.getMethods();
 
@@ -185,6 +187,15 @@ public class ClassNodeHelper {
 		}
 
 		return null;
+	}
+
+	public static MethodNode findMethodByIntrLanguage( // TODO SIMPLE-VIEW check usages
+													   ClassNode classNode,
+													   String methodNameInIntrLanguage,
+													   List<String> parameterTypesInIntrLanguage) {
+
+		MethodNode methodNode = classNode.findMethodWithTheSameSignature(methodNameInIntrLanguage, parameterTypesInIntrLanguage);
+		return methodNode;
 	}
 
 	public static List<String> convertParameterTypesToExtLanguage(

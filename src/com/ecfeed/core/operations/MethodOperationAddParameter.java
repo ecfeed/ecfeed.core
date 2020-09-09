@@ -64,7 +64,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		if (parentClassNode != null) { 
 
 			// TODO SIMPLE-VIEW convert method name and types to ext language
-			MethodNode foundMethodNode = ClassNodeHelper.findMethod(parentClassNode, fMethodNode.getName(), types, extLanguage);
+			MethodNode foundMethodNode = ClassNodeHelper.findMethodByExtLanguage(parentClassNode, fMethodNode.getName(), types, extLanguage);
 			
 			if (foundMethodNode != null) {
 				

@@ -16,9 +16,9 @@ import com.ecfeed.core.utils.ExtLanguage;
 // TODO SIMPLE-VIEW unit tests
 public abstract class AbstractParameterNodeHelper {
 
-	public static String createSignatureOfOneParameter(
+	public static String createSignatureOfOneParameterByIntrLanguage(
 			String parameterTypeInIntrLanguage,
-			String parameterName,
+			String parameterNameInIntrLanguage,
 			Boolean expectedFlag,
 			ExtLanguage extLanguageOfTheResult) {
 
@@ -33,12 +33,35 @@ public abstract class AbstractParameterNodeHelper {
 
 		signature += parameterTypeInIntrLanguage;
 
-		if (parameterName != null) {
+		if (parameterNameInIntrLanguage != null) {
 
 			signature += " ";
-			parameterName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterName, extLanguageOfTheResult);
+			parameterNameInIntrLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterNameInIntrLanguage, extLanguageOfTheResult);
 
-			signature += parameterName;
+			signature += parameterNameInIntrLanguage;
+		}
+
+		return signature;
+	}
+
+	public static String createSignatureOfOneParameterByExtLanguage(
+			String parameterTypeInExtLanguage,
+			String parameterNameInExtLanguage,
+			Boolean expectedFlag) {
+
+		String signature = "";
+
+		if (expectedFlag != null) {
+			String expectedDecoration = createExpectedDecoration(expectedFlag);
+			signature += expectedDecoration;
+		}
+
+		signature += parameterTypeInExtLanguage;
+
+		if (parameterNameInExtLanguage != null) {
+
+			signature += " ";
+			signature += parameterNameInExtLanguage;
 		}
 
 		return signature;

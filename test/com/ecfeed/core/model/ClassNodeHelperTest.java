@@ -174,26 +174,24 @@ public class ClassNodeHelperTest {
 
 		// class with conflicting method
 
-		// TODO SIMPLE-VIEW - uncomment
+		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		methodNode.addParameter(param1);
 
-//		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
-//		methodNode.addParameter(param1);
-//
-//		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
-//		methodNode.addParameter(param2);
-//
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
-//
-//		assertNotNull(errorMessage);
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
-//
-//		assertNotNull(errorMessage);
+		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
+		methodNode.addParameter(param2);
+
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
+
+		assertNotNull(errorMessage);
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
+
+		assertNotNull(errorMessage);
 	}
 
 }

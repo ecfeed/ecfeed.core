@@ -131,7 +131,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 			// TODO SIMPLE-VIEW convert method name and types to ext language
 			MethodNode foundMethodNode = 
-					ClassNodeHelper.findMethod(
+					ClassNodeHelper.findMethodByExtLanguage(
 							classNode, oldMethodNode.getName(), parameterTypes, fExtLanguage);
 
 			if (foundMethodNode == null) {

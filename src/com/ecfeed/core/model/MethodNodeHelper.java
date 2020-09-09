@@ -18,63 +18,64 @@ import com.ecfeed.core.utils.*;
 public class MethodNodeHelper {
 
 
-	public static String createSignature(MethodNode methodNode, ExtLanguage extLanguage) { 
+	public static String createSignatureByIntrLanguage(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		return MethodNodeHelper.createSignature(
+		return MethodNodeHelper.createSignatureByIntrLanguage(
 				methodNode,
 				false, extLanguage);
 	}
 
-	public static String createSignature(
+	public static String createSignatureByIntrLanguage(
 			MethodNode methodNode,
 			boolean isExpectedDecorationAdded, 
-			ExtLanguage extLanguage) {
+			ExtLanguage extLanguageOfTheResult) {
 
 
 		final List<Boolean> expectedParametersFlags =
 				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getMethodParameters()) : null);
 
 		String signature =
-				createSignature(
+				createSignatureByIntrLanguage(
 						methodNode.getName(),
 						methodNode.getParameterTypes(),
 						methodNode.getParametersNames(),
 						expectedParametersFlags,
-						extLanguage);
+						extLanguageOfTheResult);
 
 		return signature;
 	}
 
 	public static String createLongSignature(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		String shortSignature = createSignature(methodNode, extLanguage);
+		String shortSignature = createSignatureByIntrLanguage(methodNode, extLanguage);
 
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
 
 	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		String signature = createSignature(methodNode, true, extLanguage);
+		String signature = createSignatureByIntrLanguage(methodNode, true, extLanguage);
 
 		return signature;
 	}
 
 
-	public static String createSignature(
-			String fullName,
-			List<String> parameterTypes,
+	// TODO SIMPLE-VIEW unit test
+	public static String createSignatureByIntrLanguage(
+			String nameInIntrLanguage,
+			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames, 
 			List<Boolean> expectedFlags, 
-			ExtLanguage extLanguage) {
+			ExtLanguage extLanguageOfTheResult) {
 
-		fullName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(fullName, extLanguage);
+		String nameInExtLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguageOfTheResult);
 
-		String signature = new String(fullName) + "(";
+		String signature = new String(nameInExtLanguage) + "(";
 
 		String signaturesOfParameters = 
-				createSignaturesOfParameters(
-						parameterTypes, parameterNames, expectedFlags, 
-						extLanguage);
+				createSignaturesOfParametersByIntrLanguage(
+						parameterTypesInIntrLanguage, parameterNames, expectedFlags,
+						extLanguageOfTheResult);
 
 		signature += signaturesOfParameters;
 
@@ -83,22 +84,71 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static String createSignaturesOfParameters(
-			List<String> types, 
+	// TODO SIMPLE-VIEW unit test
+	public static String createSignatureByExtLanguage(
+			String nameInExtLanguage,
+			List<String> parameterTypesInExtLanguage,
+			List<String> parameterNames,
+			List<Boolean> expectedFlags) {
+
+		String signature = new String(nameInExtLanguage) + "(";
+
+		String signaturesOfParameters =
+				createSignaturesOfParametersByExtLanguage( // TODO SIMPLE-VIEW ext
+						parameterTypesInExtLanguage, parameterNames, expectedFlags);
+
+		signature += signaturesOfParameters;
+
+		signature += ")";
+
+		return signature;
+	}
+
+	private static String createSignaturesOfParametersByExtLanguage(
+			List<String> parameterTypesInExtLanguage,
+			List<String> parameterNames,
+			List<Boolean> expectedFlags) {
+
+		String signature = "";
+
+		for (int paramIndex = 0; paramIndex < parameterTypesInExtLanguage.size(); paramIndex++) {
+
+			String parameterType = parameterTypesInExtLanguage.get(paramIndex);
+			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
+			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
+
+			String signatureOfOneParameter =
+					AbstractParameterNodeHelper.createSignatureOfOneParameterByExtLanguage( // XYX by ext language
+							parameterType,
+							parameterName,
+							expectedFlag);
+
+			signature += signatureOfOneParameter;
+
+			if (paramIndex < parameterTypesInExtLanguage.size() - 1) {
+				signature += ", ";
+			}
+		}
+
+		return signature;
+	}
+
+	private static String createSignaturesOfParametersByIntrLanguage(
+			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames,
 			List<Boolean> expectedFlags, 
 			ExtLanguage extLanguage) {
 
 		String signature = "";
 
-		for (int paramIndex = 0; paramIndex < types.size(); paramIndex++) {
+		for (int paramIndex = 0; paramIndex < parameterTypesInIntrLanguage.size(); paramIndex++) {
 
-			String parameterType = types.get(paramIndex);
+			String parameterType = parameterTypesInIntrLanguage.get(paramIndex);
 			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter = 
-					AbstractParameterNodeHelper.createSignatureOfOneParameter(
+					AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
 							parameterType,
 							parameterName,
 							expectedFlag, 
@@ -106,7 +156,7 @@ public class MethodNodeHelper {
 
 			signature += signatureOfOneParameter;
 
-			if (paramIndex < types.size() - 1) {
+			if (paramIndex < parameterTypesInIntrLanguage.size() - 1) {
 				signature += ", ";
 			}
 		}
