@@ -17,10 +17,10 @@ import com.ecfeed.core.utils.ExtLanguage;
 public abstract class AbstractParameterNodeHelper {
 
 	public static String createSignatureOfOneParameter(
-			String parameterType,
+			String parameterTypeInIntrLanguage,
 			String parameterName,
 			Boolean expectedFlag,
-			ExtLanguage extLanguage) {
+			ExtLanguage extLanguageOfTheResult) {
 
 		String signature = "";
 
@@ -29,14 +29,14 @@ public abstract class AbstractParameterNodeHelper {
 			signature += expectedDecoration;
 		}
 
-		parameterType = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(parameterType, extLanguage);
+		parameterTypeInIntrLanguage = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(parameterTypeInIntrLanguage, extLanguageOfTheResult);
 
-		signature += parameterType;
+		signature += parameterTypeInIntrLanguage;
 
 		if (parameterName != null) {
 
 			signature += " ";
-			parameterName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterName, extLanguage);
+			parameterName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterName, extLanguageOfTheResult);
 
 			signature += parameterName;
 		}
