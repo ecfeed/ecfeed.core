@@ -17,6 +17,63 @@ import com.ecfeed.core.utils.*;
 
 public class MethodNodeHelper {
 
+	// TODO SIMPLE-VIEW unit tests
+	public static String getMethodName(MethodNode methodNode, ExtLanguage extLanguage) {
+
+		String nameInIntrLanguage = methodNode.getName();
+
+		String nameInExtLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguage);
+		return nameInExtLanguage;
+	}
+
+	// TODO SIMPLE-VIEW unit tests
+	public static List<String> getParameterNames(MethodNode method) {
+
+		List<String> result = new ArrayList<String>();
+
+		for(AbstractParameterNode parameter : method.getParameters()){
+			result.add(parameter.getName());
+		}
+
+		return result;
+	}
+
+	// TODO SIMPLE-VIEW unit tests
+	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguage extLanguage) {
+
+		List<String> result = new ArrayList<String>();
+
+		for (AbstractParameterNode parameter : method.getParameters()) {
+
+			String type = parameter.getType();
+
+			type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
+
+			result.add(type);
+		}
+
+		return result;
+	}
+
+	// TODO SIMPLE-VIEW unit tests
+	// TODO SIMPLE-VIEW similar methods for other types of nodes exist (extract common code)
+	public static String validateMethodName(String nameInExternalLanguage, ExtLanguage extLanguage) {
+
+		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		String nameInInternalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
+
+		if (isValid(nameInInternalLanguage)) {
+			return null;
+		}
+
+		return RegexHelper.createMessageAllowedCharsForMethod(extLanguage);
+	}
+
 
 	public static String createSignature(MethodNode methodNode, ExtLanguage extLanguage) {
 
@@ -82,7 +139,6 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static String createSignatureByExtLanguage(
 			String nameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
@@ -179,23 +235,6 @@ public class MethodNodeHelper {
 		return expectedFlags;
 	}
 
-	// TODO SIMPLE-VIEW similar methods for other types of nodes exist (extract common code)
-	public static String validateMethodName(String nameInExternalLanguage, ExtLanguage extLanguage) {
-
-		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
-
-		if (errorMessage != null) {
-			return errorMessage;
-		}
-
-		String nameInInternalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
-
-		if (isValid(nameInInternalLanguage)) {
-			return null;
-		}
-
-		return RegexHelper.createMessageAllowedCharsForMethod(extLanguage);
-	}
 
 	private static boolean isValid(String name) {
 
@@ -206,40 +245,6 @@ public class MethodNodeHelper {
 		return true;
 	}
 
-	public static String getMethodName(MethodNode methodNode, ExtLanguage extLanguage) {
-
-		String nameInIntrLanguage = methodNode.getName();
-
-		String nameInExtLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguage);
-		return nameInExtLanguage;
-	}
-
-	public static List<String> getParameterNames(MethodNode method) {
-
-		List<String> result = new ArrayList<String>();
-
-		for(AbstractParameterNode parameter : method.getParameters()){
-			result.add(parameter.getName());
-		}
-
-		return result;
-	}
-
-	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguage extLanguage) {
-
-		List<String> result = new ArrayList<String>();
-
-		for (AbstractParameterNode parameter : method.getParameters()) {
-
-			String type = parameter.getType();
-
-			type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
-
-			result.add(type);
-		}
-
-		return result;
-	}
 
 
 }
