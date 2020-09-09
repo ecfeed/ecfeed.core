@@ -36,6 +36,8 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 		setOneNodeToSelect(fTarget);
 
 		ClassNode classNode = fTarget.getClassNode();
+
+		// TODO SIMPLE-VIEW convert method name and types to ext language
 		if(ClassNodeHelper.findMethod(classNode, fSource.getName(), fSource.getParameterTypes(), getExtLanguage()) != null){
 			
 			ModelOperationException.report(

@@ -82,17 +82,16 @@ public class ClassNodeHelper {
 
 	public static String verifyNewMethodSignatureIsValidAndUnique(
 			ClassNode classNode, 
-			String methodName, 
-			List<String> parameterTypes,
+			String methodNameInExtLanguage,
+			List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
 
-		if (findMethod(classNode, methodName, parameterTypes, extLanguage) != null) {
+		if (findMethod(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage) != null) {
 
 			String newMethodSignature =
-
 					MethodNodeHelper.createSignature(
-							methodName,
-							parameterTypes,
+							methodNameInExtLanguage,
+							parameterTypesInExtLanguage,
 							null,
 							null,
 							false,
@@ -109,7 +108,7 @@ public class ClassNodeHelper {
 			return errorMessage;
 		}
 
-		String errorMessage = MethodNodeHelper.validateMethodName(methodName, extLanguage);
+		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
@@ -166,13 +165,12 @@ public class ClassNodeHelper {
 		return message;
 	}
 
-	public static MethodNode findMethod(
-			ClassNode classNode, 
-			String methodNameToFind, 
-			List<String> intrLanguageParameterTypesToFind, 
-			ExtLanguage extLanguage) {
 
-		List<String> extLanguageParameterTypesToFind = convertParameterTypesToExtLanguage(intrLanguageParameterTypesToFind, extLanguage);
+	public static MethodNode findMethod( // TODO SIMPLE-VIEW check usages
+			ClassNode classNode, 
+			String methodNameInExternalLanguage,
+			List<String> parameterTypesInExternalLanguage,
+			ExtLanguage extLanguage) {
 
 		List<MethodNode> methods = classNode.getMethods();
 
@@ -180,9 +178,9 @@ public class ClassNodeHelper {
 
 			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
 
-			String currentMethodName = methodNode.getName();
+			String currentMethodName = MethodNodeHelper.getMethodName(methodNode, extLanguage);
 
-			if (currentMethodName.equals(methodNameToFind) && currentParameterTypes.equals(extLanguageParameterTypesToFind)){
+			if (currentMethodName.equals(methodNameInExternalLanguage) && currentParameterTypes.equals(parameterTypesInExternalLanguage)){
 				return methodNode;
 			}
 		}
@@ -190,7 +188,7 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	private static List<String> convertParameterTypesToExtLanguage(
+	public static List<String> convertParameterTypesToExtLanguage(
 			List<String> parameterTypes,
 			ExtLanguage extLanguage) {
 

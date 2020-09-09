@@ -86,7 +86,8 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		shiftElements(parameterTypes, indices, shift);
 		
 		ClassNode classNode = method.getClassNode();
-		
+
+		// TODO SIMPLE-VIEW convert method name and types to ext language
 		MethodNode sibling = ClassNodeHelper.findMethod(classNode, method.getName(), parameterTypes, getExtLanguage());
 		
 		if(sibling != null && sibling != method){

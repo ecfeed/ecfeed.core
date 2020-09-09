@@ -96,7 +96,7 @@ public class MethodNodeHelper {
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter = 
-					createSignatureOfOneParameter(
+					AbstractParameterNodeHelper.createSignatureOfOneParameter(
 							parameterType,
 							parameterName,
 							expectedFlag, 
@@ -107,48 +107,6 @@ public class MethodNodeHelper {
 
 			if (paramIndex < types.size() - 1) {
 				signature += ", ";
-			}
-		}
-
-		return signature;
-	}
-
-	private static String createSignatureOfOneParameter(
-			String parameterType,
-			String parameterName, 
-			Boolean expectedFlag,
-			boolean isExpectedDecorationAdded, 
-			ExtLanguage extLanguage) {
-
-		String signature = "";
-
-		if (isExpectedDecorationAdded) {
-			String expectedDecoration = createExpectedDecoration(expectedFlag);
-			signature += expectedDecoration;
-		}
-
-		parameterType = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(parameterType, extLanguage);
-
-		signature += parameterType;
-
-		if (parameterName != null) {
-
-			signature += " ";
-			parameterName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(parameterName, extLanguage);
-
-			signature += parameterName;
-		}
-
-		return signature;
-	}
-
-	private static String createExpectedDecoration(Boolean expectedFlag) {
-
-		String signature = "";
-
-		if (expectedFlag != null) {
-			if (expectedFlag == true) {
-				signature += "[e]";
 			}
 		}
 
@@ -197,6 +155,14 @@ public class MethodNodeHelper {
 		}
 
 		return true;
+	}
+
+	public static String getMethodName(MethodNode methodNode, ExtLanguage extLanguage) {
+
+		String nameInIntrLanguage = methodNode.getName();
+
+		String nameInExtLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguage);
+		return nameInExtLanguage;
 	}
 
 	public static List<String> getParameterNames(MethodNode method) {
