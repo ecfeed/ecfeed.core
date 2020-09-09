@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.ExtLanguage;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -66,6 +67,40 @@ public class MethodNodeHelperTest {
 
 		signature = MethodNodeHelper.createLongSignature(methodNode, ExtLanguage.SIMPLE);
 		assertEquals("class1.method 1(Number param1, Number param2)", signature);
+
+		// by external language
+
+		String[] params = {"Number", "Text", "Logical"};
+		signature = MethodNodeHelper.createSignatureByExtLanguage(
+				"f 1",
+				Arrays.asList(params),
+				null,
+				null);
+
+		assertEquals("f 1(Number, Text, Logical)", signature);
+
+		// with parameter names
+
+		String[] paramNames = {"num", "txt", "log"};
+		signature = MethodNodeHelper.createSignatureByExtLanguage(
+				"f 1",
+				Arrays.asList(params),
+				Arrays.asList(paramNames),
+				null);
+
+		assertEquals("f 1(Number num, Text txt, Logical log)", signature);
+
+		// with expected decorations
+
+		Boolean[] expDecorations = {true, false, true};
+		signature = MethodNodeHelper.createSignatureByExtLanguage(
+				"f 1",
+				Arrays.asList(params),
+				Arrays.asList(paramNames),
+				Arrays.asList(expDecorations));
+
+		assertEquals("f 1([e]Number num, Text txt, [e]Logical log)", signature);
+
 	}
 
 	@Test

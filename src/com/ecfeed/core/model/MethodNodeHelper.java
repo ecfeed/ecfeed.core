@@ -59,8 +59,6 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-
-	// TODO SIMPLE-VIEW unit test
 	public static String createSignatureByIntrLanguage(
 			String nameInIntrLanguage,
 			List<String> parameterTypesInIntrLanguage,
