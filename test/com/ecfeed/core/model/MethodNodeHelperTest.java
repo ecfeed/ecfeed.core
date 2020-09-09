@@ -21,6 +21,18 @@ import static org.junit.Assert.*;
 public class MethodNodeHelperTest {
 
 	@Test
+	public void getMethodNameTest(){
+
+		MethodNode methodNode = new MethodNode("method_1", null);
+
+		String methodName = MethodNodeHelper.getMethodName(methodNode, ExtLanguage.JAVA);
+		assertEquals("method_1", methodName);
+
+		methodName = MethodNodeHelper.getMethodName(methodNode, ExtLanguage.SIMPLE);
+		assertEquals("method 1", methodName);
+	}
+
+	@Test
 	public void signatureCreateTest(){
 
 		ClassNode classNode = new ClassNode("class1", null);
