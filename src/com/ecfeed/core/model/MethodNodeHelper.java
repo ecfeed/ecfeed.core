@@ -25,7 +25,6 @@ public class MethodNodeHelper {
 		return nameInExtLanguage;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static List<String> getParameterNames(MethodNode method) {
 
 		List<String> result = new ArrayList<String>();
@@ -54,7 +53,6 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	// TODO SIMPLE-VIEW similar methods for other types of nodes exist (extract common code)
 	public static String validateMethodName(String nameInExternalLanguage, ExtLanguage extLanguage) {
 

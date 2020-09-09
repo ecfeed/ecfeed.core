@@ -51,6 +51,35 @@ public class MethodNodeHelperTest {
 	}
 
 	@Test
+	public void getParameterTypesTest(){
+
+		MethodNode methodNode = new MethodNode("method_1", null);
+
+		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		methodNode.addParameter(param1);
+
+		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0", false);
+		methodNode.addParameter(param2);
+
+		// java types
+
+		List<String> methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.JAVA);
+
+		assertEquals(2,  methodParameterTypes.size());
+		assertEquals("int", methodParameterTypes.get(0));
+		assertEquals("double", methodParameterTypes.get(1));
+
+		// simple types
+
+		methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.SIMPLE);
+
+		assertEquals(2,  methodParameterTypes.size());
+		assertEquals("Number", methodParameterTypes.get(0));
+		assertEquals("Number", methodParameterTypes.get(1));
+	}
+
+
+	@Test
 	public void signatureCreateTest(){
 
 		ClassNode classNode = new ClassNode("class1", null);
