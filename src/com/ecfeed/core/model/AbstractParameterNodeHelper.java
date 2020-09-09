@@ -20,12 +20,11 @@ public abstract class AbstractParameterNodeHelper {
 			String parameterType,
 			String parameterName,
 			Boolean expectedFlag,
-			boolean isExpectedDecorationAdded,
 			ExtLanguage extLanguage) {
 
 		String signature = "";
 
-		if (isExpectedDecorationAdded && expectedFlag != null) {
+		if (expectedFlag != null) {
 			String expectedDecoration = createExpectedDecoration(expectedFlag);
 			signature += expectedDecoration;
 		}

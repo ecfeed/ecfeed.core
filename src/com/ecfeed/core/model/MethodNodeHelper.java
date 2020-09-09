@@ -30,13 +30,16 @@ public class MethodNodeHelper {
 			boolean isExpectedDecorationAdded, 
 			ExtLanguage extLanguage) {
 
-		String signature = 
+
+		final List<Boolean> expectedParametersFlags =
+				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getMethodParameters()) : null);
+
+		String signature =
 				createSignature(
 						methodNode.getName(),
 						methodNode.getParameterTypes(),
 						methodNode.getParametersNames(),
-						getExpectedParametersFlags(methodNode.getMethodParameters()),
-						isExpectedDecorationAdded,
+						expectedParametersFlags,
 						extLanguage);
 
 		return signature;
@@ -62,7 +65,7 @@ public class MethodNodeHelper {
 			List<String> parameterTypes,
 			List<String> parameterNames, 
 			List<Boolean> expectedFlags, 
-			boolean isExpectedDecorationAdded, ExtLanguage extLanguage) {
+			ExtLanguage extLanguage) {
 
 		fullName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(fullName, extLanguage);
 
@@ -71,7 +74,7 @@ public class MethodNodeHelper {
 		String signaturesOfParameters = 
 				createSignaturesOfParameters(
 						parameterTypes, parameterNames, expectedFlags, 
-						isExpectedDecorationAdded, extLanguage);
+						extLanguage);
 
 		signature += signaturesOfParameters;
 
@@ -84,7 +87,6 @@ public class MethodNodeHelper {
 			List<String> types, 
 			List<String> parameterNames,
 			List<Boolean> expectedFlags, 
-			boolean isExpectedDecorationAdded, 
 			ExtLanguage extLanguage) {
 
 		String signature = "";
@@ -100,7 +102,6 @@ public class MethodNodeHelper {
 							parameterType,
 							parameterName,
 							expectedFlag, 
-							isExpectedDecorationAdded,
 							extLanguage);
 
 			signature += signatureOfOneParameter;

@@ -94,7 +94,6 @@ public class ClassNodeHelper {
 							parameterTypesInExtLanguage,
 							null,
 							null,
-							false,
 							extLanguage);
 
 
