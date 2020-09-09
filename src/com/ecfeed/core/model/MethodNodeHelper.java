@@ -17,7 +17,6 @@ import com.ecfeed.core.utils.*;
 
 public class MethodNodeHelper {
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getMethodName(MethodNode methodNode, ExtLanguage extLanguage) {
 
 		String nameInIntrLanguage = methodNode.getName();

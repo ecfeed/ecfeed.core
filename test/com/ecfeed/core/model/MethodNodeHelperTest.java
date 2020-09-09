@@ -33,6 +33,24 @@ public class MethodNodeHelperTest {
 	}
 
 	@Test
+	public void getParameterNamesTest(){
+
+		MethodNode methodNode = new MethodNode("method_1", null);
+
+		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		methodNode.addParameter(param1);
+
+		MethodParameterNode param2 = new MethodParameterNode("param2", null, "int", "0", false);
+		methodNode.addParameter(param2);
+
+		List<String> methodParameterNames = MethodNodeHelper.getParameterNames(methodNode);
+
+		assertEquals(2,  methodParameterNames.size());
+		assertEquals("param1", methodParameterNames.get(0));
+		assertEquals("param2", methodParameterNames.get(1));
+	}
+
+	@Test
 	public void signatureCreateTest(){
 
 		ClassNode classNode = new ClassNode("class1", null);
