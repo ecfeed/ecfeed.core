@@ -97,7 +97,7 @@ public class MethodNode extends ParametersParentNode {
 	@Override
 	public String toString() {
 
-		return MethodNodeHelper.createSignatureByIntrLanguage(
+		return MethodNodeHelper.createSignature(
 		this,
 		true, ExtLanguage.JAVA); 
 	}

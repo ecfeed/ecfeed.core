@@ -18,14 +18,14 @@ import com.ecfeed.core.utils.*;
 public class MethodNodeHelper {
 
 
-	public static String createSignatureByIntrLanguage(MethodNode methodNode, ExtLanguage extLanguage) {
+	public static String createSignature(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		return MethodNodeHelper.createSignatureByIntrLanguage(
+		return MethodNodeHelper.createSignature(
 				methodNode,
 				false, extLanguage);
 	}
 
-	public static String createSignatureByIntrLanguage(
+	public static String createSignature(
 			MethodNode methodNode,
 			boolean isExpectedDecorationAdded, 
 			ExtLanguage extLanguageOfTheResult) {
@@ -47,14 +47,14 @@ public class MethodNodeHelper {
 
 	public static String createLongSignature(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		String shortSignature = createSignatureByIntrLanguage(methodNode, extLanguage);
+		String shortSignature = createSignature(methodNode, extLanguage);
 
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
 
 	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		String signature = createSignatureByIntrLanguage(methodNode, true, extLanguage);
+		String signature = createSignature(methodNode, true, extLanguage);
 
 		return signature;
 	}

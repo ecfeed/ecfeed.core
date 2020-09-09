@@ -155,7 +155,7 @@ public class ClassNodeHelper {
 
 		String classSignature = createSignature(classNode, extLanguage);
 
-		String methodSignature = MethodNodeHelper.createSignatureByIntrLanguage(duplicateMethodNode, extLanguage);
+		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, extLanguage);
 
 		String message =
 				"Class: " 
