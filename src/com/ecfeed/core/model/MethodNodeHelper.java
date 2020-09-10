@@ -36,7 +36,6 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguage extLanguage) {
 
 		List<String> result = new ArrayList<String>();

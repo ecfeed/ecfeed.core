@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class AbstractParameterNodeHelperTest {
 
 	@Test
-	public void createSignatureTest() {
+	public void createSignatureByIntrLanguageTest() {
 
 		String signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
 				"int","par1",false,	ExtLanguage.JAVA);
@@ -58,6 +58,18 @@ public class AbstractParameterNodeHelperTest {
 				"int",null,true,	ExtLanguage.SIMPLE);
 		assertEquals("[e]Number", signature);
 
+	}
+
+	@Test
+	public void createSignatureByExtLanguageTest() {
+
+		String signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByExtLanguage(
+				"Number","par1",false);
+		assertEquals("Number par1", signature);
+
+		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByExtLanguage(
+				"Number","par1",true);
+		assertEquals("[e]Number par1", signature);
 	}
 
 }

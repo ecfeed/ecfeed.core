@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
-// TODO SIMPLE-VIEW unit tests
 public abstract class AbstractParameterNodeHelper {
 
 	public static String createSignatureOfOneParameterByIntrLanguage(
