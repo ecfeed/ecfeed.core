@@ -31,8 +31,6 @@ import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ExtLanguage;
 
-// TODO SIMPLE-VIEW unit tests
-
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
