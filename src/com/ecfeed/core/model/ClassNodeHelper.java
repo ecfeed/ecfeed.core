@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
-// TODO SIMPLE-VIEW unit tests
+
 public class ClassNodeHelper {
 
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
@@ -56,19 +56,11 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	private static boolean classNameCompliesWithJavaNamingRules(String className) {
-
-		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
-			return true;
-		}
-
-		return false;
-	}
-
+	// TODO SIMPLE-VIEW unit tests
 	public static boolean isNewMethodSignatureValidAndUnique(
-			ClassNode classNode, 
-			String methodName, 
-			List<String> parameterTypes, 
+			ClassNode classNode,
+			String methodName,
+			List<String> parameterTypes,
 			ExtLanguage extLanguage) {
 
 		String errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, methodName, parameterTypes, extLanguage);
@@ -81,7 +73,7 @@ public class ClassNodeHelper {
 	}
 
 	public static String verifyNewMethodSignatureIsValidAndUnique(
-			ClassNode classNode, 
+			ClassNode classNode,
 			String methodNameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
@@ -115,6 +107,7 @@ public class ClassNodeHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String generateNewMethodName(
 			ClassNode classNode, String startMethodName, List<String> argTypes, ExtLanguage extLanguage) {
 
@@ -134,6 +127,7 @@ public class ClassNodeHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String className = classNode.getName();
@@ -147,8 +141,9 @@ public class ClassNodeHelper {
 		return className;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String createMethodSignatureDuplicateMessage(
-			ClassNode classNode, 
+			ClassNode classNode,
 			MethodNode duplicateMethodNode,
 			ExtLanguage extLanguage) {
 
@@ -158,20 +153,21 @@ public class ClassNodeHelper {
 		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, extLanguage);
 
 		String message =
-				"Class: " 
-						+ classSignature 
+				"Class: "
+						+ classSignature
 						+ " already contains method with identical signature: " + methodSignature + ".";
 
 		return message;
 	}
 
 
+	// TODO SIMPLE-VIEW unit tests
 	public static MethodNode findMethodByExtLanguage(
 			// TODO SIMPLE-VIEW check usages
-					  ClassNode classNode,
-					  String methodNameInExternalLanguage,
-					  List<String> parameterTypesInExternalLanguage,
-					  ExtLanguage extLanguage) {
+			ClassNode classNode,
+			String methodNameInExternalLanguage,
+			List<String> parameterTypesInExternalLanguage,
+			ExtLanguage extLanguage) {
 
 		List<MethodNode> methods = classNode.getMethods();
 
@@ -189,6 +185,7 @@ public class ClassNodeHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static MethodNode findMethodByIntrLanguage( // TODO SIMPLE-VIEW check usages
 													   ClassNode classNode,
 													   String methodNameInIntrLanguage,
@@ -198,6 +195,7 @@ public class ClassNodeHelper {
 		return methodNode;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static List<String> convertParameterTypesToExtLanguage(
 			List<String> parameterTypes,
 			ExtLanguage extLanguage) {
@@ -211,6 +209,16 @@ public class ClassNodeHelper {
 		}
 
 		return result;
+	}
+
+	// TODO SIMPLE-VIEW unit tests
+	private static boolean classNameCompliesWithJavaNamingRules(String className) {
+
+		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
