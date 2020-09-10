@@ -56,22 +56,6 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static boolean isNewMethodSignatureValidAndUnique(
-			ClassNode classNode,
-			String methodName,
-			List<String> parameterTypes,
-			ExtLanguage extLanguage) {
-
-		String errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, methodName, parameterTypes, extLanguage);
-
-		if (errorMessage == null) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public static String verifyNewMethodSignatureIsValidAndUnique(
 			ClassNode classNode,
 			String methodNameInExtLanguage,
@@ -111,7 +95,9 @@ public class ClassNodeHelper {
 	public static String generateNewMethodName(
 			ClassNode classNode, String startMethodName, List<String> argTypes, ExtLanguage extLanguage) {
 
-		if (isNewMethodSignatureValidAndUnique(classNode, startMethodName, argTypes, extLanguage)) {
+		String errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, startMethodName, argTypes, extLanguage);
+
+		if (errorMessage == null) {
 			return startMethodName;
 		}
 
@@ -121,7 +107,8 @@ public class ClassNodeHelper {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			if (isNewMethodSignatureValidAndUnique(classNode, newMethodName, argTypes, extLanguage)) {
+			errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, newMethodName, argTypes, extLanguage);
+			if (errorMessage == null) {
 				return newMethodName;
 			}
 		}
@@ -187,9 +174,9 @@ public class ClassNodeHelper {
 
 	// TODO SIMPLE-VIEW unit tests
 	public static MethodNode findMethodByIntrLanguage( // TODO SIMPLE-VIEW check usages
-													   ClassNode classNode,
-													   String methodNameInIntrLanguage,
-													   List<String> parameterTypesInIntrLanguage) {
+			ClassNode classNode,
+			String methodNameInIntrLanguage,
+			List<String> parameterTypesInIntrLanguage) {
 
 		MethodNode methodNode = classNode.findMethodWithTheSameSignature(methodNameInIntrLanguage, parameterTypesInIntrLanguage);
 		return methodNode;
