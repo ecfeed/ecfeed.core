@@ -78,6 +78,7 @@ public class AbstractParameterNodeHelperTest {
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode(
 						"name", null,	"int", "0", true);
+
 		String label = AbstractParameterNodeHelper.createParameterLabel(methodParameterNode, ExtLanguage.JAVA);
 		assertEquals("name: int", label);
 
