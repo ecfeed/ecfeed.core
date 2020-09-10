@@ -79,9 +79,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-
-	// TODO SIMPLE-VIEW remove
-	public static String createLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+	public static String createParameterLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
 		String name = abstractParameterNode.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
