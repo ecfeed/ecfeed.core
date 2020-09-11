@@ -9,7 +9,7 @@
  *******************************************************************************/
 package com.ecfeed.core.utils;
 
-public enum ETypeName {  // TODO SIMPLE-VIEW - move to JavaTypeHelper ?
+public enum ETypeName {  // TODO SIMPLE-VIEW - move to JavaLanguageHelper ?
 	BOOLEAN(JavaLanguageHelper.TYPE_NAME_BOOLEAN),
 	BYTE(JavaLanguageHelper.TYPE_NAME_BYTE),
 	CHAR(JavaLanguageHelper.TYPE_NAME_CHAR),
