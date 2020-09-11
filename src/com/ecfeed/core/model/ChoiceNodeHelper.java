@@ -10,12 +10,13 @@
 
 package com.ecfeed.core.model;
 
-import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_BYTE;
-import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_DOUBLE;
-import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_FLOAT;
-import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_INT;
-import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_LONG;
-import static com.ecfeed.core.utils.JavaTypeHelper.TYPE_NAME_SHORT;
+// TODO SIMPLE-VIEW do we need constants from JavaLanguageHelper (create/extract methods?)
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_BYTE;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_DOUBLE;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_FLOAT;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_INT;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_LONG;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_SHORT;
 import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
 import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
@@ -27,7 +28,7 @@ import java.util.Map;
 
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ExtLanguage;
 
@@ -305,70 +306,70 @@ public class ChoiceNodeHelper {
 		switch(type) {
 		case TYPE_NAME_DOUBLE:
 		{
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
 				choice.setValueString(Double.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
 				choice.setValueString(Double.MAX_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MIN)) {
 				choice.setValueString("-" + Double.MIN_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MAX)) {
 				choice.setValueString("-" + Double.MAX_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
 				choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_POSITIVE_INF)) {
 				choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
 			}
 			break;
 		}
 		case TYPE_NAME_FLOAT:
 		{
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
 				choice.setValueString(Float.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
 				choice.setValueString(Float.MAX_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MIN)) {
 				choice.setValueString("-" + Float.MIN_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MAX)) {
 				choice.setValueString("-" + Float.MAX_VALUE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
 				choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_POSITIVE_INF)) {
 				choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
 			}
 			break;
 		}
 		case TYPE_NAME_BYTE:
 		{
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
 				choice.setValueString(Byte.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
 				choice.setValueString(Byte.MAX_VALUE + "");
 			}
 			break;
 		}
 		case TYPE_NAME_INT:
 		{
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
 				choice.setValueString(Integer.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
 				choice.setValueString(Integer.MAX_VALUE + "");
 			}
 			break;
 		}
 		case TYPE_NAME_SHORT:
 		{
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
 				choice.setValueString(Short.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
 				choice.setValueString(Short.MAX_VALUE + "");
 			}
 			break;
 		}
 		case TYPE_NAME_LONG:
 		{
-			if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
 				choice.setValueString(Long.MIN_VALUE + "");
-			} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
 				choice.setValueString(Long.MAX_VALUE + "");
 			}
 			break;

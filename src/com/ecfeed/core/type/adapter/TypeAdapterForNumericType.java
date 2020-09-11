@@ -12,7 +12,7 @@ package com.ecfeed.core.type.adapter;
 
 import java.util.Arrays;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAdapterForTypeWithRange<T> {
 
@@ -29,7 +29,7 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 
 	@Override
 	public String getDefaultValue() {
-		return JavaTypeHelper.DEFAULT_EXPECTED_NUMERIC_VALUE;
+		return JavaLanguageHelper.DEFAULT_EXPECTED_NUMERIC_VALUE;
 	}
 
 	@Override

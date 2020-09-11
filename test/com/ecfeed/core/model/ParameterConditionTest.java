@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ParameterConditionTest {
 
@@ -120,10 +120,10 @@ public class ParameterConditionTest {
 	public void evaluateForStrings() {
 
 		MethodParameterNode leftParam = 
-				new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+				new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 
 		MethodParameterNode rightParam = 
-				new MethodParameterNode("par2", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);		
+				new MethodParameterNode("par2", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.EQUAL, "a", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.EQUAL, "A", AssertType.FALSE);
@@ -176,22 +176,22 @@ public class ParameterConditionTest {
 
 	@Test
 	public void evaluateForInteger() {
-		evaluateForIntegerTypes(JavaTypeHelper.TYPE_NAME_INT);
+		evaluateForIntegerTypes(JavaLanguageHelper.TYPE_NAME_INT);
 	}
 
 	@Test
 	public void evaluateForLong() {
-		evaluateForIntegerTypes(JavaTypeHelper.TYPE_NAME_LONG);
+		evaluateForIntegerTypes(JavaLanguageHelper.TYPE_NAME_LONG);
 	}	
 
 	@Test
 	public void evaluateForShort() {
-		evaluateForIntegerTypes(JavaTypeHelper.TYPE_NAME_SHORT);
+		evaluateForIntegerTypes(JavaLanguageHelper.TYPE_NAME_SHORT);
 	}	
 
 	@Test
 	public void evaluateForByte() {
-		evaluateForIntegerTypes(JavaTypeHelper.TYPE_NAME_BYTE);
+		evaluateForIntegerTypes(JavaLanguageHelper.TYPE_NAME_BYTE);
 	}	
 
 	public void evaluateForFloatTypes(String parameterType) {
@@ -235,19 +235,19 @@ public class ParameterConditionTest {
 
 	@Test
 	public void evaluateForFloat() {
-		evaluateForFloatTypes(JavaTypeHelper.TYPE_NAME_FLOAT);
+		evaluateForFloatTypes(JavaLanguageHelper.TYPE_NAME_FLOAT);
 	}
 
 	@Test
 	public void evaluateForDouble() {
-		evaluateForFloatTypes(JavaTypeHelper.TYPE_NAME_DOUBLE);
+		evaluateForFloatTypes(JavaLanguageHelper.TYPE_NAME_DOUBLE);
 	}	
 
 	@Test
 	public void evaluateForBoolean() {
 
-		MethodParameterNode leftParam = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_BOOLEAN, "", false);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", null, JavaTypeHelper.TYPE_NAME_BOOLEAN, "", false);
+		MethodParameterNode leftParam = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false);
+		MethodParameterNode rightParam = new MethodParameterNode("par2", null, JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false);
 
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.EQUAL, "true", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.EQUAL, "false", AssertType.FALSE);
@@ -271,8 +271,8 @@ public class ParameterConditionTest {
 	@Test
 	public void evaluateChar() {
 
-		MethodParameterNode leftParam = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_CHAR, "", false);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", null, JavaTypeHelper.TYPE_NAME_CHAR, "", false);
+		MethodParameterNode leftParam = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_CHAR, "", false);
+		MethodParameterNode rightParam = new MethodParameterNode("par2", null, JavaLanguageHelper.TYPE_NAME_CHAR, "", false);
 
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.EQUAL, "a", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.NOT_EQUAL, "a", AssertType.FALSE);
@@ -407,22 +407,22 @@ public class ParameterConditionTest {
 	
 	@Test
 	public void evaluateForRandomizedInteger() {
-		evaluateForRangeIntegerTypes(JavaTypeHelper.TYPE_NAME_INT);
+		evaluateForRangeIntegerTypes(JavaLanguageHelper.TYPE_NAME_INT);
 	}
 
 	@Test
 	public void evaluateForRandomizedLong() {
-		evaluateForRangeIntegerTypes(JavaTypeHelper.TYPE_NAME_LONG);
+		evaluateForRangeIntegerTypes(JavaLanguageHelper.TYPE_NAME_LONG);
 	}	
 
 	@Test
 	public void evaluateForRandomizedShort() {
-		evaluateForRangeIntegerTypes(JavaTypeHelper.TYPE_NAME_SHORT);
+		evaluateForRangeIntegerTypes(JavaLanguageHelper.TYPE_NAME_SHORT);
 	}	
 
 	@Test
 	public void evaluateForRandomizedByte() {
-		evaluateForRangeIntegerTypes(JavaTypeHelper.TYPE_NAME_BYTE);
+		evaluateForRangeIntegerTypes(JavaLanguageHelper.TYPE_NAME_BYTE);
 	}	
 	
 	
@@ -431,8 +431,8 @@ public class ParameterConditionTest {
 
 	@Test
 	public void copyAndEqualityTest() {
-		MethodParameterNode leftParam = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode leftParam = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode rightParam = new MethodParameterNode("par2", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 
 		RelationStatement statement = 
 				RelationStatement.createStatementWithParameterCondition(
@@ -448,9 +448,9 @@ public class ParameterConditionTest {
 	@Test
 	public void updateReferencesTest() {
 		MethodNode method1 = new MethodNode("method1", null);
-		MethodParameterNode method1LeftParameterNode = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method1LeftParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 		method1.addParameter(method1LeftParameterNode);
-		MethodParameterNode method1RightParameterNode = new MethodParameterNode("par2", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method1RightParameterNode = new MethodParameterNode("par2", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 		method1.addParameter(method1RightParameterNode);
 
 		RelationStatement statement = 
@@ -458,9 +458,9 @@ public class ParameterConditionTest {
 						method1LeftParameterNode, EMathRelation.EQUAL, method1RightParameterNode);
 
 		MethodNode method2 = new MethodNode("method2", null);
-		MethodParameterNode method2LeftParameterNode = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method2LeftParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 		method2.addParameter(method2LeftParameterNode);
-		MethodParameterNode method2RightParameterNode = new MethodParameterNode("par2", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method2RightParameterNode = new MethodParameterNode("par2", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 		method2.addParameter(method2RightParameterNode);
 
 

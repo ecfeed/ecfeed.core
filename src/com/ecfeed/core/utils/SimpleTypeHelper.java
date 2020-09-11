@@ -56,35 +56,35 @@ public final class SimpleTypeHelper {
 
 	public static String convertJavaTypeToSimpleType(String javaType) {
 
-		if (javaType.equals(JavaTypeHelper.TYPE_NAME_BYTE)) {
+		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_BYTE)) {
 			return TYPE_NAME_NUMBER;
 		} 
 
-		if (javaType.equals(JavaTypeHelper.TYPE_NAME_SHORT)) {
+		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_SHORT)) {
 			return TYPE_NAME_NUMBER;
 		} 
 
-		if (javaType.equals(JavaTypeHelper.TYPE_NAME_INT)) {
+		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_INT)) {
 			return TYPE_NAME_NUMBER;
 		} 
 
-		if (javaType.equals(JavaTypeHelper.TYPE_NAME_LONG)) {
+		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_LONG)) {
 			return TYPE_NAME_NUMBER;
 		} 
 
-		if (javaType.equals(JavaTypeHelper.TYPE_NAME_FLOAT)) {
+		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_FLOAT)) {
 			return TYPE_NAME_NUMBER;
 		} 
 
-		if (javaType.equals(JavaTypeHelper.TYPE_NAME_DOUBLE)) {
+		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_DOUBLE)) {
 			return TYPE_NAME_NUMBER;
 		} 
 
-		if (JavaTypeHelper.isTypeWithChars(javaType)) {
+		if (JavaLanguageHelper.isTypeWithChars(javaType)) {
 			return TYPE_NAME_TEXT;
 		} 
 
-		if (JavaTypeHelper.isBooleanTypeName(javaType)) {
+		if (JavaLanguageHelper.isBooleanTypeName(javaType)) {
 			return TYPE_NAME_LOGICAL;
 		} 
 
@@ -94,15 +94,15 @@ public final class SimpleTypeHelper {
 	public static String convertSimpleTypeToJavaType(String javaType) {
 
 		if (javaType.equals(TYPE_NAME_NUMBER)) {
-			return JavaTypeHelper.TYPE_NAME_DOUBLE;
+			return JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		}
 
 		if (javaType.equals(TYPE_NAME_LOGICAL)) {
-			return JavaTypeHelper.getBooleanTypeName();
+			return JavaLanguageHelper.getBooleanTypeName();
 		}
 
 		if (javaType.equals(TYPE_NAME_TEXT)) {
-			return JavaTypeHelper.getStringTypeName();
+			return JavaLanguageHelper.getStringTypeName();
 		}
 
 		return null;

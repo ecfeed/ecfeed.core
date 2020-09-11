@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class LabelConditionTest {
 
@@ -142,7 +142,7 @@ public class LabelConditionTest {
 	@Test
 	public void updateReferencesTest() {
 		MethodNode method1 = new MethodNode("method1", null);
-		MethodParameterNode method1ParameterNode = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method1ParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 		method1.addParameter(method1ParameterNode);
 
 		RelationStatement statement = 
@@ -150,7 +150,7 @@ public class LabelConditionTest {
 						method1ParameterNode, EMathRelation.EQUAL, "ABC");
 
 		MethodNode method2 = new MethodNode("method2", null);
-		MethodParameterNode method2ParameterNode = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method2ParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
 		method2.addParameter(method2ParameterNode);
 
 		assertNotEquals(method2ParameterNode.hashCode(), statement.getLeftParameter().hashCode());

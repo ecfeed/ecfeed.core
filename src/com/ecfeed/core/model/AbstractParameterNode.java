@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
@@ -81,7 +81,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
-		return JavaTypeHelper.isNumericTypeName(fType) || JavaTypeHelper.isStringTypeName(fType);
+		return JavaLanguageHelper.isNumericTypeName(fType) || JavaLanguageHelper.isStringTypeName(fType);
 	}
 
 	public String getType() {

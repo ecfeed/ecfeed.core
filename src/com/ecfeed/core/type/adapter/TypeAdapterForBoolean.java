@@ -14,21 +14,21 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 
 public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 	private final String[] TYPES_CONVERTABLE_TO_BOOLEAN = new String[]{
-		JavaTypeHelper.TYPE_NAME_STRING,
-		JavaTypeHelper.TYPE_NAME_BOOLEAN,
+		JavaLanguageHelper.TYPE_NAME_STRING,
+		JavaLanguageHelper.TYPE_NAME_BOOLEAN,
 		SimpleTypeHelper.TYPE_NAME_TEXT,
 		SimpleTypeHelper.TYPE_NAME_LOGICAL
 	};
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_BOOLEAN;
+		return JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 	}
 
 	@Override
@@ -52,12 +52,12 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 	private String convertForExceptionMode(String value) {
 
-		if (value.equals(JavaTypeHelper.SPECIAL_VALUE_TRUE)) {
-			return JavaTypeHelper.SPECIAL_VALUE_TRUE;
+		if (value.equals(JavaLanguageHelper.SPECIAL_VALUE_TRUE)) {
+			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
 
-		if (value.equals(JavaTypeHelper.SPECIAL_VALUE_FALSE)) {
-			return JavaTypeHelper.SPECIAL_VALUE_FALSE;
+		if (value.equals(JavaLanguageHelper.SPECIAL_VALUE_FALSE)) {
+			return JavaLanguageHelper.SPECIAL_VALUE_FALSE;
 		}
 
 		reportRuntimeException(value);
@@ -66,24 +66,24 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 	private String convertForQuietMode(String value) {
 
-		if (value.toLowerCase().equals(JavaTypeHelper.SPECIAL_VALUE_TRUE.toLowerCase())) {
-			return JavaTypeHelper.SPECIAL_VALUE_TRUE;
+		if (value.toLowerCase().equals(JavaLanguageHelper.SPECIAL_VALUE_TRUE.toLowerCase())) {
+			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
 
-		if(value.toLowerCase().equals(JavaTypeHelper.SPECIAL_VALUE_FALSE.toLowerCase())){
-			return JavaTypeHelper.SPECIAL_VALUE_FALSE;
+		if(value.toLowerCase().equals(JavaLanguageHelper.SPECIAL_VALUE_FALSE.toLowerCase())){
+			return JavaLanguageHelper.SPECIAL_VALUE_FALSE;
 		}
 
 		return getDefaultValue();
 	}
 	
 	protected void reportRuntimeException(String value) {
-		TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, JavaTypeHelper.TYPE_NAME_BOOLEAN);
+		TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, JavaLanguageHelper.TYPE_NAME_BOOLEAN);
 	}
 
 	@Override
 	public String getDefaultValue() {
-		return JavaTypeHelper.DEFAULT_EXPECTED_BOOLEAN_VALUE;
+		return JavaLanguageHelper.DEFAULT_EXPECTED_BOOLEAN_VALUE;
 	}
 
 	@Override

@@ -15,21 +15,21 @@ import java.util.Arrays;
 import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 
 public class TypeAdapterForString implements ITypeAdapter<String>{
 
 	private final String[] TYPES_CONVERTABLE_TO_STRING = new String[]{
-			JavaTypeHelper.TYPE_NAME_INT, 
-			JavaTypeHelper.TYPE_NAME_FLOAT, 
-			JavaTypeHelper.TYPE_NAME_DOUBLE, 
-			JavaTypeHelper.TYPE_NAME_LONG, 
-			JavaTypeHelper.TYPE_NAME_SHORT, 
-			JavaTypeHelper.TYPE_NAME_STRING, 
-			JavaTypeHelper.TYPE_NAME_BYTE,
-			JavaTypeHelper.TYPE_NAME_CHAR,
-			JavaTypeHelper.TYPE_NAME_BOOLEAN,
+			JavaLanguageHelper.TYPE_NAME_INT,
+			JavaLanguageHelper.TYPE_NAME_FLOAT,
+			JavaLanguageHelper.TYPE_NAME_DOUBLE,
+			JavaLanguageHelper.TYPE_NAME_LONG,
+			JavaLanguageHelper.TYPE_NAME_SHORT,
+			JavaLanguageHelper.TYPE_NAME_STRING,
+			JavaLanguageHelper.TYPE_NAME_BYTE,
+			JavaLanguageHelper.TYPE_NAME_CHAR,
+			JavaLanguageHelper.TYPE_NAME_BOOLEAN,
 			SimpleTypeHelper.TYPE_NAME_TEXT,
 			SimpleTypeHelper.TYPE_NAME_NUMBER,
 			SimpleTypeHelper.TYPE_NAME_LOGICAL,
@@ -38,7 +38,7 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_STRING;
+		return JavaLanguageHelper.TYPE_NAME_STRING;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 
 	@Override
 	public String getDefaultValue() {
-		return JavaTypeHelper.DEFAULT_EXPECTED_STRING_VALUE;
+		return JavaLanguageHelper.DEFAULT_EXPECTED_STRING_VALUE;
 	}
 
 	@Override

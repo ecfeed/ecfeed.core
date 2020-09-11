@@ -56,7 +56,7 @@ public class FactoryRenameOperation {
 			String[] tokens = newNameInJavaConvention.split("\\.");
 
 			for (String token : tokens) {
-				if(JavaTypeHelper.isJavaKeyword(token)){
+				if(JavaLanguageHelper.isJavaKeyword(token)){
 					ModelOperationException.report(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
 				}
 			}
@@ -127,7 +127,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
-			if(JavaTypeHelper.isJavaKeyword(newName)){
+			if(JavaLanguageHelper.isJavaKeyword(newName)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage));
 			}
 			if(target.getParametersParent().getParameter(newName) != null){
@@ -153,7 +153,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			MethodParameterNode target = (MethodParameterNode)getOwnNode();
-			if(JavaTypeHelper.isJavaKeyword(newName)){
+			if(JavaLanguageHelper.isJavaKeyword(newName)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage));
 			}
 			if(target.getMethod().getParameter(newName) != null){

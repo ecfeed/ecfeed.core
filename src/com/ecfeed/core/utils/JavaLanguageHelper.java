@@ -15,7 +15,7 @@ import java.util.*;
 
 // TODO SIMPLE-VIEW unit tests
 
-public final class JavaTypeHelper {
+public final class JavaLanguageHelper {
 
 	public static final String TYPE_NAME_BOOLEAN = "boolean";
 	public static final String TYPE_NAME_BYTE = "byte";
@@ -189,23 +189,23 @@ public final class JavaTypeHelper {
 		List<String> result = new ArrayList<String>();
 
 		switch(typeName){
-		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
-			result.addAll(Arrays.asList(JavaTypeHelper.SPECIAL_VALUES_FOR_BOOLEAN));
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
+			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_BOOLEAN));
 			break;
-		case JavaTypeHelper.TYPE_NAME_CHAR:
-			result.addAll(Arrays.asList(JavaTypeHelper.DEFAULT_EXPECTED_CHAR_VALUE));
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
+			result.addAll(Arrays.asList(JavaLanguageHelper.DEFAULT_EXPECTED_CHAR_VALUE));
 			break;
-		case JavaTypeHelper.TYPE_NAME_BYTE:
-		case JavaTypeHelper.TYPE_NAME_INT:
-		case JavaTypeHelper.TYPE_NAME_LONG:
-		case JavaTypeHelper.TYPE_NAME_SHORT:
-			result.addAll(Arrays.asList(JavaTypeHelper.SPECIAL_VALUES_FOR_INTEGER));
+		case JavaLanguageHelper.TYPE_NAME_BYTE:
+		case JavaLanguageHelper.TYPE_NAME_INT:
+		case JavaLanguageHelper.TYPE_NAME_LONG:
+		case JavaLanguageHelper.TYPE_NAME_SHORT:
+			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_INTEGER));
 			break;
-		case JavaTypeHelper.TYPE_NAME_DOUBLE:
-		case JavaTypeHelper.TYPE_NAME_FLOAT:
-			result.addAll(Arrays.asList(JavaTypeHelper.SPECIAL_VALUES_FOR_FLOAT));
+		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
+		case JavaLanguageHelper.TYPE_NAME_FLOAT:
+			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_FLOAT));
 			break;
-		case JavaTypeHelper.TYPE_NAME_STRING:
+		case JavaLanguageHelper.TYPE_NAME_STRING:
 			result.addAll(Arrays.asList(com.ecfeed.core.utils.CommonConstants.STRING_SPECIAL_VALUES));
 			break;
 		default:
@@ -216,24 +216,24 @@ public final class JavaTypeHelper {
 
 	public static String getDefaultExpectedValue(String type) {
 		switch(type){
-		case JavaTypeHelper.TYPE_NAME_BYTE:
-			return JavaTypeHelper.DEFAULT_EXPECTED_BYTE_VALUE;
-		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
-			return JavaTypeHelper.DEFAULT_EXPECTED_BOOLEAN_VALUE;
-		case JavaTypeHelper.TYPE_NAME_CHAR:
-			return JavaTypeHelper.DEFAULT_EXPECTED_CHAR_VALUE;
-		case JavaTypeHelper.TYPE_NAME_DOUBLE:
-			return JavaTypeHelper.DEFAULT_EXPECTED_DOUBLE_VALUE;
-		case JavaTypeHelper.TYPE_NAME_FLOAT:
-			return JavaTypeHelper.DEFAULT_EXPECTED_FLOAT_VALUE;
-		case JavaTypeHelper.TYPE_NAME_INT:
-			return JavaTypeHelper.DEFAULT_EXPECTED_INT_VALUE;
-		case JavaTypeHelper.TYPE_NAME_LONG:
-			return JavaTypeHelper.DEFAULT_EXPECTED_LONG_VALUE;
-		case JavaTypeHelper.TYPE_NAME_SHORT:
-			return JavaTypeHelper.DEFAULT_EXPECTED_SHORT_VALUE;
-		case JavaTypeHelper.TYPE_NAME_STRING:
-			return JavaTypeHelper.DEFAULT_EXPECTED_STRING_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_BYTE:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_BYTE_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_BOOLEAN_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_CHAR_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_DOUBLE_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_FLOAT:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_FLOAT_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_INT:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_INT_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_LONG:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_LONG_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_SHORT:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_SHORT_VALUE;
+		case JavaLanguageHelper.TYPE_NAME_STRING:
+			return JavaLanguageHelper.DEFAULT_EXPECTED_STRING_VALUE;
 		default:
 			return "VALUE";
 		}
@@ -390,31 +390,31 @@ public final class JavaTypeHelper {
 	public static String getTypeName(String cannonicalName) {
 
 		if (cannonicalName.equals(boolean.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_BOOLEAN;
+			return JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 		}
 		if (cannonicalName.equals(byte.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_BYTE;
+			return JavaLanguageHelper.TYPE_NAME_BYTE;
 		}
 		if (cannonicalName.equals(char.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_CHAR;
+			return JavaLanguageHelper.TYPE_NAME_CHAR;
 		}
 		if (cannonicalName.equals(double.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_DOUBLE;
+			return JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		}
 		if (cannonicalName.equals(float.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_FLOAT;
+			return JavaLanguageHelper.TYPE_NAME_FLOAT;
 		}
 		if (cannonicalName.equals(int.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_INT;
+			return JavaLanguageHelper.TYPE_NAME_INT;
 		}
 		if (cannonicalName.equals(long.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_LONG;
+			return JavaLanguageHelper.TYPE_NAME_LONG;
 		}
 		if (cannonicalName.equals(short.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_SHORT;
+			return JavaLanguageHelper.TYPE_NAME_SHORT;
 		}
 		if (cannonicalName.equals(String.class.getName())) {
-			return JavaTypeHelper.TYPE_NAME_STRING;
+			return JavaLanguageHelper.TYPE_NAME_STRING;
 		}
 
 		return cannonicalName;
@@ -457,7 +457,7 @@ public final class JavaTypeHelper {
 
 	public static String getBooleanTypeName() {
 
-		return JavaTypeHelper.TYPE_NAME_BOOLEAN;
+		return JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 	}
 
 	public static boolean isStringTypeName(String typeName) {
@@ -921,15 +921,15 @@ public final class JavaTypeHelper {
 			return null;
 		}
 
-		if (JavaTypeHelper.isBooleanTypeName(typeName1) || JavaTypeHelper.isBooleanTypeName(typeName2)) {
+		if (JavaLanguageHelper.isBooleanTypeName(typeName1) || JavaLanguageHelper.isBooleanTypeName(typeName2)) {
 			return TYPE_NAME_BOOLEAN;
 		}
 
-		if (JavaTypeHelper.isTypeWithChars(typeName1) && JavaTypeHelper.isTypeWithChars(typeName2)) {
+		if (JavaLanguageHelper.isTypeWithChars(typeName1) && JavaLanguageHelper.isTypeWithChars(typeName2)) {
 			return TYPE_NAME_STRING;
 		}		
 
-		if (JavaTypeHelper.isFloatingPointTypeName(typeName1) || JavaTypeHelper.isFloatingPointTypeName(typeName2)) {
+		if (JavaLanguageHelper.isFloatingPointTypeName(typeName1) || JavaLanguageHelper.isFloatingPointTypeName(typeName2)) {
 			return TYPE_NAME_DOUBLE;
 		}
 
@@ -942,15 +942,15 @@ public final class JavaTypeHelper {
 			return null;
 		}
 
-		if (JavaTypeHelper.isTypeWithChars(typeName1)) {
+		if (JavaLanguageHelper.isTypeWithChars(typeName1)) {
 			return TYPE_NAME_STRING;
 		}		
 
-		if (JavaTypeHelper.isFloatingPointTypeName(typeName1)) {
+		if (JavaLanguageHelper.isFloatingPointTypeName(typeName1)) {
 			return TYPE_NAME_DOUBLE;
 		}
 
-		if (JavaTypeHelper.isExtendedIntTypeName(typeName1)) {
+		if (JavaLanguageHelper.isExtendedIntTypeName(typeName1)) {
 			return TYPE_NAME_LONG;
 		}
 

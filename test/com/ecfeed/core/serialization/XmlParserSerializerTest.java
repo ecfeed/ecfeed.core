@@ -51,7 +51,7 @@ import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class XmlParserSerializerTest {
 	private final int TEST_RUNS = 10;
@@ -113,7 +113,7 @@ public class XmlParserSerializerTest {
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode parameter = new MethodParameterNode("parameter", null, JavaTypeHelper.TYPE_NAME_STRING, "0", false);
+			MethodParameterNode parameter = new MethodParameterNode("parameter", null, JavaLanguageHelper.TYPE_NAME_STRING, "0", false);
 			ChoiceNode choice = new ChoiceNode("choice", null, "A                 B");
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 			testData.add(choice);
@@ -151,9 +151,9 @@ public class XmlParserSerializerTest {
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
 			MethodParameterNode choicesParentParameter =
-					new MethodParameterNode("choicesParentParameter", null, JavaTypeHelper.TYPE_NAME_STRING, "0", false);
+					new MethodParameterNode("choicesParentParameter", null, JavaLanguageHelper.TYPE_NAME_STRING, "0", false);
 			MethodParameterNode expectedParameter =
-					new MethodParameterNode("expectedParameter", null, JavaTypeHelper.TYPE_NAME_CHAR, "0", true);
+					new MethodParameterNode("expectedParameter", null, JavaLanguageHelper.TYPE_NAME_CHAR, "0", true);
 			expectedParameter.setDefaultValueString("d");
 			ChoiceNode choice1 = new ChoiceNode("choice", null, "p");
 			choice1.setParent(choicesParentParameter);
@@ -319,7 +319,7 @@ public class XmlParserSerializerTest {
 			return Short.toString((short)rand.nextInt());
 		case SerializationConstants.TYPE_NAME_STRING:
 			if(rand.nextInt(5) == 0){
-				return JavaTypeHelper.SPECIAL_VALUE_NULL;
+				return JavaLanguageHelper.SPECIAL_VALUE_NULL;
 			}
 			else{
 				return generateRandomString(rand.nextInt(10));

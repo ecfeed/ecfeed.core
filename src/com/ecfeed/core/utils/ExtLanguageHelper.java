@@ -17,7 +17,7 @@ public class ExtLanguageHelper {
 	public static String verifySeparatorsInName(String name, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {
-			return JavaTypeHelper.verifySeparatorsInName(name);
+			return JavaLanguageHelper.verifySeparatorsInName(name);
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -77,7 +77,7 @@ public class ExtLanguageHelper {
 	public static String convertSpecialValueFromIntrToExtLanguage(String value, String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			value = JavaTypeHelper.convertSpecialValueToSimpleLanguage(type, value);
+			value = JavaLanguageHelper.convertSpecialValueToSimpleLanguage(type, value);
 		}
 
 		return value;

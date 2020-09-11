@@ -14,23 +14,23 @@ import java.util.Arrays;
 
 import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 
 public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 
 	private final String[] TYPES_CONVERTABLE_TO_CHAR = new String[]{
-			JavaTypeHelper.TYPE_NAME_STRING, 
-			JavaTypeHelper.TYPE_NAME_SHORT, 
-			JavaTypeHelper.TYPE_NAME_BYTE,
-			JavaTypeHelper.TYPE_NAME_INT,
+			JavaLanguageHelper.TYPE_NAME_STRING,
+			JavaLanguageHelper.TYPE_NAME_SHORT,
+			JavaLanguageHelper.TYPE_NAME_BYTE,
+			JavaLanguageHelper.TYPE_NAME_INT,
 			SimpleTypeHelper.TYPE_NAME_TEXT, 
 			SimpleTypeHelper.TYPE_NAME_NUMBER,
 	};
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_CHAR;
+		return JavaLanguageHelper.TYPE_NAME_CHAR;
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 
 	@Override
 	public String getDefaultValue() {
-		return JavaTypeHelper.DEFAULT_EXPECTED_CHAR_VALUE;
+		return JavaLanguageHelper.DEFAULT_EXPECTED_CHAR_VALUE;
 	}
 
 	@Override

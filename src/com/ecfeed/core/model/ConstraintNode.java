@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ConstraintNode extends AbstractNode{
 
@@ -323,11 +323,11 @@ public class ConstraintNode extends AbstractNode{
 
 	private boolean isForbiddenTypeForOrderRelations(String typeName) {
 
-		if (JavaTypeHelper.isUserType(typeName)) {
+		if (JavaLanguageHelper.isUserType(typeName)) {
 			return true;
 		}
 
-		if (JavaTypeHelper.isBooleanTypeName(typeName)) {
+		if (JavaLanguageHelper.isBooleanTypeName(typeName)) {
 			return true;
 		}
 

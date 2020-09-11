@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.RelationMatcher;
@@ -44,7 +44,7 @@ public class ParameterCondition implements IStatementCondition {
 		}
 
 		String substituteType = 
-				JavaTypeHelper.getSubstituteType(
+				JavaLanguageHelper.getSubstituteType(
 						fParentRelationStatement.getLeftParameter().getType(), fRightParameterNode.getType());
 
 		return evaluateForLeftAndRightString(choices, substituteType);
@@ -65,7 +65,7 @@ public class ParameterCondition implements IStatementCondition {
 
 		ChoiceNode leftChoiceNode = getChoiceNode(choices, methodParameterNode);
 
-		if (JavaTypeHelper.isStringTypeName(methodParameterNode.getType())
+		if (JavaLanguageHelper.isStringTypeName(methodParameterNode.getType())
 				&& leftChoiceNode.isRandomizedValue()) {
 
 			return true;
@@ -103,7 +103,7 @@ public class ParameterCondition implements IStatementCondition {
 	private EvaluationResult evaluateForRandomizedChoice(
 			String leftChoiceStr, String rightChoiceStr, EMathRelation relation, String substituteType) {
 
-		if (JavaTypeHelper.isStringTypeName(substituteType)) {
+		if (JavaLanguageHelper.isStringTypeName(substituteType)) {
 
 			return EvaluationResult.TRUE;
 

@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.RelationMatcher;
@@ -49,7 +49,7 @@ public class ValueCondition implements IStatementCondition {
 						choices, fParentRelationStatement.getLeftParameter());
 
 		if(isRandomizedChoice) {
-			if(JavaTypeHelper.isStringTypeName(substituteType)) {
+			if(JavaLanguageHelper.isStringTypeName(substituteType)) {
 				return EvaluationResult.TRUE;
 			}
 			else {

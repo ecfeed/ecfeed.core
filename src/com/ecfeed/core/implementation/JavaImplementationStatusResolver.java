@@ -30,7 +30,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class JavaImplementationStatusResolver extends AbstractImplementationStatusResolver{
@@ -182,7 +182,7 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 	private List<String> getArgTypes(Method method) {
 		List<String> argTypes = new ArrayList<String>();
 		for(Class<?> parameter : method.getParameterTypes()){
-			argTypes.add(JavaTypeHelper.getTypeName(parameter.getCanonicalName()));
+			argTypes.add(JavaLanguageHelper.getTypeName(parameter.getCanonicalName()));
 		}
 		return argTypes;
 	}

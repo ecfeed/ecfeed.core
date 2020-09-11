@@ -331,8 +331,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
             ChoiceNode choiceNode) {
 
         return choiceNode.isRandomizedValue() &&
-                (JavaTypeHelper.isExtendedIntTypeName(methodParameterType)
-                        || JavaTypeHelper.isFloatingPointTypeName(methodParameterType));
+                (JavaLanguageHelper.isExtendedIntTypeName(methodParameterType)
+                        || JavaLanguageHelper.isFloatingPointTypeName(methodParameterType));
     }
 
     private static void collectSanitizedValues(
@@ -380,8 +380,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
         MethodParameterNode lParam = relationStatement.getLeftParameter();
 
-        if (!JavaTypeHelper.isExtendedIntTypeName(lParam.getType())
-                && !JavaTypeHelper.isFloatingPointTypeName(lParam.getType()))
+        if (!JavaLanguageHelper.isExtendedIntTypeName(lParam.getType())
+                && !JavaLanguageHelper.isFloatingPointTypeName(lParam.getType()))
             return false;
 
         List<ChoiceNode> allLVals = new ArrayList<>(paramChoiceSets.sainitizedGet(lParam));
@@ -491,8 +491,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
                 val2 = end.makeCloneUnlink();
                 val1.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
                 val2.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
-                if (JavaTypeHelper.isExtendedIntTypeName(start.getParameter().getType())
-                        && JavaTypeHelper.isFloatingPointTypeName(val.getParameter().getType())) {
+                if (JavaLanguageHelper.isExtendedIntTypeName(start.getParameter().getType())
+                        && JavaLanguageHelper.isFloatingPointTypeName(val.getParameter().getType())) {
                     val1 = ChoiceNodeHelper.roundValueDown(val1);
                     val2 = ChoiceNodeHelper.roundValueUp(val2);
                 }

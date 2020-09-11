@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.BooleanHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class AbstractNode{
 	private String fName;
@@ -71,7 +71,7 @@ public abstract class AbstractNode{
 	public void setName(String name, boolean checkName) {
 		
 		if (checkName ) {
-			JavaTypeHelper.verifySeparatorsInName(name);
+			JavaLanguageHelper.verifySeparatorsInName(name);
 		}
 		
 		fName = name;

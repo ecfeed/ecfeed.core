@@ -44,7 +44,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class MethodParameterOperationSetType extends BulkOperation {
@@ -65,7 +65,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
 		}
 
-		if (!JavaTypeHelper.isJavaType(newType)) {
+		if (!JavaLanguageHelper.isJavaType(newType)) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
 		}
 
@@ -182,7 +182,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				}
 			}
 
-			if (JavaTypeHelper.isUserType(newType)) {
+			if (JavaLanguageHelper.isUserType(newType)) {
 				if (fMethodParameterNode.getLeafChoices().size() > 0) {
 					if (fMethodParameterNode.getLeafChoiceValues().contains(newDefaultValue) == false) {
 						newDefaultValue = fMethodParameterNode.getLeafChoiceValues().toArray(new String[]{})[0];
@@ -214,7 +214,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 							adapter.convert(
 									expectedValue.getValueString(), false, ERunMode.QUIET);
 
-					if (JavaTypeHelper.isUserType(getNewType())) {
+					if (JavaLanguageHelper.isUserType(getNewType())) {
 						if (fMethodParameterNode.getLeafChoiceValues().contains(newValue) == false) {
 							tcIt.remove();
 							continue;
@@ -319,7 +319,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 				fOriginalStatementValues.put(statement, statement.getCondition().getValueString());
 				statement.getCondition().setValueString(newValue);
-				if (JavaTypeHelper.isUserType(getNewType())) {
+				if (JavaLanguageHelper.isUserType(getNewType())) {
 					success = newValue != null && fMethodParameterNode.getLeafChoiceValues().contains(newValue);
 				}
 				else{

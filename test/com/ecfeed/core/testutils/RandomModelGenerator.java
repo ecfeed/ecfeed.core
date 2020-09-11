@@ -37,7 +37,7 @@ import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class RandomModelGenerator {
@@ -241,7 +241,7 @@ public class RandomModelGenerator {
 		}
 
 		if(parameters.size() == 0){
-			MethodParameterNode parameter = generateParameter(JavaTypeHelper.TYPE_NAME_INT, false, 0, 1, 1);
+			MethodParameterNode parameter = generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1);
 			method.addParameter(parameter);
 			parameters.add(parameter);
 		}
@@ -311,7 +311,7 @@ public class RandomModelGenerator {
 
 	public AbstractStatement generateConsequence(MethodNode method) {
 		if(method.getParameters().size() == 0){
-			method.addParameter(generateParameter(JavaTypeHelper.TYPE_NAME_INT, false, 0, 1, 1));
+			method.addParameter(generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1));
 		}
 
 		List<MethodParameterNode> parameters = method.getMethodParameters();
@@ -354,23 +354,23 @@ public class RandomModelGenerator {
 
 	private String randomChoiceValue(String type){
 		switch(type){
-		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
 			return randomBooleanValue();
-		case JavaTypeHelper.TYPE_NAME_BYTE:
+		case JavaLanguageHelper.TYPE_NAME_BYTE:
 			return randomByteValue();
-		case JavaTypeHelper.TYPE_NAME_CHAR:
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
 			return randomCharValue();
-		case JavaTypeHelper.TYPE_NAME_DOUBLE:
+		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
 			return randomDoubleValue();
-		case JavaTypeHelper.TYPE_NAME_FLOAT:
+		case JavaLanguageHelper.TYPE_NAME_FLOAT:
 			return randomFloatValue();
-		case JavaTypeHelper.TYPE_NAME_INT:
+		case JavaLanguageHelper.TYPE_NAME_INT:
 			return randomIntValue();
-		case JavaTypeHelper.TYPE_NAME_LONG:
+		case JavaLanguageHelper.TYPE_NAME_LONG:
 			return randomLongValue();
-		case JavaTypeHelper.TYPE_NAME_SHORT:
+		case JavaLanguageHelper.TYPE_NAME_SHORT:
 			return randomShortValue();
-		case JavaTypeHelper.TYPE_NAME_STRING:
+		case JavaLanguageHelper.TYPE_NAME_STRING:
 			return randomStringValue();
 		default:
 			return randomUserTypeValue();

@@ -13,7 +13,7 @@ package com.ecfeed.core.type.adapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -50,7 +50,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 		String type = parseValue(range);
 		
 		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaTypeHelper.parseNumberValue(range[0], type, ERunMode.QUIET);
+			return JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET);
 		}
 
 		return generateNumber(range, type);
@@ -60,7 +60,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 		try {
 			Integer.parseInt(range[0]);
 			Integer.parseInt(range[1]);
-			return JavaTypeHelper.TYPE_NAME_INT;
+			return JavaLanguageHelper.TYPE_NAME_INT;
 		} catch (NumberFormatException e1) {
 		}
 		
@@ -71,7 +71,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 		try {
 			Long.parseLong(range[0]);
 			Long.parseLong(range[1]);
-			return JavaTypeHelper.TYPE_NAME_LONG;
+			return JavaLanguageHelper.TYPE_NAME_LONG;
 		} catch (NumberFormatException e2) {
 		}
 		
@@ -82,7 +82,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 		try {
 			Double.parseDouble(range[0]);
 			Double.parseDouble(range[1]);
-			return JavaTypeHelper.TYPE_NAME_DOUBLE;
+			return JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		} catch (NumberFormatException e3) {
 		}
 		
@@ -92,34 +92,34 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	private String parseDefault(String[] range) {
 		range[0] = "0";
 		range[1] = "0";
-		return JavaTypeHelper.TYPE_NAME_INT;
+		return JavaLanguageHelper.TYPE_NAME_INT;
 	}
 	
 	private Number generateNumber(String[] range, String type) {
 		switch(type) {
-			case JavaTypeHelper.TYPE_NAME_INT :	return generateInt(range, type);
-			case JavaTypeHelper.TYPE_NAME_LONG : return generateLong(range, type);
-			case JavaTypeHelper.TYPE_NAME_DOUBLE : return generateDouble(range, type);
+			case JavaLanguageHelper.TYPE_NAME_INT :	return generateInt(range, type);
+			case JavaLanguageHelper.TYPE_NAME_LONG : return generateLong(range, type);
+			case JavaLanguageHelper.TYPE_NAME_DOUBLE : return generateDouble(range, type);
 			default : return 0;
 		}
 	}
 	
 	private Integer generateInt(String[] range, String type) {
 		return ThreadLocalRandom.current().nextInt(
-				(Integer) JavaTypeHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
-				(Integer) JavaTypeHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
+				(Integer) JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
+				(Integer) JavaLanguageHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
 	}
 	
 	private Long generateLong(String[] range, String type) {
 		return ThreadLocalRandom.current().nextLong(
-				(Long) JavaTypeHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
-				(Long) JavaTypeHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
+				(Long) JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
+				(Long) JavaLanguageHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
 	}
 	
 	private Double generateDouble(String[] range, String type) {
 		return ThreadLocalRandom.current().nextDouble(
-				(Double) JavaTypeHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
-				(Double) JavaTypeHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
+				(Double) JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
+				(Double) JavaLanguageHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
 	}
 
 	@Override

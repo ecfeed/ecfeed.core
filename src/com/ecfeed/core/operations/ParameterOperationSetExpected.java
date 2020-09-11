@@ -21,7 +21,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelConstants;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
 public class ParameterOperationSetExpected extends AbstractModelOperation {
@@ -85,7 +85,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 		fTarget.setExpected(fExpected);
 		String type = fTarget.getType();
-		if(fExpected && JavaTypeHelper.hasLimitedValuesSet(type)){
+		if(fExpected && JavaLanguageHelper.hasLimitedValuesSet(type)){
 			boolean validDefaultValue = false;
 			String currentDefaultValue = fTarget.getDefaultValue();
 			for(ChoiceNode leaf : fTarget.getLeafChoices()){

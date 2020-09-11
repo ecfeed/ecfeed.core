@@ -13,7 +13,7 @@ package com.ecfeed.core.type.adapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -21,7 +21,7 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_FLOAT;
+		return JavaLanguageHelper.TYPE_NAME_FLOAT;
 	}
 
 	@Override
@@ -46,17 +46,17 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
 		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaTypeHelper.parseFloatValue(range[0], ERunMode.QUIET);
+			return JavaLanguageHelper.parseFloatValue(range[0], ERunMode.QUIET);
 		}
 		
 		return (float) ThreadLocalRandom.current().nextDouble(
-				JavaTypeHelper.parseFloatValue(range[0], ERunMode.QUIET),
-				JavaTypeHelper.parseFloatValue(range[1], ERunMode.QUIET));
+				JavaLanguageHelper.parseFloatValue(range[0], ERunMode.QUIET),
+				JavaLanguageHelper.parseFloatValue(range[1], ERunMode.QUIET));
 	}
 
 	@Override
 	protected String[] getSpecialValues() {
-		return JavaTypeHelper.SPECIAL_VALUES_FOR_FLOAT;
+		return JavaLanguageHelper.SPECIAL_VALUES_FOR_FLOAT;
 	}	
 
 }

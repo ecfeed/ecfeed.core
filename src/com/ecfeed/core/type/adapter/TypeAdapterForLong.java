@@ -13,7 +13,7 @@ package com.ecfeed.core.type.adapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -21,7 +21,7 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_LONG;
+		return JavaLanguageHelper.TYPE_NAME_LONG;
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 		}
 
 		try {
-			return String.valueOf(JavaTypeHelper.convertToLong(value));
+			return String.valueOf(JavaLanguageHelper.convertToLong(value));
 		} catch(NumberFormatException e){
 			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
 		}
@@ -46,17 +46,17 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
 		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaTypeHelper.parseLongValue(range[0], ERunMode.QUIET);
+			return JavaLanguageHelper.parseLongValue(range[0], ERunMode.QUIET);
 		}		
 		
 		return ThreadLocalRandom.current().nextLong(
-				JavaTypeHelper.parseLongValue(range[0], ERunMode.QUIET),
-				JavaTypeHelper.parseLongValue(range[1], ERunMode.QUIET));
+				JavaLanguageHelper.parseLongValue(range[0], ERunMode.QUIET),
+				JavaLanguageHelper.parseLongValue(range[1], ERunMode.QUIET));
 	}
 
 	@Override
 	protected String[] getSpecialValues() {
-		return JavaTypeHelper.SPECIAL_VALUES_FOR_LONG;
+		return JavaLanguageHelper.SPECIAL_VALUES_FOR_LONG;
 	}
 
 }

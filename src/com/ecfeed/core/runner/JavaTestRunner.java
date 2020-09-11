@@ -19,7 +19,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class JavaTestRunner {
 
@@ -104,7 +104,7 @@ public class JavaTestRunner {
 		Class<?>[] parameterTypes = method.getParameterTypes();
 		List<String> types = new ArrayList<String>();
 		for(Class<?> type : parameterTypes){
-			types.add(JavaTypeHelper.getTypeName(type.getCanonicalName()));
+			types.add(JavaLanguageHelper.getTypeName(type.getCanonicalName()));
 		}
 		return methodName.equals(methodModel.getName()) && types.equals(methodModel.getParameterTypes());
 	}
@@ -117,8 +117,8 @@ public class JavaTestRunner {
 			if(value == null){
 				String type = choice.getParameter().getType();
 				//check if null value acceptable
-				if(JavaTypeHelper.isStringTypeName(type) || JavaTypeHelper.isUserType(type)){
-					if(choice.getValueString().equals(JavaTypeHelper.VALUE_REPRESENTATION_NULL) == false){
+				if(JavaLanguageHelper.isStringTypeName(type) || JavaLanguageHelper.isUserType(type)){
+					if(choice.getValueString().equals(JavaLanguageHelper.VALUE_REPRESENTATION_NULL) == false){
 						RunnerException.report(Messages.CANNOT_PARSE_PARAMETER(type, choice.getValueString()));
 					}
 				}

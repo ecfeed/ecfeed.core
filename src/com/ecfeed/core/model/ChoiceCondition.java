@@ -16,7 +16,7 @@ import java.util.List;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ObjectHelper;
 import com.ecfeed.core.utils.RangeHelper;
@@ -143,7 +143,7 @@ public class ChoiceCondition implements IStatementCondition {
 	private String getSubstituteType(ChoiceNode leftChoice) {
 
 		String typeName = leftChoice.getParameter().getType();
-		return JavaTypeHelper.getSubstituteType(typeName);
+		return JavaLanguageHelper.getSubstituteType(typeName);
 	}
 
 	private EvaluationResult evaluateForConstantChoice(
@@ -156,8 +156,8 @@ public class ChoiceCondition implements IStatementCondition {
 			return evaluateEqualityIncludingParents(relation, actualLeftChoice);
 		}
 
-		String actualLeftValue = JavaTypeHelper.convertValueString(actualLeftChoice.getValueString(), substituteType);
-		String rightValue = JavaTypeHelper.convertValueString(fRightChoice.getValueString(), substituteType);
+		String actualLeftValue = JavaLanguageHelper.convertValueString(actualLeftChoice.getValueString(), substituteType);
+		String rightValue = JavaLanguageHelper.convertValueString(fRightChoice.getValueString(), substituteType);
 
 		if (RelationMatcher.isMatchQuiet(relation, substituteType, actualLeftValue, rightValue)) {
 			return EvaluationResult.TRUE;
@@ -173,7 +173,7 @@ public class ChoiceCondition implements IStatementCondition {
 		EMathRelation relation = fParentRelationStatement.getRelation();
 		String fRightValue = fRightChoice.getValueString();
 
-		if (JavaTypeHelper.isStringTypeName(substituteType)) {
+		if (JavaLanguageHelper.isStringTypeName(substituteType)) {
 			return EvaluationResult.TRUE;
 		}
 

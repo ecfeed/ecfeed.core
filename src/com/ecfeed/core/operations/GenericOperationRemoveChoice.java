@@ -22,7 +22,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
 import com.ecfeed.core.utils.ExtLanguage;
 
@@ -83,7 +83,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 			@Override
 			public Object visit(MethodParameterNode parameter) throws Exception {
-				if(parameter.isExpected() && JavaTypeHelper.isJavaType(parameter.getType()) == false && parameter.getChoices().size() == 1 && parameter.getChoices().get(0) == fChoice){
+				if(parameter.isExpected() && JavaLanguageHelper.isJavaType(parameter.getType()) == false && parameter.getChoices().size() == 1 && parameter.getChoices().get(0) == fChoice){
 					// We are removing the only choice of expected parameter.
 					// The last parameter must represent the default expected value
 					ModelOperationException.report(OperationMessages.EXPECTED_USER_TYPE_CATEGORY_LAST_PARTITION_PROBLEM);

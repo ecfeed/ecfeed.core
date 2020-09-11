@@ -19,7 +19,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
 import com.ecfeed.core.utils.ExtLanguage;
 
@@ -95,7 +95,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		@Override
 		public Object visit(MethodParameterNode parameter) throws Exception {
 			fOriginalDefaultValue = parameter.getDefaultValue();
-			if(parameter != null && JavaTypeHelper.isUserType(parameter.getType())){
+			if(parameter != null && JavaLanguageHelper.isUserType(parameter.getType())){
 				if(parameter.getLeafChoiceValues().contains(parameter.getDefaultValue()) == false){
 					parameter.setDefaultValueString(fNewValue);
 				}

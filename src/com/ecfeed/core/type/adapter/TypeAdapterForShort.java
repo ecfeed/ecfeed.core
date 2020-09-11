@@ -13,7 +13,7 @@ package com.ecfeed.core.type.adapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -21,7 +21,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_SHORT;
+		return JavaLanguageHelper.TYPE_NAME_SHORT;
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 		}
 
 		try {
-			return String.valueOf(JavaTypeHelper.convertToShort(value));
+			return String.valueOf(JavaLanguageHelper.convertToShort(value));
 		} catch (NumberFormatException e) {
 			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
 		}
@@ -46,17 +46,17 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
 		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaTypeHelper.parseShortValue(range[0], ERunMode.QUIET);
+			return JavaLanguageHelper.parseShortValue(range[0], ERunMode.QUIET);
 		}
 		
 		return (short) ThreadLocalRandom.current().nextInt(
-				JavaTypeHelper.parseShortValue(range[0], ERunMode.QUIET), 
-				JavaTypeHelper.parseShortValue(range[1], ERunMode.QUIET));
+				JavaLanguageHelper.parseShortValue(range[0], ERunMode.QUIET),
+				JavaLanguageHelper.parseShortValue(range[1], ERunMode.QUIET));
 	}
 
 	@Override
 	protected String[] getSpecialValues() {
-		return JavaTypeHelper.SPECIAL_VALUES_FOR_SHORT;
+		return JavaLanguageHelper.SPECIAL_VALUES_FOR_SHORT;
 	}
 
 }

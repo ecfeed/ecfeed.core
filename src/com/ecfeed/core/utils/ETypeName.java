@@ -9,16 +9,16 @@
  *******************************************************************************/
 package com.ecfeed.core.utils;
 
-public enum ETypeName {  // TODO - move to JavaTypeHelper ?
-	BOOLEAN(JavaTypeHelper.TYPE_NAME_BOOLEAN), 
-	BYTE(JavaTypeHelper.TYPE_NAME_BYTE), 
-	CHAR(JavaTypeHelper.TYPE_NAME_CHAR), 
-	SHORT(JavaTypeHelper.TYPE_NAME_SHORT), 
-	INT(JavaTypeHelper.TYPE_NAME_INT), 
-	LONG(JavaTypeHelper.TYPE_NAME_LONG), 
-	FLOAT(JavaTypeHelper.TYPE_NAME_FLOAT), 
-	DOUBLE(JavaTypeHelper.TYPE_NAME_DOUBLE), 
-	STRING(JavaTypeHelper.TYPE_NAME_STRING), 
+public enum ETypeName {  // TODO SIMPLE-VIEW - move to JavaTypeHelper ?
+	BOOLEAN(JavaLanguageHelper.TYPE_NAME_BOOLEAN),
+	BYTE(JavaLanguageHelper.TYPE_NAME_BYTE),
+	CHAR(JavaLanguageHelper.TYPE_NAME_CHAR),
+	SHORT(JavaLanguageHelper.TYPE_NAME_SHORT),
+	INT(JavaLanguageHelper.TYPE_NAME_INT),
+	LONG(JavaLanguageHelper.TYPE_NAME_LONG),
+	FLOAT(JavaLanguageHelper.TYPE_NAME_FLOAT),
+	DOUBLE(JavaLanguageHelper.TYPE_NAME_DOUBLE),
+	STRING(JavaLanguageHelper.TYPE_NAME_STRING),
 	USER_TYPE("user.type");
 
 	private String fName;
@@ -32,15 +32,15 @@ public enum ETypeName {  // TODO - move to JavaTypeHelper ?
 	}
 
 	public static final String[] SUPPORTED_TYPES = {
-		JavaTypeHelper.TYPE_NAME_BOOLEAN,
-		JavaTypeHelper.TYPE_NAME_BYTE,
-		JavaTypeHelper.TYPE_NAME_CHAR,
-		JavaTypeHelper.TYPE_NAME_DOUBLE,
-		JavaTypeHelper.TYPE_NAME_FLOAT,
-		JavaTypeHelper.TYPE_NAME_INT,
-		JavaTypeHelper.TYPE_NAME_LONG,
-		JavaTypeHelper.TYPE_NAME_SHORT,
-		JavaTypeHelper.TYPE_NAME_STRING,
+		JavaLanguageHelper.TYPE_NAME_BOOLEAN,
+		JavaLanguageHelper.TYPE_NAME_BYTE,
+		JavaLanguageHelper.TYPE_NAME_CHAR,
+		JavaLanguageHelper.TYPE_NAME_DOUBLE,
+		JavaLanguageHelper.TYPE_NAME_FLOAT,
+		JavaLanguageHelper.TYPE_NAME_INT,
+		JavaLanguageHelper.TYPE_NAME_LONG,
+		JavaLanguageHelper.TYPE_NAME_SHORT,
+		JavaLanguageHelper.TYPE_NAME_STRING,
 	};
 
 }
