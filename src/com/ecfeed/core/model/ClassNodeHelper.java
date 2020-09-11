@@ -59,17 +59,10 @@ public class ClassNodeHelper {
 			List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
 
-		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
+		String errorMessage = verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
-		if (errorMessage != null) {
+		if (errorMessage != null)
 			return errorMessage;
-		}
-
-		errorMessage = MethodNodeHelper.validateMethodParameterTypes(parameterTypesInExtLanguage, extLanguage);
-
-		if (errorMessage != null) {
-			return errorMessage;
-		}
 
 		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage) != null) {
 
@@ -94,6 +87,26 @@ public class ClassNodeHelper {
 		return null;
 	}
 
+	public static String verifyMethodSignatureIsValid(
+			String methodNameInExtLanguage,
+			List<String> parameterTypesInExtLanguage,
+			ExtLanguage extLanguage) {
+
+		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		errorMessage = MethodNodeHelper.validateMethodParameterTypes(parameterTypesInExtLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		return null;
+	}
+
 	// TODO SIMPLE-VIEW unit tests
 	public static String generateNewMethodName(
 			ClassNode classNode,
@@ -102,8 +115,8 @@ public class ClassNodeHelper {
 			ExtLanguage extLanguage) {
 
 		String errorMessage =
-				verifyNewMethodSignatureIsValidAndUnique(
-						classNode, startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
+				verifyMethodSignatureIsValid(
+					startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);
@@ -114,15 +127,16 @@ public class ClassNodeHelper {
 
 		for (int i = 1;   ; i++) {
 
-			String newMethodName = oldNameCore + String.valueOf(i);
+			String newMethodNameInExtLanguage = oldNameCore + String.valueOf(i);
 
-			errorMessage =
-					verifyNewMethodSignatureIsValidAndUnique(
-							classNode, newMethodName, parameterTypesInExtLanguage, extLanguage);
+			MethodNode methodNode = findMethodByExtLanguage(
+					classNode,
+					newMethodNameInExtLanguage,
+					parameterTypesInExtLanguage,
+					extLanguage);
 
-			if (errorMessage != null) {
-				ExceptionHelper.reportRuntimeException(errorMessage);
-				return null;
+			if (methodNode == null) {
+				return newMethodNameInExtLanguage;
 			}
 		}
 	}
@@ -160,8 +174,6 @@ public class ClassNodeHelper {
 		return message;
 	}
 
-
-	// TODO SIMPLE-VIEW unit tests
 	public static MethodNode findMethodByExtLanguage(
 			// TODO SIMPLE-VIEW check usages
 			ClassNode classNode,

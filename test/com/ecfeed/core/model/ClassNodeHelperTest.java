@@ -10,8 +10,7 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -219,7 +218,7 @@ public class ClassNodeHelperTest {
 
 		// TODO SIMPLE-VIEW
 
-		// invalid parameter type
+		// invalid parameter type in java language
 
 		String[] paramTypes1 = {"int", "x"};
 		try {
@@ -228,26 +227,77 @@ public class ClassNodeHelperTest {
 							classNode, "method", Arrays.asList(paramTypes1), ExtLanguage.JAVA);
 			fail();
 		} catch (Exception e) {
-			// TODO SIMPLE-VIEW
+			TestHelper.checkExceptionMessage(e, JavaLanguageHelper.INVALID_JAVA_TYPE);
 		}
 
-//		// java language
-//
-//		String[] paramTypesInJavaLanguage = {"int", "double"};
-//		String methodName =
-//				ClassNodeHelper.generateNewMethodName(
-//					classNode, "method", Arrays.asList(paramTypesInJavaLanguage), ExtLanguage.JAVA);
-//		assertEquals("X", methodName);
-//
-//		// simple language
-//
-//		String[] paramTypesInSimpleLanguage = {"Number", "Text"};
-//		methodName =
-//				ClassNodeHelper.generateNewMethodName(
-//						classNode, "method", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
-//		assertEquals("X", methodName);
-//
+		// simple language
 
+		String[] paramTypes2 = {"Num", "Tex"};
+		try {
+			String result =
+					ClassNodeHelper.generateNewMethodName(
+							classNode, "method", Arrays.asList(paramTypes2), ExtLanguage.SIMPLE);
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, SimpleLanguageHelper.INVALID_SIMPLE_TYPE);
+		}
+
+		// java language
+
+		String methodName;
+
+		String[] paramTypesInJavaLanguage = {"int", "String"};
+		methodName =
+				ClassNodeHelper.generateNewMethodName(
+					classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), ExtLanguage.JAVA);
+		assertEquals("method_1", methodName);
+
+		// simple language
+
+		String[] paramTypesInSimpleLanguage = {"Number", "Text"};
+		methodName =
+				ClassNodeHelper.generateNewMethodName(
+						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+		assertEquals("method 1", methodName);
+
+		// add method with the same name but only one parameter
+
+		MethodNode methodNode1 = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode1);
+
+		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		methodNode1.addParameter(param1);
+
+		// check in java language
+
+		methodName =
+				ClassNodeHelper.generateNewMethodName(
+						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), ExtLanguage.JAVA);
+		assertEquals("method_1", methodName);
+
+		// check in simple language
+
+		methodName =
+				ClassNodeHelper.generateNewMethodName(
+						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+		assertEquals("method 1", methodName);
+
+		// adding the second parameter
+
+		MethodParameterNode param2 = new MethodParameterNode("param2", null, "String", "0", false);
+		methodNode1.addParameter(param2);
+
+		// check in Java and Simple language
+
+		methodName =
+				ClassNodeHelper.generateNewMethodName(
+						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), ExtLanguage.JAVA);
+		assertEquals("method_2", methodName);
+
+		methodName =
+				ClassNodeHelper.generateNewMethodName(
+						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+		assertEquals("method 2", methodName);
 	}
 
 }

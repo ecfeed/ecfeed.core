@@ -14,6 +14,7 @@ public final class SimpleLanguageHelper {
 
 	public static final String SPECIAL_VALUE_NEGATIVE_INF_SIMPLE = "-Infinity";
 	public static final String SPECIAL_VALUE_POSITIVE_INF_SIMPLE = "Infinity";
+	public static final String INVALID_SIMPLE_TYPE = "Invalid simple type";
 
 	public static String DEFAULT_PACKAGE = "(default package)";
 
@@ -163,6 +164,6 @@ public final class SimpleLanguageHelper {
 			return null;
 		}
 
-		return "Invalid simple type: " + type + ".";
+		return INVALID_SIMPLE_TYPE + ": " + type + ".";
 	}
 }

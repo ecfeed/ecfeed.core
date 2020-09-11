@@ -94,6 +94,8 @@ public final class JavaLanguageHelper {
 			"final", "interface", "static", "void", "class", "finally", "long", "strictfp", "volatile", "const", "float",
 			"native", "super", "while", "null", "true", "false" };
 
+	public static final String INVALID_JAVA_TYPE = "Invalid java type";
+
 	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains(" ")) {
@@ -1269,6 +1271,6 @@ public final class JavaLanguageHelper {
 			return null;
 		}
 
-		return "Invalid java type: " + type + ".";
+		return INVALID_JAVA_TYPE + ": " + type + ".";
 	}
 }
