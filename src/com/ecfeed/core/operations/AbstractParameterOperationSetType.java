@@ -27,7 +27,6 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SimpleTypeHelper;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -113,7 +112,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveValues(fTarget);
 
 		if (!JavaTypeHelper.isJavaType(fNewType) && !SimpleTypeHelper.isSimpleType(fNewType) 
-				&& !JavaLanguageHelper.isValidTypeName(fNewType)) {
+				&& !JavaTypeHelper.isValidTypeName(fNewType)) {
 			
 			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
 		}

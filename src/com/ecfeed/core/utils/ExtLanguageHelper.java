@@ -17,7 +17,7 @@ public class ExtLanguageHelper {
 	public static String verifySeparatorsInName(String name, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {
-			return JavaLanguageHelper.verifySeparatorsInName(name);
+			return JavaTypeHelper.verifySeparatorsInName(name);
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {

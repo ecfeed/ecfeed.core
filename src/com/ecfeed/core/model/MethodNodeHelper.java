@@ -234,7 +234,7 @@ public class MethodNodeHelper {
 
 	private static boolean isValid(String name) {
 
-		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
+		if (!JavaTypeHelper.isValidJavaIdentifier(name)) {
 			return false;
 		}
 

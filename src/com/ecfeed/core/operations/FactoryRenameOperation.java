@@ -25,12 +25,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguageHelper;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.*;
 
 public class FactoryRenameOperation {
 
@@ -61,7 +56,7 @@ public class FactoryRenameOperation {
 			String[] tokens = newNameInJavaConvention.split("\\.");
 
 			for (String token : tokens) {
-				if(JavaLanguageHelper.isJavaKeyword(token)){
+				if(JavaTypeHelper.isJavaKeyword(token)){
 					ModelOperationException.report(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
 				}
 			}
@@ -132,7 +127,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
-			if(JavaLanguageHelper.isJavaKeyword(newName)){
+			if(JavaTypeHelper.isJavaKeyword(newName)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage));
 			}
 			if(target.getParametersParent().getParameter(newName) != null){
@@ -158,7 +153,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 			MethodParameterNode target = (MethodParameterNode)getOwnNode();
-			if(JavaLanguageHelper.isJavaKeyword(newName)){
+			if(JavaTypeHelper.isJavaKeyword(newName)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage));
 			}
 			if(target.getMethod().getParameter(newName) != null){
