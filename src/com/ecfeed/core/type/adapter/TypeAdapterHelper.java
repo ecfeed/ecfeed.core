@@ -13,7 +13,7 @@ package com.ecfeed.core.type.adapter;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleJanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterHelper {
 
@@ -28,7 +28,7 @@ public class TypeAdapterHelper {
 		JavaLanguageHelper.TYPE_NAME_STRING,
 		JavaLanguageHelper.TYPE_NAME_BYTE,
 		JavaLanguageHelper.TYPE_NAME_CHAR,
-		SimpleJanguageHelper.TYPE_NAME_NUMBER
+		SimpleLanguageHelper.TYPE_NAME_NUMBER
 	};
 
 	public static void reportRuntimeExceptionCannotConvert(String value, String typeName) {

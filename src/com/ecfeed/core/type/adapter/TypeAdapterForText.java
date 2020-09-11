@@ -10,18 +10,18 @@
 
 package com.ecfeed.core.type.adapter;
 
-import com.ecfeed.core.utils.SimpleJanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterForText extends TypeAdapterForString {
 
 	@Override
 	public String getMyTypeName() {
-		return SimpleJanguageHelper.TYPE_NAME_TEXT;
+		return SimpleLanguageHelper.TYPE_NAME_TEXT;
 	}
 	
 	@Override
 	public String getDefaultValue() {
-		return SimpleJanguageHelper.DEFAULT_EXPECTED_TEXT_VALUE;
+		return SimpleLanguageHelper.DEFAULT_EXPECTED_TEXT_VALUE;
 	}
 
 }

@@ -10,23 +10,23 @@
 
 package com.ecfeed.core.type.adapter;
 
-import com.ecfeed.core.utils.SimpleJanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterForLogical extends TypeAdapterForBoolean {
 
 	@Override
 	public String getMyTypeName() {
-		return SimpleJanguageHelper.TYPE_NAME_LOGICAL;
+		return SimpleLanguageHelper.TYPE_NAME_LOGICAL;
 	}
 	
 	@Override
 	public String getDefaultValue() {
-		return SimpleJanguageHelper.DEFAULT_EXPECTED_LOGICAL_VALUE;
+		return SimpleLanguageHelper.DEFAULT_EXPECTED_LOGICAL_VALUE;
 	}
 	
 	@Override
 	protected void reportRuntimeException(String value) {
-		TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, SimpleJanguageHelper.TYPE_NAME_LOGICAL);
+		TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, SimpleLanguageHelper.TYPE_NAME_LOGICAL);
 	}
 
 }

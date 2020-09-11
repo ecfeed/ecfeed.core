@@ -2,7 +2,7 @@ package com.ecfeed.core.utils;
 
 import java.util.Arrays;
 
-public final class SimpleJanguageHelper {
+public final class SimpleLanguageHelper {
 
 	public static final String TYPE_NAME_TEXT = "Text";
 	public static final String TYPE_NAME_NUMBER = "Number";

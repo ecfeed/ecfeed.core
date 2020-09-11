@@ -21,7 +21,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			return SimpleJanguageHelper.verifySeparatorsInName(name);
+			return SimpleLanguageHelper.verifySeparatorsInName(name);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid external language.");
@@ -35,7 +35,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			return SimpleJanguageHelper.validateType(parameterTypeInExtLanguage);
+			return SimpleLanguageHelper.validateType(parameterTypeInExtLanguage);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid external language.");
@@ -47,7 +47,7 @@ public class ExtLanguageHelper {
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			text = SimpleJanguageHelper.convertTextFromSimpleToJavaConvention(text);
+			text = SimpleLanguageHelper.convertTextFromSimpleToJavaConvention(text);
 		}
 
 		return text;
@@ -56,7 +56,7 @@ public class ExtLanguageHelper {
 	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			text = SimpleJanguageHelper.convertTextFromJavaToSimpleConvention(text);
+			text = SimpleLanguageHelper.convertTextFromJavaToSimpleConvention(text);
 		}
 
 		return text;
@@ -65,7 +65,7 @@ public class ExtLanguageHelper {
 	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			type = SimpleJanguageHelper.convertJavaTypeToSimpleType(type);
+			type = SimpleLanguageHelper.convertJavaTypeToSimpleType(type);
 		}
 
 		return type;
@@ -84,7 +84,7 @@ public class ExtLanguageHelper {
 	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			type = SimpleJanguageHelper.convertSimpleTypeToJavaType(type);
+			type = SimpleLanguageHelper.convertSimpleTypeToJavaType(type);
 		}
 
 		return type;

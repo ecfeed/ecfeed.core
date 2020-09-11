@@ -15,15 +15,15 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleJanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 	private final String[] TYPES_CONVERTABLE_TO_BOOLEAN = new String[]{
 		JavaLanguageHelper.TYPE_NAME_STRING,
 		JavaLanguageHelper.TYPE_NAME_BOOLEAN,
-		SimpleJanguageHelper.TYPE_NAME_TEXT,
-		SimpleJanguageHelper.TYPE_NAME_LOGICAL
+		SimpleLanguageHelper.TYPE_NAME_TEXT,
+		SimpleLanguageHelper.TYPE_NAME_LOGICAL
 	};
 
 	@Override
