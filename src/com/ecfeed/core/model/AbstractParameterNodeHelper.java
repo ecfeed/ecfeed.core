@@ -15,6 +15,11 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public abstract class AbstractParameterNodeHelper {
 
+	public static String validateParameterType(String parameterTypeInExtLanguage, ExtLanguage extLanguage) {
+
+		return ExtLanguageHelper.validateType(parameterTypeInExtLanguage, extLanguage);
+	}
+
 	public static String createSignatureOfOneParameterByIntrLanguage(
 			String parameterTypeInIntrLanguage,
 			String parameterNameInIntrLanguage,
@@ -97,4 +102,5 @@ public abstract class AbstractParameterNodeHelper {
 		String type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(javaType, extLanguage);
 		return type;
 	}
+
 }

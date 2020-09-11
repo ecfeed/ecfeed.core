@@ -70,6 +70,22 @@ public class MethodNodeHelper {
 		return RegexHelper.createMessageAllowedCharsForMethod(extLanguage);
 	}
 
+	public static String validateMethodParameterTypes(List<String> parameterTypesInExtLanguage,
+													  ExtLanguage extLanguage) {
+
+		String errorMessage;
+
+		for (String parameterTypeInExtLanguage : parameterTypesInExtLanguage) {
+
+			errorMessage = AbstractParameterNodeHelper.validateParameterType(parameterTypeInExtLanguage, extLanguage);
+
+			if (errorMessage != null) {
+				return errorMessage;
+			}
+		}
+
+		return null;
+	}
 
 	public static String createSignature(MethodNode methodNode, ExtLanguage extLanguage) {
 

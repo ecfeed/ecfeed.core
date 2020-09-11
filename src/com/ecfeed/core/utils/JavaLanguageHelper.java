@@ -1230,4 +1230,45 @@ public final class JavaLanguageHelper {
 
 		return true;
 	}
+
+	public static String validateType(String type) {
+
+		if (StringHelper.isEqual(type, TYPE_NAME_BOOLEAN)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_BYTE)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_CHAR)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_DOUBLE)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_FLOAT)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_INT)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_LONG)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_SHORT)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_STRING)) {
+			return null;
+		}
+
+		return "Invalid java type: " + type + ".";
+	}
 }

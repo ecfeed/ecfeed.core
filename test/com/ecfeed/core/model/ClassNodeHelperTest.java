@@ -128,6 +128,7 @@ public class ClassNodeHelperTest {
 		String methodNameInJavaLanguage = "method_1";
 
 		String[] invalidParameterTypesInJavaLanguage = { "bool", "Int" };
+		String[] invalidParameterTypesInSimpleLanguage = { "Num", "Tex" };
 
 		List<String> paramTypesInJavaLanguage = new ArrayList<>();
 		paramTypesInJavaLanguage.add("int");
@@ -140,69 +141,73 @@ public class ClassNodeHelperTest {
 		paramTypesInSimpleLanguage.add("Number");
 		paramTypesInSimpleLanguage.add("Number");
 
-
-		//  TODO SIMPLE-VIEW
 		// invalid parameter types in java language
 
-//		String errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInJavaLanguage, Arrays.asList(invalidParameterTypesInJavaLanguage), ExtLanguage.JAVA);
-//
-//		assertNotNull(errorMessage);
-//
-//		// empty class
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
-//
-//		assertNull(errorMessage);
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
-//
-//		assertNull(errorMessage);
-//
-//
-//		// class with one method without parameters
-//
-//		MethodNode methodNode = new MethodNode("method_1", null);
-//		classNode.addMethod(methodNode);
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
-//
-//		assertNull(errorMessage);
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
-//
-//		assertNull(errorMessage);
-//
-//
-//		// class with conflicting method
-//
-//		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
-//		methodNode.addParameter(param1);
-//
-//		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
-//		methodNode.addParameter(param2);
-//
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
-//
-//		assertNotNull(errorMessage);
-//
-//		errorMessage =
-//				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-//						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
-//
-//		assertNotNull(errorMessage);
+		String errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInJavaLanguage, Arrays.asList(invalidParameterTypesInJavaLanguage), ExtLanguage.JAVA);
+
+		assertNotNull(errorMessage);
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInSimpleLanguage, Arrays.asList(invalidParameterTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+
+		assertNotNull(errorMessage);
+
+		// empty class
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
+
+		assertNull(errorMessage);
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
+
+		assertNull(errorMessage);
+
+
+		// class with one method without parameters
+
+		MethodNode methodNode = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode);
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
+
+		assertNull(errorMessage);
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
+
+		assertNull(errorMessage);
+
+
+		// class with conflicting method
+
+		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		methodNode.addParameter(param1);
+
+		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
+		methodNode.addParameter(param2);
+
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
+
+		assertNotNull(errorMessage);
+
+		errorMessage =
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
+
+		assertNotNull(errorMessage);
 	}
 
 	@Test

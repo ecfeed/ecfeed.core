@@ -62,6 +62,18 @@ public class ClassNodeHelper {
 			List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
 
+		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		errorMessage = MethodNodeHelper.validateMethodParameterTypes(parameterTypesInExtLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
 		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage) != null) {
 
 			String newMethodSignature =
@@ -74,17 +86,11 @@ public class ClassNodeHelper {
 
 			String classSignature = createSignature(classNode, extLanguage);
 
-			String errorMessage =
+			errorMessage =
 					"Class: "
 							+ classSignature
 							+ " already contains method with identical signature: " + newMethodSignature + ".";
 
-			return errorMessage;
-		}
-
-		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
-
-		if (errorMessage != null) {
 			return errorMessage;
 		}
 

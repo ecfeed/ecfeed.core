@@ -149,4 +149,20 @@ public final class SimpleJanguageHelper {
 		return result;
 	}
 
+	public static String validateType(String type) {
+
+		if (StringHelper.isEqual(type, TYPE_NAME_TEXT)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_NUMBER)) {
+			return null;
+		}
+
+		if (StringHelper.isEqual(type, TYPE_NAME_LOGICAL)) {
+			return null;
+		}
+
+		return "Invalid simple type: " + type + ".";
+	}
 }

@@ -28,6 +28,22 @@ public class ExtLanguageHelper {
 		return null;
 	}
 
+	public static String validateType(String parameterTypeInExtLanguage, ExtLanguage extLanguage) {
+
+		if (extLanguage == ExtLanguage.JAVA) {
+			return JavaLanguageHelper.validateType(parameterTypeInExtLanguage);
+		}
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			return SimpleJanguageHelper.validateType(parameterTypeInExtLanguage);
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid external language.");
+		return null;
+
+	}
+
+
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
