@@ -13,10 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguageHelper;
-import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.*;
 
 
 public class ClassNodeHelper {
@@ -108,8 +105,9 @@ public class ClassNodeHelper {
 				verifyNewMethodSignatureIsValidAndUnique(
 						classNode, startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
-		if (errorMessage == null) {
-			return startMethodNameInExtLanguage;
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+			return null;
 		}
 
 		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodNameInExtLanguage);
@@ -118,9 +116,13 @@ public class ClassNodeHelper {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, newMethodName, parameterTypesInExtLanguage, extLanguage);
-			if (errorMessage == null) {
-				return newMethodName;
+			errorMessage =
+					verifyNewMethodSignatureIsValidAndUnique(
+							classNode, newMethodName, parameterTypesInExtLanguage, extLanguage);
+
+			if (errorMessage != null) {
+				ExceptionHelper.reportRuntimeException(errorMessage);
+				return null;
 			}
 		}
 	}

@@ -221,16 +221,16 @@ public class ClassNodeHelperTest {
 
 		// invalid parameter type
 
-//		String[] paramTypes1 = {"int", "x"};
-//		try {
-//			String result =
-//					ClassNodeHelper.generateNewMethodName(
-//							classNode, "method", Arrays.asList(paramTypes1), ExtLanguage.JAVA);
-//			fail();
-//		} catch (Exception e) {
-//			// TODO SIMPLE-VIEW
-//		}
-//
+		String[] paramTypes1 = {"int", "x"};
+		try {
+			String result =
+					ClassNodeHelper.generateNewMethodName(
+							classNode, "method", Arrays.asList(paramTypes1), ExtLanguage.JAVA);
+			fail();
+		} catch (Exception e) {
+			// TODO SIMPLE-VIEW
+		}
+
 //		// java language
 //
 //		String[] paramTypesInJavaLanguage = {"int", "double"};
@@ -247,7 +247,7 @@ public class ClassNodeHelperTest {
 //						classNode, "method", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
 //		assertEquals("X", methodName);
 //
-//
+
 	}
 
 }
