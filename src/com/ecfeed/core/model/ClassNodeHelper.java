@@ -93,21 +93,26 @@ public class ClassNodeHelper {
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String generateNewMethodName(
-			ClassNode classNode, String startMethodName, List<String> argTypes, ExtLanguage extLanguage) {
+			ClassNode classNode,
+			String startMethodNameInExtLanguage,
+			List<String> parameterTypesInExtLanguage,
+			ExtLanguage extLanguage) {
 
-		String errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, startMethodName, argTypes, extLanguage);
+		String errorMessage =
+				verifyNewMethodSignatureIsValidAndUnique(
+						classNode, startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
 		if (errorMessage == null) {
-			return startMethodName;
+			return startMethodNameInExtLanguage;
 		}
 
-		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodName);
+		String oldNameCore = StringHelper.removeFromNumericPostfix(startMethodNameInExtLanguage);
 
 		for (int i = 1;   ; i++) {
 
 			String newMethodName = oldNameCore + String.valueOf(i);
 
-			errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, newMethodName, argTypes, extLanguage);
+			errorMessage = verifyNewMethodSignatureIsValidAndUnique(classNode, newMethodName, parameterTypesInExtLanguage, extLanguage);
 			if (errorMessage == null) {
 				return newMethodName;
 			}
@@ -156,6 +161,9 @@ public class ClassNodeHelper {
 			List<String> parameterTypesInExternalLanguage,
 			ExtLanguage extLanguage) {
 
+		// TODO SIMPLE-VIEW validate methodNameInExternalLanguage
+		validateParameterTypes(parameterTypesInExternalLanguage, ExtLanguage.JAVA);
+
 		List<MethodNode> methods = classNode.getMethods();
 
 		for (MethodNode methodNode : methods) {
@@ -170,6 +178,10 @@ public class ClassNodeHelper {
 		}
 
 		return null;
+	}
+
+	private static void validateParameterTypes(List<String> parameterTypesInExternalLanguage, ExtLanguage extLanguage) {
+		// TODO SIMPLE-VIEW
 	}
 
 	// TODO SIMPLE-VIEW unit tests

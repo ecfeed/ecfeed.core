@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+// TODO SIMPLE-VIEW move methods to JavaTypeHelper and rename JavaTypeHelper to JavaLanguageHelper
 
 // TODO SIMPLE-VIEW unit tests
 

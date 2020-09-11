@@ -2,6 +2,8 @@ package com.ecfeed.core.utils;
 
 import java.util.Arrays;
 
+// TODO SIMPLE-VIEW rename to SimpleLanguageHelper
+
 public final class SimpleTypeHelper {
 
 	public static final String TYPE_NAME_TEXT = "Text";
@@ -24,6 +26,19 @@ public final class SimpleTypeHelper {
 	};
 
 	// TODO SIMPLE-VIEW unit test
+
+	public static String verifySeparatorsInName(String name) {
+
+		if (name.contains("_")) {
+			return "Underline chars are not allowed in name.";
+		}
+
+		if (name.startsWith(" ")) {
+			return "Name should not begin with space char.";
+		}
+
+		return null;
+	}
 
 	public static boolean isSimpleType(String typeName) {
 
