@@ -16,7 +16,7 @@ import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.SimpleJanguageHelper;
 
 public class TypeAdapterForString implements ITypeAdapter<String>{
 
@@ -30,9 +30,9 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 			JavaLanguageHelper.TYPE_NAME_BYTE,
 			JavaLanguageHelper.TYPE_NAME_CHAR,
 			JavaLanguageHelper.TYPE_NAME_BOOLEAN,
-			SimpleTypeHelper.TYPE_NAME_TEXT,
-			SimpleTypeHelper.TYPE_NAME_NUMBER,
-			SimpleTypeHelper.TYPE_NAME_LOGICAL,
+			SimpleJanguageHelper.TYPE_NAME_TEXT,
+			SimpleJanguageHelper.TYPE_NAME_NUMBER,
+			SimpleJanguageHelper.TYPE_NAME_LOGICAL,
 			TypeAdapterHelper.USER_TYPE
 	};
 

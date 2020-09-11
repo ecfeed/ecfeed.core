@@ -15,14 +15,14 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.SimpleJanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 
 	@Override
 	public String getMyTypeName() {
-		return SimpleTypeHelper.TYPE_NAME_NUMBER;
+		return SimpleJanguageHelper.TYPE_NAME_NUMBER;
 	}
 
 	@Override

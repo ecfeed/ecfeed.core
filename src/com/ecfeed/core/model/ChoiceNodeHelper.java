@@ -17,8 +17,8 @@ import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_FLOAT;
 import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_INT;
 import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_LONG;
 import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_SHORT;
-import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
-import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
+import static com.ecfeed.core.utils.SimpleJanguageHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
+import static com.ecfeed.core.utils.SimpleJanguageHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

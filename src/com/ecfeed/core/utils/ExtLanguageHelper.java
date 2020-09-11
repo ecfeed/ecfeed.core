@@ -21,7 +21,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			return SimpleTypeHelper.verifySeparatorsInName(name);
+			return SimpleJanguageHelper.verifySeparatorsInName(name);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid external language.");
@@ -31,7 +31,7 @@ public class ExtLanguageHelper {
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			text = SimpleTypeHelper.convertTextFromSimpleToJavaConvention(text);
+			text = SimpleJanguageHelper.convertTextFromSimpleToJavaConvention(text);
 		}
 
 		return text;
@@ -40,7 +40,7 @@ public class ExtLanguageHelper {
 	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			text = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(text);
+			text = SimpleJanguageHelper.convertTextFromJavaToSimpleConvention(text);
 		}
 
 		return text;
@@ -49,7 +49,7 @@ public class ExtLanguageHelper {
 	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			type = SimpleTypeHelper.convertJavaTypeToSimpleType(type);
+			type = SimpleJanguageHelper.convertJavaTypeToSimpleType(type);
 		}
 
 		return type;
@@ -68,7 +68,7 @@ public class ExtLanguageHelper {
 	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			type = SimpleTypeHelper.convertSimpleTypeToJavaType(type);
+			type = SimpleJanguageHelper.convertSimpleTypeToJavaType(type);
 		}
 
 		return type;

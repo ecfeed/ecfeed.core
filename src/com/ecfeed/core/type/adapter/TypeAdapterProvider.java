@@ -11,7 +11,7 @@
 package com.ecfeed.core.type.adapter;
 
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.SimpleJanguageHelper;
 
 public class TypeAdapterProvider implements ITypeAdapterProvider{
 
@@ -21,7 +21,7 @@ public class TypeAdapterProvider implements ITypeAdapterProvider{
 	}
 
 	public ITypeAdapter<?> getAdapter(String type){
-		if(!JavaLanguageHelper.isJavaType(type) && !SimpleTypeHelper.isSimpleType(type)){
+		if(!JavaLanguageHelper.isJavaType(type) && !SimpleJanguageHelper.isSimpleType(type)){
 			type = TypeAdapterHelper.USER_TYPE;
 		}
 		switch(type){
@@ -43,11 +43,11 @@ public class TypeAdapterProvider implements ITypeAdapterProvider{
 			return new TypeAdapterForShort();
 		case JavaLanguageHelper.TYPE_NAME_STRING:
 			return new TypeAdapterForString();
-		case SimpleTypeHelper.TYPE_NAME_TEXT:
+		case SimpleJanguageHelper.TYPE_NAME_TEXT:
 			return new TypeAdapterForText();
-		case SimpleTypeHelper.TYPE_NAME_NUMBER:
+		case SimpleJanguageHelper.TYPE_NAME_NUMBER:
 			return new TypeAdapterForNumber();
-		case SimpleTypeHelper.TYPE_NAME_LOGICAL:
+		case SimpleJanguageHelper.TYPE_NAME_LOGICAL:
 			return new TypeAdapterForLogical();
 		default:
 			return getTypeAdapterBaseForUserType(type);

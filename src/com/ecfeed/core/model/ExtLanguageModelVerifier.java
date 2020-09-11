@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.ecfeed.core.utils.Pair;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.SimpleJanguageHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 
 
@@ -27,15 +27,15 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 	public static String isNewClassNameValid(ClassNode classNode, String className) {
 
-		String simpleValueName = SimpleTypeHelper.convertTextFromJavaToSimpleConvention(className);
+		String simpleValueName = SimpleJanguageHelper.convertTextFromJavaToSimpleConvention(className);
 
 		for (ClassNode node : classNode.getRoot().getClasses()) {
 			if (node != classNode) {
-				if (SimpleTypeHelper.convertTextFromJavaToSimpleConvention(node.getSimpleName()).equals(simpleValueName)) {
+				if (SimpleJanguageHelper.convertTextFromJavaToSimpleConvention(node.getSimpleName()).equals(simpleValueName)) {
 					String errorMessage = THE_SAME_CLASSES 
 							+ System.lineSeparator() 
 							+ System.lineSeparator() 
-							+ SimpleTypeHelper.convertTextFromJavaToSimpleConvention(node.getSimpleName());
+							+ SimpleJanguageHelper.convertTextFromJavaToSimpleConvention(node.getSimpleName());
 
 					return TITLE_NON_UNIQUE_CLASS_NAMES + " " + errorMessage;
 				}

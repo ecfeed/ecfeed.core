@@ -16,7 +16,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.SimpleJanguageHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
 
@@ -115,7 +115,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	
 	private void verifyType(String type) {
 		
-		if (type.equals(SimpleTypeHelper.TYPE_NAME_TEXT) || type.equals(SimpleTypeHelper.TYPE_NAME_NUMBER)) {
+		if (type.equals(SimpleJanguageHelper.TYPE_NAME_TEXT) || type.equals(SimpleJanguageHelper.TYPE_NAME_NUMBER)) {
 			ExceptionHelper.reportRuntimeException("Invalid type of parameter: " + type);
 		}
 	}

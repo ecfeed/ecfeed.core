@@ -2,9 +2,7 @@ package com.ecfeed.core.utils;
 
 import java.util.Arrays;
 
-// TODO SIMPLE-VIEW rename to SimpleLanguageHelper
-
-public final class SimpleTypeHelper {
+public final class SimpleJanguageHelper {
 
 	public static final String TYPE_NAME_TEXT = "Text";
 	public static final String TYPE_NAME_NUMBER = "Number";

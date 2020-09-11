@@ -15,7 +15,7 @@ import java.util.Arrays;
 import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.SimpleJanguageHelper;
 
 public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 
@@ -24,8 +24,8 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 			JavaLanguageHelper.TYPE_NAME_SHORT,
 			JavaLanguageHelper.TYPE_NAME_BYTE,
 			JavaLanguageHelper.TYPE_NAME_INT,
-			SimpleTypeHelper.TYPE_NAME_TEXT, 
-			SimpleTypeHelper.TYPE_NAME_NUMBER,
+			SimpleJanguageHelper.TYPE_NAME_TEXT,
+			SimpleJanguageHelper.TYPE_NAME_NUMBER,
 	};
 
 	@Override
