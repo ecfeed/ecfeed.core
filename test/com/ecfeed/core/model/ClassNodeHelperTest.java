@@ -300,4 +300,18 @@ public class ClassNodeHelperTest {
 		assertEquals("method 2", methodName);
 	}
 
+	@Test
+	public void createSignatureTest() {
+
+		// class node without methods
+
+		ClassNode classNode = new ClassNode("com.class_1", null);
+
+		String signature = ClassNodeHelper.createSignature(classNode, ExtLanguage.JAVA);
+		assertEquals("com.class_1", signature);
+
+		signature = ClassNodeHelper.createSignature(classNode, ExtLanguage.SIMPLE);
+		assertEquals("class 1", signature);
+	}
+
 }

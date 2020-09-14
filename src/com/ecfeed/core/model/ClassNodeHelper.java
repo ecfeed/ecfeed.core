@@ -107,7 +107,6 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String generateNewMethodName(
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
@@ -141,7 +140,6 @@ public class ClassNodeHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(ClassNode classNode, ExtLanguage extLanguage) {
 
 		String className = classNode.getName();
@@ -155,7 +153,6 @@ public class ClassNodeHelper {
 		return className;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode,
 			MethodNode duplicateMethodNode,

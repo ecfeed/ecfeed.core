@@ -257,6 +257,4 @@ public class MethodNodeHelper {
 		return true;
 	}
 
-
-
 }
