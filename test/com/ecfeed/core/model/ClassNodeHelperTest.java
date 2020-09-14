@@ -314,4 +314,48 @@ public class ClassNodeHelperTest {
 		assertEquals("class 1", signature);
 	}
 
+	@Test
+	public void convertParameterTypesInJavaExtLanguageTest() {
+
+		String[] parameterTypes = {"byte", "short", "int", "long", "float", "double", "char", "String", "boolean"};
+
+		List<String> convertedTypes =
+				ClassNodeHelper.convertParameterTypesToExtLanguage(
+					Arrays.asList(parameterTypes),
+					ExtLanguage.JAVA);
+
+		assertEquals(9, convertedTypes.size());
+		assertEquals("byte", convertedTypes.get(0));
+		assertEquals("short", convertedTypes.get(1));
+		assertEquals("int", convertedTypes.get(2));
+		assertEquals("long", convertedTypes.get(3));
+		assertEquals("float", convertedTypes.get(4));
+		assertEquals("double", convertedTypes.get(5));
+		assertEquals("char", convertedTypes.get(6));
+		assertEquals("String", convertedTypes.get(7));
+		assertEquals("boolean", convertedTypes.get(8));
+	}
+
+	@Test
+	public void convertParameterTypesInSimpleExtLanguageTest() {
+
+		String[] parameterTypes = {"byte", "short", "int", "long", "float", "double", "char", "String", "boolean"};
+
+		List<String> convertedTypes =
+				ClassNodeHelper.convertParameterTypesToExtLanguage(
+						Arrays.asList(parameterTypes),
+						ExtLanguage.SIMPLE);
+
+		assertEquals(9, convertedTypes.size());
+		assertEquals("Number", convertedTypes.get(0));
+		assertEquals("Number", convertedTypes.get(1));
+		assertEquals("Number", convertedTypes.get(2));
+		assertEquals("Number", convertedTypes.get(3));
+		assertEquals("Number", convertedTypes.get(4));
+		assertEquals("Number", convertedTypes.get(5));
+		assertEquals("Text", convertedTypes.get(6));
+		assertEquals("Text", convertedTypes.get(7));
+		assertEquals("Logical", convertedTypes.get(8));
+	}
+
 }
