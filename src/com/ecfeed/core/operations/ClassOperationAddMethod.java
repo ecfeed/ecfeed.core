@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.ExtLanguage;
@@ -68,11 +69,12 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private void generateUniqeMethodName(MethodNode methodNode) {
 		
-		// TODO SIMPLE-VIEW convert methodName and parameter types to ext language
+		String methodNameInExtLanguage = MethodNodeHelper.getMethodName(methodNode, getExtLanguage());
+		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, getExtLanguage());
 		
 		String newName = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNode.getName(), methodNode.getParameterTypes(), getExtLanguage());
+						fClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, getExtLanguage());
 		
 		methodNode.setName(newName);
 	}

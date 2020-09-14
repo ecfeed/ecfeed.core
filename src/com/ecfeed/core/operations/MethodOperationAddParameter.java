@@ -53,18 +53,21 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		
 		ExtLanguage extLanguage = getExtLanguage();
 		
-		List<String> types = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
+		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
 		
-		String parameterType = AbstractParameterNodeHelper.createTypeLabel(fMethodParameterNode.getType(), extLanguage);
+		String newParameterType = AbstractParameterNodeHelper.createTypeLabel(fMethodParameterNode.getType(), extLanguage);
 		
-		types.add(fNewIndex, parameterType);
+		paremeterTypesInExtLanguage.add(fNewIndex, newParameterType);
 		
 		ClassNode parentClassNode = fMethodNode.getClassNode();
 		
 		if (parentClassNode != null) { 
 
-			// TODO SIMPLE-VIEW convert method name and types to ext language
-			MethodNode foundMethodNode = ClassNodeHelper.findMethodByExtLanguage(parentClassNode, fMethodNode.getName(), types, extLanguage);
+			String methodNameInExtLanguage = MethodNodeHelper.getMethodName(fMethodNode, extLanguage);
+			
+			MethodNode foundMethodNode = 
+					ClassNodeHelper.findMethodByExtLanguage(
+							parentClassNode, methodNameInExtLanguage, paremeterTypesInExtLanguage, extLanguage);
 			
 			if (foundMethodNode != null) {
 				
