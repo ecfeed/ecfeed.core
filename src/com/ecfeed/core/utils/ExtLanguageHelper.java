@@ -10,8 +10,6 @@
 
 package com.ecfeed.core.utils;
 
-// TODO SIMPLE-VIEW unit tests
-
 public class ExtLanguageHelper {
 
 	public static String verifySeparatorsInName(String name, ExtLanguage extLanguage) {
@@ -28,6 +26,7 @@ public class ExtLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String validateType(String parameterTypeInExtLanguage, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {
@@ -40,10 +39,9 @@ public class ExtLanguageHelper {
 
 		ExceptionHelper.reportRuntimeException("Invalid external language.");
 		return null;
-
 	}
 
-
+	// TODO SIMPLE-VIEW unit tests
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -53,6 +51,7 @@ public class ExtLanguageHelper {
 		return text;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -62,6 +61,7 @@ public class ExtLanguageHelper {
 		return text;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -72,6 +72,7 @@ public class ExtLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW move to classNodeHelper (and rename to createSignature?) or remove ?
+	// TODO SIMPLE-VIEW unit tests
 	public static String convertClassFromIntrToExtLanguage(String className, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -81,6 +82,7 @@ public class ExtLanguageHelper {
 		return className;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -90,6 +92,7 @@ public class ExtLanguageHelper {
 		return type;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
 	public static String convertSpecialValueFromIntrToExtLanguage(String value, String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
