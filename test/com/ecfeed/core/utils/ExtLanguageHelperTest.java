@@ -44,4 +44,21 @@ public class ExtLanguageHelperTest {
 		assertNull(errorMessage);
 		}
 
+	@Test
+	public void validateTypeTest() {
+
+		String errorMessage = ExtLanguageHelper.validateType("int", ExtLanguage.JAVA);
+		assertNull(errorMessage);
+
+		errorMessage = ExtLanguageHelper.validateType("intr", ExtLanguage.JAVA);
+		assertNotNull(errorMessage);
+
+		errorMessage = ExtLanguageHelper.validateType("Number", ExtLanguage.SIMPLE);
+		assertNull(errorMessage);
+
+		errorMessage = ExtLanguageHelper.validateType("Num", ExtLanguage.SIMPLE);
+		assertNotNull(errorMessage);
+	}
+
+
 }
