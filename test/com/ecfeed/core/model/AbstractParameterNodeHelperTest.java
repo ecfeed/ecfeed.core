@@ -63,11 +63,11 @@ public class AbstractParameterNodeHelperTest {
 	@Test
 	public void createSignatureByExtLanguageTest() {
 
-		String signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByExtLanguage(
+		String signature = AbstractParameterNodeHelper.createSignatureOfOneParameter(
 				"Number","par1",false);
 		assertEquals("Number par1", signature);
 
-		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByExtLanguage(
+		signature = AbstractParameterNodeHelper.createSignatureOfOneParameter(
 				"Number","par1",true);
 		assertEquals("[e]Number par1", signature);
 	}

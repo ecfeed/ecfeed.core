@@ -320,7 +320,7 @@ public class ClassNodeHelperTest {
 		String[] parameterTypes = {"byte", "short", "int", "long", "float", "double", "char", "String", "boolean"};
 
 		List<String> convertedTypes =
-				ClassNodeHelper.convertParameterTypesToExtLanguage(
+				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
 					Arrays.asList(parameterTypes),
 					ExtLanguage.JAVA);
 
@@ -342,7 +342,7 @@ public class ClassNodeHelperTest {
 		String[] parameterTypes = {"byte", "short", "int", "long", "float", "double", "char", "String", "boolean"};
 
 		List<String> convertedTypes =
-				ClassNodeHelper.convertParameterTypesToExtLanguage(
+				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
 						Arrays.asList(parameterTypes),
 						ExtLanguage.SIMPLE);
 

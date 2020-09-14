@@ -130,7 +130,7 @@ public class MethodNodeHelperTest {
 		// by external language
 
 		String[] params = {"Number", "Text", "Logical"};
-		signature = MethodNodeHelper.createSignatureByExtLanguage(
+		signature = MethodNodeHelper.createSignature(
 				"f 1",
 				Arrays.asList(params),
 				null,
@@ -141,7 +141,7 @@ public class MethodNodeHelperTest {
 		// with parameter names
 
 		String[] paramNames = {"num", "txt", "log"};
-		signature = MethodNodeHelper.createSignatureByExtLanguage(
+		signature = MethodNodeHelper.createSignature(
 				"f 1",
 				Arrays.asList(params),
 				Arrays.asList(paramNames),
@@ -152,7 +152,7 @@ public class MethodNodeHelperTest {
 		// with expected decorations
 
 		Boolean[] expDecorations = {true, false, true};
-		signature = MethodNodeHelper.createSignatureByExtLanguage(
+		signature = MethodNodeHelper.createSignature(
 				"f 1",
 				Arrays.asList(params),
 				Arrays.asList(paramNames),

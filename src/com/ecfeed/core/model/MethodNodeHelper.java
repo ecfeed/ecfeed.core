@@ -171,12 +171,12 @@ public class MethodNodeHelper {
 	}
 
 	public static String createSignature(
-			String nameInExtLanguage,
+			String methodName,
 			List<String> parameterTypes,
 			List<String> parameterNames,
 			List<Boolean> expectedFlags) {
 
-		String signature = new String(nameInExtLanguage) + "(";
+		String signature = new String(methodName) + "(";
 
 		String signaturesOfParameters =
 				createSignaturesOfParameters(
