@@ -172,14 +172,10 @@ public class ClassNodeHelper {
 	}
 
 	public static MethodNode findMethodByExtLanguage(
-			// TODO SIMPLE-VIEW check usages
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
 			List<String> parameterTypesInExternalLanguage,
 			ExtLanguage extLanguage) {
-
-		// TODO SIMPLE-VIEW validate methodNameInExternalLanguage
-		validateParameterTypes(parameterTypesInExternalLanguage, ExtLanguage.JAVA);
 
 		List<MethodNode> methods = classNode.getMethods();
 
@@ -195,10 +191,6 @@ public class ClassNodeHelper {
 		}
 
 		return null;
-	}
-
-	private static void validateParameterTypes(List<String> parameterTypesInExternalLanguage, ExtLanguage extLanguage) {
-		// TODO SIMPLE-VIEW
 	}
 
 	// TODO SIMPLE-VIEW unit tests
