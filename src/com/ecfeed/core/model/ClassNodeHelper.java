@@ -154,6 +154,8 @@ public class ClassNodeHelper {
 		return message;
 	}
 
+	// TODO SIMPLE VIEW add method findMethodByExtLanguage(classNode, methodNode, extLanguage) and use where possible instead of method below
+	
 	public static MethodNode findMethodByExtLanguage(
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
