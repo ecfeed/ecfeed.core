@@ -18,6 +18,7 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
@@ -32,7 +33,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 			AbstractNode shifted, 
 			boolean up,
 			ExtLanguage extLanguage) {
-		
+
 		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguage);
 	}
 
@@ -57,7 +58,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	@Override
 	public void execute() throws ModelOperationException {
 		MethodNode method = ((MethodParameterNode)fParameters.get(0)).getMethod();
-		
+
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
 
 			ModelOperationException.report(
@@ -81,15 +82,21 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		if(super.shiftAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof MethodParameterNode == false) return false;
 		MethodNode method = ((MethodParameterNode)shifted.get(0)).getMethod();
-		List<String> parameterTypes = method.getParameterTypes();
+		List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(method, getExtLanguage());
 		List<Integer> indices = indices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);
-		
+
 		ClassNode classNode = method.getClassNode();
 
-		// TODO SIMPLE-VIEW convert method name and types to ext language
-		MethodNode sibling = ClassNodeHelper.findMethodByExtLanguage(classNode, method.getName(), parameterTypes, getExtLanguage());
-		
+		String methodName = MethodNodeHelper.getMethodName(method, getExtLanguage());
+
+		MethodNode sibling = 
+				ClassNodeHelper.findMethodByExtLanguage(
+						classNode, 
+						methodName, 
+						parameterTypes, 
+						getExtLanguage());
+
 		if(sibling != null && sibling != method){
 			return false;
 		}
