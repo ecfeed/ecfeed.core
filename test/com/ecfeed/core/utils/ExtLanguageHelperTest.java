@@ -12,9 +12,7 @@ package com.ecfeed.core.utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class ExtLanguageHelperTest {
 
@@ -58,6 +56,28 @@ public class ExtLanguageHelperTest {
 
 		errorMessage = ExtLanguageHelper.validateType("Num", ExtLanguage.SIMPLE);
 		assertNotNull(errorMessage);
+	}
+
+	@Test
+	public void convertTextToExtLanguageTest() {
+
+		String text = ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab_c", ExtLanguage.JAVA);
+		assertEquals("ab_c", text);
+
+		text = ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab_c", ExtLanguage.SIMPLE);
+		assertEquals("ab c", text);
+
+		try {
+			ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab c", ExtLanguage.JAVA);
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab c", ExtLanguage.SIMPLE);
+			fail();
+		} catch (Exception e) {
+		}
 	}
 
 

@@ -26,7 +26,6 @@ public class ExtLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String validateType(String parameterTypeInExtLanguage, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {
@@ -44,6 +43,12 @@ public class ExtLanguageHelper {
 	// TODO SIMPLE-VIEW unit tests
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
+		String errorMessage = verifySeparatorsInName(text, extLanguage);
+
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+		}
+
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			text = SimpleLanguageHelper.convertTextFromSimpleToJavaConvention(text);
 		}
@@ -53,6 +58,12 @@ public class ExtLanguageHelper {
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguage extLanguage) {
+
+		String errorMessage = JavaLanguageHelper.verifySeparatorsInName(text);
+
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			text = SimpleLanguageHelper.convertTextFromJavaToSimpleConvention(text);
