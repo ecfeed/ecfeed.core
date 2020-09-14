@@ -193,7 +193,6 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static List<String> convertParameterTypesToExtLanguage(
 			List<String> parameterTypes,
 			ExtLanguage extLanguage) {
@@ -209,7 +208,6 @@ public class ClassNodeHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static boolean classNameCompliesWithJavaNamingRules(String className) {
 
 		if (className.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
