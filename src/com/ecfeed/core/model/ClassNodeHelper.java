@@ -115,7 +115,7 @@ public class ClassNodeHelper {
 
 		String errorMessage =
 				verifyMethodSignatureIsValid(
-					startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
+						startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);
@@ -191,16 +191,6 @@ public class ClassNodeHelper {
 		}
 
 		return null;
-	}
-
-	// TODO SIMPLE-VIEW unit tests
-	public static MethodNode findMethodByIntrLanguage( // TODO SIMPLE-VIEW check usages
-			ClassNode classNode,
-			String methodNameInIntrLanguage,
-			List<String> parameterTypesInIntrLanguage) {
-
-		MethodNode methodNode = classNode.findMethodWithTheSameSignature(methodNameInIntrLanguage, parameterTypesInIntrLanguage);
-		return methodNode;
 	}
 
 	// TODO SIMPLE-VIEW unit tests
