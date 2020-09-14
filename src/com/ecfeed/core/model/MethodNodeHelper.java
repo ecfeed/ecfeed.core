@@ -69,6 +69,26 @@ public class MethodNodeHelper {
 		return RegexHelper.createMessageAllowedCharsForMethod(extLanguage);
 	}
 
+	public static String verifyMethodSignatureIsValid(
+			String methodNameInExtLanguage,
+			List<String> parameterTypesInExtLanguage,
+			ExtLanguage extLanguage) {
+
+		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		errorMessage = MethodNodeHelper.validateMethodParameterTypes(parameterTypesInExtLanguage, extLanguage);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		return null;
+	}
+	
 	public static String validateMethodParameterTypes(List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
 

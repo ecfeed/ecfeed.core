@@ -10,10 +10,13 @@
 
 package com.ecfeed.core.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 
 public class ClassNodeHelper {
@@ -59,7 +62,7 @@ public class ClassNodeHelper {
 			List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
 
-		String errorMessage = verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
+		String errorMessage = MethodNodeHelper.verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
 		if (errorMessage != null)
 			return errorMessage;
@@ -87,26 +90,6 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	public static String verifyMethodSignatureIsValid(
-			String methodNameInExtLanguage,
-			List<String> parameterTypesInExtLanguage,
-			ExtLanguage extLanguage) {
-
-		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
-
-		if (errorMessage != null) {
-			return errorMessage;
-		}
-
-		errorMessage = MethodNodeHelper.validateMethodParameterTypes(parameterTypesInExtLanguage, extLanguage);
-
-		if (errorMessage != null) {
-			return errorMessage;
-		}
-
-		return null;
-	}
-
 	public static String generateNewMethodName(
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
@@ -114,7 +97,7 @@ public class ClassNodeHelper {
 			ExtLanguage extLanguage) {
 
 		String errorMessage =
-				verifyMethodSignatureIsValid(
+				MethodNodeHelper.verifyMethodSignatureIsValid(
 						startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
 		if (errorMessage != null) {
@@ -191,21 +174,6 @@ public class ClassNodeHelper {
 		}
 
 		return null;
-	}
-
-	public static List<String> convertParameterTypesToExtLanguage(
-			List<String> parameterTypes,
-			ExtLanguage extLanguage) {
-
-		List<String> result = new ArrayList<String>();
-
-		for (String parameterType : parameterTypes) {
-
-			parameterType = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(parameterType, extLanguage);
-			result.add(parameterType);
-		}
-
-		return result;
 	}
 
 	private static boolean classNameCompliesWithJavaNamingRules(String className) {

@@ -11,6 +11,10 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguageHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ecfeed.core.utils.ExtLanguage;
 
 public abstract class AbstractParameterNodeHelper {
@@ -103,4 +107,19 @@ public abstract class AbstractParameterNodeHelper {
 		return type;
 	}
 
+	public static List<String> convertParameterTypesToExtLanguage(
+			List<String> parameterTypes,
+			ExtLanguage extLanguage) {
+
+		List<String> result = new ArrayList<String>();
+
+		for (String parameterType : parameterTypes) {
+
+			parameterType = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(parameterType, extLanguage);
+			result.add(parameterType);
+		}
+
+		return result;
+	}
+	
 }
