@@ -121,18 +121,19 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
 
-			List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, ExtLanguage.JAVA);
+			List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, ExtLanguage.JAVA);
 
 			String newParameterType = getNewType();
-			
-			parameterTypes.set(fMethodParameterNode.getMyIndex(), newParameterType);
+
+			parameterTypesInExtLanguage.set(fMethodParameterNode.getMyIndex(), newParameterType);
 
 			ClassNode classNode = oldMethodNode.getClassNode();
 
-			// TODO SIMPLE-VIEW convert method name and types to ext language
+			String methodNameInExtLanguage = MethodNodeHelper.getMethodName(oldMethodNode, fExtLanguage);
+
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(
-							classNode, oldMethodNode.getName(), parameterTypes, fExtLanguage);
+							classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, fExtLanguage);
 
 			if (foundMethodNode == null) {
 				return;
