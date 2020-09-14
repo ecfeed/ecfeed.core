@@ -48,9 +48,9 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createSignatureOfOneParameterByExtLanguage(
-			String parameterTypeInExtLanguage,
-			String parameterNameInExtLanguage,
+	public static String createSignatureOfOneParameter(
+			String parameterType,
+			String parameterName,
 			Boolean expectedFlag) {
 
 		String signature = "";
@@ -60,12 +60,12 @@ public abstract class AbstractParameterNodeHelper {
 			signature += expectedDecoration;
 		}
 
-		signature += parameterTypeInExtLanguage;
+		signature += parameterType;
 
-		if (parameterNameInExtLanguage != null) {
+		if (parameterName != null) {
 
 			signature += " ";
-			signature += parameterNameInExtLanguage;
+			signature += parameterName;
 		}
 
 		return signature;

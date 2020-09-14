@@ -67,7 +67,7 @@ public class ClassNodeHelper {
 		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage) != null) {
 
 			String newMethodSignature =
-					MethodNodeHelper.createSignatureByExtLanguage(
+					MethodNodeHelper.createSignature(
 							methodNameInExtLanguage,
 							parameterTypesInExtLanguage,
 							null,

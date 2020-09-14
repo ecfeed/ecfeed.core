@@ -52,7 +52,6 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW similar methods for other types of nodes exist (extract common code)
 	public static String validateMethodName(String nameInExternalLanguage, ExtLanguage extLanguage) {
 
 		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
@@ -151,17 +150,17 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	public static String createSignatureByExtLanguage(
+	public static String createSignature(
 			String nameInExtLanguage,
-			List<String> parameterTypesInExtLanguage,
+			List<String> parameterTypes,
 			List<String> parameterNames,
 			List<Boolean> expectedFlags) {
 
 		String signature = new String(nameInExtLanguage) + "(";
 
 		String signaturesOfParameters =
-				createSignaturesOfParametersByExtLanguage( // TODO SIMPLE-VIEW ext
-						parameterTypesInExtLanguage, parameterNames, expectedFlags);
+				createSignaturesOfParameters(
+						parameterTypes, parameterNames, expectedFlags);
 
 		signature += signaturesOfParameters;
 
@@ -170,28 +169,26 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static String createSignaturesOfParametersByExtLanguage(
-			List<String> parameterTypesInExtLanguage,
+	private static String createSignaturesOfParameters(
+			List<String> parameterTypes,
 			List<String> parameterNames,
 			List<Boolean> expectedFlags) {
 
 		String signature = "";
 
-		for (int paramIndex = 0; paramIndex < parameterTypesInExtLanguage.size(); paramIndex++) {
+		for (int paramIndex = 0; paramIndex < parameterTypes.size(); paramIndex++) {
 
-			String parameterType = parameterTypesInExtLanguage.get(paramIndex);
+			String parameterType = parameterTypes.get(paramIndex);
 			String parameterName = (parameterNames != null ? parameterNames.get(paramIndex) : null);
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter =
-					AbstractParameterNodeHelper.createSignatureOfOneParameterByExtLanguage( // XYX by ext language
-							parameterType,
-							parameterName,
-							expectedFlag);
+					AbstractParameterNodeHelper.createSignatureOfOneParameter(
+							parameterType, parameterName, expectedFlag);
 
 			signature += signatureOfOneParameter;
 
-			if (paramIndex < parameterTypesInExtLanguage.size() - 1) {
+			if (paramIndex < parameterTypes.size() - 1) {
 				signature += ", ";
 			}
 		}

@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.model;
 
-// TODO SIMPLE-VIEW do we need constants from JavaLanguageHelper (create/extract methods?)
 import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_BYTE;
 import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_DOUBLE;
 import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_FLOAT;
