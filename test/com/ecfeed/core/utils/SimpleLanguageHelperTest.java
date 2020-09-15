@@ -54,4 +54,20 @@ public class SimpleLanguageHelperTest {
 		assertEquals("Logical", simpleTypes[2]);
 	}
 
+	@Test
+	public void convertToSimpleTypeTest() {
+
+		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("byte"));
+		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("short"));
+		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("int"));
+		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("long"));
+		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("float"));
+		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("double"));
+
+		assertEquals("Text", SimpleLanguageHelper.convertJavaTypeToSimpleType("char"));
+		assertEquals("Text", SimpleLanguageHelper.convertJavaTypeToSimpleType("String"));
+
+		assertEquals("Logical", SimpleLanguageHelper.convertJavaTypeToSimpleType("boolean"));
+	}
+
 }

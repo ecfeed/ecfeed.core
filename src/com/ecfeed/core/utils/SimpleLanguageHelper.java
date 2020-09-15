@@ -46,7 +46,6 @@ public final class SimpleLanguageHelper {
 		return Arrays.asList(SUPPORTED_SIMPLE_VIEW_TYPES).contains(typeName);
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static String[] getSupportedSimpleViewTypes() {
 
 		return SUPPORTED_SIMPLE_VIEW_TYPES;
