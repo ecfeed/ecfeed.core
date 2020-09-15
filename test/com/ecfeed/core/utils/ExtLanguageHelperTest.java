@@ -125,7 +125,7 @@ public class ExtLanguageHelperTest {
 	}
 
 	@Test
-	public void convertTypeFromToIntrLanguageTest() {
+	public void convertTypeToIntrLanguageTest() {
 
 		String text = ExtLanguageHelper.convertTypeFromExtToIntrLanguage("int", ExtLanguage.JAVA);
 		assertEquals("int", text);
@@ -144,7 +144,39 @@ public class ExtLanguageHelperTest {
 			fail();
 		} catch (Exception e) {
 		}
-
 	}
+
+	@Test
+	public void convertSpecialValueToExtLanguageTest() {
+
+		String text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE","int", ExtLanguage.JAVA);
+		assertEquals("MAX_VALUE", text);
+
+		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "int", ExtLanguage.SIMPLE);
+		assertEquals("2147483647", text);
+
+		// invalid type
+
+		try {
+			ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z", ExtLanguage.JAVA);
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z", ExtLanguage.SIMPLE);
+			fail();
+		} catch (Exception e) {
+		}
+
+		// invalid value
+
+		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("x", "int", ExtLanguage.JAVA);
+		assertEquals("x", text);
+
+		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("x", "int", ExtLanguage.SIMPLE);
+		assertEquals("x", text);
+	}
+
 
 }

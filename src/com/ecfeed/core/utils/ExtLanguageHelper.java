@@ -83,7 +83,6 @@ public class ExtLanguageHelper {
 		return type;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
@@ -97,14 +96,18 @@ public class ExtLanguageHelper {
 		return type;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static String convertSpecialValueFromIntrToExtLanguage(String value, String type, ExtLanguage extLanguage) {
+	public static String conditionallyConvertSpecialValueToExtLanguage(
+			String valueInIntrLanguage, String typeInIntrLanguage, ExtLanguage extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
-			value = JavaLanguageHelper.convertSpecialValueToSimpleLanguage(type, value);
+		if (!JavaLanguageHelper.isJavaType(typeInIntrLanguage)) {
+			ExceptionHelper.reportRuntimeException("Attempt to convert special value for invalid Java type.");
 		}
 
-		return value;
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			valueInIntrLanguage = JavaLanguageHelper.convertSpecialValueToSimpleLanguage(typeInIntrLanguage, valueInIntrLanguage);
+		}
+
+		return valueInIntrLanguage;
 	}
 
 }
