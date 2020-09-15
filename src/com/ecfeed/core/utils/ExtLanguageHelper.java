@@ -40,7 +40,6 @@ public class ExtLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		String errorMessage = verifySeparatorsInName(text, extLanguage);
@@ -56,7 +55,6 @@ public class ExtLanguageHelper {
 		return text;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguage extLanguage) {
 
 		String errorMessage = JavaLanguageHelper.verifySeparatorsInName(text);
@@ -72,8 +70,11 @@ public class ExtLanguageHelper {
 		return text;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguage extLanguage) {
+
+		if (!JavaLanguageHelper.isJavaType(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
+		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			type = SimpleLanguageHelper.convertJavaTypeToSimpleType(type);
