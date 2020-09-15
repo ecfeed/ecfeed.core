@@ -24,7 +24,6 @@ public final class SimpleLanguageHelper {
 			TYPE_NAME_LOGICAL
 	};
 
-	// TODO SIMPLE-VIEW unit test
 	public static String verifySeparators(String name) {
 
 		if (name.contains("_")) {

@@ -29,4 +29,16 @@ public class SimpleLanguageHelperTest {
 		assertNotNull(errorMessage);
 	}
 
+	@Test
+	public void isSimpleTypeTest() throws EcException{
+
+		assertTrue(SimpleLanguageHelper.isSimpleType("Number"));
+		assertTrue(SimpleLanguageHelper.isSimpleType("Text"));
+		assertTrue(SimpleLanguageHelper.isSimpleType("Logical"));
+		assertFalse(SimpleLanguageHelper.isSimpleType("int"));
+		assertFalse(SimpleLanguageHelper.isSimpleType("double"));
+		assertFalse(SimpleLanguageHelper.isSimpleType("boolean"));
+		assertFalse(SimpleLanguageHelper.isSimpleType("String"));
+	}
+
 }
