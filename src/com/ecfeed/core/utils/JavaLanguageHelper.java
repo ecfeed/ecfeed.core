@@ -97,13 +97,13 @@ public final class JavaLanguageHelper {
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
 
 	// TODO SIMPLE-VIEW unit tests
-	public static String verifySeparatorsInName(String name) {
+	public static String verifySeparators(String text) {
 
-		if (name.contains(" ")) {
+		if (text.contains(" ")) {
 			return ("Spaces are not allowed in name.");
 		}
 
-		if (name.startsWith("_")) {
+		if (text.startsWith("_")) {
 			return("Name should not begin with underline char.");
 		}
 

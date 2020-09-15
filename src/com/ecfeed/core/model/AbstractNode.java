@@ -71,7 +71,7 @@ public abstract class AbstractNode{
 	public void setName(String name, boolean checkName) {
 		
 		if (checkName ) {
-			JavaLanguageHelper.verifySeparatorsInName(name);
+			JavaLanguageHelper.verifySeparators(name);
 		}
 		
 		fName = name;
