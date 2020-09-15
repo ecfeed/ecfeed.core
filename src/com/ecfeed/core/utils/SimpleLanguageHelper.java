@@ -25,7 +25,6 @@ public final class SimpleLanguageHelper {
 	};
 
 	// TODO SIMPLE-VIEW unit test
-
 	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains("_")) {
@@ -39,6 +38,7 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW unit test
 	public static boolean isSimpleType(String typeName) {
 
 		if (typeName == null) {
@@ -48,11 +48,13 @@ public final class SimpleLanguageHelper {
 		return Arrays.asList(SUPPORTED_SIMPLE_VIEW_TYPES).contains(typeName);
 	}
 
+	// TODO SIMPLE-VIEW unit test
 	public static String[] getSupportedSimpleViewTypes() {
 
 		return SUPPORTED_SIMPLE_VIEW_TYPES;
 	}
 
+	// TODO SIMPLE-VIEW unit test
 	public static String convertJavaTypeToSimpleType(String javaType) {
 
 		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_BYTE)) {
@@ -90,6 +92,7 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW unit test
 	public static String convertSimpleTypeToJavaType(String javaType) {
 
 		if (javaType.equals(TYPE_NAME_NUMBER)) {
@@ -107,6 +110,7 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW unit test
 	public static boolean isTextTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_TEXT)) {
@@ -115,6 +119,7 @@ public final class SimpleLanguageHelper {
 		return false;
 	}	
 
+	// TODO SIMPLE-VIEW unit test
 	public static boolean isNumberTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_NUMBER)) {
@@ -123,6 +128,7 @@ public final class SimpleLanguageHelper {
 		return false;
 	}	
 
+	// TODO SIMPLE-VIEW unit test
 	public static boolean isLogicalTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_LOGICAL)) {
@@ -131,6 +137,7 @@ public final class SimpleLanguageHelper {
 		return false;
 	}	
 
+	// TODO SIMPLE-VIEW unit test
 	public static String convertTextFromJavaToSimpleConvention(String text) {
 
 		String result = text.replaceAll("_", " ");
@@ -138,7 +145,7 @@ public final class SimpleLanguageHelper {
 		return result;
 	}
 
-
+	// TODO SIMPLE-VIEW unit test
 	public static String convertTextFromSimpleToJavaConvention(String text1) {
 
 		if (text1.contains("_")) {
@@ -150,6 +157,7 @@ public final class SimpleLanguageHelper {
 		return result;
 	}
 
+	// TODO SIMPLE-VIEW unit test
 	public static String validateType(String type) {
 
 		if (StringHelper.isEqual(type, TYPE_NAME_TEXT)) {
