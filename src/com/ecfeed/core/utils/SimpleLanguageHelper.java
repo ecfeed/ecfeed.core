@@ -51,7 +51,6 @@ public final class SimpleLanguageHelper {
 		return SUPPORTED_SIMPLE_VIEW_TYPES;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static String convertJavaTypeToSimpleType(String javaType) {
 
 		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_BYTE)) {
@@ -89,7 +88,6 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static String convertSimpleTypeToJavaType(String javaType) {
 
 		if (javaType.equals(TYPE_NAME_NUMBER)) {
@@ -107,35 +105,7 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit test
-	public static boolean isTextTypeName(String typeName) {
-
-		if (typeName.equals(TYPE_NAME_TEXT)) {
-			return true;
-		}
-		return false;
-	}	
-
-	// TODO SIMPLE-VIEW unit test
-	public static boolean isNumberTypeName(String typeName) {
-
-		if (typeName.equals(TYPE_NAME_NUMBER)) {
-			return true;
-		}
-		return false;
-	}	
-
-	// TODO SIMPLE-VIEW unit test
-	public static boolean isLogicalTypeName(String typeName) {
-
-		if (typeName.equals(TYPE_NAME_LOGICAL)) {
-			return true;
-		}
-		return false;
-	}	
-
-	// TODO SIMPLE-VIEW unit test
-	public static String convertTextFromJavaToSimpleConvention(String text) {
+	public static String convertTextFromJavaToSimpleLanguage(String text) {
 
 		String result = text.replaceAll("_", " ");
 
@@ -143,7 +113,7 @@ public final class SimpleLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit test
-	public static String convertTextFromSimpleToJavaConvention(String text1) {
+	public static String convertTextFromSimpleToJavaLanguage(String text1) {
 
 		if (text1.contains("_")) {
 			ExceptionHelper.reportRuntimeException("Underline chars are not allowed in simple view.");

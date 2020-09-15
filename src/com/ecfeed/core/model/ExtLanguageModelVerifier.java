@@ -27,15 +27,15 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE MODE - unit tests
 
 	public static String isNewClassNameValid(ClassNode classNode, String className) {
 
-		String simpleValueName = SimpleLanguageHelper.convertTextFromJavaToSimpleConvention(className);
+		String simpleValueName = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(className);
 
 		for (ClassNode node : classNode.getRoot().getClasses()) {
 			if (node != classNode) {
-				if (SimpleLanguageHelper.convertTextFromJavaToSimpleConvention(node.getSimpleName()).equals(simpleValueName)) {
+				if (SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(node.getSimpleName()).equals(simpleValueName)) {
 					String errorMessage = THE_SAME_CLASSES 
 							+ System.lineSeparator() 
 							+ System.lineSeparator() 
-							+ SimpleLanguageHelper.convertTextFromJavaToSimpleConvention(node.getSimpleName());
+							+ SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(node.getSimpleName());
 
 					return TITLE_NON_UNIQUE_CLASS_NAMES + " " + errorMessage;
 				}

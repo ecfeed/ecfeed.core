@@ -70,4 +70,19 @@ public class SimpleLanguageHelperTest {
 		assertEquals("Logical", SimpleLanguageHelper.convertJavaTypeToSimpleType("boolean"));
 	}
 
+	@Test
+	public void convertToJavaTypeTest() {
+
+		assertEquals("double", SimpleLanguageHelper.convertSimpleTypeToJavaType("Number"));
+		assertEquals("String", SimpleLanguageHelper.convertSimpleTypeToJavaType("Text"));
+		assertEquals("boolean", SimpleLanguageHelper.convertSimpleTypeToJavaType("Logical"));
+	}
+
+	@Test
+	public void convertTextTest() {
+
+		assertEquals("a b", SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage("a_b"));
+		assertEquals("a_b", SimpleLanguageHelper.convertTextFromSimpleToJavaLanguage("a b"));
+	}
+
 }

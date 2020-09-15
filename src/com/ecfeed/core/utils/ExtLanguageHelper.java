@@ -49,7 +49,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			text = SimpleLanguageHelper.convertTextFromSimpleToJavaConvention(text);
+			text = SimpleLanguageHelper.convertTextFromSimpleToJavaLanguage(text);
 		}
 
 		return text;
@@ -64,7 +64,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			text = SimpleLanguageHelper.convertTextFromJavaToSimpleConvention(text);
+			text = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(text);
 		}
 
 		return text;
