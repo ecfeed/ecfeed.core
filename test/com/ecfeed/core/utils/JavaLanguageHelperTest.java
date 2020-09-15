@@ -19,15 +19,27 @@ public class JavaLanguageHelperTest {
 	@Test
 	public void verifySeparatorsTest() {
 
-		String errorMessage = SimpleLanguageHelper.verifySeparators("abc");
+		String errorMessage = JavaLanguageHelper.verifySeparators("abc");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifySeparators("a_b");
+		errorMessage = JavaLanguageHelper.verifySeparators("a_b");
+		assertNull(errorMessage);
+
+		errorMessage = JavaLanguageHelper.verifySeparators("a b");
 		assertNotNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifySeparators(" ab");
+		errorMessage = JavaLanguageHelper.verifySeparators("_ab");
 		assertNotNull(errorMessage);
 	}
 
+	@Test
+	public void isJavaKeywordTest() {
+
+		assertTrue(JavaLanguageHelper.isJavaKeyword("class"));
+		assertTrue(JavaLanguageHelper.isJavaKeyword("if"));
+		assertTrue(JavaLanguageHelper.isJavaKeyword("for"));
+
+		assertFalse(JavaLanguageHelper.isJavaKeyword("x"));
+	}
 
 }

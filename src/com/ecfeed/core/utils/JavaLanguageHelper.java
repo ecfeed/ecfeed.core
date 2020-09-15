@@ -96,7 +96,6 @@ public final class JavaLanguageHelper {
 
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String verifySeparators(String text) {
 
 		if (text.contains(" ")) {
