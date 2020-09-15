@@ -83,17 +83,6 @@ public class ExtLanguageHelper {
 		return type;
 	}
 
-	// TODO SIMPLE-VIEW move to classNodeHelper (and rename to createSignature?) or remove ?
-	// TODO SIMPLE-VIEW unit tests
-	public static String convertClassFromIntrToExtLanguage(String className, ExtLanguage extLanguage) {
-
-		if (extLanguage == ExtLanguage.SIMPLE) {
-			className = StringHelper.getLastToken(className, ".");
-		}
-
-		return className;
-	}
-
 	// TODO SIMPLE-VIEW unit tests
 	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
 
