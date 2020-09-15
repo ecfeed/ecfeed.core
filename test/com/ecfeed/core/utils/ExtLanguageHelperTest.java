@@ -80,5 +80,26 @@ public class ExtLanguageHelperTest {
 		}
 	}
 
+	@Test
+	public void convertTextToIntrLanguageTest() {
+
+		String text = ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab_c", ExtLanguage.JAVA);
+		assertEquals("ab_c", text);
+
+		text = ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab c", ExtLanguage.SIMPLE);
+		assertEquals("ab_c", text);
+
+		try {
+			ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab c", ExtLanguage.JAVA);
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab_c", ExtLanguage.SIMPLE);
+			fail();
+		} catch (Exception e) {
+		}
+	}
 
 }
