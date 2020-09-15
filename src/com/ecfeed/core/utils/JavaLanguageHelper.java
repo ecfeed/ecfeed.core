@@ -109,12 +109,10 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isJavaKeyword(String word) {
 		return Arrays.asList(JAVA_KEYWORDS).contains(word);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isValidJavaIdentifier(String value) {
 
 		if (!value.matches(RegexHelper.REGEX_JAVA_IDENTIFIER)) {
@@ -128,7 +126,6 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String[] getJavaKeywords() {
 
 		return JAVA_KEYWORDS;

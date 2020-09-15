@@ -42,4 +42,15 @@ public class JavaLanguageHelperTest {
 		assertFalse(JavaLanguageHelper.isJavaKeyword("x"));
 	}
 
+	@Test
+	public void isValidJavaIdentifierTest() {
+
+		assertTrue(JavaLanguageHelper.isValidJavaIdentifier("abc"));
+		assertTrue(JavaLanguageHelper.isValidJavaIdentifier("_a_b_"));
+		assertFalse(JavaLanguageHelper.isValidJavaIdentifier("a%b"));
+		assertFalse(JavaLanguageHelper.isValidJavaIdentifier("class"));
+		assertFalse(JavaLanguageHelper.isValidJavaIdentifier("static"));
+	}
+
+
 }
