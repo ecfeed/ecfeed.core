@@ -151,6 +151,7 @@ public final class JavaLanguageHelper {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -840,7 +841,7 @@ public final class JavaLanguageHelper {
 			return Float.parseFloat(valueString);
 		}
 	}
-	
+
 	// TODO SIMPLE-VIEW unit tests
 	public static Integer parseIntValue(String valueString, ERunMode conversionMode) {
 
@@ -1016,31 +1017,31 @@ public final class JavaLanguageHelper {
 
 		return JustifyType.LEFT;
 	}
-	
+
 	// TODO SIMPLE-VIEW unit tests - IS I
-//	public static String parseToJavaView(String text) {
-//		String returnText = text;
-//
-//		returnText = returnText.trim();
-//
-//		if (isJavaKeyword(returnText)) {
-//			return "_" + returnText;
-//		}
-//
-//		returnText = returnText.replaceAll("_", RegexHelper.REGEX_SPECIAL_CHARACTER);
-//
-//		if (returnText.matches("^[0-9].*")) {
-//			returnText = "_" + returnText;
-//		}
-//
-//		while (returnText.contains("  ")) {
-//			returnText = returnText.replaceAll("  ", " ");
-//		}
-//
-//		returnText = returnText.replaceAll(" ", "_");
-//
-//		return returnText;
-//	}
+	//	public static String parseToJavaView(String text) {
+	//		String returnText = text;
+	//
+	//		returnText = returnText.trim();
+	//
+	//		if (isJavaKeyword(returnText)) {
+	//			return "_" + returnText;
+	//		}
+	//
+	//		returnText = returnText.replaceAll("_", RegexHelper.REGEX_SPECIAL_CHARACTER);
+	//
+	//		if (returnText.matches("^[0-9].*")) {
+	//			returnText = "_" + returnText;
+	//		}
+	//
+	//		while (returnText.contains("  ")) {
+	//			returnText = returnText.replaceAll("  ", " ");
+	//		}
+	//
+	//		returnText = returnText.replaceAll(" ", "_");
+	//
+	//		return returnText;
+	//	}
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String getCompatibleNumericType(String value) {

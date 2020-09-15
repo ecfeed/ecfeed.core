@@ -85,9 +85,9 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			String newType, 
 			ITypeAdapterProvider adapterProvider, 
 			ExtLanguage extLanguage) {
-		
+
 		super(OperationNames.SET_TYPE, extLanguage);
-		
+
 		fTarget = target;
 		fNewType = newType;
 		fAdapterProvider = adapterProvider;
@@ -111,9 +111,10 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveChoices(fTarget);
 		saveValues(fTarget);
 
-		if (!JavaLanguageHelper.isJavaType(fNewType) && !SimpleLanguageHelper.isSimpleType(fNewType)
+		if (!JavaLanguageHelper.isJavaType(fNewType) 
+				&& !SimpleLanguageHelper.isSimpleType(fNewType)
 				&& !JavaLanguageHelper.isValidTypeName(fNewType)) {
-			
+
 			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
 		}
 		// Check for duplicate signatures possibly caused by global parameter type change
