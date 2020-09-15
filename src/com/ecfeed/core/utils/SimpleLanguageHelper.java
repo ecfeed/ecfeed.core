@@ -25,7 +25,7 @@ public final class SimpleLanguageHelper {
 	};
 
 	// TODO SIMPLE-VIEW unit test
-	public static String verifySeparatorsInName(String name) {
+	public static String verifySeparators(String name) {
 
 		if (name.contains("_")) {
 			return "Underline chars are not allowed in name.";

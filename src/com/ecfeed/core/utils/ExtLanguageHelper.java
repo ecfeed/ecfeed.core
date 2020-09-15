@@ -19,7 +19,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			return SimpleLanguageHelper.verifySeparatorsInName(name);
+			return SimpleLanguageHelper.verifySeparators(name);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid external language.");
