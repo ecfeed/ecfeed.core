@@ -90,6 +90,10 @@ public class ExtLanguageHelper {
 			type = SimpleLanguageHelper.convertSimpleTypeToJavaType(type);
 		}
 
+		if (!JavaLanguageHelper.isJavaType(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
+		}
+
 		return type;
 	}
 

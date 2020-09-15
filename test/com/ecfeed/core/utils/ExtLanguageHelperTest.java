@@ -124,4 +124,27 @@ public class ExtLanguageHelperTest {
 		}
 	}
 
+	@Test
+	public void convertTypeFromToIntrLanguageTest() {
+
+		String text = ExtLanguageHelper.convertTypeFromExtToIntrLanguage("int", ExtLanguage.JAVA);
+		assertEquals("int", text);
+
+		text = ExtLanguageHelper.convertTypeFromExtToIntrLanguage("Number", ExtLanguage.SIMPLE);
+		assertEquals("double", text);
+
+		try {
+			ExtLanguageHelper.convertTypeFromExtToIntrLanguage("x", ExtLanguage.JAVA);
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			ExtLanguageHelper.convertTypeFromExtToIntrLanguage("x", ExtLanguage.SIMPLE);
+			fail();
+		} catch (Exception e) {
+		}
+
+	}
+
 }
