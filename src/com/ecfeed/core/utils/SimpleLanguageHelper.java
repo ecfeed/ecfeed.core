@@ -112,7 +112,6 @@ public final class SimpleLanguageHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static String convertTextFromSimpleToJavaLanguage(String text1) {
 
 		if (text1.contains("_")) {
@@ -124,7 +123,6 @@ public final class SimpleLanguageHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static String validateType(String type) {
 
 		if (StringHelper.isEqual(type, TYPE_NAME_TEXT)) {

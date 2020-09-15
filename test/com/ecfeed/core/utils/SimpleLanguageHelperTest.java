@@ -85,4 +85,20 @@ public class SimpleLanguageHelperTest {
 		assertEquals("a_b", SimpleLanguageHelper.convertTextFromSimpleToJavaLanguage("a b"));
 	}
 
+	@Test
+	public void validateTypeTest() {
+
+		String errorMessage = SimpleLanguageHelper.validateType("Number");
+		assertNull(errorMessage);
+
+		errorMessage = SimpleLanguageHelper.validateType("Text");
+		assertNull(errorMessage);
+
+		errorMessage = SimpleLanguageHelper.validateType("Logical");
+		assertNull(errorMessage);
+
+		errorMessage = SimpleLanguageHelper.validateType("int");
+		assertNotNull(errorMessage);
+	}
+
 }
