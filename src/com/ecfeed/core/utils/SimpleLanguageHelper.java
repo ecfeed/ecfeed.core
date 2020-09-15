@@ -37,7 +37,6 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static boolean isSimpleType(String typeName) {
 
 		if (typeName == null) {

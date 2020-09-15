@@ -12,12 +12,15 @@ package com.ecfeed.core.utils;
 
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class SimpleLanguageHelperTest {
 
 	@Test
-	public void verifySeparatorsTest() throws EcException{
+	public void verifySeparatorsTest() {
 
 		String errorMessage = SimpleLanguageHelper.verifySeparators("abc");
 		assertNull(errorMessage);
@@ -30,7 +33,7 @@ public class SimpleLanguageHelperTest {
 	}
 
 	@Test
-	public void isSimpleTypeTest() throws EcException{
+	public void isSimpleTypeTest() {
 
 		assertTrue(SimpleLanguageHelper.isSimpleType("Number"));
 		assertTrue(SimpleLanguageHelper.isSimpleType("Text"));
@@ -39,6 +42,16 @@ public class SimpleLanguageHelperTest {
 		assertFalse(SimpleLanguageHelper.isSimpleType("double"));
 		assertFalse(SimpleLanguageHelper.isSimpleType("boolean"));
 		assertFalse(SimpleLanguageHelper.isSimpleType("String"));
+	}
+
+	@Test
+	public void getSupportedJavaTypesTest() {
+
+		String[] simpleTypes = SimpleLanguageHelper.getSupportedSimpleViewTypes();
+		assertEquals(3, simpleTypes.length);
+		assertEquals("Text", simpleTypes[0]);
+		assertEquals("Number", simpleTypes[1]);
+		assertEquals("Logical", simpleTypes[2]);
 	}
 
 }
