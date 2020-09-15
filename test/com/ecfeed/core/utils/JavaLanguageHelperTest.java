@@ -52,5 +52,10 @@ public class JavaLanguageHelperTest {
 		assertFalse(JavaLanguageHelper.isValidJavaIdentifier("static"));
 	}
 
+	@Test
+	public void isValidTypeNameTest() {
+		assertTrue(JavaLanguageHelper.isValidTypeName("com.ecfeed.Xx"));
+		assertFalse(JavaLanguageHelper.isValidTypeName("com.ecfeed.X*x"));
+	}
 
 }

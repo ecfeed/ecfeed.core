@@ -138,7 +138,7 @@ public final class JavaLanguageHelper {
 			return false;
 		}
 
-		if (name.matches(RegexHelper.REGEX_CLASS_NODE_NAME) == false) {
+		if (!name.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
 			return false;
 		}
 
