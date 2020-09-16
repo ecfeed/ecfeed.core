@@ -98,35 +98,35 @@ public class JavaLanguageHelperTest {
 	@Test
 	public void getDefaultExpectedValueTest() {
 
-		String value = JavaLanguageHelper.getDefaultExpectedValue("byte");
+		String value = JavaLanguageHelper.getDefaultValue("byte");
 		assertEquals("0",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("short");
+		value = JavaLanguageHelper.getDefaultValue("short");
 		assertEquals("0",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("int");
+		value = JavaLanguageHelper.getDefaultValue("int");
 		assertEquals("0",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("long");
+		value = JavaLanguageHelper.getDefaultValue("long");
 		assertEquals("0",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("float");
+		value = JavaLanguageHelper.getDefaultValue("float");
 		assertEquals("0.0",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("double");
+		value = JavaLanguageHelper.getDefaultValue("double");
 		assertEquals("0.0",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("String");
+		value = JavaLanguageHelper.getDefaultValue("String");
 		assertEquals("",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("char");
+		value = JavaLanguageHelper.getDefaultValue("char");
 		assertEquals("0",  value);
 
-		value = JavaLanguageHelper.getDefaultExpectedValue("boolean");
+		value = JavaLanguageHelper.getDefaultValue("boolean");
 		assertEquals("false",  value);
 
 		try {
-			JavaLanguageHelper.getDefaultExpectedValue("x");
+			JavaLanguageHelper.getDefaultValue("x");
 			fail();
 		} catch (Exception e) {
 		}
