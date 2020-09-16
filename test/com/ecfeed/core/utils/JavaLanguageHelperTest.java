@@ -248,6 +248,19 @@ public class JavaLanguageHelperTest {
 		assertFalse(JavaLanguageHelper.isJavaType("class"));
 	}
 
+	@Test
+	public void isUserTypeTest() {
+
+		assertFalse(JavaLanguageHelper.isUserType("byte"));
+		assertFalse(JavaLanguageHelper.isUserType("short"));
+		assertFalse(JavaLanguageHelper.isUserType("int"));
+		assertFalse(JavaLanguageHelper.isUserType("long"));
+		assertFalse(JavaLanguageHelper.isUserType("char"));
+		assertFalse(JavaLanguageHelper.isUserType("String"));
+		assertFalse(JavaLanguageHelper.isUserType("boolean"));
+		assertTrue(JavaLanguageHelper.isUserType("Type"));
+		assertFalse(JavaLanguageHelper.isUserType("class"));
+	}
 
 
 }

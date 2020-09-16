@@ -412,8 +412,15 @@ public final class JavaLanguageHelper {
 		return cannonicalName;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isUserType(String typeName) {
+
+		if (typeName == null) {
+			return false;
+		}
+
+		if (isJavaKeyword(typeName)) {
+			return false;
+		}
 
 		if (isJavaType(typeName)) {
 			return false;
@@ -421,7 +428,6 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isJavaType(String typeName) {
 
 		if (typeName == null) {
