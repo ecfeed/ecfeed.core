@@ -105,6 +105,15 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW unit test
+	public static boolean isLogicalTypeName(String typeName) {
+
+		if (typeName.equals(TYPE_NAME_LOGICAL)) {
+			return true;
+		}
+		return false;
+	}	
+
 	public static String convertTextFromJavaToSimpleLanguage(String text) {
 
 		String result = text.replaceAll("_", " ");
