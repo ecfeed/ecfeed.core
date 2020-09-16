@@ -232,6 +232,22 @@ public class JavaLanguageHelperTest {
 			fail();
 		} catch (Exception e) {
 		}
-
 	}
+
+	@Test
+	public void isJavaTypeTest() {
+
+		assertTrue(JavaLanguageHelper.isJavaType("byte"));
+		assertTrue(JavaLanguageHelper.isJavaType("short"));
+		assertTrue(JavaLanguageHelper.isJavaType("int"));
+		assertTrue(JavaLanguageHelper.isJavaType("long"));
+		assertTrue(JavaLanguageHelper.isJavaType("char"));
+		assertTrue(JavaLanguageHelper.isJavaType("String"));
+		assertTrue(JavaLanguageHelper.isJavaType("boolean"));
+		assertFalse(JavaLanguageHelper.isJavaType("Type"));
+		assertFalse(JavaLanguageHelper.isJavaType("class"));
+	}
+
+
+
 }
