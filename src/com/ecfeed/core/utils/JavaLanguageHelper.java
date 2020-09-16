@@ -269,7 +269,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static String convertConditionallySpecialValueToDoubleTxt(String valueString) {
 
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
@@ -299,7 +298,6 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static String convertConditionallySpecialValueToFloatTxt(String valueString) {
 
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
@@ -329,7 +327,6 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static String convertConditionallySpecialValueToLongTxt(String valueString) {
 
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
@@ -343,7 +340,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static String convertConditionallySpecialValueToIntTxt(String valueString) {
 
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
@@ -357,7 +353,6 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static String convertConditionallySpecialValueToShortTxt(String valueString) {
 
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
@@ -371,7 +366,6 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static String convertConditionallySpecialValueToByteTxt(String valueString) {
 
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
