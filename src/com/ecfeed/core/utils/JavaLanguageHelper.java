@@ -228,7 +228,12 @@ public final class JavaLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests
+	// TODO SIMPLE-VIEW rename to conditionally...
 	public static String convertSpecialValueToNumeric(String typeName, String value) {
+
+		if  (!isNumericTypeName(typeName)) {
+			ExceptionHelper.reportRuntimeException("Attempt to convert to numeric value a non numeric type.");
+		}
 
 		if (isByteTypeName(typeName)) {
 			return convertConditionallySpecialValueToByteTxt(value);
