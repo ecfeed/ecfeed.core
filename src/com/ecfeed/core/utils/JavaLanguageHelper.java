@@ -10,10 +10,10 @@
 
 package com.ecfeed.core.utils;
 
-import java.net.URLClassLoader;
-import java.util.*;
-
-// TODO SIMPLE-VIEW unit tests
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public final class JavaLanguageHelper {
 
@@ -154,39 +154,25 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
-//	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
-//		List<String> values = new ArrayList<String>();
-//
-//		try {
-//			Class<?> enumType = loader.loadClass(enumTypeName);
-//
-//			if(enumType != null && enumType.isEnum()){
-//				for (Object object: enumType.getEnumConstants()) {
-//					values.add(((Enum<?>)object).name());
-//				}
-//			}
-//		} catch (ClassNotFoundException e) {
-//		}
-//
-//		return values;
-//	}
+	//	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
+	//		List<String> values = new ArrayList<String>();
+	//
+	//		try {
+	//			Class<?> enumType = loader.loadClass(enumTypeName);
+	//
+	//			if(enumType != null && enumType.isEnum()){
+	//				for (Object object: enumType.getEnumConstants()) {
+	//					values.add(((Enum<?>)object).name());
+	//				}
+	//			}
+	//		} catch (ClassNotFoundException e) {
+	//		}
+	//
+	//		return values;
+	//	}
 
 	// TODO SIMPLE-VIEW unit tests
-	public static Set<String> getSpecialValues(String typeName, ExtLanguage extLanguage) {
-
-		Set<String> items;
-
-		if (extLanguage == ExtLanguage.JAVA) {
-			items = new LinkedHashSet<String>(getSpecialValues(typeName));
-		} else {
-			items = new LinkedHashSet<String>();
-		}
-
-		return items;
-	}
-
-	// TODO SIMPLE-VIEW unit tests
-	public static List<String> getSpecialValues(String typeName) {
+	public static List<String> getSymbolicNamesOfSpecialValues(String typeName) {
 
 		List<String> result = new ArrayList<String>();
 

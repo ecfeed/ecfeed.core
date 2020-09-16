@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class ExtLanguageHelper {
 
 	public static String verifySeparatorsInName(String name, ExtLanguage extLanguage) {
@@ -110,4 +113,18 @@ public class ExtLanguageHelper {
 		return valueInIntrLanguage;
 	}
 
+	// TODO SIMPLE-VIEW unit tests
+	public static Set<String> getSymbolicNamesOfSpecialValues(String typeName, ExtLanguage extLanguage) {
+
+		Set<String> items;
+
+		if (extLanguage == ExtLanguage.JAVA) {
+			items = new LinkedHashSet<String>(JavaLanguageHelper.getSymbolicNamesOfSpecialValues(typeName));
+		} else {
+			items = new LinkedHashSet<String>();
+		}
+
+		return items;
+	}
+	
 }
