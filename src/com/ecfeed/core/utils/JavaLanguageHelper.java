@@ -227,7 +227,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	public static String contitionallyConvertSpecialValueToNumeric(String typeName, String value) {
+	public static String conditionallyConvertSpecialValueToNumeric(String typeName, String value) {
 
 		if  (!isNumericTypeName(typeName)) {
 			ExceptionHelper.reportRuntimeException("Attempt to convert to numeric value a non numeric type.");

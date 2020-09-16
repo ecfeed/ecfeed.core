@@ -107,7 +107,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			valueInIntrLanguage = JavaLanguageHelper.contitionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
+			valueInIntrLanguage = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
 		}
 
 		return valueInIntrLanguage;
