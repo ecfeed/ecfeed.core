@@ -131,7 +131,6 @@ public final class JavaLanguageHelper {
 		return JAVA_KEYWORDS;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isValidTypeName(String name) {
 
 		if (name == null) {
@@ -155,23 +154,22 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
-		List<String> values = new ArrayList<String>();
-
-		try {
-			Class<?> enumType = loader.loadClass(enumTypeName);
-
-			if(enumType != null && enumType.isEnum()){
-				for (Object object: enumType.getEnumConstants()) {
-					values.add(((Enum<?>)object).name());
-				}
-			}
-		} catch (ClassNotFoundException e) {
-		}
-
-		return values;
-	}
+//	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
+//		List<String> values = new ArrayList<String>();
+//
+//		try {
+//			Class<?> enumType = loader.loadClass(enumTypeName);
+//
+//			if(enumType != null && enumType.isEnum()){
+//				for (Object object: enumType.getEnumConstants()) {
+//					values.add(((Enum<?>)object).name());
+//				}
+//			}
+//		} catch (ClassNotFoundException e) {
+//		}
+//
+//		return values;
+//	}
 
 	// TODO SIMPLE-VIEW unit tests
 	public static Set<String> getSpecialValues(String typeName, ExtLanguage extLanguage) {
