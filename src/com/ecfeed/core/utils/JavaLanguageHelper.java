@@ -229,7 +229,7 @@ public final class JavaLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests
-	public static String convertSpecialValueToSimpleLanguage(String typeName, String value) {
+	public static String convertSpecialValueToNumeric(String typeName, String value) {
 
 		if (isByteTypeName(typeName)) {
 			return convertConditionallySpecialValueToByteTxt(value);
@@ -370,7 +370,7 @@ public final class JavaLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests
-	public static String convertConditionallySpecialValueToByteTxt(String valueString) {
+	private static String convertConditionallySpecialValueToByteTxt(String valueString) {
 
 		if (valueString.equals(SPECIAL_VALUE_MIN)) {
 			return Byte.MIN_VALUE + "";
