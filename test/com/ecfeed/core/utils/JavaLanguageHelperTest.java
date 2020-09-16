@@ -276,4 +276,17 @@ public class JavaLanguageHelperTest {
 		assertTrue(JavaLanguageHelper.hasLimitedValuesSet("User"));
 	}
 
+	@Test
+	public void isExtendedIntTypeNameTest() {
+
+		assertTrue(JavaLanguageHelper.isExtendedIntTypeName("byte"));
+		assertTrue(JavaLanguageHelper.isExtendedIntTypeName("int"));
+		assertTrue(JavaLanguageHelper.isExtendedIntTypeName("short"));
+		assertTrue(JavaLanguageHelper.isExtendedIntTypeName("long"));
+
+		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("boolean"));
+		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("String"));
+		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("User"));
+	}
+
 }
