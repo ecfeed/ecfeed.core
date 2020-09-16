@@ -437,12 +437,10 @@ public final class JavaLanguageHelper {
 		return Arrays.asList(SUPPORTED_JAVA_TYPES).contains(typeName);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String[] getSupportedJavaTypes() {
 		return SUPPORTED_JAVA_TYPES;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getStringTypeName() {
 		return TYPE_NAME_STRING;
 	}

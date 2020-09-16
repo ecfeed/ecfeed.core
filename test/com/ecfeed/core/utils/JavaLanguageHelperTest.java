@@ -268,4 +268,12 @@ public class JavaLanguageHelperTest {
 		assertEquals(9, javaTypes.length);
 	}
 
+	@Test
+	public void hasLimitedValuesSetTest() {
+		assertTrue(JavaLanguageHelper.hasLimitedValuesSet("boolean"));
+		assertFalse(JavaLanguageHelper.hasLimitedValuesSet("int"));
+		assertFalse(JavaLanguageHelper.hasLimitedValuesSet("String"));
+		assertTrue(JavaLanguageHelper.hasLimitedValuesSet("User"));
+	}
+
 }
