@@ -201,7 +201,7 @@ public final class JavaLanguageHelper {
 		return result;
 	}
 
-	public static String getDefaultExpectedValue(String type) {
+	public static String getDefaultValue(String type) {
 		switch(type){
 		case JavaLanguageHelper.TYPE_NAME_BYTE:
 			return JavaLanguageHelper.DEFAULT_EXPECTED_BYTE_VALUE;
