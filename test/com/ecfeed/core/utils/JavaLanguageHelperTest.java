@@ -262,5 +262,10 @@ public class JavaLanguageHelperTest {
 		assertFalse(JavaLanguageHelper.isUserType("class"));
 	}
 
+	@Test
+	public void getSupportedJavaTypes() {
+		String[] javaTypes = JavaLanguageHelper.getSupportedJavaTypes();
+		assertEquals(9, javaTypes.length);
+	}
 
 }
