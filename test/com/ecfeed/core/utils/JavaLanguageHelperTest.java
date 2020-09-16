@@ -12,6 +12,8 @@ package com.ecfeed.core.utils;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class JavaLanguageHelperTest {
@@ -56,6 +58,41 @@ public class JavaLanguageHelperTest {
 	public void isValidTypeNameTest() {
 		assertTrue(JavaLanguageHelper.isValidTypeName("com.ecfeed.Xx"));
 		assertFalse(JavaLanguageHelper.isValidTypeName("com.ecfeed.X*x"));
+	}
+
+	@Test
+	public void getSymbolicNamesTest() {
+
+		List<String> symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("boolean");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, new String[]{ "true", "false"}));
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("char");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, new String[]{ "0" }));
+
+		final String[] symbolicNamesForIntegers = {"MIN_VALUE", "MAX_VALUE"};
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("byte");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, symbolicNamesForIntegers));
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("short");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, symbolicNamesForIntegers));
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("int");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, symbolicNamesForIntegers));
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("long");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, symbolicNamesForIntegers));
+
+		final String[] symbolicNamesForFloats = {"NEGATIVE_INFINITY", "POSITIVE_INFINITY", "MIN_VALUE", "MAX_VALUE", "-MIN_VALUE", "-MAX_VALUE"};
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("float");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, symbolicNamesForFloats));
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("double");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, symbolicNamesForFloats));
+
+		symbolicNames = JavaLanguageHelper.getSymbolicNamesOfSpecialValues("String");
+		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, new String[] { "/null"}));
 	}
 
 }
