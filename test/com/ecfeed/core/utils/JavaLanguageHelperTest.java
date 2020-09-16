@@ -95,4 +95,40 @@ public class JavaLanguageHelperTest {
 		assertTrue(CollectionHelper.isTheSameContent(symbolicNames, new String[] { "/null"}));
 	}
 
+	@Test
+	public void getDefaultExpectedValueTest() {
+
+		String value = JavaLanguageHelper.getDefaultExpectedValue("byte");
+		assertEquals("0",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("short");
+		assertEquals("0",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("int");
+		assertEquals("0",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("long");
+		assertEquals("0",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("float");
+		assertEquals("0.0",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("double");
+		assertEquals("0.0",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("String");
+		assertEquals("",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("char");
+		assertEquals("0",  value);
+
+		value = JavaLanguageHelper.getDefaultExpectedValue("boolean");
+		assertEquals("false",  value);
+
+		try {
+			JavaLanguageHelper.getDefaultExpectedValue("x");
+			fail();
+		} catch (Exception e) {
+		}
+	}
 }

@@ -171,7 +171,6 @@ public final class JavaLanguageHelper {
 	//		return values;
 	//	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static List<String> getSymbolicNamesOfSpecialValues(String typeName) {
 
 		List<String> result = new ArrayList<String>();
@@ -202,7 +201,6 @@ public final class JavaLanguageHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getDefaultExpectedValue(String type) {
 		switch(type){
 		case JavaLanguageHelper.TYPE_NAME_BYTE:
@@ -224,7 +222,8 @@ public final class JavaLanguageHelper {
 		case JavaLanguageHelper.TYPE_NAME_STRING:
 			return JavaLanguageHelper.DEFAULT_EXPECTED_STRING_VALUE;
 		default:
-			return "VALUE";
+			ExceptionHelper.reportRuntimeException("Invalid type. Cannot get default value.");
+			return null;
 		}
 	}
 
