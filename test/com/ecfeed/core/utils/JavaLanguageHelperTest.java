@@ -134,85 +134,85 @@ public class JavaLanguageHelperTest {
 
 
 	@Test
-	public void convertSpecialValueToNumericTest() {
+	public void conditionallyConvertSpecialValueToNumericTest() {
 
 		// byte
 
-		String numeric = JavaLanguageHelper.convertSpecialValueToNumeric("byte", "MAX_VALUE");
+		String numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("byte", "MAX_VALUE");
 		assertEquals("127", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("byte", "MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("byte", "MIN_VALUE");
 		assertEquals("-128", numeric);
 
 		// short
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("short", "MAX_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("short", "MAX_VALUE");
 		assertEquals("32767", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("short", "MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("short", "MIN_VALUE");
 		assertEquals("-32768", numeric);
 
 		// int
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("int", "MAX_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("int", "MAX_VALUE");
 		assertEquals("2147483647", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("int", "MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("int", "MIN_VALUE");
 		assertEquals("-2147483648", numeric);
 
 		// long
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("long", "MAX_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("long", "MAX_VALUE");
 		assertEquals("9223372036854775807", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("long", "MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("long", "MIN_VALUE");
 		assertEquals("-9223372036854775808", numeric);
 
 		// float
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("float", "MAX_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "MAX_VALUE");
 		assertEquals("3.4028235E38", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("float", "MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "MIN_VALUE");
 		assertEquals("1.4E-45", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("float", "-MAX_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "-MAX_VALUE");
 		assertEquals("-3.4028235E38", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("float", "-MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "-MIN_VALUE");
 		assertEquals("-1.4E-45", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("float", "POSITIVE_INFINITY");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "POSITIVE_INFINITY");
 		assertEquals("POSITIVE_INFINITY", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("float", "NEGATIVE_INFINITY");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "NEGATIVE_INFINITY");
 		assertEquals("NEGATIVE_INFINITY", numeric);
 
 		// double
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("double", "MAX_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "MAX_VALUE");
 		assertEquals("1.7976931348623157E308", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("double", "MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "MIN_VALUE");
 		assertEquals("4.9E-324", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("double", "-MAX_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "-MAX_VALUE");
 		assertEquals("-1.7976931348623157E308", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("double", "-MIN_VALUE");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "-MIN_VALUE");
 		assertEquals("-4.9E-324", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("double", "POSITIVE_INFINITY");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "POSITIVE_INFINITY");
 		assertEquals("POSITIVE_INFINITY", numeric);
 
-		numeric = JavaLanguageHelper.convertSpecialValueToNumeric("double", "NEGATIVE_INFINITY");
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "NEGATIVE_INFINITY");
 		assertEquals("NEGATIVE_INFINITY", numeric);
 
 
 		// String
 
 		try {
-			JavaLanguageHelper.convertSpecialValueToNumeric("String", "X");
+			JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("String", "X");
 			fail();
 		} catch (Exception e) {
 		}
@@ -220,7 +220,7 @@ public class JavaLanguageHelperTest {
 		// char
 
 		try {
-			JavaLanguageHelper.convertSpecialValueToNumeric("char", "0");
+			JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("char", "0");
 			fail();
 		} catch (Exception e) {
 		}
@@ -228,7 +228,7 @@ public class JavaLanguageHelperTest {
 		// boolean
 
 		try {
-			JavaLanguageHelper.convertSpecialValueToNumeric("boolean", "false");
+			JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("boolean", "false");
 			fail();
 		} catch (Exception e) {
 		}
