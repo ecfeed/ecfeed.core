@@ -46,6 +46,7 @@ public class FixedChoiceValueFactory {
 		String convertedValueString = valueString;
 
 		if (isRandomized) {
+
 			TypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
 			ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
 			convertedValueString = typeAdapter.generateValueAsString(valueString);  

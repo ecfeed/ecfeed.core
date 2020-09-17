@@ -50,7 +50,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 		String type = parseValue(range);
 		
 		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET);
+			return JavaLanguageHelper.parseValueToNumber(range[0], type, ERunMode.QUIET);
 		}
 
 		return generateNumber(range, type);
@@ -106,20 +106,20 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	
 	private Integer generateInt(String[] range, String type) {
 		return ThreadLocalRandom.current().nextInt(
-				(Integer) JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
-				(Integer) JavaLanguageHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
+				(Integer) JavaLanguageHelper.parseValueToNumber(range[0], type, ERunMode.QUIET),
+				(Integer) JavaLanguageHelper.parseValueToNumber(range[1], type, ERunMode.QUIET));
 	}
 	
 	private Long generateLong(String[] range, String type) {
 		return ThreadLocalRandom.current().nextLong(
-				(Long) JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
-				(Long) JavaLanguageHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
+				(Long) JavaLanguageHelper.parseValueToNumber(range[0], type, ERunMode.QUIET),
+				(Long) JavaLanguageHelper.parseValueToNumber(range[1], type, ERunMode.QUIET));
 	}
 	
 	private Double generateDouble(String[] range, String type) {
 		return ThreadLocalRandom.current().nextDouble(
-				(Double) JavaLanguageHelper.parseNumberValue(range[0], type, ERunMode.QUIET),
-				(Double) JavaLanguageHelper.parseNumberValue(range[1], type, ERunMode.QUIET));
+				(Double) JavaLanguageHelper.parseValueToNumber(range[0], type, ERunMode.QUIET),
+				(Double) JavaLanguageHelper.parseValueToNumber(range[1], type, ERunMode.QUIET));
 	}
 
 	@Override

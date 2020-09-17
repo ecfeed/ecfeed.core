@@ -616,28 +616,28 @@ public final class JavaLanguageHelper {
 //	}
 
 	public static Double convertNumericToDouble(
-			String typeName, String value, ERunMode conversionMode) {
+			String typeName, String value, ERunMode runMode) {
 
 		if (isByteTypeName(typeName)) {
-			return convertToDouble(parseByteValue(value, conversionMode));
+			return convertToDouble(parseByteValue(value, runMode));
 		}
 		if (isIntTypeName(typeName)) {
-			return convertToDouble(parseIntValue(value, conversionMode));
+			return convertToDouble(parseIntValue(value, runMode));
 		}
 		if (isShortTypeName(typeName)) {
-			return convertToDouble(parseShortValue(value, conversionMode));
+			return convertToDouble(parseShortValue(value, runMode));
 		}
 		if (isLongTypeName(typeName)) {
-			return convertToDouble(parseLongValue(value, conversionMode));
-		}		
+			return convertToDouble(parseLongValue(value, runMode));
+		}
 		if (isFloatTypeName(typeName)) {
-			return convertToDouble(parseFloatValue(value, conversionMode));
+			return convertToDouble(parseFloatValue(value, runMode));
 		}
 		if (isDoubleTypeName(typeName)) {
-			return convertToDouble(parseDoubleValue(value, conversionMode));
+			return convertToDouble(parseDoubleValue(value, runMode));
 		}
 
-		if (conversionMode == ERunMode.WITH_EXCEPTION) {
+		if (runMode == ERunMode.WITH_EXCEPTION) {
 			ExceptionHelper.reportRuntimeException("Invalid type in numeric conversion");
 		}
 
@@ -694,7 +694,36 @@ public final class JavaLanguageHelper {
 		return valueWithNull;
 	}
 
-	public static Object parseJavaValueToObject(String valueString, String typeName, ERunMode conversionMode) {
+	// TODO SIMPLE-VIEW unit tests
+	public static Number parseValueToNumber(String valueString, String type, ERunMode runMode) {
+
+		if  (type == null || valueString == null) {
+			return null;
+		}
+
+		if (!isNumericTypeName(type)) {
+			return null;
+		}
+
+		switch(type){
+			case TYPE_NAME_BYTE:
+				return parseByteValue(valueString, runMode);
+			case TYPE_NAME_DOUBLE:
+				return parseDoubleValue(valueString, runMode);
+			case TYPE_NAME_FLOAT:
+				return parseFloatValue(valueString, runMode);
+			case TYPE_NAME_INT:
+				return parseIntValue(valueString, runMode);
+			case TYPE_NAME_LONG:
+				return parseLongValue(valueString, runMode);
+			case TYPE_NAME_SHORT:
+				return parseShortValue(valueString, runMode);
+			default:
+				return null;
+		}
+	}
+
+	public static Object parseJavaValueToObject(String valueString, String typeName, ERunMode runMode) {
 
 		if(typeName == null || valueString == null){
 			return null;
@@ -704,19 +733,19 @@ public final class JavaLanguageHelper {
 		case TYPE_NAME_BOOLEAN:
 			return parseBooleanValue(valueString);
 		case TYPE_NAME_BYTE:
-			return parseByteValue(valueString, conversionMode);
+			return parseByteValue(valueString, runMode);
 		case TYPE_NAME_CHAR:
 			return parseCharValue(valueString);
 		case TYPE_NAME_DOUBLE:
-			return parseDoubleValue(valueString, conversionMode);
+			return parseDoubleValue(valueString, runMode);
 		case TYPE_NAME_FLOAT:
-			return parseFloatValue(valueString, conversionMode);
+			return parseFloatValue(valueString, runMode);
 		case TYPE_NAME_INT:
-			return parseIntValue(valueString, conversionMode);
+			return parseIntValue(valueString, runMode);
 		case TYPE_NAME_LONG:
-			return parseLongValue(valueString, conversionMode);
+			return parseLongValue(valueString, runMode);
 		case TYPE_NAME_SHORT:
-			return parseShortValue(valueString, conversionMode);
+			return parseShortValue(valueString, runMode);
 		case TYPE_NAME_STRING:
 			return parseStringValue(valueString);
 		default:
@@ -724,7 +753,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static Boolean parseBooleanValue(String valueString) {
 
 		if(valueString.toLowerCase().equals(SPECIAL_VALUE_TRUE.toLowerCase())){
@@ -734,10 +762,9 @@ public final class JavaLanguageHelper {
 			return false;
 		}
 		return null;
-	}	
+	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Byte parseByteValue(String valueString, ERunMode conversionMode) {
+	public static Byte parseByteValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
 			return Byte.MAX_VALUE;
@@ -746,7 +773,7 @@ public final class JavaLanguageHelper {
 			return Byte.MIN_VALUE;
 		}
 
-		if (conversionMode == ERunMode.QUIET) {
+		if (runMode == ERunMode.QUIET) {
 			try {
 				return Byte.parseByte(valueString);
 			} catch(Exception e){
@@ -757,7 +784,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static Character parseCharValue(String valueString) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -774,8 +800,7 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Double parseDoubleValue(String valueString, ERunMode conversionMode) {
+	public static Double parseDoubleValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
 			return Double.MAX_VALUE;
@@ -796,7 +821,7 @@ public final class JavaLanguageHelper {
 			return Double.NEGATIVE_INFINITY;
 		}
 
-		if (conversionMode == ERunMode.QUIET) {
+		if (runMode == ERunMode.QUIET) {
 			try {
 				return Double.parseDouble(valueString);
 			} catch(NumberFormatException e){
@@ -807,8 +832,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Float parseFloatValue(String valueString, ERunMode conversionMode) {
+	public static Float parseFloatValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
 			return Float.MAX_VALUE;
@@ -821,7 +845,7 @@ public final class JavaLanguageHelper {
 		}
 		if(valueString.equals(SPECIAL_VALUE_MINUS_MIN)){
 			return (-1)*Float.MIN_VALUE;
-		}		
+		}
 		if(valueString.equals(SPECIAL_VALUE_POSITIVE_INF)){
 			return Float.POSITIVE_INFINITY;
 		}
@@ -829,7 +853,7 @@ public final class JavaLanguageHelper {
 			return Float.NEGATIVE_INFINITY;
 		}
 
-		if (conversionMode == ERunMode.QUIET) {
+		if (runMode == ERunMode.QUIET) {
 			try {
 				return Float.parseFloat(valueString);
 			} catch(NumberFormatException e){
@@ -840,8 +864,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Integer parseIntValue(String valueString, ERunMode conversionMode) {
+	public static Integer parseIntValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
 			return Integer.MAX_VALUE;
@@ -850,7 +873,7 @@ public final class JavaLanguageHelper {
 			return Integer.MIN_VALUE;
 		}
 
-		if (conversionMode == ERunMode.QUIET) {
+		if (runMode == ERunMode.QUIET) {
 			try {
 				return Integer.parseInt(valueString);
 			} catch(NumberFormatException e){
@@ -861,8 +884,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Long parseLongValue(String valueString, ERunMode conversionMode) {
+	public static Long parseLongValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
 			return Long.MAX_VALUE;
@@ -871,18 +893,18 @@ public final class JavaLanguageHelper {
 			return Long.MIN_VALUE;
 		}
 
-		if (conversionMode == ERunMode.QUIET) {
+		if (runMode == ERunMode.QUIET) {
 			try {
 				return Long.parseLong(valueString);
 			} catch(NumberFormatException e){
 				return null;
-			} 
+			}
 		} else {
 			return Long.parseLong(valueString);
 		}
 	}
 
-	public static Short parseShortValue(String valueString, ERunMode conversionMode) {
+	public static Short parseShortValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
 			return Short.MAX_VALUE;
@@ -891,7 +913,7 @@ public final class JavaLanguageHelper {
 			return Short.MIN_VALUE;
 		}
 
-		if (conversionMode == ERunMode.QUIET) {
+		if (runMode == ERunMode.QUIET) {
 			try {
 				return Short.parseShort(valueString);
 			} catch(NumberFormatException e){
@@ -902,47 +924,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Number parseNumberValue(String valueString, String type, ERunMode conversionMode) {
-
-		if (type.equals(TYPE_NAME_INT)) {
-			if (conversionMode == ERunMode.QUIET) {
-				try {
-					return Integer.parseInt(valueString);
-				} catch(NumberFormatException e) {
-					return null;
-				}
-			} else {
-				return Integer.parseInt(valueString);
-			}
-		}
-
-		if (type.equals(TYPE_NAME_LONG)) {
-			if (conversionMode == ERunMode.QUIET) {
-				try {
-					return Long.parseLong(valueString);
-				} catch(NumberFormatException e) {
-					return null;
-				}
-			} else {
-				return Long.parseLong(valueString);
-			}
-		}
-
-		if (type.equals(TYPE_NAME_DOUBLE)) {
-			if (conversionMode == ERunMode.QUIET) {
-				try {
-					return Double.parseDouble(valueString);
-				} catch(NumberFormatException e) {
-					return null;
-				}
-			} else {
-				return Double.parseDouble(valueString);
-			}
-		}
-
-		return 0;
-	}
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String parseStringValue(String valueString) {
