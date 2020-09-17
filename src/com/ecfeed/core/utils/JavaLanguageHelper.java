@@ -565,7 +565,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isNumericTypeName(String typeName) {
 
 		if (isExtendedIntTypeName(typeName)) {
@@ -580,7 +579,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isTypeWithChars(String typeName) {
 
 		if (isCharTypeName(typeName)) {
