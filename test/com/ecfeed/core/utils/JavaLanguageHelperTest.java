@@ -432,4 +432,23 @@ public class JavaLanguageHelperTest {
 		assertNull(result);
 	}
 
+	@Test
+	public void getSubstituteTypeTest() {
+
+		String type = JavaLanguageHelper.getSubstituteType("int", "byte");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getSubstituteType("boolean", "byte");
+		assertEquals("boolean", type);
+
+		type = JavaLanguageHelper.getSubstituteType("int", "double");
+		assertEquals("double", type);
+
+		type = JavaLanguageHelper.getSubstituteType("String", "double");
+		assertEquals("double", type);
+
+		type = JavaLanguageHelper.getSubstituteType("String", "char");
+		assertEquals("String", type);
+	}
+
 }
