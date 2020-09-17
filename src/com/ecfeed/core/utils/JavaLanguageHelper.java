@@ -644,15 +644,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	private static <T> Double convertToDouble(T valueWithNull) {
-
-		if (valueWithNull == null) {
-			return null;
-		}
-
-		return (Double) valueWithNull;
-	}
-
 	private static Double convertToDouble(Byte valueWithNull) {
 
 		if (valueWithNull == null) {
