@@ -591,7 +591,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isTypeComparableForLessGreater(String typeName) {
 
 		if (isNumericTypeName(typeName)) {

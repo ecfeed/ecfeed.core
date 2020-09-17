@@ -323,4 +323,21 @@ public class JavaLanguageHelperTest {
 		assertTrue(JavaLanguageHelper.isTypeWithChars("String"));
 		assertFalse(JavaLanguageHelper.isTypeWithChars("User"));
 	}
+
+	@Test
+	public void isTypeComparableTest() {
+
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("byte"));
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("int"));
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("short"));
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("long"));
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("float"));
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("double"));
+
+		assertFalse(JavaLanguageHelper.isTypeComparableForLessGreater("boolean"));
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("char"));
+		assertTrue(JavaLanguageHelper.isTypeComparableForLessGreater("String"));
+		assertFalse(JavaLanguageHelper.isTypeComparableForLessGreater("User"));
+	}
+
 }
