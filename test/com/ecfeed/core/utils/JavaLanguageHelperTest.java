@@ -340,4 +340,68 @@ public class JavaLanguageHelperTest {
 		assertFalse(JavaLanguageHelper.isTypeComparableForLessGreater("User"));
 	}
 
+	@Test
+	public void convertNumericToDoulbleTest() {
+
+		double delta = 0.00001;
+
+		Double value = JavaLanguageHelper.convertNumericToDouble("byte", "1", ERunMode.QUIET);
+		assertEquals(1.0, value, delta);
+
+		value = JavaLanguageHelper.convertNumericToDouble("short", "1", ERunMode.QUIET);
+		assertEquals(1.0, value, delta);
+
+		value = JavaLanguageHelper.convertNumericToDouble("int", "1", ERunMode.QUIET);
+		assertEquals(1.0, value, delta);
+
+		value = JavaLanguageHelper.convertNumericToDouble("long", "1", ERunMode.QUIET);
+		assertEquals(1.0, value, delta);
+
+		value = JavaLanguageHelper.convertNumericToDouble("float", "1.0", ERunMode.QUIET);
+		assertEquals(1.0, value, delta);
+
+		value = JavaLanguageHelper.convertNumericToDouble("double", "1.0", ERunMode.QUIET);
+		assertEquals(1.0, value, delta);
+
+		value = JavaLanguageHelper.convertNumericToDouble("boolean", "true", ERunMode.QUIET);
+		assertNull(value);
+
+		value = JavaLanguageHelper.convertNumericToDouble("char", "1", ERunMode.QUIET);
+		assertNull(value);
+
+		value = JavaLanguageHelper.convertNumericToDouble("String", "1", ERunMode.QUIET);
+		assertNull(value);
+
+		value = JavaLanguageHelper.convertNumericToDouble("User", "1", ERunMode.QUIET);
+		assertNull(value);
+	}
+
+	@Test
+	public void parseValueToObjectTest() {
+
+		Object result = JavaLanguageHelper.parseJavaValueToObject("11", "byte", ERunMode.QUIET);
+		assertEquals((byte)11, result);
+
+		result = JavaLanguageHelper.parseJavaValueToObject("12", "short", ERunMode.QUIET);
+		assertEquals((short)12, result);
+
+		result = JavaLanguageHelper.parseJavaValueToObject("13", "int", ERunMode.QUIET);
+		assertEquals(13, result);
+
+		result = JavaLanguageHelper.parseJavaValueToObject("14", "long", ERunMode.QUIET);
+		assertEquals((long)14, result);
+
+		result = JavaLanguageHelper.parseJavaValueToObject("false", "boolean", ERunMode.QUIET);
+		assertEquals(false, result);
+
+		result = JavaLanguageHelper.parseJavaValueToObject("e", "char", ERunMode.QUIET);
+		assertEquals('e', result);
+
+		result = JavaLanguageHelper.parseJavaValueToObject("15", "String", ERunMode.QUIET);
+		assertEquals("15", result);
+
+		result = JavaLanguageHelper.parseJavaValueToObject("16", "User", ERunMode.QUIET);
+		assertNull(result);
+	}
+
 }

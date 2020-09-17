@@ -52,7 +52,7 @@ public class FixedChoiceValueFactory {
 		}
 
 		if (JavaLanguageHelper.isJavaType(typeName)) {
-			return JavaLanguageHelper.parseJavaType(convertedValueString, typeName, ERunMode.QUIET);
+			return JavaLanguageHelper.parseJavaValueToObject(convertedValueString, typeName, ERunMode.QUIET);
 		}
 		
 		if (fIsExport) {

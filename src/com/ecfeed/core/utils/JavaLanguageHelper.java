@@ -602,20 +602,19 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	public static boolean isConvertibleToNumber(String text) {
+//	public static boolean isConvertibleToNumber(String text) {
+//
+//		if (parseDoubleValue(text, ERunMode.QUIET) != null) {
+//			return true;
+//		}
+//
+//		if (parseLongValue(text, ERunMode.QUIET) != null) {
+//			return true;
+//		}
+//
+//		return false;
+//	}
 
-		if (parseDoubleValue(text, ERunMode.QUIET) != null) {
-			return true;
-		}
-
-		if (parseLongValue(text, ERunMode.QUIET) != null) {
-			return true;
-		}		
-
-		return false;
-	}
-
-	// TODO SIMPLE-VIEW unit tests
 	public static Double convertNumericToDouble(
 			String typeName, String value, ERunMode conversionMode) {
 
@@ -638,11 +637,13 @@ public final class JavaLanguageHelper {
 			return convertToDouble(parseDoubleValue(value, conversionMode));
 		}
 
-		ExceptionHelper.reportRuntimeException("Invalid type in numeric conversion");
+		if (conversionMode == ERunMode.WITH_EXCEPTION) {
+			ExceptionHelper.reportRuntimeException("Invalid type in numeric conversion");
+		}
+
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static <T> Double convertToDouble(T valueWithNull) {
 
 		if (valueWithNull == null) {
@@ -652,7 +653,42 @@ public final class JavaLanguageHelper {
 		return (Double) valueWithNull;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
+	private static Double convertToDouble(Byte valueWithNull) {
+
+		if (valueWithNull == null) {
+			return null;
+		}
+
+		return new Double(valueWithNull);
+	}
+
+	private static Double convertToDouble(Short valueWithNull) {
+
+		if (valueWithNull == null) {
+			return null;
+		}
+
+		return new Double(valueWithNull);
+	}
+
+	private static Double convertToDouble(Integer valueWithNull) {
+
+		if (valueWithNull == null) {
+			return null;
+		}
+
+		return new Double(valueWithNull);
+	}
+
+	private static Double convertToDouble(Long valueWithNull) {
+
+		if (valueWithNull == null) {
+			return null;
+		}
+
+		return new Double(valueWithNull);
+	}
+
 	private static Double convertToDouble(Float valueWithNull) {
 
 		if (valueWithNull == null) {
@@ -660,10 +696,14 @@ public final class JavaLanguageHelper {
 		}
 
 		return new Double(valueWithNull);
-	}	
+	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Object parseJavaType(String valueString, String typeName, ERunMode conversionMode) {
+	private static Double convertToDouble(Double valueWithNull) {
+
+		return valueWithNull;
+	}
+
+	public static Object parseJavaValueToObject(String valueString, String typeName, ERunMode conversionMode) {
 
 		if(typeName == null || valueString == null){
 			return null;
@@ -718,7 +758,7 @@ public final class JavaLanguageHelper {
 		if (conversionMode == ERunMode.QUIET) {
 			try {
 				return Byte.parseByte(valueString);
-			} catch(NumberFormatException e){
+			} catch(Exception e){
 				return null;
 			}
 		} else {
@@ -924,7 +964,7 @@ public final class JavaLanguageHelper {
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String convertValueString(String valueString, String typeName) {
-		return parseJavaType(valueString, typeName, ERunMode.QUIET).toString();
+		return parseJavaValueToObject(valueString, typeName, ERunMode.QUIET).toString();
 	}
 
 	// TODO SIMPLE-VIEW unit tests
