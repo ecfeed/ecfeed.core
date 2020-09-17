@@ -932,9 +932,15 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String parseJavaValueToString(String valueString, String typeName) {
-		return parseJavaValueToObject(valueString, typeName, ERunMode.QUIET).toString();
+
+		final Object object = parseJavaValueToObject(valueString, typeName, ERunMode.QUIET);
+
+		if (object == null) {
+			return null;
+		}
+
+		return object.toString();
 	}
 
 	// TODO SIMPLE-VIEW unit tests

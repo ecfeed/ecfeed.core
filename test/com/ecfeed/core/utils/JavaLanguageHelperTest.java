@@ -404,4 +404,32 @@ public class JavaLanguageHelperTest {
 		assertNull(result);
 	}
 
+	@Test
+	public void parseValueToStringTest() {
+
+		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
+		assertEquals("11", result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("12", "short");
+		assertEquals("12", result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("13", "int");
+		assertEquals("13", result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("14", "long");
+		assertEquals("14", result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("false", "boolean");
+		assertEquals("false", result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("e", "char");
+		assertEquals("e", result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("15", "String");
+		assertEquals("15", result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("16", "User");
+		assertNull(result);
+	}
+
 }
