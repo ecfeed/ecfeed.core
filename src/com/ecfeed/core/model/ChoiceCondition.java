@@ -156,8 +156,8 @@ public class ChoiceCondition implements IStatementCondition {
 			return evaluateEqualityIncludingParents(relation, actualLeftChoice);
 		}
 
-		String actualLeftValue = JavaLanguageHelper.convertValueString(actualLeftChoice.getValueString(), substituteType);
-		String rightValue = JavaLanguageHelper.convertValueString(fRightChoice.getValueString(), substituteType);
+		String actualLeftValue = JavaLanguageHelper.parseJavaValueToString(actualLeftChoice.getValueString(), substituteType);
+		String rightValue = JavaLanguageHelper.parseJavaValueToString(fRightChoice.getValueString(), substituteType);
 
 		if (RelationMatcher.isMatchQuiet(relation, substituteType, actualLeftValue, rightValue)) {
 			return EvaluationResult.TRUE;

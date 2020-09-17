@@ -924,8 +924,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-
-	// TODO SIMPLE-VIEW unit tests
 	public static String parseStringValue(String valueString) {
 
 		if(valueString.equals(VALUE_REPRESENTATION_NULL)){
@@ -935,7 +933,7 @@ public final class JavaLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests
-	public static String convertValueString(String valueString, String typeName) {
+	public static String parseJavaValueToString(String valueString, String typeName) {
 		return parseJavaValueToObject(valueString, typeName, ERunMode.QUIET).toString();
 	}
 
