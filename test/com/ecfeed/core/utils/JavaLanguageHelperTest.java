@@ -284,9 +284,26 @@ public class JavaLanguageHelperTest {
 		assertTrue(JavaLanguageHelper.isExtendedIntTypeName("short"));
 		assertTrue(JavaLanguageHelper.isExtendedIntTypeName("long"));
 
+		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("float"));
+		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("double"));
 		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("boolean"));
 		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("String"));
 		assertFalse(JavaLanguageHelper.isExtendedIntTypeName("User"));
 	}
 
+	@Test
+	public void isNumericTypeNameTest() {
+
+		assertTrue(JavaLanguageHelper.isNumericTypeName("byte"));
+		assertTrue(JavaLanguageHelper.isNumericTypeName("int"));
+		assertTrue(JavaLanguageHelper.isNumericTypeName("short"));
+		assertTrue(JavaLanguageHelper.isNumericTypeName("long"));
+		assertTrue(JavaLanguageHelper.isNumericTypeName("float"));
+		assertTrue(JavaLanguageHelper.isNumericTypeName("double"));
+
+		assertFalse(JavaLanguageHelper.isNumericTypeName("boolean"));
+		assertFalse(JavaLanguageHelper.isNumericTypeName("String"));
+		assertFalse(JavaLanguageHelper.isNumericTypeName("User"));
+
+	}
 }
