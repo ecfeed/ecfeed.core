@@ -59,6 +59,22 @@ public class JavaLanguageHelperTest {
         assertFalse(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("&"));
     }
 
+    @Test
+    public void isMatchWithJavaSimpleIdenfifierTest() {
+
+        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("class"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("if"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("for"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("int"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("String"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("User"));
+
+        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("java.lang.String"));
+        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("com.xxx.Class"));
+        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("com-xxx-Class"));
+        assertFalse(JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier("&"));
+    }
+
 	@Test
 	public void isValidJavaIdentifierTest() {
 
