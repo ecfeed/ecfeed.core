@@ -977,7 +977,6 @@ public final class JavaLanguageHelper {
 		return TYPE_NAME_LONG;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getSubstituteType(String typeName1) {
 
 		if (typeName1 == null) {
@@ -999,7 +998,6 @@ public final class JavaLanguageHelper {
 		return typeName1;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static JustifyType getJustifyType(String typeName) {
 
 		if (!isJavaType(typeName)) {
@@ -1013,7 +1011,6 @@ public final class JavaLanguageHelper {
 		return JustifyType.LEFT;
 	}
 
-	// TODO SIMPLE-VIEW unit tests - IS I
 	//	public static String parseToJavaView(String text) {
 	//		String returnText = text;
 	//

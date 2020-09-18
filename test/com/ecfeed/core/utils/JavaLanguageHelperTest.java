@@ -485,4 +485,82 @@ public class JavaLanguageHelperTest {
 		assertEquals("x", type);
 	}
 
+	@Test
+	public void getCompatibleNumericTypeTest() {
+
+		// non numeric
+		String type = JavaLanguageHelper.getCompatibleNumericType("abc");
+		assertNull(type);
+
+		// byte
+
+		type = JavaLanguageHelper.getCompatibleNumericType("0");
+		assertEquals("byte", type);
+
+		// close to 0
+		type = JavaLanguageHelper.getCompatibleNumericType("4.9E-325");
+		assertEquals("byte", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("127");
+		assertEquals("byte", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-128");
+		assertEquals("byte", type);
+
+		// short
+
+		type = JavaLanguageHelper.getCompatibleNumericType("128");
+		assertEquals("short", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-129");
+		assertEquals("short", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("32767");
+		assertEquals("short", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-32768");
+		assertEquals("short", type);
+
+		// int
+
+		type = JavaLanguageHelper.getCompatibleNumericType("32768");
+		assertEquals("int", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-32769");
+		assertEquals("int", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("2147483647");
+		assertEquals("int", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-2147483648");
+		assertEquals("int", type);
+
+		// long
+
+		type = JavaLanguageHelper.getCompatibleNumericType("2147483648");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-2147483649");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("9223372036854775807");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-9223372036854775808");
+		assertEquals("long", type);
+
+		// float
+
+		type = JavaLanguageHelper.getCompatibleNumericType("2.13");
+		assertEquals("float", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("4.9E-324");
+		assertEquals("float", type);
+
+		type = JavaLanguageHelper.getCompatibleNumericType("-4.9E-324");
+		assertEquals("float", type);
+
+		// no double
+	}
+
 }
