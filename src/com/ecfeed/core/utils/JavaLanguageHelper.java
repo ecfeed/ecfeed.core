@@ -135,7 +135,6 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static boolean isMatchWithJavaSimpleIdenfifier(String value) {
 
 		if (!value.matches(RegexHelper.REGEX_JAVA_IDENTIFIER)) {
@@ -162,23 +161,6 @@ public final class JavaLanguageHelper {
 
 		return JAVA_KEYWORDS;
 	}
-
-	//	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
-	//		List<String> values = new ArrayList<String>();
-	//
-	//		try {
-	//			Class<?> enumType = loader.loadClass(enumTypeName);
-	//
-	//			if(enumType != null && enumType.isEnum()){
-	//				for (Object object: enumType.getEnumConstants()) {
-	//					values.add(((Enum<?>)object).name());
-	//				}
-	//			}
-	//		} catch (ClassNotFoundException e) {
-	//		}
-	//
-	//		return values;
-	//	}
 
 	public static List<String> getSymbolicNamesOfSpecialValues(String typeName) {
 
@@ -731,7 +713,6 @@ public final class JavaLanguageHelper {
 		return valueWithNull;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static Number parseValueToNumber(String valueString, String type, ERunMode runMode) {
 
 		if  (type == null || valueString == null) {
@@ -760,7 +741,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW rename to parseValueToObject
 	public static Object parseJavaValueToObject(String valueString, String typeName, ERunMode runMode) {
 
 		if(typeName == null || valueString == null){
@@ -1089,7 +1069,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static Short convertToShort(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);
@@ -1107,7 +1086,6 @@ public final class JavaLanguageHelper {
 		return result.shortValue(); 
 	}	
 
-	// TODO SIMPLE-VIEW unit tests
 	public static Integer convertToInteger(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);
@@ -1125,8 +1103,7 @@ public final class JavaLanguageHelper {
 		return result.intValue(); 
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static Byte convertToByte(String str) throws NumberFormatException { 
+	public static Byte convertToByte(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);
 
@@ -1143,7 +1120,6 @@ public final class JavaLanguageHelper {
 		return result.byteValue(); 
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static Long convertToLong(String str) throws NumberFormatException {
 
 		Long result = convertToLongDirectly(str);
@@ -1155,7 +1131,6 @@ public final class JavaLanguageHelper {
 		return convertToLongViaDouble(str);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	private static Long convertToLongViaDouble(String str) throws NumberFormatException {
 
 		Double dblResult = null;
@@ -1169,7 +1144,6 @@ public final class JavaLanguageHelper {
 		return dblResult.longValue();
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static Long convertToLongDirectly(String str) {
 
 		Long result = null;
@@ -1356,5 +1330,22 @@ public final class JavaLanguageHelper {
 	//
 	//		return returnText;
 	//	}
+
+    //	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
+    //		List<String> values = new ArrayList<String>();
+    //
+    //		try {
+    //			Class<?> enumType = loader.loadClass(enumTypeName);
+    //
+    //			if(enumType != null && enumType.isEnum()){
+    //				for (Object object: enumType.getEnumConstants()) {
+    //					values.add(((Enum<?>)object).name());
+    //				}
+    //			}
+    //		} catch (ClassNotFoundException e) {
+    //		}
+    //
+    //		return values;
+    //	}
 
 }
