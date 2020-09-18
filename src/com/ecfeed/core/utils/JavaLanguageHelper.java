@@ -1157,7 +1157,6 @@ public final class JavaLanguageHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isNumericTypeLarger(String numericTypeToCompare, String currentNumericType) {
 
 		if (!isNumericTypeName(currentNumericType)) {

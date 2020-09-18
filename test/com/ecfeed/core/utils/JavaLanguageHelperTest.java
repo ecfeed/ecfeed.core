@@ -628,4 +628,35 @@ public class JavaLanguageHelperTest {
 		// no double
 	}
 
+	@Test
+    public void isNumericTypeLager() {
+
+        assertTrue(JavaLanguageHelper.isNumericTypeLarger("short", "byte"));
+        assertFalse(JavaLanguageHelper.isNumericTypeLarger("byte", "short"));
+
+        assertTrue(JavaLanguageHelper.isNumericTypeLarger("int", "short"));
+        assertFalse(JavaLanguageHelper.isNumericTypeLarger("short", "int"));
+
+        assertTrue(JavaLanguageHelper.isNumericTypeLarger("long", "int"));
+        assertFalse(JavaLanguageHelper.isNumericTypeLarger("int", "long"));
+
+        assertTrue(JavaLanguageHelper.isNumericTypeLarger("float", "long"));
+        assertFalse(JavaLanguageHelper.isNumericTypeLarger("long", "float"));
+
+        assertTrue(JavaLanguageHelper.isNumericTypeLarger("double", "float"));
+        assertFalse(JavaLanguageHelper.isNumericTypeLarger("float", "double"));
+
+        try {
+            JavaLanguageHelper.isNumericTypeLarger("String", "int");
+            fail();
+        } catch (Exception e) {
+        }
+
+        try {
+            JavaLanguageHelper.isNumericTypeLarger("int", "String");
+            fail();
+        } catch (Exception e) {
+        }
+    }
+
 }
