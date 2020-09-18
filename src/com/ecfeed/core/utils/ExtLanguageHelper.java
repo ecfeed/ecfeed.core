@@ -32,7 +32,7 @@ public class ExtLanguageHelper {
 	public static String validateType(String parameterTypeInExtLanguage, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {
-			return JavaLanguageHelper.validateType(parameterTypeInExtLanguage);
+			return JavaLanguageHelper.validateBasicJavaType(parameterTypeInExtLanguage);
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {

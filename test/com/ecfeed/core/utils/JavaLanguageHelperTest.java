@@ -657,4 +657,20 @@ public class JavaLanguageHelperTest {
         }
     }
 
+    @Test
+    public void validateTypeTest() {
+
+        assertNull(JavaLanguageHelper.validateBasicJavaType("byte"));
+        assertNull(JavaLanguageHelper.validateBasicJavaType("short"));
+        assertNull(JavaLanguageHelper.validateBasicJavaType("int"));
+        assertNull(JavaLanguageHelper.validateBasicJavaType("long"));
+        assertNull(JavaLanguageHelper.validateBasicJavaType("float"));
+        assertNull(JavaLanguageHelper.validateBasicJavaType("double"));
+	    assertNull(JavaLanguageHelper.validateBasicJavaType("boolean"));
+        assertNull(JavaLanguageHelper.validateBasicJavaType("char"));
+        assertNull(JavaLanguageHelper.validateBasicJavaType("String"));
+
+        assertNotNull(JavaLanguageHelper.validateBasicJavaType("User"));
+    }
+
 }

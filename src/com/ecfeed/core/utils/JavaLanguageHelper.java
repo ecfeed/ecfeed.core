@@ -1265,7 +1265,7 @@ public final class JavaLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests
-	public static String validateType(String type) {
+	public static String validateBasicJavaType(String type) {
 
 		if (StringHelper.isEqual(type, TYPE_NAME_BOOLEAN)) {
 			return null;
