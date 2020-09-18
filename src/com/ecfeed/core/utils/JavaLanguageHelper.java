@@ -131,29 +131,6 @@ public final class JavaLanguageHelper {
 		return JAVA_KEYWORDS;
 	}
 
-	public static boolean isValidTypeName(String name) {
-
-		if (name == null) {
-			return false;
-		}
-
-		if (!name.matches(RegexHelper.REGEX_CLASS_NODE_NAME)) {
-			return false;
-		}
-
-		StringTokenizer tokenizer = new StringTokenizer(name, ".");
-
-		while (tokenizer.hasMoreTokens()) {
-			String segment = tokenizer.nextToken();
-
-			if(isValidJavaIdentifier(segment) == false) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 	//	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
 	//		List<String> values = new ArrayList<String>();
 	//
@@ -428,7 +405,6 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
-	// TODO SIMPLE-VIEW similar to isValidTypeName() - merge
 	public static boolean isJavaType(String typeName) {
 
 		if (typeName == null) {
@@ -436,6 +412,29 @@ public final class JavaLanguageHelper {
 		}
 
 		return Arrays.asList(SUPPORTED_JAVA_TYPES).contains(typeName);
+	}
+
+	public static boolean isValidComplexTypeIdentifier(String name) {
+
+		if (name == null) {
+			return false;
+		}
+
+		if (!name.matches(RegexHelper.REGEX_COMPLEX_JAVA_IDENTIFIER)) {
+			return false;
+		}
+
+		StringTokenizer tokenizer = new StringTokenizer(name, ".");
+
+		while (tokenizer.hasMoreTokens()) {
+			String segment = tokenizer.nextToken();
+
+			if(isValidJavaIdentifier(segment) == false) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public static String[] getSupportedJavaTypes() {
@@ -1011,31 +1010,6 @@ public final class JavaLanguageHelper {
 		return JustifyType.LEFT;
 	}
 
-	//	public static String parseToJavaView(String text) {
-	//		String returnText = text;
-	//
-	//		returnText = returnText.trim();
-	//
-	//		if (isJavaKeyword(returnText)) {
-	//			return "_" + returnText;
-	//		}
-	//
-	//		returnText = returnText.replaceAll("_", RegexHelper.REGEX_SPECIAL_CHARACTER);
-	//
-	//		if (returnText.matches("^[0-9].*")) {
-	//			returnText = "_" + returnText;
-	//		}
-	//
-	//		while (returnText.contains("  ")) {
-	//			returnText = returnText.replaceAll("  ", " ");
-	//		}
-	//
-	//		returnText = returnText.replaceAll(" ", "_");
-	//
-	//		return returnText;
-	//	}
-
-	// TODO SIMPLE-VIEW unit tests
 	public static String getCompatibleNumericType(String value) {
 
 		try {
@@ -1320,4 +1294,29 @@ public final class JavaLanguageHelper {
 
 		return INVALID_JAVA_TYPE + ": " + type + ".";
 	}
+
+	//	public static String parseToJavaView(String text) {
+	//		String returnText = text;
+	//
+	//		returnText = returnText.trim();
+	//
+	//		if (isJavaKeyword(returnText)) {
+	//			return "_" + returnText;
+	//		}
+	//
+	//		returnText = returnText.replaceAll("_", RegexHelper.REGEX_SPECIAL_CHARACTER);
+	//
+	//		if (returnText.matches("^[0-9].*")) {
+	//			returnText = "_" + returnText;
+	//		}
+	//
+	//		while (returnText.contains("  ")) {
+	//			returnText = returnText.replaceAll("  ", " ");
+	//		}
+	//
+	//		returnText = returnText.replaceAll(" ", "_");
+	//
+	//		return returnText;
+	//	}
+
 }

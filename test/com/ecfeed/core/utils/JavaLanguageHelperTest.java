@@ -56,8 +56,8 @@ public class JavaLanguageHelperTest {
 
 	@Test
 	public void isValidTypeNameTest() {
-		assertTrue(JavaLanguageHelper.isValidTypeName("com.ecfeed.Xx"));
-		assertFalse(JavaLanguageHelper.isValidTypeName("com.ecfeed.X*x"));
+		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("com.ecfeed.Xx"));
+		assertFalse(JavaLanguageHelper.isValidComplexTypeIdentifier("com.ecfeed.X*x"));
 	}
 
 	@Test

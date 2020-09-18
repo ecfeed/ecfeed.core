@@ -113,7 +113,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		if (!JavaLanguageHelper.isJavaType(fNewType) 
 				&& !SimpleLanguageHelper.isSimpleType(fNewType)
-				&& !JavaLanguageHelper.isValidTypeName(fNewType)) {
+				&& !JavaLanguageHelper.isValidComplexTypeIdentifier(fNewType)) {
 
 			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
 		}
