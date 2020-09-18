@@ -449,6 +449,40 @@ public class JavaLanguageHelperTest {
 
 		type = JavaLanguageHelper.getSubstituteType("String", "char");
 		assertEquals("String", type);
+
+		type = JavaLanguageHelper.getSubstituteType("String", "x");
+		assertNull(type);
+
+		type = JavaLanguageHelper.getSubstituteType("x", "String");
+		assertNull(type);
+
+
+		type = JavaLanguageHelper.getSubstituteType("char");
+		assertEquals("String", type);
+
+		type = JavaLanguageHelper.getSubstituteType("String");
+		assertEquals("String", type);
+
+		type = JavaLanguageHelper.getSubstituteType("float");
+		assertEquals("double", type);
+
+		type = JavaLanguageHelper.getSubstituteType("double");
+		assertEquals("double", type);
+
+		type = JavaLanguageHelper.getSubstituteType("byte");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getSubstituteType("short");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getSubstituteType("int");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getSubstituteType("long");
+		assertEquals("long", type);
+
+		type = JavaLanguageHelper.getSubstituteType("x");
+		assertEquals("x", type);
 	}
 
 }

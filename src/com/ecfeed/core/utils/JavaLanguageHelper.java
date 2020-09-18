@@ -428,6 +428,7 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
+	// TODO SIMPLE-VIEW similar to isValidTypeName() - merge
 	public static boolean isJavaType(String typeName) {
 
 		if (typeName == null) {
@@ -943,10 +944,21 @@ public final class JavaLanguageHelper {
 		return object.toString();
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getSubstituteType(String typeName1, String typeName2) {
 
-		if (typeName1 == null || typeName2 == null) {
+		if (typeName1 == null) {
+			return null;
+		}
+
+		if (typeName2 == null) {
+			return null;
+		}
+
+		if (!isJavaType(typeName1)) {
+			return null;
+		}
+
+		if (!isJavaType(typeName2)) {
 			return null;
 		}
 
