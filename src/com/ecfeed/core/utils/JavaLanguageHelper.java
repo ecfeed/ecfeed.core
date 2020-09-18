@@ -126,7 +126,6 @@ public final class JavaLanguageHelper {
 		return Arrays.asList(JAVA_KEYWORDS).contains(word);
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static boolean isMatchWithJavaComplexIdenfifier(String value) {
 
 		if (!value.matches(RegexHelper.REGEX_COMPLEX_JAVA_IDENTIFIER)) {

@@ -44,6 +44,21 @@ public class JavaLanguageHelperTest {
 		assertFalse(JavaLanguageHelper.isJavaKeyword("x"));
 	}
 
+    @Test
+    public void isMatchWithJavaComplexIdenfifierTest() {
+
+        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("class"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("if"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("for"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("int"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("String"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("java.lang.String"));
+        assertTrue(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("com.xxx.Class"));
+
+        assertFalse(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("com-xxx-Class"));
+        assertFalse(JavaLanguageHelper.isMatchWithJavaComplexIdenfifier("&"));
+    }
+
 	@Test
 	public void isValidJavaIdentifierTest() {
 
