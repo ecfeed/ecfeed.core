@@ -514,13 +514,11 @@ public class JavaLanguageHelperTest {
 		type = JavaLanguageHelper.getSubstituteType("String", "char");
 		assertEquals("String", type);
 
-		// TODO SIMPLE-VIEW commented out because other tests fail
-//		type = JavaLanguageHelper.getSubstituteType("String", "x");
-//		assertNull(type);
-//
-//		type = JavaLanguageHelper.getSubstituteType("x", "String");
-//		assertNull(type);
+		type = JavaLanguageHelper.getSubstituteType("String", "x");
+		assertNull(type);
 
+		type = JavaLanguageHelper.getSubstituteType("x", "String");
+		assertNull(type);
 
 		type = JavaLanguageHelper.getSubstituteType("char");
 		assertEquals("String", type);
