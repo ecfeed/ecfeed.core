@@ -461,8 +461,6 @@ public class RandomModelGenerator {
 		//		return generator.generate();
 	}
 
-	//DEBUG
-
 	@Test
 	public void testGenerateClass(){
 		ClassNode _class = generateClass(5);

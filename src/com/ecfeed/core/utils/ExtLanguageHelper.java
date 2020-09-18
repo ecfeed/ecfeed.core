@@ -75,8 +75,8 @@ public class ExtLanguageHelper {
 
 	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguage extLanguage) {
 
-		if (!JavaLanguageHelper.isJavaType(type)) {
-			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
+		if (!JavaLanguageHelper.isValidComplexTypeIdentifier(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to convert an invalid identifier.");
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {

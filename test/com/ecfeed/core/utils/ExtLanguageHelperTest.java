@@ -105,23 +105,17 @@ public class ExtLanguageHelperTest {
 	@Test
 	public void convertTypeFromIntrToExtLanguageTest() {
 
-		String text = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("int", ExtLanguage.JAVA);
-		assertEquals("int", text);
+		String type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("int", ExtLanguage.JAVA);
+		assertEquals("int", type);
 
-		text = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("int", ExtLanguage.SIMPLE);
-		assertEquals("Number", text);
+		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("int", ExtLanguage.SIMPLE);
+		assertEquals("Number", type);
 
-		try {
-			ExtLanguageHelper.convertTypeFromIntrToExtLanguage("x", ExtLanguage.JAVA);
-			fail();
-		} catch (Exception e) {
-		}
+		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("x", ExtLanguage.JAVA);
+		assertEquals("x", type);
 
-		try {
-			ExtLanguageHelper.convertTypeFromIntrToExtLanguage("x", ExtLanguage.SIMPLE);
-			fail();
-		} catch (Exception e) {
-		}
+		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("x", ExtLanguage.SIMPLE);
+		assertNull(type);
 	}
 
 	@Test

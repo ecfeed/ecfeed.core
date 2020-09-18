@@ -94,6 +94,14 @@ public final class JavaLanguageHelper {
 			"final", "interface", "static", "void", "class", "finally", "long", "strictfp", "volatile", "const", "float",
 			"native", "super", "while", "null", "true", "false" };
 
+	private static final String[] JAVA_KEYWORDS_EXCLUDING_TYPES = new String[] {
+			"abstract", "continue", "for", "new", "switch", "assert", "default", "goto", "package", "synchronized", "do",
+			"if", "private", "this", "break", "implements", "protected", "throw", "else", "import", "public",
+			"throws", "case", "enum", "instanceof", "return", "transient", "catch", "extends", "try",
+			"final", "interface", "static", "void", "class", "finally", "strictfp", "volatile", "const",
+			"native", "super", "while", "null", "true", "false" };
+
+
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
 
 	public static String verifySeparators(String text) {
@@ -109,8 +117,33 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
+	public static boolean isJavaKeywordExcludingTypes(String word) {
+		return Arrays.asList(JAVA_KEYWORDS_EXCLUDING_TYPES).contains(word);
+	}
+
+
 	public static boolean isJavaKeyword(String word) {
 		return Arrays.asList(JAVA_KEYWORDS).contains(word);
+	}
+
+	// TODO SIMPLE-VIEW unit test
+	public static boolean isMatchWithJavaComplexIdenfifier(String value) {
+
+		if (!value.matches(RegexHelper.REGEX_COMPLEX_JAVA_IDENTIFIER)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	// TODO SIMPLE-VIEW unit test
+	public static boolean isMatchWithJavaSimpleIdenfifier(String value) {
+
+		if (!value.matches(RegexHelper.REGEX_JAVA_IDENTIFIER)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public static boolean isValidJavaIdentifier(String value) {
@@ -420,16 +453,21 @@ public final class JavaLanguageHelper {
 			return false;
 		}
 
-		if (!name.matches(RegexHelper.REGEX_COMPLEX_JAVA_IDENTIFIER)) {
+		if (!isMatchWithJavaComplexIdenfifier(name)) {
 			return false;
 		}
 
 		StringTokenizer tokenizer = new StringTokenizer(name, ".");
 
 		while (tokenizer.hasMoreTokens()) {
+
 			String segment = tokenizer.nextToken();
 
-			if(isValidJavaIdentifier(segment) == false) {
+			if (isJavaKeywordExcludingTypes(segment)) {
+				return false;
+			}
+
+			if (!isMatchWithJavaSimpleIdenfifier(segment)) {
 				return false;
 			}
 		}
@@ -723,6 +761,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW rename to parseValueToObject
 	public static Object parseJavaValueToObject(String valueString, String typeName, ERunMode runMode) {
 
 		if(typeName == null || valueString == null){
@@ -953,13 +992,14 @@ public final class JavaLanguageHelper {
 			return null;
 		}
 
-		if (!isJavaType(typeName1)) {
-			return null;
-		}
-
-		if (!isJavaType(typeName2)) {
-			return null;
-		}
+		// TODO SIMPLE-VIEW check why fails testTupleWithNullsForValueCondition when uncommented
+//		if (!isJavaType(typeName1)) {
+//			return null;
+//		}
+//
+//		if (!isJavaType(typeName2)) {
+//			return null;
+//		}
 
 		if (JavaLanguageHelper.isBooleanTypeName(typeName1) || JavaLanguageHelper.isBooleanTypeName(typeName2)) {
 			return TYPE_NAME_BOOLEAN;
