@@ -10,9 +10,13 @@ public class ConditionHelper {
 
 	public static String getSubstituteType(RelationStatement parentRelationStatement) {
 
-		String substituteType = 
+		final MethodParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+
+		final String type = leftParameter.getType();
+
+		String substituteType =
 				JavaLanguageHelper.getSubstituteType(
-						parentRelationStatement.getLeftParameter().getType(), 
+						type,
 						JavaLanguageHelper.getStringTypeName());
 
 		if (substituteType == null) {

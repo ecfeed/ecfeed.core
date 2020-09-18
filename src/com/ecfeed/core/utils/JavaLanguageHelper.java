@@ -992,14 +992,13 @@ public final class JavaLanguageHelper {
 			return null;
 		}
 
-		// TODO SIMPLE-VIEW check why fails testTupleWithNullsForValueCondition when uncommented
-//		if (!isJavaType(typeName1)) {
-//			return null;
-//		}
-//
-//		if (!isJavaType(typeName2)) {
-//			return null;
-//		}
+		if (!isJavaType(typeName1)) {
+			return null;
+		}
+
+		if (!isJavaType(typeName2)) {
+			return null;
+		}
 
 		if (JavaLanguageHelper.isBooleanTypeName(typeName1) || JavaLanguageHelper.isBooleanTypeName(typeName2)) {
 			return TYPE_NAME_BOOLEAN;

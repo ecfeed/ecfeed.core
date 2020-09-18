@@ -185,7 +185,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPremiseWithValueCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
+		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "int", "0", false);
 
 		AbstractStatement premise = 
 				RelationStatement.createStatementWithValueCondition(
@@ -196,7 +196,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createConsequenceWithValueCondition() {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
+		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "int", "0", false);
 
 		AbstractStatement consequence = 
 				RelationStatement.createStatementWithValueCondition(
@@ -207,7 +207,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPremiseWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
+		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "int", "0", false);
 
 		AbstractStatement premise = 
 				RelationStatement.createStatementWithChoiceCondition(
@@ -218,7 +218,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createConsequenceWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
+		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "int", "0", false);
 
 		AbstractStatement consequence = 
 				RelationStatement.createStatementWithChoiceCondition(
