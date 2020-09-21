@@ -10,8 +10,8 @@
 
 package com.ecfeed.core.utils;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExtLanguageHelper {
 
@@ -114,17 +114,17 @@ public class ExtLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests
-	public static Set<String> getSymbolicNamesOfSpecialValues(String typeName, ExtLanguage extLanguage) {
+	public static List<String> getSymbolicNamesOfSpecialValues(String typeName, ExtLanguage extLanguage) {
 
-		Set<String> items;
+		List<String> items;
 
 		if (extLanguage == ExtLanguage.JAVA) {
-			items = new LinkedHashSet<String>(JavaLanguageHelper.getSymbolicNamesOfSpecialValues(typeName));
+			items = JavaLanguageHelper.getSymbolicNamesOfSpecialValues(typeName);
 		} else {
-			items = new LinkedHashSet<String>();
+			items = new ArrayList<String>();
 		}
 
 		return items;
 	}
-	
+
 }
