@@ -216,8 +216,6 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		// TODO SIMPLE-VIEW
-
 		// invalid parameter type in java language
 
 		String[] paramTypes1 = {"int", "x"};
