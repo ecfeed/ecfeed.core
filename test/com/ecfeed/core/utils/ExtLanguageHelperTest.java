@@ -184,4 +184,17 @@ public class ExtLanguageHelperTest {
 		assertEquals(0, names.size());
 	}
 
+	@Test
+	public void isLogicalTypeNameTest() {
+
+		assertTrue(ExtLanguageHelper.isLogicalTypeName("boolean", ExtLanguage.JAVA));
+		assertTrue(ExtLanguageHelper.isLogicalTypeName("Logical", ExtLanguage.SIMPLE));
+
+		assertFalse(ExtLanguageHelper.isLogicalTypeName("boolean", ExtLanguage.SIMPLE));
+		assertFalse(ExtLanguageHelper.isLogicalTypeName("Logical", ExtLanguage.JAVA));
+
+		assertFalse(ExtLanguageHelper.isLogicalTypeName("x", ExtLanguage.SIMPLE));
+		assertFalse(ExtLanguageHelper.isLogicalTypeName("x", ExtLanguage.JAVA));
+	}
+
 }
