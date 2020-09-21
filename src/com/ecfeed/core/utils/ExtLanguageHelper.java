@@ -126,7 +126,6 @@ public class ExtLanguageHelper {
 		return items;
 	}
 	
-	// TODO SIMPLE-VIEW unit tests
 	public static boolean isLogicalTypeName(String type, ExtLanguage extLanguage) {
 		
 		if (extLanguage == ExtLanguage.SIMPLE) {

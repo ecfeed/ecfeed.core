@@ -105,7 +105,6 @@ public final class SimpleLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW unit test
 	public static boolean isLogicalTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_LOGICAL)) {
