@@ -13,7 +13,10 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodNodeHelper {
 
@@ -216,6 +219,38 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
+	// TODO - SIMPLE-VIEW tests
+	public static String createSignaturesOfParameters(
+			MethodNode methodNode,
+			ExtLanguage extLanguage) {
+		
+		String signature = "";
+		int paramCount = methodNode.getParametersCount();
+		
+
+		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
+
+			MethodParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
+			
+			
+			
+			String signatureOfOneParameter = 
+					AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
+							methodParameterNode.getType(),
+							methodParameterNode.getName(),
+							methodParameterNode.isExpected(), 
+							extLanguage);
+
+			signature += signatureOfOneParameter;
+
+			if (paramIndex < paramCount - 1) {
+				signature += ", ";
+			}
+		}
+
+		return signature;
+
+	}	
 	private static String createSignaturesOfParametersByIntrLanguage(
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames,

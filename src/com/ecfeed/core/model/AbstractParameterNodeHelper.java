@@ -52,6 +52,20 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
+	public static String createSignature(
+			AbstractParameterNode abstractParameterNode, 
+			ExtLanguage extLanguage) {  // TODO SIMPLE-VIEW parameter not used
+	
+		String signature = 
+				createSignatureOfOneParameter(
+					abstractParameterNode.getType(),
+					abstractParameterNode.getName(),
+					true);
+		
+		return signature;
+	}
+	
+	// TODO SIMPLE-VIEW rename to createSignature
 	public static String createSignatureOfOneParameter(
 			String parameterType,
 			String parameterName,
