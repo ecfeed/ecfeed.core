@@ -193,7 +193,6 @@ public class StringHelper {
 		return tokenizedString.substring(separatorPosition+1);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getLastTokenOrInputString(String tokenizedString, String tokenSeparator) {
 
 		int separatorPosition = tokenizedString.lastIndexOf(tokenSeparator);
