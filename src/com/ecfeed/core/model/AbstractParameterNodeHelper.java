@@ -102,6 +102,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
+	// TODO SIMPLE-VIEW rename to create signature
 	public static String createParameterLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
 		String name = abstractParameterNode.getName();

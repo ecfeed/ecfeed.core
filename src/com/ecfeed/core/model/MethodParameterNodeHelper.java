@@ -26,7 +26,7 @@ public class MethodParameterNodeHelper {
 				AbstractParameterNodeHelper.createSignatureOfOneParameter(
 						type,
 						methodParameterNode.getName(),
-						true);
+						methodParameterNode.isExpected());
 
 		if (methodParameterNode.isLinked()) {
 			signature += "[LINKED]->" + methodParameterNode.getLink().getQualifiedName();
