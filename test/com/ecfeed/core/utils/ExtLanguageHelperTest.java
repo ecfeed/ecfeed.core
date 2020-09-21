@@ -12,6 +12,8 @@ package com.ecfeed.core.utils;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class ExtLanguageHelperTest {
@@ -172,5 +174,14 @@ public class ExtLanguageHelperTest {
 		assertEquals("x", text);
 	}
 
+	@Test
+	public void getSymbolicNamesTest() {
+
+		List<String> names = ExtLanguageHelper.getSymbolicNamesOfSpecialValues("int", ExtLanguage.JAVA);
+		assertNotEquals(0, names.size());
+
+		names = ExtLanguageHelper.getSymbolicNamesOfSpecialValues("int", ExtLanguage.SIMPLE);
+		assertEquals(0, names.size());
+	}
 
 }

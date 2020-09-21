@@ -113,7 +113,6 @@ public class ExtLanguageHelper {
 		return valueInIntrLanguage;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static List<String> getSymbolicNamesOfSpecialValues(String typeName, ExtLanguage extLanguage) {
 
 		List<String> items;
