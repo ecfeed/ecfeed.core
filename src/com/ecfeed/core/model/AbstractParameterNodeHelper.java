@@ -55,16 +55,16 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createSignature(
 			AbstractParameterNode abstractParameterNode, 
 			ExtLanguage extLanguage) {  // TODO SIMPLE-VIEW parameter not used
-	
+
 		String signature = 
 				createSignatureOfOneParameter(
-					abstractParameterNode.getType(),
-					abstractParameterNode.getName(),
-					true);
-		
+						abstractParameterNode.getType(),
+						abstractParameterNode.getName(),
+						true);
+
 		return signature;
 	}
-	
+
 	// TODO SIMPLE-VIEW rename to createSignature
 	public static String createSignatureOfOneParameter(
 			String parameterType,
@@ -108,17 +108,18 @@ public abstract class AbstractParameterNodeHelper {
 		String name = abstractParameterNode.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
 
-		String type = abstractParameterNode.getType();
-		type = createTypeLabel(type, extLanguage);
+
+		String type = createTypeLabel(abstractParameterNode, extLanguage);
 
 		String label = name + ": " + type;
 		return label;
 	}
 
 
-	public static String createTypeLabel(String javaType, ExtLanguage extLanguage) {
+	public static String createTypeLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
-		String type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(javaType, extLanguage);
+		String type = abstractParameterNode.getType();
+		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 		return type;
 	}
 
@@ -136,5 +137,5 @@ public abstract class AbstractParameterNodeHelper {
 
 		return result;
 	}
-	
+
 }

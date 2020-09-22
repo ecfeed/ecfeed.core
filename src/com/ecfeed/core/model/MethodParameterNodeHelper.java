@@ -21,7 +21,7 @@ public class MethodParameterNodeHelper {
 			ExtLanguage extLanguage) {
 
 		String type = methodParameterNode.getType();
-		
+
 		String signature = 
 				AbstractParameterNodeHelper.createSignatureOfOneParameter(
 						type,

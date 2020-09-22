@@ -35,9 +35,9 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 			MethodParameterNode methodParameterNode, 
 			int index,
 			ExtLanguage extLanguage) {
-		
+
 		super(methodNode, methodParameterNode, index, true, extLanguage);
-		
+
 		fRemovedTestCases = new ArrayList<TestCaseNode>(methodNode.getTestCases());
 		fMethodNode = methodNode;
 		fMethodParameterNode = methodParameterNode;
@@ -50,33 +50,33 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	@Override
 	public void execute() throws ModelOperationException {
-		
+
 		ExtLanguage extLanguage = getExtLanguage();
-		
+
 		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
-		
-		String newParameterType = AbstractParameterNodeHelper.createTypeLabel(fMethodParameterNode.getType(), extLanguage);
-		
+
+		String newParameterType = AbstractParameterNodeHelper.createTypeLabel(fMethodParameterNode, extLanguage);
+
 		paremeterTypesInExtLanguage.add(fNewIndex, newParameterType);
-		
+
 		ClassNode parentClassNode = fMethodNode.getClassNode();
-		
+
 		if (parentClassNode != null) { 
 
 			String methodNameInExtLanguage = MethodNodeHelper.getMethodName(fMethodNode, extLanguage);
-			
+
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(
 							parentClassNode, methodNameInExtLanguage, paremeterTypesInExtLanguage, extLanguage);
-			
+
 			if (foundMethodNode != null) {
-				
+
 				ModelOperationException.report(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
 								parentClassNode, foundMethodNode, extLanguage));
 			}
 		}
-		
+
 		fMethodNode.removeTestCases();
 		super.execute();
 	}
@@ -85,7 +85,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 	public IModelOperation getReverseOperation() {
 		return new MethodReverseOperation(getExtLanguage());
 	}
-	
+
 	private class MethodReverseOperation extends ReverseOperation{
 
 		public MethodReverseOperation(ExtLanguage extLanguage) {
