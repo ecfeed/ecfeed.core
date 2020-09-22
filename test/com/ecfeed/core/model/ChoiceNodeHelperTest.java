@@ -28,16 +28,16 @@ public class ChoiceNodeHelperTest {
 		ChoiceNode choice = new ChoiceNode("choice_1", null, "MAX_VALUE");
 		choice.setParent(methodParameterNode);
 
-		String label = ChoiceNodeHelper.createLabel(choice, ExtLanguage.JAVA);
+		String label = ChoiceNodeHelper.createSignature(choice, ExtLanguage.JAVA);
 		assertEquals("choice_1 [MAX_VALUE]", label);
 
-		label = ChoiceNodeHelper.createLabel(choice, ExtLanguage.SIMPLE);
+		label = ChoiceNodeHelper.createSignature(choice, ExtLanguage.SIMPLE);
 		assertEquals("choice 1 [2147483647]", label);
 
 		choice = new ChoiceNode("choice_1", null, "5");
 		choice.setParent(methodParameterNode);
 
-		label = ChoiceNodeHelper.createLabel(choice, ExtLanguage.JAVA);
+		label = ChoiceNodeHelper.createSignature(choice, ExtLanguage.JAVA);
 		assertEquals("choice_1 [5]", label);
 	}
 
