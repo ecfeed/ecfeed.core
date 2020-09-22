@@ -21,6 +21,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
@@ -90,12 +91,14 @@ public class FactoryRenameOperation {
 
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
+			ExtLanguage extLanguage = getExtLanguage();
+
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
 							targetMethodNode.getClassNode(),
 							newNameInExtLanguage,
-							targetMethodNode.getParameterTypes(),
-							getExtLanguage());
+							MethodNodeHelper.getMethodParameterTypes(targetMethodNode, extLanguage),
+							extLanguage);
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);
