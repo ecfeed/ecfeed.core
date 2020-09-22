@@ -69,14 +69,12 @@ public class FactoryRenameOperation {
 	private static class MethodOperationRename extends GenericOperationRename {
 
 		ExtLanguage fExtLanguage;
-		String fNewName;
 
 		public MethodOperationRename(MethodNode target, String newName, ExtLanguage extLanguage) {
 
 			super(target, newName, extLanguage);
 
 			fExtLanguage = extLanguage;
-			fNewName = newName;
 		}
 
 		@Override
@@ -86,20 +84,18 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newName) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
 
 			List<String> problems = new ArrayList<String>();
 
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
-
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-					targetMethodNode.getClassNode(),
-					newNameInJavaConvention,
-					targetMethodNode.getParameterTypes(),
-					getExtLanguage());
+							targetMethodNode.getClassNode(),
+							newNameInExtLanguage,
+							targetMethodNode.getParameterTypes(),
+							getExtLanguage());
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);

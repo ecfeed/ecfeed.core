@@ -15,14 +15,14 @@ import java.util.List;
 
 public class ExtLanguageHelper {
 
-	public static String verifySeparatorsInName(String name, ExtLanguage extLanguage) {
+	public static String verifySeparatorsInName(String nameInExternalLanguage, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.JAVA) {
-			return JavaLanguageHelper.verifySeparators(name);
+			return JavaLanguageHelper.verifySeparators(nameInExternalLanguage);
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			return SimpleLanguageHelper.verifySeparators(name);
+			return SimpleLanguageHelper.verifySeparators(nameInExternalLanguage);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid external language.");

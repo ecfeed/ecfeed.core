@@ -29,20 +29,20 @@ import com.ecfeed.core.utils.SystemLogger;
 public class GenericOperationRename extends AbstractModelOperation {
 
 	private AbstractNode fTarget;
-	private String fNewName;
+	private String fNewNameInExtLanguage;
 	private String fOriginalName;
 	private String fJavaNameRegex;
 	private ExtLanguage fExtLanguage;
 
 	public GenericOperationRename(
 			AbstractNode target, 
-			String newName, 
+			String newNameInExtLanguage, 
 			ExtLanguage extLanguage) {
 
 		super(OperationNames.RENAME, extLanguage);
 
 		fTarget = target;
-		fNewName = newName;
+		fNewNameInExtLanguage = newNameInExtLanguage;
 		fOriginalName = target.getName();
 		fJavaNameRegex = getJavaNameRegex(target);
 		fExtLanguage = extLanguage;
@@ -52,17 +52,16 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public void execute() throws ModelOperationException {
 
 		setOneNodeToSelect(fTarget);
+		String oldName = fTarget.getName();
 
-		String newNameInIntrLanguage = convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
+		verifyNewName(fNewNameInExtLanguage);
 
+		String newNameInIntrLanguage = convertTextFromExtToIntrLanguage(fNewNameInExtLanguage, fExtLanguage);
+		
 		if (!(fTarget instanceof RootNode)) {
 			verifyNameWithJavaRegex(newNameInIntrLanguage, fJavaNameRegex, fTarget, ExtLanguage.JAVA);
 		}
-
-		verifyNewName(newNameInIntrLanguage);
-
-		String oldName = fTarget.getName();
-
+		
 		fTarget.setName(newNameInIntrLanguage);
 
 		String errorMessage = ExtLanguageModelVerifier.checkIsModelCompatibleWithExtLanguage(fTarget, fExtLanguage);
