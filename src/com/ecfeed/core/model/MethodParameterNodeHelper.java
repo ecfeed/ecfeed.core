@@ -20,12 +20,13 @@ public class MethodParameterNodeHelper {
 			MethodParameterNode methodParameterNode,
 			ExtLanguage extLanguage) {
 
-		String type = methodParameterNode.getType();
+		String type = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, extLanguage);
+		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguage);
 
 		String signature = 
 				AbstractParameterNodeHelper.createSignatureOfOneParameter(
 						type,
-						methodParameterNode.getName(),
+						name,
 						methodParameterNode.isExpected());
 
 		if (methodParameterNode.isLinked()) {
