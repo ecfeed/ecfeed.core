@@ -14,7 +14,6 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public class MethodParameterNodeHelper {
 
-	// TODO SIMPLE-VIEW similar for global parameter 
 	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(
 			MethodParameterNode methodParameterNode,
@@ -24,7 +23,7 @@ public class MethodParameterNodeHelper {
 		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguage);
 
 		String signature = 
-				AbstractParameterNodeHelper.createSignatureOfOneParameter(
+				AbstractParameterNodeHelper.createSignature(
 						type,
 						name,
 						methodParameterNode.isExpected());

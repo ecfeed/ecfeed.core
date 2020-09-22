@@ -35,8 +35,7 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
-	// TODO SIMPLE-VIEW rename to createSignature
-	public static String createLabel(ChoiceNode choiceNode, ExtLanguage extLanguage) {
+	public static String createSignature(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String qualifiedName = choiceNode.getQualifiedName();
 		qualifiedName =  ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);

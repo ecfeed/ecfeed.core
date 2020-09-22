@@ -58,7 +58,7 @@ public abstract class AbstractParameterNodeHelper {
 			ExtLanguage extLanguage) {
 
 		String signature = 
-				createSignatureOfOneParameter(
+				createSignature(
 						createTypeSignature(abstractParameterNode, extLanguage),
 						createNameSignature(abstractParameterNode, extLanguage),
 						isExpected);
@@ -66,8 +66,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	// TODO SIMPLE-VIEW rename to createSignature
-	public static String createSignatureOfOneParameter(
+	public static String createSignature(
 			String parameterType,
 			String parameterName,
 			Boolean expectedFlag) {
@@ -103,8 +102,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	// TODO SIMPLE-VIEW rename to create signature
-	public static String createParameterLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+	public static String createParameterSignature(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
 		String name = abstractParameterNode.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);

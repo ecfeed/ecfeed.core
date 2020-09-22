@@ -206,7 +206,7 @@ public class MethodNodeHelper {
 			Boolean expectedFlag = (expectedFlags != null ? expectedFlags.get(paramIndex) : null);
 
 			String signatureOfOneParameter =
-					AbstractParameterNodeHelper.createSignatureOfOneParameter(
+					AbstractParameterNodeHelper.createSignature(
 							parameterType, parameterName, expectedFlag);
 
 			signature += signatureOfOneParameter;
