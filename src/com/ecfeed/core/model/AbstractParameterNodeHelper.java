@@ -54,13 +54,14 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String createSignature(
 			AbstractParameterNode abstractParameterNode, 
-			ExtLanguage extLanguage) {  // TODO SIMPLE-VIEW parameter not used
+			boolean isExpected,
+			ExtLanguage extLanguage) {
 
 		String signature = 
 				createSignatureOfOneParameter(
-						abstractParameterNode.getType(),
-						abstractParameterNode.getName(),
-						true);
+						createTypeSignature(abstractParameterNode, extLanguage),
+						createNameSignature(abstractParameterNode, extLanguage),
+						isExpected);
 
 		return signature;
 	}
@@ -109,18 +110,25 @@ public abstract class AbstractParameterNodeHelper {
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
 
 
-		String type = createTypeLabel(abstractParameterNode, extLanguage);
+		String type = createTypeSignature(abstractParameterNode, extLanguage);
 
 		String label = name + ": " + type;
 		return label;
 	}
 
 
-	public static String createTypeLabel(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+	public static String createTypeSignature(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
 
 		String type = abstractParameterNode.getType();
 		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 		return type;
+	}
+
+	public static String createNameSignature(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+
+		String name = abstractParameterNode.getName();
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
+		return name;
 	}
 
 	public static List<String> convertParameterTypesToExtLanguage(
