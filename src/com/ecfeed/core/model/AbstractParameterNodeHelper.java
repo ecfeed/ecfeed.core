@@ -110,7 +110,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		String type = createTypeSignature(abstractParameterNode, extLanguage);
 
-		String label = name + ": " + type;
+		String label = type + " " + name;
 		return label;
 	}
 
