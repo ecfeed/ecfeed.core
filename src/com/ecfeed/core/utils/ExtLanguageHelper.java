@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExtLanguageHelper {
@@ -106,7 +105,7 @@ public class ExtLanguageHelper {
 			ExceptionHelper.reportRuntimeException("Attempt to convert special value for invalid Java type.");
 		}
 
-		if (extLanguage == ExtLanguage.SIMPLE && JavaLanguageHelper.isNumericTypeName(typeInIntrLanguage)) { // TODO SIMPLE-VIEW unit tests for e.g boolean String
+		if (extLanguage == ExtLanguage.SIMPLE) { 
 			valueInIntrLanguage = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
 		}
 
@@ -120,18 +119,18 @@ public class ExtLanguageHelper {
 		if (extLanguage == ExtLanguage.JAVA) {
 			items = JavaLanguageHelper.getSymbolicNamesOfSpecialValues(typeName);
 		} else {
-			items = new ArrayList<String>();
+			items = JavaLanguageHelper.getSymbolicNamesOfSpecialValuesForNonNumericTypes(typeName);
 		}
 
 		return items;
 	}
-	
+
 	public static boolean isLogicalTypeName(String type, ExtLanguage extLanguage) {
-		
+
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			return SimpleLanguageHelper.isLogicalTypeName(type);
 		}
-		
+
 		return JavaLanguageHelper.isBooleanTypeName(type);
 	}
 

@@ -192,6 +192,27 @@ public final class JavaLanguageHelper {
 		return result;
 	}
 
+	// TODO SIMPLE-VIEW use in function above
+	public static List<String> getSymbolicNamesOfSpecialValuesForNonNumericTypes(String typeName) { 
+
+		List<String> result = new ArrayList<String>();
+
+		switch(typeName){
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
+			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_BOOLEAN));
+			break;
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
+			result.addAll(Arrays.asList(JavaLanguageHelper.DEFAULT_EXPECTED_CHAR_VALUE));
+			break;
+		case JavaLanguageHelper.TYPE_NAME_STRING:
+			result.addAll(Arrays.asList(com.ecfeed.core.utils.CommonConstants.STRING_SPECIAL_VALUES));
+			break;
+		default:
+			break;
+		}
+		return result;
+	}
+
 	public static String getDefaultValue(String type) {
 		switch(type){
 		case JavaLanguageHelper.TYPE_NAME_BYTE:
@@ -221,7 +242,7 @@ public final class JavaLanguageHelper {
 	public static String conditionallyConvertSpecialValueToNumeric(String typeName, String value) {
 
 		if  (!isNumericTypeName(typeName)) {
-			ExceptionHelper.reportRuntimeException("Attempt to convert to numeric value a non numeric type.");
+			return value; // TODO SIMPLE-VIEW unit tests for e.g boolean String
 		}
 
 		if (isByteTypeName(typeName)) {
@@ -621,18 +642,18 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-//	public static boolean isConvertibleToNumber(String text) {
-//
-//		if (parseDoubleValue(text, ERunMode.QUIET) != null) {
-//			return true;
-//		}
-//
-//		if (parseLongValue(text, ERunMode.QUIET) != null) {
-//			return true;
-//		}
-//
-//		return false;
-//	}
+	//	public static boolean isConvertibleToNumber(String text) {
+	//
+	//		if (parseDoubleValue(text, ERunMode.QUIET) != null) {
+	//			return true;
+	//		}
+	//
+	//		if (parseLongValue(text, ERunMode.QUIET) != null) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
 	public static Double convertNumericToDouble(
 			String typeName, String value, ERunMode runMode) {
@@ -724,20 +745,20 @@ public final class JavaLanguageHelper {
 		}
 
 		switch(type){
-			case TYPE_NAME_BYTE:
-				return parseByteValue(valueString, runMode);
-			case TYPE_NAME_DOUBLE:
-				return parseDoubleValue(valueString, runMode);
-			case TYPE_NAME_FLOAT:
-				return parseFloatValue(valueString, runMode);
-			case TYPE_NAME_INT:
-				return parseIntValue(valueString, runMode);
-			case TYPE_NAME_LONG:
-				return parseLongValue(valueString, runMode);
-			case TYPE_NAME_SHORT:
-				return parseShortValue(valueString, runMode);
-			default:
-				return null;
+		case TYPE_NAME_BYTE:
+			return parseByteValue(valueString, runMode);
+		case TYPE_NAME_DOUBLE:
+			return parseDoubleValue(valueString, runMode);
+		case TYPE_NAME_FLOAT:
+			return parseFloatValue(valueString, runMode);
+		case TYPE_NAME_INT:
+			return parseIntValue(valueString, runMode);
+		case TYPE_NAME_LONG:
+			return parseLongValue(valueString, runMode);
+		case TYPE_NAME_SHORT:
+			return parseShortValue(valueString, runMode);
+		default:
+			return null;
 		}
 	}
 
@@ -1329,21 +1350,21 @@ public final class JavaLanguageHelper {
 	//		return returnText;
 	//	}
 
-    //	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
-    //		List<String> values = new ArrayList<String>();
-    //
-    //		try {
-    //			Class<?> enumType = loader.loadClass(enumTypeName);
-    //
-    //			if(enumType != null && enumType.isEnum()){
-    //				for (Object object: enumType.getEnumConstants()) {
-    //					values.add(((Enum<?>)object).name());
-    //				}
-    //			}
-    //		} catch (ClassNotFoundException e) {
-    //		}
-    //
-    //		return values;
-    //	}
+	//	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
+	//		List<String> values = new ArrayList<String>();
+	//
+	//		try {
+	//			Class<?> enumType = loader.loadClass(enumTypeName);
+	//
+	//			if(enumType != null && enumType.isEnum()){
+	//				for (Object object: enumType.getEnumConstants()) {
+	//					values.add(((Enum<?>)object).name());
+	//				}
+	//			}
+	//		} catch (ClassNotFoundException e) {
+	//		}
+	//
+	//		return values;
+	//	}
 
 }
