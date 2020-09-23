@@ -27,6 +27,24 @@ public class ChoiceNodeHelperTest {
 	}
 
 	@Test
+	public void getQualifiedNameTest() {
+
+		ChoiceNode choice1 = new ChoiceNode("choice_1", null, "MAX_VALUE");
+		assertEquals("choice_1", ChoiceNodeHelper.getQualifiedName(choice1, ExtLanguage.JAVA));
+		assertEquals("choice 1", ChoiceNodeHelper.getQualifiedName(choice1, ExtLanguage.SIMPLE));
+
+		ChoiceNode choice2 = new ChoiceNode("choice_2", null, "MAX_VALUE");
+		choice2.setParent(choice1);
+		assertEquals("choice_1:choice_2", ChoiceNodeHelper.getQualifiedName(choice2, ExtLanguage.JAVA));
+		assertEquals("choice 1:choice 2", ChoiceNodeHelper.getQualifiedName(choice2, ExtLanguage.SIMPLE));
+
+		ChoiceNode choice3 = new ChoiceNode("choice_3", null, "MAX_VALUE");
+		choice3.setParent(choice2);
+		assertEquals("choice_1:choice_2:choice_3", ChoiceNodeHelper.getQualifiedName(choice3, ExtLanguage.JAVA));
+		assertEquals("choice 1:choice 2:choice 3", ChoiceNodeHelper.getQualifiedName(choice3, ExtLanguage.SIMPLE));
+	}
+
+	@Test
 	public void createLabelTest() {
 
 		MethodParameterNode methodParameterNode =

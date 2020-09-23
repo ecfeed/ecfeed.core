@@ -42,13 +42,12 @@ public class ChoiceNodeHelper {
 		return name;
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	public static String getQualifiedName(ChoiceNode choiceNode, ExtLanguage extLanguage) { 
+	public static String getQualifiedName(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		ChoiceNode parentChoice = getParentChoice(choiceNode);
 
 		if (parentChoice != null) {
-			return getQualifiedName(parentChoice, extLanguage) + ":" + choiceNode.getName(); // TODO SIMPLE-VIEW add ExtLanguage
+			return getQualifiedName(parentChoice, extLanguage) + ":" + getName(choiceNode, extLanguage);
 		}
 
 		return getName(choiceNode, extLanguage);
@@ -57,12 +56,16 @@ public class ChoiceNodeHelper {
 	// TODO SIMPLE-VIEW unit tests
 	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
 
-		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
+		ChoicesParentNode choicesParentNode = choiceNode.getParent();
 
-		AbstractParameterNode abstractParameterNode = fParent.getParameter();
+		if (choicesParentNode == null) {
+			return null;
+		}
 
-		if(fParent != null && fParent != abstractParameterNode){
-			return (ChoiceNode)fParent;
+		AbstractParameterNode abstractParameterNode = choicesParentNode.getParameter();
+
+		if(choicesParentNode != null && choicesParentNode != abstractParameterNode){
+			return (ChoiceNode)choicesParentNode;
 		}
 
 		return null;
