@@ -247,27 +247,15 @@ public class JavaLanguageHelperTest {
 
 		// String
 
-		try {
-			JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("String", "X");
-			fail();
-		} catch (Exception e) {
-		}
+		assertEquals("X", JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("String", "X"));
 
 		// char
 
-		try {
-			JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("char", "0");
-			fail();
-		} catch (Exception e) {
-		}
+		assertEquals("0", JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("char", "0"));
 
 		// boolean
 
-		try {
-			JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("boolean", "false");
-			fail();
-		} catch (Exception e) {
-		}
+		assertEquals("false", JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("boolean", "false"));
 	}
 
 	@Test

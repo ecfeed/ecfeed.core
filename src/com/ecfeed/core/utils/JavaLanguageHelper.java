@@ -242,7 +242,7 @@ public final class JavaLanguageHelper {
 	public static String conditionallyConvertSpecialValueToNumeric(String typeName, String value) {
 
 		if  (!isNumericTypeName(typeName)) {
-			return value; // TODO SIMPLE-VIEW unit tests for e.g boolean String
+			return value;
 		}
 
 		if (isByteTypeName(typeName)) {
