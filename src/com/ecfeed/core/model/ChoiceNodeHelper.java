@@ -52,7 +52,7 @@ public class ChoiceNodeHelper {
 			return getQualifiedName(parentChoice, extLanguage) + ":" + choiceNode.getName(); // TODO SIMPLE-VIEW add ExtLanguage
 		}
 
-		return choiceNode.getName();
+		return getName(choiceNode, extLanguage);
 	}
 
 	// TODO SIMPLE-VIEW unit tests
