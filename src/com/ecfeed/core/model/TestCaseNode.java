@@ -26,21 +26,44 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
-	public String toString(){
-		String methodName = null;
-		if (getParent() != null){
-			methodName = getParent().getName();
-		}
-		String result = "[" + getName() + "]";
+	public String toString() { // TODO SIMPLE-VIEW remove usages
 
-		if(methodName != null){
-			result += ": " + methodName + "(";
-			result += testDataString();
-			result += ")";
-		}
-
-		return result;
+		return "TEST CASE"; 
+		//		String methodName = null;
+		//		if (getParent() != null){
+		//			methodName = getParent().getName();
+		//		}
+		//		String result = "[" + getName() + "]";
+		//
+		//		if(methodName != null){
+		//			result += ": " + methodName + "(";
+		//			result += getTestDataString(fTestData);
+		//			result += ")";
+		//		}
+		//
+		//		return result;
 	}
+
+	//	private static String getTestDataString(List<ChoiceNode> testData) {
+	//
+	//		String result = new String();
+	//
+	//		for(int index = 0; index < testData.size(); index++){
+	//			ChoiceNode choice = testData.get(index);
+	//			MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
+	//
+	//			if (methodParameterNode != null && methodParameterNode.isExpected()) {
+	//				result += "[e]" + choice.getValueString();
+	//			} else{
+	//				result += choice.getQualifiedName();
+	//			}
+	//
+	//			if (index < testData.size() - 1) {
+	//				result += ", ";
+	//			}
+	//		}
+	//		return result;
+	//	}
 
 	@Override
 	public TestCaseNode makeClone(){
@@ -54,7 +77,7 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public TestCaseNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
-		
+
 		super(name, modelChangeRegistrator);
 		fTestData = testData;
 	}
@@ -94,34 +117,16 @@ public class TestCaseNode extends AbstractNode {
 		return false;
 	}
 
-	public String testDataString(){
-		String result = new String();
-
-		for(int i = 0; i < fTestData.size(); i++){
-			ChoiceNode choice = fTestData.get(i);
-			if(getMethodParameter(choice).isExpected()){
-				result += "[e]" + choice.getValueString();
-			}
-			else{
-				result += choice.getQualifiedName();
-			}
-			if(i < fTestData.size() - 1){
-				result += ", ";
-			}
-		}
-		return result;
-	}
-
 	public static boolean validateTestSuiteName(String newName) {
-		
+
 		if (newName.length() < 1 || newName.length() > 64) {
 			return false;
 		}
-		
+
 		if(newName.matches("[ ]+.*")) { 
 			return false;
 		}
-		
+
 		return true;
 	}
 

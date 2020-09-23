@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.model;
 
+import java.util.List;
+
 import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 
@@ -25,34 +27,58 @@ public class TestCaseNodeHelper {
 		String result = "[" + testCaseNodeName + "]";
 
 		if (methodName != null) {
-			result += ": " + methodName + "(";
-			result += testCaseNode.testDataString();
+			result += " " + methodName + "(";
+			result += getTestDataString(testCaseNode.getTestData());
 			result += ")";
 		}
 
 		return result;
+	}
 
-		//		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(result, extLanguage);
+	public static String getTestDataString(TestCaseNode testCaseNode) {
+
+		return getTestDataString(testCaseNode.getTestData());
+	}
+
+	private static String getTestDataString(List<ChoiceNode> testData) {
+
+		String result = new String();
+
+		for(int index = 0; index < testData.size(); index++){
+			ChoiceNode choice = testData.get(index);
+			MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
+
+			if (methodParameterNode != null && methodParameterNode.isExpected()) {
+				result += "[e]" + choice.getValueString();
+			} else{
+				result += choice.getQualifiedName();
+			}
+
+			if (index < testData.size() - 1) {
+				result += ", ";
+			}
+		}
+		return result;
 	}
 
 	private static String getTestCaseNodeName(
 			TestCaseNode testCaseNode, 
 			ExtLanguage extLanguage) { // TODO SIMPLE-VIEW not used
-		
+
 		return testCaseNode.getName();
 	}
 
 	private static String getMethodName(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
-		
+
 		String methodName = "";
 
 		AbstractNode parent = testCaseNode.getParent();
-		
+
 		if (parent != null){
 			methodName = parent.getName();
 			methodName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(methodName, extLanguage);
 		}
-		
+
 		return methodName;
 	}
 
