@@ -35,7 +35,6 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getName(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String name = choiceNode.getName();

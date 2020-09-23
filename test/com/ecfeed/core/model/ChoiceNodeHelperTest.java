@@ -19,6 +19,14 @@ import static org.junit.Assert.*;
 public class ChoiceNodeHelperTest {
 
 	@Test
+	public void getNameTest() {
+
+		ChoiceNode choice = new ChoiceNode("choice_1", null, "MAX_VALUE");
+		assertEquals("choice_1", ChoiceNodeHelper.getName(choice, ExtLanguage.JAVA));
+		assertEquals("choice 1", ChoiceNodeHelper.getName(choice, ExtLanguage.SIMPLE));
+	}
+
+	@Test
 	public void createLabelTest() {
 
 		MethodParameterNode methodParameterNode =
