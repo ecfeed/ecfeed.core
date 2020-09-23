@@ -35,6 +35,40 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+	// TODO SIMPLE-VIEW unit tests
+	public static String getName(ChoiceNode choiceNode, ExtLanguage extLanguage) {
+
+		String name = choiceNode.getName();
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
+		return name;
+	}
+
+	// TODO SIMPLE-VIEW unit tests
+	public static String getQualifiedName(ChoiceNode choiceNode, ExtLanguage extLanguage) { 
+
+		ChoiceNode parentChoice = getParentChoice(choiceNode);
+
+		if (parentChoice != null) {
+			return getQualifiedName(parentChoice, extLanguage) + ":" + choiceNode.getName(); // TODO SIMPLE-VIEW add ExtLanguage
+		}
+
+		return choiceNode.getName();
+	}
+
+	// TODO SIMPLE-VIEW unit tests
+	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
+
+		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
+
+		AbstractParameterNode abstractParameterNode = fParent.getParameter();
+
+		if(fParent != null && fParent != abstractParameterNode){
+			return (ChoiceNode)fParent;
+		}
+
+		return null;
+	}
+
 	public static String createSignature(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String qualifiedName = choiceNode.getQualifiedName();
@@ -48,7 +82,21 @@ public class ChoiceNodeHelper {
 
 		return qualifiedName + " [" + value + "]";
 	}
-	
+
+	// TODO SIMPLE-VIEW unit tests, rename
+	public static String createSignature2(ChoiceNode choice, String result, ExtLanguage extLanguage) {
+
+		MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
+
+		if (methodParameterNode != null && methodParameterNode.isExpected()) {
+			result += "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguage);
+		} else{
+			result += ChoiceNodeHelper.getQualifiedName(choice, extLanguage);
+		}
+
+		return result;
+	}
+
 	public static String getValueString(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String type = choiceNode.getParameter().getType();
