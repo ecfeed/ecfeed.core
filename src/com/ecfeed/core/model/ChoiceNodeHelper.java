@@ -48,7 +48,7 @@ public class ChoiceNodeHelper {
 
 		return qualifiedName + " [" + value + "]";
 	}
-
+	
 	public static String getValueString(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String type = choiceNode.getParameter().getType();

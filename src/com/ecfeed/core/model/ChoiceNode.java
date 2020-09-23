@@ -127,7 +127,7 @@ public class ChoiceNode extends ChoicesParentNode {
 		return ChoiceNodeHelper.createSubstitutePath(this, parameter);
 	}
 
-	public String getQualifiedName(){
+	public String getQualifiedName(){ // TODO SIMPLE-VIEW remove  ?
 		if(parentChoice() != null){
 			return parentChoice().getQualifiedName() + ":" + getName();
 		}
@@ -302,9 +302,23 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	private ChoiceNode parentChoice(){
-		if(fParent != null && fParent != getParameter()){
+		AbstractParameterNode parameter = getParameter();
+		if(fParent != null && fParent != parameter){
 			return (ChoiceNode)fParent;
 		}
 		return null;
 	}
+	
+//	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
+//		
+//		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
+//		
+//		AbstractParameterNode abstractParameterNode = fParent.getParameter();
+//		
+//		if(fParent != null && fParent != abstractParameterNode){
+//			return (ChoiceNode)fParent;
+//		}
+//		return null;
+//	}
+
 }

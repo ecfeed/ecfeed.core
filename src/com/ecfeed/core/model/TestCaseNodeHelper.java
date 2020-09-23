@@ -28,30 +28,32 @@ public class TestCaseNodeHelper {
 
 		if (methodName != null) {
 			result += " " + methodName + "(";
-			result += getTestDataString(testCaseNode.getTestData());
+			result += getTestDataString(testCaseNode.getTestData(), extLanguage);
 			result += ")";
 		}
 
 		return result;
 	}
 
-	public static String getTestDataString(TestCaseNode testCaseNode) {
+	public static String getTestDataString(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
 
-		return getTestDataString(testCaseNode.getTestData());
+		return getTestDataString(testCaseNode.getTestData(), extLanguage);
 	}
 
-	private static String getTestDataString(List<ChoiceNode> testData) {
+	// TODO SIMPLE-VIEW unit tests
+	private static String getTestDataString(List<ChoiceNode> testData, ExtLanguage extLanguage) { 
 
 		String result = new String();
 
-		for(int index = 0; index < testData.size(); index++){
+		for (int index = 0; index < testData.size(); index++) {
+
 			ChoiceNode choice = testData.get(index);
 			MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
 
 			if (methodParameterNode != null && methodParameterNode.isExpected()) {
-				result += "[e]" + choice.getValueString();
+				result += "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguage);
 			} else{
-				result += choice.getQualifiedName();
+				result += getQualifiedName(choice, extLanguage);
 			}
 
 			if (index < testData.size() - 1) {
@@ -60,6 +62,42 @@ public class TestCaseNodeHelper {
 		}
 		return result;
 	}
+
+	// TODO SIMPLE-VIEW unit tests
+	public static String getName(ChoiceNode choiceNode, ExtLanguage extLanguage) {
+		
+		String name = choiceNode.getName();
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
+		return name;
+		
+	}
+	
+	// TODO SIMPLE-VIEW unit tests
+	public static String getQualifiedName(ChoiceNode choiceNode, ExtLanguage extLanguage) { 
+
+		ChoiceNode parentChoice = getParentChoice(choiceNode);
+
+		if (parentChoice != null) {
+			return getQualifiedName(parentChoice, extLanguage) + ":" + choiceNode.getName(); // TODO SIMPLE-VIEW add ExtLanguage
+		}
+
+		return choiceNode.getName();
+	}
+
+	// TODO SIMPLE-VIEW unit tests
+	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
+
+		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
+
+		AbstractParameterNode abstractParameterNode = fParent.getParameter();
+
+		if(fParent != null && fParent != abstractParameterNode){
+			return (ChoiceNode)fParent;
+		}
+
+		return null;
+	}
+
 
 	private static String getTestCaseNodeName(
 			TestCaseNode testCaseNode, 
