@@ -106,7 +106,7 @@ public class ExtLanguageHelper {
 			ExceptionHelper.reportRuntimeException("Attempt to convert special value for invalid Java type.");
 		}
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguage.SIMPLE && JavaLanguageHelper.isNumericTypeName(typeInIntrLanguage)) { // TODO SIMPLE-VIEW unit tests for e.g boolean String
 			valueInIntrLanguage = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
 		}
 
