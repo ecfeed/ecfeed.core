@@ -15,12 +15,14 @@ import java.util.regex.Pattern;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JustifyType;
 
@@ -58,7 +60,7 @@ public class TestCasesExportHelper {
 		return result;
 	}
 
-	public static String generateTestCaseString(int sequenceIndex, TestCaseNode testCase, String template) {
+	public static String generateTestCaseString(int sequenceIndex, TestCaseNode testCase, String template, ExtLanguage extLanguage) {
 
 		MethodNode method = testCase.getMethod();
 
@@ -72,7 +74,7 @@ public class TestCasesExportHelper {
 		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
 		result = result.replace(TEST_SUITE_NAME_SEQUENCE, testCase.getName());
 
-		result = replaceParameterSequences(testCase, result);
+		result = replaceParameterSequences(testCase, result, extLanguage);
 		result = evaluateExpressions(result);
 		result = evaluateMinWidthOperators(result);
 
@@ -284,7 +286,7 @@ public class TestCasesExportHelper {
 		return null;
 	}
 
-	private static String replaceParameterSequences(TestCaseNode testCase, String template) {
+	private static String replaceParameterSequences(TestCaseNode testCase, String template, ExtLanguage extLanguage) {
 
 		String result = replaceParameterNameSequences(testCase.getMethod(), template);
 
@@ -294,7 +296,7 @@ public class TestCasesExportHelper {
 
 			String parameterCommandSequence = matcher.group();
 
-			String valueSubstitute = createValueSubstitute(parameterCommandSequence, testCase);
+			String valueSubstitute = createValueSubstitute(parameterCommandSequence, testCase, extLanguage);
 			if (valueSubstitute != null) {
 				result = result.replace(parameterCommandSequence, valueSubstitute);
 			}
@@ -303,7 +305,7 @@ public class TestCasesExportHelper {
 		return result;
 	}
 
-	private static String createValueSubstitute(String parameterCommandSequence, TestCaseNode testCase) {
+	private static String createValueSubstitute(String parameterCommandSequence, TestCaseNode testCase, ExtLanguage extLanguage) {
 
 		int parameterNumber = getParameterNumber(parameterCommandSequence, testCase.getMethod()) - 1;
 
@@ -317,22 +319,22 @@ public class TestCasesExportHelper {
 		ChoiceNode choice = testCase.getTestData().get(parameterNumber);
 
 		String command = getParameterCommand(parameterCommandSequence);
-		String substitute = resolveChoiceCommand(command, choice);
+		String substitute = resolveChoiceCommand(command, choice, extLanguage);
 
 		return substitute;
 	}
 
-	private static String resolveChoiceCommand(String command, ChoiceNode choice) {
+	private static String resolveChoiceCommand(String command, ChoiceNode choice, ExtLanguage extLanguage) {
 		String result = command;
 		switch(command){
 		case CHOICE_COMMAND_SHORT_NAME:
-			result = choice.getName(); // TODO SIMPLE-VIEW use helper ??
+			result = ChoiceNodeHelper.getName(choice, extLanguage);
 			break;
 		case CHOICE_COMMAND_FULL_NAME:
-			result = choice.getQualifiedName(); // TODO SIMPLE-VIEW use helper ??
+			result = ChoiceNodeHelper.getQualifiedName(choice, extLanguage);
 			break;
 		case CHOICE_COMMAND_VALUE:
-			result = getValue(choice); // TODO SIMPLE-VIEW use helper ??
+			result = getValue(choice, extLanguage);
 			break;
 		default:
 			break;
@@ -340,11 +342,14 @@ public class TestCasesExportHelper {
 		return result;
 	}
 
-	private static String getValue(ChoiceNode choice) {
+	private static String getValue(ChoiceNode choice, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW extLanguage not used
+		
 		String convertedValue = convertValue(choice);
+		
 		if (convertedValue != null) {
 			return convertedValue;
 		}
+		
 		return choice.getValueString();
 	}
 

@@ -20,18 +20,20 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguage;
 
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private MethodNode fMethodNode;
-
 	private TemplateText fTemplateText;
+	private ExtLanguage fExtLanguage;
 
-	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText) {
+	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText, ExtLanguage extLanguage) {
 
 		fMethodNode = methodNode;
 		fTemplateText = new TemplateText(defaultlTemplateText);
+		fExtLanguage = extLanguage;
 	}
 
 	@Override
@@ -119,7 +121,8 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 					TestCasesExportHelper.generateTestCaseString(
 							sequenceIndex++,
 							testCase,
-							fTemplateText.getTestCaseTemplateText()));
+							fTemplateText.getTestCaseTemplateText(), 
+							fExtLanguage));
 
 			inOutStringBuilder.append("\n");
 		}

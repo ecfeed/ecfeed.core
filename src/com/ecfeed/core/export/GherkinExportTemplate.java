@@ -16,12 +16,13 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.utils.JustifyType;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class GherkinExportTemplate extends AbstractExportTemplate {
 
-	public GherkinExportTemplate(MethodNode methodNode) {
-		super(methodNode, createDefaultTemplateText(methodNode));
+	public GherkinExportTemplate(MethodNode methodNode, ExtLanguage extLanguage) {
+		super(methodNode, createDefaultTemplateText(methodNode), extLanguage);
 	}
 
 	private static String createDefaultTemplateText(MethodNode methodNode) {
