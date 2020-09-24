@@ -326,13 +326,13 @@ public class TestCasesExportHelper {
 		String result = command;
 		switch(command){
 		case CHOICE_COMMAND_SHORT_NAME:
-			result = choice.getName();
+			result = choice.getName(); // TODO SIMPLE-VIEW use helper ??
 			break;
 		case CHOICE_COMMAND_FULL_NAME:
-			result = choice.getQualifiedName();
+			result = choice.getQualifiedName(); // TODO SIMPLE-VIEW use helper ??
 			break;
 		case CHOICE_COMMAND_VALUE:
-			result = getValue(choice);
+			result = getValue(choice); // TODO SIMPLE-VIEW use helper ??
 			break;
 		default:
 			break;

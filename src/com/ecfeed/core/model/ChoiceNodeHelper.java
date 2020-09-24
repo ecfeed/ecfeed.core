@@ -72,7 +72,7 @@ public class ChoiceNodeHelper {
 
 	public static String createSignature(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
-		String qualifiedName = choiceNode.getQualifiedName();
+		String qualifiedName = choiceNode.getQualifiedName(); // TODO SIMPLE-VIEW use helper
 		qualifiedName =  ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
 
 		if (choiceNode.isAbstract()) {
@@ -175,7 +175,7 @@ public class ChoiceNodeHelper {
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
-			String choiceName = choiceNode.getQualifiedName();
+			String choiceName = choiceNode.getQualifiedName(); // TODO SIMPLE-VIEW use helper
 			choiceNames.add(choiceName);
 		}
 

@@ -64,7 +64,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	public String toString(){
 		
 		if(isAbstract()){
-			return getQualifiedName() + ABSTRACT_CHOICE_MARKER;
+			return getQualifiedName() + ABSTRACT_CHOICE_MARKER; 
 		}
 		return getQualifiedName() + " [" + getValueString() + "]";
 	}
@@ -127,10 +127,12 @@ public class ChoiceNode extends ChoicesParentNode {
 		return ChoiceNodeHelper.createSubstitutePath(this, parameter);
 	}
 
-	public String getQualifiedName(){ // TODO SIMPLE-VIEW remove  ?
-		if(parentChoice() != null){
+	public String getQualifiedName() {
+		
+		if (parentChoice() != null) {
 			return parentChoice().getQualifiedName() + ":" + getName();
 		}
+		
 		return getName();
 	}
 

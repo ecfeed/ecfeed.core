@@ -221,7 +221,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		Set<String> result = new LinkedHashSet<String>();
 
 		for (ChoiceNode p : choices) {
-			result.add(p.getQualifiedName());
+			result.add(p.getQualifiedName()); // TODO SIMPLE-VIEW use helper ??
 		}
 
 		return result;
