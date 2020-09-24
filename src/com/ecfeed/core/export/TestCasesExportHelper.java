@@ -342,7 +342,7 @@ public class TestCasesExportHelper {
 		return result;
 	}
 
-	private static String getValue(ChoiceNode choice, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW extLanguage not used
+	private static String getValue(ChoiceNode choice, ExtLanguage extLanguage) {
 		
 		String convertedValue = convertValue(choice);
 		
@@ -350,7 +350,7 @@ public class TestCasesExportHelper {
 			return convertedValue;
 		}
 		
-		return choice.getValueString();
+		return ChoiceNodeHelper.getValueString(choice, extLanguage);
 	}
 
 	private static String convertValue(ChoiceNode choice) {
