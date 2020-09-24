@@ -24,6 +24,12 @@ public abstract class AbstractParameterNodeHelper {
 		return ExtLanguageHelper.validateType(parameterTypeInExtLanguage, extLanguage);
 	}
 
+	public static String getName(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+		
+		String name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(abstractParameterNode.getName(), extLanguage);
+		return name;
+	}
+	
 	public static String createSignatureOfOneParameterByIntrLanguage(
 			String parameterTypeInIntrLanguage,
 			String parameterNameInIntrLanguage,

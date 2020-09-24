@@ -13,23 +13,14 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 
-public class ConstraintNodeHelper {
+public abstract class AbstractNodeHelper  {
 
-	// TODO SIMPLE-VIEW unit tests
-	public static String getName(ConstraintNode constraintNode, ExtLanguage extLanguage) {
+	public static String getName(AbstractNode abstractNode, ExtLanguage extLanguage) {
 
-		String name = constraintNode.getConstraint().toString();
+		String nodeName = abstractNode.getName();
 
-		String text = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
+		String text = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nodeName, extLanguage);
 		return text;
-	}
-
-	// TODO SIMPLE-VIEW unit tests
-	public static String createSignature(ConstraintNode constraintNode, ExtLanguage extLanguage) {
-
-		String result = constraintNode.toString();
-
-		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(result, extLanguage);
 	}
 
 }

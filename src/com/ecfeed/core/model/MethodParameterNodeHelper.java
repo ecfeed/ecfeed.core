@@ -11,8 +11,16 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class MethodParameterNodeHelper {
+
+
+	public static String getName(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
+		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(
+				methodParameterNode.getName(), extLanguage);
+		
+	}
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(

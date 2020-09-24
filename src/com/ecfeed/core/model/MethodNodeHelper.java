@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodNodeHelper {
 
-	public static String getMethodName(MethodNode methodNode, ExtLanguage extLanguage) {
+	public static String getMethodName(MethodNode methodNode, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW rename to getName
 
 		String nameInIntrLanguage = methodNode.getName();
 
