@@ -2,7 +2,12 @@ package com.ecfeed.core.exception;
 
 public class GeneratorExceptionServer extends GeneratorException {
 
-    public GeneratorExceptionServer(String errorMessage) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public GeneratorExceptionServer(String errorMessage) {
         super(errorMessage);
     }
 

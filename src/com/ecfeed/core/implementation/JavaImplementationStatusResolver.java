@@ -29,6 +29,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.JavaTypeHelper;
 import com.ecfeed.core.utils.SystemLogger;
@@ -62,6 +63,11 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
+			return implementationStatus(node);
+		}
+		
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
 			return implementationStatus(node);
 		}
 

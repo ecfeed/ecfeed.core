@@ -2,7 +2,11 @@ package com.ecfeed.core.exception;
 
 public class GeneratorException extends RuntimeException {
 
-    private String streamMessage = "";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7245190958322769521L;
+	private String streamMessage = "";
 
     public String getStreamMessage() {
         return this.streamMessage;

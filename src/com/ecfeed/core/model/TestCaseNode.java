@@ -12,6 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import com.ecfeed.core.utils.ExceptionHelper;
 
 
 public class TestCaseNode extends AbstractNode {
@@ -41,6 +44,22 @@ public class TestCaseNode extends AbstractNode {
 
 		return result;
 	}
+	
+	public String toStringSimplified() {
+		String methodName = null;
+		if (getParent() != null){
+			methodName = getParent().getFullName();
+		}
+		String result = "";
+
+		if(methodName != null){
+			result += "[";
+			result += testDataString();
+			result += "]";
+		}
+
+		return result;
+	}
 
 	@Override
 	public TestCaseNode makeClone(){
@@ -66,7 +85,20 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public MethodNode getMethod() {
+
 		return (MethodNode)getParent();
+	}
+	
+	public TestSuiteNode getTestSuite() {
+		
+		Optional<TestSuiteNode> testSuite = getMethod().getTestSuites().stream().filter(e -> e.getTestCaseNodes().contains(this)).findAny(); 
+		
+		if (testSuite.isPresent()) {
+			return testSuite.get();
+		}
+		
+		ExceptionHelper.reportRuntimeException("The selected TestCaseNode does not belong to any test suite");
+		return null;
 	}
 
 	public MethodParameterNode getMethodParameter(ChoiceNode choice){

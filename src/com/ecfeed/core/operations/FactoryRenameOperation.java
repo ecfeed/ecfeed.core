@@ -25,6 +25,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.SystemLogger;
@@ -102,7 +103,7 @@ public class FactoryRenameOperation {
 			}
 		}
 	}
-
+	
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
 		public MethodParameterOperationRename(AbstractNode target, String newName) {
@@ -178,6 +179,11 @@ public class FactoryRenameOperation {
 			return new GlobalParameterOperationRename(node, fNewName);
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return new GenericOperationRename(node, fNewName);
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return new GenericOperationRename(node, fNewName);

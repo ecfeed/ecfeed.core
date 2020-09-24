@@ -23,6 +23,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EcException;
 import com.ecfeed.core.utils.SystemLogger;
@@ -60,6 +61,11 @@ IImplementationStatusResolver {
 			return implementationStatus(node);
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return implementationStatus(node);
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return implementationStatus(node);
@@ -178,6 +184,11 @@ IImplementationStatusResolver {
 		return status;
 	}
 
+	protected EImplementationStatus implementationStatus(TestSuiteNode testSuite){
+		EImplementationStatus status = childrenStatus(testSuite.getTestCaseNodes());
+		return status;
+	}
+	
 	protected EImplementationStatus implementationStatus(TestCaseNode testCase){
 		EImplementationStatus status = childrenStatus(testCase.getTestData());
 		return status;

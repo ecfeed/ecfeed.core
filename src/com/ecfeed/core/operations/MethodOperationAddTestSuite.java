@@ -25,8 +25,23 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 			List<TestCase> testCases, 
 			ITypeAdapterProvider typeAdapterProvider) {
 
-		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode);
+		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode);
+		createTestSuites(testCases, testSuiteName, methodNode, typeAdapterProvider);
+		
+	}
+	
+	public MethodOperationAddTestSuite(
+			MethodNode methodNode, 
+			List<TestCaseNode> testCases, 
+			ITypeAdapterProvider typeAdapterProvider) {
 
+		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode);
+		createTestSuites(testCases, methodNode, typeAdapterProvider);
+		
+	}
+	
+	private void createTestSuites(List<TestCase> testCases, String testSuiteName, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
+		
 		for (TestCase testCase : testCases) {
 
 			TestCaseNode testCaseNode = 
@@ -39,6 +54,18 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 					new MethodOperationAddTestCase(
 							methodNode, 
 							testCaseNode, 
+							typeAdapterProvider));
+		}
+	}
+	
+	private void createTestSuites(List<TestCaseNode> testCases, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
+		
+		for (TestCaseNode testCase : testCases) {
+
+			addOperation(
+					new MethodOperationAddTestCase(
+							methodNode, 
+							testCase, 
 							typeAdapterProvider));
 		}
 	}
