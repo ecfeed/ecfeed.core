@@ -45,6 +45,23 @@ public class ChoiceNodeHelperTest {
 	}
 
 	@Test
+	public void getParentChoiceTest() {
+
+		ChoiceNode choice1 = new ChoiceNode("choice_1", null, "MAX_VALUE");
+		assertNull(ChoiceNodeHelper.getParentChoice(choice1));
+
+		ChoiceNode choice2 = new ChoiceNode("choice_2", null, "MAX_VALUE");
+		assertNull(ChoiceNodeHelper.getParentChoice(choice2));
+		choice2.setParent(choice1);
+		assertEquals(choice1, ChoiceNodeHelper.getParentChoice(choice2));
+
+		ChoiceNode choice3 = new ChoiceNode("choice_3", null, "MAX_VALUE");
+		choice3.setParent(choice2);
+		ChoiceNode parentChoice = ChoiceNodeHelper.getParentChoice(choice3);
+		assertEquals(choice2, parentChoice);
+	}
+
+	@Test
 	public void createLabelTest() {
 
 		MethodParameterNode methodParameterNode =

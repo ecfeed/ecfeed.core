@@ -53,7 +53,6 @@ public class ChoiceNodeHelper {
 		return getName(choiceNode, extLanguage);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
 
 		ChoicesParentNode choicesParentNode = choiceNode.getParent();
