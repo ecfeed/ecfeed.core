@@ -42,6 +42,15 @@ public class ExtLanguageHelper {
 		return null;
 	}
 
+	public static boolean isLogicalTypeName(String type, ExtLanguage extLanguage) {
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			return SimpleLanguageHelper.isLogicalTypeName(type);
+		}
+
+		return JavaLanguageHelper.isBooleanTypeName(type);
+	}
+
 	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
 
 		String errorMessage = verifySeparatorsInName(text, extLanguage);
@@ -123,15 +132,6 @@ public class ExtLanguageHelper {
 		}
 
 		return items;
-	}
-
-	public static boolean isLogicalTypeName(String type, ExtLanguage extLanguage) {
-
-		if (extLanguage == ExtLanguage.SIMPLE) {
-			return SimpleLanguageHelper.isLogicalTypeName(type);
-		}
-
-		return JavaLanguageHelper.isBooleanTypeName(type);
 	}
 
 }
