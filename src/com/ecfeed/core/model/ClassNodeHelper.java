@@ -24,18 +24,24 @@ public class ClassNodeHelper {
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
 
-	public static String getSimpleName(ClassNode classNode) {
+	public static String getSimpleName(ClassNode classNode, ExtLanguage extLanguage) {  // TODO SIMPLE-VIEW convert to simple if neeeded + test
 
-		return ModelHelper.getNonQualifiedName(classNode.getName());
+		String name = ModelHelper.getNonQualifiedName(classNode.getName());
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
+
+		return name;
 	}
 
-	public static String getQualifiedName(ClassNode classNode) {
+	public static String getQualifiedName(ClassNode classNode) { // TODO SIMPLE-VIEW convert to simple if neeeded + test
 
 		return classNode.getName();
 	}
 
-	public static String getPackageName(ClassNode classNode) {
+	public static String getPackageName(ClassNode classNode, ExtLanguage extLanguage) {
 
+		if (extLanguage  == ExtLanguage.SIMPLE) {
+			return "";
+		}
 		return ModelHelper.getPackageName(classNode.getName());
 	}
 

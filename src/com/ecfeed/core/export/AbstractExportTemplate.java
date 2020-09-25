@@ -88,8 +88,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-					fMethodNode,
-					fTemplateText.getHeaderTemplateText()));
+					fMethodNode, fTemplateText.getHeaderTemplateText(), fExtLanguage));
 
 		stringBuilder.append("\n");
 
@@ -97,8 +96,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-						fMethodNode,
-						fTemplateText.getFooterTemplateText()));
+						fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguage));
 
 		stringBuilder.append("\n");
 

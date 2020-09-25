@@ -43,4 +43,13 @@ public class MethodParameterNodeHelper {
 		return signature;
 	}
 
+	public static String getType(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
+
+		String type = methodParameterNode.getType();
+
+		type =  ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
+
+		return type;
+	}
+
 }

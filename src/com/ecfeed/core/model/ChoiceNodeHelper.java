@@ -73,7 +73,6 @@ public class ChoiceNodeHelper {
 	public static String createSignature(ChoiceNode choiceNode, ExtLanguage extLanguage) {
 
 		String qualifiedName = getQualifiedName(choiceNode, extLanguage);
-		qualifiedName =  ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
 
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
