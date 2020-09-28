@@ -119,6 +119,16 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return getLeafChoices(getChoicesWithCopies());
 	}	
 
+	public Set<String> getAllChoiceNames() {
+
+		return getChoiceNames(getAllChoices());
+	}
+
+	public Set<String> getLeafChoiceNames(){
+
+		return getChoiceNames(getLeafChoices());
+	}
+
 	public Set<ChoiceNode> getAllChoices() {
 
 		return getAllChoices(getChoices());
