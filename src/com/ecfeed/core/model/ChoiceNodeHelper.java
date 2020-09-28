@@ -83,11 +83,10 @@ public class ChoiceNodeHelper {
 		return qualifiedName + " [" + value + "]";
 	}
 
-	// TODO SIMPLE-VIEW unit tests, rename
 	public static String createTestDataLabel(ChoiceNode choice, ExtLanguage extLanguage) {
 
 		String result = "";
-		
+
 		MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
 
 		if (methodParameterNode != null && methodParameterNode.isExpected()) {
