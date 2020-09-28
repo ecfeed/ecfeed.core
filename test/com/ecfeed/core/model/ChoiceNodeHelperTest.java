@@ -62,7 +62,7 @@ public class ChoiceNodeHelperTest {
 	}
 
 	@Test
-	public void createLabelTest() {
+	public void createSignatureTest() {
 
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode(
@@ -82,6 +82,29 @@ public class ChoiceNodeHelperTest {
 
 		label = ChoiceNodeHelper.createSignature(choice, ExtLanguage.JAVA);
 		assertEquals("choice_1 [5]", label);
+	}
+
+	@Test
+	public void createTestDataLabelTest() {
+
+		MethodParameterNode methodParameterNode =
+				new MethodParameterNode(
+						"par1", null,	"int", "0", true);
+
+		ChoiceNode choice = new ChoiceNode("choice_1", null, "MAX_VALUE");
+		choice.setParent(methodParameterNode);
+
+		String label = ChoiceNodeHelper.createTestDataLabel(choice, ExtLanguage.SIMPLE);
+		assertEquals("[e]2147483647", label);
+
+		methodParameterNode.setExpected(false);
+
+		label = ChoiceNodeHelper.createTestDataLabel(choice, ExtLanguage.JAVA);
+		assertEquals("choice_1", label);
+
+		label = ChoiceNodeHelper.createTestDataLabel(choice, ExtLanguage.SIMPLE);
+		assertEquals("choice 1", label);
+
 	}
 
 }

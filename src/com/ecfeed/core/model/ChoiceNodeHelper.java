@@ -84,7 +84,7 @@ public class ChoiceNodeHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests, rename
-	public static String createSignature2(ChoiceNode choice, ExtLanguage extLanguage) {
+	public static String createTestDataLabel(ChoiceNode choice, ExtLanguage extLanguage) {
 
 		String result = "";
 		
