@@ -21,29 +21,29 @@ import com.ecfeed.core.utils.ExtLanguage;
 public class ReplaceChoicesOperation extends BulkOperation {
 
 	public ReplaceChoicesOperation(
-			AbstractParameterNode target, 
+			AbstractParameterNode abstractParameterNode, 
 			List<ChoiceNode> choices, 
 			ITypeAdapterProvider adapterProvider,
 			ExtLanguage extLanguage) {
 
-		super("Replace choices", true, target, target, extLanguage);
+		super("Replace choices", true, abstractParameterNode, abstractParameterNode, extLanguage);
 
 		List<ChoiceNode> skipped = new ArrayList<ChoiceNode>();
 
 		for (ChoiceNode choice : choices) {
-			if (target.getChoiceNames().contains(choice.getName())) {
+			if (abstractParameterNode.getChoiceNames().contains(choice.getName())) {
 				skipped.add(choice);
 			} else {
-				addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true, extLanguage));
+				addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguage));
 			}
 		}
 
 		addOperation(
 				new GenericRemoveNodesOperation(
-						target.getChoices(), adapterProvider, true, target, target, extLanguage));
+						abstractParameterNode.getChoices(), adapterProvider, true, abstractParameterNode, abstractParameterNode, extLanguage));
 
 		for(ChoiceNode choice : skipped){
-			addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true, extLanguage));
+			addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguage));
 		}
 	}
 

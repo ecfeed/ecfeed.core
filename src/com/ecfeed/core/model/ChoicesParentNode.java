@@ -129,16 +129,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return getChoiceNames(getChoices());
 	}
 
-	public Set<String> getAllChoiceNames() {
-
-		return getChoiceNames(getAllChoices());
-	}
-
-	public Set<String> getLeafChoiceNames(){
-
-		return getChoiceNames(getLeafChoices());
-	}
-
 	public Set<ChoiceNode> getLabeledChoices(String label) {
 
 		return getLabeledChoices(label, getChoices());
@@ -216,12 +206,12 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return result;
 	}
 
-	protected Set<String> getChoiceNames(Collection<ChoiceNode> choices) {
+	protected Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
 
 		Set<String> result = new LinkedHashSet<String>();
 
-		for (ChoiceNode p : choices) {
-			result.add(p.getQualifiedName()); // TODO SIMPLE-VIEW use helper ??
+		for (ChoiceNode choiceNode : choiceNodes) {
+			result.add(choiceNode.getQualifiedName());
 		}
 
 		return result;
@@ -248,9 +238,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
 			return startChoiceName;
 		}
-		
+
 		String oldNameCore = StringHelper.removeFromNumericPostfix(startChoiceName);
-		
+
 		for (int i = 1;   ; i++) {
 			String newParameterName = oldNameCore + String.valueOf(i);
 
