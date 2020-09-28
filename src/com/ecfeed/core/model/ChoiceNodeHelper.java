@@ -152,30 +152,14 @@ public class ChoiceNodeHelper {
 		last.setParent(parameter);
 	}
 
-	public static Map<String, List<String>> convertToParamAndChoiceNames(MethodNode methodNode, List<List<ChoiceNode>> algorithmInput) {
-
-		Map<String, List<String>> paramAndChoiceNames = new HashMap<String, List<String>>();
-
-		int parametersCount = methodNode.getParametersCount();
-
-		for (int parameterIndex = 0;  parameterIndex < parametersCount;  parameterIndex++) {
-
-			String parameterName = methodNode.getParameter(parameterIndex).getName();
-			List<ChoiceNode> choicesForParameter = algorithmInput.get(parameterIndex);
-
-			paramAndChoiceNames.put(parameterName, getChoiceNames(choicesForParameter));
-		}
-
-		return paramAndChoiceNames;
-	}
-
-	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes) {
+	// TODO SIMPLE-VIEW tests
+	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes, ExtLanguage extLanguage) {
 
 		List<String> choiceNames = new ArrayList<>();
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
-			String choiceName = choiceNode.getQualifiedName(); // TODO SIMPLE-VIEW use helper
+			String choiceName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguage);
 			choiceNames.add(choiceName);
 		}
 
