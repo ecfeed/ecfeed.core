@@ -10,36 +10,30 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.ExtLanguage;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ConstraintNodeHelperTest {
 
-
-	// TODO SIMPLE-VIEW
-	
 	@Test
-	public void compare(){
-//		ConstraintNode c1 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-//		ConstraintNode c2 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-//
-//		assertTrue(c1.isMatch(c2));
-//
-//		c1.setName("c1");
-//		assertFalse(c1.isMatch(c2));
-//		c2.setName("c1");
-//		assertTrue(c1.isMatch(c2));
-//
-//		c1.getConstraint().setPremise(new StaticStatement(false, null));
-//		assertFalse(c1.isMatch(c2));
-//		c2.getConstraint().setPremise(new StaticStatement(false, null));
-//		assertTrue(c1.isMatch(c2));
-//
-//		c1.getConstraint().setConsequence(new StaticStatement(false, null));
-//		assertFalse(c1.isMatch(c2));
-//		c2.getConstraint().setConsequence(new StaticStatement(false, null));
-//		assertTrue(c1.isMatch(c2));
+	public void createSignatureTest(){
+
+		ConstraintNode c1 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+
+		c1.setName("c_1");
+
+		c1.getConstraint().setPremise(new StaticStatement(false, null));
+
+		c1.getConstraint().setConsequence(new StaticStatement(false, null));
+
+		String signature = ConstraintNodeHelper.createSignature(c1,  ExtLanguage.JAVA);
+		assertEquals("c_1: false ⇒ false", signature);
+
+		signature = ConstraintNodeHelper.createSignature(c1,  ExtLanguage.SIMPLE);
+		assertEquals("c 1: false ⇒ false", signature);
 	}
 }

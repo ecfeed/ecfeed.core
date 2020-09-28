@@ -14,7 +14,6 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public class ConstraintNodeHelper {
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(ConstraintNode constraintNode, ExtLanguage extLanguage) {
 
 		return ConstraintHelper.getSignature(constraintNode.getConstraint(), extLanguage);

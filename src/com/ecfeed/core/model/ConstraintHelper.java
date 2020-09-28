@@ -14,13 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class ConstraintHelper {
 	
 	
 	public static String getSignature(Constraint constraint, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW move to helper and test
 
-		return constraint.getName() + ": " + constraint.getSignature();
+		String name = constraint.getName();
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
+
+		return name + ": " + constraint.getSignature();
 	}
 	
 	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {
