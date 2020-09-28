@@ -35,8 +35,6 @@ public class TestCasesExportHelper {
 	private static final String ARITHMETIC_EXPRESSION_SEQUENCE_GENERIC_PATTERN = "\\$\\(.*\\)";
 	private static final String PARAMETER_SEPARATOR = ",";
 
-	// TODO SIMPLE-VIEW test operators class, package, method in both views
-
 	public static String generateSection(MethodNode method, String template, ExtLanguage extLanguage) {
 
 		if (template == null) {

@@ -14,7 +14,6 @@ import com.ecfeed.core.utils.ExtLanguage;
 
 public class CsvExportTemplate extends AbstractExportTemplate {
 
-	// TODO SIMPLE-VIEW unit tests with Ext language
 	public CsvExportTemplate(MethodNode methodNode, ExtLanguage extLanguage) {
 
 		super(methodNode, createDefaultTemplateText(methodNode.getParametersCount()), extLanguage);
