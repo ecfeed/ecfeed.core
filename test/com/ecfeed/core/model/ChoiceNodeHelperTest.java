@@ -14,6 +14,9 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.ExtLanguage;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class ChoiceNodeHelperTest {
@@ -104,7 +107,45 @@ public class ChoiceNodeHelperTest {
 
 		label = ChoiceNodeHelper.createTestDataLabel(choice, ExtLanguage.SIMPLE);
 		assertEquals("choice 1", label);
-
 	}
 
+	@Test
+	public void getChoiceNamesTest() {
+
+		MethodParameterNode methodParameterNode =
+				new MethodParameterNode(
+						"par1", null,	"int", "0", true);
+
+		ChoiceNode choice1 = new ChoiceNode("choice_1", null, "0");
+		choice1.setParent(methodParameterNode);
+
+		ChoiceNode choice2 = new ChoiceNode("choice_2", null, "0");
+		choice2.setParent(methodParameterNode);
+
+		List<ChoiceNode> choiceNodes = new ArrayList<>();
+		choiceNodes.add(choice1);
+		choiceNodes.add(choice2);
+
+		List<String> choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, ExtLanguage.JAVA);
+		assertEquals(2, choiceNames.size());
+		assertEquals("choice_1", choiceNames.get(0));
+		assertEquals("choice_2", choiceNames.get(1));
+
+		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, ExtLanguage.SIMPLE);
+		assertEquals(2, choiceNames.size());
+		assertEquals("choice 1", choiceNames.get(0));
+		assertEquals("choice 2", choiceNames.get(1));
+
+		choice2.setParent(choice1);
+
+		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, ExtLanguage.JAVA);
+		assertEquals(2, choiceNames.size());
+		assertEquals("choice_1", choiceNames.get(0));
+		assertEquals("choice_1:choice_2", choiceNames.get(1));
+
+		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, ExtLanguage.SIMPLE);
+		assertEquals(2, choiceNames.size());
+		assertEquals("choice 1", choiceNames.get(0));
+		assertEquals("choice 1:choice 2", choiceNames.get(1));
+	}
 }

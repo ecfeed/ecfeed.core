@@ -152,7 +152,6 @@ public class ChoiceNodeHelper {
 		last.setParent(parameter);
 	}
 
-	// TODO SIMPLE-VIEW tests
 	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes, ExtLanguage extLanguage) {
 
 		List<String> choiceNames = new ArrayList<>();
