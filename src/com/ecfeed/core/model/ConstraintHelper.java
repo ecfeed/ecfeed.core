@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.ExtLanguageHelper;
 public class ConstraintHelper {
 	
 	
-	public static String getSignature(Constraint constraint, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW move to helper and test
+	public static String getSignature(Constraint constraint, ExtLanguage extLanguage) {
 
 		String name = constraint.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);

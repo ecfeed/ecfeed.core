@@ -63,7 +63,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		if (parentClassNode != null) { 
 
-			String methodNameInExtLanguage = MethodNodeHelper.getMethodName(fMethodNode, extLanguage);
+			String methodNameInExtLanguage = MethodNodeHelper.getName(fMethodNode, extLanguage);
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(

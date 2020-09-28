@@ -20,12 +20,9 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodNodeHelper {
 
-	public static String getMethodName(MethodNode methodNode, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW rename to getName
+	public static String getName(MethodNode methodNode, ExtLanguage extLanguage) {
 
-		String nameInIntrLanguage = methodNode.getName();
-
-		String nameInExtLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguage);
-		return nameInExtLanguage;
+		return AbstractNodeHelper.getName(methodNode, extLanguage);
 	}
 
 	public static List<String> getParameterNames(MethodNode method) {
@@ -91,7 +88,7 @@ public class MethodNodeHelper {
 
 		return null;
 	}
-	
+
 	public static String validateMethodParameterTypes(List<String> parameterTypesInExtLanguage,
 			ExtLanguage extLanguage) {
 
@@ -223,17 +220,17 @@ public class MethodNodeHelper {
 	public static String createSignaturesOfParameters(
 			MethodNode methodNode,
 			ExtLanguage extLanguage) {
-		
+
 		String signature = "";
 		int paramCount = methodNode.getParametersCount();
-		
+
 
 		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
 
 			MethodParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
-			
-			
-			
+
+
+
 			String signatureOfOneParameter = 
 					AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
 							methodParameterNode.getType(),

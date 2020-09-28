@@ -88,7 +88,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 		ClassNode classNode = method.getClassNode();
 
-		String methodName = MethodNodeHelper.getMethodName(method, getExtLanguage());
+		String methodName = MethodNodeHelper.getName(method, getExtLanguage());
 
 		MethodNode sibling = 
 				ClassNodeHelper.findMethodByExtLanguage(

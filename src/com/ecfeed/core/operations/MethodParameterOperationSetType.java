@@ -129,7 +129,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 			ClassNode classNode = oldMethodNode.getClassNode();
 
-			String methodNameInExtLanguage = MethodNodeHelper.getMethodName(oldMethodNode, fExtLanguage);
+			String methodNameInExtLanguage = MethodNodeHelper.getName(oldMethodNode, fExtLanguage);
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(

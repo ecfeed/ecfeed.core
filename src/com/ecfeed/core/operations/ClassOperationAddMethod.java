@@ -69,7 +69,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private void generateUniqeMethodName(MethodNode methodNode) {
 		
-		String methodNameInExtLanguage = MethodNodeHelper.getMethodName(methodNode, getExtLanguage());
+		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, getExtLanguage());
 		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, getExtLanguage());
 		
 		String newName = 
