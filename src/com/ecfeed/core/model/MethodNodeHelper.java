@@ -216,7 +216,6 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	// TODO - SIMPLE-VIEW tests
 	public static String createSignaturesOfParameters(
 			MethodNode methodNode,
 			ExtLanguage extLanguage) {

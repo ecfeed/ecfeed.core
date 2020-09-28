@@ -25,10 +25,10 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		String methodName = MethodNodeHelper.getMethodName(methodNode, ExtLanguage.JAVA);
+		String methodName = MethodNodeHelper.getName(methodNode, ExtLanguage.JAVA);
 		assertEquals("method_1", methodName);
 
-		methodName = MethodNodeHelper.getMethodName(methodNode, ExtLanguage.SIMPLE);
+		methodName = MethodNodeHelper.getName(methodNode, ExtLanguage.SIMPLE);
 		assertEquals("method 1", methodName);
 	}
 
