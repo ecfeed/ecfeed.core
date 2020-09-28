@@ -127,6 +127,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public String toString() {
 
+		return getSignature();
+	}
+
+	public String getSignature() {
+		
 		String premiseString = (fPremise != null) ? fPremise.toString() : "EMPTY";
 		String consequenceString = (fConsequence != null) ? fConsequence.toString() : "EMPTY";
 

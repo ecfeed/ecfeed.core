@@ -15,21 +15,15 @@ import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class ConstraintNodeHelper {
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getName(ConstraintNode constraintNode, ExtLanguage extLanguage) {
 
-		String name = constraintNode.getConstraint().toString();
-
-		String text = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
-		return text;
+		return AbstractNodeHelper.getName(constraintNode, extLanguage);
 	}
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(ConstraintNode constraintNode, ExtLanguage extLanguage) {
 
-		String result = constraintNode.toString();
-
-		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(result, extLanguage);
+		return ConstraintHelper.getSignature(constraintNode.getConstraint(), extLanguage);
 	}
 
 }

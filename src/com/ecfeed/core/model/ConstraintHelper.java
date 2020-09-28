@@ -13,7 +13,15 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExtLanguage;
+
 public class ConstraintHelper {
+	
+	
+	public static String getSignature(Constraint constraint, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW move to helper and test
+
+		return constraint.getName() + ": " + constraint.getSignature();
+	}
 	
 	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {
 		

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ConstraintNode extends AbstractNode{
@@ -22,65 +23,66 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public int getMyIndex() {
-		
+
 		if (getMethod() == null) {
 			return -1;
 		}
-		
+
 		return getMethod().getConstraintNodes().indexOf(this);
 	}
 
 	@Override
 	public String toString() {
-		return getName() + ": " + getConstraint().toString();
+
+		return ConstraintHelper.getSignature(fConstraint, ExtLanguage.JAVA);
 	}
 
 	@Override
 	public void setName(String name) {
-		
+
 		super.setName(name);
 		fConstraint.setName(name);
 	}
 
 	@Override
 	public ConstraintNode makeClone() {
-		
+
 		ConstraintNode copy = new ConstraintNode(getName(), getModelChangeRegistrator(), fConstraint.getCopy() );
 		copy.setProperties(getProperties());
 		return copy;
 	}
-	
+
 	public ConstraintNode(String name, IModelChangeRegistrator modelChangeRegistrator, Constraint constraint) {
-		
+
 		super(name, modelChangeRegistrator);
 		fConstraint = constraint;
 	}
 
 	public Constraint getConstraint() {
-		
+
 		return fConstraint;
 	}
-	
+
 	public List<ChoiceNode> getListOfChoices() {
 		return fConstraint.getListOfChoices(); 
 	}
 
 	public MethodNode getMethod() {
-		
+
 		AbstractNode parent = getParent();
 		if (parent == null) {
 			return null;
 		}
-		
+
 		if (parent instanceof MethodNode) {
 			return (MethodNode)parent;
 		}
-		
+
 		return null;
 	}
 
 	public void setMethod(MethodNode method) {
-		
+
 		setParent(method);
 		registerChange();
 	}
@@ -95,21 +97,21 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	public boolean mentions(ChoiceNode choice) {
-		
+
 		if (fConstraint.mentions(choice)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	public boolean mentions(MethodParameterNode parameter) {
-		
+
 		return fConstraint.mentions(parameter);
 	}
 
 	public boolean mentions(AbstractParameterNode parameter) {
-		
+
 		if (parameter instanceof MethodParameterNode) {
 			MethodParameterNode param = (MethodParameterNode)parameter;
 			return fConstraint.mentions(param);
@@ -121,30 +123,30 @@ public class ConstraintNode extends AbstractNode{
 				return fConstraint.mentions(methodParam);
 			}
 		}
-		
+
 		return false;
 	}
 
 	public boolean mentions(MethodParameterNode parameter, String label) {
-		
+
 		return fConstraint.mentions(parameter, label);
 	}
 
 	public boolean updateReferences(MethodNode method) {
-		
+
 		if (fConstraint.updateReferences(method)) {
 			setParent(method);
 			registerChange();
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	public ConstraintNode getCopy(MethodNode method) {
-		
+
 		ConstraintNode copy = makeClone();
-		
+
 		if (copy.updateReferences(method))
 			return copy;
 		else {
@@ -155,11 +157,11 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public boolean isMatch(AbstractNode node) {
-		
+
 		if (node instanceof ConstraintNode == false) {
 			return false;
 		}
-		
+
 		ConstraintNode compared = (ConstraintNode)node;
 		if (getConstraint().getPremise().compare(compared.getConstraint().getPremise()) == false) {
 			return false;
@@ -174,7 +176,7 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public Object accept(IModelVisitor visitor) throws Exception {
-		
+
 		return visitor.visit(this);
 	}
 
