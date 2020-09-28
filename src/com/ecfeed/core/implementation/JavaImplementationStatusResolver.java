@@ -30,6 +30,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
+import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -122,7 +123,8 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 
 	@Override
 	protected boolean methodDefinitionImplemented(MethodNode methodModel){
-		Class<?> parentClass = loadClass(ClassNodeHelper.getQualifiedName(methodModel.getClassNode()));
+
+		Class<?> parentClass = loadClass(ClassNodeHelper.getQualifiedName(methodModel.getClassNode(), ExtLanguage.JAVA));
 		if(parentClass == null){
 			return false;
 		}

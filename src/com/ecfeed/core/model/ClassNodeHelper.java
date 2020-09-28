@@ -24,7 +24,7 @@ public class ClassNodeHelper {
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
 
-	public static String getSimpleName(ClassNode classNode, ExtLanguage extLanguage) {  // TODO SIMPLE-VIEW convert to simple if neeeded + test
+	public static String getNonQualifiedName(ClassNode classNode, ExtLanguage extLanguage) {  // TODO SIMPLE-VIEW convert to simple if neeeded + test
 
 		String name = ModelHelper.getNonQualifiedName(classNode.getName());
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
@@ -32,9 +32,13 @@ public class ClassNodeHelper {
 		return name;
 	}
 
-	public static String getQualifiedName(ClassNode classNode) { // TODO SIMPLE-VIEW convert to simple if neeeded + test
+	public static String getQualifiedName(ClassNode classNode, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW convert to simple if neeeded + test
 
-		return classNode.getName();
+		String name = classNode.getName();
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
+
+		return name;
+
 	}
 
 	public static String getPackageName(ClassNode classNode, ExtLanguage extLanguage) {
@@ -161,7 +165,7 @@ public class ClassNodeHelper {
 	}
 
 	// TODO SIMPLE VIEW add method findMethodByExtLanguage(classNode, methodNode, extLanguage) and use where possible instead of method below
-	
+
 	public static MethodNode findMethodByExtLanguage(
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
