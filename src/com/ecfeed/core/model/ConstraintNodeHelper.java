@@ -11,14 +11,8 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class ConstraintNodeHelper {
-
-	public static String getName(ConstraintNode constraintNode, ExtLanguage extLanguage) {
-
-		return AbstractNodeHelper.getName(constraintNode, extLanguage);
-	}
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(ConstraintNode constraintNode, ExtLanguage extLanguage) {
