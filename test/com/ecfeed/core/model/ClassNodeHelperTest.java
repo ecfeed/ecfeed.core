@@ -25,13 +25,13 @@ public class ClassNodeHelperTest {
 	public void getNameAndPackageTest(){
 
 		ClassNode classNode = new ClassNode("pack.class1", null);
-		String simpleName = ClassNodeHelper.getSimpleName(classNode, ExtLanguage.JAVA);  // TODO SIMPLE-VIEW add test for SIMPLE
+		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, ExtLanguage.JAVA);  // TODO SIMPLE-VIEW add test for SIMPLE
 		assertEquals("class1", simpleName);
 
 		String packageName = ClassNodeHelper.getPackageName(classNode, ExtLanguage.JAVA); // TODO SIMPLE-VIEW add test for SIMPLE
 		assertEquals("pack", packageName);
 
-		String qualifiedName = ClassNodeHelper.getQualifiedName(classNode);
+		String qualifiedName = ClassNodeHelper.getQualifiedName(classNode, ExtLanguage.JAVA); // TODO SIMPLE-VIEW add test for SIMPLE
 		assertEquals("pack.class1", qualifiedName);
 	}
 
