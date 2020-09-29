@@ -17,7 +17,6 @@ import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class TestCaseNodeHelper {
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
 
 		String methodName = getMethodName(testCaseNode, extLanguage);
@@ -60,9 +59,9 @@ public class TestCaseNodeHelper {
 
 	private static String getTestCaseNodeName(
 			TestCaseNode testCaseNode, 
-			ExtLanguage extLanguage) { // TODO SIMPLE-VIEW not used
+			ExtLanguage extLanguage) {
 
-		return testCaseNode.getName();
+		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(testCaseNode.getName(), extLanguage);
 	}
 
 	private static String getMethodName(TestCaseNode testCaseNode, ExtLanguage extLanguage) {

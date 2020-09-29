@@ -21,7 +21,6 @@ public class MethodParameterNodeHelper {
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(
 			MethodParameterNode methodParameterNode,
 			ExtLanguage extLanguage) {
