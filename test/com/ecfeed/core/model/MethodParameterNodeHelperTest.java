@@ -17,31 +17,6 @@ import static org.junit.Assert.*;
 
 public class MethodParameterNodeHelperTest {
 
-
-	@Test
-	public void createParameterTest() { // TODO SIMPLE-VIEW move
-
-		MethodParameterNode methodParameterNode;
-
-		try {
-			new MethodParameterNode("par%1", null, "int", "0", false);
-			fail();
-		} catch (Exception e) {
-		}
-
-		try {
-			new MethodParameterNode("!", null, "int", "0", false);
-			fail();
-		} catch (Exception e) {
-		}
-
-		try {
-			new MethodParameterNode("a b", null, "int", "0", false);
-			fail();
-		} catch (Exception e) {
-		}
-	}
-
 	@Test
 	public void getNameTest() {
 
