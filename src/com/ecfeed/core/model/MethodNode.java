@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
@@ -31,16 +30,19 @@ public class MethodNode extends ParametersParentNode {
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
 		super(name, modelChangeRegistrator);
 
-		// TODO SIMPLE-VIEW add check to setName
-		// TODO SIMPLE-VIEW unit tests
-		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");
-		}
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
 		fTestCases = new ArrayList<>();
 		fConstraints = new ArrayList<>();
 
 		setDefaultPropertyValues();
+	}
+
+	public void setName(String name) {
+
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		super.setName(name);
 	}
 
 	private void setDefaultPropertyValues() {

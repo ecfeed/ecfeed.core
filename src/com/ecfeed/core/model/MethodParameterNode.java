@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodParameterNode extends AbstractParameterNode {
@@ -32,12 +31,10 @@ public class MethodParameterNode extends AbstractParameterNode {
 			String type, 
 			String defaultValue,
 			boolean expected, boolean linked, GlobalParameterNode link) {
+
 		super(name, modelChangeRegistrator, type);
 
-		// TODO SIMPLE-VIEW add check to setName
-		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");
-		}
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
 		fExpected = expected;
 		fDefaultValue = defaultValue;

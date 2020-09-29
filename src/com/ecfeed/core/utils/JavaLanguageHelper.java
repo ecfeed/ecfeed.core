@@ -103,6 +103,7 @@ public final class JavaLanguageHelper {
 
 
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
+	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier.";
 
 	public static String verifySeparators(String text) {
 
@@ -135,6 +136,13 @@ public final class JavaLanguageHelper {
 		return true;
 	}
 
+	public static void verifyIsMatchWithJavaComplexIdentifier(String qualifiedName) {
+
+		if (!JavaLanguageHelper.isMatchWithJavaComplexIdenfifier(qualifiedName)) {
+			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER);
+		}
+	}
+
 	public static boolean isMatchWithJavaSimpleIdenfifier(String value) {
 
 		if (!value.matches(RegexHelper.REGEX_JAVA_IDENTIFIER)) {
@@ -155,6 +163,13 @@ public final class JavaLanguageHelper {
 		}
 
 		return true;
+	}
+
+	public static void verifyIsValidJavaIdentifier(String name) {
+
+		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
+			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER);
+		}
 	}
 
 	public static String[] getJavaKeywords() {

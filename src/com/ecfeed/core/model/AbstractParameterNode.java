@@ -20,7 +20,6 @@ import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
 
-	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier."; // TODO SIMPLE-VIEW find similar and move to other file
 	private String fType;
 	private String fTypeComments;
 
@@ -36,9 +35,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
 		super(name, modelChangeRegistrator);
 
-		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER);
-		}
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
 		verifyType(type);
 
@@ -47,13 +44,11 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 		createDefaultProperties();
 	}
-
+	
 	@Override
 	public void setName(String name) {
 
-		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER);
-		}
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
 		super.setName(name);
 	}

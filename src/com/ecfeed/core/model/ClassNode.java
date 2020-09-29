@@ -72,10 +72,7 @@ public class ClassNode extends GlobalParametersParentNode {
 
 		super(qualifiedName, modelChangeRegistrator);
 
-		// TODO SIMPLE-VIEW add check to setName
-		if (!JavaLanguageHelper.isMatchWithJavaComplexIdenfifier(qualifiedName)) {
-			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");
-		}
+		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
 
 		setRunOnAndroid(runOnAndroid);
 
@@ -84,6 +81,13 @@ public class ClassNode extends GlobalParametersParentNode {
 		}
 
 		fMethods = new ArrayList<MethodNode>();
+	}
+
+	public void setName(String qualifiedName) {
+
+		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
+
+		super.setName(qualifiedName);
 	}
 
 	public int getMyClassIndex() {
