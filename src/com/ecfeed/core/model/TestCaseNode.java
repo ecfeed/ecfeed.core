@@ -13,6 +13,8 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExtLanguage;
+
 
 public class TestCaseNode extends AbstractNode {
 	List<ChoiceNode> fTestData;
@@ -26,44 +28,10 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
-	public String toString() { // TODO SIMPLE-VIEW remove usages
+	public String toString() {
 
-		return "TEST CASE"; 
-		//		String methodName = null;
-		//		if (getParent() != null){
-		//			methodName = getParent().getName();
-		//		}
-		//		String result = "[" + getName() + "]";
-		//
-		//		if(methodName != null){
-		//			result += ": " + methodName + "(";
-		//			result += getTestDataString(fTestData);
-		//			result += ")";
-		//		}
-		//
-		//		return result;
+		return TestCaseNodeHelper.createSignature(this, ExtLanguage.JAVA);
 	}
-
-	//	private static String getTestDataString(List<ChoiceNode> testData) {
-	//
-	//		String result = new String();
-	//
-	//		for(int index = 0; index < testData.size(); index++){
-	//			ChoiceNode choice = testData.get(index);
-	//			MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
-	//
-	//			if (methodParameterNode != null && methodParameterNode.isExpected()) {
-	//				result += "[e]" + choice.getValueString();
-	//			} else{
-	//				result += choice.getQualifiedName();
-	//			}
-	//
-	//			if (index < testData.size() - 1) {
-	//				result += ", ";
-	//			}
-	//		}
-	//		return result;
-	//	}
 
 	@Override
 	public TestCaseNode makeClone(){
