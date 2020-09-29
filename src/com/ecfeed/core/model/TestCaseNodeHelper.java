@@ -20,7 +20,7 @@ public class TestCaseNodeHelper {
 
 		String methodName = getMethodName(testCaseNode, extLanguage);
 
-		String testCaseNodeName = getName(testCaseNode, extLanguage);
+		String testCaseNodeName = AbstractNodeHelper.getName(testCaseNode, extLanguage);
 
 		String result = "[" + testCaseNodeName + "]";
 
@@ -55,14 +55,6 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
-	private static String getName(
-			TestCaseNode testCaseNode, 
-			ExtLanguage extLanguage) {
-
-		return AbstractNodeHelper.getName(testCaseNode, extLanguage);
-	}
-
-	// TODO SIMPLE-VIEW tests
 	private static String getMethodName(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
 
 		AbstractNode parent = testCaseNode.getParent();
