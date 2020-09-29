@@ -56,27 +56,23 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW tests
-	private static String getTestCaseNodeName( // TODO SIMPLE-VIEW rename to getName and use abstract node helper
+	private static String getTestCaseNodeName(
 			TestCaseNode testCaseNode, 
 			ExtLanguage extLanguage) {
 
-		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(testCaseNode.getName(), extLanguage);
+		return AbstractNodeHelper.getName(testCaseNode, extLanguage);
 	}
 
 	// TODO SIMPLE-VIEW tests
 	private static String getMethodName(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
 
-		String methodName = "";
-
 		AbstractNode parent = testCaseNode.getParent();
 
-		if (parent != null){ // TODO SIMPLE-VIEW rename user abstract node helper
-			methodName = parent.getName();
-			methodName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(methodName, extLanguage);
+		if (parent == null) {
+			return null;
 		}
 
-		return methodName;
+		return AbstractNodeHelper.getName(parent, extLanguage);
 	}
 
 }
