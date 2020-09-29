@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class TestCaseNodeHelper {
 
@@ -21,7 +20,7 @@ public class TestCaseNodeHelper {
 
 		String methodName = getMethodName(testCaseNode, extLanguage);
 
-		String testCaseNodeName = getTestCaseNodeName(testCaseNode, extLanguage);
+		String testCaseNodeName = getName(testCaseNode, extLanguage);
 
 		String result = "[" + testCaseNodeName + "]";
 
@@ -56,7 +55,7 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
-	private static String getTestCaseNodeName(
+	private static String getName(
 			TestCaseNode testCaseNode, 
 			ExtLanguage extLanguage) {
 
