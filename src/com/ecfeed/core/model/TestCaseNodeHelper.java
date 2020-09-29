@@ -39,8 +39,7 @@ public class TestCaseNodeHelper {
 		return getTestDataString(testCaseNode.getTestData(), extLanguage);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
-	private static String getTestDataString(List<ChoiceNode> testData, ExtLanguage extLanguage) { 
+	private static String getTestDataString(List<ChoiceNode> testData, ExtLanguage extLanguage) {
 
 		String result = new String();
 
@@ -57,20 +56,22 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
-	private static String getTestCaseNodeName(
+	// TODO SIMPLE-VIEW tests
+	private static String getTestCaseNodeName( // TODO SIMPLE-VIEW rename to getName and use abstract node helper
 			TestCaseNode testCaseNode, 
 			ExtLanguage extLanguage) {
 
 		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(testCaseNode.getName(), extLanguage);
 	}
 
+	// TODO SIMPLE-VIEW tests
 	private static String getMethodName(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
 
 		String methodName = "";
 
 		AbstractNode parent = testCaseNode.getParent();
 
-		if (parent != null){
+		if (parent != null){ // TODO SIMPLE-VIEW rename user abstract node helper
 			methodName = parent.getName();
 			methodName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(methodName, extLanguage);
 		}

@@ -26,18 +26,18 @@ import static org.junit.Assert.assertTrue;
 public class TestCaseNodeHelperTest {
 
 	@Test
-	public void copyRootTest() {
+	public void getSignatureAndDataStringTest() {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", null, "value");
 		ChoiceNode choiceNode2 = new ChoiceNode("choice_2", null, "value");
 
-		List<ChoiceNode> td1 = new ArrayList<ChoiceNode>();
-		td1.add(choiceNode1);
-		td1.add(choiceNode2);
+		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
+		choiceNodes.add(choiceNode1);
+		choiceNodes.add(choiceNode2);
 
-		TestCaseNode testCaseNode = new TestCaseNode("test_case_1", null, td1);
+		TestCaseNode testCaseNode = new TestCaseNode("test_case_1", null, choiceNodes);
 		testCaseNode.setParent(methodNode);
 
 		String signature = TestCaseNodeHelper.createSignature(testCaseNode, ExtLanguage.JAVA);
@@ -45,6 +45,12 @@ public class TestCaseNodeHelperTest {
 
 		signature = TestCaseNodeHelper.createSignature(testCaseNode, ExtLanguage.SIMPLE);
 		assertEquals("[test case 1] method 1(choice 1, choice 2)", signature);
+
+		String testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, ExtLanguage.JAVA);
+		assertEquals("choice_1, choice_2", testDataString);
+
+		testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, ExtLanguage.SIMPLE);
+		assertEquals("choice 1, choice 2", testDataString);
 	}
 
 }
