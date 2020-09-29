@@ -178,7 +178,7 @@ public final class JavaLanguageHelper {
 		case JavaLanguageHelper.TYPE_NAME_SHORT:
 			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_INTEGER));
 			break;
-			
+
 		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
 		case JavaLanguageHelper.TYPE_NAME_FLOAT:
 			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_FLOAT));

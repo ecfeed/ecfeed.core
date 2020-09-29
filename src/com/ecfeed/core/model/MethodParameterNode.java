@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +33,12 @@ public class MethodParameterNode extends AbstractParameterNode {
 			String defaultValue,
 			boolean expected, boolean linked, GlobalParameterNode link) {
 		super(name, modelChangeRegistrator, type);
+
+		// TODO SIMPLE-VIEW add checks to the remaining nodes
+		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
+			ExceptionHelper.reportRuntimeException("Method parameter node name is not a valid identifier.");
+		}
+
 		fExpected = expected;
 		fDefaultValue = defaultValue;
 		fLinked = linked;

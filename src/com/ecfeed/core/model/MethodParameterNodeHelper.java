@@ -17,9 +17,8 @@ public class MethodParameterNodeHelper {
 
 
 	public static String getName(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
-		return ExtLanguageHelper.convertTextFromIntrToExtLanguage(
-				methodParameterNode.getName(), extLanguage);
-		
+
+		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
 	}
 
 	// TODO SIMPLE-VIEW unit tests
@@ -46,7 +45,6 @@ public class MethodParameterNodeHelper {
 	public static String getType(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
 
 		String type = methodParameterNode.getType();
-
 		type =  ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 
 		return type;
