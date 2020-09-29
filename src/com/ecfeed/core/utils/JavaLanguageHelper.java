@@ -164,36 +164,33 @@ public final class JavaLanguageHelper {
 
 	public static List<String> getSymbolicNamesOfSpecialValues(String typeName) {
 
-		List<String> result = new ArrayList<String>();
+		List<String> result = getSymbolicNamesOfSpecialValuesForNonNumericTypes(typeName);
 
-		switch(typeName){
-		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
-			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_BOOLEAN));
-			break;
-		case JavaLanguageHelper.TYPE_NAME_CHAR:
-			result.addAll(Arrays.asList(JavaLanguageHelper.DEFAULT_EXPECTED_CHAR_VALUE));
-			break;
+		if (result.size() > 0) {
+			return result;
+		}
+
+		switch (typeName) {
+
 		case JavaLanguageHelper.TYPE_NAME_BYTE:
 		case JavaLanguageHelper.TYPE_NAME_INT:
 		case JavaLanguageHelper.TYPE_NAME_LONG:
 		case JavaLanguageHelper.TYPE_NAME_SHORT:
 			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_INTEGER));
 			break;
+			
 		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
 		case JavaLanguageHelper.TYPE_NAME_FLOAT:
 			result.addAll(Arrays.asList(JavaLanguageHelper.SPECIAL_VALUES_FOR_FLOAT));
 			break;
-		case JavaLanguageHelper.TYPE_NAME_STRING:
-			result.addAll(Arrays.asList(com.ecfeed.core.utils.CommonConstants.STRING_SPECIAL_VALUES));
-			break;
+
 		default:
 			break;
 		}
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW use in function above
-	public static List<String> getSymbolicNamesOfSpecialValuesForNonNumericTypes(String typeName) { 
+	public static List<String> getSymbolicNamesOfSpecialValuesForNonNumericTypes(String typeName) {
 
 		List<String> result = new ArrayList<String>();
 
