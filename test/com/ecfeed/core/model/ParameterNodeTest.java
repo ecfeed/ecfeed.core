@@ -11,9 +11,7 @@
 package com.ecfeed.core.model;
 
 import static com.ecfeed.core.testutils.TestUtilConstants.SUPPORTED_TYPES;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.Set;
@@ -261,6 +259,24 @@ public class ParameterNodeTest{
 
 				assertTrue(c.isMatch(c));
 			}
+		}
+	}
+
+	@Test
+	public void setNameTest(){
+
+		MethodParameterNode c1 = new MethodParameterNode("c", null, "type", "0", true);
+
+		try {
+			c1.setName("c*1");
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			c1.setName("c 1");
+			fail();
+		} catch (Exception e) {
 		}
 	}
 
