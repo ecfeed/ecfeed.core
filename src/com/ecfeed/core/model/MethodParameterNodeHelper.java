@@ -37,7 +37,7 @@ public class MethodParameterNodeHelper {
 		final GlobalParameterNode link = methodParameterNode.getLink();
 
 		if (methodParameterNode.isLinked() && link != null) {
-			signature += "[LINKED]->" + GlobalParameterNodeHelper.createSignature(link, extLanguage);
+			signature += "[LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(link, extLanguage);
 		}
 
 		return signature;

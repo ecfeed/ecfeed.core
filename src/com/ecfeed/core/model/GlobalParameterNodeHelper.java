@@ -22,7 +22,7 @@ public class GlobalParameterNodeHelper {
 	}
 
 	// TODO SIMPLE-VIEW unit tests
-	public static String createSignature(
+	public static String getQualifiedName(
 			GlobalParameterNode globalParameterNode,
 			ExtLanguage extLanguage) {
 
