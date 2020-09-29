@@ -72,6 +72,7 @@ public class ClassNode extends GlobalParametersParentNode {
 
 		super(qualifiedName, modelChangeRegistrator);
 
+		// TODO SIMPLE-VIEW add check to setName
 		// TODO SIMPLE-VIEW unit tests
 		if (!JavaLanguageHelper.isMatchWithJavaComplexIdenfifier(qualifiedName)) {
 			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");

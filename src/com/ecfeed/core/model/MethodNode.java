@@ -31,6 +31,7 @@ public class MethodNode extends ParametersParentNode {
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
 		super(name, modelChangeRegistrator);
 
+		// TODO SIMPLE-VIEW add check to setName
 		// TODO SIMPLE-VIEW unit tests
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
 			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");

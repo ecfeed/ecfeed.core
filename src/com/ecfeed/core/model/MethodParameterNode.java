@@ -34,6 +34,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 			boolean expected, boolean linked, GlobalParameterNode link) {
 		super(name, modelChangeRegistrator, type);
 
+		// TODO SIMPLE-VIEW add check to setName
 		// TODO SIMPLE-VIEW unit tests
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
 			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");

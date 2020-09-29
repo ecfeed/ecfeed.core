@@ -10,10 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +26,32 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 
+import static org.junit.Assert.*;
+
 public class MethodNodeTest {
+
+	@Test
+	public void newMethodNodeTest(){
+
+		try {
+			new MethodNode("%a", null);
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			new MethodNode("a b", null);
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			new MethodNode("0-1", null);
+			fail();
+		} catch (Exception e) {
+		}
+	}
+
 	@Test
 	public void testAddParameter(){
 		MethodNode method = new MethodNode("name", null);
@@ -56,7 +77,6 @@ public class MethodNodeTest {
 		assertEquals(2, method.getParameterTypes().size());
 		assertTrue(method.getParameterTypes().contains("type1"));
 		assertTrue(method.getParameterTypes().contains("type2"));
-
 	}
 
 	@Test
