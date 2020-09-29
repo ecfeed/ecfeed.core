@@ -22,9 +22,9 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	private String fType;
 	private String fTypeComments;
-	
+
 	private Optional<String> fSuggestedType;
-	
+
 	public abstract List<MethodNode> getMethods();
 	public abstract Object accept(IParameterVisitor visitor) throws Exception;
 
@@ -34,9 +34,14 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
 		super(name, modelChangeRegistrator);
-		
+
+		// TODO SIMPLE-VIEW add checks to the remaining nodes - unit tests
+		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
+			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");
+		}
+
 		verifyType(type);
-		
+
 		fSuggestedType = Optional.empty();
 		fType = type;
 
@@ -67,7 +72,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		}
 		return -1;
 	}
-	
+
 	@Override
 	public boolean isMatch(AbstractNode compared){
 		if(compared instanceof AbstractParameterNode == false){
@@ -91,7 +96,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	public void setType(String type) {
 
 		verifyType(type);
-		
+
 		fType = type;
 		registerChange();
 	}
@@ -112,18 +117,18 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	public void setSuggestedType(String typeHidden) {
 		fSuggestedType = Optional.ofNullable(typeHidden);
 	}
-	
+
 	private void verifyType(String type) {
-		
+
 		if (type.equals(SimpleLanguageHelper.TYPE_NAME_TEXT) || type.equals(SimpleLanguageHelper.TYPE_NAME_NUMBER)) {
 			ExceptionHelper.reportRuntimeException("Invalid type of parameter: " + type);
 		}
 	}
 
 	private void createDefaultProperties() {
-		
+
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 	}
-	
+
 }

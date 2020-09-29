@@ -62,13 +62,13 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public String toString(){
-		
+
 		if(isAbstract()){
 			return getQualifiedName() + ABSTRACT_CHOICE_MARKER; 
 		}
 		return getQualifiedName() + " [" + getValueString() + "]";
 	}
-	
+
 	public String toStringWithParenthesis() {
 
 		if(isAbstract()){
@@ -128,11 +128,11 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public String getQualifiedName() {
-		
+
 		if (parentChoice() != null) {
 			return parentChoice().getQualifiedName() + ":" + getName();
 		}
-		
+
 		return getName();
 	}
 
@@ -160,7 +160,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	public String getValueString() {
 		return fValueString;
 	}
-	
+
 	public void setValueString(String value) {
 		fValueString = value;
 	}
@@ -310,17 +310,17 @@ public class ChoiceNode extends ChoicesParentNode {
 		}
 		return null;
 	}
-	
-//	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
-//		
-//		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
-//		
-//		AbstractParameterNode abstractParameterNode = fParent.getParameter();
-//		
-//		if(fParent != null && fParent != abstractParameterNode){
-//			return (ChoiceNode)fParent;
-//		}
-//		return null;
-//	}
+
+	//	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
+	//		
+	//		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
+	//		
+	//		AbstractParameterNode abstractParameterNode = fParent.getParameter();
+	//		
+	//		if(fParent != null && fParent != abstractParameterNode){
+	//			return (ChoiceNode)fParent;
+	//		}
+	//		return null;
+	//	}
 
 }

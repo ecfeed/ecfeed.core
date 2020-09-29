@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ClassNode extends GlobalParametersParentNode {
@@ -70,6 +71,11 @@ public class ClassNode extends GlobalParametersParentNode {
 			boolean runOnAndroid, String androidBaseRunner) {
 
 		super(qualifiedName, modelChangeRegistrator);
+
+		// TODO SIMPLE-VIEW unit tests
+		if (!JavaLanguageHelper.isValidJavaIdentifier(qualifiedName)) {
+			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");
+		}
 
 		setRunOnAndroid(runOnAndroid);
 
@@ -131,7 +137,7 @@ public class ClassNode extends GlobalParametersParentNode {
 	public boolean addMethod(MethodNode method, int index) {
 
 		if (findMethodWithTheSameSignature(method.getName(), method.getParameterTypes()) != null) {
-		
+
 			ExceptionHelper.reportRuntimeException("Cannot add method. Method with identical signature already exists.");
 		}
 
