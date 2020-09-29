@@ -79,6 +79,18 @@ public class MethodParameterNodeHelperTest {
 
 		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.SIMPLE);
 		assertEquals("[e]Text par 1", signature);
+
+		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
+		methodParameterNode.setLink(globalParameterNode);
+
+		methodParameterNode.setLinked(true);
+
+		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.JAVA);
+		assertEquals("[e]String par_1[LINKED]->global_1", signature);
+
+		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.SIMPLE);
+		assertEquals("[e]Text par 1[LINKED]->global 1", signature);
+
 	}
 
 }

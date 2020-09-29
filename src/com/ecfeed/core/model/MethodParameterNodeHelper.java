@@ -35,8 +35,10 @@ public class MethodParameterNodeHelper {
 						name,
 						methodParameterNode.isExpected());
 
-		if (methodParameterNode.isLinked()) {
-			signature += "[LINKED]->" + methodParameterNode.getLink().getQualifiedName();
+		final GlobalParameterNode link = methodParameterNode.getLink();
+
+		if (methodParameterNode.isLinked() && link != null) {
+			signature += "[LINKED]->" + ExtLanguageHelper.convertTextFromIntrToExtLanguage(link.getQualifiedName(), extLanguage); // TODO SIMPLE-VIEW use helper
 		}
 
 		return signature;
