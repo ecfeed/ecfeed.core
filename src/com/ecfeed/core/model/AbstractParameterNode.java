@@ -36,7 +36,6 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		super(name, modelChangeRegistrator);
 
 		// TODO SIMPLE-VIEW add check to setName
-		// TODO SIMPLE-VIEW add checks to the remaining nodes - unit tests
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
 			ExceptionHelper.reportRuntimeException("Node name is not a valid identifier.");
 		}
