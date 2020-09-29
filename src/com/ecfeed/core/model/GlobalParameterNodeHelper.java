@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 
-public class MethodParameterNodeHelper {
+public class GlobalParameterNodeHelper {
 
 
 	public static String getName(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
@@ -23,23 +23,12 @@ public class MethodParameterNodeHelper {
 
 	// TODO SIMPLE-VIEW unit tests
 	public static String createSignature(
-			MethodParameterNode methodParameterNode,
+			GlobalParameterNode globalParameterNode,
 			ExtLanguage extLanguage) {
 
-		String type = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, extLanguage);
-		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguage);
+		String qualifiedName = globalParameterNode.getQualifiedName();
 
-		String signature = 
-				AbstractParameterNodeHelper.createSignature(
-						type,
-						name,
-						methodParameterNode.isExpected());
-
-		final GlobalParameterNode link = methodParameterNode.getLink();
-
-		if (methodParameterNode.isLinked() && link != null) {
-			signature += "[LINKED]->" + GlobalParameterNodeHelper.createSignature(link, extLanguage);
-		}
+		String signature = ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
 
 		return signature;
 	}
