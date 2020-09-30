@@ -18,6 +18,7 @@ import java.util.List;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
 public class ExtLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
@@ -36,7 +37,7 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 		return null;
 	}
-	
+
 	public static String checkIsNewClassNameValid(ClassNode classNode, String className) {
 
 		String simpleValueName = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(className);
@@ -59,7 +60,13 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 	public static String checkIsModelCompatibleWithSimpleLanguage(RootNode rootNode) {
 
-		String message = checkIsGlobalParameterOfRootDuplicated(rootNode);
+		String message = checkParameterTypesForSimpleView(rootNode);
+
+		if (message != null) {
+			return message;
+		}
+
+		message = checkIsGlobalParameterOfRootDuplicated(rootNode);
 
 		if (message != null) {
 			return message;
@@ -80,6 +87,57 @@ public class ExtLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 		message = checkIsMethodDuplicated(rootNode);
 
 		return message;
+	}
+
+	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
+		
+		String message = checkIfIsAllowedParameterType(abstractNode);
+		
+		if (message != null) {
+			return message;
+		}
+
+		List<? extends AbstractNode> childNodes = abstractNode.getChildren();
+		
+		if (childNodes == null) {
+			return null;
+		}
+		
+		if (childNodes.size() == 0) {
+			return null;
+			
+		}
+		
+		for (AbstractNode childNode : childNodes) {
+			
+			 message = checkParameterTypesForSimpleView(childNode);
+			 
+			 if (message != null) {
+				 return message;
+			 }
+		}
+		
+		return null;
+	}
+
+	private static String checkIfIsAllowedParameterType(AbstractNode abstractNode) {
+		
+		if (!(abstractNode instanceof AbstractParameterNode)) {
+			return null;
+		}
+		
+		AbstractParameterNode abstractParameterNode = (AbstractParameterNode) abstractNode;
+		
+		String type = abstractParameterNode.getType();
+		
+		if (!JavaLanguageHelper.isJavaType(type)) {
+			return 
+					"Non java types are not allowed in simple view. \nNode: " + 
+					ModelHelper.getFullPath(abstractParameterNode, ExtLanguage.JAVA) + ".\n" +
+					" Type: " + type + ".";
+		}
+
+		return null;
 	}
 
 	private static String checkIsGlobalParameterOfRootDuplicated(RootNode rootNode) {

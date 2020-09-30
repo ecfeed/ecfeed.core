@@ -10,10 +10,52 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
+	
+	// TODO SIMPLE-VIEW tests
+	public static String getFullPath(AbstractNode abstractNode, ExtLanguage extLanguage) {
+		
+		List<String> nodeNames = new ArrayList<String>();
+		
+		AbstractNode currentNode = abstractNode;
+		
+		for(;;) {
+			
+			if (currentNode == null) {
+				return createPath(nodeNames);
+			}
+			
+			nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguage));
+			
+			currentNode = currentNode.getParent();
+		}
+	}
+	
+	private static String createPath(List<String> nodeNames) {
+		
+		String path = "";
+		
+		int nodeNamesLength = nodeNames.size();
+		
+		for (int index = nodeNamesLength - 1; index >= 0; index--) {
+			
+			String nodeName = nodeNames.get(index);
+			path += nodeName;
+			
+			if (index > 0) {
+				path += ".";
+			}
+		}
+		
+		return path;
+	}
 
 	public static String getNonQualifiedName(String qualifiedName) {
 		
