@@ -65,11 +65,6 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
 		}
 
-		//  TODO SIMPLE-VIEW
-		//		if (!JavaLanguageHelper.isJavaType(newType)) {
-		//			ExceptionHelper.reportRuntimeException("Cannot set new type to non-Java type.");
-		//		}
-
 		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguage()));
 
 		if (targetMethodParameterNode.getMethod() != null) {
