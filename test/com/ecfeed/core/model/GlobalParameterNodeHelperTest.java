@@ -18,14 +18,17 @@ import static org.junit.Assert.assertEquals;
 public class GlobalParameterNodeHelperTest {
 
 	@Test
-	public void createSignatureTest(){
+	public void getQualifiedNameTest(){
 
+		// TODO SIMPLE-VIEW
+//		RootNode rootNode = new RootNode("root", null);
 //		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
+//		globalParameterNode.setParent(rootNode);
 //
-//		String signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, ExtLanguage.JAVA);
+//		String signature = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.JAVA);
 //		assertEquals("String global_1", signature);
 //
-//		signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, ExtLanguage.JAVA);
+//		signature = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.SIMPLE);
 //		assertEquals("Text global 1", signature);
 	}
 
