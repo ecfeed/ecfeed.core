@@ -20,7 +20,7 @@ public class TestCaseNodeHelper {
 
 		String methodName = getMethodName(testCaseNode, extLanguage);
 
-		String testCaseNodeName = AbstractNodeHelper.getName(testCaseNode, extLanguage);
+		String testCaseNodeName = testCaseNode.getName();
 
 		String result = "[" + testCaseNodeName + "]";
 
