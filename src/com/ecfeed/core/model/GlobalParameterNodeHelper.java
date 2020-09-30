@@ -21,22 +21,20 @@ public class GlobalParameterNodeHelper {
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
 	}
 
-	// TODO SIMPLE-VIEW unit tests
 	public static String getQualifiedName(
 			GlobalParameterNode globalParameterNode,
 			ExtLanguage extLanguage) {
 
 		String qualifiedName = globalParameterNode.getQualifiedName();
+		qualifiedName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
 
-		String signature = ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
-
-		return signature;
+		return qualifiedName;
 	}
 
-	public static String getType(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
+	public static String getType(GlobalParameterNode globalParameterNode, ExtLanguage extLanguage) {
 
-		String type = methodParameterNode.getType();
-		type =  ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
+		String type = globalParameterNode.getType();
+		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 
 		return type;
 	}

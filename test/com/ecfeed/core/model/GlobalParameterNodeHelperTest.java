@@ -20,16 +20,23 @@ public class GlobalParameterNodeHelperTest {
 	@Test
 	public void getQualifiedNameTest(){
 
-		// TODO SIMPLE-VIEW
-//		RootNode rootNode = new RootNode("root", null);
-//		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
-//		globalParameterNode.setParent(rootNode);
-//
-//		String signature = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.JAVA);
-//		assertEquals("String global_1", signature);
-//
-//		signature = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.SIMPLE);
-//		assertEquals("Text global 1", signature);
+		RootNode rootNode = new RootNode("root", null);
+
+		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
+		globalParameterNode.setParent(rootNode);
+
+		String qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.JAVA);
+		assertEquals("global_1", qualifiedName);
+
+		qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.SIMPLE);
+		assertEquals("global 1", qualifiedName);
+
+
+		String type = GlobalParameterNodeHelper.getType(globalParameterNode, ExtLanguage.JAVA);
+		assertEquals("String", type);
+
+		qualifiedName = GlobalParameterNodeHelper.getType(globalParameterNode, ExtLanguage.SIMPLE);
+		assertEquals("Text", qualifiedName);
 	}
 
 }
