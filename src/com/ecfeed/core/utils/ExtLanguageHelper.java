@@ -12,7 +12,11 @@ package com.ecfeed.core.utils;
 
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelHelper;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.SimpleLanguageModelVerifier;
 
 public class ExtLanguageHelper {
 
@@ -190,6 +194,24 @@ public class ExtLanguageHelper {
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
 		return name;
 	}
-	
+
+	// TODO SIMPLE-VIEW test
+	public static String checkIsNewClassNameValid(ClassNode classNode, String className) {
+
+		return SimpleLanguageModelVerifier.checkIsNewClassNameValid(classNode, className); // TODO SIMPLE-VIEW check
+	}
+
+	// TODO SIMPLE-VIEW test
+	public static String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode, ExtLanguage extLanguage) {
+
+		RootNode rootNode = ModelHelper.findRoot(anyNode);
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			String result = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+			return result;
+		}
+
+		return null;
+	}
 
 }

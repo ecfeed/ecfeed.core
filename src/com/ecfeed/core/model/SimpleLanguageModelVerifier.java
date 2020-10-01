@@ -21,22 +21,10 @@ import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
-public class ExtLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
+public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 	private static final String TITLE_NON_UNIQUE_CLASS_NAMES = "Non-unique class names";
 	private static final String THE_SAME_CLASSES = "There are some classes in the model that have the same name. Please edit the model before proceeding:";
-
-	public static String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode, ExtLanguage extLanguage) {
-
-		RootNode rootNode = ModelHelper.findRoot(anyNode);
-
-		if (extLanguage == ExtLanguage.SIMPLE) {
-			String result = checkIsModelCompatibleWithSimpleLanguage(rootNode);
-			return result;
-		}
-
-		return null;
-	}
 
 	public static String checkIsNewClassNameValid(ClassNode classNode, String className) {
 
