@@ -110,10 +110,6 @@ public class ExtLanguageHelper {
 	public static String conditionallyConvertSpecialValueToExtLanguage(
 			String valueInIntrLanguage, String typeInIntrLanguage, ExtLanguage extLanguage) {
 
-		if (!JavaLanguageHelper.isJavaType(typeInIntrLanguage)) {
-			ExceptionHelper.reportRuntimeException("Attempt to convert special value for invalid Java type.");
-		}
-
 		if (extLanguage == ExtLanguage.SIMPLE) { 
 			valueInIntrLanguage = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
 		}
