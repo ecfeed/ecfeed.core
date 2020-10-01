@@ -22,10 +22,6 @@ import com.ecfeed.core.model.SimpleLanguageModelVerifier;
 
 public class ExtLanguageHelper {
 
-	private static final String PARAMETER_COMMAND_NAME = "name";
-	private static final String PARAMETER_COMMAND_TYPE = "type";
-	private static final String METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE = "\\$[\\w|_]+\\.(" + PARAMETER_COMMAND_NAME + "|" + PARAMETER_COMMAND_TYPE + ")";
-	private static final String METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE = "\\$[\\w|\\s]+\\.(" + PARAMETER_COMMAND_NAME + "|" + PARAMETER_COMMAND_TYPE + ")";
 
 	public static String verifySeparatorsInName(String nameInExternalLanguage, ExtLanguage extLanguage) {
 
@@ -232,18 +228,13 @@ public class ExtLanguageHelper {
 		return pairOfSignatures;
 	}
 
-	// TODO SIMPLE-VIEW test
-	public static String getRegexPatternForMethodParameter(ExtLanguage extLanguage) {
-
-		String regexPattern;
+	public static String chooseRegex(String regexForJavalang, String regexForSimpleLang, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW rename
 
 		if  (extLanguage == ExtLanguage.JAVA)  {
-			regexPattern = METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE;
-		} else {
-			regexPattern = METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE;
+			return regexForJavalang;
 		}
 
-		return regexPattern;
+		return regexForSimpleLang;
 	}
 
 }
