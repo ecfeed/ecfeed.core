@@ -39,4 +39,19 @@ public class GlobalParameterNodeHelperTest {
 		assertEquals("Text", qualifiedName);
 	}
 
+	@Test
+	public void createSignatureTest(){
+
+		RootNode rootNode = new RootNode("root", null);
+
+		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
+		globalParameterNode.setParent(rootNode);
+
+		String signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, ExtLanguage.JAVA);
+		assertEquals("String global_1", signature);
+
+		signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, ExtLanguage.SIMPLE);
+		assertEquals("Text global 1", signature);
+	}
+
 }

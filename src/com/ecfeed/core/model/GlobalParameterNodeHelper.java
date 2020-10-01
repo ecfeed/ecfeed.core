@@ -22,8 +22,7 @@ public class GlobalParameterNodeHelper {
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
 	}
 
-	// TODO SIMPLE-VIEW test
-	public static String createLinkSignature(GlobalParameterNode parameter, ExtLanguage extLanguage) {
+	public static String createSignature(GlobalParameterNode parameter, ExtLanguage extLanguage) {
 
 		String type;
 		String qualifiedName = parameter.getQualifiedName();
@@ -35,7 +34,7 @@ public class GlobalParameterNodeHelper {
 			type = ModelHelper.getNonQualifiedName(parameter.getType());
 		}
 
-		return qualifiedName + " [" + type + "]";
+		return type + " " + qualifiedName;
 	}
 
 	public static String getQualifiedName(
