@@ -30,8 +30,6 @@ public class TestCasesExportHelper {
 	private static final String CHOICE_COMMAND_VALUE = "value";
 	private static final String TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE = "\\$[\\w|\\s]+\\.(" + CHOICE_COMMAND_SHORT_NAME + "|" + CHOICE_COMMAND_FULL_NAME + "|" + CHOICE_COMMAND_VALUE + ")";
 	private static final String TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_VIEW_LANGUAGE = "\\$[\\w|_]+\\.(" + CHOICE_COMMAND_SHORT_NAME + "|" + CHOICE_COMMAND_FULL_NAME + "|" + CHOICE_COMMAND_VALUE + ")";
-	private static final String METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE = "\\$[\\w|_]+\\.(" + PARAMETER_COMMAND_NAME + "|" + PARAMETER_COMMAND_TYPE + ")";
-	private static final String METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE = "\\$[\\w|\\s]+\\.(" + PARAMETER_COMMAND_NAME + "|" + PARAMETER_COMMAND_TYPE + ")";
 	private static final String ARITHMETIC_EXPRESSION_SEQUENCE_GENERIC_PATTERN = "\\$\\(.*\\)";
 	private static final String PARAMETER_SEPARATOR = ",";
 
@@ -77,13 +75,7 @@ public class TestCasesExportHelper {
 
 		String result = template;
 
-		String regexPattern;
-
-		if  (extLanguage == ExtLanguage.JAVA)  {
-			regexPattern = METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE;
-		} else {
-			regexPattern = METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE;
-		}
+		String regexPattern = ExtLanguageHelper.getRegexPatternForMethodParameter(extLanguage);
 
 		Matcher matcher = Pattern.compile(regexPattern).matcher(template);
 
@@ -353,13 +345,13 @@ public class TestCasesExportHelper {
 	}
 
 	private static String getValue(ChoiceNode choice, ExtLanguage extLanguage) {
-		
+
 		String convertedValue = convertValue(choice);
-		
+
 		if (convertedValue != null) {
 			return convertedValue;
 		}
-		
+
 		return ChoiceNodeHelper.getValueString(choice, extLanguage);
 	}
 
