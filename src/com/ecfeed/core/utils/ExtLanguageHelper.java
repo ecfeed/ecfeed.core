@@ -136,11 +136,25 @@ public class ExtLanguageHelper {
 		return items;
 	}
 
-	public static void verifyIfAllTypesAreUsed(ExtLanguage extLanguage) {
+	public static void reportExceptionAllTypesAreUsed(ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
 			ExceptionHelper.reportClientException("Cannot find not used parameter type. All possible types are already used.");
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
+	public static String[] createListListOfSupportedTypes(ExtLanguage extLanguage) {
+
+		String[] typeList;
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			typeList = SimpleLanguageHelper.getSupportedSimpleViewTypes();
+		} else {
+			typeList = JavaLanguageHelper.getSupportedJavaTypes();
+		}
+
+		return typeList;
+	}
+	
 }
