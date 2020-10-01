@@ -31,9 +31,13 @@ public class ModelHelper {
 			if (currentNode == null) {
 				return createPath(nodeNames);
 			}
-			
-			nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguage));
-			
+
+			if (currentNode instanceof RootNode) {
+				nodeNames.add(currentNode.getName());
+			} else {
+				nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguage));
+			}
+
 			currentNode = currentNode.getParent();
 		}
 	}

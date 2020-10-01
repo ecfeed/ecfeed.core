@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ExtLanguage;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,9 +23,21 @@ import static org.junit.Assert.*;
 public class ModelHelperTest {
 
 	@Test
-	public void newMethodNodeTest(){
+	public void getFullPathTest() {
 
+		RootNode rootNode = new RootNode("root_1", null);
+		String path = ModelHelper.getFullPath(rootNode, ExtLanguage.JAVA);
+		assertEquals("root_1", path);
+		path = ModelHelper.getFullPath(rootNode, ExtLanguage.SIMPLE);
+		assertEquals("root_1", path);
+
+		ClassNode classNode = new ClassNode("class_1", null);
+		classNode.setParent(rootNode);
+
+		path = ModelHelper.getFullPath(classNode, ExtLanguage.JAVA);
+		assertEquals("root_1.class_1", path);
+		path = ModelHelper.getFullPath(classNode, ExtLanguage.SIMPLE);
+		assertEquals("root_1.class 1", path);
 	}
-
 
 }
