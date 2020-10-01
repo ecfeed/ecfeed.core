@@ -136,4 +136,11 @@ public class ExtLanguageHelper {
 		return items;
 	}
 
+	public static void verifyIfAllTypesAreUsed(ExtLanguage extLanguage) {
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			ExceptionHelper.reportClientException("Cannot find not used parameter type. All possible types are already used.");
+		}
+	}
+
 }
