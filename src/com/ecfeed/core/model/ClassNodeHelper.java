@@ -34,22 +34,18 @@ public class ClassNodeHelper {
 
 	public static String getQualifiedName(ClassNode classNode, ExtLanguage extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
-			return getNonQualifiedName(classNode, extLanguage);
-		}
+		String name = AbstractNodeHelper.getName(classNode, extLanguage);
 
-		String name = classNode.getName();
-		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
+		name = ExtLanguageHelper.getQualifiedName(name, extLanguage);
 
 		return name;
 	}
 
 	public static String getPackageName(ClassNode classNode, ExtLanguage extLanguage) {
 
-		if (extLanguage  == ExtLanguage.SIMPLE) {
-			return "";
-		}
-		return ModelHelper.getPackageName(classNode.getName());
+		String name = classNode.getName();
+
+		return ExtLanguageHelper.getPackageName(name, extLanguage);
 	}
 
 	public static String validateClassName(String nameInExternalLanguage, ExtLanguage extLanguage) {
@@ -140,13 +136,9 @@ public class ClassNodeHelper {
 
 		String className = classNode.getName();
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
-			className = StringHelper.getLastTokenOrInputString(className, ".");
-		}
+		String signature = ExtLanguageHelper.createClassNameSignature(className, extLanguage);
 
-		className = ExtLanguageHelper.convertTextFromIntrToExtLanguage(className, extLanguage);
-
-		return className;
+		return signature;
 	}
 
 	public static String createMethodSignatureDuplicateMessage(

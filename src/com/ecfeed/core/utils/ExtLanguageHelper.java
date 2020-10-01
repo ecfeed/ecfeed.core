@@ -12,6 +12,8 @@ package com.ecfeed.core.utils;
 
 import java.util.List;
 
+import com.ecfeed.core.model.ModelHelper;
+
 public class ExtLanguageHelper {
 
 	public static String verifySeparatorsInName(String nameInExternalLanguage, ExtLanguage extLanguage) {
@@ -156,5 +158,38 @@ public class ExtLanguageHelper {
 
 		return typeList;
 	}
+
+	// TODO SIMPLE-VIEW test
+	public static String getPackageName(String name, ExtLanguage extLanguage) {
+
+		if (extLanguage  == ExtLanguage.SIMPLE) {
+			return "";
+		}
+
+		return ModelHelper.getPackageName(name);
+	}
+
+	// TODO SIMPLE-VIEW test
+	public static String createClassNameSignature(String className, ExtLanguage extLanguage) {
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			className = StringHelper.getLastTokenOrInputString(className, ".");
+		}
+
+		className = ExtLanguageHelper.convertTextFromIntrToExtLanguage(className, extLanguage);
+		return className;
+	}
+
+	// TODO SIMPLE-VIEW test
+	public static String getQualifiedName(String name, ExtLanguage extLanguage) {
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			name = ModelHelper.getNonQualifiedName(name);
+		}
+
+		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
+		return name;
+	}
 	
+
 }
