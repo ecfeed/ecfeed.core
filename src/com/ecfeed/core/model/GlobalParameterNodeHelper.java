@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class GlobalParameterNodeHelper {
 
@@ -19,6 +20,22 @@ public class GlobalParameterNodeHelper {
 	public static String getName(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
 
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
+	}
+
+	// TODO SIMPLE-VIEW test
+	public static String createLinkSignature(GlobalParameterNode parameter, ExtLanguage extLanguage) {
+
+		String type;
+		String qualifiedName = parameter.getQualifiedName();
+
+		if (extLanguage == ExtLanguage.SIMPLE) {
+			type = SimpleLanguageHelper.convertJavaTypeToSimpleType(parameter.getType());
+			qualifiedName = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(qualifiedName);
+		} else {
+			type = ModelHelper.getNonQualifiedName(parameter.getType());
+		}
+
+		return qualifiedName + " [" + type + "]";
 	}
 
 	public static String getQualifiedName(
