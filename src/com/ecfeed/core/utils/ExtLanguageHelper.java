@@ -14,6 +14,8 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.SimpleLanguageModelVerifier;
@@ -212,6 +214,17 @@ public class ExtLanguageHelper {
 		}
 
 		return null;
+	}
+
+	// TODO SIMPLE-VIEW test
+	public static Pair<String, String> createPairOfMethodSignatures(MethodNode methodNode) {
+
+		Pair<String,String> pairOfSignatures = 
+				new Pair<String, String>(
+						MethodNodeHelper.createSignature(methodNode, ExtLanguage.SIMPLE),
+						MethodNodeHelper.createSignature(methodNode, ExtLanguage.JAVA));
+
+		return pairOfSignatures;
 	}
 
 }

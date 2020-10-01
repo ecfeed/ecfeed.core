@@ -18,6 +18,7 @@ import java.util.List;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
@@ -78,46 +79,46 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 	}
 
 	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
-		
+
 		String message = checkIfIsAllowedParameterType(abstractNode);
-		
+
 		if (message != null) {
 			return message;
 		}
 
 		List<? extends AbstractNode> childNodes = abstractNode.getChildren();
-		
+
 		if (childNodes == null) {
 			return null;
 		}
-		
+
 		if (childNodes.size() == 0) {
 			return null;
-			
+
 		}
-		
+
 		for (AbstractNode childNode : childNodes) {
-			
-			 message = checkParameterTypesForSimpleView(childNode);
-			 
-			 if (message != null) {
-				 return message;
-			 }
+
+			message = checkParameterTypesForSimpleView(childNode);
+
+			if (message != null) {
+				return message;
+			}
 		}
-		
+
 		return null;
 	}
 
 	private static String checkIfIsAllowedParameterType(AbstractNode abstractNode) {
-		
+
 		if (!(abstractNode instanceof AbstractParameterNode)) {
 			return null;
 		}
-		
+
 		AbstractParameterNode abstractParameterNode = (AbstractParameterNode) abstractNode;
-		
+
 		String type = abstractParameterNode.getType();
-		
+
 		if (!JavaLanguageHelper.isJavaType(type)) {
 			return 
 					"Non java types are not allowed in simple view. \nNode: " + 
@@ -345,10 +346,7 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 			MethodNode methodNode = methods.get(index);
 
-			Pair<String,String> pairOfSignatures = 
-					new Pair<String, String>(
-							MethodNodeHelper.createSignature(methodNode, ExtLanguage.SIMPLE),
-							MethodNodeHelper.createSignature(methodNode, ExtLanguage.JAVA));
+			Pair<String, String> pairOfSignatures = ExtLanguageHelper.createPairOfMethodSignatures(methodNode);
 
 			signaturePairs.add(pairOfSignatures);
 		}
