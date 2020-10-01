@@ -153,11 +153,8 @@ public class ExtLanguageHelperTest {
 
 		// invalid type
 
-		try {
-			ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z", ExtLanguage.JAVA);
-			fail();
-		} catch (Exception e) {
-		}
+		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z", ExtLanguage.JAVA);
+		assertEquals("MAX_VALUE", text);
 
 		try {
 			ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z", ExtLanguage.SIMPLE);

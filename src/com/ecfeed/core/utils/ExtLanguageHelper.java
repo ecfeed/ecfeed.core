@@ -110,11 +110,17 @@ public class ExtLanguageHelper {
 	public static String conditionallyConvertSpecialValueToExtLanguage(
 			String valueInIntrLanguage, String typeInIntrLanguage, ExtLanguage extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) { 
-			valueInIntrLanguage = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
+		if (extLanguage == ExtLanguage.JAVA) {
+			return valueInIntrLanguage;
 		}
 
-		return valueInIntrLanguage;
+		if (!JavaLanguageHelper.isJavaType(typeInIntrLanguage)) {
+			ExceptionHelper.reportRuntimeException("Cannot convert special value. Invalid type.");
+		}
+
+		String convertedValue = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
+
+		return convertedValue;
 	}
 
 	public static List<String> getSymbolicNamesOfSpecialValues(String typeName, ExtLanguage extLanguage) {
