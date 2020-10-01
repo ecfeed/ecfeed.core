@@ -19,7 +19,6 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
 	
-	// TODO SIMPLE-VIEW tests
 	public static String getFullPath(AbstractNode abstractNode, ExtLanguage extLanguage) {
 		
 		List<String> nodeNames = new ArrayList<String>();
