@@ -26,7 +26,6 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("pack.class_1", null);
 
-
 		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, ExtLanguage.JAVA);
 		assertEquals("class_1", simpleName);
 
@@ -46,7 +45,6 @@ public class ClassNodeHelperTest {
 
 		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, ExtLanguage.SIMPLE);
 		assertEquals("class 1", qualifiedName);
-
 	}
 
 	@Test

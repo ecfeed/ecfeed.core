@@ -34,8 +34,7 @@ public class ClassNodeHelper {
 
 	public static String getQualifiedName(ClassNode classNode, ExtLanguage extLanguage) {
 
-		String name = AbstractNodeHelper.getName(classNode, extLanguage);
-
+		String name = classNode.getName();
 		name = ExtLanguageHelper.getQualifiedName(name, extLanguage);
 
 		return name;
