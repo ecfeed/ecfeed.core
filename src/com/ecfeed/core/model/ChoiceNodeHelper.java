@@ -25,7 +25,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.Pair;
 
@@ -36,7 +36,7 @@ public class ChoiceNodeHelper {
 	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
 
 		String name = choiceNode.getName();
-		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
+		name = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(name, extLanguage);
 		return name;
 	}
 
@@ -103,7 +103,7 @@ public class ChoiceNodeHelper {
 		String value = choiceNode.getValueString();
 		
 		if (JavaLanguageHelper.isJavaType(type)) {
-			value = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage(value, type, extLanguage);
+			value = ExtLanguageManagerForSimple.conditionallyConvertSpecialValueToExtLanguage(value, type, extLanguage);
 		}
 
 		return value;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 
@@ -49,7 +49,7 @@ public class MethodNodeHelper {
 
 			String type = parameter.getType();
 
-			type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
+			type = ExtLanguageManagerForSimple.convertTypeFromIntrToExtLanguage(type, extLanguage);
 
 			result.add(type);
 		}
@@ -59,13 +59,13 @@ public class MethodNodeHelper {
 
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
 
-		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+		String errorMessage = ExtLanguageManagerForSimple.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
 		}
 
-		String nameInInternalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
+		String nameInInternalLanguage = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
 
 		if (isValid(nameInInternalLanguage)) {
 			return null;
@@ -159,7 +159,7 @@ public class MethodNodeHelper {
 			List<Boolean> expectedFlags, 
 			IExtLanguageManager extLanguageOfTheResult) {
 
-		String nameInExtLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguageOfTheResult);
+		String nameInExtLanguage = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguageOfTheResult);
 
 		String signature = new String(nameInExtLanguage) + "(";
 

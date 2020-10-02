@@ -18,7 +18,7 @@ import java.util.List;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
@@ -349,7 +349,7 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 			MethodNode methodNode = methods.get(index);
 
-			Pair<String, String> pairOfSignatures = ExtLanguageHelper.createPairOfMethodSignatures(methodNode);
+			Pair<String, String> pairOfSignatures = ExtLanguageManagerForSimple.createPairOfMethodSignatures(methodNode);
 
 			signaturePairs.add(pairOfSignatures);
 		}

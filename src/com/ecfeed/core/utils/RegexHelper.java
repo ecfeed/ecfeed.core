@@ -55,7 +55,7 @@ public class RegexHelper {
 
 	public static String createMessageAllowedCharsForNode(String nodeName, IExtLanguageManager extLanguage) {
 
-		String separator = ExtLanguageHelper.chooseString("_", "[SPACE]", extLanguage);
+		String separator = ExtLanguageManagerForSimple.chooseString("_", "[SPACE]", extLanguage);
 
 		String message = nodeName + " name should contain alphanumeric charactes or: " + separator	+ " $ . Name should not start with digits.";
 

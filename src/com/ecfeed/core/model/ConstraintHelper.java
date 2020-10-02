@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public class ConstraintHelper {
 	
@@ -22,7 +22,7 @@ public class ConstraintHelper {
 	public static String getSignature(Constraint constraint, IExtLanguageManager extLanguage) {
 
 		String name = constraint.getName();
-		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
+		name = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(name, extLanguage);
 
 		return name + ": " + constraint.getSignature();
 	}

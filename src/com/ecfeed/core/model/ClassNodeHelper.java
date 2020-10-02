@@ -14,7 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -27,7 +27,7 @@ public class ClassNodeHelper {
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String name = ModelHelper.getNonQualifiedName(classNode.getName());
-		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
+		name = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(name,  extLanguage);
 
 		return name;
 	}
@@ -35,7 +35,7 @@ public class ClassNodeHelper {
 	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String name = classNode.getName();
-		name = ExtLanguageHelper.getQualifiedName(name, extLanguage);
+		name = ExtLanguageManagerForSimple.getQualifiedName(name, extLanguage);
 
 		return name;
 	}
@@ -44,18 +44,18 @@ public class ClassNodeHelper {
 
 		String name = classNode.getName();
 
-		return ExtLanguageHelper.getPackageName(name, extLanguage);
+		return ExtLanguageManagerForSimple.getPackageName(name, extLanguage);
 	}
 
 	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
 
-		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+		String errorMessage = ExtLanguageManagerForSimple.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
 		}
 
-		String nameInInternalLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
+		String nameInInternalLanguage = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
 
 		if (!classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
 			return RegexHelper.createMessageAllowedCharsForClass(extLanguage);
@@ -135,7 +135,7 @@ public class ClassNodeHelper {
 
 		String className = classNode.getName();
 
-		String signature = ExtLanguageHelper.createClassNameSignature(className, extLanguage);
+		String signature = ExtLanguageManagerForSimple.createClassNameSignature(className, extLanguage);
 
 		return signature;
 	}

@@ -20,62 +20,40 @@ import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.SimpleLanguageModelVerifier;
 
-public class ExtLanguageHelper {
+public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
-
-	public static String verifySeparatorsInName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
-
-		if (extLanguage == IExtLanguageManager.JAVA) {
-			return JavaLanguageHelper.verifySeparators(nameInExternalLanguage);
-		}
-
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			return SimpleLanguageHelper.verifySeparators(nameInExternalLanguage);
-		}
-
-		ExceptionHelper.reportRuntimeException("Invalid external language.");
-		return null;
+	@Override
+	public String verifySeparatorsInName(String nameInExternalLanguage) {
+		
+		return JavaLanguageHelper.verifySeparators(nameInExternalLanguage);
 	}
 
-	public static String validateType(String parameterTypeInExtLanguage, IExtLanguageManager extLanguage) {
-
-		if (extLanguage == IExtLanguageManager.JAVA) {
-			return JavaLanguageHelper.validateBasicJavaType(parameterTypeInExtLanguage);
-		}
-
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			return SimpleLanguageHelper.validateType(parameterTypeInExtLanguage);
-		}
-
-		ExceptionHelper.reportRuntimeException("Invalid external language.");
-		return null;
+	@Override
+	public String validateType(String parameterTypeInExtLanguage) {
+		
+		return JavaLanguageHelper.validateBasicJavaType(parameterTypeInExtLanguage);
 	}
-
-	public static boolean isLogicalTypeName(String type, IExtLanguageManager extLanguage) {
-
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			return SimpleLanguageHelper.isLogicalTypeName(type);
-		}
+	
+	@Override
+	public boolean isLogicalTypeName(String type) {
 
 		return JavaLanguageHelper.isBooleanTypeName(type);
 	}
 
-	public static String convertTextFromExtToIntrLanguage(String text, IExtLanguageManager extLanguage)  {
+	@Override
+	public String convertTextFromExtToIntrLanguage(String text)  {
 
-		String errorMessage = verifySeparatorsInName(text, extLanguage);
+		String errorMessage = verifySeparatorsInName(text);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);
 		}
 
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			text = SimpleLanguageHelper.convertTextFromSimpleToJavaLanguage(text);
-		}
-
 		return text;
 	}
 
-	public static String convertTextFromIntrToExtLanguage(String text, IExtLanguageManager extLanguage) {
+	@Override
+	public String convertTextFromIntrToExtLanguage(String text) {
 
 		String errorMessage = JavaLanguageHelper.verifySeparators(text);
 
@@ -83,21 +61,14 @@ public class ExtLanguageHelper {
 			ExceptionHelper.reportRuntimeException(errorMessage);
 		}
 
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			text = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(text);
-		}
-
 		return text;
 	}
 
-	public static String convertTypeFromIntrToExtLanguage(String type, IExtLanguageManager extLanguage) {
+	@Override
+	public String convertTypeFromIntrToExtLanguage(String type) {
 
 		if (!JavaLanguageHelper.isValidComplexTypeIdentifier(type)) {
 			ExceptionHelper.reportRuntimeException("Attempt to convert an invalid identifier.");
-		}
-
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			type = SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType(type);
 		}
 
 		return type;
@@ -183,7 +154,7 @@ public class ExtLanguageHelper {
 			className = StringHelper.getLastTokenOrInputString(className, ".");
 		}
 
-		className = ExtLanguageHelper.convertTextFromIntrToExtLanguage(className, extLanguage);
+		className = ExtLanguageManagerForJava.convertTextFromIntrToExtLanguage(className, extLanguage);
 		return className;
 	}
 
@@ -194,7 +165,7 @@ public class ExtLanguageHelper {
 			name = ModelHelper.getNonQualifiedName(name);
 		}
 
-		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
+		name = ExtLanguageManagerForJava.convertTextFromIntrToExtLanguage(name,  extLanguage);
 		return name;
 	}
 

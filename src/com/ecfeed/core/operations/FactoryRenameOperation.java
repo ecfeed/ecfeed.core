@@ -52,7 +52,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 
-			String newNameInJavaConvention = ExtLanguageHelper.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
+			String newNameInJavaConvention = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
 
 			String[] tokens = newNameInJavaConvention.split("\\.");
 

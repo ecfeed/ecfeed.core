@@ -25,7 +25,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JustifyType;
 import com.ecfeed.core.utils.StringHelper;
@@ -112,7 +112,7 @@ public class TestCasesExportHelper {
 
 	public static String getRegexPatternForMethodParameter(IExtLanguageManager extLanguage) {
 
-		return ExtLanguageHelper.chooseString(
+		return ExtLanguageManagerForSimple.chooseString(
 				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE, 
 				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE, 
 				extLanguage);
@@ -159,7 +159,7 @@ public class TestCasesExportHelper {
 			return Integer.parseInt(parameterDescriptionString);
 		} catch(NumberFormatException e) {
 
-			parameterDescriptionString = ExtLanguageHelper.convertTextFromExtToIntrLanguage(parameterDescriptionString, extLanguage);
+			parameterDescriptionString = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(parameterDescriptionString, extLanguage);
 			final int parameterNumber = methodNode.getParameterIndex(parameterDescriptionString) + 1;
 			return parameterNumber;
 		}
@@ -333,7 +333,7 @@ public class TestCasesExportHelper {
 
 	public static String getParameterSequencePattern(IExtLanguageManager extLanguage) {
 
-		return ExtLanguageHelper.chooseString(
+		return ExtLanguageManagerForSimple.chooseString(
 				TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE, 
 				TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE, 
 				extLanguage);

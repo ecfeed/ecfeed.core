@@ -23,7 +23,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -66,7 +66,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fTarget.setName(newNameInIntrLanguage);
 
 		RootNode rootNode = ModelHelper.findRoot(fTarget);
-		String errorMessage = ExtLanguageHelper.checkIsModelCompatibleWithExtLanguage(rootNode, fExtLanguage);
+		String errorMessage = ExtLanguageManagerForSimple.checkIsModelCompatibleWithExtLanguage(rootNode, fExtLanguage);
 
 		if (errorMessage != null) {
 			fTarget.setName(oldName);

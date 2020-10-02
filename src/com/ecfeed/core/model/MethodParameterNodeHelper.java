@@ -11,7 +11,7 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public class MethodParameterNodeHelper {
 
@@ -46,7 +46,7 @@ public class MethodParameterNodeHelper {
 	public static String getType(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguage) {
 
 		String type = methodParameterNode.getType();
-		type =  ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
+		type =  ExtLanguageManagerForSimple.convertTypeFromIntrToExtLanguage(type, extLanguage);
 
 		return type;
 	}
