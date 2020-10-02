@@ -80,11 +80,12 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
 
-		String message = checkIfIsAllowedParameterType(abstractNode);
-
-		if (message != null) {
-			return message;
-		}
+		// TODO SIMPLE-VIEW remove
+//		String message = checkIfIsAllowedParameterType(abstractNode);
+//
+//		if (message != null) {
+//			return message;
+//		}
 
 		List<? extends AbstractNode> childNodes = abstractNode.getChildren();
 
@@ -96,6 +97,8 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 			return null;
 
 		}
+		
+		String message = "";
 
 		for (AbstractNode childNode : childNodes) {
 
@@ -109,25 +112,25 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 		return null;
 	}
 
-	private static String checkIfIsAllowedParameterType(AbstractNode abstractNode) {
-
-		if (!(abstractNode instanceof AbstractParameterNode)) {
-			return null;
-		}
-
-		AbstractParameterNode abstractParameterNode = (AbstractParameterNode) abstractNode;
-
-		String type = abstractParameterNode.getType();
-
-		if (!JavaLanguageHelper.isJavaType(type)) {
-			return 
-					"Non java types are not allowed in simple view. \nNode: " + 
-					ModelHelper.getFullPath(abstractParameterNode, ExtLanguage.JAVA) + ".\n" +
-					" Type: " + type + ".";
-		}
-
-		return null;
-	}
+//	private static String checkIfIsAllowedParameterType(AbstractNode abstractNode) {
+//
+//		if (!(abstractNode instanceof AbstractParameterNode)) {
+//			return null;
+//		}
+//
+//		AbstractParameterNode abstractParameterNode = (AbstractParameterNode) abstractNode;
+//
+//		String type = abstractParameterNode.getType();
+//
+//		if (!JavaLanguageHelper.isJavaType(type)) {
+//			return 
+//					"Non java types are not allowed in simple view. \nNode: " + 
+//					ModelHelper.getFullPath(abstractParameterNode, ExtLanguage.JAVA) + ".\n" +
+//					" Type: " + type + ".";
+//		}
+//
+//		return null;
+//	}
 
 	private static String checkIsGlobalParameterOfRootDuplicated(RootNode rootNode) {
 

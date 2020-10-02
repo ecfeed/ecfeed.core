@@ -51,7 +51,7 @@ public final class SimpleLanguageHelper {
 		return SUPPORTED_SIMPLE_VIEW_TYPES;
 	}
 
-	public static String convertJavaTypeToSimpleType(String javaType) {
+	public static String conditionallyConvertJavaTypeToSimpleType(String javaType) {
 
 		if (javaType.equals(JavaLanguageHelper.TYPE_NAME_BYTE)) {
 			return TYPE_NAME_NUMBER;
@@ -85,24 +85,24 @@ public final class SimpleLanguageHelper {
 			return TYPE_NAME_LOGICAL;
 		} 
 
-		return null;
+		return javaType;
 	}
 
-	public static String convertSimpleTypeToJavaType(String javaType) {
+	public static String conditionallyConvertSimpleTypeToJavaType(String simpleType) {
 
-		if (javaType.equals(TYPE_NAME_NUMBER)) {
+		if (simpleType.equals(TYPE_NAME_NUMBER)) {
 			return JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		}
 
-		if (javaType.equals(TYPE_NAME_LOGICAL)) {
+		if (simpleType.equals(TYPE_NAME_LOGICAL)) {
 			return JavaLanguageHelper.getBooleanTypeName();
 		}
 
-		if (javaType.equals(TYPE_NAME_TEXT)) {
+		if (simpleType.equals(TYPE_NAME_TEXT)) {
 			return JavaLanguageHelper.getStringTypeName();
 		}
 
-		return null;
+		return simpleType;
 	}
 
 	public static boolean isLogicalTypeName(String typeName) {

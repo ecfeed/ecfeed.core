@@ -97,7 +97,7 @@ public class ExtLanguageHelper {
 		}
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			type = SimpleLanguageHelper.convertJavaTypeToSimpleType(type);
+			type = SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType(type);
 		}
 
 		return type;
@@ -106,7 +106,7 @@ public class ExtLanguageHelper {
 	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
 
 		if (extLanguage == ExtLanguage.SIMPLE) {
-			type = SimpleLanguageHelper.convertSimpleTypeToJavaType(type);
+			type = SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType(type);
 		}
 
 		if (!JavaLanguageHelper.isJavaType(type)) {
