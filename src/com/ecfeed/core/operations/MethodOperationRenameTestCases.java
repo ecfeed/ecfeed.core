@@ -15,7 +15,7 @@ import java.util.Collection;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodOperationRenameTestCases extends BulkOperation {
@@ -23,7 +23,7 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 	public MethodOperationRenameTestCases(
 			Collection<TestCaseNode> testCases, 
 			String newName,
-			ExtLanguageManager extLanguage) throws ModelOperationException {
+			IExtLanguageManager extLanguage) throws ModelOperationException {
 
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguage);
 

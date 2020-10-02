@@ -16,7 +16,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
@@ -67,7 +67,7 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
 	}
 
-	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase, ExtLanguageManager extLanguage) {
+	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase, IExtLanguageManager extLanguage) {
 		
 		super(OperationNames.REMOVE_TEST_CASE, extLanguage);
 		

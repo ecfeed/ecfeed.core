@@ -19,7 +19,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationAddTestCase extends AbstractModelOperation {
 
@@ -33,7 +33,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			TestCaseNode testCase, 
 			ITypeAdapterProvider typeAdapterProvider, 
 			int index,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		super(OperationNames.ADD_TEST_CASE, extLanguage);
 		fMethodNode = target;
@@ -46,7 +46,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			MethodNode target, 
 			TestCaseNode testCase, 
 			ITypeAdapterProvider typeAdapterProvider, 
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		this(target, testCase, typeAdapterProvider, -1, extLanguage);
 	}

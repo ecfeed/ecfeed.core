@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.Pair;
@@ -33,14 +33,14 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
-	public static String getName(ChoiceNode choiceNode, ExtLanguageManager extLanguage) {
+	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
 
 		String name = choiceNode.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
 		return name;
 	}
 
-	public static String getQualifiedName(ChoiceNode choiceNode, ExtLanguageManager extLanguage) {
+	public static String getQualifiedName(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
 
 		ChoiceNode parentChoice = getParentChoice(choiceNode);
 
@@ -68,7 +68,7 @@ public class ChoiceNodeHelper {
 		return null;
 	}
 
-	public static String createSignature(ChoiceNode choiceNode, ExtLanguageManager extLanguage) {
+	public static String createSignature(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
 
 		String qualifiedName = getQualifiedName(choiceNode, extLanguage);
 
@@ -81,7 +81,7 @@ public class ChoiceNodeHelper {
 		return qualifiedName + " [" + value + "]";
 	}
 
-	public static String createTestDataLabel(ChoiceNode choice, ExtLanguageManager extLanguage) {
+	public static String createTestDataLabel(ChoiceNode choice, IExtLanguageManager extLanguage) {
 
 		String result = "";
 
@@ -96,7 +96,7 @@ public class ChoiceNodeHelper {
 		return result;
 	}
 
-	public static String getValueString(ChoiceNode choiceNode, ExtLanguageManager extLanguage) {
+	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
 
 		String type = choiceNode.getParameter().getType();
 
@@ -153,7 +153,7 @@ public class ChoiceNodeHelper {
 		last.setParent(parameter);
 	}
 
-	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes, ExtLanguageManager extLanguage) {
+	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes, IExtLanguageManager extLanguage) {
 
 		List<String> choiceNames = new ArrayList<>();
 

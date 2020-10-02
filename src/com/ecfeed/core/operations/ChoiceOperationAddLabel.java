@@ -14,7 +14,7 @@ import java.util.Set;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
@@ -24,7 +24,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation(ExtLanguageManager extLanguage) {
+		public ReverseOperation(IExtLanguageManager extLanguage) {
 			super(ChoiceOperationAddLabel.this.getName(), extLanguage);
 		}
 
@@ -48,7 +48,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 	}
 
-	public ChoiceOperationAddLabel(ChoiceNode target, String label, ExtLanguageManager extLanguage){
+	public ChoiceOperationAddLabel(ChoiceNode target, String label, IExtLanguageManager extLanguage){
 		super(OperationNames.ADD_PARTITION_LABEL, extLanguage);
 
 		fTarget = target;

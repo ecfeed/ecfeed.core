@@ -23,7 +23,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryShiftOperation {
 	
@@ -31,12 +31,12 @@ public class FactoryShiftOperation {
 
 		private List<? extends AbstractNode> fShifted;
 		private boolean fUp;
-		private ExtLanguageManager fExtLanguage;
+		private IExtLanguageManager fExtLanguage;
 
 		public MoveUpDownOperationProvider(
 				List<? extends AbstractNode> shifted, 
 				boolean up,
-				ExtLanguageManager extLanguage) {
+				IExtLanguageManager extLanguage) {
 			fShifted = shifted;
 			fUp = up;
 			fExtLanguage = extLanguage;
@@ -125,9 +125,9 @@ public class FactoryShiftOperation {
 
 		private List<? extends AbstractNode> fShifted;
 		private int fShift;
-		private ExtLanguageManager fExtLanguage;
+		private IExtLanguageManager fExtLanguage;
 
-		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, ExtLanguageManager extLanguage){
+		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, IExtLanguageManager extLanguage){
 			fShifted = shifted;
 			fShift = calculateShift(shifted, index);
 			fExtLanguage = extLanguage;
@@ -215,7 +215,7 @@ public class FactoryShiftOperation {
 	public static GenericShiftOperation getShiftOperation(
 			List<? extends AbstractNode> shifted, 
 			boolean up,
-			ExtLanguageManager extLanguage) throws ModelOperationException{
+			IExtLanguageManager extLanguage) throws ModelOperationException{
 		
 		AbstractNode parent = getParent(shifted);
 		
@@ -224,7 +224,7 @@ public class FactoryShiftOperation {
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, ExtLanguageManager extLanguage) throws ModelOperationException {
+			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguage) throws ModelOperationException {
 		AbstractNode parent = getParent(shifted);
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguage));
 	}

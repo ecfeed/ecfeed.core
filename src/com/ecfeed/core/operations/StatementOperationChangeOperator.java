@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.EStatementOperator;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationChangeOperator extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class StatementOperationChangeOperator extends AbstractModelOperation {
 	private EStatementOperator fNewOperator;
 	private EStatementOperator fCurrentOperator;
 
-	public StatementOperationChangeOperator(StatementArray target, EStatementOperator operator, ExtLanguageManager extLanguage) {
+	public StatementOperationChangeOperator(StatementArray target, EStatementOperator operator, IExtLanguageManager extLanguage) {
 		super(OperationNames.CHANGE_STATEMENT_OPERATOR, extLanguage);
 		fTarget = target;
 		fNewOperator = operator;

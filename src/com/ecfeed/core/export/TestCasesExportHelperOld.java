@@ -11,7 +11,7 @@
 package com.ecfeed.core.export;
 
 import com.ecfeed.core.model.*;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JustifyType;
 import com.ecfeed.core.utils.StringHelper;
@@ -36,7 +36,7 @@ public class TestCasesExportHelperOld {
 	private static final String ARITHMETIC_EXPRESSION_SEQUENCE_GENERIC_PATTERN = "\\$\\(.*\\)";
 	private static final String PARAMETER_SEPARATOR = ",";
 
-	public static String generateSection(MethodNode method, String template, ExtLanguageManager extLanguage) {
+	public static String generateSection(MethodNode method, String template, IExtLanguageManager extLanguage) {
 
 		if (template == null) {
 			return new String();
@@ -53,7 +53,7 @@ public class TestCasesExportHelperOld {
 		return result;
 	}
 
-	public static String generateTestCaseString(int sequenceIndex, TestCaseNode testCase, String template, ExtLanguageManager extLanguage) {
+	public static String generateTestCaseString(int sequenceIndex, TestCaseNode testCase, String template, IExtLanguageManager extLanguage) {
 
 		MethodNode method = testCase.getMethod();
 
@@ -279,7 +279,7 @@ public class TestCasesExportHelperOld {
 		return null;
 	}
 
-	private static String replaceParameterSequences(TestCaseNode testCase, String template, ExtLanguageManager extLanguage) {
+	private static String replaceParameterSequences(TestCaseNode testCase, String template, IExtLanguageManager extLanguage) {
 
 		String result = replaceParameterNameSequences(testCase.getMethod(), template);
 
@@ -298,7 +298,7 @@ public class TestCasesExportHelperOld {
 		return result;
 	}
 
-	private static String createValueSubstitute(String parameterCommandSequence, TestCaseNode testCase, ExtLanguageManager extLanguage) {
+	private static String createValueSubstitute(String parameterCommandSequence, TestCaseNode testCase, IExtLanguageManager extLanguage) {
 
 		int parameterNumber = getParameterNumber(parameterCommandSequence, testCase.getMethod()) - 1;
 
@@ -317,7 +317,7 @@ public class TestCasesExportHelperOld {
 		return substitute;
 	}
 
-	private static String resolveChoiceCommand(String command, ChoiceNode choice, ExtLanguageManager extLanguage) {
+	private static String resolveChoiceCommand(String command, ChoiceNode choice, IExtLanguageManager extLanguage) {
 		String result = command;
 		switch(command){
 		case CHOICE_COMMAND_SHORT_NAME:
@@ -335,7 +335,7 @@ public class TestCasesExportHelperOld {
 		return result;
 	}
 
-	private static String getValue(ChoiceNode choice, ExtLanguageManager extLanguage) {
+	private static String getValue(ChoiceNode choice, IExtLanguageManager extLanguage) {
 		
 		String convertedValue = convertValue(choice);
 		

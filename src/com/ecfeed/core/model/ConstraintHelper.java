@@ -13,13 +13,13 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class ConstraintHelper {
 	
 	
-	public static String getSignature(Constraint constraint, ExtLanguageManager extLanguage) {
+	public static String getSignature(Constraint constraint, IExtLanguageManager extLanguage) {
 
 		String name = constraint.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);

@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public class GlobalParameterOperationSetType extends BulkOperation {
@@ -22,7 +22,7 @@ public class GlobalParameterOperationSetType extends BulkOperation {
 			GlobalParameterNode target, 
 			String newType, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		super(OperationNames.SET_TYPE, true, target, target, extLanguage);
 

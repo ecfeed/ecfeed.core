@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericShiftOperation extends AbstractModelOperation {
 
@@ -25,20 +25,20 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	private int fShiftSize;
 	private List<? extends AbstractNode> fCollection;
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, ExtLanguageManager extLanguage){
+	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, IExtLanguageManager extLanguage){
 		
 		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguage);
 	}
 
 	public GenericShiftOperation(
-			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, ExtLanguageManager extLanguage){
+			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, IExtLanguageManager extLanguage){
 		
 		this(collection, shifted, 0, extLanguage);
 		
 		fShiftSize = minAllowedShift(shifted, up);
 	}
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, ExtLanguageManager extLanguage){
+	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, IExtLanguageManager extLanguage){
 		super(OperationNames.MOVE, extLanguage);
 		shift = shiftAllowed(shifted, shift) ? shift : 0;
 		fToBeShifted = new ArrayList<>(shifted);

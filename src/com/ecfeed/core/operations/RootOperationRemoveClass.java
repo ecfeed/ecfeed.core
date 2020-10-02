@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class RootOperationRemoveClass extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 	private RootNode fTarget;
 	private int fCurrentIndex;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, ExtLanguageManager extLanguage) {
+	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, IExtLanguageManager extLanguage) {
 		super(OperationNames.REMOVE_CLASS, extLanguage);
 		fTarget = target;
 		fRemovedClass = removedClass;

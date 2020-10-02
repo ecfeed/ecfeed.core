@@ -24,7 +24,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationRemoveChoice extends BulkOperation {
 
@@ -53,7 +53,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 			}
 
-			public ReverseOperation(ExtLanguageManager extLanguage) {
+			public ReverseOperation(IExtLanguageManager extLanguage) {
 				super(RemoveChoiceOperation.this.getName(), extLanguage);
 			}
 
@@ -129,7 +129,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 				ChoicesParentNode target, 
 				ChoiceNode choice, 
 				ITypeAdapterProvider adapterProvider, 
-				ExtLanguageManager extLanguage){
+				IExtLanguageManager extLanguage){
 			
 			super(OperationNames.REMOVE_PARTITION, extLanguage);
 			fAdapterProvider = adapterProvider;
@@ -195,7 +195,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		super(OperationNames.REMOVE_PARTITION, true, target, target, extLanguage);
 

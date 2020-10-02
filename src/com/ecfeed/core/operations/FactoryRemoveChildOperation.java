@@ -22,17 +22,17 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryRemoveChildOperation implements IModelVisitor{
 
 	private AbstractNode fChild;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private ExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguage;
 
 	public FactoryRemoveChildOperation(
-			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguageManager extLanguage) {
+			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguage) {
 		fChild = child;
 		fValidate = validate;
 		fExtLanguage = extLanguage;

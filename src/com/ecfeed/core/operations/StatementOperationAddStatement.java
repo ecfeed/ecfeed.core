@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationAddStatement extends AbstractModelOperation {
 
@@ -21,7 +21,7 @@ public class StatementOperationAddStatement extends AbstractModelOperation {
 	private StatementArray fTarget;
 	private int fIndex;
 
-	public StatementOperationAddStatement(StatementArray parent, AbstractStatement statement, int index, ExtLanguageManager extLanguage) {
+	public StatementOperationAddStatement(StatementArray parent, AbstractStatement statement, int index, IExtLanguageManager extLanguage) {
 		super(OperationNames.ADD_STATEMENT, extLanguage);
 		fTarget = parent;
 		fStatement = statement;

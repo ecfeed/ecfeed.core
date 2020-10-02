@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -24,7 +24,7 @@ public class ClassNodeHelper {
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
 
-	public static String getNonQualifiedName(ClassNode classNode, ExtLanguageManager extLanguage) {
+	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String name = ModelHelper.getNonQualifiedName(classNode.getName());
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name,  extLanguage);
@@ -32,7 +32,7 @@ public class ClassNodeHelper {
 		return name;
 	}
 
-	public static String getQualifiedName(ClassNode classNode, ExtLanguageManager extLanguage) {
+	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String name = classNode.getName();
 		name = ExtLanguageHelper.getQualifiedName(name, extLanguage);
@@ -40,14 +40,14 @@ public class ClassNodeHelper {
 		return name;
 	}
 
-	public static String getPackageName(ClassNode classNode, ExtLanguageManager extLanguage) {
+	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String name = classNode.getName();
 
 		return ExtLanguageHelper.getPackageName(name, extLanguage);
 	}
 
-	public static String validateClassName(String nameInExternalLanguage, ExtLanguageManager extLanguage) {
+	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
 
 		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
 
@@ -68,7 +68,7 @@ public class ClassNodeHelper {
 			ClassNode classNode,
 			String methodNameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		String errorMessage = MethodNodeHelper.verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
 
@@ -102,7 +102,7 @@ public class ClassNodeHelper {
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		String errorMessage =
 				MethodNodeHelper.verifyMethodSignatureIsValid(
@@ -131,7 +131,7 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String createSignature(ClassNode classNode, ExtLanguageManager extLanguage) {
+	public static String createSignature(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String className = classNode.getName();
 
@@ -143,7 +143,7 @@ public class ClassNodeHelper {
 	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode,
 			MethodNode duplicateMethodNode,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 
 		String classSignature = createSignature(classNode, extLanguage);
@@ -164,7 +164,7 @@ public class ClassNodeHelper {
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
 			List<String> parameterTypesInExternalLanguage,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		List<MethodNode> methods = classNode.getMethods();
 

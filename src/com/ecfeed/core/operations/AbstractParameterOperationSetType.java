@@ -29,7 +29,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
@@ -42,7 +42,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	protected class ReverseOperation extends AbstractReverseOperation {
 
-		public ReverseOperation(ExtLanguageManager extLanguage) {
+		public ReverseOperation(IExtLanguageManager extLanguage) {
 			super(AbstractParameterOperationSetType.this, extLanguage);
 		}
 
@@ -84,7 +84,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			AbstractParameterNode target, 
 			String newType, 
 			ITypeAdapterProvider adapterProvider, 
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		super(OperationNames.SET_TYPE, extLanguage);
 

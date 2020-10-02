@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
@@ -28,7 +28,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation(ExtLanguageManager extLanguage) {
+		public ReverseOperation(IExtLanguageManager extLanguage) {
 			super(OperationNames.MAKE_CONSISTENT, extLanguage);
 		}
 
@@ -48,7 +48,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 	}
 
-	public MethodOperationMakeConsistent(MethodNode target, ExtLanguageManager extLanguage) {
+	public MethodOperationMakeConsistent(MethodNode target, IExtLanguageManager extLanguage) {
 		
 		super(OperationNames.MAKE_CONSISTENT, extLanguage);
 		

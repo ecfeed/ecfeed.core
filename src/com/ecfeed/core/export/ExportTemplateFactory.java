@@ -10,15 +10,15 @@
 package com.ecfeed.core.export;
 
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public class ExportTemplateFactory {
 
 	private MethodNode fMethodNode;
-	private ExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguage;
 
-	public ExportTemplateFactory(MethodNode methodNode, ExtLanguageManager extLanguage) {
+	public ExportTemplateFactory(MethodNode methodNode, IExtLanguageManager extLanguage) {
 		fMethodNode = methodNode;
 		fExtLanguage = extLanguage;
 	}

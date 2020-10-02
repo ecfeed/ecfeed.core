@@ -19,7 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ClassOperationAddMethod extends AbstractModelOperation{
 
@@ -29,14 +29,14 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ExtLanguageManager extLanguage) {
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, IExtLanguageManager extLanguage) {
 		super(OperationNames.ADD_METHOD, extLanguage);
 		fClassNode = target;
 		fMethod = method;
 		fIndex = index;
 	}
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, ExtLanguageManager extLanguage) {
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguage) {
 		this(target, method, -1, extLanguage);
 	}
 
@@ -73,7 +73,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private void generateUniqeNameForMethod(MethodNode methodNode) {
 
-		ExtLanguageManager extLanguage = getExtLanguage();
+		IExtLanguageManager extLanguage = getExtLanguage();
 
 		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, extLanguage);
 		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);

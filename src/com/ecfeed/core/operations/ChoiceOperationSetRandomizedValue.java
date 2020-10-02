@@ -5,7 +5,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation { 
 
@@ -19,7 +19,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 			ChoiceNode choiceNode, 
 			boolean newRandomized, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG, extLanguage);
 
@@ -66,7 +66,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 	}
 
 	private class ReverseOperation extends AbstractModelOperation {
-		public ReverseOperation(ExtLanguageManager extLanguage) {
+		public ReverseOperation(IExtLanguageManager extLanguage) {
 			super(ChoiceOperationSetRandomizedValue.this.getName(), extLanguage);
 		}
 

@@ -21,7 +21,7 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
@@ -34,7 +34,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 			MethodNode methodNode, 
 			MethodParameterNode methodParameterNode, 
 			int index,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		super(methodNode, methodParameterNode, index, true, extLanguage);
 
@@ -44,14 +44,14 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, ExtLanguageManager extLanguage) {
+	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, IExtLanguageManager extLanguage) {
 		this(target, parameter, -1, extLanguage);
 	}
 
 	@Override
 	public void execute() throws ModelOperationException {
 
-		ExtLanguageManager extLanguage = getExtLanguage();
+		IExtLanguageManager extLanguage = getExtLanguage();
 
 		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
 
@@ -88,7 +88,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	private class MethodReverseOperation extends ReverseOperation{
 
-		public MethodReverseOperation(ExtLanguageManager extLanguage) {
+		public MethodReverseOperation(IExtLanguageManager extLanguage) {
 			super(fMethodNode, fMethodParameterNode, extLanguage);
 		}
 

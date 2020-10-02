@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ConstraintNode extends AbstractNode{
@@ -34,7 +34,7 @@ public class ConstraintNode extends AbstractNode{
 	@Override
 	public String toString() {
 
-		return ConstraintHelper.getSignature(fConstraint, ExtLanguageManager.JAVA);
+		return ConstraintHelper.getSignature(fConstraint, IExtLanguageManager.JAVA);
 	}
 
 	@Override

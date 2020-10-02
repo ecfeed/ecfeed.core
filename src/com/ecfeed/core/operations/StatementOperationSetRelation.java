@@ -15,7 +15,7 @@ import java.util.Arrays;
 import com.ecfeed.core.model.IRelationalStatement;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationSetRelation extends AbstractModelOperation {
 
@@ -23,7 +23,7 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 	private EMathRelation fNewRelation;
 	private EMathRelation fCurrentRelation;
 
-	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, ExtLanguageManager extLanguage) {
+	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, IExtLanguageManager extLanguage) {
 		super(OperationNames.SET_STATEMENT_RELATION, extLanguage);
 		fTarget = target;
 		fNewRelation = relation;

@@ -25,7 +25,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryRemoveOperation {
 
@@ -66,9 +66,9 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
-		ExtLanguageManager fExtLanguage;
+		IExtLanguageManager fExtLanguage;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguageManager extLanguage) {
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguage) {
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
 			fExtLanguage = extLanguage;
@@ -119,7 +119,7 @@ public class FactoryRemoveOperation {
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, ExtLanguageManager extLanguage){
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguage){
 		try {
 			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, extLanguage));
 		} catch (Exception e) {

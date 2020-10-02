@@ -20,16 +20,16 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private MethodNode fMethodNode;
 	private TemplateText fTemplateText;
-	private ExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguage;
 
-	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText, ExtLanguageManager extLanguage) {
+	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText, IExtLanguageManager extLanguage) {
 
 		fMethodNode = methodNode;
 		fTemplateText = new TemplateText(defaultlTemplateText);

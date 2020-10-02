@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationAddLabels extends BulkOperation {
 	public ChoiceOperationAddLabels(
@@ -22,7 +22,7 @@ public class ChoiceOperationAddLabels extends BulkOperation {
 			Collection<String> labels, 
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation, 
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 
 		super(OperationNames.ADD_PARTITION_LABELS, false, 
 				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguage);

@@ -38,22 +38,22 @@ public class RegexHelper {
 	public static final String REGEX_STRING_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]{0,1024}";
 	public static final String REGEX_CHAR_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]";
 
-	public static String createMessageAllowedCharsForClass(ExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForClass(IExtLanguageManager extLanguage) {
 
 		return createMessageAllowedCharsForNode("Class", extLanguage);
 	}
 
-	public static String createMessageAllowedCharsForMethod(ExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForMethod(IExtLanguageManager extLanguage) {
 
 		return createMessageAllowedCharsForNode("Method", extLanguage);
 	}
 
-	public static String createMessageAllowedCharsForParameter(ExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForParameter(IExtLanguageManager extLanguage) {
 
 		return createMessageAllowedCharsForNode("Parameter", extLanguage);
 	}
 
-	public static String createMessageAllowedCharsForNode(String nodeName, ExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForNode(String nodeName, IExtLanguageManager extLanguage) {
 
 		String separator = ExtLanguageHelper.chooseString("_", "[SPACE]", extLanguage);
 

@@ -35,10 +35,10 @@ public class FactoryRenameOperation {
 
 	private static class ClassOperationRename extends GenericOperationRename {
 
-		ExtLanguageManager fExtLanguage;
+		IExtLanguageManager fExtLanguage;
 		String fNewName;
 
-		public ClassOperationRename(AbstractNode target, String newName, ExtLanguageManager extLanguage) {
+		public ClassOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguage) {
 			super(target, newName, extLanguage);
 			fExtLanguage = extLanguage;
 			fNewName = newName;
@@ -69,9 +69,9 @@ public class FactoryRenameOperation {
 
 	private static class MethodOperationRename extends GenericOperationRename {
 
-		ExtLanguageManager fExtLanguage;
+		IExtLanguageManager fExtLanguage;
 
-		public MethodOperationRename(MethodNode target, String newName, ExtLanguageManager extLanguage) {
+		public MethodOperationRename(MethodNode target, String newName, IExtLanguageManager extLanguage) {
 
 			super(target, newName, extLanguage);
 
@@ -91,7 +91,7 @@ public class FactoryRenameOperation {
 
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			ExtLanguageManager extLanguage = getExtLanguage();
+			IExtLanguageManager extLanguage = getExtLanguage();
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
@@ -109,9 +109,9 @@ public class FactoryRenameOperation {
 
 	private static class GlobalParameterOperationRename extends GenericOperationRename {
 
-		ExtLanguageManager fExtLanguage;
+		IExtLanguageManager fExtLanguage;
 
-		public GlobalParameterOperationRename(AbstractNode target, String newName, ExtLanguageManager extLanguage) {
+		public GlobalParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguage) {
 
 			super(target, newName, extLanguage);
 
@@ -137,9 +137,9 @@ public class FactoryRenameOperation {
 
 	private static class MethodParameterOperationRename extends GenericOperationRename {
 
-		ExtLanguageManager fExtLanguage;
+		IExtLanguageManager fExtLanguage;
 
-		public MethodParameterOperationRename(AbstractNode target, String newName, ExtLanguageManager extLanguage) {
+		public MethodParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguage) {
 			super(target, newName, extLanguage);
 			fExtLanguage = extLanguage;
 		}
@@ -163,9 +163,9 @@ public class FactoryRenameOperation {
 
 	private static class ChoiceOperationRename extends GenericOperationRename {
 
-		ExtLanguageManager fExtLanguage;
+		IExtLanguageManager fExtLanguage;
 
-		public ChoiceOperationRename(ChoiceNode target, String newName, ExtLanguageManager extLanguage) {
+		public ChoiceOperationRename(ChoiceNode target, String newName, IExtLanguageManager extLanguage) {
 
 			super(target, newName, extLanguage);
 
@@ -191,9 +191,9 @@ public class FactoryRenameOperation {
 	private static class RenameOperationProvider implements IModelVisitor{
 
 		private String fNewName;
-		private ExtLanguageManager fExtLanguage;
+		private IExtLanguageManager fExtLanguage;
 
-		public RenameOperationProvider(String newName, ExtLanguageManager extLanguage) {
+		public RenameOperationProvider(String newName, IExtLanguageManager extLanguage) {
 			fNewName = newName;
 			fExtLanguage = extLanguage;
 		}
@@ -239,7 +239,7 @@ public class FactoryRenameOperation {
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newName, ExtLanguageManager extLanguage){
+	public static IModelOperation getRenameOperation(AbstractNode target, String newName, IExtLanguageManager extLanguage){
 
 		try{
 			return (IModelOperation)target.accept(new RenameOperationProvider(newName, extLanguage));

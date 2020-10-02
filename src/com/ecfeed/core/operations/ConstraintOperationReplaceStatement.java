@@ -14,7 +14,7 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 
@@ -26,7 +26,7 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 			ConstraintNode target, 
 			AbstractStatement current, 
 			AbstractStatement newStatement,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 		
 		super(OperationNames.REPLACE_STATEMENT, extLanguage);
 		

@@ -10,11 +10,11 @@
 package com.ecfeed.core.export;
 
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class CsvExportTemplate extends AbstractExportTemplate {
 
-	public CsvExportTemplate(MethodNode methodNode, ExtLanguageManager extLanguage) {
+	public CsvExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguage) {
 
 		super(methodNode, createDefaultTemplateText(methodNode.getParametersCount()), extLanguage);
 	}

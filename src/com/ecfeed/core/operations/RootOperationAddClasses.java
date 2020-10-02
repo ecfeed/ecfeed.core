@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class RootOperationAddClasses extends BulkOperation {
 	
@@ -22,7 +22,7 @@ public class RootOperationAddClasses extends BulkOperation {
 			RootNode target, 
 			Collection<ClassNode> classes, 
 			int index,
-			ExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguage) {
 		
 		super(OperationNames.ADD_CLASSES, false, target, target, extLanguage);
 		

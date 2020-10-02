@@ -10,12 +10,12 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguageManager;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public abstract class AbstractNodeHelper  {
 
-	public static String getName(AbstractNode abstractNode, ExtLanguageManager extLanguage) {
+	public static String getName(AbstractNode abstractNode, IExtLanguageManager extLanguage) {
 
 		String nodeName = abstractNode.getName();
 		String text = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nodeName, extLanguage);
@@ -23,7 +23,7 @@ public abstract class AbstractNodeHelper  {
 		return text;
 	}
 
-	public static void setName(AbstractNode abstractNode, String name, ExtLanguageManager extLanguage) {
+	public static void setName(AbstractNode abstractNode, String name, IExtLanguageManager extLanguage) {
 
 		String text = ExtLanguageHelper.convertTextFromExtToIntrLanguage(name, extLanguage);
 		abstractNode.setName(text);
