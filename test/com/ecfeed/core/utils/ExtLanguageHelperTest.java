@@ -117,7 +117,7 @@ public class ExtLanguageHelperTest {
 		assertEquals("x", type);
 
 		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("x", ExtLanguage.SIMPLE);
-		assertNull(type);
+		assertEquals("x", type);
 	}
 
 	@Test

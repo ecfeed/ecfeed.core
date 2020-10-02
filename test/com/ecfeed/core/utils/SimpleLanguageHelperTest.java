@@ -57,25 +57,25 @@ public class SimpleLanguageHelperTest {
 	@Test
 	public void convertToSimpleTypeTest() {
 
-		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("byte"));
-		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("short"));
-		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("int"));
-		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("long"));
-		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("float"));
-		assertEquals("Number", SimpleLanguageHelper.convertJavaTypeToSimpleType("double"));
+		assertEquals("Number", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("byte"));
+		assertEquals("Number", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("short"));
+		assertEquals("Number", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("int"));
+		assertEquals("Number", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("long"));
+		assertEquals("Number", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("float"));
+		assertEquals("Number", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("double"));
 
-		assertEquals("Text", SimpleLanguageHelper.convertJavaTypeToSimpleType("char"));
-		assertEquals("Text", SimpleLanguageHelper.convertJavaTypeToSimpleType("String"));
+		assertEquals("Text", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("char"));
+		assertEquals("Text", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("String"));
 
-		assertEquals("Logical", SimpleLanguageHelper.convertJavaTypeToSimpleType("boolean"));
+		assertEquals("Logical", SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType("boolean"));
 	}
 
 	@Test
 	public void convertToJavaTypeTest() {
 
-		assertEquals("double", SimpleLanguageHelper.convertSimpleTypeToJavaType("Number"));
-		assertEquals("String", SimpleLanguageHelper.convertSimpleTypeToJavaType("Text"));
-		assertEquals("boolean", SimpleLanguageHelper.convertSimpleTypeToJavaType("Logical"));
+		assertEquals("double", SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType("Number"));
+		assertEquals("String", SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType("Text"));
+		assertEquals("boolean", SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType("Logical"));
 	}
 
 	@Test
