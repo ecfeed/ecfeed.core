@@ -112,7 +112,7 @@ public class TestCasesExportHelper {
 
 	public static String getRegexPatternForMethodParameter(ExtLanguage extLanguage) {
 
-		return ExtLanguageHelper.chooseRegex(
+		return ExtLanguageHelper.chooseString(
 				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE, 
 				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE, 
 				extLanguage);
@@ -333,7 +333,7 @@ public class TestCasesExportHelper {
 
 	public static String getParameterSequencePattern(ExtLanguage extLanguage) {
 
-		return ExtLanguageHelper.chooseRegex(
+		return ExtLanguageHelper.chooseString(
 				TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE, 
 				TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE, 
 				extLanguage);

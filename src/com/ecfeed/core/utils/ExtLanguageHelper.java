@@ -228,13 +228,13 @@ public class ExtLanguageHelper {
 		return pairOfSignatures;
 	}
 
-	public static String chooseRegex(String regexForJavalang, String regexForSimpleLang, ExtLanguage extLanguage) { // TODO SIMPLE-VIEW rename
+	public static String chooseString(String stringForJavalang, String stringForSimpleLang, ExtLanguage extLanguage) {
 
 		if  (extLanguage == ExtLanguage.JAVA)  {
-			return regexForJavalang;
+			return stringForJavalang;
 		}
 
-		return regexForSimpleLang;
+		return stringForSimpleLang;
 	}
 
 }
