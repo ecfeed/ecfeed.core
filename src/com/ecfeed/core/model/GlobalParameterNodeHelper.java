@@ -10,18 +10,18 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class GlobalParameterNodeHelper {
 
 
-	public static String getName(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
+	public static String getName(MethodParameterNode methodParameterNode, ExtLanguageManager extLanguage) {
 
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
 	}
 
-	public static String createSignature(GlobalParameterNode globalParameterNode, ExtLanguage extLanguage) {
+	public static String createSignature(GlobalParameterNode globalParameterNode, ExtLanguageManager extLanguage) {
 
 		String type = getType(globalParameterNode, extLanguage);
 		String qualifiedName = getQualifiedName(globalParameterNode, extLanguage);
@@ -31,7 +31,7 @@ public class GlobalParameterNodeHelper {
 
 	public static String getQualifiedName(
 			GlobalParameterNode globalParameterNode,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		String qualifiedName = globalParameterNode.getQualifiedName();
 		qualifiedName = ExtLanguageHelper.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
@@ -39,7 +39,7 @@ public class GlobalParameterNodeHelper {
 		return qualifiedName;
 	}
 
-	public static String getType(GlobalParameterNode globalParameterNode, ExtLanguage extLanguage) {
+	public static String getType(GlobalParameterNode globalParameterNode, ExtLanguageManager extLanguage) {
 
 		String type = globalParameterNode.getType();
 		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);

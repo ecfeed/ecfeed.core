@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public abstract class AbstractReverseOperation extends AbstractModelOperation {
 
-	public AbstractReverseOperation(AbstractModelOperation baseOperation, ExtLanguage extLanguage) {
+	public AbstractReverseOperation(AbstractModelOperation baseOperation, ExtLanguageManager extLanguage) {
 		super("reverse " + baseOperation, extLanguage);
 	}
 }

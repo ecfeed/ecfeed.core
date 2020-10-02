@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 

@@ -11,7 +11,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class ClassOperationSetRunOnAndroid extends AbstractModelOperation {
 
@@ -19,7 +19,7 @@ public class ClassOperationSetRunOnAndroid extends AbstractModelOperation {
 	private boolean fNewValue;
 	private boolean fOriginalValue;
 
-	public ClassOperationSetRunOnAndroid(ClassNode classNode, boolean newValue, ExtLanguage extLanguage) {
+	public ClassOperationSetRunOnAndroid(ClassNode classNode, boolean newValue, ExtLanguageManager extLanguage) {
 		super(OperationNames.SET_ANDROID_BASE_RUNNER, extLanguage);
 		fClassNode = classNode;
 		fNewValue = newValue;

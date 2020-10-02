@@ -14,7 +14,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class MethodOperationAddConstraint extends AbstractModelOperation {
 
@@ -22,7 +22,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
-	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index, ExtLanguage extLanguage){
+	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index, ExtLanguageManager extLanguage){
 		
 		super(OperationNames.ADD_CONSTRAINT, extLanguage);
 		
@@ -31,7 +31,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 		fIndex = index;
 	}
 
-	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint, ExtLanguage extLanguage){
+	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint, ExtLanguageManager extLanguage){
 		this(target, constraint, -1, extLanguage);
 	}
 

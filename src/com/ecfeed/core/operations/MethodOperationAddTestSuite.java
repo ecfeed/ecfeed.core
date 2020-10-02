@@ -16,7 +16,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCase;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class MethodOperationAddTestSuite extends BulkOperation {
 
@@ -25,7 +25,7 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 			String testSuiteName, 
 			List<TestCase> testCases, 
 			ITypeAdapterProvider typeAdapterProvider,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode, extLanguage);
 

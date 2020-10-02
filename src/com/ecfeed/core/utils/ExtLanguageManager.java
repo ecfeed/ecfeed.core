@@ -1,13 +1,13 @@
 package com.ecfeed.core.utils;
 
-public enum ExtLanguage {
+public enum ExtLanguageManager {
 
 	JAVA("JAVA"),
 	SIMPLE("SIMPLE");
 
 	private final String fCode;
 
-	ExtLanguage(String code) {
+	ExtLanguageManager(String code) {
 
 		fCode = code;
 	}
@@ -17,7 +17,7 @@ public enum ExtLanguage {
 		return fCode;
 	}
 	
-	public static ExtLanguage parse(String viewModeName) {
+	public static ExtLanguageManager parse(String viewModeName) {
 		
 		if (viewModeName == null) {
 			reportExceptionInvalidModeName();

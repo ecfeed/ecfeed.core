@@ -15,16 +15,16 @@ import com.ecfeed.core.utils.ExtLanguageHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String validateParameterType(String parameterTypeInExtLanguage, ExtLanguage extLanguage) {
+	public static String validateParameterType(String parameterTypeInExtLanguage, ExtLanguageManager extLanguage) {
 
 		return ExtLanguageHelper.validateType(parameterTypeInExtLanguage, extLanguage);
 	}
 
-	public static String getName(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+	public static String getName(AbstractParameterNode abstractParameterNode, ExtLanguageManager extLanguage) {
 		
 		String name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(abstractParameterNode.getName(), extLanguage);
 		return name;
@@ -34,7 +34,7 @@ public abstract class AbstractParameterNodeHelper {
 			String parameterTypeInIntrLanguage,
 			String parameterNameInIntrLanguage,
 			Boolean expectedFlag,
-			ExtLanguage extLanguageOfTheResult) {
+			ExtLanguageManager extLanguageOfTheResult) {
 
 		String signature = "";
 
@@ -61,7 +61,7 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createSignature(
 			AbstractParameterNode abstractParameterNode, 
 			boolean isExpected,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		String signature = 
 				createSignature(
@@ -108,7 +108,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createParameterSignature(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+	public static String createParameterSignature(AbstractParameterNode abstractParameterNode, ExtLanguageManager extLanguage) {
 
 		String name = abstractParameterNode.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
@@ -121,14 +121,14 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 
-	public static String createTypeSignature(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+	public static String createTypeSignature(AbstractParameterNode abstractParameterNode, ExtLanguageManager extLanguage) {
 
 		String type = abstractParameterNode.getType();
 		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);
 		return type;
 	}
 
-	public static String createNameSignature(AbstractParameterNode abstractParameterNode, ExtLanguage extLanguage) {
+	public static String createNameSignature(AbstractParameterNode abstractParameterNode, ExtLanguageManager extLanguage) {
 
 		String name = abstractParameterNode.getName();
 		name = ExtLanguageHelper.convertTextFromIntrToExtLanguage(name, extLanguage);
@@ -137,7 +137,7 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static List<String> convertParameterTypesToExtLanguage(
 			List<String> parameterTypes,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		List<String> result = new ArrayList<String>();
 

@@ -23,7 +23,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class FactoryShiftOperation {
 	
@@ -31,12 +31,12 @@ public class FactoryShiftOperation {
 
 		private List<? extends AbstractNode> fShifted;
 		private boolean fUp;
-		private ExtLanguage fExtLanguage;
+		private ExtLanguageManager fExtLanguage;
 
 		public MoveUpDownOperationProvider(
 				List<? extends AbstractNode> shifted, 
 				boolean up,
-				ExtLanguage extLanguage) {
+				ExtLanguageManager extLanguage) {
 			fShifted = shifted;
 			fUp = up;
 			fExtLanguage = extLanguage;
@@ -125,9 +125,9 @@ public class FactoryShiftOperation {
 
 		private List<? extends AbstractNode> fShifted;
 		private int fShift;
-		private ExtLanguage fExtLanguage;
+		private ExtLanguageManager fExtLanguage;
 
-		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, ExtLanguage extLanguage){
+		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, ExtLanguageManager extLanguage){
 			fShifted = shifted;
 			fShift = calculateShift(shifted, index);
 			fExtLanguage = extLanguage;
@@ -215,7 +215,7 @@ public class FactoryShiftOperation {
 	public static GenericShiftOperation getShiftOperation(
 			List<? extends AbstractNode> shifted, 
 			boolean up,
-			ExtLanguage extLanguage) throws ModelOperationException{
+			ExtLanguageManager extLanguage) throws ModelOperationException{
 		
 		AbstractNode parent = getParent(shifted);
 		
@@ -224,7 +224,7 @@ public class FactoryShiftOperation {
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, ExtLanguage extLanguage) throws ModelOperationException {
+			List<? extends AbstractNode> shifted, int newIndex, ExtLanguageManager extLanguage) throws ModelOperationException {
 		AbstractNode parent = getParent(shifted);
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguage));
 	}

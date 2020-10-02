@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 
@@ -26,7 +26,7 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 			NodePropertyDefs.PropertyId propertyId, 
 			String value,
 			AbstractNode abstractNode,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		super(OperationNames.SET_PROPERTY, extLanguage);
 		

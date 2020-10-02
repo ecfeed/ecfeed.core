@@ -22,7 +22,7 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class MethodParameterShiftOperation extends GenericShiftOperation {
 
@@ -32,7 +32,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 			List<AbstractParameterNode> parameters, 
 			AbstractNode shifted, 
 			boolean up,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguage);
 	}
@@ -41,7 +41,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 			List<AbstractParameterNode> parameters, 
 			List<? extends AbstractNode> shifted, 
 			boolean up, 
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 		this(parameters, shifted, 0, extLanguage);
 		setShift(minAllowedShift(shifted, up));
 	}
@@ -50,7 +50,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 			List<AbstractParameterNode> parameters, 
 			List<? extends AbstractNode> shifted, 
 			int shift,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 		super(parameters, shifted, shift, extLanguage);
 		fParameters = parameters;
 	}

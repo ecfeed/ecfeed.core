@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
@@ -20,7 +20,7 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 	private AbstractParameterNode fTarget;
 	private String fCurrentComments;
 
-	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments, ExtLanguage extLanguage) {
+	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments, ExtLanguageManager extLanguage) {
 		super(OperationNames.SET_COMMENTS, extLanguage);
 		fTarget = target;
 		fComments = comments;

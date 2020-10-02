@@ -43,18 +43,18 @@ import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class MethodParameterOperationSetType extends BulkOperation {
 
-	private ExtLanguage fExtLanguage;
+	private ExtLanguageManager fExtLanguage;
 
 	public MethodParameterOperationSetType(
 			MethodParameterNode targetMethodParameterNode, 
 			String newType, 
-			ExtLanguage extLanguage,
+			ExtLanguageManager extLanguage,
 			ITypeAdapterProvider adapterProvider) {
 
 		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguage);
@@ -85,7 +85,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				MethodParameterNode target, 
 				String newType, 
 				ITypeAdapterProvider adapterProvider, 
-				ExtLanguage extLanguage) {
+				ExtLanguageManager extLanguage) {
 
 			super(target, newType, adapterProvider, extLanguage);
 
@@ -117,7 +117,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
 
-			List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, ExtLanguage.JAVA);
+			List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(oldMethodNode, ExtLanguageManager.JAVA);
 
 			String newParameterType = getNewType();
 
@@ -354,7 +354,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
 
-			public ReverseSetTypeOperation(ExtLanguage extLanguage) {
+			public ReverseSetTypeOperation(ExtLanguageManager extLanguage) {
 
 				super(extLanguage);
 			}

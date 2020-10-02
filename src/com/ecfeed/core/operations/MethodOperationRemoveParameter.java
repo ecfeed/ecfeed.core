@@ -20,13 +20,13 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
 public class MethodOperationRemoveParameter extends BulkOperation{
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguage extLanguage) {
+			MethodNode target, MethodParameterNode parameter, boolean validate, ExtLanguageManager extLanguage) {
 
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
 
@@ -37,7 +37,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		}
 	}
 
-	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
+	public MethodOperationRemoveParameter(MethodNode target, MethodParameterNode parameter, ExtLanguageManager extLanguage) {
 		this(target, parameter, true, extLanguage);
 	}
 
@@ -46,7 +46,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			MethodParameterNode parameter, 
 			boolean validate, 
 			boolean ignoreDuplicates, 
-			ExtLanguage extLanguage){
+			ExtLanguageManager extLanguage){
 
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguage);
 
@@ -61,7 +61,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
 
-		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ExtLanguage extLanguage) {
+		public RemoveMethodParameterOperation(MethodNode target, MethodParameterNode parameter, ExtLanguageManager extLanguage) {
 			super(target, parameter, extLanguage);
 			fOriginalTestCases = new ArrayList<>();
 		}
@@ -70,7 +70,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 				MethodNode target, 
 				MethodParameterNode parameter, 
 				boolean ignoreDuplicates,
-				ExtLanguage extLanguage) {
+				ExtLanguageManager extLanguage) {
 
 			this(target, parameter, extLanguage);
 
@@ -160,7 +160,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		private class ReverseOperation extends AbstractReverseOperation {
 
-			public ReverseOperation(ExtLanguage extLanguage) {
+			public ReverseOperation(ExtLanguageManager extLanguage) {
 				super(RemoveMethodParameterOperation.this, extLanguage);
 			}
 

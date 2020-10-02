@@ -23,13 +23,13 @@ import com.ecfeed.core.model.SimpleLanguageModelVerifier;
 public class ExtLanguageHelper {
 
 
-	public static String verifySeparatorsInName(String nameInExternalLanguage, ExtLanguage extLanguage) {
+	public static String verifySeparatorsInName(String nameInExternalLanguage, ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.JAVA) {
+		if (extLanguage == ExtLanguageManager.JAVA) {
 			return JavaLanguageHelper.verifySeparators(nameInExternalLanguage);
 		}
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			return SimpleLanguageHelper.verifySeparators(nameInExternalLanguage);
 		}
 
@@ -37,13 +37,13 @@ public class ExtLanguageHelper {
 		return null;
 	}
 
-	public static String validateType(String parameterTypeInExtLanguage, ExtLanguage extLanguage) {
+	public static String validateType(String parameterTypeInExtLanguage, ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.JAVA) {
+		if (extLanguage == ExtLanguageManager.JAVA) {
 			return JavaLanguageHelper.validateBasicJavaType(parameterTypeInExtLanguage);
 		}
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			return SimpleLanguageHelper.validateType(parameterTypeInExtLanguage);
 		}
 
@@ -51,16 +51,16 @@ public class ExtLanguageHelper {
 		return null;
 	}
 
-	public static boolean isLogicalTypeName(String type, ExtLanguage extLanguage) {
+	public static boolean isLogicalTypeName(String type, ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			return SimpleLanguageHelper.isLogicalTypeName(type);
 		}
 
 		return JavaLanguageHelper.isBooleanTypeName(type);
 	}
 
-	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguage extLanguage)  {
+	public static String convertTextFromExtToIntrLanguage(String text, ExtLanguageManager extLanguage)  {
 
 		String errorMessage = verifySeparatorsInName(text, extLanguage);
 
@@ -68,14 +68,14 @@ public class ExtLanguageHelper {
 			ExceptionHelper.reportRuntimeException(errorMessage);
 		}
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			text = SimpleLanguageHelper.convertTextFromSimpleToJavaLanguage(text);
 		}
 
 		return text;
 	}
 
-	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguage extLanguage) {
+	public static String convertTextFromIntrToExtLanguage(String text, ExtLanguageManager extLanguage) {
 
 		String errorMessage = JavaLanguageHelper.verifySeparators(text);
 
@@ -83,29 +83,29 @@ public class ExtLanguageHelper {
 			ExceptionHelper.reportRuntimeException(errorMessage);
 		}
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			text = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(text);
 		}
 
 		return text;
 	}
 
-	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguage extLanguage) {
+	public static String convertTypeFromIntrToExtLanguage(String type, ExtLanguageManager extLanguage) {
 
 		if (!JavaLanguageHelper.isValidComplexTypeIdentifier(type)) {
 			ExceptionHelper.reportRuntimeException("Attempt to convert an invalid identifier.");
 		}
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			type = SimpleLanguageHelper.conditionallyConvertJavaTypeToSimpleType(type);
 		}
 
 		return type;
 	}
 
-	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguage extLanguage) {
+	public static String convertTypeFromExtToIntrLanguage(String type, ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			type = SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType(type);
 		}
 
@@ -117,9 +117,9 @@ public class ExtLanguageHelper {
 	}
 
 	public static String conditionallyConvertSpecialValueToExtLanguage(
-			String valueInIntrLanguage, String typeInIntrLanguage, ExtLanguage extLanguage) {
+			String valueInIntrLanguage, String typeInIntrLanguage, ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.JAVA) {
+		if (extLanguage == ExtLanguageManager.JAVA) {
 			return valueInIntrLanguage;
 		}
 
@@ -132,11 +132,11 @@ public class ExtLanguageHelper {
 		return convertedValue;
 	}
 
-	public static List<String> getSymbolicNamesOfSpecialValues(String typeName, ExtLanguage extLanguage) {
+	public static List<String> getSymbolicNamesOfSpecialValues(String typeName, ExtLanguageManager extLanguage) {
 
 		List<String> items;
 
-		if (extLanguage == ExtLanguage.JAVA) {
+		if (extLanguage == ExtLanguageManager.JAVA) {
 			items = JavaLanguageHelper.getSymbolicNamesOfSpecialValues(typeName);
 		} else {
 			items = JavaLanguageHelper.getSymbolicNamesOfSpecialValuesForNonNumericTypes(typeName);
@@ -145,19 +145,19 @@ public class ExtLanguageHelper {
 		return items;
 	}
 
-	public static void reportExceptionAllTypesAreUsed(ExtLanguage extLanguage) {
+	public static void reportExceptionAllTypesAreUsed(ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			ExceptionHelper.reportClientException("Cannot find not used parameter type. All possible types are already used.");
 		}
 	}
 
 	// TODO SIMPLE-VIEW test
-	public static String[] createListListOfSupportedTypes(ExtLanguage extLanguage) {
+	public static String[] createListListOfSupportedTypes(ExtLanguageManager extLanguage) {
 
 		String[] typeList;
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			typeList = SimpleLanguageHelper.getSupportedSimpleViewTypes();
 		} else {
 			typeList = JavaLanguageHelper.getSupportedJavaTypes();
@@ -167,9 +167,9 @@ public class ExtLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW test
-	public static String getPackageName(String name, ExtLanguage extLanguage) {
+	public static String getPackageName(String name, ExtLanguageManager extLanguage) {
 
-		if (extLanguage  == ExtLanguage.SIMPLE) {
+		if (extLanguage  == ExtLanguageManager.SIMPLE) {
 			return "";
 		}
 
@@ -177,9 +177,9 @@ public class ExtLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW test
-	public static String createClassNameSignature(String className, ExtLanguage extLanguage) {
+	public static String createClassNameSignature(String className, ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			className = StringHelper.getLastTokenOrInputString(className, ".");
 		}
 
@@ -188,9 +188,9 @@ public class ExtLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW test
-	public static String getQualifiedName(String name, ExtLanguage extLanguage) {
+	public static String getQualifiedName(String name, ExtLanguageManager extLanguage) {
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			name = ModelHelper.getNonQualifiedName(name);
 		}
 
@@ -205,11 +205,11 @@ public class ExtLanguageHelper {
 	}
 
 	// TODO SIMPLE-VIEW test
-	public static String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode, ExtLanguage extLanguage) {
+	public static String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode, ExtLanguageManager extLanguage) {
 
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
 
-		if (extLanguage == ExtLanguage.SIMPLE) {
+		if (extLanguage == ExtLanguageManager.SIMPLE) {
 			String result = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
 			return result;
 		}
@@ -222,15 +222,15 @@ public class ExtLanguageHelper {
 
 		Pair<String,String> pairOfSignatures = 
 				new Pair<String, String>(
-						MethodNodeHelper.createSignature(methodNode, ExtLanguage.SIMPLE),
-						MethodNodeHelper.createSignature(methodNode, ExtLanguage.JAVA));
+						MethodNodeHelper.createSignature(methodNode, ExtLanguageManager.SIMPLE),
+						MethodNodeHelper.createSignature(methodNode, ExtLanguageManager.JAVA));
 
 		return pairOfSignatures;
 	}
 
-	public static String chooseString(String stringForJavalang, String stringForSimpleLang, ExtLanguage extLanguage) {
+	public static String chooseString(String stringForJavalang, String stringForSimpleLang, ExtLanguageManager extLanguage) {
 
-		if  (extLanguage == ExtLanguage.JAVA)  {
+		if  (extLanguage == ExtLanguageManager.JAVA)  {
 			return stringForJavalang;
 		}
 

@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class ConstraintNodeHelper {
 
-	public static String createSignature(ConstraintNode constraintNode, ExtLanguage extLanguage) {
+	public static String createSignature(ConstraintNode constraintNode, ExtLanguageManager extLanguage) {
 
 		return ConstraintHelper.getSignature(constraintNode.getConstraint(), extLanguage);
 	}

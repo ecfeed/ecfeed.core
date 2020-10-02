@@ -13,11 +13,11 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class XmlExportTemplate extends AbstractExportTemplate {
 
-	public XmlExportTemplate(MethodNode methodNode, ExtLanguage extLanguage) {
+	public XmlExportTemplate(MethodNode methodNode, ExtLanguageManager extLanguage) {
 		super(methodNode, createDefaultTemplateText(methodNode), extLanguage);
 	}
 

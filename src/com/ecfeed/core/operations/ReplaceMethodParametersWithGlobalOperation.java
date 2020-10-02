@@ -20,7 +20,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 
@@ -30,7 +30,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 				MethodParameterNode target, 
 				GlobalParametersParentNode parent, 
 				ITypeAdapterProvider adapterProvider,
-				ExtLanguage extLanguage) {
+				ExtLanguageManager extLanguage) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguage);
 			MethodNode method = target.getMethod();
 			GlobalParameterNode global = new GlobalParameterNode(target);
@@ -64,7 +64,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 			GlobalParametersParentNode parent, 
 			List<MethodParameterNode> originals, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 		
 		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguage);
 		

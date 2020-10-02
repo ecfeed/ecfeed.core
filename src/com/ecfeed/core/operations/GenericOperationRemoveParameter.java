@@ -13,16 +13,16 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 	private ParametersParentNode fParametersParentNode;
 	private AbstractParameterNode fAbstractParameterNode;
 	private int fOriginalIndex;
-	private ExtLanguage fExtLanguage;
+	private ExtLanguageManager fExtLanguage;
 
-	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage extLanguage) {
+	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguageManager extLanguage) {
 
 		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguage);
 
@@ -41,7 +41,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		markModelUpdated();
 	}
 
-	public ExtLanguage getExtLanguage() {
+	public ExtLanguageManager getExtLanguage() {
 
 		return fExtLanguage;
 	}

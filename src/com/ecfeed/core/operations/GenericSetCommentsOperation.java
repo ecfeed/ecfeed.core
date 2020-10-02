@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class GenericSetCommentsOperation extends AbstractModelOperation {
 
@@ -20,7 +20,7 @@ public class GenericSetCommentsOperation extends AbstractModelOperation {
 	private AbstractNode fTarget;
 	private String fCurrentComments;
 
-	public GenericSetCommentsOperation(AbstractNode target, String comments, ExtLanguage extLanguage) {
+	public GenericSetCommentsOperation(AbstractNode target, String comments, ExtLanguageManager extLanguage) {
 
 		super(OperationNames.SET_COMMENTS, extLanguage);
 		

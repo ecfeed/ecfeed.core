@@ -21,7 +21,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class GenericMoveOperation extends BulkOperation {
 
@@ -29,7 +29,7 @@ public class GenericMoveOperation extends BulkOperation {
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguage extLanguage) throws ModelOperationException {
+			ExtLanguageManager extLanguage) throws ModelOperationException {
 		
 		this(moved, newParent, adapterProvider, -1, extLanguage);
 	}
@@ -39,7 +39,7 @@ public class GenericMoveOperation extends BulkOperation {
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
 			int newIndex,
-			ExtLanguage extLanguage) throws ModelOperationException {
+			ExtLanguageManager extLanguage) throws ModelOperationException {
 
 		super(OperationNames.MOVE, true, newParent, getParent(moved), extLanguage);
 

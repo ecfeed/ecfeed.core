@@ -17,7 +17,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class GenericOperationAddChoice extends BulkOperation {
 	
@@ -27,7 +27,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 			ITypeAdapterProvider adapterProvider, 
 			int index, 
 			boolean validate, 
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		super(OperationNames.ADD_PARTITION, true, target, target, extLanguage);
 		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index, extLanguage));
@@ -44,7 +44,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		this(target, choice, adapterProvider, -1, validate, extLanguage);
 	}
@@ -56,7 +56,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 		private ITypeAdapterProvider fAdapterProvider;
 
 		public AddChoiceOperation(
-				ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, ExtLanguage extLanguage) {
+				ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, ExtLanguageManager extLanguage) {
 
 			super(OperationNames.ADD_PARTITION, extLanguage);
 			fChoicesParentNode = target;

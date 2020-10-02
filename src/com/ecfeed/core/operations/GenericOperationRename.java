@@ -22,7 +22,7 @@ import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
@@ -33,12 +33,12 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fNewNameInExtLanguage;
 	private String fOriginalName;
 	private String fJavaNameRegex;
-	private ExtLanguage fExtLanguage;
+	private ExtLanguageManager fExtLanguage;
 
 	public GenericOperationRename(
 			AbstractNode target, 
 			String newNameInExtLanguage, 
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		super(OperationNames.RENAME, extLanguage);
 
@@ -60,7 +60,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		String newNameInIntrLanguage = convertTextFromExtToIntrLanguage(fNewNameInExtLanguage, fExtLanguage);
 		
 		if (!(fTarget instanceof RootNode)) {
-			verifyNameWithJavaRegex(newNameInIntrLanguage, fJavaNameRegex, fTarget, ExtLanguage.JAVA);
+			verifyNameWithJavaRegex(newNameInIntrLanguage, fJavaNameRegex, fTarget, ExtLanguageManager.JAVA);
 		}
 		
 		fTarget.setName(newNameInIntrLanguage);
@@ -99,7 +99,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 			String name, 
 			String regex, 
 			AbstractNode targetNode,
-			ExtLanguage extLanguage) throws ModelOperationException {
+			ExtLanguageManager extLanguage) throws ModelOperationException {
 
 		if (name.matches(regex) == false) {
 			ModelOperationException.report(getRegexProblemMessage(targetNode, extLanguage));
@@ -113,7 +113,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return "*";
 	}
 
-	private static String getRegexProblemMessage(AbstractNode abstractNode, ExtLanguage extLanguage){
+	private static String getRegexProblemMessage(AbstractNode abstractNode, ExtLanguageManager extLanguage){
 		try{
 			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguage));
 		}catch(Exception e){SystemLogger.logCatch(e);}
@@ -122,9 +122,9 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	private static class RegexProblemMessageProvider implements IModelVisitor {
 
-		private ExtLanguage fExtLanguage;
+		private ExtLanguageManager fExtLanguage;
 
-		public RegexProblemMessageProvider(ExtLanguage extLanguage) {
+		public RegexProblemMessageProvider(ExtLanguageManager extLanguage) {
 			fExtLanguage = extLanguage;
 		}
 

@@ -12,11 +12,11 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class TestCaseNodeHelper {
 
-	public static String createSignature(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
+	public static String createSignature(TestCaseNode testCaseNode, ExtLanguageManager extLanguage) {
 
 		String methodName = getMethodName(testCaseNode, extLanguage);
 
@@ -33,12 +33,12 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
-	public static String getTestDataString(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
+	public static String getTestDataString(TestCaseNode testCaseNode, ExtLanguageManager extLanguage) {
 
 		return getTestDataString(testCaseNode.getTestData(), extLanguage);
 	}
 
-	private static String getTestDataString(List<ChoiceNode> testData, ExtLanguage extLanguage) {
+	private static String getTestDataString(List<ChoiceNode> testData, ExtLanguageManager extLanguage) {
 
 		String result = new String();
 
@@ -55,7 +55,7 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
-	private static String getMethodName(TestCaseNode testCaseNode, ExtLanguage extLanguage) {
+	private static String getMethodName(TestCaseNode testCaseNode, ExtLanguageManager extLanguage) {
 
 		AbstractNode parent = testCaseNode.getParent();
 

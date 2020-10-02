@@ -10,11 +10,11 @@
 package com.ecfeed.core.export;
 
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class BasicExportTemplate extends AbstractExportTemplate {
 
-	public BasicExportTemplate(MethodNode methodNode, String templateText, ExtLanguage extLanguage) {
+	public BasicExportTemplate(MethodNode methodNode, String templateText, ExtLanguageManager extLanguage) {
 		super(methodNode, templateText, extLanguage);
 	}
 

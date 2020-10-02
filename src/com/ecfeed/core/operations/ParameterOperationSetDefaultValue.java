@@ -14,7 +14,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 
@@ -23,7 +23,7 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 	private String fNewValue;
 	private String fOriginalValue;
 
-	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, ExtLanguage extLanguage) {
+	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, ExtLanguageManager extLanguage) {
 		super(OperationNames.SET_DEFAULT_VALUE, extLanguage);
 		fTarget = target;
 		fNewValue = newValue;

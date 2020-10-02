@@ -13,19 +13,19 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodNodeHelper {
 
-	public static String getName(MethodNode methodNode, ExtLanguage extLanguage) {
+	public static String getName(MethodNode methodNode, ExtLanguageManager extLanguage) {
 
 		return AbstractNodeHelper.getName(methodNode, extLanguage);
 	}
 
-	public static void setName(MethodNode methodNode, String name, ExtLanguage extLanguage) {
+	public static void setName(MethodNode methodNode, String name, ExtLanguageManager extLanguage) {
 
 		AbstractNodeHelper.setName(methodNode, name, extLanguage);
 	}
@@ -41,7 +41,7 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguage extLanguage) {
+	public static List<String> getMethodParameterTypes(MethodNode method, ExtLanguageManager extLanguage) {
 
 		List<String> result = new ArrayList<String>();
 
@@ -57,7 +57,7 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static String validateMethodName(String nameInExternalLanguage, ExtLanguage extLanguage) {
+	public static String validateMethodName(String nameInExternalLanguage, ExtLanguageManager extLanguage) {
 
 		String errorMessage = ExtLanguageHelper.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
 
@@ -77,7 +77,7 @@ public class MethodNodeHelper {
 	public static String verifyMethodSignatureIsValid(
 			String methodNameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
 
@@ -95,7 +95,7 @@ public class MethodNodeHelper {
 	}
 
 	public static String validateMethodParameterTypes(List<String> parameterTypesInExtLanguage,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		String errorMessage;
 
@@ -111,7 +111,7 @@ public class MethodNodeHelper {
 		return null;
 	}
 
-	public static String createSignature(MethodNode methodNode, ExtLanguage extLanguage) {
+	public static String createSignature(MethodNode methodNode, ExtLanguageManager extLanguage) {
 
 		return MethodNodeHelper.createSignature(
 				methodNode,
@@ -121,7 +121,7 @@ public class MethodNodeHelper {
 	public static String createSignature(
 			MethodNode methodNode,
 			boolean isExpectedDecorationAdded, 
-			ExtLanguage extLanguageOfTheResult) {
+			ExtLanguageManager extLanguageOfTheResult) {
 
 
 		final List<Boolean> expectedParametersFlags =
@@ -138,14 +138,14 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	public static String createLongSignature(MethodNode methodNode, ExtLanguage extLanguage) {
+	public static String createLongSignature(MethodNode methodNode, ExtLanguageManager extLanguage) {
 
 		String shortSignature = createSignature(methodNode, extLanguage);
 
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
 
-	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguage extLanguage) {
+	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, ExtLanguageManager extLanguage) {
 
 		String signature = createSignature(methodNode, true, extLanguage);
 
@@ -157,7 +157,7 @@ public class MethodNodeHelper {
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames, 
 			List<Boolean> expectedFlags, 
-			ExtLanguage extLanguageOfTheResult) {
+			ExtLanguageManager extLanguageOfTheResult) {
 
 		String nameInExtLanguage = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguageOfTheResult);
 
@@ -223,7 +223,7 @@ public class MethodNodeHelper {
 
 	public static String createSignaturesOfParameters(
 			MethodNode methodNode,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		String signature = "";
 		int paramCount = methodNode.getParametersCount();
@@ -256,7 +256,7 @@ public class MethodNodeHelper {
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames,
 			List<Boolean> expectedFlags, 
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		String signature = "";
 

@@ -17,7 +17,7 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class MethodParameterOperationSetLink extends BulkOperation {
 
@@ -28,7 +28,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		private class ReverseOperation extends AbstractReverseOperation{
 
-			public ReverseOperation(ExtLanguage extLanguage) {
+			public ReverseOperation(ExtLanguageManager extLanguage) {
 				super(MethodParameterOperationSetLink.this, extLanguage);
 			}
 
@@ -45,7 +45,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		}
 
-		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link, ExtLanguage extLanguage) {
+		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link, ExtLanguageManager extLanguage) {
 			super(OperationNames.SET_LINK, extLanguage);
 			fTarget = target;
 			fNewLink = link;
@@ -78,7 +78,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 	}
 
-	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link, ExtLanguage extLanguage) {
+	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link, ExtLanguageManager extLanguage) {
 		super(OperationNames.SET_LINK, true, target, target, extLanguage);
 		addOperation(new SetLinkOperation(target, link, extLanguage));
 		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguage));

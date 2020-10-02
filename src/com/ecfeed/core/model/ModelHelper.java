@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
 	
-	public static String getFullPath(AbstractNode abstractNode, ExtLanguage extLanguage) {
+	public static String getFullPath(AbstractNode abstractNode, ExtLanguageManager extLanguage) {
 		
 		List<String> nodeNames = new ArrayList<String>();
 		

@@ -17,7 +17,7 @@ import java.util.Set;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class BulkOperation extends AbstractModelOperation {
 
@@ -38,7 +38,7 @@ public class BulkOperation extends AbstractModelOperation {
 			boolean atomic,
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		this(name, new ArrayList<IModelOperation>(), atomic, 
 				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguage);
@@ -50,7 +50,7 @@ public class BulkOperation extends AbstractModelOperation {
 			boolean atomic, 
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToelectAfterReverseOperation, 
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		super(name, extLanguage);
 

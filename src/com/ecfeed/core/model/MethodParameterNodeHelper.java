@@ -10,20 +10,20 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 import com.ecfeed.core.utils.ExtLanguageHelper;
 
 public class MethodParameterNodeHelper {
 
 
-	public static String getName(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
+	public static String getName(MethodParameterNode methodParameterNode, ExtLanguageManager extLanguage) {
 
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
 	}
 
 	public static String createSignature(
 			MethodParameterNode methodParameterNode,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		String type = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, extLanguage);
 		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguage);
@@ -43,7 +43,7 @@ public class MethodParameterNodeHelper {
 		return signature;
 	}
 
-	public static String getType(MethodParameterNode methodParameterNode, ExtLanguage extLanguage) {
+	public static String getType(MethodParameterNode methodParameterNode, ExtLanguageManager extLanguage) {
 
 		String type = methodParameterNode.getType();
 		type =  ExtLanguageHelper.convertTypeFromIntrToExtLanguage(type, extLanguage);

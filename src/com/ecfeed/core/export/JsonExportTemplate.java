@@ -13,11 +13,11 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class JsonExportTemplate extends AbstractExportTemplate {
 
-	public JsonExportTemplate(MethodNode methodNode, ExtLanguage extLanguage) {
+	public JsonExportTemplate(MethodNode methodNode, ExtLanguageManager extLanguage) {
 		super(methodNode, createDefaultTemplateText(methodNode), extLanguage);
 	}
 

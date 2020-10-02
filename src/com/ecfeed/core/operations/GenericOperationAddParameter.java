@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class GenericOperationAddParameter extends AbstractModelOperation {
 
@@ -27,7 +27,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			AbstractParameterNode parameter, 
 			int index, 
 			boolean generateUniqueName,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 		
 		super(OperationNames.ADD_PARAMETER, extLanguage);
 		fParametersParentNode = target;
@@ -40,7 +40,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			ParametersParentNode target, 
 			AbstractParameterNode parameter, 
 			boolean generateUniqueName,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 		this(target, parameter, -1, generateUniqueName, extLanguage);
 	}
 
@@ -86,7 +86,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		private AbstractParameterNode fReversedParameter;
 		private ParametersParentNode fReversedTarget;
 
-		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguage extLanguage) {
+		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter, ExtLanguageManager extLanguage) {
 			super("reverse " + OperationNames.ADD_PARAMETER, extLanguage);
 			fReversedTarget = target;
 			fReversedParameter = parameter;

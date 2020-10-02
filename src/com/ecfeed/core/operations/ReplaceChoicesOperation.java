@@ -16,7 +16,7 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManager;
 
 public class ReplaceChoicesOperation extends BulkOperation {
 
@@ -24,7 +24,7 @@ public class ReplaceChoicesOperation extends BulkOperation {
 			AbstractParameterNode abstractParameterNode, 
 			List<ChoiceNode> choices, 
 			ITypeAdapterProvider adapterProvider,
-			ExtLanguage extLanguage) {
+			ExtLanguageManager extLanguage) {
 
 		super("Replace choices", true, abstractParameterNode, abstractParameterNode, extLanguage);
 
