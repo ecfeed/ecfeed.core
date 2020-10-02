@@ -25,6 +25,11 @@ public class MethodNodeHelper {
 		return AbstractNodeHelper.getName(methodNode, extLanguage);
 	}
 
+	public static void setName(MethodNode methodNode, String name, ExtLanguage extLanguage) {
+
+		AbstractNodeHelper.setName(methodNode, name, extLanguage);
+	}
+
 	public static List<String> getParameterNames(MethodNode method) {
 
 		List<String> result = new ArrayList<String>();

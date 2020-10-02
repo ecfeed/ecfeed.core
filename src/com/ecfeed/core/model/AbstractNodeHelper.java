@@ -18,9 +18,15 @@ public abstract class AbstractNodeHelper  {
 	public static String getName(AbstractNode abstractNode, ExtLanguage extLanguage) {
 
 		String nodeName = abstractNode.getName();
-
 		String text = ExtLanguageHelper.convertTextFromIntrToExtLanguage(nodeName, extLanguage);
+
 		return text;
+	}
+
+	public static void setName(AbstractNode abstractNode, String name, ExtLanguage extLanguage) {
+
+		String text = ExtLanguageHelper.convertTextFromExtToIntrLanguage(name, extLanguage);
+		abstractNode.setName(text);
 	}
 
 }

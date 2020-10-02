@@ -26,7 +26,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 	private ClassNode fClassNode;
 	private MethodNode fMethod;
 	private int fIndex;
-	
+
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
 	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, ExtLanguage extLanguage) {
@@ -50,11 +50,15 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 			fIndex = fClassNode.getMethods().size();
 		}
 
-		generateUniqeMethodName(fMethod);
+		generateUniqeNameForMethod(fMethod);
 
-		String errorMessage = ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-				fClassNode, fMethod.getName(), fMethod.getParameterTypes(), getExtLanguage());
-		
+		String errorMessage = 
+				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+						fClassNode, 
+						MethodNodeHelper.getName(fMethod, getExtLanguage()), 
+						MethodNodeHelper.getMethodParameterTypes(fMethod, getExtLanguage()), 
+						getExtLanguage());
+
 		if (errorMessage != null){
 			problems.add(errorMessage);
 			ModelOperationException.report(StringHelper.convertToMultilineString(problems));
@@ -67,16 +71,18 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		markModelUpdated();
 	}
 
-	private void generateUniqeMethodName(MethodNode methodNode) {
-		
-		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, getExtLanguage());
-		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, getExtLanguage());
-		
-		String newName = 
+	private void generateUniqeNameForMethod(MethodNode methodNode) {
+
+		ExtLanguage extLanguage = getExtLanguage();
+
+		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, extLanguage);
+		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
+
+		String newNameInExtLanguage = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, getExtLanguage());
-		
-		methodNode.setName(newName);
+						fClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
+
+		MethodNodeHelper.setName(methodNode, newNameInExtLanguage, extLanguage);
 	}
 
 	@Override
