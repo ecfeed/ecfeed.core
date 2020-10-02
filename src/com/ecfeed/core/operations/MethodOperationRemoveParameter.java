@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
@@ -79,13 +80,13 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		@Override
 		public void execute() throws ModelOperationException {
 
-			List<String> types = getMethodTarget().getParameterTypes();
+			List<String> paramTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(getMethodTarget(), getExtLanguage());
 			int index = getParameter().getMyIndex();
-			types.remove(index);
+			paramTypesInExtLanguage.remove(index);
 
 			List<String> problems = new ArrayList<String>();
 
-			if (!fIgnoreDuplicates && validateNewSignature(types, problems) == false) {
+			if (!fIgnoreDuplicates && validateNewSignature(paramTypesInExtLanguage, problems) == false) {
 
 				String message = createErrorMessage(problems);
 
@@ -138,15 +139,15 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			return (MethodNode) getOwnNode();
 		}
 
-		private boolean validateNewSignature(List<String> newTypes, List<String> problems) {
+		private boolean validateNewSignature(List<String> newTypesInExtLanguage, List<String> problems) {
 
 			ClassNode classNode = getMethodTarget().getClassNode();
 
-			String methodName = getMethodTarget().getName();
+			String methodNameInExtLanguage = MethodNodeHelper.getName(getMethodTarget(), getExtLanguage());
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodName, newTypes, getExtLanguage());
+						classNode, methodNameInExtLanguage, newTypesInExtLanguage, getExtLanguage());
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);
