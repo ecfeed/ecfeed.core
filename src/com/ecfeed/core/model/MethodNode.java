@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
@@ -107,9 +107,7 @@ public class MethodNode extends ParametersParentNode {
 	@Override
 	public String toString() {
 
-		return MethodNodeHelper.createSignature(
-				this,
-				true, IExtLanguageManager.JAVA); 
+		return MethodNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava()); 
 	}
 
 	@Override

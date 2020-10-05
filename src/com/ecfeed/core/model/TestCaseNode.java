@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 
@@ -30,7 +31,7 @@ public class TestCaseNode extends AbstractNode {
 	@Override
 	public String toString() {
 
-		return TestCaseNodeHelper.createSignature(this, IExtLanguageManager.JAVA);
+		return TestCaseNodeHelper.createSignature(this, new ExtLanguageManagerForJava());
 	}
 
 	@Override

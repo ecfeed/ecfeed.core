@@ -112,10 +112,9 @@ public class TestCasesExportHelper {
 
 	public static String getRegexPatternForMethodParameter(IExtLanguageManager extLanguage) {
 
-		return ExtLanguageManagerForSimple.chooseString(
+		return extLanguage.chooseString(
 				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE, 
-				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE, 
-				extLanguage);
+				METHOD_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE);
 	}
 
 	private static String getParameterSubstitute(String parameterCommandSequence, MethodNode methodNode, IExtLanguageManager extLanguage) {
@@ -333,10 +332,9 @@ public class TestCasesExportHelper {
 
 	public static String getParameterSequencePattern(IExtLanguageManager extLanguage) {
 
-		return ExtLanguageManagerForSimple.chooseString(
+		return extLanguage.chooseString(
 				TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_JAVA_LANGUAGE, 
-				TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE, 
-				extLanguage);
+				TEST_PARAMETER_SEQUENCE_GENERIC_PATTERN_FOR_SIMPLE_LANGUAGE);
 
 	}
 
