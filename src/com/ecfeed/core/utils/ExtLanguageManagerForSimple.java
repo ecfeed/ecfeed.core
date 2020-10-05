@@ -29,12 +29,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	public String validateType(String parameterTypeInExtLanguage) {
-
-		return SimpleLanguageHelper.validateType(parameterTypeInExtLanguage);
-	}
-
-	@Override
 	public boolean isLogicalTypeName(String type) {
 
 		return SimpleLanguageHelper.isLogicalTypeName(type);

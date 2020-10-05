@@ -26,12 +26,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	public String validateType(String parameterTypeInExtLanguage) {
-
-		return JavaLanguageHelper.validateBasicJavaType(parameterTypeInExtLanguage);
-	}
-
-	@Override
 	public boolean isLogicalTypeName(String type) {
 
 		return JavaLanguageHelper.isBooleanTypeName(type);

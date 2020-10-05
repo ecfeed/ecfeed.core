@@ -17,11 +17,6 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String validateParameterType(String parameterTypeInExtLanguage, IExtLanguageManager extLanguage) {
-
-		return extLanguage.validateType(parameterTypeInExtLanguage);
-	}
-
 	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
 
 		String name = extLanguage.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());

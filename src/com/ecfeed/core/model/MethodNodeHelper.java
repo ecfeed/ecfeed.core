@@ -84,29 +84,6 @@ public class MethodNodeHelper {
 			return errorMessage;
 		}
 
-		errorMessage = MethodNodeHelper.validateMethodParameterTypes(parameterTypesInExtLanguage, extLanguage);
-
-		if (errorMessage != null) {
-			return errorMessage;
-		}
-
-		return null;
-	}
-
-	public static String validateMethodParameterTypes(List<String> parameterTypesInExtLanguage,
-			IExtLanguageManager extLanguage) {
-
-		String errorMessage;
-
-		for (String parameterTypeInExtLanguage : parameterTypesInExtLanguage) {
-
-			errorMessage = AbstractParameterNodeHelper.validateParameterType(parameterTypeInExtLanguage, extLanguage);
-
-			if (errorMessage != null) {
-				return errorMessage;
-			}
-		}
-
 		return null;
 	}
 
