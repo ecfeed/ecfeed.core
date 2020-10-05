@@ -143,6 +143,7 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 	}
 
 	private static String checkIsParamNameDuplicated(List<Pair<String, String>> parametersForSimpleView) {
+		
 		for (int i = 0 ; i < parametersForSimpleView.size() - 1 ; i++) {
 
 			Pair<String, String> currentPair = parametersForSimpleView.get(i);
@@ -151,9 +152,13 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 			String currentSimpleName = currentPair.getFirst();
 			String nextSimpleName = nextPair.getFirst();
 
+			
+			
 			if (currentSimpleName.equals(nextSimpleName)) {
 
-				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + currentPair.getSecond() + " and " + nextPair.getSecond()
+				// TODO SIMPLE-VIEW - this function can be  called from simple (rename) and java view - adjust message acccordingly - node names are always in java convention
+				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + 
+				currentPair.getSecond() + " and " + nextPair.getSecond()
 				+ " would have the same name in the simple view mode.";
 
 				return errorMessage;
@@ -170,7 +175,7 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 		for (AbstractParameterNode element : rootNode.getParameters()) {
 
-			String simpleName = element.getName();
+			String simpleName = AbstractNodeHelper.getName(element, new ExtLanguageManagerForSimple());
 			String javaName = element.getType() + " " + element.getName();
 
 			Pair<String, String> pair = new Pair<String, String>(simpleName, javaName);

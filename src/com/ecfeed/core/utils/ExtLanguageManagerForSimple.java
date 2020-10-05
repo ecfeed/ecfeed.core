@@ -90,7 +90,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 			String valueInIntrLanguage, String typeInIntrLanguage) {
 
 		if (!JavaLanguageHelper.isJavaType(typeInIntrLanguage)) {
-			ExceptionHelper.reportRuntimeException("Cannot convert special value. Invalid type.");
+			return valueInIntrLanguage;
 		}
 
 		String convertedValue = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
