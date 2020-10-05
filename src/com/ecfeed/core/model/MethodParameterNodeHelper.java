@@ -46,7 +46,7 @@ public class MethodParameterNodeHelper {
 	public static String getType(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguage) {
 
 		String type = methodParameterNode.getType();
-		type =  ExtLanguageManagerForSimple.convertTypeFromIntrToExtLanguage(type, extLanguage);
+		type =  extLanguage.convertTypeFromIntrToExtLanguage(type);
 
 		return type;
 	}

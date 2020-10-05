@@ -25,7 +25,6 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JustifyType;
 import com.ecfeed.core.utils.StringHelper;
@@ -158,7 +157,7 @@ public class TestCasesExportHelper {
 			return Integer.parseInt(parameterDescriptionString);
 		} catch(NumberFormatException e) {
 
-			parameterDescriptionString = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(parameterDescriptionString, extLanguage);
+			parameterDescriptionString = extLanguage.convertTextFromExtToIntrLanguage(parameterDescriptionString);
 			final int parameterNumber = methodNode.getParameterIndex(parameterDescriptionString) + 1;
 			return parameterNumber;
 		}

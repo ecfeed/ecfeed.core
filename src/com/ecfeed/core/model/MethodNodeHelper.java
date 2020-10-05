@@ -157,16 +157,16 @@ public class MethodNodeHelper {
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames, 
 			List<Boolean> expectedFlags, 
-			IExtLanguageManager extLanguageOfTheResult) {
+			IExtLanguageManager extLanguage) {
 
-		String nameInExtLanguage = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(nameInIntrLanguage, extLanguageOfTheResult);
+		String nameInExtLanguage = extLanguage.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
 
 		String signature = new String(nameInExtLanguage) + "(";
 
 		String signaturesOfParameters = 
 				createSignaturesOfParametersByIntrLanguage(
 						parameterTypesInIntrLanguage, parameterNames, expectedFlags,
-						extLanguageOfTheResult);
+						extLanguage);
 
 		signature += signaturesOfParameters;
 

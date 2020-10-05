@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public class GlobalParameterNodeHelper {
 
@@ -34,7 +33,7 @@ public class GlobalParameterNodeHelper {
 			IExtLanguageManager extLanguage) {
 
 		String qualifiedName = globalParameterNode.getQualifiedName();
-		qualifiedName = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(qualifiedName, extLanguage);
+		qualifiedName = extLanguage.convertTextFromIntrToExtLanguage(qualifiedName);
 
 		return qualifiedName;
 	}
@@ -42,7 +41,7 @@ public class GlobalParameterNodeHelper {
 	public static String getType(GlobalParameterNode globalParameterNode, IExtLanguageManager extLanguage) {
 
 		String type = globalParameterNode.getType();
-		type = ExtLanguageManagerForSimple.convertTypeFromIntrToExtLanguage(type, extLanguage);
+		type = extLanguage.convertTypeFromIntrToExtLanguage(type);
 
 		return type;
 	}
