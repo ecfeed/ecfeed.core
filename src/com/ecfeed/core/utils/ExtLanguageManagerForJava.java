@@ -15,25 +15,22 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelHelper;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.SimpleLanguageModelVerifier;
 
 public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public String verifySeparatorsInName(String nameInExternalLanguage) {
-		
+
 		return JavaLanguageHelper.verifySeparators(nameInExternalLanguage);
 	}
 
 	@Override
 	public String validateType(String parameterTypeInExtLanguage) {
-		
+
 		return JavaLanguageHelper.validateBasicJavaType(parameterTypeInExtLanguage);
 	}
-	
+
 	@Override
 	public boolean isLogicalTypeName(String type) {
 
@@ -124,7 +121,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	public String createClassNameSignature(String className) {
 
 		className = convertTextFromIntrToExtLanguage(className);
-		
+
 		return className;
 	}
 
@@ -151,24 +148,27 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW test
-	public static Pair<String, String> createPairOfMethodSignatures(MethodNode methodNode) {
+	// TODO SIMPLE-VIEW MOVE WHERE ?, test
+	public static Pair<String, String> createPairOfMethodSignatures(MethodNode methodNode) {  
+
+		// TODO SIMPLE-VIEW 
+		//		Pair<String,String> pairOfSignatures = 
+		//				new Pair<String, String>(
+		//						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.SIMPLE),
+		//						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.JAVA));
 
 		Pair<String,String> pairOfSignatures = 
 				new Pair<String, String>(
-						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.SIMPLE),
-						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.JAVA));
+						"TODO",
+						"TODO");
 
 		return pairOfSignatures;
 	}
 
-	public static String chooseString(String stringForJavalang, String stringForSimpleLang, IExtLanguageManager extLanguage) {
+	@Override
+	public String chooseString(String stringForJavalang, String stringForSimpleLang) {
 
-		if  (extLanguage == IExtLanguageManager.JAVA)  {
-			return stringForJavalang;
-		}
-
-		return stringForSimpleLang;
+		return stringForJavalang;
 	}
 
 }

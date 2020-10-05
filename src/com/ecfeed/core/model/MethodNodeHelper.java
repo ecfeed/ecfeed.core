@@ -41,7 +41,7 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static List<String> getMethodParameterTypes(MethodNode method, IExtLanguageManager extLanguage) {
+	public static List<String> getMethodParameterTypes(MethodNode method, IExtLanguageManager extLanguageManager) {
 
 		List<String> result = new ArrayList<String>();
 
@@ -49,7 +49,7 @@ public class MethodNodeHelper {
 
 			String type = parameter.getType();
 
-			type = ExtLanguageManagerForSimple.convertTypeFromIntrToExtLanguage(type, extLanguage);
+			type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
 
 			result.add(type);
 		}

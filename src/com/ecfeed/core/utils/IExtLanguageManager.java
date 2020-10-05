@@ -23,5 +23,6 @@ public interface IExtLanguageManager {
 	public String getQualifiedName(String name);
 	public String checkIsNewClassNameValid(ClassNode classNode, String className);
 	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode);
+	public String chooseString(String stringForJavalang, String stringForSimpleLang);
 
 }

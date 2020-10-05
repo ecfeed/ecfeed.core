@@ -15,7 +15,6 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.SimpleLanguageModelVerifier;
@@ -25,13 +24,13 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 	@Override
 	public String verifySeparatorsInName(String nameInExternalLanguage) {
-		
+
 		return SimpleLanguageHelper.verifySeparators(nameInExternalLanguage);
 	}
-	
+
 	@Override
 	public String validateType(String parameterTypeInExtLanguage) {
-		
+
 		return SimpleLanguageHelper.validateType(parameterTypeInExtLanguage);
 	}
 
@@ -141,7 +140,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 		className = StringHelper.getLastTokenOrInputString(className, ".");
 		className = convertTextFromIntrToExtLanguage(className);
-		
+
 		return className;
 	}
 
@@ -151,7 +150,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 		name = ModelHelper.getNonQualifiedName(name);
 		name = convertTextFromIntrToExtLanguage(name);
-		
+
 		return name;
 	}
 
@@ -168,26 +167,29 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
 		String result = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
-		
+
 		return result;
 	}
 
-	// TODO SIMPLE-VIEW test
-	public static Pair<String, String> createPairOfMethodSignatures(MethodNode methodNode) {
+	// TODO SIMPLE-VIEW MOVE WHERE ?, test
+	public static Pair<String, String> createPairOfMethodSignatures(MethodNode methodNode) {  
+
+		// TODO SIMPLE-VIEW 
+		//		Pair<String,String> pairOfSignatures = 
+		//				new Pair<String, String>(
+		//						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.SIMPLE),
+		//						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.JAVA));
 
 		Pair<String,String> pairOfSignatures = 
 				new Pair<String, String>(
-						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.SIMPLE),
-						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.JAVA));
+						"TODO",
+						"TODO");
 
 		return pairOfSignatures;
 	}
 
-	public static String chooseString(String stringForJavalang, String stringForSimpleLang, IExtLanguageManager extLanguage) {
-
-		if  (extLanguage == IExtLanguageManager.JAVA)  {
-			return stringForJavalang;
-		}
+	@Override
+	public String chooseString(String stringForJavalang, String stringForSimpleLang) {
 
 		return stringForSimpleLang;
 	}
