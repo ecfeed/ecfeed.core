@@ -56,7 +56,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericShiftOperation(fCollection, fToBeShifted, -fShiftSize, getExtLanguage());
+		return new GenericShiftOperation(fCollection, fToBeShifted, -fShiftSize, getExtLanguageManager());
 	}
 
 	public int getShift(){

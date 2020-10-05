@@ -64,7 +64,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(getExtLanguage());
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider, getExtLanguage());
+			return new ChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider, getExtLanguageManager());
 		}
 	}
 

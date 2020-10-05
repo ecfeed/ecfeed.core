@@ -36,7 +36,7 @@ public class ClassOperationSetRunOnAndroid extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationSetRunOnAndroid(fClassNode, fOriginalValue, getExtLanguage());
+		return new ClassOperationSetRunOnAndroid(fClassNode, fOriginalValue, getExtLanguageManager());
 	}
 
 }

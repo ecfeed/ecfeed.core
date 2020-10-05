@@ -59,7 +59,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new AbstractParameterOperationSetType(fTarget, fNewType, fAdapterProvider, getExtLanguage());
+			return new AbstractParameterOperationSetType(fTarget, fNewType, fAdapterProvider, getExtLanguageManager());
 		}
 
 		protected void restoreOriginalChoices(ChoicesParentNode parent) {
@@ -178,7 +178,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(getExtLanguage());
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 	protected void saveChoices(ChoicesParentNode parent){

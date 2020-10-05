@@ -55,9 +55,9 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		String errorMessage = 
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
 						fClassNode, 
-						MethodNodeHelper.getName(fMethod, getExtLanguage()), 
-						MethodNodeHelper.getMethodParameterTypes(fMethod, getExtLanguage()), 
-						getExtLanguage());
+						MethodNodeHelper.getName(fMethod, getExtLanguageManager()), 
+						MethodNodeHelper.getMethodParameterTypes(fMethod, getExtLanguageManager()), 
+						getExtLanguageManager());
 
 		if (errorMessage != null){
 			problems.add(errorMessage);
@@ -73,7 +73,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private void generateUniqeNameForMethod(MethodNode methodNode) {
 
-		IExtLanguageManager extLanguage = getExtLanguage();
+		IExtLanguageManager extLanguage = getExtLanguageManager();
 
 		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, extLanguage);
 		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
@@ -87,7 +87,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationRemoveMethod(fClassNode, fMethod, getExtLanguage());
+		return new ClassOperationRemoveMethod(fClassNode, fMethod, getExtLanguageManager());
 	}
 
 }

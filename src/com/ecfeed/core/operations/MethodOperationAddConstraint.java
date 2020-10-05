@@ -55,7 +55,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationRemoveConstraint(fMethodNode, fConstraint, getExtLanguage());
+		return new MethodOperationRemoveConstraint(fMethodNode, fConstraint, getExtLanguageManager());
 	}
 
 }

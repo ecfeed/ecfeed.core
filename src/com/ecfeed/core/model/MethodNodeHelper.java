@@ -59,13 +59,13 @@ public class MethodNodeHelper {
 
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
 
-		String errorMessage = ExtLanguageManagerForSimple.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+		String errorMessage = extLanguage.verifySeparatorsInName(nameInExternalLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
 		}
 
-		String nameInInternalLanguage = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
+		String nameInInternalLanguage = extLanguage.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
 
 		if (isValid(nameInInternalLanguage)) {
 			return null;

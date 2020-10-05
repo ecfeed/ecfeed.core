@@ -34,7 +34,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if((method != null) && validate){
-				addOperation(new MethodOperationMakeConsistent(method, getExtLanguage()));
+				addOperation(new MethodOperationMakeConsistent(method, getExtLanguageManager()));
 			}
 		}
 	}
@@ -105,7 +105,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 
 			return 
 					new GenericOperationRemoveChoice(
-							fChoicesParentNode, fChoice, fAdapterProvider, false, getExtLanguage());
+							fChoicesParentNode, fChoice, fAdapterProvider, false, getExtLanguageManager());
 		}
 
 		public final String PARTITION_VALUE_PROBLEM(String value){

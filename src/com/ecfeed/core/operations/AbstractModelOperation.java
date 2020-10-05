@@ -56,7 +56,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		fNodesToSelect = nodesToSelect;
 	}
 
-	public IExtLanguageManager getExtLanguage() {
+	public IExtLanguageManager getExtLanguageManager() {
 		return fExtLanguage;
 	}
 	
@@ -76,7 +76,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		String result = null;
 		
 		try {
-			result = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(text, extLanguage);
+			result = extLanguage.convertTextFromExtToIntrLanguage(text);
 		} catch (Exception e) {
 			ModelOperationException.report(e.getMessage());
 		}

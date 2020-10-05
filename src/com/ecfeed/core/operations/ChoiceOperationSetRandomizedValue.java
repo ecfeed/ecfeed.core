@@ -62,7 +62,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(getExtLanguage());
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 	private class ReverseOperation extends AbstractModelOperation {
@@ -78,7 +78,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider, getExtLanguage());
+			return new ChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider, getExtLanguageManager());
 		}
 
 		@Override

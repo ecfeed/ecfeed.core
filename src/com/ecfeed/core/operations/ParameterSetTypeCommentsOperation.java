@@ -36,7 +36,7 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterSetTypeCommentsOperation(fTarget, fCurrentComments, getExtLanguage());
+		return new ParameterSetTypeCommentsOperation(fTarget, fCurrentComments, getExtLanguageManager());
 	}
 
 }

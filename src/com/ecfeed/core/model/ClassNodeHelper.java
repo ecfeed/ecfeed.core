@@ -27,7 +27,7 @@ public class ClassNodeHelper {
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String name = ModelHelper.getNonQualifiedName(classNode.getName());
-		name = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(name,  extLanguage);
+		name = extLanguage.convertTextFromIntrToExtLanguage(name);
 
 		return name;
 	}
@@ -35,7 +35,7 @@ public class ClassNodeHelper {
 	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
 
 		String name = classNode.getName();
-		name = ExtLanguageManagerForSimple.getQualifiedName(name, extLanguage);
+		name = extLanguage.getQualifiedName(name);
 
 		return name;
 	}
@@ -44,18 +44,18 @@ public class ClassNodeHelper {
 
 		String name = classNode.getName();
 
-		return ExtLanguageManagerForSimple.getPackageName(name, extLanguage);
+		return extLanguage.getPackageName(name);
 	}
 
 	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
 
-		String errorMessage = ExtLanguageManagerForSimple.verifySeparatorsInName(nameInExternalLanguage, extLanguage);
+		String errorMessage = extLanguage.verifySeparatorsInName(nameInExternalLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
 		}
 
-		String nameInInternalLanguage = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(nameInExternalLanguage, extLanguage);
+		String nameInInternalLanguage = extLanguage.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
 
 		if (!classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
 			return RegexHelper.createMessageAllowedCharsForClass(extLanguage);

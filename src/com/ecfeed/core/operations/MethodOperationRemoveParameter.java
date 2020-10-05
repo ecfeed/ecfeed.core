@@ -80,7 +80,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		@Override
 		public void execute() throws ModelOperationException {
 
-			List<String> paramTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(getMethodTarget(), getExtLanguage());
+			List<String> paramTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(getMethodTarget(), getExtLanguageManager());
 			int index = getParameter().getMyIndex();
 			paramTypesInExtLanguage.remove(index);
 
@@ -132,7 +132,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 		@Override
 		public IModelOperation getReverseOperation(){
-			return new ReverseOperation(getExtLanguage());
+			return new ReverseOperation(getExtLanguageManager());
 		}
 
 		private MethodNode getMethodTarget(){
@@ -143,11 +143,11 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			ClassNode classNode = getMethodTarget().getClassNode();
 
-			String methodNameInExtLanguage = MethodNodeHelper.getName(getMethodTarget(), getExtLanguage());
+			String methodNameInExtLanguage = MethodNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInExtLanguage, newTypesInExtLanguage, getExtLanguage());
+						classNode, methodNameInExtLanguage, newTypesInExtLanguage, getExtLanguageManager());
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);
@@ -174,7 +174,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), getExtLanguage());
+				return new MethodOperationRemoveParameter(getMethodTarget(), (MethodParameterNode)getParameter(), getExtLanguageManager());
 			}
 
 		}

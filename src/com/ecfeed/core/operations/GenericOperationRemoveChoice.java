@@ -68,7 +68,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new RemoveChoiceOperation(fTarget, fChoice, fAdapterProvider, getExtLanguage());
+				return new RemoveChoiceOperation(fTarget, fChoice, fAdapterProvider, getExtLanguageManager());
 			}
 
 			private void reverseAdaptParameter() {
@@ -185,7 +185,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseOperation(getExtLanguage());
+			return new ReverseOperation(getExtLanguageManager());
 		}
 
 	}

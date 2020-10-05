@@ -14,43 +14,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public class ConstraintHelper {
-	
-	
+
+
 	public static String getSignature(Constraint constraint, IExtLanguageManager extLanguage) {
 
 		String name = constraint.getName();
-		name = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(name, extLanguage);
+		name = extLanguage.convertTextFromIntrToExtLanguage(name);
 
 		return name + ": " + constraint.getSignature();
 	}
-	
+
 	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {
-		
+
 		List<String> constraintNames = new ArrayList<>();
-		
+
 		for (IConstraint<ChoiceNode> iConstraint : constraints) {
-			
+
 			if (iConstraint instanceof Constraint) {
-				
+
 				Constraint constraint = (Constraint)iConstraint;
 				constraintNames.add(constraint.getName());
 			}
 		}
 		return constraintNames;
 	}
-	
+
 	public static boolean containsConstraints(List<Constraint> iConstraints) {
 
 		for (IConstraint<ChoiceNode> iConstraint : iConstraints) {
-			
+
 			if (iConstraint instanceof Constraint) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 

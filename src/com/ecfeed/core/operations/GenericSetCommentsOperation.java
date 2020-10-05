@@ -38,7 +38,7 @@ public class GenericSetCommentsOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericSetCommentsOperation(fTarget, fCurrentComments, getExtLanguage());
+		return new GenericSetCommentsOperation(fTarget, fCurrentComments, getExtLanguageManager());
 	}
 
 }

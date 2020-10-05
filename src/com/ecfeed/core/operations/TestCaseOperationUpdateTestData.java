@@ -45,7 +45,7 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new TestCaseOperationUpdateTestData(fTarget, fIndex, fPreviousValue, getExtLanguage());
+		return new TestCaseOperationUpdateTestData(fTarget, fIndex, fPreviousValue, getExtLanguageManager());
 	}
 
 }

@@ -63,7 +63,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 			ModelOperationException.report(
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
-							method.getClassNode(),  method, getExtLanguage()));
+							method.getClassNode(),  method, getExtLanguageManager()));
 		}
 		List<Integer> indices = indices(fParameters, getShiftedElements());
 		shiftElements(fParameters, indices, getShift());
@@ -74,7 +74,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguage());
+		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
 	}
 
 	@Override
@@ -82,20 +82,20 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		if(super.shiftAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof MethodParameterNode == false) return false;
 		MethodNode method = ((MethodParameterNode)shifted.get(0)).getMethod();
-		List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(method, getExtLanguage());
+		List<String> parameterTypes = MethodNodeHelper.getMethodParameterTypes(method, getExtLanguageManager());
 		List<Integer> indices = indices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);
 
 		ClassNode classNode = method.getClassNode();
 
-		String methodName = MethodNodeHelper.getName(method, getExtLanguage());
+		String methodName = MethodNodeHelper.getName(method, getExtLanguageManager());
 
 		MethodNode sibling = 
 				ClassNodeHelper.findMethodByExtLanguage(
 						classNode, 
 						methodName, 
 						parameterTypes, 
-						getExtLanguage());
+						getExtLanguageManager());
 
 		if(sibling != null && sibling != method){
 			return false;

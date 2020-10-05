@@ -36,7 +36,7 @@ public class StatementOperationChangeOperator extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationChangeOperator(fTarget, fCurrentOperator, getExtLanguage());
+		return new StatementOperationChangeOperator(fTarget, fCurrentOperator, getExtLanguageManager());
 	}
 
 }

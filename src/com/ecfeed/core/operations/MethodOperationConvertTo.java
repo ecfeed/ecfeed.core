@@ -40,18 +40,18 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 		ClassNode classNode = fTargetMethodNode.getClassNode();
 
-		String methodName = MethodNodeHelper.getName(fSourceMethodNode, getExtLanguage());
-		List<String> methodParameters = MethodNodeHelper.getMethodParameterTypes(fSourceMethodNode, getExtLanguage());
+		String methodName = MethodNodeHelper.getName(fSourceMethodNode, getExtLanguageManager());
+		List<String> methodParameters = MethodNodeHelper.getMethodParameterTypes(fSourceMethodNode, getExtLanguageManager());
 
 		if (ClassNodeHelper.findMethodByExtLanguage(
 				classNode, 
 				methodName, 
 				methodParameters, 
-				getExtLanguage()) != null) {
+				getExtLanguageManager()) != null) {
 
 			ModelOperationException.report(
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
-							classNode, fTargetMethodNode, getExtLanguage()));
+							classNode, fTargetMethodNode, getExtLanguageManager()));
 		}
 
 		if(fTargetMethodNode.getParameterTypes().equals(fSourceMethodNode.getParameterTypes()) == false){
@@ -72,7 +72,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationConvertTo(fSourceMethodNode, fTargetMethodNode, getExtLanguage());
+		return new MethodOperationConvertTo(fSourceMethodNode, fTargetMethodNode, getExtLanguageManager());
 	}
 
 }

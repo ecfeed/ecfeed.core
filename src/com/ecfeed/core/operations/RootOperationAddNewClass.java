@@ -42,7 +42,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 			fAddIndex = fRootNode.getClasses().size();
 		}
 
-		String errorMessage = ClassNodeHelper.validateClassName(name, getExtLanguage());
+		String errorMessage = ClassNodeHelper.validateClassName(name, getExtLanguageManager());
 
 		if (errorMessage != null) {
 			ModelOperationException.report(errorMessage);
@@ -58,7 +58,7 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationRemoveClass(fRootNode, fclassToAdd, getExtLanguage());
+		return new RootOperationRemoveClass(fRootNode, fclassToAdd, getExtLanguageManager());
 	}
 
 }

@@ -66,10 +66,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
 		}
 
-		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguage()));
+		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguageManager()));
 
 		if (targetMethodParameterNode.getMethod() != null) {
-			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getExtLanguage()));
+			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getExtLanguageManager()));
 		}
 	}
 
@@ -143,14 +143,14 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 			String message = 
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
-							classNode, foundMethodNode, getExtLanguage());
+							classNode, foundMethodNode, getExtLanguageManager());
 
 			ModelOperationException.report(message);
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseSetTypeOperation(getExtLanguage());
+			return new ReverseSetTypeOperation(getExtLanguageManager());
 		}
 
 		@SuppressWarnings("unchecked")
@@ -432,7 +432,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			public IModelOperation getReverseOperation() {
 
 				return new SetTypeOperation(
-						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getExtLanguage());
+						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getExtLanguageManager());
 			}
 
 			private void restoreStatementValues() {

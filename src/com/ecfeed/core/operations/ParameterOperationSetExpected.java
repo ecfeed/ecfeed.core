@@ -56,7 +56,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ParameterOperationSetExpected(fTarget, fExpected, getExtLanguage());
+			return new ParameterOperationSetExpected(fTarget, fExpected, getExtLanguageManager());
 		}
 
 	}
@@ -140,7 +140,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(getExtLanguage());
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 	protected MethodParameterNode getOwnNode(){

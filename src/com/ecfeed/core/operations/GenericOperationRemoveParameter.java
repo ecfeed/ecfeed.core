@@ -41,14 +41,14 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		markModelUpdated();
 	}
 
-	public IExtLanguageManager getExtLanguage() {
+	public IExtLanguageManager getExtLanguageManager() {
 
 		return fExtLanguage;
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericOperationAddParameter(fParametersParentNode, fAbstractParameterNode, fOriginalIndex, false, getExtLanguage());
+		return new GenericOperationAddParameter(fParametersParentNode, fAbstractParameterNode, fOriginalIndex, false, getExtLanguageManager());
 	}
 
 	protected ParametersParentNode getOwnNode(){

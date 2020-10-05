@@ -103,7 +103,7 @@ public class ChoiceNodeHelper {
 		String value = choiceNode.getValueString();
 		
 		if (JavaLanguageHelper.isJavaType(type)) {
-			value = ExtLanguageManagerForSimple.conditionallyConvertSpecialValueToExtLanguage(value, type, extLanguage);
+			value = extLanguage.conditionallyConvertSpecialValueToExtLanguage(value, type);
 		}
 
 		return value;

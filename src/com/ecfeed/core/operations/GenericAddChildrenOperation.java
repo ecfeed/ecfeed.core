@@ -46,11 +46,11 @@ public class GenericAddChildrenOperation extends BulkOperation {
 					operation = 
 							(IModelOperation)target.accept(
 									new FactoryAddChildOperation(
-											child, index++, adapterProvider, validate, getExtLanguage()));
+											child, index++, adapterProvider, validate, getExtLanguageManager()));
 				} else {
 					operation = 
 							(IModelOperation)target.accept(
-									new FactoryAddChildOperation(child, adapterProvider, validate, getExtLanguage()));
+									new FactoryAddChildOperation(child, adapterProvider, validate, getExtLanguageManager()));
 				}
 				if (operation != null) {
 					addOperation(operation);

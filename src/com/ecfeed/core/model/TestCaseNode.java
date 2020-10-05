@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public class TestCaseNode extends AbstractNode {

@@ -52,7 +52,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 
-			String newNameInJavaConvention = ExtLanguageManagerForSimple.convertTextFromExtToIntrLanguage(fNewName, fExtLanguage);
+			String newNameInJavaConvention = getExtLanguageManager().convertTextFromExtToIntrLanguage(fNewName);
 
 			String[] tokens = newNameInJavaConvention.split("\\.");
 
@@ -91,7 +91,7 @@ public class FactoryRenameOperation {
 
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			IExtLanguageManager extLanguage = getExtLanguage();
+			IExtLanguageManager extLanguage = getExtLanguageManager();
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
