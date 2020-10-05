@@ -81,11 +81,10 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return type;
 	}
 
-	public static String convertTypeFromExtToIntrLanguage(String type, IExtLanguageManager extLanguage) {
+	@Override
+	public String convertTypeFromExtToIntrLanguage(String type) {
 
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			type = SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType(type);
-		}
+		type = SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType(type);
 
 		if (!JavaLanguageHelper.isJavaType(type)) {
 			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
@@ -94,12 +93,9 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return type;
 	}
 
-	public static String conditionallyConvertSpecialValueToExtLanguage(
-			String valueInIntrLanguage, String typeInIntrLanguage, IExtLanguageManager extLanguage) {
-
-		if (extLanguage == IExtLanguageManager.JAVA) {
-			return valueInIntrLanguage;
-		}
+	@Override
+	public String conditionallyConvertSpecialValueToExtLanguage(
+			String valueInIntrLanguage, String typeInIntrLanguage) {
 
 		if (!JavaLanguageHelper.isJavaType(typeInIntrLanguage)) {
 			ExceptionHelper.reportRuntimeException("Cannot convert special value. Invalid type.");
@@ -110,89 +106,70 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return convertedValue;
 	}
 
-	public static List<String> getSymbolicNamesOfSpecialValues(String typeName, IExtLanguageManager extLanguage) {
+	@Override
+	public List<String> getSymbolicNamesOfSpecialValues(String typeName) {
 
-		List<String> items;
-
-		if (extLanguage == IExtLanguageManager.JAVA) {
-			items = JavaLanguageHelper.getSymbolicNamesOfSpecialValues(typeName);
-		} else {
-			items = JavaLanguageHelper.getSymbolicNamesOfSpecialValuesForNonNumericTypes(typeName);
-		}
+		List<String> items = JavaLanguageHelper.getSymbolicNamesOfSpecialValuesForNonNumericTypes(typeName);
 
 		return items;
 	}
 
-	public static void reportExceptionAllTypesAreUsed(IExtLanguageManager extLanguage) {
+	@Override
+	public void reportExceptionAllTypesAreUsed() {
 
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			ExceptionHelper.reportClientException("Cannot find not used parameter type. All possible types are already used.");
-		}
+		ExceptionHelper.reportClientException("Cannot find not used parameter type. All possible types are already used.");
 	}
 
-	// TODO SIMPLE-VIEW test
-	public static String[] createListListOfSupportedTypes(IExtLanguageManager extLanguage) {
+	@Override
+	public String[] createListListOfSupportedTypes() {
 
-		String[] typeList;
-
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			typeList = SimpleLanguageHelper.getSupportedSimpleViewTypes();
-		} else {
-			typeList = JavaLanguageHelper.getSupportedJavaTypes();
-		}
+		String[] typeList = SimpleLanguageHelper.getSupportedSimpleViewTypes();
 
 		return typeList;
 	}
 
+	@Override
 	// TODO SIMPLE-VIEW test
-	public static String getPackageName(String name, IExtLanguageManager extLanguage) {
+	public String getPackageName(String name) {
 
-		if (extLanguage  == IExtLanguageManager.SIMPLE) {
-			return "";
-		}
-
-		return ModelHelper.getPackageName(name);
+		return "";
 	}
 
+	@Override
 	// TODO SIMPLE-VIEW test
-	public static String createClassNameSignature(String className, IExtLanguageManager extLanguage) {
+	public String createClassNameSignature(String className) {
 
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			className = StringHelper.getLastTokenOrInputString(className, ".");
-		}
-
-		className = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(className, extLanguage);
+		className = StringHelper.getLastTokenOrInputString(className, ".");
+		className = convertTextFromIntrToExtLanguage(className);
+		
 		return className;
 	}
 
+	@Override
 	// TODO SIMPLE-VIEW test
-	public static String getQualifiedName(String name, IExtLanguageManager extLanguage) {
+	public String getQualifiedName(String name) {
 
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			name = ModelHelper.getNonQualifiedName(name);
-		}
-
-		name = ExtLanguageManagerForSimple.convertTextFromIntrToExtLanguage(name,  extLanguage);
+		name = ModelHelper.getNonQualifiedName(name);
+		name = convertTextFromIntrToExtLanguage(name);
+		
 		return name;
 	}
 
+	@Override
 	// TODO SIMPLE-VIEW test
-	public static String checkIsNewClassNameValid(ClassNode classNode, String className) {
+	public String checkIsNewClassNameValid(ClassNode classNode, String className) {
 
 		return SimpleLanguageModelVerifier.checkIsNewClassNameValid(classNode, className); // TODO SIMPLE-VIEW check
 	}
 
+	@Override
 	// TODO SIMPLE-VIEW test
-	public static String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode, IExtLanguageManager extLanguage) {
+	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode) {
 
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
-
-		if (extLanguage == IExtLanguageManager.SIMPLE) {
-			String result = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
-			return result;
-		}
-
-		return null;
+		String result = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		
+		return result;
 	}
 
 	// TODO SIMPLE-VIEW test

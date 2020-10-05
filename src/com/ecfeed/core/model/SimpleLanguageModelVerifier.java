@@ -15,11 +15,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
 public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
@@ -27,7 +25,7 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 	private static final String TITLE_NON_UNIQUE_CLASS_NAMES = "Non-unique class names";
 	private static final String THE_SAME_CLASSES = "There are some classes in the model that have the same name. Please edit the model before proceeding:";
 
-	public static String checkIsNewClassNameValid(ClassNode classNode, String className) {
+	public static String checkIsNewClassNameValid(ClassNode classNode, String className) { // TODO SIMPLE-VIEW rename
 
 		String simpleValueName = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(className);
 
