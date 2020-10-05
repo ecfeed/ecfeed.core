@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
@@ -79,11 +80,11 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
 
 		// TODO SIMPLE-VIEW remove
-//		String message = checkIfIsAllowedParameterType(abstractNode);
-//
-//		if (message != null) {
-//			return message;
-//		}
+		//		String message = checkIfIsAllowedParameterType(abstractNode);
+		//
+		//		if (message != null) {
+		//			return message;
+		//		}
 
 		List<? extends AbstractNode> childNodes = abstractNode.getChildren();
 
@@ -95,7 +96,7 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 			return null;
 
 		}
-		
+
 		String message = "";
 
 		for (AbstractNode childNode : childNodes) {
@@ -110,25 +111,25 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 		return null;
 	}
 
-//	private static String checkIfIsAllowedParameterType(AbstractNode abstractNode) {
-//
-//		if (!(abstractNode instanceof AbstractParameterNode)) {
-//			return null;
-//		}
-//
-//		AbstractParameterNode abstractParameterNode = (AbstractParameterNode) abstractNode;
-//
-//		String type = abstractParameterNode.getType();
-//
-//		if (!JavaLanguageHelper.isJavaType(type)) {
-//			return 
-//					"Non java types are not allowed in simple view. \nNode: " + 
-//					ModelHelper.getFullPath(abstractParameterNode, ExtLanguage.JAVA) + ".\n" +
-//					" Type: " + type + ".";
-//		}
-//
-//		return null;
-//	}
+	//	private static String checkIfIsAllowedParameterType(AbstractNode abstractNode) {
+	//
+	//		if (!(abstractNode instanceof AbstractParameterNode)) {
+	//			return null;
+	//		}
+	//
+	//		AbstractParameterNode abstractParameterNode = (AbstractParameterNode) abstractNode;
+	//
+	//		String type = abstractParameterNode.getType();
+	//
+	//		if (!JavaLanguageHelper.isJavaType(type)) {
+	//			return 
+	//					"Non java types are not allowed in simple view. \nNode: " + 
+	//					ModelHelper.getFullPath(abstractParameterNode, ExtLanguage.JAVA) + ".\n" +
+	//					" Type: " + type + ".";
+	//		}
+	//
+	//		return null;
+	//	}
 
 	private static String checkIsGlobalParameterOfRootDuplicated(RootNode rootNode) {
 
@@ -347,13 +348,24 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 			MethodNode methodNode = methods.get(index);
 
-			Pair<String, String> pairOfSignatures = ExtLanguageManagerForSimple.createPairOfMethodSignatures(methodNode);
+			Pair<String, String> pairOfSignatures = createPairOfMethodSignatures(methodNode);
 
 			signaturePairs.add(pairOfSignatures);
 		}
 
 		Collections.sort(signaturePairs, new CompareBySimpleSignature());
 		return signaturePairs;
+	}
+
+	private static Pair<String, String> createPairOfMethodSignatures(MethodNode methodNode) {  
+
+		Pair<String,String> pairOfSignatures = 
+				new Pair<String, String>(
+						MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForSimple()),
+						MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForJava()));
+
+
+		return pairOfSignatures;
 	}
 
 	private static class CompareBySimpleSignature implements Comparator<Pair<String,String>> {

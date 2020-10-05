@@ -246,8 +246,7 @@ public final class JavaLanguageHelper {
 		case JavaLanguageHelper.TYPE_NAME_STRING:
 			return JavaLanguageHelper.DEFAULT_EXPECTED_STRING_VALUE;
 		default:
-			ExceptionHelper.reportRuntimeException("Invalid type. Cannot get default value.");
-			return null;
+			return "VALUE";
 		}
 	}
 

@@ -14,7 +14,6 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelHelper;
 
 public class ExtLanguageManagerForJava implements IExtLanguageManager {
@@ -140,23 +139,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode) {
 
 		return null;
-	}
-
-	// TODO SIMPLE-VIEW MOVE WHERE ?, test
-	public static Pair<String, String> createPairOfMethodSignatures(MethodNode methodNode) {  
-
-		// TODO SIMPLE-VIEW 
-		//		Pair<String,String> pairOfSignatures = 
-		//				new Pair<String, String>(
-		//						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.SIMPLE),
-		//						MethodNodeHelper.createSignature(methodNode, IExtLanguageManager.JAVA));
-
-		Pair<String,String> pairOfSignatures = 
-				new Pair<String, String>(
-						"TODO",
-						"TODO");
-
-		return pairOfSignatures;
 	}
 
 	@Override
