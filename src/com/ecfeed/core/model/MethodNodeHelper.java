@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 

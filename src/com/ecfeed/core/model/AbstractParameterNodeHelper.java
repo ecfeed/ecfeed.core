@@ -10,8 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-
 import java.util.ArrayList;
 import java.util.List;
 

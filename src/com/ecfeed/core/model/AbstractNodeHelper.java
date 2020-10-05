@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public abstract class AbstractNodeHelper  {
 

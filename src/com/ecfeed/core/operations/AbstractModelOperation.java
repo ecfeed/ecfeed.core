@@ -16,7 +16,6 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public abstract class AbstractModelOperation implements IModelOperation {
 
@@ -59,7 +58,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	public IExtLanguageManager getExtLanguageManager() {
 		return fExtLanguage;
 	}
-	
+
 	public void setOneNodeToSelect(AbstractNode nodeToSelect) {
 		List<AbstractNode> nodes = new ArrayList<AbstractNode>();
 		nodes.add(nodeToSelect);
@@ -74,13 +73,13 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	public String convertTextFromExtToIntrLanguage(String text, IExtLanguageManager extLanguage) throws ModelOperationException {
 
 		String result = null;
-		
+
 		try {
 			result = extLanguage.convertTextFromExtToIntrLanguage(text);
 		} catch (Exception e) {
 			ModelOperationException.report(e.getMessage());
 		}
-		
+
 		return result;
 	}
 
