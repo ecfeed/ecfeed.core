@@ -27,8 +27,6 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
@@ -111,12 +109,12 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveChoices(fTarget);
 		saveValues(fTarget);
 
-		if (!JavaLanguageHelper.isJavaType(fNewType) 
-				&& !SimpleLanguageHelper.isSimpleType(fNewType)
-				&& !JavaLanguageHelper.isValidComplexTypeIdentifier(fNewType)) {
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
+		if (!extLanguageManager.isAllowedType(fNewType)) {
 
 			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
 		}
+
 		// Check for duplicate signatures possibly caused by global parameter type change
 		if(fTarget instanceof GlobalParameterNode){
 			GlobalParameterNode target = (GlobalParameterNode)fTarget;

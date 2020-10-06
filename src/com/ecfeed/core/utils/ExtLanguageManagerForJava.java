@@ -147,4 +147,17 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return stringForJavalang;
 	}
 
+	@Override
+	public boolean isAllowedType(String typeName) {
+		
+		if (JavaLanguageHelper.isJavaType(typeName)) {
+			return true;
+		}
+		
+		if (JavaLanguageHelper.isValidComplexTypeIdentifier(typeName)) {
+			return true;
+		}
+		
+		return false;
+	}
 }
