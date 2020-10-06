@@ -110,10 +110,11 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveValues(fTarget);
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
-		if (!extLanguageManager.isAllowedType(fNewType)) {
-
-			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
-		}
+		extLanguageManager.verifyIsAllowedType(fNewType);
+//		if (!extLanguageManager.isAllowedType(fNewType)) {
+//
+//			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
+//		}
 
 		// Check for duplicate signatures possibly caused by global parameter type change
 		if(fTarget instanceof GlobalParameterNode){

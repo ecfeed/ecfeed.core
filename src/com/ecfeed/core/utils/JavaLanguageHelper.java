@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import com.ecfeed.core.operations.OperationMessages;
+
 public final class JavaLanguageHelper {
 
 	public static final String TYPE_NAME_BOOLEAN = "boolean";
@@ -1349,6 +1351,15 @@ public final class JavaLanguageHelper {
 		}
 
 		return INVALID_JAVA_TYPE + ": " + type + ".";
+	}
+
+	public static void verifyIsAllowedType(String typeName) {
+
+		if (isAllowedType(typeName)) {
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
 	}
 
 	//	public static String parseToJavaView(String text) {

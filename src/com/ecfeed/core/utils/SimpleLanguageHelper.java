@@ -48,17 +48,28 @@ public final class SimpleLanguageHelper {
 
 	// TODO SIMPLE-VIEW test
 	public static boolean isAllowedType(String typeName) {
-		
+
 		if (SimpleLanguageHelper.isSimpleType(typeName)) {
 			return true;
 		}
-		
+
 		if (JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier(typeName)) {
 			return true;
 		}
-		
+
 		return false;
 	}
+
+	public static void verifyIsAllowedType(String typeName) {
+
+		if (isAllowedType(typeName)) {
+			return;
+		}
+
+		String message = "Parameter type must be a valid type identifier. It must be either a primitive type name: Number,Text,Logical or a valid user type";
+		ExceptionHelper.reportRuntimeException(message);
+	}
+
 
 	public static String[] getSupportedSimpleViewTypes() {
 
