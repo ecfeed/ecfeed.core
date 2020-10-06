@@ -150,12 +150,20 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newName) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
+			
 			MethodParameterNode target = (MethodParameterNode)getOwnNode();
-			if(JavaLanguageHelper.isJavaKeyword(newName)){
+			
+			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage));
 			}
-			if(target.getMethod().getParameter(newName) != null){
+			
+			MethodNode method = target.getMethod();
+			
+			IExtLanguageManager extLanguageManager = getExtLanguageManager();
+			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
+			
+			if(method.getParameter(newNameInIntrLanguage) != null){
 				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
 			}
 		}
