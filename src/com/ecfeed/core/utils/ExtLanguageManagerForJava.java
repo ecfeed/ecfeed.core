@@ -19,7 +19,7 @@ import com.ecfeed.core.model.ModelHelper;
 public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
-	public String verifySeparatorsInName(String nameInExternalLanguage) {
+	public String verifySeparators(String nameInExternalLanguage) {
 
 		return JavaLanguageHelper.verifySeparators(nameInExternalLanguage);
 	}
@@ -33,7 +33,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String convertTextFromExtToIntrLanguage(String text)  {
 
-		String errorMessage = verifySeparatorsInName(text);
+		String errorMessage = verifySeparators(text);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);

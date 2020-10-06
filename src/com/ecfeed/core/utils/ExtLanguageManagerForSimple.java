@@ -22,7 +22,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 
 	@Override
-	public String verifySeparatorsInName(String nameInExternalLanguage) {
+	public String verifySeparators(String nameInExternalLanguage) {
 
 		return SimpleLanguageHelper.verifySeparators(nameInExternalLanguage);
 	}
@@ -36,7 +36,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	@Override
 	public String convertTextFromExtToIntrLanguage(String text)  {
 
-		String errorMessage = verifySeparatorsInName(text);
+		String errorMessage = verifySeparators(text);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);

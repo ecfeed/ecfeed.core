@@ -58,7 +58,7 @@ public class MethodNodeHelper {
 
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
 
-		String errorMessage = extLanguage.verifySeparatorsInName(nameInExternalLanguage);
+		String errorMessage = extLanguage.verifySeparators(nameInExternalLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
