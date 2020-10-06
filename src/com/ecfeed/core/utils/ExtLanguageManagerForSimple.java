@@ -173,17 +173,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	@Override
 	public boolean isAllowedType(String typeName) {
 		
-		if (SimpleLanguageHelper.isSimpleType(typeName)) {
-			return true;
-		}
-		
-		if (JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier(typeName)) {
-			return true;
-		}
-		
-		// TODO Auto-generated method stub
-		return false;
+		return SimpleLanguageHelper.isAllowedType(typeName);
 	}
-
 
 }

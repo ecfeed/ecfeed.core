@@ -46,6 +46,20 @@ public final class SimpleLanguageHelper {
 		return Arrays.asList(SUPPORTED_SIMPLE_VIEW_TYPES).contains(typeName);
 	}
 
+	// TODO SIMPLE-VIEW test
+	public static boolean isAllowedType(String typeName) {
+		
+		if (SimpleLanguageHelper.isSimpleType(typeName)) {
+			return true;
+		}
+		
+		if (JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier(typeName)) {
+			return true;
+		}
+		
+		return false;
+	}
+
 	public static String[] getSupportedSimpleViewTypes() {
 
 		return SUPPORTED_SIMPLE_VIEW_TYPES;

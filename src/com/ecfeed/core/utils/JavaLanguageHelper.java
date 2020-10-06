@@ -460,6 +460,20 @@ public final class JavaLanguageHelper {
 		return Arrays.asList(SUPPORTED_JAVA_TYPES).contains(typeName);
 	}
 
+	// TODO SIMPLE-VIEW test
+	public static boolean isAllowedType(String typeName) {
+
+		if (JavaLanguageHelper.isJavaType(typeName)) {
+			return true;
+		}
+
+		if (JavaLanguageHelper.isValidComplexTypeIdentifier(typeName)) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static boolean isValidComplexTypeIdentifier(String name) {
 
 		if (name == null) {
