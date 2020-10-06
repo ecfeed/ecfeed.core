@@ -109,12 +109,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveChoices(fTarget);
 		saveValues(fTarget);
 
-		IExtLanguageManager extLanguageManager = getExtLanguageManager();
-		extLanguageManager.verifyIsAllowedType(fNewType);
-//		if (!extLanguageManager.isAllowedType(fNewType)) {
-//
-//			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
-//		}
+		checkType(fNewType);
 
 		// Check for duplicate signatures possibly caused by global parameter type change
 		if(fTarget instanceof GlobalParameterNode){
@@ -173,6 +168,15 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		fTarget.setType(fNewType);
 		adaptChoices(fTarget);
+	}
+
+	public void checkType(String newType) throws ModelOperationException {
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
+		String message = extLanguageManager.verifyIsAllowedType(newType);
+
+		if (message!= null) {
+			ModelOperationException.report(message);
+		}
 	}
 
 	@Override

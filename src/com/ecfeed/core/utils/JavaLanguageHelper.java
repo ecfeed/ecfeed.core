@@ -1353,13 +1353,13 @@ public final class JavaLanguageHelper {
 		return INVALID_JAVA_TYPE + ": " + type + ".";
 	}
 
-	public static void verifyIsAllowedType(String typeName) {
+	public static String verifyIsAllowedType(String typeName) {
 
 		if (isAllowedType(typeName)) {
-			return;
+			return null;
 		}
 
-		ExceptionHelper.reportRuntimeException(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
+		return OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM;
 	}
 
 	//	public static String parseToJavaView(String text) {

@@ -154,9 +154,9 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	public void verifyIsAllowedType(String typeName) {
-		JavaLanguageHelper.verifyIsAllowedType(typeName);
+	public String verifyIsAllowedType(String typeName) {
 		
+		return JavaLanguageHelper.verifyIsAllowedType(typeName);
 	}
 	
 }

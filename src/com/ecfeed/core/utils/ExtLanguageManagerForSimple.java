@@ -177,8 +177,9 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	public void verifyIsAllowedType(String typeName) {
-		SimpleLanguageHelper.verifyIsAllowedType(typeName);
+	public String verifyIsAllowedType(String typeName) {
+		
+		return SimpleLanguageHelper.verifyIsAllowedType(typeName);
 	}
 
 }

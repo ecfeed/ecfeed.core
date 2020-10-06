@@ -60,14 +60,13 @@ public final class SimpleLanguageHelper {
 		return false;
 	}
 
-	public static void verifyIsAllowedType(String typeName) {
+	public static String verifyIsAllowedType(String typeName) {
 
 		if (isAllowedType(typeName)) {
-			return;
+			return null;
 		}
 
-		String message = "Parameter type must be a valid type identifier. It must be either a primitive type name: Number,Text,Logical or a valid user type";
-		ExceptionHelper.reportRuntimeException(message);
+		return "Parameter type must be a valid type identifier. It must be either a primitive type name: Number,Text,Logical or a valid user type";
 	}
 
 
