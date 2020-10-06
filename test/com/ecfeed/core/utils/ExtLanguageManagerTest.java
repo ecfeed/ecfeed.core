@@ -18,52 +18,55 @@ import static org.junit.Assert.*;
 
 
 
-public class ExtLanguageHelperTest {
+public class ExtLanguageManagerTest {
 
 	@Test
 	public void verifySeparatorsTest() {
 
-		// TODO SIMPLE-VIEW use ExtLanguageManager
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 
-		String errorMessage = JavaLanguageHelper.verifySeparators("abc");
+
+		String errorMessage = javaExtLanguageManager.verifySeparators("abc");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifySeparators("abc");
+		errorMessage = simpleExtLanguageManager.verifySeparators("abc");
 		assertNull(errorMessage);
 
 		// underline
 
-		errorMessage = JavaLanguageHelper.verifySeparators("ab_c");
+		errorMessage = javaExtLanguageManager.verifySeparators("ab_c");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifySeparators("ab_c");
+		errorMessage = simpleExtLanguageManager.verifySeparators("ab_c");
 		assertNotNull(errorMessage);
 
 		// space
 
-		errorMessage = JavaLanguageHelper.verifySeparators("ab c");
+		errorMessage = javaExtLanguageManager.verifySeparators("ab c");
 		assertNotNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifySeparators("ab c");
+		errorMessage = simpleExtLanguageManager.verifySeparators("ab c");
 		assertNull(errorMessage);
 		}
 
 	@Test
 	public void validateTypeTest() {
 
-		// TODO SIMPLE-VIEW use ExtLanguageManager
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 
-		String errorMessage = JavaLanguageHelper.verifyIsAllowedType("int");
+		String errorMessage = javaExtLanguageManager.verifyIsAllowedType("int");
 		assertNull(errorMessage);
 
-		errorMessage = JavaLanguageHelper.verifyIsAllowedType("intr");
-		assertNotNull(errorMessage);
-
-		errorMessage = SimpleLanguageHelper.verifyIsAllowedType("Number");
+		errorMessage = javaExtLanguageManager.verifyIsAllowedType("intr");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifyIsAllowedType("Num");
-		assertNotNull(errorMessage);
+		errorMessage = simpleExtLanguageManager.verifyIsAllowedType("Number");
+		assertNull(errorMessage);
+
+		errorMessage = simpleExtLanguageManager.verifyIsAllowedType("Num");
+		assertNull(errorMessage);
 	}
 
 	@Test
@@ -125,7 +128,7 @@ public class ExtLanguageHelperTest {
 		String type = javaExtLanguageManager.convertTypeFromIntrToExtLanguage("int");
 		assertEquals("int", type);
 
-		type = javaExtLanguageManager.convertTypeFromIntrToExtLanguage("int");
+		type = simpleExtLanguageManager.convertTypeFromIntrToExtLanguage("int");
 		assertEquals("Number", type);
 
 		type = javaExtLanguageManager.convertTypeFromIntrToExtLanguage("x");
@@ -166,22 +169,23 @@ public class ExtLanguageHelperTest {
 		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
 		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 
-		String text = javaExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE","int");
+		String text = javaExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage(
+				"MAX_VALUE","int");
 		assertEquals("MAX_VALUE", text);
 
-		text = simpleExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "int");
+		text = simpleExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage(
+				"MAX_VALUE", "int");
 		assertEquals("2147483647", text);
 
 		// invalid type
 
-		text = javaExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z");
+		text = javaExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage(
+				"MAX_VALUE", "Z");
 		assertEquals("MAX_VALUE", text);
 
-		try {
-			simpleExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z");
-			fail();
-		} catch (Exception e) {
-		}
+		text = simpleExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage(
+					"MAX_VALUE", "Z");
+		assertEquals("MAX_VALUE", text);
 
 		// invalid value
 

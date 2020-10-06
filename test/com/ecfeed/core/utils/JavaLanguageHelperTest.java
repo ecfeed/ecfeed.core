@@ -161,11 +161,8 @@ public class JavaLanguageHelperTest {
 		value = JavaLanguageHelper.getDefaultValue("boolean");
 		assertEquals("false", value);
 
-		try {
-			JavaLanguageHelper.getDefaultValue("x");
-			fail();
-		} catch (Exception e) {
-		}
+		value =	JavaLanguageHelper.getDefaultValue("x");
+		assertEquals("VALUE", value);
 	}
 
 

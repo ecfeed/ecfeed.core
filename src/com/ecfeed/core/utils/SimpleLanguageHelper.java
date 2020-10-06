@@ -53,6 +53,10 @@ public final class SimpleLanguageHelper {
 			return true;
 		}
 
+		if (JavaLanguageHelper.isJavaType(typeName)) {
+			return false;
+		}
+
 		if (JavaLanguageHelper.isMatchWithJavaSimpleIdenfifier(typeName)) {
 			return true;
 		}
