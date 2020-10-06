@@ -138,8 +138,8 @@ public class ClassNodeHelperTest {
 
 		String methodNameInJavaLanguage = "method_1";
 
-		String[] invalidParameterTypesInJavaLanguage = { "bool", "Int" };
-		String[] invalidParameterTypesInSimpleLanguage = { "Num", "Tex" };
+		String[] userParameterTypesInJavaLanguage = { "User1", "com.User2" };
+		String[] userParameterTypesInSimpleLanguage = { "User1", "User2" };
 
 		List<String> paramTypesInJavaLanguage = new ArrayList<>();
 		paramTypesInJavaLanguage.add("int");
@@ -156,15 +156,15 @@ public class ClassNodeHelperTest {
 
 		String errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, Arrays.asList(invalidParameterTypesInJavaLanguage), new ExtLanguageManagerForJava());
+						classNode, methodNameInJavaLanguage, Arrays.asList(userParameterTypesInJavaLanguage), new ExtLanguageManagerForJava());
 
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, Arrays.asList(invalidParameterTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
+						classNode, methodNameInSimpleLanguage, Arrays.asList(userParameterTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
 
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 
 		// empty class
 
@@ -228,29 +228,22 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		// invalid parameter type in java language
+		String[] userTypes1 = {"User1", "com.User2"};
 
-		String[] paramTypes1 = {"int", "x"};
-		try {
-			String result =
-					ClassNodeHelper.generateNewMethodName(
-							classNode, "method", Arrays.asList(paramTypes1), new ExtLanguageManagerForJava());
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, JavaLanguageHelper.INVALID_JAVA_TYPE);
-		}
+		String result =
+				ClassNodeHelper.generateNewMethodName(
+						classNode, "method", Arrays.asList(userTypes1), new ExtLanguageManagerForJava());
+
+		assertEquals("method1", result);
 
 		// simple language
 
-		String[] paramTypes2 = {"Num", "Tex"};
-		try {
-			String result =
-					ClassNodeHelper.generateNewMethodName(
-							classNode, "method", Arrays.asList(paramTypes2), new ExtLanguageManagerForSimple());
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, SimpleLanguageHelper.INVALID_SIMPLE_TYPE);
-		}
+		String[] userTypes2 = {"User1", "User2"};
+
+		result =
+				ClassNodeHelper.generateNewMethodName(
+						classNode, "method", Arrays.asList(userTypes2), new ExtLanguageManagerForSimple());
+		assertEquals("method1", result);
 
 		// java language
 
