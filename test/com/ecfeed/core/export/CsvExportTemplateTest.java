@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import org.junit.Test;
 
 import com.ecfeed.core.model.MethodNode;
@@ -30,7 +31,7 @@ public class CsvExportTemplateTest {
 
         String templateText = new String();
 
-        CsvExportTemplate csvExportTemplate = new CsvExportTemplate(createMethodNode(), ExtLanguage.JAVA);
+        CsvExportTemplate csvExportTemplate = new CsvExportTemplate(createMethodNode(), new ExtLanguageManagerForJava());
 
         try {
             csvExportTemplate.setTemplateText(templateText);
@@ -54,7 +55,7 @@ public class CsvExportTemplateTest {
 
 
         CsvExportTemplate csvExportTemplate =
-                new CsvExportTemplate(createMethodNode(), ExtLanguage.JAVA);
+                new CsvExportTemplate(createMethodNode(), new ExtLanguageManagerForJava());
 
         setAndVerifyTemplateTexts(csvExportTemplate, templateText);
         setAndVerifyTemplateTexts(csvExportTemplate, templateText);
@@ -89,7 +90,7 @@ public class CsvExportTemplateTest {
                         "FOOTER 1\nFOOTER 2");
 
         CsvExportTemplate csvExportTemplate =
-                new CsvExportTemplate(createMethodNode(), ExtLanguage.JAVA);
+                new CsvExportTemplate(createMethodNode(), new ExtLanguageManagerForJava());
 
         try {
             csvExportTemplate.setTemplateText(templateText);
@@ -113,7 +114,7 @@ public class CsvExportTemplateTest {
         String templateText = "[xxx]";
 
         CsvExportTemplate csvExportTemplate =
-                new CsvExportTemplate(createMethodNode(), ExtLanguage.JAVA);
+                new CsvExportTemplate(createMethodNode(), new ExtLanguageManagerForJava());
 
         try {
             csvExportTemplate.setTemplateText(templateText);

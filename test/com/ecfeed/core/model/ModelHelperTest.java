@@ -13,6 +13,8 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -26,17 +28,17 @@ public class ModelHelperTest {
 	public void getFullPathTest() {
 
 		RootNode rootNode = new RootNode("root_1", null);
-		String path = ModelHelper.getFullPath(rootNode, ExtLanguage.JAVA);
+		String path = ModelHelper.getFullPath(rootNode, new ExtLanguageManagerForJava());
 		assertEquals("root_1", path);
-		path = ModelHelper.getFullPath(rootNode, ExtLanguage.SIMPLE);
+		path = ModelHelper.getFullPath(rootNode, new ExtLanguageManagerForSimple());
 		assertEquals("root_1", path);
 
 		ClassNode classNode = new ClassNode("class_1", null);
 		classNode.setParent(rootNode);
 
-		path = ModelHelper.getFullPath(classNode, ExtLanguage.JAVA);
+		path = ModelHelper.getFullPath(classNode, new ExtLanguageManagerForJava());
 		assertEquals("root_1.class_1", path);
-		path = ModelHelper.getFullPath(classNode, ExtLanguage.SIMPLE);
+		path = ModelHelper.getFullPath(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("root_1.class 1", path);
 	}
 

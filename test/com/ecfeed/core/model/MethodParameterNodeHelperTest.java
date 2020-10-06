@@ -11,6 +11,8 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -23,10 +25,10 @@ public class MethodParameterNodeHelperTest {
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode("parameter_1", null, "type1", "0", false);
 
-		String name = MethodParameterNodeHelper.getName(methodParameterNode, ExtLanguage.JAVA);
+		String name = MethodParameterNodeHelper.getName(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("parameter_1", name);
 
-		name = MethodParameterNodeHelper.getName(methodParameterNode, ExtLanguage.SIMPLE);
+		name = MethodParameterNodeHelper.getName(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("parameter 1", name);
 
 	}
@@ -39,20 +41,20 @@ public class MethodParameterNodeHelperTest {
 		methodParameterNode =
 				new MethodParameterNode("par_1", null, "int", "0", false);
 
-		String signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.JAVA);
+		String signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("int par_1", signature);
 
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.SIMPLE);
+		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Number par 1", signature);
 
 
 		methodParameterNode =
 				new MethodParameterNode("par_1", null, "String", "0", true);
 
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.JAVA);
+		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]String par_1", signature);
 
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.SIMPLE);
+		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("[e]Text par 1", signature);
 
 		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
@@ -60,10 +62,10 @@ public class MethodParameterNodeHelperTest {
 
 		methodParameterNode.setLinked(true);
 
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.JAVA);
+		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]String par_1[LINKED]->global_1", signature);
 
-		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.SIMPLE);
+		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("[e]Text par 1[LINKED]->global 1", signature);
 
 	}

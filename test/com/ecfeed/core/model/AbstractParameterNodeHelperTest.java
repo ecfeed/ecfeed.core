@@ -11,6 +11,8 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -21,41 +23,41 @@ public class AbstractParameterNodeHelperTest {
 	public void createSignatureByIntrLanguageTest() {
 
 		String signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",false,	ExtLanguage.JAVA);
+				"int","par1",false,	new ExtLanguageManagerForJava());
 		assertEquals("int par1", signature);
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",false,	ExtLanguage.SIMPLE);
+				"int","par1",false,	new ExtLanguageManagerForSimple());
 		assertEquals("Number par1", signature);
 
 		// with expected flag
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",true,	ExtLanguage.JAVA);
+				"int","par1",true,	new ExtLanguageManagerForJava());
 		assertEquals("[e]int par1", signature);
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int","par1",true,	ExtLanguage.SIMPLE);
+				"int","par1",true,	new ExtLanguageManagerForSimple());
 		assertEquals("[e]Number par1", signature);
 
 		// without parameter name
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,false,	ExtLanguage.JAVA);
+				"int",null,false,	new ExtLanguageManagerForJava());
 		assertEquals("int", signature);
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,false,	ExtLanguage.SIMPLE);
+				"int",null,false,	new ExtLanguageManagerForSimple());
 		assertEquals("Number", signature);
 
 		// expected without parameter
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,true,	ExtLanguage.JAVA);
+				"int",null,true,	new ExtLanguageManagerForJava());
 		assertEquals("[e]int", signature);
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-				"int",null,true,	ExtLanguage.SIMPLE);
+				"int",null,true,	new ExtLanguageManagerForSimple());
 		assertEquals("[e]Number", signature);
 
 	}
@@ -79,10 +81,10 @@ public class AbstractParameterNodeHelperTest {
 				new MethodParameterNode(
 						"name", null,	"int", "0", true);
 
-		String label = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.JAVA);
+		String label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]int name", label);
 
-		label = MethodParameterNodeHelper.createSignature(methodParameterNode, ExtLanguage.SIMPLE);
+		label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("[e]Number name", label);
 	}
 
@@ -93,10 +95,10 @@ public class AbstractParameterNodeHelperTest {
 				new MethodParameterNode(
 						"name", null,	"int", "0", true);
 
-		String label = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, ExtLanguage.JAVA);
+		String label = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("int", label);
 
-		label = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, ExtLanguage.SIMPLE);
+		label = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Number", label);
 	}
 

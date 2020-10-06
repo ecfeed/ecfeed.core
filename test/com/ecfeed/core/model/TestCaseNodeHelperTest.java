@@ -13,6 +13,8 @@ package com.ecfeed.core.model;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -40,16 +42,16 @@ public class TestCaseNodeHelperTest {
 		TestCaseNode testCaseNode = new TestCaseNode("test case 1", null, choiceNodes);
 		testCaseNode.setParent(methodNode);
 
-		String signature = TestCaseNodeHelper.createSignature(testCaseNode, ExtLanguage.JAVA);
+		String signature = TestCaseNodeHelper.createSignature(testCaseNode, new ExtLanguageManagerForJava());
 		assertEquals("[test case 1] method_1(choice_1, choice_2)", signature);
 
-		signature = TestCaseNodeHelper.createSignature(testCaseNode, ExtLanguage.SIMPLE);
+		signature = TestCaseNodeHelper.createSignature(testCaseNode, new ExtLanguageManagerForSimple());
 		assertEquals("[test case 1] method 1(choice 1, choice 2)", signature);
 
-		String testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, ExtLanguage.JAVA);
+		String testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForJava());
 		assertEquals("choice_1, choice_2", testDataString);
 
-		testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, ExtLanguage.SIMPLE);
+		testDataString = TestCaseNodeHelper.getTestDataString(testCaseNode, new ExtLanguageManagerForSimple());
 		assertEquals("choice 1, choice 2", testDataString);
 	}
 

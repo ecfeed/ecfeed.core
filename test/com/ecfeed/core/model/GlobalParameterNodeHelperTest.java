@@ -11,6 +11,8 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -25,17 +27,17 @@ public class GlobalParameterNodeHelperTest {
 		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
 		globalParameterNode.setParent(rootNode);
 
-		String qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.JAVA);
+		String qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("global_1", qualifiedName);
 
-		qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, ExtLanguage.SIMPLE);
+		qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("global 1", qualifiedName);
 
 
-		String type = GlobalParameterNodeHelper.getType(globalParameterNode, ExtLanguage.JAVA);
+		String type = GlobalParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("String", type);
 
-		qualifiedName = GlobalParameterNodeHelper.getType(globalParameterNode, ExtLanguage.SIMPLE);
+		qualifiedName = GlobalParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Text", qualifiedName);
 	}
 
@@ -47,10 +49,10 @@ public class GlobalParameterNodeHelperTest {
 		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", null, "String");
 		globalParameterNode.setParent(rootNode);
 
-		String signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, ExtLanguage.JAVA);
+		String signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("String global_1", signature);
 
-		signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, ExtLanguage.SIMPLE);
+		signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Text global 1", signature);
 	}
 

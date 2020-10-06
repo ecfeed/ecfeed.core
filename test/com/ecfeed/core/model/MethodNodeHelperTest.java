@@ -11,6 +11,8 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -25,10 +27,10 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		String methodName = MethodNodeHelper.getName(methodNode, ExtLanguage.JAVA);
+		String methodName = MethodNodeHelper.getName(methodNode, new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
-		methodName = MethodNodeHelper.getName(methodNode, ExtLanguage.SIMPLE);
+		methodName = MethodNodeHelper.getName(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals("method 1", methodName);
 	}
 
@@ -63,7 +65,7 @@ public class MethodNodeHelperTest {
 
 		// java types
 
-		List<String> methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.JAVA);
+		List<String> methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForJava());
 
 		assertEquals(2,  methodParameterTypes.size());
 		assertEquals("int", methodParameterTypes.get(0));
@@ -71,7 +73,7 @@ public class MethodNodeHelperTest {
 
 		// simple types
 
-		methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.SIMPLE);
+		methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForSimple());
 
 		assertEquals(2,  methodParameterTypes.size());
 		assertEquals("Number", methodParameterTypes.get(0));
@@ -87,44 +89,44 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode);
 
-		String signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.JAVA);
+		String signature = MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForJava());
 		assertEquals("method_1()", signature);
 
-		signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.SIMPLE);
+		signature = MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals("method 1()", signature);
 
 
 		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
 		methodNode.addParameter(param1);
 
-		signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.JAVA);
+		signature = MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForJava());
 		assertEquals("method_1(int param1)", signature);
 
-		signature = MethodNodeHelper.createSignature(methodNode, ExtLanguage.SIMPLE);
+		signature = MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals("method 1(Number param1)", signature);
 
 
 		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
 		methodNode.addParameter(param2);
 
-		signature = MethodNodeHelper.createSignature(methodNode, false, ExtLanguage.JAVA);
+		signature = MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForJava());
 		assertEquals("method_1(int param1, double param2)", signature);
 
-		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, ExtLanguage.JAVA);
+		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, new ExtLanguageManagerForJava());
 		assertEquals("method_1(int param1, [e]double param2)", signature);
 
 
-		signature = MethodNodeHelper.createSignature(methodNode, false, ExtLanguage.SIMPLE);
+		signature = MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForSimple());
 		assertEquals("method 1(Number param1, Number param2)", signature);
 
-		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, ExtLanguage.SIMPLE);
+		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals("method 1(Number param1, [e]Number param2)", signature);
 
 
-		signature = MethodNodeHelper.createLongSignature(methodNode, ExtLanguage.JAVA);
+		signature = MethodNodeHelper.createLongSignature(methodNode, new ExtLanguageManagerForJava());
 		assertEquals("class1.method_1(int param1, double param2)", signature);
 
-		signature = MethodNodeHelper.createLongSignature(methodNode, ExtLanguage.SIMPLE);
+		signature = MethodNodeHelper.createLongSignature(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals("class1.method 1(Number param1, Number param2)", signature);
 
 		// by external language
@@ -169,19 +171,19 @@ public class MethodNodeHelperTest {
 
 		String errorMessage;
 
-		errorMessage = MethodNodeHelper.validateMethodName("f1", ExtLanguage.JAVA);
+		errorMessage = MethodNodeHelper.validateMethodName("f1", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = MethodNodeHelper.validateMethodName("f1", ExtLanguage.SIMPLE);
+		errorMessage = MethodNodeHelper.validateMethodName("f1", new ExtLanguageManagerForSimple());
 		assertNull(errorMessage);
 
 
 		// valid with separator
 
-		errorMessage = MethodNodeHelper.validateMethodName("f_1", ExtLanguage.JAVA);
+		errorMessage = MethodNodeHelper.validateMethodName("f_1", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = MethodNodeHelper.validateMethodName("f 1", ExtLanguage.SIMPLE);
+		errorMessage = MethodNodeHelper.validateMethodName("f 1", new ExtLanguageManagerForSimple());
 		assertNull(errorMessage);
 
 
@@ -190,7 +192,7 @@ public class MethodNodeHelperTest {
 		errorMessage =
 				MethodNodeHelper.validateMethodName(
 						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_$",
-						ExtLanguage.JAVA);
+						new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
@@ -198,53 +200,53 @@ public class MethodNodeHelperTest {
 		errorMessage =
 				MethodNodeHelper.validateMethodName(
 						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 $",
-						ExtLanguage.SIMPLE);
+						new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
 
 		// just dolar
 
-		errorMessage = MethodNodeHelper.validateMethodName("$", ExtLanguage.JAVA);
+		errorMessage = MethodNodeHelper.validateMethodName("$", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = MethodNodeHelper.validateMethodName("$", ExtLanguage.SIMPLE);
+		errorMessage = MethodNodeHelper.validateMethodName("$", new ExtLanguageManagerForSimple());
 		assertNull(errorMessage);
 
 
 		// invalid separator
 
-		errorMessage = MethodNodeHelper.validateMethodName("f 1", ExtLanguage.JAVA);
+		errorMessage = MethodNodeHelper.validateMethodName("f 1", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = MethodNodeHelper.validateMethodName("f_1", ExtLanguage.SIMPLE);
+		errorMessage = MethodNodeHelper.validateMethodName("f_1", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 
 
 		// invalid char
 
-		errorMessage = MethodNodeHelper.validateMethodName("#", ExtLanguage.JAVA);
+		errorMessage = MethodNodeHelper.validateMethodName("#", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = MethodNodeHelper.validateMethodName("#", ExtLanguage.SIMPLE);
+		errorMessage = MethodNodeHelper.validateMethodName("#", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 
 
 		// number at the front
 
-		errorMessage = MethodNodeHelper.validateMethodName("1a", ExtLanguage.JAVA);
+		errorMessage = MethodNodeHelper.validateMethodName("1a", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = MethodNodeHelper.validateMethodName("1a", ExtLanguage.SIMPLE);
+		errorMessage = MethodNodeHelper.validateMethodName("1a", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 
 
 		// just separator
 
-		errorMessage = MethodNodeHelper.validateMethodName("_a", ExtLanguage.JAVA);
+		errorMessage = MethodNodeHelper.validateMethodName("_a", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = MethodNodeHelper.validateMethodName(" a", ExtLanguage.SIMPLE);
+		errorMessage = MethodNodeHelper.validateMethodName(" a", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 	}
 
@@ -267,12 +269,12 @@ public class MethodNodeHelperTest {
 		assertEquals("param1", paramNames.get(0));
 		assertEquals("param2", paramNames.get(1));
 
-		List<String> paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.JAVA);
+		List<String> paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForJava());
 		assertEquals(2, paramTypes.size());
 		assertEquals("int", paramTypes.get(0));
 		assertEquals("double", paramTypes.get(1));
 
-		paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, ExtLanguage.SIMPLE);
+		paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals(2, paramTypes.size());
 		assertEquals("Number", paramTypes.get(0));
 		assertEquals("Number", paramTypes.get(1));
@@ -292,10 +294,10 @@ public class MethodNodeHelperTest {
 		MethodParameterNode param2 = new MethodParameterNode("param_2", null, "double", "0.0", true);
 		methodNode.addParameter(param2);
 
-		String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, ExtLanguage.JAVA);
+		String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForJava());
 		assertEquals("int param_1, [e]double param_2", signature);
 
-		signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, ExtLanguage.SIMPLE);
+		signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals("Number param 1, [e]Number param 2", signature);
 	}
 

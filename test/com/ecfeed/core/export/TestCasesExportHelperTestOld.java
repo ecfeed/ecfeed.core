@@ -12,6 +12,7 @@ package com.ecfeed.core.export;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -189,7 +190,7 @@ public class TestCasesExportHelperTestOld {
         TestCaseNode testCase = new TestCaseNode("default", null, choices);
         testCase.setParent(method);
 
-        String result = TestCasesExportHelperOld.generateTestCaseString(sequenceIndex, testCase, template, ExtLanguage.JAVA);
+        String result = TestCasesExportHelperOld.generateTestCaseString(sequenceIndex, testCase, template, new ExtLanguageManagerForJava());
         result = TestCasesExportHelperOld.evaluateMinWidthOperators(result);
         assertEquals(expectedResult, result);
     }

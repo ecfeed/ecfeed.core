@@ -26,24 +26,24 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("pack.class_1", null);
 
-		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, ExtLanguage.JAVA);
+		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("class_1", simpleName);
 
-		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, ExtLanguage.SIMPLE);
+		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", simpleName);
 
 
-		String packageName = ClassNodeHelper.getPackageName(classNode, ExtLanguage.JAVA);
+		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("pack", packageName);
 
-		packageName = ClassNodeHelper.getPackageName(classNode, ExtLanguage.SIMPLE);
+		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("", packageName);
 
 
-		String qualifiedName = ClassNodeHelper.getQualifiedName(classNode, ExtLanguage.JAVA);
+		String qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("pack.class_1", qualifiedName);
 
-		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, ExtLanguage.SIMPLE);
+		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", qualifiedName);
 	}
 
@@ -52,19 +52,19 @@ public class ClassNodeHelperTest {
 
 		String errorMessage;
 
-		errorMessage = ClassNodeHelper.validateClassName("c1", ExtLanguage.JAVA);
+		errorMessage = ClassNodeHelper.validateClassName("c1", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("c1", ExtLanguage.SIMPLE);
+		errorMessage = ClassNodeHelper.validateClassName("c1", new ExtLanguageManagerForSimple());
 		assertNull(errorMessage);
 
 
 		// valid with separator
 
-		errorMessage = ClassNodeHelper.validateClassName("c_1", ExtLanguage.JAVA);
+		errorMessage = ClassNodeHelper.validateClassName("c_1", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("c 1", ExtLanguage.SIMPLE);
+		errorMessage = ClassNodeHelper.validateClassName("c 1", new ExtLanguageManagerForSimple());
 		assertNull(errorMessage);
 
 
@@ -73,7 +73,7 @@ public class ClassNodeHelperTest {
 		errorMessage =
 				ClassNodeHelper.validateClassName(
 						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_$",
-						ExtLanguage.JAVA);
+						new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
@@ -81,53 +81,53 @@ public class ClassNodeHelperTest {
 		errorMessage =
 				ClassNodeHelper.validateClassName(
 						"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 $",
-						ExtLanguage.SIMPLE);
+						new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
 
 		// just dolar
 
-		errorMessage = ClassNodeHelper.validateClassName("$", ExtLanguage.JAVA);
+		errorMessage = ClassNodeHelper.validateClassName("$", new ExtLanguageManagerForJava());
 		assertNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("$", ExtLanguage.SIMPLE);
+		errorMessage = ClassNodeHelper.validateClassName("$", new ExtLanguageManagerForSimple());
 		assertNull(errorMessage);
 
 
 		// invalid separator
 
-		errorMessage = ClassNodeHelper.validateClassName("c 1", ExtLanguage.JAVA);
+		errorMessage = ClassNodeHelper.validateClassName("c 1", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("c_1", ExtLanguage.SIMPLE);
+		errorMessage = ClassNodeHelper.validateClassName("c_1", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 
 
 		// invalid char
 
-		errorMessage = ClassNodeHelper.validateClassName("#", ExtLanguage.JAVA);
+		errorMessage = ClassNodeHelper.validateClassName("#", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("#", ExtLanguage.SIMPLE);
+		errorMessage = ClassNodeHelper.validateClassName("#", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 
 
 		// number at the front
 
-		errorMessage = ClassNodeHelper.validateClassName("1a", ExtLanguage.JAVA);
+		errorMessage = ClassNodeHelper.validateClassName("1a", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName("1a", ExtLanguage.SIMPLE);
+		errorMessage = ClassNodeHelper.validateClassName("1a", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 
 
 		// just separator
 
-		errorMessage = ClassNodeHelper.validateClassName("_a", ExtLanguage.JAVA);
+		errorMessage = ClassNodeHelper.validateClassName("_a", new ExtLanguageManagerForJava());
 		assertNotNull(errorMessage);
 
-		errorMessage = ClassNodeHelper.validateClassName(" a", ExtLanguage.SIMPLE);
+		errorMessage = ClassNodeHelper.validateClassName(" a", new ExtLanguageManagerForSimple());
 		assertNotNull(errorMessage);
 	}
 
@@ -156,13 +156,13 @@ public class ClassNodeHelperTest {
 
 		String errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, Arrays.asList(invalidParameterTypesInJavaLanguage), ExtLanguage.JAVA);
+						classNode, methodNameInJavaLanguage, Arrays.asList(invalidParameterTypesInJavaLanguage), new ExtLanguageManagerForJava());
 
 		assertNotNull(errorMessage);
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, Arrays.asList(invalidParameterTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+						classNode, methodNameInSimpleLanguage, Arrays.asList(invalidParameterTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
 
 		assertNotNull(errorMessage);
 
@@ -170,13 +170,13 @@ public class ClassNodeHelperTest {
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
+						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
+						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
@@ -188,13 +188,13 @@ public class ClassNodeHelperTest {
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
+						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
+						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
@@ -210,13 +210,13 @@ public class ClassNodeHelperTest {
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, ExtLanguage.JAVA);
+						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNotNull(errorMessage);
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, ExtLanguage.SIMPLE);
+						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNotNull(errorMessage);
 	}
@@ -234,7 +234,7 @@ public class ClassNodeHelperTest {
 		try {
 			String result =
 					ClassNodeHelper.generateNewMethodName(
-							classNode, "method", Arrays.asList(paramTypes1), ExtLanguage.JAVA);
+							classNode, "method", Arrays.asList(paramTypes1), new ExtLanguageManagerForJava());
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, JavaLanguageHelper.INVALID_JAVA_TYPE);
@@ -246,7 +246,7 @@ public class ClassNodeHelperTest {
 		try {
 			String result =
 					ClassNodeHelper.generateNewMethodName(
-							classNode, "method", Arrays.asList(paramTypes2), ExtLanguage.SIMPLE);
+							classNode, "method", Arrays.asList(paramTypes2), new ExtLanguageManagerForSimple());
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, SimpleLanguageHelper.INVALID_SIMPLE_TYPE);
@@ -259,7 +259,7 @@ public class ClassNodeHelperTest {
 		String[] paramTypesInJavaLanguage = {"int", "String"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-					classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), ExtLanguage.JAVA);
+					classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
 		// simple language
@@ -267,7 +267,7 @@ public class ClassNodeHelperTest {
 		String[] paramTypesInSimpleLanguage = {"Number", "Text"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
 		assertEquals("method 1", methodName);
 
 		// add method with the same name but only one parameter
@@ -282,14 +282,14 @@ public class ClassNodeHelperTest {
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), ExtLanguage.JAVA);
+						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
 		// check in simple language
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
 		assertEquals("method 1", methodName);
 
 		// adding the second parameter
@@ -301,12 +301,12 @@ public class ClassNodeHelperTest {
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), ExtLanguage.JAVA);
+						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), ExtLanguage.SIMPLE);
+						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
 		assertEquals("method 2", methodName);
 	}
 
@@ -317,10 +317,10 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("com.class_1", null);
 
-		String signature = ClassNodeHelper.createSignature(classNode, ExtLanguage.JAVA);
+		String signature = ClassNodeHelper.createSignature(classNode, new ExtLanguageManagerForJava());
 		assertEquals("com.class_1", signature);
 
-		signature = ClassNodeHelper.createSignature(classNode, ExtLanguage.SIMPLE);
+		signature = ClassNodeHelper.createSignature(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", signature);
 	}
 
@@ -332,7 +332,7 @@ public class ClassNodeHelperTest {
 		List<String> convertedTypes =
 				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
 					Arrays.asList(parameterTypes),
-					ExtLanguage.JAVA);
+					new ExtLanguageManagerForJava());
 
 		assertEquals(9, convertedTypes.size());
 		assertEquals("byte", convertedTypes.get(0));
@@ -354,7 +354,7 @@ public class ClassNodeHelperTest {
 		List<String> convertedTypes =
 				AbstractParameterNodeHelper.convertParameterTypesToExtLanguage(
 						Arrays.asList(parameterTypes),
-						ExtLanguage.SIMPLE);
+						new ExtLanguageManagerForSimple());
 
 		assertEquals(9, convertedTypes.size());
 		assertEquals("Number", convertedTypes.get(0));

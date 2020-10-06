@@ -11,8 +11,11 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguage;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
 
+import static com.ecfeed.core.model.ConstraintNodeHelper.createSignature;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -30,10 +33,10 @@ public class ConstraintNodeHelperTest {
 
 		c1.getConstraint().setConsequence(new StaticStatement(false, null));
 
-		String signature = ConstraintNodeHelper.createSignature(c1,  ExtLanguage.JAVA);
+		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("c_1: false ⇒ false", signature);
 
-		signature = ConstraintNodeHelper.createSignature(c1,  ExtLanguage.SIMPLE);
+		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
 		assertEquals("c 1: false ⇒ false", signature);
 	}
 }
