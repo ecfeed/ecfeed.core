@@ -7,7 +7,7 @@ import com.ecfeed.core.model.ClassNode;
 
 public interface IExtLanguageManager {
 	
-	public String verifySeparatorsInName(String nameInExternalLanguage);
+	public String verifySeparatorsInName(String nameInExternalLanguage); // TODO SIMPLE-VIEW rename to verifySeparators
 	public boolean isLogicalTypeName(String type);
 	public String convertTextFromExtToIntrLanguage(String text);
 	public String convertTextFromIntrToExtLanguage(String text);
