@@ -107,12 +107,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	public void reportExceptionAllTypesAreUsed() {
-
-		ExceptionHelper.reportClientException("Cannot find not used parameter type. All possible types are already used.");
-	}
-
-	@Override
 	public String[] createListListOfSupportedTypes() {
 
 		String[] typeList = SimpleLanguageHelper.getSupportedSimpleViewTypes();
@@ -172,13 +166,13 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 	@Override
 	public boolean isAllowedType(String typeName) {
-		
+
 		return SimpleLanguageHelper.isAllowedType(typeName);
 	}
 
 	@Override
 	public String verifyIsAllowedType(String typeName) {
-		
+
 		return SimpleLanguageHelper.verifyIsAllowedType(typeName);
 	}
 

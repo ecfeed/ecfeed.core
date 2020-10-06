@@ -90,11 +90,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	public void reportExceptionAllTypesAreUsed() {
-
-	}
-
-	@Override
 	public String[] createListListOfSupportedTypes() {
 
 		String[] typeList = JavaLanguageHelper.getSupportedJavaTypes();
@@ -149,14 +144,14 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public boolean isAllowedType(String typeName) {
-		
+
 		return JavaLanguageHelper.isAllowedType(typeName);
 	}
 
 	@Override
 	public String verifyIsAllowedType(String typeName) {
-		
+
 		return JavaLanguageHelper.verifyIsAllowedType(typeName);
 	}
-	
+
 }

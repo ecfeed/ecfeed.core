@@ -6,7 +6,7 @@ import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ClassNode;
 
 public interface IExtLanguageManager {
-	
+
 	public String verifySeparators(String nameInExternalLanguage);
 	public boolean isLogicalTypeName(String type);
 	public String convertTextFromExtToIntrLanguage(String text);
@@ -15,7 +15,6 @@ public interface IExtLanguageManager {
 	public String convertTypeFromExtToIntrLanguage(String type);
 	public String conditionallyConvertSpecialValueToExtLanguage(String valueInIntrLanguage, String typeInIntrLanguage);
 	public List<String> getSymbolicNamesOfSpecialValues(String typeName);
-	public void reportExceptionAllTypesAreUsed(); // TODO SIMPLE-VIEW remove ?
 	public String[] createListListOfSupportedTypes();
 	public String getPackageName(String name);
 	public String createClassNameSignature(String className);
