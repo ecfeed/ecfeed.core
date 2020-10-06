@@ -16,67 +16,76 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+
+
 public class ExtLanguageHelperTest {
 
 	@Test
 	public void verifySeparatorsTest() {
 
-		String errorMessage = ExtLanguageHelper.verifySeparatorsInName("abc", ExtLanguage.JAVA);
+		// TODO SIMPLE-VIEW use ExtLanguageManager
+
+		String errorMessage = JavaLanguageHelper.verifySeparators("abc");
 		assertNull(errorMessage);
 
-		errorMessage = ExtLanguageHelper.verifySeparatorsInName("abc", ExtLanguage.SIMPLE);
+		errorMessage = SimpleLanguageHelper.verifySeparators("abc");
 		assertNull(errorMessage);
 
 		// underline
 
-		errorMessage = ExtLanguageHelper.verifySeparatorsInName("ab_c", ExtLanguage.JAVA);
+		errorMessage = JavaLanguageHelper.verifySeparators("ab_c");
 		assertNull(errorMessage);
 
-		errorMessage = ExtLanguageHelper.verifySeparatorsInName("ab_c", ExtLanguage.SIMPLE);
+		errorMessage = SimpleLanguageHelper.verifySeparators("ab_c");
 		assertNotNull(errorMessage);
 
 		// space
 
-		errorMessage = ExtLanguageHelper.verifySeparatorsInName("ab c", ExtLanguage.JAVA);
+		errorMessage = JavaLanguageHelper.verifySeparators("ab c");
 		assertNotNull(errorMessage);
 
-		errorMessage = ExtLanguageHelper.verifySeparatorsInName("ab c", ExtLanguage.SIMPLE);
+		errorMessage = SimpleLanguageHelper.verifySeparators("ab c");
 		assertNull(errorMessage);
 		}
 
 	@Test
 	public void validateTypeTest() {
 
-		String errorMessage = ExtLanguageHelper.validateType("int", ExtLanguage.JAVA);
+		// TODO SIMPLE-VIEW use ExtLanguageManager
+
+		String errorMessage = JavaLanguageHelper.verifyIsAllowedType("int");
 		assertNull(errorMessage);
 
-		errorMessage = ExtLanguageHelper.validateType("intr", ExtLanguage.JAVA);
+		errorMessage = JavaLanguageHelper.verifyIsAllowedType("intr");
 		assertNotNull(errorMessage);
 
-		errorMessage = ExtLanguageHelper.validateType("Number", ExtLanguage.SIMPLE);
+		errorMessage = SimpleLanguageHelper.verifyIsAllowedType("Number");
 		assertNull(errorMessage);
 
-		errorMessage = ExtLanguageHelper.validateType("Num", ExtLanguage.SIMPLE);
+		errorMessage = SimpleLanguageHelper.verifyIsAllowedType("Num");
 		assertNotNull(errorMessage);
 	}
 
 	@Test
 	public void convertTextToExtLanguageTest() {
 
-		String text = ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab_c", ExtLanguage.JAVA);
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		String text = javaExtLanguageManager.convertTextFromIntrToExtLanguage("ab_c");
 		assertEquals("ab_c", text);
 
-		text = ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab_c", ExtLanguage.SIMPLE);
+		text = simpleExtLanguageManager.convertTextFromIntrToExtLanguage("ab_c");
 		assertEquals("ab c", text);
 
 		try {
-			ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab c", ExtLanguage.JAVA);
+			javaExtLanguageManager.convertTextFromIntrToExtLanguage("ab c");
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			ExtLanguageHelper.convertTextFromIntrToExtLanguage("ab c", ExtLanguage.SIMPLE);
+			simpleExtLanguageManager.convertTextFromIntrToExtLanguage("ab c");
 			fail();
 		} catch (Exception e) {
 		}
@@ -85,20 +94,23 @@ public class ExtLanguageHelperTest {
 	@Test
 	public void convertTextToIntrLanguageTest() {
 
-		String text = ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab_c", ExtLanguage.JAVA);
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		String text = javaExtLanguageManager.convertTextFromExtToIntrLanguage("ab_c");
 		assertEquals("ab_c", text);
 
-		text = ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab c", ExtLanguage.SIMPLE);
+		text = simpleExtLanguageManager.convertTextFromExtToIntrLanguage("ab c");
 		assertEquals("ab_c", text);
 
 		try {
-			ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab c", ExtLanguage.JAVA);
+			javaExtLanguageManager.convertTextFromExtToIntrLanguage("ab c");
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			ExtLanguageHelper.convertTextFromExtToIntrLanguage("ab_c", ExtLanguage.SIMPLE);
+			simpleExtLanguageManager.convertTextFromExtToIntrLanguage("ab_c");
 			fail();
 		} catch (Exception e) {
 		}
@@ -107,36 +119,42 @@ public class ExtLanguageHelperTest {
 	@Test
 	public void convertTypeFromIntrToExtLanguageTest() {
 
-		String type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("int", ExtLanguage.JAVA);
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		String type = javaExtLanguageManager.convertTypeFromIntrToExtLanguage("int");
 		assertEquals("int", type);
 
-		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("int", ExtLanguage.SIMPLE);
+		type = javaExtLanguageManager.convertTypeFromIntrToExtLanguage("int");
 		assertEquals("Number", type);
 
-		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("x", ExtLanguage.JAVA);
+		type = javaExtLanguageManager.convertTypeFromIntrToExtLanguage("x");
 		assertEquals("x", type);
 
-		type = ExtLanguageHelper.convertTypeFromIntrToExtLanguage("x", ExtLanguage.SIMPLE);
+		type = simpleExtLanguageManager.convertTypeFromIntrToExtLanguage("x");
 		assertEquals("x", type);
 	}
 
 	@Test
 	public void convertTypeToIntrLanguageTest() {
 
-		String text = ExtLanguageHelper.convertTypeFromExtToIntrLanguage("int", ExtLanguage.JAVA);
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		String text = javaExtLanguageManager.convertTypeFromExtToIntrLanguage("int");
 		assertEquals("int", text);
 
-		text = ExtLanguageHelper.convertTypeFromExtToIntrLanguage("Number", ExtLanguage.SIMPLE);
+		text = simpleExtLanguageManager.convertTypeFromExtToIntrLanguage("Number");
 		assertEquals("double", text);
 
 		try {
-			ExtLanguageHelper.convertTypeFromExtToIntrLanguage("x", ExtLanguage.JAVA);
+			javaExtLanguageManager.convertTypeFromExtToIntrLanguage("x");
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			ExtLanguageHelper.convertTypeFromExtToIntrLanguage("x", ExtLanguage.SIMPLE);
+			simpleExtLanguageManager.convertTypeFromExtToIntrLanguage("x");
 			fail();
 		} catch (Exception e) {
 		}
@@ -145,53 +163,62 @@ public class ExtLanguageHelperTest {
 	@Test
 	public void convertSpecialValueToExtLanguageTest() {
 
-		String text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE","int", ExtLanguage.JAVA);
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		String text = javaExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE","int");
 		assertEquals("MAX_VALUE", text);
 
-		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "int", ExtLanguage.SIMPLE);
+		text = simpleExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "int");
 		assertEquals("2147483647", text);
 
 		// invalid type
 
-		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z", ExtLanguage.JAVA);
+		text = javaExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z");
 		assertEquals("MAX_VALUE", text);
 
 		try {
-			ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z", ExtLanguage.SIMPLE);
+			simpleExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("MAX_VALUE", "Z");
 			fail();
 		} catch (Exception e) {
 		}
 
 		// invalid value
 
-		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("x", "int", ExtLanguage.JAVA);
+		text = javaExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("x", "int");
 		assertEquals("x", text);
 
-		text = ExtLanguageHelper.conditionallyConvertSpecialValueToExtLanguage("x", "int", ExtLanguage.SIMPLE);
+		text = simpleExtLanguageManager.conditionallyConvertSpecialValueToExtLanguage("x", "int");
 		assertEquals("x", text);
 	}
 
 	@Test
 	public void getSymbolicNamesTest() {
 
-		List<String> names = ExtLanguageHelper.getSymbolicNamesOfSpecialValues("int", ExtLanguage.JAVA);
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		List<String> names = javaExtLanguageManager.getSymbolicNamesOfSpecialValues("int");
 		assertNotEquals(0, names.size());
 
-		names = ExtLanguageHelper.getSymbolicNamesOfSpecialValues("int", ExtLanguage.SIMPLE);
+		names = simpleExtLanguageManager.getSymbolicNamesOfSpecialValues("int");
 		assertEquals(0, names.size());
 	}
 
 	@Test
 	public void isLogicalTypeNameTest() {
 
-		assertTrue(ExtLanguageHelper.isLogicalTypeName("boolean", ExtLanguage.JAVA));
-		assertTrue(ExtLanguageHelper.isLogicalTypeName("Logical", ExtLanguage.SIMPLE));
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 
-		assertFalse(ExtLanguageHelper.isLogicalTypeName("boolean", ExtLanguage.SIMPLE));
-		assertFalse(ExtLanguageHelper.isLogicalTypeName("Logical", ExtLanguage.JAVA));
+		assertTrue(javaExtLanguageManager.isLogicalTypeName("boolean"));
+		assertTrue(simpleExtLanguageManager.isLogicalTypeName("Logical"));
 
-		assertFalse(ExtLanguageHelper.isLogicalTypeName("x", ExtLanguage.SIMPLE));
-		assertFalse(ExtLanguageHelper.isLogicalTypeName("x", ExtLanguage.JAVA));
+		assertFalse(simpleExtLanguageManager.isLogicalTypeName("boolean"));
+		assertFalse(javaExtLanguageManager.isLogicalTypeName("Logical"));
+
+		assertFalse(simpleExtLanguageManager.isLogicalTypeName("x"));
+		assertFalse(javaExtLanguageManager.isLogicalTypeName("x"));
 	}
 
 }

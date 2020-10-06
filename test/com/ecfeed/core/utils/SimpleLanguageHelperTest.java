@@ -88,16 +88,16 @@ public class SimpleLanguageHelperTest {
 	@Test
 	public void validateTypeTest() {
 
-		String errorMessage = SimpleLanguageHelper.validateType("Number");
+		String errorMessage = SimpleLanguageHelper.verifyIsAllowedType("Number");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.validateType("Text");
+		errorMessage = SimpleLanguageHelper.verifyIsAllowedType("Text");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.validateType("Logical");
+		errorMessage = SimpleLanguageHelper.verifyIsAllowedType("Logical");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.validateType("int");
+		errorMessage = SimpleLanguageHelper.verifyIsAllowedType("int");
 		assertNotNull(errorMessage);
 	}
 
