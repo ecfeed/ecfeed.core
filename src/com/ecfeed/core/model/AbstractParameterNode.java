@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
 
@@ -37,14 +35,12 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
-		verifyType(type);
-
 		fSuggestedType = Optional.empty();
 		fType = type;
 
 		createDefaultProperties();
 	}
-	
+
 	@Override
 	public void setName(String name) {
 
@@ -100,8 +96,6 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	public void setType(String type) {
 
-		verifyType(type);
-
 		fType = type;
 		registerChange();
 	}
@@ -121,9 +115,6 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	public void setSuggestedType(String typeHidden) {
 		fSuggestedType = Optional.ofNullable(typeHidden);
-	}
-
-	private void verifyType(String type) { // TODO SIMPLE-VIEW remove ?
 	}
 
 	private void createDefaultProperties() {
