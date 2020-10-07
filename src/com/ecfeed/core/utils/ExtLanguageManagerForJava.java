@@ -160,4 +160,10 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return suggestedWidth;
 	}
 
+	@Override
+	public boolean getPackageVisibility() {
+
+		return true;
+	}
+
 }

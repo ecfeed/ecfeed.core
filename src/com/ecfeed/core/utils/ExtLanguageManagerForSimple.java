@@ -182,4 +182,10 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return 0;
 	}
 
+	@Override
+	public boolean getPackageVisibility() {
+		
+		return false;
+	}
+
 }

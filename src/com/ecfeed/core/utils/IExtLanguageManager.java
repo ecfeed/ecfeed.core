@@ -25,5 +25,5 @@ public interface IExtLanguageManager {
 	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
 	public String[] getSupportedTypes();
 	public int getPackageColumnWidth(int suggestedWidth);
-
+	public boolean getPackageVisibility();
 }
