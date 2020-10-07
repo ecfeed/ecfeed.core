@@ -154,4 +154,10 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return JavaLanguageHelper.getSupportedJavaTypes();
 	}
 
+	@Override
+	public int getPackageColumnWidth(int suggestedWidth) {
+
+		return suggestedWidth;
+	}
+
 }

@@ -176,4 +176,10 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return SimpleLanguageHelper.getSupportedSimpleViewTypes();
 	}
 
+	@Override
+	public int getPackageColumnWidth(int suggestedWidth) {
+
+		return 0;
+	}
+
 }
