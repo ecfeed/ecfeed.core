@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
 
@@ -95,6 +97,10 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	public void setType(String type) {
+		
+		if (SimpleLanguageHelper.isSimpleType(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to set invalid parameter type: " + type);
+		}
 
 		fType = type;
 		registerChange();

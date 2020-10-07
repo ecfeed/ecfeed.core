@@ -166,7 +166,11 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			}
 		}
 
-		fTarget.setType(fNewTypeInExtLanguage);
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
+		
+		String newTypeInIntrLanguage = extLanguageManager.convertTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
+		fTarget.setType(newTypeInIntrLanguage);
+		
 		adaptChoices(fTarget);
 	}
 
