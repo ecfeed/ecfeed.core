@@ -170,4 +170,10 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return SimpleLanguageHelper.verifyIsAllowedType(typeName);
 	}
 
+	@Override
+	public String[] getSupportedTypes() {
+		
+		return SimpleLanguageHelper.getSupportedSimpleViewTypes();
+	}
+
 }

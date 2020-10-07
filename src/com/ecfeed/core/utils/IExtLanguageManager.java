@@ -23,5 +23,6 @@ public interface IExtLanguageManager {
 	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode);
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);
 	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
+	public String[] getSupportedTypes();
 
 }

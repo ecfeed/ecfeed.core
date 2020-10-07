@@ -148,4 +148,10 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return JavaLanguageHelper.verifyIsAllowedType(typeName);
 	}
 
+	@Override
+	public String[] getSupportedTypes() {
+		
+		return JavaLanguageHelper.getSupportedJavaTypes();
+	}
+
 }

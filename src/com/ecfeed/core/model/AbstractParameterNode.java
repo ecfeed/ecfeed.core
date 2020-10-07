@@ -123,11 +123,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		fSuggestedType = Optional.ofNullable(typeHidden);
 	}
 
-	private void verifyType(String type) {
-
-		if (type.equals(SimpleLanguageHelper.TYPE_NAME_TEXT) || type.equals(SimpleLanguageHelper.TYPE_NAME_NUMBER)) {
-			ExceptionHelper.reportRuntimeException("Invalid type of parameter: " + type);
-		}
+	private void verifyType(String type) { // TODO SIMPLE-VIEW remove ?
 	}
 
 	private void createDefaultProperties() {
