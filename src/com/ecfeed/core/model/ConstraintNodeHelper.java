@@ -19,4 +19,9 @@ public class ConstraintNodeHelper {
 		return ConstraintHelper.getSignature(constraintNode.getConstraint(), extLanguage);
 	}
 
+	public static String getName(ConstraintNode ownNode, IExtLanguageManager extLanguageManager) {
+
+		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
+	}
+
 }
