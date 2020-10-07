@@ -24,7 +24,7 @@ public class MethodParameterNodeHelper {
 			MethodParameterNode methodParameterNode,
 			IExtLanguageManager extLanguage) {
 
-		String type = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, extLanguage);
+		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguage);
 		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguage);
 
 		String signature = 

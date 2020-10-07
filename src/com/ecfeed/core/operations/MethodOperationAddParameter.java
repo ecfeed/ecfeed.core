@@ -55,7 +55,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
 
-		String newParameterType = AbstractParameterNodeHelper.createTypeSignature(fMethodParameterNode, extLanguage);
+		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguage);
 
 		paremeterTypesInExtLanguage.add(fNewIndex, newParameterType);
 

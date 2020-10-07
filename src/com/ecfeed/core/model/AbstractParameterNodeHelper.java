@@ -22,6 +22,13 @@ public abstract class AbstractParameterNodeHelper {
 		String name = extLanguage.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
 		return name;
 	}
+	
+	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
+
+		String type = abstractParameterNode.getType();
+		type = extLanguage.convertTypeFromIntrToExtLanguage(type);
+		return type;
+	}
 
 	public static String createSignatureOfOneParameterByIntrLanguage(
 			String parameterTypeInIntrLanguage,
@@ -58,7 +65,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		String signature = 
 				createSignature(
-						createTypeSignature(abstractParameterNode, extLanguage),
+						getType(abstractParameterNode, extLanguage),
 						createNameSignature(abstractParameterNode, extLanguage),
 						isExpected);
 
@@ -107,18 +114,10 @@ public abstract class AbstractParameterNodeHelper {
 		name = extLanguage.convertTextFromIntrToExtLanguage(name);
 
 
-		String type = createTypeSignature(abstractParameterNode, extLanguage);
+		String type = getType(abstractParameterNode, extLanguage);
 
 		String label = type + " " + name;
 		return label;
-	}
-
-
-	public static String createTypeSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
-
-		String type = abstractParameterNode.getType();
-		type = extLanguage.convertTypeFromIntrToExtLanguage(type);
-		return type;
 	}
 
 	public static String createNameSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
