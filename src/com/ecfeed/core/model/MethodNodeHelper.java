@@ -11,7 +11,9 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -228,6 +230,8 @@ public class MethodNodeHelper {
 		return signature;
 
 	}	
+
+
 	private static String createSignaturesOfParametersByIntrLanguage(
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames,
@@ -284,6 +288,28 @@ public class MethodNodeHelper {
 		}
 
 		return true;
+	}
+
+	public static Set<String> getConstraintNames(MethodNode methodNode, IExtLanguageManager extLanguage) {
+
+		Set<String> constraintNames = methodNode.getConstraintsNames();
+
+		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguage);
+
+		return constraintNames;
+	}
+
+	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguage) {
+
+		Set<String> result = new HashSet<String>();
+
+		for(String constraintName : constraintNames) {
+
+			String nameInExtLanguage = extLanguage.convertTextFromIntrToExtLanguage(constraintName);
+			result.add(nameInExtLanguage);
+		}
+
+		return result;
 	}
 
 }
