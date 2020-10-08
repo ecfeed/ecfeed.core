@@ -21,13 +21,13 @@ public abstract class AbstractModelOperation implements IModelOperation {
 
 	private boolean fModelUpdated;
 	private String fName;
-	private IExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguageManager;
 
 	private List<AbstractNode> fNodesToSelect;
 
 	public AbstractModelOperation(String name, IExtLanguageManager extLanguage){
 		fName = name;
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 		fNodesToSelect = new ArrayList<AbstractNode>();
 	}
 
@@ -56,7 +56,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	}
 
 	public IExtLanguageManager getExtLanguageManager() {
-		return fExtLanguage;
+		return fExtLanguageManager;
 	}
 
 	public void setOneNodeToSelect(AbstractNode nodeToSelect) {

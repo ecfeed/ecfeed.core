@@ -16,11 +16,11 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class ExportTemplateFactory {
 
 	private MethodNode fMethodNode;
-	private IExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public ExportTemplateFactory(MethodNode methodNode, IExtLanguageManager extLanguage) {
 		fMethodNode = methodNode;
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 	}
 
 	public IExportTemplate createDefaultTemplate() {
@@ -46,16 +46,16 @@ public class ExportTemplateFactory {
 	private IExportTemplate createTemplateIntr(String formatName) {
 
 		if (formatName.equals(CsvExportTemplate.getTemplateFormatSt())) {
-			return new CsvExportTemplate(fMethodNode, fExtLanguage);
+			return new CsvExportTemplate(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(XmlExportTemplate.getTemplateFormatSt())) {
-			return new XmlExportTemplate(fMethodNode, fExtLanguage);
+			return new XmlExportTemplate(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(GherkinExportTemplate.getTemplateFormatSt())) {
-			return new GherkinExportTemplate(fMethodNode, fExtLanguage);
+			return new GherkinExportTemplate(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(JsonExportTemplate.getTemplateFormatSt())) {
-			return new JsonExportTemplate(fMethodNode, fExtLanguage);
+			return new JsonExportTemplate(fMethodNode, fExtLanguageManager);
 		}		
 		
 		return null;

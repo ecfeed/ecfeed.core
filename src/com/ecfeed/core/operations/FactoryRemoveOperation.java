@@ -66,12 +66,12 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
-		IExtLanguageManager fExtLanguage;
+		IExtLanguageManager fExtLanguageManager;
 
 		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguage) {
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
-			fExtLanguage = extLanguage;
+			fExtLanguageManager = extLanguage;
 		}
 
 		@Override
@@ -81,17 +81,17 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node, fExtLanguage);
+			return new RootOperationRemoveClass(node.getRoot(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node, fExtLanguage);
+			return new ClassOperationRemoveMethod(node.getClassNode(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguage);
+			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguageManager);
 		}
 
 		@Override
@@ -99,22 +99,22 @@ public class FactoryRemoveOperation {
 			return new GenericOperationRemoveGlobalParameter(
 					(GlobalParametersParentNode)node.getParametersParent(), 
 					node,
-					fExtLanguage);
+					fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new MethodOperationRemoveTestCase(node.getMethod(), node, fExtLanguage);
+			return new MethodOperationRemoveTestCase(node.getMethod(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new MethodOperationRemoveConstraint(node.getMethod(), node, fExtLanguage);
+			return new MethodOperationRemoveConstraint(node.getMethod(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fExtLanguage);
+			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 	}
 

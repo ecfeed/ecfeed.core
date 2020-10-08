@@ -29,22 +29,22 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	private AbstractNode fChild;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
-	private IExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public FactoryRemoveChildOperation(
 			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguage) {
 		fChild = child;
 		fValidate = validate;
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 	}
 
 	@Override
 	public Object visit(RootNode node) throws Exception {
 		if(fChild instanceof ClassNode){
-			return new RootOperationRemoveClass(node, (ClassNode)fChild, fExtLanguage);
+			return new RootOperationRemoveClass(node, (ClassNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof GlobalParameterNode){
-			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguage);
+			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguageManager);
 		}
 		return null;
 	}
@@ -52,10 +52,10 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(ClassNode node) throws Exception {
 		if(fChild instanceof MethodNode){
-			return new ClassOperationRemoveMethod(node, (MethodNode)fChild, fExtLanguage);
+			return new ClassOperationRemoveMethod(node, (MethodNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof GlobalParameterNode){
-			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguage);
+			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguageManager);
 		}
 		return null;
 	}
@@ -63,13 +63,13 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(MethodNode node) throws Exception {
 		if(fChild instanceof MethodParameterNode){
-			return new MethodOperationRemoveParameter(node, (MethodParameterNode)fChild, fExtLanguage);
+			return new MethodOperationRemoveParameter(node, (MethodParameterNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
-			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild, fExtLanguage);
+			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof TestCaseNode){
-			return new MethodOperationRemoveTestCase(node, (TestCaseNode)fChild, fExtLanguage);
+			return new MethodOperationRemoveTestCase(node, (TestCaseNode)fChild, fExtLanguageManager);
 		}
 		return null;
 	}
@@ -77,7 +77,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(MethodParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
-			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguage);
+			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 		return null;
 	}
@@ -85,7 +85,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(GlobalParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
-			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguage);
+			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 		return null;
 	}
@@ -103,7 +103,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(ChoiceNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
-			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguage);
+			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 		return null;
 	}

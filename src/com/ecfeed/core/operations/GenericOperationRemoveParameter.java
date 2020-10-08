@@ -20,7 +20,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	private ParametersParentNode fParametersParentNode;
 	private AbstractParameterNode fAbstractParameterNode;
 	private int fOriginalIndex;
-	private IExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguage) {
 
@@ -28,7 +28,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 	public IExtLanguageManager getExtLanguageManager() {
 
-		return fExtLanguage;
+		return fExtLanguageManager;
 	}
 
 	@Override

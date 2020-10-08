@@ -50,7 +50,7 @@ import com.ecfeed.core.utils.SystemLogger;
 
 public class MethodParameterOperationSetType extends BulkOperation {
 
-	private IExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public MethodParameterOperationSetType(
 			MethodParameterNode targetMethodParameterNode, 
@@ -60,7 +60,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguage);
 
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 
 		if (newType == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
@@ -127,11 +127,11 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 			ClassNode classNode = oldMethodNode.getClassNode();
 
-			String methodNameInExtLanguage = MethodNodeHelper.getName(oldMethodNode, fExtLanguage);
+			String methodNameInExtLanguage = MethodNodeHelper.getName(oldMethodNode, fExtLanguageManager);
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(
-							classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, fExtLanguage);
+							classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, fExtLanguageManager);
 
 			if (foundMethodNode == null) {
 				return;

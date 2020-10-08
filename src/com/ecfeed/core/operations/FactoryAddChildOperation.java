@@ -32,7 +32,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	private AbstractNode fChild;
 	private int fIndex;
 	private boolean fValidate;
-	IExtLanguageManager fExtLanguage;
+	IExtLanguageManager fExtLanguageManager;
 	private ITypeAdapterProvider fAdapterProvider;
 
 	public FactoryAddChildOperation(
@@ -45,7 +45,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		fChild = child;
 		fIndex = index;
 		fValidate = validate;
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 		fAdapterProvider = adapterProvider;
 	}
 
@@ -83,10 +83,10 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		GlobalParameterNode globalParameter = new GlobalParameterNode(abstractParameterNode);
 
 		if(fIndex == -1) {
-			return new GenericOperationAddParameter(rootNode, globalParameter, true, fExtLanguage);
+			return new GenericOperationAddParameter(rootNode, globalParameter, true, fExtLanguageManager);
 		}
 
-		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguage);
+		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguageManager);
 	}
 
 	private Object createOperationAddClass(RootNode rootNode) {
@@ -96,10 +96,10 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		generateUniqueNameForClass(rootNode, classNode);
 
 		if (fIndex == -1) {
-			return new RootOperationAddNewClass(rootNode, classNode, fExtLanguage);
+			return new RootOperationAddNewClass(rootNode, classNode, fExtLanguageManager);
 		}
 
-		return new RootOperationAddNewClass(rootNode, classNode, fIndex, fExtLanguage);
+		return new RootOperationAddNewClass(rootNode, classNode, fIndex, fExtLanguageManager);
 	}
 	
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
@@ -116,15 +116,15 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if(fChild instanceof MethodNode){
 			if(fIndex == -1){
-				return new ClassOperationAddMethod(node, (MethodNode)fChild, fExtLanguage);
+				return new ClassOperationAddMethod(node, (MethodNode)fChild, fExtLanguageManager);
 			}
-			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fExtLanguage);
+			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
 		}else if(fChild instanceof AbstractParameterNode){
 			GlobalParameterNode globalParameter = new GlobalParameterNode((AbstractParameterNode)fChild);
 			if(fIndex == -1){
-				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguage);
+				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
 			}
-			return new GenericOperationAddParameter(node, globalParameter, fIndex, true, fExtLanguage);
+			return new GenericOperationAddParameter(node, globalParameter, fIndex, true, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
@@ -139,27 +139,27 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			MethodParameterNode parameter = new MethodParameterNode(globalParameter, defaultValue, false);
 
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node,parameter, fExtLanguage);
+				return new MethodOperationAddParameter(node,parameter, fExtLanguageManager);
 			}
-			return new MethodOperationAddParameter(node, parameter, fIndex, fExtLanguage);
+			return new MethodOperationAddParameter(node, parameter, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof MethodParameterNode){
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fExtLanguage);
+				return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fExtLanguageManager);
 			}
-			return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fIndex, fExtLanguage);
+			return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
 			if(fIndex == -1){
-				return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fExtLanguage);
+				return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fExtLanguageManager);
 			}
-			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex, fExtLanguage);
+			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof TestCaseNode){
 			if(fIndex == -1){
-				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguage);
+				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
 			}
-			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguage);
+			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
@@ -170,9 +170,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	public Object visit(MethodParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguage);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguage);
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
@@ -183,9 +183,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	public Object visit(GlobalParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguage);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguage);
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
@@ -208,9 +208,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	public Object visit(ChoiceNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguage);
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguage);
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();

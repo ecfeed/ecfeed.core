@@ -27,13 +27,13 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private MethodNode fMethodNode;
 	private TemplateText fTemplateText;
-	private IExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText, IExtLanguageManager extLanguage) {
 
 		fMethodNode = methodNode;
 		fTemplateText = new TemplateText(defaultlTemplateText);
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-					fMethodNode, fTemplateText.getHeaderTemplateText(), fExtLanguage));
+					fMethodNode, fTemplateText.getHeaderTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
@@ -96,7 +96,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-						fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguage));
+						fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
@@ -120,7 +120,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 							sequenceIndex++,
 							testCase,
 							fTemplateText.getTestCaseTemplateText(), 
-							fExtLanguage));
+							fExtLanguageManager));
 
 			inOutStringBuilder.append("\n");
 		}

@@ -33,7 +33,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String fNewNameInExtLanguage;
 	private String fOriginalName;
 	private String fJavaNameRegex;
-	private IExtLanguageManager fExtLanguage;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public GenericOperationRename(
 			AbstractNode target, 
@@ -46,7 +46,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fNewNameInExtLanguage = newNameInExtLanguage;
 		fOriginalName = target.getName();
 		fJavaNameRegex = getJavaNameRegex(target);
-		fExtLanguage = extLanguage;
+		fExtLanguageManager = extLanguage;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		verifyNewName(fNewNameInExtLanguage);
 
-		String newNameInIntrLanguage = convertTextFromExtToIntrLanguage(fNewNameInExtLanguage, fExtLanguage);
+		String newNameInIntrLanguage = convertTextFromExtToIntrLanguage(fNewNameInExtLanguage, fExtLanguageManager);
 
 		if (!(fTarget instanceof RootNode)) {
 			verifyNameWithJavaRegex(newNameInIntrLanguage, fJavaNameRegex, fTarget, new ExtLanguageManagerForJava());
@@ -66,7 +66,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		fTarget.setName(newNameInIntrLanguage);
 
 		RootNode rootNode = ModelHelper.findRoot(fTarget);
-		String errorMessage = fExtLanguage.checkIsModelCompatibleWithExtLanguage(rootNode);
+		String errorMessage = fExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode);
 
 		if (errorMessage != null) {
 			fTarget.setName(oldName);
@@ -81,7 +81,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return new GenericOperationRename(
 				getOwnNode(), 
 				getOriginalName(), 
-				fExtLanguage);
+				fExtLanguageManager);
 	}
 
 	protected AbstractNode getOwnNode(){
@@ -122,10 +122,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	private static class RegexProblemMessageProvider implements IModelVisitor {
 
-		private IExtLanguageManager fExtLanguage;
+		private IExtLanguageManager fExtLanguageManager;
 
 		public RegexProblemMessageProvider(IExtLanguageManager extLanguage) {
-			fExtLanguage = extLanguage;
+			fExtLanguageManager = extLanguage;
 		}
 
 		@Override
@@ -136,22 +136,22 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return RegexHelper.createMessageAllowedCharsForClass(fExtLanguage);
+			return RegexHelper.createMessageAllowedCharsForClass(fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return RegexHelper.createMessageAllowedCharsForMethod(fExtLanguage);
+			return RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguage);
+			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguage);
+			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguageManager);
 		}
 
 		@Override
