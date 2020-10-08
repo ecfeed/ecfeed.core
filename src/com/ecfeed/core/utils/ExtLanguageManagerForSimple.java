@@ -184,8 +184,28 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 	@Override
 	public boolean getPackageVisibility() {
-		
+
 		return false;
+	}
+
+	@Override
+	public String getExtendedTypeForValue(String value, String currentType) {
+
+		if (JavaLanguageHelper.isCharTypeName(currentType) && value.length() > 1) {
+
+			return JavaLanguageHelper.TYPE_NAME_STRING;		
+		}
+
+		if (JavaLanguageHelper.isNumericTypeName(currentType)) {
+
+			String typeCompatibleWithValue = JavaLanguageHelper.getCompatibleNumericType(value);
+
+			if (JavaLanguageHelper.isNumericTypeLarger(typeCompatibleWithValue, currentType)) {
+				return typeCompatibleWithValue;
+			}
+		}
+
+		return currentType;
 	}
 
 }

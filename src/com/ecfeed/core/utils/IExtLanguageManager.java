@@ -24,6 +24,7 @@ public interface IExtLanguageManager {
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);
 	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
 	public String[] getSupportedTypes();
-	public int getPackageColumnWidth(int suggestedWidth);
+	public int getPackageColumnWidth(int suggestedWidth); // TODO SIMPLE-VIEW remove -use getPackageVisibility
 	public boolean getPackageVisibility();
+	public String getExtendedTypeForValue(String value, String currentType); // TODO SIMPLE-VIEW unit tests
 }

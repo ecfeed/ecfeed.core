@@ -150,7 +150,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	public String[] getSupportedTypes() {
-		
+
 		return JavaLanguageHelper.getSupportedJavaTypes();
 	}
 
@@ -164,6 +164,12 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	public boolean getPackageVisibility() {
 
 		return true;
+	}
+
+	@Override
+	public String getExtendedTypeForValue(String value, String currentType) {
+
+		return currentType; // no type extending in Java view
 	}
 
 }
