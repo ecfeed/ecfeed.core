@@ -22,13 +22,13 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	private int fOriginalIndex;
 	private IExtLanguageManager fExtLanguageManager;
 
-	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguage) {
+	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguage);
+		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguageManager);
 
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
-		fExtLanguageManager = extLanguage;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override

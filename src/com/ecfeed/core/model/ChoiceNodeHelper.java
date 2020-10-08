@@ -32,22 +32,22 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
-	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
+	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		String name = choiceNode.getName();
-		name = extLanguage.convertTextFromIntrToExtLanguage(name);
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 		return name;
 	}
 
-	public static String getQualifiedName(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
+	public static String getQualifiedName(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		ChoiceNode parentChoice = getParentChoice(choiceNode);
 
 		if (parentChoice != null) {
-			return getQualifiedName(parentChoice, extLanguage) + ":" + getName(choiceNode, extLanguage);
+			return getQualifiedName(parentChoice, extLanguageManager) + ":" + getName(choiceNode, extLanguageManager);
 		}
 
-		return getName(choiceNode, extLanguage);
+		return getName(choiceNode, extLanguageManager);
 	}
 
 	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
@@ -67,42 +67,42 @@ public class ChoiceNodeHelper {
 		return null;
 	}
 
-	public static String createSignature(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
+	public static String createSignature(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = getQualifiedName(choiceNode, extLanguage);
+		String qualifiedName = getQualifiedName(choiceNode, extLanguageManager);
 
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
 		}
 
-		String value = getValueString(choiceNode, extLanguage);
+		String value = getValueString(choiceNode, extLanguageManager);
 
 		return qualifiedName + " [" + value + "]";
 	}
 
-	public static String createTestDataLabel(ChoiceNode choice, IExtLanguageManager extLanguage) {
+	public static String createTestDataLabel(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
 		String result = "";
 
 		MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
 
 		if (methodParameterNode != null && methodParameterNode.isExpected()) {
-			result += "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguage);
+			result += "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
 		} else{
-			result += ChoiceNodeHelper.getQualifiedName(choice, extLanguage);
+			result += ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
 		}
 
 		return result;
 	}
 
-	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguage) {
+	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		String type = choiceNode.getParameter().getType();
 
 		String value = choiceNode.getValueString();
 
 		if (JavaLanguageHelper.isJavaType(type)) {
-			value = extLanguage.conditionallyConvertSpecialValueToExtLanguage(value, type);
+			value = extLanguageManager.conditionallyConvertSpecialValueToExtLanguage(value, type);
 		}
 
 		return value;
@@ -152,13 +152,13 @@ public class ChoiceNodeHelper {
 		last.setParent(parameter);
 	}
 
-	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes, IExtLanguageManager extLanguage) {
+	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes, IExtLanguageManager extLanguageManager) {
 
 		List<String> choiceNames = new ArrayList<>();
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
-			String choiceName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguage);
+			String choiceName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 			choiceNames.add(choiceName);
 		}
 

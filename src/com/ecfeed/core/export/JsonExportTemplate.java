@@ -17,8 +17,8 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class JsonExportTemplate extends AbstractExportTemplate {
 
-	public JsonExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguage) {
-		super(methodNode, createDefaultTemplateText(methodNode), extLanguage);
+	public JsonExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+		super(methodNode, createDefaultTemplateText(methodNode), extLanguageManager);
 	}
 
 	private static String createDefaultTemplateText(MethodNode methodNode) {

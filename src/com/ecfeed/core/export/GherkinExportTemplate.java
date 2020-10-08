@@ -21,8 +21,8 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class GherkinExportTemplate extends AbstractExportTemplate {
 
-	public GherkinExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguage) {
-		super(methodNode, createDefaultTemplateText(methodNode), extLanguage);
+	public GherkinExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+		super(methodNode, createDefaultTemplateText(methodNode), extLanguageManager);
 	}
 
 	private static String createDefaultTemplateText(MethodNode methodNode) {

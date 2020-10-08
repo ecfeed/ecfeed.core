@@ -19,8 +19,8 @@ public class ClassOperationSetAndroidBaseRunner extends AbstractModelOperation {
 	private String fNewValue;
 	private String fOriginalValue;
 
-	public ClassOperationSetAndroidBaseRunner(ClassNode target, String newValue, IExtLanguageManager extLanguage) {
-		super(OperationNames.SET_ANDROID_BASE_RUNNER, extLanguage);
+	public ClassOperationSetAndroidBaseRunner(ClassNode target, String newValue, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_ANDROID_BASE_RUNNER, extLanguageManager);
 		fTarget = target;
 		fNewValue = newValue;
 		fOriginalValue = target.getAndroidRunner();

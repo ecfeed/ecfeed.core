@@ -55,12 +55,12 @@ public class MethodParameterOperationSetType extends BulkOperation {
 	public MethodParameterOperationSetType(
 			MethodParameterNode targetMethodParameterNode, 
 			String newType, 
-			IExtLanguageManager extLanguage,
+			IExtLanguageManager extLanguageManager,
 			ITypeAdapterProvider adapterProvider) {
 
-		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguage);
+		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguageManager);
 
-		fExtLanguageManager = extLanguage;
+		fExtLanguageManager = extLanguageManager;
 
 		if (newType == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
@@ -86,9 +86,9 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				MethodParameterNode target, 
 				String newType, 
 				ITypeAdapterProvider adapterProvider, 
-				IExtLanguageManager extLanguage) {
+				IExtLanguageManager extLanguageManager) {
 
-			super(target, newType, adapterProvider, extLanguage);
+			super(target, newType, adapterProvider, extLanguageManager);
 
 			fMethodParameterNode = target;
 			fOriginalStatementValues = new HashMap<>();
@@ -356,9 +356,9 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
 
-			public ReverseSetTypeOperation(IExtLanguageManager extLanguage) {
+			public ReverseSetTypeOperation(IExtLanguageManager extLanguageManager) {
 
-				super(extLanguage);
+				super(extLanguageManager);
 			}
 
 			private class StatementValueRestorer implements IStatementVisitor{

@@ -36,10 +36,10 @@ public class FactoryShiftOperation {
 		public MoveUpDownOperationProvider(
 				List<? extends AbstractNode> shifted, 
 				boolean up,
-				IExtLanguageManager extLanguage) {
+				IExtLanguageManager extLanguageManager) {
 			fShifted = shifted;
 			fUp = up;
-			fExtLanguageManager = extLanguage;
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -127,10 +127,10 @@ public class FactoryShiftOperation {
 		private int fShift;
 		private IExtLanguageManager fExtLanguageManager;
 
-		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, IExtLanguageManager extLanguage){
+		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, IExtLanguageManager extLanguageManager){
 			fShifted = shifted;
 			fShift = calculateShift(shifted, index);
-			fExtLanguageManager = extLanguage;
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -215,18 +215,18 @@ public class FactoryShiftOperation {
 	public static GenericShiftOperation getShiftOperation(
 			List<? extends AbstractNode> shifted, 
 			boolean up,
-			IExtLanguageManager extLanguage) throws ModelOperationException{
+			IExtLanguageManager extLanguageManager) throws ModelOperationException{
 		
 		AbstractNode parent = getParent(shifted);
 		
 		return getShiftOperation(
-				parent, shifted, new MoveUpDownOperationProvider(shifted, up, extLanguage));
+				parent, shifted, new MoveUpDownOperationProvider(shifted, up, extLanguageManager));
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguage) throws ModelOperationException {
+			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) throws ModelOperationException {
 		AbstractNode parent = getParent(shifted);
-		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguage));
+		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguageManager));
 	}
 
 	private static GenericShiftOperation getShiftOperation(AbstractNode parent, List<? extends AbstractNode> shifted, IModelVisitor provider) throws ModelOperationException{

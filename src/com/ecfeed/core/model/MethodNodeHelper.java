@@ -21,14 +21,14 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodNodeHelper {
 
-	public static String getName(MethodNode methodNode, IExtLanguageManager extLanguage) {
+	public static String getName(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		return AbstractNodeHelper.getName(methodNode, extLanguage);
+		return AbstractNodeHelper.getName(methodNode, extLanguageManager);
 	}
 
-	public static void setName(MethodNode methodNode, String name, IExtLanguageManager extLanguage) {
+	public static void setName(MethodNode methodNode, String name, IExtLanguageManager extLanguageManager) {
 
-		AbstractNodeHelper.setName(methodNode, name, extLanguage);
+		AbstractNodeHelper.setName(methodNode, name, extLanguageManager);
 	}
 
 	public static List<String> getParameterNames(MethodNode method) {
@@ -58,29 +58,29 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
+	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = extLanguage.verifySeparators(nameInExternalLanguage);
+		String errorMessage = extLanguageManager.verifySeparators(nameInExternalLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
 		}
 
-		String nameInInternalLanguage = extLanguage.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
+		String nameInInternalLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
 
 		if (isValid(nameInInternalLanguage)) {
 			return null;
 		}
 
-		return RegexHelper.createMessageAllowedCharsForMethod(extLanguage);
+		return RegexHelper.createMessageAllowedCharsForMethod(extLanguageManager);
 	}
 
 	public static String verifyMethodSignatureIsValid(
 			String methodNameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguage);
+		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null) {
 			return errorMessage;
@@ -89,11 +89,11 @@ public class MethodNodeHelper {
 		return null;
 	}
 
-	public static String createSignature(MethodNode methodNode, IExtLanguageManager extLanguage) {
+	public static String createSignature(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		return MethodNodeHelper.createSignature(
 				methodNode,
-				false, extLanguage);
+				false, extLanguageManager);
 	}
 
 	public static String createSignature(
@@ -116,16 +116,16 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	public static String createLongSignature(MethodNode methodNode, IExtLanguageManager extLanguage) {
+	public static String createLongSignature(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		String shortSignature = createSignature(methodNode, extLanguage);
+		String shortSignature = createSignature(methodNode, extLanguageManager);
 
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
 
-	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, IExtLanguageManager extLanguage) {
+	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		String signature = createSignature(methodNode, true, extLanguage);
+		String signature = createSignature(methodNode, true, extLanguageManager);
 
 		return signature;
 	}
@@ -135,16 +135,16 @@ public class MethodNodeHelper {
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames, 
 			List<Boolean> expectedFlags, 
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		String nameInExtLanguage = extLanguage.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
+		String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
 
 		String signature = new String(nameInExtLanguage) + "(";
 
 		String signaturesOfParameters = 
 				createSignaturesOfParametersByIntrLanguage(
 						parameterTypesInIntrLanguage, parameterNames, expectedFlags,
-						extLanguage);
+						extLanguageManager);
 
 		signature += signaturesOfParameters;
 
@@ -201,7 +201,7 @@ public class MethodNodeHelper {
 
 	public static String createSignaturesOfParameters(
 			MethodNode methodNode,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		String signature = "";
 		int paramCount = methodNode.getParametersCount();
@@ -218,7 +218,7 @@ public class MethodNodeHelper {
 							methodParameterNode.getType(),
 							methodParameterNode.getName(),
 							methodParameterNode.isExpected(), 
-							extLanguage);
+							extLanguageManager);
 
 			signature += signatureOfOneParameter;
 
@@ -236,7 +236,7 @@ public class MethodNodeHelper {
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames,
 			List<Boolean> expectedFlags, 
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		String signature = "";
 
@@ -251,7 +251,7 @@ public class MethodNodeHelper {
 							parameterType,
 							parameterName,
 							expectedFlag, 
-							extLanguage);
+							extLanguageManager);
 
 			signature += signatureOfOneParameter;
 
@@ -290,22 +290,22 @@ public class MethodNodeHelper {
 		return true;
 	}
 
-	public static Set<String> getConstraintNames(MethodNode methodNode, IExtLanguageManager extLanguage) {
+	public static Set<String> getConstraintNames(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		Set<String> constraintNames = methodNode.getConstraintsNames();
 
-		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguage);
+		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
 
 		return constraintNames;
 	}
 
-	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguage) {
+	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguageManager) {
 
 		Set<String> result = new HashSet<String>();
 
 		for(String constraintName : constraintNames) {
 
-			String nameInExtLanguage = extLanguage.convertTextFromIntrToExtLanguage(constraintName);
+			String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(constraintName);
 			result.add(nameInExtLanguage);
 		}
 

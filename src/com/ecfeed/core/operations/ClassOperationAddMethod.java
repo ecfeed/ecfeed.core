@@ -29,15 +29,15 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, IExtLanguageManager extLanguage) {
-		super(OperationNames.ADD_METHOD, extLanguage);
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.ADD_METHOD, extLanguageManager);
 		fClassNode = target;
 		fMethod = method;
 		fIndex = index;
 	}
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguage) {
-		this(target, method, -1, extLanguage);
+	public ClassOperationAddMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguageManager) {
+		this(target, method, -1, extLanguageManager);
 	}
 
 	@Override
@@ -73,16 +73,16 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private void generateUniqeNameForMethod(MethodNode methodNode) {
 
-		IExtLanguageManager extLanguage = getExtLanguageManager();
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, extLanguage);
-		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
+		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, extLanguageManager);
+		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguageManager);
 
 		String newNameInExtLanguage = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
+						fClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
 
-		MethodNodeHelper.setName(methodNode, newNameInExtLanguage, extLanguage);
+		MethodNodeHelper.setName(methodNode, newNameInExtLanguage, extLanguageManager);
 	}
 
 	@Override

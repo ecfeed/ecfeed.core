@@ -21,9 +21,9 @@ public class ClassOperationRemoveMethod extends AbstractModelOperation {
 	private MethodNode fMethod;
 	private int fCurrentIndex;
 
-	public ClassOperationRemoveMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguage) {
+	public ClassOperationRemoveMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.REMOVE_METHOD, extLanguage);
+		super(OperationNames.REMOVE_METHOD, extLanguageManager);
 		
 		fTarget = target;
 		fMethod = method;

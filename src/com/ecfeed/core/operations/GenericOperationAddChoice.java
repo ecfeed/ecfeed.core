@@ -27,10 +27,10 @@ public class GenericOperationAddChoice extends BulkOperation {
 			ITypeAdapterProvider adapterProvider, 
 			int index, 
 			boolean validate, 
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.ADD_PARTITION, true, target, target, extLanguage);
-		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index, extLanguage));
+		super(OperationNames.ADD_PARTITION, true, target, target, extLanguageManager);
+		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index, extLanguageManager));
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if((method != null) && validate){
@@ -44,9 +44,9 @@ public class GenericOperationAddChoice extends BulkOperation {
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		this(target, choice, adapterProvider, -1, validate, extLanguage);
+		this(target, choice, adapterProvider, -1, validate, extLanguageManager);
 	}
 
 	private class AddChoiceOperation extends AbstractModelOperation {
@@ -56,9 +56,9 @@ public class GenericOperationAddChoice extends BulkOperation {
 		private ITypeAdapterProvider fAdapterProvider;
 
 		public AddChoiceOperation(
-				ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, IExtLanguageManager extLanguage) {
+				ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, IExtLanguageManager extLanguageManager) {
 
-			super(OperationNames.ADD_PARTITION, extLanguage);
+			super(OperationNames.ADD_PARTITION, extLanguageManager);
 			fChoicesParentNode = target;
 			fChoice = choice;
 			fIndex = index;

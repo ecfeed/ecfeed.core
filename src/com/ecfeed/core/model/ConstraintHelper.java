@@ -18,10 +18,10 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class ConstraintHelper {
 
 
-	public static String getSignature(Constraint constraint, IExtLanguageManager extLanguage) {
+	public static String getSignature(Constraint constraint, IExtLanguageManager extLanguageManager) {
 
 		String name = constraint.getName();
-		name = extLanguage.convertTextFromIntrToExtLanguage(name);
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 
 		return name + ": " + constraint.getSignature();
 	}

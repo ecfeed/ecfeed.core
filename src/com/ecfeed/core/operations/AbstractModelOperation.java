@@ -25,9 +25,9 @@ public abstract class AbstractModelOperation implements IModelOperation {
 
 	private List<AbstractNode> fNodesToSelect;
 
-	public AbstractModelOperation(String name, IExtLanguageManager extLanguage){
+	public AbstractModelOperation(String name, IExtLanguageManager extLanguageManager){
 		fName = name;
-		fExtLanguageManager = extLanguage;
+		fExtLanguageManager = extLanguageManager;
 		fNodesToSelect = new ArrayList<AbstractNode>();
 	}
 
@@ -70,12 +70,12 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		return fNodesToSelect;
 	}
 
-	public String convertTextFromExtToIntrLanguage(String text, IExtLanguageManager extLanguage) throws ModelOperationException {
+	public String convertTextFromExtToIntrLanguage(String text, IExtLanguageManager extLanguageManager) throws ModelOperationException {
 
 		String result = null;
 
 		try {
-			result = extLanguage.convertTextFromExtToIntrLanguage(text);
+			result = extLanguageManager.convertTextFromExtToIntrLanguage(text);
 		} catch (Exception e) {
 			ModelOperationException.report(e.getMessage());
 		}

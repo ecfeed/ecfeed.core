@@ -17,8 +17,8 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class XmlExportTemplate extends AbstractExportTemplate {
 
-	public XmlExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguage) {
-		super(methodNode, createDefaultTemplateText(methodNode), extLanguage);
+	public XmlExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+		super(methodNode, createDefaultTemplateText(methodNode), extLanguageManager);
 	}
 
 	private static String createDefaultTemplateText(MethodNode methodNode) {

@@ -19,9 +19,9 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 			ChoiceNode choiceNode, 
 			boolean newRandomized, 
 			ITypeAdapterProvider adapterProvider,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG, extLanguage);
+		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG, extLanguageManager);
 
 		fNewRandomized = newRandomized;
 		fChoiceNode = choiceNode;
@@ -66,8 +66,8 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 	}
 
 	private class ReverseOperation extends AbstractModelOperation {
-		public ReverseOperation(IExtLanguageManager extLanguage) {
-			super(ChoiceOperationSetRandomizedValue.this.getName(), extLanguage);
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(ChoiceOperationSetRandomizedValue.this.getName(), extLanguageManager);
 		}
 
 		@Override

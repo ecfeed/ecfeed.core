@@ -17,16 +17,16 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
+	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
-		String name = extLanguage.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
+		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
 		return name;
 	}
 	
-	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
+	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = abstractParameterNode.getType();
-		type = extLanguage.convertTypeFromIntrToExtLanguage(type);
+		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
 		return type;
 	}
 
@@ -34,7 +34,7 @@ public abstract class AbstractParameterNodeHelper {
 			String parameterTypeInIntrLanguage,
 			String parameterNameInIntrLanguage,
 			Boolean expectedFlag,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		String signature = "";
 
@@ -43,14 +43,14 @@ public abstract class AbstractParameterNodeHelper {
 			signature += expectedDecoration;
 		}
 
-		parameterTypeInIntrLanguage = extLanguage.convertTypeFromIntrToExtLanguage(parameterTypeInIntrLanguage);
+		parameterTypeInIntrLanguage = extLanguageManager.convertTypeFromIntrToExtLanguage(parameterTypeInIntrLanguage);
 
 		signature += parameterTypeInIntrLanguage;
 
 		if (parameterNameInIntrLanguage != null) {
 
 			signature += " ";
-			parameterNameInIntrLanguage = extLanguage.convertTextFromIntrToExtLanguage(parameterNameInIntrLanguage);
+			parameterNameInIntrLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(parameterNameInIntrLanguage);
 
 			signature += parameterNameInIntrLanguage;
 		}
@@ -61,12 +61,12 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createSignature(
 			AbstractParameterNode abstractParameterNode, 
 			boolean isExpected,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		String signature = 
 				createSignature(
-						getType(abstractParameterNode, extLanguage),
-						createNameSignature(abstractParameterNode, extLanguage),
+						getType(abstractParameterNode, extLanguageManager),
+						createNameSignature(abstractParameterNode, extLanguageManager),
 						isExpected);
 
 		return signature;
@@ -108,34 +108,34 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createParameterSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
+	public static String createParameterSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = abstractParameterNode.getName();
-		name = extLanguage.convertTextFromIntrToExtLanguage(name);
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 
 
-		String type = getType(abstractParameterNode, extLanguage);
+		String type = getType(abstractParameterNode, extLanguageManager);
 
 		String label = type + " " + name;
 		return label;
 	}
 
-	public static String createNameSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguage) {
+	public static String createNameSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = abstractParameterNode.getName();
-		name = extLanguage.convertTextFromIntrToExtLanguage(name);
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 		return name;
 	}
 
 	public static List<String> convertParameterTypesToExtLanguage(
 			List<String> parameterTypes,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		List<String> result = new ArrayList<String>();
 
 		for (String parameterType : parameterTypes) {
 
-			parameterType = extLanguage.convertTypeFromIntrToExtLanguage(parameterType);
+			parameterType = extLanguageManager.convertTypeFromIntrToExtLanguage(parameterType);
 			result.add(parameterType);
 		}
 

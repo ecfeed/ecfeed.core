@@ -15,9 +15,9 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationRenameLabel extends BulkOperation {
 
-	public ChoiceOperationRenameLabel(ChoiceNode target, String currentLabel, String newLabel, IExtLanguageManager extLanguage) {
-		super(OperationNames.RENAME_LABEL, true, target, target, extLanguage);
-		addOperation(new ChoiceOperationRemoveLabel(target, currentLabel, extLanguage));
-		addOperation(new ChoiceOperationAddLabel(target, newLabel, extLanguage));
+	public ChoiceOperationRenameLabel(ChoiceNode target, String currentLabel, String newLabel, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.RENAME_LABEL, true, target, target, extLanguageManager);
+		addOperation(new ChoiceOperationRemoveLabel(target, currentLabel, extLanguageManager));
+		addOperation(new ChoiceOperationAddLabel(target, newLabel, extLanguageManager));
 	}
 }

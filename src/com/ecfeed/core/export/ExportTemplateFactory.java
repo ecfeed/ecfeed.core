@@ -18,9 +18,9 @@ public class ExportTemplateFactory {
 	private MethodNode fMethodNode;
 	private IExtLanguageManager fExtLanguageManager;
 
-	public ExportTemplateFactory(MethodNode methodNode, IExtLanguageManager extLanguage) {
+	public ExportTemplateFactory(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 		fMethodNode = methodNode;
-		fExtLanguageManager = extLanguage;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	public IExportTemplate createDefaultTemplate() {

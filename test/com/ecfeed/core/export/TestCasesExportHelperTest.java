@@ -203,8 +203,8 @@ public class TestCasesExportHelperTest {
         performTest("MIN_VALUE", "MAX_VALUE", "(X).min_width(2,CENTER)", "X ", new ExtLanguageManagerForSimple());
     }
 
-//    private void performTest(String template, String expectedResult, ExtLanguage extLanguage) {
-//        performTest("MIN_VALUE", "MAX_VALUE", template, expectedResult, extLanguage);
+//    private void performTest(String template, String expectedResult, ExtLanguage extLanguageManager) {
+//        performTest("MIN_VALUE", "MAX_VALUE", template, expectedResult, extLanguageManager);
 //    }
 
     private void performTest(String par0Value, String par1Value,  String template, String expectedResult, IExtLanguageManager extLanguageManager) {

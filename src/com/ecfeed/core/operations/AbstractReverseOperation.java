@@ -14,7 +14,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractReverseOperation extends AbstractModelOperation {
 
-	public AbstractReverseOperation(AbstractModelOperation baseOperation, IExtLanguageManager extLanguage) {
-		super("reverse " + baseOperation, extLanguage);
+	public AbstractReverseOperation(AbstractModelOperation baseOperation, IExtLanguageManager extLanguageManager) {
+		super("reverse " + baseOperation, extLanguageManager);
 	}
 }

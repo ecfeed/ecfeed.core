@@ -28,8 +28,8 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation(IExtLanguageManager extLanguage) {
-			super(OperationNames.MAKE_CONSISTENT, extLanguage);
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(OperationNames.MAKE_CONSISTENT, extLanguageManager);
 		}
 
 		@Override
@@ -48,9 +48,9 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 	}
 
-	public MethodOperationMakeConsistent(MethodNode target, IExtLanguageManager extLanguage) {
+	public MethodOperationMakeConsistent(MethodNode target, IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.MAKE_CONSISTENT, extLanguage);
+		super(OperationNames.MAKE_CONSISTENT, extLanguageManager);
 		
 		fMethodNode = target;
 		fOriginalConstraints = new ArrayList<ConstraintNode>(target.getConstraintNodes());

@@ -21,8 +21,8 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 	private RootNode fTarget;
 	private int fCurrentIndex;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, IExtLanguageManager extLanguage) {
-		super(OperationNames.REMOVE_CLASS, extLanguage);
+	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.REMOVE_CLASS, extLanguageManager);
 		fTarget = target;
 		fRemovedClass = removedClass;
 		fCurrentIndex = removedClass.getMyClassIndex();

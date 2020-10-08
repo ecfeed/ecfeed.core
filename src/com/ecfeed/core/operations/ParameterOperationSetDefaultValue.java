@@ -23,8 +23,8 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 	private String fNewValue;
 	private String fOriginalValue;
 
-	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, IExtLanguageManager extLanguage) {
-		super(OperationNames.SET_DEFAULT_VALUE, extLanguage);
+	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_DEFAULT_VALUE, extLanguageManager);
 		fTarget = target;
 		fNewValue = newValue;
 		fOriginalValue = target.getDefaultValue();

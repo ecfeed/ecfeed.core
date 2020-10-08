@@ -34,9 +34,9 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 			MethodNode methodNode, 
 			MethodParameterNode methodParameterNode, 
 			int index,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		super(methodNode, methodParameterNode, index, true, extLanguage);
+		super(methodNode, methodParameterNode, index, true, extLanguageManager);
 
 		fRemovedTestCases = new ArrayList<TestCaseNode>(methodNode.getTestCases());
 		fMethodNode = methodNode;
@@ -44,18 +44,18 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, IExtLanguageManager extLanguage) {
-		this(target, parameter, -1, extLanguage);
+	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		this(target, parameter, -1, extLanguageManager);
 	}
 
 	@Override
 	public void execute() throws ModelOperationException {
 
-		IExtLanguageManager extLanguage = getExtLanguageManager();
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguage);
+		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguageManager);
 
-		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguage);
+		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguageManager);
 
 		paremeterTypesInExtLanguage.add(fNewIndex, newParameterType);
 
@@ -63,17 +63,17 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		if (parentClassNode != null) { 
 
-			String methodNameInExtLanguage = MethodNodeHelper.getName(fMethodNode, extLanguage);
+			String methodNameInExtLanguage = MethodNodeHelper.getName(fMethodNode, extLanguageManager);
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(
-							parentClassNode, methodNameInExtLanguage, paremeterTypesInExtLanguage, extLanguage);
+							parentClassNode, methodNameInExtLanguage, paremeterTypesInExtLanguage, extLanguageManager);
 
 			if (foundMethodNode != null) {
 
 				ModelOperationException.report(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
-								parentClassNode, foundMethodNode, extLanguage));
+								parentClassNode, foundMethodNode, extLanguageManager));
 			}
 		}
 
@@ -88,8 +88,8 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	private class MethodReverseOperation extends ReverseOperation{
 
-		public MethodReverseOperation(IExtLanguageManager extLanguage) {
-			super(fMethodNode, fMethodParameterNode, extLanguage);
+		public MethodReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(fMethodNode, fMethodParameterNode, extLanguageManager);
 		}
 
 		@Override

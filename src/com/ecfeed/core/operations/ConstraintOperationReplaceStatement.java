@@ -26,9 +26,9 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 			ConstraintNode target, 
 			AbstractStatement current, 
 			AbstractStatement newStatement,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.REPLACE_STATEMENT, extLanguage);
+		super(OperationNames.REPLACE_STATEMENT, extLanguageManager);
 		
 		fTarget = target;
 		fCurrentStatement = current;

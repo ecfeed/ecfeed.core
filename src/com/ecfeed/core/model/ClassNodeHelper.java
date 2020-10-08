@@ -23,41 +23,41 @@ public class ClassNodeHelper {
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
 
-	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
+	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = ModelHelper.getNonQualifiedName(classNode.getName());
-		name = extLanguage.convertTextFromIntrToExtLanguage(name);
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 
 		return name;
 	}
 
-	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguage) {
+	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = classNode.getName();
-		name = extLanguage.getQualifiedName(name);
+		name = extLanguageManager.getQualifiedName(name);
 
 		return name;
 	}
 
-	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguage) {
+	public static String getPackageName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = classNode.getName();
 
-		return extLanguage.getPackageName(name);
+		return extLanguageManager.getPackageName(name);
 	}
 
-	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguage) {
+	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = extLanguage.verifySeparators(nameInExternalLanguage);
+		String errorMessage = extLanguageManager.verifySeparators(nameInExternalLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;
 		}
 
-		String nameInInternalLanguage = extLanguage.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
+		String nameInInternalLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(nameInExternalLanguage);
 
 		if (!classNameCompliesWithJavaNamingRules(nameInInternalLanguage)) {
-			return RegexHelper.createMessageAllowedCharsForClass(extLanguage);
+			return RegexHelper.createMessageAllowedCharsForClass(extLanguageManager);
 		}
 
 		return null;
@@ -67,14 +67,14 @@ public class ClassNodeHelper {
 			ClassNode classNode,
 			String methodNameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = MethodNodeHelper.verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
+		String errorMessage = MethodNodeHelper.verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null)
 			return errorMessage;
 
-		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage) != null) {
+		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager) != null) {
 
 			String newMethodSignature =
 					MethodNodeHelper.createSignature(
@@ -84,7 +84,7 @@ public class ClassNodeHelper {
 							null);
 
 
-			String classSignature = createSignature(classNode, extLanguage);
+			String classSignature = createSignature(classNode, extLanguageManager);
 
 			errorMessage =
 					"Class: "
@@ -101,11 +101,11 @@ public class ClassNodeHelper {
 			ClassNode classNode,
 			String startMethodNameInExtLanguage,
 			List<String> parameterTypesInExtLanguage,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		String errorMessage =
 				MethodNodeHelper.verifyMethodSignatureIsValid(
-						startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguage);
+						startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);
@@ -122,7 +122,7 @@ public class ClassNodeHelper {
 					classNode,
 					newMethodNameInExtLanguage,
 					parameterTypesInExtLanguage,
-					extLanguage);
+					extLanguageManager);
 
 			if (methodNode == null) {
 				return newMethodNameInExtLanguage;
@@ -130,11 +130,11 @@ public class ClassNodeHelper {
 		}
 	}
 
-	public static String createSignature(ClassNode classNode, IExtLanguageManager extLanguage) {
+	public static String createSignature(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String className = classNode.getName();
 
-		String signature = extLanguage.createClassNameSignature(className);
+		String signature = extLanguageManager.createClassNameSignature(className);
 
 		return signature;
 	}
@@ -142,12 +142,12 @@ public class ClassNodeHelper {
 	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode,
 			MethodNode duplicateMethodNode,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 
-		String classSignature = createSignature(classNode, extLanguage);
+		String classSignature = createSignature(classNode, extLanguageManager);
 
-		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, extLanguage);
+		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, extLanguageManager);
 
 		String message =
 				"Class: "
@@ -157,21 +157,21 @@ public class ClassNodeHelper {
 		return message;
 	}
 
-	// TODO SIMPLE VIEW add method findMethodByExtLanguage(classNode, methodNode, extLanguage) and use where possible instead of method below
+	// TODO SIMPLE VIEW add method findMethodByExtLanguage(classNode, methodNode, extLanguageManager) and use where possible instead of method below
 
 	public static MethodNode findMethodByExtLanguage(
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
 			List<String> parameterTypesInExternalLanguage,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		List<MethodNode> methods = classNode.getMethods();
 
 		for (MethodNode methodNode : methods) {
 
-			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguage);
+			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguageManager);
 
-			String currentMethodName = MethodNodeHelper.getName(methodNode, extLanguage);
+			String currentMethodName = MethodNodeHelper.getName(methodNode, extLanguageManager);
 
 			if (currentMethodName.equals(methodNameInExternalLanguage) && currentParameterTypes.equals(parameterTypesInExternalLanguage)){
 				return methodNode;

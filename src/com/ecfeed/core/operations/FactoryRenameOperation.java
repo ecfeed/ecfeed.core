@@ -38,9 +38,9 @@ public class FactoryRenameOperation {
 		IExtLanguageManager fExtLanguageManager;
 		String fNewName;
 
-		public ClassOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguage) {
-			super(target, newName, extLanguage);
-			fExtLanguageManager = extLanguage;
+		public ClassOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
+			super(target, newName, extLanguageManager);
+			fExtLanguageManager = extLanguageManager;
 			fNewName = newName;
 		}
 
@@ -71,11 +71,11 @@ public class FactoryRenameOperation {
 
 		IExtLanguageManager fExtLanguageManager;
 
-		public MethodOperationRename(MethodNode target, String newName, IExtLanguageManager extLanguage) {
+		public MethodOperationRename(MethodNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, newName, extLanguage);
+			super(target, newName, extLanguageManager);
 
-			fExtLanguageManager = extLanguage;
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -91,14 +91,14 @@ public class FactoryRenameOperation {
 
 			MethodNode targetMethodNode = (MethodNode)getOwnNode();
 
-			IExtLanguageManager extLanguage = getExtLanguageManager();
+			IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
 							targetMethodNode.getClassNode(),
 							newNameInExtLanguage,
-							MethodNodeHelper.getMethodParameterTypes(targetMethodNode, extLanguage),
-							extLanguage);
+							MethodNodeHelper.getMethodParameterTypes(targetMethodNode, extLanguageManager),
+							extLanguageManager);
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);
@@ -111,11 +111,11 @@ public class FactoryRenameOperation {
 
 		IExtLanguageManager fExtLanguageManager;
 
-		public GlobalParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguage) {
+		public GlobalParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, newName, extLanguage);
+			super(target, newName, extLanguageManager);
 
-			fExtLanguageManager = extLanguage;
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -139,9 +139,9 @@ public class FactoryRenameOperation {
 
 		IExtLanguageManager fExtLanguageManager;
 
-		public MethodParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguage) {
-			super(target, newName, extLanguage);
-			fExtLanguageManager = extLanguage;
+		public MethodParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
+			super(target, newName, extLanguageManager);
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -173,11 +173,11 @@ public class FactoryRenameOperation {
 
 		IExtLanguageManager fExtLanguageManager;
 
-		public ChoiceOperationRename(ChoiceNode target, String newName, IExtLanguageManager extLanguage) {
+		public ChoiceOperationRename(ChoiceNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, newName, extLanguage);
+			super(target, newName, extLanguageManager);
 
-			fExtLanguageManager = extLanguage;
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -201,9 +201,9 @@ public class FactoryRenameOperation {
 		private String fNewName;
 		private IExtLanguageManager fExtLanguageManager;
 
-		public RenameOperationProvider(String newName, IExtLanguageManager extLanguage) {
+		public RenameOperationProvider(String newName, IExtLanguageManager extLanguageManager) {
 			fNewName = newName;
-			fExtLanguageManager = extLanguage;
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -247,10 +247,10 @@ public class FactoryRenameOperation {
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newName, IExtLanguageManager extLanguage){
+	public static IModelOperation getRenameOperation(AbstractNode target, String newName, IExtLanguageManager extLanguageManager){
 
 		try{
-			return (IModelOperation)target.accept(new RenameOperationProvider(newName, extLanguage));
+			return (IModelOperation)target.accept(new RenameOperationProvider(newName, extLanguageManager));
 		} catch(Exception e) {
 			SystemLogger.logCatch(e);
 		}

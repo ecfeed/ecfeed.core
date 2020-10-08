@@ -38,10 +38,10 @@ public class BulkOperation extends AbstractModelOperation {
 			boolean atomic,
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		this(name, new ArrayList<IModelOperation>(), atomic, 
-				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguage);
+				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguageManager);
 	}
 
 	public BulkOperation(
@@ -50,9 +50,9 @@ public class BulkOperation extends AbstractModelOperation {
 			boolean atomic, 
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToelectAfterReverseOperation, 
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		super(name, extLanguage);
+		super(name, extLanguageManager);
 
 		fOperations = operations;
 		fExecutedOperations = new ArrayList<IModelOperation>();

@@ -14,17 +14,17 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractNodeHelper  {
 
-	public static String getName(AbstractNode abstractNode, IExtLanguageManager extLanguage) {
+	public static String getName(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 
 		String nodeName = abstractNode.getName();
-		String text = extLanguage.convertTextFromIntrToExtLanguage(nodeName);
+		String text = extLanguageManager.convertTextFromIntrToExtLanguage(nodeName);
 
 		return text;
 	}
 
-	public static void setName(AbstractNode abstractNode, String name, IExtLanguageManager extLanguage) {
+	public static void setName(AbstractNode abstractNode, String name, IExtLanguageManager extLanguageManager) {
 
-		String text = extLanguage.convertTextFromExtToIntrLanguage(name);
+		String text = extLanguageManager.convertTextFromExtToIntrLanguage(name);
 		abstractNode.setName(text);
 	}
 

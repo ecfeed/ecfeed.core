@@ -67,9 +67,9 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
 	}
 
-	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase, IExtLanguageManager extLanguage) {
+	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase, IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.REMOVE_TEST_CASE, extLanguage);
+		super(OperationNames.REMOVE_TEST_CASE, extLanguageManager);
 		
 		fMethodNode = target;
 		fTestCase = testCase;

@@ -16,9 +16,9 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class TestCaseNodeHelper {
 
-	public static String createSignature(TestCaseNode testCaseNode, IExtLanguageManager extLanguage) {
+	public static String createSignature(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
 
-		String methodName = getMethodName(testCaseNode, extLanguage);
+		String methodName = getMethodName(testCaseNode, extLanguageManager);
 
 		String testCaseNodeName = testCaseNode.getName();
 
@@ -26,26 +26,26 @@ public class TestCaseNodeHelper {
 
 		if (methodName != null) {
 			result += " " + methodName + "(";
-			result += getTestDataString(testCaseNode.getTestData(), extLanguage);
+			result += getTestDataString(testCaseNode.getTestData(), extLanguageManager);
 			result += ")";
 		}
 
 		return result;
 	}
 
-	public static String getTestDataString(TestCaseNode testCaseNode, IExtLanguageManager extLanguage) {
+	public static String getTestDataString(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
 
-		return getTestDataString(testCaseNode.getTestData(), extLanguage);
+		return getTestDataString(testCaseNode.getTestData(), extLanguageManager);
 	}
 
-	private static String getTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguage) {
+	private static String getTestDataString(List<ChoiceNode> testData, IExtLanguageManager extLanguageManager) {
 
 		String result = new String();
 
 		for (int index = 0; index < testData.size(); index++) {
 
 			ChoiceNode choice = testData.get(index);
-			result += ChoiceNodeHelper.createTestDataLabel(choice, extLanguage);
+			result += ChoiceNodeHelper.createTestDataLabel(choice, extLanguageManager);
 
 			if (index < testData.size() - 1) {
 				result += ", ";
@@ -55,7 +55,7 @@ public class TestCaseNodeHelper {
 		return result;
 	}
 
-	private static String getMethodName(TestCaseNode testCaseNode, IExtLanguageManager extLanguage) {
+	private static String getMethodName(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
 
 		AbstractNode parent = testCaseNode.getParent();
 
@@ -63,7 +63,7 @@ public class TestCaseNodeHelper {
 			return null;
 		}
 
-		return AbstractNodeHelper.getName(parent, extLanguage);
+		return AbstractNodeHelper.getName(parent, extLanguageManager);
 	}
 
 }

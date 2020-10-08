@@ -20,9 +20,9 @@ public class GenericSetCommentsOperation extends AbstractModelOperation {
 	private AbstractNode fTarget;
 	private String fCurrentComments;
 
-	public GenericSetCommentsOperation(AbstractNode target, String comments, IExtLanguageManager extLanguage) {
+	public GenericSetCommentsOperation(AbstractNode target, String comments, IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.SET_COMMENTS, extLanguage);
+		super(OperationNames.SET_COMMENTS, extLanguageManager);
 		
 		fTarget = target;
 		fComments = comments;

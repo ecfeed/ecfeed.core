@@ -32,9 +32,9 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	private ITypeAdapterProvider fAdapterProvider;
 
-	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, IExtLanguageManager extLanguage){
+	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, IExtLanguageManager extLanguageManager){
 		
-		super(OperationNames.SET_PARTITION_VALUE, extLanguage);
+		super(OperationNames.SET_PARTITION_VALUE, extLanguageManager);
 		
 		fOwnChoiceNode = target;
 		fNewValue = newValue;
@@ -127,8 +127,8 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		}
 
-		public ReverseOperation(IExtLanguageManager extLanguage) {
-			super(ChoiceOperationSetValue.this.getName(), extLanguage);
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(ChoiceOperationSetValue.this.getName(), extLanguageManager);
 		}
 
 		@Override

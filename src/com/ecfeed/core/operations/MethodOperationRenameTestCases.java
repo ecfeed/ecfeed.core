@@ -23,16 +23,16 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 	public MethodOperationRenameTestCases(
 			Collection<TestCaseNode> testCases, 
 			String newName,
-			IExtLanguageManager extLanguage) throws ModelOperationException {
+			IExtLanguageManager extLanguageManager) throws ModelOperationException {
 
-		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguage);
+		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguageManager);
 
 		if (newName.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false) {
 			ModelOperationException.report(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 
 		for(TestCaseNode testCase : testCases){
-			addOperation(FactoryRenameOperation.getRenameOperation(testCase, newName, extLanguage));
+			addOperation(FactoryRenameOperation.getRenameOperation(testCase, newName, extLanguageManager));
 		}
 	}
 

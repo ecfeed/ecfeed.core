@@ -22,14 +22,14 @@ public class ChoiceOperationAddLabels extends BulkOperation {
 			Collection<String> labels, 
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation, 
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_PARTITION_LABELS, false, 
-				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguage);
+				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguageManager);
 
 		for(String label : labels){
 			if(target.getInheritedLabels().contains(label) == false){
-				addOperation(new ChoiceOperationAddLabel(target, label, extLanguage));
+				addOperation(new ChoiceOperationAddLabel(target, label, extLanguageManager));
 			}
 		}
 	}

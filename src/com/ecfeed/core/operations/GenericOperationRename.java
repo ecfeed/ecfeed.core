@@ -38,15 +38,15 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public GenericOperationRename(
 			AbstractNode target, 
 			String newNameInExtLanguage, 
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.RENAME, extLanguage);
+		super(OperationNames.RENAME, extLanguageManager);
 
 		fTarget = target;
 		fNewNameInExtLanguage = newNameInExtLanguage;
 		fOriginalName = target.getName();
 		fJavaNameRegex = getJavaNameRegex(target);
-		fExtLanguageManager = extLanguage;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -99,10 +99,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 			String name, 
 			String regex, 
 			AbstractNode targetNode,
-			IExtLanguageManager extLanguage) throws ModelOperationException {
+			IExtLanguageManager extLanguageManager) throws ModelOperationException {
 
 		if (name.matches(regex) == false) {
-			ModelOperationException.report(getRegexProblemMessage(targetNode, extLanguage));
+			ModelOperationException.report(getRegexProblemMessage(targetNode, extLanguageManager));
 		}
 	}
 
@@ -113,9 +113,9 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return "*";
 	}
 
-	private static String getRegexProblemMessage(AbstractNode abstractNode, IExtLanguageManager extLanguage){
+	private static String getRegexProblemMessage(AbstractNode abstractNode, IExtLanguageManager extLanguageManager){
 		try{
-			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguage));
+			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguageManager));
 		}catch(Exception e){SystemLogger.logCatch(e);}
 		return "";
 	}
@@ -124,8 +124,8 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		private IExtLanguageManager fExtLanguageManager;
 
-		public RegexProblemMessageProvider(IExtLanguageManager extLanguage) {
-			fExtLanguageManager = extLanguage;
+		public RegexProblemMessageProvider(IExtLanguageManager extLanguageManager) {
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override

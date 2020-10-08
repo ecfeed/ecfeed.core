@@ -45,13 +45,13 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			boolean validate,
 			AbstractNode nodeToSelect,
 			AbstractNode nodeToSelectAfterReverseOperation,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_NODES, 
 				false,
 				nodeToSelect,
 				nodeToSelectAfterReverseOperation,
-				extLanguage);
+				extLanguageManager);
 
 		fSelectedNodes = new HashSet<>(nodes);
 

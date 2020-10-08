@@ -25,9 +25,9 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 	private MethodNode fTargetMethodNode;
 	private MethodNode fSourceMethodNode;
 
-	public MethodOperationConvertTo(MethodNode target, MethodNode source, IExtLanguageManager extLanguage) {
+	public MethodOperationConvertTo(MethodNode target, MethodNode source, IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.CONVERT_METHOD, extLanguage);
+		super(OperationNames.CONVERT_METHOD, extLanguageManager);
 
 		fTargetMethodNode = target;
 		fSourceMethodNode = source;

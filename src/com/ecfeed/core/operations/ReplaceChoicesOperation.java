@@ -24,9 +24,9 @@ public class ReplaceChoicesOperation extends BulkOperation {
 			AbstractParameterNode abstractParameterNode, 
 			List<ChoiceNode> choices, 
 			ITypeAdapterProvider adapterProvider,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		super("Replace choices", true, abstractParameterNode, abstractParameterNode, extLanguage);
+		super("Replace choices", true, abstractParameterNode, abstractParameterNode, extLanguageManager);
 
 		List<ChoiceNode> skipped = new ArrayList<ChoiceNode>();
 
@@ -34,16 +34,16 @@ public class ReplaceChoicesOperation extends BulkOperation {
 			if (abstractParameterNode.getChoiceNames().contains(choice.getName())) {
 				skipped.add(choice);
 			} else {
-				addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguage));
+				addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguageManager));
 			}
 		}
 
 		addOperation(
 				new GenericRemoveNodesOperation(
-						abstractParameterNode.getChoices(), adapterProvider, true, abstractParameterNode, abstractParameterNode, extLanguage));
+						abstractParameterNode.getChoices(), adapterProvider, true, abstractParameterNode, abstractParameterNode, extLanguageManager));
 
 		for(ChoiceNode choice : skipped){
-			addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguage));
+			addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguageManager));
 		}
 	}
 

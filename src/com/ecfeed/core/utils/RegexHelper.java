@@ -38,24 +38,24 @@ public class RegexHelper {
 	public static final String REGEX_STRING_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]{0,1024}";
 	public static final String REGEX_CHAR_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]";
 
-	public static String createMessageAllowedCharsForClass(IExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForClass(IExtLanguageManager extLanguageManager) {
 
-		return createMessageAllowedCharsForNode("Class", extLanguage);
+		return createMessageAllowedCharsForNode("Class", extLanguageManager);
 	}
 
-	public static String createMessageAllowedCharsForMethod(IExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForMethod(IExtLanguageManager extLanguageManager) {
 
-		return createMessageAllowedCharsForNode("Method", extLanguage);
+		return createMessageAllowedCharsForNode("Method", extLanguageManager);
 	}
 
-	public static String createMessageAllowedCharsForParameter(IExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForParameter(IExtLanguageManager extLanguageManager) {
 
-		return createMessageAllowedCharsForNode("Parameter", extLanguage);
+		return createMessageAllowedCharsForNode("Parameter", extLanguageManager);
 	}
 
-	public static String createMessageAllowedCharsForNode(String nodeName, IExtLanguageManager extLanguage) {
+	public static String createMessageAllowedCharsForNode(String nodeName, IExtLanguageManager extLanguageManager) {
 
-		String separator = extLanguage.chooseString("_", "[SPACE]");
+		String separator = extLanguageManager.chooseString("_", "[SPACE]");
 
 		String message = nodeName + " name should contain alphanumeric charactes or: " + separator	+ " $ . Name should not start with digits.";
 

@@ -15,33 +15,33 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class GlobalParameterNodeHelper {
 
 
-	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguage) {
+	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
-		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
+		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
-	public static String createSignature(GlobalParameterNode globalParameterNode, IExtLanguageManager extLanguage) {
+	public static String createSignature(GlobalParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
 
-		String type = getType(globalParameterNode, extLanguage);
-		String qualifiedName = getQualifiedName(globalParameterNode, extLanguage);
+		String type = getType(globalParameterNode, extLanguageManager);
+		String qualifiedName = getQualifiedName(globalParameterNode, extLanguageManager);
 
 		return type + " " + qualifiedName;
 	}
 
 	public static String getQualifiedName(
 			GlobalParameterNode globalParameterNode,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
 		String qualifiedName = globalParameterNode.getQualifiedName();
-		qualifiedName = extLanguage.convertTextFromIntrToExtLanguage(qualifiedName);
+		qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
 
 		return qualifiedName;
 	}
 
-	public static String getType(GlobalParameterNode globalParameterNode, IExtLanguageManager extLanguage) {
+	public static String getType(GlobalParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = globalParameterNode.getType();
-		type = extLanguage.convertTypeFromIntrToExtLanguage(type);
+		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
 
 		return type;
 	}

@@ -22,12 +22,12 @@ public class RootOperationAddNewClass extends AbstractModelOperation {
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
 
-	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, IExtLanguageManager extLanguage) {
-		this(target, classToAdd, -1, extLanguage);
+	public RootOperationAddNewClass(RootNode target, ClassNode classToAdd, IExtLanguageManager extLanguageManager) {
+		this(target, classToAdd, -1, extLanguageManager);
 	}
 	
-	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, IExtLanguageManager extLanguage) {
-		super(OperationNames.ADD_CLASS, extLanguage);
+	public RootOperationAddNewClass(RootNode rootNode, ClassNode classToAdd, int addIndex, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.ADD_CLASS, extLanguageManager);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
 		fAddIndex = addIndex;

@@ -30,22 +30,22 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 				MethodParameterNode target, 
 				GlobalParametersParentNode parent, 
 				ITypeAdapterProvider adapterProvider,
-				IExtLanguageManager extLanguage) {
-			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguage);
+				IExtLanguageManager extLanguageManager) {
+			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
 			MethodNode method = target.getMethod();
 			GlobalParameterNode global = new GlobalParameterNode(target);
-			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguage));
-			addOperation(new MethodParameterOperationSetLink(target, global, extLanguage));
-			addOperation(new MethodParameterOperationSetLinked(target, true, extLanguage));
+			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
+			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
+			addOperation(new MethodParameterOperationSetLinked(target, true, extLanguageManager));
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
 					ConstraintNode copy = constraint.makeClone();
-					addOperation(new MethodOperationAddConstraint(method, copy, constraint.getMyIndex(), extLanguage));
+					addOperation(new MethodOperationAddConstraint(method, copy, constraint.getMyIndex(), extLanguageManager));
 				}
 			}
 			for(TestCaseNode tc : method.getTestCases()){
 				TestCaseNode copy = tc.makeClone();
-				addOperation(new MethodOperationAddTestCase(method, copy, adapterProvider, tc.getMyIndex(), extLanguage));
+				addOperation(new MethodOperationAddTestCase(method, copy, adapterProvider, tc.getMyIndex(), extLanguageManager));
 			}
 		}
 
@@ -64,12 +64,12 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 			GlobalParametersParentNode parent, 
 			List<MethodParameterNode> originals, 
 			ITypeAdapterProvider adapterProvider,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguage);
+		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguageManager);
 		
 		for(MethodParameterNode parameter : originals){
-			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, extLanguage));
+			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, extLanguageManager));
 		}
 	}
 

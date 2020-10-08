@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
 	
-	public static String getFullPath(AbstractNode abstractNode, IExtLanguageManager extLanguage) {
+	public static String getFullPath(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 		
 		List<String> nodeNames = new ArrayList<String>();
 		
@@ -34,7 +34,7 @@ public class ModelHelper {
 			if (currentNode instanceof RootNode) {
 				nodeNames.add(currentNode.getName());
 			} else {
-				nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguage));
+				nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguageManager));
 			}
 
 			currentNode = currentNode.getParent();

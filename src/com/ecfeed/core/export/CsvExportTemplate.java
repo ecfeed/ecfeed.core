@@ -14,9 +14,9 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class CsvExportTemplate extends AbstractExportTemplate {
 
-	public CsvExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguage) {
+	public CsvExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		super(methodNode, createDefaultTemplateText(methodNode.getParametersCount()), extLanguage);
+		super(methodNode, createDefaultTemplateText(methodNode.getParametersCount()), extLanguageManager);
 	}
 
 	private static String createDefaultTemplateText(int methodParametersCount) {

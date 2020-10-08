@@ -22,17 +22,17 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
-	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index, IExtLanguageManager extLanguage){
+	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index, IExtLanguageManager extLanguageManager){
 		
-		super(OperationNames.ADD_CONSTRAINT, extLanguage);
+		super(OperationNames.ADD_CONSTRAINT, extLanguageManager);
 		
 		fMethodNode = methodNode;
 		fConstraint = constraint;
 		fIndex = index;
 	}
 
-	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint, IExtLanguageManager extLanguage){
-		this(target, constraint, -1, extLanguage);
+	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint, IExtLanguageManager extLanguageManager){
+		this(target, constraint, -1, extLanguageManager);
 	}
 
 	@Override

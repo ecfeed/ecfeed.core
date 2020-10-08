@@ -14,9 +14,9 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintNodeHelper {
 
-	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguage) {
+	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		return ConstraintHelper.getSignature(constraintNode.getConstraint(), extLanguage);
+		return ConstraintHelper.getSignature(constraintNode.getConstraint(), extLanguageManager);
 	}
 
 	public static String getName(ConstraintNode ownNode, IExtLanguageManager extLanguageManager) {

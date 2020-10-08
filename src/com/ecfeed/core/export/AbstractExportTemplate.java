@@ -29,11 +29,11 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	private TemplateText fTemplateText;
 	private IExtLanguageManager fExtLanguageManager;
 
-	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText, IExtLanguageManager extLanguage) {
+	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText, IExtLanguageManager extLanguageManager) {
 
 		fMethodNode = methodNode;
 		fTemplateText = new TemplateText(defaultlTemplateText);
-		fExtLanguageManager = extLanguage;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override

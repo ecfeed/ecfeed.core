@@ -25,9 +25,9 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 			String testSuiteName, 
 			List<TestCase> testCases, 
 			ITypeAdapterProvider typeAdapterProvider,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode, extLanguage);
+		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode, extLanguageManager);
 
 		for (TestCase testCase : testCases) {
 
@@ -42,7 +42,7 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 							methodNode, 
 							testCaseNode, 
 							typeAdapterProvider,
-							extLanguage));
+							extLanguageManager));
 		}
 	}
 

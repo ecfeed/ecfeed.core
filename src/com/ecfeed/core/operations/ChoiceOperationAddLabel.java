@@ -24,8 +24,8 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation(IExtLanguageManager extLanguage) {
-			super(ChoiceOperationAddLabel.this.getName(), extLanguage);
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(ChoiceOperationAddLabel.this.getName(), extLanguageManager);
 		}
 
 		@Override
@@ -48,8 +48,8 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 	}
 
-	public ChoiceOperationAddLabel(ChoiceNode target, String label, IExtLanguageManager extLanguage){
-		super(OperationNames.ADD_PARTITION_LABEL, extLanguage);
+	public ChoiceOperationAddLabel(ChoiceNode target, String label, IExtLanguageManager extLanguageManager){
+		super(OperationNames.ADD_PARTITION_LABEL, extLanguageManager);
 
 		fTarget = target;
 		fLabel = label;

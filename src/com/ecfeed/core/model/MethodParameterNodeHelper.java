@@ -15,17 +15,17 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class MethodParameterNodeHelper {
 
 
-	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguage) {
+	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
-		return AbstractNodeHelper.getName(methodParameterNode, extLanguage);
+		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
 	public static String createSignature(
 			MethodParameterNode methodParameterNode,
-			IExtLanguageManager extLanguage) {
+			IExtLanguageManager extLanguageManager) {
 
-		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguage);
-		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguage);
+		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
+		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguageManager);
 
 		String signature = 
 				AbstractParameterNodeHelper.createSignature(
@@ -36,16 +36,16 @@ public class MethodParameterNodeHelper {
 		final GlobalParameterNode link = methodParameterNode.getLink();
 
 		if (methodParameterNode.isLinked() && link != null) {
-			signature += "[LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(link, extLanguage);
+			signature += "[LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(link, extLanguageManager);
 		}
 
 		return signature;
 	}
 
-	public static String getType(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguage) {
+	public static String getType(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = methodParameterNode.getType();
-		type =  extLanguage.convertTypeFromIntrToExtLanguage(type);
+		type =  extLanguageManager.convertTypeFromIntrToExtLanguage(type);
 
 		return type;
 	}

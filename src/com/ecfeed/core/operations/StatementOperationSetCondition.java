@@ -21,8 +21,8 @@ public class StatementOperationSetCondition extends AbstractModelOperation {
 	private IStatementCondition fCurrentCondition;
 	private IStatementCondition fNewCondition;
 
-	public StatementOperationSetCondition(RelationStatement target, IStatementCondition condition, IExtLanguageManager extLanguage) {
-		super(OperationNames.SET_STATEMENT_CONDITION, extLanguage);
+	public StatementOperationSetCondition(RelationStatement target, IStatementCondition condition, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_STATEMENT_CONDITION, extLanguageManager);
 		fTarget = target;
 		fNewCondition = condition;
 		fCurrentCondition = target.getCondition();
