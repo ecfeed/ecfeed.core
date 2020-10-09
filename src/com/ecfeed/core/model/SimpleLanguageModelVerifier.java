@@ -18,33 +18,9 @@ import java.util.List;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.Pair;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 
 public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
-
-	private static final String TITLE_NON_UNIQUE_CLASS_NAMES = "Non-unique class names";
-	private static final String THE_SAME_CLASSES = "There are some classes in the model that have the same name. Please edit the model before proceeding:";
-
-	public static String checkIsNewClassNameValid(ClassNode classNode, String className) { // TODO SIMPLE-VIEW rename
-
-		String simpleValueName = SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(className);
-
-		for (ClassNode node : classNode.getRoot().getClasses()) {
-			if (node != classNode) {
-				if (SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(node.getSimpleName()).equals(simpleValueName)) {
-					String errorMessage = THE_SAME_CLASSES 
-							+ System.lineSeparator() 
-							+ System.lineSeparator() 
-							+ SimpleLanguageHelper.convertTextFromJavaToSimpleLanguage(node.getSimpleName());
-
-					return TITLE_NON_UNIQUE_CLASS_NAMES + " " + errorMessage;
-				}
-			}
-		}
-
-		return null;
-	}
 
 	public static String checkIsModelCompatibleWithSimpleLanguage(RootNode rootNode) {
 
@@ -205,7 +181,7 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 		for (ClassNode element : rootNode.getClasses()) {
 
 
-			String simpleSignature = element.getSimpleName();
+			String simpleSignature = element.getNonQualifiedName();
 			String fullSignature = element.getName();
 
 			Pair<String, String> classSignaturesPair = new Pair<String, String>(simpleSignature, fullSignature);

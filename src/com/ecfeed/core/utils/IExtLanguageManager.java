@@ -3,7 +3,6 @@ package com.ecfeed.core.utils;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ClassNode;
 
 public interface IExtLanguageManager {
 
@@ -19,7 +18,6 @@ public interface IExtLanguageManager {
 	public String getPackageName(String name);
 	public String createClassNameSignature(String className);
 	public String getQualifiedName(String name);
-	public String checkIsNewClassNameValid(ClassNode classNode, String className);
 	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode);
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);
 	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
@@ -27,4 +25,5 @@ public interface IExtLanguageManager {
 	public int getPackageColumnWidth(int suggestedWidth); // TODO SIMPLE-VIEW remove -use getPackageVisibility
 	public boolean getPackageVisibility();
 	public String getExtendedTypeForValue(String value, String currentType); // TODO SIMPLE-VIEW unit tests
+	public String createQualifiedName(String packageName, String name);
 }

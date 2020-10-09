@@ -13,7 +13,6 @@ package com.ecfeed.core.utils;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.SimpleLanguageModelVerifier;
@@ -143,13 +142,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 	@Override
 	// TODO SIMPLE-VIEW test
-	public String checkIsNewClassNameValid(ClassNode classNode, String className) {
-
-		return SimpleLanguageModelVerifier.checkIsNewClassNameValid(classNode, className); // TODO SIMPLE-VIEW check
-	}
-
-	@Override
-	// TODO SIMPLE-VIEW test
 	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode) {
 
 		RootNode rootNode = ModelHelper.findRoot(anyNode);
@@ -206,6 +198,12 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		}
 
 		return currentType;
+	}
+
+	@Override
+	public String createQualifiedName(String packageName, String name) {
+
+		return name;
 	}
 
 }

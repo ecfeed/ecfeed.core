@@ -13,7 +13,6 @@ package com.ecfeed.core.utils;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ModelHelper;
 
 public class ExtLanguageManagerForJava implements IExtLanguageManager {
@@ -123,14 +122,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	// TODO SIMPLE-VIEW test
-	public String checkIsNewClassNameValid(ClassNode classNode, String className) {
-
-		// TODO SIMPLE-VIEW implement
-		return null;
-	}
-
-	@Override
-	// TODO SIMPLE-VIEW test
 	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode) {
 
 		return null;
@@ -170,6 +161,12 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	public String getExtendedTypeForValue(String value, String currentType) {
 
 		return currentType; // no type extending in Java view
+	}
+
+	@Override
+	public String createQualifiedName(String packageName, String name) {
+
+		return packageName + "." + name;
 	}
 
 }

@@ -232,7 +232,7 @@ public class ClassNode extends GlobalParametersParentNode {
 		return result;
 	}
 
-	public String getSimpleName() {
+	public String getNonQualifiedName() {
 		String[] nameNodeSplit = getName().split("\\.");
 		return nameNodeSplit[nameNodeSplit.length - 1];
 	}
