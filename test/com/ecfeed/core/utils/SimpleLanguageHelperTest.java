@@ -56,6 +56,8 @@ public class SimpleLanguageHelperTest {
 		assertFalse(SimpleLanguageHelper.isAllowedType("String"));
 
 		assertTrue(SimpleLanguageHelper.isAllowedType("User"));
+		assertFalse(SimpleLanguageHelper.isAllowedType("User-1"));
+		assertFalse(SimpleLanguageHelper.isAllowedType("com.User"));
 	}
 
 	@Test

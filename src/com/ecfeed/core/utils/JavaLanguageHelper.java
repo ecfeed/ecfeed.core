@@ -469,6 +469,10 @@ public final class JavaLanguageHelper {
 			return true;
 		}
 
+		if (SimpleLanguageHelper.isSimpleType(typeName)) {
+			return false;
+		}
+
 		if (JavaLanguageHelper.isValidComplexTypeIdentifier(typeName)) {
 			return true;
 		}

@@ -35,6 +35,23 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void isAllowedTypeTest() {
+
+		assertTrue(JavaLanguageHelper.isAllowedType("double"));
+		assertTrue(JavaLanguageHelper.isAllowedType("boolean"));
+		assertTrue(JavaLanguageHelper.isAllowedType("String"));
+		assertTrue(JavaLanguageHelper.isAllowedType("int"));
+
+		assertFalse(JavaLanguageHelper.isAllowedType("Number"));
+		assertFalse(JavaLanguageHelper.isAllowedType("Text"));
+		assertFalse(JavaLanguageHelper.isAllowedType("Logical"));
+
+		assertTrue(JavaLanguageHelper.isAllowedType("com.User"));
+		assertFalse(JavaLanguageHelper.isAllowedType("Logical-1"));
+		assertFalse(JavaLanguageHelper.isAllowedType("A^b"));
+	}
+
+	@Test
 	public void isJavaKeywordTest() {
 
 		assertTrue(JavaLanguageHelper.isJavaKeyword("class"));
