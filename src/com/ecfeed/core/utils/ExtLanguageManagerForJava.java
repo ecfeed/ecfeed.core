@@ -146,12 +146,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	public int getPackageColumnWidth(int suggestedWidth) {
-
-		return suggestedWidth;
-	}
-
-	@Override
 	public boolean getPackageVisibility() {
 
 		return true;

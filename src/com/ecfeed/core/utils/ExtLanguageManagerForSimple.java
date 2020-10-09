@@ -169,12 +169,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	public int getPackageColumnWidth(int suggestedWidth) {
-
-		return 0;
-	}
-
-	@Override
 	public boolean getPackageVisibility() {
 
 		return false;
