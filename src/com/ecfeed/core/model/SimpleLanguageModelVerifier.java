@@ -54,11 +54,11 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 			return message;
 		}
 
-		message = checkIsGlobalParameterOfRootDuplicated(rootNode);
-
-		if (message != null) {
-			return message;
-		}
+		//		message = checkIsGlobalParameterOfRootDuplicated(rootNode);
+		//
+		//		if (message != null) {
+		//			return message;
+		//		}
 
 		message = checkClassDuplicated(rootNode);
 
@@ -66,11 +66,11 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 			return message;
 		}
 
-		message = checkIsGlobalParameterOfClassDuplicated(rootNode);
-
-		if (message != null) {
-			return message;
-		}
+		//		message = checkIsGlobalParameterOfClassDuplicated(rootNode);
+		//
+		//		if (message != null) {
+		//			return message;
+		//		}
 
 		message = checkIsMethodDuplicated(rootNode);
 
@@ -78,13 +78,6 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 	}
 
 	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
-
-		// TODO SIMPLE-VIEW remove
-		//		String message = checkIfIsAllowedParameterType(abstractNode);
-		//
-		//		if (message != null) {
-		//			return message;
-		//		}
 
 		List<? extends AbstractNode> childNodes = abstractNode.getChildren();
 
@@ -111,81 +104,61 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 		return null;
 	}
 
-	//	private static String checkIfIsAllowedParameterType(AbstractNode abstractNode) {
+	//	private static String checkIsGlobalParameterOfRootDuplicated(RootNode rootNode) {
 	//
-	//		if (!(abstractNode instanceof AbstractParameterNode)) {
+	//		if (rootNode.getParameters().size() <= 1) {
 	//			return null;
 	//		}
 	//
-	//		AbstractParameterNode abstractParameterNode = (AbstractParameterNode) abstractNode;
+	//		List<Pair<String, String>> parameterPairs = createParametersForSimpleView(rootNode);
 	//
-	//		String type = abstractParameterNode.getType();
+	//		return checkIsParamNameDuplicated(parameterPairs);
+	//	}
+
+	//	private static String checkIsParamNameDuplicated(List<Pair<String, String>> parametersForSimpleView) {
+	//		
+	//		for (int i = 0 ; i < parametersForSimpleView.size() - 1 ; i++) {
 	//
-	//		if (!JavaLanguageHelper.isJavaType(type)) {
-	//			return 
-	//					"Non java types are not allowed in simple view. \nNode: " + 
-	//					ModelHelper.getFullPath(abstractParameterNode, ExtLanguage.JAVA) + ".\n" +
-	//					" Type: " + type + ".";
+	//			Pair<String, String> currentPair = parametersForSimpleView.get(i);
+	//			Pair<String, String> nextPair = parametersForSimpleView.get(i + 1);
+	//
+	//			String currentSimpleName = currentPair.getFirst();
+	//			String nextSimpleName = nextPair.getFirst();
+	//
+	//			
+	//			
+	//			if (currentSimpleName.equals(nextSimpleName)) {
+	//
+	//				// TODO - this function can be  called from simple (rename) and java view - adjust message acccordingly - node names are always in java convention
+	//				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + 
+	//				currentPair.getSecond() + " and " + nextPair.getSecond()
+	//				+ " would have the same name in the simple view mode.";
+	//
+	//				return errorMessage;
+	//			}
+	//
 	//		}
 	//
 	//		return null;
 	//	}
 
-	private static String checkIsGlobalParameterOfRootDuplicated(RootNode rootNode) {
-
-		if (rootNode.getParameters().size() <= 1) {
-			return null;
-		}
-
-		List<Pair<String, String>> parameterPairs = createParametersForSimpleView(rootNode);
-
-		return checkIsParamNameDuplicated(parameterPairs);
-	}
-
-	private static String checkIsParamNameDuplicated(List<Pair<String, String>> parametersForSimpleView) {
-		
-		for (int i = 0 ; i < parametersForSimpleView.size() - 1 ; i++) {
-
-			Pair<String, String> currentPair = parametersForSimpleView.get(i);
-			Pair<String, String> nextPair = parametersForSimpleView.get(i + 1);
-
-			String currentSimpleName = currentPair.getFirst();
-			String nextSimpleName = nextPair.getFirst();
-
-			
-			
-			if (currentSimpleName.equals(nextSimpleName)) {
-
-				// TODO SIMPLE-VIEW - this function can be  called from simple (rename) and java view - adjust message acccordingly - node names are always in java convention
-				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + 
-				currentPair.getSecond() + " and " + nextPair.getSecond()
-				+ " would have the same name in the simple view mode.";
-
-				return errorMessage;
-			}
-
-		}
-
-		return null;
-	}
-
-	private static List<Pair<String, String>> createParametersForSimpleView(RootNode rootNode) { 
-
-		List<Pair<String, String>> parameters = new ArrayList<>();
-
-		for (AbstractParameterNode element : rootNode.getParameters()) {
-
-			String simpleName = AbstractNodeHelper.getName(element, new ExtLanguageManagerForSimple());
-			String javaName = element.getType() + " " + element.getName();
-
-			Pair<String, String> pair = new Pair<String, String>(simpleName, javaName);
-			parameters.add(pair);
-		}
-
-		Collections.sort(parameters, new CompareBySimpleSignature());
-
-		return parameters;
-	}
+	//	private static List<Pair<String, String>> createParametersForSimpleView(RootNode rootNode) { 
+	//
+	//		List<Pair<String, String>> parameters = new ArrayList<>();
+	//
+	//		for (AbstractParameterNode element : rootNode.getParameters()) {
+	//
+	//			String simpleName = AbstractNodeHelper.getName(element, new ExtLanguageManagerForSimple());
+	//			String javaName = element.getType() + " " + element.getName();
+	//
+	//			Pair<String, String> pair = new Pair<String, String>(simpleName, javaName);
+	//			parameters.add(pair);
+	//		}
+	//
+	//		Collections.sort(parameters, new CompareBySimpleSignature());
+	//
+	//		return parameters;
+	//	}
 
 	private static String checkClassDuplicated(RootNode rootNode) {
 
@@ -245,48 +218,48 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 		return signaturePairs;
 	}  
 
-	private static String checkIsGlobalParameterOfClassDuplicated(RootNode rootNode) {
+	//	private static String checkIsGlobalParameterOfClassDuplicated(RootNode rootNode) {
+	//
+	//		String message = "";
+	//
+	//		for (ClassNode classNode : rootNode.getClasses()) {
+	//
+	//			message = checkIsClassParameterDuplicatedInOneClass(classNode);
+	//
+	//			if (message != null) {
+	//				return message;
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
 
-		String message = "";
+	//	private static String checkIsClassParameterDuplicatedInOneClass(ClassNode classNode) {
+	//
+	//		if (classNode.getParameters().size() <= 1) {
+	//			return null;
+	//		}
+	//
+	//		List<Pair<String, String>> parametersForSimpleView = createListOfSimpleViewParameters(classNode);
+	//
+	//		return checkIsParamNameDuplicated(parametersForSimpleView);
+	//	}
 
-		for (ClassNode classNode : rootNode.getClasses()) {
-
-			message = checkIsClassParameterDuplicatedInOneClass(classNode);
-
-			if (message != null) {
-				return message;
-			}
-		}
-
-		return null;
-	}
-
-	private static String checkIsClassParameterDuplicatedInOneClass(ClassNode classNode) {
-
-		if (classNode.getParameters().size() <= 1) {
-			return null;
-		}
-
-		List<Pair<String, String>> parametersForSimpleView = createListOfSimpleViewParameters(classNode);
-
-		return checkIsParamNameDuplicated(parametersForSimpleView);
-	}
-
-	private static List<Pair<String, String>> createListOfSimpleViewParameters(ClassNode classNode) {
-
-		List<Pair<String, String>> parameters = new ArrayList<>();
-
-		for (AbstractParameterNode element : classNode.getParameters()) {
-
-
-			Pair<String, String> pair = new Pair<String, String>(element.getName(), element.getType() + " " + element.getName());
-
-			parameters.add(pair);
-		}
-
-		Collections.sort(parameters, new CompareBySimpleSignature());
-		return parameters;
-	}  
+	//	private static List<Pair<String, String>> createListOfSimpleViewParameters(ClassNode classNode) {
+	//
+	//		List<Pair<String, String>> parameters = new ArrayList<>();
+	//
+	//		for (AbstractParameterNode element : classNode.getParameters()) {
+	//
+	//
+	//			Pair<String, String> pair = new Pair<String, String>(element.getName(), element.getType() + " " + element.getName());
+	//
+	//			parameters.add(pair);
+	//		}
+	//
+	//		Collections.sort(parameters, new CompareBySimpleSignature());
+	//		return parameters;
+	//	}  
 
 	private static String checkIsMethodDuplicated(RootNode rootNode) {
 
