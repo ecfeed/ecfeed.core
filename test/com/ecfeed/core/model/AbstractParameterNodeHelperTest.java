@@ -95,10 +95,10 @@ public class AbstractParameterNodeHelperTest {
 				new MethodParameterNode(
 						"name", null,	"int", "0", true);
 
-		String label = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, new ExtLanguageManagerForJava());
+		String label = AbstractParameterNodeHelper.getType(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("int", label);
 
-		label = AbstractParameterNodeHelper.createTypeSignature(methodParameterNode, new ExtLanguageManagerForSimple());
+		label = AbstractParameterNodeHelper.getType(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Number", label);
 	}
 
