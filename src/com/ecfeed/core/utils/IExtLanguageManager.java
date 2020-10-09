@@ -23,6 +23,6 @@ public interface IExtLanguageManager {
 	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
 	public String[] getSupportedTypes();
 	public boolean getPackageVisibility();
-	public String getExtendedTypeForValue(String value, String currentType); // TODO SIMPLE-VIEW unit tests
+	public String getExtendedTypeForValue(String value, String currentType);
 	public String createQualifiedName(String packageName, String name);
 }

@@ -225,4 +225,34 @@ public class ExtLanguageManagerTest {
 		assertFalse(javaExtLanguageManager.isLogicalTypeName("x"));
 	}
 
+	@Test
+	public void getPackageVisibilityTest() {
+
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		assertTrue(javaExtLanguageManager.getPackageVisibility());
+		assertFalse(simpleExtLanguageManager.getPackageVisibility());
+	}
+
+	@Test
+	public void getExtendedTypeForValueTest() {
+
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1000", "byte"));
+		assertEquals("byte", javaExtLanguageManager.getExtendedTypeForValue("1000", "byte"));
+	}
+
+	@Test
+	public void createQualifiedNameTest() {
+
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		assertEquals("com.User", javaExtLanguageManager.createQualifiedName("com", "User"));
+		assertEquals("User", simpleExtLanguageManager.createQualifiedName("com", "User"));
+	}
+
 }
