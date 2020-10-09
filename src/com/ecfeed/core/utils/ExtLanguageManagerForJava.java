@@ -97,7 +97,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
 	public String getPackageName(String name) {
 
 		return ModelHelper.getPackageName(name);

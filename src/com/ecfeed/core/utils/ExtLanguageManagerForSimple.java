@@ -114,7 +114,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
 	public String getPackageName(String name) {
 
 		return "";
