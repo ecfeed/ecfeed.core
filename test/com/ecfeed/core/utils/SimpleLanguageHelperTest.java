@@ -45,6 +45,20 @@ public class SimpleLanguageHelperTest {
 	}
 
 	@Test
+	public void isAllowedTypeTest() {
+
+		assertTrue(SimpleLanguageHelper.isAllowedType("Number"));
+		assertTrue(SimpleLanguageHelper.isAllowedType("Text"));
+		assertTrue(SimpleLanguageHelper.isAllowedType("Logical"));
+		assertFalse(SimpleLanguageHelper.isAllowedType("int"));
+		assertFalse(SimpleLanguageHelper.isAllowedType("double"));
+		assertFalse(SimpleLanguageHelper.isAllowedType("boolean"));
+		assertFalse(SimpleLanguageHelper.isAllowedType("String"));
+
+		assertTrue(SimpleLanguageHelper.isAllowedType("User"));
+	}
+
+	@Test
 	public void getSupportedJavaTypesTest() {
 
 		String[] simpleTypes = SimpleLanguageHelper.getSupportedSimpleViewTypes();
