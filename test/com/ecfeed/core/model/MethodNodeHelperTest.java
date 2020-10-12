@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;

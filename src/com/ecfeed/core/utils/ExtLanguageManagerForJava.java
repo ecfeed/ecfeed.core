@@ -112,7 +112,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
 	public String getQualifiedName(String name) {
 
 		name = convertTextFromIntrToExtLanguage(name);

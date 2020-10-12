@@ -130,7 +130,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
 	public String getQualifiedName(String name) {
 
 		name = ModelHelper.getNonQualifiedName(name);
