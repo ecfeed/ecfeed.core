@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.RootNode;
 import org.junit.Test;
 
 import java.util.List;
@@ -275,4 +276,15 @@ public class ExtLanguageManagerTest {
 		assertEquals("User", simpleExtLanguageManager.getQualifiedName("com.User"));
 	}
 
+	@Test
+	public void isModelCompatibleWithExtLanguageTest() {
+
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		RootNode rootNode = new RootNode("root", null);
+
+		assertNull(javaExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode));
+		assertNull(simpleExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode));
+	}
 }

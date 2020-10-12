@@ -128,7 +128,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
 	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode) {
 
 		String result = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);

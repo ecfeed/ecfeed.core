@@ -110,7 +110,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
 	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode) {
 
 		return null;
