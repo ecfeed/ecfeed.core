@@ -134,7 +134,7 @@ public class ClassNodeHelper {
 
 		String className = classNode.getName();
 
-		String signature = extLanguageManager.createClassNameSignature(className);
+		String signature = extLanguageManager.getQualifiedName(className);
 
 		return signature;
 	}

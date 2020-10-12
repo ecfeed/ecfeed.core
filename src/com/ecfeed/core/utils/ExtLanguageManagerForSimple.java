@@ -120,16 +120,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
-	public String createClassNameSignature(String className) {
-
-		className = StringHelper.getLastTokenOrInputString(className, ".");
-		className = convertTextFromIntrToExtLanguage(className);
-
-		return className;
-	}
-
-	@Override
 	public String getQualifiedName(String name) {
 
 		name = ModelHelper.getNonQualifiedName(name);

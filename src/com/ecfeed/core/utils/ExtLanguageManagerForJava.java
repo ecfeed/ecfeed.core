@@ -103,15 +103,6 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	// TODO SIMPLE-VIEW test
-	public String createClassNameSignature(String className) {
-
-		className = convertTextFromIntrToExtLanguage(className);
-
-		return className;
-	}
-
-	@Override
 	public String getQualifiedName(String name) {
 
 		name = convertTextFromIntrToExtLanguage(name);
