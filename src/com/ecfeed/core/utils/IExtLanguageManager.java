@@ -2,7 +2,7 @@ package com.ecfeed.core.utils;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.RootNode;
 
 public interface IExtLanguageManager {
 
@@ -17,7 +17,7 @@ public interface IExtLanguageManager {
 	public String[] createListListOfSupportedTypes();
 	public String getPackageName(String name);
 	public String getQualifiedName(String name);
-	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode);
+	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode);
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);
 	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
 	public String[] getSupportedTypes();

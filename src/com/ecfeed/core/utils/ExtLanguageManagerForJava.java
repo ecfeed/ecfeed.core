@@ -12,8 +12,8 @@ package com.ecfeed.core.utils;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelHelper;
+import com.ecfeed.core.model.RootNode;
 
 public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
@@ -111,7 +111,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
 	@Override
 	// TODO SIMPLE-VIEW test
-	public String checkIsModelCompatibleWithExtLanguage(AbstractNode anyNode) {
+	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode) {
 
 		return null;
 	}
