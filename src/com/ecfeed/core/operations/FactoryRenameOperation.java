@@ -36,23 +36,34 @@ public class FactoryRenameOperation {
 	private static class ClassOperationRename extends GenericOperationRename {
 
 		IExtLanguageManager fExtLanguageManager;
-		String fNewName;
 
-		public ClassOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
-			super(target, newName, extLanguageManager);
-			fExtLanguageManager = extLanguageManager;
-			fNewName = newName;
+		private String fNewPackageName;
+		private String fNewNonQualifiedNameInExtLanguage;
+
+		public ClassOperationRename(
+				AbstractNode target, 
+				String newPackageName, 
+				String newNonQualifiedNameInExtLanguage, 
+				IExtLanguageManager extLanguageManager) {
+
+			super(target, newPackageName, newNonQualifiedNameInExtLanguage, extLanguageManager);
+
+			fNewPackageName = newPackageName;
+			fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
+
+			fExtLanguageManager = extLanguageManager;			
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ClassOperationRename(getOwnNode(), getOriginalName(), fExtLanguageManager);
+			return new ClassOperationRename(getOwnNode(), getOriginalPackageName(), getOriginalNonQualifiedName(), fExtLanguageManager);
 		}
 
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 
-			String newNameInJavaConvention = getExtLanguageManager().convertTextFromExtToIntrLanguage(fNewName);
+			String newNameInJavaConvention = 
+					fNewPackageName + "."  + getExtLanguageManager().convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);  // TODO SIMPLE-VIEW use function
 
 			String[] tokens = newNameInJavaConvention.split("\\.");
 
@@ -61,6 +72,7 @@ public class FactoryRenameOperation {
 					ModelOperationException.report(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
 				}
 			}
+
 			if(getOwnNode().getSibling(newNameInJavaConvention) != null){
 				ModelOperationException.report(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
 			}
@@ -73,7 +85,7 @@ public class FactoryRenameOperation {
 
 		public MethodOperationRename(MethodNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, newName, extLanguageManager);
+			super(target, null, newName, extLanguageManager);
 
 			fExtLanguageManager = extLanguageManager;
 		}
@@ -81,7 +93,7 @@ public class FactoryRenameOperation {
 		@Override
 		public IModelOperation getReverseOperation() {
 
-			return new MethodOperationRename((MethodNode)getOwnNode(), getOriginalName(), fExtLanguageManager);
+			return new MethodOperationRename((MethodNode)getOwnNode(), getOriginalNonQualifiedName(), fExtLanguageManager);
 		}
 
 		@Override
@@ -113,14 +125,14 @@ public class FactoryRenameOperation {
 
 		public GlobalParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, newName, extLanguageManager);
+			super(target, null, newName, extLanguageManager);
 
 			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new GlobalParameterOperationRename(getOwnNode(), getOriginalName(), fExtLanguageManager);
+			return new GlobalParameterOperationRename(getOwnNode(), getOriginalNonQualifiedName(), fExtLanguageManager);
 		}
 
 		@Override
@@ -140,29 +152,29 @@ public class FactoryRenameOperation {
 		IExtLanguageManager fExtLanguageManager;
 
 		public MethodParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
-			super(target, newName, extLanguageManager);
+			super(target, null, newName, extLanguageManager);
 			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodParameterOperationRename(getOwnNode(), getOriginalName(), fExtLanguageManager);
+			return new MethodParameterOperationRename(getOwnNode(), getOriginalNonQualifiedName(), fExtLanguageManager);
 		}
 
 		@Override
 		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
-			
+
 			MethodParameterNode target = (MethodParameterNode)getOwnNode();
-			
+
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
-			
+
 			MethodNode method = target.getMethod();
-			
+
 			IExtLanguageManager extLanguageManager = getExtLanguageManager();
 			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
-			
+
 			if(method.getParameter(newNameInIntrLanguage) != null){
 				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
 			}
@@ -175,14 +187,14 @@ public class FactoryRenameOperation {
 
 		public ChoiceOperationRename(ChoiceNode target, String newName, IExtLanguageManager extLanguageManager) {
 
-			super(target, newName, extLanguageManager);
+			super(target, null, newName, extLanguageManager);
 
 			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationRename((ChoiceNode)getOwnNode(), getOriginalName(), fExtLanguageManager);
+			return new ChoiceOperationRename((ChoiceNode)getOwnNode(), getOriginalNonQualifiedName(), fExtLanguageManager);
 		}
 
 		@Override
@@ -198,59 +210,64 @@ public class FactoryRenameOperation {
 
 	private static class RenameOperationProvider implements IModelVisitor{
 
-		private String fNewName;
+		private String fNewPackageName;
+		private String fNewNonQualifiedNameInExtLanguage;
 		private IExtLanguageManager fExtLanguageManager;
 
-		public RenameOperationProvider(String newName, IExtLanguageManager extLanguageManager) {
-			fNewName = newName;
+		public RenameOperationProvider(String newPackageName, String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager) {
+
+			fNewPackageName  = newPackageName;
+			fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
 			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName, fExtLanguageManager);
+			return new GenericOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new ClassOperationRename(node, fNewName, fExtLanguageManager);
+			return new ClassOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new MethodOperationRename(node, fNewName, fExtLanguageManager);
+
+			return new MethodOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodParameterOperationRename(node, fNewName, fExtLanguageManager);
+			return new MethodParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GlobalParameterOperationRename(node, fNewName, fExtLanguageManager);
+			return new GlobalParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName,fExtLanguageManager);
+			return new GenericOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new GenericOperationRename(node, fNewName, fExtLanguageManager);
+			return new GenericOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return new ChoiceOperationRename(node, fNewName, fExtLanguageManager);
+			return new ChoiceOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newName, IExtLanguageManager extLanguageManager){
+	public static IModelOperation getRenameOperation(AbstractNode target, String newPackageName, String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager){
 
 		try{
-			return (IModelOperation)target.accept(new RenameOperationProvider(newName, extLanguageManager));
+			return (IModelOperation)target.accept(new RenameOperationProvider(
+					newPackageName, newNonQualifiedNameInExtLanguage, extLanguageManager));
 		} catch(Exception e) {
 			SystemLogger.logCatch(e);
 		}

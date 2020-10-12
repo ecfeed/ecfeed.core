@@ -32,7 +32,7 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 		}
 
 		for(TestCaseNode testCase : testCases){
-			addOperation(FactoryRenameOperation.getRenameOperation(testCase, newName, extLanguageManager));
+			addOperation(FactoryRenameOperation.getRenameOperation(testCase, null, newName, extLanguageManager));
 		}
 	}
 

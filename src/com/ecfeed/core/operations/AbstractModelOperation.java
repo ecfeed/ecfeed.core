@@ -70,7 +70,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		return fNodesToSelect;
 	}
 
-	public String convertTextFromExtToIntrLanguage(String text, IExtLanguageManager extLanguageManager) throws ModelOperationException {
+	public String convertTextFromExtToIntrLanguage(String text, IExtLanguageManager extLanguageManager) throws ModelOperationException { // TODO SIMPLE-VIEW remove
 
 		String result = null;
 

@@ -10,7 +10,8 @@
 
 package com.ecfeed.core.utils;
 
-public class PackageClassHelper {
+public class PackageClassHelper { // TODO SIMPLE-VIEW rename to QualifiedNameHelper ??
+
 
 	public static final String PACKAGE_CLASS_SEPARATOR = ".";
 
@@ -18,8 +19,12 @@ public class PackageClassHelper {
 		return StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);		
 	}
 
-	public static String getClass(String packageWithClass) {
+	public static String getClass(String packageWithClass) { // TODO SIMPLE-VIEW remove
 		return StringHelper.getLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);
+	}
+
+	public static String getNonQualifiedName(String qualifiedName) { // TODO SIMPLE-VIEW test
+		return StringHelper.getLastToken(qualifiedName, PACKAGE_CLASS_SEPARATOR);
 	}
 
 	public static String createPackageWithClass(String thePackage, String className) {

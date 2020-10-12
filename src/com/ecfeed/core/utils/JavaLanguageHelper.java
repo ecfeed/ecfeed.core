@@ -1365,6 +1365,15 @@ public final class JavaLanguageHelper {
 		return OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM;
 	}
 
+	public static String createQualifiedName(String packageName, String nonQualifiedName) { // TODO SIMPLE-VIEW test
+		
+		if (packageName == null) {
+			return nonQualifiedName;
+		}
+		
+		return packageName + "." + nonQualifiedName;
+	}
+	
 	//	public static String parseToJavaView(String text) {
 	//		String returnText = text;
 	//
