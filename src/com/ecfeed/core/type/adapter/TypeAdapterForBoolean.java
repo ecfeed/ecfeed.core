@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
@@ -65,7 +66,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	}
 
 	private String convertForQuietMode(String value) {
-
+		
 		if (value.toLowerCase().equals(JavaLanguageHelper.SPECIAL_VALUE_TRUE.toLowerCase())) {
 			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
@@ -74,6 +75,16 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 			return JavaLanguageHelper.SPECIAL_VALUE_FALSE;
 		}
 
+		value = StringHelper.removeFromPostfix(".", value);
+		
+		if (StringHelper.isEqual("1", value)) {
+			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
+		}
+		
+		if (StringHelper.isEqual("0", value)) {
+			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
+		}
+		
 		return getDefaultValue();
 	}
 	
