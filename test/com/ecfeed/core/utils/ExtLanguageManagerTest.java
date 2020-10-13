@@ -267,16 +267,6 @@ public class ExtLanguageManagerTest {
 	}
 
 	@Test
-	public void getQualifiedNameTest() {
-
-		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
-		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
-
-		assertEquals("com.User", javaExtLanguageManager.getQualifiedName("com.User"));
-		assertEquals("User", simpleExtLanguageManager.getQualifiedName("com.User"));
-	}
-
-	@Test
 	public void isModelCompatibleWithExtLanguageTest() {
 
 		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();

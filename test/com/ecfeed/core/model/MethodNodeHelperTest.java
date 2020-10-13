@@ -64,7 +64,7 @@ public class MethodNodeHelperTest {
 
 		// java types
 
-		List<String> methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForJava());
+		List<String> methodParameterTypes = MethodNodeHelper.getParameterTypes(methodNode, new ExtLanguageManagerForJava());
 
 		assertEquals(2,  methodParameterTypes.size());
 		assertEquals("int", methodParameterTypes.get(0));
@@ -72,7 +72,7 @@ public class MethodNodeHelperTest {
 
 		// simple types
 
-		methodParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForSimple());
+		methodParameterTypes = MethodNodeHelper.getParameterTypes(methodNode, new ExtLanguageManagerForSimple());
 
 		assertEquals(2,  methodParameterTypes.size());
 		assertEquals("Number", methodParameterTypes.get(0));
@@ -268,12 +268,12 @@ public class MethodNodeHelperTest {
 		assertEquals("param1", paramNames.get(0));
 		assertEquals("param2", paramNames.get(1));
 
-		List<String> paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForJava());
+		List<String> paramTypes = MethodNodeHelper.getParameterTypes(methodNode, new ExtLanguageManagerForJava());
 		assertEquals(2, paramTypes.size());
 		assertEquals("int", paramTypes.get(0));
 		assertEquals("double", paramTypes.get(1));
 
-		paramTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, new ExtLanguageManagerForSimple());
+		paramTypes = MethodNodeHelper.getParameterTypes(methodNode, new ExtLanguageManagerForSimple());
 		assertEquals(2, paramTypes.size());
 		assertEquals("Number", paramTypes.get(0));
 		assertEquals("Number", paramTypes.get(1));

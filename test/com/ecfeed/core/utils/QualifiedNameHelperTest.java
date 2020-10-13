@@ -14,29 +14,16 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.ecfeed.core.utils.PackageClassHelper;
-
-public class PackageClassHelperTest{
+public class QualifiedNameHelperTest {
 
 	private static final String PACKAGE = "com.ecfeed.utils";
 	private static final String CLASS = "Class";
-	private static final String PACKAGE_WITH_CLASS = PACKAGE + PackageClassHelper.PACKAGE_CLASS_SEPARATOR + CLASS;
+	private static final String PACKAGE_WITH_CLASS = PACKAGE + QualifiedNameHelper.PACKAGE_CLASS_SEPARATOR + CLASS;
 
 	@Test
 	public void shouldGetPackage(){
-		String result = PackageClassHelper.getPackage(PACKAGE_WITH_CLASS);
+		String result = QualifiedNameHelper.getPackage(PACKAGE_WITH_CLASS);
 		assertEquals(PACKAGE, result);
 	}
 
-	@Test
-	public void shouldGetClass(){
-		String result = PackageClassHelper.getClass(PACKAGE_WITH_CLASS);
-		assertEquals(CLASS, result);
-	}	
-
-	@Test
-	public void shouldCreatePackageWithClass(){
-		String result = PackageClassHelper.createPackageWithClass(PACKAGE, CLASS);
-		assertEquals(PACKAGE_WITH_CLASS, result);
-	}	
 }
