@@ -12,7 +12,6 @@ package com.ecfeed.core.utils;
 
 import java.util.List;
 
-import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.SimpleLanguageModelVerifier;
 
@@ -116,15 +115,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	public String getPackageName(String name) {
 
 		return "";
-	}
-
-	@Override
-	public String getQualifiedName(String name) {
-
-		name = ModelHelper.getNonQualifiedName(name);
-		name = convertTextFromIntrToExtLanguage(name);
-
-		return name;
 	}
 
 	@Override

@@ -12,7 +12,6 @@ package com.ecfeed.core.utils;
 
 import java.util.List;
 
-import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 
 public class ExtLanguageManagerForJava implements IExtLanguageManager {
@@ -99,14 +98,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String getPackageName(String name) {
 
-		return ModelHelper.getPackageName(name);
-	}
-
-	@Override
-	public String getQualifiedName(String name) {
-
-		name = convertTextFromIntrToExtLanguage(name);   // TODO SIMPLE-VIEW ??
-		return name;
+		return QualifiedNameHelper.getPackage(name);
 	}
 
 	@Override
