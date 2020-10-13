@@ -34,7 +34,10 @@ public class ClassNodeHelper {
 	public static String getQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = classNode.getName();
-		name = extLanguageManager.convertTextFromExtToIntrLanguage(name);
+
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
+
+		name = extLanguageManager.getQualifiedName(name);
 
 		return name;
 	}
@@ -133,7 +136,7 @@ public class ClassNodeHelper {
 	public static String createSignature(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		return getQualifiedName(classNode, extLanguageManager);
-		}
+	}
 
 	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode,

@@ -118,6 +118,14 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
+	public String getQualifiedName(String qualfiedName) {
+
+		final String nameWithoutPackage = QualifiedNameHelper.getNonQualifiedName(qualfiedName);
+
+		return nameWithoutPackage;
+	}
+
+	@Override
 	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode) {
 
 		String result = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);

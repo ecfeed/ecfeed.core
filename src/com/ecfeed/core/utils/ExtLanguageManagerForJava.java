@@ -102,6 +102,11 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
+	public String getQualifiedName(String qualfiedName) {
+		return qualfiedName;
+	}
+
+	@Override
 	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode) {
 
 		return null;

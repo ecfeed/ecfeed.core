@@ -16,6 +16,7 @@ public interface IExtLanguageManager {
 	public List<String> getSymbolicNamesOfSpecialValues(String typeName);
 	public String[] createListListOfSupportedTypes();
 	public String getPackageName(String name);
+	public String getQualifiedName(String qualfiedName);
 	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode);
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);
 	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
