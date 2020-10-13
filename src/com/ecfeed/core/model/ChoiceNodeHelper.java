@@ -97,6 +97,10 @@ public class ChoiceNodeHelper {
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
+		if (choiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot get value from empty string.");
+		}
+		
 		String type = choiceNode.getParameter().getType();
 
 		String value = choiceNode.getValueString();

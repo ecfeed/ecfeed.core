@@ -41,7 +41,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 			return String.valueOf(Double.parseDouble(value));
 		} catch(NumberFormatException e){}
 		
-		return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
+		return "0";
 	}
 
 	@Override
