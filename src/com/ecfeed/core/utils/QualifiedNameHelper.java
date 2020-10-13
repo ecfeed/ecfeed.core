@@ -23,10 +23,6 @@ public class QualifiedNameHelper {
 		return StringHelper.getLastToken(qualifiedName, PACKAGE_CLASS_SEPARATOR);
 	}
 
-	public static String removeDefaultPackagePrefix(String packageWithClass) {
-		return StringHelper.removeToPrefix(".", packageWithClass);
-	}
-
 	public static boolean hasPackageName(String packageWithClass) {
 		String trimmedPackageWithClass = packageWithClass.trim();
 
