@@ -62,10 +62,12 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newName) throws ModelOperationException {
 
-			String newNameInJavaConvention = 
-					fNewPackageName + "."  + getExtLanguageManager().convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);  // TODO SIMPLE-VIEW use function
+			String nonQualifiedNameInIntrLangage = 
+					getExtLanguageManager().convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);
 
-			String[] tokens = newNameInJavaConvention.split("\\.");
+			String newNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(fNewPackageName, nonQualifiedNameInIntrLangage);
+
+			String[] tokens = newNameInIntrLanguage.split("\\.");
 
 			for (String token : tokens) {
 				if(JavaLanguageHelper.isJavaKeyword(token)){
@@ -73,7 +75,7 @@ public class FactoryRenameOperation {
 				}
 			}
 
-			if(getOwnNode().getSibling(newNameInJavaConvention) != null){
+			if(getOwnNode().getSibling(newNameInIntrLanguage) != null){
 				ModelOperationException.report(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
 			}
 		}
