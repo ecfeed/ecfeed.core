@@ -66,12 +66,12 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public void execute() throws ModelOperationException {
 
 		setOneNodeToSelect(fTargetAbstractNode);
-		String oldName = fTargetAbstractNode.getName();
+		String oldQualifiedNameInIntrLanguage = fTargetAbstractNode.getName();
 
-		String newNameInExtLanguage = fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
-		verifyNewName(newNameInExtLanguage);
+		String newQualifiedNameInExtLanguage = fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
+		verifyNewName(newQualifiedNameInExtLanguage);
 
-		String newNonQualifiedNameInIntrLanguage = fExtLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
+		String newNonQualifiedNameInIntrLanguage = fExtLanguageManager.convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);
 
 		String newQualifiedNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
 
@@ -86,7 +86,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		String errorMessage = fExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode);
 
 		if (errorMessage != null) {
-			fTargetAbstractNode.setName(oldName);
+			fTargetAbstractNode.setName(oldQualifiedNameInIntrLanguage);
 			ModelOperationException.report(errorMessage);
 		}
 
