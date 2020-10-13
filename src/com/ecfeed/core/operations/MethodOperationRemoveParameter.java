@@ -80,7 +80,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		@Override
 		public void execute() throws ModelOperationException {
 
-			List<String> paramTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(getMethodTarget(), getExtLanguageManager());
+			List<String> paramTypesInExtLanguage = MethodNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
 			int index = getParameter().getMyIndex();
 			paramTypesInExtLanguage.remove(index);
 

@@ -41,7 +41,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 		ClassNode classNode = fTargetMethodNode.getClassNode();
 
 		String methodName = MethodNodeHelper.getName(fSourceMethodNode, getExtLanguageManager());
-		List<String> methodParameters = MethodNodeHelper.getMethodParameterTypes(fSourceMethodNode, getExtLanguageManager());
+		List<String> methodParameters = MethodNodeHelper.getParameterTypes(fSourceMethodNode, getExtLanguageManager());
 
 		if (ClassNodeHelper.findMethodByExtLanguage(
 				classNode, 

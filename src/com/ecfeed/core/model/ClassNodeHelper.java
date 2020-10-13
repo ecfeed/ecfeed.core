@@ -157,8 +157,6 @@ public class ClassNodeHelper {
 		return message;
 	}
 
-	// TODO SIMPLE VIEW add method findMethodByExtLanguage(classNode, methodNode, extLanguageManager) and use where possible instead of method below
-
 	public static MethodNode findMethodByExtLanguage(
 			ClassNode classNode,
 			String methodNameInExternalLanguage,
@@ -169,9 +167,9 @@ public class ClassNodeHelper {
 
 		for (MethodNode methodNode : methods) {
 
-			List<String> currentParameterTypes = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguageManager);
-
 			String currentMethodName = MethodNodeHelper.getName(methodNode, extLanguageManager);
+			
+			List<String> currentParameterTypes = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 
 			if (currentMethodName.equals(methodNameInExternalLanguage) && currentParameterTypes.equals(parameterTypesInExternalLanguage)){
 				return methodNode;

@@ -53,7 +53,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(fMethodNode, extLanguageManager);
+		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
 
 		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguageManager);
 

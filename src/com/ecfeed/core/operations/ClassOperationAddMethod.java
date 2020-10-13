@@ -56,7 +56,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
 						fClassNode, 
 						MethodNodeHelper.getName(fMethod, getExtLanguageManager()), 
-						MethodNodeHelper.getMethodParameterTypes(fMethod, getExtLanguageManager()), 
+						MethodNodeHelper.getParameterTypes(fMethod, getExtLanguageManager()), 
 						getExtLanguageManager());
 
 		if (errorMessage != null){
@@ -76,7 +76,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, extLanguageManager);
-		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getMethodParameterTypes(methodNode, extLanguageManager);
+		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 
 		String newNameInExtLanguage = 
 				ClassNodeHelper.generateNewMethodName(

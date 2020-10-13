@@ -42,7 +42,7 @@ public class MethodNodeHelper {
 		return result;
 	}
 
-	public static List<String> getMethodParameterTypes(MethodNode method, IExtLanguageManager extLanguageManager) {
+	public static List<String> getParameterTypes(MethodNode method, IExtLanguageManager extLanguageManager) {
 
 		List<String> result = new ArrayList<String>();
 
