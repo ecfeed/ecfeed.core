@@ -67,6 +67,10 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 	private String convertForQuietMode(String value) {
 		
+		if (StringHelper.isNullOrEmpty(value)) {
+			return JavaLanguageHelper.SPECIAL_VALUE_FALSE;
+		}
+		
 		if (value.toLowerCase().equals(JavaLanguageHelper.SPECIAL_VALUE_TRUE.toLowerCase())) {
 			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
