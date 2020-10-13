@@ -19,16 +19,8 @@ public class QualifiedNameHelper {
 		return StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);		
 	}
 
-	public static String getClass(String packageWithClass) { // TODO SIMPLE-VIEW remove
-		return StringHelper.getLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);
-	}
-
 	public static String getNonQualifiedName(String qualifiedName) { // TODO SIMPLE-VIEW test
 		return StringHelper.getLastToken(qualifiedName, PACKAGE_CLASS_SEPARATOR);
-	}
-
-	public static String createPackageWithClass(String thePackage, String className) {
-		return thePackage + PACKAGE_CLASS_SEPARATOR + className;
 	}
 
 	public static String removeDefaultPackagePrefix(String packageWithClass) {
