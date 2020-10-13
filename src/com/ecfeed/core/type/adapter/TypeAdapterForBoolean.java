@@ -21,10 +21,10 @@ import com.ecfeed.core.utils.StringHelper;
 public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 	private final String[] TYPES_CONVERTABLE_TO_BOOLEAN = new String[]{
-		JavaLanguageHelper.TYPE_NAME_STRING,
-		JavaLanguageHelper.TYPE_NAME_BOOLEAN,
-		SimpleLanguageHelper.TYPE_NAME_TEXT,
-		SimpleLanguageHelper.TYPE_NAME_LOGICAL
+			JavaLanguageHelper.TYPE_NAME_STRING,
+			JavaLanguageHelper.TYPE_NAME_BOOLEAN,
+			SimpleLanguageHelper.TYPE_NAME_TEXT,
+			SimpleLanguageHelper.TYPE_NAME_LOGICAL
 	};
 
 	@Override
@@ -43,7 +43,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	}
 
 	public String convert(String value, boolean isRandomized, ERunMode conversionMode){
-	
+
 		if (conversionMode == ERunMode.WITH_EXCEPTION) {
 			return convertForExceptionMode(value);
 		}
@@ -66,11 +66,11 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	}
 
 	private String convertForQuietMode(String value) {
-		
+
 		if (StringHelper.isNullOrEmpty(value)) {
 			return JavaLanguageHelper.SPECIAL_VALUE_FALSE;
 		}
-		
+
 		if (value.toLowerCase().equals(JavaLanguageHelper.SPECIAL_VALUE_TRUE.toLowerCase())) {
 			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
@@ -80,18 +80,18 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		}
 
 		value = StringHelper.removeFromPostfix(".", value);
-		
-		if (StringHelper.isEqual("1", value)) { // TODO SIMPLE-VIEW use constant
+
+		if (StringHelper.isEqual(JavaLanguageHelper.SPECIAL_VALUE_ONE, value)) {
 			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
-		
-		if (StringHelper.isEqual("0", value)) { // TODO SIMPLE-VIEW use constant
+
+		if (StringHelper.isEqual(JavaLanguageHelper.SPECIAL_VALUE_ZERO, value)) {
 			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
-		
+
 		return getDefaultValue();
 	}
-	
+
 	protected void reportRuntimeException(String value) {
 		TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, JavaLanguageHelper.TYPE_NAME_BOOLEAN);
 	}

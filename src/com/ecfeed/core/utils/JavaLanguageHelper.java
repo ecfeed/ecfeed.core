@@ -77,6 +77,9 @@ public final class JavaLanguageHelper {
 	public static final String DEFAULT_EXPECTED_STRING_VALUE = "";
 	public static final String DEFAULT_EXPECTED_ENUM_VALUE = "VALUE";
 
+	public static final String SPECIAL_VALUE_ZERO = "0";
+	public static final String SPECIAL_VALUE_ONE = "1";
+
 	private static final String[] SUPPORTED_JAVA_TYPES = new String[] {
 			TYPE_NAME_INT,
 			TYPE_NAME_BYTE,
