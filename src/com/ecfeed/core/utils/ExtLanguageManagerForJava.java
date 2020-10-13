@@ -105,7 +105,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String getQualifiedName(String name) {
 
-		name = convertTextFromIntrToExtLanguage(name);
+		name = convertTextFromIntrToExtLanguage(name);   // TODO SIMPLE-VIEW ??
 		return name;
 	}
 

@@ -1366,14 +1366,18 @@ public final class JavaLanguageHelper {
 	}
 
 	public static String createQualifiedName(String packageName, String nonQualifiedName) { // TODO SIMPLE-VIEW test
-		
+
 		if (packageName == null) {
 			return nonQualifiedName;
 		}
-		
+
+		if (packageName.isEmpty()) {
+			return nonQualifiedName;
+		}
+
 		return packageName + "." + nonQualifiedName;
 	}
-	
+
 	//	public static String parseToJavaView(String text) {
 	//		String returnText = text;
 	//
