@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.PackageClassHelper;
+import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
 	public static String generateNewClassName(RootNode rootNode, String startClassName) {
-		boolean defaultPackage = !PackageClassHelper.hasPackageName(startClassName);
+		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassName);
 
 		for (int i = 1;   ; i++) {
 			String newClassName = startClassName + String.valueOf(i);

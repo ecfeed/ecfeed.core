@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.utils;
 
-public class PackageClassHelper { // TODO SIMPLE-VIEW rename to QualifiedNameHelper ??
+public class QualifiedNameHelper {
 
 
 	public static final String PACKAGE_CLASS_SEPARATOR = ".";
