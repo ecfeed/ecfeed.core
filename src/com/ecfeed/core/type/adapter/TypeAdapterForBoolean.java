@@ -81,11 +81,11 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 		value = StringHelper.removeFromPostfix(".", value);
 		
-		if (StringHelper.isEqual("1", value)) {
+		if (StringHelper.isEqual("1", value)) { // TODO SIMPLE-VIEW use constant
 			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
 		
-		if (StringHelper.isEqual("0", value)) {
+		if (StringHelper.isEqual("0", value)) { // TODO SIMPLE-VIEW use constant
 			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
 		}
 		

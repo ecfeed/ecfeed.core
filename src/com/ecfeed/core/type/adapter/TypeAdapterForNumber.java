@@ -27,12 +27,21 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 
 	@Override
 	public String convertSingleValue(String value, ERunMode conversionMode) {
+		
 		String result = super.convertSpecialValue(value);
 
 		if (result != null) {
 			return result;
 		}
+		
+		if (StringHelper.isEqual("false", value)) { // TODO SIMPLE-VIEW - use constant
+			return "0";
+		}
 
+		if (StringHelper.isEqual("true", value)) { // TODO SIMPLE-VIEW - use constant
+			return "1";
+		}
+		
 		try {
 			return String.valueOf(Long.parseLong(value));
 		} catch(NumberFormatException e){}

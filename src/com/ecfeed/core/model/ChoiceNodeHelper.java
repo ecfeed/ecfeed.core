@@ -101,7 +101,13 @@ public class ChoiceNodeHelper {
 			ExceptionHelper.reportRuntimeException("Cannot get value from empty string.");
 		}
 		
-		String type = choiceNode.getParameter().getType();
+		AbstractParameterNode parameter = choiceNode.getParameter();
+		
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Cannot get value. Empty parameter.");
+		}
+		
+		String type = parameter.getType();
 
 		String value = choiceNode.getValueString();
 
