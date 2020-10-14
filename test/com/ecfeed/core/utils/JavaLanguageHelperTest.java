@@ -534,6 +534,23 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void parseBooleanValueTest() {
+
+		assertTrue(JavaLanguageHelper.parseBooleanValue("true"));
+		assertFalse(JavaLanguageHelper.parseBooleanValue("false"));
+		assertNull(JavaLanguageHelper.parseBooleanValue("1"));
+	}
+
+	@Test
+	public void parseByteValueTest() {
+
+		assertEquals(new Byte((byte)127), JavaLanguageHelper.parseByteValue("MAX_VALUE",  ERunMode.QUIET));
+		assertEquals(new Byte((byte)-128), JavaLanguageHelper.parseByteValue("MIN_VALUE",  ERunMode.QUIET));
+		assertEquals(new Byte((byte)1), JavaLanguageHelper.parseByteValue("1",  ERunMode.QUIET));
+		assertEquals(null, JavaLanguageHelper.parseByteValue("a",  ERunMode.QUIET));
+	}
+
+	@Test
 	public void parseValueToStringTest() {
 
 		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");

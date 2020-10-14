@@ -811,7 +811,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Boolean parseBooleanValue(String valueString) {
 
 		if(valueString.toLowerCase().equals(SPECIAL_VALUE_TRUE.toLowerCase())){
@@ -844,7 +843,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Character parseCharValue(String valueString) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
