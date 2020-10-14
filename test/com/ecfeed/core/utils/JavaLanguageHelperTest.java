@@ -569,6 +569,15 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void parseIntValueTest() {
+
+		assertEquals(new Integer(2147483647), JavaLanguageHelper.parseIntValue("MAX_VALUE",  ERunMode.QUIET));
+		assertEquals(new Integer(-2147483648), JavaLanguageHelper.parseIntValue("MIN_VALUE",  ERunMode.QUIET));
+		assertEquals(new Integer(1), JavaLanguageHelper.parseIntValue("1",  ERunMode.QUIET));
+		assertEquals(null, JavaLanguageHelper.parseIntValue("a",  ERunMode.QUIET));
+	}
+
+	@Test
 	public void parseValueToStringTest() {
 
 		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
