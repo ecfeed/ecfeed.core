@@ -19,7 +19,7 @@ public class QualifiedNameHelper {
 		return StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);		
 	}
 
-	public static String getNonQualifiedName(String qualifiedName) { // TODO SIMPLE-VIEW test
+	public static String getNonQualifiedName(String qualifiedName) {
 		return StringHelper.getLastToken(qualifiedName, PACKAGE_CLASS_SEPARATOR);
 	}
 

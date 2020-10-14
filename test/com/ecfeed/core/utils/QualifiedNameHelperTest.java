@@ -11,6 +11,8 @@
 package com.ecfeed.core.utils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -24,6 +26,18 @@ public class QualifiedNameHelperTest {
 	public void shouldGetPackage(){
 		String result = QualifiedNameHelper.getPackage(PACKAGE_WITH_CLASS);
 		assertEquals(PACKAGE, result);
+	}
+
+	@Test
+	public void shouldGetNonQualifiedName(){
+		String result = QualifiedNameHelper.getNonQualifiedName(PACKAGE_WITH_CLASS);
+		assertEquals(CLASS, result);
+	}
+
+	@Test
+	public void hasPackageNameTest(){
+		assertTrue(QualifiedNameHelper.hasPackageName(PACKAGE_WITH_CLASS));
+		assertFalse(QualifiedNameHelper.hasPackageName(CLASS));
 	}
 
 }
