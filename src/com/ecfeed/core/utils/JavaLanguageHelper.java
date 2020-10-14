@@ -891,7 +891,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Float parseFloatValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){

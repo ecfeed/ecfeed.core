@@ -560,6 +560,15 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void parseFloatValueTest() {
+
+		assertEquals(new Float(3.4028235E38), JavaLanguageHelper.parseFloatValue("MAX_VALUE",  ERunMode.QUIET));
+		assertEquals(new Float(1.4E-45), JavaLanguageHelper.parseFloatValue("MIN_VALUE",  ERunMode.QUIET));
+		assertEquals(new Float(1), JavaLanguageHelper.parseFloatValue("1",  ERunMode.QUIET));
+		assertEquals(null, JavaLanguageHelper.parseFloatValue("a",  ERunMode.QUIET));
+	}
+
+	@Test
 	public void parseValueToStringTest() {
 
 		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
