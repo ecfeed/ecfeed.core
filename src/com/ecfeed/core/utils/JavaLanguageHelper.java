@@ -833,7 +833,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Byte parseByteValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -1056,7 +1055,7 @@ public final class JavaLanguageHelper {
 		return typeName1;
 	}
 
-	public static JustifyType getJustifyType(String typeName) { // TODO SIMPLE-VIEW rename
+	public static JustifyType getTypeJustification(String typeName) {
 
 		if (!isJavaType(typeName)) {
 			return JustifyType.LEFT;

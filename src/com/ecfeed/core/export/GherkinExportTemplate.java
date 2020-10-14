@@ -201,7 +201,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 
 			int maxParamValueLength = getMaxParamValueLength(methodParameterNode, parameterName);
 
-			JustifyType justifyType = JavaLanguageHelper.getJustifyType(methodParameterNode.getType());
+			JustifyType justifyType = JavaLanguageHelper.getTypeJustification(methodParameterNode.getType());
 
 			String paramDescription = embedInMinWidthOperator("$" + parameterName + "." + "value", maxParamValueLength, justifyType);
 			stringBuilder.append(paramDescription);
