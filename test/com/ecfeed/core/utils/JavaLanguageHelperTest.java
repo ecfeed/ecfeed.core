@@ -596,6 +596,13 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void parseStringValueTest() {
+
+		assertEquals("Abc", JavaLanguageHelper.parseStringValue("Abc"));
+		assertNull(JavaLanguageHelper.parseStringValue("/null"));
+	}
+
+	@Test
 	public void parseValueToStringTest() {
 
 		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");

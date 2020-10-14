@@ -983,7 +983,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static String parseStringValue(String valueString) {
 
 		if(valueString.equals(VALUE_REPRESENTATION_NULL)){
