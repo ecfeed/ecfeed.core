@@ -280,8 +280,8 @@ public abstract class XomAnalyser {
 		
 		MethodParameterNode targetMethodParameterNode = 
 				new MethodParameterNode(
-						name, method.getModelChangeRegistrator(), 
-						type, defaultValue, Boolean.parseBoolean(expected));
+						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
+                );
 
 		parseParameterProperties(parameterElement, targetMethodParameterNode);
 

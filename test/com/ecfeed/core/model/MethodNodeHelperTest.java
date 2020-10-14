@@ -38,10 +38,10 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", null, "int", "0", false);
+		MethodParameterNode param2 = new MethodParameterNode("param2", "int", "0", false, null);
 		methodNode.addParameter(param2);
 
 		List<String> methodParameterNames = MethodNodeHelper.getParameterNames(methodNode);
@@ -56,10 +56,10 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0", false);
+		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0", false, null);
 		methodNode.addParameter(param2);
 
 		// java types
@@ -95,7 +95,7 @@ public class MethodNodeHelperTest {
 		assertEquals("method 1()", signature);
 
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
 		signature = MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForJava());
@@ -105,7 +105,7 @@ public class MethodNodeHelperTest {
 		assertEquals("method 1(Number param1)", signature);
 
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
+		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
 		signature = MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForJava());
@@ -257,10 +257,10 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", null, "int", "0", false);
+		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", null, "double", "0.0", true);
+		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
 		List<String> paramNames = MethodNodeHelper.getParameterNames(methodNode);
@@ -287,10 +287,10 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode);
 
-		MethodParameterNode param1 = new MethodParameterNode("param_1", null, "int", "0", false);
+		MethodParameterNode param1 = new MethodParameterNode("param_1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param_2", null, "double", "0.0", true);
+		MethodParameterNode param2 = new MethodParameterNode("param_2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
 		String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForJava());

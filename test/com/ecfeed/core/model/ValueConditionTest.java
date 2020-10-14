@@ -117,7 +117,7 @@ public class ValueConditionTest {
 	}
 
 	public void evaluateForRangeIntegerTypes(String parameterType) {
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, parameterType, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", parameterType, "", false, null);
 
 		evaluateRandomizedOne(methodParameterNode, "1", EMathRelation.EQUAL,     "1", AssertType.TRUE);
 		evaluateRandomizedOne(methodParameterNode, "1", EMathRelation.NOT_EQUAL, "1", AssertType.FALSE);
@@ -240,7 +240,7 @@ public class ValueConditionTest {
 	}	
 
 	public void evaluateForAmbiguousIntegerTypes(String parameterType) {
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, parameterType, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", parameterType, "", false, null);
 
 		evaluateRandomizeAmbiguousOne(methodParameterNode, "1", EMathRelation.EQUAL,     "1", AssertType.FALSE);
 		evaluateRandomizeAmbiguousOne(methodParameterNode, "1", EMathRelation.NOT_EQUAL, "1", AssertType.FALSE);
@@ -383,7 +383,7 @@ public class ValueConditionTest {
 	@Test
 	public void evaluateForStrings() {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
 		evaluateOne(methodParameterNode, "a", EMathRelation.EQUAL, "a", AssertType.TRUE);
 		evaluateOne(methodParameterNode, "a", EMathRelation.EQUAL, "A", AssertType.FALSE);
@@ -403,7 +403,7 @@ public class ValueConditionTest {
 
 	private void evaluateForIntegerTypes(String parameterType) {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, parameterType, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", parameterType, "", false, null);
 
 		evaluateOne(methodParameterNode, "1", EMathRelation.EQUAL,     "1", AssertType.TRUE);
 		evaluateOne(methodParameterNode, "1", EMathRelation.NOT_EQUAL, "1", AssertType.FALSE);
@@ -455,7 +455,7 @@ public class ValueConditionTest {
 
 	public void evaluateForFloatTypes(String parameterType) {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, parameterType, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", parameterType, "", false, null);
 
 		evaluateOne(methodParameterNode, "1", EMathRelation.EQUAL,     "1", AssertType.TRUE);
 		evaluateOne(methodParameterNode, "1.0", EMathRelation.EQUAL,   "1.0", AssertType.TRUE);
@@ -504,7 +504,7 @@ public class ValueConditionTest {
 	@Test
 	public void evaluateForBoolean() {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false, null);
 
 		evaluateOne(methodParameterNode, "true", EMathRelation.EQUAL, "true", AssertType.TRUE);
 		evaluateOne(methodParameterNode, "true", EMathRelation.EQUAL, "false", AssertType.FALSE);
@@ -528,7 +528,7 @@ public class ValueConditionTest {
 	@Test
 	public void evaluateChar() {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_CHAR, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_CHAR, "", false, null);
 
 		evaluateOne(methodParameterNode, "a", EMathRelation.EQUAL, "a", AssertType.TRUE);
 		evaluateOne(methodParameterNode, "a", EMathRelation.NOT_EQUAL, "a", AssertType.FALSE);
@@ -558,7 +558,7 @@ public class ValueConditionTest {
 
 	@Test
 	public void copyAndEqualityTest() {
-		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
 		RelationStatement statement = 
 				RelationStatement.createStatementWithValueCondition(
@@ -573,7 +573,7 @@ public class ValueConditionTest {
 	@Test
 	public void updateReferencesTest() {
 		MethodNode method1 = new MethodNode("method1", null);
-		MethodParameterNode method1ParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method1ParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method1.addParameter(method1ParameterNode);
 
 		RelationStatement statement = 
@@ -581,7 +581,7 @@ public class ValueConditionTest {
 						method1ParameterNode, EMathRelation.EQUAL, "ABC");
 
 		MethodNode method2 = new MethodNode("method2", null);
-		MethodParameterNode method2ParameterNode = new MethodParameterNode("par1", null, JavaLanguageHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method2ParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method2.addParameter(method2ParameterNode);
 
 		assertNotEquals(method2ParameterNode.hashCode(), statement.getLeftParameter().hashCode());

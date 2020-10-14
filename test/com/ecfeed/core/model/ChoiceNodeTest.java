@@ -20,9 +20,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 
 public class ChoiceNodeTest{
@@ -38,7 +35,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testGetParameter(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", null, "type","0",  false);
+		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
 		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
 		ChoiceNode p111 = new ChoiceNode("p111", null, "0");
@@ -62,7 +59,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testLevel(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", null, "type", "0", false);
+		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
 		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
 		ChoiceNode p111 = new ChoiceNode("p111", null, "0");

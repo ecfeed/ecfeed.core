@@ -25,12 +25,14 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private GlobalParameterNode fLink;
 	private List<ChoiceNode> fChoicesCopy;
 
-	public MethodParameterNode( // TODO SIMPLE-VIEW change param order
-			String name, 
-			IModelChangeRegistrator modelChangeRegistrator, 
-			String type, 
-			String defaultValue,
-			boolean expected, boolean linked, GlobalParameterNode link) {
+	public MethodParameterNode(
+				String name,
+				String type,
+				String defaultValue,
+				boolean expected,
+				boolean linked,
+				GlobalParameterNode link,
+				IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, modelChangeRegistrator, type);
 
@@ -43,11 +45,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	public MethodParameterNode(
-			String name, IModelChangeRegistrator modelChangeRegistrator, // TODO SIMPLE-VIEW change param order
-			String type, String defaultValue,
-			boolean expected) {
+			String name,
+			String type,
+			String defaultValue,
+			boolean expected,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		this(name, modelChangeRegistrator, type, defaultValue, expected, false, null);
+		this(name, type, defaultValue, expected, false, null, modelChangeRegistrator);
 	}
 
 	public MethodParameterNode(AbstractParameterNode source,
@@ -56,9 +60,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 		this(
 				source.getName(),
-				source.getModelChangeRegistrator(),
-				source.getType(), 
-				defaultValue, expected, linked, link);
+				source.getType(), defaultValue, expected, linked, link, source.getModelChangeRegistrator()
+		);
 
 		addChoices(source.getChoices());
 	}
@@ -80,8 +83,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 	@Override
 	public MethodParameterNode makeClone() {
 		MethodParameterNode copy = 
-				new MethodParameterNode(getName(), getModelChangeRegistrator(),
-						getType(), getDefaultValue(), isExpected());
+				new MethodParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
+				);
 
 		copy.fLinked = fLinked;
 		copy.fLink = fLink;

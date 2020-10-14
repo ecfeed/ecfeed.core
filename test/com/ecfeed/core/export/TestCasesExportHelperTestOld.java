@@ -11,7 +11,6 @@ package com.ecfeed.core.export;
  *******************************************************************************/
 
 import com.ecfeed.core.model.*;
-import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import org.junit.Test;
 
@@ -173,12 +172,12 @@ public class TestCasesExportHelperTestOld {
         MethodNode method = new MethodNode("testMethod", null);
         theClass.addMethod(method);
 
-        MethodParameterNode parameter0 = new MethodParameterNode("par0", null, "int", "0", false);
+        MethodParameterNode parameter0 = new MethodParameterNode("par0", "int", "0", false, null);
         ChoiceNode choiceNode00 = new ChoiceNode("p0", null, par0Value);
         parameter0.addChoice(choiceNode00);
         method.addParameter(parameter0);
 
-        MethodParameterNode parameter1 = new MethodParameterNode("par1", null, "int", "0", false);
+        MethodParameterNode parameter1 = new MethodParameterNode("par1", "int", "0", false, null);
         ChoiceNode choiceNode11 = new ChoiceNode("p1", null, par1Value);
         parameter1.addChoice(choiceNode11);
         method.addParameter(parameter1);

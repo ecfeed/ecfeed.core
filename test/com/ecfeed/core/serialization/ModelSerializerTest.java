@@ -31,7 +31,6 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelConverter;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.serialization.ModelParser;
@@ -175,7 +174,7 @@ public class ModelSerializerTest {
 
 		ChoiceNode choice = new ChoiceNode("choice", null, "0");
 
-		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "int", "0", false);
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
 		parameter.addChoice(choice);
 
 		MethodNode methodNode = new MethodNode("testMethod1", null);

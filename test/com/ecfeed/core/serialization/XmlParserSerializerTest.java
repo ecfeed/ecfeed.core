@@ -113,7 +113,7 @@ public class XmlParserSerializerTest {
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode parameter = new MethodParameterNode("parameter", null, JavaLanguageHelper.TYPE_NAME_STRING, "0", false);
+			MethodParameterNode parameter = new MethodParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
 			ChoiceNode choice = new ChoiceNode("choice", null, "A                 B");
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 			testData.add(choice);
@@ -151,9 +151,9 @@ public class XmlParserSerializerTest {
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
 			MethodParameterNode choicesParentParameter =
-					new MethodParameterNode("choicesParentParameter", null, JavaLanguageHelper.TYPE_NAME_STRING, "0", false);
+					new MethodParameterNode("choicesParentParameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
 			MethodParameterNode expectedParameter =
-					new MethodParameterNode("expectedParameter", null, JavaLanguageHelper.TYPE_NAME_CHAR, "0", true);
+					new MethodParameterNode("expectedParameter", JavaLanguageHelper.TYPE_NAME_CHAR, "0", true, null);
 			expectedParameter.setDefaultValueString("d");
 			ChoiceNode choice1 = new ChoiceNode("choice", null, "p");
 			choice1.setParent(choicesParentParameter);
@@ -273,7 +273,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private MethodParameterNode createChoicesParentParameter(String type, int numOfChoices) {
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), null, type, "0", false);
+		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", false, null);
 		for(int i = 0; i < numOfChoices; i++){
 			parameter.addChoice(createChoice(type, 1));
 		}
@@ -290,7 +290,7 @@ public class XmlParserSerializerTest {
 
 	private MethodParameterNode createExpectedValueParameter(String type) {
 		String defaultValue = createRandomValue(type);
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), null, type, "0", true);
+		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", true, null);
 		parameter.setDefaultValueString(defaultValue);
 		return parameter;
 	}

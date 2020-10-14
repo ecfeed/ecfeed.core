@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
@@ -79,7 +78,7 @@ public class AbstractParameterNodeHelperTest {
 
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode(
-						"name", null,	"int", "0", true);
+						"name", "int", "0", true, null);
 
 		String label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]int name", label);
@@ -93,7 +92,7 @@ public class AbstractParameterNodeHelperTest {
 
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode(
-						"name", null,	"int", "0", true);
+						"name", "int", "0", true, null);
 
 		String label = AbstractParameterNodeHelper.getType(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("int", label);

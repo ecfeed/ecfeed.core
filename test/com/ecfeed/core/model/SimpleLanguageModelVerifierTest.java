@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.testutils.RandomModelGenerator;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -53,7 +52,7 @@ public class SimpleLanguageModelVerifierTest {
 		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 
 		MethodParameterNode methodParameterNode11 =
-				new MethodParameterNode("Param1", null, "int", "0", false);
+				new MethodParameterNode("Param1", "int", "0", false, null);
 		methodNode1.addParameter(methodParameterNode11);
 
 		MethodNode methodNode2 = new MethodNode("Method_1", null);
@@ -61,7 +60,7 @@ public class SimpleLanguageModelVerifierTest {
 		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 
 		MethodParameterNode methodParameterNode21 =
-				new MethodParameterNode("Param1", null, "int", "0", false);
+				new MethodParameterNode("Param1", "int", "0", false, null);
 		methodNode2.addParameter(methodParameterNode21);
 		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 

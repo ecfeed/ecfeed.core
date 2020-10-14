@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -228,12 +227,12 @@ public class TestCasesExportHelperTest {
         MethodNode method = new MethodNode("testMethod_1", null);
         theClass.addMethod(method);
 
-        MethodParameterNode parameter0 = new MethodParameterNode("par_0", null, "int", "MAX_VALUE", false);
+        MethodParameterNode parameter0 = new MethodParameterNode("par_0", "int", "MAX_VALUE", false, null);
         ChoiceNode choiceNode00 = new ChoiceNode("c_0", null, par0Value);
         parameter0.addChoice(choiceNode00);
         method.addParameter(parameter0);
 
-        MethodParameterNode parameter1 = new MethodParameterNode("par_1", null, "int", "MIN_VALUE", false);
+        MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "MIN_VALUE", false, null);
         ChoiceNode choiceNode11 = new ChoiceNode("c_1", null, par1Value);
         parameter1.addChoice(choiceNode11);
         method.addParameter(parameter1);

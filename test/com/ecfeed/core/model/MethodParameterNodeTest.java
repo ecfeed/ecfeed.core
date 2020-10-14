@@ -22,19 +22,19 @@ public class MethodParameterNodeTest {
 		MethodParameterNode methodParameterNode;
 
 		try {
-			new MethodParameterNode("par%1", null, "int", "0", false);
+			new MethodParameterNode("par%1", "int", "0", false, null);
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			new MethodParameterNode("!", null, "int", "0", false);
+			new MethodParameterNode("!", "int", "0", false, null);
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			new MethodParameterNode("a b", null, "int", "0", false);
+			new MethodParameterNode("a b", "int", "0", false, null);
 			fail();
 		} catch (Exception e) {
 		}

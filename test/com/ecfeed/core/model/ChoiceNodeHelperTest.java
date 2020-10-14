@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 
-import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
@@ -71,7 +70,7 @@ public class ChoiceNodeHelperTest {
 
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode(
-						"par1", null,	"int", "0", true);
+						"par1", "int", "0", true, null);
 
 		ChoiceNode choice = new ChoiceNode("choice_1", null, "MAX_VALUE");
 		choice.setParent(methodParameterNode);
@@ -94,7 +93,7 @@ public class ChoiceNodeHelperTest {
 
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode(
-						"par1", null,	"int", "0", true);
+						"par1", "int", "0", true, null);
 
 		ChoiceNode choice = new ChoiceNode("choice_1", null, "MAX_VALUE");
 		choice.setParent(methodParameterNode);
@@ -116,7 +115,7 @@ public class ChoiceNodeHelperTest {
 
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode(
-						"par1", null,	"int", "0", true);
+						"par1", "int", "0", true, null);
 
 		ChoiceNode choice1 = new ChoiceNode("choice_1", null, "0");
 		choice1.setParent(methodParameterNode);

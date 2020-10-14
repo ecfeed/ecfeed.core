@@ -19,13 +19,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.TestCaseNode;
-
 public class ClassNodeTest extends ClassNode {
 	public ClassNodeTest(){
 		super("com.ecfeed.model.ClassNodeTest", null);
@@ -62,11 +55,11 @@ public class ClassNodeTest extends ClassNode {
 
 		int inx = 0;
 		for(String type : method1Types){
-			method1.addParameter(new MethodParameterNode("parameter" +  inx++, null, type, "0",  false));
+			method1.addParameter(new MethodParameterNode("parameter" +  inx++, type, "0", false, null));
 		}
 
 		for(String type : method2Types){
-			method2.addParameter(new MethodParameterNode("parameter" + inx++, null, type, "0",  false));
+			method2.addParameter(new MethodParameterNode("parameter" + inx++, type, "0", false, null));
 		}
 
 		classNode.addMethod(method1);

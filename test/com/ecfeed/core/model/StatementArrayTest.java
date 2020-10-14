@@ -20,13 +20,6 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.EStatementOperator;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 
@@ -45,14 +38,14 @@ public class StatementArrayTest {
 	@BeforeClass
 	public static void prepareModel(){
 		fMethod = new MethodNode("method", null);
-		fParameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
+		fParameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
 		fChoice11 = new ChoiceNode("choice11", null, null);
 		fChoice12 = new ChoiceNode("choice12", null, null);
 		fChoice13 = new ChoiceNode("choice13", null, null);
 		fParameter1.addChoice(fChoice11);
 		fParameter1.addChoice(fChoice12);
 		fParameter1.addChoice(fChoice13);
-		fParameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
+		fParameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
 		fChoice21 = new ChoiceNode("choice21", null, null);
 		fChoice22 = new ChoiceNode("choice22", null, null);
 		fChoice23 = new ChoiceNode("choice23", null, null);

@@ -148,7 +148,7 @@ public class RandomModelGenerator {
 	public MethodParameterNode generateParameter(String type, boolean expected, int choiceLevels, int choices, int labels){
 		String name = generateString(RegexHelper.REGEX_CATEGORY_NODE_NAME);
 
-		MethodParameterNode parameter = new MethodParameterNode(name, null, type, randomChoiceValue(type), expected);
+		MethodParameterNode parameter = new MethodParameterNode(name, type, randomChoiceValue(type), expected, null);
 
 		parameter.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, "X");
 		parameter.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, "Y");
