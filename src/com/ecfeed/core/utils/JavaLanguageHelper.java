@@ -781,6 +781,17 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	public static String parseJavaValueToString(String valueString, String typeName) {
+
+		final Object object = parseJavaValueToObject(valueString, typeName, ERunMode.QUIET);
+
+		if (object == null) {
+			return null;
+		}
+
+		return object.toString();
+	}
+
 	public static Object parseJavaValueToObject(String valueString, String typeName, ERunMode runMode) {
 
 		if(typeName == null || valueString == null){
@@ -989,18 +1000,6 @@ public final class JavaLanguageHelper {
 			return null;
 		}
 		return valueString;
-	}
-
-	// TODO SIMPLE-VIEW test
-	public static String parseJavaValueToString(String valueString, String typeName) {
-
-		final Object object = parseJavaValueToObject(valueString, typeName, ERunMode.QUIET);
-
-		if (object == null) {
-			return null;
-		}
-
-		return object.toString();
 	}
 
 	public static String getSubstituteType(String typeName1, String typeName2) {

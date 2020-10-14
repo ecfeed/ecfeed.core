@@ -605,7 +605,10 @@ public class JavaLanguageHelperTest {
 	@Test
 	public void parseValueToStringTest() {
 
-		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
+		String result = JavaLanguageHelper.parseJavaValueToString("a%b^c", "byte");
+		assertNull(result);
+
+		result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
 		assertEquals("11", result);
 
 		result = JavaLanguageHelper.parseJavaValueToString("12", "short");
