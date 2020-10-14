@@ -1109,7 +1109,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Short convertToShort(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);

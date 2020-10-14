@@ -764,6 +764,25 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void convertToShortTest() {
+
+		assertEquals(new Short(Short.MAX_VALUE), JavaLanguageHelper.convertToShort("32767"));
+		assertEquals(new Short(Short.MIN_VALUE), JavaLanguageHelper.convertToShort("-32768"));
+
+		try {
+			JavaLanguageHelper.convertToShort("32768");
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			JavaLanguageHelper.convertToShort("-32769");
+			fail();
+		} catch (Exception e) {
+		}
+	}
+
+	@Test
     public void isNumericTypeLager() {
 
         assertTrue(JavaLanguageHelper.isNumericTypeLarger("short", "byte"));
