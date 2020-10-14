@@ -19,6 +19,25 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
+	public static String classWithNameExists(
+			String classNameInExtLanguage,
+			RootNode rootNode,
+			IExtLanguageManager extLanguageManager) {
+
+		List<ClassNode> classes = rootNode.getClasses();
+
+		for (ClassNode node : classes) {
+
+			String existingClassNameInExtLanguage = ClassNodeHelper.getQualifiedName(node, extLanguageManager);
+
+			if (StringHelper.isEqual(classNameInExtLanguage, existingClassNameInExtLanguage)) {
+				return "Class with name: " + classNameInExtLanguage + " already exists.";
+			}
+		}
+
+		return null;
+	}
+
 	public static String generateNewClassName(RootNode rootNode, String startClassNameCore) {
 		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
 
@@ -63,26 +82,6 @@ public class RootNodeHelper {
 		}
 
 		return true;
-	}
-
-	// TODO SIMPLE-VIEW test
-	public static String classWithNameExists(
-			String classNameInExtLanguage, 
-			RootNode rootNode,
-			IExtLanguageManager extLanguageManager) {
-
-		List<ClassNode> classes = rootNode.getClasses();
-
-		for (ClassNode node : classes) {
-
-			String existingClassNameInExtLanguage = ClassNodeHelper.getQualifiedName(node, extLanguageManager);
-
-			if (StringHelper.isEqual(classNameInExtLanguage, existingClassNameInExtLanguage)) {
-				return "Class with name: " + classNameInExtLanguage + " already exists."; 
-			}
-		}
-
-		return null;
 	}
 
 }

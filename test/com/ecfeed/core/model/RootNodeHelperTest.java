@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.testutils.RandomModelGenerator;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -20,7 +21,7 @@ public class RootNodeHelperTest {
 	@Test
 	public void generateNewClassNameTest() {
 
-		RootNode rootNode = new RootNode("name", null);
+		RootNode rootNode = new RootNode("Root", null);
 		final String classNameCore = "Class";
 		String newClassName = RootNodeHelper.generateNewClassName(rootNode, classNameCore);
 		assertEquals("Class1", newClassName);
@@ -36,6 +37,18 @@ public class RootNodeHelperTest {
 
 		newClassName = RootNodeHelper.generateNewClassName(rootNode, classNameCore);
 		assertEquals("Class3", newClassName);
+	}
+
+	@Test
+	public void classWithNameExistsTest() {
+
+		RootNode rootNode = new RootNode("Root", null);
+		assertNull(RootNodeHelper.classWithNameExists("Class1",  rootNode, new ExtLanguageManagerForJava()));
+
+		ClassNode class1 = new ClassNode("Class1", null);
+		rootNode.addClass(class1);
+
+		assertNotNull(RootNodeHelper.classWithNameExists("Class1",  rootNode, new ExtLanguageManagerForJava()));
 	}
 
 }
