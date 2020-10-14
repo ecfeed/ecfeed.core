@@ -859,7 +859,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Double parseDoubleValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){

@@ -551,6 +551,15 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void parseDoubleValueTest() {
+
+		assertEquals(new Double(1.7976931348623157E308), JavaLanguageHelper.parseDoubleValue("MAX_VALUE",  ERunMode.QUIET));
+		assertEquals(new Double(4.9E-324), JavaLanguageHelper.parseDoubleValue("MIN_VALUE",  ERunMode.QUIET));
+		assertEquals(new Double(1), JavaLanguageHelper.parseDoubleValue("1",  ERunMode.QUIET));
+		assertEquals(null, JavaLanguageHelper.parseDoubleValue("a",  ERunMode.QUIET));
+	}
+
+	@Test
 	public void parseValueToStringTest() {
 
 		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
