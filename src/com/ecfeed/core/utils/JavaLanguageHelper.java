@@ -1161,7 +1161,6 @@ public final class JavaLanguageHelper {
 		return result.byteValue(); 
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Long convertToLong(String str) throws NumberFormatException {
 
 		Long result = convertToLongDirectly(str);
@@ -1186,7 +1185,6 @@ public final class JavaLanguageHelper {
 		return dblResult.longValue();
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Long convertToLongDirectly(String str) {
 
 		Long result = null;

@@ -802,6 +802,16 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void convertToLongTest() {
+
+		assertEquals(new Long(Long.MAX_VALUE), JavaLanguageHelper.convertToLong("9223372036854775807"));
+		assertEquals(new Long(Long.MIN_VALUE), JavaLanguageHelper.convertToLong("-9223372036854775808"));
+
+		assertEquals(new Long(Long.MAX_VALUE), JavaLanguageHelper.convertToLongDirectly("9223372036854775807"));
+		assertEquals(new Long(Long.MIN_VALUE), JavaLanguageHelper.convertToLongDirectly("-9223372036854775808"));
+	}
+
+	@Test
     public void isNumericTypeLager() {
 
         assertTrue(JavaLanguageHelper.isNumericTypeLarger("short", "byte"));
