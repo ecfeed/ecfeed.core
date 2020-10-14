@@ -123,7 +123,6 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isJavaKeywordExcludingTypes(String word) {
 		return Arrays.asList(JAVA_KEYWORDS_EXCLUDING_TYPES).contains(word);
 	}

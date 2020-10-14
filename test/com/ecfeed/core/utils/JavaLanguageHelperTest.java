@@ -35,6 +35,13 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void isJavaKeywordExcludingTypes() {
+
+		assertTrue(JavaLanguageHelper.isJavaKeywordExcludingTypes("switch"));
+		assertFalse(JavaLanguageHelper.isJavaKeywordExcludingTypes("int"));
+	}
+
+	@Test
 	public void isAllowedTypeTest() {
 
 		assertTrue(JavaLanguageHelper.isAllowedType("double"));
