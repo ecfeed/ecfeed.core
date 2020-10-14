@@ -513,7 +513,6 @@ public final class JavaLanguageHelper {
 		return SUPPORTED_JAVA_TYPES;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static String getStringTypeName() {
 		return TYPE_NAME_STRING;
 	}
@@ -527,13 +526,11 @@ public final class JavaLanguageHelper {
 		return !isJavaType(type);
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static String getBooleanTypeName() {
 
 		return JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isStringTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_STRING)) {
@@ -542,7 +539,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isCharTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_CHAR)) {
@@ -551,7 +547,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isBooleanTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_BOOLEAN)) {
@@ -560,7 +555,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isByteTypeName(String typeName) {
 
 		if (typeName == null) {
@@ -573,7 +567,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isIntTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_INT)) {
@@ -582,7 +575,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isShortTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_SHORT)) {
@@ -591,7 +583,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isLongTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_LONG)) {
@@ -600,7 +591,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isFloatTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_FLOAT)) {
@@ -609,7 +599,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isDoubleTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_DOUBLE)) {
@@ -618,7 +607,6 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static boolean isFloatingPointTypeName(String typeName) {
 
 		if (isFloatTypeName(typeName)) {

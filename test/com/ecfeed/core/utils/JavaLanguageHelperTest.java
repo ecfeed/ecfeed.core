@@ -331,6 +331,45 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void getTypeNamesTest() {
+
+		assertEquals("String", JavaLanguageHelper.getStringTypeName());
+		assertEquals("boolean", JavaLanguageHelper.getBooleanTypeName());
+		assertEquals("boolean", JavaLanguageHelper.getBooleanTypeName());
+
+		assertTrue(JavaLanguageHelper.isStringTypeName("String"));
+		assertFalse(JavaLanguageHelper.isStringTypeName("int"));
+
+		assertTrue(JavaLanguageHelper.isCharTypeName("char"));
+		assertFalse(JavaLanguageHelper.isCharTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isBooleanTypeName("boolean"));
+		assertFalse(JavaLanguageHelper.isBooleanTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isByteTypeName("byte"));
+		assertFalse(JavaLanguageHelper.isByteTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isIntTypeName("int"));
+		assertFalse(JavaLanguageHelper.isIntTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isShortTypeName("short"));
+		assertFalse(JavaLanguageHelper.isShortTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isLongTypeName("long"));
+		assertFalse(JavaLanguageHelper.isLongTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isFloatTypeName("float"));
+		assertFalse(JavaLanguageHelper.isLongTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isDoubleTypeName("double"));
+		assertFalse(JavaLanguageHelper.isDoubleTypeName("String"));
+
+		assertTrue(JavaLanguageHelper.isFloatingPointTypeName("float"));
+		assertTrue(JavaLanguageHelper.isFloatingPointTypeName("double"));
+		assertFalse(JavaLanguageHelper.isFloatingPointTypeName("String"));
+	}
+
+	@Test
 	public void hasLimitedValuesSetTest() {
 		assertTrue(JavaLanguageHelper.hasLimitedValuesSet("boolean"));
 		assertFalse(JavaLanguageHelper.hasLimitedValuesSet("int"));
