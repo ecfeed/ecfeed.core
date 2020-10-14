@@ -1143,7 +1143,6 @@ public final class JavaLanguageHelper {
 		return result.intValue(); 
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Byte convertToByte(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);
@@ -1346,7 +1345,6 @@ public final class JavaLanguageHelper {
 		return INVALID_JAVA_TYPE + ": " + type + ".";
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static String verifyIsAllowedType(String typeName) {
 
 		if (isAllowedType(typeName)) {
@@ -1356,7 +1354,7 @@ public final class JavaLanguageHelper {
 		return OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM;
 	}
 
-	public static String createQualifiedName(String packageName, String nonQualifiedName) { // TODO SIMPLE-VIEW test
+	public static String createQualifiedName(String packageName, String nonQualifiedName) {
 
 		if (packageName == null) {
 			return nonQualifiedName;
@@ -1368,46 +1366,5 @@ public final class JavaLanguageHelper {
 
 		return packageName + "." + nonQualifiedName;
 	}
-
-	//	public static String parseToJavaView(String text) {
-	//		String returnText = text;
-	//
-	//		returnText = returnText.trim();
-	//
-	//		if (isJavaKeyword(returnText)) {
-	//			return "_" + returnText;
-	//		}
-	//
-	//		returnText = returnText.replaceAll("_", RegexHelper.REGEX_SPECIAL_CHARACTER);
-	//
-	//		if (returnText.matches("^[0-9].*")) {
-	//			returnText = "_" + returnText;
-	//		}
-	//
-	//		while (returnText.contains("  ")) {
-	//			returnText = returnText.replaceAll("  ", " ");
-	//		}
-	//
-	//		returnText = returnText.replaceAll(" ", "_");
-	//
-	//		return returnText;
-	//	}
-
-	//	public static List<String> getEnumValuesNames(URLClassLoader loader, String enumTypeName) {
-	//		List<String> values = new ArrayList<String>();
-	//
-	//		try {
-	//			Class<?> enumType = loader.loadClass(enumTypeName);
-	//
-	//			if(enumType != null && enumType.isEnum()){
-	//				for (Object object: enumType.getEnumConstants()) {
-	//					values.add(((Enum<?>)object).name());
-	//				}
-	//			}
-	//		} catch (ClassNotFoundException e) {
-	//		}
-	//
-	//		return values;
-	//	}
 
 }

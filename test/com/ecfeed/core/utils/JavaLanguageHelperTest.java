@@ -764,6 +764,25 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void convertToByteTest() {
+
+		assertEquals(new Byte(Byte.MAX_VALUE), JavaLanguageHelper.convertToByte("127"));
+		assertEquals(new Byte(Byte.MIN_VALUE), JavaLanguageHelper.convertToByte("-128"));
+
+		try {
+			JavaLanguageHelper.convertToByte("128");
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			JavaLanguageHelper.convertToByte("-129");
+			fail();
+		} catch (Exception e) {
+		}
+	}
+
+	@Test
 	public void convertToShortTest() {
 
 		assertEquals(new Short(Short.MAX_VALUE), JavaLanguageHelper.convertToShort("32767"));
@@ -857,5 +876,13 @@ public class JavaLanguageHelperTest {
 
         assertNotNull(JavaLanguageHelper.validateBasicJavaType("User"));
     }
+
+	@Test
+	public void createQualifiedName() {
+
+		assertEquals("com.xx.User", JavaLanguageHelper.createQualifiedName("com.xx", "User"));
+		assertEquals("User", JavaLanguageHelper.createQualifiedName(null, "User"));
+		assertEquals("User", JavaLanguageHelper.createQualifiedName("", "User"));
+	}
 
 }
