@@ -176,7 +176,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static String[] getJavaKeywords() {
 
 		return JAVA_KEYWORDS;

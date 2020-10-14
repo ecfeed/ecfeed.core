@@ -110,6 +110,14 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void getJavaKeywords() {
+
+		String[] keywords = JavaLanguageHelper.getJavaKeywords();
+
+		assertEquals(53, keywords.length);
+	}
+
+	@Test
 	public void isValidTypeNameTest() {
 
         assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("boolean"));
