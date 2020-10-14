@@ -19,7 +19,7 @@ public interface IExtLanguageManager {
 	public String getQualifiedName(String qualfiedName);
 	public String checkIsModelCompatibleWithExtLanguage(RootNode rootNode);
 	public String chooseString(String stringForJavalang, String stringForSimpleLang);
-	public String verifyIsAllowedType(String typeName); // TODO SIMPLE-VIEW unit tests
+	public String verifyIsAllowedType(String typeName);
 	public String[] getSupportedTypes();
 	public boolean getPackageVisibility();
 	public String getExtendedTypeForValue(String value, String currentType);
