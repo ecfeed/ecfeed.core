@@ -587,6 +587,15 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void parseShorValueTest() {
+
+		assertEquals(new  Short(Short.MAX_VALUE), JavaLanguageHelper.parseShortValue("MAX_VALUE",  ERunMode.QUIET));
+		assertEquals(new Short(Short.MIN_VALUE), JavaLanguageHelper.parseShortValue("MIN_VALUE",  ERunMode.QUIET));
+		assertEquals(new Short((short) 1), JavaLanguageHelper.parseShortValue("1",  ERunMode.QUIET));
+		assertEquals(null, JavaLanguageHelper.parseShortValue("a",  ERunMode.QUIET));
+	}
+
+	@Test
 	public void parseValueToStringTest() {
 
 		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
