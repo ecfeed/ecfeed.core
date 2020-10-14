@@ -123,10 +123,10 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isJavaKeywordExcludingTypes(String word) {
 		return Arrays.asList(JAVA_KEYWORDS_EXCLUDING_TYPES).contains(word);
 	}
-
 
 	public static boolean isJavaKeyword(String word) {
 		return Arrays.asList(JAVA_KEYWORDS).contains(word);
@@ -177,6 +177,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String[] getJavaKeywords() {
 
 		return JAVA_KEYWORDS;
@@ -407,6 +408,7 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String getTypeName(String cannonicalName) {
 
 		if (cannonicalName.equals(boolean.class.getName())) {
@@ -514,6 +516,7 @@ public final class JavaLanguageHelper {
 		return SUPPORTED_JAVA_TYPES;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String getStringTypeName() {
 		return TYPE_NAME_STRING;
 	}
@@ -527,11 +530,13 @@ public final class JavaLanguageHelper {
 		return !isJavaType(type);
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String getBooleanTypeName() {
 
 		return JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isStringTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_STRING)) {
@@ -540,22 +545,25 @@ public final class JavaLanguageHelper {
 		return false;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isCharTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_CHAR)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isBooleanTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_BOOLEAN)) {
 			return true;
 		}
 		return false;
-	}		
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isByteTypeName(String typeName) {
 
 		if (typeName == null) {
@@ -566,48 +574,54 @@ public final class JavaLanguageHelper {
 			return true;
 		}
 		return false;
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isIntTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_INT)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isShortTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_SHORT)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isLongTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_LONG)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isFloatTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_FLOAT)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isDoubleTypeName(String typeName) {
 
 		if (typeName.equals(TYPE_NAME_DOUBLE)) {
 			return true;
 		}
 		return false;
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean isFloatingPointTypeName(String typeName) {
 
 		if (isFloatTypeName(typeName)) {
@@ -674,19 +688,6 @@ public final class JavaLanguageHelper {
 		}
 		return false;
 	}
-
-	//	public static boolean isConvertibleToNumber(String text) {
-	//
-	//		if (parseDoubleValue(text, ERunMode.QUIET) != null) {
-	//			return true;
-	//		}
-	//
-	//		if (parseLongValue(text, ERunMode.QUIET) != null) {
-	//			return true;
-	//		}
-	//
-	//		return false;
-	//	}
 
 	public static Double convertNumericToDouble(
 			String typeName, String value, ERunMode runMode) {
@@ -825,6 +826,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Boolean parseBooleanValue(String valueString) {
 
 		if(valueString.toLowerCase().equals(SPECIAL_VALUE_TRUE.toLowerCase())){
@@ -836,6 +838,7 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Byte parseByteValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -856,6 +859,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Character parseCharValue(String valueString) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -872,6 +876,7 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Double parseDoubleValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -904,6 +909,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Float parseFloatValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -936,6 +942,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Integer parseIntValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -956,6 +963,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Long parseLongValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -976,6 +984,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Short parseShortValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){
@@ -996,6 +1005,7 @@ public final class JavaLanguageHelper {
 		}
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String parseStringValue(String valueString) {
 
 		if(valueString.equals(VALUE_REPRESENTATION_NULL)){
@@ -1004,6 +1014,7 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String parseJavaValueToString(String valueString, String typeName) {
 
 		final Object object = parseJavaValueToObject(valueString, typeName, ERunMode.QUIET);
@@ -1069,7 +1080,7 @@ public final class JavaLanguageHelper {
 		return typeName1;
 	}
 
-	public static JustifyType getJustifyType(String typeName) {
+	public static JustifyType getJustifyType(String typeName) { // TODO SIMPLE-VIEW rename
 
 		if (!isJavaType(typeName)) {
 			return JustifyType.LEFT;
@@ -1123,6 +1134,7 @@ public final class JavaLanguageHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Short convertToShort(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);
@@ -1138,8 +1150,9 @@ public final class JavaLanguageHelper {
 		}		
 
 		return result.shortValue(); 
-	}	
+	}
 
+	// TODO SIMPLE-VIEW test
 	public static Integer convertToInteger(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);
@@ -1157,6 +1170,7 @@ public final class JavaLanguageHelper {
 		return result.intValue(); 
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Byte convertToByte(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);
@@ -1174,6 +1188,7 @@ public final class JavaLanguageHelper {
 		return result.byteValue(); 
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Long convertToLong(String str) throws NumberFormatException {
 
 		Long result = convertToLongDirectly(str);
@@ -1198,6 +1213,7 @@ public final class JavaLanguageHelper {
 		return dblResult.longValue();
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Long convertToLongDirectly(String str) {
 
 		Long result = null;
@@ -1359,6 +1375,7 @@ public final class JavaLanguageHelper {
 		return INVALID_JAVA_TYPE + ": " + type + ".";
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String verifyIsAllowedType(String typeName) {
 
 		if (isAllowedType(typeName)) {
