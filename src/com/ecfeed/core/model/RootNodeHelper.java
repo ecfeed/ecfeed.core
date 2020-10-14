@@ -19,11 +19,11 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
-	public static String generateNewClassName(RootNode rootNode, String startClassName) {
-		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassName);
+	public static String generateNewClassName(RootNode rootNode, String startClassNameCore) {
+		boolean defaultPackage = !QualifiedNameHelper.hasPackageName(startClassNameCore);
 
 		for (int i = 1;   ; i++) {
-			String newClassName = startClassName + String.valueOf(i);
+			String newClassName = startClassNameCore + String.valueOf(i);
 			Optional<String> validatedNewClassName = validateClassName(rootNode, newClassName, defaultPackage);
 
 			if (validatedNewClassName.isPresent()) {
