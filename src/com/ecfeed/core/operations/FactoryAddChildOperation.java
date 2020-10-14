@@ -96,10 +96,10 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		generateUniqueNameForClass(rootNode, classNode);
 
 		if (fIndex == -1) {
-			return new RootOperationAddNewClass(rootNode, classNode, fExtLanguageManager);
+			return new RootOperationAddClass(rootNode, classNode, fExtLanguageManager);
 		}
 
-		return new RootOperationAddNewClass(rootNode, classNode, fIndex, fExtLanguageManager);
+		return new RootOperationAddClass(rootNode, classNode, fIndex, fExtLanguageManager);
 	}
 	
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {

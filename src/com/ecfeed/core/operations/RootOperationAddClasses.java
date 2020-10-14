@@ -27,7 +27,7 @@ public class RootOperationAddClasses extends BulkOperation {
 		super(OperationNames.ADD_CLASSES, false, target, target, extLanguageManager);
 		
 		for(ClassNode classNode : classes){
-			addOperation(new RootOperationAddNewClass(target, classNode, index++, extLanguageManager));
+			addOperation(new RootOperationAddClass(target, classNode, index++, extLanguageManager));
 		}
 	}
 }
