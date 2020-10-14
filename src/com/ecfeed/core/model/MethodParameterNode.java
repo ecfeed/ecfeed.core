@@ -25,7 +25,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private GlobalParameterNode fLink;
 	private List<ChoiceNode> fChoicesCopy;
 
-	public MethodParameterNode(
+	public MethodParameterNode( // TODO SIMPLE-VIEW change param order
 			String name, 
 			IModelChangeRegistrator modelChangeRegistrator, 
 			String type, 
@@ -43,7 +43,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	public MethodParameterNode(
-			String name, IModelChangeRegistrator modelChangeRegistrator, 
+			String name, IModelChangeRegistrator modelChangeRegistrator, // TODO SIMPLE-VIEW change param order
 			String type, String defaultValue,
 			boolean expected) {
 

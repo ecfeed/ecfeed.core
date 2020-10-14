@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class MethodParameterNodeTest {
 
 	@Test
-	public void createParameterTest() { // TODO SIMPLE-VIEW move
+	public void createParameterTest() {
 
 		MethodParameterNode methodParameterNode;
 
