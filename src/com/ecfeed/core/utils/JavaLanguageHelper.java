@@ -406,7 +406,6 @@ public final class JavaLanguageHelper {
 		return valueString;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static String getTypeName(String cannonicalName) {
 
 		if (cannonicalName.equals(boolean.class.getName())) {

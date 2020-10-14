@@ -197,7 +197,6 @@ public class JavaLanguageHelperTest {
 		assertEquals("VALUE", value);
 	}
 
-
 	@Test
 	public void conditionallyConvertSpecialValueToNumericTest() {
 
@@ -285,6 +284,16 @@ public class JavaLanguageHelperTest {
 		// boolean
 
 		assertEquals("false", JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("boolean", "false"));
+	}
+
+	@Test
+	public void getTypeNameTest() {
+
+		assertEquals("String", JavaLanguageHelper.getTypeName("java.lang.String"));
+		assertEquals("com.User", JavaLanguageHelper.getTypeName("com.User"));
+
+		assertEquals("boolean", JavaLanguageHelper.getTypeName("boolean"));
+		assertEquals("double", JavaLanguageHelper.getTypeName("double"));
 	}
 
 	@Test
