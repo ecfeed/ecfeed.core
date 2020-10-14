@@ -943,7 +943,6 @@ public final class JavaLanguageHelper {
 		}
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Long parseLongValue(String valueString, ERunMode runMode) {
 
 		if(valueString.equals(SPECIAL_VALUE_MAX)){

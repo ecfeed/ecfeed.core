@@ -578,6 +578,15 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void parseLongValueTest() {
+
+		assertEquals(new  Long(Long.MAX_VALUE), JavaLanguageHelper.parseLongValue("MAX_VALUE",  ERunMode.QUIET));
+		assertEquals(new Long(Long.MIN_VALUE), JavaLanguageHelper.parseLongValue("MIN_VALUE",  ERunMode.QUIET));
+		assertEquals(new Long(1), JavaLanguageHelper.parseLongValue("1",  ERunMode.QUIET));
+		assertEquals(null, JavaLanguageHelper.parseLongValue("a",  ERunMode.QUIET));
+	}
+
+	@Test
 	public void parseValueToStringTest() {
 
 		Object result = JavaLanguageHelper.parseJavaValueToString("11", "byte");
