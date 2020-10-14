@@ -1126,7 +1126,6 @@ public final class JavaLanguageHelper {
 		return result.shortValue(); 
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Integer convertToInteger(String str) throws NumberFormatException {
 
 		Long result = convertToLong(str);

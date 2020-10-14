@@ -783,6 +783,25 @@ public class JavaLanguageHelperTest {
 	}
 
 	@Test
+	public void convertToIntegerTest() {
+
+		assertEquals(new Integer(Integer.MAX_VALUE), JavaLanguageHelper.convertToInteger("2147483647"));
+		assertEquals(new Integer(Integer.MIN_VALUE), JavaLanguageHelper.convertToInteger("-2147483648"));
+
+		try {
+			JavaLanguageHelper.convertToInteger("2147483648");
+			fail();
+		} catch (Exception e) {
+		}
+
+		try {
+			JavaLanguageHelper.convertToInteger("-2147483650");
+			fail();
+		} catch (Exception e) {
+		}
+	}
+
+	@Test
     public void isNumericTypeLager() {
 
         assertTrue(JavaLanguageHelper.isNumericTypeLarger("short", "byte"));
