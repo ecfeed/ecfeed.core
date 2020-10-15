@@ -19,6 +19,9 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RootNodeHelper {
 
+	public static final String CLASS_WITH_NAME = "Class with name";
+	public static final String ALREADY_EXISTS = "already exists";
+
 	public static String classWithNameExists(
 			String classNameInExtLanguage,
 			RootNode rootNode,
@@ -31,7 +34,8 @@ public class RootNodeHelper {
 			String existingClassNameInExtLanguage = ClassNodeHelper.getQualifiedName(node, extLanguageManager);
 
 			if (StringHelper.isEqual(classNameInExtLanguage, existingClassNameInExtLanguage)) {
-				return "Class with name: " + classNameInExtLanguage + " already exists.";
+				return CLASS_WITH_NAME + ": " + classNameInExtLanguage + " " +	ALREADY_EXISTS +
+						".";
 			}
 		}
 

@@ -10,10 +10,7 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ClassNodeHelper;
-import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class RootOperationAddClass extends AbstractModelOperation {
@@ -37,19 +34,25 @@ public class RootOperationAddClass extends AbstractModelOperation {
 	public void execute() throws ModelOperationException {
 
 		setOneNodeToSelect(fRootNode);
-		String name = fclassToAdd.getName();
+
+		final IExtLanguageManager extLanguageManager = getExtLanguageManager();
+
+		String name = ClassNodeHelper.getQualifiedName(fclassToAdd, extLanguageManager);
+
 		if(fAddIndex == -1){
 			fAddIndex = fRootNode.getClasses().size();
 		}
 
-		String errorMessage = ClassNodeHelper.validateClassName(name, getExtLanguageManager());
+		String errorMessage = ClassNodeHelper.validateClassName(name, extLanguageManager);
 
 		if (errorMessage != null) {
 			ModelOperationException.report(errorMessage);
 		}
-		
-		if(fRootNode.getClass(name) != null){
-			ModelOperationException.report(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
+
+		errorMessage = RootNodeHelper.classWithNameExists(name, fRootNode, extLanguageManager);
+
+		if (errorMessage != null) {
+			ModelOperationException.report(errorMessage);
 		}
 		
 		fRootNode.addClass(fclassToAdd, fAddIndex);
