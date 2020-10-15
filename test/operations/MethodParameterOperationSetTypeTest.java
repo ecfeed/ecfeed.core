@@ -54,12 +54,14 @@ public class MethodParameterOperationSetTypeTest {
 
 		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
 
-		// seting param of method2 to Number in simple mode
+		// set param of method2 to Number
+
+		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "Number", new ExtLanguageManagerForSimple(), typeAdapterProvider);
+							methodParameterNode2, "Number", extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -69,12 +71,12 @@ public class MethodParameterOperationSetTypeTest {
 					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
 		}
 
-		// seting param of method1 to Text in simple mode
+		// set param of method1 to Text
 
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "Text", new ExtLanguageManagerForSimple(), typeAdapterProvider);
+							methodParameterNode1, "Text", extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -84,18 +86,31 @@ public class MethodParameterOperationSetTypeTest {
 					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
 		}
 
-		// seting param of method1 to Logical in simple mode
+		// set param of method1 to Logical
 
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "Logical", new ExtLanguageManagerForSimple(), typeAdapterProvider);
+							methodParameterNode1, "Logical", extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
 		}
 
-		//  TODO SIMPLE-VIEW add more cases
+		// set param of method2 to logical
+
+		try {
+			MethodParameterOperationSetType methodParameterOperationSetType =
+					new MethodParameterOperationSetType(
+							methodParameterNode2, "Logical", extLanguageManagerForSimple, typeAdapterProvider);
+			methodParameterOperationSetType.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(
+					e,
+					"Class1",
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+		}
 	}
 
 }
