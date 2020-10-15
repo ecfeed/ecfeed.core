@@ -22,6 +22,7 @@ public class ClassNodeHelper {
 
 	public static final String LINK_NOT_SET_PROBLEM = "The link to global parameter is not defined";
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
+	public static final String CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE = "contains method with identical signature";
 
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
@@ -92,7 +93,9 @@ public class ClassNodeHelper {
 			errorMessage =
 					"Class: "
 							+ classSignature
-							+ " already contains method with identical signature: " + newMethodSignature + ".";
+							+ " already " +
+							CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE +
+							": " + newMethodSignature + ".";
 
 			return errorMessage;
 		}
@@ -151,7 +154,9 @@ public class ClassNodeHelper {
 		String message =
 				"Class: "
 						+ classSignature
-						+ " already contains method with identical signature: " + methodSignature + ".";
+						+ " already " +
+						CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE +
+						": " + methodSignature + ".";
 
 		return message;
 	}
