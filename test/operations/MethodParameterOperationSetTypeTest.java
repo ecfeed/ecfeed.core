@@ -197,7 +197,95 @@ public class MethodParameterOperationSetTypeTest {
 					"Class1",
 					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
 		}
-
 	}
+
+	@Test
+	public void setTypeInJavaModeForOneParam() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = new ClassNode("com.Class1", null);
+		rootNode.addClass(classNode);
+
+		// add method1 with int parameter
+
+		MethodNode methodNode1 = new MethodNode("method", null);
+		classNode.addMethod(methodNode1);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+
+		methodNode1.addParameter(methodParameterNode1);
+
+		// add method2 with String parameter
+
+		MethodNode methodNode2 = new MethodNode("method", null);
+		classNode.addMethod(methodNode2);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par1", "String", "x", false, null);
+
+		methodNode2.addParameter(methodParameterNode2);
+
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
+		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		// set param of method2 to int
+
+		try {
+			MethodParameterOperationSetType methodParameterOperationSetType =
+					new MethodParameterOperationSetType(
+							methodParameterNode2, "int", extLanguageManagerForJava, typeAdapterProvider);
+			methodParameterOperationSetType.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(
+					e,
+					"Class1",
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+		}
+
+		// set param of method1 to String
+
+		try {
+			MethodParameterOperationSetType methodParameterOperationSetType =
+					new MethodParameterOperationSetType(
+							methodParameterNode1, "String", extLanguageManagerForJava, typeAdapterProvider);
+			methodParameterOperationSetType.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(
+					e,
+					"Class1",
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+		}
+
+		// set param of method1 to boolean
+
+		try {
+			MethodParameterOperationSetType methodParameterOperationSetType =
+					new MethodParameterOperationSetType(
+							methodParameterNode1, "boolean", extLanguageManagerForJava, typeAdapterProvider);
+			methodParameterOperationSetType.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		// set param of method2 to boolean
+
+		try {
+			MethodParameterOperationSetType methodParameterOperationSetType =
+					new MethodParameterOperationSetType(
+							methodParameterNode2, "boolean", extLanguageManagerForJava, typeAdapterProvider);
+			methodParameterOperationSetType.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(
+					e,
+					"Class1",
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+		}
+	}
+
 
 }
