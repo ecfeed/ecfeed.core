@@ -13,6 +13,8 @@ package operations;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.operations.MethodParameterOperationSetType;
 import com.ecfeed.core.operations.RootOperationAddClass;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProvider;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
@@ -23,7 +25,7 @@ import static org.junit.Assert.fail;
 public class MethodParameterOperationSetTypeTest {
 
 	@Test
-	public void test1() {
+	public void setTypeInSimpleModeForOneParam() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -50,12 +52,14 @@ public class MethodParameterOperationSetTypeTest {
 
 		methodNode2.addParameter(methodParameterNode2);
 
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
+
 		// seting param of method2 to Number in simple mode
 
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "Number", new ExtLanguageManagerForSimple(), null);
+							methodParameterNode2, "Number", new ExtLanguageManagerForSimple(), typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -70,7 +74,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "Text", new ExtLanguageManagerForSimple(), null);
+							methodParameterNode1, "Text", new ExtLanguageManagerForSimple(), typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -82,14 +86,14 @@ public class MethodParameterOperationSetTypeTest {
 
 		// seting param of method1 to Logical in simple mode
 
-//		try {
-//			MethodParameterOperationSetType methodParameterOperationSetType =
-//					new MethodParameterOperationSetType(
-//							methodParameterNode1, "Logical", new ExtLanguageManagerForSimple(), null);
-//			methodParameterOperationSetType.execute();
-//		} catch (Exception e) {
-//			fail();
-//		}
+		try {
+			MethodParameterOperationSetType methodParameterOperationSetType =
+					new MethodParameterOperationSetType(
+							methodParameterNode1, "Logical", new ExtLanguageManagerForSimple(), typeAdapterProvider);
+			methodParameterOperationSetType.execute();
+		} catch (Exception e) {
+			fail();
+		}
 
 		//  TODO SIMPLE-VIEW add more cases
 	}

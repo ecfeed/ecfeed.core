@@ -27,6 +27,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
@@ -85,6 +86,10 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_TYPE, extLanguageManager);
+
+		if (adapterProvider == null) {
+			ExceptionHelper.reportRuntimeException("Type adapter is empty.");
+		}
 
 		fTarget = target;
 		fNewTypeInExtLanguage = newType;
