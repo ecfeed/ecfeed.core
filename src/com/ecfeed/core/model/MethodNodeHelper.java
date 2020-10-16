@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
@@ -310,6 +311,105 @@ public class MethodNodeHelper {
 		}
 
 		return result;
+	}
+
+	// TODO SIMPLE-VIEW move to helper and test
+	public static MethodParameterNode createNewParameter(
+			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		String name = MethodNodeHelper.generateNewParameterName(methodNode);
+
+		String type = MethodNodeHelper.findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
+
+		String defaultValue = JavaLanguageHelper.getDefaultValue(type);
+
+		MethodParameterNode parameter = 
+				new MethodParameterNode(name, type, defaultValue, false, methodNode.getModelChangeRegistrator());
+
+		return parameter;
+	}
+
+	public static String generateNewParameterName(ParametersParentNode parametersParentNode) { // TODO SIMPLE-VIEW ParametersParentNode
+
+		int i = 0;
+
+		String name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
+
+		while(parametersParentNode.getParameter(name) != null) {
+			name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
+		}
+
+		return name;
+	}
+
+
+	// TODO SIMPLE-VIEW move to helper
+	public static String findNotUsedJavaTypeForParameter(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		ClassNode classNode = methodNode.getClassNode();
+
+		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
+
+		for (String type : typeListInExtLanguage) {
+			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
+				type = extLanguageManager.convertTypeFromExtToIntrLanguage(type);
+				return type;
+			}
+		}
+
+		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
+
+		return userType;
+	}
+
+	// TODO SIMPLE-VIEW move to method node helper
+	private static boolean isNewTypeUsed(
+			String typeForLastParameter, ClassNode classNode, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		List<String> parameterTypesInExternalLanguage = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+		parameterTypesInExternalLanguage.add(typeForLastParameter);
+
+		String methodNameInExternalLanguage = MethodNodeHelper.getName(methodNode, extLanguageManager);
+
+		MethodNode foundMethodNode = 
+				ClassNodeHelper.findMethodByExtLanguage(
+						classNode,
+						methodNameInExternalLanguage,
+						parameterTypesInExternalLanguage,
+						extLanguageManager);
+
+		if (foundMethodNode != null) {
+			return true;
+		}
+
+		return false;
+	}
+
+	// TODO SIMPLE-VIEW move to helper
+	public static String findNewUserTypeForJavaLanguage(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		ClassNode classNode = methodNode.getClassNode();
+
+		String startUserType = extLanguageManager.chooseString(
+				CommonConstants.DEFAULT_USER_TYPE_FOR_JAVA, CommonConstants.DEFAULT_USER_TYPE_FOR_SIMPLE);
+
+		String type = startUserType; 
+		int i = 0;
+
+		while (true) {
+
+			List<String> newTypes = methodNode.getParameterTypes();
+			newTypes.add(type);
+
+			if (classNode.findMethodWithTheSameSignature(methodNode.getName(), newTypes) == null) {
+				break;
+
+			} else {
+				type = startUserType + i++;
+			}
+		}
+
+		return type;
 	}
 
 }
