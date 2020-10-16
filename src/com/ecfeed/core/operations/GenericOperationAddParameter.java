@@ -62,7 +62,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			ModelOperationException.report(OperationMessages.TOO_HIGH_INDEX_PROBLEM);
 		}
 		if(fParametersParentNode.getParameter(parameterName) != null){
-			ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
+			ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
 		fParametersParentNode.addParameter(fAbstractParameterNode, fNewIndex);

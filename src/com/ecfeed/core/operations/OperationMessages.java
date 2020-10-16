@@ -25,7 +25,7 @@ public class OperationMessages {
 
 	public static final String UNEXPECTED_PROBLEM_WHILE_REMOVING_ELEMENT = "Element could not be removed from the model.";
 
-	public static final String CATEGORY_NAME_DUPLICATE_PROBLEM = "A parameter with this name already exists in the element.";
+	public static final String PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS = "A parameter with this name already exists.";
 
 	public static final String CATEGORY_TYPE_REGEX_PROBLEM = "Parameter type must be a valid type identifier in Java, i.e. it must be either a primitive type name or String or a valid qualified type name of user type";
 

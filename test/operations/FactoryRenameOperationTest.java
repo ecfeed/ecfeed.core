@@ -13,6 +13,7 @@ package operations;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.operations.FactoryRenameOperation;
 import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.operations.RootOperationAddClass;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
@@ -245,6 +246,92 @@ public class FactoryRenameOperationTest {
 		}
 	}
 
+	@Test
+	public void renameParameterTest() {
 
-	// TODO SIMPLE-VIEW rename parameter
+		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = new ClassNode("com.Class1", null);
+		rootNode.addClass(classNode);
+
+		// add method1 with int parameter
+
+		MethodNode methodNode1 = new MethodNode("method1", null);
+		classNode.addMethod(methodNode1);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode1.addParameter(methodParameterNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "String", "0", false, null);
+		methodNode1.addParameter(methodParameterNode2);
+
+		// rename in simple mode - the same parameter name - should fail
+
+		IModelOperation operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"par1",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+		}
+
+		// rename in java mode - the same parameter name - should fail
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"par1",
+						extLanguageManagerForJava);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+		}
+
+		// rename in simple mode - other parameter name - should suceed
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"par1b",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		// rename in java mode - other parameter name - should succeed
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"par1c",
+						extLanguageManagerForJava);
+
+		try {
+			operation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+	}
+
 }

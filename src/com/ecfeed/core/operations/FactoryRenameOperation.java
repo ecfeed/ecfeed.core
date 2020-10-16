@@ -144,7 +144,7 @@ public class FactoryRenameOperation {
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
 			if(target.getParametersParent().getParameter(newName) != null){
-				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
+				ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
 	}
@@ -178,7 +178,7 @@ public class FactoryRenameOperation {
 			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
 
 			if(method.getParameter(newNameInIntrLanguage) != null){
-				ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
+				ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
 	}
