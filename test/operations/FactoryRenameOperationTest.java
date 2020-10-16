@@ -11,6 +11,7 @@
 package operations;
 
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.operations.FactoryRenameOperation;
@@ -77,6 +78,85 @@ public class FactoryRenameOperationTest {
 		}
 	}
 
-	// TODO SIMPLE-VIEW rename method
+	@Test
+	public void renameMethodWithoutParametersTest() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add class1
+
+		ClassNode classNode = new ClassNode("com.Class1", null);
+		rootNode.addClass(classNode);
+
+		MethodNode methodNode1 = new MethodNode("method1", null);
+		classNode.addMethod(methodNode1);
+
+		MethodNode methodNode2 = new MethodNode("method2", null);
+		classNode.addMethod(methodNode2);
+
+		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		// rename in simple mode - the same method name
+
+		IModelOperation operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodNode2,
+						null,
+						"method1",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+		}
+
+		// rename in java mode - the same method name
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodNode2,
+						null,
+						"method1",
+						extLanguageManagerForJava);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+		}
+
+		// rename in simple mode - the other method name
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodNode2,
+						null,
+						"method2b",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		// rename in java mode - the other method name
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodNode2,
+						null,
+						"method2c",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+	}
+
 	// TODO SIMPLE-VIEW rename parameter
 }
