@@ -15,6 +15,7 @@ public final class SimpleLanguageHelper {
 	public static final String SPECIAL_VALUE_NEGATIVE_INF_SIMPLE = "-Infinity";
 	public static final String SPECIAL_VALUE_POSITIVE_INF_SIMPLE = "Infinity";
 	public static final String INVALID_SIMPLE_TYPE = "Invalid simple type";
+	public static final String UNDERLINE_CHARS_ARE_NOT_ALLOWED = "Underline chars are not allowed.";
 
 	public static String DEFAULT_PACKAGE = "(default package)";
 
@@ -27,7 +28,7 @@ public final class SimpleLanguageHelper {
 	public static String verifySeparators(String name) {
 
 		if (name.contains("_")) {
-			return "Underline chars are not allowed in name.";
+			return UNDERLINE_CHARS_ARE_NOT_ALLOWED;
 		}
 
 		if (name.startsWith(" ")) {
@@ -150,7 +151,7 @@ public final class SimpleLanguageHelper {
 	public static String convertTextFromSimpleToJavaLanguage(String text1) {
 
 		if (text1.contains("_")) {
-			ExceptionHelper.reportRuntimeException("Underline chars are not allowed in simple view.");
+			ExceptionHelper.reportRuntimeException(UNDERLINE_CHARS_ARE_NOT_ALLOWED);
 		}
 
 		String result = text1.replace(" ", "_");

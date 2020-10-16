@@ -15,9 +15,7 @@ import com.ecfeed.core.operations.FactoryRenameOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.operations.RootOperationAddClass;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import com.ecfeed.core.utils.TestHelper;
+import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -317,6 +315,38 @@ public class FactoryRenameOperationTest {
 			fail();
 		}
 
+		// rename in simple mode - invalid name 1 - should fail
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"par_1b",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, SimpleLanguageHelper.UNDERLINE_CHARS_ARE_NOT_ALLOWED);
+		}
+
+		// rename in simple mode - invalid name 2 - should fail
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"par1b+",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, RegexHelper.SHOULD_CONTAIN_ALPHANUMERIC_CHARACTERS);
+		}
+
 		// rename in java mode - other parameter name - should succeed
 
 		operation =
@@ -330,6 +360,38 @@ public class FactoryRenameOperationTest {
 			operation.execute();
 		} catch (Exception e) {
 			fail();
+		}
+
+		// rename in java mode - invalid name 1 - should fail
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"par 1c",
+						extLanguageManagerForJava);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, JavaLanguageHelper.SPACES_ARE_NOT_ALLOWED_IN_NAME);
+		}
+
+		// rename in java mode - invalid name 1 - should fail
+
+		operation =
+				FactoryRenameOperation.getRenameOperation(
+						methodParameterNode2,
+						null,
+						"p=ar1c",
+						extLanguageManagerForJava);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, RegexHelper.SHOULD_CONTAIN_ALPHANUMERIC_CHARACTERS);
 		}
 
 	}

@@ -109,11 +109,12 @@ public final class JavaLanguageHelper {
 
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
 	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier.";
+	public static final String SPACES_ARE_NOT_ALLOWED_IN_NAME = "Spaces are not allowed in name.";
 
 	public static String verifySeparators(String text) {
 
 		if (text.contains(" ")) {
-			return ("Spaces are not allowed in name.");
+			return SPACES_ARE_NOT_ALLOWED_IN_NAME;
 		}
 
 		if (text.startsWith("_")) {

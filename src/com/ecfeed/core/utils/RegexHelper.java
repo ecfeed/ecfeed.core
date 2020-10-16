@@ -37,6 +37,7 @@ public class RegexHelper {
 	public static final String REGEX_USER_TYPE_VALUE = REGEX_JAVA_IDENTIFIER;
 	public static final String REGEX_STRING_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]{0,1024}";
 	public static final String REGEX_CHAR_TYPE_VALUE = "[" + REGEX_SPECIAL_CHARACTER + "A-Za-z1-9 !@#$%^&*()_+=;':,.<>/?]";
+	public static final String SHOULD_CONTAIN_ALPHANUMERIC_CHARACTERS = "should contain alphanumeric characters";
 
 	public static String createMessageAllowedCharsForClass(IExtLanguageManager extLanguageManager) {
 
@@ -57,7 +58,9 @@ public class RegexHelper {
 
 		String separator = extLanguageManager.chooseString("_", "[SPACE]");
 
-		String message = nodeName + " name should contain alphanumeric charactes or: " + separator	+ " $ . Name should not start with digits.";
+		String message = nodeName + " name " +
+				SHOULD_CONTAIN_ALPHANUMERIC_CHARACTERS +
+				" or: " + separator	+ " $ . Name should not start with digits.";
 
 		return message;
 	}
