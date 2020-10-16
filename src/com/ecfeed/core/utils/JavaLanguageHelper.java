@@ -493,10 +493,17 @@ public final class JavaLanguageHelper {
 		}
 
 		StringTokenizer tokenizer = new StringTokenizer(name, ".");
+		boolean isFirstToken = true;
 
 		while (tokenizer.hasMoreTokens()) {
 
 			String segment = tokenizer.nextToken();
+
+			if (isFirstToken && StringHelper.isEqual("default", segment)) {
+				isFirstToken = false;
+				continue;
+			}
+			isFirstToken = false;
 
 			if (isJavaKeywordExcludingTypes(segment)) {
 				return false;

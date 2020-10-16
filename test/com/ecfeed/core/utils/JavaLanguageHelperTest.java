@@ -124,6 +124,7 @@ public class JavaLanguageHelperTest {
         assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("String"));
         assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("int"));
         assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("Integer"));
+		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("default.UserType"));
 		assertTrue(JavaLanguageHelper.isValidComplexTypeIdentifier("com.ecfeed.Xx"));
 		assertFalse(JavaLanguageHelper.isValidComplexTypeIdentifier("com.ecfeed.X*x"));
 	}
