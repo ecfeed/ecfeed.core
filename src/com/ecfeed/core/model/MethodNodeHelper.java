@@ -232,7 +232,6 @@ public class MethodNodeHelper {
 
 	}	
 
-
 	private static String createSignaturesOfParametersByIntrLanguage(
 			List<String> parameterTypesInIntrLanguage,
 			List<String> parameterNames,
@@ -281,7 +280,6 @@ public class MethodNodeHelper {
 		return expectedFlags;
 	}
 
-
 	private static boolean isValid(String name) {
 
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
@@ -291,6 +289,7 @@ public class MethodNodeHelper {
 		return true;
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static Set<String> getConstraintNames(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		Set<String> constraintNames = methodNode.getConstraintsNames();
@@ -319,7 +318,7 @@ public class MethodNodeHelper {
 
 		String name = MethodNodeHelper.generateNewParameterName(methodNode);
 
-		String type = MethodNodeHelper.findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
+		String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(methodNode, extLanguageManager);
 
 		String defaultValue = JavaLanguageHelper.getDefaultValue(type);
 
@@ -352,7 +351,7 @@ public class MethodNodeHelper {
 
 		for (String type : typeListInExtLanguage) {
 			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
-				type = extLanguageManager.convertTypeFromExtToIntrLanguage(type);
+				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
 				return type;
 			}
 		}

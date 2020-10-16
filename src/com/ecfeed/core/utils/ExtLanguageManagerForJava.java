@@ -73,6 +73,16 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
+	public String convertToMinimalTypeFromExtToIntrLanguage(String type) {
+
+		if (!JavaLanguageHelper.isJavaType(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
+		}
+
+		return type;
+	}
+
+	@Override
 	public String conditionallyConvertSpecialValueToExtLanguage(
 			String valueInIntrLanguage, String typeInIntrLanguage) {
 

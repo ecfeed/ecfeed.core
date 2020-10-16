@@ -76,7 +76,31 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		type = SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType(type);
 
 		if (!JavaLanguageHelper.isJavaType(type)) {
-			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
+			ExceptionHelper.reportRuntimeException("Attempt to convert non simple type.");
+		}
+
+		return type;
+	}
+
+	@Override
+	public String convertToMinimalTypeFromExtToIntrLanguage(String type) {
+
+		// TODO SIMPLE-VIEW move to helper
+
+		if (StringHelper.isEqual("Number", type)) {
+			return "byte";
+		}
+
+		if (StringHelper.isEqual("Text", type)) {
+			return "char";
+		}
+
+		if (StringHelper.isEqual("Logical", type)) {
+			return "boolean";
+		}
+
+		if (!JavaLanguageHelper.isJavaType(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to convert non simple type.");
 		}
 
 		return type;

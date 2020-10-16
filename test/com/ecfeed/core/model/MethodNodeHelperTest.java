@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -300,4 +301,38 @@ public class MethodNodeHelperTest {
 		assertEquals("Number param 1, [e]Number param 2", signature);
 	}
 
+	@Test
+	public void createNewParameterForSimpleTest() {
+
+		IExtLanguageManager  extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		IExtLanguageManager  extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		ClassNode classNode = new ClassNode("class1", null);
+
+		// add method 1
+
+		MethodNode methodNode1a = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode1a);
+
+		MethodParameterNode methodParameterNode1a =
+				MethodNodeHelper.createNewParameter(methodNode1a, extLanguageManagerForSimple);
+
+		assertEquals("char",  methodParameterNode1a.getType());
+
+		methodNode1a.addParameter(methodParameterNode1a);
+
+		// add method 2
+
+		MethodNode methodNode1b = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode1b);
+
+		MethodParameterNode methodParameterNode1b =
+				MethodNodeHelper.createNewParameter(methodNode1b, extLanguageManagerForSimple);
+
+		assertEquals("byte",  methodParameterNode1b.getType());
+
+		methodNode1b.addParameter(methodParameterNode1b);
+
+		// TODO SIMPLE-VIEW add succesive types - logical and user
+	}
 }

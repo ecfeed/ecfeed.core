@@ -12,7 +12,10 @@ public interface IExtLanguageManager {
 	public String convertTextFromIntrToExtLanguage(String text);
 	public String convertTypeFromIntrToExtLanguage(String type);
 	public String convertTypeFromExtToIntrLanguage(String type);
-	public String conditionallyConvertSpecialValueToExtLanguage(String valueInIntrLanguage, String typeInIntrLanguage);
+
+    String convertToMinimalTypeFromExtToIntrLanguage(String type);
+
+    public String conditionallyConvertSpecialValueToExtLanguage(String valueInIntrLanguage, String typeInIntrLanguage);
 	public List<String> getSymbolicNamesOfSpecialValues(String typeName);
 	public String[] createListListOfSupportedTypes();
 	public String getPackageName(String name);
