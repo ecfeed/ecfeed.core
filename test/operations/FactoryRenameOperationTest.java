@@ -397,11 +397,9 @@ public class FactoryRenameOperationTest {
 	}
 
 	@Test
-	public void renameChoiceTest() {
+	public void renameChoiceForSimpleViewTest() {
 
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-//		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
-
 
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode("par1", "int", "0", false, null);
@@ -425,7 +423,7 @@ public class FactoryRenameOperationTest {
 			operation.execute();
 			fail();
 		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, "?");
+			TestHelper.checkExceptionMessage(e, FactoryRenameOperation.PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 		}
 	}
 
