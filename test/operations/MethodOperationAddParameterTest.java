@@ -145,7 +145,6 @@ public class MethodOperationAddParameterTest {
 					e,
 					"com.class1",
 					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
-
 		}
 	}
 
