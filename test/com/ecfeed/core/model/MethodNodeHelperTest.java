@@ -305,11 +305,10 @@ public class MethodNodeHelperTest {
 	public void createNewParameterForSimpleTest() {
 
 		IExtLanguageManager  extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-		IExtLanguageManager  extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		// add method 1
+		// add method 1 - char
 
 		MethodNode methodNode1a = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1a);
@@ -321,7 +320,7 @@ public class MethodNodeHelperTest {
 
 		methodNode1a.addParameter(methodParameterNode1a);
 
-		// add method 2
+		// add method 2 - byte
 
 		MethodNode methodNode1b = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1b);
@@ -333,6 +332,40 @@ public class MethodNodeHelperTest {
 
 		methodNode1b.addParameter(methodParameterNode1b);
 
-		// TODO SIMPLE-VIEW add succesive types - logical and user
+		// add method 3 - boolean
+
+		MethodNode methodNode1c = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode1c);
+
+		MethodParameterNode methodParameterNode1c =
+				MethodNodeHelper.createNewParameter(methodNode1c, extLanguageManagerForSimple);
+
+		assertEquals("boolean",  methodParameterNode1c.getType());
+
+		methodNode1c.addParameter(methodParameterNode1c);
+
+		// add method 4 - user type
+
+		MethodNode methodNode1d = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode1d);
+
+		MethodParameterNode methodParameterNode1d =
+				MethodNodeHelper.createNewParameter(methodNode1d, extLanguageManagerForSimple);
+
+		assertEquals("UserType",  methodParameterNode1d.getType());
+
+		methodNode1d.addParameter(methodParameterNode1d);
+
+		// add method 4 - user type 2
+
+		MethodNode methodNode1e = new MethodNode("method_1", null);
+		classNode.addMethod(methodNode1e);
+
+		MethodParameterNode methodParameterNode1e =
+				MethodNodeHelper.createNewParameter(methodNode1e, extLanguageManagerForSimple);
+
+		assertEquals("UserType0",  methodParameterNode1e.getType());
+
+		methodNode1e.addParameter(methodParameterNode1e);
 	}
 }
