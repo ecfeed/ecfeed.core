@@ -60,10 +60,11 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newName) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
+
 
 			String nonQualifiedNameInIntrLangage = 
-					getExtLanguageManager().convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);
+					getExtLanguageManager().convertTextFromExtToIntrLanguage(newNameInExtLanguage);
 
 			String newNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(fNewPackageName, nonQualifiedNameInIntrLangage);
 
@@ -138,12 +139,13 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newName) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
+
 			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
-			if(JavaLanguageHelper.isJavaKeyword(newName)){
+			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
-			if(target.getParametersParent().getParameter(newName) != null){
+			if(target.getParametersParent().getParameter(newNameInExtLanguage) != null){
 				ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
@@ -200,11 +202,9 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newNameInIntrLanguage)throws ModelOperationException{
+		protected void verifyNewName(String newNameInExtLanguage)throws ModelOperationException{
 
-			//			newNameInIntrLanguage = ExtLanguageHelper.convertTextFromExtToIntrLanguage(newNameInIntrLanguage, fExtLanguageManager);
-
-			if(getOwnNode().getSibling(newNameInIntrLanguage) != null){
+			if(getOwnNode().getSibling(newNameInExtLanguage) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}
 		}

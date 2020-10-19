@@ -114,7 +114,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return fOriginalPackageName;
 	}
 
-	protected void verifyNewName(String newNameInIntrLanguage) throws ModelOperationException{
+	protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException{
 	}
 
 	private static void verifyNameWithJavaRegex(
