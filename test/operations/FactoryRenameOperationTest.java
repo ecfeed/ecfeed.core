@@ -396,4 +396,37 @@ public class FactoryRenameOperationTest {
 
 	}
 
+	@Test
+	public void renameChoiceTest() {
+
+		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+//		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+
+		MethodParameterNode methodParameterNode =
+				new MethodParameterNode("par1", "int", "0", false, null);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice 1", null, "1");
+		methodParameterNode.addChoice(choiceNode1);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("choice 2", null, "2");
+		methodParameterNode.addChoice(choiceNode2);
+
+		// rename in java mode - invalid name 1 - should fail
+
+		IModelOperation operation =
+				FactoryRenameOperation.getRenameOperation(
+						choiceNode2,
+						null,
+						"choice 1",
+						extLanguageManagerForSimple);
+
+		try {
+			operation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, "?");
+		}
+	}
+
 }

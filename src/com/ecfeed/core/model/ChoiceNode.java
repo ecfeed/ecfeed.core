@@ -28,14 +28,14 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	private ChoiceNode fOrigChoiceNode = null;
 
-	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value) {
+	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value) { // TODO SIMPLE-VIEW move change registrator
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
 	}
 
-	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value, boolean isRandomized) {
+	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value, boolean isRandomized) { // TODO SIMPLE-VIEW move change registrator
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<>();
