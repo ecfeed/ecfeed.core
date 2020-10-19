@@ -19,31 +19,58 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.TestHelper;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class MethodOperationAddParameterTest {
 
 	@Test
-	public void test1() {
+	public void addParameterForSingle() {
 
-		RootNode rootNode = new RootNode("Root", null);
+		IExtLanguageManager  extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
-		ClassNode classNode = new ClassNode("com.Class1", null);
-		rootNode.addClass(classNode);
+		ClassNode classNode = new ClassNode("class1", null);
 
-		// method 1
+		// add method with int parameter
 
-		MethodNode methodNode1 = new MethodNode("method1", null);
+		MethodNode methodNode1 = new MethodNode("method", null);
 		classNode.addMethod(methodNode1);
 
-		// TODO SIMPLE-VIEW
-//		MethodInterface methodInterface
-//		MethodOperationAddParameter methodOperationAddParameter =
-//				new MethodOperationAddParameter(
-//				methodNode1,
-//				MethodParameterNode methodParameterNode,
-//		IExtLanguageManager extLanguageManager) {
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("arg0", "int", "0", false, null);
 
+		MethodOperationAddParameter methodOperationAddParameter1 =
+				new MethodOperationAddParameter(
+					methodNode1,
+					methodParameterNode1,
+					extLanguageManagerForSimple);
+
+		try {
+			methodOperationAddParameter1.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		// again add method with long parameter - should fail in simple mode
+
+		MethodNode methodNode2 = new MethodNode("method", null);
+		classNode.addMethod(methodNode2);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("arg0", "long", "0", false, null);
+
+		MethodOperationAddParameter methodOperationAddParameter2 =
+				new MethodOperationAddParameter(
+						methodNode2,
+						methodParameterNode2,
+						extLanguageManagerForSimple);
+
+		try {
+			methodOperationAddParameter2.execute();
+			fail();
+		} catch (Exception e) {
+
+		}
 
 
 	}

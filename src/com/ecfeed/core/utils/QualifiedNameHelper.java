@@ -15,14 +15,17 @@ public class QualifiedNameHelper {
 
 	public static final String PACKAGE_CLASS_SEPARATOR = ".";
 
+	// TODO SIMPLE-VIEW test
 	public static String getPackage(String packageWithClass) {
 		return StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);		
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static String getNonQualifiedName(String qualifiedName) {
-		return StringHelper.getLastToken(qualifiedName, PACKAGE_CLASS_SEPARATOR);
+		return StringHelper.getLastTokenOrInputString(qualifiedName, PACKAGE_CLASS_SEPARATOR);
 	}
 
+	// TODO SIMPLE-VIEW test
 	public static boolean hasPackageName(String packageWithClass) {
 		String trimmedPackageWithClass = packageWithClass.trim();
 

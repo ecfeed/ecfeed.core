@@ -496,7 +496,6 @@ public class MethodNodeHelperTest {
 		assertEquals("default.UserType",  methodParameterNode10.getType());
 
 		methodNode10.addParameter(methodParameterNode10);
-
 	}
 
 }
