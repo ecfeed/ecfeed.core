@@ -368,4 +368,135 @@ public class MethodNodeHelperTest {
 
 		methodNode1e.addParameter(methodParameterNode1e);
 	}
+
+	@Test
+	public void createNewParameterForJavaTest() {
+
+		IExtLanguageManager  extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		ClassNode classNode = new ClassNode("class1", null);
+
+		// add method 1 - int
+
+		MethodNode methodNode1 = new MethodNode("method", null);
+		classNode.addMethod(methodNode1);
+
+		MethodParameterNode methodParameterNode1 =
+				MethodNodeHelper.createNewParameter(methodNode1, extLanguageManagerForJava);
+
+		assertEquals("int",  methodParameterNode1.getType());
+
+		methodNode1.addParameter(methodParameterNode1);
+
+		// add method 2 - byte
+
+		MethodNode methodNode2 = new MethodNode("method", null);
+		classNode.addMethod(methodNode2);
+
+		MethodParameterNode methodParameterNode2 =
+				MethodNodeHelper.createNewParameter(methodNode2, extLanguageManagerForJava);
+
+		assertEquals("byte",  methodParameterNode2.getType());
+
+		methodNode2.addParameter(methodParameterNode2);
+
+		// add method 3 - short
+
+		MethodNode methodNode3 = new MethodNode("method", null);
+		classNode.addMethod(methodNode3);
+
+		MethodParameterNode methodParameterNode3 =
+				MethodNodeHelper.createNewParameter(methodNode3, extLanguageManagerForJava);
+
+		assertEquals("short",  methodParameterNode3.getType());
+
+		methodNode3.addParameter(methodParameterNode3);
+
+		// add method 4 - long
+
+		MethodNode methodNode4 = new MethodNode("method", null);
+		classNode.addMethod(methodNode4);
+
+		MethodParameterNode methodParameterNode4 =
+				MethodNodeHelper.createNewParameter(methodNode4, extLanguageManagerForJava);
+
+		assertEquals("long",  methodParameterNode4.getType());
+
+		methodNode4.addParameter(methodParameterNode4);
+
+		// add method 5 - float
+
+		MethodNode methodNode5 = new MethodNode("method", null);
+		classNode.addMethod(methodNode5);
+
+		MethodParameterNode methodParameterNode5 =
+				MethodNodeHelper.createNewParameter(methodNode5, extLanguageManagerForJava);
+
+		assertEquals("float",  methodParameterNode5.getType());
+
+		methodNode5.addParameter(methodParameterNode5);
+
+		// add method 6
+
+		MethodNode methodNode6 = new MethodNode("method", null);
+		classNode.addMethod(methodNode6);
+
+		MethodParameterNode methodParameterNode6 =
+				MethodNodeHelper.createNewParameter(methodNode6, extLanguageManagerForJava);
+
+		assertEquals("double",  methodParameterNode6.getType());
+
+		methodNode6.addParameter(methodParameterNode6);
+
+		// add method 7
+
+		MethodNode methodNode7 = new MethodNode("method", null);
+		classNode.addMethod(methodNode7);
+
+		MethodParameterNode methodParameterNode7 =
+				MethodNodeHelper.createNewParameter(methodNode7, extLanguageManagerForJava);
+
+		assertEquals("String",  methodParameterNode7.getType());
+
+		methodNode7.addParameter(methodParameterNode7);
+
+
+		// add method 8
+
+		MethodNode methodNode8 = new MethodNode("method", null);
+		classNode.addMethod(methodNode8);
+
+		MethodParameterNode methodParameterNode8 =
+				MethodNodeHelper.createNewParameter(methodNode8, extLanguageManagerForJava);
+
+		assertEquals("char",  methodParameterNode8.getType());
+
+		methodNode8.addParameter(methodParameterNode8);
+
+		// add method 9
+
+		MethodNode methodNode9 = new MethodNode("method", null);
+		classNode.addMethod(methodNode9);
+
+		MethodParameterNode methodParameterNode9 =
+				MethodNodeHelper.createNewParameter(methodNode9, extLanguageManagerForJava);
+
+		assertEquals("boolean",  methodParameterNode9.getType());
+
+		methodNode9.addParameter(methodParameterNode9);
+
+		// add method 10
+
+		MethodNode methodNode10 = new MethodNode("method", null);
+		classNode.addMethod(methodNode10);
+
+		MethodParameterNode methodParameterNode10 =
+				MethodNodeHelper.createNewParameter(methodNode10, extLanguageManagerForJava);
+
+		assertEquals("default.UserType",  methodParameterNode10.getType());
+
+		methodNode10.addParameter(methodParameterNode10);
+
+	}
+
 }
