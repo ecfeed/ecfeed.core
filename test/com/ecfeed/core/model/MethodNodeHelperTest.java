@@ -498,4 +498,45 @@ public class MethodNodeHelperTest {
 		methodNode10.addParameter(methodParameterNode10);
 	}
 
+	@Test
+	public void createTwoParametersForJavaTest() {
+
+		IExtLanguageManager  extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		ClassNode classNode = new ClassNode("class1", null);
+
+		// add method 1 - parameters int, int
+
+		MethodNode methodNode1 = new MethodNode("method", null);
+		classNode.addMethod(methodNode1);
+
+		MethodParameterNode methodParameterNode11 =
+				MethodNodeHelper.createNewParameter(methodNode1, extLanguageManagerForJava);
+
+		assertEquals("int",  methodParameterNode11.getType());
+		methodNode1.addParameter(methodParameterNode11);
+
+		MethodParameterNode methodParameterNode12 =
+				MethodNodeHelper.createNewParameter(methodNode1, extLanguageManagerForJava);
+
+		assertEquals("int",  methodParameterNode12.getType());
+		methodNode1.addParameter(methodParameterNode12);
+
+		// add method 2 - parameters int, byte
+
+		MethodNode methodNode2 = new MethodNode("method", null);
+		classNode.addMethod(methodNode2);
+
+		MethodParameterNode methodParameterNode21 =
+				MethodNodeHelper.createNewParameter(methodNode2, extLanguageManagerForJava);
+
+		assertEquals("int",  methodParameterNode21.getType());
+		methodNode2.addParameter(methodParameterNode21);
+
+		MethodParameterNode methodParameterNode22 =
+				MethodNodeHelper.createNewParameter(methodNode2, extLanguageManagerForJava);
+
+		assertEquals("byte",  methodParameterNode22.getType());
+		methodNode2.addParameter(methodParameterNode22);
+	}
 }

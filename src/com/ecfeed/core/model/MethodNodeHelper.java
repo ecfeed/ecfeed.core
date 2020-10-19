@@ -341,8 +341,6 @@ public class MethodNodeHelper {
 		return name;
 	}
 
-
-	// TODO SIMPLE-VIEW move to helper
 	public static String findNotUsedJavaTypeForParameter(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		ClassNode classNode = methodNode.getClassNode();
@@ -361,7 +359,6 @@ public class MethodNodeHelper {
 		return userType;
 	}
 
-	// TODO SIMPLE-VIEW move to method node helper
 	private static boolean isNewTypeUsed(
 			String typeForLastParameter, ClassNode classNode, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
