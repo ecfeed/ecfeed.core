@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.BooleanHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class AbstractNode{
@@ -29,6 +30,12 @@ public abstract class AbstractNode{
 	protected final List<AbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<AbstractNode>();
 
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
+
+		String errorMessage = JavaLanguageHelper.verifySeparators(name);
+
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+		}
 
 		fName = name;
 		fModelChangeRegistrator = modelChangeRegistrator;
@@ -71,7 +78,11 @@ public abstract class AbstractNode{
 	public void setName(String name, boolean checkName) {
 		
 		if (checkName ) {
-			JavaLanguageHelper.verifySeparators(name);
+			String errorMessage = JavaLanguageHelper.verifySeparators(name);
+
+			if (errorMessage != null) {
+				ExceptionHelper.reportRuntimeException(errorMessage);
+			}
 		}
 		
 		fName = name;
@@ -169,10 +180,14 @@ public abstract class AbstractNode{
 
 	public AbstractNode getSibling(String name) {
 
-		if (getParent() == null) 
+		final AbstractNode parent = getParent();
+
+		if (parent == null)
 			return null;
 
-		for (AbstractNode sibling : getParent().getChildren()) {
+		final List<? extends AbstractNode> siblings = parent.getChildren();
+
+		for (AbstractNode sibling : siblings) {
 
 			if (sibling.getName().equals(name) && sibling != this) {
 				return sibling;

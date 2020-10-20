@@ -402,12 +402,12 @@ public class FactoryRenameOperationTest {
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
 		MethodParameterNode methodParameterNode =
-				new MethodParameterNode("par1", "int", "0", false, null);
+				new MethodParameterNode("par_1", "int", "0", false, null);
 
-		ChoiceNode choiceNode1 = new ChoiceNode("choice 1", null, "1");
+		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", null, "1");
 		methodParameterNode.addChoice(choiceNode1);
 
-		ChoiceNode choiceNode2 = new ChoiceNode("choice 2", null, "2");
+		ChoiceNode choiceNode2 = new ChoiceNode("choice_2", null, "2");
 		methodParameterNode.addChoice(choiceNode2);
 
 		// rename in java mode - invalid name 1 - should fail

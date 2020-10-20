@@ -206,7 +206,9 @@ public class FactoryRenameOperation {
 
 			String newNameInIntrLanguage = fExtLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
 
-			if(getOwnNode().getSibling(newNameInIntrLanguage) != null){
+			final AbstractNode ownNode = getOwnNode();
+
+			if(ownNode.getSibling(newNameInIntrLanguage) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}
 		}

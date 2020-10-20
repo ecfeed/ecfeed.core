@@ -113,11 +113,11 @@ public class MethodNodeTest {
 	@Test
 	public void testAddTestCase(){
 		MethodNode method = new MethodNode("name", null);
-		TestCaseNode testCase1 = new TestCaseNode("suite 1", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase2 = new TestCaseNode("suite 2", null, new ArrayList<ChoiceNode>());
+		TestCaseNode testCase1 = new TestCaseNode("suite_1", null, new ArrayList<ChoiceNode>());
+		TestCaseNode testCase2 = new TestCaseNode("suite_2", null, new ArrayList<ChoiceNode>());
 		assertEquals(0, method.getTestCases().size());
-		assertEquals(0, method.getTestCases("suite 1").size());
-		assertEquals(0, method.getTestCases("suite 2").size());
+		assertEquals(0, method.getTestCases("suite_1").size());
+		assertEquals(0, method.getTestCases("suite_2").size());
 
 		method.addTestCase(testCase1);
 		method.addTestCase(testCase2);
@@ -129,23 +129,23 @@ public class MethodNodeTest {
 		assertTrue(method.getTestCases().contains(testCase1));
 		assertTrue(method.getTestCases().contains(testCase2));
 
-		assertEquals(1, method.getTestCases("suite 1").size());
-		assertTrue(method.getTestCases("suite 1").contains(testCase1));
-		assertFalse(method.getTestCases("suite 1").contains(testCase2));
+		assertEquals(1, method.getTestCases("suite_1").size());
+		assertTrue(method.getTestCases("suite_1").contains(testCase1));
+		assertFalse(method.getTestCases("suite_1").contains(testCase2));
 
-		assertEquals(1, method.getTestCases("suite 2").size());
-		assertTrue(method.getTestCases("suite 2").contains(testCase2));
-		assertFalse(method.getTestCases("suite 2").contains(testCase1));
+		assertEquals(1, method.getTestCases("suite_2").size());
+		assertTrue(method.getTestCases("suite_2").contains(testCase2));
+		assertFalse(method.getTestCases("suite_2").contains(testCase1));
 
 		assertEquals(2, method.getTestCaseNames().size());
-		assertTrue(method.getTestCaseNames().contains("suite 1"));
-		assertTrue(method.getTestCaseNames().contains("suite 2"));
+		assertTrue(method.getTestCaseNames().contains("suite_1"));
+		assertTrue(method.getTestCaseNames().contains("suite_2"));
 	}
 
 	@Test
 	public void testGetChildren(){
 		MethodNode method = new MethodNode("name", null);
-		TestCaseNode testCase = new TestCaseNode("test case", null, new ArrayList<ChoiceNode>());
+		TestCaseNode testCase = new TestCaseNode("test_case", null, new ArrayList<ChoiceNode>());
 		ConstraintNode constraint = new ConstraintNode("constraint",
 				null, new Constraint("constraint", null, new StaticStatement(false, null), new StaticStatement(false, null)));
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
@@ -166,7 +166,7 @@ public class MethodNodeTest {
 		assertTrue(method.getChildren().contains(testCase));
 		assertEquals(parameter, method.getChild("parameter"));
 		assertEquals(expCat, method.getChild("expCat"));
-		assertEquals(testCase, method.getChild("test case"));
+		assertEquals(testCase, method.getChild("test_case"));
 		assertEquals(constraint, method.getChild("constraint"));
 	}
 
