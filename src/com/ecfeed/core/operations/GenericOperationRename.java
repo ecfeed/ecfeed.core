@@ -113,6 +113,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 	protected String getOriginalPackageName(){
 		return fOriginalPackageName;
 	}
+	
+	public String getNewPackageName() {
+		return fNewPackageName;
+	}
 
 	protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException{
 	}

@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -293,23 +292,25 @@ public class MethodNodeHelper {
 
 		Set<String> constraintNames = methodNode.getConstraintsNames();
 
-//		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
+		//		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
 
 		return constraintNames;
 	}
 
-//	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguageManager) {
-//
-//		Set<String> result = new HashSet<String>();
-//
-//		for(String constraintName : constraintNames) {
-//
-//			String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(constraintName);
-//			result.add(nameInExtLanguage);
-//		}
-//
-//		return result;
-//	}
+
+	//	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguageManager) {
+	//
+	//		Set<String> result = new HashSet<String>();
+	//
+	//		for(String constraintName : constraintNames) {
+	//
+	//			String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(constraintName);
+	//			result.add(nameInExtLanguage);
+	//		}
+	//
+	//		return result;
+	//	}
+
 
 	public static MethodParameterNode createNewParameter(
 			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
@@ -326,7 +327,7 @@ public class MethodNodeHelper {
 		return parameter;
 	}
 
-	public static String generateNewParameterName(ParametersParentNode parametersParentNode) { // TODO SIMPLE-VIEW ParametersParentNode
+	public static String generateNewParameterName(ParametersParentNode parametersParentNode) {
 
 		int i = 0;
 

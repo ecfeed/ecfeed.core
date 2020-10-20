@@ -35,11 +35,6 @@ public class FactoryRenameOperation {
 
 	private static class ClassOperationRename extends GenericOperationRename {
 
-		IExtLanguageManager fExtLanguageManager;
-
-		private String fNewPackageName;
-		private String fNewNonQualifiedNameInExtLanguage; // TODO SIMPLE-VIEW check
-
 		public ClassOperationRename(
 				AbstractNode target, 
 				String newPackageName, 
@@ -47,16 +42,11 @@ public class FactoryRenameOperation {
 				IExtLanguageManager extLanguageManager) {
 
 			super(target, newPackageName, newNonQualifiedNameInExtLanguage, extLanguageManager);
-
-			fNewPackageName = newPackageName;
-			fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
-
-			fExtLanguageManager = extLanguageManager;			
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ClassOperationRename(getOwnNode(), getOriginalPackageName(), getOriginalNonQualifiedName(), fExtLanguageManager);
+			return new ClassOperationRename(getOwnNode(), getOriginalPackageName(), getOriginalNonQualifiedName(), getExtLanguageManager());
 		}
 
 		@Override
@@ -66,7 +56,7 @@ public class FactoryRenameOperation {
 			String nonQualifiedNameInIntrLangage = 
 					getExtLanguageManager().convertTextFromExtToIntrLanguage(newNameInExtLanguage);
 
-			String newNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(fNewPackageName, nonQualifiedNameInIntrLangage);
+			String newNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(getNewPackageName(), nonQualifiedNameInIntrLangage);
 
 			String[] tokens = newNameInIntrLanguage.split("\\.");
 
