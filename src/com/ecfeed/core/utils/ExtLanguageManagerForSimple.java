@@ -181,10 +181,12 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return false;
 	}
 
+	// TODO SIMPLE-VIEW test
 	@Override
 	public String getExtendedTypeForValue(String value, String currentType) {
 
-		if (JavaLanguageHelper.isCharTypeName(currentType) && value.length() > 1) {
+		if (JavaLanguageHelper.isCharTypeName(currentType) 
+				&& ((value.length() > 1) || (value.length() == 0))) {
 
 			return JavaLanguageHelper.TYPE_NAME_STRING;		
 		}
