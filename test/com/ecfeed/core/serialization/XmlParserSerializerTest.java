@@ -183,9 +183,9 @@ public class XmlParserSerializerTest {
 							null, new StaticStatement(true, null),
 							new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()));
 
-			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", null, choiceConstraint);
-			ConstraintNode labelConstraintNode = new ConstraintNode("label constraint", null, labelConstraint);
-			ConstraintNode expectedConstraintNode = new ConstraintNode("expected constraint", null, expectedConstraint);
+			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", choiceConstraint, null);
+			ConstraintNode labelConstraintNode = new ConstraintNode("label constraint", labelConstraint, null);
+			ConstraintNode expectedConstraintNode = new ConstraintNode("expected constraint", expectedConstraint, null);
 
 			root.addClass(classNode);
 			classNode.addMethod(method);
@@ -361,7 +361,7 @@ public class XmlParserSerializerTest {
 			List<MethodParameterNode> expectedParameters, int numOfConstraints) {
 		List<ConstraintNode> constraints = new ArrayList<ConstraintNode>();
 		for(int i = 0; i < numOfConstraints; ++i){
-			constraints.add(new ConstraintNode(randomName(), null, createConstraint(choicesParentParameters, expectedParameters)));
+			constraints.add(new ConstraintNode(randomName(), createConstraint(choicesParentParameters, expectedParameters), null));
 		}
 		return constraints;
 	}

@@ -59,8 +59,8 @@ public class CopyNodeTest{
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
 		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
-		ConstraintNode constraint1 = new ConstraintNode("constraint1", null, new Constraint("constraint1", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ConstraintNode constraint2 = new ConstraintNode("constraint2", null, new Constraint("constraint2", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
+		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		par1.addChoice(choice1);
 		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
@@ -142,7 +142,7 @@ public class CopyNodeTest{
 		premise.addStatement(RelationStatement.createStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
 		ExpectedValueStatement consequence = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
 
-		ConstraintNode constraint = new ConstraintNode("constraint", null, new Constraint("constraint", null, premise, consequence));
+		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", null, premise, consequence), null);
 		method.addConstraint(constraint);
 
 		ConstraintNode copy = constraint.makeClone();

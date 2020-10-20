@@ -204,7 +204,7 @@ public class RandomModelGenerator {
 						generatePremise(method), 
 						generateConsequence(method));
 
-		return new ConstraintNode(name, null, constraint);
+		return new ConstraintNode(name, constraint, null);
 	}
 
 	public AbstractStatement generatePremise(MethodNode method) {

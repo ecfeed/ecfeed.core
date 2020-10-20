@@ -22,8 +22,8 @@ public class ConstraintNodeTest {
 
 	@Test
 	public void compare(){
-		ConstraintNode c1 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ConstraintNode c2 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode c1 = new ConstraintNode("c", new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
+		ConstraintNode c2 = new ConstraintNode("c", new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
 
 		assertTrue(c1.isMatch(c2));
 

@@ -25,7 +25,7 @@ public class ConstraintNodeHelperTest {
 	@Test
 	public void createSignatureTest(){
 
-		ConstraintNode c1 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode c1 = new ConstraintNode("c", new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
 
 		c1.setName("c_1");
 

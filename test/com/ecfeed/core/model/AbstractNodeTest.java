@@ -101,7 +101,14 @@ public class AbstractNodeTest{
 		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
 		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
-		ConstraintNode constraint = new ConstraintNode("name", null, new Constraint("constraint", null, new StaticStatement(true, null), new StaticStatement(false, null)));
+		ConstraintNode constraint = new ConstraintNode(
+				"name",
+				new Constraint(
+						"constraint",
+						null,
+						new StaticStatement(true, null),
+						new StaticStatement(false, null)),
+				null);
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
 		ChoiceNode choice = new ChoiceNode("name", "0", null);
 
@@ -158,7 +165,7 @@ public class AbstractNodeTest{
 		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
 		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
-		ConstraintNode constraint = new ConstraintNode("name", null, new Constraint("name", null, new StaticStatement(true, null), new StaticStatement(false, null)));
+		ConstraintNode constraint = new ConstraintNode("name", new Constraint("name", null, new StaticStatement(true, null), new StaticStatement(false, null)), null );
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
 		ChoiceNode choice = new ChoiceNode("name", "0", null);
 
@@ -188,7 +195,7 @@ public class AbstractNodeTest{
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
 		MethodParameterNode expCat = new MethodParameterNode("expCat", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
-		ConstraintNode constraint = new ConstraintNode("constraint", null, new Constraint("constraint", null, new StaticStatement(true, null), new StaticStatement(false, null)));
+		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", null, new StaticStatement(true, null), new StaticStatement(false, null)), null);
 		TestCaseNode testCase = new TestCaseNode("testCase", null, new ArrayList<ChoiceNode>());
 		ChoiceNode p = new ChoiceNode("p", "0", null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
