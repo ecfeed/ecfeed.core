@@ -311,7 +311,6 @@ public class MethodNodeHelper {
 //		return result;
 //	}
 
-	// TODO SIMPLE-VIEW move to helper and test
 	public static MethodParameterNode createNewParameter(
 			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
@@ -380,7 +379,6 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW move to helper
 	public static String findNewUserTypeForJavaLanguage(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		ClassNode classNode = methodNode.getClassNode();
