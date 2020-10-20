@@ -51,12 +51,12 @@ public class ConstraintNode extends AbstractNode{
 	@Override
 	public ConstraintNode makeClone() {
 
-		ConstraintNode copy = new ConstraintNode(getName(), getModelChangeRegistrator(), fConstraint.getCopy() );
+		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.getCopy(), getModelChangeRegistrator() );
 		copy.setProperties(getProperties());
 		return copy;
 	}
 
-	public ConstraintNode(String name, IModelChangeRegistrator modelChangeRegistrator, Constraint constraint) {
+	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, modelChangeRegistrator);
 		fConstraint = constraint;

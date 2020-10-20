@@ -526,7 +526,7 @@ public abstract class XomAnalyser {
 		}
 
 		Constraint constraint = new Constraint(name, method.getModelChangeRegistrator(), premise.get(), consequence.get());
-		ConstraintNode targetConstraint = new ConstraintNode(name, method.getModelChangeRegistrator(), constraint);
+		ConstraintNode targetConstraint = new ConstraintNode(name, constraint, method.getModelChangeRegistrator());
 
 		targetConstraint.setDescription(parseComments(element));
 
