@@ -38,7 +38,7 @@ public class FactoryRenameOperation {
 		IExtLanguageManager fExtLanguageManager;
 
 		private String fNewPackageName;
-		private String fNewNonQualifiedNameInExtLanguage;
+		private String fNewNonQualifiedNameInExtLanguage; // TODO SIMPLE-VIEW check
 
 		public ClassOperationRename(
 				AbstractNode target, 
@@ -202,9 +202,11 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newNameInExtLanguage)throws ModelOperationException{
+		protected void verifyNewName(String newNameInExtLanguage)throws ModelOperationException {
 
-			if(getOwnNode().getSibling(newNameInExtLanguage) != null){
+			String newNameInIntrLanguage = fExtLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
+
+			if(getOwnNode().getSibling(newNameInIntrLanguage) != null){
 				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}
 		}
