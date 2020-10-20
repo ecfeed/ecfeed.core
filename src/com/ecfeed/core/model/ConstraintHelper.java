@@ -20,6 +20,10 @@ public class ConstraintHelper {
 
 	public static String getSignature(Constraint constraint, IExtLanguageManager extLanguageManager) {
 
+		if (constraint == null) {
+			return "EMPTY";
+		}
+
 		String name = constraint.getName();
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 

@@ -15,8 +15,10 @@ import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -539,4 +541,24 @@ public class MethodNodeHelperTest {
 		assertEquals("byte",  methodParameterNode22.getType());
 		methodNode2.addParameter(methodParameterNode22);
 	}
+
+	@Test
+	public void getConstraintNamesTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		Constraint constraint = new Constraint("c 1", null, null, null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cn 1", constraint,null);
+		methodNode.addConstraint(constraintNode);
+
+		Set<String> names = MethodNodeHelper.getConstraintNames(methodNode, new ExtLanguageManagerForJava());
+
+		assertEquals(1, names.size());
+
+		List<String> namesArray = new ArrayList<>(names);
+
+		assertEquals("cn 1", namesArray.get(0));
+	}
+
 }

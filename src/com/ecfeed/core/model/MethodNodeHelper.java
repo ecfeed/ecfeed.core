@@ -289,28 +289,27 @@ public class MethodNodeHelper {
 		return true;
 	}
 
-	// TODO SIMPLE-VIEW test
 	public static Set<String> getConstraintNames(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		Set<String> constraintNames = methodNode.getConstraintsNames();
 
-		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
+//		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
 
 		return constraintNames;
 	}
 
-	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguageManager) {
-
-		Set<String> result = new HashSet<String>();
-
-		for(String constraintName : constraintNames) {
-
-			String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(constraintName);
-			result.add(nameInExtLanguage);
-		}
-
-		return result;
-	}
+//	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguageManager) {
+//
+//		Set<String> result = new HashSet<String>();
+//
+//		for(String constraintName : constraintNames) {
+//
+//			String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(constraintName);
+//			result.add(nameInExtLanguage);
+//		}
+//
+//		return result;
+//	}
 
 	// TODO SIMPLE-VIEW move to helper and test
 	public static MethodParameterNode createNewParameter(

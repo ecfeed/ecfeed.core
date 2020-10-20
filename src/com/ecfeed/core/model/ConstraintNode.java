@@ -38,6 +38,10 @@ public class ConstraintNode extends AbstractNode{
 	@Override
 	public String toString() {
 
+		if (fConstraint == null) {
+			return "EMPTY";
+		}
+
 		return ConstraintHelper.getSignature(fConstraint, new ExtLanguageManagerForJava());
 	}
 
