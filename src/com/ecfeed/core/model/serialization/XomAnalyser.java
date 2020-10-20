@@ -459,7 +459,7 @@ public abstract class XomAnalyser {
 					return Optional.empty();
 				}
 				
-				testValue = new ChoiceNode(EXPECTED_VALUE_CHOICE_NAME, parameter.getModelChangeRegistrator(), valueString);
+				testValue = new ChoiceNode(EXPECTED_VALUE_CHOICE_NAME, valueString, parameter.getModelChangeRegistrator());
 				testValue.setParent(parameter);
 			}
 			
@@ -725,7 +725,7 @@ public abstract class XomAnalyser {
 			return null;
 		}
 		
-		ChoiceNode condition = new ChoiceNode("expected", parameter.getModelChangeRegistrator(), valueString);
+		ChoiceNode condition = new ChoiceNode("expected", valueString, parameter.getModelChangeRegistrator());
 		condition.setParent(parameter);
 
 		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
@@ -746,7 +746,7 @@ public abstract class XomAnalyser {
 			return Optional.empty();
 		}
 
-		ChoiceNode choice = new ChoiceNode(name, modelChangeRegistrator, value);
+		ChoiceNode choice = new ChoiceNode(name, value, modelChangeRegistrator);
 		choice.setRandomizedValue(isRandomized);
 		choice.setDescription(parseComments(element));
 

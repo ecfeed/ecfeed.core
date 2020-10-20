@@ -99,7 +99,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 					fTarget.setDefaultValueString(fTarget.getLeafChoices().toArray(new ChoiceNode[]{})[0].getValueString());
 				}
 				else{
-					fTarget.addChoice(new ChoiceNode("choice", fTarget.getModelChangeRegistrator(), currentDefaultValue));
+					fTarget.addChoice(new ChoiceNode("choice", currentDefaultValue, fTarget.getModelChangeRegistrator()));
 				}
 			}
 		}
@@ -114,8 +114,8 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 					ChoiceNode p = 
 							new ChoiceNode(
 									ModelConstants.EXPECTED_VALUE_CHOICE_NAME, 
-									fTarget.getModelChangeRegistrator(), 
-									fTarget.getDefaultValue());
+									fTarget.getDefaultValue(), 
+									fTarget.getModelChangeRegistrator());
 					
 					p.setParent(fTarget);
 					TestCaseNode newTestCase = testCase.makeClone();

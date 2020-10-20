@@ -131,7 +131,7 @@ public class ChoiceNodeHelper {
 		for(;;) {
 			ChoiceNode copy = 
 					new ChoiceNode(
-							orgChoice.getName(), orgChoice.getModelChangeRegistrator(), orgChoice.getValueString());
+							orgChoice.getName(), orgChoice.getValueString(), orgChoice.getModelChangeRegistrator());
 
 			copies.add(copy);
 

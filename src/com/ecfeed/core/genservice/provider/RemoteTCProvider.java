@@ -309,7 +309,7 @@ public class RemoteTCProvider implements ITCProvider {
             ChoiceNode choiceNode;
 
             if (methodParameterNode.isExpected() || choiceName.equals("@expected")) {
-                choiceNode = new ChoiceNode(choiceName, methodParameterNode.getModelChangeRegistrator(), choiceValue);
+                choiceNode = new ChoiceNode(choiceName, choiceValue, methodParameterNode.getModelChangeRegistrator());
                 choiceNode.setParent(methodParameterNode);
             } else {
                 choiceNode = methodParameterNode.findChoice(choiceName);

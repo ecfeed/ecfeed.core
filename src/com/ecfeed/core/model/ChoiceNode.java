@@ -28,14 +28,14 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	private ChoiceNode fOrigChoiceNode = null;
 
-	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value) { // TODO SIMPLE-VIEW move change registrator
+	public ChoiceNode(String name, String value, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
 	}
 
-	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value, boolean isRandomized) { // TODO SIMPLE-VIEW move change registrator
+	public ChoiceNode(String name, String value, boolean isRandomized, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<>();
@@ -107,7 +107,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public ChoiceNode makeCloneUnlink() {
-		ChoiceNode copy = new ChoiceNode(getName(), getModelChangeRegistrator(), fValueString);
+		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 		copy.setParent(fParent);

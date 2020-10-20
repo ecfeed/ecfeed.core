@@ -123,8 +123,8 @@ public abstract class GeneratorHelper {
 
         ChoiceNode choiceNode =
                 new ChoiceNode(
-                        "", methodParameterNode.getModelChangeRegistrator(),
-                        methodParameterNode.getDefaultValue());
+                        "", methodParameterNode.getDefaultValue(),
+                        methodParameterNode.getModelChangeRegistrator());
 
         choiceNode.setParent(methodParameterNode);
 

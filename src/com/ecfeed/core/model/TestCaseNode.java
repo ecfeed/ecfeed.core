@@ -122,7 +122,7 @@ public class TestCaseNode extends AbstractNode {
 			if(parameter.isExpected()){
 				String name = getTestData().get(i).getName();
 				String value = getTestData().get(i).getValueString();
-				ChoiceNode newChoice = new ChoiceNode(name, parameter.getModelChangeRegistrator(), value);
+				ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
 				newChoice.setParent(parameter);
 				getTestData().set(i, newChoice);
 			} else{
