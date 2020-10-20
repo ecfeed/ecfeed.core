@@ -20,6 +20,10 @@ public class TestCaseNode extends AbstractNode {
 	List<ChoiceNode> fTestData;
 
 	@Override
+	protected void verifyName(String name) {
+	}
+
+	@Override
 	public int getMyIndex(){
 		if(getMethod() == null){
 			return -1;

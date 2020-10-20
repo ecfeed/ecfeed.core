@@ -39,11 +39,11 @@ public class TestCaseNodeHelperTest {
 		choiceNodes.add(choiceNode1);
 		choiceNodes.add(choiceNode2);
 
-		TestCaseNode testCaseNode = new TestCaseNode("test_case_1", null, choiceNodes);
+		TestCaseNode testCaseNode = new TestCaseNode("test case 1", null, choiceNodes);
 		testCaseNode.setParent(methodNode);
 
 		String signature = TestCaseNodeHelper.createSignature(testCaseNode, new ExtLanguageManagerForJava());
-		assertEquals("[test_case_1] method_1(choice_1, choice_2)", signature);
+		assertEquals("[test case 1] method_1(choice_1, choice_2)", signature);
 
 		signature = TestCaseNodeHelper.createSignature(testCaseNode, new ExtLanguageManagerForSimple());
 		assertEquals("[test case 1] method 1(choice 1, choice 2)", signature);

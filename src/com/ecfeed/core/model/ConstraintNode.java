@@ -22,6 +22,10 @@ public class ConstraintNode extends AbstractNode{
 	private Constraint fConstraint;
 
 	@Override
+	protected void verifyName(String name) {
+	}
+
+	@Override
 	public int getMyIndex() {
 
 		if (getMethod() == null) {

@@ -31,17 +31,21 @@ public abstract class AbstractNode{
 
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
-		String errorMessage = JavaLanguageHelper.verifySeparators(name);
+        verifyName(name);
 
-		if (errorMessage != null) {
-			ExceptionHelper.reportRuntimeException(errorMessage);
-		}
-
-		fName = name;
+        fName = name;
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	@Override
+    protected void verifyName(String name) {
+        String errorMessage = JavaLanguageHelper.verifySeparators(name);
+
+        if (errorMessage != null) {
+            ExceptionHelper.reportRuntimeException(errorMessage);
+        }
+    }
+
+    @Override
 	public String toString() {
 
 		return getName();
@@ -78,12 +82,8 @@ public abstract class AbstractNode{
 	public void setName(String name, boolean checkName) {
 		
 		if (checkName ) {
-			String errorMessage = JavaLanguageHelper.verifySeparators(name);
-
-			if (errorMessage != null) {
-				ExceptionHelper.reportRuntimeException(errorMessage);
-			}
-		}
+            verifyName(name);
+        }
 		
 		fName = name;
 		registerChange();
