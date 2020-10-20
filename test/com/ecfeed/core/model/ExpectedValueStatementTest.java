@@ -49,13 +49,13 @@ public class ExpectedValueStatementTest{
 
 	@Test
 	public void testAdapt(){
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "");
-		ChoiceNode statementChoice = new ChoiceNode("exp_choice", null, "statement expected value");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "", null);
+		ChoiceNode statementChoice = new ChoiceNode("exp_choice", "statement expected value", null);
 		ExpectedValueStatement testStatement = new ExpectedValueStatement(fExpParameter1, statementChoice, new JavaPrimitiveTypePredicate());
 
 		List<ChoiceNode> testData = new ArrayList<>();
 		testData.add(choice1);
-		testData.add(new ChoiceNode("", null, fExpParameter1.getDefaultValue()));
+		testData.add(new ChoiceNode("", fExpParameter1.getDefaultValue(), null));
 		testData.add(choice1);
 
 		testStatement.adapt(testData);
@@ -70,8 +70,8 @@ public class ExpectedValueStatementTest{
 		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
 		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
 
-		ChoiceNode p1 = new ChoiceNode("name", null, "value");
-		ChoiceNode p2 = new ChoiceNode("name", null, "value");
+		ChoiceNode p1 = new ChoiceNode("name", "value", null);
+		ChoiceNode p2 = new ChoiceNode("name", "value", null);
 
 		ExpectedValueStatement s1 = new ExpectedValueStatement(c1, p1, predicate);
 		ExpectedValueStatement s2 = new ExpectedValueStatement(c2, p2, predicate);

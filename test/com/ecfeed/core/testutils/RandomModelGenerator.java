@@ -170,7 +170,7 @@ public class RandomModelGenerator {
 
 		for(MethodParameterNode c : method.getMethodParameters()){
 			if(c.isExpected()){
-				ChoiceNode expectedValue = new ChoiceNode("@expected", null, randomChoiceValue(c.getType()));
+				ChoiceNode expectedValue = new ChoiceNode("@expected", randomChoiceValue(c.getType()), null);
 				expectedValue.setParent(c);
 				testData.add(expectedValue);
 			}
@@ -291,7 +291,7 @@ public class RandomModelGenerator {
 
 		String value = randomChoiceValue(parameter.getType());
 		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
-		ChoiceNode choice = new ChoiceNode(name, null, value);
+		ChoiceNode choice = new ChoiceNode(name, value, null);
 		parameter.addChoice(choice);
 		return new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
 	}
@@ -327,7 +327,7 @@ public class RandomModelGenerator {
 		name = name.replaceAll(":", "_");
 		String value = randomChoiceValue(type);
 
-		ChoiceNode choice = new ChoiceNode(name, null, value);
+		ChoiceNode choice = new ChoiceNode(name, value, null);
 		for(int i = 0; i < labels; i++){
 			String label = generateString(RegexHelper.REGEX_PARTITION_LABEL);
 			choice.addLabel(label);

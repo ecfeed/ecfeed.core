@@ -25,7 +25,7 @@ import com.ecfeed.core.testutils.RandomModelGenerator;
 public class ChoiceNodeTest{
 	@Test
 	public void testValue() {
-		ChoiceNode choice = new ChoiceNode("name", null, "value");
+		ChoiceNode choice = new ChoiceNode("name", "value", null);
 		assertEquals("value", choice.getValueString());
 		choice.setValueString("new value");
 		assertEquals("new value", choice.getValueString());
@@ -36,9 +36,9 @@ public class ChoiceNodeTest{
 	public void testGetParameter(){
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
-		ChoiceNode p111 = new ChoiceNode("p111", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
+		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
 
 		method.addParameter(parameter);
 		parameter.addChoice(p1);
@@ -60,9 +60,9 @@ public class ChoiceNodeTest{
 	public void testLevel(){
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
-		ChoiceNode p111 = new ChoiceNode("p111", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
+		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
 
 		method.addParameter(parameter);
 		parameter.addChoice(p1);
@@ -143,23 +143,23 @@ public class ChoiceNodeTest{
 
 	@Test
 	public void getLeafsTest(){
-		ChoiceNode p = new ChoiceNode("p", null, "0");
+		ChoiceNode p = new ChoiceNode("p", "0", null);
 
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p3 = new ChoiceNode("p1", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p3 = new ChoiceNode("p1", "0", null);
 
-		ChoiceNode p21 = new ChoiceNode("p21", null, "0");
-		ChoiceNode p22 = new ChoiceNode("p22", null, "0");
-		ChoiceNode p23 = new ChoiceNode("p23", null, "0");
+		ChoiceNode p21 = new ChoiceNode("p21", "0", null);
+		ChoiceNode p22 = new ChoiceNode("p22", "0", null);
+		ChoiceNode p23 = new ChoiceNode("p23", "0", null);
 
-		ChoiceNode p31 = new ChoiceNode("p31", null, "0");
-		ChoiceNode p32 = new ChoiceNode("p32", null, "0");
-		ChoiceNode p33 = new ChoiceNode("p33", null, "0");
+		ChoiceNode p31 = new ChoiceNode("p31", "0", null);
+		ChoiceNode p32 = new ChoiceNode("p32", "0", null);
+		ChoiceNode p33 = new ChoiceNode("p33", "0", null);
 
-		ChoiceNode p321 = new ChoiceNode("p321", null, "0");
-		ChoiceNode p322 = new ChoiceNode("p322", null, "0");
-		ChoiceNode p323 = new ChoiceNode("p323", null, "0");
+		ChoiceNode p321 = new ChoiceNode("p321", "0", null);
+		ChoiceNode p322 = new ChoiceNode("p322", "0", null);
+		ChoiceNode p323 = new ChoiceNode("p323", "0", null);
 
 		p.addChoice(p1);
 		p.addChoice(p2);
@@ -191,8 +191,8 @@ public class ChoiceNodeTest{
 
 	@Test
 	public void getQualifiedNameTest(){
-		ChoiceNode p = new ChoiceNode("p", null, "0");
-		ChoiceNode q = new ChoiceNode("q", null, "0");
+		ChoiceNode p = new ChoiceNode("p", "0", null);
+		ChoiceNode q = new ChoiceNode("q", "0", null);
 
 		p.addChoice(q);
 
@@ -201,13 +201,13 @@ public class ChoiceNodeTest{
 
 	@Test
 	public void getAllDescendantsTest(){
-		ChoiceNode p = new ChoiceNode("p", null, "0");
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
-		ChoiceNode p12 = new ChoiceNode("p12", null, "0");
-		ChoiceNode p111 = new ChoiceNode("p111", null, "0");
-		ChoiceNode p112 = new ChoiceNode("p112", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
+		ChoiceNode p = new ChoiceNode("p", "0", null);
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
+		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
+		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
+		ChoiceNode p112 = new ChoiceNode("p112", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 
 		p.addChoice(p1);
 		p.addChoice(p2);
@@ -228,11 +228,11 @@ public class ChoiceNodeTest{
 
 	@Test 
 	public void labelTest(){
-		ChoiceNode p = new ChoiceNode("p", null, "0");
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
-		ChoiceNode p12 = new ChoiceNode("p12", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
+		ChoiceNode p = new ChoiceNode("p", "0", null);
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
+		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 
 		p.addChoice(p1);
 		p.addChoice(p2);
@@ -318,8 +318,8 @@ public class ChoiceNodeTest{
 	/*******************compare()***************************/
 	@Test
 	public void compareNameTest(){
-		ChoiceNode p1 = new ChoiceNode("p", null, "VALUE");
-		ChoiceNode p2 = new ChoiceNode("p", null, "VALUE");
+		ChoiceNode p1 = new ChoiceNode("p", "VALUE", null);
+		ChoiceNode p2 = new ChoiceNode("p", "VALUE", null);
 
 		assertTrue(p1.isMatch(p2));
 
@@ -331,8 +331,8 @@ public class ChoiceNodeTest{
 
 	@Test
 	public void compareValueTest(){
-		ChoiceNode p1 = new ChoiceNode("p", null, "VALUE");
-		ChoiceNode p2 = new ChoiceNode("p", null, "VALUE");
+		ChoiceNode p1 = new ChoiceNode("p", "VALUE", null);
+		ChoiceNode p2 = new ChoiceNode("p", "VALUE", null);
 
 		assertTrue(p1.isMatch(p2));
 
@@ -344,8 +344,8 @@ public class ChoiceNodeTest{
 
 	@Test
 	public void compareLabelsTest(){
-		ChoiceNode p1 = new ChoiceNode("p", null, "VALUE");
-		ChoiceNode p2 = new ChoiceNode("p", null, "VALUE");
+		ChoiceNode p1 = new ChoiceNode("p", "VALUE", null);
+		ChoiceNode p2 = new ChoiceNode("p", "VALUE", null);
 
 		assertTrue(p1.isMatch(p2));
 
@@ -362,11 +362,11 @@ public class ChoiceNodeTest{
 
 	@Test
 	public void compareChildrenTest(){
-		ChoiceNode p1 = new ChoiceNode("p", null, "VALUE");
-		ChoiceNode p2 = new ChoiceNode("p", null, "VALUE");
+		ChoiceNode p1 = new ChoiceNode("p", "VALUE", null);
+		ChoiceNode p2 = new ChoiceNode("p", "VALUE", null);
 
-		ChoiceNode p11 = new ChoiceNode("p", null, "VALUE");
-		ChoiceNode p21 = new ChoiceNode("p", null, "VALUE");
+		ChoiceNode p11 = new ChoiceNode("p", "VALUE", null);
+		ChoiceNode p21 = new ChoiceNode("p", "VALUE", null);
 
 		assertTrue(p1.isMatch(p2));
 

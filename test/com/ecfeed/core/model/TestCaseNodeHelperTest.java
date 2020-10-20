@@ -32,8 +32,8 @@ public class TestCaseNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", null, "value");
-		ChoiceNode choiceNode2 = new ChoiceNode("choice_2", null, "value");
+		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "value", null);
+		ChoiceNode choiceNode2 = new ChoiceNode("choice_2", "value", null);
 
 		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
 		choiceNodes.add(choiceNode1);

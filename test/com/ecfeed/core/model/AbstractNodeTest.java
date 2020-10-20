@@ -103,7 +103,7 @@ public class AbstractNodeTest{
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("name", null, new Constraint("constraint", null, new StaticStatement(true, null), new StaticStatement(false, null)));
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
-		ChoiceNode choice = new ChoiceNode("name", null, "0");
+		ChoiceNode choice = new ChoiceNode("name", "0", null);
 
 		parameter.addChoice(choice);
 		method.addParameter(parameter);
@@ -160,7 +160,7 @@ public class AbstractNodeTest{
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("name", null, new Constraint("name", null, new StaticStatement(true, null), new StaticStatement(false, null)));
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
-		ChoiceNode choice = new ChoiceNode("name", null, "0");
+		ChoiceNode choice = new ChoiceNode("name", "0", null);
 
 		parameter.addChoice(choice);
 		method.addParameter(parameter);
@@ -190,8 +190,8 @@ public class AbstractNodeTest{
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("constraint", null, new Constraint("constraint", null, new StaticStatement(true, null), new StaticStatement(false, null)));
 		TestCaseNode testCase = new TestCaseNode("testCase", null, new ArrayList<ChoiceNode>());
-		ChoiceNode p = new ChoiceNode("p", null, "0");
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0" );
+		ChoiceNode p = new ChoiceNode("p", "0", null);
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 
 		p.addChoice(p1);
 		parameter.addChoice(p);
@@ -231,8 +231,8 @@ public class AbstractNodeTest{
 	@Test
 	public void getSiblingTest(){
 		MethodParameterNode cat = new MethodParameterNode("cat", "type", "0", false, null);
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 
 		cat.addChoice(p1);
 		cat.addChoice(p2);

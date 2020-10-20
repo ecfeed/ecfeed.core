@@ -477,7 +477,7 @@ public class MethodNodeTest {
 	public void testChoiceRemoved(){
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		ChoiceNode choice = new ChoiceNode("choice", null, "value");
+		ChoiceNode choice = new ChoiceNode("choice", "value", null);
 		Constraint mentioningConstraint = 
 				new Constraint(
 						"constraint",
@@ -491,7 +491,7 @@ public class MethodNodeTest {
 		mentioningTestData.add(choice);
 		TestCaseNode mentioningTestCaseNode = new TestCaseNode("name", null, mentioningTestData);
 		List<ChoiceNode> notMentioningTestData = new ArrayList<ChoiceNode>();
-		mentioningTestData.add(new ChoiceNode("dummy", null, "0"));
+		mentioningTestData.add(new ChoiceNode("dummy", "0", null));
 		TestCaseNode notMentioningTestCaseNode = new TestCaseNode("name", null, notMentioningTestData);
 
 		parameter.addChoice(choice);

@@ -52,7 +52,7 @@ public class ModelTestUtils {
 
 	public static AbstractNode getNode(ENodeType type, String name){
 		switch(type){
-		case CHOICE: return new ChoiceNode(name, null, "value");
+		case CHOICE: return new ChoiceNode(name, "value", null);
 		case CLASS: return new ClassNode(name, null);
 		case CONSTRAINT: return new ConstraintNode(name, null, new Constraint(name, null, new StaticStatement(true, null), new StaticStatement(true, null)));
 		case METHOD: return new MethodNode(name, null);

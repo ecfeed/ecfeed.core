@@ -28,7 +28,7 @@ public class ParameterNodeTest{
 
 		assertEquals(0, parameter.getChoices().size());
 
-		ChoiceNode choice = new ChoiceNode("choice", null, "0");
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
 		parameter.addChoice(choice);
 
 		assertEquals(1, parameter.getChoices().size());
@@ -37,9 +37,9 @@ public class ParameterNodeTest{
 	@Test
 	public void getChoiceTest(){
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		ChoiceNode p = new ChoiceNode("p", null, "0");
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
+		ChoiceNode p = new ChoiceNode("p", "0", null);
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		parameter.addChoice(p);
 		p.addChoice(p1);
 		p1.addChoice(p11);
@@ -55,8 +55,8 @@ public class ParameterNodeTest{
 	@Test
 	public void getChoicesTest() {
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "0");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
 		parameter.addChoice(choice1);
 		parameter.addChoice(choice2);
 
@@ -69,8 +69,8 @@ public class ParameterNodeTest{
 	@Test
 	public void getChildrenTest() {
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "0");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
 		parameter.addChoice(choice1);
 		parameter.addChoice(choice2);
 
@@ -83,8 +83,8 @@ public class ParameterNodeTest{
 	@Test
 	public void getChoiceNames() {
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "0");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
 		parameter.addChoice(choice1);
 		parameter.addChoice(choice2);
 
@@ -96,10 +96,10 @@ public class ParameterNodeTest{
 	@Test
 	public void getLeafChoiceNamesTest() {
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
-		ChoiceNode p12 = new ChoiceNode("p12", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
+		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 		p1.addChoice(p11);
 		p1.addChoice(p12);
 		parameter.addChoice(p1);
@@ -115,10 +115,10 @@ public class ParameterNodeTest{
 	@Test
 	public void getAllChoiceNamesTest(){
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
-		ChoiceNode p12 = new ChoiceNode("p12", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
+		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 		p1.addChoice(p11);
 		p1.addChoice(p12);
 		parameter.addChoice(p1);
@@ -146,21 +146,21 @@ public class ParameterNodeTest{
 	public void getLeafChoicesTest(){
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
 
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p3 = new ChoiceNode("p1", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p3 = new ChoiceNode("p1", "0", null);
 
-		ChoiceNode p21 = new ChoiceNode("p21", null, "0");
-		ChoiceNode p22 = new ChoiceNode("p22", null, "0");
-		ChoiceNode p23 = new ChoiceNode("p23", null, "0");
+		ChoiceNode p21 = new ChoiceNode("p21", "0", null);
+		ChoiceNode p22 = new ChoiceNode("p22", "0", null);
+		ChoiceNode p23 = new ChoiceNode("p23", "0", null);
 
-		ChoiceNode p31 = new ChoiceNode("p31", null, "0");
-		ChoiceNode p32 = new ChoiceNode("p32", null, "0");
-		ChoiceNode p33 = new ChoiceNode("p33", null, "0");
+		ChoiceNode p31 = new ChoiceNode("p31", "0", null);
+		ChoiceNode p32 = new ChoiceNode("p32", "0", null);
+		ChoiceNode p33 = new ChoiceNode("p33", "0", null);
 
-		ChoiceNode p321 = new ChoiceNode("p321", null, "0");
-		ChoiceNode p322 = new ChoiceNode("p322", null, "0");
-		ChoiceNode p323 = new ChoiceNode("p323", null, "0");
+		ChoiceNode p321 = new ChoiceNode("p321", "0", null);
+		ChoiceNode p322 = new ChoiceNode("p322", "0", null);
+		ChoiceNode p323 = new ChoiceNode("p323", "0", null);
 
 		parameter.addChoice(p1);
 		parameter.addChoice(p2);
@@ -192,19 +192,19 @@ public class ParameterNodeTest{
 
 	@Test
 	public void getAllLabelsTest(){
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		p1.addLabel("l11");
 		p1.addLabel("l12");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 		p2.addLabel("l21");
 		p2.addLabel("l22");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		p11.addLabel("l111");
 		p11.addLabel("l112");
-		ChoiceNode p12 = new ChoiceNode("p12", null, "0");
+		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
 		p12.addLabel("l121");
 		p12.addLabel("l122");
-		ChoiceNode p21 = new ChoiceNode("p21", null, "0");
+		ChoiceNode p21 = new ChoiceNode("p21", "0", null);
 		p21.addLabel("l211");
 		p21.addLabel("l212");//	protected Set<String> getAllChoiceNames(List<ChoiceNode> choices) {
 		//		Set<String> result = new LinkedHashSet<String>();
@@ -216,7 +216,7 @@ public class ParameterNodeTest{
 		//	}
 		//
 
-		ChoiceNode p22 = new ChoiceNode("p22", null, "0");
+		ChoiceNode p22 = new ChoiceNode("p22", "0", null);
 		p22.addLabel("l221");
 		p22.addLabel("l222");
 
@@ -335,8 +335,8 @@ public class ParameterNodeTest{
 
 		assertTrue(c1.isMatch(c2));
 
-		ChoiceNode p1 = new ChoiceNode("p", null, "value");
-		ChoiceNode p2 = new ChoiceNode("p", null, "value");
+		ChoiceNode p1 = new ChoiceNode("p", "value", null);
+		ChoiceNode p2 = new ChoiceNode("p", "value", null);
 
 		c1.addChoice(p1);
 		assertFalse(c1.isMatch(c2));
@@ -368,10 +368,10 @@ public class ParameterNodeTest{
 		c2.setDefaultValueString("cc");
 		assertTrue(c1.isMatch(c2));
 
-		c1.addChoice(new ChoiceNode("p", null, "x"));
+		c1.addChoice(new ChoiceNode("p", "x", null));
 		c1.setDefaultValueString("cc");
 		assertFalse(c1.isMatch(c2));
-		c2.addChoice(new ChoiceNode("p1", null, "x"));
+		c2.addChoice(new ChoiceNode("p1", "x", null));
 		assertFalse(c1.isMatch(c2));
 		c2.getChoice("p1").setName("p");
 		assertTrue(c1.isMatch(c2));

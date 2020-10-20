@@ -45,10 +45,10 @@ public class ParameterConditionTest {
 				RelationStatement.createStatementWithParameterCondition(
 						leftMethodParameterNode, statementRelation, rightMethodParameterNode);
 
-		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, null, leftChoiceValue);
-		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, null, rightChoiceValue);
+		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
+		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, rightChoiceValue, null);
 
-		ChoiceNode whatChoiceNode = new ChoiceNode("Label" + 3, null, "3");
+		ChoiceNode whatChoiceNode = new ChoiceNode("Label" + 3, "3", null);
 		
 		EvaluationResult result = statement.evaluate(createList(leftChoiceNode, rightChoiceNode, whatChoiceNode));
 
@@ -75,8 +75,8 @@ public class ParameterConditionTest {
 				RelationStatement.createStatementWithParameterCondition(
 						leftMethodParameterNode, statementRelation, rightMethodParameterNode);
 
-		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, null, leftChoiceValue, true);
-		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, null, rightChoiceValue, true);
+		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, true, null);
+		ChoiceNode rightChoiceNode = new ChoiceNode("Label" + rightChoiceValue, rightChoiceValue, true, null);
 
 		EvaluationResult result = statement.evaluate(createList(leftChoiceNode, rightChoiceNode));
 

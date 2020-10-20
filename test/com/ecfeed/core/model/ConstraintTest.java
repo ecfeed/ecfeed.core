@@ -90,8 +90,8 @@ public class ConstraintTest {
 
 		Constraint constraint = new Constraint("c", null, premise, consequence);
 
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "value1");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
@@ -99,8 +99,8 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullsForChoiceCondition() {
 
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "value1");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 
 		AbstractStatement premise = createPremiseWithChoiceCondition(choice1);
 		AbstractStatement consequence = createConsequenceWithChoiceCondition(choice2);
@@ -121,8 +121,8 @@ public class ConstraintTest {
 
 		Constraint constraint = new Constraint("c", null, premise, consequence);
 
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "value1");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
@@ -132,8 +132,8 @@ public class ConstraintTest {
 	public void testTupleWithNullConsequenceForChoiceCondition() {
 
 		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "value11");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "value12");
+		ChoiceNode choice11 = new ChoiceNode("choice11", "value11", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "value12", null);
 		choice11.setParent(parameter1);
 		choice12.setParent(parameter1);
 
@@ -143,7 +143,7 @@ public class ConstraintTest {
 
 
 		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 		choice2.setParent(parameter2);
 
 		AbstractStatement consequence = 

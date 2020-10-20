@@ -114,7 +114,7 @@ public class XmlParserSerializerTest {
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
 			MethodParameterNode parameter = new MethodParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
-			ChoiceNode choice = new ChoiceNode("choice", null, "A                 B");
+			ChoiceNode choice = new ChoiceNode("choice", "A                 B", null);
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 			testData.add(choice);
 			TestCaseNode testCase = new TestCaseNode("test", null, testData);
@@ -155,9 +155,9 @@ public class XmlParserSerializerTest {
 			MethodParameterNode expectedParameter =
 					new MethodParameterNode("expectedParameter", JavaLanguageHelper.TYPE_NAME_CHAR, "0", true, null);
 			expectedParameter.setDefaultValueString("d");
-			ChoiceNode choice1 = new ChoiceNode("choice", null, "p");
+			ChoiceNode choice1 = new ChoiceNode("choice", "p", null);
 			choice1.setParent(choicesParentParameter);
-			ChoiceNode choice2 = new ChoiceNode("expected", null, "s");
+			ChoiceNode choice2 = new ChoiceNode("expected", "s", null);
 			choice2.setParent(expectedParameter);
 
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
@@ -181,7 +181,7 @@ public class XmlParserSerializerTest {
 					new Constraint(
 							"constraint",
 							null, new StaticStatement(true, null),
-							new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", null, "n"), new JavaPrimitiveTypePredicate()));
+							new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()));
 
 			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", null, choiceConstraint);
 			ConstraintNode labelConstraintNode = new ConstraintNode("label constraint", null, labelConstraint);
@@ -342,7 +342,7 @@ public class XmlParserSerializerTest {
 
 	private ChoiceNode createChoice(String type, int level) {
 		String value = createRandomValue(type);
-		ChoiceNode choice = new ChoiceNode(randomName(), null, value);
+		ChoiceNode choice = new ChoiceNode(randomName(), value, null);
 		for(int i = 0; i < rand.nextInt(MAX_PARTITION_LABELS); i++){
 			choice.addLabel(generateRandomString(10));
 		}
@@ -438,7 +438,7 @@ public class XmlParserSerializerTest {
 	private AbstractStatement createExpectedStatement(List<MethodParameterNode> parameters) {
 		if(parameters.size() == 0) return null;
 		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		return new ExpectedValueStatement(parameter, new ChoiceNode("default", null, createRandomValue(parameter.getType())), new JavaPrimitiveTypePredicate());
+		return new ExpectedValueStatement(parameter, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
 	}
 
 	private List<MethodParameterNode> getChoicesParentParameters(List<? extends MethodParameterNode> parameters) {

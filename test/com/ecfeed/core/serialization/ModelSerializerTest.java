@@ -172,7 +172,7 @@ public class ModelSerializerTest {
 
 	private RootNode createModel(int version) {
 
-		ChoiceNode choice = new ChoiceNode("choice", null, "0");
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
 
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
 		parameter.addChoice(choice);

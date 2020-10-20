@@ -73,7 +73,7 @@ public class ModelChangeRegistrationTest {
 		rootNode.addParameter(globalParameterNode);
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
-		ChoiceNode choice = new ChoiceNode("c1", changeCounter, "0");
+		ChoiceNode choice = new ChoiceNode("c1", "0", changeCounter);
 
 		changeCounter.registerModelSaved();
 		globalParameterNode.addChoice(choice);

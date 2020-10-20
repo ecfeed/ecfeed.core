@@ -29,15 +29,15 @@ public class LabelConditionTest {
 	
 	@Test
 	public void evaluateTest(){
-		ChoiceNode q = new ChoiceNode("q", null, "0");
+		ChoiceNode q = new ChoiceNode("q", "0", null);
 
-		ChoiceNode p = new ChoiceNode("p", null, "0");
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
-		ChoiceNode p12 = new ChoiceNode("p12", null, "0");
-		ChoiceNode p21 = new ChoiceNode("p21", null, "0");
-		ChoiceNode p22 = new ChoiceNode("p22", null, "0");
+		ChoiceNode p = new ChoiceNode("p", "0", null);
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
+		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
+		ChoiceNode p21 = new ChoiceNode("p21", "0", null);
+		ChoiceNode p22 = new ChoiceNode("p22", "0", null);
 
 		p.addChoice(p1);
 		p.addChoice(p2);

@@ -228,12 +228,12 @@ public class TestCasesExportHelperTest {
         theClass.addMethod(method);
 
         MethodParameterNode parameter0 = new MethodParameterNode("par_0", "int", "MAX_VALUE", false, null);
-        ChoiceNode choiceNode00 = new ChoiceNode("c_0", null, par0Value);
+        ChoiceNode choiceNode00 = new ChoiceNode("c_0", par0Value, null);
         parameter0.addChoice(choiceNode00);
         method.addParameter(parameter0);
 
         MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "MIN_VALUE", false, null);
-        ChoiceNode choiceNode11 = new ChoiceNode("c_1", null, par1Value);
+        ChoiceNode choiceNode11 = new ChoiceNode("c_1", par1Value, null);
         parameter1.addChoice(choiceNode11);
         method.addParameter(parameter1);
 

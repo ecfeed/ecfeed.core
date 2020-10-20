@@ -44,7 +44,7 @@ public class ValueConditionTest {
 				RelationStatement.createStatementWithValueCondition(
 						methodParameterNode, statementRelation, value);
 
-		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, null, choiceValue);
+		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
 
 		EvaluationResult result = statement.evaluate(createList(choiceNode));
 
@@ -74,7 +74,7 @@ public class ValueConditionTest {
 				RelationStatement.createStatementWithValueCondition(
 						methodParameterNode, statementRelation, value);
 
-		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, null, choiceValue);
+		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
 		choiceNode.setRandomizedValue(true);
 
 
@@ -101,7 +101,7 @@ public class ValueConditionTest {
 				RelationStatement.createStatementWithValueCondition(
 						methodParameterNode, statementRelation, value);
 
-		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, null, choiceValue);
+		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
 		choiceNode.setRandomizedValue(true);
 
 

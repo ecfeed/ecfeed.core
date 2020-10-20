@@ -61,11 +61,11 @@ public class CopyNodeTest{
 		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
 		ConstraintNode constraint1 = new ConstraintNode("constraint1", null, new Constraint("constraint1", null, new StaticStatement(true, null), new StaticStatement(true, null)));
 		ConstraintNode constraint2 = new ConstraintNode("constraint2", null, new Constraint("constraint2", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		par1.addChoice(choice1);
-		ChoiceNode expectedChoice1 = new ChoiceNode("expected", null, "0");
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
 		expectedChoice1.setParent(par2);
-		ChoiceNode expectedChoice2 = new ChoiceNode("expected", null, "2");
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
 		expectedChoice2.setParent(par2);
 		TestCaseNode testCase1 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
 		TestCaseNode testCase2 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice2));
@@ -84,12 +84,12 @@ public class CopyNodeTest{
 	@Test
 	public void copyGlobalParameterTest(){
 		GlobalParameterNode parameter = new GlobalParameterNode("parameter", null, "int");
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "1");
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "11");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "12");
-		ChoiceNode choice2 = new ChoiceNode("choice1", null, "2");
-		ChoiceNode choice21 = new ChoiceNode("choice11", null, "21");
-		ChoiceNode choice22 = new ChoiceNode("choice12", null, "22");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "1", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "11", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "12", null);
+		ChoiceNode choice2 = new ChoiceNode("choice1", "2", null);
+		ChoiceNode choice21 = new ChoiceNode("choice11", "21", null);
+		ChoiceNode choice22 = new ChoiceNode("choice12", "22", null);
 		choice1.addChoice(choice11);
 		choice1.addChoice(choice12);
 		choice1.addChoice(choice21);
@@ -104,12 +104,12 @@ public class CopyNodeTest{
 	@Test
 	public void copyMethodParameterTest(){
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "1");
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "11");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "12");
-		ChoiceNode choice2 = new ChoiceNode("choice1", null, "2");
-		ChoiceNode choice21 = new ChoiceNode("choice11", null, "21");
-		ChoiceNode choice22 = new ChoiceNode("choice12", null, "22");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "1", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "11", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "12", null);
+		ChoiceNode choice2 = new ChoiceNode("choice1", "2", null);
+		ChoiceNode choice21 = new ChoiceNode("choice11", "21", null);
+		ChoiceNode choice22 = new ChoiceNode("choice12", "22", null);
 		choice1.addChoice(choice11);
 		choice1.addChoice(choice12);
 		choice1.addChoice(choice21);
@@ -126,11 +126,11 @@ public class CopyNodeTest{
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
 		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		choice1.addLabel("label");
 		par1.addChoice(choice1);
 
-		ChoiceNode expectedChoice = new ChoiceNode("expected", null, "0");
+		ChoiceNode expectedChoice = new ChoiceNode("expected", "0", null);
 		expectedChoice.setParent(par2);
 
 		method.addParameter(par1);
@@ -154,11 +154,11 @@ public class CopyNodeTest{
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
 		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		par1.addChoice(choice1);
-		ChoiceNode expectedChoice1 = new ChoiceNode("expected", null, "0");
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
 		expectedChoice1.setParent(par2);
-		ChoiceNode expectedChoice2 = new ChoiceNode("expected", null, "2");
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
 		expectedChoice2.setParent(par2);
 		TestCaseNode testCase = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
 
@@ -172,13 +172,13 @@ public class CopyNodeTest{
 
 	@Test
 	public void copyChoiceTest(){
-		ChoiceNode choice = new ChoiceNode("choice", null, "0");
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "0");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "0");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "0");
-		ChoiceNode choice21 = new ChoiceNode("choice21", null, "0");
-		ChoiceNode choice22 = new ChoiceNode("choice22", null, "0");
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "0", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "0", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
+		ChoiceNode choice21 = new ChoiceNode("choice21", "0", null);
+		ChoiceNode choice22 = new ChoiceNode("choice22", "0", null);
 
 		choice.addChoice(choice1);
 		choice.addChoice(choice2);
@@ -220,7 +220,7 @@ public class CopyNodeTest{
 	@Test
 	public void choiceStatementTest(){
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "65", false, null);
-		ChoiceNode choice = new ChoiceNode("choice", null, "876");
+		ChoiceNode choice = new ChoiceNode("choice", "876", null);
 		parameter.addChoice(choice);
 		choice.addLabel("label");
 
@@ -239,7 +239,7 @@ public class CopyNodeTest{
 	@Test
 	public void expectedStatementTest(){
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "65", true, null);
-		ChoiceNode choice = new ChoiceNode("expected", null, "876");
+		ChoiceNode choice = new ChoiceNode("expected", "876", null);
 		choice.setParent(parameter);
 
 		ExpectedValueStatement statement = new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
