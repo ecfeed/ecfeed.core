@@ -244,6 +244,11 @@ public class ExtLanguageManagerTest {
 
 		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1000", "byte"));
 		assertEquals("byte", javaExtLanguageManager.getExtendedTypeForValue("1000", "byte"));
+
+		assertEquals("String", simpleExtLanguageManager.getExtendedTypeForValue("AB", "char"));
+		assertEquals("String", simpleExtLanguageManager.getExtendedTypeForValue("", "char"));
+
+
 	}
 
 	@Test

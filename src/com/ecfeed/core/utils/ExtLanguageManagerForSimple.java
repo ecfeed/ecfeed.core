@@ -163,7 +163,6 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return false;
 	}
 
-	// TODO SIMPLE-VIEW test
 	@Override
 	public String getExtendedTypeForValue(String value, String currentType) {
 
