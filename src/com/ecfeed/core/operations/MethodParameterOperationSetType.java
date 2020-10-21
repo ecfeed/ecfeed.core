@@ -186,13 +186,13 @@ public class MethodParameterOperationSetType extends BulkOperation {
 						newDefaultValue = fMethodParameterNode.getLeafChoiceValues().toArray(new String[]{})[0];
 					}
 				}
-				else{
-					fMethodParameterNode.addChoice(
-							new ChoiceNode(
-									"choice1", 
-									newDefaultValue, 
-									fMethodParameterNode.getModelChangeRegistrator()));
-				}
+				//				else{
+				//					fMethodParameterNode.addChoice(
+				//							new ChoiceNode(
+				//									"choice1", 
+				//									newDefaultValue, 
+				//									fMethodParameterNode.getModelChangeRegistrator()));
+				//				}
 			}
 
 			fMethodParameterNode.setDefaultValueString(newDefaultValue);
