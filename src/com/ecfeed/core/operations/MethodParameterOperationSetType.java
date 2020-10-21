@@ -189,7 +189,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				else{
 					fMethodParameterNode.addChoice(
 							new ChoiceNode(
-									newDefaultValue.toLowerCase(), 
+									"choice1", 
 									newDefaultValue, 
 									fMethodParameterNode.getModelChangeRegistrator()));
 				}

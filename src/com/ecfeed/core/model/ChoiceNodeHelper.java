@@ -67,7 +67,12 @@ public class ChoiceNodeHelper {
 		return null;
 	}
 
+	// TODO SIMPLE-VIEW test for nested choices
 	public static String createSignature(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+		
+		if (choiceNode == null) {
+			return "EMPTY";
+		}
 
 		String qualifiedName = getQualifiedName(choiceNode, extLanguageManager);
 
@@ -75,7 +80,13 @@ public class ChoiceNodeHelper {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
 		}
 
-		String value = getValueString(choiceNode, extLanguageManager);
+		String value;
+		
+		if (choiceNode.getParent() == null) {
+			value = "N/A";
+		} else {
+			value = getValueString(choiceNode, extLanguageManager);
+		}
 
 		return qualifiedName + " [" + value + "]";
 	}
