@@ -166,12 +166,23 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	@Override
 	public String getExtendedTypeForValue(String value, String currentType, boolean isRandomizedValue) {
 
-		// TODO SIMPLE-VIEW use isRandomizedValue
+		if (!RangeHelper.isRange(value)) {
+			return getExtendedTypeForSingleValue(value, currentType);
+		}
 
-		if (JavaLanguageHelper.isCharTypeName(currentType) 
+		String[] range = RangeHelper.splitToRange(value);
+
+		String extendedType = getExtendedTypeForSingleValue(range[0], currentType);
+		extendedType = getExtendedTypeForSingleValue(range[1], extendedType);
+
+		return extendedType;
+	}
+
+	public String getExtendedTypeForSingleValue(String value, String currentType) {
+		if (JavaLanguageHelper.isCharTypeName(currentType)
 				&& ((value.length() > 1) || (value.length() == 0))) {
 
-			return JavaLanguageHelper.TYPE_NAME_STRING;		
+			return JavaLanguageHelper.TYPE_NAME_STRING;
 		}
 
 		if (JavaLanguageHelper.isNumericTypeName(currentType)) {
