@@ -48,7 +48,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 			return convertForExceptionMode(value);
 		}
 
-		return convertForQuietMode(value);
+		return convertForQuietMode(value, getDefaultValue());
 	}
 
 	private String convertForExceptionMode(String value) {
@@ -65,7 +65,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		return null;
 	}
 
-	private String convertForQuietMode(String value) {
+	public static String convertForQuietMode(String value, String defaultValue) {
 
 		if (StringHelper.isNullOrEmpty(value)) {
 			return JavaLanguageHelper.SPECIAL_VALUE_FALSE;
@@ -86,10 +86,10 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		}
 
 		if (StringHelper.isEqual(JavaLanguageHelper.SPECIAL_VALUE_ZERO, value)) {
-			return JavaLanguageHelper.SPECIAL_VALUE_FALSE; // TODO SIMPLE-VIEW test
+			return JavaLanguageHelper.SPECIAL_VALUE_FALSE;
 		}
 
-		return getDefaultValue();
+		return defaultValue;
 	}
 
 	protected void reportRuntimeException(String value) {
