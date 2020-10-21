@@ -86,7 +86,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		}
 
 		if (StringHelper.isEqual(JavaLanguageHelper.SPECIAL_VALUE_ZERO, value)) {
-			return JavaLanguageHelper.SPECIAL_VALUE_TRUE;
+			return JavaLanguageHelper.SPECIAL_VALUE_FALSE; // TODO SIMPLE-VIEW test
 		}
 
 		return getDefaultValue();

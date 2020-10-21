@@ -251,7 +251,9 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		String newValue = 
 				adapter.convert(
-						choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);
+						choice.getValueString(), 
+						choice.isRandomizedValue(), 
+						ERunMode.QUIET);
 
 		if (newValue == null) {
 			it.remove();
