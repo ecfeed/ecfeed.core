@@ -147,7 +147,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	}
 
 	@Override
-	public String getExtendedTypeForValue(String value, String currentType) {
+	public String getExtendedTypeForValue(String value, String currentType, boolean isRandomizedValue) {
 
 		return currentType; // no type extending in Java view
 	}

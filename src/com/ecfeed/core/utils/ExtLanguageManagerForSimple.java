@@ -164,7 +164,9 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	public String getExtendedTypeForValue(String value, String currentType) {
+	public String getExtendedTypeForValue(String value, String currentType, boolean isRandomizedValue) {
+
+		// TODO SIMPLE-VIEW use isRandomizedValue
 
 		if (JavaLanguageHelper.isCharTypeName(currentType) 
 				&& ((value.length() > 1) || (value.length() == 0))) {
