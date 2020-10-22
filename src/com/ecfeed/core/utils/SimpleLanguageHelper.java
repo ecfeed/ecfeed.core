@@ -173,7 +173,7 @@ public final class SimpleLanguageHelper {
 			return "boolean";
 		}
 
-		if (!JavaLanguageHelper.isJavaType(type)) {
+		if (JavaLanguageHelper.isJavaType(type)) { // TODO SIMPLE-VIEW test
 			ExceptionHelper.reportRuntimeException("Attempt to convert non simple type.");
 		}
 

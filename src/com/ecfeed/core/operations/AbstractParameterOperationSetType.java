@@ -173,7 +173,9 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		String newTypeInIntrLanguage = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage); // TODO SIMPLE-VIEW test
+		String newTypeInIntrLanguage = 
+				extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
+		
 		fTarget.setType(newTypeInIntrLanguage);
 
 		adaptChoices(fTarget);
