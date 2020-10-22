@@ -18,6 +18,8 @@ import com.ecfeed.core.model.SimpleLanguageModelVerifier;
 public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 
 
+	public static final String ATTEMPT_TO_CONVERT_NON_SIMPLE_TYPE = "Attempt to convert non simple type.";
+
 	@Override
 	public String verifySeparators(String nameInExternalLanguage) {
 
@@ -76,7 +78,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		type = SimpleLanguageHelper.conditionallyConvertSimpleTypeToJavaType(type);
 
 		if (!JavaLanguageHelper.isJavaType(type)) {
-			ExceptionHelper.reportRuntimeException("Attempt to convert non simple type.");
+			ExceptionHelper.reportRuntimeException(ATTEMPT_TO_CONVERT_NON_SIMPLE_TYPE);
 		}
 
 		return type;

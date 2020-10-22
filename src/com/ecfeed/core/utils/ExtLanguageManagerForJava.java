@@ -16,6 +16,8 @@ import com.ecfeed.core.model.RootNode;
 
 public class ExtLanguageManagerForJava implements IExtLanguageManager {
 
+	public static final String ATTEMPT_TO_CONVERT_NON_JAVA_TYPE = "Attempt to convert non java type.";
+
 	@Override
 	public String verifySeparators(String nameInExternalLanguage) {
 
@@ -66,7 +68,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	public String convertTypeFromExtToIntrLanguage(String type) {
 
 		if (!JavaLanguageHelper.isJavaType(type)) {
-			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
+			ExceptionHelper.reportRuntimeException(ATTEMPT_TO_CONVERT_NON_JAVA_TYPE);
 		}
 
 		return type;
@@ -75,7 +77,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String convertToMinimalTypeFromExtToIntrLanguage(String type) {
 
-		if (!JavaLanguageHelper.isJavaType(type)) {
+		if (SimpleLanguageHelper.isSimpleType(type)) {
 			ExceptionHelper.reportRuntimeException("Attempt to convert non java type.");
 		}
 

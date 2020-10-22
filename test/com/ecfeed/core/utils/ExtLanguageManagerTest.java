@@ -121,6 +121,43 @@ public class ExtLanguageManagerTest {
 	}
 
 	@Test
+	public void convertToMinimalTypeForSimpleTest() {
+
+		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
+
+		assertEquals("byte",  simpleExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("Number"));
+		assertEquals("char",  simpleExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("Text"));
+		assertEquals("boolean",  simpleExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("Logical"));
+		assertEquals("UserType",  simpleExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("UserType"));
+
+		try {
+			simpleExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("int");
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e,ExtLanguageManagerForSimple.ATTEMPT_TO_CONVERT_NON_SIMPLE_TYPE);
+		}
+	}
+
+	@Test
+	public void convertToMinimalTypeForJavaTest() {
+
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+
+		assertEquals("byte",  javaExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("byte"));
+		assertEquals("char",  javaExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("char"));
+		assertEquals("boolean",  javaExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("boolean"));
+		assertEquals("UserType",  javaExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("UserType"));
+
+		try {
+			javaExtLanguageManager.convertToMinimalTypeFromExtToIntrLanguage("Number");
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e,ExtLanguageManagerForJava.ATTEMPT_TO_CONVERT_NON_JAVA_TYPE);
+		}
+
+	}
+
+	@Test
 	public void convertTypeFromIntrToExtLanguageTest() {
 
 		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
