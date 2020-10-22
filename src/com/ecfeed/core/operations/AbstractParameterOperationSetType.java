@@ -172,15 +172,15 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		}
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
-		
-		String newTypeInIntrLanguage = extLanguageManager.convertTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
+
+		String newTypeInIntrLanguage = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage); // TODO SIMPLE-VIEW test
 		fTarget.setType(newTypeInIntrLanguage);
-		
+
 		adaptChoices(fTarget);
 	}
 
 	public void checkType(String newTypeInExtLanguage) throws ModelOperationException {
-		
+
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 		String message = extLanguageManager.verifyIsAllowedType(newTypeInExtLanguage);
 
