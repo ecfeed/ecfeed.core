@@ -95,6 +95,30 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
+	public static String createReverseSignature(
+			String parameterType,
+			String parameterName,
+			Boolean expectedFlag) {
+
+		String signature = "";
+
+		if (parameterName != null) {
+			signature += parameterName;
+		}
+		
+		signature += " : ";
+		
+		if (expectedFlag != null) {
+			String expectedDecoration = createExpectedDecoration(expectedFlag);
+			signature += expectedDecoration;
+		}
+
+		signature += parameterType;
+
+
+		return signature;
+	}
+	
 	private static String createExpectedDecoration(Boolean expectedFlag) {
 
 		String signature = "";

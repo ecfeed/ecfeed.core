@@ -42,6 +42,28 @@ public class MethodParameterNodeHelper {
 		return signature;
 	}
 
+	public static String createReverseSignature( // TODO SIMPLE-VIEW test
+			MethodParameterNode methodParameterNode,
+			IExtLanguageManager extLanguageManager) {
+
+		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
+		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguageManager);
+
+		String signature = 
+				AbstractParameterNodeHelper.createReverseSignature(
+						type,
+						name,
+						methodParameterNode.isExpected());
+
+		final GlobalParameterNode link = methodParameterNode.getLink();
+
+		if (methodParameterNode.isLinked() && link != null) {
+			signature += "[LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(link, extLanguageManager);
+		}
+
+		return signature;
+	}
+
 	public static String getType(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = methodParameterNode.getType();
