@@ -20,6 +20,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class MethodParameterOperationSetTypeTest {
@@ -111,6 +112,39 @@ public class MethodParameterOperationSetTypeTest {
 					"Class1",
 					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
 		}
+	}
+
+	@Test
+	public void setTextToNumberInSimpleMode() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = new ClassNode("com.Class1", null);
+		rootNode.addClass(classNode);
+
+		// add method1 with char parameter
+
+		MethodNode methodNode1 = new MethodNode("method", null);
+		classNode.addMethod(methodNode1);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "char", "A", false, null);
+
+		methodNode1.addParameter(methodParameterNode1);
+
+		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
+
+		try {
+			MethodParameterOperationSetType methodParameterOperationSetType =
+					new MethodParameterOperationSetType(
+							methodParameterNode1, "Number", extLanguageManagerForSimple, typeAdapterProvider);
+			methodParameterOperationSetType.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		assertEquals("byte", methodParameterNode1.getType());
 	}
 
 	@Test
