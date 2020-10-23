@@ -1019,12 +1019,12 @@ public final class JavaLanguageHelper {
 			return null;
 		}
 
-		if (!isJavaType(typeName1)) {
-			return null;
+		if (!isJavaType(typeName1)) { // TODO SIMPLE-VIEW test
+			return typeName1;
 		}
 
-		if (!isJavaType(typeName2)) {
-			return null;
+		if (!isJavaType(typeName2)) { // TODO SIMPLE-VIEW test
+			return typeName2;
 		}
 
 		if (JavaLanguageHelper.isBooleanTypeName(typeName1) || JavaLanguageHelper.isBooleanTypeName(typeName2)) {
