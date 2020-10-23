@@ -102,19 +102,18 @@ public abstract class AbstractParameterNodeHelper {
 
 		String signature = "";
 
-		if (parameterName != null) {
-			signature += parameterName;
-		}
-		
-		signature += " : ";
-		
 		if (expectedFlag != null) {
 			String expectedDecoration = createExpectedDecoration(expectedFlag);
 			signature += expectedDecoration;
 		}
 
-		signature += parameterType;
+		if (parameterName != null) {
+			signature += parameterName;
+		}
+		
+		signature += " : ";
 
+		signature += parameterType;
 
 		return signature;
 	}
