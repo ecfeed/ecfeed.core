@@ -35,7 +35,7 @@ public class MethodNodeHelper {
 	public static MethodParameterNode findMethodParameterByName(
 			String parameterNameToFindInExtLanguage, 
 			MethodNode methodNode, 
-			IExtLanguageManager extLanguageManager) { // TODO SIMPLE-VIEW test
+			IExtLanguageManager extLanguageManager) {
 
 		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
 

@@ -42,7 +42,7 @@ public class MethodParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createReverseSignature( // TODO SIMPLE-VIEW test
+	public static String createReverseSignature(
 			MethodParameterNode methodParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
