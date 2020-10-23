@@ -37,6 +37,52 @@ public class MethodNodeHelperTest {
 	}
 
 	@Test
+	public void findMethodParameterByNameTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("arg_1", "String", "", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("arg_2", "String", "", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		// checks for simple language
+
+		ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+
+		MethodParameterNode foundMethodParameterNode =
+				MethodNodeHelper.findMethodParameterByName("arg 1", methodNode, extLanguageManagerForSimple);
+		assertEquals(foundMethodParameterNode, methodParameterNode1);
+
+		foundMethodParameterNode =
+				MethodNodeHelper.findMethodParameterByName("arg 2", methodNode, extLanguageManagerForSimple);
+		assertEquals(foundMethodParameterNode, methodParameterNode2);
+
+		foundMethodParameterNode =
+				MethodNodeHelper.findMethodParameterByName("arg 3", methodNode, extLanguageManagerForSimple);
+		assertNull(foundMethodParameterNode);
+
+		// checks for Java language
+
+		ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		foundMethodParameterNode =
+				MethodNodeHelper.findMethodParameterByName("arg_1", methodNode, extLanguageManagerForJava);
+		assertEquals(foundMethodParameterNode, methodParameterNode1);
+
+		foundMethodParameterNode =
+				MethodNodeHelper.findMethodParameterByName("arg_2", methodNode, extLanguageManagerForJava);
+		assertEquals(foundMethodParameterNode, methodParameterNode2);
+
+		foundMethodParameterNode =
+				MethodNodeHelper.findMethodParameterByName("arg_3", methodNode, extLanguageManagerForJava);
+		assertNull(foundMethodParameterNode);
+	}
+
+	@Test
 	public void getParameterNamesTest(){
 
 		MethodNode methodNode = new MethodNode("method_1", null);
