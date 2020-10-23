@@ -653,10 +653,10 @@ public class JavaLanguageHelperTest {
 		assertEquals("String", type);
 
 		type = JavaLanguageHelper.getSubstituteType("String", "x");
-		assertNull(type);
+		assertEquals("x", type);
 
 		type = JavaLanguageHelper.getSubstituteType("x", "String");
-		assertNull(type);
+		assertEquals("x", type);
 
 		type = JavaLanguageHelper.getSubstituteType("char");
 		assertEquals("String", type);
