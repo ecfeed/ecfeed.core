@@ -18,6 +18,7 @@ import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
@@ -29,6 +30,27 @@ public class MethodNodeHelper {
 	public static void setName(MethodNode methodNode, String name, IExtLanguageManager extLanguageManager) {
 
 		AbstractNodeHelper.setName(methodNode, name, extLanguageManager);
+	}
+
+	public static MethodParameterNode findMethodParameterByName(
+			String parameterNameToFindInExtLanguage, 
+			MethodNode methodNode, 
+			IExtLanguageManager extLanguageManager) { // TODO SIMPLE-VIEW test
+
+		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
+
+		for (AbstractParameterNode parameter : methodParameters) {
+
+			MethodParameterNode methodParameterNode = (MethodParameterNode)parameter;
+
+			String parameterNameInExtLanguage = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
+
+			if (StringHelper.isEqual(parameterNameToFindInExtLanguage, parameterNameInExtLanguage)) {
+				return methodParameterNode;
+			}
+		}
+		return null;
+
 	}
 
 	public static List<String> getParameterNames(MethodNode method) {

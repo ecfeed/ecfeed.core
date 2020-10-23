@@ -52,7 +52,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 		return fParameters.size();
 	}	
 
-	public AbstractParameterNode getParameter(String parameterName) {
+	public AbstractParameterNode getParameter(String parameterName) {  // TODO SIMPLE-VIEW rename to find parameter
 
 		for (AbstractParameterNode parameter : fParameters) {
 			if (parameter.getName().equals(parameterName)) {
