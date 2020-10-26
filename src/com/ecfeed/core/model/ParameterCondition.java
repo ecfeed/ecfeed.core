@@ -13,12 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.RangeHelper;
-import com.ecfeed.core.utils.RelationMatcher;
+import com.ecfeed.core.utils.*;
 
 
 public class ParameterCondition implements IStatementCondition {
@@ -203,6 +198,14 @@ public class ParameterCondition implements IStatementCondition {
 	public String toString() {
 
 		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getName());
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		return StatementConditionHelper.createParameterDescription(
+				MethodParameterNodeHelper.getName(fRightParameterNode, extLanguageManager));
+
 	}
 
 	@Override

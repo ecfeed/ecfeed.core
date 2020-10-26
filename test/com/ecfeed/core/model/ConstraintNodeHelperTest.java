@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import org.junit.Test;
@@ -47,8 +46,21 @@ public class ConstraintNodeHelperTest {
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
-		AbstractStatement premise = createPremiseWithValueCondition();
-		AbstractStatement consequence = createConsequenceWithValueCondition();
+		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
+
+		AbstractStatement premise1 =
+				RelationStatement.createStatementWithValueCondition(
+						parameter1, EMathRelation.EQUAL, "A");
+
+		AbstractStatement premise = premise1;
+
+		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
+
+		AbstractStatement consequence1 =
+				RelationStatement.createStatementWithValueCondition(
+						parameter2, EMathRelation.EQUAL, "C");
+
+		AbstractStatement consequence = consequence1;
 
 		Constraint constraint = new Constraint("co_1", null, premise, consequence);
 
@@ -59,31 +71,38 @@ public class ConstraintNodeHelperTest {
 
 		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
 		assertEquals("co 1: par 1=A => par 2=C", signature);
-
-		System.out.println(signature);
 	}
 
-	private AbstractStatement createPremiseWithValueCondition() {
+	@Test
+	public void createSignatureTest3() {
+
+		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
+		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+
+		ChoiceNode choice1 = new ChoiceNode("choice_1", "value1", null);
+		ChoiceNode choice2 = new ChoiceNode("choice_2", "value2", null);
 
 		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
 
 		AbstractStatement premise =
-				RelationStatement.createStatementWithValueCondition(
-						parameter1, EMathRelation.EQUAL, "A");
-
-		return premise;
-	}
-
-	private AbstractStatement createConsequenceWithValueCondition() {
+				RelationStatement.createStatementWithChoiceCondition(
+						parameter1, EMathRelation.EQUAL, choice1);
 
 		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
 
 		AbstractStatement consequence =
-				RelationStatement.createStatementWithValueCondition(
-						parameter2, EMathRelation.EQUAL, "C");
+				RelationStatement.createStatementWithChoiceCondition(
+						parameter2, EMathRelation.EQUAL, choice2);
 
-		return consequence;
+		Constraint constraint = new Constraint("co", null, premise, consequence);
+
+		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
+
+		String signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForJava);
+		assertEquals("co: par_1=choice_1[choice] => par_2=choice_2[choice]", signature);
+
+		signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForSimple);
+		assertEquals("co: par 1=choice 1[choice] => par 2=choice 2[choice]", signature);
 	}
-
 
 }
