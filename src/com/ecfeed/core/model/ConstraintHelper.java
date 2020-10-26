@@ -27,7 +27,8 @@ public class ConstraintHelper {
 		String name = constraint.getName();
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 
-		return name + ": " + constraint.getSignature();
+		String signature2 = constraint.getSignature();
+		return name + ": " + signature2;
 	}
 
 	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {

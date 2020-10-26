@@ -132,8 +132,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public String getSignature() {
 		
-		String premiseString = (fPremise != null) ? fPremise.toString() : "EMPTY";
-		String consequenceString = (fConsequence != null) ? fConsequence.toString() : "EMPTY";
+		String premiseString = AbstractStatementHelper.createSignature(fPremise);
+		String consequenceString = AbstractStatementHelper.createSignature(fConsequence);
 
 		return premiseString + " \u21d2 " + consequenceString;
 	}
