@@ -12,10 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.*;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -129,6 +126,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public String toString() {
 
 		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		MethodParameterNode methodParameterNode = getLeftParameter();
+		return MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager) + getRelation() + fRightCondition.toString();
 	}
 
 	@Override

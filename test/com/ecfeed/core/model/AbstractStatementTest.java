@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.MessageStack;
@@ -40,6 +41,12 @@ public class AbstractStatementTest {
 		public boolean updateReferences(MethodNode method){
 			return true;
 		}
+
+		@Override
+		public String createSignature(IExtLanguageManager extLanguageManager) {
+			return null;
+		}
+
 		@Override
 		public boolean compare(IStatement statement) {
 			return false;

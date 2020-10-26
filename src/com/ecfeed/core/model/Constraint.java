@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public class Constraint implements IConstraint<ChoiceNode> {
@@ -127,13 +129,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public String toString() {
 
-		return getSignature();
+		return createSignature(new ExtLanguageManagerForJava());
 	}
 
-	public String getSignature() {
+	public String createSignature(IExtLanguageManager extLanguageManager) {
 		
-		String premiseString = AbstractStatementHelper.createSignature(fPremise);
-		String consequenceString = AbstractStatementHelper.createSignature(fConsequence);
+		String premiseString = AbstractStatementHelper.createSignature(fPremise, extLanguageManager);
+		String consequenceString = AbstractStatementHelper.createSignature(fConsequence, extLanguageManager);
 
 		return premiseString + " => " + consequenceString;
 	}

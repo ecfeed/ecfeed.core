@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 //ambigous always false
@@ -109,6 +110,14 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public String toString(){
 		return getParameter().getName() + getRelation().toString() + fCondition.getValueString();
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager){
+
+		final MethodParameterNode parameter = getParameter();
+
+		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fCondition.getValueString();
 	}
 
 	@Override

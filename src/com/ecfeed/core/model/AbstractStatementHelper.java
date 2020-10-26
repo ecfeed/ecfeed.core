@@ -10,50 +10,21 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
+
 import java.util.List;
 
 public abstract class AbstractStatementHelper {
 
-	public static String createSignature(AbstractStatement abstractStatement) { // TODO SIMPLE-VIEW test
+	public static String createSignature(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
 
 		if (abstractStatement == null) {
 			return "EMPTY";
 		}
 
-		return abstractStatement.toString();
+		return abstractStatement.createSignature(extLanguageManager);
 	}
 
 
-	public static String createSignature9(StatementArray statementArray) { // TODO SIMPLE-VIEW 
 
-		String result = new String("(");
-		
-		List<AbstractStatement> statements = statementArray.getChildren();
-		
-		int statementsSize = statements.size();
-		
-		for (int i = 0; i < statementsSize; i++) {
-			
-			AbstractStatement abstractStatement = statements.get(i);
-			
-			result += abstractStatement.toString();
-			
-			if (i < statementsSize - 1) {
-				
-				EStatementOperator operator2 = statementArray.getOperator();
-				
-				switch(operator2) {
-				case AND:
-					result += " \u2227 ";
-					break;
-				case OR:
-					result += " \u2228 ";
-					break;
-				}
-			}
-		}
-		
-		return result + ")";
-	}
-	
 }
