@@ -135,7 +135,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		String premiseString = AbstractStatementHelper.createSignature(fPremise);
 		String consequenceString = AbstractStatementHelper.createSignature(fConsequence);
 
-		return premiseString + " \u21d2 " + consequenceString;
+		return premiseString + " => " + consequenceString;
 	}
 
 	@Override
