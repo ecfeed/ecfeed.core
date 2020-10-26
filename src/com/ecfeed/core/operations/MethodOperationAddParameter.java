@@ -73,7 +73,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 				ModelOperationException.report(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
-								parentClassNode, foundMethodNode, extLanguageManager));
+								parentClassNode, foundMethodNode, false, extLanguageManager));
 			}
 		}
 

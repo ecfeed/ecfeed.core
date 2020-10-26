@@ -315,8 +315,8 @@ public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
 
 		Pair<String,String> pairOfSignatures = 
 				new Pair<String, String>(
-						MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForSimple()),
-						MethodNodeHelper.createSignature(methodNode, new ExtLanguageManagerForJava()));
+						MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForSimple()),
+						MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForJava()));
 
 
 		return pairOfSignatures;

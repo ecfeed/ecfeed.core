@@ -89,7 +89,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 				ModelOperationException.report(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
-								method.getClassNode(), method, getExtLanguageManager()));
+								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
 			fTarget.setLinked(fLinked);

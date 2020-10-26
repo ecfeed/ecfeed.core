@@ -144,12 +144,13 @@ public class ClassNodeHelper {
 	public static String createMethodSignatureDuplicateMessage(
 			ClassNode classNode,
 			MethodNode duplicateMethodNode,
+			boolean isParamNameAdded,
 			IExtLanguageManager extLanguageManager) {
 
 
 		String classSignature = createSignature(classNode, extLanguageManager);
 
-		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, extLanguageManager);
+		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, isParamNameAdded, extLanguageManager);
 
 		String message =
 				"Class: "

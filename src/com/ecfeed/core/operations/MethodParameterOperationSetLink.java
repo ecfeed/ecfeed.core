@@ -64,7 +64,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 				
 				ModelOperationException.report(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
-								method.getClassNode(), method, getExtLanguageManager()));
+								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
 			fCurrentLink = fTarget.getLink();

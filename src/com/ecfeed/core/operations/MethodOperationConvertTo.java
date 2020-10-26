@@ -51,7 +51,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 			ModelOperationException.report(
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
-							classNode, fTargetMethodNode, getExtLanguageManager()));
+							classNode, fTargetMethodNode, false, getExtLanguageManager()));
 		}
 
 		if(fTargetMethodNode.getParameterTypes().equals(fSourceMethodNode.getParameterTypes()) == false){

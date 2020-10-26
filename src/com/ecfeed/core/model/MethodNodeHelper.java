@@ -111,15 +111,17 @@ public class MethodNodeHelper {
 		return null;
 	}
 
-	public static String createSignature(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
 		return MethodNodeHelper.createSignature(
 				methodNode,
+				isParamNameAdded,
 				false, extLanguageManager);
 	}
 
 	public static String createSignature(
 			MethodNode methodNode,
+			boolean isParamNameAdded,
 			boolean isExpectedDecorationAdded, 
 			IExtLanguageManager extLanguageOfTheResult) {
 
@@ -127,27 +129,35 @@ public class MethodNodeHelper {
 		final List<Boolean> expectedParametersFlags =
 				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getMethodParameters()) : null);
 
+		List<String> parametersNames = new ArrayList<>();
+
+		if (isParamNameAdded == true) {
+			parametersNames = methodNode.getParametersNames();
+		} else {
+			parametersNames = null;
+		}
+
 		String signature =
 				createSignatureByIntrLanguage(
 						methodNode.getName(),
 						methodNode.getParameterTypes(),
-						methodNode.getParametersNames(),
+						parametersNames,
 						expectedParametersFlags,
 						extLanguageOfTheResult);
 
 		return signature;
 	}
 
-	public static String createLongSignature(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	public static String createLongSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
-		String shortSignature = createSignature(methodNode, extLanguageManager);
+		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
 
 		return methodNode.getParent().getName() + "." + shortSignature;
 	}
 
-	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
-		String signature = createSignature(methodNode, true, extLanguageManager);
+		String signature = createSignature(methodNode, isParamNameAdded, true,  extLanguageManager);
 
 		return signature;
 	}
