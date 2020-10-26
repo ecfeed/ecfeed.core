@@ -42,7 +42,7 @@ public class ConstraintNode extends AbstractNode{
 			return "EMPTY";
 		}
 
-		return ConstraintHelper.getSignature(fConstraint, new ExtLanguageManagerForJava());
+		return ConstraintHelper.createSignature(fConstraint, new ExtLanguageManagerForJava());
 	}
 
 	@Override

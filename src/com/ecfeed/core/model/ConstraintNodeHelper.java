@@ -16,7 +16,7 @@ public class ConstraintNodeHelper {
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		return ConstraintHelper.getSignature(constraintNode.getConstraint(), extLanguageManager);
+		return ConstraintHelper.createSignature(constraintNode.getConstraint(), extLanguageManager);
 	}
 
 	public static String getName(ConstraintNode ownNode, IExtLanguageManager extLanguageManager) {
