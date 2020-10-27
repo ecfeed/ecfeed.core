@@ -12,8 +12,6 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-import java.util.List;
-
 public abstract class AbstractStatementHelper {
 
 	public static String createSignature(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
