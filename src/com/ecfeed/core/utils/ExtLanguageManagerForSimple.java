@@ -203,7 +203,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		if (JavaLanguageHelper.isNumericTypeLarger(typeCompatibleWithValue, currentType)) {
 			return typeCompatibleWithValue;
 		}
-		
+
 		return currentType;
 	}
 

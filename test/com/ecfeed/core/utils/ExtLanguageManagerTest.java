@@ -278,25 +278,25 @@ public class ExtLanguageManagerTest {
 
 		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 
-		// TODO XYX UNCOMMENT
-//		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1000", "byte", false));
-//		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("123.4", "byte", false));
-//
-//		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1:1001", "byte", true));
-//		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1000:1001", "byte", true));
-//		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("11.1:12.2", "byte", true));
-//		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("11.1:12", "byte", true));
-//		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("11:12.2", "byte", true));
-//
-//		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
-//
-//		assertEquals("byte", javaExtLanguageManager.getExtendedTypeForValue("1000", "byte", false));
-//		assertEquals("byte", javaExtLanguageManager.getExtendedTypeForValue("1000:1000", "byte", false));
-//
-//		assertEquals("String", simpleExtLanguageManager.getExtendedTypeForValue("AB", "char", false));
-//		assertEquals("String", simpleExtLanguageManager.getExtendedTypeForValue("", "char", false));
+		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1000", "byte", false));
+		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("123.4", "byte", false));
+
+		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1:1001", "byte", true));
+		assertEquals("short", simpleExtLanguageManager.getExtendedTypeForValue("1000:1001", "byte", true));
+		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("11.1:12.2", "byte", true));
+		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("11.1:12", "byte", true));
+		assertEquals("float", simpleExtLanguageManager.getExtendedTypeForValue("11:12.2", "byte", true));
+
+		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
+
+		assertEquals("byte", javaExtLanguageManager.getExtendedTypeForValue("1000", "byte", false));
+		assertEquals("byte", javaExtLanguageManager.getExtendedTypeForValue("1000:1000", "byte", false));
+
+		assertEquals("String", simpleExtLanguageManager.getExtendedTypeForValue("AB", "char", false));
+		assertEquals("String", simpleExtLanguageManager.getExtendedTypeForValue("", "char", false));
 
 		// invalid values
+		
 		assertEquals("byte", simpleExtLanguageManager.getExtendedTypeForValue("4t", "byte", false));
 		assertEquals("int", simpleExtLanguageManager.getExtendedTypeForValue("4t", "int", false));
 		assertEquals("long", simpleExtLanguageManager.getExtendedTypeForValue("4t", "long", false));
