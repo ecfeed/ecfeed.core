@@ -183,21 +183,27 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	public String getExtendedTypeForSingleValue(String value, String currentType) {
+
 		if (JavaLanguageHelper.isCharTypeName(currentType)
 				&& ((value.length() > 1) || (value.length() == 0))) {
 
 			return JavaLanguageHelper.TYPE_NAME_STRING;
 		}
 
-		if (JavaLanguageHelper.isNumericTypeName(currentType)) {
-
-			String typeCompatibleWithValue = JavaLanguageHelper.getCompatibleNumericType(value);
-
-			if (JavaLanguageHelper.isNumericTypeLarger(typeCompatibleWithValue, currentType)) {
-				return typeCompatibleWithValue;
-			}
+		if (!JavaLanguageHelper.isNumericTypeName(currentType)) {
+			return currentType;
 		}
 
+		String typeCompatibleWithValue = JavaLanguageHelper.getCompatibleNumericType(value);
+
+		if (typeCompatibleWithValue == null) {
+			return currentType;
+		}
+
+		if (JavaLanguageHelper.isNumericTypeLarger(typeCompatibleWithValue, currentType)) {
+			return typeCompatibleWithValue;
+		}
+		
 		return currentType;
 	}
 
