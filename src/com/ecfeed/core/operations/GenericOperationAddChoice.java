@@ -122,7 +122,10 @@ public class GenericOperationAddChoice extends BulkOperation {
 				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(type);
 				String newValue = 
 						adapter.convert(
-								choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);
+								choice.getValueString(), 
+								choice.isRandomizedValue(), 
+								ERunMode.QUIET,
+								getExtLanguageManager());
 
 				if(newValue == null){
 					ModelOperationException.report(PARTITION_VALUE_PROBLEM(choice.getValueString()));

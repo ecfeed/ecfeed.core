@@ -74,11 +74,18 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			MethodParameterNode parameter = fTestCase.getMethodParameter(choice);
 
 			if(parameter.isExpected()){
+				
 				String type = parameter.getType();
+				
 				ITypeAdapter<?> adapter = fTypeAdapterProvider.getAdapter(type);
+				
 				String newValue = 
 						adapter.convert(
-								choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);
+								choice.getValueString(), 
+								choice.isRandomizedValue(), 
+								ERunMode.QUIET, 
+								getExtLanguageManager());
+				
 				if(newValue == null){
 					ModelOperationException.report(OperationMessages.TEST_CASE_DATA_INCOMPATIBLE_WITH_METHOD);
 				}

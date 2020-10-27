@@ -15,6 +15,7 @@ import java.util.Arrays;
 import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 
@@ -52,7 +53,7 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 	}
 
 	@Override
-	public String convert(String value, boolean isRandomized, ERunMode conversionMode) {
+	public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 		return value;
 	}
 

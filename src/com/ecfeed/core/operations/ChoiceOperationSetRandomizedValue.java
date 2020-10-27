@@ -51,7 +51,10 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 		try {
 			return typeAdapter.convert(
-					fChoiceNode.getValueString(), randomized, ERunMode.QUIET);
+					fChoiceNode.getValueString(), 
+					randomized, 
+					ERunMode.QUIET, 
+					getExtLanguageManager());
 
 		} catch (RuntimeException ex) {
 			ModelOperationException.report(ex.getMessage());

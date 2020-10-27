@@ -169,7 +169,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 			ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
 			String newDefaultValue = 
-					adapter.convert(fMethodParameterNode.getDefaultValue(), false, ERunMode.QUIET);
+					adapter.convert(fMethodParameterNode.getDefaultValue(), false, ERunMode.QUIET, getExtLanguageManager());
 
 			if (newDefaultValue == null) {
 				if (fMethodParameterNode.getLeafChoices().size() > 0) {
@@ -210,7 +210,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 					ChoiceNode expectedValue = tcIt.next().getTestData().get(fMethodParameterNode.getMyIndex());
 					String newValue = 
 							adapter.convert(
-									expectedValue.getValueString(), false, ERunMode.QUIET);
+									expectedValue.getValueString(), false, ERunMode.QUIET, getExtLanguageManager());
 
 					if (JavaLanguageHelper.isUserType(getNewType())) {
 						if (fMethodParameterNode.getLeafChoiceValues().contains(newValue) == false) {
@@ -313,7 +313,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
 				String newValue = 
 						adapter.convert(
-								statement.getCondition().getValueString(), false, ERunMode.QUIET);
+								statement.getCondition().getValueString(), 
+								false, 
+								ERunMode.QUIET,
+								getExtLanguageManager());
 
 				fOriginalStatementValues.put(statement, statement.getCondition().getValueString());
 				statement.getCondition().setValueString(newValue);

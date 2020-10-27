@@ -13,6 +13,7 @@ package com.ecfeed.core.type.adapter;
 import java.util.Arrays;
 
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class TypeAdapterBaseForUserType<T extends Enum<T>> implements ITypeAdapter<T> {
@@ -34,7 +35,7 @@ public class TypeAdapterBaseForUserType<T extends Enum<T>> implements ITypeAdapt
 		return Arrays.asList(TYPES_CONVERTABLE_TO_USER_TYPE).contains(type);
 	}
 
-	public String convert(String value, boolean isRandomized, ERunMode conversionMode) {
+	public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 		return JavaLanguageHelper.isValidJavaIdentifier(value) ? value : null;
 	}
 

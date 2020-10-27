@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -42,7 +43,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		return Arrays.asList(TYPES_CONVERTABLE_TO_BOOLEAN).contains(type);
 	}
 
-	public String convert(String value, boolean isRandomized, ERunMode conversionMode){
+	public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (conversionMode == ERunMode.WITH_EXCEPTION) {
 			return convertForExceptionMode(value);

@@ -12,6 +12,7 @@ package com.ecfeed.core.type.adapter;
 
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RangeHelper;
 
 public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> {
@@ -26,7 +27,7 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 	}
 
 	@Override
-	public String convert(String value, boolean isRandomized, ERunMode conversionMode) {
+	public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (!RangeHelper.isRange(value)) {
 			return convertNotRange(value, isRandomized, conversionMode);
@@ -51,7 +52,7 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 		return null;
 	}
 
-	private String convertRange(String value, boolean isRandomized, ERunMode conversionMode) {
+	private String convertRange(String value, boolean isRandomized, ERunMode conversionMode) { // TODO  SIMPLE-VIEW check  for MAX_VALUE and Simple
 		String[] range = RangeHelper.splitToRange(value);
 
 		if (isRandomized) {

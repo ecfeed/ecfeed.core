@@ -83,7 +83,12 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		ITypeAdapter<?> typeAdapter = fAdapterProvider.getAdapter(type); 
 
 		try {
-			return typeAdapter.convert(value, fOwnChoiceNode.isRandomizedValue(), ERunMode.WITH_EXCEPTION);
+			return typeAdapter.convert(
+					value, 
+					fOwnChoiceNode.isRandomizedValue(), 
+					ERunMode.WITH_EXCEPTION,
+					getExtLanguageManager());
+			
 		} catch (RuntimeException ex) {
 			ModelOperationException.report(ex.getMessage());
 		}

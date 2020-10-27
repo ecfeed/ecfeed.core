@@ -158,7 +158,8 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 						adapter.convert(
 								parentChoiceNode.getValueString(), 
 								parentChoiceNode.isRandomizedValue(),
-								ERunMode.QUIET);
+								ERunMode.QUIET,
+								getExtLanguageManager());
 
 				if(newValue == null){
 					newValue = adapter.getDefaultValue();
