@@ -98,7 +98,9 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 			return valueInIntrLanguage;
 		}
 
-		String convertedValue = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(typeInIntrLanguage, valueInIntrLanguage);
+		String convertedValue = 
+				JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric(
+						typeInIntrLanguage, valueInIntrLanguage);
 
 		return convertedValue;
 	}
