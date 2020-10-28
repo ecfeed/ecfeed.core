@@ -10,37 +10,37 @@
 
 package com.ecfeed.core.type;
 
-import com.ecfeed.core.type.adapter.TypeAdapterForLong;
+import com.ecfeed.core.type.adapter.TypeAdapterForByte;
 import com.ecfeed.core.type.adapter.TypeAdapterForNumericType;
 import com.ecfeed.core.type.adapter.TypeAdapterHelper;
 import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class TypeAdapterForLongTest {
+public class TypeAdapterForByteTest {
 
 	@Test
 	public void convertSingleValueForJavaTest() {
 
 		IExtLanguageManager extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
-		TypeAdapterForLong typeAdapterForLong = new TypeAdapterForLong();
+		TypeAdapterForByte typeAdapterForByte = new TypeAdapterForByte();
 
-		assertEquals("1", typeAdapterForLong.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("1", typeAdapterForLong.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("0", typeAdapterForLong.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
+
+		assertEquals("1", typeAdapterForByte.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1", typeAdapterForByte.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("0", typeAdapterForByte.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
 
 		try {
-			typeAdapterForLong.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
+			typeAdapterForByte.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
 		}
 
-		assertEquals("MAX_VALUE", typeAdapterForLong.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("MAX_VALUE", typeAdapterForByte.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
 	}
 
 	@Test
@@ -48,17 +48,17 @@ public class TypeAdapterForLongTest {
 
 		IExtLanguageManager extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
-		TypeAdapterForLong typeAdapterForLong = new TypeAdapterForLong();
+		TypeAdapterForByte typeAdapterForByte = new TypeAdapterForByte();
 
-		assertEquals("1", typeAdapterForLong.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
-		assertEquals("1", typeAdapterForLong.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForByte.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForByte.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		// invalid value
 
-		assertEquals("0", typeAdapterForLong.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForByte.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForLong.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForByte.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
@@ -66,10 +66,10 @@ public class TypeAdapterForLongTest {
 
 		// symbolic value
 
-		assertEquals("0", typeAdapterForLong.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForByte.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForLong.convertSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForByte.convertSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterForNumericType.SPECIAL_VALUES_ARE_NOT_ALLOWED);

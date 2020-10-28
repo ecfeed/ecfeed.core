@@ -26,7 +26,7 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 	}
 
 	@Override
-	protected String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
 		if (isSymbolicValue(value)) {
 			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
