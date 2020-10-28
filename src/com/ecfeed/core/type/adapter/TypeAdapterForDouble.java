@@ -28,6 +28,13 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	@Override
 	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
+		String result = convert2(value, runMode, extLanguageManager);
+		result = extLanguageManager.formatNumber(result);
+
+		return result;
+	}
+
+	public String convert2(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 		if (isSymbolicValue(value)) {
 			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
