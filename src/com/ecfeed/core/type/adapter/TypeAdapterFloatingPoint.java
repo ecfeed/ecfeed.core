@@ -13,6 +13,7 @@ package com.ecfeed.core.type.adapter;
 import java.util.Arrays;
 
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class TypeAdapterFloatingPoint<T extends Number> extends TypeAdapterForNumericType<T>{
@@ -23,12 +24,10 @@ public abstract class TypeAdapterFloatingPoint<T extends Number> extends TypeAda
 	}
 
 	@Override
-	protected String convertSingleValue(String value, ERunMode conversionMode) {
+	protected String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
-		String result = super.convertSpecialValue(value);
-
-		if (result != null) {
-			return result;
+		if (checkIsSpecialValue(value, extLanguageManager)) {
+			return value;
 		}
 
 		try {

@@ -164,4 +164,9 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return packageName + "." + nonQualifiedName;
 	}
 
+	@Override
+	public boolean isSpecialValueAllowed() {
+		return true;
+	}
+
 }

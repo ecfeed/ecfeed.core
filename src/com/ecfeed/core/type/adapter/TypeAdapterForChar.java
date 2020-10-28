@@ -14,6 +14,7 @@ import java.util.Arrays;
 
 import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 
@@ -39,7 +40,9 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode) {
+	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+		
+		// TODO SIMPLE-VIEW - use extLanguageManager
 
 		if (value.length() == 1) {
 			return value;

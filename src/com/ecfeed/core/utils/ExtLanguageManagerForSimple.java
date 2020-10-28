@@ -213,4 +213,9 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return name;
 	}
 
+	@Override
+	public boolean isSpecialValueAllowed() {
+		return false;
+	}
+
 }

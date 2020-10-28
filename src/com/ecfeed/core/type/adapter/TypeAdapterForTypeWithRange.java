@@ -17,7 +17,7 @@ import com.ecfeed.core.utils.RangeHelper;
 
 public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> {
 
-	protected abstract String convertSingleValue(String value, ERunMode conversionMode);
+	protected abstract String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
 
 	protected abstract String[] getSpecialValues();
 
@@ -30,14 +30,15 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 	public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (!RangeHelper.isRange(value)) {
-			return convertNotRange(value, isRandomized, conversionMode);
+			return convertNotRange(value, isRandomized, conversionMode, extLanguageManager);
 		}
 
-		return convertRange(value, isRandomized, conversionMode);
+		return convertRange(value, isRandomized, conversionMode, extLanguageManager);
 	}
 
-	private String convertNotRange(String value, boolean isRandomized, ERunMode conversionMode) {
-		String result = convertSingleValue(value, conversionMode);
+	private String convertNotRange(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+		
+		String result = convertSingleValue(value, conversionMode, extLanguageManager);
 
 		if (!isRandomized) {
 			return result;
@@ -52,12 +53,17 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 		return null;
 	}
 
-	private String convertRange(String value, boolean isRandomized, ERunMode conversionMode) { // TODO  SIMPLE-VIEW check  for MAX_VALUE and Simple
+	private String convertRange(
+			String value, 
+			boolean isRandomized, 
+			ERunMode conversionMode, 
+			IExtLanguageManager extLanguageManager) { // TODO  SIMPLE-VIEW check  for MAX_VALUE and Simple
+		
 		String[] range = RangeHelper.splitToRange(value);
 
 		if (isRandomized) {
-			String firstValue = convertSingleValue(range[0], conversionMode);
-			String secondValue = convertSingleValue(range[1], conversionMode);
+			String firstValue = convertSingleValue(range[0], conversionMode, extLanguageManager);
+			String secondValue = convertSingleValue(range[1], conversionMode, extLanguageManager);
 
 			checkRange(range, conversionMode);		
 

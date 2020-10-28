@@ -12,6 +12,8 @@ package com.ecfeed.core.type.adapter;
 
 import java.util.Arrays;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAdapterForTypeWithRange<T> {
@@ -23,8 +25,21 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTABLE_TO_NUMBERS).contains(type);
 	}
 
-	protected String convertSpecialValue(String value){
-		return Arrays.asList(getSpecialValues()).contains(value) ? value : null;
+	protected boolean checkIsSpecialValue(String value, IExtLanguageManager extLanguageManager){
+		
+		// TODO SIMPLE-VIEW - check if special values are allowed
+		
+		boolean isSpecialValue = Arrays.asList(getSpecialValues()).contains(value);
+		
+		if (!isSpecialValue) {
+			return false;
+		}
+		
+		if (!extLanguageManager.isSpecialValueAllowed()) {
+			ExceptionHelper.reportRuntimeException("Special values are not allowed.");
+		}
+			
+		return true;
 	}
 
 	@Override

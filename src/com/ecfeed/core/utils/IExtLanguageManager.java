@@ -12,9 +12,7 @@ public interface IExtLanguageManager {
 	public String convertTextFromIntrToExtLanguage(String text);
 	public String convertTypeFromIntrToExtLanguage(String type);
 	public String convertTypeFromExtToIntrLanguage(String type);
-
-    String convertToMinimalTypeFromExtToIntrLanguage(String type);
-
+    public String convertToMinimalTypeFromExtToIntrLanguage(String type);
     public String conditionallyConvertSpecialValueToExtLanguage(String valueInIntrLanguage, String typeInIntrLanguage);
 	public List<String> getSymbolicNamesOfSpecialValues(String typeName);
 	public String[] createListListOfSupportedTypes();
@@ -27,4 +25,5 @@ public interface IExtLanguageManager {
 	public boolean getPackageVisibility();
 	public String getExtendedTypeForValue(String value, String currentType, boolean isRandomizedValue);
 	public String createQualifiedName(String packageName, String name);
+	public boolean isSpecialValueAllowed();
 }

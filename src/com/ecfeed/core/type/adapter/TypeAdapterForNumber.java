@@ -13,6 +13,7 @@ package com.ecfeed.core.type.adapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
@@ -26,12 +27,10 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode) {
-
-		String result = super.convertSpecialValue(value);
-
-		if (result != null) {
-			return result;
+	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+		
+		if (checkIsSpecialValue(value, extLanguageManager)) {
+			return value;
 		}
 
 		if (StringHelper.isEqual(JavaLanguageHelper.SPECIAL_VALUE_FALSE, value)) {
