@@ -33,7 +33,11 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 		}
 
 		try {
-			return String.valueOf(JavaLanguageHelper.parseDoubleValue(value, ERunMode.WITH_EXCEPTION));
+			String convertedValue = String.valueOf(JavaLanguageHelper.parseDoubleValue(value, ERunMode.WITH_EXCEPTION));
+			convertedValue = extLanguageManager.formatNumber(convertedValue);
+
+			return convertedValue;
+
 		} catch(NumberFormatException e) {
 			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
 		}

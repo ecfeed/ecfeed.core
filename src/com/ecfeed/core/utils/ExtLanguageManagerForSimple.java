@@ -218,4 +218,21 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return false;
 	}
 
+	@Override
+	public String formatNumber(String number) {
+
+		String[] tokens = StringHelper.splitIntoTokens(number, "\\.");
+
+		if (tokens.length < 2) {
+			return number;
+		}
+
+		String fraction = tokens[1].trim();
+		if (StringHelper.isEqual("0", fraction)) {
+			return tokens[0];
+		}
+
+		return number;
+	}
+
 }

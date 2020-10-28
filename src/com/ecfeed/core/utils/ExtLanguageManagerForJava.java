@@ -169,4 +169,9 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return true;
 	}
 
+	@Override
+	public String formatNumber(String number) {
+		return number;
+	}
+
 }

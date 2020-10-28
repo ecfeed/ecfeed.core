@@ -28,14 +28,26 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 	@Override
 	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
+		String result = convert2(value, runMode, extLanguageManager);
+		result = extLanguageManager.formatNumber(result);
+
+		return result;
+	}
+
+	public String convert2(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
 		if (isSymbolicValue(value)) {
 			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
-			return String.valueOf(Float.parseFloat(value));
+			String convertedValue = String.valueOf(Float.parseFloat(value));
+			return convertedValue;
+
 		} catch(NumberFormatException e) {
-			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
+			String convertedValue = TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
+
+			return convertedValue;
 		}
 	}
 
