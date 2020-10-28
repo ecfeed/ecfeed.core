@@ -9,15 +9,7 @@
  *******************************************************************************/
 package com.ecfeed.core.testutils;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.IModelVisitor;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.*;
 
 public enum ENodeType {
 	PROJECT, CLASS, METHOD, PARAMETER, METHOD_PARAMETER, GLOBAL_PARAMETER, CONSTRAINT, TEST_CASE, CHOICE;
@@ -37,6 +29,11 @@ public enum ENodeType {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
+			return null;
+		}
+
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
 			return null;
 		}
 
