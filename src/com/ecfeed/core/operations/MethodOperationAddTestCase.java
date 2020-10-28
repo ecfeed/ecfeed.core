@@ -84,6 +84,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 		}
 
 		fMethodNode.addTestCase(fTestCase, fIndex);
+		
 		markModelUpdated();
 	}
 

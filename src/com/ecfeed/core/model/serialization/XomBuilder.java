@@ -42,9 +42,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Elements;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
@@ -60,8 +57,13 @@ import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.StringHelper;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Elements;
 
 public abstract class XomBuilder implements IModelVisitor {
 
@@ -187,6 +189,12 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetGlobalParamElement;
 	}
 
+	@Override
+	public Object visit(TestSuiteNode node) throws Exception {
+
+		return null;
+	}
+	
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
 
@@ -329,7 +337,7 @@ public abstract class XomBuilder implements IModelVisitor {
 				fWhiteCharConverter);
 		return targetGlobalParamElement;
 	}
-
+	
 	private Element createTargetTestCaseElement(TestCaseNode node) {
 
 		Element targetTestCaseElement = new Element(TEST_CASE_NODE_NAME);
@@ -380,7 +388,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return value.replaceAll(xml10pattern, "");
 	}
-
+	
 	private void appendChoiceOfTestCase(Element targetTestCaseElement,
 			TestCaseNode node, ChoiceNode choiceNode) {
 
