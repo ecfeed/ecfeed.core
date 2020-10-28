@@ -23,6 +23,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 
 public class FactoryShiftOperation{
 
@@ -71,6 +72,9 @@ public class FactoryShiftOperation{
 			if(fShifted.get(0) instanceof TestCaseNode){
 				return new GenericShiftOperation(node.getTestCases(), fShifted, fUp);
 			}
+			if(fShifted.get(0) instanceof TestSuiteNode){
+				return new GenericShiftOperation(node.getTestSuites(), fShifted, fUp);
+			}
 			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
@@ -89,6 +93,12 @@ public class FactoryShiftOperation{
 			if(fShifted.get(0) instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fUp);
 			}
+			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			return null;
+		}
+		
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
 			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
@@ -182,6 +192,12 @@ public class FactoryShiftOperation{
 			return null;
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			return null;
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);

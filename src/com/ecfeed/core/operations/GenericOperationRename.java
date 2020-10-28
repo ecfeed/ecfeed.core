@@ -21,6 +21,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
@@ -58,6 +59,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 			return OperationMessages.CATEGORY_NAME_REGEX_PROBLEM;
 		}
 
+		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM;
+		}
+		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM;
@@ -102,6 +108,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 
 		@Override
+		public Object visit(TestSuiteNode node) throws Exception {
+			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
+		}
+		
+		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
 		}
@@ -119,10 +130,17 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	public GenericOperationRename(AbstractNode target, String newName){
 		super(OperationNames.RENAME);
+		
 		fTarget = target;
 		fNewName = newName;
-		fOriginalName = target.getFullName();
 		fNameRegex = getNameRegex(target);
+		
+		if (fTarget instanceof TestSuiteNode) {
+			fOriginalName = ((TestSuiteNode) fTarget).getSuiteName();
+		} else {
+			fOriginalName = target.getFullName();
+		}
+	
 	}
 
 	@Override
@@ -130,7 +148,13 @@ public class GenericOperationRename extends AbstractModelOperation {
 		setOneNodeToSelect(fTarget);
 		verifyNameWithRegex();
 		verifyNewName(fNewName);
-		fTarget.setFullName(fNewName);
+		
+		if (fTarget instanceof TestSuiteNode) {
+			((TestSuiteNode) fTarget).getTestCaseNodes().stream().forEach(e -> e.setFullName(fNewName));
+		} else {
+			fTarget.setFullName(fNewName);
+		}
+		
 		markModelUpdated();
 	}
 

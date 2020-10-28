@@ -17,6 +17,7 @@ public class SerializationConstants {
 
 	public static final String EXPECTED_VALUE_PARAMETER_NODE_NAME = "ExpectedValueParameter";
 	public static final String LABEL_NODE_NAME = "Label";
+	public static final String TEST_SUITE_NODE_NAME = "TestSuite";
 	public static final String TEST_CASE_NODE_NAME = "TestCase";
 	public static final String TEST_PARAMETER_NODE_NAME = "TestParameter";
 	public static final String EXPECTED_PARAMETER_NODE_NAME = "ExpectedValue";
