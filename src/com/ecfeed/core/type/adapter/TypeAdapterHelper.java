@@ -31,10 +31,12 @@ public class TypeAdapterHelper {
 		SimpleLanguageHelper.TYPE_NAME_NUMBER
 	};
 
+	public static final String CANNOT_CONVERT_VALUE = "Cannot convert value";
+
 	public static void reportRuntimeExceptionCannotConvert(String value, String typeName) {
 
-		final String CANNOT_CONVERT_VALUE = "Cannot convert value [" + value + "] to " + typeName + ".";
-		ExceptionHelper.reportRuntimeException(CANNOT_CONVERT_VALUE);
+		final String CANNOT_CONVERT_VALUE_MSG = CANNOT_CONVERT_VALUE + " [" + value + "] to " + typeName + ".";
+		ExceptionHelper.reportRuntimeException(CANNOT_CONVERT_VALUE_MSG);
 	}
 
 	public static String handleConversionError(String value, String type, ERunMode conversionMode) {

@@ -18,7 +18,8 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAdapterForTypeWithRange<T> {
 
-	public static final String DELIMITER = ":";		
+	public static final String DELIMITER = ":";
+	public static final String SPECIAL_VALUES_ARE_NOT_ALLOWED = "Special values are not allowed.";
 
 	@Override
 	public boolean isCompatible(String type) {
@@ -27,8 +28,6 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 
 	protected boolean checkIsSpecialValue(String value, IExtLanguageManager extLanguageManager){
 		
-		// TODO SIMPLE-VIEW - check if special values are allowed
-		
 		boolean isSpecialValue = Arrays.asList(getSpecialValues()).contains(value);
 		
 		if (!isSpecialValue) {
@@ -36,7 +35,7 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 		}
 		
 		if (!extLanguageManager.isSpecialValueAllowed()) {
-			ExceptionHelper.reportRuntimeException("Special values are not allowed.");
+			ExceptionHelper.reportRuntimeException(SPECIAL_VALUES_ARE_NOT_ALLOWED);
 		}
 			
 		return true;
