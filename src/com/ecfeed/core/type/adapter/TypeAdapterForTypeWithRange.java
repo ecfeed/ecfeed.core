@@ -19,7 +19,7 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 
 	protected abstract String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
 
-	protected abstract String[] getSpecialValues();
+	protected abstract String[] getSymbolicValues();
 
 	@Override
 	public boolean isRandomizable() {

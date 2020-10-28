@@ -26,7 +26,7 @@ public abstract class TypeAdapterFloatingPoint<T extends Number> extends TypeAda
 	@Override
 	protected String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
-		if (checkIsSpecialValue(value, extLanguageManager)) {
+		if (checkIsSymboliclValue(value, extLanguageManager)) {
 			return value;
 		}
 

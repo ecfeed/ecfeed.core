@@ -214,7 +214,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	}
 
 	@Override
-	public boolean isSpecialValueAllowed() {
+	public boolean isSymbolicValueAllowed() {
 		return false;
 	}
 

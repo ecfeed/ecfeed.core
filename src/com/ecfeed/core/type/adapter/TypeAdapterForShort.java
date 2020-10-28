@@ -28,7 +28,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 	@Override
 	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 		
-		if (checkIsSpecialValue(value, extLanguageManager)) {
+		if (checkIsSymboliclValue(value, extLanguageManager)) {
 			return value;
 		}
 
@@ -54,7 +54,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 	}
 
 	@Override
-	protected String[] getSpecialValues() {
+	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_SHORT;
 	}
 

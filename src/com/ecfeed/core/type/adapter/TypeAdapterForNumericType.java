@@ -26,15 +26,15 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTABLE_TO_NUMBERS).contains(type);
 	}
 
-	protected boolean checkIsSpecialValue(String value, IExtLanguageManager extLanguageManager){
+	protected boolean checkIsSymboliclValue(String value, IExtLanguageManager extLanguageManager){
 		
-		boolean isSpecialValue = Arrays.asList(getSpecialValues()).contains(value);
+		boolean isSymbolicValue = Arrays.asList(getSymbolicValues()).contains(value);
 		
-		if (!isSpecialValue) {
+		if (!isSymbolicValue) {
 			return false;
 		}
 		
-		if (!extLanguageManager.isSpecialValueAllowed()) {
+		if (!extLanguageManager.isSymbolicValueAllowed()) {
 			ExceptionHelper.reportRuntimeException(SPECIAL_VALUES_ARE_NOT_ALLOWED);
 		}
 			

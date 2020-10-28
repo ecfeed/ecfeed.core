@@ -52,6 +52,9 @@ public class TypeAdapterForLongTest {
 
 		assertEquals("1", typeAdapterForLong.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
 		assertEquals("1", typeAdapterForLong.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
+
+		// invalid value
+
 		assertEquals("0", typeAdapterForLong.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
@@ -61,6 +64,7 @@ public class TypeAdapterForLongTest {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
 		}
 
+		// symbolic value
 		try {
 			typeAdapterForLong.convertSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();

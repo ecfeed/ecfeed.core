@@ -29,7 +29,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	@Override
 	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 		
-		if (checkIsSpecialValue(value, extLanguageManager)) {
+		if (checkIsSymboliclValue(value, extLanguageManager)) {
 			return value;
 		}
 
@@ -131,7 +131,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	}
 
 	@Override
-	protected String[] getSpecialValues() {
+	protected String[] getSymbolicValues() {
 		return new String[0];
 	}
 

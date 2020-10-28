@@ -72,7 +72,7 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 	}
 
 	@Override
-	protected String[] getSpecialValues() {
+	protected String[] getSymbolicValues() {
 		return null;
 	}
 
