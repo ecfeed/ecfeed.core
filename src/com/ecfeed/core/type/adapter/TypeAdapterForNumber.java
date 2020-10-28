@@ -27,10 +27,10 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-		
-		if (checkIsSymboliclValue(value, extLanguageManager)) {
-			return value;
+	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		if (StringHelper.isEqual(JavaLanguageHelper.SPECIAL_VALUE_FALSE, value)) {

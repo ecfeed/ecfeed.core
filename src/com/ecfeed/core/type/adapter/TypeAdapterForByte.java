@@ -26,16 +26,16 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 	}
 
 	@Override
-	protected String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+	protected String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
-		if (checkIsSymboliclValue(value, extLanguageManager)) {
-			return value;
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
 			return String.valueOf(JavaLanguageHelper.convertToByte(value));
 		} catch (NumberFormatException e) {
-			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
+			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
 		}
 	}
 

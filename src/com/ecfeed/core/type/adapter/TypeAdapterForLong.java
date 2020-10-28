@@ -12,11 +12,7 @@ package com.ecfeed.core.type.adapter;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.RangeHelper;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.*;
 
 public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 
@@ -26,16 +22,16 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-		
-		if (checkIsSymboliclValue(value, extLanguageManager)) {
-			return value;
+	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
 			return String.valueOf(JavaLanguageHelper.convertToLong(value));
 		} catch(NumberFormatException e){
-			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
+			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
 		}
 	}
 

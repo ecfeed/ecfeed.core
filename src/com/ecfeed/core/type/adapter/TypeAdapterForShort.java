@@ -26,16 +26,16 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-		
-		if (checkIsSymboliclValue(value, extLanguageManager)) {
-			return value;
+	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
 			return String.valueOf(JavaLanguageHelper.convertToShort(value));
 		} catch (NumberFormatException e) {
-			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
+			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
 		}
 	}
 

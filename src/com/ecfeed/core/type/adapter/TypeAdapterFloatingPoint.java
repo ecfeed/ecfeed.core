@@ -24,10 +24,10 @@ public abstract class TypeAdapterFloatingPoint<T extends Number> extends TypeAda
 	}
 
 	@Override
-	protected String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+	protected String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
-		if (checkIsSymboliclValue(value, extLanguageManager)) {
-			return value;
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {

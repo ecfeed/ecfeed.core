@@ -12,6 +12,7 @@ package com.ecfeed.core.type.adapter;
 
 import java.util.Arrays;
 
+import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -26,19 +27,25 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTABLE_TO_NUMBERS).contains(type);
 	}
 
-	protected boolean checkIsSymboliclValue(String value, IExtLanguageManager extLanguageManager){
-		
+	protected boolean isSymbolicValue(String value) {
+
 		boolean isSymbolicValue = Arrays.asList(getSymbolicValues()).contains(value);
-		
-		if (!isSymbolicValue) {
-			return false;
+
+		return isSymbolicValue;
+	}
+
+	protected String handleConversionOfSymbolicValue(String symbolicValue, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
+		if (extLanguageManager.isSymbolicValueAllowed()) {
+			return symbolicValue;
 		}
-		
-		if (!extLanguageManager.isSymbolicValueAllowed()) {
-			ExceptionHelper.reportRuntimeException(SPECIAL_VALUES_ARE_NOT_ALLOWED);
+
+		if (runMode == ERunMode.QUIET) {
+			return TypeAdapterHelper.handleConversionError(symbolicValue, getMyTypeName(), runMode);
 		}
-			
-		return true;
+
+		ExceptionHelper.reportRuntimeException(SPECIAL_VALUES_ARE_NOT_ALLOWED);
+		return null;
 	}
 
 	@Override

@@ -26,10 +26,10 @@ public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
 	}
 
 	@Override
-	protected String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-		
-		if (checkIsSymboliclValue(value, extLanguageManager)) {
-			return value;
+	protected String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
@@ -37,7 +37,7 @@ public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
 			return String.valueOf(integer);
 		} catch (NumberFormatException e) {
 
-			if (conversionMode == ERunMode.WITH_EXCEPTION) {
+			if (runMode == ERunMode.WITH_EXCEPTION) {
 				TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, JavaLanguageHelper.TYPE_NAME_INT);
 				return null;
 			} else {

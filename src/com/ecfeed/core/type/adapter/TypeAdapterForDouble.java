@@ -26,16 +26,16 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-		
-		if (checkIsSymboliclValue(value, extLanguageManager)) {
-			return value;
+	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
 			return String.valueOf(JavaLanguageHelper.parseDoubleValue(value, ERunMode.WITH_EXCEPTION));
 		} catch(NumberFormatException e) {
-			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
+			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
 		}
 	}
 
