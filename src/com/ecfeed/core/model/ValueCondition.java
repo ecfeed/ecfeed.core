@@ -13,13 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.RangeHelper;
-import com.ecfeed.core.utils.RelationMatcher;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.*;
 
 
 public class ValueCondition implements IStatementCondition {
@@ -49,7 +43,7 @@ public class ValueCondition implements IStatementCondition {
 						choices, fParentRelationStatement.getLeftParameter());
 
 		if(isRandomizedChoice) {
-			if(JavaTypeHelper.isStringTypeName(substituteType)) {
+			if(JavaLanguageHelper.isStringTypeName(substituteType)) {
 				return EvaluationResult.TRUE;
 			}
 			else {
@@ -155,6 +149,12 @@ public class ValueCondition implements IStatementCondition {
 
 	@Override
 	public String toString() {
+
+		return fRightValue;
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
 
 		return fRightValue;
 	}

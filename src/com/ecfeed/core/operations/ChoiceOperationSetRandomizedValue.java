@@ -5,6 +5,7 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation { 
 
@@ -15,9 +16,12 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 
 	public ChoiceOperationSetRandomizedValue(
-			ChoiceNode choiceNode, boolean newRandomized, ITypeAdapterProvider adapterProvider) {
+			ChoiceNode choiceNode, 
+			boolean newRandomized, 
+			ITypeAdapterProvider adapterProvider,
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG);
+		super(OperationNames.SET_CHOICE_RANDOMIZED_FLAG, extLanguageManager);
 
 		fNewRandomized = newRandomized;
 		fChoiceNode = choiceNode;
@@ -47,7 +51,10 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 		try {
 			return typeAdapter.convert(
-					fChoiceNode.getValueString(), randomized, ERunMode.QUIET);
+					fChoiceNode.getValueString(), 
+					randomized, 
+					ERunMode.QUIET, 
+					getExtLanguageManager());
 
 		} catch (RuntimeException ex) {
 			ModelOperationException.report(ex.getMessage());
@@ -58,12 +65,12 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 	private class ReverseOperation extends AbstractModelOperation {
-		public ReverseOperation() {
-			super(ChoiceOperationSetRandomizedValue.this.getName());
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(ChoiceOperationSetRandomizedValue.this.getName(), extLanguageManager);
 		}
 
 		@Override
@@ -74,7 +81,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider);
+			return new ChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider, getExtLanguageManager());
 		}
 
 		@Override

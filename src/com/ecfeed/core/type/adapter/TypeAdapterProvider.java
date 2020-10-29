@@ -10,8 +10,8 @@
 
 package com.ecfeed.core.type.adapter;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterProvider implements ITypeAdapterProvider{
 
@@ -21,33 +21,33 @@ public class TypeAdapterProvider implements ITypeAdapterProvider{
 	}
 
 	public ITypeAdapter<?> getAdapter(String type){
-		if(!JavaTypeHelper.isJavaType(type) && !SimpleTypeHelper.isSimpleType(type)){
+		if(!JavaLanguageHelper.isJavaType(type) && !SimpleLanguageHelper.isSimpleType(type)){
 			type = TypeAdapterHelper.USER_TYPE;
 		}
 		switch(type){
-		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
 			return new TypeAdapterForBoolean();
-		case JavaTypeHelper.TYPE_NAME_BYTE:
+		case JavaLanguageHelper.TYPE_NAME_BYTE:
 			return new TypeAdapterForByte();
-		case JavaTypeHelper.TYPE_NAME_CHAR:
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
 			return new TypeAdapterForChar();
-		case JavaTypeHelper.TYPE_NAME_DOUBLE:
+		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
 			return new TypeAdapterForDouble();
-		case JavaTypeHelper.TYPE_NAME_FLOAT:
+		case JavaLanguageHelper.TYPE_NAME_FLOAT:
 			return new TypeAdapterForFloat();
-		case JavaTypeHelper.TYPE_NAME_INT:
+		case JavaLanguageHelper.TYPE_NAME_INT:
 			return new TypeAdapterForInt();
-		case JavaTypeHelper.TYPE_NAME_LONG:
+		case JavaLanguageHelper.TYPE_NAME_LONG:
 			return new TypeAdapterForLong();
-		case JavaTypeHelper.TYPE_NAME_SHORT:
+		case JavaLanguageHelper.TYPE_NAME_SHORT:
 			return new TypeAdapterForShort();
-		case JavaTypeHelper.TYPE_NAME_STRING:
+		case JavaLanguageHelper.TYPE_NAME_STRING:
 			return new TypeAdapterForString();
-		case SimpleTypeHelper.TYPE_NAME_TEXT:
+		case SimpleLanguageHelper.TYPE_NAME_TEXT:
 			return new TypeAdapterForText();
-		case SimpleTypeHelper.TYPE_NAME_NUMBER:
+		case SimpleLanguageHelper.TYPE_NAME_NUMBER:
 			return new TypeAdapterForNumber();
-		case SimpleTypeHelper.TYPE_NAME_LOGICAL:
+		case SimpleLanguageHelper.TYPE_NAME_LOGICAL:
 			return new TypeAdapterForLogical();
 		default:
 			return getTypeAdapterBaseForUserType(type);

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.BooleanHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class AbstractNode{
 	private String fName;
@@ -29,14 +31,24 @@ public abstract class AbstractNode{
 
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
-		fName = name;
+        verifyName(name);
+
+        fName = name;
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	@Override
+    protected void verifyName(String name) {
+        String errorMessage = JavaLanguageHelper.verifySeparators(name);
+
+        if (errorMessage != null) {
+            ExceptionHelper.reportRuntimeException(errorMessage);
+        }
+    }
+
+    @Override
 	public String toString() {
 
-		return getFullName();
+		return getName();
 	}
 
 	public int getMyIndex() {
@@ -52,18 +64,27 @@ public abstract class AbstractNode{
 
 		List<String> result = new ArrayList<String>();
 		for(AbstractNode node : nodes){
-			result.add(node.getFullName());
+			result.add(node.getName());
 		}
 
 		return result;
 	}
 
-	public String getFullName() { // TODO - rename to getName
+	public String getName() {
 		return fName;
 	}
 
-	public void setFullName(String name) { // TODO - rename to setName
+	public void setName(String name) {
 
+		setName(name, true);
+	}
+
+	public void setName(String name, boolean checkName) {
+		
+		if (checkName ) {
+            verifyName(name);
+        }
+		
 		fName = name;
 		registerChange();
 	}
@@ -126,7 +147,7 @@ public abstract class AbstractNode{
 
 	public AbstractNode getRoot() {
 
-		if(getParent() == null){
+		if (getParent() == null) {
 			return this;
 		}
 
@@ -142,7 +163,7 @@ public abstract class AbstractNode{
 
 		if(tokens.length == 1){
 			for(AbstractNode child : getChildren()){
-				if(child.getFullName().equals(tokens[0])){
+				if(child.getName().equals(tokens[0])){
 					return child;
 				}
 			}
@@ -159,12 +180,16 @@ public abstract class AbstractNode{
 
 	public AbstractNode getSibling(String name) {
 
-		if (getParent() == null) 
+		final AbstractNode parent = getParent();
+
+		if (parent == null)
 			return null;
 
-		for (AbstractNode sibling : getParent().getChildren()) {
+		final List<? extends AbstractNode> siblings = parent.getChildren();
 
-			if (sibling.getFullName().equals(name) && sibling != this) {
+		for (AbstractNode sibling : siblings) {
+
+			if (sibling.getName().equals(name) && sibling != this) {
 				return sibling;
 			}
 		}
@@ -222,7 +247,7 @@ public abstract class AbstractNode{
 
 		for (;;) {
 
-			path.add(currentNode.getFullName());
+			path.add(currentNode.getName());
 
 			AbstractNode parentNode = currentNode.getParent();
 
@@ -262,7 +287,7 @@ public abstract class AbstractNode{
 
 	public boolean isMatch(AbstractNode node) {
 
-		if (!getFullName().equals(node.getFullName())) {
+		if (!getName().equals(node.getName())) {
 			return false;
 		}
 
@@ -283,6 +308,7 @@ public abstract class AbstractNode{
 	}
 
 	public abstract AbstractNode makeClone();
+	
 	public abstract Object accept(IModelVisitor visitor) throws Exception;
 
 	public void setProperties(NodeProperties nodeProperties) {

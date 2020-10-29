@@ -15,35 +15,55 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	private List<AbstractParameterNode> fParameters;
 
-	public MethodParameterShiftOperation(List<AbstractParameterNode> parameters, AbstractNode shifted, boolean up) {
-		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up);
+	public MethodParameterShiftOperation(
+			List<AbstractParameterNode> parameters, 
+			AbstractNode shifted, 
+			boolean up,
+			IExtLanguageManager extLanguageManager) {
+
+		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguageManager);
 	}
 
-	public MethodParameterShiftOperation(List<AbstractParameterNode> parameters, List<? extends AbstractNode> shifted, boolean up) {
-		this(parameters, shifted, 0);
+	public MethodParameterShiftOperation(
+			List<AbstractParameterNode> parameters, 
+			List<? extends AbstractNode> shifted, 
+			boolean up, 
+			IExtLanguageManager extLanguageManager) {
+		this(parameters, shifted, 0, extLanguageManager);
 		setShift(minAllowedShift(shifted, up));
 	}
 
-	public MethodParameterShiftOperation(List<AbstractParameterNode> parameters, List<? extends AbstractNode> shifted, int shift) {
-		super(parameters, shifted, shift);
+	public MethodParameterShiftOperation(
+			List<AbstractParameterNode> parameters, 
+			List<? extends AbstractNode> shifted, 
+			int shift,
+			IExtLanguageManager extLanguageManager) {
+		super(parameters, shifted, shift, extLanguageManager);
 		fParameters = parameters;
 	}
 
 	@Override
 	public void execute() throws ModelOperationException {
 		MethodNode method = ((MethodParameterNode)fParameters.get(0)).getMethod();
+
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getFullName()));
+
+			ModelOperationException.report(
+					ClassNodeHelper.createMethodSignatureDuplicateMessage(
+							method.getClassNode(),  method, false, getExtLanguageManager()));
 		}
 		List<Integer> indices = indices(fParameters, getShiftedElements());
 		shiftElements(fParameters, indices, getShift());
@@ -54,7 +74,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift());
+		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
 	}
 
 	@Override
@@ -62,10 +82,21 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		if(super.shiftAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof MethodParameterNode == false) return false;
 		MethodNode method = ((MethodParameterNode)shifted.get(0)).getMethod();
-		List<String> parameterTypes = method.getParameterTypes();
+		List<String> parameterTypes = MethodNodeHelper.getParameterTypes(method, getExtLanguageManager());
 		List<Integer> indices = indices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);
-		MethodNode sibling = method.getClassNode().getMethod(method.getFullName(), parameterTypes);
+
+		ClassNode classNode = method.getClassNode();
+
+		String methodName = MethodNodeHelper.getName(method, getExtLanguageManager());
+
+		MethodNode sibling = 
+				ClassNodeHelper.findMethodByExtLanguage(
+						classNode, 
+						methodName, 
+						parameterTypes, 
+						getExtLanguageManager());
+
 		if(sibling != null && sibling != method){
 			return false;
 		}

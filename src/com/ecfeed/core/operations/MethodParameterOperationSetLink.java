@@ -17,6 +17,7 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterOperationSetLink extends BulkOperation {
 
@@ -27,8 +28,8 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		private class ReverseOperation extends AbstractReverseOperation{
 
-			public ReverseOperation() {
-				super(MethodParameterOperationSetLink.this);
+			public ReverseOperation(IExtLanguageManager extLanguageManager) {
+				super(MethodParameterOperationSetLink.this, extLanguageManager);
 			}
 
 			@Override
@@ -39,13 +40,13 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new SetLinkOperation(fTarget, fNewLink);
+				return new SetLinkOperation(fTarget, fNewLink, getExtLanguageManager());
 			}
 
 		}
 
-		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link) {
-			super(OperationNames.SET_LINK);
+		public SetLinkOperation(MethodParameterNode target, GlobalParameterNode link, IExtLanguageManager extLanguageManager) {
+			super(OperationNames.SET_LINK, extLanguageManager);
 			fTarget = target;
 			fNewLink = link;
 		}
@@ -54,12 +55,16 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 		public void execute() throws ModelOperationException {
 
 			setOneNodeToSelect(fTarget);
+			
 			MethodNode method = fTarget.getMethod();
 			List<String> types = method.getParameterTypes();
 			types.set(fTarget.getMyIndex(), fNewLink.getType());
 
 			if(method.checkDuplicate(fTarget.getMyIndex(), fNewLink.getType())){
-				ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getFullName()));
+				
+				ModelOperationException.report(
+						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
 			fCurrentLink = fTarget.getLink();
@@ -68,14 +73,14 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseOperation();
+			return new ReverseOperation(getExtLanguageManager());
 		}
 
 	}
 
-	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link) {
-		super(OperationNames.SET_LINK, true, target, target);
-		addOperation(new SetLinkOperation(target, link));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod()));
+	public MethodParameterOperationSetLink(MethodParameterNode target, GlobalParameterNode link, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_LINK, true, target, target, extLanguageManager);
+		addOperation(new SetLinkOperation(target, link, extLanguageManager));
+		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguageManager));
 	}
 }

@@ -13,12 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.RangeHelper;
-import com.ecfeed.core.utils.RelationMatcher;
+import com.ecfeed.core.utils.*;
 
 
 public class ParameterCondition implements IStatementCondition {
@@ -44,7 +39,7 @@ public class ParameterCondition implements IStatementCondition {
 		}
 
 		String substituteType = 
-				JavaTypeHelper.getSubstituteType(
+				JavaLanguageHelper.getSubstituteType(
 						fParentRelationStatement.getLeftParameter().getType(), fRightParameterNode.getType());
 
 		return evaluateForLeftAndRightString(choices, substituteType);
@@ -65,7 +60,7 @@ public class ParameterCondition implements IStatementCondition {
 
 		ChoiceNode leftChoiceNode = getChoiceNode(choices, methodParameterNode);
 
-		if (JavaTypeHelper.isStringTypeName(methodParameterNode.getType())
+		if (JavaLanguageHelper.isStringTypeName(methodParameterNode.getType())
 				&& leftChoiceNode.isRandomizedValue()) {
 
 			return true;
@@ -103,7 +98,7 @@ public class ParameterCondition implements IStatementCondition {
 	private EvaluationResult evaluateForRandomizedChoice(
 			String leftChoiceStr, String rightChoiceStr, EMathRelation relation, String substituteType) {
 
-		if (JavaTypeHelper.isStringTypeName(substituteType)) {
+		if (JavaLanguageHelper.isStringTypeName(substituteType)) {
 
 			return EvaluationResult.TRUE;
 
@@ -158,7 +153,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fRightParameterNode.getFullName());
+		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fRightParameterNode.getName());
 		if (tmpParameterNode == null) {
 			return false;
 		}
@@ -202,7 +197,15 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getFullName());
+		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getName());
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		return StatementConditionHelper.createParameterDescription(
+				MethodParameterNodeHelper.getName(fRightParameterNode, extLanguageManager));
+
 	}
 
 	@Override

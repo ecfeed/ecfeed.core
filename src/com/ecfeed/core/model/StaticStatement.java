@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public class StaticStatement extends AbstractStatement {
@@ -49,6 +50,12 @@ public class StaticStatement extends AbstractStatement {
 
 	@Override
 	public String toString() {
+
+		return convertToString(fValue);
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
 
 		return convertToString(fValue);
 	}

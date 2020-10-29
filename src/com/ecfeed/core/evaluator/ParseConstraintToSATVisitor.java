@@ -26,7 +26,7 @@ import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.ValueCondition;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 class ParseConstraintToSATVisitor implements IStatementVisitor {
 
@@ -116,8 +116,8 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             return doubleChoiceParamConstraints(statement);
         } else if (statement.getCondition() instanceof ChoiceCondition &&
                 ((ChoiceCondition) statement.getCondition()).getRightChoice().isRandomizedValue() &&
-                (JavaTypeHelper.isExtendedIntTypeName(statement.getLeftParameter().getType())
-                        || JavaTypeHelper.isFloatingPointTypeName(statement.getLeftParameter().getType()))
+                (JavaLanguageHelper.isExtendedIntTypeName(statement.getLeftParameter().getType())
+                        || JavaLanguageHelper.isFloatingPointTypeName(statement.getLeftParameter().getType()))
         ) {
             switch (statement.getRelation()) {
                 case GREATER_THAN:

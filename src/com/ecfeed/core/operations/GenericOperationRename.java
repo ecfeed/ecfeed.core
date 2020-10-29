@@ -18,69 +18,192 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.QualifiedNameHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class GenericOperationRename extends AbstractModelOperation {
 
-	private AbstractNode fTarget;
-	private String fNewName;
-	private String fOriginalName;
-	private String fNameRegex;
+	private AbstractNode fTargetAbstractNode;
 
-	private class RegexProblemMessageProvider implements IModelVisitor {
+	private String fNewPackageName;
+	private String fNewNonQualifiedNameInExtLanguage;
+
+	private String fOriginalPackageName;
+	private String fOriginalNonQualifiedNameInExtLanguage;
+
+	private String fJavaNameRegex;
+	private IExtLanguageManager fExtLanguageManager;
+
+	public GenericOperationRename(
+			AbstractNode target,
+			String newPackageName,
+			String newNonQualifiedNameInExtLanguage, 
+			IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.RENAME, extLanguageManager);
+
+		fTargetAbstractNode = target;
+
+		fNewPackageName = newPackageName;
+		fNewNonQualifiedNameInExtLanguage = newNonQualifiedNameInExtLanguage;
+
+		fOriginalPackageName = QualifiedNameHelper.getPackage(target.getName());
+		fOriginalNonQualifiedNameInExtLanguage = QualifiedNameHelper.getNonQualifiedName(target.getName());
+
+		fJavaNameRegex = getJavaNameRegex(target);
+		fExtLanguageManager = extLanguageManager;
+	}
+
+	@Override
+	public void execute() throws ModelOperationException {
+
+		setOneNodeToSelect(fTargetAbstractNode);
+		String oldQualifiedNameInIntrLanguage = fTargetAbstractNode.getName();
+
+		String newQualifiedNameInExtLanguage = fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
+		verifyNewName(newQualifiedNameInExtLanguage);
+
+		String newNonQualifiedNameInIntrLanguage = fExtLanguageManager.convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);
+
+		String newQualifiedNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
+
+		if (!(fTargetAbstractNode instanceof RootNode)) {
+			verifyNameWithJavaRegex(newQualifiedNameInIntrLanguage, fJavaNameRegex, fTargetAbstractNode, new ExtLanguageManagerForJava());
+		}
+
+		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
+
+		RootNode rootNode = ModelHelper.findRoot(fTargetAbstractNode);
+
+		String errorMessage = fExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode);
+
+		if (errorMessage != null) {
+			fTargetAbstractNode.setName(oldQualifiedNameInIntrLanguage);
+			ModelOperationException.report(errorMessage);
+		}
+
+		markModelUpdated();
+	}
+
+	@Override
+	public IModelOperation getReverseOperation() {
+		return new GenericOperationRename(
+				getOwnNode(), 
+				getOriginalPackageName(),
+				getOriginalNonQualifiedName(),
+				fExtLanguageManager);
+	}
+
+	protected AbstractNode getOwnNode(){
+		return fTargetAbstractNode;
+	}
+
+	protected String getOriginalNonQualifiedName(){
+		return fOriginalNonQualifiedNameInExtLanguage;
+	}
+
+	protected String getOriginalPackageName(){
+		return fOriginalPackageName;
+	}
+	
+	public String getNewPackageName() {
+		return fNewPackageName;
+	}
+
+	protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException{
+	}
+
+	private static void verifyNameWithJavaRegex(
+			String name, 
+			String regex, 
+			AbstractNode targetNode,
+			IExtLanguageManager extLanguageManager) throws ModelOperationException {
+
+		if (name.matches(regex) == false) {
+			ModelOperationException.report(getRegexProblemMessage(targetNode, extLanguageManager));
+		}
+	}
+
+	private String getJavaNameRegex(AbstractNode target) {
+		try{
+			return (String)fTargetAbstractNode.accept(new JavaNameRegexProvider());
+		}catch(Exception e){SystemLogger.logCatch(e);}
+		return "*";
+	}
+
+	private static String getRegexProblemMessage(AbstractNode abstractNode, IExtLanguageManager extLanguageManager){
+		try{
+			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguageManager));
+		}catch(Exception e){SystemLogger.logCatch(e);}
+		return "";
+	}
+
+	private static class RegexProblemMessageProvider implements IModelVisitor {
+
+		private IExtLanguageManager fExtLanguageManager;
+
+		public RegexProblemMessageProvider(IExtLanguageManager extLanguageManager) {
+			fExtLanguageManager = extLanguageManager;
+		}
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
-			return RegexHelper.MODEL_NAME_REGEX_PROBLEM;
+
+			return RegexHelper.createMessageAllowedCharsForModel();
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return RegexHelper.CLASS_NAME_REGEX_PROBLEM;
+			return RegexHelper.createMessageAllowedCharsForClass(fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return OperationMessages.METHOD_NAME_REGEX_PROBLEM;
-		}
-
-		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			return OperationMessages.CATEGORY_NAME_REGEX_PROBLEM;
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return OperationMessages.CATEGORY_NAME_REGEX_PROBLEM;
+			return RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM;
-		}
-		
-		@Override
-		public Object visit(TestCaseNode node) throws Exception {
-			return OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM;
+			return null; // TODO SIMPLE-VIEW check
 		}
 
 		@Override
-		public Object visit(ConstraintNode node) throws Exception {
-			return OperationMessages.CONSTRAINT_NAME_REGEX_PROBLEM;
+		public Object visit(MethodParameterNode node) throws Exception {
+			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguageManager);
+		}
+
+		@Override
+		public Object visit(GlobalParameterNode node) throws Exception {
+			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return RegexHelper.PARTITION_NAME_REGEX_PROBLEM;
+			return RegexHelper.createMessageAllowedCharsForChoice();
 		}
+
+		@Override
+		public Object visit(TestCaseNode node) throws Exception {
+			return OperationMessages.TEST_CASE_NOT_ALLOWED;
+		}
+
+		@Override
+		public Object visit(ConstraintNode node) throws Exception {
+			return OperationMessages.CONSTRAINT_NOT_ALLOWED;
+		}
+
 	}
 
-	private class NameRegexProvider implements IModelVisitor {
+	private class JavaNameRegexProvider implements IModelVisitor {
 
 		@Override
 		public Object visit(RootNode node) throws Exception {
@@ -126,77 +249,6 @@ public class GenericOperationRename extends AbstractModelOperation {
 		public Object visit(ChoiceNode node) throws Exception {
 			return RegexHelper.REGEX_PARTITION_NODE_NAME;
 		}
-	}
-
-	public GenericOperationRename(AbstractNode target, String newName){
-		super(OperationNames.RENAME);
-		
-		fTarget = target;
-		fNewName = newName;
-		fNameRegex = getNameRegex(target);
-		
-		if (fTarget instanceof TestSuiteNode) {
-			fOriginalName = ((TestSuiteNode) fTarget).getSuiteName();
-		} else {
-			fOriginalName = target.getFullName();
-		}
-	
-	}
-
-	@Override
-	public void execute() throws ModelOperationException{
-		setOneNodeToSelect(fTarget);
-		verifyNameWithRegex();
-		verifyNewName(fNewName);
-		
-		if (fTarget instanceof TestSuiteNode) {
-			((TestSuiteNode) fTarget).getTestCaseNodes().stream().forEach(e -> e.setFullName(fNewName));
-		} else {
-			fTarget.setFullName(fNewName);
-		}
-		
-		markModelUpdated();
-	}
-
-	@Override
-	public IModelOperation getReverseOperation() {
-		return new GenericOperationRename(getOwnNode(), getOriginalName());
-	}
-
-	protected AbstractNode getOwnNode(){
-		return fTarget;
-	}
-
-	protected String getOriginalName(){
-		return fOriginalName;
-	}
-
-	protected String getNewName(){
-		return fNewName;
-	}
-
-	protected void verifyNewName(String newName) throws ModelOperationException{
-	}
-
-	protected void verifyNameWithRegex() throws ModelOperationException {
-
-		if (fNewName.matches(fNameRegex) == false) {
-			ModelOperationException.report(getRegexProblemMessage());
-		}
-	}
-
-	private String getNameRegex(AbstractNode target) {
-		try{
-			return (String)fTarget.accept(new NameRegexProvider());
-		}catch(Exception e){SystemLogger.logCatch(e);}
-		return "*";
-	}
-
-	private String getRegexProblemMessage(){
-		try{
-			return (String)fTarget.accept(new RegexProblemMessageProvider());
-		}catch(Exception e){SystemLogger.logCatch(e);}
-		return "";
 	}
 
 }

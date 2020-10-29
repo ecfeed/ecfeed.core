@@ -344,7 +344,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		encodeAndAddAttribute(
 				targetTestCaseElement, 
-				new Attribute(TEST_SUITE_NAME_ATTRIBUTE, node.getFullName()), 
+				new Attribute(TEST_SUITE_NAME_ATTRIBUTE, node.getName()), 
 				fWhiteCharConverter);
 
 		if (fSerializatorParams.getSerializeComments()) {
@@ -456,7 +456,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createAbstractElement(String nodeTag, AbstractNode node) {
 
 		Element targetAbstractElement = new Element(nodeTag);
-		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, node.getFullName());
+		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, node.getName());
 		encodeAndAddAttribute(targetAbstractElement, nameAttr, fWhiteCharConverter);
 		appendComments(targetAbstractElement, node);
 

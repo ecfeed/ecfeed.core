@@ -10,14 +10,17 @@
 package com.ecfeed.core.export;
 
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public class ExportTemplateFactory {
 
-	MethodNode fMethodNode;
+	private MethodNode fMethodNode;
+	private IExtLanguageManager fExtLanguageManager;
 
-	public ExportTemplateFactory(MethodNode methodNode) {
+	public ExportTemplateFactory(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 		fMethodNode = methodNode;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	public IExportTemplate createDefaultTemplate() {
@@ -43,16 +46,16 @@ public class ExportTemplateFactory {
 	private IExportTemplate createTemplateIntr(String formatName) {
 
 		if (formatName.equals(CsvExportTemplate.getTemplateFormatSt())) {
-			return new CsvExportTemplate(fMethodNode);
+			return new CsvExportTemplate(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(XmlExportTemplate.getTemplateFormatSt())) {
-			return new XmlExportTemplate(fMethodNode);
+			return new XmlExportTemplate(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(GherkinExportTemplate.getTemplateFormatSt())) {
-			return new GherkinExportTemplate(fMethodNode);
+			return new GherkinExportTemplate(fMethodNode, fExtLanguageManager);
 		}
 		if (formatName.equals(JsonExportTemplate.getTemplateFormatSt())) {
-			return new JsonExportTemplate(fMethodNode);
+			return new JsonExportTemplate(fMethodNode, fExtLanguageManager);
 		}		
 		
 		return null;

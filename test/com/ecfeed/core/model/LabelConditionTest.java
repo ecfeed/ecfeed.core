@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class LabelConditionTest {
 
@@ -29,15 +29,15 @@ public class LabelConditionTest {
 	
 	@Test
 	public void evaluateTest(){
-		ChoiceNode q = new ChoiceNode("q", null, "0");
+		ChoiceNode q = new ChoiceNode("q", "0", null);
 
-		ChoiceNode p = new ChoiceNode("p", null, "0");
-		ChoiceNode p1 = new ChoiceNode("p1", null, "0");
-		ChoiceNode p2 = new ChoiceNode("p2", null, "0");
-		ChoiceNode p11 = new ChoiceNode("p11", null, "0");
-		ChoiceNode p12 = new ChoiceNode("p12", null, "0");
-		ChoiceNode p21 = new ChoiceNode("p21", null, "0");
-		ChoiceNode p22 = new ChoiceNode("p22", null, "0");
+		ChoiceNode p = new ChoiceNode("p", "0", null);
+		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
+		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
+		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
+		ChoiceNode p12 = new ChoiceNode("p12", "0", null);
+		ChoiceNode p21 = new ChoiceNode("p21", "0", null);
+		ChoiceNode p22 = new ChoiceNode("p22", "0", null);
 
 		p.addChoice(p1);
 		p.addChoice(p2);
@@ -54,9 +54,9 @@ public class LabelConditionTest {
 		p21.addLabel("p21");
 		p22.addLabel("p22");
 
-		MethodParameterNode c1 = new MethodParameterNode("c1", null, "type", "0", false);
+		MethodParameterNode c1 = new MethodParameterNode("c1", "type", "0", false, null);
 		c1.addChoice(p);
-		MethodParameterNode c2 = new MethodParameterNode("c2", null, "type", "0", false);
+		MethodParameterNode c2 = new MethodParameterNode("c2", "type", "0", false, null);
 		c2.addChoice(q);
 
 		MethodNode method = new MethodNode("method", null);
@@ -142,7 +142,7 @@ public class LabelConditionTest {
 	@Test
 	public void updateReferencesTest() {
 		MethodNode method1 = new MethodNode("method1", null);
-		MethodParameterNode method1ParameterNode = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method1ParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method1.addParameter(method1ParameterNode);
 
 		RelationStatement statement = 
@@ -150,7 +150,7 @@ public class LabelConditionTest {
 						method1ParameterNode, EMathRelation.EQUAL, "ABC");
 
 		MethodNode method2 = new MethodNode("method2", null);
-		MethodParameterNode method2ParameterNode = new MethodParameterNode("par1", null, JavaTypeHelper.TYPE_NAME_STRING, "", false);
+		MethodParameterNode method2ParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method2.addParameter(method2ParameterNode);
 
 		assertNotEquals(method2ParameterNode.hashCode(), statement.getLeftParameter().hashCode());

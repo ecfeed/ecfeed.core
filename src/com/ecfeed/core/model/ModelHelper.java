@@ -10,12 +10,58 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
+	
+	public static String getFullPath(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
+		
+		List<String> nodeNames = new ArrayList<String>();
+		
+		AbstractNode currentNode = abstractNode;
+		
+		for(;;) {
+			
+			if (currentNode == null) {
+				return createPath(nodeNames);
+			}
 
-	public static String getSimpleName(String qualifiedName) {
+			if (currentNode instanceof RootNode) {
+				nodeNames.add(currentNode.getName());
+			} else {
+				nodeNames.add(AbstractNodeHelper.getName(currentNode, extLanguageManager));
+			}
+
+			currentNode = currentNode.getParent();
+		}
+	}
+	
+	private static String createPath(List<String> nodeNames) {
+		
+		String path = "";
+		
+		int nodeNamesLength = nodeNames.size();
+		
+		for (int index = nodeNamesLength - 1; index >= 0; index--) {
+			
+			String nodeName = nodeNames.get(index);
+			path += nodeName;
+			
+			if (index > 0) {
+				path += ".";
+			}
+		}
+		
+		return path;
+	}
+
+	public static String getNonQualifiedName(String qualifiedName) {
+		
 		int lastDotIndex = qualifiedName.lastIndexOf('.');
 
 		if (lastDotIndex == -1) {
@@ -50,14 +96,6 @@ public class ModelHelper {
 	public static boolean validateTestCaseName(String name){
 
 		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
-	}
-
-	public static String convertParameterToSimplifiedString(AbstractParameterNode parameter) {
-		String result = parameter.toString();
-		String type = parameter.getType();
-
-		result.replace(type, ModelHelper.getSimpleName(type));
-		return result;
 	}
 
 	public static RootNode findRoot(AbstractNode startNode) { 

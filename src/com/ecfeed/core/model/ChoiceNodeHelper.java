@@ -10,23 +10,124 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.Pair;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_BYTE;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_DOUBLE;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_FLOAT;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_INT;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_LONG;
+import static com.ecfeed.core.utils.JavaLanguageHelper.TYPE_NAME_SHORT;
+import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
+import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.ecfeed.core.utils.JavaTypeHelper.*;
-import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_NEGATIVE_INF_SIMPLE;
-import static com.ecfeed.core.utils.SimpleTypeHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.Pair;
 
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
+
+	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+
+		String name = choiceNode.getName();
+		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
+		return name;
+	}
+
+	public static String getQualifiedName(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+
+		ChoiceNode parentChoice = getParentChoice(choiceNode);
+
+		if (parentChoice != null) {
+			return getQualifiedName(parentChoice, extLanguageManager) + ":" + getName(choiceNode, extLanguageManager);
+		}
+
+		return getName(choiceNode, extLanguageManager);
+	}
+
+	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
+
+		ChoicesParentNode choicesParentNode = choiceNode.getParent();
+
+		if (choicesParentNode == null) {
+			return null;
+		}
+
+		AbstractParameterNode abstractParameterNode = choicesParentNode.getParameter();
+
+		if(choicesParentNode != null && choicesParentNode != abstractParameterNode){
+			return (ChoiceNode)choicesParentNode;
+		}
+
+		return null;
+	}
+
+	// TODO SIMPLE-VIEW test for nested choices
+	public static String createSignature(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+		
+		if (choiceNode == null) {
+			return "EMPTY";
+		}
+
+		String qualifiedName = getQualifiedName(choiceNode, extLanguageManager);
+
+		if (choiceNode.isAbstract()) {
+			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
+		}
+
+		String value;
+		
+		if (choiceNode.getParent() == null) {
+			value = "N/A";
+		} else {
+			value = getValueString(choiceNode, extLanguageManager);
+		}
+
+		return qualifiedName + " [" + value + "]";
+	}
+
+	public static String createTestDataLabel(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
+
+		String result = "";
+
+		MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
+
+		if (methodParameterNode != null && methodParameterNode.isExpected()) {
+			result += "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
+		} else{
+			result += ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+		}
+
+		return result;
+	}
+
+	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+
+		if (choiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot get value from empty string.");
+		}
+		
+		AbstractParameterNode parameter = choiceNode.getParameter();
+		
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Cannot get value. Empty parameter.");
+		}
+		
+		String type = parameter.getType();
+
+		String value = choiceNode.getValueString();
+
+		if (JavaLanguageHelper.isJavaType(type)) {
+			value = extLanguageManager.conditionallyConvertSpecialValueToExtLanguage(value, type);
+		}
+
+		return value;
+	}
 
 	public static ChoiceNode createSubstitutePath(ChoiceNode choice, MethodParameterNode parameter) {
 		List<ChoiceNode> copies = createListOfCopies(choice);
@@ -41,8 +142,8 @@ public class ChoiceNodeHelper {
 		for(;;) {
 			ChoiceNode copy = 
 					new ChoiceNode(
-							orgChoice.getFullName(), orgChoice.getModelChangeRegistrator(), orgChoice.getValueString());
-			
+							orgChoice.getName(), orgChoice.getValueString(), orgChoice.getModelChangeRegistrator());
+
 			copies.add(copy);
 
 			AbstractNode orgParent = orgChoice.getParent();
@@ -72,33 +173,16 @@ public class ChoiceNodeHelper {
 		last.setParent(parameter);
 	}
 
-	public static Map<String, List<String>> convertToParamAndChoiceNames(MethodNode methodNode, List<List<ChoiceNode>> algorithmInput) {
-		
-		Map<String, List<String>> paramAndChoiceNames = new HashMap<String, List<String>>();
-		
-		int parametersCount = methodNode.getParametersCount();
-		
-		for (int parameterIndex = 0;  parameterIndex < parametersCount;  parameterIndex++) {
-			
-			String parameterName = methodNode.getParameter(parameterIndex).getFullName();
-			List<ChoiceNode> choicesForParameter = algorithmInput.get(parameterIndex);
-			
-			paramAndChoiceNames.put(parameterName, getChoiceNames(choicesForParameter));
-		}
-		
-		return paramAndChoiceNames;
-	}
-	
-	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes) {
-		
+	public static List<String> getChoiceNames(List<ChoiceNode> choiceNodes, IExtLanguageManager extLanguageManager) {
+
 		List<String> choiceNames = new ArrayList<>();
-		
+
 		for (ChoiceNode choiceNode : choiceNodes) {
-			
-			String choiceName = choiceNode.getQualifiedName();
+
+			String choiceName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 			choiceNames.add(choiceName);
 		}
-		
+
 		return choiceNames;
 	}
 
@@ -166,34 +250,34 @@ public class ChoiceNodeHelper {
 		choice = convertValueToNumeric(choice);
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			case TYPE_NAME_FLOAT: {
-				double val = Double.parseDouble(choice.getValueString());
-				if(val==0.0)
-					val = -eps;
-				else if(val<0.0)
-					val *= 1+eps;
-				else
-					val /= 1+eps;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
+		case TYPE_NAME_DOUBLE:
+		case TYPE_NAME_FLOAT: {
+			double val = Double.parseDouble(choice.getValueString());
+			if(val==0.0)
+				val = -eps;
+			else if(val<0.0)
+				val *= 1+eps;
+			else
+				val /= 1+eps;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
 
-			case TYPE_NAME_BYTE:
-			case TYPE_NAME_INT:
-			case TYPE_NAME_SHORT:
-			case TYPE_NAME_LONG: {
-				long val = Long.parseLong(choice.getValueString());
-				if(val!=Long.MIN_VALUE)
-					val--;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
+		case TYPE_NAME_BYTE:
+		case TYPE_NAME_INT:
+		case TYPE_NAME_SHORT:
+		case TYPE_NAME_LONG: {
+			long val = Long.parseLong(choice.getValueString());
+			if(val!=Long.MIN_VALUE)
+				val--;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
 
-			default: {
-				reportExceptionUnhandledType();
-				return null;
-			}
+		default: {
+			reportExceptionUnhandledType();
+			return null;
+		}
 		}
 	}
 
@@ -207,33 +291,33 @@ public class ChoiceNodeHelper {
 		choice = convertValueToNumeric(choice);
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			case TYPE_NAME_FLOAT: {
-				double val = Double.parseDouble(choice.getValueString());
-				if(val==0.0)
-					val = eps;
-				else if(val<0.0)
-					val /= 1+eps;
-				else
-					val *= 1+eps;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
-			case TYPE_NAME_BYTE:
-			case TYPE_NAME_INT:
-			case TYPE_NAME_SHORT:
-			case TYPE_NAME_LONG: {
-				long val = Long.parseLong(choice.getValueString());
-				if(val != Long.MAX_VALUE)
-					val++;
-				clone.setValueString(String.valueOf(val));
-				return clone;
-			}
-			default:
-			{
-				reportExceptionUnhandledType();
-				return null;
-			}
+		case TYPE_NAME_DOUBLE:
+		case TYPE_NAME_FLOAT: {
+			double val = Double.parseDouble(choice.getValueString());
+			if(val==0.0)
+				val = eps;
+			else if(val<0.0)
+				val /= 1+eps;
+			else
+				val *= 1+eps;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
+		case TYPE_NAME_BYTE:
+		case TYPE_NAME_INT:
+		case TYPE_NAME_SHORT:
+		case TYPE_NAME_LONG: {
+			long val = Long.parseLong(choice.getValueString());
+			if(val != Long.MAX_VALUE)
+				val++;
+			clone.setValueString(String.valueOf(val));
+			return clone;
+		}
+		default:
+		{
+			reportExceptionUnhandledType();
+			return null;
+		}
 		}
 	}
 
@@ -272,80 +356,80 @@ public class ChoiceNodeHelper {
 		String valueString = choice.getValueString();
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Double.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Double.MAX_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
-					choice.setValueString("-" + Double.MIN_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
-					choice.setValueString("-" + Double.MAX_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
-				}
-				break;
+		case TYPE_NAME_DOUBLE:
+		{
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Double.MIN_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Double.MAX_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MIN)) {
+				choice.setValueString("-" + Double.MIN_VALUE);
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MAX)) {
+				choice.setValueString("-" + Double.MAX_VALUE);
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
 			}
-			case TYPE_NAME_FLOAT:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Float.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Float.MAX_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MIN)) {
-					choice.setValueString("-" + Float.MIN_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MINUS_MAX)) {
-					choice.setValueString("-" + Float.MAX_VALUE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_POSITIVE_INF)) {
-					choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_FLOAT:
+		{
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Float.MIN_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Float.MAX_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MIN)) {
+				choice.setValueString("-" + Float.MIN_VALUE);
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MINUS_MAX)) {
+				choice.setValueString("-" + Float.MAX_VALUE);
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_NEGATIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_NEGATIVE_INF_SIMPLE);
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_POSITIVE_INF)) {
+				choice.setValueString(SPECIAL_VALUE_POSITIVE_INF_SIMPLE);
 			}
-			case TYPE_NAME_BYTE:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Byte.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Byte.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_BYTE:
+		{
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Byte.MIN_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Byte.MAX_VALUE + "");
 			}
-			case TYPE_NAME_INT:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Integer.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Integer.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_INT:
+		{
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Integer.MIN_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Integer.MAX_VALUE + "");
 			}
-			case TYPE_NAME_SHORT:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Short.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Short.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_SHORT:
+		{
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Short.MIN_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Short.MAX_VALUE + "");
 			}
-			case TYPE_NAME_LONG:
-			{
-				if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MIN)) {
-					choice.setValueString(Long.MIN_VALUE + "");
-				} else if (valueString.equals(JavaTypeHelper.SPECIAL_VALUE_MAX)) {
-					choice.setValueString(Long.MAX_VALUE + "");
-				}
-				break;
+			break;
+		}
+		case TYPE_NAME_LONG:
+		{
+			if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MIN)) {
+				choice.setValueString(Long.MIN_VALUE + "");
+			} else if (valueString.equals(JavaLanguageHelper.SPECIAL_VALUE_MAX)) {
+				choice.setValueString(Long.MAX_VALUE + "");
 			}
-			default:
-			{
-				reportExceptionUnhandledType();
-			}
+			break;
+		}
+		default:
+		{
+			reportExceptionUnhandledType();
+		}
 		}
 		return choice;
 	}
@@ -376,55 +460,55 @@ public class ChoiceNodeHelper {
 		String type = choice.getParameter().getType();
 
 		switch(type) {
-			case TYPE_NAME_DOUBLE:
-			case TYPE_NAME_FLOAT: {
-				double v1 = Double.parseDouble(start.getValueString());
-				double v2 = Double.parseDouble(end.getValueString());
-				for(int i=0;i<N;i++)
-				{
-					double v = (v1*(N-1-i)+v2*i)/(N-1);
-					ChoiceNode tmp = start.makeClone();
-					tmp.setValueString(String.valueOf(v));
-					ret.add(tmp);
-				}
-
-				if(v2 > Long.MAX_VALUE || v1 < Long.MIN_VALUE)
-					return ret;
-				long w1 = (long) Math.ceil(v1);
-				long w2 = (long) Math.floor(v2);
-				if(w1 <= w2)
-				{
-					for(String val : getInterleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
-					{
-						ChoiceNode tmp = start.makeClone();
-						tmp.setValueString(val);
-						ret.add(tmp);
-					}
-				}
-				return ret;
+		case TYPE_NAME_DOUBLE:
+		case TYPE_NAME_FLOAT: {
+			double v1 = Double.parseDouble(start.getValueString());
+			double v2 = Double.parseDouble(end.getValueString());
+			for(int i=0;i<N;i++)
+			{
+				double v = (v1*(N-1-i)+v2*i)/(N-1);
+				ChoiceNode tmp = start.makeClone();
+				tmp.setValueString(String.valueOf(v));
+				ret.add(tmp);
 			}
 
-			case TYPE_NAME_BYTE:
-			case TYPE_NAME_INT:
-			case TYPE_NAME_SHORT:
-			case TYPE_NAME_LONG: {
-				String v1 = start.getValueString();
-				String v2 = end.getValueString();
-
-				for(String val : getInterleavedBigIntegers(v1,v2,N))
+			if(v2 > Long.MAX_VALUE || v1 < Long.MIN_VALUE)
+				return ret;
+			long w1 = (long) Math.ceil(v1);
+			long w2 = (long) Math.floor(v2);
+			if(w1 <= w2)
+			{
+				for(String val : getInterleavedBigIntegers(String.valueOf(w1),String.valueOf(w2),N))
 				{
 					ChoiceNode tmp = start.makeClone();
 					tmp.setValueString(val);
 					ret.add(tmp);
 				}
-				return ret;
 			}
+			return ret;
+		}
 
-			default:
+		case TYPE_NAME_BYTE:
+		case TYPE_NAME_INT:
+		case TYPE_NAME_SHORT:
+		case TYPE_NAME_LONG: {
+			String v1 = start.getValueString();
+			String v2 = end.getValueString();
+
+			for(String val : getInterleavedBigIntegers(v1,v2,N))
 			{
-				reportExceptionUnhandledType();
-				return null;
+				ChoiceNode tmp = start.makeClone();
+				tmp.setValueString(val);
+				ret.add(tmp);
 			}
+			return ret;
+		}
+
+		default:
+		{
+			reportExceptionUnhandledType();
+			return null;
+		}
 		}
 	}
 

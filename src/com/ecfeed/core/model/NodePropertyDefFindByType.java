@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 
@@ -39,7 +39,7 @@ public class NodePropertyDefFindByType {
 
 	public static final NodePropertyDef findByTypeOfElement = 
 			new NodePropertyDef(
-					"wbFindByType", JavaTypeHelper.TYPE_NAME_STRING, STANDARD_VALUE_SET_WITH_DEFAULT_UNMAPPED);
+					"wbFindByType", JavaLanguageHelper.TYPE_NAME_STRING, STANDARD_VALUE_SET_WITH_DEFAULT_UNMAPPED);
 
 	public static String[] getPossibleValues(String webElementType) {
 		return getValueSet(webElementType).getPossibleValues();

@@ -46,7 +46,7 @@ public class TestCasesRequest {
 	}
 
 	@JsonSetter("model")
-	public void setModelName(String model) {
+	public void setModelIdentificationStr(String model) {
 		fModel = model;
 	}
 

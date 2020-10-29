@@ -13,7 +13,8 @@ package com.ecfeed.core.type.adapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -21,22 +22,31 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_DOUBLE;
+		return JavaLanguageHelper.TYPE_NAME_DOUBLE;
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode) {
+	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
-		String result = super.convertSpecialValue(value);
+		String result = convert2(value, runMode, extLanguageManager);
+		result = extLanguageManager.formatNumber(result);
 
-		if (result != null) {
-			return result;
+		return result;
+	}
+
+	public String convert2(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
-			return String.valueOf(JavaTypeHelper.parseDoubleValue(value, ERunMode.WITH_EXCEPTION));
+			String convertedValue = String.valueOf(JavaLanguageHelper.parseDoubleValue(value, ERunMode.WITH_EXCEPTION));
+			convertedValue = extLanguageManager.formatNumber(convertedValue);
+
+			return convertedValue;
+
 		} catch(NumberFormatException e) {
-			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
+			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
 		}
 	}
 
@@ -46,12 +56,12 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
 		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaTypeHelper.parseDoubleValue(range[0], ERunMode.QUIET);
+			return JavaLanguageHelper.parseDoubleValue(range[0], ERunMode.QUIET);
 		}		
 		
 		return ThreadLocalRandom.current().nextDouble(
-				JavaTypeHelper.parseDoubleValue(range[0], ERunMode.QUIET),
-				JavaTypeHelper.parseDoubleValue(range[1], ERunMode.QUIET));
+				JavaLanguageHelper.parseDoubleValue(range[0], ERunMode.QUIET),
+				JavaLanguageHelper.parseDoubleValue(range[1], ERunMode.QUIET));
 
 	}
 
@@ -64,8 +74,8 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	}	
 
 	@Override
-	protected String[] getSpecialValues() {
-		return JavaTypeHelper.SPECIAL_VALUES_FOR_DOUBLE;
+	protected String[] getSymbolicValues() {
+		return JavaLanguageHelper.SPECIAL_VALUES_FOR_DOUBLE;
 	}	
 
 }

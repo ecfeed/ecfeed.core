@@ -16,12 +16,13 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.utils.JustifyType;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class GherkinExportTemplate extends AbstractExportTemplate {
 
-	public GherkinExportTemplate(MethodNode methodNode) {
-		super(methodNode, createDefaultTemplateText(methodNode));
+	public GherkinExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+		super(methodNode, createDefaultTemplateText(methodNode), extLanguageManager);
 	}
 
 	private static String createDefaultTemplateText(MethodNode methodNode) {
@@ -54,7 +55,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
-		stringBuilder.append("Scenario: executing " + methodNode.getFullName() + "\n");
+		stringBuilder.append("Scenario: executing " + methodNode.getName() + "\n");
 		stringBuilder.append(createInputParametersSection(methodNode));
 		stringBuilder.append(createExecuteSection(methodNode));
 		stringBuilder.append(createExpectedParametersSection(methodNode));
@@ -81,7 +82,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 				continue;
 			}
 
-			String parameterName = methodNode.getParameter(parameterIndex).getFullName();
+			String parameterName = methodNode.getParameter(parameterIndex).getName();
 			String line = getInputParameterPrefix(counter) + parameterName + " is <" + parameterName + ">" + "\n";
 			stringBuilder.append(line);
 
@@ -115,7 +116,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 				continue;
 			}
 
-			String parameterName = methodNode.getParameter(parameterIndex).getFullName();
+			String parameterName = methodNode.getParameter(parameterIndex).getName();
 			String line = getExpectedParameterPrefix(counter) + parameterName + " is <" + parameterName + ">" + "\n";
 			stringBuilder.append(line);
 			counter++;
@@ -158,7 +159,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 
 	private static String createParameterDescription(MethodParameterNode methodParameterNode) {
 
-		String parameterName = methodParameterNode.getFullName();
+		String parameterName = methodParameterNode.getName();
 		int maxParamValueLength = getMaxParamValueLength(methodParameterNode, parameterName);
 
 		return embedInMinWidthOperator("<" + parameterName + ">", maxParamValueLength, JustifyType.CENTER); 
@@ -183,7 +184,7 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 	}
 
 	private static String createExecuteSection(MethodNode methodNode) {
-		return "\tWhen " + methodNode.getFullName() + " is executed\n";
+		return "\tWhen " + methodNode.getName() + " is executed\n";
 	}
 
 	private static String createDefaultTestCaseTemplate(MethodNode methodNode) {
@@ -196,11 +197,11 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		for (int index = 0; index < methodParametersCount; ++index) {
 
 			MethodParameterNode methodParameterNode = methodNode.getMethodParameter(index);  
-			String parameterName = methodParameterNode.getFullName(); 
+			String parameterName = methodParameterNode.getName(); 
 
 			int maxParamValueLength = getMaxParamValueLength(methodParameterNode, parameterName);
 
-			JustifyType justifyType = JavaTypeHelper.getJustifyType(methodParameterNode.getType());
+			JustifyType justifyType = JavaLanguageHelper.getTypeJustification(methodParameterNode.getType());
 
 			String paramDescription = embedInMinWidthOperator("$" + parameterName + "." + "value", maxParamValueLength, justifyType);
 			stringBuilder.append(paramDescription);

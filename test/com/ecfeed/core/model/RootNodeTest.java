@@ -89,7 +89,7 @@ public class RootNodeTest{
 
 		assertFalse(r1.isMatch(r2));
 
-		r2.setFullName("r1");
+		r2.setName("r1");
 		assertTrue(r1.isMatch(r2));
 
 		ClassNode class1 = new ClassNode("name", null);
@@ -101,10 +101,10 @@ public class RootNodeTest{
 		r2.addClass(class2);
 		assertTrue(r1.isMatch(r2));
 
-		class2.setFullName("new name");
+		class2.setName("new_name");
 		assertFalse(r1.isMatch(r2));
 
-		class2.setFullName("name");
+		class2.setName("name");
 		assertTrue(r1.isMatch(r2));
 
 		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", null, "int");
@@ -114,9 +114,9 @@ public class RootNodeTest{
 		assertFalse(r1.isMatch(r2));
 		r2.addParameter(parameter2);
 		assertTrue(r1.isMatch(r2));
-		parameter1.setFullName("newName");
+		parameter1.setName("newName");
 		assertFalse(r1.isMatch(r2));
-		parameter2.setFullName("newName");
+		parameter2.setName("newName");
 		assertTrue(r1.isMatch(r2));
 
 		parameter1.setType("float");

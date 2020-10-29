@@ -61,7 +61,7 @@ public class ConstraintTest {
 	@Test
 	public void testMentions() {
 		ChoiceNode choice = new ChoiceNode("choice", null, null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "type", "0", false);
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
 		parameter.addChoice(choice);
 
 		AbstractStatement mentioningStatement = 
@@ -90,8 +90,8 @@ public class ConstraintTest {
 
 		Constraint constraint = new Constraint("c", null, premise, consequence);
 
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "value1");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
@@ -99,8 +99,8 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullsForChoiceCondition() {
 
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "value1");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 
 		AbstractStatement premise = createPremiseWithChoiceCondition(choice1);
 		AbstractStatement consequence = createConsequenceWithChoiceCondition(choice2);
@@ -113,16 +113,16 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullsForParameterCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
+		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
+		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
 
 		AbstractStatement premise = createStatementWithParameterCondition(parameter1, parameter2);
 		AbstractStatement consequence = createStatementWithParameterCondition(parameter1, parameter2);
 
 		Constraint constraint = new Constraint("c", null, premise, consequence);
 
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "value1");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
@@ -131,9 +131,9 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullConsequenceForChoiceCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "value11");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "value12");
+		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "value11", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "value12", null);
 		choice11.setParent(parameter1);
 		choice12.setParent(parameter1);
 
@@ -142,8 +142,8 @@ public class ConstraintTest {
 						parameter1, EMathRelation.EQUAL, choice11);
 
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "value2");
+		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 		choice2.setParent(parameter2);
 
 		AbstractStatement consequence = 
@@ -185,7 +185,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPremiseWithValueCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
+		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
 
 		AbstractStatement premise = 
 				RelationStatement.createStatementWithValueCondition(
@@ -196,7 +196,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createConsequenceWithValueCondition() {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
+		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
 
 		AbstractStatement consequence = 
 				RelationStatement.createStatementWithValueCondition(
@@ -207,7 +207,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPremiseWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
+		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
 
 		AbstractStatement premise = 
 				RelationStatement.createStatementWithChoiceCondition(
@@ -218,7 +218,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createConsequenceWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
+		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
 
 		AbstractStatement consequence = 
 				RelationStatement.createStatementWithChoiceCondition(

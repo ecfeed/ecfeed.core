@@ -16,9 +16,15 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+
 
 public class TestCaseNode extends AbstractNode {
 	List<ChoiceNode> fTestData;
+
+	@Override
+	protected void verifyName(String name) {
+	}
 
 	@Override
 	public int getMyIndex(){
@@ -29,37 +35,26 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
-	public String toString(){
-		String methodName = null;
-		if (getParent() != null){
-			methodName = getParent().getFullName();
-		}
-		String result = "[" + getFullName() + "]";
+	public String toString() {
 
-		if(methodName != null){
-			result += ": " + methodName + "(";
-			result += testDataString();
-			result += ")";
-		}
-
-		return result;
+		return TestCaseNodeHelper.createSignature(this, new ExtLanguageManagerForJava());
 	}
 	
-	public String toStringSimplified() {
-		String methodName = null;
-		if (getParent() != null){
-			methodName = getParent().getFullName();
-		}
-		String result = "";
-
-		if(methodName != null){
-			result += "[";
-			result += testDataString();
-			result += "]";
-		}
-
-		return result;
-	}
+//	public String toStringSimplified() {
+//		String methodName = null;
+//		if (getParent() != null){
+//			methodName = getParent().getName();
+//		}
+//		String result = "";
+//
+//		if(methodName != null){
+//			result += "[";
+//			result += testDataString();
+//			result += "]";
+//		}
+//
+//		return result;
+//	}
 
 	@Override
 	public TestCaseNode makeClone(){
@@ -67,13 +62,13 @@ public class TestCaseNode extends AbstractNode {
 		for(ChoiceNode choice : fTestData){
 			testdata.add(choice);
 		}
-		TestCaseNode copy = new TestCaseNode(this.getFullName(), getModelChangeRegistrator(), testdata);
+		TestCaseNode copy = new TestCaseNode(this.getName(), getModelChangeRegistrator(), testdata);
 		copy.setProperties(getProperties());
 		return copy;
 	}
 
 	public TestCaseNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
-		
+
 		super(name, modelChangeRegistrator);
 		fTestData = testData;
 	}
@@ -126,34 +121,16 @@ public class TestCaseNode extends AbstractNode {
 		return false;
 	}
 
-	public String testDataString(){
-		String result = new String();
-
-		for(int i = 0; i < fTestData.size(); i++){
-			ChoiceNode choice = fTestData.get(i);
-			if(getMethodParameter(choice).isExpected()){
-				result += "[e]" + choice.getValueString();
-			}
-			else{
-				result += choice.getQualifiedName();
-			}
-			if(i < fTestData.size() - 1){
-				result += ", ";
-			}
-		}
-		return result;
-	}
-
 	public static boolean validateTestSuiteName(String newName) {
-		
+
 		if (newName.length() < 1 || newName.length() > 64) {
 			return false;
 		}
-		
+
 		if(newName.matches("[ ]+.*")) { 
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -175,9 +152,9 @@ public class TestCaseNode extends AbstractNode {
 		for(int i = 0; i < parameters.size(); i++){
 			MethodParameterNode parameter = parameters.get(i);
 			if(parameter.isExpected()){
-				String name = getTestData().get(i).getFullName();
+				String name = getTestData().get(i).getName();
 				String value = getTestData().get(i).getValueString();
-				ChoiceNode newChoice = new ChoiceNode(name, parameter.getModelChangeRegistrator(), value);
+				ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
 				newChoice.setParent(parameter);
 				getTestData().set(i, newChoice);
 			} else{

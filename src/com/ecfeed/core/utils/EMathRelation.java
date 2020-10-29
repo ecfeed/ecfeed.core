@@ -187,7 +187,7 @@ public enum EMathRelation{
 
 	public static boolean isRelationForParameterType(EMathRelation relation, String parameterTypeName) {
 
-		if (JavaTypeHelper.isTypeComparableForLessGreater(parameterTypeName)) {
+		if (JavaLanguageHelper.isTypeComparableForLessGreater(parameterTypeName)) {
 			return true;
 		}
 		if (relation == EQUAL || relation == NOT_EQUAL) {
@@ -273,11 +273,11 @@ public enum EMathRelation{
 
 	public static boolean isEqualityMatchForBooleans(EMathRelation relation, String actualValue, String valueToMatch) {
 
-		if (JavaTypeHelper.parseBooleanValue(actualValue) == null) {
+		if (JavaLanguageHelper.parseBooleanValue(actualValue) == null) {
 			return false;
 		}
 
-		if (JavaTypeHelper.parseBooleanValue(valueToMatch) == null) {
+		if (JavaLanguageHelper.parseBooleanValue(valueToMatch) == null) {
 			return false;
 		}		
 

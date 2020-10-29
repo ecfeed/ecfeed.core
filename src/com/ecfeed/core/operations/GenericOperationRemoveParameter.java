@@ -13,39 +13,50 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
-	private ParametersParentNode fTarget;
-	private AbstractParameterNode fParameter;
+	private ParametersParentNode fParametersParentNode;
+	private AbstractParameterNode fAbstractParameterNode;
 	private int fOriginalIndex;
+	private IExtLanguageManager fExtLanguageManager;
 
-	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter) {
-		super(OperationNames.REMOVE_METHOD_PARAMETER);
-		fTarget = target;
-		fParameter = parameter;
+	public GenericOperationRemoveParameter(ParametersParentNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguageManager);
+
+		fParametersParentNode = target;
+		fAbstractParameterNode = parameter;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
 	public void execute() throws ModelOperationException {
 
-		setOneNodeToSelect(fTarget);
-		fOriginalIndex = fTarget.getParameters().indexOf(fParameter);
-		fTarget.removeParameter(fParameter);
+		setOneNodeToSelect(fParametersParentNode);
+		fOriginalIndex = fParametersParentNode.getParameters().indexOf(fAbstractParameterNode);
+
+		fParametersParentNode.removeParameter(fAbstractParameterNode);
 		markModelUpdated();
+	}
+
+	public IExtLanguageManager getExtLanguageManager() {
+
+		return fExtLanguageManager;
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericOperationAddParameter(fTarget, fParameter, fOriginalIndex, false);
+		return new GenericOperationAddParameter(fParametersParentNode, fAbstractParameterNode, fOriginalIndex, false, getExtLanguageManager());
 	}
 
 	protected ParametersParentNode getOwnNode(){
-		return fTarget;
+		return fParametersParentNode;
 	}
 
 	protected AbstractParameterNode getParameter(){
-		return fParameter;
+		return fAbstractParameterNode;
 	}
 
 	protected int getOriginalIndex(){

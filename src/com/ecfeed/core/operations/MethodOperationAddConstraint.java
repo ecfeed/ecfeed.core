@@ -14,6 +14,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationAddConstraint extends AbstractModelOperation {
 
@@ -21,15 +22,17 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
-	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index){
-		super(OperationNames.ADD_CONSTRAINT);
+	public MethodOperationAddConstraint(MethodNode methodNode, ConstraintNode constraint, int index, IExtLanguageManager extLanguageManager){
+		
+		super(OperationNames.ADD_CONSTRAINT, extLanguageManager);
+		
 		fMethodNode = methodNode;
 		fConstraint = constraint;
 		fIndex = index;
 	}
 
-	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint){
-		this(target, constraint, -1);
+	public MethodOperationAddConstraint(MethodNode target, ConstraintNode constraint, IExtLanguageManager extLanguageManager){
+		this(target, constraint, -1, extLanguageManager);
 	}
 
 	@Override
@@ -40,8 +43,8 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 		if(fIndex == -1){
 			fIndex = fMethodNode.getConstraintNodes().size();
 		}
-		if(fConstraint.getFullName().matches(RegexHelper.REGEX_CONSTRAINT_NODE_NAME) == false){
-			ModelOperationException.report(OperationMessages.CONSTRAINT_NAME_REGEX_PROBLEM);
+		if(fConstraint.getName().matches(RegexHelper.REGEX_CONSTRAINT_NODE_NAME) == false){
+			ModelOperationException.report(OperationMessages.CONSTRAINT_NOT_ALLOWED);
 		}
 		if(fConstraint.updateReferences(fMethodNode) == false){
 			ModelOperationException.report(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);
@@ -52,7 +55,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationRemoveConstraint(fMethodNode, fConstraint);
+		return new MethodOperationRemoveConstraint(fMethodNode, fConstraint, getExtLanguageManager());
 	}
 
 }

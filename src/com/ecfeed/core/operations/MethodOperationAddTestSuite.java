@@ -16,6 +16,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCase;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationAddTestSuite extends BulkOperation {
 
@@ -23,21 +24,13 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 			MethodNode methodNode, 
 			String testSuiteName, 
 			List<TestCase> testCases, 
-			ITypeAdapterProvider typeAdapterProvider) {
+			ITypeAdapterProvider typeAdapterProvider,
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode);
-		createTestSuites(testCases, testSuiteName, methodNode, typeAdapterProvider);
-		
-	}
-	
-	public MethodOperationAddTestSuite(
-			MethodNode methodNode, 
-			List<TestCaseNode> testCases, 
-			ITypeAdapterProvider typeAdapterProvider) {
+		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode, extLanguageManager);
 
-		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode);
-		createTestSuites(testCases, methodNode, typeAdapterProvider);
-		
+		createTestSuites(
+		        testCases, testSuiteName, methodNode, typeAdapterProvider);
 	}
 	
 	private void createTestSuites(List<TestCase> testCases, String testSuiteName, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
@@ -54,7 +47,8 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 					new MethodOperationAddTestCase(
 							methodNode, 
 							testCaseNode, 
-							typeAdapterProvider));
+							typeAdapterProvider,
+							getExtLanguageManager()));
 		}
 	}
 	
@@ -66,7 +60,8 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 					new MethodOperationAddTestCase(
 							methodNode, 
 							testCase, 
-							typeAdapterProvider));
+							typeAdapterProvider,
+							getExtLanguageManager()));
 		}
 	}
 

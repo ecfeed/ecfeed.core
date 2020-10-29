@@ -17,7 +17,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.StringHelper;
 
-public class ChoiceNode extends ChoicesParentNode{
+public class ChoiceNode extends ChoicesParentNode {
 
 	public static final String ABSTRACT_CHOICE_MARKER = "[ABSTRACT]";
 
@@ -28,14 +28,14 @@ public class ChoiceNode extends ChoicesParentNode{
 
 	private ChoiceNode fOrigChoiceNode = null;
 
-	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value) {
+	public ChoiceNode(String name, String value, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
 	}
 
-	public ChoiceNode(String name, IModelChangeRegistrator modelChangeRegistrator, String value, boolean isRandomized) {
+	public ChoiceNode(String name, String value, boolean isRandomized, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<>();
@@ -62,8 +62,9 @@ public class ChoiceNode extends ChoicesParentNode{
 
 	@Override
 	public String toString(){
+
 		if(isAbstract()){
-			return getQualifiedName() + ABSTRACT_CHOICE_MARKER;
+			return getQualifiedName() + ABSTRACT_CHOICE_MARKER; 
 		}
 		return getQualifiedName() + " [" + getValueString() + "]";
 	}
@@ -106,7 +107,7 @@ public class ChoiceNode extends ChoicesParentNode{
 	}
 
 	public ChoiceNode makeCloneUnlink() {
-		ChoiceNode copy = new ChoiceNode(getFullName(), getModelChangeRegistrator(), fValueString);
+		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 		copy.setParent(fParent);
@@ -126,11 +127,13 @@ public class ChoiceNode extends ChoicesParentNode{
 		return ChoiceNodeHelper.createSubstitutePath(this, parameter);
 	}
 
-	public String getQualifiedName(){
-		if(parentChoice() != null){
-			return parentChoice().getQualifiedName() + ":" + getFullName();
+	public String getQualifiedName() {
+
+		if (parentChoice() != null) {
+			return parentChoice().getQualifiedName() + ":" + getName();
 		}
-		return getFullName();
+
+		return getName();
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
@@ -202,7 +205,7 @@ public class ChoiceNode extends ChoicesParentNode{
 		List<String> names = new ArrayList<String>();
 
 		for (ChoiceNode choice : existingChoices) {
-			names.add(choice.getFullName());
+			names.add(choice.getName());
 		}
 
 		return names;
@@ -301,9 +304,23 @@ public class ChoiceNode extends ChoicesParentNode{
 	}
 
 	private ChoiceNode parentChoice(){
-		if(fParent != null && fParent != getParameter()){
+		AbstractParameterNode parameter = getParameter();
+		if(fParent != null && fParent != parameter){
 			return (ChoiceNode)fParent;
 		}
 		return null;
 	}
+
+	//	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
+	//		
+	//		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
+	//		
+	//		AbstractParameterNode abstractParameterNode = fParent.getParameter();
+	//		
+	//		if(fParent != null && fParent != abstractParameterNode){
+	//			return (ChoiceNode)fParent;
+	//		}
+	//		return null;
+	//	}
+
 }

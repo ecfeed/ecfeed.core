@@ -28,7 +28,7 @@ public class ModelChangeRegistrationTest {
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
-		rootNode.setFullName("NEW NAME");
+		rootNode.setName("NEW_NAME");
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
@@ -73,7 +73,7 @@ public class ModelChangeRegistrationTest {
 		rootNode.addParameter(globalParameterNode);
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
-		ChoiceNode choice = new ChoiceNode("c1", changeCounter, "0");
+		ChoiceNode choice = new ChoiceNode("c1", "0", changeCounter);
 
 		changeCounter.registerModelSaved();
 		globalParameterNode.addChoice(choice);
@@ -101,7 +101,7 @@ public class ModelChangeRegistrationTest {
 		changeCounter.registerModelSaved();
 		MethodParameterNode methodParameterNode = 
 				new MethodParameterNode(
-						"par1", methodNode.getModelChangeRegistrator(), "int", "0", false);
+						"par1", "int", "0", false, methodNode.getModelChangeRegistrator());
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
@@ -132,7 +132,7 @@ public class ModelChangeRegistrationTest {
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		Constraint constraint1 = new Constraint("name1", changeCounter, new StaticStatement(true, changeCounter), new StaticStatement(false, changeCounter));
-		ConstraintNode constraintNode1 = new ConstraintNode("name1", null, constraint1);
+		ConstraintNode constraintNode1 = new ConstraintNode("name1", constraint1, null);
 
 		changeCounter.registerModelSaved();
 		methodNode.addConstraint(constraintNode1);

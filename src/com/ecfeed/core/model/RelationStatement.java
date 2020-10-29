@@ -12,10 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.*;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -122,13 +119,20 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String getLeftOperandName() {
 
-		return getLeftParameter().getFullName();
+		return getLeftParameter().getName();
 	}
 
 	@Override
 	public String toString() {
 
 		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		MethodParameterNode methodParameterNode = getLeftParameter();
+		return MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager) + getRelation() + fRightCondition.createSignature(extLanguageManager);
 	}
 
 	@Override
@@ -146,7 +150,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fLeftParameter.getFullName());
+		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fLeftParameter.getName());
 
 		if (tmpParameterNode != null && !tmpParameterNode.isExpected()) {
 
@@ -167,7 +171,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		RelationStatement compared = (RelationStatement)statement;
 
-		if ( !(getLeftParameter().getFullName().equals(compared.getLeftParameter().getFullName())) ) {
+		if ( !(getLeftParameter().getName().equals(compared.getLeftParameter().getName())) ) {
 			return false;
 		}
 

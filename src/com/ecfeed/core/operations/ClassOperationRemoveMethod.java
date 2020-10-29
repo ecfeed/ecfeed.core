@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ClassOperationRemoveMethod extends AbstractModelOperation {
 
@@ -20,8 +21,10 @@ public class ClassOperationRemoveMethod extends AbstractModelOperation {
 	private MethodNode fMethod;
 	private int fCurrentIndex;
 
-	public ClassOperationRemoveMethod(ClassNode target, MethodNode method) {
-		super(OperationNames.REMOVE_METHOD);
+	public ClassOperationRemoveMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.REMOVE_METHOD, extLanguageManager);
+		
 		fTarget = target;
 		fMethod = method;
 		fCurrentIndex = fMethod.getMyMethodIndex();
@@ -42,7 +45,8 @@ public class ClassOperationRemoveMethod extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationAddMethod(fTarget, fMethod, fCurrentIndex);
+		
+		return new ClassOperationAddMethod(fTarget, fMethod, fCurrentIndex, getExtLanguageManager());
 	}
 
 }

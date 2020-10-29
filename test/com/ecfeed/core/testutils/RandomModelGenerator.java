@@ -37,7 +37,7 @@ import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class RandomModelGenerator {
@@ -148,7 +148,7 @@ public class RandomModelGenerator {
 	public MethodParameterNode generateParameter(String type, boolean expected, int choiceLevels, int choices, int labels){
 		String name = generateString(RegexHelper.REGEX_CATEGORY_NODE_NAME);
 
-		MethodParameterNode parameter = new MethodParameterNode(name, null, type, randomChoiceValue(type), expected);
+		MethodParameterNode parameter = new MethodParameterNode(name, type, randomChoiceValue(type), expected, null);
 
 		parameter.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, "X");
 		parameter.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, "Y");
@@ -170,7 +170,7 @@ public class RandomModelGenerator {
 
 		for(MethodParameterNode c : method.getMethodParameters()){
 			if(c.isExpected()){
-				ChoiceNode expectedValue = new ChoiceNode("@expected", null, randomChoiceValue(c.getType()));
+				ChoiceNode expectedValue = new ChoiceNode("@expected", randomChoiceValue(c.getType()), null);
 				expectedValue.setParent(c);
 				testData.add(expectedValue);
 			}
@@ -204,7 +204,7 @@ public class RandomModelGenerator {
 						generatePremise(method), 
 						generateConsequence(method));
 
-		return new ConstraintNode(name, null, constraint);
+		return new ConstraintNode(name, constraint, null);
 	}
 
 	public AbstractStatement generatePremise(MethodNode method) {
@@ -241,7 +241,7 @@ public class RandomModelGenerator {
 		}
 
 		if(parameters.size() == 0){
-			MethodParameterNode parameter = generateParameter(JavaTypeHelper.TYPE_NAME_INT, false, 0, 1, 1);
+			MethodParameterNode parameter = generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1);
 			method.addParameter(parameter);
 			parameters.add(parameter);
 		}
@@ -291,7 +291,7 @@ public class RandomModelGenerator {
 
 		String value = randomChoiceValue(parameter.getType());
 		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
-		ChoiceNode choice = new ChoiceNode(name, null, value);
+		ChoiceNode choice = new ChoiceNode(name, value, null);
 		parameter.addChoice(choice);
 		return new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
 	}
@@ -311,7 +311,7 @@ public class RandomModelGenerator {
 
 	public AbstractStatement generateConsequence(MethodNode method) {
 		if(method.getParameters().size() == 0){
-			method.addParameter(generateParameter(JavaTypeHelper.TYPE_NAME_INT, false, 0, 1, 1));
+			method.addParameter(generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1));
 		}
 
 		List<MethodParameterNode> parameters = method.getMethodParameters();
@@ -327,7 +327,7 @@ public class RandomModelGenerator {
 		name = name.replaceAll(":", "_");
 		String value = randomChoiceValue(type);
 
-		ChoiceNode choice = new ChoiceNode(name, null, value);
+		ChoiceNode choice = new ChoiceNode(name, value, null);
 		for(int i = 0; i < labels; i++){
 			String label = generateString(RegexHelper.REGEX_PARTITION_LABEL);
 			choice.addLabel(label);
@@ -354,23 +354,23 @@ public class RandomModelGenerator {
 
 	private String randomChoiceValue(String type){
 		switch(type){
-		case JavaTypeHelper.TYPE_NAME_BOOLEAN:
+		case JavaLanguageHelper.TYPE_NAME_BOOLEAN:
 			return randomBooleanValue();
-		case JavaTypeHelper.TYPE_NAME_BYTE:
+		case JavaLanguageHelper.TYPE_NAME_BYTE:
 			return randomByteValue();
-		case JavaTypeHelper.TYPE_NAME_CHAR:
+		case JavaLanguageHelper.TYPE_NAME_CHAR:
 			return randomCharValue();
-		case JavaTypeHelper.TYPE_NAME_DOUBLE:
+		case JavaLanguageHelper.TYPE_NAME_DOUBLE:
 			return randomDoubleValue();
-		case JavaTypeHelper.TYPE_NAME_FLOAT:
+		case JavaLanguageHelper.TYPE_NAME_FLOAT:
 			return randomFloatValue();
-		case JavaTypeHelper.TYPE_NAME_INT:
+		case JavaLanguageHelper.TYPE_NAME_INT:
 			return randomIntValue();
-		case JavaTypeHelper.TYPE_NAME_LONG:
+		case JavaLanguageHelper.TYPE_NAME_LONG:
 			return randomLongValue();
-		case JavaTypeHelper.TYPE_NAME_SHORT:
+		case JavaLanguageHelper.TYPE_NAME_SHORT:
 			return randomShortValue();
-		case JavaTypeHelper.TYPE_NAME_STRING:
+		case JavaLanguageHelper.TYPE_NAME_STRING:
 			return randomStringValue();
 		default:
 			return randomUserTypeValue();
@@ -460,8 +460,6 @@ public class RandomModelGenerator {
 		//		Xeger generator = new Xeger(regex);
 		//		return generator.generate();
 	}
-
-	//DEBUG
 
 	@Test
 	public void testGenerateClass(){

@@ -97,7 +97,7 @@ public class TestSuiteNode extends AbstractNode {
 			testdata.add(choice);
 		}
 		
-		TestSuiteNode copy = new TestSuiteNode(this.getFullName(), getModelChangeRegistrator(), testdata);
+		TestSuiteNode copy = new TestSuiteNode(this.getName(), getModelChangeRegistrator(), testdata);
 		copy.setProperties(getProperties());
 		return copy;
 	}

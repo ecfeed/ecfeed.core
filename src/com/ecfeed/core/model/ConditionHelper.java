@@ -2,7 +2,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.RangeHelper;
 
@@ -10,10 +10,14 @@ public class ConditionHelper {
 
 	public static String getSubstituteType(RelationStatement parentRelationStatement) {
 
-		String substituteType = 
-				JavaTypeHelper.getSubstituteType(
-						parentRelationStatement.getLeftParameter().getType(), 
-						JavaTypeHelper.getStringTypeName());
+		final MethodParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+
+		final String type = leftParameter.getType();
+
+		String substituteType =
+				JavaLanguageHelper.getSubstituteType(
+						type,
+						JavaLanguageHelper.getStringTypeName());
 
 		if (substituteType == null) {
 			final String MESSAGE = "Substitute type must not be null.";
@@ -43,7 +47,7 @@ public class ConditionHelper {
 			EMathRelation relation,
 			String substituteType) {
 
-		if (JavaTypeHelper.isStringTypeName(substituteType)) {
+		if (JavaLanguageHelper.isStringTypeName(substituteType)) {
 			return ConditionHelper.isAmbiguousForStringType(leftChoiceNode, parentRelationStatement);
 		}
 

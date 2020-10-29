@@ -17,25 +17,36 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationAddChoice extends BulkOperation {
 	
 	public GenericOperationAddChoice(
-			ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, boolean validate) {
+			ChoicesParentNode target, 
+			ChoiceNode choice, 
+			ITypeAdapterProvider adapterProvider, 
+			int index, 
+			boolean validate, 
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.ADD_PARTITION, true, target, target);
-		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index));
+		super(OperationNames.ADD_PARTITION, true, target, target, extLanguageManager);
+		addOperation(new AddChoiceOperation(target, choice, adapterProvider, index, extLanguageManager));
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if((method != null) && validate){
-				addOperation(new MethodOperationMakeConsistent(method));
+				addOperation(new MethodOperationMakeConsistent(method, getExtLanguageManager()));
 			}
 		}
 	}
 
-	public GenericOperationAddChoice(ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, boolean validate) {
+	public GenericOperationAddChoice(
+			ChoicesParentNode target, 
+			ChoiceNode choice, 
+			ITypeAdapterProvider adapterProvider, 
+			boolean validate,
+			IExtLanguageManager extLanguageManager) {
 
-		this(target, choice, adapterProvider, -1, validate);
+		this(target, choice, adapterProvider, -1, validate, extLanguageManager);
 	}
 
 	private class AddChoiceOperation extends AbstractModelOperation {
@@ -44,9 +55,10 @@ public class GenericOperationAddChoice extends BulkOperation {
 		private int fIndex;
 		private ITypeAdapterProvider fAdapterProvider;
 
-		public AddChoiceOperation(ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index) {
+		public AddChoiceOperation(
+				ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, IExtLanguageManager extLanguageManager) {
 
-			super(OperationNames.ADD_PARTITION);
+			super(OperationNames.ADD_PARTITION, extLanguageManager);
 			fChoicesParentNode = target;
 			fChoice = choice;
 			fIndex = index;
@@ -66,8 +78,8 @@ public class GenericOperationAddChoice extends BulkOperation {
 			if(fIndex == -1) {
 				fIndex = fChoicesParentNode.getChoices().size();
 			}
-			if(fChoicesParentNode.getChoiceNames().contains(fChoice.getFullName())){
-				ModelOperationException.report(CHOICE_NAME_DUPLICATE_PROBLEM(fChoicesParentNode.getFullName(), fChoice.getFullName()));
+			if(fChoicesParentNode.getChoiceNames().contains(fChoice.getName())){
+				ModelOperationException.report(CHOICE_NAME_DUPLICATE_PROBLEM(fChoicesParentNode.getName(), fChoice.getName()));
 			}
 			if(fIndex < 0){
 				ModelOperationException.report(OperationMessages.NEGATIVE_INDEX_PROBLEM);
@@ -84,14 +96,16 @@ public class GenericOperationAddChoice extends BulkOperation {
 
 		private void generateUniqueChoiceName(ChoiceNode choiceNode) {
 
-			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, choiceNode.getFullName());
-			choiceNode.setFullName(newName);
+			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, choiceNode.getName());
+			choiceNode.setName(newName);
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
 
-			return new GenericOperationRemoveChoice(fChoicesParentNode, fChoice, fAdapterProvider, false);
+			return 
+					new GenericOperationRemoveChoice(
+							fChoicesParentNode, fChoice, fAdapterProvider, false, getExtLanguageManager());
 		}
 
 		public final String PARTITION_VALUE_PROBLEM(String value){
@@ -108,7 +122,10 @@ public class GenericOperationAddChoice extends BulkOperation {
 				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(type);
 				String newValue = 
 						adapter.convert(
-								choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);
+								choice.getValueString(), 
+								choice.isRandomizedValue(), 
+								ERunMode.QUIET,
+								getExtLanguageManager());
 
 				if(newValue == null){
 					ModelOperationException.report(PARTITION_VALUE_PROBLEM(choice.getValueString()));

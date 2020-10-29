@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+
 
 public class MethodNode extends ParametersParentNode {
 
@@ -29,11 +32,20 @@ public class MethodNode extends ParametersParentNode {
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
 		super(name, modelChangeRegistrator);
 
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
 		fTestCases = new ArrayList<>();
 		fTestSuites = new ArrayList<>();
 		fConstraints = new ArrayList<>();
 
 		setDefaultPropertyValues();
+	}
+
+	public void setName(String name) {
+
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		super.setName(name);
 	}
 
 	private void setDefaultPropertyValues() {
@@ -80,50 +92,25 @@ public class MethodNode extends ParametersParentNode {
 		registerChange();
 	}	
 
+	public List<String> getParameterTypes() {
+
+		List<String> parameterTypes = new ArrayList<String>();
+
+		List<AbstractParameterNode> parameters = getParameters();
+
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+
+			String parameterType = abstractParameterNode.getType();
+			parameterTypes.add(parameterType);
+		}
+
+		return parameterTypes;
+	}
+
 	@Override
-	public String toString(){
-		String result = new String(getFullName()) + "(";
-		List<String> types = getParameterTypes();
-		List<String> names = getParametersNames();
-		for(int i = 0; i < types.size(); i++){
-			if(getMethodParameters().get(i).isExpected()){
-				result += "[e]";
-			}
-			result += types.get(i);
-			result += " ";
-			result += names.get(i);
-			if(i < types.size() - 1) result += ", ";
-		}
-		result += ")";
-		return result;
-	}
+	public String toString() {
 
-	public String getShortSignature() {
-
-		List<String> types = getParameterTypes();
-		List<String> names = getParametersNames();
-
-		String result = new String(getFullName()) + "(";
-
-		for (int i = 0; i < types.size(); i++) {
-
-			result += types.get(i);
-			result += " ";
-			result += names.get(i);
-
-			if (i < types.size() - 1) {
-				result += ", ";
-			}
-		}
-
-		result += ")";
-
-		return result;
-	}
-
-	public String getLongSignature() {
-
-		return getParent().getFullName() + "." + getShortSignature();
+		return MethodNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava()); 
 	}
 
 	@Override
@@ -143,7 +130,7 @@ public class MethodNode extends ParametersParentNode {
 
 	@Override
 	public MethodNode makeClone(){
-		MethodNode copy = new MethodNode(getFullName(), getModelChangeRegistrator());
+		MethodNode copy = new MethodNode(getName(), getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 
@@ -164,8 +151,8 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		copy.setParent(getParent());
-//		if(!copy.isMatch(this))
-//			assert copy.isMatch(this);
+		//		if(!copy.isMatch(this))
+		//			assert copy.isMatch(this);
 		return copy;
 	}
 
@@ -192,12 +179,18 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public MethodNode getSibling(List<String> argTypes){
-		ClassNode parent = getClassNode();
-		if(parent == null) return null;
-		MethodNode sibling = parent.getMethod(getFullName(), argTypes);
-		if(sibling == null || sibling == this){
+
+		ClassNode classNode = getClassNode();
+
+		if (classNode == null) 
+			return null;
+
+		MethodNode sibling = classNode.findMethodWithTheSameSignature(getName(), argTypes);
+
+		if (sibling == null || sibling == this) {
 			return null;
 		}
+
 		return sibling;
 	}
 
@@ -245,7 +238,7 @@ public class MethodNode extends ParametersParentNode {
 		return classNode.getRunOnAndroid();
 	}
 
-	public MethodParameterNode getMethodParameter(String name){
+	public MethodParameterNode getMethodParameter(String name){ // TODO SIMPLE-VIEW rename to find method parameter
 		return (MethodParameterNode)getParameter(name);
 	}
 
@@ -253,7 +246,7 @@ public class MethodNode extends ParametersParentNode {
 		ArrayList<String> names = new ArrayList<String>();
 		for(MethodParameterNode parameter : getMethodParameters()){
 			if(parameter.isExpected() == expected){
-				names.add(parameter.getFullName());
+				names.add(parameter.getName());
 			}
 		}
 		return names;
@@ -283,7 +276,7 @@ public class MethodNode extends ParametersParentNode {
 	public List<Constraint> getConstraints(String name) {
 		List<Constraint> constraints = new ArrayList<Constraint>();
 		for(ConstraintNode node : fConstraints){
-			if(node.getFullName().equals(name)){
+			if(node.getName().equals(name)){
 				constraints.add(node.getConstraint());
 			}
 		}
@@ -293,7 +286,7 @@ public class MethodNode extends ParametersParentNode {
 	public Set<String> getConstraintsNames() {
 		Set<String> names = new HashSet<String>();
 		for(ConstraintNode constraint : fConstraints){
-			names.add(constraint.getFullName());
+			names.add(constraint.getName());
 		}
 		return names;
 	}
@@ -342,7 +335,7 @@ public class MethodNode extends ParametersParentNode {
 	private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
 		String defaultValue = methodParameterNode.getDefaultValue();
 
-		ChoiceNode choiceNode = new ChoiceNode("@expected", methodParameterNode.getModelChangeRegistrator(), defaultValue);
+		ChoiceNode choiceNode = new ChoiceNode("@expected", defaultValue, methodParameterNode.getModelChangeRegistrator());
 		choiceNode.setParent(methodParameterNode);
 
 		return choiceNode;
@@ -393,7 +386,7 @@ public class MethodNode extends ParametersParentNode {
 	public Collection<TestCaseNode> getTestCases(String testSuite) {
 		ArrayList<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
 		for(TestCaseNode testCase : getTestCases()){
-			if(testSuite.equals(testCase.getFullName())){
+			if(testSuite.equals(testCase.getName())){
 				testCases.add(testCase);
 			}
 		}
@@ -404,8 +397,8 @@ public class MethodNode extends ParametersParentNode {
 
 		Set<String> names = new HashSet<String>();
 
-		for(TestCaseNode testCase : getTestCases()) {
-			names.add(testCase.getFullName());
+		for(TestCaseNode testCase : getTestCases()){
+			names.add(testCase.getName());
 		}
 
 		return names;
@@ -450,7 +443,7 @@ public class MethodNode extends ParametersParentNode {
 		Iterator<TestCaseNode> iterator = getTestCases().iterator();
 		while(iterator.hasNext()){
 			TestCaseNode testCase = iterator.next();
-			if(testCase.getFullName().equals(suiteName)){
+			if(testCase.getName().equals(suiteName)){
 				iterator.remove();
 			}
 		}

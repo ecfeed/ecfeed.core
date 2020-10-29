@@ -31,7 +31,6 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelConverter;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.serialization.ModelParser;
@@ -173,9 +172,9 @@ public class ModelSerializerTest {
 
 	private RootNode createModel(int version) {
 
-		ChoiceNode choice = new ChoiceNode("choice", null, "0");
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
 
-		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "int", "0", false);
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
 		parameter.addChoice(choice);
 
 		MethodNode methodNode = new MethodNode("testMethod1", null);
@@ -186,7 +185,7 @@ public class ModelSerializerTest {
 				null, RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice),
 				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice));
 
-		ConstraintNode constraintNode = new ConstraintNode("name1", null, constraint);
+		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
 		methodNode.addConstraint(constraintNode);
 
 		ClassNode classNode = new ClassNode("com.example.TestClass", null, false, null);
@@ -218,7 +217,7 @@ public class ModelSerializerTest {
 		RootNode convertedModel = null;
 		try {
 			convertedModel = ModelConverter.convertToCurrentVersion(createModel(0));
-		} catch (ModelOperationException e) {
+		} catch (Exception e) {
 			fail();
 		}
 		String convertedString = getSerializedString(convertedModel);

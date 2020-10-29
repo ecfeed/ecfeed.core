@@ -51,7 +51,7 @@ import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class XmlParserSerializerTest {
 	private final int TEST_RUNS = 10;
@@ -113,8 +113,8 @@ public class XmlParserSerializerTest {
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode parameter = new MethodParameterNode("parameter", null, JavaTypeHelper.TYPE_NAME_STRING, "0", false);
-			ChoiceNode choice = new ChoiceNode("choice", null, "A                 B");
+			MethodParameterNode parameter = new MethodParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
+			ChoiceNode choice = new ChoiceNode("choice", "A                 B", null);
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 			testData.add(choice);
 			TestCaseNode testCase = new TestCaseNode("test", null, testData);
@@ -151,13 +151,13 @@ public class XmlParserSerializerTest {
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
 			MethodParameterNode choicesParentParameter =
-					new MethodParameterNode("choicesParentParameter", null, JavaTypeHelper.TYPE_NAME_STRING, "0", false);
+					new MethodParameterNode("choicesParentParameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
 			MethodParameterNode expectedParameter =
-					new MethodParameterNode("expectedParameter", null, JavaTypeHelper.TYPE_NAME_CHAR, "0", true);
+					new MethodParameterNode("expectedParameter", JavaLanguageHelper.TYPE_NAME_CHAR, "0", true, null);
 			expectedParameter.setDefaultValueString("d");
-			ChoiceNode choice1 = new ChoiceNode("choice", null, "p");
+			ChoiceNode choice1 = new ChoiceNode("choice", "p", null);
 			choice1.setParent(choicesParentParameter);
-			ChoiceNode choice2 = new ChoiceNode("expected", null, "s");
+			ChoiceNode choice2 = new ChoiceNode("expected", "s", null);
 			choice2.setParent(expectedParameter);
 
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
@@ -181,11 +181,11 @@ public class XmlParserSerializerTest {
 					new Constraint(
 							"constraint",
 							null, new StaticStatement(true, null),
-							new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", null, "n"), new JavaPrimitiveTypePredicate()));
+							new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()));
 
-			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", null, choiceConstraint);
-			ConstraintNode labelConstraintNode = new ConstraintNode("label constraint", null, labelConstraint);
-			ConstraintNode expectedConstraintNode = new ConstraintNode("expected constraint", null, expectedConstraint);
+			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", choiceConstraint, null);
+			ConstraintNode labelConstraintNode = new ConstraintNode("label constraint", labelConstraint, null);
+			ConstraintNode expectedConstraintNode = new ConstraintNode("expected constraint", expectedConstraint, null);
 
 			root.addClass(classNode);
 			classNode.addMethod(method);
@@ -273,7 +273,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private MethodParameterNode createChoicesParentParameter(String type, int numOfChoices) {
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), null, type, "0", false);
+		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", false, null);
 		for(int i = 0; i < numOfChoices; i++){
 			parameter.addChoice(createChoice(type, 1));
 		}
@@ -290,7 +290,7 @@ public class XmlParserSerializerTest {
 
 	private MethodParameterNode createExpectedValueParameter(String type) {
 		String defaultValue = createRandomValue(type);
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), null, type, "0", true);
+		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", true, null);
 		parameter.setDefaultValueString(defaultValue);
 		return parameter;
 	}
@@ -319,7 +319,7 @@ public class XmlParserSerializerTest {
 			return Short.toString((short)rand.nextInt());
 		case SerializationConstants.TYPE_NAME_STRING:
 			if(rand.nextInt(5) == 0){
-				return JavaTypeHelper.SPECIAL_VALUE_NULL;
+				return JavaLanguageHelper.SPECIAL_VALUE_NULL;
 			}
 			else{
 				return generateRandomString(rand.nextInt(10));
@@ -342,7 +342,7 @@ public class XmlParserSerializerTest {
 
 	private ChoiceNode createChoice(String type, int level) {
 		String value = createRandomValue(type);
-		ChoiceNode choice = new ChoiceNode(randomName(), null, value);
+		ChoiceNode choice = new ChoiceNode(randomName(), value, null);
 		for(int i = 0; i < rand.nextInt(MAX_PARTITION_LABELS); i++){
 			choice.addLabel(generateRandomString(10));
 		}
@@ -361,7 +361,7 @@ public class XmlParserSerializerTest {
 			List<MethodParameterNode> expectedParameters, int numOfConstraints) {
 		List<ConstraintNode> constraints = new ArrayList<ConstraintNode>();
 		for(int i = 0; i < numOfConstraints; ++i){
-			constraints.add(new ConstraintNode(randomName(), null, createConstraint(choicesParentParameters, expectedParameters)));
+			constraints.add(new ConstraintNode(randomName(), createConstraint(choicesParentParameters, expectedParameters), null));
 		}
 		return constraints;
 	}
@@ -438,7 +438,7 @@ public class XmlParserSerializerTest {
 	private AbstractStatement createExpectedStatement(List<MethodParameterNode> parameters) {
 		if(parameters.size() == 0) return null;
 		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		return new ExpectedValueStatement(parameter, new ChoiceNode("default", null, createRandomValue(parameter.getType())), new JavaPrimitiveTypePredicate());
+		return new ExpectedValueStatement(parameter, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
 	}
 
 	private List<MethodParameterNode> getChoicesParentParameters(List<? extends MethodParameterNode> parameters) {
@@ -511,7 +511,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareModels(RootNode model1, RootNode model2) {
-		compareNames(model1.getFullName(), model2.getFullName());
+		compareNames(model1.getName(), model2.getName());
 		compareSizes(model1.getClasses(), model2.getClasses());
 		for(int i = 0; i < model1.getClasses().size(); ++i){
 			compareClasses(model1.getClasses().get(i), model2.getClasses().get(i));
@@ -519,7 +519,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareClasses(ClassNode classNode1, ClassNode classNode2) {
-		compareNames(classNode1.getFullName(), classNode2.getFullName());
+		compareNames(classNode1.getName(), classNode2.getName());
 		compareSizes(classNode1.getMethods(), classNode2.getMethods());
 
 		for(int i = 0; i < classNode1.getMethods().size(); ++i){
@@ -528,7 +528,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareMethods(MethodNode method1, MethodNode method2) {
-		compareNames(method1.getFullName(), method2.getFullName());
+		compareNames(method1.getName(), method2.getName());
 		compareSizes(method1.getParameters(), method2.getParameters());
 		compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes());
 		compareSizes(method1.getTestCases(), method2.getTestCases());
@@ -545,7 +545,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareParameters(MethodParameterNode parameter1, MethodParameterNode parameter2) {
-		compareNames(parameter1.getFullName(), parameter2.getFullName());
+		compareNames(parameter1.getName(), parameter2.getName());
 		compareNames(parameter1.getType(), parameter2.getType());
 		compareSizes(parameter1.getChoices(), parameter2.getChoices());
 		if(parameter1 instanceof MethodParameterNode || parameter2 instanceof MethodParameterNode){
@@ -559,7 +559,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
-		compareNames(choice1.getFullName(), choice2.getFullName());
+		compareNames(choice1.getName(), choice2.getName());
 		compareValues(choice1.getValueString(),choice2.getValueString());
 		compareLabels(choice1.getLabels(), choice2.getLabels());
 		assertEquals(choice1.getChoices().size(), choice2.getChoices().size());
@@ -589,7 +589,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareConstraintNodes(ConstraintNode constraint1, ConstraintNode constraint2) {
-		compareNames(constraint1.getFullName(), constraint2.getFullName());
+		compareNames(constraint1.getName(), constraint2.getName());
 		compareConstraints(constraint1.getConstraint(), constraint2.getConstraint());
 	}
 
@@ -662,7 +662,7 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareTestCases(TestCaseNode testCase1, TestCaseNode testCase2) {
-		compareNames(testCase1.getFullName(), testCase2.getFullName());
+		compareNames(testCase1.getName(), testCase2.getName());
 		compareSizes(testCase1.getTestData(), testCase2.getTestData());
 		for(int i = 0; i < testCase1.getTestData().size(); i++){
 			ChoiceNode testValue1 = testCase1.getTestData().get(i);

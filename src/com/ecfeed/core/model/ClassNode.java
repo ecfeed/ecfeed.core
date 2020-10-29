@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.BooleanHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ClassNode extends GlobalParametersParentNode {
@@ -31,7 +33,7 @@ public class ClassNode extends GlobalParametersParentNode {
 
 	@Override
 	public ClassNode makeClone(){
-		ClassNode copy = new ClassNode(getFullName(), getModelChangeRegistrator());
+		ClassNode copy = new ClassNode(getName(), getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 
@@ -70,6 +72,8 @@ public class ClassNode extends GlobalParametersParentNode {
 
 		super(qualifiedName, modelChangeRegistrator);
 
+		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
+
 		setRunOnAndroid(runOnAndroid);
 
 		if (!StringHelper.isNullOrEmpty(androidBaseRunner)) {
@@ -77,6 +81,13 @@ public class ClassNode extends GlobalParametersParentNode {
 		}
 
 		fMethods = new ArrayList<MethodNode>();
+	}
+
+	public void setName(String qualifiedName) {
+
+		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
+
+		super.setName(qualifiedName);
 	}
 
 	public int getMyClassIndex() {
@@ -128,23 +139,31 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	public boolean addMethod(MethodNode method, int index) {
-		if(index >= 0 && index <= fMethods.size()){
+
+		if (findMethodWithTheSameSignature(method.getName(), method.getParameterTypes()) != null) {
+
+			ExceptionHelper.reportRuntimeException("Cannot add method. Method with identical signature already exists.");
+		}
+
+		if (index >= 0 && index <= fMethods.size()) {
 			fMethods.add(index, method);
 			method.setParent(this);
 			boolean result = fMethods.indexOf(method) == index;
 			registerChange();
 			return result;
 		}
+
 		return false;
 	}
 
-	public MethodNode getMethod(String name, List<String> argTypes) {
+	public MethodNode findMethodWithTheSameSignature(String name, List<String> parameterTypes) {
+
 		for (MethodNode methodNode : getMethods()) {
 			List<String> args = new ArrayList<String>();
 			for (AbstractParameterNode arg : methodNode.getParameters()){
 				args.add(arg.getType());
 			}
-			if (methodNode.getFullName().equals(name) && args.equals(argTypes)){
+			if (methodNode.getName().equals(name) && args.equals(parameterTypes)){
 				return methodNode;
 			}
 		}
@@ -213,8 +232,8 @@ public class ClassNode extends GlobalParametersParentNode {
 		return result;
 	}
 
-	public String getSimpleName() {
-		String[] nameNodeSplit = getFullName().split("\\.");
+	public String getNonQualifiedName() {
+		String[] nameNodeSplit = getName().split("\\.");
 		return nameNodeSplit[nameNodeSplit.length - 1];
 	}
 }

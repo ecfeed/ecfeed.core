@@ -27,14 +27,13 @@ import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.SimpleTypeHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	private AbstractParameterNode fTarget;
-	private String fNewType;
+	private String fNewTypeInExtLanguage;
 	private String fCurrentType;
 	private ITypeAdapterProvider fAdapterProvider;
 	private Map<ChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
@@ -42,8 +41,8 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	protected class ReverseOperation extends AbstractReverseOperation {
 
-		public ReverseOperation() {
-			super(AbstractParameterOperationSetType.this);
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(AbstractParameterOperationSetType.this, extLanguageManager);
 		}
 
 		@Override
@@ -59,7 +58,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new AbstractParameterOperationSetType(fTarget, fNewType, fAdapterProvider);
+			return new AbstractParameterOperationSetType(fTarget, fNewTypeInExtLanguage, fAdapterProvider, getExtLanguageManager());
 		}
 
 		protected void restoreOriginalChoices(ChoicesParentNode parent) {
@@ -80,10 +79,20 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	}
 
-	public AbstractParameterOperationSetType(AbstractParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
-		super(OperationNames.SET_TYPE);
+	public AbstractParameterOperationSetType(
+			AbstractParameterNode target, 
+			String newType, 
+			ITypeAdapterProvider adapterProvider, 
+			IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.SET_TYPE, extLanguageManager);
+
+		if (adapterProvider == null) {
+			ExceptionHelper.reportRuntimeException("Type adapter is empty.");
+		}
+
 		fTarget = target;
-		fNewType = newType;
+		fNewTypeInExtLanguage = newType;
 		fAdapterProvider = adapterProvider;
 		fOriginalChoices = new HashMap<>();
 		fOriginalValues = new HashMap<>();
@@ -105,11 +114,8 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveChoices(fTarget);
 		saveValues(fTarget);
 
-		if (!JavaTypeHelper.isJavaType(fNewType) && !SimpleTypeHelper.isSimpleType(fNewType) 
-				&& !JavaLanguageHelper.isValidTypeName(fNewType)) {
-			
-			ModelOperationException.report(OperationMessages.CATEGORY_TYPE_REGEX_PROBLEM);
-		}
+		checkType(fNewTypeInExtLanguage);
+
 		// Check for duplicate signatures possibly caused by global parameter type change
 		if(fTarget instanceof GlobalParameterNode){
 			GlobalParameterNode target = (GlobalParameterNode)fTarget;
@@ -123,7 +129,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 				HashMap<MethodNode, List<String>> methods = new HashMap<>();
 				//searching for methods with same name as currently investigated
 				for(MethodNode methodNode: classNode.getMethods()){
-					if(methodNode.getFullName().equals(testedMethod.getFullName())
+					if(methodNode.getName().equals(testedMethod.getName())
 							&& methodNode.getParameters().size() == testedMethod.getParameters().size()){
 						// if method links edited global parameter - replace types before matching
 						if(target.getMethods().contains(methodNode)){
@@ -131,7 +137,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 							for(AbstractParameterNode parameter: methodNode.getParameters()){
 								MethodParameterNode param = (MethodParameterNode)parameter;
 								if(param.isLinked() && param.getLink().equals(target)){
-									types.set(parameter.getMyIndex(), fNewType);
+									types.set(parameter.getMyIndex(), fNewTypeInExtLanguage);
 								}			
 							}
 							methods.put(methodNode, types);
@@ -156,7 +162,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 						for(int k = n+1; k < remainingMethods.size(); k++){
 							if(methods.get(method).equals(methods.get(remainingMethods.get(k)))){
 								ModelOperationException.report(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
-										method.getClassNode().getFullName(), method.getFullName(), method.getParameters().toString(),
+										method.getClassNode().getName(), method.getName(), method.getParameters().toString(),
 										remainingMethods.get(k).getParameters().toString()));
 							}
 						}
@@ -165,13 +171,29 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			}
 		}
 
-		fTarget.setType(fNewType);
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
+
+		String newTypeInIntrLanguage = 
+				extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
+		
+		fTarget.setType(newTypeInIntrLanguage);
+
 		adaptChoices(fTarget);
+	}
+
+	public void checkType(String newTypeInExtLanguage) throws ModelOperationException {
+
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
+		String message = extLanguageManager.verifyIsAllowedType(newTypeInExtLanguage);
+
+		if (message!= null) {
+			ModelOperationException.report(message);
+		}
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 	protected void saveChoices(ChoicesParentNode parent){
@@ -190,7 +212,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	private void adaptChoices(ChoicesParentNode parent) {
 		Iterator<ChoiceNode> it = getChoices(parent).iterator();
-		ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(fNewType);
+		ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(fNewTypeInExtLanguage);
 		while(it.hasNext()){
 			adaptOneChoice(it, adapter);
 		}
@@ -218,7 +240,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		String newValue = 
 				adapter.convert(
-						choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);
+						choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET, getExtLanguageManager());
 
 		if (newValue == null) {
 			newValue = adapter.getDefaultValue();
@@ -231,7 +253,10 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		String newValue = 
 				adapter.convert(
-						choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);
+						choice.getValueString(), 
+						choice.isRandomizedValue(), 
+						ERunMode.QUIET,
+						getExtLanguageManager());
 
 		if (newValue == null) {
 			it.remove();
@@ -262,7 +287,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	}
 
 	protected String getNewType(){
-		return fNewType;
+		return fNewTypeInExtLanguage;
 	}
 
 }

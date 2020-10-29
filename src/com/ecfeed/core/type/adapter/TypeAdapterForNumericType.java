@@ -12,24 +12,45 @@ package com.ecfeed.core.type.adapter;
 
 import java.util.Arrays;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAdapterForTypeWithRange<T> {
 
-	public static final String DELIMITER = ":";		
+	public static final String DELIMITER = ":";
+	public static final String SPECIAL_VALUES_ARE_NOT_ALLOWED = "Special values are not allowed.";
 
 	@Override
 	public boolean isCompatible(String type) {
 		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTABLE_TO_NUMBERS).contains(type);
 	}
 
-	protected String convertSpecialValue(String value){
-		return Arrays.asList(getSpecialValues()).contains(value) ? value : null;
+	protected boolean isSymbolicValue(String value) {
+
+		boolean isSymbolicValue = Arrays.asList(getSymbolicValues()).contains(value);
+
+		return isSymbolicValue;
+	}
+
+	protected String handleConversionOfSymbolicValue(String symbolicValue, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+
+		if (extLanguageManager.isSymbolicValueAllowed()) {
+			return symbolicValue;
+		}
+
+		if (runMode == ERunMode.QUIET) {
+			return TypeAdapterHelper.handleConversionError(symbolicValue, getMyTypeName(), runMode);
+		}
+
+		ExceptionHelper.reportRuntimeException(SPECIAL_VALUES_ARE_NOT_ALLOWED);
+		return null;
 	}
 
 	@Override
 	public String getDefaultValue() {
-		return JavaTypeHelper.DEFAULT_EXPECTED_NUMERIC_VALUE;
+		return JavaLanguageHelper.DEFAULT_EXPECTED_NUMERIC_VALUE;
 	}
 
 	@Override

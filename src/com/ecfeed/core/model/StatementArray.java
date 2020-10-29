@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public class StatementArray extends AbstractStatement {
@@ -153,6 +154,32 @@ public class StatementArray extends AbstractStatement {
 				}
 			}
 		}
+		return result + ")";
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		String result = new String("(");
+
+		for (int i = 0; i < fStatements.size(); i++) {
+
+			final AbstractStatement abstractStatement = fStatements.get(i);
+
+			result += abstractStatement.createSignature(extLanguageManager);
+
+			if (i < fStatements.size() - 1) {
+				switch(fOperator) {
+					case AND:
+						result += " \u2227 ";
+						break;
+					case OR:
+						result += " \u2228 ";
+						break;
+				}
+			}
+		}
+
 		return result + ")";
 	}
 

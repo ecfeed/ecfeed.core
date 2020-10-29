@@ -12,6 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericSetCommentsOperation extends AbstractModelOperation {
 
@@ -19,9 +20,10 @@ public class GenericSetCommentsOperation extends AbstractModelOperation {
 	private AbstractNode fTarget;
 	private String fCurrentComments;
 
-	public GenericSetCommentsOperation(AbstractNode target, String comments) {
+	public GenericSetCommentsOperation(AbstractNode target, String comments, IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.SET_COMMENTS);
+		super(OperationNames.SET_COMMENTS, extLanguageManager);
+		
 		fTarget = target;
 		fComments = comments;
 	}
@@ -36,7 +38,7 @@ public class GenericSetCommentsOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericSetCommentsOperation(fTarget, fCurrentComments);
+		return new GenericSetCommentsOperation(fTarget, fCurrentComments, getExtLanguageManager());
 	}
 
 }

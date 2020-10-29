@@ -19,6 +19,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterOperationSetLinked extends BulkOperation{
 
@@ -31,8 +32,8 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 		private class ReverseSetLinkedOperation extends AbstractReverseOperation{
 
-			public ReverseSetLinkedOperation() {
-				super(SetLinkedOperation.this);
+			public ReverseSetLinkedOperation(IExtLanguageManager extLanguageManager) {
+				super(SetLinkedOperation.this, extLanguageManager);
 			}
 
 			@Override
@@ -56,13 +57,13 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new SetLinkedOperation(fTarget, fLinked);
+				return new SetLinkedOperation(fTarget, fLinked, getExtLanguageManager());
 			}
 
 		}
 
-		public SetLinkedOperation(MethodParameterNode target, boolean linked) {
-			super(OperationNames.SET_LINKED);
+		public SetLinkedOperation(MethodParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+			super(OperationNames.SET_LINKED, extLanguageManager);
 			fTarget = target;
 			fLinked = linked;
 		}
@@ -85,7 +86,10 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 			}
 
 			if(method.checkDuplicate(fTarget.getMyIndex(), newType)){
-				ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(method.getClassNode(), method.getFullName()));
+
+				ModelOperationException.report(
+						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
 			fTarget.setLinked(fLinked);
@@ -98,15 +102,15 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ReverseSetLinkedOperation();
+			return new ReverseSetLinkedOperation(getExtLanguageManager());
 		}
 
 	}
 
-	public MethodParameterOperationSetLinked(MethodParameterNode target, boolean linked) {
-		super(OperationNames.SET_LINKED, true, target, target);
-		addOperation(new SetLinkedOperation(target, linked));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod())); 
+	public MethodParameterOperationSetLinked(MethodParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
+		addOperation(new SetLinkedOperation(target, linked, extLanguageManager));
+		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguageManager)); 
 	}
 
 	public void addOperation(int index, IModelOperation operation){

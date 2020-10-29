@@ -1,11 +1,11 @@
 /*******************************************************************************
  *
- * Copyright (c) 2016 ecFeed AS.                                                
- * All rights reserved. This program and the accompanying materials              
- * are made available under the terms of the Eclipse Public License v1.0         
- * which accompanies this distribution, and is available at                      
- * http://www.eclipse.org/legal/epl-v10.html 
- *  
+ * Copyright (c) 2016 ecFeed AS.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
  *******************************************************************************/
 
 package com.ecfeed.core.operations;
@@ -16,6 +16,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
@@ -38,7 +39,7 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 					return null;
 				}
 				@Override
-				public String convert(String value, boolean isRandomized, ERunMode conversionMode) {
+				public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 					return value;
 				}
 				@Override
@@ -65,9 +66,11 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 		}
 
 	}
-	
-	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase) {
-		super(OperationNames.REMOVE_TEST_CASE);
+
+	public MethodOperationRemoveTestCase(MethodNode target, TestCaseNode testCase, IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.REMOVE_TEST_CASE, extLanguageManager);
+
 		fMethodNode = target;
 		fTestCase = testCase;
 		fIndex = testCase.getMyIndex();
@@ -83,7 +86,7 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationAddTestCase(fMethodNode, fTestCase, new DummyAdapterProvider(), fIndex);
+		return new MethodOperationAddTestCase(fMethodNode, fTestCase, new DummyAdapterProvider(), fIndex, getExtLanguageManager());
 	}
 
 }

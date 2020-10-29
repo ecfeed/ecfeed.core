@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 //ambigous always false
@@ -39,7 +40,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public String getLeftOperandName() {
-		return fParameter.getFullName();
+		return fParameter.getName();
 	}
 
 	@Override
@@ -108,7 +109,15 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public String toString(){
-		return getParameter().getFullName() + getRelation().toString() + fCondition.getValueString();
+		return getParameter().getName() + getRelation().toString() + fCondition.getValueString();
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager){
+
+		final MethodParameterNode parameter = getParameter();
+
+		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fCondition.getValueString();
 	}
 
 	@Override
@@ -118,7 +127,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public boolean updateReferences(MethodNode method){
-		MethodParameterNode parameter = (MethodParameterNode)method.getParameter(fParameter.getFullName());
+		MethodParameterNode parameter = (MethodParameterNode)method.getParameter(fParameter.getName());
 		if(parameter != null && parameter.isExpected()){
 			fParameter = parameter;
 			fCondition.setParent(parameter);
@@ -145,7 +154,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		}
 
 		ExpectedValueStatement compared = (ExpectedValueStatement)statement;
-		if(getParameter().getFullName().equals(compared.getParameter().getFullName()) == false){
+		if(getParameter().getName().equals(compared.getParameter().getName()) == false){
 			return false;
 		}
 

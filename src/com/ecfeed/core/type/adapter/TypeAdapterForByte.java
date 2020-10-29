@@ -13,7 +13,8 @@ package com.ecfeed.core.type.adapter;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -21,28 +22,26 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 
 	@Override
 	public String getMyTypeName() {
-		return JavaTypeHelper.TYPE_NAME_BYTE;
+		return JavaLanguageHelper.TYPE_NAME_BYTE;
 	}
 
 	@Override
-	protected String convertSingleValue(String value, ERunMode conversionMode) {
+	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
-		String result = super.convertSpecialValue(value);
-
-		if (result != null) {
-			return result;
+		if (isSymbolicValue(value)) {
+			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);
 		}
 
 		try {
-			return String.valueOf(StringHelper.convertToByte(value));
+			return String.valueOf(JavaLanguageHelper.convertToByte(value));
 		} catch (NumberFormatException e) {
-			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
+			return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), runMode);
 		}
 	}
 
 	@Override
-	protected String[] getSpecialValues() {
-		return JavaTypeHelper.SPECIAL_VALUES_FOR_BYTE;
+	protected String[] getSymbolicValues() {
+		return JavaLanguageHelper.SPECIAL_VALUES_FOR_BYTE;
 	}
 
 	@Override
@@ -51,12 +50,12 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 		
 		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaTypeHelper.parseByteValue(range[0], ERunMode.QUIET);
+			return JavaLanguageHelper.parseByteValue(range[0], ERunMode.QUIET);
 		}		
 
 		return (byte) ThreadLocalRandom.current().nextInt(
-				JavaTypeHelper.parseByteValue(range[0], ERunMode.QUIET), 
-				JavaTypeHelper.parseByteValue(range[1], ERunMode.QUIET));
+				JavaLanguageHelper.parseByteValue(range[0], ERunMode.QUIET),
+				JavaLanguageHelper.parseByteValue(range[1], ERunMode.QUIET));
 	}
 
 }

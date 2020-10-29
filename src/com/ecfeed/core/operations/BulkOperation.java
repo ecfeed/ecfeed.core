@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class BulkOperation extends AbstractModelOperation {
 
@@ -36,10 +37,11 @@ public class BulkOperation extends AbstractModelOperation {
 			String name, 
 			boolean atomic,
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToSelectAfterReverseOperation) {
+			AbstractNode nodeToSelectAfterReverseOperation,
+			IExtLanguageManager extLanguageManager) {
 
 		this(name, new ArrayList<IModelOperation>(), atomic, 
-				nodeToSelect, nodeToSelectAfterReverseOperation);
+				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguageManager);
 	}
 
 	public BulkOperation(
@@ -47,9 +49,10 @@ public class BulkOperation extends AbstractModelOperation {
 			List<IModelOperation> operations, 
 			boolean atomic, 
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToelectAfterReverseOperation) {
+			AbstractNode nodeToelectAfterReverseOperation, 
+			IExtLanguageManager extLanguageManager) {
 
-		super(name);
+		super(name, extLanguageManager);
 
 		fOperations = operations;
 		fExecutedOperations = new ArrayList<IModelOperation>();
@@ -71,7 +74,7 @@ public class BulkOperation extends AbstractModelOperation {
 
 	public static final String PROBLEM_WITH_BULK_OPERATION(String operation) {
 
-		return "Cannot perform operation: " + operation;
+		return "Cannot perform operation: " + operation + ".";
 	}	
 
 	@Override
@@ -84,7 +87,7 @@ public class BulkOperation extends AbstractModelOperation {
 			try {
 				operation.execute();
 				fExecutedOperations.add(operation);
-			} catch(ModelOperationException e) {
+			} catch(Exception e) {
 				errors.add(e.getMessage());
 				if(fAtomic) {
 					getReverseOperation().execute();
@@ -96,7 +99,7 @@ public class BulkOperation extends AbstractModelOperation {
 		for (ICheckOperation operation : fCheckOperations) {
 			try {
 				operation.check();
-			} catch(ModelOperationException e) {
+			} catch(Exception e) {
 				errors.add(e.getMessage());
 				getReverseOperation().execute();
 				break;
@@ -116,8 +119,12 @@ public class BulkOperation extends AbstractModelOperation {
 	@Override
 	public IModelOperation getReverseOperation() {
 		return new BulkOperation(
-				"reverse " + getName(), reverseOperations(), 
-				fAtomic, fNodeToSelectAfterReverseOperation, null);
+				"reverse " + getName(), 
+				reverseOperations(), 
+				fAtomic, 
+				fNodeToSelectAfterReverseOperation, 
+				null, 
+				getExtLanguageManager());
 	}
 
 

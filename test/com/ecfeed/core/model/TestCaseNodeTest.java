@@ -27,8 +27,8 @@ public class TestCaseNodeTest {
 
 	@Test
 	public void compare(){
-		ChoiceNode p1 = new ChoiceNode("name", null, "value");
-		ChoiceNode p2 = new ChoiceNode("name", null, "value");
+		ChoiceNode p1 = new ChoiceNode("name", "value", null);
+		ChoiceNode p2 = new ChoiceNode("name", "value", null);
 
 		List<ChoiceNode> td1 = new ArrayList<ChoiceNode>();
 		td1.add(p1);
@@ -43,14 +43,14 @@ public class TestCaseNodeTest {
 		assertTrue(tc1.isMatch(tc2));
 		assertFalse(tc1.isMatch(tc3));
 
-		tc1.setFullName("tc1");
+		tc1.setName("tc1");
 		assertFalse(tc1.isMatch(tc2));
-		tc2.setFullName("tc1");
+		tc2.setName("tc1");
 		assertTrue(tc1.isMatch(tc2));
 
-		p1.setFullName("p1");
+		p1.setName("p1");
 		assertFalse(tc1.isMatch(tc2));
-		p2.setFullName("p1");
+		p2.setName("p1");
 		assertTrue(tc1.isMatch(tc2));
 	}
 

@@ -19,13 +19,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.TestCaseNode;
-
 public class ClassNodeTest extends ClassNode {
 	public ClassNodeTest(){
 		super("com.ecfeed.model.ClassNodeTest", null);
@@ -35,7 +28,7 @@ public class ClassNodeTest extends ClassNode {
 	public void getChildrenTest(){
 		ClassNode classNode = new ClassNode("com.example.ClassName", null);
 		MethodNode method1 = new MethodNode("method1", null);
-		MethodNode method2 = new MethodNode("method1", null);
+		MethodNode method2 = new MethodNode("method2", null);
 
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
@@ -62,25 +55,25 @@ public class ClassNodeTest extends ClassNode {
 
 		int inx = 0;
 		for(String type : method1Types){
-			method1.addParameter(new MethodParameterNode("parameter" +  inx++, null, type, "0",  false));
+			method1.addParameter(new MethodParameterNode("parameter" +  inx++, type, "0", false, null));
 		}
 
 		for(String type : method2Types){
-			method2.addParameter(new MethodParameterNode("parameter" + inx++, null, type, "0",  false));
+			method2.addParameter(new MethodParameterNode("parameter" + inx++, type, "0", false, null));
 		}
 
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 
-		assertEquals(method1, classNode.getMethod("method", method1Types));
-		assertEquals(method2, classNode.getMethod("method", method2Types));
+		assertEquals(method1, classNode.findMethodWithTheSameSignature("method", method1Types));
+		assertEquals(method2, classNode.findMethodWithTheSameSignature("method", method2Types));
 	}
 
 	@Test
 	public void getMethodsTest() {
 		ClassNode classNode = new ClassNode("com.example.ClassName", null);
-		MethodNode method1 = new MethodNode("method", null);
-		MethodNode method2 = new MethodNode("method", null);
+		MethodNode method1 = new MethodNode("method1", null);
+		MethodNode method2 = new MethodNode("method2", null);
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 
@@ -91,8 +84,8 @@ public class ClassNodeTest extends ClassNode {
 	@Test
 	public void getTestSuitesTest(){
 		ClassNode classNode = new ClassNode("com.example.ClassName", null);
-		MethodNode method1 = new MethodNode("method", null);
-		MethodNode method2 = new MethodNode("method", null);
+		MethodNode method1 = new MethodNode("method1", null);
+		MethodNode method2 = new MethodNode("method2", null);
 
 		method1.addTestCase(new TestCaseNode("suite 1", null, null));
 		method1.addTestCase(new TestCaseNode("suite 2", null, null));
@@ -122,7 +115,7 @@ public class ClassNodeTest extends ClassNode {
 
 		assertFalse(c1.isMatch(c2));
 
-		c2.setFullName("c1");
+		c2.setName("c1");
 		assertTrue(c1.isMatch(c2));
 
 		MethodNode m1 = new MethodNode("m1", null);
@@ -134,7 +127,7 @@ public class ClassNodeTest extends ClassNode {
 		c2.addMethod(m2);
 		assertFalse(c1.isMatch(c2));
 
-		m2.setFullName("m1");
+		m2.setName("m1");
 		assertTrue(c1.isMatch(c2));
 
 		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", null, "int");
@@ -143,9 +136,9 @@ public class ClassNodeTest extends ClassNode {
 		GlobalParameterNode parameter2 = new GlobalParameterNode("parameter1", null, "int");
 		c2.addParameter(parameter2);
 		assertTrue(c1.isMatch(c2));
-		parameter1.setFullName("newName");
+		parameter1.setName("newName");
 		assertFalse(c1.isMatch(c2));
-		parameter2.setFullName("newName");
+		parameter2.setName("newName");
 		assertTrue(c1.isMatch(c2));
 		parameter1.setType("float");
 		assertFalse(c1.isMatch(c2));

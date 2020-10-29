@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.JavaLanguageHelper;
+
 public class MethodParameterNode extends AbstractParameterNode {
 
 	private boolean fExpected;
@@ -24,12 +26,18 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private List<ChoiceNode> fChoicesCopy;
 
 	public MethodParameterNode(
-			String name, 
-			IModelChangeRegistrator modelChangeRegistrator, 
-			String type, 
-			String defaultValue,
-			boolean expected, boolean linked, GlobalParameterNode link) {
+				String name,
+				String type,
+				String defaultValue,
+				boolean expected,
+				boolean linked,
+				GlobalParameterNode link,
+				IModelChangeRegistrator modelChangeRegistrator) {
+
 		super(name, modelChangeRegistrator, type);
+
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
 		fExpected = expected;
 		fDefaultValue = defaultValue;
 		fLinked = linked;
@@ -37,11 +45,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	public MethodParameterNode(
-			String name, IModelChangeRegistrator modelChangeRegistrator, 
-			String type, String defaultValue,
-			boolean expected) {
+			String name,
+			String type,
+			String defaultValue,
+			boolean expected,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		this(name, modelChangeRegistrator, type, defaultValue, expected, false, null);
+		this(name, type, defaultValue, expected, false, null, modelChangeRegistrator);
 	}
 
 	public MethodParameterNode(AbstractParameterNode source,
@@ -49,10 +59,9 @@ public class MethodParameterNode extends AbstractParameterNode {
 			GlobalParameterNode link) {
 
 		this(
-				source.getFullName(),
-				source.getModelChangeRegistrator(),
-				source.getType(), 
-				defaultValue, expected, linked, link);
+				source.getName(),
+				source.getType(), defaultValue, expected, linked, link, source.getModelChangeRegistrator()
+		);
 
 		addChoices(source.getChoices());
 	}
@@ -68,14 +77,14 @@ public class MethodParameterNode extends AbstractParameterNode {
 			return super.toString() + "(" + getDefaultValue() + "): "
 					+ getType();
 		}
-		return new String(getFullName() + ": " + getType());
+		return new String(getName() + ": " + getType());
 	}
 
 	@Override
 	public MethodParameterNode makeClone() {
 		MethodParameterNode copy = 
-				new MethodParameterNode(getFullName(), getModelChangeRegistrator(),
-						getType(), getDefaultValue(), isExpected());
+				new MethodParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
+				);
 
 		copy.fLinked = fLinked;
 		copy.fLink = fLink;
@@ -159,7 +168,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		if(list1.size() != list2.size())
 			return false;
 		for(int i=0; i< list1.size(); i++)
-			if(list1.get(i).getFullName() != list2.get(i).getFullName() || list1.get(i).getValueString() != list2.get(i).getValueString())
+			if(list1.get(i).getName() != list2.get(i).getName() || list1.get(i).getValueString() != list2.get(i).getValueString())
 				return false;
 		return true;
 	}

@@ -20,18 +20,20 @@ import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private MethodNode fMethodNode;
-
 	private TemplateText fTemplateText;
+	private IExtLanguageManager fExtLanguageManager;
 
-	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText) {
+	public AbstractExportTemplate(MethodNode methodNode, String defaultlTemplateText, IExtLanguageManager extLanguageManager) {
 
 		fMethodNode = methodNode;
 		fTemplateText = new TemplateText(defaultlTemplateText);
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -86,8 +88,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-					fMethodNode,
-					fTemplateText.getHeaderTemplateText()));
+					fMethodNode, fTemplateText.getHeaderTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
@@ -95,8 +96,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
-						fMethodNode,
-						fTemplateText.getFooterTemplateText()));
+						fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguageManager));
 
 		stringBuilder.append("\n");
 
@@ -119,7 +119,8 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 					TestCasesExportHelper.generateTestCaseString(
 							sequenceIndex++,
 							testCase,
-							fTemplateText.getTestCaseTemplateText()));
+							fTemplateText.getTestCaseTemplateText(), 
+							fExtLanguageManager));
 
 			inOutStringBuilder.append("\n");
 		}
