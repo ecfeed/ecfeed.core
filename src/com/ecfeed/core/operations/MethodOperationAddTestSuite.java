@@ -52,17 +52,4 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 		}
 	}
 	
-	private void createTestSuites(List<TestCaseNode> testCases, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
-		
-		for (TestCaseNode testCase : testCases) {
-
-			addOperation(
-					new MethodOperationAddTestCase(
-							methodNode, 
-							testCase, 
-							typeAdapterProvider,
-							getExtLanguageManager()));
-		}
-	}
-
 }
