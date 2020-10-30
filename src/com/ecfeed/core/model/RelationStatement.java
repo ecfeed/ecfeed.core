@@ -32,11 +32,14 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createStatementWithChoiceCondition(
-			MethodParameterNode parameter, EMathRelation relation, ChoiceNode choiceNode) {
+			MethodParameterNode parameter, 
+			EMathRelation relation, 
+			ChoiceNode choiceNode) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
 		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement);
+		
 		relationStatement.setCondition(condition);
 
 		return relationStatement;

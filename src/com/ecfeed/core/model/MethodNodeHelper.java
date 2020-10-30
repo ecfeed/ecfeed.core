@@ -53,12 +53,17 @@ public class MethodNodeHelper {
 
 	}
 
-	public static List<String> getParameterNames(MethodNode method) {
+	public static List<String> getParameterNames(MethodNode method, IExtLanguageManager extLanguageManager) {
 
 		List<String> result = new ArrayList<String>();
 
 		for(AbstractParameterNode parameter : method.getParameters()){
-			result.add(parameter.getName());
+			
+			MethodParameterNode methodParameterNode = (MethodParameterNode)parameter;
+			
+			String name = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
+			
+			result.add(name);
 		}
 
 		return result;
