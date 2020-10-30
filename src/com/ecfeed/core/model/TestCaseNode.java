@@ -40,22 +40,6 @@ public class TestCaseNode extends AbstractNode {
 		return TestCaseNodeHelper.createSignature(this, new ExtLanguageManagerForJava());
 	}
 	
-//	public String toStringSimplified() {
-//		String methodName = null;
-//		if (getParent() != null){
-//			methodName = getParent().getName();
-//		}
-//		String result = "";
-//
-//		if(methodName != null){
-//			result += "[";
-//			result += testDataString();
-//			result += "]";
-//		}
-//
-//		return result;
-//	}
-
 	@Override
 	public TestCaseNode makeClone(){
 		List<ChoiceNode> testdata = new ArrayList<>();
@@ -214,6 +198,11 @@ public class TestCaseNode extends AbstractNode {
 			return getMethod().getTestCases().size();
 		}
 		return -1;
+	}
+
+	@Override
+	public boolean isTheSameExtLanguageAndIntrLanguage() {
+		return true;
 	}
 
 }

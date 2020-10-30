@@ -309,4 +309,9 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return getMethod().getMentioningConstraints(this, label);
 	}
 
+	@Override
+	public boolean isTheSameExtLanguageAndIntrLanguage() {
+		return false;
+	}
+
 }

@@ -135,4 +135,9 @@ public class GlobalParameterNode extends AbstractParameterNode {
 		}
 		return copy;
 	}
+
+	@Override
+	public boolean isTheSameExtLanguageAndIntrLanguage() {
+		return false;
+	}
 }

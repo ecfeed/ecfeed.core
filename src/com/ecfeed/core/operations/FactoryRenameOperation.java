@@ -182,7 +182,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newNameInExtLanguage)throws ModelOperationException {
 
-			String newNameInIntrLanguage = fExtLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
+			String newNameInIntrLanguage = newNameInExtLanguage;
 
 			final AbstractNode ownNode = getOwnNode();
 

@@ -366,4 +366,9 @@ public class ConstraintNode extends AbstractNode{
 	boolean mentionsParameter(MethodParameterNode methodParameter) {
 		return fConstraint.mentionsParameter(methodParameter);
 	}
+
+	@Override
+	public boolean isTheSameExtLanguageAndIntrLanguage() {
+		return true;
+	}
 }

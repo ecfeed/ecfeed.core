@@ -236,4 +236,9 @@ public class ClassNode extends GlobalParametersParentNode {
 		String[] nameNodeSplit = getName().split("\\.");
 		return nameNodeSplit[nameNodeSplit.length - 1];
 	}
+
+	@Override
+	public boolean isTheSameExtLanguageAndIntrLanguage() {
+		return false;
+	}
 }

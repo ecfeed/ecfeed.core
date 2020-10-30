@@ -35,7 +35,6 @@ public class ChoiceNodeHelper {
 	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		String name = choiceNode.getName();
-		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
 		return name;
 	}
 

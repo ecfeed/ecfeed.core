@@ -311,16 +311,9 @@ public class ChoiceNode extends ChoicesParentNode {
 		return null;
 	}
 
-	//	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
-	//		
-	//		ChoicesParentNode fParent = (ChoicesParentNode) choiceNode.getParent();
-	//		
-	//		AbstractParameterNode abstractParameterNode = fParent.getParameter();
-	//		
-	//		if(fParent != null && fParent != abstractParameterNode){
-	//			return (ChoiceNode)fParent;
-	//		}
-	//		return null;
-	//	}
+	@Override
+	public boolean isTheSameExtLanguageAndIntrLanguage() {
+		return true;
+	}
 
 }

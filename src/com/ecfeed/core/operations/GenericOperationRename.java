@@ -72,8 +72,15 @@ public class GenericOperationRename extends AbstractModelOperation {
 		String newQualifiedNameInExtLanguage = fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
 		verifyNewName(newQualifiedNameInExtLanguage);
 
-		String newNonQualifiedNameInIntrLanguage = fExtLanguageManager.convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);
-
+		String newNonQualifiedNameInIntrLanguage; 
+		
+		if (fTargetAbstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+			newNonQualifiedNameInIntrLanguage = fNewNonQualifiedNameInExtLanguage;
+		} else {
+			newNonQualifiedNameInIntrLanguage = 
+					fExtLanguageManager.convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);
+		}
+		
 		String newQualifiedNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
 
 		if (!(fTargetAbstractNode instanceof RootNode)) {
