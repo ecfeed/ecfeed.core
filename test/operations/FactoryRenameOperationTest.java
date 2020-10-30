@@ -401,8 +401,17 @@ public class FactoryRenameOperationTest {
 
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = new ClassNode("class", null);
+		rootNode.addClass(classNode);
+
+		MethodNode  methodNode = new MethodNode("method",  null);
+		classNode.addMethod(methodNode);
+
 		MethodParameterNode methodParameterNode =
 				new MethodParameterNode("par_1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "1", null);
 		methodParameterNode.addChoice(choiceNode1);
@@ -410,7 +419,7 @@ public class FactoryRenameOperationTest {
 		ChoiceNode choiceNode2 = new ChoiceNode("choice_2", "2", null);
 		methodParameterNode.addChoice(choiceNode2);
 
-		// rename in java mode - invalid name 1 - should fail
+		// rename in java mode
 
 		IModelOperation operation =
 				FactoryRenameOperation.getRenameOperation(
@@ -421,9 +430,8 @@ public class FactoryRenameOperationTest {
 
 		try {
 			operation.execute();
-			fail();
 		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, FactoryRenameOperation.PARTITION_NAME_NOT_UNIQUE_PROBLEM);
+			fail();
 		}
 	}
 

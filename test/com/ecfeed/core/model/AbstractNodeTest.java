@@ -29,6 +29,11 @@ public class AbstractNodeTest{
 		}
 
 		@Override
+		public boolean isTheSameExtLanguageAndIntrLanguage() {
+			return true;
+		}
+
+		@Override
 		public AbstractNode makeClone() {
 			return null;
 		}

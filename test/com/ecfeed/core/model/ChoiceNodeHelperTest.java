@@ -27,24 +27,42 @@ public class ChoiceNodeHelperTest {
 
 		ChoiceNode choice = new ChoiceNode("choice_1", "MAX_VALUE", null);
 		assertEquals("choice_1", ChoiceNodeHelper.getName(choice, new ExtLanguageManagerForJava()));
-		assertEquals("choice 1", ChoiceNodeHelper.getName(choice, new ExtLanguageManagerForSimple()));
+		assertEquals("choice_1", ChoiceNodeHelper.getName(choice, new ExtLanguageManagerForSimple()));
 	}
 
 	@Test
-	public void getQualifiedNameTest() {
+	public void getQualifiedNameTest1() {
 
 		ChoiceNode choice1 = new ChoiceNode("choice_1", "MAX_VALUE", null);
 		assertEquals("choice_1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForJava()));
-		assertEquals("choice 1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForSimple()));
+		assertEquals("choice_1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForSimple()));
 
 		ChoiceNode choice2 = new ChoiceNode("choice_2", "MAX_VALUE", null);
 		choice2.setParent(choice1);
 		assertEquals("choice_1:choice_2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForJava()));
-		assertEquals("choice 1:choice 2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForSimple()));
+		assertEquals("choice_1:choice_2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForSimple()));
 
 		ChoiceNode choice3 = new ChoiceNode("choice_3", "MAX_VALUE", null);
 		choice3.setParent(choice2);
 		assertEquals("choice_1:choice_2:choice_3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForJava()));
+		assertEquals("choice_1:choice_2:choice_3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForSimple()));
+	}
+
+	@Test
+	public void getQualifiedNameTest2() {
+
+		ChoiceNode choice1 = new ChoiceNode("choice 1", "MAX_VALUE", null);
+		assertEquals("choice 1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForJava()));
+		assertEquals("choice 1", ChoiceNodeHelper.getQualifiedName(choice1, new ExtLanguageManagerForSimple()));
+
+		ChoiceNode choice2 = new ChoiceNode("choice 2", "MAX_VALUE", null);
+		choice2.setParent(choice1);
+		assertEquals("choice 1:choice 2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForJava()));
+		assertEquals("choice 1:choice 2", ChoiceNodeHelper.getQualifiedName(choice2, new ExtLanguageManagerForSimple()));
+
+		ChoiceNode choice3 = new ChoiceNode("choice 3", "MAX_VALUE", null);
+		choice3.setParent(choice2);
+		assertEquals("choice 1:choice 2:choice 3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForJava()));
 		assertEquals("choice 1:choice 2:choice 3", ChoiceNodeHelper.getQualifiedName(choice3, new ExtLanguageManagerForSimple()));
 	}
 
@@ -79,7 +97,7 @@ public class ChoiceNodeHelperTest {
 		assertEquals("choice_1 [MAX_VALUE]", label);
 
 		label = ChoiceNodeHelper.createSignature(choice, new ExtLanguageManagerForSimple());
-		assertEquals("choice 1 [2147483647]", label);
+		assertEquals("choice_1 [2147483647]", label);
 
 		choice = new ChoiceNode("choice_1", "5", null);
 		choice.setParent(methodParameterNode);
@@ -107,7 +125,7 @@ public class ChoiceNodeHelperTest {
 		assertEquals("choice_1", label);
 
 		label = ChoiceNodeHelper.createTestDataLabel(choice, new ExtLanguageManagerForSimple());
-		assertEquals("choice 1", label);
+		assertEquals("choice_1", label);
 	}
 
 	@Test
@@ -134,8 +152,8 @@ public class ChoiceNodeHelperTest {
 
 		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, new ExtLanguageManagerForSimple());
 		assertEquals(2, choiceNames.size());
-		assertEquals("choice 1", choiceNames.get(0));
-		assertEquals("choice 2", choiceNames.get(1));
+		assertEquals("choice_1", choiceNames.get(0));
+		assertEquals("choice_2", choiceNames.get(1));
 
 		choice2.setParent(choice1);
 
@@ -146,7 +164,7 @@ public class ChoiceNodeHelperTest {
 
 		choiceNames = ChoiceNodeHelper.getChoiceNames(choiceNodes, new ExtLanguageManagerForSimple());
 		assertEquals(2, choiceNames.size());
-		assertEquals("choice 1", choiceNames.get(0));
-		assertEquals("choice 1:choice 2", choiceNames.get(1));
+		assertEquals("choice_1", choiceNames.get(0));
+		assertEquals("choice_1:choice_2", choiceNames.get(1));
 	}
 }

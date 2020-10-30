@@ -114,7 +114,7 @@ public class TestCasesExportHelperTest {
     @Test
     public void shouldParseChoiceNames() {
         performTest("MIN_VALUE", "MAX_VALUE", "$1.choice, $2.full_choice", "c_0, c_1", new ExtLanguageManagerForJava());
-        performTest("MIN_VALUE", "MAX_VALUE", "$1.choice, $2.full_choice", "c 0, c 1", new ExtLanguageManagerForSimple());
+        performTest("MIN_VALUE", "MAX_VALUE", "$1.choice, $2.full_choice", "c_0, c_1", new ExtLanguageManagerForSimple());
     }
 
     @Test

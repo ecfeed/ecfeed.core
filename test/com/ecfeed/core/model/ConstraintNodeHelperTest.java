@@ -80,7 +80,7 @@ public class ConstraintNodeHelperTest {
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
 		ChoiceNode choice1 = new ChoiceNode("choice_1", "value1", null);
-		ChoiceNode choice2 = new ChoiceNode("choice_2", "value2", null);
+		ChoiceNode choice2 = new ChoiceNode("choice 2", "value2", null);
 
 		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
 
@@ -99,10 +99,10 @@ public class ConstraintNodeHelperTest {
 		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
 
 		String signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForJava);
-		assertEquals("co: par_1=choice_1[choice] => par_2=choice_2[choice]", signature);
+		assertEquals("co: par_1=choice_1[choice] => par_2=choice 2[choice]", signature);
 
 		signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForSimple);
-		assertEquals("co: par 1=choice 1[choice] => par 2=choice 2[choice]", signature);
+		assertEquals("co: par 1=choice_1[choice] => par 2=choice 2[choice]", signature);
 	}
 
 }
