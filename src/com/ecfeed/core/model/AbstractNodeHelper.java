@@ -16,16 +16,30 @@ public abstract class AbstractNodeHelper  {
 
 	public static String getName(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 
-		String nodeName = abstractNode.getName();
-		String text = extLanguageManager.convertTextFromIntrToExtLanguage(nodeName);
+		String nameInIntrLanguage = abstractNode.getName();
 
-		return text;
+		String nameInExtLanguage; 
+
+		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+			nameInExtLanguage = nameInIntrLanguage;
+		} else {
+			nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
+		}
+
+		return nameInExtLanguage;
 	}
 
-	public static void setName(AbstractNode abstractNode, String name, IExtLanguageManager extLanguageManager) {
+	public static void setName(AbstractNode abstractNode, String nameInExtLanguage, IExtLanguageManager extLanguageManager) {
 
-		String text = extLanguageManager.convertTextFromExtToIntrLanguage(name);
-		abstractNode.setName(text);
+		String nameInIntrLanguage;
+
+		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+			nameInIntrLanguage = nameInExtLanguage;
+		} else {
+			nameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(nameInExtLanguage);
+		}
+
+		abstractNode.setName(nameInIntrLanguage);
 	}
 
 }
