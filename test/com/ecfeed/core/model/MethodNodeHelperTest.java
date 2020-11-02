@@ -93,7 +93,7 @@ public class MethodNodeHelperTest {
 		MethodParameterNode param2 = new MethodParameterNode("param2", "int", "0", false, null);
 		methodNode.addParameter(param2);
 
-		List<String> methodParameterNames = MethodNodeHelper.getParameterNames(methodNode);
+		List<String> methodParameterNames = MethodNodeHelper.getParameterNames(methodNode, new ExtLanguageManagerForJava());
 
 		assertEquals(2,  methodParameterNames.size());
 		assertEquals("param1", methodParameterNames.get(0));
@@ -330,7 +330,7 @@ public class MethodNodeHelperTest {
 		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
-		List<String> paramNames = MethodNodeHelper.getParameterNames(methodNode);
+		List<String> paramNames = MethodNodeHelper.getParameterNames(methodNode, new ExtLanguageManagerForJava());
 		assertEquals(2, paramNames.size());
 		assertEquals("param1", paramNames.get(0));
 		assertEquals("param2", paramNames.get(1));
