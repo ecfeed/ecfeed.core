@@ -279,6 +279,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.toString();
 	}
 
+	// TODO SIMPLE-VIEW
+	public String getConditionSignature(IExtLanguageManager extLanguageManager) {
+		return fRightCondition.createSignature(extLanguageManager);
+	}
+	
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return fRightCondition.getListOfChoices();
