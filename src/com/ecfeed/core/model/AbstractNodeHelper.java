@@ -14,30 +14,53 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractNodeHelper  {
 
+	public static String convertTextFromIntrToExtLanguage(
+			String textInIntrLanguage,
+			AbstractNode abstractNode, 
+			IExtLanguageManager extLanguageManager) {
+
+		String textInExtLanguage;
+
+		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+			textInExtLanguage = textInIntrLanguage;
+		} else {
+			textInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(textInIntrLanguage);
+		}
+
+		return textInExtLanguage;
+	}
+
+	public static String convertTextFromExtToIntrLanguage(
+			AbstractNode abstractNode, 
+			String textInExtLanguage,
+			IExtLanguageManager extLanguageManager) {
+
+		String textInIntrLanguage;
+
+		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+			textInIntrLanguage = textInExtLanguage;
+		} else {
+			textInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(textInExtLanguage);
+		}
+
+		return textInIntrLanguage;
+	}
+
 	public static String getName(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 
 		String nameInIntrLanguage = abstractNode.getName();
 
-		String nameInExtLanguage; 
-
-		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
-			nameInExtLanguage = nameInIntrLanguage;
-		} else {
-			nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(nameInIntrLanguage);
-		}
+		String nameInExtLanguage = convertTextFromIntrToExtLanguage(nameInIntrLanguage, abstractNode, extLanguageManager);
 
 		return nameInExtLanguage;
 	}
+
 
 	public static void setName(AbstractNode abstractNode, String nameInExtLanguage, IExtLanguageManager extLanguageManager) {
 
 		String nameInIntrLanguage;
 
-		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
-			nameInIntrLanguage = nameInExtLanguage;
-		} else {
-			nameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(nameInExtLanguage);
-		}
+		nameInIntrLanguage = convertTextFromExtToIntrLanguage(abstractNode, nameInExtLanguage, extLanguageManager);
 
 		abstractNode.setName(nameInIntrLanguage);
 	}
