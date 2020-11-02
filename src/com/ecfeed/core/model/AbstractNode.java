@@ -39,7 +39,7 @@ public abstract class AbstractNode{
 
     protected void verifyName(String name) {
     	
-    	if (AbstractNodeHelper.isTheSameExtLanguageAndIntrLanguage(this)) {
+    	if (AbstractNodeHelper.isTheSameExtAndIntrLanguage(this)) {
 			return;
 		}
     	
