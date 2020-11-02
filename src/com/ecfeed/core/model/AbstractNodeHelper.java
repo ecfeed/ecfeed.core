@@ -14,6 +14,47 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractNodeHelper  {
 
+	public static boolean isTheSameExtLanguageAndIntrLanguage(AbstractNode abstractNode) {
+		
+		if (abstractNode instanceof RootNode) {
+			return true;
+		}
+		
+		if (abstractNode instanceof ChoiceNode) {
+			return true;
+		}
+
+		if (abstractNode instanceof ConstraintNode) {
+			return true;
+		}
+
+		if (abstractNode instanceof TestCaseNode) {
+			return true;
+		}
+
+		if (abstractNode instanceof TestSuiteNode) {
+			return true;
+		}
+		
+		if (abstractNode instanceof ClassNode) {
+			return false;
+		}
+
+		if (abstractNode instanceof GlobalParameterNode) {
+			return false;
+		}
+
+		if (abstractNode instanceof MethodNode) {
+			return false;
+		}
+
+		if (abstractNode instanceof MethodParameterNode) {
+			return false;
+		}
+		
+		return false;
+	}
+	
 	public static String convertTextFromIntrToExtLanguage(
 			String textInIntrLanguage,
 			AbstractNode abstractNode, 
@@ -21,7 +62,7 @@ public abstract class AbstractNodeHelper  {
 
 		String textInExtLanguage;
 
-		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+		if (isTheSameExtLanguageAndIntrLanguage(abstractNode)) {
 			textInExtLanguage = textInIntrLanguage;
 		} else {
 			textInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(textInIntrLanguage);
@@ -37,7 +78,7 @@ public abstract class AbstractNodeHelper  {
 
 		String textInIntrLanguage;
 
-		if (abstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+		if (isTheSameExtLanguageAndIntrLanguage(abstractNode)) {
 			textInIntrLanguage = textInExtLanguage;
 		} else {
 			textInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(textInExtLanguage);

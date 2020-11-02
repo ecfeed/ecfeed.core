@@ -143,9 +143,4 @@ public class RootNode extends GlobalParametersParentNode {
 		return result;
 	}
 
-	@Override
-	public boolean isTheSameExtLanguageAndIntrLanguage() {
-		return true;
-	}
-
 }

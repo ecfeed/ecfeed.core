@@ -107,9 +107,4 @@ public class TestSuiteNode extends AbstractNode {
 		return visitor.visit(this);
 	}
 
-	@Override
-	public boolean isTheSameExtLanguageAndIntrLanguage() {
-		return true;
-	}
-
 }

@@ -11,6 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
@@ -74,7 +75,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		String newNonQualifiedNameInIntrLanguage; 
 		
-		if (fTargetAbstractNode.isTheSameExtLanguageAndIntrLanguage()) {
+		if (AbstractNodeHelper.isTheSameExtLanguageAndIntrLanguage(fTargetAbstractNode)) {
 			newNonQualifiedNameInIntrLanguage = fNewNonQualifiedNameInExtLanguage;
 		} else {
 			newNonQualifiedNameInIntrLanguage = 

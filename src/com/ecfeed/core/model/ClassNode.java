@@ -237,8 +237,4 @@ public class ClassNode extends GlobalParametersParentNode {
 		return nameNodeSplit[nameNodeSplit.length - 1];
 	}
 
-	@Override
-	public boolean isTheSameExtLanguageAndIntrLanguage() {
-		return false;
-	}
 }

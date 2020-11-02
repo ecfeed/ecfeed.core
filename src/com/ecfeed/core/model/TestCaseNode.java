@@ -200,9 +200,4 @@ public class TestCaseNode extends AbstractNode {
 		return -1;
 	}
 
-	@Override
-	public boolean isTheSameExtLanguageAndIntrLanguage() {
-		return true;
-	}
-
 }

@@ -682,8 +682,4 @@ public class MethodNode extends ParametersParentNode {
 		registerChange();
 	}
 
-	@Override
-	public boolean isTheSameExtLanguageAndIntrLanguage() {
-		return false;
-	}
 }

@@ -311,9 +311,4 @@ public class ChoiceNode extends ChoicesParentNode {
 		return null;
 	}
 
-	@Override
-	public boolean isTheSameExtLanguageAndIntrLanguage() {
-		return true;
-	}
-
 }

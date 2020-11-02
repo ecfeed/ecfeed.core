@@ -29,8 +29,6 @@ public abstract class AbstractNode{
 	private NodeProperties fProperties = new NodeProperties();
 	protected final List<AbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<AbstractNode>();
 
-	public abstract boolean isTheSameExtLanguageAndIntrLanguage();
-	
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
         verifyName(name);
@@ -41,7 +39,7 @@ public abstract class AbstractNode{
 
     protected void verifyName(String name) {
     	
-    	if (isTheSameExtLanguageAndIntrLanguage()) {
+    	if (AbstractNodeHelper.isTheSameExtLanguageAndIntrLanguage(this)) {
 			return;
 		}
     	
