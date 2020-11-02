@@ -370,7 +370,7 @@ public class MethodNodeHelper {
 
 		String name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
 
-		while(parametersParentNode.getParameter(name) != null) {
+		while(parametersParentNode.findParameter(name) != null) {
 			name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
 		}
 

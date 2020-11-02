@@ -186,7 +186,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	ChoiceNode getRandomChoiceNode(MethodNode methodNode, String parameterName, Random randomGenerator) {
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)methodNode.getParameter(parameterName);
+		MethodParameterNode methodParameterNode = (MethodParameterNode)methodNode.findParameter(parameterName);
 		List<ChoiceNode> choices = methodParameterNode.getLeafChoicesWithCopies();
 
 		ChoiceNode choiceNode = choices.get(randomGenerator.nextInt(choices.size()));

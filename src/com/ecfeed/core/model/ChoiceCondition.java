@@ -54,7 +54,7 @@ public class ChoiceCondition implements IStatementCondition {
 	public boolean updateReferences(MethodNode methodNode) {
 
 		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		MethodParameterNode methodParameterNode = methodNode.getMethodParameter(parameterName);
+		MethodParameterNode methodParameterNode = methodNode.findMethodParameter(parameterName);
 
 		String choiceName = fRightChoice.getQualifiedName();
 		ChoiceNode choiceNode = methodParameterNode.getChoice(choiceName);

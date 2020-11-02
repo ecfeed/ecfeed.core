@@ -238,8 +238,8 @@ public class MethodNode extends ParametersParentNode {
 		return classNode.getRunOnAndroid();
 	}
 
-	public MethodParameterNode getMethodParameter(String name){ // TODO SIMPLE-VIEW rename to find method parameter
-		return (MethodParameterNode)getParameter(name);
+	public MethodParameterNode findMethodParameter(String name){
+		return (MethodParameterNode)findParameter(name);
 	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {

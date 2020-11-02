@@ -153,7 +153,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fLeftParameter.getName());
+		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fLeftParameter.getName());
 
 		if (tmpParameterNode != null && !tmpParameterNode.isExpected()) {
 
@@ -279,7 +279,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.toString();
 	}
 
-	// TODO SIMPLE-VIEW
 	public String getConditionSignature(IExtLanguageManager extLanguageManager) {
 		return fRightCondition.createSignature(extLanguageManager);
 	}

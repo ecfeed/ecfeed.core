@@ -153,7 +153,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fRightParameterNode.getName());
+		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fRightParameterNode.getName());
 		if (tmpParameterNode == null) {
 			return false;
 		}

@@ -123,7 +123,7 @@ public class FactoryRenameOperation {
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
 				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
-			if(target.getParametersParent().getParameter(newNameInExtLanguage) != null){
+			if(target.getParametersParent().findParameter(newNameInExtLanguage) != null){
 				ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
@@ -157,7 +157,7 @@ public class FactoryRenameOperation {
 			IExtLanguageManager extLanguageManager = getExtLanguageManager();
 			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
 
-			if(method.getParameter(newNameInIntrLanguage) != null){
+			if(method.findParameter(newNameInIntrLanguage) != null){
 				ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}

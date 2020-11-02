@@ -17,7 +17,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public interface IStatement{
-	public String createSignature(IExtLanguageManager extLanguageManager); // TODO SIMPLE-VIEW
+	public String createSignature(IExtLanguageManager extLanguageManager);
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
 	public boolean compare(IStatement statement);

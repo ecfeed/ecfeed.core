@@ -52,7 +52,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 		return fParameters.size();
 	}	
 
-	public AbstractParameterNode getParameter(String parameterName) {  // TODO SIMPLE-VIEW rename to find parameter
+	public AbstractParameterNode findParameter(String parameterName) {
 
 		for (AbstractParameterNode parameter : fParameters) {
 			if (parameter.getName().equals(parameterName)) {
@@ -82,7 +82,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 	public boolean parameterExists(String parameterName) {
 
-		if (getParameter(parameterName) == null) {
+		if (findParameter(parameterName) == null) {
 			return false;
 		}
 
@@ -126,7 +126,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		boolean result = fParameters.remove(parameter);
 		registerChange();
-		
+
 		return result;
 	}
 
@@ -134,7 +134,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		fParameters.clear();
 		fParameters.addAll(parameters);
-		
+
 		registerChange();
 	}
 
@@ -172,9 +172,9 @@ public abstract class ParametersParentNode extends AbstractNode {
 		if (!fParametersParentNode.parameterExists(startParameterName)) {
 			return startParameterName;
 		}
-		
+
 		String oldNameCore = StringHelper.removeFromNumericPostfix(startParameterName);
-		
+
 		for (int i = 1;   ; i++) {
 
 			String newParameterName = oldNameCore + String.valueOf(i);

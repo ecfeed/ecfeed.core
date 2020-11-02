@@ -625,7 +625,7 @@ public abstract class XomAnalyser {
 
 		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
-		MethodParameterNode parameter = (MethodParameterNode)method.getParameter(parameterName);
+		MethodParameterNode parameter = (MethodParameterNode)method.findParameter(parameterName);
 		if (parameter == null || parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
@@ -651,7 +651,7 @@ public abstract class XomAnalyser {
 
 		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
-		MethodParameterNode leftParameterNode = (MethodParameterNode)method.getParameter(parameterName);
+		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 		if (leftParameterNode == null || leftParameterNode.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
@@ -659,7 +659,7 @@ public abstract class XomAnalyser {
 
 		String rightParameterName = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, errorList);
 
-		MethodParameterNode rightParameterNode = (MethodParameterNode)method.getParameter(rightParameterName);
+		MethodParameterNode rightParameterNode = (MethodParameterNode)method.findParameter(rightParameterName);
 		if (rightParameterNode == null) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, method.getName()));
 			return null;
@@ -678,7 +678,7 @@ public abstract class XomAnalyser {
 
 		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
-		MethodParameterNode leftParameterNode = (MethodParameterNode)method.getParameter(parameterName);
+		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 		if (leftParameterNode == null || leftParameterNode.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
@@ -701,7 +701,7 @@ public abstract class XomAnalyser {
 		String label = getAttributeValue(element, SerializationConstants.STATEMENT_LABEL_ATTRIBUTE_NAME, errorList);
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 
-		MethodParameterNode parameter = method.getMethodParameter(parameterName);
+		MethodParameterNode parameter = method.findMethodParameter(parameterName);
 		if (parameter == null || parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
@@ -718,7 +718,7 @@ public abstract class XomAnalyser {
 
 		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 		String valueString = getAttributeValue(element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
-		MethodParameterNode parameter = method.getMethodParameter(parameterName);
+		MethodParameterNode parameter = method.findMethodParameter(parameterName);
 		
 		if (parameter == null || !parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
