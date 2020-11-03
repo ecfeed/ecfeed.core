@@ -26,7 +26,7 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) { // TODO SIMPLE-VIEW rename to adaptSingleValue
+	public String adaptSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) { // TODO SIMPLE-VIEW rename to adaptSingleValue
 
 		String result = convert2(value, runMode, extLanguageManager);
 		result = extLanguageManager.formatNumber(result);

@@ -80,7 +80,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 				ITypeAdapter<?> adapter = fTypeAdapterProvider.getAdapter(type);
 				
 				String newValue = 
-						adapter.convert(
+						adapter.adapt(
 								choice.getValueString(), 
 								choice.isRandomizedValue(), 
 								ERunMode.QUIET, 

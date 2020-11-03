@@ -17,7 +17,7 @@ import com.ecfeed.core.utils.RangeHelper;
 
 public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> {
 
-	protected abstract String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
+	protected abstract String adaptSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
 
 	protected abstract String[] getSymbolicValues();
 
@@ -27,18 +27,18 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 	}
 
 	@Override
-	public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (!RangeHelper.isRange(value)) {
-			return convertNotRange(value, isRandomized, conversionMode, extLanguageManager);
+			return adaptNotRange(value, isRandomized, conversionMode, extLanguageManager);
 		}
 
-		return convertRange(value, isRandomized, conversionMode, extLanguageManager);
+		return adaptRange(value, isRandomized, conversionMode, extLanguageManager);
 	}
 
-	private String convertNotRange(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+	private String adaptNotRange(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 		
-		String result = convertSingleValue(value, conversionMode, extLanguageManager);
+		String result = adaptSingleValue(value, conversionMode, extLanguageManager);
 
 		if (!isRandomized) {
 			return result;
@@ -53,7 +53,7 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 		return null;
 	}
 
-	private String convertRange(
+	private String adaptRange(
 			String value, 
 			boolean isRandomized, 
 			ERunMode conversionMode, 
@@ -62,8 +62,8 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 		String[] range = RangeHelper.splitToRange(value);
 
 		if (isRandomized) {
-			String firstValue = convertSingleValue(range[0], conversionMode, extLanguageManager);
-			String secondValue = convertSingleValue(range[1], conversionMode, extLanguageManager);
+			String firstValue = adaptSingleValue(range[0], conversionMode, extLanguageManager);
+			String secondValue = adaptSingleValue(range[1], conversionMode, extLanguageManager);
 
 			checkRange(range, conversionMode);		
 

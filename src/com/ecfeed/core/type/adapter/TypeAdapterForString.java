@@ -53,7 +53,7 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 	}
 
 	@Override
-	public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 		return value;
 	}
 

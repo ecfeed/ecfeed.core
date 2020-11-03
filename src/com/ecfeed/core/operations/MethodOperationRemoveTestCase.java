@@ -39,7 +39,7 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 					return null;
 				}
 				@Override
-				public String convert(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+				public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 					return value;
 				}
 				@Override

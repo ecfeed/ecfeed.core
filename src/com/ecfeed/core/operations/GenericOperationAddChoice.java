@@ -121,7 +121,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 				String type = fChoicesParentNode.getParameter().getType();
 				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(type);
 				String newValue = 
-						adapter.convert(
+						adapter.adapt(
 								choice.getValueString(), 
 								choice.isRandomizedValue(), 
 								ERunMode.QUIET,

@@ -28,18 +28,18 @@ public class TypeAdapterForIntTest {
 
 		TypeAdapterForInt typeAdapterForInt = new TypeAdapterForInt();
 
-		assertEquals("1", typeAdapterForInt.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("1", typeAdapterForInt.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("0", typeAdapterForInt.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1", typeAdapterForInt.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1", typeAdapterForInt.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("0", typeAdapterForInt.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
 
 		try {
-			typeAdapterForInt.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
+			typeAdapterForInt.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
 		}
 
-		assertEquals("MAX_VALUE", typeAdapterForInt.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("MAX_VALUE", typeAdapterForInt.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
 	}
 
 	@Test
@@ -49,15 +49,15 @@ public class TypeAdapterForIntTest {
 
 		TypeAdapterForInt typeAdapterForInt = new TypeAdapterForInt();
 
-		assertEquals("1", typeAdapterForInt.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
-		assertEquals("1", typeAdapterForInt.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForInt.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForInt.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		// invalid value
 
-		assertEquals("0", typeAdapterForInt.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForInt.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForInt.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForInt.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
@@ -65,10 +65,10 @@ public class TypeAdapterForIntTest {
 
 		// symbolic value
 
-		assertEquals("0", typeAdapterForInt.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForInt.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForInt.convertSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForInt.adaptSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterForNumericType.SPECIAL_VALUES_ARE_NOT_ALLOWED);
@@ -82,19 +82,19 @@ public class TypeAdapterForIntTest {
 
 		TypeAdapterForInt typeAdapterForInt = new TypeAdapterForInt();
 
-		assertEquals("1:2", typeAdapterForInt.convert("1:2", true, ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1:2", typeAdapterForInt.adapt("1:2", true, ERunMode.QUIET, extLanguageManagerForSimple));
 
 		String result =
-				typeAdapterForInt.convert("MAX_VALUE:MAX_VALUE", true, ERunMode.QUIET, extLanguageManagerForSimple);
+				typeAdapterForInt.adapt("MAX_VALUE:MAX_VALUE", true, ERunMode.QUIET, extLanguageManagerForSimple);
 
 		assertEquals("0:0", result);
 
 
 		IExtLanguageManager extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
-		assertEquals("1:2", typeAdapterForInt.convert("1:2", true, ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1:2", typeAdapterForInt.adapt("1:2", true, ERunMode.QUIET, extLanguageManagerForJava));
 
-		result = typeAdapterForInt.convert("MAX_VALUE:MAX_VALUE", true, ERunMode.QUIET, extLanguageManagerForJava);
+		result = typeAdapterForInt.adapt("MAX_VALUE:MAX_VALUE", true, ERunMode.QUIET, extLanguageManagerForJava);
 
 		assertEquals("MAX_VALUE:MAX_VALUE", result);
 	}

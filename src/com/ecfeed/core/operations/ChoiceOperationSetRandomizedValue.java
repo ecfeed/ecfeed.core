@@ -50,7 +50,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 		ITypeAdapter<?> typeAdapter = fAdapterProvider.getAdapter(type); 
 
 		try {
-			return typeAdapter.convert(
+			return typeAdapter.adapt(
 					fChoiceNode.getValueString(), 
 					randomized, 
 					ERunMode.QUIET, 

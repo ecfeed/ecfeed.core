@@ -28,18 +28,18 @@ public class TypeAdapterForDoubleTest {
 
 		TypeAdapterForDouble typeAdapterForDouble = new TypeAdapterForDouble();
 
-		assertEquals("1.0", typeAdapterForDouble.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("1.0", typeAdapterForDouble.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("0.0", typeAdapterForDouble.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1.0", typeAdapterForDouble.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1.0", typeAdapterForDouble.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("0.0", typeAdapterForDouble.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
 
 		try {
-			typeAdapterForDouble.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
+			typeAdapterForDouble.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
 		}
 
-		assertEquals("MAX_VALUE", typeAdapterForDouble.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("MAX_VALUE", typeAdapterForDouble.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
 	}
 
 	@Test
@@ -49,15 +49,15 @@ public class TypeAdapterForDoubleTest {
 
 		TypeAdapterForDouble typeAdapterForDouble = new TypeAdapterForDouble();
 
-		assertEquals("1", typeAdapterForDouble.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
-		assertEquals("1", typeAdapterForDouble.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForDouble.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForDouble.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		// invalid value
 
-		assertEquals("0", typeAdapterForDouble.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForDouble.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForDouble.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForDouble.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
@@ -65,10 +65,10 @@ public class TypeAdapterForDoubleTest {
 
 		// symbolic value
 
-		assertEquals("0", typeAdapterForDouble.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForDouble.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForDouble.convertSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForDouble.adaptSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterForNumericType.SPECIAL_VALUES_ARE_NOT_ALLOWED);

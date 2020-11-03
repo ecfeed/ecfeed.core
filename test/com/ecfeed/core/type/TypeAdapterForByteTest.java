@@ -29,18 +29,18 @@ public class TypeAdapterForByteTest {
 		TypeAdapterForByte typeAdapterForByte = new TypeAdapterForByte();
 
 
-		assertEquals("1", typeAdapterForByte.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("1", typeAdapterForByte.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
-		assertEquals("0", typeAdapterForByte.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1", typeAdapterForByte.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("1", typeAdapterForByte.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("0", typeAdapterForByte.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForJava));
 
 		try {
-			typeAdapterForByte.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
+			typeAdapterForByte.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForJava);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
 		}
 
-		assertEquals("MAX_VALUE", typeAdapterForByte.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
+		assertEquals("MAX_VALUE", typeAdapterForByte.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForJava));
 	}
 
 	@Test
@@ -50,15 +50,15 @@ public class TypeAdapterForByteTest {
 
 		TypeAdapterForByte typeAdapterForByte = new TypeAdapterForByte();
 
-		assertEquals("1", typeAdapterForByte.convertSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
-		assertEquals("1", typeAdapterForByte.convertSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForByte.adaptSingleValue("1", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("1", typeAdapterForByte.adaptSingleValue("1.0", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		// invalid value
 
-		assertEquals("0", typeAdapterForByte.convertSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForByte.adaptSingleValue("ab", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForByte.convertSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForByte.adaptSingleValue("ab", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterHelper.CANNOT_CONVERT_VALUE);
@@ -66,10 +66,10 @@ public class TypeAdapterForByteTest {
 
 		// symbolic value
 
-		assertEquals("0", typeAdapterForByte.convertSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
+		assertEquals("0", typeAdapterForByte.adaptSingleValue("MAX_VALUE", ERunMode.QUIET, extLanguageManagerForSimple));
 
 		try {
-			typeAdapterForByte.convertSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
+			typeAdapterForByte.adaptSingleValue("MAX_VALUE", ERunMode.WITH_EXCEPTION, extLanguageManagerForSimple);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, TypeAdapterForNumericType.SPECIAL_VALUES_ARE_NOT_ALLOWED);

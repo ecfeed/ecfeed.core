@@ -239,7 +239,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		}
 
 		String newValue = 
-				adapter.convert(
+				adapter.adapt(
 						choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET, getExtLanguageManager());
 
 		if (newValue == null) {
@@ -252,7 +252,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	private void adaptValueChoice(ChoiceNode choice, ITypeAdapter<?> adapter, Iterator<ChoiceNode> it) {
 
 		String newValue = 
-				adapter.convert(
+				adapter.adapt(
 						choice.getValueString(), 
 						choice.isRandomizedValue(), 
 						ERunMode.QUIET,

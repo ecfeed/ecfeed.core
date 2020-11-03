@@ -27,7 +27,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+	public String adaptSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
 		if (isSymbolicValue(value)) {
 			return handleConversionOfSymbolicValue(value, runMode, extLanguageManager);

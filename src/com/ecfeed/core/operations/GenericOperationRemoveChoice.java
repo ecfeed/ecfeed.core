@@ -155,7 +155,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 			if(parentChoiceNode.isAbstract() == false){
 				ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(parentChoiceNode.getParameter().getType());
 				String newValue = 
-						adapter.convert(
+						adapter.adapt(
 								parentChoiceNode.getValueString(), 
 								parentChoiceNode.isRandomizedValue(),
 								ERunMode.QUIET,

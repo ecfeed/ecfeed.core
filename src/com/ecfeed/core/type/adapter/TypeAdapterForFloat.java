@@ -26,7 +26,7 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
+	public String adaptSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
 		String result = convert2(value, runMode, extLanguageManager);
 		result = extLanguageManager.formatNumber(result);

@@ -40,7 +40,7 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 	}
 
 	@Override
-	public String convertSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+	public String adaptSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 		
 		if (value.length() == 1) {
 			return value;
