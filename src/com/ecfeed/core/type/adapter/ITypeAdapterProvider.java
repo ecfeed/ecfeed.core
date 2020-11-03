@@ -10,6 +10,6 @@
 
 package com.ecfeed.core.type.adapter;
 
-public interface ITypeAdapterProvider { // TODO remove ? do we need this to get type adapter ?
+public interface ITypeAdapterProvider {
 	public ITypeAdapter<?> getAdapter(String type);
 }

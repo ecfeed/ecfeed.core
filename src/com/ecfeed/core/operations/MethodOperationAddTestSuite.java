@@ -27,14 +27,24 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 			ITypeAdapterProvider typeAdapterProvider,
 			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.ADD_TEST_CASES, false, methodNode, methodNode, extLanguageManager);
+		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode, extLanguageManager);
+		createTestSuites(testCases, testSuiteName, methodNode, typeAdapterProvider);
 
-		createTestSuites(
-		        testCases, testSuiteName, methodNode, typeAdapterProvider);
 	}
-	
+
+	public MethodOperationAddTestSuite(
+			MethodNode methodNode, 
+			List<TestCaseNode> testCases, 
+			ITypeAdapterProvider typeAdapterProvider,
+			IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode, extLanguageManager);
+		createTestSuites(testCases, methodNode, typeAdapterProvider);
+
+	}
+
 	private void createTestSuites(List<TestCase> testCases, String testSuiteName, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
-		
+
 		for (TestCase testCase : testCases) {
 
 			TestCaseNode testCaseNode = 
@@ -51,5 +61,18 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 							getExtLanguageManager()));
 		}
 	}
-	
+
+	private void createTestSuites(List<TestCaseNode> testCases, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
+
+		for (TestCaseNode testCase : testCases) {
+
+			addOperation(
+					new MethodOperationAddTestCase(
+							methodNode, 
+							testCase, 
+							typeAdapterProvider,
+							getExtLanguageManager()));
+		}
+	}
+
 }
