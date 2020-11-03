@@ -223,13 +223,8 @@ public class FactoryRenameOperation {
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return null; // TODO SIMPLE-VIEW check
+			return new GenericOperationRename(node, null, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
-
-//		@Override
-//		public Object visit(TestSuiteNode node) throws Exception {
-//			return new GenericOperationRename(node, fNewName);
-//		}
 		
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
