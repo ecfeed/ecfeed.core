@@ -365,7 +365,7 @@ public final class JavaLanguageHelper {
 			return Long.MAX_VALUE + "";
 		} 
 
-		return valueString;  // TODO SIMPLE-VIEW test
+		return valueString;
 	}
 
 	private static String convertConditionallySpecialValueToIntTxt(String valueString) {

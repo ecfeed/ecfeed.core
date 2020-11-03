@@ -212,6 +212,9 @@ public class JavaLanguageHelperTest {
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("byte", "7");
 		assertEquals("7", numeric);
 
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("byte", "AB");
+		assertEquals("AB", numeric);
+
 		// short
 
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("short", "MAX_VALUE");
@@ -223,6 +226,9 @@ public class JavaLanguageHelperTest {
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("short", "32760");
 		assertEquals("32760", numeric);
 
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("short", "XY");
+		assertEquals("XY", numeric);
+
 		// int
 
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("int", "MAX_VALUE");
@@ -230,6 +236,9 @@ public class JavaLanguageHelperTest {
 
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("int", "MIN_VALUE");
 		assertEquals("-2147483648", numeric);
+
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("int", "XY");
+		assertEquals("XY", numeric);
 
 		// long
 
@@ -241,6 +250,9 @@ public class JavaLanguageHelperTest {
 
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("long", "5");
 		assertEquals("5", numeric);
+
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("long", "ABC");
+		assertEquals("ABC", numeric);
 
 		// float
 
@@ -265,6 +277,9 @@ public class JavaLanguageHelperTest {
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "-1.0");
 		assertEquals("-1.0", numeric);
 
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("float", "XY");
+		assertEquals("XY", numeric);
+
 		// double
 
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "MAX_VALUE");
@@ -287,6 +302,9 @@ public class JavaLanguageHelperTest {
 
 		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "5.1");
 		assertEquals("5.1", numeric);
+
+		numeric = JavaLanguageHelper.conditionallyConvertSpecialValueToNumeric("double", "XY");
+		assertEquals("XY", numeric);
 
 		// String
 
