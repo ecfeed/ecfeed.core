@@ -75,4 +75,28 @@ public class TypeAdapterForIntTest {
 		}
 	}
 
+	@Test
+	public void convertRangeTest() {
+
+		IExtLanguageManager extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
+
+		TypeAdapterForInt typeAdapterForInt = new TypeAdapterForInt();
+
+		assertEquals("1:2", typeAdapterForInt.convert("1:2", true, ERunMode.QUIET, extLanguageManagerForSimple));
+
+		String result =
+				typeAdapterForInt.convert("MAX_VALUE:MAX_VALUE", true, ERunMode.QUIET, extLanguageManagerForSimple);
+
+		assertEquals("0:0", result);
+
+
+		IExtLanguageManager extLanguageManagerForJava = new ExtLanguageManagerForJava();
+
+		assertEquals("1:2", typeAdapterForInt.convert("1:2", true, ERunMode.QUIET, extLanguageManagerForJava));
+
+		result = typeAdapterForInt.convert("MAX_VALUE:MAX_VALUE", true, ERunMode.QUIET, extLanguageManagerForJava);
+
+		assertEquals("MAX_VALUE:MAX_VALUE", result);
+	}
+
 }
