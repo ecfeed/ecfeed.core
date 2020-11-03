@@ -66,7 +66,6 @@ public class ChoiceNodeHelper {
 		return null;
 	}
 
-	// TODO SIMPLE-VIEW test for nested choices
 	public static String createSignature(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 		
 		if (choiceNode == null) {
