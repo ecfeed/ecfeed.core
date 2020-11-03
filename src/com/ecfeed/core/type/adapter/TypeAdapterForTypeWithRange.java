@@ -37,7 +37,7 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 	}
 
 	private String adaptNotRange(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-		
+
 		String result = adaptSingleValue(value, conversionMode, extLanguageManager);
 
 		if (!isRandomized) {
@@ -57,8 +57,8 @@ public abstract class TypeAdapterForTypeWithRange<T> implements ITypeAdapter<T> 
 			String value, 
 			boolean isRandomized, 
 			ERunMode conversionMode, 
-			IExtLanguageManager extLanguageManager) { // TODO  SIMPLE-VIEW check  for MAX_VALUE and Simple
-		
+			IExtLanguageManager extLanguageManager) {
+
 		String[] range = RangeHelper.splitToRange(value);
 
 		if (isRandomized) {

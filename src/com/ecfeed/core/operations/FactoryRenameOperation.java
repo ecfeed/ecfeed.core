@@ -226,6 +226,11 @@ public class FactoryRenameOperation {
 			return null; // TODO SIMPLE-VIEW check
 		}
 
+//		@Override
+//		public Object visit(TestSuiteNode node) throws Exception {
+//			return new GenericOperationRename(node, fNewName);
+//		}
+		
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
 			return new MethodParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
@@ -236,11 +241,6 @@ public class FactoryRenameOperation {
 			return new GlobalParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
-//		@Override
-//		public Object visit(TestSuiteNode node) throws Exception {
-//			return new GenericOperationRename(node, fNewName);
-//		}
-		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return new GenericOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);

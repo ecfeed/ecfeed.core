@@ -26,7 +26,7 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	}
 
 	@Override
-	public String adaptSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) { // TODO SIMPLE-VIEW rename to adaptSingleValue
+	public String adaptSingleValue(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
 		String result = convert2(value, runMode, extLanguageManager);
 		result = extLanguageManager.formatNumber(result);
@@ -59,7 +59,7 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseDoubleValue(range[0], ERunMode.QUIET);
 		}		
-		
+
 		return ThreadLocalRandom.current().nextDouble(
 				JavaLanguageHelper.parseDoubleValue(range[0], ERunMode.QUIET),
 				JavaLanguageHelper.parseDoubleValue(range[1], ERunMode.QUIET));
