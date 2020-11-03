@@ -17,10 +17,12 @@ import java.util.Set;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class BulkOperation extends AbstractModelOperation {
 
+	private static final String ATTEMPT_TO_ADD_EMPTY_OPERATION = "Attempt to add empty operation.";
 	List<IModelOperation> fOperations;
 	List<IModelOperation> fExecutedOperations;
 	// either all operation or none. if false, all operations are executed
@@ -65,10 +67,20 @@ public class BulkOperation extends AbstractModelOperation {
 	}
 
 	protected void addOperation(IModelOperation operation) {
+		
+		if (operation == null) {
+			ExceptionHelper.reportRuntimeException(ATTEMPT_TO_ADD_EMPTY_OPERATION);
+		}
+		
 		fOperations.add(operation);
 	}
 
 	protected void addCheckOperation(ICheckOperation operation) {
+
+		if (operation == null) {
+			ExceptionHelper.reportRuntimeException(ATTEMPT_TO_ADD_EMPTY_OPERATION);
+		}
+		
 		fCheckOperations.add(operation);
 	}
 

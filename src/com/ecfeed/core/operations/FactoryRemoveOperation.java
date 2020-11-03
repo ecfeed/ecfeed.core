@@ -105,8 +105,7 @@ public class FactoryRemoveOperation {
 		
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return null;   // TODO SIMPLE-VIEW
-//			return new MethodOperationRemoveTestS(node.getMethod(), node, fExtLanguageManager);
+			return new MethodOperationRemoveTestSuite(node.getMethod(), node, fExtLanguageManager);
 		}
 
 		@Override
