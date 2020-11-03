@@ -11,7 +11,9 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.CommonConstants;
@@ -58,11 +60,11 @@ public class MethodNodeHelper {
 		List<String> result = new ArrayList<String>();
 
 		for(AbstractParameterNode parameter : method.getParameters()){
-			
+
 			MethodParameterNode methodParameterNode = (MethodParameterNode)parameter;
-			
+
 			String name = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
-			
+
 			result.add(name);
 		}
 
@@ -441,6 +443,43 @@ public class MethodNodeHelper {
 		}
 
 		return type;
+	}
+
+	public static List<TestSuiteNode> groupTestCases(MethodNode method) { // TODO SIMPLE-VIEW test
+
+		List<TestSuiteNode> testSuites = method.getTestSuites();
+
+		List<String> testSuiteNames = new ArrayList<>();
+		testSuiteNames.addAll(method.getTestCaseNames());
+
+		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
+
+		TestSuiteNode testSuiteNode;
+		for (String testSuite : testSuiteNames) {
+
+			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuite);
+			if (existingNode.isPresent()) {
+				testSuiteNode = existingNode.get();
+				testSuiteNode.getTestCaseNodes().clear();
+			} else {
+				testSuiteNode = new TestSuiteNode();
+				testSuiteNode.setSuiteName(testSuite);
+				testSuiteNode.setParent(method);
+				testSuites.add(testSuiteNode);
+			}
+
+			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuite);
+			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
+				testSuiteNode.setName(testSuite + " (" + testCasesSuite.size() + ")" + " - Display limit exceeded" );
+			} else {
+				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
+				testSuiteNode.setName(testSuite + " (" + testCasesSuite.size() + ")");
+			}
+		}
+
+		testSuites.sort((a, b) -> a.getSuiteName().compareTo(b.getSuiteName()));
+
+		return testSuites;
 	}
 
 }
