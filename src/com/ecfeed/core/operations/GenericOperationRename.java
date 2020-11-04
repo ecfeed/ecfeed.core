@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
@@ -68,28 +71,47 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public void execute() throws ModelOperationException {
 
 		setOneNodeToSelect(fTargetAbstractNode);
+		
 		String oldQualifiedNameInIntrLanguage = fTargetAbstractNode.getName();
 
-		String newQualifiedNameInExtLanguage = fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
-		verifyNewName(newQualifiedNameInExtLanguage);
+		String newQualifiedNameInIntrLanguage = prepareNewQualifiedName();
 
-		String newNonQualifiedNameInIntrLanguage; 
+		setNewNameWithCheck(newQualifiedNameInIntrLanguage, oldQualifiedNameInIntrLanguage);
+
+		markModelUpdated();
+	}
+
+	private String prepareNewQualifiedName() throws ModelOperationException {
 		
-		if (AbstractNodeHelper.isTheSameExtAndIntrLanguage(fTargetAbstractNode)) {
-			newNonQualifiedNameInIntrLanguage = fNewNonQualifiedNameInExtLanguage;
-		} else {
-			newNonQualifiedNameInIntrLanguage = 
-					fExtLanguageManager.convertTextFromExtToIntrLanguage(fNewNonQualifiedNameInExtLanguage);
-		}
+		String newQualifiedNameInExtLanguage = 
+				fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
 		
-		String newQualifiedNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
+		verifyNewName(newQualifiedNameInExtLanguage); // TODO SIMPLE-VIEW do we need this ?
+
+		String newNonQualifiedNameInIntrLanguage = 		
+				AbstractNodeHelper.convertTextFromExtToIntrLanguage(
+						fTargetAbstractNode, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+		
+		String newQualifiedNameInIntrLanguage = 
+				JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
 
 		if (!(fTargetAbstractNode instanceof RootNode)) {
 			verifyNameWithJavaRegex(newQualifiedNameInIntrLanguage, fJavaNameRegex, fTargetAbstractNode, new ExtLanguageManagerForJava());
 		}
+		
+		return newQualifiedNameInIntrLanguage;
+	}
 
+	private void setNewNameWithCheck(
+			String newQualifiedNameInIntrLanguage, 
+			String oldQualifiedNameInIntrLanguage) throws ModelOperationException {
+		
 		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
-
+		
+		if (fTargetAbstractNode instanceof TestSuiteNode) {
+			setNewNameInChildTestCases(newQualifiedNameInIntrLanguage);
+		} 
+		
 		RootNode rootNode = ModelHelper.findRoot(fTargetAbstractNode);
 
 		String errorMessage = fExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode);
@@ -98,8 +120,17 @@ public class GenericOperationRename extends AbstractModelOperation {
 			fTargetAbstractNode.setName(oldQualifiedNameInIntrLanguage);
 			ModelOperationException.report(errorMessage);
 		}
+	}
 
-		markModelUpdated();
+	private void setNewNameInChildTestCases(String qualifiedNameInIntrLanguage) {
+		
+		TestSuiteNode testSuiteNode = (TestSuiteNode) fTargetAbstractNode;
+		
+		List<TestCaseNode> testCaseNodes = testSuiteNode.getTestCaseNodes();
+		
+		Stream<TestCaseNode> stream = testCaseNodes.stream();
+		
+		stream.forEach(testCaseNode -> testCaseNode.setName(qualifiedNameInIntrLanguage));
 	}
 
 	@Override
