@@ -71,7 +71,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	public void execute() throws ModelOperationException {
 
 		setOneNodeToSelect(fTargetAbstractNode);
-		
+
 		String oldQualifiedNameInIntrLanguage = fTargetAbstractNode.getName();
 
 		String newQualifiedNameInIntrLanguage = prepareNewQualifiedName();
@@ -82,36 +82,40 @@ public class GenericOperationRename extends AbstractModelOperation {
 	}
 
 	private String prepareNewQualifiedName() throws ModelOperationException {
-		
+
 		String newQualifiedNameInExtLanguage = 
 				fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
-		
-		verifyNewName(newQualifiedNameInExtLanguage); // TODO SIMPLE-VIEW do we need this ?
+
+		verifyNewName(newQualifiedNameInExtLanguage);
 
 		String newNonQualifiedNameInIntrLanguage = 		
 				AbstractNodeHelper.convertTextFromExtToIntrLanguage(
 						fTargetAbstractNode, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
-		
+
 		String newQualifiedNameInIntrLanguage = 
 				JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
 
 		if (!(fTargetAbstractNode instanceof RootNode)) {
-			verifyNameWithJavaRegex(newQualifiedNameInIntrLanguage, fJavaNameRegex, fTargetAbstractNode, new ExtLanguageManagerForJava());
+			verifyNameWithJavaRegex(
+					newQualifiedNameInIntrLanguage, 
+					fJavaNameRegex, 
+					fTargetAbstractNode, 
+					new ExtLanguageManagerForJava());
 		}
-		
+
 		return newQualifiedNameInIntrLanguage;
 	}
 
 	private void setNewNameWithCheck(
 			String newQualifiedNameInIntrLanguage, 
 			String oldQualifiedNameInIntrLanguage) throws ModelOperationException {
-		
+
 		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
-		
+
 		if (fTargetAbstractNode instanceof TestSuiteNode) {
 			setNewNameInChildTestCases(newQualifiedNameInIntrLanguage);
 		} 
-		
+
 		RootNode rootNode = ModelHelper.findRoot(fTargetAbstractNode);
 
 		String errorMessage = fExtLanguageManager.checkIsModelCompatibleWithExtLanguage(rootNode);
@@ -123,13 +127,13 @@ public class GenericOperationRename extends AbstractModelOperation {
 	}
 
 	private void setNewNameInChildTestCases(String qualifiedNameInIntrLanguage) {
-		
+
 		TestSuiteNode testSuiteNode = (TestSuiteNode) fTargetAbstractNode;
-		
+
 		List<TestCaseNode> testCaseNodes = testSuiteNode.getTestCaseNodes();
-		
+
 		Stream<TestCaseNode> stream = testCaseNodes.stream();
-		
+
 		stream.forEach(testCaseNode -> testCaseNode.setName(qualifiedNameInIntrLanguage));
 	}
 
@@ -153,7 +157,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	protected String getOriginalPackageName(){
 		return fOriginalPackageName;
 	}
-	
+
 	public String getNewPackageName() {
 		return fNewPackageName;
 	}
@@ -168,7 +172,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 			IExtLanguageManager extLanguageManager) throws ModelOperationException {
 
 		if (name.matches(regex) == false) {
-			ModelOperationException.report(getRegexProblemMessage(targetNode, extLanguageManager));
+
+			String regexProblemMessage = getRegexProblemMessage(targetNode, extLanguageManager);
+
+			ModelOperationException.report(regexProblemMessage);
 		}
 	}
 
@@ -212,7 +219,10 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return null; // TODO SIMPLE-VIEW check
+
+			String nodeNameInExtLanguage = AbstractNodeHelper.getName(node, fExtLanguageManager);
+
+			return RegexHelper.createMessageAllowedCharsForNode(nodeNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override
@@ -273,7 +283,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		public Object visit(TestSuiteNode node) throws Exception {
 			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
 		}
-		
+
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;

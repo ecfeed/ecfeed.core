@@ -12,7 +12,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.SystemLogger;
 
-public class ModelOperationException extends Exception { // TODO - delete ? we have to catch every exception - not only ModelOperationException 
+public class ModelOperationException extends Exception { // TODO SIMPLE-VIEW - delete ? we have to catch every exception - not only ModelOperationException 
 
 	/**
 	 * 
@@ -21,11 +21,17 @@ public class ModelOperationException extends Exception { // TODO - delete ? we h
 
 
 	protected ModelOperationException(String message) {
+
 		super(message);
 		SystemLogger.logThrow(message);
 	}
 
 	public static void report(String message) throws ModelOperationException {
+
+		if (message == null) {
+			message = "Unknown error.";
+		}
+
 		throw new ModelOperationException(message);
 	}
 
