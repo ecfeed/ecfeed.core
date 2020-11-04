@@ -626,7 +626,7 @@ public class MethodNodeHelperTest {
 	}
 
 	@Test
-	public void groupTestCasesTest1() {
+	public void groupTestCasesTest() {
 
 		RootNode rootNode = new RootNode("root", null);
 
@@ -656,23 +656,12 @@ public class MethodNodeHelperTest {
 
 		List<TestSuiteNode> testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
 
-		assertEquals(1, testSuiteNodes.size());
-		TestSuiteNode testSuiteNode = testSuiteNodes.get(0);
-		List<TestCaseNode> testCaseNodes = testSuiteNode.getChildren();
-
-		assertEquals(testCase1, testCaseNodes.get(0));
-		assertEquals(testCase2, testCaseNodes.get(1));
+		checkTestSuites1(testCase1, testCase2, testSuiteNodes);
 
 		// the second time - result should be the same
 
 		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-
-		assertEquals(1, testSuiteNodes.size());
-		testSuiteNode = testSuiteNodes.get(0);
-		testCaseNodes = testSuiteNode.getChildren();
-
-		assertEquals(testCase1, testCaseNodes.get(0));
-		assertEquals(testCase2, testCaseNodes.get(1));
+		checkTestSuites1(testCase1, testCase2, testSuiteNodes);
 
 		// the third, different test case
 
@@ -680,6 +669,25 @@ public class MethodNodeHelperTest {
 		methodNode.addTestCase(testCase3);
 
 		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
+
+		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
+	}
+
+	public void checkTestSuites1(TestCaseNode testCase1, TestCaseNode testCase2, List<TestSuiteNode> testSuiteNodes) {
+
+		assertEquals(1, testSuiteNodes.size());
+		TestSuiteNode testSuiteNode = testSuiteNodes.get(0);
+		List<TestCaseNode> testCaseNodes = testSuiteNode.getChildren();
+
+		assertEquals(testCase1, testCaseNodes.get(0));
+		assertEquals(testCase2, testCaseNodes.get(1));
+	}
+
+	public void checkTestSuites2(
+			List<TestSuiteNode> testSuiteNodes,
+			TestCaseNode testCase1, TestCaseNode testCase2, TestCaseNode testCase3) {
 
 		assertEquals(2, testSuiteNodes.size());
 
