@@ -445,7 +445,7 @@ public class MethodNodeHelper {
 		return type;
 	}
 
-	public static List<TestSuiteNode> groupTestCases(MethodNode method) { // TODO SIMPLE-VIEW test
+	public static List<TestSuiteNode> groupTestCases(MethodNode method) { // TODO test
 
 		List<TestSuiteNode> testSuites = method.getTestSuites();
 
