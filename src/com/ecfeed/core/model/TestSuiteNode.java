@@ -6,54 +6,54 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestSuiteNode extends AbstractNode {
-	List<TestCaseNode> fTestCase;
+	List<TestCaseNode> fTestCaseNodes;
 	String fSuiteName;
 
 	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<TestCaseNode> testData) {
 		super(name, modelChangeRegistrator);
 
-		fTestCase = testData;
+		fTestCaseNodes = testData;
 	}
 
 	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator, Collection<TestCaseNode> testData) {
 		super(name, modelChangeRegistrator);
 
-		fTestCase = testData.stream().collect(Collectors.toList());
+		fTestCaseNodes = testData.stream().collect(Collectors.toList());
 	}
 
 	public TestSuiteNode(List<TestCaseNode> testData) {
 		super("", null);
 
-		fTestCase = testData;
+		fTestCaseNodes = testData;
 	}
 
 	public TestSuiteNode(Collection<TestCaseNode> testData) {
 		super("", null);
 
-		fTestCase = testData.stream().collect(Collectors.toList());
+		fTestCaseNodes = testData.stream().collect(Collectors.toList());
 	}
 
 	public TestSuiteNode() {
 		super("", null);
 
-		fTestCase = new ArrayList<>();
+		fTestCaseNodes = new ArrayList<>();
 	}
 
 	public List<TestCaseNode> getTestCaseNodes() { 
 
-		return fTestCase;
+		return fTestCaseNodes;
 	}
 
 	@Override
 	public boolean hasChildren(){
 
-		return(fTestCase.size() != 0);
+		return(fTestCaseNodes.size() != 0);
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren() {
+	public List<TestCaseNode> getChildren() {
 
-		return fTestCase;
+		return fTestCaseNodes;
 	}
 
 	public void setSuiteName(String suiteName) {
@@ -92,7 +92,7 @@ public class TestSuiteNode extends AbstractNode {
 	public TestSuiteNode makeClone() {
 		List<TestCaseNode> testdata = new ArrayList<>();
 
-		for(TestCaseNode choice : fTestCase) {
+		for(TestCaseNode choice : fTestCaseNodes) {
 			testdata.add(choice);
 		}
 

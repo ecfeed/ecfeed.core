@@ -625,4 +625,76 @@ public class MethodNodeHelperTest {
 		assertEquals("cn 1", namesArray.get(0));
 	}
 
+	@Test
+	public void groupTestCasesTest1() {
+
+		RootNode rootNode = new RootNode("root", null);
+
+		ClassNode classNode = new ClassNode("class", null);
+		rootNode.addClass(classNode);
+
+		MethodNode methodNode = new MethodNode("method", null);
+		classNode.addMethod(methodNode);
+
+		MethodParameterNode methodParameterNode =
+				new MethodParameterNode(
+						"par","int", "0",false,null);
+
+		methodNode.addParameter(methodParameterNode);
+
+		ChoiceNode choiceNode = new ChoiceNode("c", "1", null);
+		methodParameterNode.addChoice(choiceNode);
+
+		List<ChoiceNode> choices = new ArrayList<>();
+		choices.add(choiceNode);
+
+		TestCaseNode testCase1 = new TestCaseNode("t1", null, choices);
+		methodNode.addTestCase(testCase1);
+
+		TestCaseNode testCase2 = new TestCaseNode("t1", null, choices);
+		methodNode.addTestCase(testCase2);
+
+		List<TestSuiteNode> testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+
+		assertEquals(1, testSuiteNodes.size());
+		TestSuiteNode testSuiteNode = testSuiteNodes.get(0);
+		List<TestCaseNode> testCaseNodes = testSuiteNode.getChildren();
+
+		assertEquals(testCase1, testCaseNodes.get(0));
+		assertEquals(testCase2, testCaseNodes.get(1));
+
+		// the second time - result should be the same
+
+		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+
+		assertEquals(1, testSuiteNodes.size());
+		testSuiteNode = testSuiteNodes.get(0);
+		testCaseNodes = testSuiteNode.getChildren();
+
+		assertEquals(testCase1, testCaseNodes.get(0));
+		assertEquals(testCase2, testCaseNodes.get(1));
+
+		// the third, different test case
+
+		TestCaseNode testCase3 = new TestCaseNode("txx", null, choices);
+		methodNode.addTestCase(testCase3);
+
+		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+
+		assertEquals(2, testSuiteNodes.size());
+
+		TestSuiteNode testSuiteNode1 = testSuiteNodes.get(0);
+		List<TestCaseNode> testCaseNodes1 = testSuiteNode1.getChildren();
+
+		assertEquals(2, testCaseNodes1.size());
+
+		assertEquals(testCase1, testCaseNodes1.get(0));
+		assertEquals(testCase2, testCaseNodes1.get(1));
+
+		TestSuiteNode testSuiteNode2 = testSuiteNodes.get(1);
+		List<TestCaseNode> testCaseNodes2 = testSuiteNode2.getChildren();
+
+		assertEquals(1, testCaseNodes2.size());
+		assertEquals(testCase3, testCaseNodes2.get(0));
+	}
 }
