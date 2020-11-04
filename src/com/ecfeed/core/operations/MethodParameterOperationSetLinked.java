@@ -17,8 +17,8 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterOperationSetLinked extends BulkOperation{
@@ -37,7 +37,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 			}
 
 			@Override
-			public void execute() throws ModelOperationException {
+			public void execute() {
 
 				setOneNodeToSelect(fTarget);
 				MethodNode methodNode = fTarget.getMethod();
@@ -69,7 +69,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fTarget);
 
@@ -77,7 +77,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 			String newType;
 			if(fLinked){
 				if(fTarget.getLink() == null){
-					ModelOperationException.report(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
+					ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
 				}
 				newType = fTarget.getLink().getType();
 			}
@@ -87,7 +87,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 			if(method.checkDuplicate(fTarget.getMyIndex(), newType)){
 
-				ModelOperationException.report(
+				ExceptionHelper.reportRuntimeException(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}

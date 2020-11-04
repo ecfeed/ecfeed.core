@@ -17,9 +17,9 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ClassOperationAddMethod extends AbstractModelOperation{
 
@@ -41,7 +41,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fClassNode);
 		List<String> problems = new ArrayList<String>();
@@ -61,11 +61,11 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 		if (errorMessage != null){
 			problems.add(errorMessage);
-			ModelOperationException.report(StringHelper.convertToMultilineString(problems));
+			ExceptionHelper.reportRuntimeException(StringHelper.convertToMultilineString(problems));
 		}
 
 		if(fClassNode.addMethod(fMethod, fIndex) == false){
-			ModelOperationException.report(UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT);
+			ExceptionHelper.reportRuntimeException(UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT);
 		}
 
 		markModelUpdated();

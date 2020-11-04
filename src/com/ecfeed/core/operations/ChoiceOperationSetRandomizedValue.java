@@ -1,10 +1,10 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation { 
@@ -31,19 +31,19 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		adaptChoice(fNewRandomized);
 		markModelUpdated();
 	}
 
-	private void adaptChoice(boolean newRandomized) throws ModelOperationException {
+	private void adaptChoice(boolean newRandomized) {
 
 		String newValue = adaptChoiceValue(newRandomized);
 		fChoiceNode.setValueString(newValue);
 		fChoiceNode.setRandomizedValue(newRandomized);
 	}
 
-	private String adaptChoiceValue(boolean randomized) throws ModelOperationException {
+	private String adaptChoiceValue(boolean randomized) {
 
 		String type = fChoiceNode.getParameter().getType();
 
@@ -57,7 +57,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 					getExtLanguageManager());
 
 		} catch (RuntimeException ex) {
-			ModelOperationException.report(ex.getMessage());
+			ExceptionHelper.reportRuntimeException(ex.getMessage());
 		}
 
 		return null;
@@ -74,7 +74,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 			adaptChoice(fOriginalRandomized);
 			markModelUpdated();
 		}

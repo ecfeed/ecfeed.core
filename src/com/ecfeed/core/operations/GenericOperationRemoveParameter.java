@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -32,7 +31,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fParametersParentNode);
 		fOriginalIndex = fParametersParentNode.getParameters().indexOf(fAbstractParameterNode);

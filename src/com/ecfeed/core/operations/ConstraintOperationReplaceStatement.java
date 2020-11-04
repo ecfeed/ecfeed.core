@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
@@ -36,7 +36,7 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 		Constraint constraint = fTarget.getConstraint();
@@ -48,7 +48,7 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 			constraint.setConsequence(fNewStatement);
 		}
 		else {
-			ModelOperationException.report(OperationMessages.TARGET_STATEMENT_NOT_FOUND_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TARGET_STATEMENT_NOT_FOUND_PROBLEM);
 		}
 		markModelUpdated();
 	}

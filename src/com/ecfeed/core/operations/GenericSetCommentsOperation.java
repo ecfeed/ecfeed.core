@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericSetCommentsOperation extends AbstractModelOperation {
@@ -29,7 +28,7 @@ public class GenericSetCommentsOperation extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 		fCurrentComments = fTarget.getDescription() != null ? fTarget.getDescription() : "";

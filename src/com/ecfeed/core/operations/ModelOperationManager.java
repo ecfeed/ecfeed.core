@@ -13,8 +13,6 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.ModelOperationException;
-
 public class ModelOperationManager {
 	private List<IModelOperation> fHistory;
 	private int fHistoryIndex = 0;
@@ -44,7 +42,7 @@ public class ModelOperationManager {
 		return fHistoryIndex < fHistory.size();
 	}
 
-	public void undo() throws ModelOperationException{
+	public void undo() {
 		if(fHistoryIndex > 0){
 			IModelOperation operation = fHistory.get(fHistoryIndex - 1).getReverseOperation();
 			operation.execute();
@@ -52,7 +50,7 @@ public class ModelOperationManager {
 		}
 	}
 
-	public void redo() throws ModelOperationException{
+	public void redo() {
 		if(fHistoryIndex < fHistory.size()){
 			IModelOperation operation = fHistory.get(fHistoryIndex);
 			operation.execute();
@@ -60,7 +58,7 @@ public class ModelOperationManager {
 		}
 	}
 
-	public void execute(IModelOperation operation) throws ModelOperationException{
+	public void execute(IModelOperation operation) {
 		operation.execute();
 		updateHistory(operation);
 	}

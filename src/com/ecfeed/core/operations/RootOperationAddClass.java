@@ -11,6 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class RootOperationAddClass extends AbstractModelOperation {
@@ -31,7 +32,7 @@ public class RootOperationAddClass extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fRootNode);
 
@@ -46,13 +47,13 @@ public class RootOperationAddClass extends AbstractModelOperation {
 		String errorMessage = ClassNodeHelper.validateClassName(name, extLanguageManager);
 
 		if (errorMessage != null) {
-			ModelOperationException.report(errorMessage);
+			ExceptionHelper.reportRuntimeException(errorMessage);
 		}
 
 		errorMessage = RootNodeHelper.classWithNameExists(name, fRootNode, extLanguageManager);
 
 		if (errorMessage != null) {
-			ModelOperationException.report(errorMessage);
+			ExceptionHelper.reportRuntimeException(errorMessage);
 		}
 		
 		fRootNode.addClass(fclassToAdd, fAddIndex);

@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.IStatementCondition;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -29,7 +28,7 @@ public class StatementOperationSetCondition extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		fTarget.setCondition(fNewCondition);
 		markModelUpdated();
 	}

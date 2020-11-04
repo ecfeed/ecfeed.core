@@ -13,11 +13,10 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
 
 
 public interface IModelOperation {
-	public void execute() throws ModelOperationException;
+	public void execute();
 	public boolean modelUpdated();
 	public IModelOperation getReverseOperation();
 	public String getName();

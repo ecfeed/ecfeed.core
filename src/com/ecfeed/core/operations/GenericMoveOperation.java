@@ -21,10 +21,10 @@ import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericMoveOperation extends BulkOperation {
@@ -33,7 +33,7 @@ public class GenericMoveOperation extends BulkOperation {
 			List<? extends AbstractNode> moved, 
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider,
-			IExtLanguageManager extLanguageManager) throws ModelOperationException {
+			IExtLanguageManager extLanguageManager) {
 		
 		this(moved, newParent, adapterProvider, -1, extLanguageManager);
 	}
@@ -43,7 +43,7 @@ public class GenericMoveOperation extends BulkOperation {
 			AbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
 			int newIndex,
-			IExtLanguageManager extLanguageManager) throws ModelOperationException {
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.MOVE, true, newParent, getParent(moved), extLanguageManager);
 
@@ -98,7 +98,7 @@ public class GenericMoveOperation extends BulkOperation {
 				addOperation(operation);
 			}
 		} catch (Exception e) {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 		}
 
 		setOneNodeToSelect(newParent);

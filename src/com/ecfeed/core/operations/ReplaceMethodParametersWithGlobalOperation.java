@@ -17,7 +17,6 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.GlobalParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -50,7 +49,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 		}
 
 		@Override
-		public void execute() throws ModelOperationException{
+		public void execute() {
 			try {
 				super.execute();
 			} catch (Exception e) {

@@ -18,8 +18,8 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -78,7 +78,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			List<String> paramTypesInExtLanguage = MethodNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
 			int index = getParameter().getMyIndex();
@@ -90,7 +90,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 				String message = createErrorMessage(problems);
 
-				ModelOperationException.report(message);
+				ExceptionHelper.reportRuntimeException(message);
 			}
 
 			fOriginalTestCases.clear();
@@ -165,7 +165,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 			}
 
 			@Override
-			public void execute() throws ModelOperationException {
+			public void execute() {
 
 				setOneNodeToSelect(getMethodTarget());
 				getMethodTarget().replaceTestCases(fOriginalTestCases);

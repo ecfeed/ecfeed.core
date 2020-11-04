@@ -13,8 +13,8 @@ package com.ecfeed.core.operations;
 import java.util.Collection;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
@@ -23,12 +23,12 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 	public MethodOperationRenameTestCases(
 			Collection<TestCaseNode> testCases, 
 			String newName,
-			IExtLanguageManager extLanguageManager) throws ModelOperationException {
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.RENAME_TEST_CASE, false, getFirstParent(testCases), getFirstParent(testCases), extLanguageManager);
 
 		if (newName.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false) {
-			ModelOperationException.report(OperationMessages.TEST_CASE_NOT_ALLOWED);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 
 		for(TestCaseNode testCase : testCases){

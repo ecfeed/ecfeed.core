@@ -15,13 +15,13 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IParameterVisitor;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationSetValue extends AbstractModelOperation {
 
@@ -43,12 +43,12 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		String convertedValue = adaptChoiceValue(fOwnChoiceNode.getParameter().getType(), fNewValue);
 		
 		if(convertedValue == null){
-			ModelOperationException.report(OperationMessages.PARTITION_VALUE_PROBLEM(fNewValue));
+			ExceptionHelper.reportRuntimeException(OperationMessages.PARTITION_VALUE_PROBLEM(fNewValue));
 		}
 		
 		fOwnChoiceNode.setValueString(convertedValue);
@@ -72,7 +72,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		return "setValue[" + fOwnChoiceNode + "](" + fNewValue + ")";
 	}
 
-	private String adaptChoiceValue(String type, String value) throws ModelOperationException {
+	private String adaptChoiceValue(String type, String value) {
 
 		final int MAX_PARTITION_VALUE_STRING_LENGTH = 512;
 
@@ -90,7 +90,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 					getExtLanguageManager());
 			
 		} catch (RuntimeException ex) {
-			ModelOperationException.report(ex.getMessage());
+			ExceptionHelper.reportRuntimeException(ex.getMessage());
 		}
 		return null;
 	}
@@ -137,7 +137,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 			fOwnChoiceNode.setValueString(fOriginalValue);
 			adaptParameter(fOwnChoiceNode.getParameter());
 			markModelUpdated();

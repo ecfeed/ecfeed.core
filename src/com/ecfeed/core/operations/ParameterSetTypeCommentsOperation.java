@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
@@ -27,7 +26,7 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 		fCurrentComments = fTarget.getTypeComments() != null ? fTarget.getTypeComments() : "";

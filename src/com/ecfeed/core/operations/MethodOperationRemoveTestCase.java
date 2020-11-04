@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -77,7 +76,7 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		setOneNodeToSelect(fMethodNode);
 		fIndex = fTestCase.getMyIndex();
 		fMethodNode.removeTestCase(fTestCase);

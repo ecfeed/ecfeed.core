@@ -23,10 +23,10 @@ import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelHelper;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -68,7 +68,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTargetAbstractNode);
 
@@ -81,7 +81,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		markModelUpdated();
 	}
 
-	private String prepareNewQualifiedName() throws ModelOperationException {
+	private String prepareNewQualifiedName() {
 
 		String newQualifiedNameInExtLanguage = 
 				fExtLanguageManager.createQualifiedName(fNewPackageName, fNewNonQualifiedNameInExtLanguage);
@@ -108,7 +108,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 	private void setNewNameWithCheck(
 			String newQualifiedNameInIntrLanguage, 
-			String oldQualifiedNameInIntrLanguage) throws ModelOperationException {
+			String oldQualifiedNameInIntrLanguage) {
 
 		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
 
@@ -122,7 +122,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 
 		if (errorMessage != null) {
 			fTargetAbstractNode.setName(oldQualifiedNameInIntrLanguage);
-			ModelOperationException.report(errorMessage);
+			ExceptionHelper.reportRuntimeException(errorMessage);
 		}
 	}
 
@@ -162,20 +162,20 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return fNewPackageName;
 	}
 
-	protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException{
+	protected void verifyNewName(String newNameInExtLanguage) {
 	}
 
 	private static void verifyNameWithJavaRegex(
 			String name, 
 			String regex, 
 			AbstractNode targetNode,
-			IExtLanguageManager extLanguageManager) throws ModelOperationException {
+			IExtLanguageManager extLanguageManager) {
 
 		if (name.matches(regex) == false) {
 
 			String regexProblemMessage = getRegexProblemMessage(targetNode, extLanguageManager);
 
-			ModelOperationException.report(regexProblemMessage);
+			ExceptionHelper.reportRuntimeException(regexProblemMessage);
 		}
 	}
 

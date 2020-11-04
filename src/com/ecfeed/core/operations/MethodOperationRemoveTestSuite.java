@@ -3,7 +3,6 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -66,7 +65,7 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		setOneNodeToSelect(fMethodNode);
 		fMethodNode.removeTestSuite(fTestSuite);
 		markModelUpdated();

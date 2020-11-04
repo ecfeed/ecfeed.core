@@ -13,10 +13,10 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationAddChoice extends BulkOperation {
@@ -70,7 +70,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fChoicesParentNode);
 			generateUniqueChoiceName(fChoice);
@@ -79,13 +79,13 @@ public class GenericOperationAddChoice extends BulkOperation {
 				fIndex = fChoicesParentNode.getChoices().size();
 			}
 			if(fChoicesParentNode.getChoiceNames().contains(fChoice.getName())){
-				ModelOperationException.report(CHOICE_NAME_DUPLICATE_PROBLEM(fChoicesParentNode.getName(), fChoice.getName()));
+				ExceptionHelper.reportRuntimeException(CHOICE_NAME_DUPLICATE_PROBLEM(fChoicesParentNode.getName(), fChoice.getName()));
 			}
 			if(fIndex < 0){
-				ModelOperationException.report(OperationMessages.NEGATIVE_INDEX_PROBLEM);
+				ExceptionHelper.reportRuntimeException(OperationMessages.NEGATIVE_INDEX_PROBLEM);
 			}
 			if(fIndex > fChoicesParentNode.getChoices().size()){
-				ModelOperationException.report(OperationMessages.TOO_HIGH_INDEX_PROBLEM);
+				ExceptionHelper.reportRuntimeException(OperationMessages.TOO_HIGH_INDEX_PROBLEM);
 			}
 
 			validateChoiceValue(fChoice);
@@ -114,7 +114,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 					"Choices of user defined type must follow Java enum defining rules.";
 		}
 
-		private void validateChoiceValue(ChoiceNode choice) throws ModelOperationException {
+		private void validateChoiceValue(ChoiceNode choice) {
 
 			if (choice.isAbstract() == false) {
 
@@ -128,7 +128,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 								getExtLanguageManager());
 
 				if(newValue == null){
-					ModelOperationException.report(PARTITION_VALUE_PROBLEM(choice.getValueString()));
+					ExceptionHelper.reportRuntimeException(PARTITION_VALUE_PROBLEM(choice.getValueString()));
 				}
 			}
 			else {

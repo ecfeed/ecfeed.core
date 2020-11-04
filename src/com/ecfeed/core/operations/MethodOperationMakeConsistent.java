@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -33,7 +32,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fMethodNode);
 			fMethodNode.replaceTestCases(fOriginalTestCases);
@@ -58,7 +57,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fMethodNode);
 

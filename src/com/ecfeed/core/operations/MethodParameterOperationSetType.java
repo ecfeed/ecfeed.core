@@ -32,7 +32,6 @@ import com.ecfeed.core.model.LabelCondition;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParameterCondition;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
@@ -94,7 +93,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			MethodNode methodNode = fMethodParameterNode.getMethod();
 
@@ -115,7 +114,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			markModelUpdated();
 		}
 
-		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
+		private void checkForDuplicateSignature(MethodNode oldMethodNode) {
 
 			List<String> parameterTypesInExtLanguage = 
 					MethodNodeHelper.getParameterTypes(oldMethodNode, getExtLanguageManager());
@@ -144,7 +143,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
 							classNode, foundMethodNode, false, getExtLanguageManager());
 
-			ModelOperationException.report(message);
+			ExceptionHelper.reportRuntimeException(message);
 		}
 
 		@Override
@@ -420,7 +419,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			}
 
 			@Override
-			public void execute() throws ModelOperationException{
+			public void execute() {
 
 				super.execute();
 				fMethodParameterNode.getMethod().replaceTestCases(fOriginalTestCases);

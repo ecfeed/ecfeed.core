@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.EStatementOperator;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -29,7 +28,7 @@ public class StatementOperationChangeOperator extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		fTarget.setOperator(fNewOperator);
 		markModelUpdated();
 	}

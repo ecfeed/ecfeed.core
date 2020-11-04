@@ -23,7 +23,6 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -46,7 +45,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fTarget);
 
@@ -103,7 +102,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 
@@ -161,7 +160,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 						method = remainingMethods.get(n);
 						for(int k = n+1; k < remainingMethods.size(); k++){
 							if(methods.get(method).equals(methods.get(remainingMethods.get(k)))){
-								ModelOperationException.report(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
+								ExceptionHelper.reportRuntimeException(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
 										method.getClassNode().getName(), method.getName(), method.getParameters().toString(),
 										remainingMethods.get(k).getParameters().toString()));
 							}
@@ -181,13 +180,13 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		adaptChoices(fTarget);
 	}
 
-	public void checkType(String newTypeInExtLanguage) throws ModelOperationException {
+	public void checkType(String newTypeInExtLanguage) {
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 		String message = extLanguageManager.verifyIsAllowedType(newTypeInExtLanguage);
 
 		if (message!= null) {
-			ModelOperationException.report(message);
+			ExceptionHelper.reportRuntimeException(message);
 		}
 	}
 

@@ -11,8 +11,8 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationAddParameter extends AbstractModelOperation {
@@ -45,7 +45,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fParametersParentNode);
 
@@ -56,13 +56,13 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		String parameterName = fAbstractParameterNode.getName();
 
 		if(fNewIndex < 0){
-			ModelOperationException.report(OperationMessages.NEGATIVE_INDEX_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.NEGATIVE_INDEX_PROBLEM);
 		}
 		if(fNewIndex > fParametersParentNode.getParameters().size()){
-			ModelOperationException.report(OperationMessages.TOO_HIGH_INDEX_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TOO_HIGH_INDEX_PROBLEM);
 		}
 		if(fParametersParentNode.findParameter(parameterName) != null){
-			ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+			ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
 		fParametersParentNode.addParameter(fAbstractParameterNode, fNewIndex);
@@ -93,7 +93,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 			setOneNodeToSelect(fParametersParentNode);
 			fOriginalIndex = fReversedParameter.getMyIndex();
 			fReversedTarget.removeParameter(fReversedParameter);

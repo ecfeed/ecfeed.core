@@ -13,13 +13,13 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodOperationAddTestCase extends AbstractModelOperation {
 
@@ -52,7 +52,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fMethodNode);
 
@@ -60,10 +60,10 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			fIndex = fMethodNode.getTestCases().size();
 		}
 		if(fTestCase.getName().matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false){
-			ModelOperationException.report(OperationMessages.TEST_CASE_NOT_ALLOWED);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 		if(fTestCase.updateReferences(fMethodNode) == false){
-			ModelOperationException.report(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
 		}
 
 		//following must be done AFTER references are updated
@@ -87,7 +87,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 								getExtLanguageManager());
 				
 				if(newValue == null){
-					ModelOperationException.report(OperationMessages.TEST_CASE_DATA_INCOMPATIBLE_WITH_METHOD);
+					ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_DATA_INCOMPATIBLE_WITH_METHOD);
 				}
 				choice.setValueString(newValue);
 			}

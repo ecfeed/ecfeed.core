@@ -38,7 +38,7 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) {
 
 
 			String nonQualifiedNameInIntrLangage = 
@@ -50,12 +50,12 @@ public class FactoryRenameOperation {
 
 			for (String token : tokens) {
 				if(JavaLanguageHelper.isJavaKeyword(token)){
-					ModelOperationException.report(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
+					ExceptionHelper.reportRuntimeException(CLASS_NAME_CONTAINS_KEYWORD_PROBLEM);
 				}
 			}
 
 			if(getOwnNode().getSibling(newNameInIntrLanguage) != null){
-				ModelOperationException.report(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
+				ExceptionHelper.reportRuntimeException(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
 			}
 		}
 	}
@@ -78,7 +78,7 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) {
 
 			List<String> problems = new ArrayList<String>();
 
@@ -95,7 +95,7 @@ public class FactoryRenameOperation {
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);
-				ModelOperationException.report(StringHelper.convertToMultilineString(problems));
+				ExceptionHelper.reportRuntimeException(StringHelper.convertToMultilineString(problems));
 			}
 		}
 	}
@@ -117,14 +117,14 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) {
 
 			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
-				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
+				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
 			if(target.getParametersParent().findParameter(newNameInExtLanguage) != null){
-				ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
 	}
@@ -144,12 +144,12 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newNameInExtLanguage) throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) {
 
 			MethodParameterNode target = (MethodParameterNode)getOwnNode();
 
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
-				ModelOperationException.report(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
+				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
 
 			MethodNode method = target.getMethod();
@@ -158,7 +158,7 @@ public class FactoryRenameOperation {
 			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
 
 			if(method.findParameter(newNameInIntrLanguage) != null){
-				ModelOperationException.report(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
 	}
@@ -180,14 +180,14 @@ public class FactoryRenameOperation {
 		}
 
 		@Override
-		protected void verifyNewName(String newNameInExtLanguage)throws ModelOperationException {
+		protected void verifyNewName(String newNameInExtLanguage) {
 
 			String newNameInIntrLanguage = newNameInExtLanguage;
 
 			final AbstractNode ownNode = getOwnNode();
 
 			if(ownNode.getSibling(newNameInIntrLanguage) != null){
-				ModelOperationException.report(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
+				ExceptionHelper.reportRuntimeException(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
 			}
 		}
 	}

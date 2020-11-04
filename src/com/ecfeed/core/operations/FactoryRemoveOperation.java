@@ -21,19 +21,19 @@ import com.ecfeed.core.model.GlobalParametersParentNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryRemoveOperation {
 
 	private static class UnsupportedModelOperation implements IModelOperation{
 		@Override
-		public void execute() throws ModelOperationException {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+		public void execute() {
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 		}
 
 		@Override

@@ -10,12 +10,13 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 
 public class ModelConverter {
 
 	private static final String INVALID_MODEL_VERSION = "Invalid model version.";
 
-	public static RootNode convertToCurrentVersion(RootNode model) throws ModelOperationException {
+	public static RootNode convertToCurrentVersion(RootNode model) {
 		int softwareVersion = ModelVersionDistributor.getCurrentSoftwareVersion();
 		int modelVersion = model.getModelVersion();
 
@@ -25,7 +26,7 @@ public class ModelConverter {
 		return model;
 	}
 
-	private static RootNode convertToNextVersion(RootNode model, int fromVersion) throws ModelOperationException {
+	private static RootNode convertToNextVersion(RootNode model, int fromVersion) {
 		switch (fromVersion) {
 		case 0:
 			model = convertFrom0To1(model);
@@ -37,7 +38,7 @@ public class ModelConverter {
 			model = convertFrom2To3(model);
 			break;
 		default:
-			ModelOperationException.report(INVALID_MODEL_VERSION); 
+			ExceptionHelper.reportRuntimeException(INVALID_MODEL_VERSION); 
 			break;
 		}
 

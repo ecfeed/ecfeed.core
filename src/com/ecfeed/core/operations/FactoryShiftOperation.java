@@ -20,10 +20,10 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryShiftOperation {
@@ -51,7 +51,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof GlobalParameterNode){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -63,7 +63,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof MethodNode){
 				return new GenericShiftOperation(node.getMethods(), fShifted, fUp, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -81,7 +81,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof TestSuiteNode){
 				return new GenericShiftOperation(node.getTestSuites(), fShifted, fUp, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -90,7 +90,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -99,25 +99,25 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 		
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -126,7 +126,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 	}
@@ -151,7 +151,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof GlobalParameterNode){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -163,7 +163,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof GlobalParameterNode){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -178,7 +178,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof TestCaseNode){
 				return new GenericShiftOperation(node.getTestCases(), fShifted, fShift, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -187,7 +187,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -196,25 +196,25 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 		
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
@@ -223,7 +223,7 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
 			}
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 	}
@@ -231,7 +231,7 @@ public class FactoryShiftOperation {
 	public static GenericShiftOperation getShiftOperation(
 			List<? extends AbstractNode> shifted, 
 			boolean up,
-			IExtLanguageManager extLanguageManager) throws ModelOperationException{
+			IExtLanguageManager extLanguageManager) {
 		
 		AbstractNode parent = getParent(shifted);
 		
@@ -240,20 +240,20 @@ public class FactoryShiftOperation {
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) throws ModelOperationException {
+			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) {
 		AbstractNode parent = getParent(shifted);
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguageManager));
 	}
 
-	private static GenericShiftOperation getShiftOperation(AbstractNode parent, List<? extends AbstractNode> shifted, IModelVisitor provider) throws ModelOperationException{
+	private static GenericShiftOperation getShiftOperation(AbstractNode parent, List<? extends AbstractNode> shifted, IModelVisitor provider) {
 		if(parent == null || haveTheSameType(shifted) == false){
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 		}
 		try{
 			return (GenericShiftOperation)parent.accept(provider);
 		}
 		catch(Exception e){
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 	}

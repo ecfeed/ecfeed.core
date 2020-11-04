@@ -12,9 +12,9 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodOperationAddConstraint extends AbstractModelOperation {
 
@@ -36,7 +36,7 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fMethodNode);
 
@@ -44,10 +44,10 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 			fIndex = fMethodNode.getConstraintNodes().size();
 		}
 		if(fConstraint.getName().matches(RegexHelper.REGEX_CONSTRAINT_NODE_NAME) == false){
-			ModelOperationException.report(OperationMessages.CONSTRAINT_NOT_ALLOWED);
+			ExceptionHelper.reportRuntimeException(OperationMessages.CONSTRAINT_NOT_ALLOWED);
 		}
 		if(fConstraint.updateReferences(fMethodNode) == false){
-			ModelOperationException.report(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);
 		}
 		fMethodNode.addConstraint(fConstraint, fIndex);
 		markModelUpdated();

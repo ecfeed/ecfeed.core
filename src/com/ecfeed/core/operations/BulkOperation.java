@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -32,7 +31,7 @@ public class BulkOperation extends AbstractModelOperation {
 	private AbstractNode fNodeToSelectAfterReverseOperation;
 
 	protected interface ICheckOperation {
-		public void check() throws ModelOperationException;
+		public void check();
 	}
 
 	public BulkOperation(
@@ -90,7 +89,7 @@ public class BulkOperation extends AbstractModelOperation {
 	}	
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		Set<String> errors = new HashSet<String>();
 		fExecutedOperations.clear();
@@ -124,7 +123,7 @@ public class BulkOperation extends AbstractModelOperation {
 				message += "\n" + error;
 			}
 
-			ModelOperationException.report(message);
+			ExceptionHelper.reportRuntimeException(message);
 		}
 	}
 

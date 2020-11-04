@@ -11,9 +11,9 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
@@ -32,10 +32,10 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		String convertedValue = fTypeAdapter.adapt(fNewValue, false, ERunMode.QUIET, getExtLanguageManager());
 		if(convertedValue == null){
-			ModelOperationException.report(OperationMessages.CATEGORY_DEFAULT_VALUE_REGEX_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.CATEGORY_DEFAULT_VALUE_REGEX_PROBLEM);
 		}
 
 		fTarget.setDefaultValueString(convertedValue);

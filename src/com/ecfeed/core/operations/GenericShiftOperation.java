@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericShiftOperation extends AbstractModelOperation {
@@ -47,7 +46,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setNodesToSelect();
 		shiftElements(fCollection, indices(fCollection, fToBeShifted), fShiftSize);

@@ -12,7 +12,6 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationRemoveConstraint extends AbstractModelOperation {
@@ -29,7 +28,7 @@ public class MethodOperationRemoveConstraint extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		
 		setOneNodeToSelect(fMethodNode);
 		fIndex = fConstraint.getMyIndex();

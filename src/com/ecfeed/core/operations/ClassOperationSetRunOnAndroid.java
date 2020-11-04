@@ -10,7 +10,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ClassOperationSetRunOnAndroid extends AbstractModelOperation {
@@ -27,7 +26,7 @@ public class ClassOperationSetRunOnAndroid extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fClassNode);
 		fClassNode.setRunOnAndroid(fNewValue);

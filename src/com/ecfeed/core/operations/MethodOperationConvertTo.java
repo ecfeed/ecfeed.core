@@ -17,7 +17,7 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationConvertTo extends AbstractModelOperation {
@@ -34,7 +34,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTargetMethodNode);
 
@@ -49,13 +49,13 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 				methodParameters, 
 				getExtLanguageManager()) != null) {
 
-			ModelOperationException.report(
+			ExceptionHelper.reportRuntimeException(
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
 							classNode, fTargetMethodNode, false, getExtLanguageManager()));
 		}
 
 		if(fTargetMethodNode.getParameterTypes().equals(fSourceMethodNode.getParameterTypes()) == false){
-			ModelOperationException.report(ClassNodeHelper.METHODS_INCOMPATIBLE_PROBLEM);
+			ExceptionHelper.reportRuntimeException(ClassNodeHelper.METHODS_INCOMPATIBLE_PROBLEM);
 		}
 
 		fTargetMethodNode.setName(methodName);

@@ -13,7 +13,6 @@ package com.ecfeed.core.operations;
 import java.util.Set;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationAddLabel extends AbstractModelOperation {
@@ -29,7 +28,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fTarget);
 			fTarget.removeLabel(fLabel);
@@ -57,7 +56,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 		fTarget.addLabel(fLabel);

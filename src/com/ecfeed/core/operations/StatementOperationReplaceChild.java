@@ -11,8 +11,8 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationReplaceChild extends AbstractModelOperation {
@@ -29,9 +29,9 @@ public class StatementOperationReplaceChild extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		if(fTarget == null){
-			ModelOperationException.report(OperationMessages.NULL_POINTER_TARGET);
+			ExceptionHelper.reportRuntimeException(OperationMessages.NULL_POINTER_TARGET);
 		}
 		fTarget.replaceChild(fCurrentChild, fNewChild);
 		markModelUpdated();

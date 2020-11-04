@@ -10,7 +10,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -38,7 +37,7 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		
 		setOneNodeToSelect(fAbstractNode);
 		fAbstractNode.setPropertyValue(fPropertyId, fNewValue);

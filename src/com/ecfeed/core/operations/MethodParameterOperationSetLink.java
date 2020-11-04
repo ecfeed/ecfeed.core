@@ -16,7 +16,7 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterOperationSetLink extends BulkOperation {
@@ -33,7 +33,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 			}
 
 			@Override
-			public void execute() throws ModelOperationException {
+			public void execute() {
 				setOneNodeToSelect(fTarget);
 				fTarget.setLink(fCurrentLink);
 			}
@@ -52,7 +52,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fTarget);
 			
@@ -62,7 +62,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 			if(method.checkDuplicate(fTarget.getMyIndex(), fNewLink.getType())){
 				
-				ModelOperationException.report(
+				ExceptionHelper.reportRuntimeException(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
