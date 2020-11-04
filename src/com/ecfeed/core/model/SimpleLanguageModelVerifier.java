@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.Pair;
 
 
-public class SimpleLanguageModelVerifier { // TODO - SIMPLE-VIEW - unit tests
+public class SimpleLanguageModelVerifier {
 
 	public static String checkIsModelCompatibleWithSimpleLanguage(RootNode rootNode) {
 
