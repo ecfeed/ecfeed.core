@@ -655,7 +655,6 @@ public class MethodNodeHelperTest {
 		methodNode.addTestCase(testCase2);
 
 		List<TestSuiteNode> testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-
 		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
 
 		// the second time - result should be the same
@@ -673,6 +672,12 @@ public class MethodNodeHelperTest {
 
 		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
 		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
+
+		// removing the third test case
+		methodNode.removeTestCase(testCase3);
+
+		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
 	}
 
 	public void checkTestSuites1(List<TestSuiteNode> testSuiteNodes, TestCaseNode testCase1, TestCaseNode testCase2) {
