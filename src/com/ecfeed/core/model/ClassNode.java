@@ -30,6 +30,12 @@ public class ClassNode extends GlobalParametersParentNode {
 		children.addAll(fMethods);
 		return children;
 	}
+	
+	@Override
+	public int getChildrenCount() {
+		
+		return super.getChildrenCount() + fMethods.size();
+	}
 
 	@Override
 	public ClassNode makeClone(){

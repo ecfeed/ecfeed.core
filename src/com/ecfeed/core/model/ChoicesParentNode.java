@@ -83,9 +83,15 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return fChoices;
 	}
 
-	public int getChoiceCount() {
+	public int getChoiceCount() { // TODO SIMPLE-VIEW remove
 
 		return getChoices().size();
+	}
+
+	@Override
+	public int getChildrenCount() {
+		
+		return fChoices.size();
 	}
 
 	public List<ChoiceNode> getChoicesWithCopies() {

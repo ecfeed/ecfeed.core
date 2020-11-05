@@ -143,6 +143,12 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		return fParameters;
 	}
+	
+	@Override
+	public int getChildrenCount() {
+		
+		return fParameters.size();
+	}
 
 	@Override
 	public boolean isMatch(AbstractNode node) {

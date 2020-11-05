@@ -120,6 +120,8 @@ public abstract class AbstractNode{
 		return EMPTY_CHILDREN_ARRAY;
 	}
 
+	public abstract int getChildrenCount();
+	
 	public boolean hasChildren() {
 
 		if(getChildren() != null) {

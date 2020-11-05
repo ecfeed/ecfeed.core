@@ -55,6 +55,12 @@ public class TestSuiteNode extends AbstractNode {
 
 		return fTestCaseNodes;
 	}
+	
+	@Override
+	public int getChildrenCount() {
+		
+		return fTestCaseNodes.size();
+	}
 
 	public void setSuiteName(String suiteName) {
 		fSuiteName = suiteName;

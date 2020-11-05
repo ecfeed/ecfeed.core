@@ -53,6 +53,11 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	@Override
+	public int getChildrenCount() {
+		return 0;
+	}
+	
+	@Override
 	public ConstraintNode makeClone() {
 
 		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.getCopy(), getModelChangeRegistrator() );

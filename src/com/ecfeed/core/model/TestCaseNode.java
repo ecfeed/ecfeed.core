@@ -41,6 +41,11 @@ public class TestCaseNode extends AbstractNode {
 	}
 	
 	@Override
+	public int getChildrenCount() {
+		return 0;
+	}
+	
+	@Override
 	public TestCaseNode makeClone(){
 		List<ChoiceNode> testdata = new ArrayList<>();
 		for(ChoiceNode choice : fTestData){
