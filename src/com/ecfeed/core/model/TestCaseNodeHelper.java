@@ -16,13 +16,18 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class TestCaseNodeHelper {
 
-	public static String createSignature(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignature(
+			TestCaseNode testCaseNode, boolean displayTestSuiteName, IExtLanguageManager extLanguageManager) {
 
 		String methodName = getMethodName(testCaseNode, extLanguageManager);
 
-		String testCaseNodeName = testCaseNode.getName();
+		String result = "";
 
-		String result = "[" + testCaseNodeName + "]";
+		if (displayTestSuiteName) { 
+			String testCaseNodeName = testCaseNode.getName();
+
+			result += "[" + testCaseNodeName + "]";
+		}
 
 		if (methodName != null) {
 			result += " " + methodName + "(";

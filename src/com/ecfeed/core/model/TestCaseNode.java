@@ -37,7 +37,7 @@ public class TestCaseNode extends AbstractNode {
 	@Override
 	public String toString() {
 
-		return TestCaseNodeHelper.createSignature(this, new ExtLanguageManagerForJava());
+		return TestCaseNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava());
 	}
 	
 	@Override
