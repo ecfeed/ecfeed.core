@@ -29,6 +29,11 @@ public class AbstractNodeTest{
 		}
 
 		@Override
+		public int getChildrenCount() {
+			return 0;
+		}
+
+		@Override
 		public AbstractNode makeClone() {
 			return null;
 		}
