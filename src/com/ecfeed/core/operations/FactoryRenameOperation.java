@@ -118,6 +118,12 @@ public class FactoryRenameOperation {
 
 		@Override
 		protected void verifyNewName(String newNameInExtLanguage) {
+			
+			String errorMessage = AbstractParameterNodeHelper.validateParameterName(newNameInExtLanguage, fExtLanguageManager);
+			
+			if (errorMessage != null) {
+				ExceptionHelper.reportRuntimeException(errorMessage);
+			}
 
 			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){

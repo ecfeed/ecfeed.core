@@ -23,6 +23,13 @@ public abstract class AbstractParameterNodeHelper {
 		return name;
 	}
 	
+	public static String validateParameterName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
+
+		String errorMessage = extLanguageManager.verifySeparators(nameInExternalLanguage);
+
+		return errorMessage;
+	}
+	
 	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = abstractParameterNode.getType();
