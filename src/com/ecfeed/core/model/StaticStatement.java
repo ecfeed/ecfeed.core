@@ -117,7 +117,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 		return false;
 	}
 

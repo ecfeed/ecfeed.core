@@ -2,6 +2,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.RangeHelper;
@@ -74,9 +75,13 @@ public class ConditionHelper {
 	}
 
 	public static void addRelStatementToMesageStack(
-			RelationStatement relationStatement, MessageStack messageStack) {
+			RelationStatement relationStatement, 
+			MessageStack messageStack,
+			IExtLanguageManager extLanguageManager) {
 
-		String message = createMessage("Statement", relationStatement.toString());
+		String message = createMessage(
+				"Statement", 
+				AbstractStatementHelper.createSignature(relationStatement, extLanguageManager));
 		
 		messageStack.addMessage(message);
 	}

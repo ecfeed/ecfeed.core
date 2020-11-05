@@ -19,7 +19,7 @@ public class ChoiceCondition implements IStatementCondition {
 
 	private ChoiceNode fRightChoice;
 	private RelationStatement fParentRelationStatement;
-	private IExtLanguageManager fExtLanguageManager;
+	private IExtLanguageManager fExtLanguageManager; // TODO SIMPLE-VIEW remove ?
 
 	public ChoiceCondition(
 			ChoiceNode rightChoice, 
@@ -211,7 +211,10 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> testDomain, MessageStack messageStack) {
+	public boolean isAmbiguous(
+			List<List<ChoiceNode>> testDomain, 
+			MessageStack messageStack, 
+			IExtLanguageManager extLanguageManager) {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);
 
@@ -222,7 +225,7 @@ public class ChoiceCondition implements IStatementCondition {
 
 		for (ChoiceNode leftChoiceNode : choicesForParameter) {
 
-			if (isChoiceAmbiguous(leftChoiceNode, relation, substituteType, messageStack, fExtLanguageManager)) {
+			if (isChoiceAmbiguous(leftChoiceNode, relation, substituteType, messageStack, extLanguageManager)) {
 				return true;
 			}
 		}
@@ -249,10 +252,13 @@ public class ChoiceCondition implements IStatementCondition {
 				return false;
 			}
 
+			String leftSignature = ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager);
+			String rightSignature = ChoiceNodeHelper.createSignature(fRightChoice, extLanguageManager);
+			
 			ConditionHelper.addValuesMessageToStack(
-					ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager), 
+					leftSignature, 
 					relation, 
-					ChoiceNodeHelper.createSignature(fRightChoice, extLanguageManager),
+					rightSignature,
 					messageStack);
 
 			return true;

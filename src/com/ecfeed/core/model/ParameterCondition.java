@@ -229,7 +229,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);
 

@@ -273,10 +273,11 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack) {
+	public boolean isAmbiguous(
+			List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 
 		for (AbstractStatement statement : fStatements) {
-			if (statement.isAmbiguous(values, messageStack)) {
+			if (statement.isAmbiguous(values, messageStack, extLanguageManager)) {
 				return true;
 			}
 		}
