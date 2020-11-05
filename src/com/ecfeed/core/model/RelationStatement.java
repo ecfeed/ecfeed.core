@@ -19,11 +19,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	private MethodParameterNode fLeftParameter;
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
+	private IExtLanguageManager fExtLanguageManager;
 
 	public static RelationStatement createStatementWithLabelCondition(
-			MethodParameterNode parameter, EMathRelation relation, String label) {
+			MethodParameterNode parameter, 
+			EMathRelation relation, 
+			String label,
+			IExtLanguageManager extLanguageManager) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = new RelationStatement(parameter, relation, null, extLanguageManager);
 
 		IStatementCondition condition = new LabelCondition(label, relationStatement);
 		relationStatement.setCondition(condition);
@@ -34,11 +38,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public static RelationStatement createStatementWithChoiceCondition(
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
-			ChoiceNode choiceNode) {
+			ChoiceNode choiceNode,
+			IExtLanguageManager extLanguageManager) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = new RelationStatement(parameter, relation, null, extLanguageManager);
 
-		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement);
+		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement, extLanguageManager);
 		
 		relationStatement.setCondition(condition);
 
@@ -46,20 +51,26 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createStatementWithParameterCondition(
-			MethodParameterNode parameter, EMathRelation relation, MethodParameterNode rightParameter) {
+			MethodParameterNode parameter, 
+			EMathRelation relation, 
+			MethodParameterNode rightParameter,
+			IExtLanguageManager extLanguageManager) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = new RelationStatement(parameter, relation, null, extLanguageManager);
 
-		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement);
+		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement, extLanguageManager);
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
 	}	
 
 	public static RelationStatement createStatementWithValueCondition(
-			MethodParameterNode parameter, EMathRelation relation, String textValue) {
+			MethodParameterNode parameter, 
+			EMathRelation relation, 
+			String textValue, 
+			IExtLanguageManager extLanguageManager) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = new RelationStatement(parameter, relation, null, extLanguageManager);
 
 		IStatementCondition condition = new ValueCondition(textValue, relationStatement);
 		relationStatement.setCondition(condition);
@@ -70,13 +81,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	private RelationStatement(
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
-			IStatementCondition condition) {
+			IStatementCondition condition,
+			IExtLanguageManager extLanguageManager) {
 
 		super(parameter.getModelChangeRegistrator());
 
 		fLeftParameter = parameter;
 		fRelation = relation;
 		fRightCondition = condition;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -147,7 +160,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public RelationStatement getCopy() {
 
-		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.getCopy());
+		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.getCopy(), fExtLanguageManager);
 	}
 
 	@Override
@@ -260,11 +273,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public void setCondition(ChoiceNode choice) {
-		fRightCondition = new ChoiceCondition(choice, this);
+		fRightCondition = new ChoiceCondition(choice, this, fExtLanguageManager);
 	}
 
 	public void setCondition(MethodParameterNode parameter, ChoiceNode choice) {
-		fRightCondition = new ChoiceCondition(choice, this);
+		fRightCondition = new ChoiceCondition(choice, this, fExtLanguageManager);
 	}
 
 	public IStatementCondition getCondition() {

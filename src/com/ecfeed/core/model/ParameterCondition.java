@@ -20,11 +20,16 @@ public class ParameterCondition implements IStatementCondition {
 
 	private MethodParameterNode fRightParameterNode;
 	private RelationStatement fParentRelationStatement;
+	private IExtLanguageManager fExtLanguageManager;
 
-	public ParameterCondition(MethodParameterNode rightParameter, RelationStatement parentRelationStatement) {
+	public ParameterCondition(
+			MethodParameterNode rightParameter, 
+			RelationStatement parentRelationStatement,
+			IExtLanguageManager extLanguageManager) {
 
 		fRightParameterNode = rightParameter;
 		fParentRelationStatement = parentRelationStatement;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -147,7 +152,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public ParameterCondition getCopy() {
 
-		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement);
+		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement, fExtLanguageManager);
 	}
 
 	@Override
@@ -237,7 +242,7 @@ public class ParameterCondition implements IStatementCondition {
 		EMathRelation relation = fParentRelationStatement.getRelation();
 
 		return isAmbiguousForLeftAndRightChoices(
-				leftChoices, rightChoices, relation, substituteType, messageStack);					
+				leftChoices, rightChoices, relation, substituteType, fExtLanguageManager, messageStack);					
 	}
 
 	private boolean isAmbiguousForLeftAndRightChoices(
@@ -245,13 +250,14 @@ public class ParameterCondition implements IStatementCondition {
 			List<ChoiceNode> rightChoices,
 			EMathRelation relation,
 			String substituteType,
+			IExtLanguageManager extLanguageManager,
 			MessageStack messageStack) {
 
 		for (ChoiceNode leftChoiceNode : leftChoices) {
 			for (ChoiceNode rightChoiceNode : rightChoices) {
 
 				if (isChoicesPairAmbiguous(
-						leftChoiceNode, rightChoiceNode, relation, substituteType, messageStack)) {
+						leftChoiceNode, rightChoiceNode, relation, substituteType, extLanguageManager, messageStack)) {
 					return true;
 				}
 			}
@@ -265,6 +271,7 @@ public class ParameterCondition implements IStatementCondition {
 			ChoiceNode rightChoiceNode,
 			EMathRelation relation,
 			String substituteType,
+			IExtLanguageManager extLanguageManager,
 			MessageStack messageStack) {
 
 		if (areBothChoicesFixed(leftChoiceNode, rightChoiceNode)) {
@@ -276,7 +283,10 @@ public class ParameterCondition implements IStatementCondition {
 				fParentRelationStatement, relation, substituteType)) {
 
 			ConditionHelper.addValuesMessageToStack(
-					leftChoiceNode.toString(), relation, rightChoiceNode.toString(), messageStack);
+					ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager), 
+					relation, 
+					ChoiceNodeHelper.createSignature(rightChoiceNode, extLanguageManager), 
+					messageStack);
 
 			return true;
 		}

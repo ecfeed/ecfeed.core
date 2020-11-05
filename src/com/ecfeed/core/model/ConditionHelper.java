@@ -68,19 +68,25 @@ public class ConditionHelper {
 			return;
 		}
 
-		messageStack.addMessage(createMessage("Values", left + relation.toString() + right));
+		String message = createMessage("Values", left + relation.toString() + right);
+		
+		messageStack.addMessage(message);
 	}
 
 	public static void addRelStatementToMesageStack(
 			RelationStatement relationStatement, MessageStack messageStack) {
 
-		messageStack.addMessage(createMessage("Statement", relationStatement.toString()));
+		String message = createMessage("Statement", relationStatement.toString());
+		
+		messageStack.addMessage(message);
 	}
 
 	public static void addConstraintNameToMesageStack(
 			String constraintName, MessageStack messageStack) {
 
-		messageStack.addMessage(createMessage("Constraint", constraintName.toString()));
+		String message = createMessage("Constraint", constraintName.toString());
+		
+		messageStack.addMessage(message);
 	}
 
 	public static String createMessage(String name, String value) {

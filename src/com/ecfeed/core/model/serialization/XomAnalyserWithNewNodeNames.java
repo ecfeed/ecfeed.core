@@ -10,7 +10,13 @@
 
 package com.ecfeed.core.model.serialization;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
+
 public abstract class XomAnalyserWithNewNodeNames extends XomAnalyser {
+
+	public XomAnalyserWithNewNodeNames(IExtLanguageManager extLanguageManager) {
+		super(extLanguageManager);
+	}
 
 	@Override
 	protected String getChoiceNodeName() {

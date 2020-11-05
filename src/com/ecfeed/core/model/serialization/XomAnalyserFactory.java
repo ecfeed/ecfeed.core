@@ -10,15 +10,20 @@
 
 package com.ecfeed.core.model.serialization;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
+
 public class XomAnalyserFactory {
 
-	public static XomAnalyser createXomAnalyser(int version) {
+	public static XomAnalyser createXomAnalyser(int version, IExtLanguageManager extLanguageManager) {
+
 		if (version == 0) {
-			return new XomAnalyserVersion0();
+			return new XomAnalyserVersion0(extLanguageManager);
 		}
+
 		if (version == 1) {
-			return new XomAnalyserVersion1();
+			return new XomAnalyserVersion1(extLanguageManager);
 		}
-		return new XomAnalyserVersion3();
+
+		return new XomAnalyserVersion3(extLanguageManager);
 	}
 }

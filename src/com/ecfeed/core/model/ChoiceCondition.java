@@ -19,11 +19,16 @@ public class ChoiceCondition implements IStatementCondition {
 
 	private ChoiceNode fRightChoice;
 	private RelationStatement fParentRelationStatement;
+	private IExtLanguageManager fExtLanguageManager;
 
-	public ChoiceCondition(ChoiceNode rightChoice, RelationStatement parentRelationStatement) {
+	public ChoiceCondition(
+			ChoiceNode rightChoice, 
+			RelationStatement parentRelationStatement, 
+			IExtLanguageManager extLanguageManager) {
 
 		fRightChoice = rightChoice;
 		fParentRelationStatement = parentRelationStatement;
+		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -47,7 +52,7 @@ public class ChoiceCondition implements IStatementCondition {
 
 	@Override
 	public ChoiceCondition getCopy() {
-		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement);
+		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement, fExtLanguageManager);
 	}
 
 	@Override
@@ -109,13 +114,13 @@ public class ChoiceCondition implements IStatementCondition {
 
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
-		
+
 		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
 		choices.add(fRightChoice);
-		
+
 		return choices;
 	}
-	
+
 	public ChoiceNode getRightChoice() {
 		return fRightChoice;
 	}
@@ -217,7 +222,7 @@ public class ChoiceCondition implements IStatementCondition {
 
 		for (ChoiceNode leftChoiceNode : choicesForParameter) {
 
-			if (isChoiceAmbiguous(leftChoiceNode, relation, substituteType, messageStack)) {
+			if (isChoiceAmbiguous(leftChoiceNode, relation, substituteType, messageStack, fExtLanguageManager)) {
 				return true;
 			}
 		}
@@ -229,22 +234,26 @@ public class ChoiceCondition implements IStatementCondition {
 			ChoiceNode leftChoiceNode,
 			EMathRelation relation,
 			String substituteType,
-			MessageStack messageStack) {
-		
+			MessageStack messageStack,
+			IExtLanguageManager extLanguageManager) {
+
 		if (!leftChoiceNode.isRandomizedValue()) {
 			return false;
 		}
-		
+
 		if (ConditionHelper.isRandomizedChoiceAmbiguous(
 				leftChoiceNode, fRightChoice.getValueString(), 
 				fParentRelationStatement, relation, substituteType)) {
-				
+
 			if (leftChoiceNode.equals(fRightChoice)) {
 				return false;
 			}
-			
+
 			ConditionHelper.addValuesMessageToStack(
-					leftChoiceNode.toString(), relation, fRightChoice.toString(), messageStack);
+					ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager), 
+					relation, 
+					ChoiceNodeHelper.createSignature(fRightChoice, extLanguageManager),
+					messageStack);
 
 			return true;
 		}
