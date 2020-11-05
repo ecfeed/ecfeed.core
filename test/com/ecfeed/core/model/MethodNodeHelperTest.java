@@ -656,12 +656,12 @@ public class MethodNodeHelperTest {
 
 		List<TestSuiteNode> testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
 
-		checkTestSuites1(testCase1, testCase2, testSuiteNodes);
+		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
 
 		// the second time - result should be the same
 
 		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-		checkTestSuites1(testCase1, testCase2, testSuiteNodes);
+		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
 
 		// the third, different test case
 
@@ -675,14 +675,20 @@ public class MethodNodeHelperTest {
 		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
 	}
 
-	public void checkTestSuites1(TestCaseNode testCase1, TestCaseNode testCase2, List<TestSuiteNode> testSuiteNodes) {
+	public void checkTestSuites1(List<TestSuiteNode> testSuiteNodes, TestCaseNode testCase1, TestCaseNode testCase2) {
 
 		assertEquals(1, testSuiteNodes.size());
+
 		TestSuiteNode testSuiteNode = testSuiteNodes.get(0);
 		List<TestCaseNode> testCaseNodes = testSuiteNode.getChildren();
 
 		assertEquals(testCase1, testCaseNodes.get(0));
 		assertEquals(testCase2, testCaseNodes.get(1));
+
+		String testSuiteName = testSuiteNode.getName();
+
+		assertEquals(testSuiteName, testCase1.getName());
+		assertEquals(testSuiteName, testCase2.getName());
 	}
 
 	public void checkTestSuites2(

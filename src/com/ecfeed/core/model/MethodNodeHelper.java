@@ -455,25 +455,26 @@ public class MethodNodeHelper {
 		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
 
 		TestSuiteNode testSuiteNode;
-		for (String testSuite : testSuiteNames) {
+		for (String testSuiteName : testSuiteNames) {
 
-			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuite);
+			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuiteName);
+
 			if (existingNode.isPresent()) {
 				testSuiteNode = existingNode.get();
 				testSuiteNode.getTestCaseNodes().clear();
 			} else {
 				testSuiteNode = new TestSuiteNode();
-				testSuiteNode.setSuiteName(testSuite);
+				testSuiteNode.setSuiteName(testSuiteName);
 				testSuiteNode.setParent(method);
 				testSuites.add(testSuiteNode);
 			}
 
-			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuite);
+			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
 			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
-				testSuiteNode.setName(testSuite + " (" + testCasesSuite.size() + ")" + " - Display limit exceeded" );
+				testSuiteNode.setName(testSuiteName + " - Display limit exceeded" );
 			} else {
 				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
-				testSuiteNode.setName(testSuite + " (" + testCasesSuite.size() + ")");
+				testSuiteNode.setName(testSuiteName);
 			}
 		}
 
