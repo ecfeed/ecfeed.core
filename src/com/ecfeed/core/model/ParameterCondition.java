@@ -20,16 +20,13 @@ public class ParameterCondition implements IStatementCondition {
 
 	private MethodParameterNode fRightParameterNode;
 	private RelationStatement fParentRelationStatement;
-	private IExtLanguageManager fExtLanguageManager;
 
 	public ParameterCondition(
 			MethodParameterNode rightParameter, 
-			RelationStatement parentRelationStatement,
-			IExtLanguageManager extLanguageManager) {
+			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
 		fParentRelationStatement = parentRelationStatement;
-		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -152,7 +149,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public ParameterCondition getCopy() {
 
-		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement, fExtLanguageManager);
+		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement);
 	}
 
 	@Override
@@ -242,7 +239,7 @@ public class ParameterCondition implements IStatementCondition {
 		EMathRelation relation = fParentRelationStatement.getRelation();
 
 		return isAmbiguousForLeftAndRightChoices(
-				leftChoices, rightChoices, relation, substituteType, fExtLanguageManager, messageStack);					
+				leftChoices, rightChoices, relation, substituteType, extLanguageManager, messageStack);					
 	}
 
 	private boolean isAmbiguousForLeftAndRightChoices(

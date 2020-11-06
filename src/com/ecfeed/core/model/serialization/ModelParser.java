@@ -32,7 +32,6 @@ import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.IExtLanguageManager;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -43,10 +42,8 @@ public class ModelParser {
 
 	Builder fBuilder = new Builder();
 	XomAnalyser fXomAnalyser = null;
-	IExtLanguageManager fExtLanguageManager;
 	
-	public ModelParser(IExtLanguageManager extLanguageManager) {
-		fExtLanguageManager = extLanguageManager;
+	public ModelParser() {
 	}
 
 	public RootNode parseModel(
@@ -88,7 +85,7 @@ public class ModelParser {
 
 	private void createXomAnalyser(int version) throws ParserException {
 		if (fXomAnalyser == null) {
-			fXomAnalyser = XomAnalyserFactory.createXomAnalyser(version, fExtLanguageManager);
+			fXomAnalyser = XomAnalyserFactory.createXomAnalyser(version);
 		}			
 	}
 

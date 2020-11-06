@@ -40,10 +40,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import nu.xom.Element;
-import nu.xom.Elements;
-import nu.xom.Node;
-
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
@@ -67,14 +63,16 @@ import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.BooleanHolder;
 import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.StringHolder;
+
+import nu.xom.Element;
+import nu.xom.Elements;
+import nu.xom.Node;
 
 public abstract class XomAnalyser {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
-	private IExtLanguageManager fExtLanguageManager;
 
 	protected abstract int getModelVersion();
 	protected abstract String getChoiceNodeName();
@@ -83,8 +81,7 @@ public abstract class XomAnalyser {
 	protected abstract String getParameterNodeName();
 	protected abstract String getStatementParameterAttributeName();
 
-	public XomAnalyser(IExtLanguageManager extLanguageManager) {
-		fExtLanguageManager = extLanguageManager;
+	public XomAnalyser() {
 	}
 	
 	public RootNode parseRoot(
@@ -647,7 +644,7 @@ public abstract class XomAnalyser {
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 		EMathRelation relation = getRelation(relationName, errorList);
 
-		return RelationStatement.createStatementWithChoiceCondition(parameter, relation, choice, fExtLanguageManager);
+		return RelationStatement.createStatementWithChoiceCondition(parameter, relation, choice);
 	}
 
 	public RelationStatement parseParameterStatement(
@@ -674,7 +671,7 @@ public abstract class XomAnalyser {
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 		EMathRelation relation = getRelation(relationName, errorList);
 
-		return RelationStatement.createStatementWithParameterCondition(leftParameterNode, relation, rightParameterNode, fExtLanguageManager);
+		return RelationStatement.createStatementWithParameterCondition(leftParameterNode, relation, rightParameterNode);
 	}
 
 	public RelationStatement parseValueStatement(
@@ -695,7 +692,7 @@ public abstract class XomAnalyser {
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 		EMathRelation relation = getRelation(relationName, errorList);
 
-		return RelationStatement.createStatementWithValueCondition(leftParameterNode, relation, text, fExtLanguageManager);
+		return RelationStatement.createStatementWithValueCondition(leftParameterNode, relation, text);
 	}
 
 	public RelationStatement parseLabelStatement(
@@ -714,7 +711,7 @@ public abstract class XomAnalyser {
 		}
 		EMathRelation relation = getRelation(relationName, errorList);
 
-		return RelationStatement.createStatementWithLabelCondition(parameter, relation, label, fExtLanguageManager);
+		return RelationStatement.createStatementWithLabelCondition(parameter, relation, label);
 	}
 
 	public ExpectedValueStatement parseExpectedValueStatement(

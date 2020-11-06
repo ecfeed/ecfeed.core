@@ -19,16 +19,13 @@ public class ChoiceCondition implements IStatementCondition {
 
 	private ChoiceNode fRightChoice;
 	private RelationStatement fParentRelationStatement;
-	private IExtLanguageManager fExtLanguageManager; // TODO SIMPLE-VIEW remove ?
 
 	public ChoiceCondition(
 			ChoiceNode rightChoice, 
-			RelationStatement parentRelationStatement, 
-			IExtLanguageManager extLanguageManager) {
+			RelationStatement parentRelationStatement) {
 
 		fRightChoice = rightChoice;
 		fParentRelationStatement = parentRelationStatement;
-		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -52,7 +49,7 @@ public class ChoiceCondition implements IStatementCondition {
 
 	@Override
 	public ChoiceCondition getCopy() {
-		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement, fExtLanguageManager);
+		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement);
 	}
 
 	@Override

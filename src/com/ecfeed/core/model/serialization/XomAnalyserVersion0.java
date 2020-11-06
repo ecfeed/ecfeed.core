@@ -10,12 +10,10 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.utils.IExtLanguageManager;
-
 public class XomAnalyserVersion0 extends XomAnalyser {
 
-	public XomAnalyserVersion0(IExtLanguageManager extLanguageManager) {
-		super(extLanguageManager);
+	public XomAnalyserVersion0() {
+		super();
 	}
 
 	@Override
