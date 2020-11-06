@@ -52,7 +52,7 @@ public class ClassNodeHelper {
 
 	public static String validateClassName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = extLanguageManager.verifySeparators(nameInExternalLanguage);
+		String errorMessage = extLanguageManager.verifySeparatorsInName(nameInExternalLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;

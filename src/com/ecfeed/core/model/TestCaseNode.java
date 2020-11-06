@@ -23,7 +23,7 @@ public class TestCaseNode extends AbstractNode {
 	List<ChoiceNode> fTestData;
 
 	@Override
-	protected void verifyName(String name) {
+	protected void verifyName(String nameInIntrLanguage) {
 	}
 
 	@Override

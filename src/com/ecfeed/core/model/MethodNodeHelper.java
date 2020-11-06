@@ -89,7 +89,7 @@ public class MethodNodeHelper {
 
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = extLanguageManager.verifySeparators(nameInExternalLanguage);
+		String errorMessage = extLanguageManager.verifySeparatorsInName(nameInExternalLanguage);
 
 		if (errorMessage != null) {
 			return errorMessage;

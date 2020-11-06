@@ -24,7 +24,13 @@ public class SimpleLanguageModelVerifier {
 
 	public static String checkIsModelCompatibleWithSimpleLanguage(RootNode rootNode) {
 
-		String message = checkParameterTypesForSimpleView(rootNode);
+		String message = checkNodeNames(rootNode);
+
+		if (message != null) {
+			return message;
+		}
+
+		message = checkParameterTypesForSimpleView(rootNode);
 
 		if (message != null) {
 			return message;
@@ -51,6 +57,11 @@ public class SimpleLanguageModelVerifier {
 		message = checkIsMethodDuplicated(rootNode);
 
 		return message;
+	}
+
+	private static String checkNodeNames(RootNode rootNode) {
+
+		return null; // TODO SIMPLE-VIEW
 	}
 
 	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {

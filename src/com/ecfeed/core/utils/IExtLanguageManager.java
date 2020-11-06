@@ -6,7 +6,8 @@ import com.ecfeed.core.model.RootNode;
 
 public interface IExtLanguageManager {
 
-	public String verifySeparators(String nameInExternalLanguage);
+	public String verifySeparatorsInText(String textInExternalLanguage);
+	public String verifySeparatorsInName(String nameInExternalLanguage);
 	public boolean isLogicalTypeName(String type);
 	public String convertTextFromExtToIntrLanguage(String text);
 	public String convertTextFromIntrToExtLanguage(String text);

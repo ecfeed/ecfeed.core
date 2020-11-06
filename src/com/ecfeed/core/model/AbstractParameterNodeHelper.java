@@ -25,7 +25,7 @@ public abstract class AbstractParameterNodeHelper {
 	
 	public static String validateParameterName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = extLanguageManager.verifySeparators(nameInExternalLanguage);
+		String errorMessage = extLanguageManager.verifySeparatorsInName(nameInExternalLanguage);
 
 		return errorMessage;
 	}

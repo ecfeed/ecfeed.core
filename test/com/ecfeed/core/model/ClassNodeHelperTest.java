@@ -125,10 +125,10 @@ public class ClassNodeHelperTest {
 		// just separator
 
 		errorMessage = ClassNodeHelper.validateClassName("_a", new ExtLanguageManagerForJava());
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 
 		errorMessage = ClassNodeHelper.validateClassName(" a", new ExtLanguageManagerForSimple());
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 	}
 
 	@Test

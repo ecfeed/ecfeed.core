@@ -21,17 +21,17 @@ public class JavaLanguageHelperTest {
 	@Test
 	public void verifySeparatorsTest() {
 
-		String errorMessage = JavaLanguageHelper.verifySeparators("abc");
+		String errorMessage = JavaLanguageHelper.verifySeparatorsInText("abc");
 		assertNull(errorMessage);
 
-		errorMessage = JavaLanguageHelper.verifySeparators("a_b");
+		errorMessage = JavaLanguageHelper.verifySeparatorsInText("a_b");
 		assertNull(errorMessage);
 
-		errorMessage = JavaLanguageHelper.verifySeparators("a b");
+		errorMessage = JavaLanguageHelper.verifySeparatorsInText("a b");
 		assertNotNull(errorMessage);
 
-		errorMessage = JavaLanguageHelper.verifySeparators("_ab");
-		assertNotNull(errorMessage);
+		errorMessage = JavaLanguageHelper.verifySeparatorsInText("_ab");
+		assertNull(errorMessage);
 	}
 
 	@Test

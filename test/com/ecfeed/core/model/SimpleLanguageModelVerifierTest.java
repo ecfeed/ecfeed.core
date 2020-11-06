@@ -83,4 +83,15 @@ public class SimpleLanguageModelVerifierTest {
 		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 	}
 
+	@Test
+	public void notAllowedNames() { // TODO SIMPLE-VIEW test
+
+//		RootNode rootNode = new RootNode("rootNode", null);
+//
+//		ClassNode classNode1 = new ClassNode("com.__", null);
+//		rootNode.addClass(classNode1);
+//
+//		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+	}
+
 }

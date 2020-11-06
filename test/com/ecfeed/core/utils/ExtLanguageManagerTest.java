@@ -22,32 +22,32 @@ import static org.junit.Assert.*;
 public class ExtLanguageManagerTest {
 
 	@Test
-	public void verifySeparatorsTest() {
+	public void verifySeparatorsInTextTest() { // TODO SIMPLE-VIEW add verify separators in name test
 
 		IExtLanguageManager javaExtLanguageManager = new ExtLanguageManagerForJava();
 		IExtLanguageManager simpleExtLanguageManager = new ExtLanguageManagerForSimple();
 
 
-		String errorMessage = javaExtLanguageManager.verifySeparators("abc");
+		String errorMessage = javaExtLanguageManager.verifySeparatorsInText("abc");
 		assertNull(errorMessage);
 
-		errorMessage = simpleExtLanguageManager.verifySeparators("abc");
+		errorMessage = simpleExtLanguageManager.verifySeparatorsInText("abc");
 		assertNull(errorMessage);
 
 		// underline
 
-		errorMessage = javaExtLanguageManager.verifySeparators("ab_c");
+		errorMessage = javaExtLanguageManager.verifySeparatorsInText("ab_c");
 		assertNull(errorMessage);
 
-		errorMessage = simpleExtLanguageManager.verifySeparators("ab_c");
+		errorMessage = simpleExtLanguageManager.verifySeparatorsInText("ab_c");
 		assertNotNull(errorMessage);
 
 		// space
 
-		errorMessage = javaExtLanguageManager.verifySeparators("ab c");
+		errorMessage = javaExtLanguageManager.verifySeparatorsInText("ab c");
 		assertNotNull(errorMessage);
 
-		errorMessage = simpleExtLanguageManager.verifySeparators("ab c");
+		errorMessage = simpleExtLanguageManager.verifySeparatorsInText("ab c");
 		assertNull(errorMessage);
 		}
 

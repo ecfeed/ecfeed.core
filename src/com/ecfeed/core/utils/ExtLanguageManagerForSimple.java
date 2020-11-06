@@ -21,9 +21,15 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	public static final String ATTEMPT_TO_CONVERT_NON_SIMPLE_TYPE = "Attempt to convert non simple type.";
 
 	@Override
-	public String verifySeparators(String nameInExternalLanguage) {
+	public String verifySeparatorsInName(String nameInExternalLanguage) {
 
-		return SimpleLanguageHelper.verifySeparators(nameInExternalLanguage);
+		return SimpleLanguageHelper.verifySeparatorsInName(nameInExternalLanguage);
+	}
+
+	@Override
+	public String verifySeparatorsInText(String textInExtLanguage) {
+
+		return SimpleLanguageHelper.verifySeparatorsInText(textInExtLanguage);
 	}
 
 	@Override
@@ -35,7 +41,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	@Override
 	public String convertTextFromExtToIntrLanguage(String text)  {
 
-		String errorMessage = verifySeparators(text);
+		String errorMessage = verifySeparatorsInText(text);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);
@@ -49,7 +55,7 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 	@Override
 	public String convertTextFromIntrToExtLanguage(String text) {
 
-		String errorMessage = JavaLanguageHelper.verifySeparators(text);
+		String errorMessage = JavaLanguageHelper.verifySeparatorsInText(text);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);

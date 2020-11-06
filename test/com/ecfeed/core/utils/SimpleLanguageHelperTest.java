@@ -22,14 +22,14 @@ public class SimpleLanguageHelperTest {
 	@Test
 	public void verifySeparatorsTest() {
 
-		String errorMessage = SimpleLanguageHelper.verifySeparators("abc");
+		String errorMessage = SimpleLanguageHelper.verifySeparatorsInText("abc");
 		assertNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifySeparators("a_b");
+		errorMessage = SimpleLanguageHelper.verifySeparatorsInText("a_b");
 		assertNotNull(errorMessage);
 
-		errorMessage = SimpleLanguageHelper.verifySeparators(" ab");
-		assertNotNull(errorMessage);
+		errorMessage = SimpleLanguageHelper.verifySeparatorsInText(" ab");
+		assertNull(errorMessage);
 	}
 
 	@Test

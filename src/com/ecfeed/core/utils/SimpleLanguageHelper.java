@@ -25,14 +25,27 @@ public final class SimpleLanguageHelper {
 			TYPE_NAME_LOGICAL
 	};
 
-	public static String verifySeparators(String name) {
+	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains("_")) {
 			return UNDERLINE_CHARS_ARE_NOT_ALLOWED;
 		}
 
-		if (name.startsWith(" ")) {
-			return "Name should not begin with space character.";
+		if (StringHelper.isTrimmedEmpty(name)) {
+			return "Name should not contain only blank characters.";
+		}
+
+		return null;
+	}
+
+	public static String verifySeparatorsInText(String text) {
+
+		if (text.contains("_")) {
+			return UNDERLINE_CHARS_ARE_NOT_ALLOWED;
+		}
+
+		if (StringHelper.isTrimmedEmpty(text)) {
+			return "Name should not contain only blank characters.";
 		}
 
 		return null;

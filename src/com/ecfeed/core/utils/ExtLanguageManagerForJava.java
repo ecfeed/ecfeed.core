@@ -19,9 +19,15 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	public static final String ATTEMPT_TO_CONVERT_NON_JAVA_TYPE = "Attempt to convert non java type.";
 
 	@Override
-	public String verifySeparators(String nameInExternalLanguage) {
+	public String verifySeparatorsInName(String nameInExternalLanguage) {
 
-		return JavaLanguageHelper.verifySeparators(nameInExternalLanguage);
+		return JavaLanguageHelper.verifySeparatorsInName(nameInExternalLanguage);
+	}
+
+	@Override
+	public String verifySeparatorsInText(String nameInExternalLanguage) {
+
+		return JavaLanguageHelper.verifySeparatorsInText(nameInExternalLanguage);
 	}
 
 	@Override
@@ -33,7 +39,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String convertTextFromExtToIntrLanguage(String text)  {
 
-		String errorMessage = verifySeparators(text);
+		String errorMessage = verifySeparatorsInText(text);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);
@@ -45,7 +51,7 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 	@Override
 	public String convertTextFromIntrToExtLanguage(String text) {
 
-		String errorMessage = JavaLanguageHelper.verifySeparators(text);
+		String errorMessage = JavaLanguageHelper.verifySeparatorsInText(text);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);

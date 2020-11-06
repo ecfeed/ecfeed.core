@@ -310,10 +310,10 @@ public class MethodNodeHelperTest {
 		// just separator
 
 		errorMessage = MethodNodeHelper.validateMethodName("_a", new ExtLanguageManagerForJava());
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 
 		errorMessage = MethodNodeHelper.validateMethodName(" a", new ExtLanguageManagerForSimple());
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 	}
 
 	@Test

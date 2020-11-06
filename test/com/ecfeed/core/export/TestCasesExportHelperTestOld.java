@@ -189,8 +189,8 @@ public class TestCasesExportHelperTestOld {
         TestCaseNode testCase = new TestCaseNode("default", null, choices);
         testCase.setParent(method);
 
-        String result = TestCasesExportHelperOld.generateTestCaseString(sequenceIndex, testCase, template, new ExtLanguageManagerForJava());
-        result = TestCasesExportHelperOld.evaluateMinWidthOperators(result);
+        String result = TestCasesExportHelper.generateTestCaseString(sequenceIndex, testCase, template, new ExtLanguageManagerForJava());
+        result = TestCasesExportHelper.evaluateMinWidthOperators(result);
         assertEquals(expectedResult, result);
     }
 

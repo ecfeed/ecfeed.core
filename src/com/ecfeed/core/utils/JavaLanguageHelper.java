@@ -111,14 +111,19 @@ public final class JavaLanguageHelper {
 	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier.";
 	public static final String SPACES_ARE_NOT_ALLOWED_IN_NAME = "Spaces are not allowed in name.";
 
-	public static String verifySeparators(String text) {
+	public static String verifySeparatorsInName(String name) {
 
-		if (text.contains(" ")) {
+		if (name.contains(" ")) {
 			return SPACES_ARE_NOT_ALLOWED_IN_NAME;
 		}
 
-		if (text.startsWith("_")) {
-			return("Name should not begin with underline char.");
+		return null;
+	}
+
+	public static String verifySeparatorsInText(String text) {
+
+		if (text.contains(" ")) {
+			return SPACES_ARE_NOT_ALLOWED_IN_NAME;
 		}
 
 		return null;

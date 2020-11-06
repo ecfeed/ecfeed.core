@@ -37,13 +37,13 @@ public abstract class AbstractNode{
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-    protected void verifyName(String name) {
+    protected void verifyName(String nameInIntrLanguage) {
     	
     	if (AbstractNodeHelper.isTheSameExtAndIntrLanguage(this)) {
 			return;
 		}
     	
-        String errorMessage = JavaLanguageHelper.verifySeparators(name);
+        String errorMessage = JavaLanguageHelper.verifySeparatorsInName(nameInIntrLanguage);
 
         if (errorMessage != null) {
             ExceptionHelper.reportRuntimeException(errorMessage);

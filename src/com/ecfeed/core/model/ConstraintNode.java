@@ -22,7 +22,7 @@ public class ConstraintNode extends AbstractNode{
 	private Constraint fConstraint;
 
 	@Override
-	protected void verifyName(String name) {
+	protected void verifyName(String nameInIntrLanguage) {
 	}
 
 	@Override
