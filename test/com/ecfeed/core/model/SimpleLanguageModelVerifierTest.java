@@ -84,14 +84,59 @@ public class SimpleLanguageModelVerifierTest {
 	}
 
 	@Test
-	public void notAllowedNames() { // TODO SIMPLE-VIEW test
+	public void notAllowedNames() {
 
-//		RootNode rootNode = new RootNode("rootNode", null);
-//
-//		ClassNode classNode1 = new ClassNode("com.__", null);
-//		rootNode.addClass(classNode1);
-//
-//		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+		RootNode rootNode = new RootNode("rootNode", null);
+
+		// invalid class name
+
+		ClassNode classNodeErr = new ClassNode("com.__", null);
+		rootNode.addClass(classNodeErr);
+
+		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+
+		// correct class name
+
+		rootNode.removeClass(classNodeErr);
+
+        ClassNode classNodeOk = new ClassNode("com.fun", null);
+        rootNode.addClass(classNodeOk);
+
+        assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+
+        // invalid method name
+
+        MethodNode methodNodeErr = new MethodNode("___", null);
+        classNodeOk.addMethod(methodNodeErr);
+
+        assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+
+        // correct method name
+
+        classNodeOk.removeMethod(methodNodeErr);
+
+        MethodNode methodNodeOk = new MethodNode("fun", null);
+        classNodeOk.addMethod(methodNodeOk);
+
+        assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+
+        // invalid method parameter name
+
+        MethodParameterNode methodParameterNodeErr =
+                new MethodParameterNode("___","int", "0", false, null);
+        methodNodeOk.addParameter(methodParameterNodeErr);
+
+        assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+
+        // correct method parameter name
+
+        methodNodeOk.removeParameter(methodParameterNodeErr);
+
+        MethodParameterNode methodParameterNodeOk =
+                new MethodParameterNode("par","int", "0", false, null);
+        methodNodeOk.removeParameter(methodParameterNodeOk);
+
+        assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 	}
 
 }

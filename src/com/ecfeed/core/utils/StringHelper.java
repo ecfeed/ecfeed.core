@@ -439,4 +439,17 @@ public class StringHelper {
 		return result;
 	}
 
+	public static boolean containsOnly(char character, String str) { // TODO SIMPLE-VIEW test
+
+		for (int i = 0; i < str.length(); i++){
+			char charInStr = str.charAt(i);
+
+			if (charInStr != character) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }

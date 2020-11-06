@@ -15,9 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.*;
 
 
 public class SimpleLanguageModelVerifier {
@@ -57,11 +55,6 @@ public class SimpleLanguageModelVerifier {
 		message = checkIsMethodDuplicated(rootNode);
 
 		return message;
-	}
-
-	private static String checkNodeNames(RootNode rootNode) {
-
-		return null; // TODO SIMPLE-VIEW
 	}
 
 	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
@@ -344,5 +337,106 @@ public class SimpleLanguageModelVerifier {
 			return signature1.compareTo(signature2);
 		}
 	}
+
+	private static String checkNodeNames(RootNode rootNode) {
+
+		String errorMessage = checkNamesOfGlobalParameters(rootNode);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		errorMessage = checkNamesOfClassesWithChildren(rootNode);
+
+		return errorMessage;
+	}
+
+	private static String checkNamesOfGlobalParameters(RootNode rootNode) {
+
+		List<GlobalParameterNode> globalParameterNodes = rootNode.getGlobalParameters();
+
+		for(GlobalParameterNode globalParameterNode : globalParameterNodes) {
+
+			String name = globalParameterNode.getName();
+			String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(name);
+
+			if (errorMessage != null) {
+				return errorMessage;
+			}
+		}
+		return null;
+	}
+
+	private static String checkNamesOfClassesWithChildren(RootNode rootNode) {
+
+		List<ClassNode> classNodes = rootNode.getClasses();
+
+		for (ClassNode classNode : classNodes) {
+
+			String errorMessage = checkNamesOfClasseWithChildren(classNode);
+
+			if (errorMessage != null) {
+				return errorMessage;
+			}
+		}
+
+		return null;
+	}
+
+	private static String checkNamesOfClasseWithChildren(ClassNode classNode) {
+
+		String className = classNode.getNonQualifiedName();
+		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		List<MethodNode>  methodNodes = classNode.getMethods();
+
+		for(MethodNode methodNode : methodNodes) {
+
+			errorMessage = checkNamesOfMethodWithChildren(methodNode);
+
+			if (errorMessage != null) {
+				return errorMessage;
+			}
+		}
+
+		return null;
+	}
+
+	private static String checkNamesOfMethodWithChildren(MethodNode methodNode) {
+
+		String className = methodNode.getName();
+		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
+
+		for(MethodParameterNode methodParameterNode : methodParameterNodes) {
+
+			errorMessage = checkNamsOfMethodParameter(methodParameterNode);
+
+			if (errorMessage != null) {
+				return errorMessage;
+			}
+		}
+
+		return null;
+
+	}
+
+	private static String checkNamsOfMethodParameter(MethodParameterNode methodParameterNode) {
+
+		String className = methodParameterNode.getName();
+		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
+
+		return errorMessage;
+	}
+
 
 }

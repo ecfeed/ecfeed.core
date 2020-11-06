@@ -1380,4 +1380,12 @@ public final class JavaLanguageHelper {
 		return packageName + "." + nonQualifiedName;
 	}
 
+	public static String checkCompatibilityWithSimpleMode(String name) {
+
+		if (StringHelper.containsOnly('_', name)) {
+			return "Name must not contain only underline characters.";
+		}
+
+		return null;
+	}
 }
