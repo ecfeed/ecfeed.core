@@ -15,7 +15,7 @@ public final class SimpleLanguageHelper {
 	public static final String SPECIAL_VALUE_NEGATIVE_INF_SIMPLE = "-Infinity";
 	public static final String SPECIAL_VALUE_POSITIVE_INF_SIMPLE = "Infinity";
 	public static final String INVALID_SIMPLE_TYPE = "Invalid simple type";
-	public static final String UNDERLINE_CHARS_ARE_NOT_ALLOWED = "Underline chars are not allowed.";
+	public static final String UNDERLINE_CHARS_ARE_NOT_ALLOWED = "Underline characters are not allowed.";
 
 	public static String DEFAULT_PACKAGE = "(default package)";
 
@@ -32,7 +32,7 @@ public final class SimpleLanguageHelper {
 		}
 
 		if (name.startsWith(" ")) {
-			return "Name should not begin with space char.";
+			return "Name should not begin with space character.";
 		}
 
 		return null;
