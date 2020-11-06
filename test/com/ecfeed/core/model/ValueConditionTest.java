@@ -16,12 +16,8 @@ import static org.junit.Assert.assertNotEquals;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ecfeed.core.utils.*;
 import org.junit.Test;
-
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.MessageStack;
 
 public class ValueConditionTest {
 
@@ -106,7 +102,7 @@ public class ValueConditionTest {
 
 
 		EvaluationResult result = EvaluationResult.convertFromBoolean(
-				statement.isAmbiguous(Arrays.asList(createList(choiceNode)), new MessageStack()));
+				statement.isAmbiguous(Arrays.asList(createList(choiceNode)), new MessageStack(), new ExtLanguageManagerForJava()));
 
 
 		if (assertResult == AssertType.TRUE) {

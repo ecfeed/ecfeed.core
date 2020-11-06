@@ -60,7 +60,7 @@ public class AbstractStatementTest {
 			return false;
 		}
 		@Override
-		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack) {
+		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 			return false;
 		}
 		@Override
