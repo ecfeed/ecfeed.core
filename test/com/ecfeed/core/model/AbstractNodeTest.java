@@ -29,6 +29,11 @@ public class AbstractNodeTest{
 		}
 
 		@Override
+		protected String getNonQualifiedName() {
+			return getName();
+		}
+
+		@Override
 		public int getChildrenCount() {
 			return 0;
 		}

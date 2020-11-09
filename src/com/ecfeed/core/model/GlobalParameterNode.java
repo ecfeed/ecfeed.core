@@ -19,7 +19,7 @@ import java.util.Set;
 
 public class GlobalParameterNode extends AbstractParameterNode {
 
-	public GlobalParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
+	public GlobalParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) { // TODO SIMPLE-VIEW change signature
 		super(name, modelChangeRegistrator, type);
 	}
 
@@ -94,6 +94,11 @@ public class GlobalParameterNode extends AbstractParameterNode {
 			return getName();
 		}
 		return getParent().getName() + ":" + getName();
+	}
+
+	@Override
+	protected String getNonQualifiedName() {
+		return getName();
 	}
 
 	@Override

@@ -110,6 +110,7 @@ public final class JavaLanguageHelper {
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
 	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier.";
 	public static final String SPACES_ARE_NOT_ALLOWED_IN_NAME = "Spaces are not allowed in name.";
+	public static final String NAME_MUST_NOT_CONTAIN_ONLY_UNDERLINE_CHARACTERS = "Name must not contain only underline characters.";
 
 	public static String verifySeparatorsInName(String name) {
 
@@ -1383,7 +1384,7 @@ public final class JavaLanguageHelper {
 	public static String checkCompatibilityWithSimpleMode(String name) {
 
 		if (StringHelper.containsOnly('_', name)) {
-			return "Name must not contain only underline characters.";
+			return NAME_MUST_NOT_CONTAIN_ONLY_UNDERLINE_CHARACTERS;
 		}
 
 		return null;

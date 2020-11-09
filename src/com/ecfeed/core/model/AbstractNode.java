@@ -29,6 +29,8 @@ public abstract class AbstractNode{
 	private NodeProperties fProperties = new NodeProperties();
 	protected final List<AbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<AbstractNode>();
 
+	protected abstract String getNonQualifiedName();
+
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
         verifyName(name);

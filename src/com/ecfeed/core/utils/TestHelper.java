@@ -6,8 +6,18 @@ public class TestHelper {
 
 		String message = e.getMessage();
 
+		checkMessageIntr(message, expectedItems);
+	}
+
+	public static void checkMessage(String message, String... expectedItems) {
+
+		checkMessageIntr(message, expectedItems);
+	}
+
+	public static void checkMessageIntr(String message, String[] expectedItems) {
+
 		int index = 0;
-		int itemIndex = 0;
+		int itemIndex;
 
 		for (String expectedItem : expectedItems ) {
 

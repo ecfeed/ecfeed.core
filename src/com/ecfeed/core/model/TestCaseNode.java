@@ -23,6 +23,11 @@ public class TestCaseNode extends AbstractNode {
 	List<ChoiceNode> fTestData;
 
 	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
+
+	@Override
 	protected void verifyName(String nameInIntrLanguage) {
 	}
 

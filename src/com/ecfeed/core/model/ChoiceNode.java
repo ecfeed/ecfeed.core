@@ -59,7 +59,12 @@ public class ChoiceNode extends ChoicesParentNode {
 	public List<? extends AbstractNode> getChildren(){
 		return getChoices();
 	}
-	
+
+	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
+
 	@Override
 	public String toString(){
 

@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.TestHelper;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -88,30 +91,55 @@ public class SimpleLanguageModelVerifierTest {
 
 		RootNode rootNode = new RootNode("rootNode", null);
 
+		// invalid global parameter name
+
+		GlobalParameterNode globalParameterNodeErr = new GlobalParameterNode("__", null, "int");
+		rootNode.addParameter(globalParameterNodeErr);
+
+		String errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		assertNotNull(errorMessage);
+		checkInvalidNameMessage(errorMessage, globalParameterNodeErr);
+
+		rootNode.removeParameter(globalParameterNodeErr);
+
+
+		// valid global parameter name
+
+		GlobalParameterNode globalParameterNodeOk = new GlobalParameterNode("par1", null, "int");
+		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		assertNull(errorMessage);
+
+
 		// invalid class name
 
 		ClassNode classNodeErr = new ClassNode("com.__", null);
 		rootNode.addClass(classNodeErr);
 
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		// correct class name
+		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		assertNotNull(errorMessage);
+		checkInvalidNameMessage(errorMessage, classNodeErr);
 
 		rootNode.removeClass(classNodeErr);
+
+		// valid class name
 
         ClassNode classNodeOk = new ClassNode("com.fun", null);
         rootNode.addClass(classNodeOk);
 
         assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 
+
         // invalid method name
 
         MethodNode methodNodeErr = new MethodNode("___", null);
         classNodeOk.addMethod(methodNodeErr);
 
-        assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+        errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+        assertNotNull(errorMessage);
+		checkInvalidNameMessage(errorMessage, methodNodeErr);
 
-        // correct method name
+
+        // valid method name
 
         classNodeOk.removeMethod(methodNodeErr);
 
@@ -120,23 +148,76 @@ public class SimpleLanguageModelVerifierTest {
 
         assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 
+
         // invalid method parameter name
 
         MethodParameterNode methodParameterNodeErr =
                 new MethodParameterNode("___","int", "0", false, null);
         methodNodeOk.addParameter(methodParameterNodeErr);
 
-        assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+        assertNotNull(errorMessage);
+		checkInvalidNameMessage(errorMessage, methodParameterNodeErr);
 
-        // correct method parameter name
+
+        // valid method parameter name
 
         methodNodeOk.removeParameter(methodParameterNodeErr);
 
         MethodParameterNode methodParameterNodeOk =
                 new MethodParameterNode("par","int", "0", false, null);
-        methodNodeOk.removeParameter(methodParameterNodeOk);
+        methodNodeOk.addParameter(methodParameterNodeOk);
 
         assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
+
+
+        // invalid choice name
+
+		ChoiceNode choiceNodeErr = new ChoiceNode("__", "1", null);
+		methodParameterNodeOk.addChoice(choiceNodeErr);
+
+		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		assertNotNull(errorMessage);
+		checkInvalidNameMessage(errorMessage, choiceNodeErr);
+
+		methodParameterNodeOk.removeChoice(choiceNodeErr);
+
+
+		// valid choice name
+
+		ChoiceNode choiceNodeoK = new ChoiceNode("c1", "1", null);
+		methodParameterNodeOk.addChoice(choiceNodeoK);
+		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		assertNull(errorMessage);
+
+
+		// invalid constraint name
+
+		ConstraintNode constraintNodeErr = new ConstraintNode("__", null, null);
+		methodNodeOk.addConstraint(constraintNodeErr);
+
+		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		assertNotNull(errorMessage);
+		checkInvalidNameMessage(errorMessage, constraintNodeErr);
+
+		methodNodeOk.removeConstraint(constraintNodeErr);
+
+
+		// valid constraint
+
+		ConstraintNode constraintNodeOk = new ConstraintNode("constr", null, null);
+		methodNodeOk.addConstraint(constraintNodeOk);
+
+		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
+		assertNull(errorMessage);
+	}
+
+	public void checkInvalidNameMessage(String errorMessage, AbstractNode nodeErr) {
+
+		TestHelper.checkMessage(
+				errorMessage,
+				JavaLanguageHelper.NAME_MUST_NOT_CONTAIN_ONLY_UNDERLINE_CHARACTERS,
+				ModelHelper.getFullPath(nodeErr, new ExtLanguageManagerForJava()));
 	}
 
 }

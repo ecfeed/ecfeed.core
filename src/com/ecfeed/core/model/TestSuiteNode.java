@@ -51,6 +51,11 @@ public class TestSuiteNode extends AbstractNode {
 	}
 
 	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
+
+	@Override
 	public List<TestCaseNode> getChildren() {
 
 		return fTestCaseNodes;

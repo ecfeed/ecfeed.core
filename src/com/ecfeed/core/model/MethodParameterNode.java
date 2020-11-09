@@ -72,6 +72,11 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
+
+	@Override
 	public String toString() {
 		if (fExpected) {
 			return super.toString() + "(" + getDefaultValue() + "): "

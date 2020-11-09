@@ -22,6 +22,11 @@ public class ConstraintNode extends AbstractNode{
 	private Constraint fConstraint;
 
 	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
+
+	@Override
 	protected void verifyName(String nameInIntrLanguage) {
 	}
 

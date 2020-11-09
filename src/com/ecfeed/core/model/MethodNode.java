@@ -29,6 +29,11 @@ public class MethodNode extends ParametersParentNode {
 	private List<TestSuiteNode> fTestSuites;
 	private List<ConstraintNode> fConstraints;
 
+	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
+
 	public MethodNode(String name, IModelChangeRegistrator modelChangeRegistrator){
 		super(name, modelChangeRegistrator);
 

@@ -338,43 +338,23 @@ public class SimpleLanguageModelVerifier {
 		}
 	}
 
-	private static String checkNodeNames(RootNode rootNode) {
+	private static String checkNodeNames(AbstractNode abstractNode) {
 
-		String errorMessage = checkNamesOfGlobalParameters(rootNode);
+		String name = abstractNode.getNonQualifiedName();
+		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(name);
 
 		if (errorMessage != null) {
-			return errorMessage;
+
+			String decoratedMessage = createMessageWithNodeName(abstractNode, errorMessage);
+
+			return decoratedMessage;
 		}
 
-		errorMessage = checkNamesOfClassesWithChildren(rootNode);
+		List<AbstractNode> children = (List<AbstractNode>) abstractNode.getChildren();
 
-		return errorMessage;
-	}
+		for (AbstractNode child : children) {
 
-	private static String checkNamesOfGlobalParameters(RootNode rootNode) {
-
-		List<GlobalParameterNode> globalParameterNodes = rootNode.getGlobalParameters();
-
-		for(GlobalParameterNode globalParameterNode : globalParameterNodes) {
-
-			String name = globalParameterNode.getName();
-			String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(name);
-
-			if (errorMessage != null) {
-				return createMessageWithNodeName(globalParameterNode, errorMessage);
-			}
-		}
-
-		return null;
-	}
-
-	private static String checkNamesOfClassesWithChildren(RootNode rootNode) {
-
-		List<ClassNode> classNodes = rootNode.getClasses();
-
-		for (ClassNode classNode : classNodes) {
-
-			String errorMessage = checkNamesOfClassWithChildren(classNode);
+			errorMessage = checkNodeNames(child);
 
 			if (errorMessage != null) {
 				return errorMessage;
@@ -382,101 +362,6 @@ public class SimpleLanguageModelVerifier {
 		}
 
 		return null;
-	}
-
-	private static String checkNamesOfClassWithChildren(ClassNode classNode) {
-
-		String className = classNode.getNonQualifiedName();
-		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
-
-		if (errorMessage != null) {
-
-			return createMessageWithNodeName(classNode, errorMessage);
-		}
-
-		errorMessage = checkNamesOfClassGlobalParameters(classNode);
-
-		if (errorMessage != null) {
-
-			return errorMessage;
-		}
-
-		errorMessage = checkNamesOfMethodsWithChildren(classNode);
-
-		return errorMessage;
-	}
-
-	private static String checkNamesOfClassGlobalParameters(ClassNode classNode) {
-
-		String errorMessage;
-		List<GlobalParameterNode> globalParameterNodes = classNode.getGlobalParameters();
-
-		for(GlobalParameterNode globalParameterNode : globalParameterNodes) {
-
-			errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(globalParameterNode.getName());
-
-			if (errorMessage != null) {
-
-				return createMessageWithNodeName(globalParameterNode, errorMessage);
-			}
-		}
-
-		return null;
-	}
-
-	public static String checkNamesOfMethodsWithChildren(ClassNode classNode) {
-
-		String errorMessage;
-		List<MethodNode>  methodNodes = classNode.getMethods();
-
-		for(MethodNode methodNode : methodNodes) {
-
-			errorMessage = checkNamesOfMethodWithChildren(methodNode);
-
-			if (errorMessage != null) {
-				return errorMessage;
-			}
-		}
-
-		return null;
-	}
-
-	private static String checkNamesOfMethodWithChildren(MethodNode methodNode) {
-
-		String methodName = methodNode.getName();
-		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(methodName);
-
-		if (errorMessage != null) {
-			return createMessageWithNodeName(methodNode, errorMessage);
-		}
-
-		List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
-
-		for(MethodParameterNode methodParameterNode : methodParameterNodes) {
-
-			errorMessage = checkNameOfMethodParameter(methodParameterNode);
-
-			if (errorMessage != null) {
-				return errorMessage;
-			}
-		}
-
-		return null;
-	}
-
-	private static String checkNameOfMethodParameter(MethodParameterNode methodParameterNode) {
-
-		String className = methodParameterNode.getName();
-
-		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
-
-		if (errorMessage == null) {
-			return null;
-		}
-
-		errorMessage = createMessageWithNodeName(methodParameterNode, errorMessage);
-
-		return errorMessage;
 	}
 
 	public static String createMessageWithNodeName(AbstractNode abstractNode, String errorMessage) {

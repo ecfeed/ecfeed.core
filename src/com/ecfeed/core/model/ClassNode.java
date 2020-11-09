@@ -238,6 +238,7 @@ public class ClassNode extends GlobalParametersParentNode {
 		return result;
 	}
 
+	@Override
 	public String getNonQualifiedName() {
 		String[] nameNodeSplit = getName().split("\\.");
 		return nameNodeSplit[nameNodeSplit.length - 1];

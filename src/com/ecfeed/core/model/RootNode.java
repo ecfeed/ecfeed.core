@@ -56,7 +56,12 @@ public class RootNode extends GlobalParametersParentNode {
 
 		fClasses = new ArrayList<ClassNode>();
 		fModelVersion = modelVersion;
-	}	
+	}
+
+	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
 
 	public RootNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
