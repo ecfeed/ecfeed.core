@@ -388,7 +388,7 @@ public abstract class XomAnalyser {
 			return Optional.empty();
 		}
 		
-		GlobalParameterNode targetGlobalParameterNode = new GlobalParameterNode(name, modelChangeRegistrator, type);
+		GlobalParameterNode targetGlobalParameterNode = new GlobalParameterNode(name, type, modelChangeRegistrator);
 
 		parseParameterProperties(element, targetGlobalParameterNode);
 

@@ -350,6 +350,7 @@ public class SimpleLanguageModelVerifier {
 			return decoratedMessage;
 		}
 
+		@SuppressWarnings("unchecked")
 		List<AbstractNode> children = (List<AbstractNode>) abstractNode.getChildren();
 
 		for (AbstractNode child : children) {

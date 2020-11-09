@@ -19,14 +19,14 @@ import java.util.Set;
 
 public class GlobalParameterNode extends AbstractParameterNode {
 
-	public GlobalParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) { // TODO SIMPLE-VIEW change signature
+	public GlobalParameterNode(String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator, type);
 	}
 
 	//copy constructor creating a global parameter instance from other types, eg. MethodParameterNode
 	public GlobalParameterNode(AbstractParameterNode source) {
 
-		this(source.getName(), source.getModelChangeRegistrator(), source.getType());
+		this(source.getName(), source.getType(), source.getModelChangeRegistrator());
 		for(ChoiceNode choice : source.getChoices()){
 			addChoice(choice.makeClone());
 		}
@@ -35,7 +35,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	@Override
 	public GlobalParameterNode makeClone() {
 
-		GlobalParameterNode copy = new GlobalParameterNode(getName(), getModelChangeRegistrator(), getType());
+		GlobalParameterNode copy = new GlobalParameterNode(getName(), getType(), getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 
