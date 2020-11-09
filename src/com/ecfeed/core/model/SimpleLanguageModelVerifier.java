@@ -361,9 +361,10 @@ public class SimpleLanguageModelVerifier {
 			String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(name);
 
 			if (errorMessage != null) {
-				return errorMessage;
+				return createMessageWithNodeName(globalParameterNode, errorMessage);
 			}
 		}
+
 		return null;
 	}
 
@@ -373,7 +374,7 @@ public class SimpleLanguageModelVerifier {
 
 		for (ClassNode classNode : classNodes) {
 
-			String errorMessage = checkNamesOfClasseWithChildren(classNode);
+			String errorMessage = checkNamesOfClassWithChildren(classNode);
 
 			if (errorMessage != null) {
 				return errorMessage;
@@ -383,15 +384,49 @@ public class SimpleLanguageModelVerifier {
 		return null;
 	}
 
-	private static String checkNamesOfClasseWithChildren(ClassNode classNode) {
+	private static String checkNamesOfClassWithChildren(ClassNode classNode) {
 
 		String className = classNode.getNonQualifiedName();
 		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
 
 		if (errorMessage != null) {
+
+			return createMessageWithNodeName(classNode, errorMessage);
+		}
+
+		errorMessage = checkNamesOfClassGlobalParameters(classNode);
+
+		if (errorMessage != null) {
+
 			return errorMessage;
 		}
 
+		errorMessage = checkNamesOfMethodsWithChildren(classNode);
+
+		return errorMessage;
+	}
+
+	private static String checkNamesOfClassGlobalParameters(ClassNode classNode) {
+
+		String errorMessage;
+		List<GlobalParameterNode> globalParameterNodes = classNode.getGlobalParameters();
+
+		for(GlobalParameterNode globalParameterNode : globalParameterNodes) {
+
+			errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(globalParameterNode.getName());
+
+			if (errorMessage != null) {
+
+				return createMessageWithNodeName(globalParameterNode, errorMessage);
+			}
+		}
+
+		return null;
+	}
+
+	public static String checkNamesOfMethodsWithChildren(ClassNode classNode) {
+
+		String errorMessage;
 		List<MethodNode>  methodNodes = classNode.getMethods();
 
 		for(MethodNode methodNode : methodNodes) {
@@ -408,18 +443,18 @@ public class SimpleLanguageModelVerifier {
 
 	private static String checkNamesOfMethodWithChildren(MethodNode methodNode) {
 
-		String className = methodNode.getName();
-		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
+		String methodName = methodNode.getName();
+		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(methodName);
 
 		if (errorMessage != null) {
-			return errorMessage;
+			return createMessageWithNodeName(methodNode, errorMessage);
 		}
 
 		List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
 
 		for(MethodParameterNode methodParameterNode : methodParameterNodes) {
 
-			errorMessage = checkNamsOfMethodParameter(methodParameterNode);
+			errorMessage = checkNameOfMethodParameter(methodParameterNode);
 
 			if (errorMessage != null) {
 				return errorMessage;
@@ -427,16 +462,32 @@ public class SimpleLanguageModelVerifier {
 		}
 
 		return null;
-
 	}
 
-	private static String checkNamsOfMethodParameter(MethodParameterNode methodParameterNode) {
+	private static String checkNameOfMethodParameter(MethodParameterNode methodParameterNode) {
 
 		String className = methodParameterNode.getName();
+
 		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(className);
+
+		if (errorMessage == null) {
+			return null;
+		}
+
+		errorMessage = createMessageWithNodeName(methodParameterNode, errorMessage);
 
 		return errorMessage;
 	}
 
+	public static String createMessageWithNodeName(AbstractNode abstractNode, String errorMessage) {
+
+		String fullPath = ModelHelper.getFullPath(abstractNode, new ExtLanguageManagerForJava());
+
+		String nodeTypeName = ModelHelper.getNodeTypeName(abstractNode);
+
+		String message = errorMessage + "\n" + nodeTypeName	+ ": " + fullPath + ".";
+
+		return message;
+	}
 
 }
