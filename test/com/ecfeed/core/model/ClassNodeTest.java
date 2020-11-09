@@ -130,10 +130,10 @@ public class ClassNodeTest extends ClassNode {
 		m2.setName("m1");
 		assertTrue(c1.isMatch(c2));
 
-		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", null, "int");
+		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", "int", null);
 		c1.addParameter(parameter1);
 		assertFalse(c1.isMatch(c2));
-		GlobalParameterNode parameter2 = new GlobalParameterNode("parameter1", null, "int");
+		GlobalParameterNode parameter2 = new GlobalParameterNode("parameter1", "int", null);
 		c2.addParameter(parameter2);
 		assertTrue(c1.isMatch(c2));
 		parameter1.setName("newName");

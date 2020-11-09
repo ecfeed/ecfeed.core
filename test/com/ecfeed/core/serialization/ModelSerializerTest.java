@@ -54,8 +54,8 @@ public class ModelSerializerTest {
 
 		model.addClass(new ClassNode("com.example.TestClass1", null));
 		model.addClass(new ClassNode("com.example.TestClass2", null));
-		model.addParameter(new GlobalParameterNode("globalParameter1", null, "int"));
-		model.addParameter(new GlobalParameterNode("globalParameter2", null, "com.example.UserType"));
+		model.addParameter(new GlobalParameterNode("globalParameter1", "int", null));
+		model.addParameter(new GlobalParameterNode("globalParameter2", "com.example.UserType", null));
 
 		OutputStream ostream = new ByteArrayOutputStream();
 		ModelSerializer serializer = new ModelSerializer(ostream, version);
@@ -94,9 +94,9 @@ public class ModelSerializerTest {
 		ClassNode classNode = new ClassNode("com.example.TestClass", null, runOnAndroid, androidBaseRunner);
 		classNode.addMethod(new MethodNode("testMethod1", null));
 		classNode.addMethod(new MethodNode("testMethod2", null));
-		classNode.addParameter(new GlobalParameterNode("parameter1", null, "int"));
-		classNode.addParameter(new GlobalParameterNode("parameter2", null, "float"));
-		classNode.addParameter(new GlobalParameterNode("parameter3", null, "com.example.UserType"));
+		classNode.addParameter(new GlobalParameterNode("parameter1", "int", null));
+		classNode.addParameter(new GlobalParameterNode("parameter2", "float", null));
+		classNode.addParameter(new GlobalParameterNode("parameter3", "com.example.UserType", null));
 
 		RootNode model = new RootNode("model", null, version);
 		model.addClass(classNode);

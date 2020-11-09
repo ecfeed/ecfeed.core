@@ -93,7 +93,7 @@ public class SimpleLanguageModelVerifierTest {
 
 		// invalid global parameter name
 
-		GlobalParameterNode globalParameterNodeErr = new GlobalParameterNode("__", null, "int");
+		GlobalParameterNode globalParameterNodeErr = new GlobalParameterNode("__", "int", null);
 		rootNode.addParameter(globalParameterNodeErr);
 
 		String errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
@@ -105,7 +105,7 @@ public class SimpleLanguageModelVerifierTest {
 
 		// valid global parameter name
 
-		GlobalParameterNode globalParameterNodeOk = new GlobalParameterNode("par1", null, "int");
+		GlobalParameterNode globalParameterNodeOk = new GlobalParameterNode("par1", "int", null);
 		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
 		assertNull(errorMessage);
 

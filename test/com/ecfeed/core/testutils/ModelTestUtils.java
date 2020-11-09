@@ -61,7 +61,7 @@ public class ModelTestUtils {
 		case METHOD: return new MethodNode(name, null);
 		case PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);
 		case METHOD_PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);
-		case GLOBAL_PARAMETER: return new GlobalParameterNode(name, null, "int");
+		case GLOBAL_PARAMETER: return new GlobalParameterNode(name, "int", null);
 		case PROJECT: return new RootNode(name, null);
 		case TEST_CASE: return new TestCaseNode(name, null, new ArrayList<ChoiceNode>());
 		}
