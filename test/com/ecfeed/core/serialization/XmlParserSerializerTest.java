@@ -35,7 +35,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.EStatementOperator;
+import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -454,7 +454,7 @@ public class XmlParserSerializerTest {
 	private AbstractStatement createStatementArray(int levels, List<MethodParameterNode> parameters) {
 
 		StatementArray array = 
-				new StatementArray(rand.nextBoolean()?EStatementOperator.AND:EStatementOperator.OR, null);
+				new StatementArray(rand.nextBoolean()?StatementArrayOperator.AND:StatementArrayOperator.OR, null);
 
 		for(int i = 0; i < rand.nextInt(3) + 1; ++i){
 			if(levels > 0){

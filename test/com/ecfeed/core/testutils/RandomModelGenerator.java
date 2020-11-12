@@ -25,7 +25,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.EStatementOperator;
+import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -300,7 +300,7 @@ public class RandomModelGenerator {
 
 		StatementArray statement = 
 				new StatementArray(
-						rand.nextBoolean()?EStatementOperator.AND:EStatementOperator.OR,
+						rand.nextBoolean()?StatementArrayOperator.AND:StatementArrayOperator.OR,
 								method.getModelChangeRegistrator());
 
 		for(int i = 0; i < MAX_STATEMENTS; i++){

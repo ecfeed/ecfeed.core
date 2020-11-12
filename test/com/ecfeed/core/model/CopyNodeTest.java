@@ -136,7 +136,7 @@ public class CopyNodeTest{
 		method.addParameter(par1);
 		method.addParameter(par2);
 
-		StatementArray premise = new StatementArray(EStatementOperator.OR, null);
+		StatementArray premise = new StatementArray(StatementArrayOperator.OR, null);
 		premise.addStatement(new StaticStatement(true, null));
 		premise.addStatement(RelationStatement.createStatementWithChoiceCondition(par1, EMathRelation.EQUAL, choice1));
 		premise.addStatement(RelationStatement.createStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
@@ -205,7 +205,7 @@ public class CopyNodeTest{
 
 	@Test
 	public void copyStatementArrayTest(){
-		for(EStatementOperator operator : new EStatementOperator[]{EStatementOperator.AND, EStatementOperator.OR}){
+		for(StatementArrayOperator operator : new StatementArrayOperator[]{StatementArrayOperator.AND, StatementArrayOperator.OR}){
 			StatementArray array = new StatementArray(operator, null);
 			array.addStatement(new StaticStatement(true, null));
 			array.addStatement(new StaticStatement(false, null));
