@@ -19,10 +19,10 @@ import com.ecfeed.core.utils.MessageStack;
 
 public class StatementArray extends AbstractStatement {
 
-	private EStatementOperator fOperator;
+	private StatementArrayOperator fOperator;
 	private List<AbstractStatement> fStatements;
 
-	public StatementArray(EStatementOperator operator, IModelChangeRegistrator modelChangeRegistrator) {
+	public StatementArray(StatementArrayOperator operator, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(modelChangeRegistrator);
 
@@ -254,11 +254,11 @@ public class StatementArray extends AbstractStatement {
 		return fOperator.toString();
 	}
 
-	public EStatementOperator getOperator() {
+	public StatementArrayOperator getOperator() {
 		return fOperator;
 	}
 
-	public void setOperator(EStatementOperator operator) {
+	public void setOperator(StatementArrayOperator operator) {
 		fOperator = operator;
 	}
 

@@ -46,7 +46,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.EStatementOperator;
+import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
@@ -582,10 +582,10 @@ public abstract class XomAnalyser {
 		
 		switch(operatorValue) {
 			case SerializationConstants.STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE:
-				statementArray = new StatementArray(EStatementOperator.OR, method.getModelChangeRegistrator());
+				statementArray = new StatementArray(StatementArrayOperator.OR, method.getModelChangeRegistrator());
 				break;
 			case SerializationConstants.STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE:
-				statementArray = new StatementArray(EStatementOperator.AND, method.getModelChangeRegistrator());
+				statementArray = new StatementArray(StatementArrayOperator.AND, method.getModelChangeRegistrator());
 				break;
 			default:
 				errorList.add(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(method.getName(), operatorValue));

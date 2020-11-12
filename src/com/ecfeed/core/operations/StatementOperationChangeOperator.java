@@ -10,17 +10,17 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.EStatementOperator;
+import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationChangeOperator extends AbstractModelOperation {
 
 	private StatementArray fTarget;
-	private EStatementOperator fNewOperator;
-	private EStatementOperator fCurrentOperator;
+	private StatementArrayOperator fNewOperator;
+	private StatementArrayOperator fCurrentOperator;
 
-	public StatementOperationChangeOperator(StatementArray target, EStatementOperator operator, IExtLanguageManager extLanguageManager) {
+	public StatementOperationChangeOperator(StatementArray target, StatementArrayOperator operator, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.CHANGE_STATEMENT_OPERATOR, extLanguageManager);
 		fTarget = target;
 		fNewOperator = operator;

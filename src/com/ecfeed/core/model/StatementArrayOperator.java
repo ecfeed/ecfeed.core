@@ -10,24 +10,25 @@
 
 package com.ecfeed.core.model;
 
-public enum EStatementOperator{
+public enum StatementArrayOperator {
+
 	AND("AND"), 
 	OR("OR");
-	
+
 	public static final String OPERATOR_AND = "AND";
 	public static final String OPERATOR_OR = "OR";
 
 	String fValue;
 
-	private EStatementOperator(String value){
+	private StatementArrayOperator(String value){
 		fValue = value;
 	}
-	
+
 	public String toString(){
 		return fValue; 
 	}
-	
-	public static EStatementOperator getOperator(String text){
+
+	public static StatementArrayOperator getOperator(String text){
 		switch(text){
 		case OPERATOR_AND:
 			return AND;
