@@ -12,13 +12,14 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
-public enum ConstraintType {
+public enum AbstractStatementFunction {
 
-	IMPLICATION("IMPLICATION");
+	PRECONDITION("PRECONDITION"),
+	POSTCONDITION("POSTCONDITION");
 
 	private final String fCode;
 
-	ConstraintType(String code) {
+	AbstractStatementFunction(String code) {
 
 		fCode = code;
 	}
@@ -28,24 +29,28 @@ public enum ConstraintType {
 		return fCode;
 	}
 
-	public static ConstraintType parse(String text) {
+	public static AbstractStatementFunction parse(String text) {
 
 		if (text == null) {
-			reportExceptionInvalidConstraintType();
+			reportExceptionInvalidStatementFunction();
 			return null;
 		}
 
-		if (text.equals(IMPLICATION.getCode())) {
-			return IMPLICATION;
+		if (text.equals(PRECONDITION.getCode())) {
+			return PRECONDITION;
 		}
 
-		reportExceptionInvalidConstraintType();
+		if (text.equals(POSTCONDITION.getCode())) {
+			return POSTCONDITION;
+		}
+		
+		reportExceptionInvalidStatementFunction();
 		return null;
 	}
 
-	private static void reportExceptionInvalidConstraintType() {
+	private static void reportExceptionInvalidStatementFunction() {
 
-		ExceptionHelper.reportRuntimeException("Invalid constraint type.");
+		ExceptionHelper.reportRuntimeException("Invalid statement function.");
 	}
 
 }
