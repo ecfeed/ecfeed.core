@@ -37,9 +37,9 @@ public class ConstraintNodeTest {
 		c2.getConstraint().setPremise(new StaticStatement(false, null));
 		assertTrue(c1.isMatch(c2));
 
-		c1.getConstraint().setConsequence(new StaticStatement(false, null));
+		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
 		assertFalse(c1.isMatch(c2));
-		c2.getConstraint().setConsequence(new StaticStatement(false, null));
+		c2.getConstraint().setPostcondition(new StaticStatement(false, null));
 		assertTrue(c1.isMatch(c2));
 	}
 }

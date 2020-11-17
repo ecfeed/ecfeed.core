@@ -14,7 +14,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.ANDROID
 import static com.ecfeed.core.model.serialization.SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.COMMENTS_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
@@ -216,7 +216,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
 
 		AbstractStatement premise = node.getConstraint().getPremise();
-		AbstractStatement consequence = node.getConstraint().getConsequence();
+		AbstractStatement postcondition = node.getConstraint().getPostcondition();
 
 		Element premiseElement = new Element(CONSTRAINT_PREMISE_NODE_NAME);
 		premiseElement.appendChild((Element)premise.accept(
@@ -224,14 +224,14 @@ public abstract class XomBuilder implements IModelVisitor {
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
-		Element consequenceElement = new Element(CONSTRAINT_CONSEQUENCE_NODE_NAME);
-		consequenceElement.appendChild((Element)consequence.accept(
+		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);
+		postconditionElement.appendChild((Element)postcondition.accept(
 				new XomStatementBuilder(
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
 		targetConstraintElement.appendChild(premiseElement);
-		targetConstraintElement.appendChild(consequenceElement);
+		targetConstraintElement.appendChild(postconditionElement);
 
 		return targetConstraintElement;
 	}

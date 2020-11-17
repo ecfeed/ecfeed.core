@@ -185,7 +185,7 @@ public class ConstraintNode extends AbstractNode{
 			return false;
 		}
 
-		if (getConstraint().getConsequence().compare(compared.getConstraint().getConsequence()) == false) {
+		if (getConstraint().getPostcondition().compare(compared.getConstraint().getPostcondition()) == false) {
 			return false;
 		}
 

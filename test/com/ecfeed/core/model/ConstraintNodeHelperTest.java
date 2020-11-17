@@ -31,7 +31,7 @@ public class ConstraintNodeHelperTest {
 
 		c1.getConstraint().setPremise(new StaticStatement(false, null));
 
-		c1.getConstraint().setConsequence(new StaticStatement(false, null));
+		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
 
 		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("c_1: false => false", signature);
@@ -56,13 +56,13 @@ public class ConstraintNodeHelperTest {
 
 		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
 
-		AbstractStatement consequence1 =
+		AbstractStatement postcondition1 =
 				RelationStatement.createStatementWithValueCondition(
 						parameter2, EMathRelation.EQUAL, "C");
 
-		AbstractStatement consequence = consequence1;
+		AbstractStatement postcondition = postcondition1;
 
-		Constraint constraint = new Constraint("co_1", null, premise, consequence);
+		Constraint constraint = new Constraint("co_1", null, premise, postcondition);
 
 		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
 
@@ -90,11 +90,11 @@ public class ConstraintNodeHelperTest {
 
 		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
 
-		AbstractStatement consequence =
+		AbstractStatement postcondition =
 				RelationStatement.createStatementWithChoiceCondition(
 						parameter2, EMathRelation.EQUAL, choice2);
 
-		Constraint constraint = new Constraint("co", null, premise, consequence);
+		Constraint constraint = new Constraint("co", null, premise, postcondition);
 
 		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
 

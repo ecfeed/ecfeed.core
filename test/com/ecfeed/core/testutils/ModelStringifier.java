@@ -151,7 +151,7 @@ public class ModelStringifier {
 			result += " ";
 		}
 		result += "Consequence:\n";
-		result += stringify(node.getConstraint().getConsequence(), indent + 4);
+		result += stringify(node.getConstraint().getPostcondition(), indent + 4);
 		return result;
 	}
 
