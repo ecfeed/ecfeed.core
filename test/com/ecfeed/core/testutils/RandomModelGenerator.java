@@ -202,7 +202,7 @@ public class RandomModelGenerator {
 						"constraint", 
 						method.getModelChangeRegistrator(), 
 						generatePremise(method), 
-						generatePostcondition(method));
+						generateConsequence(method));
 
 		return new ConstraintNode(name, constraint, null);
 	}
@@ -309,7 +309,7 @@ public class RandomModelGenerator {
 		return statement;
 	}
 
-	public AbstractStatement generatePostcondition(MethodNode method) {
+	public AbstractStatement generateConsequence(MethodNode method) {
 		if(method.getParameters().size() == 0){
 			method.addParameter(generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1));
 		}

@@ -123,8 +123,8 @@ public class ModelLogger {
 		AbstractStatement premise = constraintNode.getConstraint().getPremise();
 		printAbstractStatement(premise, "Premise", indent + indentIncrement);
 
-		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
-		printAbstractStatement(postcondition, "postcondition", indent + indentIncrement);
+		AbstractStatement consequence = constraintNode.getConstraint().getConsequence();
+		printAbstractStatement(consequence, "Consequence", indent + indentIncrement);
 	}
 
 	private static void printMethodNode(MethodNode methodNode, String fieldName, int indent) {

@@ -370,16 +370,16 @@ public class XmlParserSerializerTest {
 			List<MethodParameterNode> expectedParameters) {
 
 		AbstractStatement premise = createChoicesParentStatement(choicesParentParameters);
-		AbstractStatement postcondition = null;
-		while(postcondition == null){
+		AbstractStatement consequence = null;
+		while(consequence == null){
 			if(rand.nextBoolean()){
-				postcondition = createChoicesParentStatement(choicesParentParameters);
+				consequence = createChoicesParentStatement(choicesParentParameters);
 			} else {
-				postcondition = createExpectedStatement(expectedParameters);
+				consequence = createExpectedStatement(expectedParameters);
 			}
 		}
 
-		return new Constraint("constraint", null, premise, postcondition);
+		return new Constraint("constraint", null, premise, consequence);
 	}
 
 	private AbstractStatement createChoicesParentStatement(List<MethodParameterNode> parameters) {
@@ -595,7 +595,7 @@ public class XmlParserSerializerTest {
 
 	private void compareConstraints(Constraint constraint1, Constraint constraint2) {
 		compareBasicStatements(constraint1.getPremise(), constraint2.getPremise());
-		compareBasicStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
+		compareBasicStatements(constraint1.getConsequence(), constraint2.getConsequence());
 	}
 
 	private void compareBasicStatements(AbstractStatement statement1, AbstractStatement statement2) {

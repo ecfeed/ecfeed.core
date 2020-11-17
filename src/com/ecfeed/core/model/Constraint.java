@@ -24,14 +24,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	private String fName;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
-	private AbstractStatement fPrecondition;
-	private AbstractStatement fPostcondition;
+	private AbstractStatement fPremise;
+	private AbstractStatement fConsequence;
 
 
 	public Constraint(String name,
 			IModelChangeRegistrator modelChangeRegistrator,
 			AbstractStatement premise, 
-			AbstractStatement postcondition) {
+			AbstractStatement consequence) {
 
 		if (name == null) {
 			fName = "constraint";
@@ -39,8 +39,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		fName = name;
 		fModelChangeRegistrator = modelChangeRegistrator;
-		fPrecondition = premise;
-		fPostcondition = postcondition;
+		fPremise = premise;
+		fConsequence = consequence;
 	}
 
 	public String getName() {
@@ -56,7 +56,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			MessageStack outWhyAmbiguous, 
 			IExtLanguageManager extLanguageManager) {
 		
-		if (isAmbiguousForPremiseOrpostcondition(testDomain, outWhyAmbiguous, extLanguageManager)) {
+		if (isAmbiguousForPremiseOrConsequence(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			ConditionHelper.addConstraintNameToMesageStack(getName(), outWhyAmbiguous);
 			return true;
 		}
@@ -65,14 +65,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	}
 
-	private boolean isAmbiguousForPremiseOrpostcondition(
+	private boolean isAmbiguousForPremiseOrConsequence(
 			List<List<ChoiceNode>> testDomain, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager) {
 
-		if (fPrecondition.isAmbiguous(testDomain, outWhyAmbiguous, extLanguageManager)) {
+		if (fPremise.isAmbiguous(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			return true;
 		}
 
-		if (fPostcondition.isAmbiguous(testDomain, outWhyAmbiguous, extLanguageManager)) {
+		if (fConsequence.isAmbiguous(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			return true;
 		}
 
@@ -82,11 +82,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
 
-		if (fPrecondition == null) { 
+		if (fPremise == null) { 
 			return EvaluationResult.TRUE;
 		}
 
-		EvaluationResult premiseEvaluationResult = fPrecondition.evaluate(values); 
+		EvaluationResult premiseEvaluationResult = fPremise.evaluate(values); 
 
 		if (premiseEvaluationResult == EvaluationResult.FALSE) {
 			return EvaluationResult.TRUE;
@@ -96,17 +96,17 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
-		if (fPostcondition == null) {
+		if (fConsequence == null) {
 			return EvaluationResult.FALSE;
 		}
 
-		EvaluationResult postconditionEvaluationResult = fPostcondition.evaluate(values);
+		EvaluationResult consequenceEvaluationResult = fConsequence.evaluate(values);
 
-		if (postconditionEvaluationResult == EvaluationResult.TRUE) {
+		if (consequenceEvaluationResult == EvaluationResult.TRUE) {
 			return EvaluationResult.TRUE;
 		}
 
-		if (postconditionEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+		if (consequenceEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
@@ -116,12 +116,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public boolean adapt(List<ChoiceNode> values) {
 
-		if (fPrecondition == null) {
+		if (fPremise == null) {
 			return true;
 		}
 
-		if (fPrecondition.evaluate(values) == EvaluationResult.TRUE) {
-			return fPostcondition.adapt(values);
+		if (fPremise.evaluate(values) == EvaluationResult.TRUE) {
+			return fConsequence.adapt(values);
 		}
 
 		return true;
@@ -135,20 +135,20 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 		
-		String premiseString = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
-		String postconditionString = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
+		String premiseString = AbstractStatementHelper.createSignature(fPremise, extLanguageManager);
+		String consequenceString = AbstractStatementHelper.createSignature(fConsequence, extLanguageManager);
 
-		return premiseString + " => " + postconditionString;
+		return premiseString + " => " + consequenceString;
 	}
 
 	@Override
 	public boolean mentions(int dimension) {
 
-		if (fPrecondition.mentions(dimension)) {
+		if (fPremise.mentions(dimension)) {
 			return true;
 		}
 
-		if (fPostcondition.mentions(dimension)) {
+		if (fConsequence.mentions(dimension)) {
 			return true;
 		}
 
@@ -157,26 +157,26 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public AbstractStatement getPremise() {
 
-		return fPrecondition;
+		return fPremise;
 	}
 
-	public AbstractStatement getPostcondition() {
+	public AbstractStatement getConsequence() {
 
-		return fPostcondition;
+		return fConsequence;
 	}
 
 	public void setPremise(AbstractStatement statement) {
 
-		fPrecondition = statement;
+		fPremise = statement;
 
 		if (fModelChangeRegistrator != null) {
 			fModelChangeRegistrator.registerChange();
 		}
 	}
 
-	public void setPostcondition(AbstractStatement postcondition) {
+	public void setConsequence(AbstractStatement consequence) {
 
-		fPostcondition = postcondition;
+		fConsequence = consequence;
 
 		if (fModelChangeRegistrator != null) {
 			fModelChangeRegistrator.registerChange();
@@ -185,35 +185,35 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public boolean mentions(MethodParameterNode parameter) {
 
-		return fPrecondition.mentions(parameter) || fPostcondition.mentions(parameter);
+		return fPremise.mentions(parameter) || fConsequence.mentions(parameter);
 	}
 
 	public boolean mentions(MethodParameterNode parameter, String label) {
 
-		return fPrecondition.mentions(parameter, label) || fPostcondition.mentions(parameter, label);
+		return fPremise.mentions(parameter, label) || fConsequence.mentions(parameter, label);
 	}
 
 	public boolean mentions(ChoiceNode choice) {
 
-		return fPrecondition.mentions(choice) || fPostcondition.mentions(choice);
+		return fPremise.mentions(choice) || fConsequence.mentions(choice);
 	}
 
 	public List<ChoiceNode> getListOfChoices() { // TODO - remove ? exists: getReferencedChoices
 		
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
-		result.addAll(fPrecondition.getListOfChoices());
-		result.addAll(fPostcondition.getListOfChoices());
+		result.addAll(fPremise.getListOfChoices());
+		result.addAll(fConsequence.getListOfChoices());
 		
 		return result;
 	}
 
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 
-		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {
+		if (fPremise.mentionsParameterAndOrderRelation(parameter)) {
 			return true;
 		}
 
-		if (fPostcondition.mentionsParameterAndOrderRelation(parameter)) {
+		if (fConsequence.mentionsParameterAndOrderRelation(parameter)) {
 			return true;
 		}
 
@@ -222,15 +222,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public Constraint getCopy(){
 
-		AbstractStatement premise = fPrecondition.getCopy();
-		AbstractStatement postcondition = fPostcondition.getCopy();
+		AbstractStatement premise = fPremise.getCopy();
+		AbstractStatement consequence = fConsequence.getCopy();
 
-		return new Constraint(new String(fName), fModelChangeRegistrator, premise, postcondition);
+		return new Constraint(new String(fName), fModelChangeRegistrator, premise, consequence);
 	}
 
 	public boolean updateReferences(MethodNode method) {
 
-		if (fPrecondition.updateReferences(method) && fPostcondition.updateReferences(method)) {
+		if (fPremise.updateReferences(method) && fConsequence.updateReferences(method)) {
 			return true;
 		}
 
@@ -241,8 +241,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public Set<ChoiceNode> getReferencedChoices() {
 
 		try {
-			Set<ChoiceNode> referenced = (Set<ChoiceNode>)fPrecondition.accept(new ReferencedChoicesProvider());
-			referenced.addAll((Set<ChoiceNode>)fPostcondition.accept(new ReferencedChoicesProvider()));
+			Set<ChoiceNode> referenced = (Set<ChoiceNode>)fPremise.accept(new ReferencedChoicesProvider());
+			referenced.addAll((Set<ChoiceNode>)fConsequence.accept(new ReferencedChoicesProvider()));
 
 			return referenced;
 		} catch(Exception e) {
@@ -255,10 +255,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		try{
 			Set<AbstractParameterNode> referenced = 
-					(Set<AbstractParameterNode>)fPrecondition.accept(new ReferencedParametersProvider());
+					(Set<AbstractParameterNode>)fPremise.accept(new ReferencedParametersProvider());
 
 			referenced.addAll(
-					(Set<AbstractParameterNode>)fPostcondition.accept(new ReferencedParametersProvider()));
+					(Set<AbstractParameterNode>)fConsequence.accept(new ReferencedParametersProvider()));
 
 			return referenced;
 		} catch(Exception e) {
@@ -270,8 +270,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public Set<String> getReferencedLabels(MethodParameterNode parameter) {
 
 		try {
-			Set<String> referenced = (Set<String>)fPrecondition.accept(new ReferencedLabelsProvider(parameter));
-			referenced.addAll((Set<String>)fPostcondition.accept(new ReferencedLabelsProvider(parameter)));
+			Set<String> referenced = (Set<String>)fPremise.accept(new ReferencedLabelsProvider(parameter));
+			referenced.addAll((Set<String>)fConsequence.accept(new ReferencedLabelsProvider(parameter)));
 
 			return referenced;
 		} catch(Exception e) {
@@ -281,11 +281,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	boolean mentionsParameter(MethodParameterNode methodParameter) {
 
-		if (fPrecondition.mentions(methodParameter)) {
+		if (fPremise.mentions(methodParameter)) {
 			return true;
 		}
 
-		if (fPostcondition.mentions(methodParameter)) {
+		if (fConsequence.mentions(methodParameter)) {
 			return true;
 		}
 
