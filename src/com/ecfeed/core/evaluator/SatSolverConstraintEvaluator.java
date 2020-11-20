@@ -595,9 +595,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		AbstractStatement precondition = constraint.getPrecondition(), postcondition = constraint.getPostcondition();
 		if (postcondition instanceof ExpectedValueStatement) {
-			Integer premiseID = null;
+			Integer preconditionId = null;
 			try {
-				premiseID =
+				preconditionId =
 						(Integer) precondition.accept(
 								new ParseConstraintToSATVisitor(
 										fMethodNode,
@@ -606,14 +606,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 										fChoiceMappingsBucket,
 										fChoiceToSolverIdMappings));
 
-				outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) postcondition));
+				outExpectedValConstraints.add(new Pair<>(preconditionId, (ExpectedValueStatement) postcondition));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
-			Integer premiseID = null, consequenceID = null;
+			Integer preconditionId = null, consequenceID = null;
 			try {
-				premiseID = (Integer) precondition.accept(
+				preconditionId = (Integer) precondition.accept(
 						new ParseConstraintToSATVisitor(
 								fMethodNode,
 								fSat4Solver,
@@ -633,7 +633,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 				e.printStackTrace();
 			}
 
-			fSat4Solver.addSat4Clause(new int[]{-premiseID, consequenceID});
+			fSat4Solver.addSat4Clause(new int[]{-preconditionId, consequenceID});
 		}
 	}
 

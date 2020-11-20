@@ -86,13 +86,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return EvaluationResult.TRUE;
 		}
 
-		EvaluationResult premiseEvaluationResult = fPrecondition.evaluate(values); 
+		EvaluationResult preconditionEvaluationResult = fPrecondition.evaluate(values);
 
-		if (premiseEvaluationResult == EvaluationResult.FALSE) {
+		if (preconditionEvaluationResult == EvaluationResult.FALSE) {
 			return EvaluationResult.TRUE;
 		}
 
-		if (premiseEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+		if (preconditionEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
@@ -135,10 +135,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		String premiseString = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
-		String consequenceString = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
+		String preconditionSignature = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
+		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
 
-		return premiseString + " => " + consequenceString;
+		return preconditionSignature + " => " + postconditionSignature;
 	}
 
 	@Override
