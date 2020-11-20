@@ -35,7 +35,7 @@ public class ConstraintTest {
 	}
 
 	@Test
-	public void testSetPremise() {
+	public void testSetPrecondition() {
 		AbstractStatement statement1 = new StaticStatement(true, null); 
 		AbstractStatement statement2 = new StaticStatement(false, null); 
 		AbstractStatement statement3 = new StaticStatement(false, null);
@@ -47,7 +47,7 @@ public class ConstraintTest {
 	}
 
 	@Test
-	public void testSetConsequence() {
+	public void testSetPostcondition() {
 		AbstractStatement statement1 = new StaticStatement(true, null); 
 		AbstractStatement statement2 = new StaticStatement(false, null); 
 		AbstractStatement statement3 = new StaticStatement(false, null);
@@ -85,10 +85,10 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullsForValueCondition() {
 
-		AbstractStatement premise = createPremiseWithValueCondition();
-		AbstractStatement consequence = createConsequenceWithValueCondition();
+		AbstractStatement precondition = createPreconditionWithValueCondition();
+		AbstractStatement postcondition = createPostconditionWithValueCondition();
 
-		Constraint constraint = new Constraint("c", null, premise, consequence);
+		Constraint constraint = new Constraint("c", null, precondition, postcondition);
 
 		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
@@ -102,10 +102,10 @@ public class ConstraintTest {
 		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 
-		AbstractStatement premise = createPremiseWithChoiceCondition(choice1);
-		AbstractStatement consequence = createConsequenceWithChoiceCondition(choice2);
+		AbstractStatement precondition = createPreconditionWithChoiceCondition(choice1);
+		AbstractStatement postcondition = createPostconditionWithChoiceCondition(choice2);
 
-		Constraint constraint = new Constraint("c", null, premise, consequence);
+		Constraint constraint = new Constraint("c", null, precondition, postcondition);
 
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
@@ -116,10 +116,10 @@ public class ConstraintTest {
 		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
 		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
 
-		AbstractStatement premise = createStatementWithParameterCondition(parameter1, parameter2);
-		AbstractStatement consequence = createStatementWithParameterCondition(parameter1, parameter2);
+		AbstractStatement precondition = createStatementWithParameterCondition(parameter1, parameter2);
+		AbstractStatement postcondition = createStatementWithParameterCondition(parameter1, parameter2);
 
-		Constraint constraint = new Constraint("c", null, premise, consequence);
+		Constraint constraint = new Constraint("c", null, precondition, postcondition);
 
 		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
@@ -137,7 +137,7 @@ public class ConstraintTest {
 		choice11.setParent(parameter1);
 		choice12.setParent(parameter1);
 
-		AbstractStatement premise = 
+		AbstractStatement precondition =
 				RelationStatement.createStatementWithChoiceCondition(
 						parameter1, EMathRelation.EQUAL, choice11);
 
@@ -146,7 +146,7 @@ public class ConstraintTest {
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 		choice2.setParent(parameter2);
 
-		AbstractStatement consequence = 
+		AbstractStatement postcondition =
 				RelationStatement.createStatementWithChoiceCondition(
 						parameter2, EMathRelation.EQUAL, choice2);
 
@@ -156,7 +156,7 @@ public class ConstraintTest {
 		parameter1.setParent(methodNode);
 		parameter2.setParent(methodNode);
 
-		Constraint constraint = new Constraint("c", null, premise, consequence);
+		Constraint constraint = new Constraint("c", null, precondition, postcondition);
 
 		List<ChoiceNode> values = new ArrayList<ChoiceNode>();
 		values.add(choice12);
@@ -183,18 +183,18 @@ public class ConstraintTest {
 		assertTrue(constraint.evaluate(values) == EvaluationResult.INSUFFICIENT_DATA);
 	}
 
-	private AbstractStatement createPremiseWithValueCondition() {
+	private AbstractStatement createPreconditionWithValueCondition() {
 
 		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
 
-		AbstractStatement premise = 
+		AbstractStatement precondition =
 				RelationStatement.createStatementWithValueCondition(
 						parameter1, EMathRelation.EQUAL, "A");
 
-		return premise;
+		return precondition;
 	}
 
-	private AbstractStatement createConsequenceWithValueCondition() {
+	private AbstractStatement createPostconditionWithValueCondition() {
 
 		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
 
@@ -205,36 +205,36 @@ public class ConstraintTest {
 		return consequence;
 	}
 
-	private AbstractStatement createPremiseWithChoiceCondition(ChoiceNode choiceNode) {
+	private AbstractStatement createPreconditionWithChoiceCondition(ChoiceNode choiceNode) {
 
 		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
 
-		AbstractStatement premise = 
+		AbstractStatement precondition =
 				RelationStatement.createStatementWithChoiceCondition(
 						parameter1, EMathRelation.EQUAL, choiceNode);
 
-		return premise;
+		return precondition;
 	}
 
-	private AbstractStatement createConsequenceWithChoiceCondition(ChoiceNode choiceNode) {
+	private AbstractStatement createPostconditionWithChoiceCondition(ChoiceNode choiceNode) {
 
 		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
 
-		AbstractStatement consequence = 
+		AbstractStatement postcondition =
 				RelationStatement.createStatementWithChoiceCondition(
 						parameter2, EMathRelation.EQUAL, choiceNode);
 
-		return consequence;
+		return postcondition;
 	}
 
 	private AbstractStatement createStatementWithParameterCondition(
 			MethodParameterNode parameter1, MethodParameterNode parameter2) {
 
-		AbstractStatement premise = 
+		AbstractStatement precondition =
 				RelationStatement.createStatementWithParameterCondition(
 						parameter1, EMathRelation.EQUAL, parameter2);
 
-		return premise;
+		return precondition;
 	}
 
 }

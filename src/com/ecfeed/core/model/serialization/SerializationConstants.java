@@ -22,8 +22,8 @@ public class SerializationConstants {
 	public static final String TEST_PARAMETER_NODE_NAME = "TestParameter";
 	public static final String EXPECTED_PARAMETER_NODE_NAME = "ExpectedValue";
 	public static final String CONSTRAINT_NODE_NAME = "Constraint";
-	public static final String CONSTRAINT_PREMISE_NODE_NAME = "Premise";
-	public static final String CONSTRAINT_CONSEQUENCE_NODE_NAME = "Consequence";
+	public static final String CONSTRAINT_PRECONDITION_NODE_NAME = "Premise";
+	public static final String CONSTRAINT_POSTCONDITION_NODE_NAME = "Consequence";
 	public static final String CONSTRAINT_CHOICE_STATEMENT_NODE_NAME = "Statement";
 	public static final String CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME = "ParameterStatement";
 	public static final String CONSTRAINT_VALUE_STATEMENT_NODE_NAME = "ValueStatement"; 

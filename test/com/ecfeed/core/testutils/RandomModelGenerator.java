@@ -201,13 +201,13 @@ public class RandomModelGenerator {
 				new Constraint(
 						"constraint", 
 						method.getModelChangeRegistrator(), 
-						generatePremise(method), 
-						generateConsequence(method));
+						generatePrecondition(method),
+						generatePostcondition(method));
 
 		return new ConstraintNode(name, constraint, null);
 	}
 
-	public AbstractStatement generatePremise(MethodNode method) {
+	public AbstractStatement generatePrecondition(MethodNode method) {
 		return generateStatement(method, MAX_STATEMENTS_DEPTH);
 	}
 
@@ -309,7 +309,7 @@ public class RandomModelGenerator {
 		return statement;
 	}
 
-	public AbstractStatement generateConsequence(MethodNode method) {
+	public AbstractStatement generatePostcondition(MethodNode method) {
 		if(method.getParameters().size() == 0){
 			method.addParameter(generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1));
 		}

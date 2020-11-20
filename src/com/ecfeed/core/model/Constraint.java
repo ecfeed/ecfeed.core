@@ -56,7 +56,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			MessageStack outWhyAmbiguous, 
 			IExtLanguageManager extLanguageManager) {
 
-		if (isAmbiguousForPremiseOrConsequence(testDomain, outWhyAmbiguous, extLanguageManager)) {
+		if (isAmbiguousForPreconditionOrPostcondition(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			ConditionHelper.addConstraintNameToMesageStack(getName(), outWhyAmbiguous);
 			return true;
 		}
@@ -65,7 +65,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	}
 
-	private boolean isAmbiguousForPremiseOrConsequence(
+	private boolean isAmbiguousForPreconditionOrPostcondition(
 			List<List<ChoiceNode>> testDomain, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager) {
 
 		if (fPrecondition.isAmbiguous(testDomain, outWhyAmbiguous, extLanguageManager)) {

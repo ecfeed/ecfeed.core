@@ -14,9 +14,9 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.ANDROID
 import static com.ecfeed.core.model.serialization.SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.COMMENTS_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.LABEL_ATTRIBUTE_NAME;
@@ -218,19 +218,19 @@ public abstract class XomBuilder implements IModelVisitor {
 		AbstractStatement precondition = node.getConstraint().getPrecondition();
 		AbstractStatement postcondition = node.getConstraint().getPostcondition();
 
-		Element premiseElement = new Element(CONSTRAINT_PREMISE_NODE_NAME);
-		premiseElement.appendChild((Element)precondition.accept(
+		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
+		preconditionElement.appendChild((Element)precondition.accept(
 				new XomStatementBuilder(
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
-		Element consequenceElement = new Element(CONSTRAINT_CONSEQUENCE_NODE_NAME);
+		Element consequenceElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);
 		consequenceElement.appendChild((Element)postcondition.accept(
 				new XomStatementBuilder(
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
-		targetConstraintElement.appendChild(premiseElement);
+		targetConstraintElement.appendChild(preconditionElement);
 		targetConstraintElement.appendChild(consequenceElement);
 
 		return targetConstraintElement;
