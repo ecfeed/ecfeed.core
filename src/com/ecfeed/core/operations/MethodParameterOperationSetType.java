@@ -243,8 +243,8 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 					IStatementVisitor statementAdapter = new StatementAdapter();
 					try {
-						if (!(boolean) constraint.getPremise().accept(statementAdapter)
-								|| !(boolean) constraint.getConsequence().accept(statementAdapter)) {
+						if (!(boolean) constraint.getPrecondition().accept(statementAdapter)
+								|| !(boolean) constraint.getPostcondition().accept(statementAdapter)) {
 							methodNode.removeConstraint(constraintItr);
 						}
 					} catch (Exception e) {
@@ -255,8 +255,8 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		}
 
 		private boolean isRelevantConstraint(Constraint constraint) {
-			if (constraint.getConsequence() instanceof ExpectedValueStatement) {
-				ExpectedValueStatement expectedValueStatement = (ExpectedValueStatement)constraint.getConsequence();
+			if (constraint.getPostcondition() instanceof ExpectedValueStatement) {
+				ExpectedValueStatement expectedValueStatement = (ExpectedValueStatement)constraint.getPostcondition();
 				MethodParameterNode methodParameterNode = expectedValueStatement.getParameter();
 				if(fMethodParameterNode.equals(methodParameterNode)) {
 					return true;
@@ -441,8 +441,8 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				IStatementVisitor valueRestorer = new StatementValueRestorer();
 				for(ConstraintNode constraint : fMethodParameterNode.getMethod().getConstraintNodes()) {
 					try {
-						constraint.getConstraint().getPremise().accept(valueRestorer);
-						constraint.getConstraint().getConsequence().accept(valueRestorer);
+						constraint.getConstraint().getPrecondition().accept(valueRestorer);
+						constraint.getConstraint().getPostcondition().accept(valueRestorer);
 					} catch(Exception e) {SystemLogger.logCatch(e);}
 				}
 			}

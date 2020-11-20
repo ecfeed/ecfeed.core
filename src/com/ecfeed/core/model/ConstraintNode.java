@@ -181,11 +181,11 @@ public class ConstraintNode extends AbstractNode{
 		}
 
 		ConstraintNode compared = (ConstraintNode)node;
-		if (getConstraint().getPremise().compare(compared.getConstraint().getPremise()) == false) {
+		if (getConstraint().getPrecondition().compare(compared.getConstraint().getPrecondition()) == false) {
 			return false;
 		}
 
-		if (getConstraint().getConsequence().compare(compared.getConstraint().getConsequence()) == false) {
+		if (getConstraint().getPostcondition().compare(compared.getConstraint().getPostcondition()) == false) {
 			return false;
 		}
 

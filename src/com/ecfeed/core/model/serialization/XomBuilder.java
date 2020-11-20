@@ -215,8 +215,8 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
 
-		AbstractStatement premise = node.getConstraint().getPremise();
-		AbstractStatement consequence = node.getConstraint().getConsequence();
+		AbstractStatement premise = node.getConstraint().getPrecondition();
+		AbstractStatement consequence = node.getConstraint().getPostcondition();
 
 		Element premiseElement = new Element(CONSTRAINT_PREMISE_NODE_NAME);
 		premiseElement.appendChild((Element)premise.accept(

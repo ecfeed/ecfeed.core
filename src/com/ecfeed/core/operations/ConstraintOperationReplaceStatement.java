@@ -41,10 +41,10 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 		setOneNodeToSelect(fTarget);
 		Constraint constraint = fTarget.getConstraint();
 
-		if (constraint.getPremise() == fCurrentStatement) {
+		if (constraint.getPrecondition() == fCurrentStatement) {
 			constraint.setPremise(fNewStatement);
 		}
-		else if (constraint.getConsequence() == fCurrentStatement) {
+		else if (constraint.getPostcondition() == fCurrentStatement) {
 			constraint.setConsequence(fNewStatement);
 		}
 		else {
