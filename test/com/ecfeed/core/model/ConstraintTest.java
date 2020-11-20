@@ -41,9 +41,9 @@ public class ConstraintTest {
 		AbstractStatement statement3 = new StaticStatement(false, null);
 
 		Constraint constraint = new Constraint("c", null, statement1, statement2);
-		assertTrue(constraint.getPremise().equals(statement1));
+		assertTrue(constraint.getPrecondition().equals(statement1));
 		constraint.setPremise(statement3);
-		assertTrue(constraint.getPremise().equals(statement3));
+		assertTrue(constraint.getPrecondition().equals(statement3));
 	}
 
 	@Test
@@ -53,9 +53,9 @@ public class ConstraintTest {
 		AbstractStatement statement3 = new StaticStatement(false, null);
 
 		Constraint constraint = new Constraint("c", null, statement1, statement2);
-		assertTrue(constraint.getConsequence().equals(statement2));
+		assertTrue(constraint.getPostcondition().equals(statement2));
 		constraint.setConsequence(statement3);
-		assertTrue(constraint.getConsequence().equals(statement3));
+		assertTrue(constraint.getPostcondition().equals(statement3));
 	}
 
 	@Test

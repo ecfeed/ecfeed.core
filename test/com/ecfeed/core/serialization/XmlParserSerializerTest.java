@@ -594,8 +594,8 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareConstraints(Constraint constraint1, Constraint constraint2) {
-		compareBasicStatements(constraint1.getPremise(), constraint2.getPremise());
-		compareBasicStatements(constraint1.getConsequence(), constraint2.getConsequence());
+		compareBasicStatements(constraint1.getPrecondition(), constraint2.getPrecondition());
+		compareBasicStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
 	}
 
 	private void compareBasicStatements(AbstractStatement statement1, AbstractStatement statement2) {

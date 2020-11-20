@@ -145,13 +145,13 @@ public class ModelStringifier {
 			result += " ";
 		}
 		result += "Premise:\n";
-		result += stringify(node.getConstraint().getPremise(), indent + 4);
+		result += stringify(node.getConstraint().getPrecondition(), indent + 4);
 		result += "\n";
 		for(int i = 0; i < indent + 2; i++){
 			result += " ";
 		}
 		result += "Consequence:\n";
-		result += stringify(node.getConstraint().getConsequence(), indent + 4);
+		result += stringify(node.getConstraint().getPostcondition(), indent + 4);
 		return result;
 	}
 
