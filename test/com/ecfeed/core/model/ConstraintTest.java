@@ -129,7 +129,7 @@ public class ConstraintTest {
 
 
 	@Test
-	public void testTupleWithNullConsequenceForChoiceCondition() {
+	public void testTupleWithNullPostconditionForChoiceCondition() {
 
 		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
 		ChoiceNode choice11 = new ChoiceNode("choice11", "value11", null);
@@ -198,11 +198,11 @@ public class ConstraintTest {
 
 		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
 
-		AbstractStatement consequence = 
+		AbstractStatement postcondition =
 				RelationStatement.createStatementWithValueCondition(
 						parameter2, EMathRelation.EQUAL, "C");
 
-		return consequence;
+		return postcondition;
 	}
 
 	private AbstractStatement createPreconditionWithChoiceCondition(ChoiceNode choiceNode) {

@@ -100,13 +100,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return EvaluationResult.FALSE;
 		}
 
-		EvaluationResult consequenceEvaluationResult = fPostcondition.evaluate(values);
+		EvaluationResult postconditionEvaluationResult = fPostcondition.evaluate(values);
 
-		if (consequenceEvaluationResult == EvaluationResult.TRUE) {
+		if (postconditionEvaluationResult == EvaluationResult.TRUE) {
 			return EvaluationResult.TRUE;
 		}
 
-		if (consequenceEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+		if (postconditionEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 

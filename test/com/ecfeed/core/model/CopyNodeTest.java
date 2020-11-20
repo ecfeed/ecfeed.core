@@ -140,9 +140,9 @@ public class CopyNodeTest{
 		precondition.addStatement(new StaticStatement(true, null));
 		precondition.addStatement(RelationStatement.createStatementWithChoiceCondition(par1, EMathRelation.EQUAL, choice1));
 		precondition.addStatement(RelationStatement.createStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
-		ExpectedValueStatement consequence = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
+		ExpectedValueStatement postcondition = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
 
-		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", null, precondition, consequence), null);
+		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", null, precondition, postcondition), null);
 		method.addConstraint(constraint);
 
 		ConstraintNode copy = constraint.makeClone();
