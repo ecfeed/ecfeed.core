@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 //ambigous always false
-public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement{
+public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement{  // TODO CONSTRAINTS-NEW rename to ExpectedValueAssignment
 
 	MethodParameterNode fParameter;
 	ChoiceNode fCondition;
