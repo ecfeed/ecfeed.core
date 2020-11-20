@@ -14,28 +14,28 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 public enum ConstraintType {
 
-	IMPLICATION("IMPLICATION");
+	IMPLICATION("Implication");
 
-	private final String fCode;
+	private final String fDescription;
 
-	ConstraintType(String code) {
+	ConstraintType(String description) {
 
-		fCode = code;
+		fDescription = description;
 	}
 
-	public String getCode() {
+	public String getDescription() {
 
-		return fCode;
+		return fDescription;
 	}
 
-	public static String[] getItems() {
+	public static String[] getDescriptions() {
 
-		return new String[] {IMPLICATION.getCode()};
+		return new String[] {IMPLICATION.getDescription()};
 	}
 
-	public static String getDefaultItem() {
+	public static String getDefauldDescription() {
 
-		return IMPLICATION.getCode();
+		return IMPLICATION.getDescription();
 	}
 
 	public static ConstraintType parse(String text) {
@@ -45,7 +45,7 @@ public enum ConstraintType {
 			return null;
 		}
 
-		if (text.equals(IMPLICATION.getCode())) {
+		if (text.equals(IMPLICATION.getDescription())) {
 			return IMPLICATION;
 		}
 
