@@ -42,10 +42,10 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 		Constraint constraint = fTarget.getConstraint();
 
 		if (constraint.getPrecondition() == fCurrentStatement) {
-			constraint.setPremise(fNewStatement);
+			constraint.setPrecondition(fNewStatement);
 		}
 		else if (constraint.getPostcondition() == fCurrentStatement) {
-			constraint.setConsequence(fNewStatement);
+			constraint.setPostcondition(fNewStatement);
 		}
 		else {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TARGET_STATEMENT_NOT_FOUND_PROBLEM);

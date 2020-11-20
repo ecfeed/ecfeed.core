@@ -165,7 +165,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return fPostcondition;
 	}
 
-	public void setPremise(AbstractStatement statement) {
+	public void setPrecondition(AbstractStatement statement) {
 
 		fPrecondition = statement;
 
@@ -174,7 +174,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	public void setConsequence(AbstractStatement postcondition) {
+	public void setPostcondition(AbstractStatement postcondition) {
 
 		fPostcondition = postcondition;
 
