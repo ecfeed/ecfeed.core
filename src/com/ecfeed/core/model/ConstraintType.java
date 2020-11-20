@@ -28,6 +28,16 @@ public enum ConstraintType {
 		return fCode;
 	}
 
+	public static String[] getItems() {
+
+		return new String[] {IMPLICATION.getCode()};
+	}
+
+	public static String getDefaultItem() {
+
+		return IMPLICATION.getCode();
+	}
+
 	public static ConstraintType parse(String text) {
 
 		if (text == null) {
