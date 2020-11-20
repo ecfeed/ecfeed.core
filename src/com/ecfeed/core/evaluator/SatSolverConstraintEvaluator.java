@@ -557,17 +557,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			return;
 		}
 
-		AbstractStatement premise = constraint.getPrecondition(), consequence = constraint.getPostcondition();
-		if (consequence instanceof ExpectedValueStatement) {
+		AbstractStatement precondition = constraint.getPrecondition(), postcondition = constraint.getPostcondition();
+		if (postcondition instanceof ExpectedValueStatement) {
 			try {
-				premise.accept(new CollectingStatementVisitor(inOutRelationStatements));
+				precondition.accept(new CollectingStatementVisitor(inOutRelationStatements));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				premise.accept(new CollectingStatementVisitor(inOutRelationStatements));
-				consequence.accept(new CollectingStatementVisitor(inOutRelationStatements));
+				precondition.accept(new CollectingStatementVisitor(inOutRelationStatements));
+				postcondition.accept(new CollectingStatementVisitor(inOutRelationStatements));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -593,12 +593,12 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			return;
 		}
 
-		AbstractStatement premise = constraint.getPrecondition(), consequence = constraint.getPostcondition();
-		if (consequence instanceof ExpectedValueStatement) {
+		AbstractStatement precondition = constraint.getPrecondition(), postcondition = constraint.getPostcondition();
+		if (postcondition instanceof ExpectedValueStatement) {
 			Integer premiseID = null;
 			try {
 				premiseID =
-						(Integer) premise.accept(
+						(Integer) precondition.accept(
 								new ParseConstraintToSATVisitor(
 										fMethodNode,
 										fSat4Solver,
@@ -606,14 +606,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 										fChoiceMappingsBucket,
 										fChoiceToSolverIdMappings));
 
-				outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) consequence));
+				outExpectedValConstraints.add(new Pair<>(premiseID, (ExpectedValueStatement) postcondition));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			Integer premiseID = null, consequenceID = null;
 			try {
-				premiseID = (Integer) premise.accept(
+				premiseID = (Integer) precondition.accept(
 						new ParseConstraintToSATVisitor(
 								fMethodNode,
 								fSat4Solver,
@@ -622,7 +622,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 								fChoiceToSolverIdMappings));
 
 				consequenceID =
-						(Integer) consequence.accept(
+						(Integer) postcondition.accept(
 								new ParseConstraintToSATVisitor(
 										fMethodNode,
 										fSat4Solver,

@@ -120,11 +120,11 @@ public class ModelLogger {
 		AbstractNode parent = constraintNode.getParent();
 		printMethodNode((MethodNode)parent, "parentMethod", indent + indentIncrement);
 
-		AbstractStatement premise = constraintNode.getConstraint().getPrecondition();
-		printAbstractStatement(premise, "Premise", indent + indentIncrement);
+		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+		printAbstractStatement(precondition, "Premise", indent + indentIncrement);
 
-		AbstractStatement consequence = constraintNode.getConstraint().getPostcondition();
-		printAbstractStatement(consequence, "Consequence", indent + indentIncrement);
+		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+		printAbstractStatement(postcondition, "Consequence", indent + indentIncrement);
 	}
 
 	private static void printMethodNode(MethodNode methodNode, String fieldName, int indent) {

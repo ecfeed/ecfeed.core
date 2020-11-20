@@ -174,9 +174,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	public void setConsequence(AbstractStatement consequence) {
+	public void setConsequence(AbstractStatement postcondition) {
 
-		fPostcondition = consequence;
+		fPostcondition = postcondition;
 
 		if (fModelChangeRegistrator != null) {
 			fModelChangeRegistrator.registerChange();
@@ -222,10 +222,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public Constraint getCopy(){
 
-		AbstractStatement premise = fPrecondition.getCopy();
-		AbstractStatement consequence = fPostcondition.getCopy();
+		AbstractStatement precondition = fPrecondition.getCopy();
+		AbstractStatement postcondition = fPostcondition.getCopy();
 
-		return new Constraint(new String(fName), fModelChangeRegistrator, premise, consequence);
+		return new Constraint(new String(fName), fModelChangeRegistrator, precondition, postcondition);
 	}
 
 	public boolean updateReferences(MethodNode method) {

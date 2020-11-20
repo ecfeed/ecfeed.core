@@ -215,17 +215,17 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
 
-		AbstractStatement premise = node.getConstraint().getPrecondition();
-		AbstractStatement consequence = node.getConstraint().getPostcondition();
+		AbstractStatement precondition = node.getConstraint().getPrecondition();
+		AbstractStatement postcondition = node.getConstraint().getPostcondition();
 
 		Element premiseElement = new Element(CONSTRAINT_PREMISE_NODE_NAME);
-		premiseElement.appendChild((Element)premise.accept(
+		premiseElement.appendChild((Element)precondition.accept(
 				new XomStatementBuilder(
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
 		Element consequenceElement = new Element(CONSTRAINT_CONSEQUENCE_NODE_NAME);
-		consequenceElement.appendChild((Element)consequence.accept(
+		consequenceElement.appendChild((Element)postcondition.accept(
 				new XomStatementBuilder(
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));

@@ -486,8 +486,8 @@ public abstract class XomAnalyser {
 			return Optional.empty();
 		}
 
-		Optional<AbstractStatement> premise = null;
-		Optional<AbstractStatement> consequence = null;
+		Optional<AbstractStatement> precondition = null;
+		Optional<AbstractStatement> postcondition = null;
 
 		if ((getIterableChildren(element, SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME).size() != 1) ||
 				(getIterableChildren(element, SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME).size() != 1)) {
@@ -499,9 +499,9 @@ public abstract class XomAnalyser {
 		for (Element child : getIterableChildren(element, SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME)) {
 			if (child.getLocalName().equals(SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME)) {
 				if (getIterableChildren(child).size() == 1) {
-					//there is only one statement per premise or consequence that is either
+					//there is only one statement per precondition or postcondition that is either
 					//a single statement or statement array
-					premise = parseStatement(child.getChildElements().get(0), method, errorList);
+					precondition = parseStatement(child.getChildElements().get(0), method, errorList);
 				} else {
 					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 					return Optional.empty();
@@ -512,7 +512,7 @@ public abstract class XomAnalyser {
 		for (Element child : getIterableChildren(element, SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME)) {
 			if (child.getLocalName().equals(SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME)) {
 				if (getIterableChildren(child).size() == 1) {
-					consequence = parseStatement(child.getChildElements().get(0), method, errorList);
+					postcondition = parseStatement(child.getChildElements().get(0), method, errorList);
 				} else {
 					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 					return Optional.empty();
@@ -523,12 +523,12 @@ public abstract class XomAnalyser {
 			}
 		}
 		
-		if (!premise.isPresent() || !consequence.isPresent()) {
+		if (!precondition.isPresent() || !postcondition.isPresent()) {
 			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
 			return Optional.empty();
 		}
 
-		Constraint constraint = new Constraint(name, method.getModelChangeRegistrator(), premise.get(), consequence.get());
+		Constraint constraint = new Constraint(name, method.getModelChangeRegistrator(), precondition.get(), postcondition.get());
 		ConstraintNode targetConstraint = new ConstraintNode(name, constraint, method.getModelChangeRegistrator());
 
 		targetConstraint.setDescription(parseComments(element));
