@@ -29,9 +29,9 @@ public class ConstraintNodeHelperTest {
 
 		c1.setName("c_1");
 
-		c1.getConstraint().setPremise(new StaticStatement(false, null));
+		c1.getConstraint().setPrecondition(new StaticStatement(false, null));
 
-		c1.getConstraint().setConsequence(new StaticStatement(false, null));
+		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
 
 		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("c_1: false => false", signature);

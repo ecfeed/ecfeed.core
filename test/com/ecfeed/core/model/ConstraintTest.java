@@ -42,7 +42,7 @@ public class ConstraintTest {
 
 		Constraint constraint = new Constraint("c", null, statement1, statement2);
 		assertTrue(constraint.getPrecondition().equals(statement1));
-		constraint.setPremise(statement3);
+		constraint.setPrecondition(statement3);
 		assertTrue(constraint.getPrecondition().equals(statement3));
 	}
 
@@ -54,7 +54,7 @@ public class ConstraintTest {
 
 		Constraint constraint = new Constraint("c", null, statement1, statement2);
 		assertTrue(constraint.getPostcondition().equals(statement2));
-		constraint.setConsequence(statement3);
+		constraint.setPostcondition(statement3);
 		assertTrue(constraint.getPostcondition().equals(statement3));
 	}
 
