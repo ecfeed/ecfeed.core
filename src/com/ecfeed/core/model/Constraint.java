@@ -23,6 +23,7 @@ import com.ecfeed.core.utils.MessageStack;
 public class Constraint implements IConstraint<ChoiceNode> {
 
 	private String fName;
+	private ConstraintType fConstraintType;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
 	private AbstractStatement fPrecondition;
 	private AbstractStatement fPostcondition;
@@ -50,6 +51,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public void setName(String name) {
 		fName = name;
 	}	
+	
+	public ConstraintType getConstraintType() {
+		return fConstraintType;
+	}
+	
+	public void setConstratintType(ConstraintType constraintType) {
+		fConstraintType = constraintType;
+	}
 
 	public boolean isAmbiguous(
 			List<List<ChoiceNode>> testDomain, 
