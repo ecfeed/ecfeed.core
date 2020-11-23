@@ -73,7 +73,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}	
 
-	private RelationStatement(
+	private RelationStatement( // TODO CONSTRAINTS-NEW change order of parameters
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			IStatementCondition condition) {

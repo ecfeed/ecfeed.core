@@ -50,6 +50,10 @@ public enum ConstraintType {
 			return IMPLICATION;
 		}
 
+		if (text.equals(INVARIANT.getDescription())) {
+			return INVARIANT;
+		}
+
 		reportExceptionInvalidConstraintType();
 		return null;
 	}
