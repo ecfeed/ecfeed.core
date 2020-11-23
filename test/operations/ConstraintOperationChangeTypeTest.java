@@ -16,9 +16,7 @@ import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ConstraintOperationChangeTypeTest {
 
@@ -66,31 +64,39 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
-		// checking precondition
+		StaticStatement truePrecondition = new StaticStatement(true, null);
+		checkConstraint(constraintNode, ConstraintType.INVARIANT, truePrecondition, initialPostcondition);
 
-		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
-
-		if (!(precondition instanceof StaticStatement)) {
-			fail();
-		}
-
-		StaticStatement staticPrecondition = (StaticStatement)precondition;
-
-		if (EvaluationResult.TRUE != staticPrecondition.getValue()) {
-			fail();
-		}
-
-		// checking postcondition
-
-		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
-
-		if (!(postcondition instanceof RelationStatement)) {
-			fail();
-		}
-
-		RelationStatement relationStatementPostcondition = (RelationStatement)postcondition;
-
-		assertEquals(initialPostcondition, relationStatementPostcondition);
+//		// checking type
+//
+//		assertEquals(ConstraintType.INVARIANT, constraintNode.getConstraint().getType());
+//
+//		// checking precondition
+//
+//		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+//
+//		if (!(precondition instanceof StaticStatement)) {
+//			fail();
+//		}
+//
+//		StaticStatement staticPrecondition = (StaticStatement)precondition;
+//
+//		if (EvaluationResult.TRUE != staticPrecondition.getValue()) {
+//			fail();
+//		}
+//
+//
+//		// checking postcondition
+//
+//		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+//
+//		if (!(postcondition instanceof RelationStatement)) {
+//			fail();
+//		}
+//
+//		RelationStatement relationStatementPostcondition = (RelationStatement)postcondition;
+//
+//		assertEquals(initialPostcondition, relationStatementPostcondition);
 
 		// reverse operation
 
@@ -101,15 +107,87 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
+		checkConstraint(constraintNode, ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition);
+	}
+
+	@Test
+	public void renameInvariantToImplicationTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
+		methodParameterNode2.addChoice(choiceNode2);
+
+		StaticStatement initialPrecondition =
+				new StaticStatement(true, null);
+
+		RelationStatement initialPostcondition =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+
+		Constraint constraint =
+				new Constraint("constraint", ConstraintType.INVARIANT, initialPrecondition, initialPostcondition, null);
+
+		Constraint initialConstraint = constraint.makeClone();
+
+		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
+
+		IModelOperation changeTypeOperation =
+				new ConstraintOperationChangeType(
+						constraintNode,
+						ConstraintType.IMPLICATION,
+						new ExtLanguageManagerForJava());
+
+		try {
+			changeTypeOperation.execute();
+		} catch (Exception e) {
+		}
+
+		checkConstraint(constraintNode, ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition);
+
+		// reverse operation
+
+		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();
+
+		try {
+			reverseOperation.execute();
+		} catch (Exception e) {
+		}
+
+		checkConstraint(constraintNode, ConstraintType.INVARIANT, initialPrecondition, initialPostcondition);
+	}
+
+	public void checkConstraint(
+			ConstraintNode constraintNode,
+			ConstraintType constraintType,
+			AbstractStatement initialPrecondition,
+			AbstractStatement initialPostcondition) {
+
+		final Constraint constraint = constraintNode.getConstraint();
+
+		assertEquals(constraintType, constraint.getType());
+
 		// checking precondition
 
-		precondition = constraintNode.getConstraint().getPrecondition();
+		AbstractStatement precondition = constraint.getPrecondition();
 
 		assertTrue(precondition.isEqualTo(initialPrecondition));
 
 		// checking postcondition
 
-		postcondition = constraintNode.getConstraint().getPostcondition();
+		AbstractStatement postcondition = constraint.getPostcondition();
 
 		assertTrue(postcondition.isEqualTo(initialPostcondition));
 	}

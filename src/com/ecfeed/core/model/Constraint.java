@@ -15,10 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.*;
 
 public class Constraint implements IConstraint<ChoiceNode> {
 
@@ -46,6 +43,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fPostcondition = postcondition;
 
 		fModelChangeRegistrator = modelChangeRegistrator;
+
+		// TODO CONSTRAINTS-NEW add checking type vs content with tests
 	}
 
 	public String getName() {
@@ -64,6 +63,19 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fConstraintType = constraintType;
 	}
 
+	public String checkIntegrity() {
+	    return null;
+    }
+
+    public void verify() {
+
+	    String errorMessage = checkIntegrity();
+
+	    if (errorMessage != null) {
+            ExceptionHelper.reportRuntimeException(errorMessage);
+        }
+    }
+
 	public boolean isAmbiguous(
 			List<List<ChoiceNode>> testDomain, 
 			MessageStack outWhyAmbiguous, 
@@ -75,7 +87,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		return false;
-
 	}
 
 	private boolean isAmbiguousForPreconditionOrPostcondition(
