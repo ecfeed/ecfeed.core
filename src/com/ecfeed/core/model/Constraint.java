@@ -51,11 +51,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public void setName(String name) {
 		fName = name;
 	}	
-	
+
 	public ConstraintType getConstraintType() {
 		return fConstraintType;
 	}
-	
+
 	public void setConstratintType(ConstraintType constraintType) {
 		fConstraintType = constraintType;
 	}
@@ -207,9 +207,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return fPrecondition.mentions(choice) || fPostcondition.mentions(choice);
 	}
 
-	public List<ChoiceNode> getListOfChoices() { // TODO - remove ? exists: getReferencedChoices
+	public List<ChoiceNode> getListOfChoices() {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+
 		result.addAll(fPrecondition.getListOfChoices());
 		result.addAll(fPostcondition.getListOfChoices());
 
