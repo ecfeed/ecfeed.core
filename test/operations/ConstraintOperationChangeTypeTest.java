@@ -67,37 +67,6 @@ public class ConstraintOperationChangeTypeTest {
 		StaticStatement truePrecondition = new StaticStatement(true, null);
 		checkConstraint(constraintNode, ConstraintType.INVARIANT, truePrecondition, initialPostcondition);
 
-//		// checking type
-//
-//		assertEquals(ConstraintType.INVARIANT, constraintNode.getConstraint().getType());
-//
-//		// checking precondition
-//
-//		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
-//
-//		if (!(precondition instanceof StaticStatement)) {
-//			fail();
-//		}
-//
-//		StaticStatement staticPrecondition = (StaticStatement)precondition;
-//
-//		if (EvaluationResult.TRUE != staticPrecondition.getValue()) {
-//			fail();
-//		}
-//
-//
-//		// checking postcondition
-//
-//		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
-//
-//		if (!(postcondition instanceof RelationStatement)) {
-//			fail();
-//		}
-//
-//		RelationStatement relationStatementPostcondition = (RelationStatement)postcondition;
-//
-//		assertEquals(initialPostcondition, relationStatementPostcondition);
-
 		// reverse operation
 
 		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();

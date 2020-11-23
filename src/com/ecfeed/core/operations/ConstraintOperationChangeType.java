@@ -56,7 +56,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		AbstractStatement newPrecondition = new StaticStatement(true, null);
 		constraint.setPrecondition(newPrecondition);
 
-		constraint.verify();
+		constraint.assertIsCorrect();
 
 		markModelUpdated();
 	}
@@ -83,7 +83,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			constraint.setPrecondition(fInitialConstraintCopy.getPrecondition());
 			constraint.setPostcondition(fInitialConstraintCopy.getPostcondition());
 
-			constraint.verify();
+			constraint.assertIsCorrect();
 
 			markModelUpdated();
 		}

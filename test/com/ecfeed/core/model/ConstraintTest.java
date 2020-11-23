@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,94 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 
 public class ConstraintTest {
+
+	@Test
+	public void verifyConstraintTest() {
+
+		MethodNode  methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		// statements
+
+		StaticStatement falseStatement = new StaticStatement(false, null);
+
+		StaticStatement trueStatement = new StaticStatement(true, null);
+
+		RelationStatement relationStatementWithChoice =
+				RelationStatement.createStatementWithChoiceCondition(
+					methodParameterNode1,
+					EMathRelation.EQUAL,
+					choiceNode1);
+
+		// constraints
+
+		Constraint constraint =
+				new Constraint(
+						"c",
+						ConstraintType.INVARIANT,
+						trueStatement,
+						trueStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.IMPLICATION,
+						trueStatement,
+						trueStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.IMPLICATION,
+						relationStatementWithChoice,
+						trueStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.INVARIANT,
+						relationStatementWithChoice,
+						trueStatement,
+						null);
+
+		try {
+			constraint.assertIsCorrect();
+			fail();
+		} catch (Exception e) {
+		}
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.INVARIANT,
+						falseStatement,
+						trueStatement,
+						null);
+
+		try {
+			constraint.assertIsCorrect();
+			fail();
+		} catch (Exception e) {
+		}
+
+		// TODO CONSTRAINTS-NEW
+	}
+
 	@Test
 	public void testEvaluate() {
 		AbstractStatement trueStatement = new StaticStatement(true, null); 
