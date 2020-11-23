@@ -41,7 +41,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
 		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement);
-		
+
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
@@ -288,7 +288,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public String getConditionSignature(IExtLanguageManager extLanguageManager) {
 		return fRightCondition.createSignature(extLanguageManager);
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return fRightCondition.getListOfChoices();

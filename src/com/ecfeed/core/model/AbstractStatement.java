@@ -79,7 +79,7 @@ public abstract class AbstractStatement implements IStatement {
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 		return false;
 	}
-	
+
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
 		return EvaluationResult.FALSE;

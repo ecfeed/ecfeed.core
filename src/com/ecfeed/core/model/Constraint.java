@@ -30,9 +30,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 
 	public Constraint(String name,
-					  AbstractStatement precondition,
-					  AbstractStatement postcondition,
-					  IModelChangeRegistrator modelChangeRegistrator) {
+			AbstractStatement precondition,
+			AbstractStatement postcondition,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
 		if (name == null) {
 			fName = "constraint";
