@@ -52,11 +52,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fName = name;
 	}	
 
-	public ConstraintType getConstraintType() { // TODO CONSTRAINTS-NEW rename to getType
+	public ConstraintType getType() {
 		return fConstraintType;
 	}
 
-	public void setConstratintType(ConstraintType constraintType) { // TODO CONSTRAINTS-NEW rename to setType
+	public void setType(ConstraintType constraintType) {
 		fConstraintType = constraintType;
 	}
 

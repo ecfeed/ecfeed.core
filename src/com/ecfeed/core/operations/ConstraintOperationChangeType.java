@@ -39,14 +39,14 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		Constraint constraint = fCurrentConstraintNode.getConstraint();
 
-		if (constraint.getConstraintType() == null) {
+		if (constraint.getType() == null) {
 			ExceptionHelper.reportRuntimeException("Constraint type not set.");
 		}
 
 		AbstractStatement newPrecondition = new StaticStatement(true, null);
 
 		constraint.setPrecondition(newPrecondition);
-		constraint.setConstratintType(fNewConstraintType);
+		constraint.setType(fNewConstraintType);
 
 		markModelUpdated();
 	}
@@ -71,7 +71,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			final AbstractStatement initialPrecondition = fInitialConstraintCopy.getPrecondition();
 
 			constraint.setPrecondition(initialPrecondition);
-			constraint.setConstratintType(fInitialConstraintCopy.getConstraintType());
+			constraint.setType(fInitialConstraintCopy.getType());
 
 			markModelUpdated();
 

@@ -49,7 +49,7 @@ public class ConstraintOperationChangeTypeTest {
 
 		Constraint constraint = new Constraint("constraint", initialPrecondition, initialPostcondition, null);
 
-		constraint.setConstratintType(ConstraintType.IMPLICATION); // TODO CONSTRAINTS-NEW remove after changing constraint constructor
+		constraint.setType(ConstraintType.IMPLICATION); // TODO CONSTRAINTS-NEW remove after changing constraint constructor
 
 		Constraint initialConstraint = constraint.getCopy();
 
