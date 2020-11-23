@@ -12,9 +12,7 @@ package operations;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.operations.ConstraintOperationChangeType;
-import com.ecfeed.core.operations.FactoryRenameOperation;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
@@ -109,13 +107,13 @@ public class ConstraintOperationChangeTypeTest {
 
 		precondition = constraintNode.getConstraint().getPrecondition();
 
-		assertTrue(precondition.compare(initialPrecondition));
+		assertTrue(precondition.isEqualTo(initialPrecondition));
 
 		// checking postcondition
 
 		postcondition = constraintNode.getConstraint().getPostcondition();
-		
-		assertTrue(postcondition.compare(initialPostcondition));
+
+		assertTrue(postcondition.isEqualTo(initialPostcondition));
 	}
 
 }

@@ -559,7 +559,7 @@ public class ChoiceConditionTest {
 
 		RelationStatement copy = statement.getCopy();
 
-		boolean result = statement.compare(copy);
+		boolean result = statement.isEqualTo(copy);
 		assertEquals(true, result);
 
 	}

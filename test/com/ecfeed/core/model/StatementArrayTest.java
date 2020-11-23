@@ -300,10 +300,10 @@ public class StatementArrayTest {
 		StatementArray and1 = new StatementArray(StatementArrayOperator.AND, null);
 		StatementArray and2 = new StatementArray(StatementArrayOperator.AND, null);
 
-		assertTrue(or1.compare(or2));
-		assertTrue(and1.compare(and2));
-		assertFalse(or1.compare(and1));
-		assertFalse(and1.compare(or1));
+		assertTrue(or1.isEqualTo(or2));
+		assertTrue(and1.isEqualTo(and2));
+		assertFalse(or1.isEqualTo(and1));
+		assertFalse(and1.isEqualTo(or1));
 	}
 
 	@Test
@@ -313,16 +313,16 @@ public class StatementArrayTest {
 
 		StaticStatement ss1 = new StaticStatement(true, null);
 		StaticStatement ss2 = new StaticStatement(true, null);
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 
 		s1.addStatement(ss1);
-		assertFalse(s1.compare(s2));
+		assertFalse(s1.isEqualTo(s2));
 		s2.addStatement(ss2);
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 
 		ss1.setValue(false);;
-		assertFalse(s1.compare(s2));
+		assertFalse(s1.isEqualTo(s2));
 		ss2.setValue(false);
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 	}
 }

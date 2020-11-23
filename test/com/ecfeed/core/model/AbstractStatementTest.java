@@ -48,7 +48,7 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public boolean compare(IStatement statement) {
+		public boolean isEqualTo(IStatement statement) {
 			return false;
 		}
 		@Override

@@ -148,7 +148,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean compare(IStatement statement){
+	public boolean isEqualTo(IStatement statement){
 		if(statement instanceof ExpectedValueStatement == false){
 			return false;
 		}

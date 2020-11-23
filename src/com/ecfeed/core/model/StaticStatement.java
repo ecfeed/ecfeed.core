@@ -86,7 +86,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean compare(IStatement statement){
+	public boolean isEqualTo(IStatement statement){
 		if(statement instanceof StaticStatement == false){
 			return false;
 		}

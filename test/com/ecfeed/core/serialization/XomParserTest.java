@@ -447,7 +447,7 @@ public class XomParserTest {
 	}
 
 	private void assertStatementsEqual(AbstractStatement s1, AbstractStatement s2) {
-		if(s1.compare(s2) == false){
+		if(s1.isEqualTo(s2) == false){
 			fail("Parsed statement\n" + fStringifier.stringify(s1, 0) + "\ndiffers from original\n" + fStringifier.stringify(s2, 0));
 		}
 

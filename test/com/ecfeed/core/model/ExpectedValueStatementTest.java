@@ -76,16 +76,16 @@ public class ExpectedValueStatementTest{
 		ExpectedValueStatement s1 = new ExpectedValueStatement(c1, p1, predicate);
 		ExpectedValueStatement s2 = new ExpectedValueStatement(c2, p2, predicate);
 
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 		c1.setName("c1");
-		assertFalse(s1.compare(s2));
+		assertFalse(s1.isEqualTo(s2));
 		c2.setName("c1");
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 
 		s1.getCondition().setValueString("v1");
-		assertFalse(s1.compare(s2));
+		assertFalse(s1.isEqualTo(s2));
 		s2.getCondition().setValueString("v1");
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 
 	}
 }

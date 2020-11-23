@@ -73,7 +73,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}	
 
-	private RelationStatement( // TODO CONSTRAINTS-NEW change order of parameters
+	private RelationStatement(
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			IStatementCondition condition) {
@@ -172,7 +172,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean compare(IStatement statement) { // TODO CONSTRAINTS-NEW rename do isEqualTo
+	public boolean isEqualTo(IStatement statement) {
 
 		if ( !(statement instanceof RelationStatement) ) {
 			return false;

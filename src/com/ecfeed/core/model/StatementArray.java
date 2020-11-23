@@ -209,7 +209,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override 
-	public boolean compare(IStatement statement) {
+	public boolean isEqualTo(IStatement statement) {
 
 		if (statement instanceof StatementArray == false) {
 			return false;
@@ -225,7 +225,7 @@ public class StatementArray extends AbstractStatement {
 		}
 
 		for (int i = 0; i < getStatements().size(); i++) {
-			if (getStatements().get(i).compare(compared.getStatements().get(i)) == false) {
+			if (getStatements().get(i).isEqualTo(compared.getStatements().get(i)) == false) {
 				return false;
 			}
 		}
