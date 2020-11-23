@@ -16,17 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.*;
 
 public class ModelTestUtils {
 
@@ -55,8 +45,13 @@ public class ModelTestUtils {
 		case CHOICE: return new ChoiceNode(name, "value", null);
 		case CLASS: return new ClassNode(name, null);
 		case CONSTRAINT: return new ConstraintNode(
-				name, new Constraint(name,
-                new StaticStatement(true, null), new StaticStatement(true, null), null),
+				name,
+				new Constraint(
+						name,
+						ConstraintType.IMPLICATION,
+						new StaticStatement(true, null),
+						new StaticStatement(true, null),
+						null),
 				null);
 		case METHOD: return new MethodNode(name, null);
 		case PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);

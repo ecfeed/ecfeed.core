@@ -40,25 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.StatementArrayOperator;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.IModelChangeRegistrator;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.BooleanHolder;
@@ -528,7 +510,14 @@ public abstract class XomAnalyser {
 			return Optional.empty();
 		}
 
-		Constraint constraint = new Constraint(name, precondition.get(), postcondition.get(), method.getModelChangeRegistrator());
+		Constraint constraint =
+				new Constraint(
+						name,
+						ConstraintType.IMPLICATION,  // TODO CONSTRAINTS-NEW
+						precondition.get(),
+						postcondition.get(),
+						method.getModelChangeRegistrator());
+
 		ConstraintNode targetConstraint = new ConstraintNode(name, constraint, method.getModelChangeRegistrator());
 
 		targetConstraint.setDescription(parseComments(element));

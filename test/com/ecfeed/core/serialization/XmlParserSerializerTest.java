@@ -26,25 +26,11 @@ import java.util.Set;
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.*;
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.StatementArrayOperator;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.serialization.ParserException;
@@ -166,21 +152,24 @@ public class XmlParserSerializerTest {
 			TestCaseNode testCase = new TestCaseNode("test", null, testData);
 			Constraint choiceConstraint = new Constraint(
 					"constraint",
-                    new StaticStatement(true, null), RelationStatement.createStatementWithChoiceCondition(
+					ConstraintType.IMPLICATION,
+					new StaticStatement(true, null), RelationStatement.createStatementWithChoiceCondition(
                             choicesParentParameter, EMathRelation.EQUAL, choice1), null
             );
 
 			Constraint labelConstraint = 
 					new Constraint(
 							"constraint",
-                            new StaticStatement(true, null), RelationStatement.createStatementWithLabelCondition(
+							ConstraintType.IMPLICATION,
+							new StaticStatement(true, null), RelationStatement.createStatementWithLabelCondition(
                                     choicesParentParameter, EMathRelation.EQUAL, "label"), null
                     );
 
 			Constraint expectedConstraint = 
 					new Constraint(
 							"constraint",
-                            new StaticStatement(true, null), new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()), null
+							ConstraintType.IMPLICATION,
+							new StaticStatement(true, null), new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()), null
                     );
 
 			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", choiceConstraint, null);
@@ -379,7 +368,7 @@ public class XmlParserSerializerTest {
 			}
 		}
 
-		return new Constraint("constraint", precondition, postcondition, null);
+		return new Constraint("constraint", ConstraintType.IMPLICATION, precondition, postcondition, null);
 	}
 
 	private AbstractStatement createChoicesParentStatement(List<MethodParameterNode> parameters) {

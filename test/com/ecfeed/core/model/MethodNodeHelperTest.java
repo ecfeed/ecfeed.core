@@ -611,7 +611,7 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		Constraint constraint = new Constraint("c 1", null, null, null);
+		Constraint constraint = new Constraint("c 1", ConstraintType.IMPLICATION, null, null, null);
 
 		ConstraintNode constraintNode = new ConstraintNode("cn 1", constraint,null);
 		methodNode.addConstraint(constraintNode);

@@ -29,7 +29,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	private AbstractStatement fPostcondition;
 
 
-	public Constraint(String name,
+	public Constraint(
+			String name,
+			ConstraintType constraintType,
 			AbstractStatement precondition,
 			AbstractStatement postcondition,
 			IModelChangeRegistrator modelChangeRegistrator) {
@@ -39,9 +41,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		fName = name;
-		fModelChangeRegistrator = modelChangeRegistrator;
+		fConstraintType = constraintType;
 		fPrecondition = precondition;
 		fPostcondition = postcondition;
+
+		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
 	public String getName() {
@@ -239,12 +243,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
-	public Constraint getCopy(){ // TOOD CONSTRAINT-NEW rename to makeClone
+	public Constraint getCopy(){ // TODO CONSTRAINTS-NEW rename to makeClone
 
 		AbstractStatement precondition = fPrecondition.getCopy();
 		AbstractStatement postcondition = fPostcondition.getCopy();
 
-		return new Constraint(new String(fName), precondition, postcondition, fModelChangeRegistrator);
+		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
 	@SuppressWarnings("unchecked")

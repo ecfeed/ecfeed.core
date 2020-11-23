@@ -20,19 +20,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import com.ecfeed.core.model.*;
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelConverter;
-import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.testutils.RandomModelGenerator;
@@ -182,7 +172,8 @@ public class ModelSerializerTest {
 
 		Constraint constraint = new Constraint(
 				"constraint",
-                RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
+				ConstraintType.IMPLICATION,
+				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
         );
 
 		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);

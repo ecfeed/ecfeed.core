@@ -17,24 +17,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ecfeed.core.model.*;
 import org.junit.Test;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.StatementArrayOperator;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -200,7 +185,8 @@ public class RandomModelGenerator {
 		Constraint constraint = 
 				new Constraint(
 						"constraint",
-                        generatePrecondition(method), generatePostcondition(method), method.getModelChangeRegistrator()
+						ConstraintType.IMPLICATION,
+						generatePrecondition(method), generatePostcondition(method), method.getModelChangeRegistrator()
                 );
 
 		return new ConstraintNode(name, constraint, null);

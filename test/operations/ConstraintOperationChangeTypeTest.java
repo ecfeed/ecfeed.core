@@ -47,9 +47,7 @@ public class ConstraintOperationChangeTypeTest {
 		RelationStatement initialPostcondition =
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
-		Constraint constraint = new Constraint("constraint", initialPrecondition, initialPostcondition, null);
-
-		constraint.setType(ConstraintType.IMPLICATION); // TODO CONSTRAINTS-NEW remove after changing constraint constructor
+		Constraint constraint = new Constraint("constraint", ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition, null);
 
 		Constraint initialConstraint = constraint.getCopy();
 
