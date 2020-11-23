@@ -560,7 +560,7 @@ public class ValueConditionTest {
 				RelationStatement.createStatementWithValueCondition(
 						methodParameterNode, EMathRelation.EQUAL, "ABC");
 
-		RelationStatement copy = statement.getCopy();
+		RelationStatement copy = statement.makeClone();
 
 		boolean result = statement.isEqualTo(copy);
 		assertEquals(true, result);

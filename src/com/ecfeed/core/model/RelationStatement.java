@@ -151,7 +151,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement getCopy() {
+	public RelationStatement makeClone() {
 
 		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.getCopy());
 	}

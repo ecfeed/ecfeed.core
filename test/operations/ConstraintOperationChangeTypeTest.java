@@ -49,7 +49,7 @@ public class ConstraintOperationChangeTypeTest {
 
 		Constraint constraint = new Constraint("constraint", ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition, null);
 
-		Constraint initialConstraint = constraint.getCopy();
+		Constraint initialConstraint = constraint.makeClone();
 
 		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
 

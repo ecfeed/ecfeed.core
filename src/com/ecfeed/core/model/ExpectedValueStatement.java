@@ -120,7 +120,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public ExpectedValueStatement getCopy(){
+	public ExpectedValueStatement makeClone(){
 		return new ExpectedValueStatement(fParameter, fCondition.makeClone(), fPredicate);
 	}
 

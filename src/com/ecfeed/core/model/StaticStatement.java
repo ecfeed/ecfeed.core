@@ -76,7 +76,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public StaticStatement getCopy(){
+	public StaticStatement makeClone(){
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 

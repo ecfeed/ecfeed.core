@@ -90,7 +90,7 @@ public abstract class AbstractStatement implements IStatement {
 		return false;
 	}
 
-	public abstract AbstractStatement getCopy();
+	public abstract AbstractStatement makeClone();
 
 	public abstract boolean updateReferences(MethodNode method);
 }

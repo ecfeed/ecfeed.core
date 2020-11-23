@@ -196,8 +196,8 @@ public class CopyNodeTest{
 		StaticStatement statement1 = new StaticStatement(true, null);
 		StaticStatement statement2 = new StaticStatement(false, null);
 
-		StaticStatement copy1 = statement1.getCopy();
-		StaticStatement copy2 = statement2.getCopy();
+		StaticStatement copy1 = statement1.makeClone();
+		StaticStatement copy2 = statement2.makeClone();
 
 		assertTrue(statement1.isEqualTo(copy1));
 		assertTrue(statement2.isEqualTo(copy2));
@@ -212,7 +212,7 @@ public class CopyNodeTest{
 			array.addStatement(new StaticStatement(true, null));
 			array.addStatement(new StaticStatement(false, null));
 
-			StatementArray copy = array.getCopy();
+			StatementArray copy = array.makeClone();
 			assertTrue(array.isEqualTo(copy));
 		}
 	}
@@ -229,8 +229,8 @@ public class CopyNodeTest{
 		RelationStatement statement2 = 
 				RelationStatement.createStatementWithLabelCondition(parameter, EMathRelation.EQUAL, "label");
 
-		RelationStatement copy1 = statement1.getCopy();
-		RelationStatement copy2 = statement2.getCopy();
+		RelationStatement copy1 = statement1.makeClone();
+		RelationStatement copy2 = statement2.makeClone();
 
 		assertTrue(statement1.isEqualTo(copy1));
 		assertTrue(statement2.isEqualTo(copy2));
@@ -243,7 +243,7 @@ public class CopyNodeTest{
 		choice.setParent(parameter);
 
 		ExpectedValueStatement statement = new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
-		ExpectedValueStatement copy = statement.getCopy();
+		ExpectedValueStatement copy = statement.makeClone();
 		assertTrue(statement.isEqualTo(copy));
 	}
 	//	RootNode fRoot;

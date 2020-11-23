@@ -184,12 +184,12 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public StatementArray getCopy() {
+	public StatementArray makeClone() {
 
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement: fStatements) {
-			copy.addStatement(statement.getCopy());
+			copy.addStatement(statement.makeClone());
 		}
 
 		return copy;

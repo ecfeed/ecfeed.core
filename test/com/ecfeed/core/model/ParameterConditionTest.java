@@ -438,7 +438,7 @@ public class ParameterConditionTest {
 				RelationStatement.createStatementWithParameterCondition(
 						leftParam, EMathRelation.EQUAL, rightParam);
 
-		RelationStatement copy = statement.getCopy();
+		RelationStatement copy = statement.makeClone();
 
 		boolean result = statement.isEqualTo(copy);
 		assertEquals(true, result);

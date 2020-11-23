@@ -34,7 +34,7 @@ public class AbstractStatementTest {
 			return null;
 		}
 		@Override
-		public AbstractStatement getCopy(){
+		public AbstractStatement makeClone(){
 			return null;
 		}
 		@Override

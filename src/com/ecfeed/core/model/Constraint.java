@@ -243,10 +243,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
-	public Constraint getCopy(){ // TODO CONSTRAINTS-NEW rename to makeClone
+	public Constraint makeClone() {
 
-		AbstractStatement precondition = fPrecondition.getCopy();
-		AbstractStatement postcondition = fPostcondition.getCopy();
+		AbstractStatement precondition = fPrecondition.makeClone();
+		AbstractStatement postcondition = fPostcondition.makeClone();
 
 		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}

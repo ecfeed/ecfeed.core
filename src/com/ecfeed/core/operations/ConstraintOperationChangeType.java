@@ -31,7 +31,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		fNewConstraintType = newConstraintType;
 		fExtLanguageManager = extLanguageManager;
 
-		fInitialConstraintCopy = fCurrentConstraintNode.getConstraint().getCopy();
+		fInitialConstraintCopy = fCurrentConstraintNode.getConstraint().makeClone();
 	}
 
 	@Override
