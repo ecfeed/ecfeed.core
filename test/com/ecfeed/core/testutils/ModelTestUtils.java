@@ -56,7 +56,7 @@ public class ModelTestUtils {
 		case CLASS: return new ClassNode(name, null);
 		case CONSTRAINT: return new ConstraintNode(
 				name, new Constraint(name,
-				null, new StaticStatement(true, null), new StaticStatement(true, null)),
+                new StaticStatement(true, null), new StaticStatement(true, null), null),
 				null);
 		case METHOD: return new MethodNode(name, null);
 		case PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);

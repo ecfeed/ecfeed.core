@@ -29,10 +29,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	private AbstractStatement fPostcondition;
 
 
-	public Constraint(String name,  // TODO CONSTRAINTS-NEW registrator at and, add constraint type
-			IModelChangeRegistrator modelChangeRegistrator,
-			AbstractStatement precondition, 
-			AbstractStatement postcondition) {
+	public Constraint(String name,
+					  AbstractStatement precondition,
+					  AbstractStatement postcondition,
+					  IModelChangeRegistrator modelChangeRegistrator) {
 
 		if (name == null) {
 			fName = "constraint";
@@ -244,7 +244,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		AbstractStatement precondition = fPrecondition.getCopy();
 		AbstractStatement postcondition = fPostcondition.getCopy();
 
-		return new Constraint(new String(fName), fModelChangeRegistrator, precondition, postcondition);
+		return new Constraint(new String(fName), precondition, postcondition, fModelChangeRegistrator);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -182,8 +182,8 @@ public class ModelSerializerTest {
 
 		Constraint constraint = new Constraint(
 				"constraint",
-				null, RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice),
-				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice));
+                RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
+        );
 
 		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
 		methodNode.addConstraint(constraintNode);

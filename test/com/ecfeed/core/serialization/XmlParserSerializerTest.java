@@ -166,22 +166,22 @@ public class XmlParserSerializerTest {
 			TestCaseNode testCase = new TestCaseNode("test", null, testData);
 			Constraint choiceConstraint = new Constraint(
 					"constraint",
-					null, new StaticStatement(true, null),
-					RelationStatement.createStatementWithChoiceCondition(
-							choicesParentParameter, EMathRelation.EQUAL, choice1));
+                    new StaticStatement(true, null), RelationStatement.createStatementWithChoiceCondition(
+                            choicesParentParameter, EMathRelation.EQUAL, choice1), null
+            );
 
 			Constraint labelConstraint = 
 					new Constraint(
 							"constraint",
-							null, new StaticStatement(true, null),
-							RelationStatement.createStatementWithLabelCondition(
-									choicesParentParameter, EMathRelation.EQUAL, "label"));
+                            new StaticStatement(true, null), RelationStatement.createStatementWithLabelCondition(
+                                    choicesParentParameter, EMathRelation.EQUAL, "label"), null
+                    );
 
 			Constraint expectedConstraint = 
 					new Constraint(
 							"constraint",
-							null, new StaticStatement(true, null),
-							new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()));
+                            new StaticStatement(true, null), new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()), null
+                    );
 
 			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", choiceConstraint, null);
 			ConstraintNode labelConstraintNode = new ConstraintNode("label constraint", labelConstraint, null);
@@ -379,7 +379,7 @@ public class XmlParserSerializerTest {
 			}
 		}
 
-		return new Constraint("constraint", null, precondition, postcondition);
+		return new Constraint("constraint", precondition, postcondition, null);
 	}
 
 	private AbstractStatement createChoicesParentStatement(List<MethodParameterNode> parameters) {

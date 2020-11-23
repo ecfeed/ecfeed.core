@@ -199,10 +199,9 @@ public class RandomModelGenerator {
 
 		Constraint constraint = 
 				new Constraint(
-						"constraint", 
-						method.getModelChangeRegistrator(), 
-						generatePrecondition(method),
-						generatePostcondition(method));
+						"constraint",
+                        generatePrecondition(method), generatePostcondition(method), method.getModelChangeRegistrator()
+                );
 
 		return new ConstraintNode(name, constraint, null);
 	}
