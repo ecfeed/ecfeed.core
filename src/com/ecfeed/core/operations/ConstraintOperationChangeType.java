@@ -33,30 +33,14 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 	@Override
 	public void execute() {
 
-//		setOneNodeToSelect(fRootNode);
-//
-//		final IExtLanguageManager extLanguageManager = getExtLanguageManager();
-//
-//		String name = ClassNodeHelper.getQualifiedName(fclassToAdd, extLanguageManager);
-//
-//		if(fAddIndex == -1){
-//			fAddIndex = fRootNode.getClasses().size();
-//		}
-//
-//		String errorMessage = ClassNodeHelper.validateClassName(name, extLanguageManager);
-//
-//		if (errorMessage != null) {
-//			ExceptionHelper.reportRuntimeException(errorMessage);
-//		}
-//
-//		errorMessage = RootNodeHelper.classWithNameExists(name, fRootNode, extLanguageManager);
-//
-//		if (errorMessage != null) {
-//			ExceptionHelper.reportRuntimeException(errorMessage);
-//		}
-//
-//		fRootNode.addClass(fclassToAdd, fAddIndex);
-//		markModelUpdated();
+		Constraint constraint = fConstraintNode.getConstraint();
+
+		AbstractStatement newPrecondition = new StaticStatement(true, null);
+
+		constraint.setPrecondition(newPrecondition);
+		constraint.setConstratintType(fNewConstraintType);
+
+		markModelUpdated();
 	}
 
 	@Override

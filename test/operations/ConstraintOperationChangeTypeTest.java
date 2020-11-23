@@ -18,12 +18,13 @@ import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ConstraintOperationChangeTypeTest {
 
 	@Test
-	public void renameImplicationToInvariant() {
+	public void renameImplicationToInvariantTest() {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -44,12 +45,16 @@ public class ConstraintOperationChangeTypeTest {
 		RelationStatement relationStatement1 =
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
 
-		RelationStatement relationStatement2 =
+		RelationStatement initialPostcondition =
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
-		Constraint constraint = new Constraint("constraint", null, relationStatement1, relationStatement2);
+		Constraint constraint = new Constraint("constraint", null, relationStatement1, initialPostcondition);
+
+		Constraint initialConstraint = constraint.getCopy();
 
 		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
 
 		IModelOperation changeTypeOperation =
 				new ConstraintOperationChangeType(
@@ -61,6 +66,34 @@ public class ConstraintOperationChangeTypeTest {
 			changeTypeOperation.execute();
 		} catch (Exception e) {
 		}
+
+		// checking precondition
+
+		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+		if (!(precondition instanceof StaticStatement)) {
+			fail();
+		}
+
+		StaticStatement staticPrecondition = (StaticStatement)precondition;
+
+		if (EvaluationResult.TRUE != staticPrecondition.getValue()) {
+			fail();
+		}
+
+		// checking postcondition
+
+		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+
+		if (!(postcondition instanceof RelationStatement)) {
+			fail();
+		}
+
+		RelationStatement relationStatementPostcondition = (RelationStatement)postcondition;
+
+		assertEquals(initialPostcondition, relationStatementPostcondition);
+
+		// TODO CONSTRAINTS-NEW reverse operation
 	}
 
 }

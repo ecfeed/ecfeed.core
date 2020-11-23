@@ -230,14 +230,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
-	public Constraint getCopy(){
-
-		AbstractStatement precondition = fPrecondition.getCopy();
-		AbstractStatement postcondition = fPostcondition.getCopy();
-
-		return new Constraint(new String(fName), fModelChangeRegistrator, precondition, postcondition);
-	}
-
 	public boolean updateReferences(MethodNode method) {
 
 		if (fPrecondition.updateReferences(method) && fPostcondition.updateReferences(method)) {
@@ -245,6 +237,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		return false;
+	}
+
+	public Constraint getCopy(){ // TOOD CONSTRAINT-NEW rename to makeClone
+
+		AbstractStatement precondition = fPrecondition.getCopy();
+		AbstractStatement postcondition = fPostcondition.getCopy();
+
+		return new Constraint(new String(fName), fModelChangeRegistrator, precondition, postcondition);
 	}
 
 	@SuppressWarnings("unchecked")
