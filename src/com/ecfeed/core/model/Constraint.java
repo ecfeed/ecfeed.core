@@ -29,7 +29,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	private AbstractStatement fPostcondition;
 
 
-	public Constraint(String name,
+	public Constraint(String name,  // TODO CONSTRAINTS-NEW registrator at and, add constraint type
 			IModelChangeRegistrator modelChangeRegistrator,
 			AbstractStatement precondition, 
 			AbstractStatement postcondition) {
@@ -52,11 +52,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fName = name;
 	}	
 
-	public ConstraintType getConstraintType() {
+	public ConstraintType getConstraintType() { // TODO CONSTRAINTS-NEW rename to getType
 		return fConstraintType;
 	}
 
-	public void setConstratintType(ConstraintType constraintType) {
+	public void setConstratintType(ConstraintType constraintType) { // TODO CONSTRAINTS-NEW rename to setType
 		fConstraintType = constraintType;
 	}
 

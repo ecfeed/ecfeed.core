@@ -16,24 +16,32 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintOperationChangeType extends AbstractModelOperation {
 
-	private ConstraintNode fConstraintNode;
+	private ConstraintNode fCurrentConstraintNode;
 	private ConstraintType fNewConstraintType;
 	private IExtLanguageManager fExtLanguageManager;
+
+	private Constraint fInitialConstraintCopy;
 
 	public ConstraintOperationChangeType(
 			ConstraintNode constraintNode,
 			ConstraintType newConstraintType,
 			IExtLanguageManager extLanguageManager) {
 		super(OperationNames.CHANGE_CONSTRAINT_TYPE, extLanguageManager);
-		fConstraintNode = constraintNode;
+		fCurrentConstraintNode = constraintNode;
 		fNewConstraintType = newConstraintType;
 		fExtLanguageManager = extLanguageManager;
+
+		fInitialConstraintCopy = fCurrentConstraintNode.getConstraint().getCopy();
 	}
 
 	@Override
 	public void execute() {
 
-		Constraint constraint = fConstraintNode.getConstraint();
+		Constraint constraint = fCurrentConstraintNode.getConstraint();
+
+		if (constraint.getConstraintType() == null) {
+			ExceptionHelper.reportRuntimeException("Constraint type not set.");
+		}
 
 		AbstractStatement newPrecondition = new StaticStatement(true, null);
 
@@ -46,9 +54,33 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 	@Override
 	public IModelOperation getReverseOperation() {
 
-		final ConstraintType constraintType = fConstraintNode.getConstraint().getConstraintType();
+		return new ReverseOperationChangeType(fExtLanguageManager);
+	}
 
-		return new ConstraintOperationChangeType(fConstraintNode, constraintType, fExtLanguageManager);
+	private class ReverseOperationChangeType extends AbstractModelOperation {
+
+		public ReverseOperationChangeType(IExtLanguageManager extLanguageManager) {
+			super(OperationNames.CHANGE_CONSTRAINT_TYPE, extLanguageManager);
+		}
+
+		@Override
+		public void execute() {
+
+			Constraint constraint = fCurrentConstraintNode.getConstraint();
+
+			final AbstractStatement initialPrecondition = fInitialConstraintCopy.getPrecondition();
+
+			constraint.setPrecondition(initialPrecondition);
+			constraint.setConstratintType(fInitialConstraintCopy.getConstraintType());
+
+			markModelUpdated();
+
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return null;
+		}
 	}
 
 }

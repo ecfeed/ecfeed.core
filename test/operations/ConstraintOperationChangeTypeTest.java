@@ -19,6 +19,7 @@ import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class ConstraintOperationChangeTypeTest {
@@ -42,13 +43,15 @@ public class ConstraintOperationChangeTypeTest {
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
 		methodParameterNode2.addChoice(choiceNode2);
 
-		RelationStatement relationStatement1 =
+		RelationStatement initialPrecondition =
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
 
 		RelationStatement initialPostcondition =
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
-		Constraint constraint = new Constraint("constraint", null, relationStatement1, initialPostcondition);
+		Constraint constraint = new Constraint("constraint", null, initialPrecondition, initialPostcondition);
+
+		constraint.setConstratintType(ConstraintType.IMPLICATION); // TODO CONSTRAINTS-NEW remove after changing constraint constructor
 
 		Constraint initialConstraint = constraint.getCopy();
 
@@ -93,7 +96,26 @@ public class ConstraintOperationChangeTypeTest {
 
 		assertEquals(initialPostcondition, relationStatementPostcondition);
 
-		// TODO CONSTRAINTS-NEW reverse operation
+		// reverse operation
+
+		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();
+
+		try {
+			reverseOperation.execute();
+		} catch (Exception e) {
+		}
+
+		// checking precondition
+
+		precondition = constraintNode.getConstraint().getPrecondition();
+
+		assertTrue(precondition.compare(initialPrecondition));
+
+		// checking postcondition
+
+		postcondition = constraintNode.getConstraint().getPostcondition();
+		
+		assertTrue(postcondition.compare(initialPostcondition));
 	}
 
 }

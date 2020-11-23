@@ -172,7 +172,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean compare(IStatement statement) {
+	public boolean compare(IStatement statement) { // TODO CONSTRAINTS-NEW rename do isEqualTo
 
 		if ( !(statement instanceof RelationStatement) ) {
 			return false;
