@@ -34,11 +34,11 @@ public enum ConstraintType {
 		return new String[] {IMPLICATION.getDescription(), INVARIANT.getDescription()};
 	}
 
-	public static String getDefauldDescription() {
+	public static ConstraintType getDefaultType() {
 
-		return IMPLICATION.getDescription();
+		return IMPLICATION;
 	}
-
+	
 	public static ConstraintType parse(String text) {
 
 		if (text == null) {
