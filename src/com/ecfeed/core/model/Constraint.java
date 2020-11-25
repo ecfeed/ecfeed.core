@@ -177,8 +177,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		String preconditionSignature = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
 		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
+
+		if (fConstraintType == ConstraintType.INVARIANT) {
+			return postconditionSignature;
+		}
+
+		String preconditionSignature = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
 
 		return preconditionSignature + " => " + postconditionSignature;
 	}

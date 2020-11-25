@@ -10,19 +10,51 @@
 
 package com.ecfeed.core.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 
+import static org.junit.Assert.*;
+
 public class ConstraintTest {
+
+	@Test
+	public void createSignatureTest() {
+
+		StaticStatement falseStatement = new StaticStatement(false, null);
+
+		StaticStatement trueStatement = new StaticStatement(true, null);
+
+		// invariant constraint
+
+		Constraint constraint =
+				new Constraint(
+						"c",
+						ConstraintType.INVARIANT,
+						trueStatement,
+						falseStatement,
+						null);
+
+		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+
+		String signature = constraint.createSignature(extLanguageManager);
+
+		assertEquals("false", signature);
+
+		// implication constraint
+
+		constraint.setType(ConstraintType.IMPLICATION);
+
+		signature = constraint.createSignature(extLanguageManager);
+
+		assertEquals("true => false", signature);
+	}
 
 	@Test
 	public void verifyConstraintTest() {
