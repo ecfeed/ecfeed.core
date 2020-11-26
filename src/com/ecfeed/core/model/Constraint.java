@@ -65,27 +65,42 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public String checkIntegrity() {
 
+		if (fConstraintType == ConstraintType.IMPLICATION) {
+			return null;
+		}
+
         if (fConstraintType == ConstraintType.INVARIANT) {
+			return checkInvariantConstraint();
+		}
 
-            AbstractStatement precondition = getPrecondition();
-
-            if (!(precondition instanceof StaticStatement))  {
-                return "Invariant constraint has precondition of a wrong type.";
-            }
-
-            StaticStatement staticStatement = (StaticStatement)precondition;
-
-            if (staticStatement.getValue() != EvaluationResult.TRUE) {
-                return "Precondition has an invalid value.";
-            }
-        }
-
-        // TODO CONSTRAINTS-NEW
+		if (fConstraintType == ConstraintType.EXPECTED_OUTPUT) {
+			return checkExpectedOutputConstraint();
+		}
 
 	    return null;
     }
 
-    public void assertIsCorrect() {
+	private String checkExpectedOutputConstraint() {
+
+		return null; // TODO CONSTRAINTS-NEW
+	}
+
+	public String checkInvariantConstraint() {
+		AbstractStatement precondition = getPrecondition();
+
+		if (!(precondition instanceof StaticStatement))  {
+			return "Invariant constraint has precondition of a wrong type.";
+		}
+
+		StaticStatement staticStatement = (StaticStatement)precondition;
+
+		if (staticStatement.getValue() != EvaluationResult.TRUE) {
+			return "Precondition has an invalid value.";
+		}
+		return null;
+	}
+
+	public void assertIsCorrect() {
 
 	    String errorMessage = checkIntegrity();
 

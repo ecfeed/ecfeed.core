@@ -199,6 +199,14 @@ public class ConstraintTest {
 
 		constraint.assertIsCorrect();
 
+//		constraint =
+//				new Constraint(
+//						"c",
+//						ConstraintType.EXPECTED_OUTPUT,
+//						relationStatementWithChoiceAndEqual,
+//						relationStatementWithChoiceAndEqual,
+//						null);
+//
 //		try {
 //			constraint.assertIsCorrect();
 //			fail();
