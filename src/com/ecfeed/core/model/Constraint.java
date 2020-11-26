@@ -178,7 +178,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		if (fPrecondition.evaluate(values) == EvaluationResult.TRUE) {
-			return fPostcondition.adapt(values);
+			return fPostcondition.setValues(values);
 		}
 
 		return true;

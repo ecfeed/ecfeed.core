@@ -86,7 +86,7 @@ public abstract class AbstractStatement implements IStatement {
 	}
 
 	@Override
-	public boolean adapt(List<ChoiceNode> values){
+	public boolean setValues(List<ChoiceNode> values){
 		return false;
 	}
 

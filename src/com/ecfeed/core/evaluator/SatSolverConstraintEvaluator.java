@@ -248,7 +248,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValConstraints.getList()) {
 			if (model.contains(expectedValConstraint.getFirst())) {
-				expectedValConstraint.getSecond().adapt(valueAssignment);
+				expectedValConstraint.getSecond().setValues(valueAssignment);
 			}
 		}
 
