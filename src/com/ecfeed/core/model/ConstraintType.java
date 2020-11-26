@@ -15,7 +15,8 @@ import com.ecfeed.core.utils.ExceptionHelper;
 public enum ConstraintType {
 
 	IMPLICATION("Implication"),
-	INVARIANT("Invariant");
+	INVARIANT("Invariant"),
+	EXPECTED_OUTPUT("Expected output");
 
 	private final String fDescription;
 
@@ -31,7 +32,7 @@ public enum ConstraintType {
 
 	public static String[] getDescriptions() {
 
-		return new String[] {IMPLICATION.getDescription(), INVARIANT.getDescription()};
+		return new String[] {IMPLICATION.getDescription(), INVARIANT.getDescription(), EXPECTED_OUTPUT.getDescription()};
 	}
 
 	public static ConstraintType getDefaultType() {
@@ -54,6 +55,10 @@ public enum ConstraintType {
 			return INVARIANT;
 		}
 
+		if (text.equals(EXPECTED_OUTPUT.getDescription())) {
+			return EXPECTED_OUTPUT;
+		}
+		
 		reportExceptionInvalidConstraintType();
 		return null;
 	}
