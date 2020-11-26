@@ -144,6 +144,72 @@ public class ConstraintTest {
 	}
 
 	@Test
+	public void verifyExpectedOutputConstraintTest() {
+
+		MethodNode  methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		// statements
+
+		StaticStatement falseStatement = new StaticStatement(false, null);
+
+		StaticStatement trueStatement = new StaticStatement(true, null);
+
+		RelationStatement relationStatementWithChoiceAndEqual =
+				RelationStatement.createStatementWithChoiceCondition(
+						methodParameterNode1,
+						EMathRelation.EQUAL,
+						choiceNode1);
+
+		// constraints
+
+		Constraint constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						trueStatement,
+						trueStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						falseStatement,
+						trueStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						trueStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+//		try {
+//			constraint.assertIsCorrect();
+//			fail();
+//		} catch (Exception e) {
+//		}
+
+		// TODO CONSTRAINTS-NEW
+	}
+
+
+	@Test
 	public void testEvaluate() {
 		AbstractStatement trueStatement = new StaticStatement(true, null); 
 		AbstractStatement falseStatement = new StaticStatement(false, null); 
