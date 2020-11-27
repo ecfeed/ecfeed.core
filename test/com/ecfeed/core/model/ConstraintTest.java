@@ -269,6 +269,58 @@ public class ConstraintTest {
 
 		constraint.assertIsCorrect();
 
+		// constraint with array of statements and one static statement
+
+		StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, null);
+		statementArray.addStatement(trueStatement);
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						statementArray,
+						null);
+		try {
+			constraint.assertIsCorrect();
+			fail();
+		} catch (Exception e) {
+		}
+
+		// constraint with array of statements
+
+		statementArray = new StatementArray(StatementArrayOperator.AND, null);
+		statementArray.addStatement(assignmentStatement);
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						statementArray,
+						null);
+
+		constraint.assertIsCorrect();
+
+
+		// constraint with array of statements and OR operator
+
+		statementArray = new StatementArray(StatementArrayOperator.OR, null);
+		statementArray.addStatement(assignmentStatement);
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						statementArray,
+						null);
+
+		try {
+			constraint.assertIsCorrect();
+			fail();
+		} catch (Exception e) {
+		}
 	}
 
 	@Test

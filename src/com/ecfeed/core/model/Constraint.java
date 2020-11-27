@@ -88,11 +88,37 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 
+		if (postcondition instanceof StatementArray) {
+			return checkAssignmentStatementArray(postcondition);
+		}
+
 		if (!(postcondition instanceof AssignmentStatement)) {
 			return "Expected output constraint has precondition of a wrong type.";
 		}
 
-		return null; // TODO CONSTRAINTS-NEW
+		return null;
+	}
+
+	private String checkAssignmentStatementArray(AbstractStatement postcondition) {
+
+		StatementArray statementArray = (StatementArray)postcondition;
+
+		StatementArrayOperator statementArrayOperator = statementArray.getOperator();
+
+		if (statementArrayOperator != StatementArrayOperator.AND) {
+			return "Expected output statement has operator of a wrong type.";
+		}
+
+		List<AbstractStatement> abstractStatements = statementArray.getStatements();
+
+		for (AbstractStatement abstractStatement : abstractStatements )  {
+
+			if (!(abstractStatement instanceof AssignmentStatement)) {
+				return "Expected output constraint has postcondition of invalid structure.";
+			}
+		}
+
+		return null;
 	}
 
 	public String checkInvariantConstraint() {
