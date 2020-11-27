@@ -15,7 +15,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 public enum ConstraintType {
 
 	EXTENDED_FILTER("Implication"),
-	FILTER("Invariant"),
+	BASIC_FILTER("Invariant"),
 	ASSIGNMENT("Expected output");
 
 	private final String fDescription;
@@ -32,7 +32,7 @@ public enum ConstraintType {
 
 	public static String[] getDescriptions() {
 
-		return new String[] {EXTENDED_FILTER.getDescription(), FILTER.getDescription(), ASSIGNMENT.getDescription()};
+		return new String[] {EXTENDED_FILTER.getDescription(), BASIC_FILTER.getDescription(), ASSIGNMENT.getDescription()};
 	}
 
 	public static ConstraintType getDefaultType() {
@@ -51,8 +51,8 @@ public enum ConstraintType {
 			return EXTENDED_FILTER;
 		}
 
-		if (text.equals(FILTER.getDescription())) {
-			return FILTER;
+		if (text.equals(BASIC_FILTER.getDescription())) {
+			return BASIC_FILTER;
 		}
 
 		if (text.equals(ASSIGNMENT.getDescription())) {

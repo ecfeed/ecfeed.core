@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 public class ConstraintOperationChangeTypeTest {
 
 	@Test
-	public void changeImplicationToInvariantTest() {
+	public void changeExtendedFilterToBasicFilter() {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -56,7 +56,7 @@ public class ConstraintOperationChangeTypeTest {
 		IModelOperation changeTypeOperation =
 				new ConstraintOperationChangeType(
 						constraintNode,
-						ConstraintType.FILTER,
+						ConstraintType.BASIC_FILTER,
 						new ExtLanguageManagerForJava());
 
 		try {
@@ -65,7 +65,7 @@ public class ConstraintOperationChangeTypeTest {
 		}
 
 		StaticStatement truePrecondition = new StaticStatement(true, null);
-		checkConstraint(constraintNode, ConstraintType.FILTER, truePrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.BASIC_FILTER, truePrecondition, initialPostcondition);
 
 		// reverse operation
 
@@ -80,7 +80,7 @@ public class ConstraintOperationChangeTypeTest {
 	}
 
 	@Test
-	public void renameInvariantToImplicationTest() {
+	public void changeBasicFilterToExtendedFilter() {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -105,7 +105,7 @@ public class ConstraintOperationChangeTypeTest {
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint =
-				new Constraint("constraint", ConstraintType.FILTER, initialPrecondition, initialPostcondition, null);
+				new Constraint("constraint", ConstraintType.BASIC_FILTER, initialPrecondition, initialPostcondition, null);
 
 		Constraint initialConstraint = constraint.makeClone();
 
@@ -135,11 +135,11 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
-		checkConstraint(constraintNode, ConstraintType.FILTER, initialPrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.BASIC_FILTER, initialPrecondition, initialPostcondition);
 	}
 
 	@Test
-	public void changeInvariantToAssignmentTest() {
+	public void changeBasicFilterToAssignmentTest() {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -164,7 +164,7 @@ public class ConstraintOperationChangeTypeTest {
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint =
-				new Constraint("constraint", ConstraintType.FILTER, initialPrecondition, initialPostcondition, null);
+				new Constraint("constraint", ConstraintType.BASIC_FILTER, initialPrecondition, initialPostcondition, null);
 
 		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
 
@@ -194,7 +194,7 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
-		checkConstraint(constraintNode, ConstraintType.FILTER, initialPrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.BASIC_FILTER, initialPrecondition, initialPostcondition);
 	}
 
 	public void checkConstraint(

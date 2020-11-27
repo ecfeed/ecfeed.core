@@ -58,12 +58,12 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		final ConstraintType currentConstraintType = currentConstraint.getType();
 
-		if (currentConstraintType == ConstraintType.FILTER && newConstraintType == ConstraintType.EXTENDED_FILTER) {
+		if (currentConstraintType == ConstraintType.BASIC_FILTER && newConstraintType == ConstraintType.EXTENDED_FILTER) {
 			currentConstraint.setType(newConstraintType);
 			return;
 		}
 
-		if (currentConstraintType == ConstraintType.FILTER && newConstraintType == ConstraintType.ASSIGNMENT) {
+		if (currentConstraintType == ConstraintType.BASIC_FILTER && newConstraintType == ConstraintType.ASSIGNMENT) {
 
 			currentConstraint.setPrecondition(currentConstraint.getPostcondition());
 

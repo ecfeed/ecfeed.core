@@ -69,7 +69,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return null;
 		}
 
-        if (fConstraintType == ConstraintType.FILTER) {
+        if (fConstraintType == ConstraintType.BASIC_FILTER) {
 			return checkInvariantConstraint();
 		}
 
@@ -231,7 +231,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
 
-		if (fConstraintType == ConstraintType.FILTER) {
+		if (fConstraintType == ConstraintType.BASIC_FILTER) {
 			return postconditionSignature;
 		}
 

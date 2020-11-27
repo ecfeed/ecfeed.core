@@ -36,7 +36,7 @@ public class ConstraintTest {
 		Constraint constraint =
 				new Constraint(
 						"c",
-						ConstraintType.FILTER,
+						ConstraintType.BASIC_FILTER,
 						trueStatement,
 						falseStatement,
 						null);
@@ -85,7 +85,7 @@ public class ConstraintTest {
 		Constraint constraint =
 				new Constraint(
 						"c",
-						ConstraintType.FILTER,
+						ConstraintType.BASIC_FILTER,
 						trueStatement,
 						trueStatement,
 						null);
@@ -115,7 +115,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.FILTER,
+						ConstraintType.BASIC_FILTER,
 						relationStatementWithChoice,
 						trueStatement,
 						null);
@@ -129,7 +129,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.FILTER,
+						ConstraintType.BASIC_FILTER,
 						falseStatement,
 						trueStatement,
 						null);
