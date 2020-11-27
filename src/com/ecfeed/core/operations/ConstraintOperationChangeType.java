@@ -37,28 +37,49 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 	@Override
 	public void execute() {
 
-		Constraint constraint = fCurrentConstraintNode.getConstraint();
+		Constraint currentConstraint = fCurrentConstraintNode.getConstraint();
 
-		final ConstraintType constraintType = constraint.getType();
+		final ConstraintType currentConstraintType = currentConstraint.getType();
 
-		if (constraintType == null) {
+		if (currentConstraintType == null) {
 			ExceptionHelper.reportRuntimeException("Constraint type not set.");
 		}
 
-		if (constraintType == ConstraintType.INVARIANT && fNewConstraintType == ConstraintType.IMPLICATION) {
-			constraint.setType(fNewConstraintType);
-			markModelUpdated();
+		changeType(currentConstraint, fNewConstraintType);
+
+		currentConstraint.assertIsCorrect();
+
+		markModelUpdated(); // TODO CONSTRAINTS-NEW do we need this in operations ? vs modelChangeRegistrator
+	}
+
+	public static void changeType(
+			Constraint currentConstraint,
+			ConstraintType newConstraintType) {
+
+		final ConstraintType currentConstraintType = currentConstraint.getType();
+
+		if (currentConstraintType == ConstraintType.INVARIANT && newConstraintType == ConstraintType.IMPLICATION) {
+			currentConstraint.setType(newConstraintType);
 			return;
 		}
 
-		constraint.setType(fNewConstraintType);
+		if (currentConstraintType == ConstraintType.INVARIANT && newConstraintType == ConstraintType.EXPECTED_OUTPUT) {
 
+			currentConstraint.setPrecondition(currentConstraint.getPostcondition());
+
+			StatementArray statementArrayWithAnd =
+					new StatementArray(
+							StatementArrayOperator.AND,
+							null); // TODO CONSTRAINTS-NEW check
+
+			currentConstraint.setPostcondition(statementArrayWithAnd);
+			currentConstraint.setType(newConstraintType);
+			return;
+		}
+
+		currentConstraint.setType(newConstraintType);
 		AbstractStatement newPrecondition = new StaticStatement(true, null);
-		constraint.setPrecondition(newPrecondition);
-
-		constraint.assertIsCorrect();
-
-		markModelUpdated();
+		currentConstraint.setPrecondition(newPrecondition);
 	}
 
 	@Override

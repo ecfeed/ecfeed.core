@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 public class ConstraintOperationChangeTypeTest {
 
 	@Test
-	public void renameImplicationToInvariantTest() {
+	public void changeImplicationToInvariantTest() {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -125,6 +125,65 @@ public class ConstraintOperationChangeTypeTest {
 		}
 
 		checkConstraint(constraintNode, ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition);
+
+		// reverse operation
+
+		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();
+
+		try {
+			reverseOperation.execute();
+		} catch (Exception e) {
+		}
+
+		checkConstraint(constraintNode, ConstraintType.INVARIANT, initialPrecondition, initialPostcondition);
+	}
+
+	@Test
+	public void changeInvariantToAssignmentTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
+		methodParameterNode2.addChoice(choiceNode2);
+
+		StaticStatement initialPrecondition =
+				new StaticStatement(true, null);
+
+		RelationStatement initialPostcondition =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+
+		Constraint constraint =
+				new Constraint("constraint", ConstraintType.INVARIANT, initialPrecondition, initialPostcondition, null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
+
+		IModelOperation changeTypeOperation =
+				new ConstraintOperationChangeType(
+						constraintNode,
+						ConstraintType.EXPECTED_OUTPUT,
+						new ExtLanguageManagerForJava());
+
+		try {
+			changeTypeOperation.execute();
+		} catch (Exception e) {
+		}
+
+		StatementArray statementArrayAnd = new StatementArray(StatementArrayOperator.AND, null);
+
+		checkConstraint(constraintNode, ConstraintType.EXPECTED_OUTPUT, initialPostcondition, statementArrayAnd);
 
 		// reverse operation
 
