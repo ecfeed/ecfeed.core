@@ -261,6 +261,69 @@ public class ConstraintOperationChangeTypeTest {
 		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition);
 	}
 
+	@Test
+	public void changeArrayAssignmentToBasicFilterTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
+		methodParameterNode2.addChoice(choiceNode2);
+
+		RelationStatement initialPrecondition =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+
+		AssignmentStatement assignmentStatement =
+				AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode2, choiceNode2);
+
+		StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, null);
+		statementArray.addStatement(assignmentStatement);
+
+		Constraint constraint =
+				new Constraint("constraint", ConstraintType.ASSIGNMENT, initialPrecondition, statementArray, null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
+
+		IModelOperation changeTypeOperation =
+				new ConstraintOperationChangeType(
+						constraintNode,
+						ConstraintType.BASIC_FILTER,
+						new ExtLanguageManagerForJava());
+
+		try {
+			changeTypeOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		StaticStatement truePrecondition = new StaticStatement(true, null);
+		checkConstraint(constraintNode, ConstraintType.BASIC_FILTER, truePrecondition, initialPrecondition);
+
+		// reverse operation
+
+		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();
+
+		try {
+			reverseOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, statementArray);
+	}
+
 	public void checkConstraint(
 			ConstraintNode constraintNode,
 			ConstraintType constraintType,
