@@ -73,7 +73,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}	
 
-	private RelationStatement(
+	protected RelationStatement(
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			IStatementCondition condition) {
