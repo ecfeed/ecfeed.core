@@ -32,12 +32,15 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		fExtLanguageManager = extLanguageManager;
 
 		fInitialConstraintCopy = fCurrentConstraintNode.getConstraint().makeClone();
+		fInitialConstraintCopy.assertIsCorrect();
 	}
 
 	@Override
 	public void execute() {
 
 		Constraint currentConstraint = fCurrentConstraintNode.getConstraint();
+
+		currentConstraint.assertIsCorrect();
 
 		final ConstraintType currentConstraintType = currentConstraint.getType();
 
@@ -77,6 +80,17 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			return;
 		}
 
+		if (currentConstraintType == ConstraintType.ASSIGNMENT && newConstraintType == ConstraintType.BASIC_FILTER) {
+
+			currentConstraint.setPostcondition(currentConstraint.getPrecondition());
+
+			StaticStatement staticStatement = new StaticStatement(true, null);
+			currentConstraint.setPrecondition(staticStatement);
+
+			currentConstraint.setType(newConstraintType);
+			return;
+		}
+
 		currentConstraint.setType(newConstraintType);
 		AbstractStatement newPrecondition = new StaticStatement(true, null);
 		currentConstraint.setPrecondition(newPrecondition);
@@ -98,6 +112,8 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		public void execute() {
 
 			Constraint constraint = fCurrentConstraintNode.getConstraint();
+
+			fInitialConstraintCopy.assertIsCorrect();
 
 			constraint.setType(fInitialConstraintCopy.getType());
 

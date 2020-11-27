@@ -95,5 +95,11 @@ public class AssignmentStatement extends RelationStatement {
 		return EMathRelation.ASSIGN;
 	}
 
+	@Override
+	public AssignmentStatement makeClone() {
+
+		return new AssignmentStatement(getLeftParameter(), getCondition().getCopy());
+	}
+
 }
 
