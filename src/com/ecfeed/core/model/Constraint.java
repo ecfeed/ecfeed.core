@@ -82,10 +82,21 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	private String checkExpectedOutputConstraint() {
 
+		AbstractStatement postcondition = getPostcondition();
+
+		if (postcondition instanceof StaticStatement) {
+			return null;
+		}
+
+		if (!(postcondition instanceof AssignmentStatement)) {
+			return "Expected output constraint has precondition of a wrong type.";
+		}
+
 		return null; // TODO CONSTRAINTS-NEW
 	}
 
 	public String checkInvariantConstraint() {
+
 		AbstractStatement precondition = getPrecondition();
 
 		if (!(precondition instanceof StaticStatement))  {

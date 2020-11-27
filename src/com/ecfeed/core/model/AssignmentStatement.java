@@ -21,5 +21,44 @@ public class AssignmentStatement extends RelationStatement {
 		super(parameter, EMathRelation.ASSIGN, condition);
 	}
 
+	public static AssignmentStatement createAssignmentWithChoiceCondition(
+			MethodParameterNode parameter,
+			ChoiceNode choiceNode) {
+
+		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
+
+		IStatementCondition condition = new ChoiceCondition(choiceNode, AssignmentStatement);
+
+		AssignmentStatement.setCondition(condition);
+
+		return AssignmentStatement;
+	}
+
+	public static AssignmentStatement createAssignmentWithParameterCondition(
+			MethodParameterNode parameter,
+			MethodParameterNode rightParameter) {
+
+		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
+
+		IStatementCondition condition = new ParameterCondition(rightParameter, AssignmentStatement);
+
+		AssignmentStatement.setCondition(condition);
+
+		return AssignmentStatement;
+	}
+
+	public static AssignmentStatement createAssignmentWithValueCondition(
+			MethodParameterNode parameter,
+			String textValue) {
+
+		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
+
+		IStatementCondition condition = new ValueCondition(textValue, AssignmentStatement);
+
+		AssignmentStatement.setCondition(condition);
+
+		return AssignmentStatement;
+	}
+
 }
 

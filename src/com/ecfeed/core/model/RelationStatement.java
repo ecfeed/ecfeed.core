@@ -20,7 +20,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
 
-	public static RelationStatement createStatementWithLabelCondition(
+	public static RelationStatement createStatementWithLabelCondition( // TODO CONSTRAINTS-NEW rename createRelationWithLabelCondition
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			String label) {
@@ -33,7 +33,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}
 
-	public static RelationStatement createStatementWithChoiceCondition(
+	public static RelationStatement createStatementWithChoiceCondition(// TODO CONSTRAINTS-NEW rename createRelationWith..
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			ChoiceNode choiceNode) {
@@ -47,7 +47,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}
 
-	public static RelationStatement createStatementWithParameterCondition(
+	public static RelationStatement createStatementWithParameterCondition(// TODO CONSTRAINTS-NEW rename createRelationWith..
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			MethodParameterNode rightParameter) {
@@ -60,7 +60,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return relationStatement;
 	}	
 
-	public static RelationStatement createStatementWithValueCondition(
+	public static RelationStatement createStatementWithValueCondition(// TODO CONSTRAINTS-NEW rename createRelationWith..
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			String textValue) {

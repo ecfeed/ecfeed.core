@@ -152,6 +152,10 @@ public class ConstraintTest {
 				new MethodParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
@@ -161,13 +165,7 @@ public class ConstraintTest {
 
 		StaticStatement trueStatement = new StaticStatement(true, null);
 
-		RelationStatement relationStatementWithChoiceAndEqual =
-				RelationStatement.createStatementWithChoiceCondition(
-						methodParameterNode1,
-						EMathRelation.EQUAL,
-						choiceNode1);
-
-		// constraints
+		// constraints with static statements
 
 		Constraint constraint =
 				new Constraint(
@@ -189,6 +187,14 @@ public class ConstraintTest {
 
 		constraint.assertIsCorrect();
 
+		// relation statement as precondition - OK
+
+		RelationStatement relationStatementWithChoiceAndEqual =
+				RelationStatement.createStatementWithChoiceCondition(
+						methodParameterNode1,
+						EMathRelation.EQUAL,
+						choiceNode1);
+
 		constraint =
 				new Constraint(
 						"c",
@@ -199,23 +205,71 @@ public class ConstraintTest {
 
 		constraint.assertIsCorrect();
 
-//		constraint =
-//				new Constraint(
-//						"c",
-//						ConstraintType.EXPECTED_OUTPUT,
-//						relationStatementWithChoiceAndEqual,
-//						relationStatementWithChoiceAndEqual,
-//						null);
-//
-//		try {
-//			constraint.assertIsCorrect();
-//			fail();
-//		} catch (Exception e) {
-//		}
+		// relation statement as postcondition - err
 
-		// TODO CONSTRAINTS-NEW
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						relationStatementWithChoiceAndEqual,
+						null);
+
+		try {
+			constraint.assertIsCorrect();
+			fail();
+		} catch (Exception e) {
+		}
+
+		// assignment statement with choice condition
+
+		AssignmentStatement assignmentStatement =
+				AssignmentStatement.createAssignmentWithChoiceCondition(
+						methodParameterNode1, choiceNode1);
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						assignmentStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+		// assignment statement with parameter condition
+
+		assignmentStatement =
+				AssignmentStatement.createAssignmentWithParameterCondition(
+						methodParameterNode1, methodParameterNode2);
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						assignmentStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
+		// assignment statement with value condition
+
+		assignmentStatement =
+				AssignmentStatement.createAssignmentWithValueCondition(
+						methodParameterNode1, "5");
+
+		constraint =
+				new Constraint(
+						"c",
+						ConstraintType.EXPECTED_OUTPUT,
+						relationStatementWithChoiceAndEqual,
+						assignmentStatement,
+						null);
+
+		constraint.assertIsCorrect();
+
 	}
-
 
 	@Test
 	public void testEvaluate() {
