@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.evaluator.EvaluatorHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
@@ -226,6 +227,10 @@ public class ConstraintTest {
 		AssignmentStatement assignmentStatement =
 				AssignmentStatement.createAssignmentWithChoiceCondition(
 						methodParameterNode1, choiceNode1);
+
+		EMathRelation mathRelation = assignmentStatement.getRelation();
+		assertEquals(EMathRelation.ASSIGN, mathRelation);
+		assertEquals(EvaluationResult.TRUE, assignmentStatement.evaluate(null));
 
 		constraint =
 				new Constraint(

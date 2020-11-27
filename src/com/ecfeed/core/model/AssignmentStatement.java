@@ -11,6 +11,9 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+
+import java.util.List;
 
 public class AssignmentStatement extends RelationStatement {
 
@@ -58,6 +61,38 @@ public class AssignmentStatement extends RelationStatement {
 		AssignmentStatement.setCondition(condition);
 
 		return AssignmentStatement;
+	}
+
+	@Override
+	public EvaluationResult evaluate(List<ChoiceNode> values) {
+		return EvaluationResult.TRUE;
+	}
+
+	@Override
+	public boolean setValues(List<ChoiceNode> values) {
+
+		// TODO CONSTRAINTS-NEW
+		//		if (values == null) {
+		//			return true;
+		//		}
+		//
+		//		if  (fParameter.getMethod() != null) {
+		//
+		//			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
+		//			values.set(index, fCondition.makeClone());
+		//		}
+
+		return true;
+	}
+
+	@Override
+	public EMathRelation[] getAvailableRelations() {
+		return new EMathRelation[]{EMathRelation.ASSIGN};
+	}
+
+	@Override
+	public EMathRelation getRelation() {
+		return EMathRelation.ASSIGN;
 	}
 
 }
