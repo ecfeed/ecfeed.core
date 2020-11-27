@@ -65,15 +65,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public String checkIntegrity() {
 
-		if (fConstraintType == ConstraintType.IMPLICATION) {
+		if (fConstraintType == ConstraintType.EXTENDED_FILTER) {
 			return null;
 		}
 
-        if (fConstraintType == ConstraintType.INVARIANT) {
+        if (fConstraintType == ConstraintType.FILTER) {
 			return checkInvariantConstraint();
 		}
 
-		if (fConstraintType == ConstraintType.EXPECTED_OUTPUT) {
+		if (fConstraintType == ConstraintType.ASSIGNMENT) {
 			return checkExpectedOutputConstraint();
 		}
 
@@ -231,7 +231,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
 
-		if (fConstraintType == ConstraintType.INVARIANT) {
+		if (fConstraintType == ConstraintType.FILTER) {
 			return postconditionSignature;
 		}
 

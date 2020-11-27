@@ -25,7 +25,7 @@ public class ConstraintNodeHelperTest {
 	@Test
 	public void createSignatureTest1(){
 
-		ConstraintNode c1 = new ConstraintNode("c", new Constraint("c", ConstraintType.IMPLICATION, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ConstraintNode c1 = new ConstraintNode("c", new Constraint("c", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
 
 		c1.setName("c_1");
 
@@ -62,7 +62,7 @@ public class ConstraintNodeHelperTest {
 
 		AbstractStatement postcondition = postcondition1;
 
-		Constraint constraint = new Constraint("co_1", ConstraintType.IMPLICATION, precondition, postcondition, null);
+		Constraint constraint = new Constraint("co_1", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
 
@@ -94,7 +94,7 @@ public class ConstraintNodeHelperTest {
 				RelationStatement.createStatementWithChoiceCondition(
 						parameter2, EMathRelation.EQUAL, choice2);
 
-		Constraint constraint = new Constraint("co", ConstraintType.IMPLICATION, precondition, postcondition, null);
+		Constraint constraint = new Constraint("co", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
 

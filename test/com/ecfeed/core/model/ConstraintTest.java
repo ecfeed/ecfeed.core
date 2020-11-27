@@ -36,7 +36,7 @@ public class ConstraintTest {
 		Constraint constraint =
 				new Constraint(
 						"c",
-						ConstraintType.INVARIANT,
+						ConstraintType.FILTER,
 						trueStatement,
 						falseStatement,
 						null);
@@ -49,7 +49,7 @@ public class ConstraintTest {
 
 		// implication constraint
 
-		constraint.setType(ConstraintType.IMPLICATION);
+		constraint.setType(ConstraintType.EXTENDED_FILTER);
 
 		signature = constraint.createSignature(extLanguageManager);
 
@@ -85,7 +85,7 @@ public class ConstraintTest {
 		Constraint constraint =
 				new Constraint(
 						"c",
-						ConstraintType.INVARIANT,
+						ConstraintType.FILTER,
 						trueStatement,
 						trueStatement,
 						null);
@@ -95,7 +95,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.IMPLICATION,
+						ConstraintType.EXTENDED_FILTER,
 						trueStatement,
 						trueStatement,
 						null);
@@ -105,7 +105,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.IMPLICATION,
+						ConstraintType.EXTENDED_FILTER,
 						relationStatementWithChoice,
 						trueStatement,
 						null);
@@ -115,7 +115,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.INVARIANT,
+						ConstraintType.FILTER,
 						relationStatementWithChoice,
 						trueStatement,
 						null);
@@ -129,7 +129,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.INVARIANT,
+						ConstraintType.FILTER,
 						falseStatement,
 						trueStatement,
 						null);
@@ -170,7 +170,7 @@ public class ConstraintTest {
 		Constraint constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						trueStatement,
 						trueStatement,
 						null);
@@ -180,7 +180,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						falseStatement,
 						trueStatement,
 						null);
@@ -198,7 +198,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						trueStatement,
 						null);
@@ -210,7 +210,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						relationStatementWithChoiceAndEqual,
 						null);
@@ -234,7 +234,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						assignmentStatement,
 						null);
@@ -250,7 +250,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						assignmentStatement,
 						null);
@@ -266,7 +266,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						assignmentStatement,
 						null);
@@ -281,7 +281,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						statementArray,
 						null);
@@ -299,7 +299,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						statementArray,
 						null);
@@ -315,7 +315,7 @@ public class ConstraintTest {
 		constraint =
 				new Constraint(
 						"c",
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
 						statementArray,
 						null);
@@ -333,10 +333,10 @@ public class ConstraintTest {
 		AbstractStatement falseStatement = new StaticStatement(false, null); 
 		List<ChoiceNode> values = new ArrayList<ChoiceNode>();
 
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, falseStatement, falseStatement, null).evaluate(values) == EvaluationResult.TRUE);
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, falseStatement, trueStatement, null).evaluate(values) == EvaluationResult.TRUE);
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, trueStatement, trueStatement, null).evaluate(values) == EvaluationResult.TRUE);
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, trueStatement, falseStatement, null).evaluate(values) == EvaluationResult.FALSE);
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, falseStatement, falseStatement, null).evaluate(values) == EvaluationResult.TRUE);
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, falseStatement, trueStatement, null).evaluate(values) == EvaluationResult.TRUE);
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, trueStatement, trueStatement, null).evaluate(values) == EvaluationResult.TRUE);
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, trueStatement, falseStatement, null).evaluate(values) == EvaluationResult.FALSE);
 	}
 
 	@Test
@@ -345,7 +345,7 @@ public class ConstraintTest {
 		AbstractStatement statement2 = new StaticStatement(false, null); 
 		AbstractStatement statement3 = new StaticStatement(false, null);
 
-		Constraint constraint = new Constraint("c", ConstraintType.IMPLICATION, statement1, statement2, null);
+		Constraint constraint = new Constraint("c", ConstraintType.EXTENDED_FILTER, statement1, statement2, null);
 		assertTrue(constraint.getPrecondition().equals(statement1));
 		constraint.setPrecondition(statement3);
 		assertTrue(constraint.getPrecondition().equals(statement3));
@@ -357,7 +357,7 @@ public class ConstraintTest {
 		AbstractStatement statement2 = new StaticStatement(false, null); 
 		AbstractStatement statement3 = new StaticStatement(false, null);
 
-		Constraint constraint = new Constraint("c", ConstraintType.IMPLICATION, statement1, statement2, null);
+		Constraint constraint = new Constraint("c", ConstraintType.EXTENDED_FILTER, statement1, statement2, null);
 		assertTrue(constraint.getPostcondition().equals(statement2));
 		constraint.setPostcondition(statement3);
 		assertTrue(constraint.getPostcondition().equals(statement3));
@@ -373,17 +373,17 @@ public class ConstraintTest {
 				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
 		AbstractStatement notMentioningStatement = new StaticStatement(false, null);
 
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, mentioningStatement, notMentioningStatement, null).mentions(parameter));
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, mentioningStatement, notMentioningStatement, null).mentions(choice));
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, mentioningStatement, notMentioningStatement, null).mentions(parameter));
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, mentioningStatement, notMentioningStatement, null).mentions(choice));
 
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, notMentioningStatement, mentioningStatement, null).mentions(parameter));
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, notMentioningStatement, mentioningStatement, null).mentions(choice));
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, notMentioningStatement, mentioningStatement, null).mentions(parameter));
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, notMentioningStatement, mentioningStatement, null).mentions(choice));
 
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, mentioningStatement, mentioningStatement, null).mentions(parameter));
-		assertTrue(new Constraint("c", ConstraintType.IMPLICATION, mentioningStatement, mentioningStatement, null).mentions(choice));
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, mentioningStatement, mentioningStatement, null).mentions(parameter));
+		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, mentioningStatement, mentioningStatement, null).mentions(choice));
 
-		assertFalse(new Constraint("c", ConstraintType.IMPLICATION, notMentioningStatement, notMentioningStatement, null).mentions(parameter));
-		assertFalse(new Constraint("c", ConstraintType.IMPLICATION, notMentioningStatement, notMentioningStatement, null).mentions(choice));
+		assertFalse(new Constraint("c", ConstraintType.EXTENDED_FILTER, notMentioningStatement, notMentioningStatement, null).mentions(parameter));
+		assertFalse(new Constraint("c", ConstraintType.EXTENDED_FILTER, notMentioningStatement, notMentioningStatement, null).mentions(choice));
 
 	}
 
@@ -393,7 +393,7 @@ public class ConstraintTest {
 		AbstractStatement precondition = createPreconditionWithValueCondition();
 		AbstractStatement postcondition = createPostconditionWithValueCondition();
 
-		Constraint constraint = new Constraint("c", ConstraintType.IMPLICATION, precondition, postcondition, null);
+		Constraint constraint = new Constraint("c", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
@@ -410,7 +410,7 @@ public class ConstraintTest {
 		AbstractStatement precondition = createPreconditionWithChoiceCondition(choice1);
 		AbstractStatement postcondition = createPostconditionWithChoiceCondition(choice2);
 
-		Constraint constraint = new Constraint("c", ConstraintType.IMPLICATION, precondition, postcondition, null);
+		Constraint constraint = new Constraint("c", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
@@ -424,7 +424,7 @@ public class ConstraintTest {
 		AbstractStatement precondition = createStatementWithParameterCondition(parameter1, parameter2);
 		AbstractStatement postcondition = createStatementWithParameterCondition(parameter1, parameter2);
 
-		Constraint constraint = new Constraint("c", ConstraintType.IMPLICATION, precondition, postcondition, null);
+		Constraint constraint = new Constraint("c", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		ChoiceNode choice1 = new ChoiceNode("choice1", "value1", null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
@@ -461,7 +461,7 @@ public class ConstraintTest {
 		parameter1.setParent(methodNode);
 		parameter2.setParent(methodNode);
 
-		Constraint constraint = new Constraint("c", ConstraintType.IMPLICATION, precondition, postcondition, null);
+		Constraint constraint = new Constraint("c", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		List<ChoiceNode> values = new ArrayList<ChoiceNode>();
 		values.add(choice12);

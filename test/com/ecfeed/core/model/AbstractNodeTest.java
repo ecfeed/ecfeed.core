@@ -115,7 +115,7 @@ public class AbstractNodeTest{
 				"name",
 				new Constraint(
 						"constraint",
-						ConstraintType.IMPLICATION,
+						ConstraintType.EXTENDED_FILTER,
 						new StaticStatement(true, null), new StaticStatement(false, null), null
                 ),
 				null);
@@ -175,7 +175,7 @@ public class AbstractNodeTest{
 		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
 		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
-		ConstraintNode constraint = new ConstraintNode("name", new Constraint("name", ConstraintType.IMPLICATION, new StaticStatement(true, null), new StaticStatement(false, null), null), null );
+		ConstraintNode constraint = new ConstraintNode("name", new Constraint("name", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null );
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
 		ChoiceNode choice = new ChoiceNode("name", "0", null);
 
@@ -205,7 +205,7 @@ public class AbstractNodeTest{
 		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
 		MethodParameterNode expCat = new MethodParameterNode("expCat", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
-		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.IMPLICATION, new StaticStatement(true, null), new StaticStatement(false, null), null), null);
+		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null);
 		TestCaseNode testCase = new TestCaseNode("testCase", null, new ArrayList<ChoiceNode>());
 		ChoiceNode p = new ChoiceNode("p", "0", null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);

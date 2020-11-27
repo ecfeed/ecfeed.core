@@ -185,7 +185,7 @@ public class RandomModelGenerator {
 		Constraint constraint = 
 				new Constraint(
 						"constraint",
-						ConstraintType.IMPLICATION,
+						ConstraintType.EXTENDED_FILTER,
 						generatePrecondition(method), generatePostcondition(method), method.getModelChangeRegistrator()
                 );
 

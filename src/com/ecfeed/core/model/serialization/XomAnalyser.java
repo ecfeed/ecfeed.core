@@ -513,7 +513,7 @@ public abstract class XomAnalyser {
 		Constraint constraint =
 				new Constraint(
 						name,
-						ConstraintType.IMPLICATION,  // TODO CONSTRAINTS-NEW
+						ConstraintType.EXTENDED_FILTER,  // TODO CONSTRAINTS-NEW
 						precondition.get(),
 						postcondition.get(),
 						method.getModelChangeRegistrator());

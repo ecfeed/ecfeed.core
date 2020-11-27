@@ -48,7 +48,7 @@ public class ModelTestUtils {
 				name,
 				new Constraint(
 						name,
-						ConstraintType.IMPLICATION,
+						ConstraintType.EXTENDED_FILTER,
 						new StaticStatement(true, null),
 						new StaticStatement(true, null),
 						null),

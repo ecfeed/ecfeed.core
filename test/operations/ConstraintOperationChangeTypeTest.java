@@ -45,7 +45,7 @@ public class ConstraintOperationChangeTypeTest {
 		RelationStatement initialPostcondition =
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
-		Constraint constraint = new Constraint("constraint", ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition, null);
+		Constraint constraint = new Constraint("constraint", ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition, null);
 
 		Constraint initialConstraint = constraint.makeClone();
 
@@ -56,7 +56,7 @@ public class ConstraintOperationChangeTypeTest {
 		IModelOperation changeTypeOperation =
 				new ConstraintOperationChangeType(
 						constraintNode,
-						ConstraintType.INVARIANT,
+						ConstraintType.FILTER,
 						new ExtLanguageManagerForJava());
 
 		try {
@@ -65,7 +65,7 @@ public class ConstraintOperationChangeTypeTest {
 		}
 
 		StaticStatement truePrecondition = new StaticStatement(true, null);
-		checkConstraint(constraintNode, ConstraintType.INVARIANT, truePrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.FILTER, truePrecondition, initialPostcondition);
 
 		// reverse operation
 
@@ -76,7 +76,7 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
-		checkConstraint(constraintNode, ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition);
 	}
 
 	@Test
@@ -105,7 +105,7 @@ public class ConstraintOperationChangeTypeTest {
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint =
-				new Constraint("constraint", ConstraintType.INVARIANT, initialPrecondition, initialPostcondition, null);
+				new Constraint("constraint", ConstraintType.FILTER, initialPrecondition, initialPostcondition, null);
 
 		Constraint initialConstraint = constraint.makeClone();
 
@@ -116,7 +116,7 @@ public class ConstraintOperationChangeTypeTest {
 		IModelOperation changeTypeOperation =
 				new ConstraintOperationChangeType(
 						constraintNode,
-						ConstraintType.IMPLICATION,
+						ConstraintType.EXTENDED_FILTER,
 						new ExtLanguageManagerForJava());
 
 		try {
@@ -124,7 +124,7 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
-		checkConstraint(constraintNode, ConstraintType.IMPLICATION, initialPrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition);
 
 		// reverse operation
 
@@ -135,7 +135,7 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
-		checkConstraint(constraintNode, ConstraintType.INVARIANT, initialPrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.FILTER, initialPrecondition, initialPostcondition);
 	}
 
 	@Test
@@ -164,7 +164,7 @@ public class ConstraintOperationChangeTypeTest {
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint =
-				new Constraint("constraint", ConstraintType.INVARIANT, initialPrecondition, initialPostcondition, null);
+				new Constraint("constraint", ConstraintType.FILTER, initialPrecondition, initialPostcondition, null);
 
 		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
 
@@ -173,7 +173,7 @@ public class ConstraintOperationChangeTypeTest {
 		IModelOperation changeTypeOperation =
 				new ConstraintOperationChangeType(
 						constraintNode,
-						ConstraintType.EXPECTED_OUTPUT,
+						ConstraintType.ASSIGNMENT,
 						new ExtLanguageManagerForJava());
 
 		try {
@@ -183,7 +183,7 @@ public class ConstraintOperationChangeTypeTest {
 
 		StatementArray statementArrayAnd = new StatementArray(StatementArrayOperator.AND, null);
 
-		checkConstraint(constraintNode, ConstraintType.EXPECTED_OUTPUT, initialPostcondition, statementArrayAnd);
+		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPostcondition, statementArrayAnd);
 
 		// reverse operation
 
@@ -194,7 +194,7 @@ public class ConstraintOperationChangeTypeTest {
 		} catch (Exception e) {
 		}
 
-		checkConstraint(constraintNode, ConstraintType.INVARIANT, initialPrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.FILTER, initialPrecondition, initialPostcondition);
 	}
 
 	public void checkConstraint(

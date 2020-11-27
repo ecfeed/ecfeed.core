@@ -172,7 +172,7 @@ public class ModelSerializerTest {
 
 		Constraint constraint = new Constraint(
 				"constraint",
-				ConstraintType.IMPLICATION,
+				ConstraintType.EXTENDED_FILTER,
 				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
         );
 

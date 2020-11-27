@@ -152,7 +152,7 @@ public class XmlParserSerializerTest {
 			TestCaseNode testCase = new TestCaseNode("test", null, testData);
 			Constraint choiceConstraint = new Constraint(
 					"constraint",
-					ConstraintType.IMPLICATION,
+					ConstraintType.EXTENDED_FILTER,
 					new StaticStatement(true, null), RelationStatement.createStatementWithChoiceCondition(
                             choicesParentParameter, EMathRelation.EQUAL, choice1), null
             );
@@ -160,7 +160,7 @@ public class XmlParserSerializerTest {
 			Constraint labelConstraint = 
 					new Constraint(
 							"constraint",
-							ConstraintType.IMPLICATION,
+							ConstraintType.EXTENDED_FILTER,
 							new StaticStatement(true, null), RelationStatement.createStatementWithLabelCondition(
                                     choicesParentParameter, EMathRelation.EQUAL, "label"), null
                     );
@@ -168,7 +168,7 @@ public class XmlParserSerializerTest {
 			Constraint expectedConstraint = 
 					new Constraint(
 							"constraint",
-							ConstraintType.IMPLICATION,
+							ConstraintType.EXTENDED_FILTER,
 							new StaticStatement(true, null), new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()), null
                     );
 
@@ -368,7 +368,7 @@ public class XmlParserSerializerTest {
 			}
 		}
 
-		return new Constraint("constraint", ConstraintType.IMPLICATION, precondition, postcondition, null);
+		return new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 	}
 
 	private AbstractStatement createChoicesParentStatement(List<MethodParameterNode> parameters) {
