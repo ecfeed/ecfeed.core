@@ -385,6 +385,67 @@ public class ConstraintOperationChangeTypeTest {
 		checkConstraint(constraintNode, ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition);
 	}
 
+	@Test
+	public void changeAssignmentToExtendedFilterTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
+		methodParameterNode2.addChoice(choiceNode2);
+
+		RelationStatement initialPrecondition =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
+
+		StatementArray initialPostcondition =
+				new StatementArray(StatementArrayOperator.AND, null);
+
+		Constraint constraint =
+				new Constraint("constraint", ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition, null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
+
+		IModelOperation changeTypeOperation =
+				new ConstraintOperationChangeType(
+						constraintNode,
+						ConstraintType.EXTENDED_FILTER,
+						new ExtLanguageManagerForJava());
+
+		try {
+			changeTypeOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		StaticStatement staticTrueStatement = new StaticStatement(true, null);
+
+		checkConstraint(constraintNode, ConstraintType.EXTENDED_FILTER, initialPrecondition, staticTrueStatement);
+
+		// reverse operation
+
+		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();
+
+		try {
+			reverseOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition);
+	}
+
 	public void checkConstraint(
 			ConstraintNode constraintNode,
 			ConstraintType constraintType,

@@ -61,6 +61,11 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		final ConstraintType currentConstraintType = currentConstraint.getType();
 
+		if (currentConstraintType == newConstraintType) {
+			ExceptionHelper.reportRuntimeException("Cannot change constraint type to the same type.");
+			return;
+		}
+
 		if (currentConstraintType == ConstraintType.BASIC_FILTER && newConstraintType == ConstraintType.EXTENDED_FILTER) {
 			currentConstraint.setType(newConstraintType);
 			return;
@@ -100,6 +105,16 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			return;
 		}
 
+		if (currentConstraintType == ConstraintType.ASSIGNMENT && newConstraintType == ConstraintType.EXTENDED_FILTER) {
+
+			StaticStatement staticStatement = new StaticStatement(true, null);  // TODO CONSTRAINTS-NEW check
+			currentConstraint.setPostcondition(staticStatement);
+
+			currentConstraint.setType(newConstraintType);
+			return;
+		}
+
+		// TODO CONSTRAINTS-NEW move inside if
 		currentConstraint.setType(newConstraintType);
 		AbstractStatement newPrecondition = new StaticStatement(true, null);
 		currentConstraint.setPrecondition(newPrecondition);
