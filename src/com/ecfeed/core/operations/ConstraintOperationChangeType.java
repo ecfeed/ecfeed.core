@@ -84,8 +84,17 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 			currentConstraint.setPostcondition(currentConstraint.getPrecondition());
 
-			StaticStatement staticStatement = new StaticStatement(true, null);
+			StaticStatement staticStatement = new StaticStatement(true, null);  // TODO CONSTRAINTS-NEW check
 			currentConstraint.setPrecondition(staticStatement);
+
+			currentConstraint.setType(newConstraintType);
+			return;
+		}
+
+		if (currentConstraintType == ConstraintType.EXTENDED_FILTER && newConstraintType == ConstraintType.ASSIGNMENT) {
+
+			StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, null);  // TODO CONSTRAINTS-NEW check
+			currentConstraint.setPostcondition(statementArray);
 
 			currentConstraint.setType(newConstraintType);
 			return;

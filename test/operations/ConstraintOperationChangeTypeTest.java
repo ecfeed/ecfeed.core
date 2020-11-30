@@ -324,6 +324,67 @@ public class ConstraintOperationChangeTypeTest {
 		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, statementArray);
 	}
 
+	@Test
+	public void changeExtendedFilterToAssignmentTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
+		methodParameterNode2.addChoice(choiceNode2);
+
+		RelationStatement initialPrecondition =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
+
+		RelationStatement initialPostcondition =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+
+		Constraint constraint =
+				new Constraint("constraint", ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition, null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
+
+		IModelOperation changeTypeOperation =
+				new ConstraintOperationChangeType(
+						constraintNode,
+						ConstraintType.ASSIGNMENT,
+						new ExtLanguageManagerForJava());
+
+		try {
+			changeTypeOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		StatementArray statementArrayAnd = new StatementArray(StatementArrayOperator.AND, null);
+
+		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, statementArrayAnd);
+
+		// reverse operation
+
+		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();
+
+		try {
+			reverseOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		checkConstraint(constraintNode, ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition);
+	}
+
 	public void checkConstraint(
 			ConstraintNode constraintNode,
 			ConstraintType constraintType,
