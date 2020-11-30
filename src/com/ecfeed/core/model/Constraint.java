@@ -63,6 +63,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fConstraintType = constraintType;
 	}
 
+	public IModelChangeRegistrator getModelChangeRegistrator() {
+		
+		return fModelChangeRegistrator;
+	}
+	
 	public String checkIntegrity() {
 
 		if (fConstraintType == ConstraintType.EXTENDED_FILTER) {
@@ -74,13 +79,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		if (fConstraintType == ConstraintType.ASSIGNMENT) {
-			return checkExpectedOutputConstraint();
+			return checkAssignmentConstraint();
 		}
 
+	    ExceptionHelper.reportRuntimeException("Invalid constraint type.");
 	    return null;
     }
 
-	private String checkExpectedOutputConstraint() {
+	private String checkAssignmentConstraint() {
 
 		AbstractStatement postcondition = getPostcondition();
 

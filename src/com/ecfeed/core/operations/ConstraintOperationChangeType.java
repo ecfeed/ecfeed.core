@@ -48,8 +48,10 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		if (currentConstraintType == null) {
 			ExceptionHelper.reportRuntimeException("Constraint type not set.");
 		}
+		
+		IModelChangeRegistrator modelChangeRegistrator = currentConstraint.getModelChangeRegistrator();
 
-		changePreAndPostcondition(currentConstraint, fNewConstraintType);
+		changePreAndPostcondition(currentConstraint, fNewConstraintType, modelChangeRegistrator);
 		currentConstraint.setType(fNewConstraintType);
 
 		currentConstraint.assertIsCorrect();
@@ -59,7 +61,8 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 	public static void changePreAndPostcondition(
 			Constraint currentConstraint,
-			ConstraintType newConstraintType) {
+			ConstraintType newConstraintType, 
+			IModelChangeRegistrator modelChangeRegistrator) {
 
 		final ConstraintType currentConstraintType = currentConstraint.getType();
 
@@ -79,7 +82,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			StatementArray statementArrayWithAnd =
 					new StatementArray(
 							StatementArrayOperator.AND,
-							null); // TODO CONSTRAINTS-NEW check
+							modelChangeRegistrator);
 
 			currentConstraint.setPostcondition(statementArrayWithAnd);
 			return;
@@ -89,7 +92,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 			currentConstraint.setPostcondition(currentConstraint.getPrecondition());
 
-			StaticStatement staticStatement = new StaticStatement(true, null);  // TODO CONSTRAINTS-NEW check
+			StaticStatement staticStatement = new StaticStatement(true, modelChangeRegistrator);
 			currentConstraint.setPrecondition(staticStatement);
 
 			return;
@@ -97,7 +100,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		if (currentConstraintType == ConstraintType.EXTENDED_FILTER && newConstraintType == ConstraintType.ASSIGNMENT) {
 
-			StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, null);  // TODO CONSTRAINTS-NEW check
+			StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, modelChangeRegistrator);
 			currentConstraint.setPostcondition(statementArray);
 
 			return;
@@ -105,7 +108,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		if (currentConstraintType == ConstraintType.ASSIGNMENT && newConstraintType == ConstraintType.EXTENDED_FILTER) {
 
-			StaticStatement staticStatement = new StaticStatement(true, null);  // TODO CONSTRAINTS-NEW check
+			StaticStatement staticStatement = new StaticStatement(true, modelChangeRegistrator);
 			currentConstraint.setPostcondition(staticStatement);
 
 			return;
@@ -113,7 +116,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		if (currentConstraintType == ConstraintType.EXTENDED_FILTER && newConstraintType == ConstraintType.BASIC_FILTER) {
 
-			AbstractStatement newPrecondition = new StaticStatement(true, null);
+			AbstractStatement newPrecondition = new StaticStatement(true, modelChangeRegistrator);
 			currentConstraint.setPrecondition(newPrecondition);
 
 			return;
