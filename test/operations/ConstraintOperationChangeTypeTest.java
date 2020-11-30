@@ -21,6 +21,39 @@ import static org.junit.Assert.*;
 public class ConstraintOperationChangeTypeTest {
 
 	@Test
+	public void changeToTheSameType() {
+
+		StaticStatement initialPrecondition = new StaticStatement(true, null);
+
+		StaticStatement initialPostcondition = new StaticStatement(true, null);
+
+		Constraint constraint =
+				new Constraint(
+						"constraint",
+						ConstraintType.EXTENDED_FILTER,
+						initialPrecondition,
+						initialPostcondition,
+						null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
+
+		IModelOperation changeTypeOperation =
+				new ConstraintOperationChangeType(
+						constraintNode,
+						ConstraintType.EXTENDED_FILTER,
+						new ExtLanguageManagerForJava());
+
+		try {
+			changeTypeOperation.execute();
+			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, ConstraintOperationChangeType.CANNOT_CHANGE_CONSTRAINT_TYPE_TO_THE_SAME_TYPE);
+		}
+	}
+
+	@Test
 	public void changeExtendedFilterToBasicFilter() {
 
 		MethodNode methodNode = new MethodNode("method", null);
