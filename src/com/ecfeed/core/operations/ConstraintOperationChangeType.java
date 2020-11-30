@@ -49,14 +49,15 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			ExceptionHelper.reportRuntimeException("Constraint type not set.");
 		}
 
-		changeType(currentConstraint, fNewConstraintType);
+		changePreAndPostcondition(currentConstraint, fNewConstraintType);
+		currentConstraint.setType(fNewConstraintType);
 
 		currentConstraint.assertIsCorrect();
 
 		markModelUpdated(); // TODO CONSTRAINTS-NEW do we need this in operations ? vs modelChangeRegistrator
 	}
 
-	public static void changeType(
+	public static void changePreAndPostcondition(
 			Constraint currentConstraint,
 			ConstraintType newConstraintType) {
 
@@ -68,7 +69,6 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		}
 
 		if (currentConstraintType == ConstraintType.BASIC_FILTER && newConstraintType == ConstraintType.EXTENDED_FILTER) {
-			currentConstraint.setType(newConstraintType);
 			return;
 		}
 
@@ -82,7 +82,6 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 							null); // TODO CONSTRAINTS-NEW check
 
 			currentConstraint.setPostcondition(statementArrayWithAnd);
-			currentConstraint.setType(newConstraintType);
 			return;
 		}
 
@@ -93,7 +92,6 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			StaticStatement staticStatement = new StaticStatement(true, null);  // TODO CONSTRAINTS-NEW check
 			currentConstraint.setPrecondition(staticStatement);
 
-			currentConstraint.setType(newConstraintType);
 			return;
 		}
 
@@ -102,7 +100,6 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, null);  // TODO CONSTRAINTS-NEW check
 			currentConstraint.setPostcondition(statementArray);
 
-			currentConstraint.setType(newConstraintType);
 			return;
 		}
 
@@ -111,14 +108,18 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 			StaticStatement staticStatement = new StaticStatement(true, null);  // TODO CONSTRAINTS-NEW check
 			currentConstraint.setPostcondition(staticStatement);
 
-			currentConstraint.setType(newConstraintType);
 			return;
 		}
 
-		// TODO CONSTRAINTS-NEW move inside if
-		currentConstraint.setType(newConstraintType);
-		AbstractStatement newPrecondition = new StaticStatement(true, null);
-		currentConstraint.setPrecondition(newPrecondition);
+		if (currentConstraintType == ConstraintType.EXTENDED_FILTER && newConstraintType == ConstraintType.BASIC_FILTER) {
+
+			AbstractStatement newPrecondition = new StaticStatement(true, null);
+			currentConstraint.setPrecondition(newPrecondition);
+
+			return;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid operation of changing constraint type.");
 	}
 
 	@Override
