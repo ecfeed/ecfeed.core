@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model.serialization;
 
-public class XomBuilderVersion0 extends XomBuilder {
+public class XomBuilderVersion0 extends XomBuilderWithoutConstraintType {
 
 	XomBuilderVersion0(SerializatorParams serializatorParams) {
 

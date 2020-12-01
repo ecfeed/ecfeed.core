@@ -62,6 +62,7 @@ public abstract class XomAnalyser {
 	protected abstract String getStatementChoiceAttributeName();
 	protected abstract String getParameterNodeName();
 	protected abstract String getStatementParameterAttributeName();
+	protected abstract ConstraintType getConstraintType(Element element, List<String> errorList) throws ParserException;
 
 	public XomAnalyser() {
 	}

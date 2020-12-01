@@ -8,20 +8,17 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model;
+package com.ecfeed.core.model.serialization;
 
-public class ModelVersionDistributor {
+public class XomAnalyserVersion4 extends XomAnalyserWithConstraintTypes {
 
-	public static int getCurrentSoftwareVersion() {
+	public XomAnalyserVersion4() {
+		super();
+	}
 
+	@Override
+	protected int getModelVersion() {
 		return 4;
 	}
 
-	public static boolean isAndroidAttributeInTheClass(int version) {
-
-		if (version < 2) {
-			return true;
-		}
-		return false;
-	}	
 }

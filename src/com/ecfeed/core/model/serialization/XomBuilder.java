@@ -49,6 +49,7 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
@@ -76,6 +77,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	protected abstract String getChoiceAttributeName();
 	protected abstract String getStatementChoiceAttributeName();
 	protected abstract int getModelVersion();
+	protected abstract void addConstraintTypeAttribute(ConstraintType constraintType, Element targetConstraintElement);
 
 	XomBuilder(SerializatorParams serializatorParams) {
 
@@ -194,7 +196,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return null;
 	}
-	
+
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
 
@@ -214,6 +216,9 @@ public abstract class XomBuilder implements IModelVisitor {
 	public Object visit(ConstraintNode node) throws Exception{
 
 		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
+
+		ConstraintType constraintType = node.getConstraint().getType();
+		addConstraintTypeAttribute(constraintType, targetConstraintElement);
 
 		AbstractStatement precondition = node.getConstraint().getPrecondition();
 		AbstractStatement postcondition = node.getConstraint().getPostcondition();
@@ -235,6 +240,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return targetConstraintElement;
 	}
+
 
 	@Override
 	public Object visit(ChoiceNode node) throws Exception {
@@ -337,7 +343,7 @@ public abstract class XomBuilder implements IModelVisitor {
 				fWhiteCharConverter);
 		return targetGlobalParamElement;
 	}
-	
+
 	private Element createTargetTestCaseElement(TestCaseNode node) {
 
 		Element targetTestCaseElement = new Element(TEST_CASE_NODE_NAME);
@@ -388,7 +394,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return value.replaceAll(xml10pattern, "");
 	}
-	
+
 	private void appendChoiceOfTestCase(Element targetTestCaseElement,
 			TestCaseNode node, ChoiceNode choiceNode) {
 
