@@ -31,7 +31,7 @@ public class XomBuilderWithConstraintType extends XomBuilderVersionWithNewNodeNa
 	@Override
 	public void addConstraintTypeAttribute(ConstraintType constraintType, Element targetConstraintElement) {
 
-		String typeDescription = constraintType.getDescription();
+		String typeDescription = constraintType.getCode();
 		Attribute attributeType = new Attribute(PROPERTY_ATTRIBUTE_TYPE, typeDescription);
 		targetConstraintElement.addAttribute(attributeType);
 	}

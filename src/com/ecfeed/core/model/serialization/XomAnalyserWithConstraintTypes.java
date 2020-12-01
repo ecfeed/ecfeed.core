@@ -34,7 +34,7 @@ public abstract class XomAnalyserWithConstraintTypes extends XomAnalyserWithNewN
 		ConstraintType constraintType = null;
 		
 		try {
-			constraintType = ConstraintType.parse(type);
+			constraintType = ConstraintType.parseCode(type);
 		} catch (Exception e) {
 			errorList.add("Cannot parse constraint type.");
 			ParserException.create();

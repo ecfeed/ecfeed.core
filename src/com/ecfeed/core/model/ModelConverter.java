@@ -37,6 +37,10 @@ public class ModelConverter {
 		case 2:
 			model = convertFrom2To3(model);
 			break;
+		case 3:
+			model = convertFrom3To4(model);
+			break;
+			
 		default:
 			ExceptionHelper.reportRuntimeException(INVALID_MODEL_VERSION); 
 			break;
@@ -61,4 +65,10 @@ public class ModelConverter {
 		// Relation types changed from symbols to text. The model is compatible backwards.
 		return model;
 	}
+	
+	private static RootNode convertFrom3To4(RootNode model) {
+		// Default constraint type was added during model parsing. No further conversion needed.
+		return model;
+	}
+	
 }

@@ -14,17 +14,24 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 public enum ConstraintType {
 
-	EXTENDED_FILTER("Implication"),
-	BASIC_FILTER("Invariant"),
-	ASSIGNMENT("Expected output");
+	EXTENDED_FILTER("EF", "Implication"),
+	BASIC_FILTER("BF",  "Invariant"),
+	ASSIGNMENT("AS",  "Expected output");
 
 	private final String fDescription;
+	private final String fCode;
 
-	ConstraintType(String description) {
+	ConstraintType(String code, String description) {
 
+		fCode = code;
 		fDescription = description;
 	}
 
+	public String getCode() {
+		
+		return fCode;
+	}
+	
 	public String getDescription() {
 
 		return fDescription;
@@ -40,22 +47,22 @@ public enum ConstraintType {
 		return EXTENDED_FILTER;
 	}
 	
-	public static ConstraintType parse(String text) {
+	public static ConstraintType parseDescription(String description) {
 
-		if (text == null) {
+		if (description == null) {
 			reportExceptionInvalidConstraintType();
 			return null;
 		}
 
-		if (text.equals(EXTENDED_FILTER.getDescription())) {
+		if (description.equals(EXTENDED_FILTER.getDescription())) {
 			return EXTENDED_FILTER;
 		}
 
-		if (text.equals(BASIC_FILTER.getDescription())) {
+		if (description.equals(BASIC_FILTER.getDescription())) {
 			return BASIC_FILTER;
 		}
 
-		if (text.equals(ASSIGNMENT.getDescription())) {
+		if (description.equals(ASSIGNMENT.getDescription())) {
 			return ASSIGNMENT;
 		}
 		
@@ -63,6 +70,29 @@ public enum ConstraintType {
 		return null;
 	}
 
+	public static ConstraintType parseCode(String code) {
+
+		if (code == null) {
+			reportExceptionInvalidConstraintType();
+			return null;
+		}
+
+		if (code.equals(EXTENDED_FILTER.getCode())) {
+			return EXTENDED_FILTER;
+		}
+
+		if (code.equals(BASIC_FILTER.getCode())) {
+			return BASIC_FILTER;
+		}
+
+		if (code.equals(ASSIGNMENT.getCode())) {
+			return ASSIGNMENT;
+		}
+		
+		reportExceptionInvalidConstraintType();
+		return null;
+	}
+	
 	private static void reportExceptionInvalidConstraintType() {
 
 		ExceptionHelper.reportRuntimeException("Invalid constraint type.");

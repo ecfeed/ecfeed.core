@@ -96,7 +96,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<ClassNode> parseClass(
-			Element classElement, RootNode parent, List<String> errorList) {
+			Element classElement, RootNode parent, List<String> errorList) throws ParserException {
 
 		String name;
 		
@@ -180,7 +180,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<MethodNode> parseMethod(
-			Element methodElement, ClassNode classNode, List<String> errorList) {
+			Element methodElement, ClassNode classNode, List<String> errorList) throws ParserException {
 		
 		String name;
 		
@@ -458,7 +458,7 @@ public abstract class XomAnalyser {
 		return Optional.ofNullable(targetTestCaseNode);
 	}
 
-	public Optional<ConstraintNode> parseConstraint(Element element, MethodNode method, List<String> errorList) {
+	public Optional<ConstraintNode> parseConstraint(Element element, MethodNode method, List<String> errorList) throws ParserException {
 		
 		String name;
 		
@@ -469,6 +469,8 @@ public abstract class XomAnalyser {
 			return Optional.empty();
 		}
 
+		ConstraintType constraintType = getConstraintType(element, errorList);
+		
 		Optional<AbstractStatement> precondition = null;
 		Optional<AbstractStatement> postcondition = null;
 
@@ -514,7 +516,7 @@ public abstract class XomAnalyser {
 		Constraint constraint =
 				new Constraint(
 						name,
-						ConstraintType.EXTENDED_FILTER,  // TODO CONSTRAINTS-NEW
+						constraintType,
 						precondition.get(),
 						postcondition.get(),
 						method.getModelChangeRegistrator());

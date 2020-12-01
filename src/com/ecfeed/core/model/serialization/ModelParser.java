@@ -72,7 +72,10 @@ public class ModelParser {
 			}
 
 			createXomAnalyser(modelVersion);
-			return getXomAnalyser().parseRoot(element, modelChangeRegistrator, outErrorList);
+			
+			RootNode rootNode = getXomAnalyser().parseRoot(element, modelChangeRegistrator, outErrorList);
+			return rootNode;
+			
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
