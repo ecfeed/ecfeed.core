@@ -911,7 +911,7 @@ public class ModelPartialSerializerTest {
 		sb.append("    <Class name='com.example.test.TestClass1'>");
 		sb.append("        <Method name='testMethod1'>");
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='true' link='globalArg1'/>");
-		sb.append("            <Constraint name='constraint'>");
+		sb.append("            <Constraint name='constraint' type=\"EF\">");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='globalc1:global11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
