@@ -656,7 +656,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='choice21' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
-		sb.append("            <Constraint name='constraint2'>");
+		sb.append("            <Constraint name='constraint2' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");

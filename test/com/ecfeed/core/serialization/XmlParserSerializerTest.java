@@ -150,31 +150,62 @@ public class XmlParserSerializerTest {
 			testData.add(choice1);
 			testData.add(choice2);
 			TestCaseNode testCase = new TestCaseNode("test", null, testData);
-			Constraint choiceConstraint = new Constraint(
+
+			Constraint constraintExtendedFilter = new Constraint(
 					"constraint",
 					ConstraintType.EXTENDED_FILTER,
-					new StaticStatement(true, null), RelationStatement.createStatementWithChoiceCondition(
-                            choicesParentParameter, EMathRelation.EQUAL, choice1), null
-            );
+					new StaticStatement(true, null),
+					RelationStatement.createStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					null);
+
+			Constraint constraintBasicFilter = new Constraint(
+					"constraint",
+					ConstraintType.BASIC_FILTER,
+					new StaticStatement(true, null),
+					RelationStatement.createStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					null);
+
+			Constraint constraintAssignment = new Constraint(
+					"constraint",
+					ConstraintType.ASSIGNMENT,
+					new StaticStatement(true, null),
+					new StatementArray(StatementArrayOperator.AND, null),
+					null);
 
 			Constraint labelConstraint = 
 					new Constraint(
 							"constraint",
 							ConstraintType.EXTENDED_FILTER,
-							new StaticStatement(true, null), RelationStatement.createStatementWithLabelCondition(
-                                    choicesParentParameter, EMathRelation.EQUAL, "label"), null
-                    );
+							new StaticStatement(true, null),
+							RelationStatement.createStatementWithLabelCondition(choicesParentParameter, EMathRelation.EQUAL, "label"),
+							null);
 
-			Constraint expectedConstraint = 
+			Constraint expectedConstraint =
 					new Constraint(
 							"constraint",
-							ConstraintType.EXTENDED_FILTER,
-							new StaticStatement(true, null), new ExpectedValueStatement(expectedParameter, new ChoiceNode("expected", "n", null), new JavaPrimitiveTypePredicate()), null
+							ConstraintType.ASSIGNMENT,
+							new StaticStatement(true, null),
+							new ExpectedValueStatement(
+									expectedParameter,
+									new ChoiceNode("expected", "n", null),
+									new JavaPrimitiveTypePredicate()),
+							null
                     );
 
-			ConstraintNode choiceConstraintNode = new ConstraintNode("choice constraint", choiceConstraint, null);
-			ConstraintNode labelConstraintNode = new ConstraintNode("label constraint", labelConstraint, null);
-			ConstraintNode expectedConstraintNode = new ConstraintNode("expected constraint", expectedConstraint, null);
+			ConstraintNode choiceConstraintNodeExtendedFilter =
+					new ConstraintNode("choice constraint extended filter", constraintExtendedFilter, null);
+
+			ConstraintNode choiceConstraintNodeBasicFilter =
+					new ConstraintNode("choice constraint basic filter", constraintBasicFilter, null);
+
+			ConstraintNode constraintNodeAssignment =
+					new ConstraintNode("assignment constraint ", constraintAssignment, null);
+
+			ConstraintNode labelConstraintNode =
+					new ConstraintNode("label constraint", labelConstraint, null);
+
+			ConstraintNode expectedConstraintNode =
+					new ConstraintNode("expected constraint", expectedConstraint, null);
 
 			root.addClass(classNode);
 			classNode.addMethod(method);
@@ -183,7 +214,9 @@ public class XmlParserSerializerTest {
 			choicesParentParameter.addChoice(choice1);
 			method.addTestCase(testCase);
 			method.addConstraint(labelConstraintNode);
-			method.addConstraint(choiceConstraintNode);
+			method.addConstraint(choiceConstraintNodeExtendedFilter);
+			method.addConstraint(choiceConstraintNodeBasicFilter);
+			method.addConstraint(constraintNodeAssignment);
 			method.addConstraint(expectedConstraintNode);
 
 			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
@@ -583,6 +616,11 @@ public class XmlParserSerializerTest {
 	}
 
 	private void compareConstraints(Constraint constraint1, Constraint constraint2) {
+
+		if (constraint1.getType() != constraint2.getType()) {
+			fail("Constraint types different.");
+		}
+
 		compareBasicStatements(constraint1.getPrecondition(), constraint2.getPrecondition());
 		compareBasicStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
 	}
