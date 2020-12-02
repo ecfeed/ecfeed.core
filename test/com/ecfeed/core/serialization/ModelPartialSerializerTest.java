@@ -438,7 +438,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='choice1' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
-		sb.append("            <Constraint name='constraint'>");
+		sb.append("            <Constraint name='constraint' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='choice1' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
@@ -510,7 +510,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='choice21' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
-		sb.append("            <Constraint name='constraint1'>");
+		sb.append("            <Constraint name='constraint1' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
@@ -518,7 +518,7 @@ public class ModelPartialSerializerTest {
 		sb.append("                    <StaticStatement value='true'/>");
 		sb.append("                </Consequence>");
 		sb.append("            </Constraint>");
-		sb.append("            <Constraint name='constraint2'>");
+		sb.append("            <Constraint name='constraint2' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
@@ -549,7 +549,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='choice21' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
-		sb.append("            <Constraint name='constraint1'>");
+		sb.append("            <Constraint name='constraint1' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
@@ -617,7 +617,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='choice21' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
-		sb.append("            <Constraint name='constraint1'>");
+		sb.append("            <Constraint name='constraint1' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='choice11' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
@@ -625,7 +625,7 @@ public class ModelPartialSerializerTest {
 		sb.append("                    <StaticStatement value='true'/>");
 		sb.append("                </Consequence>");
 		sb.append("            </Constraint>");
-		sb.append("            <Constraint name='constraint2'>");
+		sb.append("            <Constraint name='constraint2' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <Statement choice='choice12' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
@@ -725,7 +725,7 @@ public class ModelPartialSerializerTest {
 		sb.append("            <Parameter name='arg2' type='int' isExpected='false' expected='0' linked='false'>");
 		sb.append("                <Choice name='choice21' value='0' isRandomized='false'/>");
 		sb.append("            </Parameter>");
-		sb.append("            <Constraint name='constraint1'>");
+		sb.append("            <Constraint name='constraint1' type='EF'>");
 		sb.append("                <Premise>");
 		sb.append("                    <ParameterStatement rightParameter='arg2' parameter='arg1' relation='equal'/>");
 		sb.append("                </Premise>");
