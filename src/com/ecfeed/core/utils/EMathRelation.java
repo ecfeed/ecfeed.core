@@ -164,7 +164,7 @@ public enum EMathRelation{
 			.orElse(null);
 	}
 
-	public static EMathRelation[] getAvailableRelations(String parameterType) {
+	public static EMathRelation[] getAvailableComparisonRelations(String parameterType) {
 
 		List<EMathRelation> relations = new ArrayList<EMathRelation>();
 
@@ -179,7 +179,7 @@ public enum EMathRelation{
 
 	public static String[] getAvailableRelationNames(String parameterTypeName) {
 
-		return relationCodesToNames(getAvailableRelations(parameterTypeName)); 
+		return relationCodesToNames(getAvailableComparisonRelations(parameterTypeName)); 
 	}
 
 	public static String[] relationCodesToNames(EMathRelation[] relationCodes) {

@@ -147,7 +147,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public EMathRelation[] getAvailableRelations() {
 
-		return EMathRelation.getAvailableRelations(getLeftParameter().getType());
+		return EMathRelation.getAvailableComparisonRelations(getLeftParameter().getType());
 	}
 
 	@Override
