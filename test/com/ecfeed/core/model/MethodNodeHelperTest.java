@@ -716,4 +716,34 @@ public class MethodNodeHelperTest {
 		assertEquals(1, testCaseNodes2.size());
 		assertEquals(testCase3, testCaseNodes2.get(0));
 	}
+
+	@Test
+	public void findNotUsedParameterTest() {
+
+		// empty function
+
+		MethodNode methodNode = new MethodNode("fun",  null);
+
+		assertNull(MethodNodeHelper.findNotUsedExpectedParameter(methodNode));
+
+		// not expected parameter - no constraint
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		assertNull(MethodNodeHelper.findNotUsedExpectedParameter(methodNode));
+
+		//  expected parameter - no constraint
+
+		methodNode.removeParameter(methodParameterNode1);
+
+		methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", true, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		assertNotNull(MethodNodeHelper.findNotUsedExpectedParameter(methodNode));
+
+		// TODO - CONSTRAINTS-NEW add tests
+	}
 }

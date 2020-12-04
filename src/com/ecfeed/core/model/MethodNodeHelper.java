@@ -484,9 +484,17 @@ public class MethodNodeHelper {
 	}
 	
 	public static MethodParameterNode findNotUsedExpectedParameter(MethodNode fCurrentMethodNode) {
-		// TODO - CONSTRAINTS-NEW
+
+		List<MethodParameterNode> parameters = fCurrentMethodNode.getMethodParameters();
+
+		for (MethodParameterNode parameterNode : parameters) {
+
+			if (parameterNode.isExpected()) {
+				return parameterNode;
+			}
+		}
+
 		return null;
 	}
-
 
 }
