@@ -23,6 +23,4 @@ public abstract class AbstractStatementHelper {
 		return abstractStatement.createSignature(extLanguageManager);
 	}
 
-
-
 }
