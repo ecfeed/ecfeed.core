@@ -55,6 +55,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public boolean setExpectedValue(List<ChoiceNode> testCaseValues) {
 
+
 		if (testCaseValues == null) {
 			return true;
 		}

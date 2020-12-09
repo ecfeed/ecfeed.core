@@ -50,7 +50,7 @@ public class GeneratorTestUtils{
 		}
 
 		@Override
-		public boolean setValues(List<String> values) {
+		public boolean setExpectedValues(List<String> values) {
 			return false;
 		}
 

@@ -82,6 +82,7 @@ public class AssignmentStatement extends RelationStatement {
 //			values.set(index, fCondition.makeClone());
 //		}
 
+
 		return true;
 	}
 
