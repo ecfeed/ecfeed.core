@@ -69,18 +69,18 @@ public class AssignmentStatement extends RelationStatement {
 	}
 
 	@Override
-	public boolean setValues(List<ChoiceNode> values) {
+	public boolean setExpectedValue(List<ChoiceNode> values) {
 
-		// TODO CONSTRAINTS-NEW
-		//		if (values == null) {
-		//			return true;
-		//		}
-		//
-		//		if  (fParameter.getMethod() != null) {
-		//
-		//			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
-		//			values.set(index, fCondition.makeClone());
-		//		}
+		// TODO XYX
+//		if (values == null) {
+//			return true;
+//		}
+//
+//		if  (fParameter.getMethod() != null) {
+//
+//			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
+//			values.set(index, fCondition.makeClone());
+//		}
 
 		return true;
 	}

@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.MessageStack;
 public interface IStatement{
 	public String createSignature(IExtLanguageManager extLanguageManager);
 	public EvaluationResult evaluate(List<ChoiceNode> values);
-	public boolean setValues(List<ChoiceNode> values);
+	public boolean setExpectedValue(List<ChoiceNode> values);
 	public boolean isEqualTo(IStatement statement);
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
