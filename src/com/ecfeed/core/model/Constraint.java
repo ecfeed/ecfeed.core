@@ -214,7 +214,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@Override
-	public boolean adapt(List<ChoiceNode> values) {
+	public boolean setValues(List<ChoiceNode> values) {
 
 		if (fPrecondition == null) {
 			return true;
