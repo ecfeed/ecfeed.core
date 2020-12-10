@@ -84,9 +84,15 @@ public class StatementArray extends AbstractStatement {
 
 		case AND:
 			return evaluateForAndOperator(values);
+			
 		case OR:
 			return evaluateForOrOperator(values);
+		case ASSIGN:
+			
+			return EvaluationResult.FALSE;
+			
 		}
+
 		return EvaluationResult.FALSE;
 	}
 
@@ -97,14 +103,7 @@ public class StatementArray extends AbstractStatement {
 		for (int i = 0; i < fStatements.size(); i++) {
 			result += fStatements.get(i).toString();
 			if (i < fStatements.size() - 1) {
-				switch(fOperator) {
-				case AND:
-					result += " \u2227 ";
-					break;
-				case OR:
-					result += " \u2228 ";
-					break;
-				}
+				result += createSignatureOfOperator(fOperator);
 			}
 		}
 		return result + ")";
@@ -122,18 +121,25 @@ public class StatementArray extends AbstractStatement {
 			result += abstractStatement.createSignature(extLanguageManager);
 
 			if (i < fStatements.size() - 1) {
-				switch(fOperator) {
-					case AND:
-						result += " \u2227 ";
-						break;
-					case OR:
-						result += " \u2228 ";
-						break;
-				}
+				result += createSignatureOfOperator(fOperator);
 			}
 		}
 
 		return result + ")";
+	}
+
+	public String createSignatureOfOperator(StatementArrayOperator operator) {
+
+		switch(fOperator) {
+		case AND:
+			return " \u2227 ";
+		case OR:
+			return " \u2228 ";
+		case ASSIGN:
+			return " := ";
+		}
+
+		return null;
 	}
 
 	@Override

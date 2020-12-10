@@ -64,6 +64,7 @@ public class SerializationConstants {
 	public static final String STATEMENT_STATIC_VALUE_ATTRIBUTE_NAME = "value";
 	public static final String STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE = "and";
 	public static final String STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE = "or";
+	public static final String STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE = "assign";
 	public static final String STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME = "value";
 	public static final String RUN_ON_ANDROID_ATTRIBUTE_NAME = "runOnAndroid";
 	public static final String ANDROID_RUNNER_ATTRIBUTE_NAME = "androidRunner";

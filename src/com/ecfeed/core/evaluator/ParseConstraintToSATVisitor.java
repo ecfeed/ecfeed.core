@@ -105,6 +105,8 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fSat4Solver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray());
                 break;
             }
+            case ASSIGN:
+            	break;
         }
 //            statementToID.put(statement,myID); not really necessary, as we are never reusing the same statements
         return myID;
