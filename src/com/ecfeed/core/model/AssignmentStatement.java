@@ -115,7 +115,8 @@ public class AssignmentStatement extends RelationStatement {
 
 			String value = valueCondition.getRightValue();
 
-			newChoiceNode =  new ChoiceNode("choice", value, null); // TODO CONSTRAINTIS-NEW not null ?
+			newChoiceNode =  new ChoiceNode("assignment", value, null);
+			newChoiceNode.setParent(methodParameterNode);
 
 			values.set(indexOfParameter, newChoiceNode);
 			return true;
