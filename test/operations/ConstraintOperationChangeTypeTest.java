@@ -217,7 +217,7 @@ public class ConstraintOperationChangeTypeTest {
 			fail();
 		}
 
-		StatementArray statementArrayAnd = new StatementArray(StatementArrayOperator.AND, null);
+		StatementArray statementArrayAnd = new StatementArray(StatementArrayOperator.ASSIGN, null);
 
 		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPostcondition, statementArrayAnd);
 
@@ -319,7 +319,7 @@ public class ConstraintOperationChangeTypeTest {
 		AssignmentStatement assignmentStatement =
 				AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode2, choiceNode2);
 
-		StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, null);
+		StatementArray statementArray = new StatementArray(StatementArrayOperator.ASSIGN, null);
 		statementArray.addStatement(assignmentStatement);
 
 		Constraint constraint =
@@ -401,7 +401,7 @@ public class ConstraintOperationChangeTypeTest {
 			fail();
 		}
 
-		StatementArray statementArrayAnd = new StatementArray(StatementArrayOperator.AND, null);
+		StatementArray statementArrayAnd = new StatementArray(StatementArrayOperator.ASSIGN, null);
 
 		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, statementArrayAnd);
 
@@ -441,7 +441,7 @@ public class ConstraintOperationChangeTypeTest {
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
 
 		StatementArray initialPostcondition =
-				new StatementArray(StatementArrayOperator.AND, null);
+				new StatementArray(StatementArrayOperator.ASSIGN, null);
 
 		Constraint constraint =
 				new Constraint("constraint", ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition, null);

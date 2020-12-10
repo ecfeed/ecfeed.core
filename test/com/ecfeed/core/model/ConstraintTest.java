@@ -293,7 +293,7 @@ public class ConstraintTest {
 
 		// constraint with array of statements
 
-		statementArray = new StatementArray(StatementArrayOperator.AND, null);
+		statementArray = new StatementArray(StatementArrayOperator.ASSIGN, null);
 		statementArray.addStatement(assignmentStatement);
 
 		constraint =

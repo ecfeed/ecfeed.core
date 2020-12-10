@@ -81,7 +81,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 			StatementArray statementArrayWithAnd =
 					new StatementArray(
-							StatementArrayOperator.AND,
+							StatementArrayOperator.ASSIGN,
 							modelChangeRegistrator);
 
 			currentConstraint.setPostcondition(statementArrayWithAnd);
