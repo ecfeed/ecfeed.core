@@ -40,6 +40,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class XmlParserSerializerTest {
+
 	private final int TEST_RUNS = 10;
 
 	private final int MAX_CLASSES = 5;
@@ -93,41 +94,6 @@ public class XmlParserSerializerTest {
 	public void parseChoiceTestVersion1() {
 		parseChoiceTest(1);
 	}	
-
-	public void parseChoiceTest(int version) {
-		try{
-			RootNode root = new RootNode("root", null, version);
-			ClassNode classNode = new ClassNode("classNode", null);
-			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode parameter = new MethodParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
-			ChoiceNode choice = new ChoiceNode("choice", "A                 B", null);
-			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
-			testData.add(choice);
-			TestCaseNode testCase = new TestCaseNode("test", null, testData);
-
-			root.addClass(classNode);
-			classNode.addMethod(method);
-			method.addParameter(parameter);
-			parameter.addChoice(choice);
-			method.addTestCase(testCase);
-
-			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-			ModelSerializer serializer = new ModelSerializer(ostream, version);
-			ModelParser parser = new ModelParser();
-			serializer.serialize(root);
-
-			ByteArrayInputStream istream = new ByteArrayInputStream(ostream.toByteArray());
-			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
-			compareModels(root, parsedModel);
-		}
-		catch (IOException e) {
-			fail("Unexpected exception");
-		} catch (ParserException e) {
-			fail("Unexpected exception: " + e.getMessage());
-		} catch (Exception e) {
-			fail("Unexpected exception: " + e.getMessage());
-		}
-	}
 
 	@Test
 	public void parseConditionStatementTest(){
@@ -225,6 +191,41 @@ public class XmlParserSerializerTest {
 
 			ByteArrayInputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
+			compareModels(root, parsedModel);
+		}
+		catch (IOException e) {
+			fail("Unexpected exception");
+		} catch (ParserException e) {
+			fail("Unexpected exception: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
+
+	public void parseChoiceTest(int version) {
+		try{
+			RootNode root = new RootNode("root", null, version);
+			ClassNode classNode = new ClassNode("classNode", null);
+			MethodNode method = new MethodNode("method", null);
+			MethodParameterNode parameter = new MethodParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
+			ChoiceNode choice = new ChoiceNode("choice", "A                 B", null);
+			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
+			testData.add(choice);
+			TestCaseNode testCase = new TestCaseNode("test", null, testData);
+
+			root.addClass(classNode);
+			classNode.addMethod(method);
+			method.addParameter(parameter);
+			parameter.addChoice(choice);
+			method.addTestCase(testCase);
+
+			ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+			ModelSerializer serializer = new ModelSerializer(ostream, version);
+			ModelParser parser = new ModelParser();
+			serializer.serialize(root);
+
+			ByteArrayInputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
 			compareModels(root, parsedModel);
 		}
