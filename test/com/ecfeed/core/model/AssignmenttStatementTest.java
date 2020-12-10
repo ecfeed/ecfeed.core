@@ -56,22 +56,41 @@ public class AssignmenttStatementTest {
 
 		// assignment with value condition
 
-		AbstractStatement assignmentStatement =
+		AbstractStatement assignmentWithValueCondition =
 				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "5");
 
-		ChoiceNode choiceNode1 = new ChoiceNode("result1", "0", null);
-		ChoiceNode choiceNode2 = new ChoiceNode("result2", "0", null);
+		ChoiceNode testCaseChoiceNode1 = new ChoiceNode("result1", "0", null);
+		ChoiceNode testCaseChoiceNode2 = new ChoiceNode("result2", "0", null);
 
-		List<ChoiceNode> choiceNodes = new ArrayList<>();
-		choiceNodes.add(choiceNode1);
-		choiceNodes.add(choiceNode2);
+		List<ChoiceNode> testCaseChoiceNodes = new ArrayList<>();
+		testCaseChoiceNodes.add(testCaseChoiceNode1);
+		testCaseChoiceNodes.add(testCaseChoiceNode2);
 
-		assignmentStatement.setExpectedValue(choiceNodes);
+		assignmentWithValueCondition.setExpectedValue(testCaseChoiceNodes);
 
-		ChoiceNode resultChoiceNode = choiceNodes.get(1);
+		ChoiceNode resultChoiceNode = testCaseChoiceNodes.get(1);
 		String resultValue = resultChoiceNode.getValueString();
 
 		assertEquals("5", resultValue);
+
+		// assignment with parameter condition
+
+		AbstractStatement assignmentWithParameterCondition =
+				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+
+		testCaseChoiceNode1 = new ChoiceNode("result1", "33", null);
+		testCaseChoiceNode2 = new ChoiceNode("result2", "0", null);
+
+		testCaseChoiceNodes = new ArrayList<>();
+		testCaseChoiceNodes.add(testCaseChoiceNode1);
+		testCaseChoiceNodes.add(testCaseChoiceNode2);
+
+		assignmentWithParameterCondition.setExpectedValue(testCaseChoiceNodes);
+
+		resultChoiceNode = testCaseChoiceNodes.get(1);
+		resultValue = resultChoiceNode.getValueString();
+
+		assertEquals("33", resultValue);
 	}
 
 }

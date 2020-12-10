@@ -100,14 +100,7 @@ public class AssignmentStatement extends RelationStatement {
 
 		ChoiceNode newChoiceNode = null;
 
-		if (statementCondition instanceof ChoiceCondition) {
-
-			ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
-			newChoiceNode = choiceCondition.getRightChoice().makeClone();
-
-			values.set(indexOfParameter, newChoiceNode);
-			return true;
-		}
+		// TODO CONSTRAINTS-NEW refactor
 
 		if (statementCondition instanceof ValueCondition) {
 
@@ -121,6 +114,36 @@ public class AssignmentStatement extends RelationStatement {
 			values.set(indexOfParameter, newChoiceNode);
 			return true;
 		}
+
+		if (statementCondition instanceof ParameterCondition) {
+
+			ParameterCondition parameterCondition = (ParameterCondition)statementCondition;
+
+			MethodParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
+
+			int indexOfRightParameter = parameters.indexOf(rightParameterNode);
+
+			if (indexOfRightParameter == -1) {
+				ExceptionHelper.reportRuntimeException("Invalid index of right parameter.");
+			}
+
+			ChoiceNode sourceChoiceNode = values.get(indexOfRightParameter);
+
+			newChoiceNode = sourceChoiceNode.makeClone();
+
+			values.set(indexOfParameter, newChoiceNode);
+			return true;
+		}
+
+		if (statementCondition instanceof ChoiceCondition) {
+
+			ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
+			newChoiceNode = choiceCondition.getRightChoice().makeClone();
+
+			values.set(indexOfParameter, newChoiceNode);
+			return true;
+		}
+
 
 		ExceptionHelper.reportRuntimeException("Invalid type of statement condition.");
 		return false;
