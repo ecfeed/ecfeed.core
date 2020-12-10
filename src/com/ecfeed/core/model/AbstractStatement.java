@@ -90,6 +90,11 @@ public abstract class AbstractStatement implements IStatement {
 		return false;
 	}
 
+	@Override
+	public boolean setExpectedValues(List<ChoiceNode> values) {
+		return false;
+	}
+
 	public abstract AbstractStatement makeClone();
 
 	public abstract boolean updateReferences(MethodNode method);

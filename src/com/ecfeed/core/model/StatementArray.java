@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
@@ -87,54 +88,6 @@ public class StatementArray extends AbstractStatement {
 			return evaluateForOrOperator(values);
 		}
 		return EvaluationResult.FALSE;
-	}
-
-	private EvaluationResult evaluateForOrOperator(List<ChoiceNode> values) {
-
-		boolean insufficient_data = false;
-
-		for (IStatement statement : fStatements) {
-
-			EvaluationResult evaluationResult = statement.evaluate(values);
-
-			if (evaluationResult == EvaluationResult.TRUE) {
-				return EvaluationResult.TRUE;
-			}
-
-			if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
-				insufficient_data = true;
-			}			
-		}
-
-		if (insufficient_data) {
-			return EvaluationResult.INSUFFICIENT_DATA;
-		}
-
-		return EvaluationResult.FALSE;
-	}
-
-	private EvaluationResult evaluateForAndOperator(List<ChoiceNode> values) {
-
-		boolean insufficient_data = false;
-
-		for (IStatement statement : fStatements) {
-
-			EvaluationResult evaluationResult = statement.evaluate(values);
-
-			if (evaluationResult == EvaluationResult.FALSE) {
-				return EvaluationResult.FALSE;
-			}
-
-			if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
-				insufficient_data = true;
-			}
-		}
-
-		if (insufficient_data) {
-			return EvaluationResult.INSUFFICIENT_DATA;
-		}
-
-		return EvaluationResult.TRUE;
 	}
 
 	@Override
@@ -250,28 +203,6 @@ public class StatementArray extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftOperandName() {
-		return fOperator.toString();
-	}
-
-	public StatementArrayOperator getOperator() {
-		return fOperator;
-	}
-
-	public void setOperator(StatementArrayOperator operator) {
-		fOperator = operator;
-	}
-
-	public void addStatement(AbstractStatement statement, int index) {
-
-		fStatements.add(index, statement);
-		statement.setParent(this);
-	}
-
-	public void addStatement(AbstractStatement statement) {
-		addStatement(statement, fStatements.size());
-	}
-
 	@Override
 	public boolean isAmbiguous(
 			List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
@@ -301,4 +232,106 @@ public class StatementArray extends AbstractStatement {
 
 		return null;
 	}
+
+	@Override
+	public boolean setExpectedValue(List<ChoiceNode> values) {
+		ExceptionHelper.reportRuntimeException("Invalid use of setExpectedValue function in statement array.");
+		return false;
+	}
+
+	@Override
+	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
+
+		StatementArrayOperator statementArrayOperator = getOperator();
+
+		if (statementArrayOperator != StatementArrayOperator.ASSIGN) {
+			return true;
+		}
+
+		List<AbstractStatement> statements = getStatements();
+
+		for (AbstractStatement abstractStatement : statements) {
+
+			if (!(abstractStatement instanceof AssignmentStatement)) {
+				continue;
+			}
+
+			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+
+			assignmentStatement.setExpectedValue(testCaseChoices);
+		}
+
+		return true;
+	}
+
+	private EvaluationResult evaluateForOrOperator(List<ChoiceNode> values) {
+
+		boolean insufficient_data = false;
+
+		for (IStatement statement : fStatements) {
+
+			EvaluationResult evaluationResult = statement.evaluate(values);
+
+			if (evaluationResult == EvaluationResult.TRUE) {
+				return EvaluationResult.TRUE;
+			}
+
+			if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+				insufficient_data = true;
+			}
+		}
+
+		if (insufficient_data) {
+			return EvaluationResult.INSUFFICIENT_DATA;
+		}
+
+		return EvaluationResult.FALSE;
+	}
+
+	private EvaluationResult evaluateForAndOperator(List<ChoiceNode> values) {
+
+		boolean insufficient_data = false;
+
+		for (IStatement statement : fStatements) {
+
+			EvaluationResult evaluationResult = statement.evaluate(values);
+
+			if (evaluationResult == EvaluationResult.FALSE) {
+				return EvaluationResult.FALSE;
+			}
+
+			if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+				insufficient_data = true;
+			}
+		}
+
+		if (insufficient_data) {
+			return EvaluationResult.INSUFFICIENT_DATA;
+		}
+
+		return EvaluationResult.TRUE;
+	}
+
+	public String getLeftOperandName() {
+		return fOperator.toString();
+	}
+
+	public StatementArrayOperator getOperator() {
+		return fOperator;
+	}
+
+	public void setOperator(StatementArrayOperator operator) {
+		fOperator = operator;
+	}
+
+	public void addStatement(AbstractStatement statement, int index) {
+
+		fStatements.add(index, statement);
+		statement.setParent(this);
+	}
+
+	public void addStatement(AbstractStatement statement) {
+		addStatement(statement, fStatements.size());
+	}
+
 }

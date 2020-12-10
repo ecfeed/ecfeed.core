@@ -65,14 +65,14 @@ public class AssignmentStatement extends RelationStatement {
 	}
 
 	@Override
-	public EvaluationResult evaluate(List<ChoiceNode> values) {
+	public EvaluationResult evaluate(List<ChoiceNode> testCaseValues) {
 		return EvaluationResult.TRUE;
 	}
 
 	@Override
-	public boolean setExpectedValue(List<ChoiceNode> values) {
+	public boolean setExpectedValue(List<ChoiceNode> testCaseValues) {
 
-		if (values == null) {
+		if (testCaseValues == null) {
 			return true;
 		}
 
@@ -86,6 +86,12 @@ public class AssignmentStatement extends RelationStatement {
 
 		if (methodNode == null) {
 			return true;
+		}
+
+		int countOfParameters = methodNode.getMethodParameterCount();
+
+		if (testCaseValues.size() != countOfParameters) {
+			ExceptionHelper.reportRuntimeException("Invalid size of test case values list.");
 		}
 
 		List<AbstractParameterNode> parameters = methodNode.getParameters();
@@ -111,7 +117,7 @@ public class AssignmentStatement extends RelationStatement {
 			newChoiceNode =  new ChoiceNode("assignment", value, null);
 			newChoiceNode.setParent(methodParameterNode);
 
-			values.set(indexOfParameter, newChoiceNode);
+			testCaseValues.set(indexOfParameter, newChoiceNode);
 			return true;
 		}
 
@@ -127,11 +133,11 @@ public class AssignmentStatement extends RelationStatement {
 				ExceptionHelper.reportRuntimeException("Invalid index of right parameter.");
 			}
 
-			ChoiceNode sourceChoiceNode = values.get(indexOfRightParameter);
+			ChoiceNode sourceChoiceNode = testCaseValues.get(indexOfRightParameter);
 
 			newChoiceNode = sourceChoiceNode.makeClone();
 
-			values.set(indexOfParameter, newChoiceNode);
+			testCaseValues.set(indexOfParameter, newChoiceNode);
 			return true;
 		}
 
@@ -140,12 +146,18 @@ public class AssignmentStatement extends RelationStatement {
 			ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
 			newChoiceNode = choiceCondition.getRightChoice().makeClone();
 
-			values.set(indexOfParameter, newChoiceNode);
+			testCaseValues.set(indexOfParameter, newChoiceNode);
 			return true;
 		}
 
 
 		ExceptionHelper.reportRuntimeException("Invalid type of statement condition.");
+		return false;
+	}
+
+	@Override
+	public boolean setExpectedValues(List<ChoiceNode> testCaseValues) {
+		ExceptionHelper.reportRuntimeException("Invalid use of function set expected values of assignment statement.");
 		return false;
 	}
 

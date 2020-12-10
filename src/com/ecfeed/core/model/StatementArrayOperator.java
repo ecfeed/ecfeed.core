@@ -22,7 +22,7 @@ public enum StatementArrayOperator {
 
 	String fValue;
 
-	private StatementArrayOperator(String value){
+	StatementArrayOperator(String value){
 		fValue = value;
 	}
 
