@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
 
 import java.util.List;
 
@@ -71,19 +72,57 @@ public class AssignmentStatement extends RelationStatement {
 	@Override
 	public boolean setExpectedValue(List<ChoiceNode> values) {
 
-		// TODO XYX
-//		if (values == null) {
-//			return true;
-//		}
-//
-//		if  (fParameter.getMethod() != null) {
-//
-//			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
-//			values.set(index, fCondition.makeClone());
-//		}
+		if (values == null) {
+			return true;
+		}
 
+		MethodParameterNode methodParameterNode = getLeftParameter();
 
-		return true;
+		if (methodParameterNode == null) {
+			return true;
+		}
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		if (methodNode == null) {
+			return true;
+		}
+
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
+
+		int indexOfParameter = parameters.indexOf(methodParameterNode);
+
+		if (indexOfParameter == -1) {
+			ExceptionHelper.reportRuntimeException("Invalid index of parameter.");
+		}
+
+		IStatementCondition statementCondition = getCondition();
+
+		ChoiceNode newChoiceNode = null;
+
+		if (statementCondition instanceof ChoiceCondition) {
+
+			ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
+			newChoiceNode = choiceCondition.getRightChoice().makeClone();
+
+			values.set(indexOfParameter, newChoiceNode);
+			return true;
+		}
+
+		if (statementCondition instanceof ValueCondition) {
+
+			ValueCondition valueCondition = (ValueCondition)statementCondition;
+
+			String value = valueCondition.getRightValue();
+
+			newChoiceNode =  new ChoiceNode("choice", value, null); // TODO CONSTRAINTIS-NEW not null ?
+
+			values.set(indexOfParameter, newChoiceNode);
+			return true;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid type of statement condition.");
+		return false;
 	}
 
 	@Override
