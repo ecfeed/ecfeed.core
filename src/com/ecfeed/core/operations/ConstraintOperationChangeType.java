@@ -100,7 +100,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		if (currentConstraintType == ConstraintType.EXTENDED_FILTER && newConstraintType == ConstraintType.ASSIGNMENT) {
 
-			StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, modelChangeRegistrator);
+			StatementArray statementArray = new StatementArray(StatementArrayOperator.ASSIGN, modelChangeRegistrator);
 			currentConstraint.setPostcondition(statementArray);
 
 			return;

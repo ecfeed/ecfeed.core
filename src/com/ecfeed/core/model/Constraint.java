@@ -64,17 +64,17 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	public IModelChangeRegistrator getModelChangeRegistrator() {
-		
+
 		return fModelChangeRegistrator;
 	}
-	
+
 	public String checkIntegrity() {
 
 		if (fConstraintType == ConstraintType.EXTENDED_FILTER) {
 			return null;
 		}
 
-        if (fConstraintType == ConstraintType.BASIC_FILTER) {
+		if (fConstraintType == ConstraintType.BASIC_FILTER) {
 			return checkInvariantConstraint();
 		}
 
@@ -82,9 +82,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return checkAssignmentConstraint();
 		}
 
-	    ExceptionHelper.reportRuntimeException("Invalid constraint type.");
-	    return null;
-    }
+		ExceptionHelper.reportRuntimeException("Invalid constraint type.");
+		return null;
+	}
 
 	private String checkAssignmentConstraint() {
 
@@ -107,11 +107,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	private String checkAssignmentStatementArray(AbstractStatement postcondition) {
 
+		// TODO CONSTRAINTS-NEW reset calling combo in case of error
+
 		StatementArray statementArray = (StatementArray)postcondition;
 
 		StatementArrayOperator statementArrayOperator = statementArray.getOperator();
 
-		if (statementArrayOperator != StatementArrayOperator.AND) {
+		if (statementArrayOperator != StatementArrayOperator.ASSIGN) {
 			return "Expected output statement has operator of a wrong type.";
 		}
 
@@ -145,12 +147,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public void assertIsCorrect() {
 
-	    String errorMessage = checkIntegrity();
+		String errorMessage = checkIntegrity();
 
-	    if (errorMessage != null) {
-            ExceptionHelper.reportRuntimeException(errorMessage);
-        }
-    }
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+		}
+	}
 
 	public boolean isAmbiguous(
 			List<List<ChoiceNode>> testDomain, 

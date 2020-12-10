@@ -13,10 +13,12 @@ package com.ecfeed.core.model;
 public enum StatementArrayOperator {
 
 	AND("AND"), 
-	OR("OR");
+	OR("OR"),
+	ASSIGN("ASSIGN");
 
 	public static final String OPERATOR_AND = "AND";
 	public static final String OPERATOR_OR = "OR";
+	public static final String OPERATOR_ASSIGN = "ASSIGN";
 
 	String fValue;
 
@@ -28,13 +30,18 @@ public enum StatementArrayOperator {
 		return fValue; 
 	}
 
-	public static StatementArrayOperator getOperator(String text){
+	public static StatementArrayOperator getOperator(String text){ // TODO - CONSTRAINTS-NEW rename to parse
+
 		switch(text){
+
 		case OPERATOR_AND:
 			return AND;
 		case OPERATOR_OR:
 			return OR;
+		case OPERATOR_ASSIGN:
+			return ASSIGN;
 		}
+
 		return null;
 	}
 
