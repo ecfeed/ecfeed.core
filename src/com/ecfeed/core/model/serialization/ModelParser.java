@@ -13,7 +13,6 @@ package com.ecfeed.core.model.serialization;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractStatement;
@@ -26,14 +25,13 @@ import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
-
 import com.ecfeed.core.utils.ListOfStrings;
+
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;

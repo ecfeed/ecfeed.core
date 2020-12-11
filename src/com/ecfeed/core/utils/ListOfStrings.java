@@ -1,8 +1,5 @@
 package com.ecfeed.core.utils;
 
-import com.google.common.collect.Multiset;
-import com.google.common.collect.Multisets;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,4 +25,9 @@ public class ListOfStrings {
 
         return false;
     }
+
+	public List<String> getCollectionOfStrings() {
+		
+		return fStrings;
+	}
 }

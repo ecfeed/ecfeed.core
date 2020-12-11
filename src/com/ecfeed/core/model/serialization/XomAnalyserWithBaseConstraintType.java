@@ -10,11 +10,9 @@
 
 package com.ecfeed.core.model.serialization;
 
-import java.util.List;
-
 import com.ecfeed.core.model.ConstraintType;
-
 import com.ecfeed.core.utils.ListOfStrings;
+
 import nu.xom.Element;
 
 public abstract class XomAnalyserWithBaseConstraintType extends XomAnalyser {
