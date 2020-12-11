@@ -15,7 +15,9 @@ import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
+import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.StringHolder;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -29,10 +31,9 @@ public class XmlUpgradeTest {
 	@Test
 	public void upgradeStandardConstraintFromVersion3To4Test() {
 
-		String sourceInVersion3 = createSourceXmlWithStandardConstraintInVersion3();
-		String expectedResultInVersion4 = createResultXmlWithStandardConstraintInVersion4();
+		Pair<String,String> pairOfXmls = createXmlsWithStandardConstraintInVersion3And4();
 
-		upgradeFromVersion3To4(sourceInVersion3, expectedResultInVersion4);
+		upgradeFromVersion3To4(pairOfXmls.getFirst(), pairOfXmls.getSecond());
 	}
 
 	private void upgradeFromVersion3To4(String sourceInVersion3, String expectedResultInVersion4) {
@@ -104,9 +105,9 @@ public class XmlUpgradeTest {
 		}
 	}
 
-	private String createSourceXmlWithStandardConstraintInVersion3() {
+	private Pair<String, String> createXmlsWithStandardConstraintInVersion3And4() {
 
-		String xml = "<?xml version='1.0' encoding='UTF-8'?>\n" +
+		String sourceTxtInVersion3 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='3'>\n" +
 				"    <Class name='classNode'>\n" +
 				"        <Properties>\n" +
@@ -150,13 +151,10 @@ public class XmlUpgradeTest {
 				"</Model>";
 
 
-		xml = xml.replace("'", "\"");
-		return xml;
-	}
+		sourceTxtInVersion3 = sourceTxtInVersion3.replace("'", "\"");
 
-	private String createResultXmlWithStandardConstraintInVersion4() {
 
-		String xml = "<?xml version='1.0' encoding='UTF-8'?>\n" +
+		String expectedResultTextInVersion4 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='4'>\n" +
 				"    <Class name='classNode'>\n" +
 				"        <Properties>\n" +
@@ -199,8 +197,9 @@ public class XmlUpgradeTest {
 				"    </Class>\n" +
 				"</Model>";
 
-		xml = xml.replace("'", "\"");
-		return xml;
+		expectedResultTextInVersion4 = expectedResultTextInVersion4.replace("'", "\"");
+
+		return new Pair<>(sourceTxtInVersion3, expectedResultTextInVersion4);
 	}
 
 }
