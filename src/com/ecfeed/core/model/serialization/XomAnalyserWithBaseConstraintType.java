@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.ConstraintType;
 
+import com.ecfeed.core.utils.ListOfStrings;
 import nu.xom.Element;
 
 public abstract class XomAnalyserWithBaseConstraintType extends XomAnalyser {
@@ -23,7 +24,7 @@ public abstract class XomAnalyserWithBaseConstraintType extends XomAnalyser {
 	}
 
 	@Override
-	protected ConstraintType getConstraintType(Element element, List<String> errorList) throws ParserException {
+	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
 
 		return ConstraintType.EXTENDED_FILTER;
 	}

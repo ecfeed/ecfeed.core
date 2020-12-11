@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.ListOfStrings;
 import org.junit.Test;
 
 import com.ecfeed.core.model.serialization.ModelParser;
@@ -54,7 +55,7 @@ public class ModelSerializerTest {
 
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -97,7 +98,7 @@ public class ModelSerializerTest {
 			serializer.serialize(model);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -116,7 +117,7 @@ public class ModelSerializerTest {
 			serializer.serialize(r);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			parser.parseClass(istream, new ArrayList<>());
+			parser.parseClass(istream, new ListOfStrings());
 			fail("Exception expected");
 		} catch (Exception e) {
 			//			System.out.println("Exception caught: " + e.getMessage());

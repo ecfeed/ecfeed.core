@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.ConstraintType;
 
+import com.ecfeed.core.utils.ListOfStrings;
 import nu.xom.Element;
 
 public abstract class XomAnalyserWithConstraintTypes extends XomAnalyserWithNewNodeNames {
@@ -23,7 +24,7 @@ public abstract class XomAnalyserWithConstraintTypes extends XomAnalyserWithNewN
 	}
 
 	@Override
-	protected ConstraintType getConstraintType(Element element, List<String> errorList) throws ParserException {
+	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
 		
 		String type = element.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_TYPE);
 		

@@ -42,11 +42,7 @@ import java.util.Optional;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
-import com.ecfeed.core.utils.BooleanHelper;
-import com.ecfeed.core.utils.BooleanHolder;
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.StringHolder;
+import com.ecfeed.core.utils.*;
 
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -62,13 +58,13 @@ public abstract class XomAnalyser {
 	protected abstract String getStatementChoiceAttributeName();
 	protected abstract String getParameterNodeName();
 	protected abstract String getStatementParameterAttributeName();
-	protected abstract ConstraintType getConstraintType(Element element, List<String> errorList) throws ParserException;
+	protected abstract ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException;
 
 	public XomAnalyser() {
 	}
 	
 	public RootNode parseRoot(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 		
 		assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
 		String name = getElementName(element, outErrorList);
@@ -96,7 +92,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<ClassNode> parseClass(
-			Element classElement, RootNode parent, List<String> errorList) throws ParserException {
+			Element classElement, RootNode parent, ListOfStrings errorList) throws ParserException {
 
 		String name;
 		
@@ -180,7 +176,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<MethodNode> parseMethod(
-			Element methodElement, ClassNode classNode, List<String> errorList) throws ParserException {
+			Element methodElement, ClassNode classNode, ListOfStrings errorList) throws ParserException {
 		
 		String name;
 		
@@ -244,7 +240,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<MethodParameterNode> parseMethodParameter(
-			Element parameterElement, MethodNode method, List<String> errorList) {
+			Element parameterElement, MethodNode method, ListOfStrings errorList) {
 
 		String name, type;
 		String defaultValue = null;
@@ -359,7 +355,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<GlobalParameterNode> parseGlobalParameter(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> errorList) {
+			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
 
 		String name, type;
 		
@@ -389,7 +385,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<TestCaseNode> parseTestCase(
-			Element element, MethodNode method, List<String> errorList) {
+			Element element, MethodNode method, ListOfStrings errorList) {
 
 		String name;
 		
@@ -458,7 +454,7 @@ public abstract class XomAnalyser {
 		return Optional.ofNullable(targetTestCaseNode);
 	}
 
-	public Optional<ConstraintNode> parseConstraint(Element element, MethodNode method, List<String> errorList) throws ParserException {
+	public Optional<ConstraintNode> parseConstraint(Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
 		
 		String name;
 		
@@ -531,7 +527,7 @@ public abstract class XomAnalyser {
 	public Optional<AbstractStatement> parseStatement(
 			Element element,
 			MethodNode method,
-			List<String> errorList) {
+			ListOfStrings errorList) {
 
 		try {
 			String localName = element.getLocalName();
@@ -568,7 +564,7 @@ public abstract class XomAnalyser {
 	}
 
 	public StatementArray parseStatementArray(
-			Element element, MethodNode method, List<String> errorList) throws ParserException {
+			Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
 
 		assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATEMENT_ARRAY_NODE_NAME, errorList);
 
@@ -605,7 +601,7 @@ public abstract class XomAnalyser {
 	}
 
 	public StaticStatement parseStaticStatement(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> errorList) throws ParserException {
+			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) throws ParserException {
 
 		assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATIC_STATEMENT_NODE_NAME, errorList);
 
@@ -624,7 +620,7 @@ public abstract class XomAnalyser {
 	}
 
 	public AbstractStatement parseChoiceStatement(
-			Element element, MethodNode method, List<String> errorList) throws ParserException {
+			Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
 		
 		assertNodeTag(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
@@ -654,7 +650,7 @@ public abstract class XomAnalyser {
 	}
 
 	public AbstractStatement parseParameterStatement(
-			Element element, MethodNode method, List<String> errorList) throws ParserException { 
+			Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
 		
 		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
 
@@ -685,7 +681,7 @@ public abstract class XomAnalyser {
 	}
 
 	public AbstractStatement parseValueStatement(
-			Element element, MethodNode method, List<String> errorList) throws ParserException {
+			Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
 
 		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
 
@@ -711,7 +707,7 @@ public abstract class XomAnalyser {
 	}
 
 	public RelationStatement parseLabelStatement(
-			Element element, MethodNode method, List<String> errorList) throws ParserException {
+			Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
 		
 		assertNodeTag(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
 
@@ -730,7 +726,7 @@ public abstract class XomAnalyser {
 	}
 
 	public ExpectedValueStatement parseExpectedValueStatement(
-			Element element, MethodNode method, List<String> errorList) throws ParserException {
+			Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
 		
 		assertNodeTag(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
 
@@ -750,7 +746,7 @@ public abstract class XomAnalyser {
 	}
 
 	public Optional<ChoiceNode> parseChoice(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, List<String> errorList) {
+			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
 
 		String name, value;
 		boolean isRandomized;
@@ -789,7 +785,7 @@ public abstract class XomAnalyser {
 	}
 
 	private static void assertNodeTag(
-			String qualifiedName, String expectedName, List<String> errorList) throws ParserException {
+			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {
 		
 		if (qualifiedName.equals(expectedName) == false) {
 			errorList.add("Unexpected node name: " + qualifiedName + " instead of " + expectedName);
@@ -844,7 +840,7 @@ public abstract class XomAnalyser {
 	}
 
 	protected String getElementName(
-			Element element, List<String> errorList) throws ParserException {
+			Element element, ListOfStrings errorList) throws ParserException {
 		
 		String name = element.getAttributeValue(SerializationConstants.NODE_NAME_ATTRIBUTE);
 		
@@ -857,7 +853,7 @@ public abstract class XomAnalyser {
 	}
 
 	protected String getAttributeValue(
-			Element element, String attributeName, List<String> errorList) throws ParserException {
+			Element element, String attributeName, ListOfStrings errorList) throws ParserException {
 		
 		String value = element.getAttributeValue(attributeName);
 		
@@ -880,7 +876,7 @@ public abstract class XomAnalyser {
 	}
 
 	protected EMathRelation parseRelationName(
-			String relationName, List<String> errorList) throws ParserException {
+			String relationName, ListOfStrings errorList) throws ParserException {
 
 		EMathRelation relation = EMathRelation.getRelation(relationName);
 
