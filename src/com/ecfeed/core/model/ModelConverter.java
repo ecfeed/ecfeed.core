@@ -17,6 +17,7 @@ public class ModelConverter {
 	private static final String INVALID_MODEL_VERSION = "Invalid model version.";
 
 	public static RootNode convertToCurrentVersion(RootNode model) {
+
 		int softwareVersion = ModelVersionDistributor.getCurrentSoftwareVersion();
 		int modelVersion = model.getModelVersion();
 
@@ -52,22 +53,26 @@ public class ModelConverter {
 
 	private static RootNode convertFrom0To1(RootNode model) {
 		// no changes in model internal structure, just serialization and parsing differs
-	    return model;
+		model.setVersion(1);
+		return model;
 	}
 
 	private static RootNode convertFrom1To2(RootNode model) {
 		// Flag of the ClassNode: RunOnAndroid moved to properties in ClassNode constructor.
-		// Serializer in version 2 writes the RunOnAndroid flag to NodeProperties of the ClassNode. 
+		// Serializer in version 2 writes the RunOnAndroid flag to NodeProperties of the ClassNode.
+		model.setVersion(2);
 		return model;
 	}
 
 	private static RootNode convertFrom2To3(RootNode model) {
 		// Relation types changed from symbols to text. The model is compatible backwards.
+		model.setVersion(3);
 		return model;
 	}
-	
-	private static RootNode convertFrom3To4(RootNode model) {
+
+	public static RootNode convertFrom3To4(RootNode model) {
 		// Default constraint type was added during model parsing. No further conversion needed.
+		model.setVersion(4);
 		return model;
 	}
 	
