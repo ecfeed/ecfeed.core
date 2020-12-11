@@ -124,7 +124,7 @@ public class XmlUpgradeTemporaryTest {
 				"par1",
 				"int",
 				"1",
-				true,
+				false,
 				null);
 
 		methodNode.addParameter(methodParameterNode1);
@@ -132,14 +132,29 @@ public class XmlUpgradeTemporaryTest {
 		ChoiceNode choiceNode11 = new ChoiceNode("choice11", "11",  null);
 		methodParameterNode1.addChoice(choiceNode11);
 
+		// method parameter 2 node with choice
+
+		MethodParameterNode methodParameterNode2 = new MethodParameterNode(
+				"par2",
+				"int",
+				"2",
+				true,
+				null);
+
+		methodNode.addParameter(methodParameterNode2);
+
+		ChoiceNode choiceNode21 = new ChoiceNode("choice21", "21",  null);
+		methodParameterNode2.addChoice(choiceNode21);
+
 		// constraint
 
-		AbstractStatement precondition = RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
+		AbstractStatement precondition =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
 
 		ChoiceNode choiceNodeForPostcondition = new ChoiceNode("expected", "5", null);
 
 		AbstractStatement postcondition =
-				new ExpectedValueStatement(methodParameterNode1, choiceNodeForPostcondition, new JavaPrimitiveTypePredicate());
+				new ExpectedValueStatement(methodParameterNode2, choiceNodeForPostcondition, new JavaPrimitiveTypePredicate());
 
 		Constraint constraint = new Constraint(
 				"constraint",
@@ -161,7 +176,7 @@ public class XmlUpgradeTemporaryTest {
 			fail();
 		}
 
-		//System.out.println(ostream.toString());
+		// System.out.println(ostream.toString());
 	}
 
 
