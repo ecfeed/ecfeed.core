@@ -52,10 +52,13 @@ public abstract class ParametersParentNode extends AbstractNode {
 		return fParameters.size();
 	}	
 
-	public AbstractParameterNode findParameter(String parameterName) {
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
 
 		for (AbstractParameterNode parameter : fParameters) {
-			if (parameter.getName().equals(parameterName)) {
+
+			final String parameterName = parameter.getName();
+
+			if (parameterName.equals(parameterNameToFind)) {
 				return parameter;
 			}
 		}

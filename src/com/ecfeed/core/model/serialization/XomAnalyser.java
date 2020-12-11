@@ -626,14 +626,20 @@ public abstract class XomAnalyser {
 
 		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
-		MethodParameterNode parameter = (MethodParameterNode)method.findParameter(parameterName);
-		if (parameter == null || parameter.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
+		MethodParameterNode methodParameterNode = (MethodParameterNode)method.findParameter(parameterName);
+
+		if (methodParameterNode == null) {
+			errorList.add("Cannot find parameter: " + parameterName + " for method: " + method.getName());
+			return null;
+		}
+
+		if (methodParameterNode.isExpected()) {
+			errorList.add("Parameter for choice statement must not be expected.");
 			return null;
 		}
 
 		String choiceName = getAttributeValue(element, getStatementChoiceAttributeName(), errorList);
-		ChoiceNode choice = parameter.getChoice(choiceName);
+		ChoiceNode choice = methodParameterNode.getChoice(choiceName);
 		if (choice == null) {
 			errorList.add(Messages.WRONG_PARTITION_NAME(choiceName, parameterName, method.getName()));
 			return null;
@@ -643,10 +649,10 @@ public abstract class XomAnalyser {
 		EMathRelation relation = parseRelationName(relationName, errorList);
 
 		if (relation == EMathRelation.ASSIGN) {
-			return AssignmentStatement.createAssignmentWithChoiceCondition(parameter, choice);
+			return AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode, choice);
 		}
 
-		return RelationStatement.createStatementWithChoiceCondition(parameter, relation, choice);
+		return RelationStatement.createStatementWithChoiceCondition(methodParameterNode, relation, choice);
 	}
 
 	public AbstractStatement parseParameterStatement(

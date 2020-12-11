@@ -37,14 +37,13 @@ public class XmlUpgradeTest {
 		upgradeFromVersion3To4(pairOfXmls.getFirst(), pairOfXmls.getSecond());
 	}
 
-//	@Test
-//	public void upgradeAssignmentConstraintFromVersion3To4Test() {
-//
-//		Pair<String,String> pairOfXmls = createXmlsWithAssignmentConstraintInVersion3And4();
-//
-//		// TODO CONSTRAINTS-NEW
-////		upgradeFromVersion3To4(pairOfXmls.getFirst(), pairOfXmls.getSecond());
-//	}
+	@Test
+	public void upgradeAssignmentConstraintFromVersion3To4Test() {
+
+		Pair<String,String> pairOfXmls = createXmlsWithAssignmentConstraintInVersion3And4();
+
+		upgradeFromVersion3To4(pairOfXmls.getFirst(), pairOfXmls.getSecond());
+	}
 
 	private void upgradeFromVersion3To4(String sourceInVersion3, String expectedResultInVersion4) {
 
