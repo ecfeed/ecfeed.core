@@ -150,7 +150,7 @@ public enum EMathRelation{
 		return false;
 	}	
 
-	public static EMathRelation getRelation(String name) {
+	public static EMathRelation getRelation(String name) { // TODO CONSTRAINTS-NEW rename to parse
 
 		for (EMathRelation relation : EMathRelation.values()) {
 			if (name.equals(relation.getName())) {

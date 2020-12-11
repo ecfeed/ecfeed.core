@@ -54,6 +54,8 @@ public class ConstraintTest {
 		signature = constraint.createSignature(extLanguageManager);
 
 		assertEquals("true => false", signature);
+
+		// TODO CONSTRAINTS-NEW - add tests of signature for assignment constraints with 3 condition types
 	}
 
 	@Test

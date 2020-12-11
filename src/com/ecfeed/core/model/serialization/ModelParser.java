@@ -245,7 +245,7 @@ public class ModelParser {
 		}
 	}
 
-	public RelationStatement parseChoicesParentStatement(
+	public AbstractStatement parseChoicesParentStatement(
 			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
 		
 		try {

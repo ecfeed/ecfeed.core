@@ -528,7 +528,10 @@ public abstract class XomAnalyser {
 		return Optional.ofNullable(targetConstraint);
 	}
 
-	public Optional<AbstractStatement> parseStatement(Element element, MethodNode method, List<String> errorList) {
+	public Optional<AbstractStatement> parseStatement(
+			Element element,
+			MethodNode method,
+			List<String> errorList) {
 
 		try {
 			String localName = element.getLocalName();
@@ -573,17 +576,24 @@ public abstract class XomAnalyser {
 		String operatorValue = getAttributeValue(element, SerializationConstants.STATEMENT_OPERATOR_ATTRIBUTE_NAME, errorList);
 		
 		switch(operatorValue) {
+
 			case SerializationConstants.STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE:
 				statementArray = new StatementArray(StatementArrayOperator.OR, method.getModelChangeRegistrator());
 				break;
+
 			case SerializationConstants.STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE:
 				statementArray = new StatementArray(StatementArrayOperator.AND, method.getModelChangeRegistrator());
 				break;
+
+			case SerializationConstants.STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE:
+				statementArray = new StatementArray(StatementArrayOperator.ASSIGN, method.getModelChangeRegistrator());
+				break;
+
 			default:
 				errorList.add(Messages.WRONG_STATEMENT_ARRAY_OPERATOR(method.getName(), operatorValue));
 				return null;
 		}
-		
+
 		for (Element child : getIterableChildren(element)) {
 			Optional<AbstractStatement> childStatement = parseStatement(child, method, errorList);
 			if (childStatement.isPresent()) {
@@ -613,7 +623,7 @@ public abstract class XomAnalyser {
 		
 	}
 
-	public RelationStatement parseChoiceStatement(
+	public AbstractStatement parseChoiceStatement(
 			Element element, MethodNode method, List<String> errorList) throws ParserException {
 		
 		assertNodeTag(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
@@ -634,12 +644,16 @@ public abstract class XomAnalyser {
 		}
 
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
-		EMathRelation relation = getRelation(relationName, errorList);
+		EMathRelation relation = parseRelationName(relationName, errorList);
+
+		if (relation == EMathRelation.ASSIGN) {
+			return AssignmentStatement.createAssignmentWithChoiceCondition(parameter, choice);
+		}
 
 		return RelationStatement.createStatementWithChoiceCondition(parameter, relation, choice);
 	}
 
-	public RelationStatement parseParameterStatement(
+	public AbstractStatement parseParameterStatement(
 			Element element, MethodNode method, List<String> errorList) throws ParserException { 
 		
 		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
@@ -661,12 +675,16 @@ public abstract class XomAnalyser {
 		}
 
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
-		EMathRelation relation = getRelation(relationName, errorList);
+		EMathRelation relation = parseRelationName(relationName, errorList);
+
+		if (relation == EMathRelation.ASSIGN) {
+			return AssignmentStatement.createAssignmentWithParameterCondition(leftParameterNode, rightParameterNode);
+		}
 
 		return RelationStatement.createStatementWithParameterCondition(leftParameterNode, relation, rightParameterNode);
 	}
 
-	public RelationStatement parseValueStatement(
+	public AbstractStatement parseValueStatement(
 			Element element, MethodNode method, List<String> errorList) throws ParserException {
 
 		assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
@@ -674,17 +692,22 @@ public abstract class XomAnalyser {
 		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
+
 		if (leftParameterNode == null || leftParameterNode.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
 
-		String text = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME, errorList);
+		String value = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME, errorList);
 
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
-		EMathRelation relation = getRelation(relationName, errorList);
+		EMathRelation relation = parseRelationName(relationName, errorList);
 
-		return RelationStatement.createStatementWithValueCondition(leftParameterNode, relation, text);
+		if (relation == EMathRelation.ASSIGN) {
+			return AssignmentStatement.createAssignmentWithValueCondition(leftParameterNode, value);
+		}
+
+		return RelationStatement.createStatementWithValueCondition(leftParameterNode, relation, value);
 	}
 
 	public RelationStatement parseLabelStatement(
@@ -701,7 +724,7 @@ public abstract class XomAnalyser {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
-		EMathRelation relation = getRelation(relationName, errorList);
+		EMathRelation relation = parseRelationName(relationName, errorList);
 
 		return RelationStatement.createStatementWithLabelCondition(parameter, relation, label);
 	}
@@ -856,7 +879,7 @@ public abstract class XomAnalyser {
 		return Boolean.parseBoolean(fWhiteCharConverter.decode(isRandomizedValue));
 	}
 
-	protected EMathRelation getRelation(
+	protected EMathRelation parseRelationName(
 			String relationName, List<String> errorList) throws ParserException {
 
 		EMathRelation relation = EMathRelation.getRelation(relationName);

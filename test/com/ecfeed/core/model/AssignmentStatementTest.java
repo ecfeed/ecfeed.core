@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class AssignmenttStatementTest {
+public class AssignmentStatementTest {
 
 	@Test
 	public void assignmentStatementTest() {

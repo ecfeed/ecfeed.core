@@ -176,6 +176,5 @@ public class AssignmentStatement extends RelationStatement {
 
 		return new AssignmentStatement(getLeftParameter(), getCondition().getCopy());
 	}
-
 }
 

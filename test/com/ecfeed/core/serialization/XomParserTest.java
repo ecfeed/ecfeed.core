@@ -304,7 +304,7 @@ public class XomParserTest {
 				TRACE(element);
 				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 
-				RelationStatement parsedS = null;
+				AbstractStatement parsedS = null;
 				switch(element.getLocalName()){
 				case SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME:
 					parsedS = analyser.parseLabelStatement(element, m, new ArrayList<>());
