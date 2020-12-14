@@ -12,6 +12,8 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
+import java.util.List;
+
 public class ModelConverter {
 
 	private static final String INVALID_MODEL_VERSION = "Invalid model version.";
@@ -70,10 +72,58 @@ public class ModelConverter {
 		return model;
 	}
 
-	public static RootNode convertFrom3To4(RootNode model) {
-		// Default constraint type was added during model parsing. No further conversion needed.
-		model.setVersion(4);
-		return model;
+	public static RootNode convertFrom3To4(RootNode rootNode) {
+
+		List<ClassNode> classNodes = rootNode.getClasses();
+
+		for (ClassNode classNode:  classNodes) {
+			convertClassFrom3To4(classNode);
+		}
+
+
+		rootNode.setVersion(4);
+		return rootNode;
 	}
-	
+
+	private static void convertClassFrom3To4(ClassNode classNode) {
+
+		List<MethodNode> methodNodes = classNode.getMethods();
+
+		for (MethodNode methodNode : methodNodes) {
+			convertMethodFrom3To4(methodNode);
+		}
+	}
+
+	private static void convertMethodFrom3To4(MethodNode methodNode) {
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+			convertConstraintFrom3To4(constraintNode);
+		}
+	}
+
+	private static void convertConstraintFrom3To4(ConstraintNode constraintNode) {
+
+		Constraint constraint = constraintNode.getConstraint();
+
+		AbstractStatement oldAbstractStatement = constraint.getPostcondition();
+
+		if (!(oldAbstractStatement instanceof ExpectedValueStatement)) {
+			return;
+		}
+
+		constraint.setType(ConstraintType.ASSIGNMENT);
+
+		ExpectedValueStatement oldExpectedValueStatement = (ExpectedValueStatement)oldAbstractStatement;
+
+		MethodParameterNode methodParameterNode = oldExpectedValueStatement.getParameter();
+		String value = oldExpectedValueStatement.getCondition().getValueString();
+
+		AbstractStatement newPostcondition =
+				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode, value);
+
+		constraint.setPostcondition(newPostcondition);
+	}
+
 }

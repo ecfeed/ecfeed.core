@@ -38,7 +38,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public String getLeftOperandName() {
+	public String getLeftOperandName() { // TODO RENAME TO getLeftParameterName
 		return fParameter.getName();
 	}
 
@@ -105,7 +105,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return result;
 	}
 
-	public MethodParameterNode getParameter(){
+	public MethodParameterNode getParameter(){ // TODO RENAME TO getLeftParameter
 		return fParameter;
 	}
 
