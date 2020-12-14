@@ -126,7 +126,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public String getLeftOperandName() {
+	public String getLeftParameterName() {
 
 		return getLeftParameter().getName();
 	}
@@ -134,7 +134,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String toString() {
 
-		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+		return getLeftParameterName() + getRelation() + fRightCondition.toString();
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public String getLeftOperandName() {
+		public String getLeftParameterName() {
 			return null;
 		}
 		@Override

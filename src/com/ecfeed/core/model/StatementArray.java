@@ -318,7 +318,7 @@ public class StatementArray extends AbstractStatement {
 		return EvaluationResult.TRUE;
 	}
 
-	public String getLeftOperandName() {
+	public String getLeftParameterName() {
 		return fOperator.toString();
 	}
 

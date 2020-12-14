@@ -104,7 +104,7 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftOperandName(){
+	public String getLeftParameterName(){
 		return toString();
 	}
 
