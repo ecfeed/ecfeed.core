@@ -450,7 +450,8 @@ public class ConstraintTest {
 	}
 
 	@Test
-	public void testEvaluate() {
+	public void testEvaluateOfExtendedFilter() {
+
 		AbstractStatement trueStatement = new StaticStatement(true, null); 
 		AbstractStatement falseStatement = new StaticStatement(false, null); 
 		List<ChoiceNode> values = new ArrayList<ChoiceNode>();
@@ -459,6 +460,31 @@ public class ConstraintTest {
 		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, falseStatement, trueStatement, null).evaluate(values) == EvaluationResult.TRUE);
 		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, trueStatement, trueStatement, null).evaluate(values) == EvaluationResult.TRUE);
 		assertTrue(new Constraint("c", ConstraintType.EXTENDED_FILTER, trueStatement, falseStatement, null).evaluate(values) == EvaluationResult.FALSE);
+	}
+
+	@Test
+	public void evaluateAssignmentConstraint() {
+
+		MethodParameterNode methodParameterNode =
+				new MethodParameterNode("par",  "int", "0", true, null);
+
+		StaticStatement precondition =
+				new StaticStatement(false, null);
+
+		AssignmentStatement assignmentStatement =
+				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode, "9");
+
+		StatementArray postcondition = new StatementArray(StatementArrayOperator.ASSIGN, null);
+		postcondition.addStatement(assignmentStatement);
+
+		Constraint constraint  =
+				new Constraint("cn", ConstraintType.ASSIGNMENT, precondition, postcondition, null);
+
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
+
+		List<ChoiceNode> choiceNodes  =  new ArrayList<>();
+
+		assertEquals(EvaluationResult.TRUE,  constraint.evaluate(choiceNodes));
 	}
 
 	@Test

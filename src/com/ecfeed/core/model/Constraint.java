@@ -227,6 +227,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
 
+		if (fConstraintType == ConstraintType.ASSIGNMENT) {
+			return EvaluationResult.TRUE;
+		}
+
 		if (fPrecondition == null) { 
 			return EvaluationResult.TRUE;
 		}
