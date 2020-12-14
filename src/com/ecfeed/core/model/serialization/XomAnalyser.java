@@ -884,7 +884,7 @@ public abstract class XomAnalyser {
 	protected EMathRelation parseRelationName(
 			String relationName, ListOfStrings errorList) throws ParserException {
 
-		EMathRelation relation = EMathRelation.getRelation(relationName);
+		EMathRelation relation = EMathRelation.parse(relationName);
 
 		if (relation == null) {
 			errorList.add(Messages.WRONG_OR_MISSING_RELATION_FORMAT(relationName));
