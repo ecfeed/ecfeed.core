@@ -254,8 +254,6 @@ public class ConstraintTest {
 			fail();
 		} catch (Exception e) {
 		}
-
-		// TODO CONSTRAINTS-NEW
 	}
 
 	@Test

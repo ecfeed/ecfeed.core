@@ -43,8 +43,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fPostcondition = postcondition;
 
 		fModelChangeRegistrator = modelChangeRegistrator;
-
-		// TODO CONSTRAINTS-NEW add checking type vs content with tests
 	}
 
 	public String getName() {
