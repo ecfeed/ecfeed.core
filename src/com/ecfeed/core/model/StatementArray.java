@@ -136,7 +136,7 @@ public class StatementArray extends AbstractStatement {
 		case OR:
 			return " \u2228 ";
 		case ASSIGN:
-			return " := ";
+			return " , ";
 		}
 
 		return null;

@@ -247,7 +247,7 @@ public class ConstraintOperationChangeTypeTest {
 		methodParameterNode1.addChoice(choiceNode1);
 
 		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+				new MethodParameterNode("par2", "int", "0", true, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -256,11 +256,15 @@ public class ConstraintOperationChangeTypeTest {
 		RelationStatement initialPrecondition =
 				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
-		AssignmentStatement initialPostcondition =
+		AssignmentStatement assignmentWithChoiceCondition =
 				AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode2, choiceNode2);
 
+		StatementArray postconditionStatementArray = new StatementArray(StatementArrayOperator.ASSIGN, null);
+		postconditionStatementArray.addStatement(assignmentWithChoiceCondition);
+
+
 		Constraint constraint =
-				new Constraint("constraint", ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition, null);
+				new Constraint("constraint", ConstraintType.ASSIGNMENT, initialPrecondition, postconditionStatementArray, null);
 
 		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
 
@@ -291,7 +295,7 @@ public class ConstraintOperationChangeTypeTest {
 			fail();
 		}
 
-		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition);
+		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, postconditionStatementArray);
 	}
 
 	@Test
@@ -307,7 +311,7 @@ public class ConstraintOperationChangeTypeTest {
 		methodParameterNode1.addChoice(choiceNode1);
 
 		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+				new MethodParameterNode("par2", "int", "0", true, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);

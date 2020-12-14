@@ -68,25 +68,25 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return fModelChangeRegistrator;
 	}
 
-	public String checkIntegrity() {
+	public String checkIntegrity(IExtLanguageManager extLanguageManager) {
 
 		if (fConstraintType == ConstraintType.EXTENDED_FILTER) {
 			return null;
 		}
 
 		if (fConstraintType == ConstraintType.BASIC_FILTER) {
-			return checkInvariantConstraint();
+			return checkBasicFilterConstraint(extLanguageManager);
 		}
 
 		if (fConstraintType == ConstraintType.ASSIGNMENT) {
-			return checkAssignmentConstraint();
+			return checkAssignmentConstraint(extLanguageManager);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid constraint type.");
 		return null;
 	}
 
-	private String checkAssignmentConstraint() {
+	private String checkAssignmentConstraint(IExtLanguageManager extLanguageManager) {
 
 		AbstractStatement postcondition = getPostcondition();
 
@@ -95,17 +95,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		if (postcondition instanceof StatementArray) {
-			return checkAssignmentStatementArray(postcondition);
+			return checkAssignmentStatementArray(postcondition, extLanguageManager);
 		}
 
-		if (!(postcondition instanceof AssignmentStatement)) {
-			return "Expected output constraint has precondition of a wrong type.";
-		}
-
-		return null;
+		return "Expected output constraint has postcondition of invalid type.";
 	}
 
-	private String checkAssignmentStatementArray(AbstractStatement postcondition) {
+	private String checkAssignmentStatementArray(AbstractStatement postcondition, IExtLanguageManager extLanguageManager) {
 
 		// TODO CONSTRAINTS-NEW reset calling combo in case of error
 
@@ -114,7 +110,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		StatementArrayOperator statementArrayOperator = statementArray.getOperator();
 
 		if (statementArrayOperator != StatementArrayOperator.ASSIGN) {
-			return "Expected output statement has operator of a wrong type.";
+			return "Expected output statement has operator of invalid type.";
 		}
 
 		List<AbstractStatement> abstractStatements = statementArray.getStatements();
@@ -122,14 +118,23 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		for (AbstractStatement abstractStatement : abstractStatements )  {
 
 			if (!(abstractStatement instanceof AssignmentStatement)) {
-				return "Expected output constraint has postcondition of invalid structure.";
+				return "Expected output constraint has postcondition with statement of invalid type.";
 			}
+
+			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+
+			MethodParameterNode leftParameterNode = assignmentStatement.getLeftParameter();
+
+			if (!leftParameterNode.isExpected()) {
+				return ("Left parameter should of assignment: " + assignmentStatement.createSignature(extLanguageManager) + " should be expected.");
+			}
+
 		}
 
 		return null;
 	}
 
-	public String checkInvariantConstraint() {
+	public String checkBasicFilterConstraint(IExtLanguageManager extLanguageManager) { // TODO CONSTRAINTS-NEW use
 
 		AbstractStatement precondition = getPrecondition();
 
@@ -145,9 +150,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return null;
 	}
 
-	public void assertIsCorrect() {
+	public void assertIsCorrect(IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = checkIntegrity();
+		String errorMessage = checkIntegrity(extLanguageManager);
 
 		if (errorMessage != null) {
 			ExceptionHelper.reportRuntimeException(errorMessage);

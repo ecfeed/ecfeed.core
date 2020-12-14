@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 public class ConstraintTest {
 
 	@Test
-	public void createSignatureTest() {
+	public void createSignatureWithStaticStatementsTest() {
 
 		StaticStatement falseStatement = new StaticStatement(false, null);
 
@@ -56,6 +56,70 @@ public class ConstraintTest {
 		assertEquals("true => false", signature);
 
 		// TODO CONSTRAINTS-NEW - add tests of signature for assignment constraints with 3 condition types
+	}
+
+	@Test
+	public void createSignatureWithAssignmetStatementTest() {
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "1", true, null);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "2", true, null);
+
+		ChoiceNode choiceNode21 = new ChoiceNode("choice1", "5", null);
+		methodParameterNode2.addChoice(choiceNode21);
+
+		// precondition - static
+
+		StaticStatement precondition = new StaticStatement(true, null);
+
+		// postcondition - assignment with value condition
+
+		StatementArray postconditionStatementArray = new StatementArray(StatementArrayOperator.ASSIGN, null);
+
+		AssignmentStatement assignmentWithValueCondition =
+				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "3");
+
+		postconditionStatementArray.addStatement(assignmentWithValueCondition);
+
+		// invariant constraint
+
+		Constraint constraint =
+				new Constraint(
+						"c",
+						ConstraintType.ASSIGNMENT,
+						precondition,
+						postconditionStatementArray,
+						null);
+
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
+
+		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+
+		String signature = constraint.createSignature(extLanguageManager);
+
+		assertEquals("true => (par2:=3)", signature);
+
+		// postcondition - assignment with value condition
+
+		AssignmentStatement assignmentWithChoiceCondition =
+				AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode2, choiceNode21);
+
+		postconditionStatementArray.addStatement(assignmentWithChoiceCondition);
+
+		signature = constraint.createSignature(extLanguageManager);
+		assertEquals("true => (par2:=3 , par2:=choice1[choice])", signature);
+
+		//  postcondition - assignment with parameter conditions
+
+		AssignmentStatement assignmentStatementWithParameterCondition =
+				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+
+		postconditionStatementArray.addStatement(assignmentStatementWithParameterCondition);
+
+		signature = constraint.createSignature(extLanguageManager);
+		assertEquals("true => (par2:=3 , par2:=choice1[choice] , par2:=par1[parameter])", signature);
 	}
 
 	@Test
@@ -92,7 +156,7 @@ public class ConstraintTest {
 						trueStatement,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		constraint =
 				new Constraint(
@@ -102,7 +166,7 @@ public class ConstraintTest {
 						trueStatement,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		constraint =
 				new Constraint(
@@ -112,7 +176,7 @@ public class ConstraintTest {
 						trueStatement,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		constraint =
 				new Constraint(
@@ -123,7 +187,7 @@ public class ConstraintTest {
 						null);
 
 		try {
-			constraint.assertIsCorrect();
+			constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 			fail();
 		} catch (Exception e) {
 		}
@@ -137,7 +201,7 @@ public class ConstraintTest {
 						null);
 
 		try {
-			constraint.assertIsCorrect();
+			constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 			fail();
 		} catch (Exception e) {
 		}
@@ -155,7 +219,7 @@ public class ConstraintTest {
 		methodNode.addParameter(methodParameterNode1);
 
 		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+				new MethodParameterNode("par2", "int", "0", true, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
@@ -177,7 +241,7 @@ public class ConstraintTest {
 						trueStatement,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		constraint =
 				new Constraint(
@@ -187,9 +251,9 @@ public class ConstraintTest {
 						trueStatement,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
-		// relation statement as precondition - OK
+		// relation statement as precondition - ok
 
 		RelationStatement relationStatementWithChoiceAndEqual =
 				RelationStatement.createStatementWithChoiceCondition(
@@ -205,7 +269,7 @@ public class ConstraintTest {
 						trueStatement,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		// relation statement as postcondition - err
 
@@ -218,7 +282,7 @@ public class ConstraintTest {
 						null);
 
 		try {
-			constraint.assertIsCorrect();
+			constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 			fail();
 		} catch (Exception e) {
 		}
@@ -227,7 +291,10 @@ public class ConstraintTest {
 
 		AssignmentStatement assignmentStatement =
 				AssignmentStatement.createAssignmentWithChoiceCondition(
-						methodParameterNode1, choiceNode1);
+						methodParameterNode2, choiceNode1);
+
+		StatementArray statementArray = new StatementArray(StatementArrayOperator.ASSIGN, null);
+		statementArray.addStatement(assignmentStatement);
 
 		EMathRelation mathRelation = assignmentStatement.getRelation();
 		assertEquals(EMathRelation.ASSIGN, mathRelation);
@@ -238,57 +305,63 @@ public class ConstraintTest {
 						"c",
 						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
-						assignmentStatement,
+						statementArray,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		// assignment statement with parameter condition
 
 		assignmentStatement =
 				AssignmentStatement.createAssignmentWithParameterCondition(
-						methodParameterNode1, methodParameterNode2);
+						methodParameterNode2, methodParameterNode1);
+
+		StatementArray statementArray1 = new StatementArray(StatementArrayOperator.ASSIGN, null);
+		statementArray1.addStatement(assignmentStatement);
 
 		constraint =
 				new Constraint(
 						"c",
 						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
-						assignmentStatement,
+						statementArray1,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		// assignment statement with value condition
 
 		assignmentStatement =
 				AssignmentStatement.createAssignmentWithValueCondition(
-						methodParameterNode1, "5");
+						methodParameterNode2, "5");
+
+		StatementArray statementArray2 = new StatementArray(StatementArrayOperator.ASSIGN, null);
+		statementArray2.addStatement(assignmentStatement);
 
 		constraint =
 				new Constraint(
 						"c",
 						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
-						assignmentStatement,
+						statementArray2,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 		// constraint with array of statements and one static statement
 
-		StatementArray statementArray = new StatementArray(StatementArrayOperator.AND, null);
-		statementArray.addStatement(trueStatement);
+		StatementArray assignmentStatementArray = new StatementArray(StatementArrayOperator.AND, null);
+		assignmentStatementArray.addStatement(trueStatement);
 
 		constraint =
 				new Constraint(
 						"c",
 						ConstraintType.ASSIGNMENT,
 						relationStatementWithChoiceAndEqual,
-						statementArray,
+						assignmentStatementArray,
 						null);
 		try {
-			constraint.assertIsCorrect();
+			constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 			fail();
 		} catch (Exception e) {
 		}
@@ -306,7 +379,7 @@ public class ConstraintTest {
 						statementArray,
 						null);
 
-		constraint.assertIsCorrect();
+		constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 
 
 		// constraint with array of statements and OR operator
@@ -323,7 +396,7 @@ public class ConstraintTest {
 						null);
 
 		try {
-			constraint.assertIsCorrect();
+			constraint.assertIsCorrect(new ExtLanguageManagerForJava());
 			fail();
 		} catch (Exception e) {
 		}

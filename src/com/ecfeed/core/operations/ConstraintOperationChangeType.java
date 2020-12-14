@@ -33,7 +33,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		fExtLanguageManager = extLanguageManager;
 
 		fInitialConstraintCopy = fCurrentConstraintNode.getConstraint().makeClone();
-		fInitialConstraintCopy.assertIsCorrect();
+		fInitialConstraintCopy.assertIsCorrect(extLanguageManager);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		Constraint currentConstraint = fCurrentConstraintNode.getConstraint();
 
-		currentConstraint.assertIsCorrect();
+		currentConstraint.assertIsCorrect(getExtLanguageManager());
 
 		final ConstraintType currentConstraintType = currentConstraint.getType();
 
@@ -54,7 +54,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 		changePreAndPostcondition(currentConstraint, fNewConstraintType, modelChangeRegistrator);
 		currentConstraint.setType(fNewConstraintType);
 
-		currentConstraint.assertIsCorrect();
+		currentConstraint.assertIsCorrect(getExtLanguageManager());
 
 		markModelUpdated(); // TODO CONSTRAINTS-NEW do we need this in operations ? vs modelChangeRegistrator
 	}
@@ -142,14 +142,14 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 			Constraint constraint = fCurrentConstraintNode.getConstraint();
 
-			fInitialConstraintCopy.assertIsCorrect();
+			fInitialConstraintCopy.assertIsCorrect(getExtLanguageManager());
 
 			constraint.setType(fInitialConstraintCopy.getType());
 
 			constraint.setPrecondition(fInitialConstraintCopy.getPrecondition());
 			constraint.setPostcondition(fInitialConstraintCopy.getPostcondition());
 
-			constraint.assertIsCorrect();
+			constraint.assertIsCorrect(getExtLanguageManager());
 
 			markModelUpdated();
 		}
