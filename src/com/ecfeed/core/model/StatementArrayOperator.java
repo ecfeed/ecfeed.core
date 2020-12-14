@@ -30,7 +30,7 @@ public enum StatementArrayOperator {
 		return fValue; 
 	}
 
-	public static StatementArrayOperator getOperator(String text){ // TODO - CONSTRAINTS-NEW rename to parse
+	public static StatementArrayOperator parse(String text) {
 
 		switch(text){
 
