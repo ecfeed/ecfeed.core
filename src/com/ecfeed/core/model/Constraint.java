@@ -88,6 +88,46 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	private String checkAssignmentConstraint(IExtLanguageManager extLanguageManager) {
 
+		AbstractStatement precondition = getPrecondition();
+		String errorMessage = checkStatementOfPreconditionOfAssignmentConstraint(precondition, extLanguageManager);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		return checkPostconditionOfAssignmentConstraint(extLanguageManager);
+	}
+
+	private String checkStatementOfPreconditionOfAssignmentConstraint(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
+
+		if (abstractStatement instanceof StaticStatement) {
+			return null;
+		}
+
+		if (abstractStatement instanceof ExpectedValueStatement) {
+			return "Expected value statement is not allowed in this version of software.";
+		}
+
+		if (abstractStatement instanceof RelationStatement) {
+			return null;
+		}
+
+		if (abstractStatement instanceof StatementArray) {
+
+			StatementArray statementArray = (StatementArray)abstractStatement;
+
+			List<AbstractStatement> statements = statementArray.getStatements();
+
+			for (AbstractStatement childAbstractStatement : statements) {
+				checkStatementOfPreconditionOfAssignmentConstraint(childAbstractStatement, extLanguageManager);
+			}
+		}
+
+		return "Invalid type of precondition of assignment constraint.";
+	}
+
+	private String checkPostconditionOfAssignmentConstraint(IExtLanguageManager extLanguageManager) {
+
 		AbstractStatement postcondition = getPostcondition();
 
 		if (postcondition instanceof StaticStatement) {
