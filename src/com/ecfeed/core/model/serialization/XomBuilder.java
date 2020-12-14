@@ -241,7 +241,6 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetConstraintElement;
 	}
 
-
 	@Override
 	public Object visit(ChoiceNode node) throws Exception {
 
@@ -262,6 +261,10 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		return targetChoiceElement;
+	}
+
+	protected WhiteCharConverter getWhiteCharConverter() {
+		return fWhiteCharConverter;
 	}
 
 	private Element createTargetChoiceElement(ChoiceNode node) {

@@ -54,6 +54,7 @@ public class SerializationConstants {
 	public static final String NULL_VALUE_STRING_REPRESENTATION = "/null";
 	public static final String TEST_SUITE_NAME_ATTRIBUTE = "testSuite";
 	public static final String LABEL_ATTRIBUTE_NAME = "label";
+	public static final String LABEL_ATTRIBUTE_TYPE = "type";
 	public static final String VALUE_ATTRIBUTE_NAME = "value";
 	public static final String STATIC_VALUE_ATTRIBUTE_NAME = "value";
 	public static final String STATEMENT_LABEL_ATTRIBUTE_NAME = "label";
