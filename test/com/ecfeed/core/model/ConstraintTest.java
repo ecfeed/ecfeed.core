@@ -27,11 +27,26 @@ public class ConstraintTest {
 	@Test
 	public void createSignatureWithStaticStatementsTest() {
 
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "1", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode11 = new ChoiceNode("choice1", "7", null);
+		methodParameterNode1.addChoice(choiceNode11);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "1", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		// static statements
+
 		StaticStatement falseStatement = new StaticStatement(false, null);
 
 		StaticStatement trueStatement = new StaticStatement(true, null);
 
-		// invariant constraint
+		// constraint with basic filter
 
 		Constraint constraint =
 				new Constraint(
@@ -47,15 +62,49 @@ public class ConstraintTest {
 
 		assertEquals("false", signature);
 
-		// implication constraint
+		// constraint with extended filter
 
 		constraint.setType(ConstraintType.EXTENDED_FILTER);
 
 		signature = constraint.createSignature(extLanguageManager);
-
 		assertEquals("true => false", signature);
 
-		// TODO CONSTRAINTS-NEW - add tests of signature for assignment constraints with 3 condition types
+		// value condition
+
+		RelationStatement relationStatement =
+				RelationStatement.createStatementWithValueCondition(methodParameterNode1, EMathRelation.EQUAL, "5");
+
+		constraint.setPostcondition(relationStatement);
+
+		signature = constraint.createSignature(extLanguageManager);
+		assertEquals("true => par1=5", signature);
+
+		// label condition
+
+		relationStatement =
+				RelationStatement.createStatementWithLabelCondition(methodParameterNode1, EMathRelation.EQUAL, "label1");
+		constraint.setPostcondition(relationStatement);
+
+		signature = constraint.createSignature(extLanguageManager);
+		assertEquals("true => par1=label1[label]", signature);
+
+		// choice condition
+
+		relationStatement =
+				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
+		constraint.setPostcondition(relationStatement);
+
+		signature = constraint.createSignature(extLanguageManager);
+		assertEquals("true => par1=choice1[choice]", signature);
+
+		// parameter condition
+
+		relationStatement =
+				RelationStatement.createStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
+		constraint.setPostcondition(relationStatement);
+
+		signature = constraint.createSignature(extLanguageManager);
+		assertEquals("true => par1=par2[parameter]", signature);
 	}
 
 	@Test
