@@ -104,55 +104,80 @@ public class AssignmentStatement extends RelationStatement {
 
 		IStatementCondition statementCondition = getCondition();
 
-		ChoiceNode newChoiceNode = null;
+		ChoiceNode newChoiceNode =
+				createChoiceNodeWithResultValue(testCaseValues, methodParameterNode, parameters, statementCondition);
 
-		// TODO CONSTRAINTS-NEW refactor
+		if (newChoiceNode == null) {
+			return false;
+		}
+
+		testCaseValues.set(indexOfParameter, newChoiceNode);
+		return true;
+	}
+
+	private ChoiceNode createChoiceNodeWithResultValue(
+			List<ChoiceNode> testCaseValues,
+			MethodParameterNode methodParameterNode,
+			List<AbstractParameterNode> parameters,
+			IStatementCondition statementCondition) {
 
 		if (statementCondition instanceof ValueCondition) {
 
 			ValueCondition valueCondition = (ValueCondition)statementCondition;
 
-			String value = valueCondition.getRightValue();
-
-			newChoiceNode =  new ChoiceNode("assignment", value, null);
-			newChoiceNode.setParent(methodParameterNode);
-
-			testCaseValues.set(indexOfParameter, newChoiceNode);
-			return true;
+			return createChoiceNodeForValueCondition(methodParameterNode, valueCondition);
 		}
 
 		if (statementCondition instanceof ParameterCondition) {
 
 			ParameterCondition parameterCondition = (ParameterCondition)statementCondition;
 
-			MethodParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
-
-			int indexOfRightParameter = parameters.indexOf(rightParameterNode);
-
-			if (indexOfRightParameter == -1) {
-				ExceptionHelper.reportRuntimeException("Invalid index of right parameter.");
-			}
-
-			ChoiceNode sourceChoiceNode = testCaseValues.get(indexOfRightParameter);
-
-			newChoiceNode = sourceChoiceNode.makeClone();
-
-			testCaseValues.set(indexOfParameter, newChoiceNode);
-			return true;
+			return createChoiceNodeForParameterCondition(testCaseValues, parameters, parameterCondition);
 		}
 
 		if (statementCondition instanceof ChoiceCondition) {
 
 			ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
-			newChoiceNode = choiceCondition.getRightChoice().makeClone();
 
-			testCaseValues.set(indexOfParameter, newChoiceNode);
-			return true;
+			return createChoiceNodeForChoiceCondition(choiceCondition);
 		}
 
-
 		ExceptionHelper.reportRuntimeException("Invalid type of statement condition.");
-		return false;
+		return null;
+	}
+
+	private ChoiceNode createChoiceNodeForChoiceCondition(ChoiceCondition choiceCondition) {
+
+		ChoiceNode newChoiceNode = choiceCondition.getRightChoice().makeClone();
+
+		return newChoiceNode;
+	}
+
+	private ChoiceNode createChoiceNodeForParameterCondition(List<ChoiceNode> testCaseValues, List<AbstractParameterNode> parameters, ParameterCondition parameterCondition) {
+
+		MethodParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
+
+		int indexOfRightParameter = parameters.indexOf(rightParameterNode);
+
+		if (indexOfRightParameter == -1) {
+			ExceptionHelper.reportRuntimeException("Invalid index of right parameter.");
+		}
+
+		ChoiceNode sourceChoiceNode = testCaseValues.get(indexOfRightParameter);
+
+		ChoiceNode newChoiceNode = sourceChoiceNode.makeClone();
+
+		return newChoiceNode;
+	}
+
+	private ChoiceNode createChoiceNodeForValueCondition(MethodParameterNode methodParameterNode, ValueCondition valueCondition) {
+
+		String value = valueCondition.getRightValue();
+
+		ChoiceNode newChoiceNode =  new ChoiceNode("assignment", value, null);
+		newChoiceNode.setParent(methodParameterNode);
+
+		return newChoiceNode;
 	}
 
 	@Override
