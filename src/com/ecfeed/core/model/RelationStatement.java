@@ -20,10 +20,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
 
-	public static RelationStatement createStatementWithLabelCondition( // TODO CONSTRAINTS-NEW rename createRelationWithLabelCondition
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			String label) {
+	public static RelationStatement createRelationStatementWithLabelCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		String label) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -31,12 +31,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}
+		}
 
-	public static RelationStatement createStatementWithChoiceCondition(// TODO CONSTRAINTS-NEW rename createRelationWith..
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			ChoiceNode choiceNode) {
+	public static RelationStatement createRelationStatementWithChoiceCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		ChoiceNode choiceNode) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -45,12 +45,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}
+		}
 
-	public static RelationStatement createStatementWithParameterCondition(// TODO CONSTRAINTS-NEW rename createRelationWith..
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			MethodParameterNode rightParameter) {
+	public static RelationStatement createRelationStatementWithParameterCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		MethodParameterNode rightParameter) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -58,12 +58,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}	
+		}
 
-	public static RelationStatement createStatementWithValueCondition(// TODO CONSTRAINTS-NEW rename createRelationWith..
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			String textValue) {
+	public static RelationStatement createRelationStatementWithValueCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		String textValue) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -71,7 +71,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}	
+		}
 
 	protected RelationStatement(
 			MethodParameterNode parameter, 

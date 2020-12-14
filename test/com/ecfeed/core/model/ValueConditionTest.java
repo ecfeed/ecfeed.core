@@ -37,7 +37,7 @@ public class ValueConditionTest {
 		methodNode.addParameter(methodParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithValueCondition(
+				RelationStatement.createRelationStatementWithValueCondition(
 						methodParameterNode, statementRelation, value);
 
 		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
@@ -67,7 +67,7 @@ public class ValueConditionTest {
 		methodNode.addParameter(methodParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithValueCondition(
+				RelationStatement.createRelationStatementWithValueCondition(
 						methodParameterNode, statementRelation, value);
 
 		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
@@ -94,7 +94,7 @@ public class ValueConditionTest {
 		methodNode.addParameter(methodParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithValueCondition(
+				RelationStatement.createRelationStatementWithValueCondition(
 						methodParameterNode, statementRelation, value);
 
 		ChoiceNode choiceNode = new ChoiceNode("Label" + choiceValue, choiceValue, null);
@@ -557,7 +557,7 @@ public class ValueConditionTest {
 		MethodParameterNode methodParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithValueCondition(
+				RelationStatement.createRelationStatementWithValueCondition(
 						methodParameterNode, EMathRelation.EQUAL, "ABC");
 
 		RelationStatement copy = statement.makeClone();
@@ -573,7 +573,7 @@ public class ValueConditionTest {
 		method1.addParameter(method1ParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithValueCondition(
+				RelationStatement.createRelationStatementWithValueCondition(
 						method1ParameterNode, EMathRelation.EQUAL, "ABC");
 
 		MethodNode method2 = new MethodNode("method2", null);

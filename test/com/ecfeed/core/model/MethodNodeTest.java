@@ -482,7 +482,7 @@ public class MethodNodeTest {
 				new Constraint(
 						"constraint",
 						ConstraintType.EXTENDED_FILTER,
-						RelationStatement.createStatementWithChoiceCondition(
+						RelationStatement.createRelationStatementWithChoiceCondition(
                                 parameter, EMathRelation.EQUAL, choice), new StaticStatement(false, null), null);
 
 		Constraint notMentioningConstraint =

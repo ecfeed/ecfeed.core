@@ -242,7 +242,7 @@ public class RandomModelGenerator {
 			List<String> choiceNames = new ArrayList<String>(parameter.getAllChoiceNames());
 			String luckyChoiceName = choiceNames.get(rand.nextInt(choiceNames.size()));
 			ChoiceNode condition = parameter.getChoice(luckyChoiceName);
-			return RelationStatement.createStatementWithChoiceCondition(parameter, relation, condition);
+			return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, condition);
 		}
 		else{
 			if(parameter.getLeafLabels().size() == 0){
@@ -252,7 +252,7 @@ public class RandomModelGenerator {
 			Set<String>labels = parameter.getLeafLabels();
 
 			String label = labels.toArray(new String[]{})[rand.nextInt(labels.size())];
-			return RelationStatement.createStatementWithLabelCondition(parameter, relation, label);
+			return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
 		}
 	}
 

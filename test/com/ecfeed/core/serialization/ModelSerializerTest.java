@@ -18,7 +18,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -174,7 +173,7 @@ public class ModelSerializerTest {
 		Constraint constraint = new Constraint(
 				"constraint",
 				ConstraintType.EXTENDED_FILTER,
-				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
+				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
         );
 
 		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);

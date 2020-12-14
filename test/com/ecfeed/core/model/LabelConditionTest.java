@@ -79,22 +79,22 @@ public class LabelConditionTest {
 		p21q.add(p21); p21q.add(q);
 
 		RelationStatement pEqual = 
-				RelationStatement.createStatementWithLabelCondition(c1, EMathRelation.EQUAL, "p");
+				RelationStatement.createRelationStatementWithLabelCondition(c1, EMathRelation.EQUAL, "p");
 
 		RelationStatement pNotEqual = 
-				RelationStatement.createStatementWithLabelCondition(c1, EMathRelation.NOT_EQUAL, "p");
+				RelationStatement.createRelationStatementWithLabelCondition(c1, EMathRelation.NOT_EQUAL, "p");
 
 		RelationStatement p1Equal = 
-				RelationStatement.createStatementWithLabelCondition(c1, EMathRelation.EQUAL, "p1");
+				RelationStatement.createRelationStatementWithLabelCondition(c1, EMathRelation.EQUAL, "p1");
 
 		RelationStatement p1NotEqual = 
-				RelationStatement.createStatementWithLabelCondition(c1, EMathRelation.NOT_EQUAL, "p1");
+				RelationStatement.createRelationStatementWithLabelCondition(c1, EMathRelation.NOT_EQUAL, "p1");
 
 		RelationStatement p11Equal = 
-				RelationStatement.createStatementWithLabelCondition(c1, EMathRelation.EQUAL, "p11");
+				RelationStatement.createRelationStatementWithLabelCondition(c1, EMathRelation.EQUAL, "p11");
 
 		RelationStatement p11NotEqual = 
-				RelationStatement.createStatementWithLabelCondition(c1, EMathRelation.NOT_EQUAL, "p11");
+				RelationStatement.createRelationStatementWithLabelCondition(c1, EMathRelation.NOT_EQUAL, "p11");
 
 		//Check that all pEqual statements evaluates to true for all vectors
 		assertTrue(pEqual.evaluate(pq) == EvaluationResult.TRUE);
@@ -146,7 +146,7 @@ public class LabelConditionTest {
 		method1.addParameter(method1ParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithLabelCondition(
+				RelationStatement.createRelationStatementWithLabelCondition(
 						method1ParameterNode, EMathRelation.EQUAL, "ABC");
 
 		MethodNode method2 = new MethodNode("method2", null);

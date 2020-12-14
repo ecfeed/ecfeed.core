@@ -40,7 +40,7 @@ public class ChoiceConditionTest {
 		rightChoiceNode.setParent(leftMethodParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						leftMethodParameterNode, statementRelation, rightChoiceNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
@@ -70,7 +70,7 @@ public class ChoiceConditionTest {
 
 		rightChoiceNode.setRandomizedValue(true);
 		RelationStatement statement = 
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						leftMethodParameterNode, statementRelation, rightChoiceNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
@@ -102,7 +102,7 @@ public class ChoiceConditionTest {
 
 		rightChoiceNode.setRandomizedValue(true);
 		RelationStatement statement = 
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						leftMethodParameterNode, statementRelation, rightChoiceNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
@@ -554,7 +554,7 @@ public class ChoiceConditionTest {
 		MethodParameterNode rightParam = new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithParameterCondition(
+				RelationStatement.createRelationStatementWithParameterCondition(
 						leftParam, EMathRelation.EQUAL, rightParam);
 
 		RelationStatement copy = statement.makeClone();
@@ -573,7 +573,7 @@ public class ChoiceConditionTest {
 		method1.addParameter(method1RightParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithParameterCondition(
+				RelationStatement.createRelationStatementWithParameterCondition(
 						method1LeftParameterNode, EMathRelation.EQUAL, method1RightParameterNode);
 
 		MethodNode method2 = new MethodNode("method2", null);

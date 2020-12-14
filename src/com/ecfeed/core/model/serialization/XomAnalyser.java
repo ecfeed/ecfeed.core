@@ -652,7 +652,7 @@ public abstract class XomAnalyser {
 			return AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode, choice);
 		}
 
-		return RelationStatement.createStatementWithChoiceCondition(methodParameterNode, relation, choice);
+		return RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode, relation, choice);
 	}
 
 	public AbstractStatement parseParameterStatement(
@@ -683,7 +683,7 @@ public abstract class XomAnalyser {
 			return AssignmentStatement.createAssignmentWithParameterCondition(leftParameterNode, rightParameterNode);
 		}
 
-		return RelationStatement.createStatementWithParameterCondition(leftParameterNode, relation, rightParameterNode);
+		return RelationStatement.createRelationStatementWithParameterCondition(leftParameterNode, relation, rightParameterNode);
 	}
 
 	public AbstractStatement parseValueStatement(
@@ -709,7 +709,7 @@ public abstract class XomAnalyser {
 			return AssignmentStatement.createAssignmentWithValueCondition(leftParameterNode, value);
 		}
 
-		return RelationStatement.createStatementWithValueCondition(leftParameterNode, relation, value);
+		return RelationStatement.createRelationStatementWithValueCondition(leftParameterNode, relation, value);
 	}
 
 	public RelationStatement parseLabelStatement(
@@ -728,7 +728,7 @@ public abstract class XomAnalyser {
 		}
 		EMathRelation relation = parseRelationName(relationName, errorList);
 
-		return RelationStatement.createStatementWithLabelCondition(parameter, relation, label);
+		return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
 	}
 
 	public ExpectedValueStatement parseExpectedValueStatement(

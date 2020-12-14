@@ -38,7 +38,7 @@ public class XmlUpgradeTest {
 		Pair<String, String> pairOfXmls = createXmlsWithAssignmentConstraintInVersion3And4();
 
 		String serializedModelInVersion4 = generateAssignmentConstraintExampleInVersion4();
-		
+
 		upgradeFromVersion3To4(pairOfXmls.getFirst(), pairOfXmls.getSecond(), serializedModelInVersion4);
 	}
 
@@ -355,7 +355,7 @@ public class XmlUpgradeTest {
 		// constraint
 
 		AbstractStatement precondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
 
 		AbstractStatement postcondition =
 				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "5");

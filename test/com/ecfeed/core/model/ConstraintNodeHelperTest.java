@@ -49,7 +49,7 @@ public class ConstraintNodeHelperTest {
 		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
 
 		AbstractStatement precondition1 =
-				RelationStatement.createStatementWithValueCondition(
+				RelationStatement.createRelationStatementWithValueCondition(
 						parameter1, EMathRelation.EQUAL, "A");
 
 		AbstractStatement precondition = precondition1;
@@ -57,7 +57,7 @@ public class ConstraintNodeHelperTest {
 		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
 
 		AbstractStatement postcondition1 =
-				RelationStatement.createStatementWithValueCondition(
+				RelationStatement.createRelationStatementWithValueCondition(
 						parameter2, EMathRelation.EQUAL, "C");
 
 		AbstractStatement postcondition = postcondition1;
@@ -85,13 +85,13 @@ public class ConstraintNodeHelperTest {
 		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
 
 		AbstractStatement precondition =
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						parameter1, EMathRelation.EQUAL, choice1);
 
 		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
 
 		AbstractStatement postcondition =
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						parameter2, EMathRelation.EQUAL, choice2);
 
 		Constraint constraint = new Constraint("co", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);

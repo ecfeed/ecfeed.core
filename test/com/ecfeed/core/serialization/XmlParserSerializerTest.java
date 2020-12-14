@@ -121,14 +121,14 @@ public class XmlParserSerializerTest {
 					"constraint",
 					ConstraintType.EXTENDED_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
 					null);
 
 			Constraint constraintBasicFilter = new Constraint(
 					"constraint",
 					ConstraintType.BASIC_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
 					null);
 
 			Constraint constraintAssignment = new Constraint(
@@ -143,7 +143,7 @@ public class XmlParserSerializerTest {
 							"constraint",
 							ConstraintType.EXTENDED_FILTER,
 							new StaticStatement(true, null),
-							RelationStatement.createStatementWithLabelCondition(choicesParentParameter, EMathRelation.EQUAL, "label"),
+							RelationStatement.createRelationStatementWithLabelCondition(choicesParentParameter, EMathRelation.EQUAL, "label"),
 							null);
 
 			Constraint expectedConstraint =
@@ -545,7 +545,7 @@ public class XmlParserSerializerTest {
 			parameter.getChoices().get(0).addLabel(label);
 		}
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createStatementWithLabelCondition(parameter, relation, label);
+		return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
 	}
 
 	private AbstractStatement createChoiceStatement(List<MethodParameterNode> parameters) {
@@ -554,7 +554,7 @@ public class XmlParserSerializerTest {
 				new ArrayList<ChoiceNode>(parameter.getLeafChoices()).get(rand.nextInt(parameter.getChoices().size()));
 
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createStatementWithChoiceCondition(parameter, relation, choiceNode);
+		return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, choiceNode);
 	}
 
 	private EMathRelation pickRelation() {

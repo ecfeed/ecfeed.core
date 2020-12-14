@@ -73,10 +73,10 @@ public class ConstraintOperationChangeTypeTest {
 		methodParameterNode2.addChoice(choiceNode2);
 
 		RelationStatement initialPrecondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
 
 		RelationStatement initialPostcondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint = new Constraint("constraint", ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition, null);
 
@@ -137,7 +137,7 @@ public class ConstraintOperationChangeTypeTest {
 				new StaticStatement(true, null);
 
 		RelationStatement initialPostcondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint =
 				new Constraint("constraint", ConstraintType.BASIC_FILTER, initialPrecondition, initialPostcondition, null);
@@ -196,7 +196,7 @@ public class ConstraintOperationChangeTypeTest {
 				new StaticStatement(true, null);
 
 		RelationStatement initialPostcondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint =
 				new Constraint("constraint", ConstraintType.BASIC_FILTER, initialPrecondition, initialPostcondition, null);
@@ -254,7 +254,7 @@ public class ConstraintOperationChangeTypeTest {
 		methodParameterNode2.addChoice(choiceNode2);
 
 		RelationStatement initialPrecondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		AssignmentStatement assignmentWithChoiceCondition =
 				AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode2, choiceNode2);
@@ -318,7 +318,7 @@ public class ConstraintOperationChangeTypeTest {
 		methodParameterNode2.addChoice(choiceNode2);
 
 		RelationStatement initialPrecondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		AssignmentStatement assignmentStatement =
 				AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode2, choiceNode2);
@@ -381,10 +381,10 @@ public class ConstraintOperationChangeTypeTest {
 		methodParameterNode2.addChoice(choiceNode2);
 
 		RelationStatement initialPrecondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
 
 		RelationStatement initialPostcondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode2, EMathRelation.EQUAL, choiceNode2);
 
 		Constraint constraint =
 				new Constraint("constraint", ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition, null);
@@ -442,7 +442,7 @@ public class ConstraintOperationChangeTypeTest {
 		methodParameterNode2.addChoice(choiceNode2);
 
 		RelationStatement initialPrecondition =
-				RelationStatement.createStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
 
 		StatementArray initialPostcondition =
 				new StatementArray(StatementArrayOperator.ASSIGN, null);
