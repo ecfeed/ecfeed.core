@@ -53,17 +53,17 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean setExpectedValue(List<ChoiceNode> testCaseValues) {
+	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
 
 
-		if (testCaseValues == null) {
+		if (testCaseChoices == null) {
 			return true;
 		}
 
 		if  (fParameter.getMethod() != null) {
 
 			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
-			testCaseValues.set(index, fCondition.makeClone());
+			testCaseChoices.set(index, fCondition.makeClone());
 		}
 
 		return true;

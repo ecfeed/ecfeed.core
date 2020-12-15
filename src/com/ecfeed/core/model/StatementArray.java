@@ -240,12 +240,6 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean setExpectedValue(List<ChoiceNode> values) {
-		ExceptionHelper.reportRuntimeException("Invalid use of setExpectedValue function in statement array.");
-		return false;
-	}
-
-	@Override
 	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
 
 		StatementArrayOperator statementArrayOperator = getOperator();
@@ -264,7 +258,7 @@ public class StatementArray extends AbstractStatement {
 
 			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
 
-			assignmentStatement.setExpectedValue(testCaseChoices);
+			assignmentStatement.setExpectedValues(testCaseChoices);
 		}
 
 		return true;

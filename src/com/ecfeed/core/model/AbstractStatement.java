@@ -86,11 +86,6 @@ public abstract class AbstractStatement implements IStatement {
 	}
 
 	@Override
-	public boolean setExpectedValue(List<ChoiceNode> values){
-		return false;
-	}
-
-	@Override
 	public boolean setExpectedValues(List<ChoiceNode> values) {
 		return false;
 	}

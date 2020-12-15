@@ -70,7 +70,7 @@ public class AssignmentStatement extends RelationStatement {
 	}
 
 	@Override
-	public boolean setExpectedValue(List<ChoiceNode> testCaseValues) {
+	public boolean setExpectedValues(List<ChoiceNode> testCaseValues) {
 
 		if (testCaseValues == null) {
 			return true;
@@ -178,12 +178,6 @@ public class AssignmentStatement extends RelationStatement {
 		newChoiceNode.setParent(methodParameterNode);
 
 		return newChoiceNode;
-	}
-
-	@Override
-	public boolean setExpectedValues(List<ChoiceNode> testCaseValues) {
-		ExceptionHelper.reportRuntimeException("Invalid use of function set expected values of assignment statement.");
-		return false;
 	}
 
 	@Override

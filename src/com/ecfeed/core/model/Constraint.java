@@ -263,15 +263,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@Override
-	public boolean setExpectedValues(List<ChoiceNode> values) { // TODO CONSTRAINTS-NEW
-
+	public boolean setExpectedValues(List<ChoiceNode> testCaseNodes) { // TODO CONSTRAINTS-NEW
 
 		if (fPrecondition == null) {
 			return true;
 		}
 
-		if (fPrecondition.evaluate(values) == EvaluationResult.TRUE) {
-			return fPostcondition.setExpectedValue(values);
+		if (fPrecondition.evaluate(testCaseNodes) == EvaluationResult.TRUE) {
+			return fPostcondition.setExpectedValues(testCaseNodes);
 		}
 
 		return true;

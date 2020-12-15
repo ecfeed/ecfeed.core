@@ -58,7 +58,7 @@ public class ExpectedValueStatementTest{
 		testData.add(new ChoiceNode("", fExpParameter1.getDefaultValue(), null));
 		testData.add(choice1);
 
-		testStatement.setExpectedValue(testData);
+		testStatement.setExpectedValues(testData);
 
 		assertTrue(testData.get(1).getValueString().equals(statementChoice.getValueString()));
 	}

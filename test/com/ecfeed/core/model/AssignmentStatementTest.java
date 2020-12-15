@@ -66,7 +66,7 @@ public class AssignmentStatementTest {
 		testCaseChoiceNodes.add(testCaseChoiceNode1);
 		testCaseChoiceNodes.add(testCaseChoiceNode2);
 
-		assignmentWithValueCondition.setExpectedValue(testCaseChoiceNodes);
+		assignmentWithValueCondition.setExpectedValues(testCaseChoiceNodes);
 
 		ChoiceNode resultChoiceNode = testCaseChoiceNodes.get(0);
 		String resultValue = resultChoiceNode.getValueString();
@@ -88,7 +88,7 @@ public class AssignmentStatementTest {
 		testCaseChoiceNodes.add(testCaseChoiceNode1);
 		testCaseChoiceNodes.add(testCaseChoiceNode2);
 
-		assignmentWithParameterCondition.setExpectedValue(testCaseChoiceNodes);
+		assignmentWithParameterCondition.setExpectedValues(testCaseChoiceNodes);
 
 		resultChoiceNode = testCaseChoiceNodes.get(0);
 		resultValue = resultChoiceNode.getValueString();
@@ -112,7 +112,7 @@ public class AssignmentStatementTest {
 		testCaseChoiceNodes.add(testCaseChoiceNode1);
 		testCaseChoiceNodes.add(testCaseChoiceNode2);
 
-		assignmentWithChoiceCondition.setExpectedValue(testCaseChoiceNodes);
+		assignmentWithChoiceCondition.setExpectedValues(testCaseChoiceNodes);
 
 		resultChoiceNode = testCaseChoiceNodes.get(0);
 		resultValue = resultChoiceNode.getValueString();
