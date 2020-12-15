@@ -54,7 +54,7 @@ public class HomebrewConstraintEvaluator<E> implements IConstraintEvaluator<E> {
     }
 
     @Override
-    public List<E> adapt(List<E> valueAssignment) {
+    public List<E> setExpectedValues(List<E> valueAssignment) {
         if (valueAssignment != null) {
             for (IConstraint<E> constraint : fConstraints) {
                 constraint.setExpectedValues(valueAssignment);

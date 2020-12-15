@@ -225,14 +225,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	}
 
 	@Override
-	public List<ChoiceNode> adapt(List<ChoiceNode> testCaseValues) { // TODO - rename adapt to adaptExpectedChoices or assignExpectedChoices
+	public List<ChoiceNode> setExpectedValues(List<ChoiceNode> testCaseChoices) {
 
 		if (!fSat4Solver.hasConstraints())
-			return testCaseValues;
+			return testCaseChoices;
 
 		final List<Integer> assumptionsFromValues =
 				createSolverAssumptions(
-						testCaseValues,
+						testCaseChoices,
 						fSat4Solver,
 						fMethodNode,
 						fChoiceToSolverIdMappings);
@@ -248,19 +248,19 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValueConstraintsData.getList()) {
 			if (model.contains(expectedValConstraint.getFirst())) {
-				expectedValConstraint.getSecond().setExpectedValues(testCaseValues);
+				expectedValConstraint.getSecond().setExpectedValues(testCaseChoices);
 			}
 		}
 
-		for (int i = 0; i < testCaseValues.size(); i++) {
-			ChoiceNode p = testCaseValues.get(i);
+		for (int i = 0; i < testCaseChoices.size(); i++) {
+			ChoiceNode p = testCaseChoices.get(i);
 			MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
 			if (parameter.isExpected()) {
-				testCaseValues.set(i, p.makeClone());
+				testCaseChoices.set(i, p.makeClone());
 			}
 		}
 
-		return testCaseValues;
+		return testCaseChoices;
 	}
 
 	private static void createInputToSanitizedMapping(

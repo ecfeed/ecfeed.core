@@ -128,7 +128,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 
 	protected List<E> adapt(List<E> testCaseValues)
 	{
-		return fConstraintEvaluator.adapt(testCaseValues);
+		return fConstraintEvaluator.setExpectedValues(testCaseValues);
 	}
 
 	private void validateInput(List<? extends List<E>> inputDomain) throws GeneratorException {
