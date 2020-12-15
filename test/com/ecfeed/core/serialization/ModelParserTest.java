@@ -12,19 +12,16 @@ package com.ecfeed.core.serialization;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.model.serialization.ModelParser;
-import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.StringHelper;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.List;
 
-import static com.ecfeed.core.testutils.ModelTestUtils.assertElementsEqual;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -32,17 +29,81 @@ public class ModelParserTest {
 
 	RandomModelGenerator fGenerator = new RandomModelGenerator();
 
+	// TODO CONSTRAINTS-NEW add tests for choice assignments and parameter assignments
+	
 	@Test
-	public void parseModelWithAssignmentConstraint() {
+	public void parseModelWithValueAssignmentConstraint() {
 
 		String modelXml = getModelXmlWithAssingments();
 
 		ByteArrayInputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 		ModelParser parser = new ModelParser();
 		try {
-			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
-			ModelLogger.printModel("after parsing", parsedModel);
+			final ListOfStrings outErrorList = new ListOfStrings();
+
+			RootNode parsedModel = parser.parseModel(istream, null, outErrorList);
+
+			// ModelLogger.printModel("after parsing", parsedModel);
+
+			if (!outErrorList.isEmpty()) {
+				fail(outErrorList.getCollectionOfStrings().get(0));
+			}
+
+			checkAssignmentsInModel(parsedModel);
+
 		} catch (ParserException e) {
+			fail();
+		}
+	}
+
+	private void checkAssignmentsInModel(RootNode rootNode) {
+
+		List<ClassNode> classNodes = rootNode.getClasses();
+		ClassNode classNode = classNodes.get(0);
+
+		List<MethodNode> methodNodes = classNode.getMethods();
+		MethodNode methodNode = methodNodes.get(0);
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+		ConstraintNode constraintNode = constraintNodes.get(0);
+
+		Constraint constraint = constraintNode.getConstraint();
+
+		AbstractStatement postcondition = constraint.getPostcondition();
+
+		if (!(postcondition instanceof StatementArray)) {
+			fail();
+		}
+
+		StatementArray statementArray = (StatementArray)postcondition;
+
+		List<AbstractStatement> statements = statementArray.getChildren();
+
+		if (statements.size() != 1) {
+			fail();
+		}
+
+		AbstractStatement abstractStatement = statements.get(0);
+
+		if (!(abstractStatement instanceof AssignmentStatement)) {
+			fail();
+		}
+
+		AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+
+		if (assignmentStatement.getRelation() !=  EMathRelation.ASSIGN) {
+			fail();
+		}
+
+		IStatementCondition statementCondition = assignmentStatement.getCondition();
+
+		if (!(statementCondition instanceof ValueCondition)) {
+			fail();
+		}
+
+		ValueCondition valueCondition  = (ValueCondition)statementCondition;
+
+		if (!StringHelper.isEqual(valueCondition.getRightValue(), "5")) {
 			fail();
 		}
 	}

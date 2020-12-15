@@ -235,7 +235,7 @@ public class XmlParserSerializerTest {
 				"par2",
 				"int",
 				"2",
-				false,
+				true,
 				null);
 		methodNode.addParameter(methodParameterNode2);
 

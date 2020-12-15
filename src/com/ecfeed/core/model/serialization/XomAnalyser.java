@@ -633,8 +633,10 @@ public abstract class XomAnalyser {
 			return null;
 		}
 
-		if (methodParameterNode.isExpected()) {
-			errorList.add("Parameter for choice statement must not be expected.");
+		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
+		EMathRelation relation = parseRelationName(relationName, errorList);
+
+		if (!isOkExpectedPropertyOfParameter(methodParameterNode, relation, errorList)) {
 			return null;
 		}
 
@@ -644,9 +646,6 @@ public abstract class XomAnalyser {
 			errorList.add(Messages.WRONG_PARTITION_NAME(choiceName, parameterName, method.getName()));
 			return null;
 		}
-
-		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
-		EMathRelation relation = parseRelationName(relationName, errorList);
 
 		if (relation == EMathRelation.ASSIGN) {
 			return AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode, choice);
@@ -663,8 +662,16 @@ public abstract class XomAnalyser {
 		String parameterName = getAttributeValue(element, getStatementParameterAttributeName(), errorList);
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
-		if (leftParameterNode == null || leftParameterNode.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
+
+		if (leftParameterNode == null) {  // TODO CONSTRAINTS-NEW extract and use in other types of statements
+			errorList.add("Empty parameter while parsing value statement.");
+			return null;
+		}
+
+		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
+		EMathRelation relation = parseRelationName(relationName, errorList);
+
+		if (!isOkExpectedPropertyOfParameter(leftParameterNode, relation, errorList)) {
 			return null;
 		}
 
@@ -675,9 +682,6 @@ public abstract class XomAnalyser {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, method.getName()));
 			return null;
 		}
-
-		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
-		EMathRelation relation = parseRelationName(relationName, errorList);
 
 		if (relation == EMathRelation.ASSIGN) {
 			return AssignmentStatement.createAssignmentWithParameterCondition(leftParameterNode, rightParameterNode);
@@ -695,21 +699,45 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 
-		if (leftParameterNode == null || leftParameterNode.isExpected()) {
-			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
+		if (leftParameterNode == null) {  // TODO CONSTRAINTS-NEW extract and use in other types of statements
+			errorList.add("Empty parameter while parsing value statement.");
+			return null;
+		}
+
+		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
+		EMathRelation relation = parseRelationName(relationName, errorList);
+
+		if (!isOkExpectedPropertyOfParameter(leftParameterNode, relation, errorList)) {
 			return null;
 		}
 
 		String value = getAttributeValue(element, SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME, errorList);
-
-		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
-		EMathRelation relation = parseRelationName(relationName, errorList);
 
 		if (relation == EMathRelation.ASSIGN) {
 			return AssignmentStatement.createAssignmentWithValueCondition(leftParameterNode, value);
 		}
 
 		return RelationStatement.createRelationStatementWithValueCondition(leftParameterNode, relation, value);
+	}
+
+	private boolean isOkExpectedPropertyOfParameter(
+			MethodParameterNode leftParameterNode,
+			EMathRelation relation,
+			ListOfStrings errorList) {
+
+		if (relation == EMathRelation.ASSIGN) { // TODO CONSTRAINTS-NEW refactor
+			if (!leftParameterNode.isExpected()) {
+				errorList.add("Left parameter of value statement in assignment should be expected.");
+				return false;
+			}
+		} else {
+			if (leftParameterNode.isExpected()) {
+				errorList.add("Left parameter of value statement should not be expected.");
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public RelationStatement parseLabelStatement(
@@ -722,6 +750,7 @@ public abstract class XomAnalyser {
 		String relationName = getAttributeValue(element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, errorList);
 
 		MethodParameterNode parameter = method.findMethodParameter(parameterName);
+
 		if (parameter == null || parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
