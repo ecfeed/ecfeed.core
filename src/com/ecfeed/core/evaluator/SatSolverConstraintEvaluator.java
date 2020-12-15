@@ -22,7 +22,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
 	private List<RelationStatement> fAllRelationStatements;
-	private ExpectedConstraintsData fExpectedValConstraints;
+	private ExpectedValueConstraintsData fExpectedValueConstraintsData;
 
 	private MethodNode fMethodNode;
 	private EcSatSolver fSat4Solver;
@@ -41,7 +41,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		fChoiceToSolverIdMappings = new ChoiceToSolverIdMappings();
 		fParamChoiceSets = new ParamChoiceSets(method);
 
-		fExpectedValConstraints = new ExpectedConstraintsData();
+		fExpectedValueConstraintsData = new ExpectedValueConstraintsData();
 
 		fAllRelationStatements = new ArrayList<>();
 		fChoiceMappingsBucket = new ChoicesMappingsBucket();
@@ -106,13 +106,13 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		parseConstraintsToSat(
 				initConstraints,
-				fExpectedValConstraints,
+				fExpectedValueConstraintsData,
 				sat4Solver);
 
 
 
 
-		Sat4jLogger.log("fExpectedValConstraints", fExpectedValConstraints, 1, fLogLevel);
+		Sat4jLogger.log("fExpectedValConstraints", fExpectedValueConstraintsData, 1, fLogLevel);
 	}
 
 	@Override
@@ -246,7 +246,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		Set<Integer> model = new HashSet<>(Ints.asList(fSat4Solver.getModel()));
 
-		for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValConstraints.getList()) {
+		for (Pair<Integer, ExpectedValueStatement> expectedValConstraint : fExpectedValueConstraintsData.getList()) {
 			if (model.contains(expectedValConstraint.getFirst())) {
 				expectedValConstraint.getSecond().setExpectedValue(testCaseValues);
 			}
@@ -576,17 +576,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	private void parseConstraintsToSat(
 			Collection<Constraint> initConstraints,
-			ExpectedConstraintsData outExpectedValConstraints,
+			ExpectedValueConstraintsData outExpectedValueConstraintsData,
 			EcSatSolver sat4Solver) { // TODO - input / output
 
 		for (Constraint constraint : initConstraints) {
-			parseConstraintToSat(constraint, outExpectedValConstraints, sat4Solver);
+			parseConstraintToSat(constraint, outExpectedValueConstraintsData, sat4Solver);
 		}
 	}
 
 	private void parseConstraintToSat(
 			Constraint constraint,
-			ExpectedConstraintsData outExpectedValConstraints,
+			ExpectedValueConstraintsData inOutExpectedValConstraints,
 			EcSatSolver sat4Solver) {
 
 		if (constraint == null) {
@@ -606,7 +606,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 										fChoiceMappingsBucket,
 										fChoiceToSolverIdMappings));
 
-				outExpectedValConstraints.add(new Pair<>(preconditionId, (ExpectedValueStatement) postcondition));
+				inOutExpectedValConstraints.add(new Pair<>(preconditionId, (ExpectedValueStatement) postcondition));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
