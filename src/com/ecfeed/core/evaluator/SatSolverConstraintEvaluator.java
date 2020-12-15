@@ -599,7 +599,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	private void parseConstraintToSat(
 			Constraint constraint,
 			OldExpectedValueConstraintsData inOutExpectedValConstraints,
-			ExpectedValueAssignmentsData outExpectedValueAssignmentsData) {
+			ExpectedValueAssignmentsData inOutExpectedValueAssignmentsData) {
 
 		if (constraint == null) {
 			return;
@@ -608,10 +608,11 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		AbstractStatement precondition = constraint.getPrecondition();
 		AbstractStatement postcondition = constraint.getPostcondition();
 
-		if (postcondition instanceof AssignmentStatement) {
+		if (constraint.getType() == ConstraintType.ASSIGNMENT) {
 
-			addAssignmentStatementToAssignmentsTable(
-					precondition, (AssignmentStatement)postcondition, outExpectedValueAssignmentsData);
+			addAssignmentStatementsToAssignmentsTable(
+					precondition, postcondition, inOutExpectedValueAssignmentsData);
+
 			return;
 		}
 
@@ -619,21 +620,44 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 			addExpectedValueStatementToAssignmentsTable(
 					precondition, (ExpectedValueStatement)postcondition, inOutExpectedValConstraints);
+
 			return;
 		}
 
 		addFilteringConstraintToSatSolver(precondition, postcondition);
 	}
 
-	private void addAssignmentStatementToAssignmentsTable(
+	private void addAssignmentStatementsToAssignmentsTable(
 			AbstractStatement precondition,
-			AssignmentStatement postcondition,
+			AbstractStatement postcondition,
 			ExpectedValueAssignmentsData inOutExpectedValueAssignmentsData) {
 
-		Integer preconditionId;
+		if (!(postcondition instanceof StatementArray)) {
+			return;
+		}
+
+		StatementArray statementArray = (StatementArray)postcondition;
+		List<AbstractStatement> abstractStatements = statementArray.getChildren();
+
+		for (AbstractStatement abstractStatement : abstractStatements) {
+
+			if (!(abstractStatement instanceof AssignmentStatement)) {
+				continue;
+			}
+
+			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+
+			addOneStatementToAssignmetsTable(precondition, assignmentStatement, inOutExpectedValueAssignmentsData);
+		}
+	}
+
+	private void addOneStatementToAssignmetsTable(
+			AbstractStatement precondition,
+			AssignmentStatement assignmentStatement,
+			ExpectedValueAssignmentsData inOutExpectedValueAssignmentsData) {
 
 		try {
-			preconditionId =
+			Integer preconditionId =
 					(Integer) precondition.accept(
 							new ParseConstraintToSATVisitor(
 									fMethodNode,
@@ -642,23 +666,20 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 									fChoiceMappingsBucket,
 									fChoiceToSolverIdMappings));
 
-			inOutExpectedValueAssignmentsData.add(new Pair<>(preconditionId, postcondition));
+			inOutExpectedValueAssignmentsData.add(new Pair<>(preconditionId, assignmentStatement));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void addExpectedValueStatementToAssignmentsTable(
 			AbstractStatement precondition,
-			ExpectedValueStatement postcondition,
+			ExpectedValueStatement expectedValueStatement,
 			OldExpectedValueConstraintsData inOutExpectedValConstraints) {
 
-		Integer preconditionId;
-
 		try {
-			preconditionId =
+			Integer preconditionId =
 					(Integer) precondition.accept(
 							new ParseConstraintToSATVisitor(
 									fMethodNode,
@@ -667,7 +688,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 									fChoiceMappingsBucket,
 									fChoiceToSolverIdMappings));
 
-			inOutExpectedValConstraints.add(new Pair<>(preconditionId, postcondition));
+			inOutExpectedValConstraints.add(new Pair<>(preconditionId, expectedValueStatement));
 
 		} catch (Exception e) {
 			e.printStackTrace();
