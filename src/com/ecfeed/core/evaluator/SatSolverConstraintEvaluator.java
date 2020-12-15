@@ -43,6 +43,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		fParamChoiceSets = new ParamChoiceSets(method);
 
 		fExpectedValueConstraintsData = new ExpectedValueConstraintsData();
+		fExpectedValueAssignmentsData = new ExpectedValueAssignmentsData();
 
 		fAllRelationStatements = new ArrayList<>();
 		fChoiceMappingsBucket = new ChoicesMappingsBucket();
@@ -108,7 +109,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		parseConstraintsToSat(
 				initConstraints,
 				fExpectedValueConstraintsData,
-				sat4Solver);
+				fExpectedValueAssignmentsData);
 
 
 
@@ -578,23 +579,28 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	private void parseConstraintsToSat(
 			Collection<Constraint> initConstraints,
 			ExpectedValueConstraintsData outExpectedValueConstraintsData,
-			EcSatSolver sat4Solver) { // TODO - input / output
+			ExpectedValueAssignmentsData outExpectedValueAssignmentsData) {
 
 		for (Constraint constraint : initConstraints) {
-			parseConstraintToSat(constraint, outExpectedValueConstraintsData, sat4Solver);
+			parseConstraintToSat(
+					constraint,
+					outExpectedValueConstraintsData,
+					outExpectedValueAssignmentsData);
 		}
 	}
 
 	private void parseConstraintToSat(
 			Constraint constraint,
 			ExpectedValueConstraintsData inOutExpectedValConstraints,
-			EcSatSolver sat4Solver) {
+			ExpectedValueAssignmentsData outExpectedValueAssignmentsData) {   // TODO CONSTRAINTS-NEW use
 
 		if (constraint == null) {
 			return;
 		}
 
-		AbstractStatement precondition = constraint.getPrecondition(), postcondition = constraint.getPostcondition();
+		AbstractStatement precondition = constraint.getPrecondition();
+		AbstractStatement postcondition = constraint.getPostcondition();
+
 		if (postcondition instanceof ExpectedValueStatement) {
 			Integer preconditionId = null;
 			try {
