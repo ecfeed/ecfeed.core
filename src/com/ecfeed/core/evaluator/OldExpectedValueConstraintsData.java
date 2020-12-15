@@ -6,12 +6,12 @@ import com.ecfeed.core.utils.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpectedValueConstraintsData {
+public class OldExpectedValueConstraintsData {
 
     //Integer is the variable of pre-condition enforcing postcondition ExpectedValueStatement
     private List<Pair<Integer, ExpectedValueStatement>> fExpectedValConstraints;
 
-    public ExpectedValueConstraintsData() {
+    public OldExpectedValueConstraintsData() {
         fExpectedValConstraints = new ArrayList<>();
     }
 
