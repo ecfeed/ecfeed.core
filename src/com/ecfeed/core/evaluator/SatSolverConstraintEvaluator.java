@@ -23,6 +23,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	private List<RelationStatement> fAllRelationStatements;
 	private ExpectedValueConstraintsData fExpectedValueConstraintsData;
+	private ExpectedValueAssignmentsData fExpectedValueAssignmentsData;
 
 	private MethodNode fMethodNode;
 	private EcSatSolver fSat4Solver;
