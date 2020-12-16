@@ -44,7 +44,7 @@ public enum ConstraintType {
 
 	public static ConstraintType getDefaultType() {
 
-		return EXTENDED_FILTER;
+		return BASIC_FILTER;
 	}
 	
 	public static ConstraintType parseDescription(String description) {
