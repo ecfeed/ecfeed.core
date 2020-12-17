@@ -35,4 +35,16 @@ public class ListOfStrings {
 		
 		return fStrings.get(0);
 	}
+	
+	public String getErrorsAsText() {
+		
+		String text = "";
+		
+		for (String error : fStrings) {
+			
+			text += error + "\n";
+		}
+		
+		return text;
+	}
 }
