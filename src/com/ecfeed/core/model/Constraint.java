@@ -141,8 +141,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	private String checkAssignmentStatementArray(AbstractStatement postcondition, IExtLanguageManager extLanguageManager) {
 
-		// TODO CONSTRAINTS-NEW reset calling combo in case of error
-
 		StatementArray statementArray = (StatementArray)postcondition;
 
 		StatementArrayOperator statementArrayOperator = statementArray.getOperator();
