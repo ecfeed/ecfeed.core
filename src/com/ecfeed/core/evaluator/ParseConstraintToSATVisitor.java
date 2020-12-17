@@ -123,8 +123,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         ) {
             switch (statement.getRelation()) {
             	case ASSIGN:
-            		// TODO CONSTRAINTS-NEW
-            		return "*TODO*";
+            		return null;
                 case GREATER_THAN:
                 case LESS_EQUAL: {
                     RelationStatement statement1 = statement.makeClone();
@@ -261,7 +260,6 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
             switch (statement.getRelation()) {
         	case ASSIGN:
-        		// TODO CONSTRAINTS-NEW
         		break;
 
                 case EQUAL:
