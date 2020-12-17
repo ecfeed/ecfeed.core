@@ -50,6 +50,7 @@ import nu.xom.Node;
 
 public abstract class XomAnalyser {
 
+	private static final String EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT = "Empty parameter while parsing value statement.";
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 
 	protected abstract int getModelVersion();
@@ -629,7 +630,7 @@ public abstract class XomAnalyser {
 		MethodParameterNode methodParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 
 		if (methodParameterNode == null) {
-			errorList.add("Cannot find parameter: " + parameterName + " for method: " + method.getName());
+			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
 			return null;
 		}
 
@@ -663,8 +664,8 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 
-		if (leftParameterNode == null) {  // TODO CONSTRAINTS-NEW extract and use in other types of statements
-			errorList.add("Empty parameter while parsing value statement.");
+		if (leftParameterNode == null) {
+			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
 			return null;
 		}
 
@@ -699,8 +700,8 @@ public abstract class XomAnalyser {
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 
-		if (leftParameterNode == null) {  // TODO CONSTRAINTS-NEW extract and use in other types of statements
-			errorList.add("Empty parameter while parsing value statement.");
+		if (leftParameterNode == null) {
+			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
 			return null;
 		}
 
