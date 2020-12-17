@@ -170,7 +170,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return null;
 	}
 
-	public String checkBasicFilterConstraint(IExtLanguageManager extLanguageManager) { // TODO CONSTRAINTS-NEW use
+	public String checkBasicFilterConstraint(IExtLanguageManager extLanguageManager) {
 
 		AbstractStatement precondition = getPrecondition();
 
@@ -183,6 +183,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		if (staticStatement.getValue() != EvaluationResult.TRUE) {
 			return "Precondition has an invalid value.";
 		}
+		
 		return null;
 	}
 
@@ -261,7 +262,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@Override
-	public boolean setExpectedValues(List<ChoiceNode> testCaseNodes) { // TODO CONSTRAINTS-NEW
+	public boolean setExpectedValues(List<ChoiceNode> testCaseNodes) {
 
 		if (fPrecondition == null) {
 			return true;
