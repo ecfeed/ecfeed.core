@@ -29,8 +29,6 @@ public class ModelParserTest {
 
 	RandomModelGenerator fGenerator = new RandomModelGenerator();
 
-	// TODO CONSTRAINTS-NEW add tests for choice assignments and parameter assignments
-	
 	@Test
 	public void parseModelWithValueAssignmentConstraint() {
 

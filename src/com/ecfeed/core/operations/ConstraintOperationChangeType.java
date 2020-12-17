@@ -56,7 +56,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 		currentConstraint.assertIsCorrect(getExtLanguageManager());
 
-		markModelUpdated(); // TODO CONSTRAINTS-NEW do we need this in operations ? vs modelChangeRegistrator
+		markModelUpdated();
 	}
 
 	public static void changePreAndPostcondition(
