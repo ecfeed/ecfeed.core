@@ -726,16 +726,19 @@ public abstract class XomAnalyser {
 			EMathRelation relation,
 			ListOfStrings errorList) {
 
-		if (relation == EMathRelation.ASSIGN) { // TODO CONSTRAINTS-NEW refactor
+		if (relation == EMathRelation.ASSIGN) {
+
 			if (!leftParameterNode.isExpected()) {
 				errorList.add("Left parameter of value statement in assignment should be expected.");
 				return false;
 			}
-		} else {
-			if (leftParameterNode.isExpected()) {
-				errorList.add("Left parameter of value statement should not be expected.");
-				return false;
-			}
+
+			return true;
+		} 
+
+		if (leftParameterNode.isExpected()) {
+			errorList.add("Left parameter of value statement should not be expected.");
+			return false;
 		}
 
 		return true;
