@@ -30,4 +30,9 @@ public class ListOfStrings {
 		
 		return fStrings;
 	}
+	
+	public String getFirstString() {
+		
+		return fStrings.get(0);
+	}
 }
