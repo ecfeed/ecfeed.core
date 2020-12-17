@@ -37,7 +37,7 @@ import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 
-// TODO CONSTRAINTS-NEW check all tests for class java.lang.NullPointerException
+// TODO check all tests for java.lang.NullPointerException
 
 public class XmlParserSerializerTest {
 
