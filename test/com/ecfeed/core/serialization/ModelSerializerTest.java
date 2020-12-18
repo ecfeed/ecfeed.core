@@ -18,21 +18,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
+import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.ListOfStrings;
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelConverter;
-import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.testutils.RandomModelGenerator;
@@ -64,7 +54,7 @@ public class ModelSerializerTest {
 
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -107,7 +97,7 @@ public class ModelSerializerTest {
 			serializer.serialize(model);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -126,7 +116,7 @@ public class ModelSerializerTest {
 			serializer.serialize(r);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			parser.parseClass(istream, new ArrayList<>());
+			parser.parseClass(istream, new ListOfStrings());
 			fail("Exception expected");
 		} catch (Exception e) {
 			//			System.out.println("Exception caught: " + e.getMessage());
@@ -182,8 +172,9 @@ public class ModelSerializerTest {
 
 		Constraint constraint = new Constraint(
 				"constraint",
-				null, RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice),
-				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice));
+				ConstraintType.EXTENDED_FILTER,
+				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
+        );
 
 		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
 		methodNode.addConstraint(constraintNode);

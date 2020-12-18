@@ -10,18 +10,39 @@
 
 package com.ecfeed.core.model;
 
-public class ModelVersionDistributor {
+public enum StatementArrayOperator {
 
-	public static int getCurrentSoftwareVersion() {
+	AND("AND"), 
+	OR("OR"),
+	ASSIGN("ASSIGN");
 
-		return 4;
+	public static final String OPERATOR_AND = "AND";
+	public static final String OPERATOR_OR = "OR";
+	public static final String OPERATOR_ASSIGN = "ASSIGN";
+
+	String fValue;
+
+	StatementArrayOperator(String value){
+		fValue = value;
 	}
 
-	public static boolean isAndroidAttributeInTheClass(int version) {
+	public String toString(){
+		return fValue; 
+	}
 
-		if (version < 2) {
-			return true;
+	public static StatementArrayOperator parse(String text) {
+
+		switch(text){
+
+		case OPERATOR_AND:
+			return AND;
+		case OPERATOR_OR:
+			return OR;
+		case OPERATOR_ASSIGN:
+			return ASSIGN;
 		}
-		return false;
-	}	
+
+		return null;
+	}
+
 }

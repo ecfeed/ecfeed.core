@@ -482,5 +482,63 @@ public class MethodNodeHelper {
 
 		return testSuites;
 	}
+	
+	public static MethodParameterNode findExpectedParameterNotUsedInAssignment(MethodNode methodNode, Constraint constraint) {
+
+		if (constraint.getType() != ConstraintType.ASSIGNMENT) {
+			return null;
+		}
+
+		AbstractStatement postcondition = constraint.getPostcondition();
+
+		if (!(postcondition instanceof StatementArray)) {
+			return null;
+		}
+
+		StatementArray statementArray = (StatementArray)postcondition;
+
+		MethodParameterNode parameterNode = findNotUsedExpectedParameter(methodNode, statementArray);
+		return parameterNode;
+	}
+
+	public static MethodParameterNode findNotUsedExpectedParameter(MethodNode methodNode, StatementArray statementArray) {
+
+		List<MethodParameterNode> parameters = methodNode.getMethodParameters();
+
+		for (MethodParameterNode parameterNode : parameters) {
+
+			if (!parameterNode.isExpected()) {
+				continue;
+			}
+
+			if (!isParameterUsedInAssignment(parameterNode, statementArray)) {
+				return parameterNode;
+			}
+		}
+		return null;
+	}
+
+	public static boolean isParameterUsedInAssignment(MethodParameterNode parameterNode, StatementArray statementArray) {
+
+		List<AbstractStatement> statements = statementArray.getStatements();
+
+		for (AbstractStatement abstractStatement : statements) {
+
+			if (!(abstractStatement instanceof AssignmentStatement)) {
+				continue;
+			}
+
+			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+
+			MethodParameterNode leftParameter = assignmentStatement.getLeftParameter();
+
+			if (leftParameter == parameterNode) {
+				return true;
+			}
+
+		}
+
+		return false;
+	}
 
 }

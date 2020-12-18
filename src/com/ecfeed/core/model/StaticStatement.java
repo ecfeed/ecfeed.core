@@ -76,7 +76,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public StaticStatement getCopy(){
+	public StaticStatement makeClone(){
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
@@ -86,7 +86,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean compare(IStatement statement){
+	public boolean isEqualTo(IStatement statement){
 		if(statement instanceof StaticStatement == false){
 			return false;
 		}
@@ -104,7 +104,7 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftOperandName(){
+	public String getLeftParameterName(){
 		return toString();
 	}
 

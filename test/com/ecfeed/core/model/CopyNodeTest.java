@@ -59,8 +59,8 @@ public class CopyNodeTest{
 		MethodNode method = new MethodNode("method", null);
 		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
 		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
-		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
-		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
+		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		par1.addChoice(choice1);
 		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
@@ -136,13 +136,13 @@ public class CopyNodeTest{
 		method.addParameter(par1);
 		method.addParameter(par2);
 
-		StatementArray premise = new StatementArray(EStatementOperator.OR, null);
-		premise.addStatement(new StaticStatement(true, null));
-		premise.addStatement(RelationStatement.createStatementWithChoiceCondition(par1, EMathRelation.EQUAL, choice1));
-		premise.addStatement(RelationStatement.createStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
-		ExpectedValueStatement consequence = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
+		StatementArray precondition = new StatementArray(StatementArrayOperator.OR, null);
+		precondition.addStatement(new StaticStatement(true, null));
+		precondition.addStatement(RelationStatement.createRelationStatementWithChoiceCondition(par1, EMathRelation.EQUAL, choice1));
+		precondition.addStatement(RelationStatement.createRelationStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
+		ExpectedValueStatement postcondition = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
 
-		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", null, premise, consequence), null);
+		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null), null);
 		method.addConstraint(constraint);
 
 		ConstraintNode copy = constraint.makeClone();
@@ -196,24 +196,24 @@ public class CopyNodeTest{
 		StaticStatement statement1 = new StaticStatement(true, null);
 		StaticStatement statement2 = new StaticStatement(false, null);
 
-		StaticStatement copy1 = statement1.getCopy();
-		StaticStatement copy2 = statement2.getCopy();
+		StaticStatement copy1 = statement1.makeClone();
+		StaticStatement copy2 = statement2.makeClone();
 
-		assertTrue(statement1.compare(copy1));
-		assertTrue(statement2.compare(copy2));
+		assertTrue(statement1.isEqualTo(copy1));
+		assertTrue(statement2.isEqualTo(copy2));
 	}
 
 	@Test
 	public void copyStatementArrayTest(){
-		for(EStatementOperator operator : new EStatementOperator[]{EStatementOperator.AND, EStatementOperator.OR}){
+		for(StatementArrayOperator operator : new StatementArrayOperator[]{StatementArrayOperator.AND, StatementArrayOperator.OR}){
 			StatementArray array = new StatementArray(operator, null);
 			array.addStatement(new StaticStatement(true, null));
 			array.addStatement(new StaticStatement(false, null));
 			array.addStatement(new StaticStatement(true, null));
 			array.addStatement(new StaticStatement(false, null));
 
-			StatementArray copy = array.getCopy();
-			assertTrue(array.compare(copy));
+			StatementArray copy = array.makeClone();
+			assertTrue(array.isEqualTo(copy));
 		}
 	}
 
@@ -225,15 +225,15 @@ public class CopyNodeTest{
 		choice.addLabel("label");
 
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
+				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithLabelCondition(parameter, EMathRelation.EQUAL, "label");
+				RelationStatement.createRelationStatementWithLabelCondition(parameter, EMathRelation.EQUAL, "label");
 
-		RelationStatement copy1 = statement1.getCopy();
-		RelationStatement copy2 = statement2.getCopy();
+		RelationStatement copy1 = statement1.makeClone();
+		RelationStatement copy2 = statement2.makeClone();
 
-		assertTrue(statement1.compare(copy1));
-		assertTrue(statement2.compare(copy2));
+		assertTrue(statement1.isEqualTo(copy1));
+		assertTrue(statement2.isEqualTo(copy2));
 	}
 
 	@Test
@@ -243,8 +243,8 @@ public class CopyNodeTest{
 		choice.setParent(parameter);
 
 		ExpectedValueStatement statement = new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
-		ExpectedValueStatement copy = statement.getCopy();
-		assertTrue(statement.compare(copy));
+		ExpectedValueStatement copy = statement.makeClone();
+		assertTrue(statement.isEqualTo(copy));
 	}
 	//	RootNode fRoot;
 	//

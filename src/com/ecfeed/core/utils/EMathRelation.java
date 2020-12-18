@@ -19,6 +19,7 @@ import static com.ecfeed.core.utils.StatementRelationNames.*;
 
 class StatementRelationNames {
 	
+	static final String RELATION_ASSIGN = "assign";
 	static final String RELATION_EQUAL = "equal"; 
 	static final String RELATION_NOT_EQUAL = "notequal";
 	static final String RELATION_LESS_THAN = "lessthan";
@@ -26,6 +27,7 @@ class StatementRelationNames {
 	static final String RELATION_GREATER_THAN = "greaterthan";
 	static final String RELATION_GREATER_THAN_EQUAL = "greaterthanequal";
 	
+	static final String[] SYMBOL_RELATION_ASSIGN = { ":=" };
 	static final String[] SYMBOL_RELATION_EQUAL = { "=" };
 	static final String[] SYMBOL_RELATION_NOT_EQUAL = { "\u2260", "?" };
 	static final String[] SYMBOL_RELATION_LESS_THAN = { "<", "&lt;" };
@@ -35,7 +37,13 @@ class StatementRelationNames {
 }
 
 public enum EMathRelation{
-	
+
+	ASSIGN(RELATION_ASSIGN, SYMBOL_RELATION_ASSIGN) {
+		@Override
+		public boolean isMatch(String typeName, String leftString, String rightString) {
+			return false;
+		}
+	}, 
 	EQUAL(RELATION_EQUAL, SYMBOL_RELATION_EQUAL) {
 		@Override
 		public boolean isMatch(String typeName, String leftString, String rightString) {
@@ -142,7 +150,7 @@ public enum EMathRelation{
 		return false;
 	}	
 
-	public static EMathRelation getRelation(String name) {
+	public static EMathRelation parse(String name) {
 
 		for (EMathRelation relation : EMathRelation.values()) {
 			if (name.equals(relation.getName())) {
@@ -156,7 +164,7 @@ public enum EMathRelation{
 			.orElse(null);
 	}
 
-	public static EMathRelation[] getAvailableRelations(String parameterType) {
+	public static EMathRelation[] getAvailableComparisonRelations(String parameterType) {
 
 		List<EMathRelation> relations = new ArrayList<EMathRelation>();
 
@@ -171,7 +179,7 @@ public enum EMathRelation{
 
 	public static String[] getAvailableRelationNames(String parameterTypeName) {
 
-		return relationCodesToNames(getAvailableRelations(parameterTypeName)); 
+		return relationCodesToNames(getAvailableComparisonRelations(parameterTypeName)); 
 	}
 
 	public static String[] relationCodesToNames(EMathRelation[] relationCodes) {

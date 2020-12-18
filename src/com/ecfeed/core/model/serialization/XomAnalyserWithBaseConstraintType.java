@@ -8,20 +8,23 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model;
+package com.ecfeed.core.model.serialization;
 
-public class ModelVersionDistributor {
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.utils.ListOfStrings;
 
-	public static int getCurrentSoftwareVersion() {
+import nu.xom.Element;
 
-		return 4;
+public abstract class XomAnalyserWithBaseConstraintType extends XomAnalyser {
+
+	public XomAnalyserWithBaseConstraintType() {
+		super();
 	}
 
-	public static boolean isAndroidAttributeInTheClass(int version) {
+	@Override
+	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
 
-		if (version < 2) {
-			return true;
-		}
-		return false;
-	}	
+		return ConstraintType.EXTENDED_FILTER;
+	}
+
 }

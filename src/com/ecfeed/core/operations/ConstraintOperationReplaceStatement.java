@@ -41,11 +41,11 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 		setOneNodeToSelect(fTarget);
 		Constraint constraint = fTarget.getConstraint();
 
-		if (constraint.getPremise() == fCurrentStatement) {
-			constraint.setPremise(fNewStatement);
+		if (constraint.getPrecondition() == fCurrentStatement) {
+			constraint.setPrecondition(fNewStatement);
 		}
-		else if (constraint.getConsequence() == fCurrentStatement) {
-			constraint.setConsequence(fNewStatement);
+		else if (constraint.getPostcondition() == fCurrentStatement) {
+			constraint.setPostcondition(fNewStatement);
 		}
 		else {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TARGET_STATEMENT_NOT_FOUND_PROBLEM);

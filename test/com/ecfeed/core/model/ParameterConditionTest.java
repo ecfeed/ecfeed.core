@@ -42,7 +42,7 @@ public class ParameterConditionTest {
 		methodNode.addParameter(rightMethodParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithParameterCondition(
+				RelationStatement.createRelationStatementWithParameterCondition(
 						leftMethodParameterNode, statementRelation, rightMethodParameterNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
@@ -72,7 +72,7 @@ public class ParameterConditionTest {
 		methodNode.addParameter(rightMethodParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithParameterCondition(
+				RelationStatement.createRelationStatementWithParameterCondition(
 						leftMethodParameterNode, statementRelation, rightMethodParameterNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, true, null);
@@ -435,12 +435,12 @@ public class ParameterConditionTest {
 		MethodParameterNode rightParam = new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithParameterCondition(
+				RelationStatement.createRelationStatementWithParameterCondition(
 						leftParam, EMathRelation.EQUAL, rightParam);
 
-		RelationStatement copy = statement.getCopy();
+		RelationStatement copy = statement.makeClone();
 
-		boolean result = statement.compare(copy);
+		boolean result = statement.isEqualTo(copy);
 		assertEquals(true, result);
 
 	}
@@ -454,7 +454,7 @@ public class ParameterConditionTest {
 		method1.addParameter(method1RightParameterNode);
 
 		RelationStatement statement = 
-				RelationStatement.createStatementWithParameterCondition(
+				RelationStatement.createRelationStatementWithParameterCondition(
 						method1LeftParameterNode, EMathRelation.EQUAL, method1RightParameterNode);
 
 		MethodNode method2 = new MethodNode("method2", null);

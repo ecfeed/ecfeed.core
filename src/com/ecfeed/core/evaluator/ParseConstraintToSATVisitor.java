@@ -105,6 +105,8 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fSat4Solver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray());
                 break;
             }
+            case ASSIGN:
+            	break;
         }
 //            statementToID.put(statement,myID); not really necessary, as we are never reusing the same statements
         return myID;
@@ -120,9 +122,11 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                         || JavaLanguageHelper.isFloatingPointTypeName(statement.getLeftParameter().getType()))
         ) {
             switch (statement.getRelation()) {
+            	case ASSIGN:
+            		return null;
                 case GREATER_THAN:
                 case LESS_EQUAL: {
-                    RelationStatement statement1 = statement.getCopy();
+                    RelationStatement statement1 = statement.makeClone();
                     ChoiceNode val = ((ChoiceCondition) statement.getCondition()).getRightChoice();
                     val = ChoiceNodeHelper.rangeSplit(val).getSecond();
                     statement1.setCondition(val);
@@ -130,7 +134,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 }
                 case GREATER_EQUAL:
                 case LESS_THAN: {
-                    RelationStatement statement1 = statement.getCopy();
+                    RelationStatement statement1 = statement.makeClone();
                     ChoiceNode val = ((ChoiceCondition) statement.getCondition()).getRightChoice();
                     val = ChoiceNodeHelper.rangeSplit(val).getFirst();
                     statement1.setCondition(val);
@@ -138,8 +142,8 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 }
                 case NOT_EQUAL:
                 case EQUAL: {
-                    RelationStatement statementLow = statement.getCopy();
-                    RelationStatement statementHigh = statement.getCopy();
+                    RelationStatement statementLow = statement.makeClone();
+                    RelationStatement statementHigh = statement.makeClone();
                     ChoiceNode val = ((ChoiceCondition) statement.getCondition()).getRightChoice();
                     ChoiceNode valLow = ChoiceNodeHelper.rangeSplit(val).getFirst();
                     ChoiceNode valHigh = ChoiceNodeHelper.rangeSplit(val).getSecond();
@@ -255,6 +259,9 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             }
 
             switch (statement.getRelation()) {
+        	case ASSIGN:
+        		break;
+
                 case EQUAL:
                 case NOT_EQUAL: //negated at return
                 {

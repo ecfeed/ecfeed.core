@@ -19,8 +19,7 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
-//ambigous always false
-public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement{
+public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
 	MethodParameterNode fParameter;
 	ChoiceNode fCondition;
@@ -39,7 +38,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public String getLeftOperandName() {
+	public String getLeftParameterName() {
 		return fParameter.getName();
 	}
 
@@ -54,12 +53,19 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean adapt(List<ChoiceNode> values){
-		if(values == null) return true;
-		if(fParameter.getMethod() != null){
-			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
-			values.set(index, fCondition.makeClone());
+	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
+
+
+		if (testCaseChoices == null) {
+			return true;
 		}
+
+		if  (fParameter.getMethod() != null) {
+
+			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
+			testCaseChoices.set(index, fCondition.makeClone());
+		}
+
 		return true;
 	}
 
@@ -99,7 +105,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return result;
 	}
 
-	public MethodParameterNode getParameter(){
+	public MethodParameterNode getParameter(){ // TODO RENAME TO getLeftParameter
 		return fParameter;
 	}
 
@@ -121,7 +127,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public ExpectedValueStatement getCopy(){
+	public ExpectedValueStatement makeClone(){
 		return new ExpectedValueStatement(fParameter, fCondition.makeClone(), fPredicate);
 	}
 
@@ -148,7 +154,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean compare(IStatement statement){
+	public boolean isEqualTo(IStatement statement){
 		if(statement instanceof ExpectedValueStatement == false){
 			return false;
 		}

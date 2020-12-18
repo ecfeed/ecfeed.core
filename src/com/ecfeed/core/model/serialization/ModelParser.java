@@ -13,7 +13,6 @@ package com.ecfeed.core.model.serialization;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractStatement;
@@ -26,12 +25,12 @@ import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -47,7 +46,7 @@ public class ModelParser {
 	}
 
 	public RootNode parseModel(
-			String modelXml, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException { 
+			String modelXml, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 
 		InputStream istream = new ByteArrayInputStream(modelXml.getBytes());
 
@@ -55,7 +54,7 @@ public class ModelParser {
 	}
 
 	public RootNode parseModel(
-			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 
 		try {
 			Document document = fBuilder.build(istream);
@@ -72,7 +71,10 @@ public class ModelParser {
 			}
 
 			createXomAnalyser(modelVersion);
-			return getXomAnalyser().parseRoot(element, modelChangeRegistrator, outErrorList);
+			
+			RootNode rootNode = getXomAnalyser().parseRoot(element, modelChangeRegistrator, outErrorList);
+			return rootNode;
+			
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -98,7 +100,7 @@ public class ModelParser {
 
 	// TODO
 	public ClassNode parseClass(
-			InputStream istream, List<String> outErrorList) throws ParserException {
+			InputStream istream, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -114,7 +116,7 @@ public class ModelParser {
 
 	// TODO
 	public MethodNode parseMethod(
-			InputStream istream, List<String> outErrorList) throws ParserException {
+			InputStream istream, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -130,7 +132,7 @@ public class ModelParser {
 
 	// TODO
 	public GlobalParameterNode parseGlobalParameter(
-			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -146,7 +148,7 @@ public class ModelParser {
 
 	// TODO
 	public MethodParameterNode parseMethodParameter(
-			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -162,7 +164,7 @@ public class ModelParser {
 
 	// TODO
 	public ChoiceNode parseChoice(
-			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 
 		try {
 			Document document = fBuilder.build(istream);
@@ -182,7 +184,7 @@ public class ModelParser {
 
 	// TODO
 	public TestCaseNode parseTestCase(
-			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -197,7 +199,7 @@ public class ModelParser {
 	}
 
 	public Optional<ConstraintNode> parseConstraint(
-			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -213,7 +215,7 @@ public class ModelParser {
 
 	// TODO
 	public AbstractStatement parseStatement(
-			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -228,7 +230,7 @@ public class ModelParser {
 	}
 
 	public StaticStatement parseStaticStatement(
-			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, List<String> outErrorList) throws ParserException {
+			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -242,8 +244,8 @@ public class ModelParser {
 		}
 	}
 
-	public RelationStatement parseChoicesParentStatement(
-			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+	public AbstractStatement parseChoicesParentStatement(
+			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -258,7 +260,7 @@ public class ModelParser {
 	}
 
 	public ExpectedValueStatement parseExpectedValueStatement(
-			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
@@ -273,7 +275,7 @@ public class ModelParser {
 	}
 
 	public StatementArray parseStatementArray(
-			InputStream istream, MethodNode method, List<String> outErrorList) throws ParserException {
+			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);

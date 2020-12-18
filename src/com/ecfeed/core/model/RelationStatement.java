@@ -20,10 +20,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
 
-	public static RelationStatement createStatementWithLabelCondition(
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			String label) {
+	public static RelationStatement createRelationStatementWithLabelCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		String label) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -31,26 +31,26 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}
+		}
 
-	public static RelationStatement createStatementWithChoiceCondition(
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			ChoiceNode choiceNode) {
+	public static RelationStatement createRelationStatementWithChoiceCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		ChoiceNode choiceNode) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
 		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement);
-		
+
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}
+		}
 
-	public static RelationStatement createStatementWithParameterCondition(
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			MethodParameterNode rightParameter) {
+	public static RelationStatement createRelationStatementWithParameterCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		MethodParameterNode rightParameter) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -58,12 +58,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}	
+		}
 
-	public static RelationStatement createStatementWithValueCondition(
-			MethodParameterNode parameter, 
-			EMathRelation relation, 
-			String textValue) {
+	public static RelationStatement createRelationStatementWithValueCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		String textValue) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -71,9 +71,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}	
+		}
 
-	private RelationStatement(
+	protected RelationStatement(
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			IStatementCondition condition) {
@@ -126,7 +126,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public String getLeftOperandName() {
+	public String getLeftParameterName() {
 
 		return getLeftParameter().getName();
 	}
@@ -134,7 +134,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String toString() {
 
-		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+		return getLeftParameterName() + getRelation() + fRightCondition.toString();
 	}
 
 	@Override
@@ -147,11 +147,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public EMathRelation[] getAvailableRelations() {
 
-		return EMathRelation.getAvailableRelations(getLeftParameter().getType());
+		return EMathRelation.getAvailableComparisonRelations(getLeftParameter().getType());
 	}
 
 	@Override
-	public RelationStatement getCopy() {
+	public RelationStatement makeClone() {
 
 		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.getCopy());
 	}
@@ -172,7 +172,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean compare(IStatement statement) {
+	public boolean isEqualTo(IStatement statement) {
 
 		if ( !(statement instanceof RelationStatement) ) {
 			return false;
@@ -288,7 +288,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public String getConditionSignature(IExtLanguageManager extLanguageManager) {
 		return fRightCondition.createSignature(extLanguageManager);
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return fRightCondition.getListOfChoices();

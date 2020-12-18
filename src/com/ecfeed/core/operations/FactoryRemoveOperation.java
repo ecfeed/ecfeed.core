@@ -115,7 +115,7 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new MethodOperationRemoveConstraint(node.getMethod(), node, fExtLanguageManager);
+			return new MethodOperationRemoveConstraint(node.getMethodNode(), node, fExtLanguageManager);
 		}
 
 		@Override

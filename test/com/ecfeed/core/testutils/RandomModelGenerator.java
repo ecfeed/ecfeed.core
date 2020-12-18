@@ -17,24 +17,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ecfeed.core.model.*;
 import org.junit.Test;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.EStatementOperator;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -199,15 +184,15 @@ public class RandomModelGenerator {
 
 		Constraint constraint = 
 				new Constraint(
-						"constraint", 
-						method.getModelChangeRegistrator(), 
-						generatePremise(method), 
-						generateConsequence(method));
+						"constraint",
+						ConstraintType.EXTENDED_FILTER,
+						generatePrecondition(method), generatePostcondition(method), method.getModelChangeRegistrator()
+                );
 
 		return new ConstraintNode(name, constraint, null);
 	}
 
-	public AbstractStatement generatePremise(MethodNode method) {
+	public AbstractStatement generatePrecondition(MethodNode method) {
 		return generateStatement(method, MAX_STATEMENTS_DEPTH);
 	}
 
@@ -257,7 +242,7 @@ public class RandomModelGenerator {
 			List<String> choiceNames = new ArrayList<String>(parameter.getAllChoiceNames());
 			String luckyChoiceName = choiceNames.get(rand.nextInt(choiceNames.size()));
 			ChoiceNode condition = parameter.getChoice(luckyChoiceName);
-			return RelationStatement.createStatementWithChoiceCondition(parameter, relation, condition);
+			return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, condition);
 		}
 		else{
 			if(parameter.getLeafLabels().size() == 0){
@@ -267,7 +252,7 @@ public class RandomModelGenerator {
 			Set<String>labels = parameter.getLeafLabels();
 
 			String label = labels.toArray(new String[]{})[rand.nextInt(labels.size())];
-			return RelationStatement.createStatementWithLabelCondition(parameter, relation, label);
+			return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
 		}
 	}
 
@@ -300,7 +285,7 @@ public class RandomModelGenerator {
 
 		StatementArray statement = 
 				new StatementArray(
-						rand.nextBoolean()?EStatementOperator.AND:EStatementOperator.OR,
+						rand.nextBoolean()?StatementArrayOperator.AND:StatementArrayOperator.OR,
 								method.getModelChangeRegistrator());
 
 		for(int i = 0; i < MAX_STATEMENTS; i++){
@@ -309,7 +294,7 @@ public class RandomModelGenerator {
 		return statement;
 	}
 
-	public AbstractStatement generateConsequence(MethodNode method) {
+	public AbstractStatement generatePostcondition(MethodNode method) {
 		if(method.getParameters().size() == 0){
 			method.addParameter(generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1));
 		}

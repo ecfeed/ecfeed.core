@@ -33,11 +33,11 @@ public class ConstraintNode extends AbstractNode{
 	@Override
 	public int getMyIndex() {
 
-		if (getMethod() == null) {
+		if (getMethodNode() == null) {
 			return -1;
 		}
 
-		return getMethod().getConstraintNodes().indexOf(this);
+		return getMethodNode().getConstraintNodes().indexOf(this);
 	}
 
 	@Override
@@ -61,11 +61,11 @@ public class ConstraintNode extends AbstractNode{
 	public int getChildrenCount() {
 		return 0;
 	}
-	
+
 	@Override
 	public ConstraintNode makeClone() {
 
-		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.getCopy(), getModelChangeRegistrator() );
+		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.makeClone(), getModelChangeRegistrator() );
 		copy.setProperties(getProperties());
 		return copy;
 	}
@@ -85,7 +85,7 @@ public class ConstraintNode extends AbstractNode{
 		return fConstraint.getListOfChoices(); 
 	}
 
-	public MethodNode getMethod() {
+	public MethodNode getMethodNode() {
 
 		AbstractNode parent = getParent();
 		if (parent == null) {
@@ -181,11 +181,11 @@ public class ConstraintNode extends AbstractNode{
 		}
 
 		ConstraintNode compared = (ConstraintNode)node;
-		if (getConstraint().getPremise().compare(compared.getConstraint().getPremise()) == false) {
+		if (getConstraint().getPrecondition().isEqualTo(compared.getConstraint().getPrecondition()) == false) {
 			return false;
 		}
 
-		if (getConstraint().getConsequence().compare(compared.getConstraint().getConsequence()) == false) {
+		if (getConstraint().getPostcondition().isEqualTo(compared.getConstraint().getPostcondition()) == false) {
 			return false;
 		}
 
@@ -218,7 +218,7 @@ public class ConstraintNode extends AbstractNode{
 	private boolean areParametersConsistent() {
 
 		final Set<AbstractParameterNode> referencedParameters = getConstraint().getReferencedParameters();
-		final List<AbstractParameterNode> methodParameters = getMethod().getParameters();
+		final List<AbstractParameterNode> methodParameters = getMethodNode().getParameters();
 
 		for (AbstractParameterNode referencedParameter : referencedParameters) {
 			if (!isParameterConsistent(referencedParameter, methodParameters)) {
@@ -280,7 +280,7 @@ public class ConstraintNode extends AbstractNode{
 			return false;
 		}
 
-		MethodNode methodNode = getMethod();
+		MethodNode methodNode = getMethodNode();
 
 		if (parameterMethods.contains(methodNode) == false) {
 			return false;
@@ -315,7 +315,7 @@ public class ConstraintNode extends AbstractNode{
 
 	private boolean constraintsConsistent() {
 
-		for (MethodParameterNode parameter : getMethod().getMethodParameters()) {
+		for (MethodParameterNode parameter : getMethodNode().getMethodParameters()) {
 			if (!isConsistentForParameter(parameter)) {
 				return false;
 			}
@@ -367,8 +367,8 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public int getMaxIndex() {
-		if (getMethod() != null) {
-			return getMethod().getConstraintNodes().size();
+		if (getMethodNode() != null) {
+			return getMethodNode().getConstraintNodes().size();
 		}
 		return -1;
 	}

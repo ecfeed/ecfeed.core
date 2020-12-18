@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.model.serialization;
 
+import com.ecfeed.core.utils.ExceptionHelper;
+
 public class XomAnalyserFactory {
 
 	public static XomAnalyser createXomAnalyser(int version) {
@@ -22,6 +24,19 @@ public class XomAnalyserFactory {
 			return new XomAnalyserVersion1();
 		}
 
-		return new XomAnalyserVersion3();
+		if (version == 2) {
+			return new XomAnalyserVersion2();
+		}
+
+		if (version == 3) {
+			return new XomAnalyserVersion3();
+		}
+
+		if (version == 4) {
+			return new XomAnalyserVersion4();
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid xom analyser version.");
+		return null;
 	}
 }

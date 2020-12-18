@@ -25,13 +25,13 @@ public class ConstraintNodeHelperTest {
 	@Test
 	public void createSignatureTest1(){
 
-		ConstraintNode c1 = new ConstraintNode("c", new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)), null);
+		ConstraintNode c1 = new ConstraintNode("c", new Constraint("c", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
 
 		c1.setName("c_1");
 
-		c1.getConstraint().setPremise(new StaticStatement(false, null));
+		c1.getConstraint().setPrecondition(new StaticStatement(false, null));
 
-		c1.getConstraint().setConsequence(new StaticStatement(false, null));
+		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
 
 		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("c_1: false => false", signature);
@@ -48,21 +48,21 @@ public class ConstraintNodeHelperTest {
 
 		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
 
-		AbstractStatement premise1 =
-				RelationStatement.createStatementWithValueCondition(
+		AbstractStatement precondition1 =
+				RelationStatement.createRelationStatementWithValueCondition(
 						parameter1, EMathRelation.EQUAL, "A");
 
-		AbstractStatement premise = premise1;
+		AbstractStatement precondition = precondition1;
 
 		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
 
-		AbstractStatement consequence1 =
-				RelationStatement.createStatementWithValueCondition(
+		AbstractStatement postcondition1 =
+				RelationStatement.createRelationStatementWithValueCondition(
 						parameter2, EMathRelation.EQUAL, "C");
 
-		AbstractStatement consequence = consequence1;
+		AbstractStatement postcondition = postcondition1;
 
-		Constraint constraint = new Constraint("co_1", null, premise, consequence);
+		Constraint constraint = new Constraint("co_1", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
 
@@ -84,17 +84,17 @@ public class ConstraintNodeHelperTest {
 
 		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
 
-		AbstractStatement premise =
-				RelationStatement.createStatementWithChoiceCondition(
+		AbstractStatement precondition =
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						parameter1, EMathRelation.EQUAL, choice1);
 
 		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
 
-		AbstractStatement consequence =
-				RelationStatement.createStatementWithChoiceCondition(
+		AbstractStatement postcondition =
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						parameter2, EMathRelation.EQUAL, choice2);
 
-		Constraint constraint = new Constraint("co", null, premise, consequence);
+		Constraint constraint = new Constraint("co", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
 		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
 

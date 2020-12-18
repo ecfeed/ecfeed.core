@@ -8,33 +8,17 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model;
+package com.ecfeed.core.model.serialization;
 
-public enum EStatementOperator{
-	AND("AND"), 
-	OR("OR");
-	
-	public static final String OPERATOR_AND = "AND";
-	public static final String OPERATOR_OR = "OR";
+public class XomBuilderVersion4 extends XomBuilderWithConstraintType {
 
-	String fValue;
-
-	private EStatementOperator(String value){
-		fValue = value;
+	XomBuilderVersion4(SerializatorParams serializatorParams) {
+		super(serializatorParams);
 	}
-	
-	public String toString(){
-		return fValue; 
-	}
-	
-	public static EStatementOperator getOperator(String text){
-		switch(text){
-		case OPERATOR_AND:
-			return AND;
-		case OPERATOR_OR:
-			return OR;
-		}
-		return null;
+
+	@Override
+	protected int getModelVersion() {
+		return 4;
 	}
 
 }

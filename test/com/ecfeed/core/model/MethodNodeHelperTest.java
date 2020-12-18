@@ -611,7 +611,7 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		Constraint constraint = new Constraint("c 1", null, null, null);
+		Constraint constraint = new Constraint("c 1", ConstraintType.EXTENDED_FILTER, null, null, null);
 
 		ConstraintNode constraintNode = new ConstraintNode("cn 1", constraint,null);
 		methodNode.addConstraint(constraintNode);
@@ -715,5 +715,91 @@ public class MethodNodeHelperTest {
 
 		assertEquals(1, testCaseNodes2.size());
 		assertEquals(testCase3, testCaseNodes2.get(0));
+	}
+
+	@Test
+	public void findExpectedParameterNotUsedInAssignmentTest() {
+
+		// prepare method with one parameter
+
+		MethodNode methodNode = new MethodNode("fun",  null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		// prepare constraint with empty list of assignments
+
+		StaticStatement trueStatement = new StaticStatement(true, null);
+
+		StatementArray statementArray1 = new StatementArray(StatementArrayOperator.AND, null);
+
+		Constraint constraint =
+				new Constraint(
+						"c",
+						ConstraintType.ASSIGNMENT,
+						trueStatement,
+						statementArray1,
+						null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+
+		// check with not expected parameter
+
+		MethodParameterNode resultMethodParameterNode =
+				MethodNodeHelper.findExpectedParameterNotUsedInAssignment(methodNode, constraint);
+
+		assertNull(resultMethodParameterNode);
+
+		// check with expected parameter
+
+		methodParameterNode1.setExpected(true);
+
+		resultMethodParameterNode =
+				MethodNodeHelper.findExpectedParameterNotUsedInAssignment(methodNode, constraint);
+
+		assertEquals(methodParameterNode1, resultMethodParameterNode);
+
+		// add assignment to constraint
+
+		AssignmentStatement assignmentStatement1 =
+				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode1, "6");
+		statementArray1.addStatement(assignmentStatement1);
+
+		resultMethodParameterNode =
+				MethodNodeHelper.findExpectedParameterNotUsedInAssignment(methodNode, constraint);
+		assertNull(resultMethodParameterNode);
+
+		// add the second parameter - not expected
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		resultMethodParameterNode =
+				MethodNodeHelper.findExpectedParameterNotUsedInAssignment(methodNode, constraint);
+
+		assertNull(resultMethodParameterNode);
+
+		// change the second parameter to expected
+
+		methodParameterNode2.setExpected(true);
+
+		resultMethodParameterNode =
+				MethodNodeHelper.findExpectedParameterNotUsedInAssignment(methodNode, constraint);
+		assertEquals(methodParameterNode2, resultMethodParameterNode);
+
+		//  use the second parameter in assignment
+
+		AssignmentStatement assignmentStatement2 =
+				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "3");
+		statementArray1.addStatement(assignmentStatement2);
+
+		resultMethodParameterNode =
+				MethodNodeHelper.findExpectedParameterNotUsedInAssignment(methodNode, constraint);
+
+		assertNull(resultMethodParameterNode);
 	}
 }

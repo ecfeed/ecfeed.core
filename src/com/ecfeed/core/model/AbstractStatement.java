@@ -24,7 +24,7 @@ public abstract class AbstractStatement implements IStatement {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public abstract String getLeftOperandName();
+	public abstract String getLeftParameterName();
 	public abstract boolean mentions(int methodParameterIndex);
 
 	public IModelChangeRegistrator getModelChangeRegistrator() {
@@ -79,18 +79,18 @@ public abstract class AbstractStatement implements IStatement {
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 		return false;
 	}
-	
+
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
 		return EvaluationResult.FALSE;
 	}
 
 	@Override
-	public boolean adapt(List<ChoiceNode> values){
+	public boolean setExpectedValues(List<ChoiceNode> values) {
 		return false;
 	}
 
-	public abstract AbstractStatement getCopy();
+	public abstract AbstractStatement makeClone();
 
 	public abstract boolean updateReferences(MethodNode method);
 }

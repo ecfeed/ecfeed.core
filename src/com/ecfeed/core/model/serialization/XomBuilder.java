@@ -14,9 +14,9 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.ANDROID
 import static com.ecfeed.core.model.serialization.SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.COMMENTS_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_CONSEQUENCE_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PREMISE_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.LABEL_ATTRIBUTE_NAME;
@@ -49,6 +49,7 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
@@ -76,6 +77,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	protected abstract String getChoiceAttributeName();
 	protected abstract String getStatementChoiceAttributeName();
 	protected abstract int getModelVersion();
+	protected abstract void addConstraintTypeAttribute(ConstraintType constraintType, Element targetConstraintElement);
 
 	XomBuilder(SerializatorParams serializatorParams) {
 
@@ -194,7 +196,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return null;
 	}
-	
+
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
 
@@ -215,23 +217,26 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
 
-		AbstractStatement premise = node.getConstraint().getPremise();
-		AbstractStatement consequence = node.getConstraint().getConsequence();
+		ConstraintType constraintType = node.getConstraint().getType();
+		addConstraintTypeAttribute(constraintType, targetConstraintElement);
 
-		Element premiseElement = new Element(CONSTRAINT_PREMISE_NODE_NAME);
-		premiseElement.appendChild((Element)premise.accept(
+		AbstractStatement precondition = node.getConstraint().getPrecondition();
+		AbstractStatement postcondition = node.getConstraint().getPostcondition();
+
+		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
+		preconditionElement.appendChild((Element)precondition.accept(
 				new XomStatementBuilder(
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
-		Element consequenceElement = new Element(CONSTRAINT_CONSEQUENCE_NODE_NAME);
-		consequenceElement.appendChild((Element)consequence.accept(
+		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);
+		postconditionElement.appendChild((Element)postcondition.accept(
 				new XomStatementBuilder(
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
-		targetConstraintElement.appendChild(premiseElement);
-		targetConstraintElement.appendChild(consequenceElement);
+		targetConstraintElement.appendChild(preconditionElement);
+		targetConstraintElement.appendChild(postconditionElement);
 
 		return targetConstraintElement;
 	}
@@ -256,6 +261,10 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		return targetChoiceElement;
+	}
+
+	protected WhiteCharConverter getWhiteCharConverter() {
+		return fWhiteCharConverter;
 	}
 
 	private Element createTargetChoiceElement(ChoiceNode node) {
@@ -337,7 +346,7 @@ public abstract class XomBuilder implements IModelVisitor {
 				fWhiteCharConverter);
 		return targetGlobalParamElement;
 	}
-	
+
 	private Element createTargetTestCaseElement(TestCaseNode node) {
 
 		Element targetTestCaseElement = new Element(TEST_CASE_NODE_NAME);
@@ -388,7 +397,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return value.replaceAll(xml10pattern, "");
 	}
-	
+
 	private void appendChoiceOfTestCase(Element targetTestCaseElement,
 			TestCaseNode node, ChoiceNode choiceNode) {
 
