@@ -16,8 +16,8 @@ import java.util.List;
 
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
@@ -27,12 +27,12 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation() {
-			super(OperationNames.MAKE_CONSISTENT);
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(OperationNames.MAKE_CONSISTENT, extLanguageManager);
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fMethodNode);
 			fMethodNode.replaceTestCases(fOriginalTestCases);
@@ -42,20 +42,22 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodOperationMakeConsistent(fMethodNode);
+			return new MethodOperationMakeConsistent(fMethodNode, getExtLanguageManager());
 		}
 
 	}
 
-	public MethodOperationMakeConsistent(MethodNode target) {
-		super(OperationNames.MAKE_CONSISTENT);
+	public MethodOperationMakeConsistent(MethodNode target, IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.MAKE_CONSISTENT, extLanguageManager);
+		
 		fMethodNode = target;
 		fOriginalConstraints = new ArrayList<ConstraintNode>(target.getConstraintNodes());
 		fOriginalTestCases = new ArrayList<TestCaseNode>(target.getTestCases());
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fMethodNode);
 
@@ -84,7 +86,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 }

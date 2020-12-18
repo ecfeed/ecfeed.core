@@ -16,17 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.*;
 
 public class ModelTestUtils {
 
@@ -52,13 +42,21 @@ public class ModelTestUtils {
 
 	public static AbstractNode getNode(ENodeType type, String name){
 		switch(type){
-		case CHOICE: return new ChoiceNode(name, null, "value");
+		case CHOICE: return new ChoiceNode(name, "value", null);
 		case CLASS: return new ClassNode(name, null);
-		case CONSTRAINT: return new ConstraintNode(name, null, new Constraint(name, null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		case CONSTRAINT: return new ConstraintNode(
+				name,
+				new Constraint(
+						name,
+						ConstraintType.EXTENDED_FILTER,
+						new StaticStatement(true, null),
+						new StaticStatement(true, null),
+						null),
+				null);
 		case METHOD: return new MethodNode(name, null);
-		case PARAMETER: return new MethodParameterNode(name, null, "int", "0", false);
-		case METHOD_PARAMETER: return new MethodParameterNode(name, null, "int", "0", false);
-		case GLOBAL_PARAMETER: return new GlobalParameterNode(name, null, "int");
+		case PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);
+		case METHOD_PARAMETER: return new MethodParameterNode(name, "int", "0", false, null);
+		case GLOBAL_PARAMETER: return new GlobalParameterNode(name, "int", null);
 		case PROJECT: return new RootNode(name, null);
 		case TEST_CASE: return new TestCaseNode(name, null, new ArrayList<ChoiceNode>());
 		}

@@ -27,8 +27,8 @@ public class CopyNodeTest{
 		RootNode root = new RootNode("name", null);
 		ClassNode class1 = new ClassNode("class1", null);
 		ClassNode class2 = new ClassNode("class2", null);
-		GlobalParameterNode par1 = new GlobalParameterNode("par1", null, "int");
-		GlobalParameterNode par2 = new GlobalParameterNode("par2", null, "int");
+		GlobalParameterNode par1 = new GlobalParameterNode("par1", "int", null);
+		GlobalParameterNode par2 = new GlobalParameterNode("par2", "int", null);
 		root.addClass(class1);
 		root.addClass(class2);
 		root.addParameter(par1);
@@ -43,8 +43,8 @@ public class CopyNodeTest{
 		ClassNode classNode = new ClassNode("Class", null);
 		MethodNode method1 = new MethodNode("method1", null);
 		MethodNode method2 = new MethodNode("method2", null);
-		GlobalParameterNode par1 = new GlobalParameterNode("par1", null, "int");
-		GlobalParameterNode par2 = new GlobalParameterNode("par2", null, "int");
+		GlobalParameterNode par1 = new GlobalParameterNode("par1", "int", null);
+		GlobalParameterNode par2 = new GlobalParameterNode("par2", "int", null);
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 		classNode.addParameter(par1);
@@ -57,15 +57,15 @@ public class CopyNodeTest{
 	@Test
 	public void copyMethodTest(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode par1 = new MethodParameterNode("par1", null, "int", "0", false);
-		MethodParameterNode par2 = new MethodParameterNode("par2", null, "int", "0", true);
-		ConstraintNode constraint1 = new ConstraintNode("constraint1", null, new Constraint("constraint1", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ConstraintNode constraint2 = new ConstraintNode("constraint2", null, new Constraint("constraint2", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
+		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
+		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
+		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		par1.addChoice(choice1);
-		ChoiceNode expectedChoice1 = new ChoiceNode("expected", null, "0");
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
 		expectedChoice1.setParent(par2);
-		ChoiceNode expectedChoice2 = new ChoiceNode("expected", null, "2");
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
 		expectedChoice2.setParent(par2);
 		TestCaseNode testCase1 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
 		TestCaseNode testCase2 = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice2));
@@ -83,13 +83,13 @@ public class CopyNodeTest{
 
 	@Test
 	public void copyGlobalParameterTest(){
-		GlobalParameterNode parameter = new GlobalParameterNode("parameter", null, "int");
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "1");
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "11");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "12");
-		ChoiceNode choice2 = new ChoiceNode("choice1", null, "2");
-		ChoiceNode choice21 = new ChoiceNode("choice11", null, "21");
-		ChoiceNode choice22 = new ChoiceNode("choice12", null, "22");
+		GlobalParameterNode parameter = new GlobalParameterNode("parameter", "int", null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "1", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "11", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "12", null);
+		ChoiceNode choice2 = new ChoiceNode("choice1", "2", null);
+		ChoiceNode choice21 = new ChoiceNode("choice11", "21", null);
+		ChoiceNode choice22 = new ChoiceNode("choice12", "22", null);
 		choice1.addChoice(choice11);
 		choice1.addChoice(choice12);
 		choice1.addChoice(choice21);
@@ -103,13 +103,13 @@ public class CopyNodeTest{
 
 	@Test
 	public void copyMethodParameterTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "int", "0", false);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "1");
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "11");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "12");
-		ChoiceNode choice2 = new ChoiceNode("choice1", null, "2");
-		ChoiceNode choice21 = new ChoiceNode("choice11", null, "21");
-		ChoiceNode choice22 = new ChoiceNode("choice12", null, "22");
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "1", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "11", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "12", null);
+		ChoiceNode choice2 = new ChoiceNode("choice1", "2", null);
+		ChoiceNode choice21 = new ChoiceNode("choice11", "21", null);
+		ChoiceNode choice22 = new ChoiceNode("choice12", "22", null);
 		choice1.addChoice(choice11);
 		choice1.addChoice(choice12);
 		choice1.addChoice(choice21);
@@ -124,25 +124,25 @@ public class CopyNodeTest{
 	@Test
 	public void copyConstraintTest(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode par1 = new MethodParameterNode("par1", null, "int", "0", false);
-		MethodParameterNode par2 = new MethodParameterNode("par2", null, "int", "0", true);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
+		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
+		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		choice1.addLabel("label");
 		par1.addChoice(choice1);
 
-		ChoiceNode expectedChoice = new ChoiceNode("expected", null, "0");
+		ChoiceNode expectedChoice = new ChoiceNode("expected", "0", null);
 		expectedChoice.setParent(par2);
 
 		method.addParameter(par1);
 		method.addParameter(par2);
 
-		StatementArray premise = new StatementArray(EStatementOperator.OR, null);
-		premise.addStatement(new StaticStatement(true, null));
-		premise.addStatement(RelationStatement.createStatementWithChoiceCondition(par1, EMathRelation.EQUAL, choice1));
-		premise.addStatement(RelationStatement.createStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
-		ExpectedValueStatement consequence = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
+		StatementArray precondition = new StatementArray(StatementArrayOperator.OR, null);
+		precondition.addStatement(new StaticStatement(true, null));
+		precondition.addStatement(RelationStatement.createRelationStatementWithChoiceCondition(par1, EMathRelation.EQUAL, choice1));
+		precondition.addStatement(RelationStatement.createRelationStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
+		ExpectedValueStatement postcondition = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
 
-		ConstraintNode constraint = new ConstraintNode("constraint", null, new Constraint("constraint", null, premise, consequence));
+		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null), null);
 		method.addConstraint(constraint);
 
 		ConstraintNode copy = constraint.makeClone();
@@ -152,13 +152,13 @@ public class CopyNodeTest{
 	@Test
 	public void copyTestCaseTest(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode par1 = new MethodParameterNode("par1", null, "int", "0", false);
-		MethodParameterNode par2 = new MethodParameterNode("par2", null, "int", "0", true);
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
+		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
+		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		par1.addChoice(choice1);
-		ChoiceNode expectedChoice1 = new ChoiceNode("expected", null, "0");
+		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
 		expectedChoice1.setParent(par2);
-		ChoiceNode expectedChoice2 = new ChoiceNode("expected", null, "2");
+		ChoiceNode expectedChoice2 = new ChoiceNode("expected", "2", null);
 		expectedChoice2.setParent(par2);
 		TestCaseNode testCase = new TestCaseNode("test case 1", null, Arrays.asList(choice1, expectedChoice1));
 
@@ -172,13 +172,13 @@ public class CopyNodeTest{
 
 	@Test
 	public void copyChoiceTest(){
-		ChoiceNode choice = new ChoiceNode("choice", null, "0");
-		ChoiceNode choice1 = new ChoiceNode("choice1", null, "0");
-		ChoiceNode choice11 = new ChoiceNode("choice11", null, "0");
-		ChoiceNode choice12 = new ChoiceNode("choice12", null, "0");
-		ChoiceNode choice2 = new ChoiceNode("choice2", null, "0");
-		ChoiceNode choice21 = new ChoiceNode("choice21", null, "0");
-		ChoiceNode choice22 = new ChoiceNode("choice22", null, "0");
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
+		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
+		ChoiceNode choice11 = new ChoiceNode("choice11", "0", null);
+		ChoiceNode choice12 = new ChoiceNode("choice12", "0", null);
+		ChoiceNode choice2 = new ChoiceNode("choice2", "0", null);
+		ChoiceNode choice21 = new ChoiceNode("choice21", "0", null);
+		ChoiceNode choice22 = new ChoiceNode("choice22", "0", null);
 
 		choice.addChoice(choice1);
 		choice.addChoice(choice2);
@@ -196,55 +196,55 @@ public class CopyNodeTest{
 		StaticStatement statement1 = new StaticStatement(true, null);
 		StaticStatement statement2 = new StaticStatement(false, null);
 
-		StaticStatement copy1 = statement1.getCopy();
-		StaticStatement copy2 = statement2.getCopy();
+		StaticStatement copy1 = statement1.makeClone();
+		StaticStatement copy2 = statement2.makeClone();
 
-		assertTrue(statement1.compare(copy1));
-		assertTrue(statement2.compare(copy2));
+		assertTrue(statement1.isEqualTo(copy1));
+		assertTrue(statement2.isEqualTo(copy2));
 	}
 
 	@Test
 	public void copyStatementArrayTest(){
-		for(EStatementOperator operator : new EStatementOperator[]{EStatementOperator.AND, EStatementOperator.OR}){
+		for(StatementArrayOperator operator : new StatementArrayOperator[]{StatementArrayOperator.AND, StatementArrayOperator.OR}){
 			StatementArray array = new StatementArray(operator, null);
 			array.addStatement(new StaticStatement(true, null));
 			array.addStatement(new StaticStatement(false, null));
 			array.addStatement(new StaticStatement(true, null));
 			array.addStatement(new StaticStatement(false, null));
 
-			StatementArray copy = array.getCopy();
-			assertTrue(array.compare(copy));
+			StatementArray copy = array.makeClone();
+			assertTrue(array.isEqualTo(copy));
 		}
 	}
 
 	@Test
 	public void choiceStatementTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "int", "65", false);
-		ChoiceNode choice = new ChoiceNode("choice", null, "876");
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "65", false, null);
+		ChoiceNode choice = new ChoiceNode("choice", "876", null);
 		parameter.addChoice(choice);
 		choice.addLabel("label");
 
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
+				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithLabelCondition(parameter, EMathRelation.EQUAL, "label");
+				RelationStatement.createRelationStatementWithLabelCondition(parameter, EMathRelation.EQUAL, "label");
 
-		RelationStatement copy1 = statement1.getCopy();
-		RelationStatement copy2 = statement2.getCopy();
+		RelationStatement copy1 = statement1.makeClone();
+		RelationStatement copy2 = statement2.makeClone();
 
-		assertTrue(statement1.compare(copy1));
-		assertTrue(statement2.compare(copy2));
+		assertTrue(statement1.isEqualTo(copy1));
+		assertTrue(statement2.isEqualTo(copy2));
 	}
 
 	@Test
 	public void expectedStatementTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "int", "65", true);
-		ChoiceNode choice = new ChoiceNode("expected", null, "876");
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "65", true, null);
+		ChoiceNode choice = new ChoiceNode("expected", "876", null);
 		choice.setParent(parameter);
 
 		ExpectedValueStatement statement = new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
-		ExpectedValueStatement copy = statement.getCopy();
-		assertTrue(statement.compare(copy));
+		ExpectedValueStatement copy = statement.makeClone();
+		assertTrue(statement.isEqualTo(copy));
 	}
 	//	RootNode fRoot;
 	//

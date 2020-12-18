@@ -11,8 +11,8 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.IStatementCondition;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationSetCondition extends AbstractModelOperation {
 
@@ -20,22 +20,22 @@ public class StatementOperationSetCondition extends AbstractModelOperation {
 	private IStatementCondition fCurrentCondition;
 	private IStatementCondition fNewCondition;
 
-	public StatementOperationSetCondition(RelationStatement target, IStatementCondition condition) {
-		super(OperationNames.SET_STATEMENT_CONDITION);
+	public StatementOperationSetCondition(RelationStatement target, IStatementCondition condition, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_STATEMENT_CONDITION, extLanguageManager);
 		fTarget = target;
 		fNewCondition = condition;
 		fCurrentCondition = target.getCondition();
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		fTarget.setCondition(fNewCondition);
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationSetCondition(fTarget, fCurrentCondition);
+		return new StatementOperationSetCondition(fTarget, fCurrentCondition, getExtLanguageManager());
 	}
 
 }

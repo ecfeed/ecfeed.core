@@ -11,7 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
@@ -19,14 +19,14 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 	private AbstractParameterNode fTarget;
 	private String fCurrentComments;
 
-	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments) {
-		super(OperationNames.SET_COMMENTS);
+	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_COMMENTS, extLanguageManager);
 		fTarget = target;
 		fComments = comments;
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 		fCurrentComments = fTarget.getTypeComments() != null ? fTarget.getTypeComments() : "";
@@ -35,7 +35,7 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterSetTypeCommentsOperation(fTarget, fCurrentComments);
+		return new ParameterSetTypeCommentsOperation(fTarget, fCurrentComments, getExtLanguageManager());
 	}
 
 }

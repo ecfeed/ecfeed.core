@@ -13,8 +13,9 @@ package com.ecfeed.core.operations;
 import java.util.Arrays;
 
 import com.ecfeed.core.model.IRelationalStatement;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationSetRelation extends AbstractModelOperation {
 
@@ -22,17 +23,17 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 	private EMathRelation fNewRelation;
 	private EMathRelation fCurrentRelation;
 
-	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation) {
-		super(OperationNames.SET_STATEMENT_RELATION);
+	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_STATEMENT_RELATION, extLanguageManager);
 		fTarget = target;
 		fNewRelation = relation;
 		fCurrentRelation = target.getRelation();
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		if(Arrays.asList(fTarget.getAvailableRelations()).contains(fNewRelation) == false){
-			ModelOperationException.report(OperationMessages.DIALOG_UNALLOWED_RELATION_MESSAGE);
+			ExceptionHelper.reportRuntimeException(OperationMessages.DIALOG_UNALLOWED_RELATION_MESSAGE);
 		}
 		fTarget.setRelation(fNewRelation);
 		markModelUpdated();
@@ -40,7 +41,7 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationSetRelation(fTarget, fCurrentRelation);
+		return new StatementOperationSetRelation(fTarget, fCurrentRelation, getExtLanguageManager());
 	}
 
 }

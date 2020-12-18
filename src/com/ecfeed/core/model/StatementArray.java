@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public class StatementArray extends AbstractStatement {
 
-	private EStatementOperator fOperator;
+	private StatementArrayOperator fOperator;
 	private List<AbstractStatement> fStatements;
 
-	public StatementArray(EStatementOperator operator, IModelChangeRegistrator modelChangeRegistrator) {
+	public StatementArray(StatementArrayOperator operator, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(modelChangeRegistrator);
 
@@ -82,10 +83,184 @@ public class StatementArray extends AbstractStatement {
 
 		case AND:
 			return evaluateForAndOperator(values);
+			
 		case OR:
 			return evaluateForOrOperator(values);
+		case ASSIGN:
+			
+			return EvaluationResult.FALSE;
+			
 		}
+
 		return EvaluationResult.FALSE;
+	}
+
+	@Override
+	public String toString() {
+
+		String result = new String("(");
+		for (int i = 0; i < fStatements.size(); i++) {
+			result += fStatements.get(i).toString();
+			if (i < fStatements.size() - 1) {
+				result += createSignatureOfOperator(fOperator);
+			}
+		}
+		return result + ")";
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		String result = new String("(");
+
+		for (int i = 0; i < fStatements.size(); i++) {
+
+			final AbstractStatement abstractStatement = fStatements.get(i);
+
+			result += abstractStatement.createSignature(extLanguageManager);
+
+			if (i < fStatements.size() - 1) {
+				result += createSignatureOfOperator(fOperator);
+			}
+		}
+
+		return result + ")";
+	}
+
+	public String createSignatureOfOperator(StatementArrayOperator operator) {
+
+		switch(fOperator) {
+		case AND:
+			return " \u2227 ";
+		case OR:
+			return " \u2228 ";
+		case ASSIGN:
+			return " , ";
+		}
+
+		return null;
+	}
+
+	@Override
+	public StatementArray makeClone() {
+
+		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
+
+		for (AbstractStatement statement: fStatements) {
+			copy.addStatement(statement.makeClone());
+		}
+
+		return copy;
+	}
+
+	@Override
+	public boolean updateReferences(MethodNode method) {
+
+		for (AbstractStatement statement: fStatements) {
+			if (!statement.updateReferences(method)) return false;
+		}
+		return true;
+	}
+
+	List<AbstractStatement> getStatements() {
+		return fStatements;
+	}
+
+	@Override 
+	public boolean isEqualTo(IStatement statement) {
+
+		if (statement instanceof StatementArray == false) {
+			return false;
+		}
+		StatementArray compared = (StatementArray)statement;
+
+		if (getOperator() != compared.getOperator()) {
+			return false;
+		}
+
+		if (getStatements().size() != compared.getStatements().size()) {
+			return false;
+		}
+
+		for (int i = 0; i < getStatements().size(); i++) {
+			if (getStatements().get(i).isEqualTo(compared.getStatements().get(i)) == false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public Object accept(IStatementVisitor visitor) throws Exception {
+		return visitor.visit(this);
+	}
+
+	@Override
+	public boolean mentions(int methodParameterIndex) {
+
+		for ( AbstractStatement abstractStatement : fStatements) {
+			if (abstractStatement.mentions(methodParameterIndex)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isAmbiguous(
+			List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
+
+		for (AbstractStatement statement : fStatements) {
+			if (statement.isAmbiguous(values, messageStack, extLanguageManager)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public List<ChoiceNode> getListOfChoices() {
+
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+
+		for (AbstractStatement abstractStatement : fStatements) {
+
+			List<ChoiceNode> listOfChoices = abstractStatement.getListOfChoices();
+
+			if (listOfChoices != null) {
+				result.addAll(listOfChoices);
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
+
+		StatementArrayOperator statementArrayOperator = getOperator();
+
+		if (statementArrayOperator != StatementArrayOperator.ASSIGN) {
+			return true;
+		}
+
+		List<AbstractStatement> statements = getStatements();
+
+		for (AbstractStatement abstractStatement : statements) {
+
+			if (!(abstractStatement instanceof AssignmentStatement)) {
+				continue;
+			}
+
+			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+
+			assignmentStatement.setExpectedValues(testCaseChoices);
+		}
+
+		return true;
 	}
 
 	private EvaluationResult evaluateForOrOperator(List<ChoiceNode> values) {
@@ -102,7 +277,7 @@ public class StatementArray extends AbstractStatement {
 
 			if (evaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 				insufficient_data = true;
-			}			
+			}
 		}
 
 		if (insufficient_data) {
@@ -136,102 +311,15 @@ public class StatementArray extends AbstractStatement {
 		return EvaluationResult.TRUE;
 	}
 
-	@Override
-	public String toString() {
-
-		String result = new String("(");
-		for (int i = 0; i < fStatements.size(); i++) {
-			result += fStatements.get(i).toString();
-			if (i < fStatements.size() - 1) {
-				switch(fOperator) {
-				case AND:
-					result += " \u2227 ";
-					break;
-				case OR:
-					result += " \u2228 ";
-					break;
-				}
-			}
-		}
-		return result + ")";
-	}
-
-	@Override
-	public StatementArray getCopy() {
-
-		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
-
-		for (AbstractStatement statement: fStatements) {
-			copy.addStatement(statement.getCopy());
-		}
-
-		return copy;
-	}
-
-	@Override
-	public boolean updateReferences(MethodNode method) {
-
-		for (AbstractStatement statement: fStatements) {
-			if (!statement.updateReferences(method)) return false;
-		}
-		return true;
-	}
-
-	List<AbstractStatement> getStatements() {
-		return fStatements;
-	}
-
-	@Override 
-	public boolean compare(IStatement statement) {
-
-		if (statement instanceof StatementArray == false) {
-			return false;
-		}
-		StatementArray compared = (StatementArray)statement;
-
-		if (getOperator() != compared.getOperator()) {
-			return false;
-		}
-
-		if (getStatements().size() != compared.getStatements().size()) {
-			return false;
-		}
-
-		for (int i = 0; i < getStatements().size(); i++) {
-			if (getStatements().get(i).compare(compared.getStatements().get(i)) == false) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	@Override
-	public Object accept(IStatementVisitor visitor) throws Exception {
-		return visitor.visit(this);
-	}
-
-	@Override
-	public boolean mentions(int methodParameterIndex) {
-
-		for ( AbstractStatement abstractStatement : fStatements) {
-			if (abstractStatement.mentions(methodParameterIndex)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public String getLeftOperandName() {
+	public String getLeftParameterName() {
 		return fOperator.toString();
 	}
 
-	public EStatementOperator getOperator() {
+	public StatementArrayOperator getOperator() {
 		return fOperator;
 	}
 
-	public void setOperator(EStatementOperator operator) {
+	public void setOperator(StatementArrayOperator operator) {
 		fOperator = operator;
 	}
 
@@ -245,32 +333,4 @@ public class StatementArray extends AbstractStatement {
 		addStatement(statement, fStatements.size());
 	}
 
-	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack) {
-
-		for (AbstractStatement statement : fStatements) {
-			if (statement.isAmbiguous(values, messageStack)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	public List<ChoiceNode> getListOfChoices() {
-
-		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
-
-		for (AbstractStatement abstractStatement : fStatements) {
-
-			List<ChoiceNode> listOfChoices = abstractStatement.getListOfChoices();
-
-			if (listOfChoices != null) {
-				result.addAll(listOfChoices);
-			}
-		}
-
-		return null;
-	}
 }

@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.Set;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
@@ -23,12 +23,12 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation() {
-			super(ChoiceOperationAddLabel.this.getName());
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(ChoiceOperationAddLabel.this.getName(), extLanguageManager);
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fTarget);
 			fTarget.removeLabel(fLabel);
@@ -42,13 +42,13 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationAddLabel(fTarget, fLabel);
+			return new ChoiceOperationAddLabel(fTarget, fLabel, getExtLanguageManager());
 		}
 
 	}
 
-	public ChoiceOperationAddLabel(ChoiceNode target, String label){
-		super(OperationNames.ADD_PARTITION_LABEL);
+	public ChoiceOperationAddLabel(ChoiceNode target, String label, IExtLanguageManager extLanguageManager){
+		super(OperationNames.ADD_PARTITION_LABEL, extLanguageManager);
 
 		fTarget = target;
 		fLabel = label;
@@ -56,7 +56,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 		fTarget.addLabel(fLabel);
@@ -69,7 +69,7 @@ public class ChoiceOperationAddLabel extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 }

@@ -37,7 +37,7 @@ public class TemplateText {
         fTestCaseTemplateText = new StringHolder();
         fFooterTemplateText = new StringHolder();
 
-        if (completeTemplateText == null || completeTemplateText.isEmpty()) {
+        if (StringHelper.isNullOrBlank(completeTemplateText)) {
             markTemplateAsFaulty(TEMPLATE_EMPTY);
             return;
         }

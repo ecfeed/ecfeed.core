@@ -13,7 +13,8 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 
@@ -21,34 +22,40 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 	private AbstractStatement fCurrentStatement;
 	private ConstraintNode fTarget;
 
-	public ConstraintOperationReplaceStatement(ConstraintNode target, AbstractStatement current, AbstractStatement newStatement) {
-		super(OperationNames.REPLACE_STATEMENT);
+	public ConstraintOperationReplaceStatement(
+			ConstraintNode target, 
+			AbstractStatement current, 
+			AbstractStatement newStatement,
+			IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.REPLACE_STATEMENT, extLanguageManager);
+		
 		fTarget = target;
 		fCurrentStatement = current;
 		fNewStatement = newStatement;
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 		Constraint constraint = fTarget.getConstraint();
 
-		if (constraint.getPremise() == fCurrentStatement) {
-			constraint.setPremise(fNewStatement);
+		if (constraint.getPrecondition() == fCurrentStatement) {
+			constraint.setPrecondition(fNewStatement);
 		}
-		else if (constraint.getConsequence() == fCurrentStatement) {
-			constraint.setConsequence(fNewStatement);
+		else if (constraint.getPostcondition() == fCurrentStatement) {
+			constraint.setPostcondition(fNewStatement);
 		}
 		else {
-			ModelOperationException.report(OperationMessages.TARGET_STATEMENT_NOT_FOUND_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TARGET_STATEMENT_NOT_FOUND_PROBLEM);
 		}
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement);
+		return new ConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement, getExtLanguageManager());
 	}
 
 }

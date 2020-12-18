@@ -14,32 +14,28 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.StaticStatement;
-
 public class ConstraintNodeTest {
 
 	@Test
 	public void compare(){
-		ConstraintNode c1 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
-		ConstraintNode c2 = new ConstraintNode("c", null, new Constraint("c", null, new StaticStatement(true, null), new StaticStatement(true, null)));
+		ConstraintNode c1 = new ConstraintNode("c", new Constraint("c", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
+		ConstraintNode c2 = new ConstraintNode("c", new Constraint("c", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
 
 		assertTrue(c1.isMatch(c2));
 
-		c1.setFullName("c1");
+		c1.setName("c1");
 		assertFalse(c1.isMatch(c2));
-		c2.setFullName("c1");
+		c2.setName("c1");
 		assertTrue(c1.isMatch(c2));
 
-		c1.getConstraint().setPremise(new StaticStatement(false, null));
+		c1.getConstraint().setPrecondition(new StaticStatement(false, null));
 		assertFalse(c1.isMatch(c2));
-		c2.getConstraint().setPremise(new StaticStatement(false, null));
+		c2.getConstraint().setPrecondition(new StaticStatement(false, null));
 		assertTrue(c1.isMatch(c2));
 
-		c1.getConstraint().setConsequence(new StaticStatement(false, null));
+		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
 		assertFalse(c1.isMatch(c2));
-		c2.getConstraint().setConsequence(new StaticStatement(false, null));
+		c2.getConstraint().setPostcondition(new StaticStatement(false, null));
 		assertTrue(c1.isMatch(c2));
 	}
 }

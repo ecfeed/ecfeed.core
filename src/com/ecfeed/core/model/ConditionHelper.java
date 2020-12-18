@@ -2,7 +2,8 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.RangeHelper;
 
@@ -10,10 +11,14 @@ public class ConditionHelper {
 
 	public static String getSubstituteType(RelationStatement parentRelationStatement) {
 
-		String substituteType = 
-				JavaTypeHelper.getSubstituteType(
-						parentRelationStatement.getLeftParameter().getType(), 
-						JavaTypeHelper.getStringTypeName());
+		final MethodParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+
+		final String type = leftParameter.getType();
+
+		String substituteType =
+				JavaLanguageHelper.getSubstituteType(
+						type,
+						JavaLanguageHelper.getStringTypeName());
 
 		if (substituteType == null) {
 			final String MESSAGE = "Substitute type must not be null.";
@@ -43,7 +48,7 @@ public class ConditionHelper {
 			EMathRelation relation,
 			String substituteType) {
 
-		if (JavaTypeHelper.isStringTypeName(substituteType)) {
+		if (JavaLanguageHelper.isStringTypeName(substituteType)) {
 			return ConditionHelper.isAmbiguousForStringType(leftChoiceNode, parentRelationStatement);
 		}
 
@@ -64,19 +69,29 @@ public class ConditionHelper {
 			return;
 		}
 
-		messageStack.addMessage(createMessage("Values", left + relation.toString() + right));
+		String message = createMessage("Values", left + relation.toString() + right);
+		
+		messageStack.addMessage(message);
 	}
 
 	public static void addRelStatementToMesageStack(
-			RelationStatement relationStatement, MessageStack messageStack) {
+			RelationStatement relationStatement, 
+			MessageStack messageStack,
+			IExtLanguageManager extLanguageManager) {
 
-		messageStack.addMessage(createMessage("Statement", relationStatement.toString()));
+		String message = createMessage(
+				"Statement", 
+				AbstractStatementHelper.createSignature(relationStatement, extLanguageManager));
+		
+		messageStack.addMessage(message);
 	}
 
 	public static void addConstraintNameToMesageStack(
 			String constraintName, MessageStack messageStack) {
 
-		messageStack.addMessage(createMessage("Constraint", constraintName.toString()));
+		String message = createMessage("Constraint", constraintName.toString());
+		
+		messageStack.addMessage(message);
 	}
 
 	public static String createMessage(String name, String value) {

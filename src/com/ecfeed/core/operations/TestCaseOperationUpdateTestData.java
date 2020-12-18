@@ -11,8 +11,9 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 
@@ -21,8 +22,8 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 	private int fIndex;
 	private TestCaseNode fTarget;
 
-	public TestCaseOperationUpdateTestData(TestCaseNode target, int index, ChoiceNode value) {
-		super(OperationNames.UPDATE_TEST_DATA);
+	public TestCaseOperationUpdateTestData(TestCaseNode target, int index, ChoiceNode value, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.UPDATE_TEST_DATA, extLanguageManager);
 		fTarget = target;
 		fIndex = index;
 		fNewValue = value;
@@ -30,12 +31,12 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 
 		if(fNewValue.getParameter() != fTarget.getTestData().get(fIndex).getParameter()){
-			ModelOperationException.report(OperationMessages.TEST_DATA_CATEGORY_MISMATCH_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_DATA_CATEGORY_MISMATCH_PROBLEM);
 		}
 
 		fTarget.getTestData().set(fIndex, fNewValue);
@@ -44,7 +45,7 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new TestCaseOperationUpdateTestData(fTarget, fIndex, fPreviousValue);
+		return new TestCaseOperationUpdateTestData(fTarget, fIndex, fPreviousValue, getExtLanguageManager());
 	}
 
 }

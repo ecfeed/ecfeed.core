@@ -11,8 +11,9 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationReplaceChild extends AbstractModelOperation {
 
@@ -20,17 +21,17 @@ public class StatementOperationReplaceChild extends AbstractModelOperation {
 	private AbstractStatement fCurrentChild;
 	private StatementArray fTarget;
 
-	public StatementOperationReplaceChild(StatementArray target, AbstractStatement child, AbstractStatement newStatement) {
-		super(OperationNames.REPLACE_STATEMENT);
+	public StatementOperationReplaceChild(StatementArray target, AbstractStatement child, AbstractStatement newStatement, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.REPLACE_STATEMENT, extLanguageManager);
 		fTarget = target;
 		fCurrentChild = child;
 		fNewChild = newStatement;
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		if(fTarget == null){
-			ModelOperationException.report(OperationMessages.NULL_POINTER_TARGET);
+			ExceptionHelper.reportRuntimeException(OperationMessages.NULL_POINTER_TARGET);
 		}
 		fTarget.replaceChild(fCurrentChild, fNewChild);
 		markModelUpdated();
@@ -38,7 +39,7 @@ public class StatementOperationReplaceChild extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationReplaceChild(fTarget, fNewChild, fCurrentChild);
+		return new StatementOperationReplaceChild(fTarget, fNewChild, fCurrentChild, getExtLanguageManager());
 	}
 
 }

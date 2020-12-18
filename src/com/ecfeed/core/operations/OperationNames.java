@@ -51,6 +51,7 @@ public interface OperationNames {
 	public static final String SET_CHOICE_RANDOMIZED_FLAG = "Set choice randomized flag";
 	public static final String ADD_CLASSES = "Add classes";
 	public static final String ADD_CLASS = "Add class";
+	public static final String CHANGE_CONSTRAINT_TYPE = "Change constraint type";
 	public static final String REMOVE_CLASS = "Remove class";
 	public static final String ADD_STATEMENT = "Add statement";
 	public static final String UPDATE_TEST_DATA = "Update test data";

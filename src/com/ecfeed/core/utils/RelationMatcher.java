@@ -29,21 +29,21 @@ public class RelationMatcher {
 			return true;
 		}		
 
-		if (JavaTypeHelper.isNumericTypeName(typeName)) {
+		if (JavaLanguageHelper.isNumericTypeName(typeName)) {
 			if (isMatchForNumericTypes(typeName, relation, leftString, rightString)) {
 				return true;
 			}
 			return false;
 		}
 
-		if (JavaTypeHelper.isTypeWithChars(typeName)) {
+		if (JavaLanguageHelper.isTypeWithChars(typeName)) {
 			if (EMathRelation.isMatch(relation, leftString, rightString)) {
 				return true;
 			}
 			return false;
 		}
 
-		if (JavaTypeHelper.isBooleanTypeName(typeName)) {
+		if (JavaLanguageHelper.isBooleanTypeName(typeName)) {
 			if (EMathRelation.isEqualityMatchForBooleans(relation, leftString, rightString)) {
 				return true;
 			}
@@ -60,10 +60,10 @@ public class RelationMatcher {
 	private static boolean isMatchForNumericTypes(
 			String typeName, EMathRelation relation, String leftValue, String rightValue) {
 
-		if (JavaTypeHelper.isFloatingPointTypeName(typeName)) {
+		if (JavaLanguageHelper.isFloatingPointTypeName(typeName)) {
 
-			Double leftDouble = JavaTypeHelper.convertNumericToDouble(typeName, leftValue, ERunMode.QUIET);
-			Double rightDouble = JavaTypeHelper.convertNumericToDouble(typeName, rightValue, ERunMode.QUIET);
+			Double leftDouble = JavaLanguageHelper.convertNumericToDouble(typeName, leftValue, ERunMode.QUIET);
+			Double rightDouble = JavaLanguageHelper.convertNumericToDouble(typeName, rightValue, ERunMode.QUIET);
 
 			if (EMathRelation.isMatch(relation, leftDouble, rightDouble)) {
 				return true;
@@ -72,8 +72,8 @@ public class RelationMatcher {
 			return false;
 		}
 
-		Long leftLong = JavaTypeHelper.parseLongValue(leftValue, ERunMode.QUIET);
-		Long rightLong = JavaTypeHelper.parseLongValue(rightValue, ERunMode.QUIET);
+		Long leftLong = JavaLanguageHelper.parseLongValue(leftValue, ERunMode.QUIET);
+		Long rightLong = JavaLanguageHelper.parseLongValue(rightValue, ERunMode.QUIET);
 
 		if (EMathRelation.isMatch(relation, leftLong, rightLong)) {
 			return true;

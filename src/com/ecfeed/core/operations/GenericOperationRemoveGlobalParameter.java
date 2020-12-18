@@ -13,23 +13,37 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.GlobalParametersParentNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 
-	public GenericOperationRemoveGlobalParameter(GlobalParametersParentNode target, GlobalParameterNode parameter) {
-		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target);
+	public GenericOperationRemoveGlobalParameter(
+			GlobalParametersParentNode target, 
+			GlobalParameterNode parameter,
+			IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguageManager);
+		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, extLanguageManager));
 		}
-		addOperation(new GenericOperationRemoveParameter(target, parameter));
+		
+		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguageManager));
 	}
 
-	public GenericOperationRemoveGlobalParameter(GlobalParametersParentNode target, GlobalParameterNode parameter, boolean ignoreDuplicates) {
-		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target);
+	public GenericOperationRemoveGlobalParameter(
+			GlobalParametersParentNode target, 
+			GlobalParameterNode parameter, 
+			boolean ignoreDuplicates,
+			IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguageManager);
+		
 		for(MethodParameterNode linker : parameter.getLinkers()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates));
+			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates, extLanguageManager));
 		}
-		addOperation(new GenericOperationRemoveParameter(target, parameter));
+		
+		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguageManager));
 	}
 
 }

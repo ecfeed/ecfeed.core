@@ -14,7 +14,7 @@ import com.ecfeed.core.implementation.ModelClassLoader;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.TypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class FixedChoiceValueFactory {
 
@@ -46,13 +46,14 @@ public class FixedChoiceValueFactory {
 		String convertedValueString = valueString;
 
 		if (isRandomized) {
+
 			TypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
 			ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
 			convertedValueString = typeAdapter.generateValueAsString(valueString);  
 		}
 
-		if (JavaTypeHelper.isJavaType(typeName)) {
-			return JavaTypeHelper.parseJavaType(convertedValueString, typeName, ERunMode.QUIET); 
+		if (JavaLanguageHelper.isJavaType(typeName)) {
+			return JavaLanguageHelper.parseJavaValueToObject(convertedValueString, typeName, ERunMode.QUIET);
 		}
 		
 		if (fIsExport) {

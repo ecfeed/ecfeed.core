@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericShiftOperation extends AbstractModelOperation {
 
@@ -24,17 +24,21 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	private int fShiftSize;
 	private List<? extends AbstractNode> fCollection;
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up){
-		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up);
+	public GenericShiftOperation(List<? extends AbstractNode> collection, AbstractNode shifted, boolean up, IExtLanguageManager extLanguageManager){
+		
+		this(collection, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguageManager);
 	}
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up){
-		this(collection, shifted, 0);
+	public GenericShiftOperation(
+			List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, boolean up, IExtLanguageManager extLanguageManager){
+		
+		this(collection, shifted, 0, extLanguageManager);
+		
 		fShiftSize = minAllowedShift(shifted, up);
 	}
 
-	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift){
-		super(OperationNames.MOVE);
+	public GenericShiftOperation(List<? extends AbstractNode> collection, List<? extends AbstractNode> shifted, int shift, IExtLanguageManager extLanguageManager){
+		super(OperationNames.MOVE, extLanguageManager);
 		shift = shiftAllowed(shifted, shift) ? shift : 0;
 		fToBeShifted = new ArrayList<>(shifted);
 		fCollection = collection;
@@ -42,7 +46,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setNodesToSelect();
 		shiftElements(fCollection, indices(fCollection, fToBeShifted), fShiftSize);
@@ -51,7 +55,7 @@ public class GenericShiftOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new GenericShiftOperation(fCollection, fToBeShifted, -fShiftSize);
+		return new GenericShiftOperation(fCollection, fToBeShifted, -fShiftSize, getExtLanguageManager());
 	}
 
 	public int getShift(){

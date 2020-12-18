@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 
@@ -31,7 +31,7 @@ public class NodePropertyDefElemType {
 
 	public static final NodePropertyDef elementType = 
 			new NodePropertyDef(
-					WB_ELEMENT_TYPE, JavaTypeHelper.TYPE_NAME_STRING, EMPTY_STR,
+					WB_ELEMENT_TYPE, JavaLanguageHelper.TYPE_NAME_STRING, EMPTY_STR,
 					new String[]{EMPTY_STR, TEXT, CHECKBOX, PAGE_ELEMENT, PAGE_URL, DELAY, BROWSER });
 
 
@@ -75,16 +75,16 @@ public class NodePropertyDefElemType {
 	}
 
 	public static NodePropertyValueSet getValueSet(String parameterType) {
-		if (JavaTypeHelper.isStringTypeName(parameterType)) {
+		if (JavaLanguageHelper.isStringTypeName(parameterType)) {
 			return VALUE_SET_FOR_STRING;
 		}
-		if (JavaTypeHelper.isCharTypeName(parameterType)) {
+		if (JavaLanguageHelper.isCharTypeName(parameterType)) {
 			return VALUE_SET_FOR_CHAR;
 		}
-		if (JavaTypeHelper.isBooleanTypeName(parameterType)) {
+		if (JavaLanguageHelper.isBooleanTypeName(parameterType)) {
 			return VALUE_SET_FOR_BOOLEAN;
 		}		
-		if (JavaTypeHelper.isNumericTypeName(parameterType)) {
+		if (JavaLanguageHelper.isNumericTypeName(parameterType)) {
 			return VALUE_SET_FOR_NUMERIC_TYPES;
 		}		
 		return null;
