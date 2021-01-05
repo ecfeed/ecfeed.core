@@ -107,6 +107,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		if (abstractStatement instanceof RelationStatement) {
+			
+			RelationStatement relationStatement = (RelationStatement)abstractStatement;
+			
+			EMathRelation mathRelation = relationStatement.getRelation();
+			
+			if (mathRelation == EMathRelation.ASSIGN) {
+				return "Assignment is not allowed in precondition.";
+			}
+			
 			return null;
 		}
 
@@ -117,11 +126,18 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			List<AbstractStatement> statements = statementArray.getStatements();
 
 			for (AbstractStatement childAbstractStatement : statements) {
-				checkStatementOfPreconditionOfAssignmentConstraint(childAbstractStatement, extLanguageManager);
+				
+				String errorMessage = 
+						checkStatementOfPreconditionOfAssignmentConstraint(
+								childAbstractStatement, extLanguageManager);
+				
+				if (errorMessage != null) {
+					return errorMessage;
+				}
 			}
 		}
 
-		return "Invalid type of precondition of assignment constraint.";
+		return null;
 	}
 
 	private String checkPostconditionOfAssignmentConstraint(IExtLanguageManager extLanguageManager) {
