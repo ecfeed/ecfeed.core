@@ -54,11 +54,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
-		if (!relationStatement.isRightParameterTypeAllowed(rightParameter.getType())) {
-			ExceptionHelper.reportRuntimeException("Invalid type of right parameter in relation statement.");
-		}
-
 		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement);
+
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
@@ -262,6 +259,18 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public void setCondition(IStatementCondition condition) {
+
+		if (condition instanceof ParameterCondition) {
+
+			ParameterCondition parameterCondition = (ParameterCondition)condition;
+
+			MethodParameterNode rightParameter = parameterCondition.getRightParameterNode();
+
+			if (!isRightParameterTypeAllowed(rightParameter.getType())) {
+				ExceptionHelper.reportRuntimeException("Invalid type of right parameter in relation statement.");
+			}
+		}
+
 		fRightCondition = condition;
 	}
 
