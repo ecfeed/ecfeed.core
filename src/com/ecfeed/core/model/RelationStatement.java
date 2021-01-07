@@ -294,5 +294,49 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.getListOfChoices();
 	}
 
+	// TODO CONSTRAINTS-NEW test
+	public boolean isRightParameterTypeAllowed(String rightParameterType) {
+
+		MethodParameterNode leftParameter = getLeftParameter();
+		String leftParameterType =  leftParameter.getType();
+		
+		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+			
+			return false;
+		}
+		
+		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
+				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
+				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
+				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
+				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+			
+			return false;
+		}
+		
+		return true;
+	}
 }
 

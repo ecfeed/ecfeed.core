@@ -69,7 +69,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public String checkIntegrity(IExtLanguageManager extLanguageManager) {
 
 		if (fConstraintType == ConstraintType.EXTENDED_FILTER) {
-			return null;
+			return checkExtendedFilterConstraint(extLanguageManager);
 		}
 
 		if (fConstraintType == ConstraintType.BASIC_FILTER) {
@@ -87,7 +87,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	private String checkAssignmentConstraint(IExtLanguageManager extLanguageManager) {
 
 		AbstractStatement precondition = getPrecondition();
-		String errorMessage = checkStatementOfPreconditionOfAssignmentConstraint(precondition, extLanguageManager);
+		String errorMessage = checkFilteringStatement(precondition, extLanguageManager);
 
 		if (errorMessage != null) {
 			return errorMessage;
@@ -96,7 +96,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return checkPostconditionOfAssignmentConstraint(extLanguageManager);
 	}
 
-	private String checkStatementOfPreconditionOfAssignmentConstraint(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
+	private String checkFilteringStatement(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
 
 		if (abstractStatement instanceof StaticStatement) {
 			return null;
@@ -107,16 +107,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 		if (abstractStatement instanceof RelationStatement) {
-			
-			RelationStatement relationStatement = (RelationStatement)abstractStatement;
-			
-			EMathRelation mathRelation = relationStatement.getRelation();
-			
-			if (mathRelation == EMathRelation.ASSIGN) {
-				return "Assignment is not allowed in precondition.";
-			}
-			
-			return null;
+			return checkFilteringRelationStatement(abstractStatement);
 		}
 
 		if (abstractStatement instanceof StatementArray) {
@@ -128,7 +119,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			for (AbstractStatement childAbstractStatement : statements) {
 				
 				String errorMessage = 
-						checkStatementOfPreconditionOfAssignmentConstraint(
+						checkFilteringStatement(
 								childAbstractStatement, extLanguageManager);
 				
 				if (errorMessage != null) {
@@ -137,6 +128,44 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			}
 		}
 
+		return null;
+	}
+
+	public String checkFilteringRelationStatement(AbstractStatement abstractStatement) {
+		
+		RelationStatement relationStatement = (RelationStatement)abstractStatement;
+		
+		EMathRelation mathRelation = relationStatement.getRelation();
+		
+		if (mathRelation == EMathRelation.ASSIGN) {
+			return "Assignment is not allowed in filtering statement.";
+		}
+		
+		String errorMessage = checkParameterTypes(relationStatement); // TODO CONSTRAINTS-NEW test
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+				
+		return null;
+	}
+
+	private String checkParameterTypes(RelationStatement relationStatement) {
+		
+		IStatementCondition statementCondition = relationStatement.getCondition();
+		
+		if (!(statementCondition instanceof ParameterCondition)) {
+			return null;
+		}
+		
+		ParameterCondition parameterCondition = (ParameterCondition)statementCondition;
+		
+		String rightParameterType = parameterCondition.getRightParameterNode().getType();
+		
+		if (!relationStatement.isRightParameterTypeAllowed(rightParameterType)) {
+			return "Parameter type mismatch.";
+		}
+				
 		return null;
 	}
 
@@ -186,6 +215,27 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return null;
 	}
 
+	public String checkExtendedFilterConstraint(IExtLanguageManager extLanguageManager) {
+
+		AbstractStatement precondition = getPrecondition();
+
+		String errorMessage = checkFilteringStatement(precondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		AbstractStatement postcondition = getPostcondition();
+		
+		errorMessage = checkFilteringStatement(postcondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		return null;
+	}
+	
 	public String checkBasicFilterConstraint(IExtLanguageManager extLanguageManager) {
 
 		AbstractStatement precondition = getPrecondition();
@@ -200,7 +250,16 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return "Precondition has an invalid value.";
 		}
 		
+		AbstractStatement postcondition = getPostcondition();
+		
+		String errorMessage = checkFilteringStatement(postcondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
 		return null;
+
 	}
 
 	public void assertIsCorrect(IExtLanguageManager extLanguageManager) {
