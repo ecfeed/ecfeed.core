@@ -154,7 +154,7 @@ public class MethodNodeHelperTest {
 		assertEquals("method_1(int)", signature);
 
 		signature = MethodNodeHelper.createSignature(methodNode, true, new ExtLanguageManagerForSimple());
-		assertEquals("method 1(Number param1)", signature);
+		assertEquals("method 1(Number: param1)", signature);
 
 		signature = MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForSimple());
 		assertEquals("method 1(Number)", signature);
@@ -178,7 +178,7 @@ public class MethodNodeHelperTest {
 		assertEquals("method 1(Number, Number)", signature);
 
 		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, true, new ExtLanguageManagerForSimple());
-		assertEquals("method 1(Number param1, [e]Number param2)", signature);
+		assertEquals("method 1(Number: param1, [e]Number: param2)", signature);
 
 		signature = MethodNodeHelper.createSignatureWithExpectedDecorations(methodNode, false, new ExtLanguageManagerForSimple());
 		assertEquals("method 1(Number, [e]Number)", signature);
@@ -190,7 +190,7 @@ public class MethodNodeHelperTest {
 		assertEquals("class1.method_1(int, double)", signature);
 
 		signature = MethodNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForSimple());
-		assertEquals("class1.method 1(Number param1, Number param2)", signature);
+		assertEquals("class1.method 1(Number: param1, Number: param2)", signature);
 
 		signature = MethodNodeHelper.createLongSignature(methodNode, false, new ExtLanguageManagerForSimple());
 		assertEquals("class1.method 1(Number, Number)", signature);
@@ -367,7 +367,7 @@ public class MethodNodeHelperTest {
 		assertEquals("int param_1, [e]double param_2", signature);
 
 		signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForSimple());
-		assertEquals("Number param 1, [e]Number param 2", signature);
+		assertEquals("Number: param 1, [e]Number: param 2", signature);
 	}
 
 	@Test

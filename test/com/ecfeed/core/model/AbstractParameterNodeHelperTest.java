@@ -27,7 +27,7 @@ public class AbstractParameterNodeHelperTest {
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
 				"int","par1",false,	new ExtLanguageManagerForSimple());
-		assertEquals("Number par1", signature);
+		assertEquals("Number: par1", signature);
 
 		// with expected flag
 
@@ -37,7 +37,7 @@ public class AbstractParameterNodeHelperTest {
 
 		signature = AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
 				"int","par1",true,	new ExtLanguageManagerForSimple());
-		assertEquals("[e]Number par1", signature);
+		assertEquals("[e]Number: par1", signature);
 
 		// without parameter name
 
