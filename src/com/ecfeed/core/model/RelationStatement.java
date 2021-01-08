@@ -307,7 +307,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.getListOfChoices();
 	}
 
-	// TODO CONSTRAINTS-NEW test
 	public boolean isRightParameterTypeAllowed(String rightParameterType) {
 
 		MethodParameterNode leftParameter = getLeftParameter();

@@ -141,7 +141,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return "Assignment is not allowed in filtering statement.";
 		}
 		
-		String errorMessage = checkParameterTypes(relationStatement); // TODO CONSTRAINTS-NEW test
+		String errorMessage = checkParameterTypes(relationStatement);
 		
 		if (errorMessage != null) {
 			return errorMessage;
