@@ -28,4 +28,5 @@ public interface IExtLanguageManager {
 	public String createQualifiedName(String packageName, String name);
 	public boolean isSymbolicValueAllowed();
 	public String formatNumber(String number);
+    public String getTypeSeparator();
 }

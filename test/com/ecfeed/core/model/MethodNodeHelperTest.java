@@ -202,7 +202,8 @@ public class MethodNodeHelperTest {
 				"f 1",
 				Arrays.asList(params),
 				null,
-				null);
+				null,
+				new ExtLanguageManagerForSimple());
 
 		assertEquals("f 1(Number, Text, Logical)", signature);
 
@@ -213,7 +214,8 @@ public class MethodNodeHelperTest {
 				"f 1",
 				Arrays.asList(params),
 				Arrays.asList(paramNames),
-				null);
+				null,
+				new ExtLanguageManagerForJava());
 
 		assertEquals("f 1(Number num, Text txt, Logical log)", signature);
 
@@ -224,9 +226,10 @@ public class MethodNodeHelperTest {
 				"f 1",
 				Arrays.asList(params),
 				Arrays.asList(paramNames),
-				Arrays.asList(expDecorations));
+				Arrays.asList(expDecorations),
+				new ExtLanguageManagerForSimple());
 
-		assertEquals("f 1([e]Number num, Text txt, [e]Logical log)", signature);
+		assertEquals("f 1([e]Number: num, Text: txt, [e]Logical: log)", signature);
 
 	}
 

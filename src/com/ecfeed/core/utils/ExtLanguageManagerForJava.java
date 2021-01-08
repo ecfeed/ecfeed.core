@@ -180,4 +180,9 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return number;
 	}
 
+	@Override
+	public String getTypeSeparator() {
+		return "";
+	}
+
 }

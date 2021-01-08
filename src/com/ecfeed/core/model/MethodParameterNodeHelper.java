@@ -31,7 +31,8 @@ public class MethodParameterNodeHelper {
 				AbstractParameterNodeHelper.createSignature(
 						type,
 						name,
-						methodParameterNode.isExpected());
+						methodParameterNode.isExpected(),
+						extLanguageManager);
 
 		final GlobalParameterNode link = methodParameterNode.getLink();
 
