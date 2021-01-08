@@ -53,8 +53,10 @@ public abstract class AbstractParameterNodeHelper {
 		parameterTypeInIntrLanguage = extLanguageManager.convertTypeFromIntrToExtLanguage(parameterTypeInIntrLanguage);
 
 		signature += parameterTypeInIntrLanguage;
-
+		
 		if (parameterNameInIntrLanguage != null) {
+			
+			signature += extLanguageManager.getTypeSeparator();
 
 			signature += " ";
 			parameterNameInIntrLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(parameterNameInIntrLanguage);
