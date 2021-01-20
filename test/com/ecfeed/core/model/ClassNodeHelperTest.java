@@ -48,6 +48,31 @@ public class ClassNodeHelperTest {
 	}
 
 	@Test
+	public void getNameAndDefaultPackageTest(){
+
+		ClassNode classNode = new ClassNode("class_1", null);
+
+		String simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForJava());
+		assertEquals("class_1", simpleName);
+
+		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		assertEquals("class 1", simpleName);
+		
+		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
+		assertEquals("", packageName);
+
+		packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForSimple());
+		assertEquals("", packageName);
+
+
+		String qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForJava());
+		assertEquals("class_1", qualifiedName);
+
+		qualifiedName = ClassNodeHelper.getQualifiedName(classNode, new ExtLanguageManagerForSimple());
+		assertEquals("class 1", qualifiedName);
+	}
+
+	@Test
 	public void verifyNameTest(){
 
 		String errorMessage;
