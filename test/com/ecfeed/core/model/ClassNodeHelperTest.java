@@ -57,7 +57,7 @@ public class ClassNodeHelperTest {
 
 		simpleName = ClassNodeHelper.getNonQualifiedName(classNode, new ExtLanguageManagerForSimple());
 		assertEquals("class 1", simpleName);
-		
+
 		String packageName = ClassNodeHelper.getPackageName(classNode, new ExtLanguageManagerForJava());
 		assertEquals("", packageName);
 
