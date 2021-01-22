@@ -17,15 +17,16 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	private final Map<List<E>, Integer> fScores = new HashMap<>();
 	private final Map<List<E>, Integer> fConstructedTable = new HashMap<>();
 	private static final int NOT_INCLUDE = -1;
+	private List<List<E>> input;
 	private int argN; // The number of dimensions to be covered
 	private int dimensionCount; // Total number of dimensions for an input domain
 
 	private IConstraintEvaluator<E> fconstraintEvaluator; // to check how to use it
 
-	public NwiseScoreEvaluator_Rep(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN)
-			throws GeneratorException {
+	public NwiseScoreEvaluator_Rep(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN){
 
 		this.argN = argN;
+		this.input = input;
 		dimensionCount = input.size();
 
 		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
@@ -147,10 +148,10 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 		return -1;
 	}
 
-	@Override
-	public void update(List<E> test) { // this method is to be discussed and finished
-		// TODO Auto-generated method stub
-
+	public void update(List<E> test) { // to be discussed to see if the logics is correct
+		if (test.size() == argN)
+			return;
+		NwiseScoreEvaluator_Rep fScores_update = new NwiseScoreEvaluator_Rep<>(input,fconstraintEvaluator, test.size());			
 	}
 
 }
