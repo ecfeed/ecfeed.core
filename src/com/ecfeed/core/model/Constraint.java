@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.*;
 
 public class Constraint implements IConstraint<ChoiceNode> {
@@ -105,6 +108,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		if (abstractStatement instanceof ExpectedValueStatement) {
 			return "Expected value statement is not allowed in this version of software.";
 		}
+		
+		String errorMessage = checkIfStatementValueIsAdaptable(abstractStatement, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
 
 		if (abstractStatement instanceof RelationStatement) {
 			return checkFilteringRelationStatement(abstractStatement);
@@ -118,7 +127,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 			for (AbstractStatement childAbstractStatement : statements) {
 				
-				String errorMessage = 
+				errorMessage = 
 						checkFilteringStatement(
 								childAbstractStatement, extLanguageManager);
 				
@@ -259,7 +268,49 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 		
 		return null;
-
+	}
+	
+	private String checkIfStatementValueIsAdaptable(
+			AbstractStatement abstractStatement,
+			IExtLanguageManager extLanguageManager) {
+		
+		if (!(abstractStatement instanceof RelationStatement)) {
+			return null;
+		}
+		
+		RelationStatement relationStatement = (RelationStatement)abstractStatement;
+		
+		String leftParameterType = relationStatement.getLeftParameter().getType();
+		
+		if (leftParameterType == null) {
+			return null;
+		}
+		
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(leftParameterType);
+		
+		IStatementCondition statementCondition = relationStatement.getCondition();
+		
+		if (!(statementCondition instanceof ValueCondition)) {
+			return null;
+		}
+				
+		ValueCondition valueCondition = (ValueCondition)statementCondition;
+		
+		String value = valueCondition.getRightValue();
+		
+		try {
+			typeAdapter.adapt(
+					value, 
+					false, 
+					ERunMode.WITH_EXCEPTION,
+					extLanguageManager);
+			
+		} catch (RuntimeException ex) {
+			return "Incompatible types. " + ex.getMessage();
+		}
+		
+		return null;
 	}
 
 	public void assertIsCorrect(IExtLanguageManager extLanguageManager) {
