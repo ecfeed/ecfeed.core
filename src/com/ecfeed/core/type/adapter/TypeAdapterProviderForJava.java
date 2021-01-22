@@ -13,7 +13,7 @@ package com.ecfeed.core.type.adapter;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 
-public class TypeAdapterProvider implements ITypeAdapterProvider{
+public class TypeAdapterProviderForJava implements ITypeAdapterProvider{
 
 	@SuppressWarnings("rawtypes")
 	protected ITypeAdapter<?> getTypeAdapterBaseForUserType(String type) {

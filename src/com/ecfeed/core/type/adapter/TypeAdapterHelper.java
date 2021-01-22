@@ -31,7 +31,7 @@ public class TypeAdapterHelper {
 		SimpleLanguageHelper.TYPE_NAME_NUMBER
 	};
 
-	public static final String CANNOT_CONVERT_VALUE = "Cannot convert value";
+	private static final String CANNOT_CONVERT_VALUE = "Cannot convert value";
 
 	public static void reportRuntimeExceptionCannotConvert(String value, String typeName) {
 
