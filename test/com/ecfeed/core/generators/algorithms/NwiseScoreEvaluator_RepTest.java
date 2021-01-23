@@ -31,7 +31,7 @@ public class NwiseScoreEvaluator_RepTest {
 	    */
 	
 	    @Test
-	    public void test() throws GeneratorException{
+	    public void test(){
 	        
 	    	/* Score[b2, c2, d1] = 3*(5+9) + 2*(5+6) + 3*(9+6) = 109 
 	    	
