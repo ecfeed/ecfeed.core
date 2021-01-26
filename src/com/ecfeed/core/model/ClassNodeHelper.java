@@ -85,7 +85,8 @@ public class ClassNodeHelper {
 							methodNameInExtLanguage,
 							parameterTypesInExtLanguage,
 							null,
-							null);
+							null,
+							extLanguageManager);
 
 
 			String classSignature = createSignature(classNode, extLanguageManager);

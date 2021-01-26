@@ -196,13 +196,14 @@ public class MethodNodeHelper {
 			String methodName,
 			List<String> parameterTypes,
 			List<String> parameterNames,
-			List<Boolean> expectedFlags) {
+			List<Boolean> expectedFlags,
+			IExtLanguageManager extLanguageManager) {
 
 		String signature = new String(methodName) + "(";
 
 		String signaturesOfParameters =
 				createSignaturesOfParameters(
-						parameterTypes, parameterNames, expectedFlags);
+						parameterTypes, parameterNames, expectedFlags, extLanguageManager);
 
 		signature += signaturesOfParameters;
 
@@ -214,7 +215,8 @@ public class MethodNodeHelper {
 	private static String createSignaturesOfParameters(
 			List<String> parameterTypes,
 			List<String> parameterNames,
-			List<Boolean> expectedFlags) {
+			List<Boolean> expectedFlags,
+			IExtLanguageManager extLanguageManager) {
 
 		String signature = "";
 
@@ -226,7 +228,7 @@ public class MethodNodeHelper {
 
 			String signatureOfOneParameter =
 					AbstractParameterNodeHelper.createSignature(
-							parameterType, parameterName, expectedFlag);
+							parameterType, parameterName, expectedFlag, extLanguageManager);
 
 			signature += signatureOfOneParameter;
 

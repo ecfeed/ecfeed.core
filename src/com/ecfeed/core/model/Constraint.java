@@ -15,6 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.*;
 
 public class Constraint implements IConstraint<ChoiceNode> {
@@ -69,7 +72,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public String checkIntegrity(IExtLanguageManager extLanguageManager) {
 
 		if (fConstraintType == ConstraintType.EXTENDED_FILTER) {
-			return null;
+			return checkExtendedFilterConstraint(extLanguageManager);
 		}
 
 		if (fConstraintType == ConstraintType.BASIC_FILTER) {
@@ -87,7 +90,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	private String checkAssignmentConstraint(IExtLanguageManager extLanguageManager) {
 
 		AbstractStatement precondition = getPrecondition();
-		String errorMessage = checkStatementOfPreconditionOfAssignmentConstraint(precondition, extLanguageManager);
+		String errorMessage = checkFilteringStatement(precondition, extLanguageManager);
 
 		if (errorMessage != null) {
 			return errorMessage;
@@ -96,7 +99,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return checkPostconditionOfAssignmentConstraint(extLanguageManager);
 	}
 
-	private String checkStatementOfPreconditionOfAssignmentConstraint(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
+	private String checkFilteringStatement(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
 
 		if (abstractStatement instanceof StaticStatement) {
 			return null;
@@ -105,9 +108,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		if (abstractStatement instanceof ExpectedValueStatement) {
 			return "Expected value statement is not allowed in this version of software.";
 		}
+		
+		String errorMessage = checkIfStatementValueIsAdaptable(abstractStatement, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
 
 		if (abstractStatement instanceof RelationStatement) {
-			return null;
+			return checkFilteringRelationStatement(abstractStatement);
 		}
 
 		if (abstractStatement instanceof StatementArray) {
@@ -117,11 +126,56 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			List<AbstractStatement> statements = statementArray.getStatements();
 
 			for (AbstractStatement childAbstractStatement : statements) {
-				checkStatementOfPreconditionOfAssignmentConstraint(childAbstractStatement, extLanguageManager);
+				
+				errorMessage = 
+						checkFilteringStatement(
+								childAbstractStatement, extLanguageManager);
+				
+				if (errorMessage != null) {
+					return errorMessage;
+				}
 			}
 		}
 
-		return "Invalid type of precondition of assignment constraint.";
+		return null;
+	}
+
+	public String checkFilteringRelationStatement(AbstractStatement abstractStatement) {
+		
+		RelationStatement relationStatement = (RelationStatement)abstractStatement;
+		
+		EMathRelation mathRelation = relationStatement.getRelation();
+		
+		if (mathRelation == EMathRelation.ASSIGN) {
+			return "Assignment is not allowed in filtering statement.";
+		}
+		
+		String errorMessage = checkParameterTypes(relationStatement);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+				
+		return null;
+	}
+
+	private String checkParameterTypes(RelationStatement relationStatement) {
+		
+		IStatementCondition statementCondition = relationStatement.getCondition();
+		
+		if (!(statementCondition instanceof ParameterCondition)) {
+			return null;
+		}
+		
+		ParameterCondition parameterCondition = (ParameterCondition)statementCondition;
+		
+		String rightParameterType = parameterCondition.getRightParameterNode().getType();
+		
+		if (!relationStatement.isRightParameterTypeAllowed(rightParameterType)) {
+			return "Parameter type mismatch.";
+		}
+				
+		return null;
 	}
 
 	private String checkPostconditionOfAssignmentConstraint(IExtLanguageManager extLanguageManager) {
@@ -170,6 +224,27 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return null;
 	}
 
+	public String checkExtendedFilterConstraint(IExtLanguageManager extLanguageManager) {
+
+		AbstractStatement precondition = getPrecondition();
+
+		String errorMessage = checkFilteringStatement(precondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		AbstractStatement postcondition = getPostcondition();
+		
+		errorMessage = checkFilteringStatement(postcondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		return null;
+	}
+	
 	public String checkBasicFilterConstraint(IExtLanguageManager extLanguageManager) {
 
 		AbstractStatement precondition = getPrecondition();
@@ -182,6 +257,57 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		if (staticStatement.getValue() != EvaluationResult.TRUE) {
 			return "Precondition has an invalid value.";
+		}
+		
+		AbstractStatement postcondition = getPostcondition();
+		
+		String errorMessage = checkFilteringStatement(postcondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		return null;
+	}
+	
+	private String checkIfStatementValueIsAdaptable(
+			AbstractStatement abstractStatement,
+			IExtLanguageManager extLanguageManager) {
+		
+		if (!(abstractStatement instanceof RelationStatement)) {
+			return null;
+		}
+		
+		RelationStatement relationStatement = (RelationStatement)abstractStatement;
+		
+		String leftParameterType = relationStatement.getLeftParameter().getType();
+		
+		if (leftParameterType == null) {
+			return null;
+		}
+		
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(leftParameterType);
+		
+		IStatementCondition statementCondition = relationStatement.getCondition();
+		
+		if (!(statementCondition instanceof ValueCondition)) {
+			return null;
+		}
+				
+		ValueCondition valueCondition = (ValueCondition)statementCondition;
+		
+		String value = valueCondition.getRightValue();
+		
+		try {
+			typeAdapter.adapt(
+					value, 
+					false, 
+					ERunMode.WITH_EXCEPTION,
+					extLanguageManager);
+			
+		} catch (RuntimeException ex) {
+			return "Incompatible types. " + ex.getMessage();
 		}
 		
 		return null;

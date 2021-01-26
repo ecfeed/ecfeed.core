@@ -16,7 +16,7 @@ public enum ConstraintType {
 
 	EXTENDED_FILTER("EF", "Implication"),
 	BASIC_FILTER("BF",  "Invariant"),
-	ASSIGNMENT("AS",  "Expected output");
+	ASSIGNMENT("AS",  "Expected output assignment");
 
 	private final String fDescription;
 	private final String fCode;

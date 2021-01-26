@@ -37,7 +37,7 @@ public class ConstraintNodeHelperTest {
 		assertEquals("c_1: false => false", signature);
 
 		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
-		assertEquals("c 1: false => false", signature);
+		assertEquals("c_1: false => false", signature);
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class ConstraintNodeHelperTest {
 		assertEquals("co_1: par_1=A => par_2=C", signature);
 
 		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
-		assertEquals("co 1: par 1=A => par 2=C", signature);
+		assertEquals("co_1: par 1=A => par 2=C", signature);
 	}
 
 	@Test

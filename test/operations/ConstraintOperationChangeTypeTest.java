@@ -423,7 +423,7 @@ public class ConstraintOperationChangeTypeTest {
 	}
 
 	@Test
-	public void changeAssignmentToExtendedFilterTest() {
+	public void changeAssignment1ToExtendedFilterTest() {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -441,8 +441,75 @@ public class ConstraintOperationChangeTypeTest {
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
 		methodParameterNode2.addChoice(choiceNode2);
 
+		// precondition as relation statement
+
 		RelationStatement initialPrecondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1);
+
+		StatementArray initialPostcondition =
+				new StatementArray(StatementArrayOperator.ASSIGN, null);
+
+		Constraint constraint =
+				new Constraint("constraint", ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition, null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
+
+		// executing operation
+
+		IModelOperation changeTypeOperation =
+				new ConstraintOperationChangeType(
+						constraintNode,
+						ConstraintType.EXTENDED_FILTER,
+						new ExtLanguageManagerForJava());
+
+		try {
+			changeTypeOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		StaticStatement staticTrueStatement = new StaticStatement(true, null);
+
+		checkConstraint(constraintNode, ConstraintType.EXTENDED_FILTER, initialPrecondition, staticTrueStatement);
+
+		// reverse operation
+
+		IModelOperation reverseOperation = changeTypeOperation.getReverseOperation();
+
+		try {
+			reverseOperation.execute();
+		} catch (Exception e) {
+			fail();
+		}
+
+		checkConstraint(constraintNode, ConstraintType.ASSIGNMENT, initialPrecondition, initialPostcondition);
+	}
+
+	@Test
+	public void changeAssignment2ToExtendedFilterTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		MethodParameterNode methodParameterNode1 =
+				new MethodParameterNode("par1", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
+		methodParameterNode1.addChoice(choiceNode1);
+
+		MethodParameterNode methodParameterNode2 =
+				new MethodParameterNode("par2", "int", "0", false, null);
+		methodNode.addParameter(methodParameterNode2);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
+		methodParameterNode2.addChoice(choiceNode2);
+
+		// precondition as statement array
+
+		StatementArray initialPrecondition = new StatementArray(StatementArrayOperator.AND, null);
+
+		initialPrecondition.addStatement(
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode1));
 
 		StatementArray initialPostcondition =
 				new StatementArray(StatementArrayOperator.ASSIGN, null);

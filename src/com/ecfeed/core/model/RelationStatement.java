@@ -55,6 +55,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
 		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement);
+
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
@@ -258,6 +259,18 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public void setCondition(IStatementCondition condition) {
+
+		if (condition instanceof ParameterCondition) {
+
+			ParameterCondition parameterCondition = (ParameterCondition)condition;
+
+			MethodParameterNode rightParameter = parameterCondition.getRightParameterNode();
+
+			if (!isRightParameterTypeAllowed(rightParameter.getType())) {
+				ExceptionHelper.reportRuntimeException("Invalid type of right parameter in relation statement.");
+			}
+		}
+
 		fRightCondition = condition;
 	}
 
@@ -294,5 +307,48 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.getListOfChoices();
 	}
 
+	public boolean isRightParameterTypeAllowed(String rightParameterType) {
+
+		MethodParameterNode leftParameter = getLeftParameter();
+		String leftParameterType =  leftParameter.getType();
+		
+		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+			
+			return false;
+		}
+		
+		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
+				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
+				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
+				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
+				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+			
+			return false;
+		}
+		
+		return true;
+	}
 }
 

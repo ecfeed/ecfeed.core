@@ -16,7 +16,8 @@ public class QualifiedNameHelper {
 	public static final String PACKAGE_CLASS_SEPARATOR = ".";
 
 	public static String getPackage(String packageWithClass) {
-		return StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);		
+		String result = StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);	
+		return result == null ? "" : result;		
 	}
 
 	public static String getNonQualifiedName(String qualifiedName) {
