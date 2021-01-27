@@ -14,7 +14,7 @@ import com.ecfeed.core.model.*;
 import com.ecfeed.core.operations.MethodParameterOperationSetType;
 import com.ecfeed.core.operations.RootOperationAddClass;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
@@ -53,7 +53,7 @@ public class MethodParameterOperationSetTypeTest {
 
 		methodNode2.addParameter(methodParameterNode2);
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
 
 		// set param of method2 to Number
 
@@ -133,7 +133,7 @@ public class MethodParameterOperationSetTypeTest {
 		methodNode1.addParameter(methodParameterNode1);
 
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
 
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
@@ -188,7 +188,7 @@ public class MethodParameterOperationSetTypeTest {
 
 
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
 		// set param22 to Logical
@@ -261,7 +261,7 @@ public class MethodParameterOperationSetTypeTest {
 
 		methodNode2.addParameter(methodParameterNode2);
 
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProvider();
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
 		// set param of method2 to int
