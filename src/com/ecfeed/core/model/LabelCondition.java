@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public class LabelCondition implements IStatementCondition {
@@ -76,6 +77,13 @@ public class LabelCondition implements IStatementCondition {
 
 	@Override
 	public String toString() {
+
+		return StatementConditionHelper.createLabelDescription(fRightLabel);
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
 		return StatementConditionHelper.createLabelDescription(fRightLabel);
 	}
 
@@ -113,7 +121,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 		return false;
 	}
 

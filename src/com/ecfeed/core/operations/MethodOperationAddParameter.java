@@ -13,65 +13,96 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	List<TestCaseNode> fRemovedTestCases;
-	MethodNode fTarget;
-	MethodParameterNode fParameter;
+	MethodNode fMethodNode;
+	MethodParameterNode fMethodParameterNode;
 	private int fNewIndex;
 
-	private class MethodReverseOperation extends ReverseOperation{
+	public MethodOperationAddParameter(
+			MethodNode methodNode, 
+			MethodParameterNode methodParameterNode, 
+			int index,
+			IExtLanguageManager extLanguageManager) {
 
-		public MethodReverseOperation() {
-			super(fTarget, fParameter);
-		}
+		super(methodNode, methodParameterNode, index, true, extLanguageManager);
 
-		@Override
-		public void execute() throws ModelOperationException {
-			fTarget.replaceTestCases(fRemovedTestCases);
-			super.execute();
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new MethodOperationAddParameter(fTarget, fParameter);
-		}
-
+		fRemovedTestCases = new ArrayList<TestCaseNode>(methodNode.getTestCases());
+		fMethodNode = methodNode;
+		fMethodParameterNode = methodParameterNode;
+		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, int index) {
-		super(target, parameter, index, true);
-		fRemovedTestCases = new ArrayList<TestCaseNode>(target.getTestCases());
-		fTarget = target;
-		fParameter = parameter;
-		fNewIndex = index != -1 ? index : target.getParameters().size();
-	}
-
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter) {
-		this(target, parameter, -1);
+	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		this(target, parameter, -1, extLanguageManager);
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
-		List<String> types = fTarget.getParameterTypes();
-		types.add(fNewIndex, fParameter.getType());
-		if(fTarget.getClassNode() != null && fTarget.getClassNode().getMethod(fTarget.getFullName(), types) != null){
-			String methodName =  fTarget.getClassNode().getMethod(fTarget.getFullName(), types).getFullName();
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(fTarget.getClassNode(), methodName));
+	public void execute() {
+
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
+
+		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
+
+		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguageManager);
+
+		paremeterTypesInExtLanguage.add(fNewIndex, newParameterType);
+
+		ClassNode parentClassNode = fMethodNode.getClassNode();
+
+		if (parentClassNode != null) { 
+
+			String methodNameInExtLanguage = MethodNodeHelper.getName(fMethodNode, extLanguageManager);
+
+			MethodNode foundMethodNode = 
+					ClassNodeHelper.findMethodByExtLanguage(
+							parentClassNode, methodNameInExtLanguage, paremeterTypesInExtLanguage, extLanguageManager);
+
+			if (foundMethodNode != null) {
+
+				ExceptionHelper.reportRuntimeException(
+						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+								parentClassNode, foundMethodNode, false, extLanguageManager));
+			}
 		}
-		fTarget.removeTestCases();
+
+		fMethodNode.removeTestCases();
 		super.execute();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodReverseOperation();
+		return new MethodReverseOperation(getExtLanguageManager());
+	}
+
+	private class MethodReverseOperation extends ReverseOperation{
+
+		public MethodReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(fMethodNode, fMethodParameterNode, extLanguageManager);
+		}
+
+		@Override
+		public void execute() {
+			fMethodNode.replaceTestCases(fRemovedTestCases);
+			super.execute();
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new MethodOperationAddParameter(fMethodNode, fMethodParameterNode, getExtLanguageManager());
+		}
+
 	}
 
 }

@@ -11,14 +11,14 @@
 package com.ecfeed.core.model;
 
 public class ModelVersionDistributor {
-	
+
 	public static int getCurrentSoftwareVersion() {
-		
-		return 3;
+
+		return 4;
 	}
 
 	public static boolean isAndroidAttributeInTheClass(int version) {
-		
+
 		if (version < 2) {
 			return true;
 		}

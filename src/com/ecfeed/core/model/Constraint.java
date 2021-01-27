@@ -15,30 +15,37 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.*;
 
 public class Constraint implements IConstraint<ChoiceNode> {
 
 	private String fName;
+	private ConstraintType fConstraintType;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
-	private AbstractStatement fPremise;
-	private AbstractStatement fConsequence;
+	private AbstractStatement fPrecondition;
+	private AbstractStatement fPostcondition;
 
 
-	public Constraint(String name,
-			IModelChangeRegistrator modelChangeRegistrator,
-			AbstractStatement premise, 
-			AbstractStatement consequence) {
+	public Constraint(
+			String name,
+			ConstraintType constraintType,
+			AbstractStatement precondition,
+			AbstractStatement postcondition,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
 		if (name == null) {
 			fName = "constraint";
 		}
 
 		fName = name;
+		fConstraintType = constraintType;
+		fPrecondition = precondition;
+		fPostcondition = postcondition;
+
 		fModelChangeRegistrator = modelChangeRegistrator;
-		fPremise = premise;
-		fConsequence = consequence;
 	}
 
 	public String getName() {
@@ -49,27 +56,293 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fName = name;
 	}	
 
+	public ConstraintType getType() {
+		return fConstraintType;
+	}
+
+	public void setType(ConstraintType constraintType) {
+		fConstraintType = constraintType;
+	}
+
+	public IModelChangeRegistrator getModelChangeRegistrator() {
+
+		return fModelChangeRegistrator;
+	}
+
+	public String checkIntegrity(IExtLanguageManager extLanguageManager) {
+
+		if (fConstraintType == ConstraintType.EXTENDED_FILTER) {
+			return checkExtendedFilterConstraint(extLanguageManager);
+		}
+
+		if (fConstraintType == ConstraintType.BASIC_FILTER) {
+			return checkBasicFilterConstraint(extLanguageManager);
+		}
+
+		if (fConstraintType == ConstraintType.ASSIGNMENT) {
+			return checkAssignmentConstraint(extLanguageManager);
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid constraint type.");
+		return null;
+	}
+
+	private String checkAssignmentConstraint(IExtLanguageManager extLanguageManager) {
+
+		AbstractStatement precondition = getPrecondition();
+		String errorMessage = checkFilteringStatement(precondition, extLanguageManager);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		return checkPostconditionOfAssignmentConstraint(extLanguageManager);
+	}
+
+	private String checkFilteringStatement(AbstractStatement abstractStatement, IExtLanguageManager extLanguageManager) {
+
+		if (abstractStatement instanceof StaticStatement) {
+			return null;
+		}
+
+		if (abstractStatement instanceof ExpectedValueStatement) {
+			return "Expected value statement is not allowed in this version of software.";
+		}
+		
+		String errorMessage = checkIfStatementValueIsAdaptable(abstractStatement, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		if (abstractStatement instanceof RelationStatement) {
+			return checkFilteringRelationStatement(abstractStatement);
+		}
+
+		if (abstractStatement instanceof StatementArray) {
+
+			StatementArray statementArray = (StatementArray)abstractStatement;
+
+			List<AbstractStatement> statements = statementArray.getStatements();
+
+			for (AbstractStatement childAbstractStatement : statements) {
+				
+				errorMessage = 
+						checkFilteringStatement(
+								childAbstractStatement, extLanguageManager);
+				
+				if (errorMessage != null) {
+					return errorMessage;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public String checkFilteringRelationStatement(AbstractStatement abstractStatement) {
+		
+		RelationStatement relationStatement = (RelationStatement)abstractStatement;
+		
+		EMathRelation mathRelation = relationStatement.getRelation();
+		
+		if (mathRelation == EMathRelation.ASSIGN) {
+			return "Assignment is not allowed in filtering statement.";
+		}
+		
+		String errorMessage = checkParameterTypes(relationStatement);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+				
+		return null;
+	}
+
+	private String checkParameterTypes(RelationStatement relationStatement) {
+		
+		IStatementCondition statementCondition = relationStatement.getCondition();
+		
+		if (!(statementCondition instanceof ParameterCondition)) {
+			return null;
+		}
+		
+		ParameterCondition parameterCondition = (ParameterCondition)statementCondition;
+		
+		String rightParameterType = parameterCondition.getRightParameterNode().getType();
+		
+		if (!relationStatement.isRightParameterTypeAllowed(rightParameterType)) {
+			return "Parameter type mismatch.";
+		}
+				
+		return null;
+	}
+
+	private String checkPostconditionOfAssignmentConstraint(IExtLanguageManager extLanguageManager) {
+
+		AbstractStatement postcondition = getPostcondition();
+
+		if (postcondition instanceof StaticStatement) {
+			return null;
+		}
+
+		if (postcondition instanceof StatementArray) {
+			return checkAssignmentStatementArray(postcondition, extLanguageManager);
+		}
+
+		return "Expected output constraint has postcondition of invalid type.";
+	}
+
+	private String checkAssignmentStatementArray(AbstractStatement postcondition, IExtLanguageManager extLanguageManager) {
+
+		StatementArray statementArray = (StatementArray)postcondition;
+
+		StatementArrayOperator statementArrayOperator = statementArray.getOperator();
+
+		if (statementArrayOperator != StatementArrayOperator.ASSIGN) {
+			return "Expected output statement has operator of invalid type.";
+		}
+
+		List<AbstractStatement> abstractStatements = statementArray.getStatements();
+
+		for (AbstractStatement abstractStatement : abstractStatements )  {
+
+			if (!(abstractStatement instanceof AssignmentStatement)) {
+				return "Expected output constraint has postcondition with statement of invalid type.";
+			}
+
+			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+
+			MethodParameterNode leftParameterNode = assignmentStatement.getLeftParameter();
+
+			if (!leftParameterNode.isExpected()) {
+				return ("Left parameter should of assignment: " + assignmentStatement.createSignature(extLanguageManager) + " should be expected.");
+			}
+
+		}
+
+		return null;
+	}
+
+	public String checkExtendedFilterConstraint(IExtLanguageManager extLanguageManager) {
+
+		AbstractStatement precondition = getPrecondition();
+
+		String errorMessage = checkFilteringStatement(precondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		AbstractStatement postcondition = getPostcondition();
+		
+		errorMessage = checkFilteringStatement(postcondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		return null;
+	}
+	
+	public String checkBasicFilterConstraint(IExtLanguageManager extLanguageManager) {
+
+		AbstractStatement precondition = getPrecondition();
+
+		if (!(precondition instanceof StaticStatement))  {
+			return "Invariant constraint has precondition of a wrong type.";
+		}
+
+		StaticStatement staticStatement = (StaticStatement)precondition;
+
+		if (staticStatement.getValue() != EvaluationResult.TRUE) {
+			return "Precondition has an invalid value.";
+		}
+		
+		AbstractStatement postcondition = getPostcondition();
+		
+		String errorMessage = checkFilteringStatement(postcondition, extLanguageManager);
+		
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+		
+		return null;
+	}
+	
+	private String checkIfStatementValueIsAdaptable(
+			AbstractStatement abstractStatement,
+			IExtLanguageManager extLanguageManager) {
+		
+		if (!(abstractStatement instanceof RelationStatement)) {
+			return null;
+		}
+		
+		RelationStatement relationStatement = (RelationStatement)abstractStatement;
+		
+		String leftParameterType = relationStatement.getLeftParameter().getType();
+		
+		if (leftParameterType == null) {
+			return null;
+		}
+		
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(leftParameterType);
+		
+		IStatementCondition statementCondition = relationStatement.getCondition();
+		
+		if (!(statementCondition instanceof ValueCondition)) {
+			return null;
+		}
+				
+		ValueCondition valueCondition = (ValueCondition)statementCondition;
+		
+		String value = valueCondition.getRightValue();
+		
+		try {
+			typeAdapter.adapt(
+					value, 
+					false, 
+					ERunMode.WITH_EXCEPTION,
+					extLanguageManager);
+			
+		} catch (RuntimeException ex) {
+			return "Incompatible types. " + ex.getMessage();
+		}
+		
+		return null;
+	}
+
+	public void assertIsCorrect(IExtLanguageManager extLanguageManager) {
+
+		String errorMessage = checkIntegrity(extLanguageManager);
+
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+		}
+	}
+
 	public boolean isAmbiguous(
 			List<List<ChoiceNode>> testDomain, 
-			MessageStack outWhyAmbiguous) {
-		
-		if (isAmbiguousForPremiseOrConsequence(testDomain, outWhyAmbiguous)) {
+			MessageStack outWhyAmbiguous, 
+			IExtLanguageManager extLanguageManager) {
+
+		if (isAmbiguousForPreconditionOrPostcondition(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			ConditionHelper.addConstraintNameToMesageStack(getName(), outWhyAmbiguous);
 			return true;
 		}
 
 		return false;
-
 	}
 
-	private boolean isAmbiguousForPremiseOrConsequence(
-			List<List<ChoiceNode>> testDomain, MessageStack outWhyAmbiguous) {
+	private boolean isAmbiguousForPreconditionOrPostcondition(
+			List<List<ChoiceNode>> testDomain, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager) {
 
-		if (fPremise.isAmbiguous(testDomain, outWhyAmbiguous)) {
+		if (fPrecondition.isAmbiguous(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			return true;
 		}
 
-		if (fConsequence.isAmbiguous(testDomain, outWhyAmbiguous)) {
+		if (fPostcondition.isAmbiguous(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			return true;
 		}
 
@@ -79,31 +352,35 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
 
-		if (fPremise == null) { 
+		if (fConstraintType == ConstraintType.ASSIGNMENT) {
 			return EvaluationResult.TRUE;
 		}
 
-		EvaluationResult premiseEvaluationResult = fPremise.evaluate(values); 
-
-		if (premiseEvaluationResult == EvaluationResult.FALSE) {
+		if (fPrecondition == null) { 
 			return EvaluationResult.TRUE;
 		}
 
-		if (premiseEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+		EvaluationResult preconditionEvaluationResult = fPrecondition.evaluate(values);
+
+		if (preconditionEvaluationResult == EvaluationResult.FALSE) {
+			return EvaluationResult.TRUE;
+		}
+
+		if (preconditionEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
-		if (fConsequence == null) {
+		if (fPostcondition == null) {
 			return EvaluationResult.FALSE;
 		}
 
-		EvaluationResult consequenceEvaluationResult = fConsequence.evaluate(values);
+		EvaluationResult postconditionEvaluationResult = fPostcondition.evaluate(values);
 
-		if (consequenceEvaluationResult == EvaluationResult.TRUE) {
+		if (postconditionEvaluationResult == EvaluationResult.TRUE) {
 			return EvaluationResult.TRUE;
 		}
 
-		if (consequenceEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
+		if (postconditionEvaluationResult == EvaluationResult.INSUFFICIENT_DATA) {
 			return EvaluationResult.INSUFFICIENT_DATA;
 		}
 
@@ -111,14 +388,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@Override
-	public boolean adapt(List<ChoiceNode> values) {
+	public boolean setExpectedValues(List<ChoiceNode> testCaseNodes) {
 
-		if (fPremise == null) {
+		if (fPrecondition == null) {
 			return true;
 		}
 
-		if (fPremise.evaluate(values) == EvaluationResult.TRUE) {
-			return fConsequence.adapt(values);
+		if (fPrecondition.evaluate(testCaseNodes) == EvaluationResult.TRUE) {
+			return fPostcondition.setExpectedValues(testCaseNodes);
 		}
 
 		return true;
@@ -127,48 +404,58 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public String toString() {
 
-		String premiseString = (fPremise != null) ? fPremise.toString() : "EMPTY";
-		String consequenceString = (fConsequence != null) ? fConsequence.toString() : "EMPTY";
+		return createSignature(new ExtLanguageManagerForJava());
+	}
 
-		return premiseString + " \u21d2 " + consequenceString;
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
+
+		if (fConstraintType == ConstraintType.BASIC_FILTER) {
+			return postconditionSignature;
+		}
+
+		String preconditionSignature = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
+
+		return preconditionSignature + " => " + postconditionSignature;
 	}
 
 	@Override
 	public boolean mentions(int dimension) {
 
-		if (fPremise.mentions(dimension)) {
+		if (fPrecondition.mentions(dimension)) {
 			return true;
 		}
 
-		if (fConsequence.mentions(dimension)) {
+		if (fPostcondition.mentions(dimension)) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public AbstractStatement getPremise() {
+	public AbstractStatement getPrecondition() {
 
-		return fPremise;
+		return fPrecondition;
 	}
 
-	public AbstractStatement getConsequence() {
+	public AbstractStatement getPostcondition() {
 
-		return fConsequence;
+		return fPostcondition;
 	}
 
-	public void setPremise(AbstractStatement statement) {
+	public void setPrecondition(AbstractStatement statement) {
 
-		fPremise = statement;
+		fPrecondition = statement;
 
 		if (fModelChangeRegistrator != null) {
 			fModelChangeRegistrator.registerChange();
 		}
 	}
 
-	public void setConsequence(AbstractStatement consequence) {
+	public void setPostcondition(AbstractStatement postcondition) {
 
-		fConsequence = consequence;
+		fPostcondition = postcondition;
 
 		if (fModelChangeRegistrator != null) {
 			fModelChangeRegistrator.registerChange();
@@ -177,64 +464,65 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public boolean mentions(MethodParameterNode parameter) {
 
-		return fPremise.mentions(parameter) || fConsequence.mentions(parameter);
+		return fPrecondition.mentions(parameter) || fPostcondition.mentions(parameter);
 	}
 
 	public boolean mentions(MethodParameterNode parameter, String label) {
 
-		return fPremise.mentions(parameter, label) || fConsequence.mentions(parameter, label);
+		return fPrecondition.mentions(parameter, label) || fPostcondition.mentions(parameter, label);
 	}
 
 	public boolean mentions(ChoiceNode choice) {
 
-		return fPremise.mentions(choice) || fConsequence.mentions(choice);
+		return fPrecondition.mentions(choice) || fPostcondition.mentions(choice);
 	}
 
-	public List<ChoiceNode> getListOfChoices() { // TODO - remove ? exists: getReferencedChoices
-		
+	public List<ChoiceNode> getListOfChoices() {
+
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
-		result.addAll(fPremise.getListOfChoices());
-		result.addAll(fConsequence.getListOfChoices());
-		
+
+		result.addAll(fPrecondition.getListOfChoices());
+		result.addAll(fPostcondition.getListOfChoices());
+
 		return result;
 	}
 
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 
-		if (fPremise.mentionsParameterAndOrderRelation(parameter)) {
+		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {
 			return true;
 		}
 
-		if (fConsequence.mentionsParameterAndOrderRelation(parameter)) {
+		if (fPostcondition.mentionsParameterAndOrderRelation(parameter)) {
 			return true;
 		}
 
 		return false;
-	}
-
-	public Constraint getCopy(){
-
-		AbstractStatement premise = fPremise.getCopy();
-		AbstractStatement consequence = fConsequence.getCopy();
-
-		return new Constraint(new String(fName), fModelChangeRegistrator, premise, consequence);
 	}
 
 	public boolean updateReferences(MethodNode method) {
 
-		if (fPremise.updateReferences(method) && fConsequence.updateReferences(method)) {
+		if (fPrecondition.updateReferences(method) && fPostcondition.updateReferences(method)) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public Constraint makeClone() {
+
+		AbstractStatement precondition = fPrecondition.makeClone();
+		AbstractStatement postcondition = fPostcondition.makeClone();
+
+		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Set<ChoiceNode> getReferencedChoices() {
 
 		try {
-			Set<ChoiceNode> referenced = (Set<ChoiceNode>)fPremise.accept(new ReferencedChoicesProvider());
-			referenced.addAll((Set<ChoiceNode>)fConsequence.accept(new ReferencedChoicesProvider()));
+			Set<ChoiceNode> referenced = (Set<ChoiceNode>)fPrecondition.accept(new ReferencedChoicesProvider());
+			referenced.addAll((Set<ChoiceNode>)fPostcondition.accept(new ReferencedChoicesProvider()));
 
 			return referenced;
 		} catch(Exception e) {
@@ -247,10 +535,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		try{
 			Set<AbstractParameterNode> referenced = 
-					(Set<AbstractParameterNode>)fPremise.accept(new ReferencedParametersProvider());
+					(Set<AbstractParameterNode>)fPrecondition.accept(new ReferencedParametersProvider());
 
 			referenced.addAll(
-					(Set<AbstractParameterNode>)fConsequence.accept(new ReferencedParametersProvider()));
+					(Set<AbstractParameterNode>)fPostcondition.accept(new ReferencedParametersProvider()));
 
 			return referenced;
 		} catch(Exception e) {
@@ -262,8 +550,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public Set<String> getReferencedLabels(MethodParameterNode parameter) {
 
 		try {
-			Set<String> referenced = (Set<String>)fPremise.accept(new ReferencedLabelsProvider(parameter));
-			referenced.addAll((Set<String>)fConsequence.accept(new ReferencedLabelsProvider(parameter)));
+			Set<String> referenced = (Set<String>)fPrecondition.accept(new ReferencedLabelsProvider(parameter));
+			referenced.addAll((Set<String>)fPostcondition.accept(new ReferencedLabelsProvider(parameter)));
 
 			return referenced;
 		} catch(Exception e) {
@@ -273,11 +561,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	boolean mentionsParameter(MethodParameterNode methodParameter) {
 
-		if (fPremise.mentions(methodParameter)) {
+		if (fPrecondition.mentions(methodParameter)) {
 			return true;
 		}
 
-		if (fConsequence.mentions(methodParameter)) {
+		if (fPostcondition.mentions(methodParameter)) {
 			return true;
 		}
 

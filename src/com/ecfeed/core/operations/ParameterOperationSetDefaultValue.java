@@ -11,9 +11,10 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 
@@ -22,8 +23,8 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 	private String fNewValue;
 	private String fOriginalValue;
 
-	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter) {
-		super(OperationNames.SET_DEFAULT_VALUE);
+	public ParameterOperationSetDefaultValue(MethodParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.SET_DEFAULT_VALUE, extLanguageManager);
 		fTarget = target;
 		fNewValue = newValue;
 		fOriginalValue = target.getDefaultValue();
@@ -31,10 +32,10 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
-		String convertedValue = fTypeAdapter.convert(fNewValue, false, ERunMode.QUIET);
+	public void execute() {
+		String convertedValue = fTypeAdapter.adapt(fNewValue, false, ERunMode.QUIET, getExtLanguageManager());
 		if(convertedValue == null){
-			ModelOperationException.report(OperationMessages.CATEGORY_DEFAULT_VALUE_REGEX_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.CATEGORY_DEFAULT_VALUE_REGEX_PROBLEM);
 		}
 
 		fTarget.setDefaultValueString(convertedValue);
@@ -43,7 +44,7 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter);
+		return new ParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter, getExtLanguageManager());
 	}
 
 }

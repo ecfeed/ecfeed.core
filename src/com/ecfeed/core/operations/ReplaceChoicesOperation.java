@@ -16,32 +16,34 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ReplaceChoicesOperation extends BulkOperation {
 
 	public ReplaceChoicesOperation(
-			AbstractParameterNode target, 
+			AbstractParameterNode abstractParameterNode, 
 			List<ChoiceNode> choices, 
-			ITypeAdapterProvider adapterProvider) {
+			ITypeAdapterProvider adapterProvider,
+			IExtLanguageManager extLanguageManager) {
 
-		super("Replace choices", true, target, target);
+		super("Replace choices", true, abstractParameterNode, abstractParameterNode, extLanguageManager);
 
 		List<ChoiceNode> skipped = new ArrayList<ChoiceNode>();
 
 		for (ChoiceNode choice : choices) {
-			if (target.getChoiceNames().contains(choice.getFullName())) {
+			if (abstractParameterNode.getChoiceNames().contains(choice.getName())) {
 				skipped.add(choice);
 			} else {
-				addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true));
+				addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguageManager));
 			}
 		}
 
 		addOperation(
 				new GenericRemoveNodesOperation(
-						target.getChoices(), adapterProvider, true, target, target));
+						abstractParameterNode.getChoices(), adapterProvider, true, abstractParameterNode, abstractParameterNode, extLanguageManager));
 
 		for(ChoiceNode choice : skipped){
-			addOperation(new GenericOperationAddChoice(target, choice, adapterProvider, true));
+			addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguageManager));
 		}
 	}
 

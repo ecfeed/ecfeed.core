@@ -116,7 +116,7 @@ IImplementationStatusResolver {
 	}
 
 	protected EImplementationStatus implementationStatus(ClassNode classNode) throws EcException {
-		if(!classDefinitionImplemented(classNode.getFullName())){
+		if(!classDefinitionImplemented(classNode.getName())){
 			return EImplementationStatus.NOT_IMPLEMENTED;
 		}
 

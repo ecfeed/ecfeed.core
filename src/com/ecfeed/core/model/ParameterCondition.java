@@ -13,12 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.RangeHelper;
-import com.ecfeed.core.utils.RelationMatcher;
+import com.ecfeed.core.utils.*;
 
 
 public class ParameterCondition implements IStatementCondition {
@@ -26,7 +21,9 @@ public class ParameterCondition implements IStatementCondition {
 	private MethodParameterNode fRightParameterNode;
 	private RelationStatement fParentRelationStatement;
 
-	public ParameterCondition(MethodParameterNode rightParameter, RelationStatement parentRelationStatement) {
+	public ParameterCondition(
+			MethodParameterNode rightParameter, 
+			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
 		fParentRelationStatement = parentRelationStatement;
@@ -44,7 +41,7 @@ public class ParameterCondition implements IStatementCondition {
 		}
 
 		String substituteType = 
-				JavaTypeHelper.getSubstituteType(
+				JavaLanguageHelper.getSubstituteType(
 						fParentRelationStatement.getLeftParameter().getType(), fRightParameterNode.getType());
 
 		return evaluateForLeftAndRightString(choices, substituteType);
@@ -65,7 +62,7 @@ public class ParameterCondition implements IStatementCondition {
 
 		ChoiceNode leftChoiceNode = getChoiceNode(choices, methodParameterNode);
 
-		if (JavaTypeHelper.isStringTypeName(methodParameterNode.getType())
+		if (JavaLanguageHelper.isStringTypeName(methodParameterNode.getType())
 				&& leftChoiceNode.isRandomizedValue()) {
 
 			return true;
@@ -103,7 +100,7 @@ public class ParameterCondition implements IStatementCondition {
 	private EvaluationResult evaluateForRandomizedChoice(
 			String leftChoiceStr, String rightChoiceStr, EMathRelation relation, String substituteType) {
 
-		if (JavaTypeHelper.isStringTypeName(substituteType)) {
+		if (JavaLanguageHelper.isStringTypeName(substituteType)) {
 
 			return EvaluationResult.TRUE;
 
@@ -158,7 +155,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fRightParameterNode.getFullName());
+		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fRightParameterNode.getName());
 		if (tmpParameterNode == null) {
 			return false;
 		}
@@ -202,7 +199,15 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getFullName());
+		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getName());
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		return StatementConditionHelper.createParameterDescription(
+				MethodParameterNodeHelper.getName(fRightParameterNode, extLanguageManager));
+
 	}
 
 	@Override
@@ -221,7 +226,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);
 
@@ -234,7 +239,7 @@ public class ParameterCondition implements IStatementCondition {
 		EMathRelation relation = fParentRelationStatement.getRelation();
 
 		return isAmbiguousForLeftAndRightChoices(
-				leftChoices, rightChoices, relation, substituteType, messageStack);					
+				leftChoices, rightChoices, relation, substituteType, extLanguageManager, messageStack);					
 	}
 
 	private boolean isAmbiguousForLeftAndRightChoices(
@@ -242,13 +247,14 @@ public class ParameterCondition implements IStatementCondition {
 			List<ChoiceNode> rightChoices,
 			EMathRelation relation,
 			String substituteType,
+			IExtLanguageManager extLanguageManager,
 			MessageStack messageStack) {
 
 		for (ChoiceNode leftChoiceNode : leftChoices) {
 			for (ChoiceNode rightChoiceNode : rightChoices) {
 
 				if (isChoicesPairAmbiguous(
-						leftChoiceNode, rightChoiceNode, relation, substituteType, messageStack)) {
+						leftChoiceNode, rightChoiceNode, relation, substituteType, extLanguageManager, messageStack)) {
 					return true;
 				}
 			}
@@ -262,6 +268,7 @@ public class ParameterCondition implements IStatementCondition {
 			ChoiceNode rightChoiceNode,
 			EMathRelation relation,
 			String substituteType,
+			IExtLanguageManager extLanguageManager,
 			MessageStack messageStack) {
 
 		if (areBothChoicesFixed(leftChoiceNode, rightChoiceNode)) {
@@ -273,7 +280,10 @@ public class ParameterCondition implements IStatementCondition {
 				fParentRelationStatement, relation, substituteType)) {
 
 			ConditionHelper.addValuesMessageToStack(
-					leftChoiceNode.toString(), relation, rightChoiceNode.toString(), messageStack);
+					ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager), 
+					relation, 
+					ChoiceNodeHelper.createSignature(rightChoiceNode, extLanguageManager), 
+					messageStack);
 
 			return true;
 		}

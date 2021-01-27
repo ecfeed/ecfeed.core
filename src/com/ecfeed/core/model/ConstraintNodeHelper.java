@@ -10,31 +10,18 @@
 
 package com.ecfeed.core.model;
 
-public enum EStatementOperator{
-	AND("AND"), 
-	OR("OR");
-	
-	public static final String OPERATOR_AND = "AND";
-	public static final String OPERATOR_OR = "OR";
+import com.ecfeed.core.utils.IExtLanguageManager;
 
-	String fValue;
+public class ConstraintNodeHelper {
 
-	private EStatementOperator(String value){
-		fValue = value;
+	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
+
+		return ConstraintHelper.createSignature(constraintNode.getConstraint(), extLanguageManager);
 	}
-	
-	public String toString(){
-		return fValue; 
-	}
-	
-	public static EStatementOperator getOperator(String text){
-		switch(text){
-		case OPERATOR_AND:
-			return AND;
-		case OPERATOR_OR:
-			return OR;
-		}
-		return null;
+
+	public static String getName(ConstraintNode ownNode, IExtLanguageManager extLanguageManager) {
+
+		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
 	}
 
 }

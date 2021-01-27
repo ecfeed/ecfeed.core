@@ -71,7 +71,7 @@ public class ModelStringifier {
 
 	public String stringify(RootNode r, int indent){
 		String result = intendentString(indent);
-		result += "Model " + r.getFullName();
+		result += "Model " + r.getName();
 
 		for(ClassNode c : r.getClasses()){
 			result += "\n" + stringify(c, indent + 2);
@@ -82,7 +82,7 @@ public class ModelStringifier {
 
 	public String stringify(ClassNode c, int indent){
 		String result = intendentString(indent);
-		result += "Class " + c.getFullName();
+		result += "Class " + c.getName();
 
 		for(MethodNode m : c.getMethods()){
 			result += "\n" + stringify(m, indent + 2);
@@ -112,7 +112,7 @@ public class ModelStringifier {
 
 	public String stringify(MethodParameterNode c, int indent){
 		String result = intendentString(indent);
-		result += "Parameter " + c.getFullName() + "[" + c.getType() + "], " + (c.isExpected() ? "expected" : "patitioned");
+		result += "Parameter " + c.getName() + "[" + c.getType() + "], " + (c.isExpected() ? "expected" : "patitioned");
 		result += " default value: " + c.getDefaultValue();
 		for(ChoiceNode child : c.getChoices()){
 			result += "\n";
@@ -140,25 +140,25 @@ public class ModelStringifier {
 
 	public String stringify(ConstraintNode node, int indent){
 		String result = intendentString(indent);
-		result += "Constraint " + node.getFullName() + "\n";
+		result += "Constraint " + node.getName() + "\n";
 		for(int i = 0; i < indent + 2; i++){
 			result += " ";
 		}
 		result += "Premise:\n";
-		result += stringify(node.getConstraint().getPremise(), indent + 4);
+		result += stringify(node.getConstraint().getPrecondition(), indent + 4);
 		result += "\n";
 		for(int i = 0; i < indent + 2; i++){
 			result += " ";
 		}
 		result += "Consequence:\n";
-		result += stringify(node.getConstraint().getConsequence(), indent + 4);
+		result += stringify(node.getConstraint().getPostcondition(), indent + 4);
 		return result;
 	}
 
 	public String stringify(ChoiceNode p, int indent){
 		String result = intendentString(indent);
 		result += "Choice ";
-		result += p.getFullName() + "[" + p.getValueString() + "]";
+		result += p.getName() + "[" + p.getValueString() + "]";
 		result += ", Labels: ";
 		for(String label : p.getLabels()){
 			result += label + " ";
@@ -192,7 +192,7 @@ public class ModelStringifier {
 	public String stringify(ExpectedValueStatement s, int indent){
 		String result = intendentString(indent);
 		result += "Expected value statement ";
-		result += s.getParameter().getFullName() + "[" + s.getParameter().getType() + "] " + s.getRelation() + " " + s.getCondition().getValueString();
+		result += s.getParameter().getName() + "[" + s.getParameter().getType() + "] " + s.getRelation() + " " + s.getCondition().getValueString();
 		return result;
 	}
 

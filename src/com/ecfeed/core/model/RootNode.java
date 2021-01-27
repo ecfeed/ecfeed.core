@@ -34,7 +34,7 @@ public class RootNode extends GlobalParametersParentNode {
 
 	@Override
 	public RootNode makeClone() {
-		RootNode copy = new RootNode(getFullName(), getModelChangeRegistrator(), fModelVersion);
+		RootNode copy = new RootNode(getName(), getModelChangeRegistrator(), fModelVersion);
 
 		copy.setProperties(getProperties());
 
@@ -56,7 +56,12 @@ public class RootNode extends GlobalParametersParentNode {
 
 		fClasses = new ArrayList<ClassNode>();
 		fModelVersion = modelVersion;
-	}	
+	}
+
+	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
 
 	public RootNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
@@ -94,7 +99,7 @@ public class RootNode extends GlobalParametersParentNode {
 
 	public ClassNode getClass(String name) {
 		for(ClassNode childClass : getClasses()){
-			if(childClass.getFullName().equals(name)){
+			if(childClass.getName().equals(name)){
 				return childClass;
 			}
 		}

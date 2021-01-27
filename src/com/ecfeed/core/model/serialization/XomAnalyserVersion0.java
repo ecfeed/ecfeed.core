@@ -10,7 +10,11 @@
 
 package com.ecfeed.core.model.serialization;
 
-public class XomAnalyserVersion0 extends XomAnalyser {
+public class XomAnalyserVersion0 extends XomAnalyserWithBaseConstraintType {
+
+	public XomAnalyserVersion0() {
+		super();
+	}
 
 	@Override
 	protected int getModelVersion() {
@@ -41,6 +45,5 @@ public class XomAnalyserVersion0 extends XomAnalyser {
 	protected String getStatementParameterAttributeName() {
 		return SerializationHelperVersion0.getStatementParameterAttributeName();
 	}
-
 
 }

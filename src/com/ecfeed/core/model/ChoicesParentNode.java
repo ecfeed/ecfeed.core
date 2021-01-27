@@ -83,9 +83,15 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return fChoices;
 	}
 
-	public int getChoiceCount() {
+	public int getChoiceCount() { // TODO SIMPLE-VIEW remove
 
 		return getChoices().size();
+	}
+
+	@Override
+	public int getChildrenCount() {
+		
+		return fChoices.size();
 	}
 
 	public List<ChoiceNode> getChoicesWithCopies() {
@@ -101,7 +107,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
 
 		for (ChoiceNode choiceNode : fChoices) {
-			if (choiceNode.getFullName().equals(choiceNameToFind)) {
+			if (choiceNode.getName().equals(choiceNameToFind)) {
 				return true;
 			}
 		}
@@ -119,16 +125,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return getLeafChoices(getChoicesWithCopies());
 	}	
 
-	public Set<ChoiceNode> getAllChoices() {
-
-		return getAllChoices(getChoices());
-	}
-
-	public Set<String> getChoiceNames() {
-
-		return getChoiceNames(getChoices());
-	}
-
 	public Set<String> getAllChoiceNames() {
 
 		return getChoiceNames(getAllChoices());
@@ -137,6 +133,16 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public Set<String> getLeafChoiceNames(){
 
 		return getChoiceNames(getLeafChoices());
+	}
+
+	public Set<ChoiceNode> getAllChoices() {
+
+		return getAllChoices(getChoices());
+	}
+
+	public Set<String> getChoiceNames() {
+
+		return getChoiceNames(getChoices());
 	}
 
 	public Set<ChoiceNode> getLabeledChoices(String label) {
@@ -216,12 +222,12 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return result;
 	}
 
-	protected Set<String> getChoiceNames(Collection<ChoiceNode> choices) {
+	protected Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
 
 		Set<String> result = new LinkedHashSet<String>();
 
-		for (ChoiceNode p : choices) {
-			result.add(p.getQualifiedName());
+		for (ChoiceNode choiceNode : choiceNodes) {
+			result.add(choiceNode.getQualifiedName());
 		}
 
 		return result;
@@ -248,9 +254,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
 			return startChoiceName;
 		}
-		
+
 		String oldNameCore = StringHelper.removeFromNumericPostfix(startChoiceName);
-		
+
 		for (int i = 1;   ; i++) {
 			String newParameterName = oldNameCore + String.valueOf(i);
 

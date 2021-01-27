@@ -12,6 +12,10 @@ package com.ecfeed.core.model.serialization;
 
 public class XomAnalyserVersion2 extends XomAnalyserWithNewNodeNames {
 
+	public XomAnalyserVersion2() {
+		super();
+	}
+
 	@Override
 	protected int getModelVersion() {
 		return 2;

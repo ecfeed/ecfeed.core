@@ -10,32 +10,32 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.EStatementOperator;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class StatementOperationChangeOperator extends AbstractModelOperation {
 
 	private StatementArray fTarget;
-	private EStatementOperator fNewOperator;
-	private EStatementOperator fCurrentOperator;
+	private StatementArrayOperator fNewOperator;
+	private StatementArrayOperator fCurrentOperator;
 
-	public StatementOperationChangeOperator(StatementArray target, EStatementOperator operator) {
-		super(OperationNames.CHANGE_STATEMENT_OPERATOR);
+	public StatementOperationChangeOperator(StatementArray target, StatementArrayOperator operator, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.CHANGE_STATEMENT_OPERATOR, extLanguageManager);
 		fTarget = target;
 		fNewOperator = operator;
 		fCurrentOperator = target.getOperator();
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		fTarget.setOperator(fNewOperator);
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationChangeOperator(fTarget, fCurrentOperator);
+		return new StatementOperationChangeOperator(fTarget, fCurrentOperator, getExtLanguageManager());
 	}
 
 }

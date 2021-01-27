@@ -126,6 +126,15 @@ public class StringHelperTest{
 	}
 
 	@Test
+	public void shouldGetLastTokenOrInputString(){
+		String result = StringHelper.getLastTokenOrInputString("1#2#3", "#");
+		assertEquals("3", result);
+
+		result = StringHelper.getLastTokenOrInputString("3", "#");
+		assertEquals("3", result);
+	}
+
+	@Test
 	public void shouldGetAllBeforeLastToken(){
 		String result = StringHelper.getAllBeforeLastToken("1#2#3", "#");
 		assertEquals("1#2", result);

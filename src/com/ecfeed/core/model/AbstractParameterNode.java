@@ -15,15 +15,16 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	private String fType;
 	private String fTypeComments;
-	
+
 	private Optional<String> fSuggestedType;
-	
+
 	public abstract List<MethodNode> getMethods();
 	public abstract Object accept(IParameterVisitor visitor) throws Exception;
 
@@ -33,13 +34,21 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
 		super(name, modelChangeRegistrator);
-		
-		verifyType(type);
-		
+
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
 		fSuggestedType = Optional.empty();
 		fType = type;
 
 		createDefaultProperties();
+	}
+
+	@Override
+	public void setName(String name) {
+
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		super.setName(name);
 	}
 
 	@Override
@@ -66,7 +75,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		}
 		return -1;
 	}
-	
+
 	@Override
 	public boolean isMatch(AbstractNode compared){
 		if(compared instanceof AbstractParameterNode == false){
@@ -80,7 +89,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
-		return JavaTypeHelper.isNumericTypeName(fType) || JavaTypeHelper.isStringTypeName(fType);
+		return JavaLanguageHelper.isNumericTypeName(fType) || JavaLanguageHelper.isStringTypeName(fType);
 	}
 
 	public String getType() {
@@ -88,9 +97,11 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	public void setType(String type) {
-
-		verifyType(type);
 		
+		if (SimpleLanguageHelper.isSimpleType(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to set invalid parameter type: " + type);
+		}
+
 		fType = type;
 		registerChange();
 	}
@@ -111,18 +122,11 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	public void setSuggestedType(String typeHidden) {
 		fSuggestedType = Optional.ofNullable(typeHidden);
 	}
-	
-	private void verifyType(String type) {
-		
-		if (type.equals("Text") || type.equals("Number")) {
-			ExceptionHelper.reportRuntimeException("Invalid type of parameter: " + type);
-		}
-	}
 
 	private void createDefaultProperties() {
-		
+
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 	}
-	
+
 }

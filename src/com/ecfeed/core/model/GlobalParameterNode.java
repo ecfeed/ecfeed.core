@@ -19,14 +19,14 @@ import java.util.Set;
 
 public class GlobalParameterNode extends AbstractParameterNode {
 
-	public GlobalParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
+	public GlobalParameterNode(String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator, type);
 	}
 
 	//copy constructor creating a global parameter instance from other types, eg. MethodParameterNode
 	public GlobalParameterNode(AbstractParameterNode source) {
 
-		this(source.getFullName(), source.getModelChangeRegistrator(), source.getType());
+		this(source.getName(), source.getType(), source.getModelChangeRegistrator());
 		for(ChoiceNode choice : source.getChoices()){
 			addChoice(choice.makeClone());
 		}
@@ -35,7 +35,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	@Override
 	public GlobalParameterNode makeClone() {
 
-		GlobalParameterNode copy = new GlobalParameterNode(getFullName(), getModelChangeRegistrator(), getType());
+		GlobalParameterNode copy = new GlobalParameterNode(getName(), getType(), getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 
@@ -58,19 +58,19 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	}
 
 	public List<MethodParameterNode> getLinkers(){
-		
+
 		List<MethodParameterNode> result = new ArrayList<>();
 		List<MethodNode> methods = getMethods();
-		
+
 		if (methods == null) {
 			return new ArrayList<>();
-					
+
 		}
-		
+
 		for(MethodNode method : methods) {
 			result.addAll(method.getLinkers(this));
 		}
-		
+
 		return result;
 	}
 
@@ -91,14 +91,19 @@ public class GlobalParameterNode extends AbstractParameterNode {
 
 	public String getQualifiedName() {
 		if(getParent() == getRoot() || getParent() == null){
-			return getFullName();
+			return getName();
 		}
-		return getParent().getFullName() + ":" + getFullName();
+		return getParent().getName() + ":" + getName();
+	}
+
+	@Override
+	protected String getNonQualifiedName() {
+		return getName();
 	}
 
 	@Override
 	public String toString(){
-		return getFullName() + ": " + getType();
+		return getName() + ": " + getType();
 	}
 
 	@Override
@@ -135,4 +140,5 @@ public class GlobalParameterNode extends AbstractParameterNode {
 		}
 		return copy;
 	}
+
 }

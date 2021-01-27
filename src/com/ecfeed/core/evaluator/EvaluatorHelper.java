@@ -8,7 +8,7 @@ import java.util.List;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeComparator;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class EvaluatorHelper {
 
@@ -40,7 +40,7 @@ public class EvaluatorHelper {
 
         int n = sortedChoices.size();
 
-        if (!JavaTypeHelper.isNumericTypeName(methodParameterNode.getType())) {
+        if (!JavaLanguageHelper.isNumericTypeName(methodParameterNode.getType())) {
             for (int i = 0; i < n; i++) {
                 choiceVars.add(satSolver.newId());
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));

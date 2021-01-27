@@ -14,73 +14,93 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ConstraintNode extends AbstractNode{
 
 	private Constraint fConstraint;
 
 	@Override
+	protected String getNonQualifiedName() {
+		return getName();
+	}
+
+	@Override
+	protected void verifyName(String nameInIntrLanguage) {
+	}
+
+	@Override
 	public int getMyIndex() {
-		
-		if (getMethod() == null) {
+
+		if (getMethodNode() == null) {
 			return -1;
 		}
-		
-		return getMethod().getConstraintNodes().indexOf(this);
+
+		return getMethodNode().getConstraintNodes().indexOf(this);
 	}
 
 	@Override
 	public String toString() {
-		return getFullName() + ": " + getConstraint().toString();
+
+		if (fConstraint == null) {
+			return "EMPTY";
+		}
+
+		return ConstraintHelper.createSignature(fConstraint, new ExtLanguageManagerForJava());
 	}
 
 	@Override
-	public void setFullName(String name) {
-		
-		super.setFullName(name);
+	public void setName(String name) {
+
+		super.setName(name);
 		fConstraint.setName(name);
 	}
 
 	@Override
+	public int getChildrenCount() {
+		return 0;
+	}
+
+	@Override
 	public ConstraintNode makeClone() {
-		
-		ConstraintNode copy = new ConstraintNode(getFullName(), getModelChangeRegistrator(), fConstraint.getCopy() );
+
+		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.makeClone(), getModelChangeRegistrator() );
 		copy.setProperties(getProperties());
 		return copy;
 	}
-	
-	public ConstraintNode(String name, IModelChangeRegistrator modelChangeRegistrator, Constraint constraint) {
-		
+
+	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {
+
 		super(name, modelChangeRegistrator);
 		fConstraint = constraint;
 	}
 
 	public Constraint getConstraint() {
-		
+
 		return fConstraint;
 	}
-	
+
 	public List<ChoiceNode> getListOfChoices() {
 		return fConstraint.getListOfChoices(); 
 	}
 
-	public MethodNode getMethod() {
-		
+	public MethodNode getMethodNode() {
+
 		AbstractNode parent = getParent();
 		if (parent == null) {
 			return null;
 		}
-		
+
 		if (parent instanceof MethodNode) {
 			return (MethodNode)parent;
 		}
-		
+
 		return null;
 	}
 
 	public void setMethod(MethodNode method) {
-		
+
 		setParent(method);
 		registerChange();
 	}
@@ -95,21 +115,21 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	public boolean mentions(ChoiceNode choice) {
-		
+
 		if (fConstraint.mentions(choice)) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	public boolean mentions(MethodParameterNode parameter) {
-		
+
 		return fConstraint.mentions(parameter);
 	}
 
 	public boolean mentions(AbstractParameterNode parameter) {
-		
+
 		if (parameter instanceof MethodParameterNode) {
 			MethodParameterNode param = (MethodParameterNode)parameter;
 			return fConstraint.mentions(param);
@@ -121,30 +141,30 @@ public class ConstraintNode extends AbstractNode{
 				return fConstraint.mentions(methodParam);
 			}
 		}
-		
+
 		return false;
 	}
 
 	public boolean mentions(MethodParameterNode parameter, String label) {
-		
+
 		return fConstraint.mentions(parameter, label);
 	}
 
 	public boolean updateReferences(MethodNode method) {
-		
+
 		if (fConstraint.updateReferences(method)) {
 			setParent(method);
 			registerChange();
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	public ConstraintNode getCopy(MethodNode method) {
-		
+
 		ConstraintNode copy = makeClone();
-		
+
 		if (copy.updateReferences(method))
 			return copy;
 		else {
@@ -155,17 +175,17 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public boolean isMatch(AbstractNode node) {
-		
+
 		if (node instanceof ConstraintNode == false) {
 			return false;
 		}
-		
+
 		ConstraintNode compared = (ConstraintNode)node;
-		if (getConstraint().getPremise().compare(compared.getConstraint().getPremise()) == false) {
+		if (getConstraint().getPrecondition().isEqualTo(compared.getConstraint().getPrecondition()) == false) {
 			return false;
 		}
 
-		if (getConstraint().getConsequence().compare(compared.getConstraint().getConsequence()) == false) {
+		if (getConstraint().getPostcondition().isEqualTo(compared.getConstraint().getPostcondition()) == false) {
 			return false;
 		}
 
@@ -174,7 +194,7 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public Object accept(IModelVisitor visitor) throws Exception {
-		
+
 		return visitor.visit(this);
 	}
 
@@ -198,7 +218,7 @@ public class ConstraintNode extends AbstractNode{
 	private boolean areParametersConsistent() {
 
 		final Set<AbstractParameterNode> referencedParameters = getConstraint().getReferencedParameters();
-		final List<AbstractParameterNode> methodParameters = getMethod().getParameters();
+		final List<AbstractParameterNode> methodParameters = getMethodNode().getParameters();
 
 		for (AbstractParameterNode referencedParameter : referencedParameters) {
 			if (!isParameterConsistent(referencedParameter, methodParameters)) {
@@ -260,7 +280,7 @@ public class ConstraintNode extends AbstractNode{
 			return false;
 		}
 
-		MethodNode methodNode = getMethod();
+		MethodNode methodNode = getMethodNode();
 
 		if (parameterMethods.contains(methodNode) == false) {
 			return false;
@@ -295,7 +315,7 @@ public class ConstraintNode extends AbstractNode{
 
 	private boolean constraintsConsistent() {
 
-		for (MethodParameterNode parameter : getMethod().getMethodParameters()) {
+		for (MethodParameterNode parameter : getMethodNode().getMethodParameters()) {
 			if (!isConsistentForParameter(parameter)) {
 				return false;
 			}
@@ -323,11 +343,11 @@ public class ConstraintNode extends AbstractNode{
 
 	private boolean isForbiddenTypeForOrderRelations(String typeName) {
 
-		if (JavaTypeHelper.isUserType(typeName)) {
+		if (JavaLanguageHelper.isUserType(typeName)) {
 			return true;
 		}
 
-		if (JavaTypeHelper.isBooleanTypeName(typeName)) {
+		if (JavaLanguageHelper.isBooleanTypeName(typeName)) {
 			return true;
 		}
 
@@ -347,8 +367,8 @@ public class ConstraintNode extends AbstractNode{
 
 	@Override
 	public int getMaxIndex() {
-		if (getMethod() != null) {
-			return getMethod().getConstraintNodes().size();
+		if (getMethodNode() != null) {
+			return getMethodNode().getConstraintNodes().size();
 		}
 		return -1;
 	}
@@ -356,4 +376,5 @@ public class ConstraintNode extends AbstractNode{
 	boolean mentionsParameter(MethodParameterNode methodParameter) {
 		return fConstraint.mentionsParameter(methodParameter);
 	}
+
 }

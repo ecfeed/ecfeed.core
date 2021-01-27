@@ -16,10 +16,10 @@ import java.util.List;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
-//ambigous always false
-public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement{
+public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
 	MethodParameterNode fParameter;
 	ChoiceNode fCondition;
@@ -38,8 +38,8 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public String getLeftOperandName() {
-		return fParameter.getFullName();
+	public String getLeftParameterName() {
+		return fParameter.getName();
 	}
 
 	@Override
@@ -53,12 +53,19 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean adapt(List<ChoiceNode> values){
-		if(values == null) return true;
-		if(fParameter.getMethod() != null){
-			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
-			values.set(index, fCondition.makeClone());
+	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
+
+
+		if (testCaseChoices == null) {
+			return true;
 		}
+
+		if  (fParameter.getMethod() != null) {
+
+			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
+			testCaseChoices.set(index, fCondition.makeClone());
+		}
+
 		return true;
 	}
 
@@ -98,7 +105,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return result;
 	}
 
-	public MethodParameterNode getParameter(){
+	public MethodParameterNode getParameter(){ // TODO RENAME TO getLeftParameter
 		return fParameter;
 	}
 
@@ -108,17 +115,25 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public String toString(){
-		return getParameter().getFullName() + getRelation().toString() + fCondition.getValueString();
+		return getParameter().getName() + getRelation().toString() + fCondition.getValueString();
 	}
 
 	@Override
-	public ExpectedValueStatement getCopy(){
+	public String createSignature(IExtLanguageManager extLanguageManager){
+
+		final MethodParameterNode parameter = getParameter();
+
+		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fCondition.getValueString();
+	}
+
+	@Override
+	public ExpectedValueStatement makeClone(){
 		return new ExpectedValueStatement(fParameter, fCondition.makeClone(), fPredicate);
 	}
 
 	@Override
 	public boolean updateReferences(MethodNode method){
-		MethodParameterNode parameter = (MethodParameterNode)method.getParameter(fParameter.getFullName());
+		MethodParameterNode parameter = (MethodParameterNode)method.findParameter(fParameter.getName());
 		if(parameter != null && parameter.isExpected()){
 			fParameter = parameter;
 			fCondition.setParent(parameter);
@@ -139,13 +154,13 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean compare(IStatement statement){
+	public boolean isEqualTo(IStatement statement){
 		if(statement instanceof ExpectedValueStatement == false){
 			return false;
 		}
 
 		ExpectedValueStatement compared = (ExpectedValueStatement)statement;
-		if(getParameter().getFullName().equals(compared.getParameter().getFullName()) == false){
+		if(getParameter().getName().equals(compared.getParameter().getName()) == false){
 			return false;
 		}
 
@@ -166,7 +181,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 		return false;
 	}
 

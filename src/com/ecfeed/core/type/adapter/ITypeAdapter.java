@@ -11,12 +11,13 @@
 package com.ecfeed.core.type.adapter;
 
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public interface ITypeAdapter<T> {
 
 	public boolean isRandomizable();
 	public boolean isCompatible(String type);
-	public String convert(String value, boolean isRandomized, ERunMode conversionMode);
+	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
 	public String getDefaultValue();
 	public boolean isNullAllowed();
 	public T generateValue(String range);

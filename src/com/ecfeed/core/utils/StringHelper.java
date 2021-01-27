@@ -53,14 +53,14 @@ public class StringHelper {
 	}
 
 	public static String cutToMaxSize(String stringToCut, int maxSize) {
-		
+
 		if (stringToCut.length() <= maxSize) {
 			return stringToCut;
 		}
 
 		return stringToCut.substring(0, maxSize);
 	}
-	
+
 	public static String removeToPrefix(String prefix, String fromStr) {
 
 		int index = fromStr.indexOf(prefix);
@@ -108,9 +108,9 @@ public class StringHelper {
 
 		while (lastIndex > 0 && Character.isDigit(fromStr.charAt(lastIndex - 1))) {
 			lastIndex--;
-	    }
-		
-	    return fromStr.substring(lastIndex);
+		}
+
+		return fromStr.substring(lastIndex);
 	}
 
 	public static String removeStrgAtEnd(String pattern, String strg) {
@@ -151,12 +151,12 @@ public class StringHelper {
 
 		return insertCharsToLength(line, " ", lengthAfterInsert);
 	}	
-	
+
 	public static String insertZerosToLength(String line, int lengthAfterInsert) {
 
 		return insertCharsToLength(line, "0", lengthAfterInsert);
 	}	
-	
+
 	public static String insertCharsToLength(String line, String paddingChar, int lengthAfterInsert) {
 
 		if (line.length() >= lengthAfterInsert) {
@@ -193,6 +193,16 @@ public class StringHelper {
 		return tokenizedString.substring(separatorPosition+1);
 	}
 
+	public static String getLastTokenOrInputString(String tokenizedString, String tokenSeparator) {
+
+		int separatorPosition = tokenizedString.lastIndexOf(tokenSeparator);
+
+		if (separatorPosition == -1) {
+			return tokenizedString;
+		}
+		return tokenizedString.substring(separatorPosition+1);
+	}
+
 	public static String getFirstToken(String tokenizedString, String tokenSeparator) {
 
 		int separatorPosition = tokenizedString.indexOf(tokenSeparator);
@@ -202,7 +212,7 @@ public class StringHelper {
 		}
 		return tokenizedString.substring(0, separatorPosition);
 	}
-	
+
 	public static String[] splitIntoTokens(String tokenizedString, String tokenSeparatorRegex) {
 
 		return tokenizedString.split(tokenSeparatorRegex);
@@ -221,40 +231,40 @@ public class StringHelper {
 
 	public static String getPackageWithClass(String methodSignature) {
 
-	    String signatureWithoutModifiers = methodSignature
-                .replaceAll("public", "")
-                .replaceAll("void", "");
+		String signatureWithoutModifiers = methodSignature
+				.replaceAll("public", "")
+				.replaceAll("void", "");
 
-	    String simplifiedSignature;
+		String simplifiedSignature;
 
-	    if (signatureWithoutModifiers.contains("(")) {
+		if (signatureWithoutModifiers.contains("(")) {
 			simplifiedSignature = signatureWithoutModifiers.substring(0, signatureWithoutModifiers.indexOf('('));
 		} else {
 			simplifiedSignature = signatureWithoutModifiers;
 		}
 
-	    String packageWithClass = simplifiedSignature
-                .substring(0, simplifiedSignature.lastIndexOf('.'));
+		String packageWithClass = simplifiedSignature
+				.substring(0, simplifiedSignature.lastIndexOf('.'));
 
-	    return packageWithClass.trim();
-    }
+		return packageWithClass.trim();
+	}
 
-    public static String getMethodShortSignature(String methodSignature) {
+	public static String getMethodShortSignature(String methodSignature) {
 
-	    String simplifiedSignature;
+		String simplifiedSignature;
 
-	    if (methodSignature.contains("(")) {
+		if (methodSignature.contains("(")) {
 			simplifiedSignature = methodSignature.substring(0, methodSignature.indexOf('('));
 		} else {
-	    	simplifiedSignature = methodSignature;
+			simplifiedSignature = methodSignature;
 		}
 
-	    int indexOfLastDot = simplifiedSignature.lastIndexOf('.') + 1;
-	    String methodShortSignature = methodSignature.substring(indexOfLastDot);
+		int indexOfLastDot = simplifiedSignature.lastIndexOf('.') + 1;
+		String methodShortSignature = methodSignature.substring(indexOfLastDot);
 
-	    return methodShortSignature.trim();
+		return methodShortSignature.trim();
 
-    }
+	}
 
 	public static boolean isCharAt(int index, String strg, String chr) {
 
@@ -372,94 +382,6 @@ public class StringHelper {
 		return source.replace(substr, strToReplace);
 	}
 
-	public static Byte convertToByte(String str) throws NumberFormatException {
-
-		Long result = convertToLong(str);
-
-		Long maxIntValue = new Long(Byte.MAX_VALUE);
-		if (result > maxIntValue) {
-			throw new NumberFormatException();
-		}
-
-		Long minIntValue = new Long(Byte.MIN_VALUE);
-		if (result < minIntValue) {
-			throw new NumberFormatException();
-		}		
-
-		return result.byteValue(); 
-	}
-
-	public static Short convertToShort(String str) throws NumberFormatException {
-
-		Long result = convertToLong(str);
-
-		Long maxIntValue = new Long(Short.MAX_VALUE);
-		if (result > maxIntValue) {
-			throw new NumberFormatException();
-		}
-
-		Long minIntValue = new Long(Short.MIN_VALUE);
-		if (result < minIntValue) {
-			throw new NumberFormatException();
-		}		
-
-		return result.shortValue(); 
-	}	
-
-	public static Integer convertToInteger(String str) throws NumberFormatException {
-
-		Long result = convertToLong(str);
-
-		Long maxIntValue = new Long(Integer.MAX_VALUE);
-		if (result > maxIntValue) {
-			throw new NumberFormatException();
-		}
-
-		Long minIntValue = new Long(Integer.MIN_VALUE);
-		if (result < minIntValue) {
-			throw new NumberFormatException();
-		}		
-
-		return result.intValue(); 
-	}
-
-	public static Long convertToLong(String str) throws NumberFormatException {
-
-		Long result = convertToLongDirectly(str);
-
-		if (result != null) {
-			return result;
-		}
-
-		return convertToLongViaDouble(str);
-	}
-
-	public static Long convertToLongDirectly(String str) {
-
-		Long result = null;
-
-		try {
-			result = Long.parseLong(str);
-		} catch (NumberFormatException e){
-			return null;
-		}
-
-		return result;
-	}
-
-	private static Long convertToLongViaDouble(String str) throws NumberFormatException {
-
-		Double dblResult = null;
-
-		dblResult = Double.parseDouble(str);
-
-		if (dblResult != Math.floor(dblResult)) {
-			throw new NumberFormatException();
-		}
-
-		return dblResult.longValue();
-	}
-
 	public static String convertToMultilineString(Collection<String> strings){
 
 		String consolidated = "";
@@ -516,5 +438,18 @@ public class StringHelper {
 
 		return result;
 	}
-	
+
+	public static boolean containsOnly(char character, String str) { // TODO SIMPLE-VIEW test
+
+		for (int i = 0; i < str.length(); i++){
+			char charInStr = str.charAt(i);
+
+			if (charInStr != character) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 }

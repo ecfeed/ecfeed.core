@@ -11,8 +11,9 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParametersParentNode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationAddParameter extends AbstractModelOperation {
 
@@ -22,9 +23,13 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	private boolean fGenerateUniqueName;
 
 	public GenericOperationAddParameter(
-			ParametersParentNode target, AbstractParameterNode parameter, int index, boolean generateUniqueName) {
+			ParametersParentNode target, 
+			AbstractParameterNode parameter, 
+			int index, 
+			boolean generateUniqueName,
+			IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.ADD_PARAMETER);
+		super(OperationNames.ADD_PARAMETER, extLanguageManager);
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;
 		fNewIndex = (index == -1)? target.getParameters().size() : index;
@@ -32,12 +37,15 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	}
 
 	public GenericOperationAddParameter(
-			ParametersParentNode target, AbstractParameterNode parameter, boolean generateUniqueName) {
-		this(target, parameter, -1, generateUniqueName);
+			ParametersParentNode target, 
+			AbstractParameterNode parameter, 
+			boolean generateUniqueName,
+			IExtLanguageManager extLanguageManager) {
+		this(target, parameter, -1, generateUniqueName, extLanguageManager);
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fParametersParentNode);
 
@@ -45,16 +53,16 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 			generateUniqueParameterName(fAbstractParameterNode);
 		}
 		
-		String parameterName = fAbstractParameterNode.getFullName();
+		String parameterName = fAbstractParameterNode.getName();
 
 		if(fNewIndex < 0){
-			ModelOperationException.report(OperationMessages.NEGATIVE_INDEX_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.NEGATIVE_INDEX_PROBLEM);
 		}
 		if(fNewIndex > fParametersParentNode.getParameters().size()){
-			ModelOperationException.report(OperationMessages.TOO_HIGH_INDEX_PROBLEM);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TOO_HIGH_INDEX_PROBLEM);
 		}
-		if(fParametersParentNode.getParameter(parameterName) != null){
-			ModelOperationException.report(OperationMessages.CATEGORY_NAME_DUPLICATE_PROBLEM);
+		if(fParametersParentNode.findParameter(parameterName) != null){
+			ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 		}
 
 		fParametersParentNode.addParameter(fAbstractParameterNode, fNewIndex);
@@ -63,13 +71,13 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	private void generateUniqueParameterName(AbstractParameterNode abstractParameterNode) {
 
-		String newName = ParametersParentNode.generateNewParameterName(fParametersParentNode, abstractParameterNode.getFullName());
-		abstractParameterNode.setFullName(newName);
+		String newName = ParametersParentNode.generateNewParameterName(fParametersParentNode, abstractParameterNode.getName());
+		abstractParameterNode.setName(newName);
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(fParametersParentNode, fAbstractParameterNode);
+		return new ReverseOperation(fParametersParentNode, fAbstractParameterNode, getExtLanguageManager());
 	}
 
 	protected class ReverseOperation extends AbstractModelOperation{
@@ -78,14 +86,14 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		private AbstractParameterNode fReversedParameter;
 		private ParametersParentNode fReversedTarget;
 
-		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter) {
-			super("reverse " + OperationNames.ADD_PARAMETER);
+		public ReverseOperation(ParametersParentNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
+			super("reverse " + OperationNames.ADD_PARAMETER, extLanguageManager);
 			fReversedTarget = target;
 			fReversedParameter = parameter;
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 			setOneNodeToSelect(fParametersParentNode);
 			fOriginalIndex = fReversedParameter.getMyIndex();
 			fReversedTarget.removeParameter(fReversedParameter);
@@ -94,7 +102,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new GenericOperationAddParameter(fReversedTarget, fReversedParameter, fOriginalIndex, true);
+			return new GenericOperationAddParameter(fReversedTarget, fReversedParameter, fOriginalIndex, true, getExtLanguageManager());
 		}
 	}
 	

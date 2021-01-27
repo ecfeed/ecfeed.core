@@ -10,7 +10,11 @@
 
 package com.ecfeed.core.model.serialization;
 
-public abstract class XomAnalyserWithNewNodeNames extends XomAnalyser {
+public abstract class XomAnalyserWithNewNodeNames extends XomAnalyserWithBaseConstraintType {
+
+	public XomAnalyserWithNewNodeNames() {
+		super();
+	}
 
 	@Override
 	protected String getChoiceNodeName() {
@@ -36,4 +40,5 @@ public abstract class XomAnalyserWithNewNodeNames extends XomAnalyser {
 	protected String getStatementParameterAttributeName() {
 		return SerializationHelperVersion1.getStatementParameterAttributeName();
 	}
+
 }

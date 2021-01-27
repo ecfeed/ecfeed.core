@@ -11,13 +11,13 @@
 package com.ecfeed.core.model;
 
 
-public final class ValueFieldOperationException extends ModelOperationException {
+public final class ValueFieldOperationException extends RuntimeException {
 
 	private ValueFieldOperationException(String message) {
 		super(message);
 	}
 	
-	public static void report(String message) throws ModelOperationException {
+	public static void report(String message) {
 		throw new ValueFieldOperationException(message);
 	}
 

@@ -16,10 +16,12 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class BulkOperation extends AbstractModelOperation {
 
+	private static final String ATTEMPT_TO_ADD_EMPTY_OPERATION = "Attempt to add empty operation.";
 	List<IModelOperation> fOperations;
 	List<IModelOperation> fExecutedOperations;
 	// either all operation or none. if false, all operations are executed
@@ -29,17 +31,18 @@ public class BulkOperation extends AbstractModelOperation {
 	private AbstractNode fNodeToSelectAfterReverseOperation;
 
 	protected interface ICheckOperation {
-		public void check() throws ModelOperationException;
+		public void check();
 	}
 
 	public BulkOperation(
 			String name, 
 			boolean atomic,
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToSelectAfterReverseOperation) {
+			AbstractNode nodeToSelectAfterReverseOperation,
+			IExtLanguageManager extLanguageManager) {
 
 		this(name, new ArrayList<IModelOperation>(), atomic, 
-				nodeToSelect, nodeToSelectAfterReverseOperation);
+				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguageManager);
 	}
 
 	public BulkOperation(
@@ -47,9 +50,10 @@ public class BulkOperation extends AbstractModelOperation {
 			List<IModelOperation> operations, 
 			boolean atomic, 
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToelectAfterReverseOperation) {
+			AbstractNode nodeToelectAfterReverseOperation, 
+			IExtLanguageManager extLanguageManager) {
 
-		super(name);
+		super(name, extLanguageManager);
 
 		fOperations = operations;
 		fExecutedOperations = new ArrayList<IModelOperation>();
@@ -62,20 +66,30 @@ public class BulkOperation extends AbstractModelOperation {
 	}
 
 	protected void addOperation(IModelOperation operation) {
+		
+		if (operation == null) {
+			ExceptionHelper.reportRuntimeException(ATTEMPT_TO_ADD_EMPTY_OPERATION);
+		}
+		
 		fOperations.add(operation);
 	}
 
 	protected void addCheckOperation(ICheckOperation operation) {
+
+		if (operation == null) {
+			ExceptionHelper.reportRuntimeException(ATTEMPT_TO_ADD_EMPTY_OPERATION);
+		}
+		
 		fCheckOperations.add(operation);
 	}
 
 	public static final String PROBLEM_WITH_BULK_OPERATION(String operation) {
 
-		return "Cannot perform operation: " + operation;
+		return "Cannot perform operation: " + operation + ".";
 	}	
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		Set<String> errors = new HashSet<String>();
 		fExecutedOperations.clear();
@@ -84,7 +98,7 @@ public class BulkOperation extends AbstractModelOperation {
 			try {
 				operation.execute();
 				fExecutedOperations.add(operation);
-			} catch(ModelOperationException e) {
+			} catch(Exception e) {
 				errors.add(e.getMessage());
 				if(fAtomic) {
 					getReverseOperation().execute();
@@ -96,7 +110,7 @@ public class BulkOperation extends AbstractModelOperation {
 		for (ICheckOperation operation : fCheckOperations) {
 			try {
 				operation.check();
-			} catch(ModelOperationException e) {
+			} catch(Exception e) {
 				errors.add(e.getMessage());
 				getReverseOperation().execute();
 				break;
@@ -109,15 +123,19 @@ public class BulkOperation extends AbstractModelOperation {
 				message += "\n" + error;
 			}
 
-			ModelOperationException.report(message);
+			ExceptionHelper.reportRuntimeException(message);
 		}
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
 		return new BulkOperation(
-				"reverse " + getName(), reverseOperations(), 
-				fAtomic, fNodeToSelectAfterReverseOperation, null);
+				"reverse " + getName(), 
+				reverseOperations(), 
+				fAtomic, 
+				fNodeToSelectAfterReverseOperation, 
+				null, 
+				getExtLanguageManager());
 	}
 
 

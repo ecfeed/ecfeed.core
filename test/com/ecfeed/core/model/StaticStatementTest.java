@@ -17,8 +17,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.utils.EvaluationResult;
 
 public class StaticStatementTest {
@@ -51,8 +49,8 @@ public class StaticStatementTest {
 		StaticStatement false1 = new StaticStatement(false, null);
 		StaticStatement false2 = new StaticStatement(false, null);
 
-		assertTrue(true1.compare(true2));
-		assertTrue(false1.compare(false2));
-		assertFalse(true1.compare(false1));
+		assertTrue(true1.isEqualTo(true2));
+		assertTrue(false1.isEqualTo(false2));
+		assertFalse(true1.isEqualTo(false1));
 	}
 }

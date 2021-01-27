@@ -27,6 +27,6 @@ import com.ecfeed.core.utils.EvaluationResult;
  */
 public interface IConstraint<E> {
 	public EvaluationResult evaluate(List<E> values);
-	public boolean adapt(List<E> values);
+	public boolean setExpectedValues(List<E> values);
 	public boolean mentions(int dimension);
 }
