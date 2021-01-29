@@ -140,7 +140,7 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	}
 	
 	public void update(List<E> test) {
-		// if the test does not cover the argN-tuples, the scores does not update
+		// if the test does not cover any argN-tuple, the scores does not update
 		if (test.size() < argN)
 			return;
 		// obtain all the argN-tuples covered by the test and remove them
