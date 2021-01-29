@@ -11,23 +11,30 @@ import java.util.stream.IntStream;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.SystemLogger;
 
 public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 
-	private final Map<List<E>, Integer> fScores = new HashMap<>();
-	private final Map<List<E>, Integer> fConstructedTable = new HashMap<>();
+	private final Map<List<E>, Integer> fScores = new HashMap<>(); // store all the scores
+	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>(); // store all the constructed tables
 	private static final int NOT_INCLUDE = -1;
-	private List<List<E>> input;
 	private int argN; // The number of dimensions to be covered
 	private int dimensionCount; // Total number of dimensions for an input domain
 
 	private IConstraintEvaluator<E> fconstraintEvaluator; // to check how to use it
 
-	public NwiseScoreEvaluator_Rep(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN){
+	public NwiseScoreEvaluator_Rep(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN)
+			throws GeneratorException {
 
 		this.argN = argN;
-		this.input = input;
 		dimensionCount = input.size();
+		this.fconstraintEvaluator = constraintEvaluator;
+
+		if (input == null || constraintEvaluator == null) {
+			GeneratorException.report("input or constraints cannot be null");
+		}
+		fconstraintEvaluator.initialize(input);
 
 		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
 		int[] range = input.stream().mapToInt(List::size).toArray();
@@ -42,15 +49,6 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 		calculateFrequency();
 		calculateScore(input.size());
 
-		/*
-		 * if(input == null || constraintEvaluator == null){
-		 * GeneratorException.report("input or constraints of algorithm cannot be null"
-		 * ); }
-		 * 
-		 * fconstraintEvaluator = constraintEvaluator;
-		 * fconstraintEvaluator.initialize(input);
-		 */
-		
 	}
 
 	public int getdimensionCount() {
@@ -71,38 +69,28 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 
 	private void add(int[] encode, List<List<E>> inputs) {
 		List<E> tuple = decodeTuple(encode, inputs);
-		if (tuple.size() > argN || !constraintCheck(tuple))
+		// if (tuple.size() > argN || !constraintCheck(tuple))
+		if (tuple.size() > argN || constraintCheck(tuple) == EvaluationResult.FALSE)
 			return;
-		fConstructedTable.put(tuple, (tuple.size() == argN ? 1 : 0));
+		fTupleOccurences.put(tuple, (tuple.size() == argN ? 1 : 0));
 	}
 
 	private void calculateFrequency() {
 		for (int m = argN - 1; m > 0; m--) {
 			List<List<E>> remove = new ArrayList<>();
-			for (List<E> key : fConstructedTable.keySet()) {
+			for (List<E> key : fTupleOccurences.keySet()) {
 				if (key.size() == m) {
-					int freq = (int) fConstructedTable.keySet().stream()
+					int freq = (int) fTupleOccurences.keySet().stream()
 							.filter(s -> s.size() == argN && s.containsAll(key)).count();
 					if (freq > 0)
-						fConstructedTable.put(key, freq);
+						fTupleOccurences.put(key, freq);
 					else
 						remove.add(key);
 				}
 			}
-			remove.forEach(s -> fConstructedTable.remove(s));
+			remove.forEach(s -> fTupleOccurences.remove(s));
 		}
 	}
-
-	// Need to rewrite it by using fconstraintEvaluator
-	// Currently the constraints from the example were hard-coded 
-	public boolean constraintCheck(List<E> tuple) {
-		return tuple.size() != 3 || (!tuple.contains("c1") && (!tuple.contains("a1") || tuple.contains("b1")));
-	}
-
-	/*
-	 * private EvaluationResult constraintCheck(List<E> tuple) { return
-	 * fConstraintEvaluator.evaluate(tuple); }
-	 */
 
 	private List<E> decodeTuple(int[] encode, List<List<E>> inputs) {
 		return IntStream.range(0, encode.length).mapToObj(i -> encode[i] == -1 ? null : inputs.get(i).get(encode[i]))
@@ -111,9 +99,9 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 
 	private void calculateScore(int size) {
 		IntStream.range(1, size + 1).forEach(l -> {
-			fConstructedTable.keySet().forEach(k -> {
+			fTupleOccurences.keySet().forEach(k -> {
 				if (k.size() == l) {
-					int update = fConstructedTable.get(k);
+					int update = fTupleOccurences.get(k);
 					if (l > 1)
 						update = calculateScore(k);
 					fScores.put(k, update);
@@ -123,20 +111,24 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	}
 
 	private int calculateScore(List<E> tuple) {
-		return fConstructedTable.get(tuple) * fConstructedTable.keySet().stream()
+		return fTupleOccurences.get(tuple) * fTupleOccurences.keySet().stream()
 				.filter(k -> tuple.containsAll(k) && k.size() == tuple.size() - 1).mapToInt(fScores::get).sum();
 	}
 
+	public EvaluationResult constraintCheck(List<E> tuple) {
+		return fconstraintEvaluator.evaluate(tuple);
+	}
+
 	public int getNumOfTuples() {
-		return fConstructedTable.size();
+		return fTupleOccurences.size();
 	}
 
 	public void printSequence() {
 		for (int m = argN; m > 0; m--) {
 			int finalM = m;
-			fConstructedTable.keySet().stream().filter(s -> s.size() == finalM).forEach(s -> {
+			fTupleOccurences.keySet().stream().filter(s -> s.size() == finalM).forEach(s -> {
 				s.forEach(k -> System.out.print(k + ","));
-				System.out.println(fConstructedTable.get(s));
+				System.out.println(fTupleOccurences.get(s));
 			});
 		}
 	}
@@ -144,14 +136,19 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	public int getScore(List<E> tuple) {
 		if (fScores.containsKey(tuple))
 			return fScores.get(tuple);
-		System.err.println("The tuple does not exist!");
 		return -1;
 	}
-
-	public void update(List<E> test) { // to be disucssed to see if the logics is correct
-		if (test.size() == argN)
+	
+	public void update(List<E> test) {
+		// if the test does not cover the argN-tuples, the scores does not update
+		if (test.size() < argN)
 			return;
-		NwiseScoreEvaluator_Rep fScores_update = new NwiseScoreEvaluator_Rep<>(input,fconstraintEvaluator, test.size());			
+		// obtain all the argN-tuples covered by the test and remove them
+		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == argN && test.containsAll(e.getKey()));
+		// update the occurences (i.e., fTupleOccurences) in the constructed table and scores (i.e., fScores)
+		calculateFrequency();
+		fScores.clear();
+		calculateScore(argN);
 	}
 
 }
