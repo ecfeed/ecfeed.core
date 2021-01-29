@@ -11,8 +11,6 @@ import java.util.stream.IntStream;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.SystemLogger;
 
 public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 
@@ -28,7 +26,7 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 			throws GeneratorException {
 
 		this.argN = argN;
-		dimensionCount = input.size();
+		this.dimensionCount = input.size();
 		this.fconstraintEvaluator = constraintEvaluator;
 
 		if (input == null || constraintEvaluator == null) {
@@ -46,8 +44,8 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 				add(encode, input);
 		}
 
-		calculateFrequency();
-		calculateScore(input.size());
+		calculateFrequency(); // calculate occurences in the constructed table
+		calculateScore(input.size()); //calculate scores for all the tuples in constructed table
 
 	}
 
@@ -69,7 +67,6 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 
 	private void add(int[] encode, List<List<E>> inputs) {
 		List<E> tuple = decodeTuple(encode, inputs);
-		// if (tuple.size() > argN || !constraintCheck(tuple))
 		if (tuple.size() > argN || constraintCheck(tuple) == EvaluationResult.FALSE)
 			return;
 		fTupleOccurences.put(tuple, (tuple.size() == argN ? 1 : 0));
