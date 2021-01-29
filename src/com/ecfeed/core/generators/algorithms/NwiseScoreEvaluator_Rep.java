@@ -22,7 +22,7 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	private int argN; // The number of dimensions to be covered
 	private int dimensionCount; // Total number of dimensions for an input domain
 
-	private IConstraintEvaluator<E> fconstraintEvaluator; // to check how to use it
+	private IConstraintEvaluator<E> fconstraintEvaluator;
 
 	public NwiseScoreEvaluator_Rep(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN)
 			throws GeneratorException {
