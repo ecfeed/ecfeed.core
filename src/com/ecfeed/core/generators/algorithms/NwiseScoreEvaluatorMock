@@ -6,9 +6,9 @@ import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 
-public class NwiseScoreEvaluator_RepforTest<E> extends NwiseScoreEvaluator_Rep<E> {
+public class NwiseScoreEvaluatorMock<E> extends NwiseScoreEvaluator<E> {
 
-	public NwiseScoreEvaluator_RepforTest(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN) throws GeneratorException {
+	public NwiseScoreEvaluatorMock(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN) throws GeneratorException {
 		super(input, constraintEvaluator, argN);
 	}
 	
