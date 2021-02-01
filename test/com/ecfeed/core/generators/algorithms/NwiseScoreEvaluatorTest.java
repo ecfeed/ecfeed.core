@@ -8,7 +8,7 @@ import com.ecfeed.core.generators.api.GeneratorException;
 import java.util.Arrays;
 import java.util.List;
 
-public class NwiseScoreEvaluator_RepTest {
+public class NwiseScoreEvaluatorTest {
 
 	/*
 	 * input = [a1, a2], [b1, b2], [c1, c2], [d1, d2], a1=>b1 AND !c1
@@ -49,7 +49,7 @@ public class NwiseScoreEvaluator_RepTest {
 		List<List<String>> input = Arrays.asList(Arrays.asList("a1", "a2"), Arrays.asList("b1", "b2"),
 				Arrays.asList("c1", "c2"), Arrays.asList("d1", "d2"));
 
-		NwiseScoreEvaluator_RepforTest<String> fScores = new NwiseScoreEvaluator_RepforTest<>(input, new HomebrewConstraintEvaluator(input), 3);
+		NwiseScoreEvaluatorMock<String> fScores = new NwiseScoreEvaluatorMock<>(input, new HomebrewConstraintEvaluator(input), 3);
 
 		assert (109 == fScores.getScore(Arrays.asList("b2", "c2", "d1")));
 		assert (113 == fScores.getScore(Arrays.asList("a1", "b1", "c2")));
@@ -62,7 +62,7 @@ public class NwiseScoreEvaluator_RepTest {
 		List<List<String>> input = Arrays.asList(Arrays.asList("a1", "a2"), Arrays.asList("b1", "b2"),
 				Arrays.asList("c1", "c2"), Arrays.asList("d1", "d2"));
 
-		NwiseScoreEvaluator_RepforTest<String> fScores = new NwiseScoreEvaluator_RepforTest<>(input, new HomebrewConstraintEvaluator(input), 3);
+		NwiseScoreEvaluatorMock<String> fScores = new NwiseScoreEvaluatorMock<>(input, new HomebrewConstraintEvaluator(input), 3);
 
 		/*
 		 * Update the scores when the test [a1,b1,c2] (three dimensions) is generated, Score[a1,b1,c2] = 0 as the tuple [a1, b1, c2] should
@@ -95,4 +95,34 @@ public class NwiseScoreEvaluator_RepTest {
 		assert (53 == fScores.getScore(Arrays.asList("a1", "b1", "d1")));
 		assert (-1 == fScores.getScore(Arrays.asList("a2", "b2", "c2"))); //[a2, b2, c2] has been removed so the score is -1
 	}
+	
+	@Test
+	public void testUpdatefor4Tuples() throws GeneratorException {
+		
+		/* 
+		 * input has been changed as compared with the previous two tests. The differences are for the parameter c,three values are taken as input.
+		 * The goal is to cover all the 4-tuples (the previous two tests are to cover all the 3-tuples)
+		 */
+		
+		List<List<String>> input = Arrays.asList(Arrays.asList("a1", "a2"), Arrays.asList("b1", "b2"),
+				Arrays.asList("c1", "c2", "c3"), Arrays.asList("d1", "d2"));
+
+		NwiseScoreEvaluatorMock<String> fScores = new NwiseScoreEvaluatorMock<>(input, new HomebrewConstraintEvaluator(input), 4);
+		
+		// checking the getScore values
+		assert (3120 == fScores.getScore(Arrays.asList("a2", "b2", "c2", "d1")));
+		assert (3120 == fScores.getScore(Arrays.asList("a2", "b2", "c2", "d2")));
+		assert (2512 == fScores.getScore(Arrays.asList("a1", "b1", "c3", "d2")));
+	
+		// checking the update values
+		fScores.update((Arrays.asList("a2", "b2", "c2", "d1")));
+		// the tuple [a2,b2,c2,d1] has been removed so that the score should be -1
+		assert (-1 == fScores.getScore(Arrays.asList("a2", "b2", "c2", "d1")));
+		// the tuple [a2,b2,c2,d1] has been removed so that the score for [a2,b2,c2,d2] has been affected and updated
+		assert (2448 == fScores.getScore(Arrays.asList("a2", "b2", "c2", "d2")));
+		// the tuple[a1,b1,c3,d2] has no overlap with the tuple [a2,b2,c2,d1] so that the score of [a1,b1,c3,d2] should remain the same
+		assert (2512 == fScores.getScore(Arrays.asList("a1", "b1", "c3", "d2")));
+		
+	}
+	
 }
