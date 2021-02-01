@@ -12,21 +12,21 @@ import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 
-public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
+public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	private final Map<List<E>, Integer> fScores = new HashMap<>(); // store all the scores
 	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>(); // store all the constructed tables
 	private static final int NOT_INCLUDE = -1;
-	private int argN; // The number of dimensions to be covered
-	private int dimensionCount; // Total number of dimensions for an input domain
+	private int fargN; // The number of dimensions to be covered
+	private int fdimensionCount; // Total number of dimensions for an input domain
 
 	private IConstraintEvaluator<E> fconstraintEvaluator;
 
-	public NwiseScoreEvaluator_Rep(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN)
+	public NwiseScoreEvaluator(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN)
 			throws GeneratorException {
 
-		this.argN = argN;
-		this.dimensionCount = input.size();
+		this.fargN = argN;
+		this.fdimensionCount = input.size();
 		this.fconstraintEvaluator = constraintEvaluator;
 
 		if (input == null || constraintEvaluator == null) {
@@ -50,7 +50,7 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	}
 
 	public int getdimensionCount() {
-		return dimensionCount;
+		return fdimensionCount;
 	}
 
 	private boolean plus(int[] encode, int[] range) {
@@ -67,18 +67,18 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 
 	private void add(int[] encode, List<List<E>> inputs) {
 		List<E> tuple = decodeTuple(encode, inputs);
-		if (tuple.size() > argN || constraintCheck(tuple) == EvaluationResult.FALSE)
+		if (tuple.size() > fargN || constraintCheck(tuple) == EvaluationResult.FALSE)
 			return;
-		fTupleOccurences.put(tuple, (tuple.size() == argN ? 1 : 0));
+		fTupleOccurences.put(tuple, (tuple.size() == fargN ? 1 : 0));
 	}
 
 	private void calculateFrequency() {
-		for (int m = argN - 1; m > 0; m--) {
+		for (int m = fargN - 1; m > 0; m--) {
 			List<List<E>> remove = new ArrayList<>();
 			for (List<E> key : fTupleOccurences.keySet()) {
 				if (key.size() == m) {
 					int freq = (int) fTupleOccurences.keySet().stream()
-							.filter(s -> s.size() == argN && s.containsAll(key)).count();
+							.filter(s -> s.size() == fargN && s.containsAll(key)).count();
 					if (freq > 0)
 						fTupleOccurences.put(key, freq);
 					else
@@ -121,7 +121,7 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	}
 
 	public void printSequence() {
-		for (int m = argN; m > 0; m--) {
+		for (int m = fargN; m > 0; m--) {
 			int finalM = m;
 			fTupleOccurences.keySet().stream().filter(s -> s.size() == finalM).forEach(s -> {
 				s.forEach(k -> System.out.print(k + ","));
@@ -138,14 +138,14 @@ public class NwiseScoreEvaluator_Rep<E> implements IScoreEvaluator<E> {
 	
 	public void update(List<E> test) {
 		// if the test does not cover any argN-tuple, the scores does not update
-		if (test.size() < argN)
+		if (test.size() < fargN)
 			return;
 		// obtain all the argN-tuples covered by the test and remove them
-		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == argN && test.containsAll(e.getKey()));
+		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == fargN && test.containsAll(e.getKey()));
 		// update the occurences (i.e., fTupleOccurences) in the constructed table and scores (i.e., fScores)
 		calculateFrequency();
 		fScores.clear();
-		calculateScore(argN);
+		calculateScore(fargN);
 	}
 
 }
