@@ -14,7 +14,7 @@ public class CommonConstants {
 	public static final String DEFAULT_NEW_ECT_FILE_NAME = DEFAULT_NEW_ECT_MODEL_NAME + "." + EQUIVALENCE_CLASS_FILE_EXTENSION;
 
 	public static final String DEFAULT_NEW_METHOD_NAME = "testMethod";
-	public static final String DEFAULT_NEW_PARAMETER_NAME = "arg";
+	public static final String DEFAULT_NEW_PARAMETER_NAME = "par";
 	public static final String DEFAULT_USER_TYPE_FOR_JAVA = "default.UserType";
 	public static final String DEFAULT_USER_TYPE_FOR_SIMPLE = "UserType";
 	public static final String DEFAULT_NEW_CONSTRAINT_NAME = "constraint";
