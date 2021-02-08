@@ -18,22 +18,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
+import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.ListOfStrings;
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelConverter;
-import com.ecfeed.core.model.ModelOperationException;
-import com.ecfeed.core.model.ModelVersionDistributor;
-import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.serialization.ModelParser;
 import com.ecfeed.core.model.serialization.ModelSerializer;
 import com.ecfeed.core.testutils.RandomModelGenerator;
@@ -55,8 +44,8 @@ public class ModelSerializerTest {
 
 		model.addClass(new ClassNode("com.example.TestClass1", null));
 		model.addClass(new ClassNode("com.example.TestClass2", null));
-		model.addParameter(new GlobalParameterNode("globalParameter1", null, "int"));
-		model.addParameter(new GlobalParameterNode("globalParameter2", null, "com.example.UserType"));
+		model.addParameter(new GlobalParameterNode("globalParameter1", "int", null));
+		model.addParameter(new GlobalParameterNode("globalParameter2", "com.example.UserType", null));
 
 		OutputStream ostream = new ByteArrayOutputStream();
 		ModelSerializer serializer = new ModelSerializer(ostream, version);
@@ -65,7 +54,7 @@ public class ModelSerializerTest {
 
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -95,9 +84,9 @@ public class ModelSerializerTest {
 		ClassNode classNode = new ClassNode("com.example.TestClass", null, runOnAndroid, androidBaseRunner);
 		classNode.addMethod(new MethodNode("testMethod1", null));
 		classNode.addMethod(new MethodNode("testMethod2", null));
-		classNode.addParameter(new GlobalParameterNode("parameter1", null, "int"));
-		classNode.addParameter(new GlobalParameterNode("parameter2", null, "float"));
-		classNode.addParameter(new GlobalParameterNode("parameter3", null, "com.example.UserType"));
+		classNode.addParameter(new GlobalParameterNode("parameter1", "int", null));
+		classNode.addParameter(new GlobalParameterNode("parameter2", "float", null));
+		classNode.addParameter(new GlobalParameterNode("parameter3", "com.example.UserType", null));
 
 		RootNode model = new RootNode("model", null, version);
 		model.addClass(classNode);
@@ -108,7 +97,7 @@ public class ModelSerializerTest {
 			serializer.serialize(model);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			RootNode parsedModel = parser.parseModel(istream, null, new ArrayList<>());
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
 			assertElementsEqual(model, parsedModel);
 		} catch (Exception e) {
@@ -127,7 +116,7 @@ public class ModelSerializerTest {
 			serializer.serialize(r);
 			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
 			ModelParser parser = new ModelParser();
-			parser.parseClass(istream, new ArrayList<>());
+			parser.parseClass(istream, new ListOfStrings());
 			fail("Exception expected");
 		} catch (Exception e) {
 			//			System.out.println("Exception caught: " + e.getMessage());
@@ -173,9 +162,9 @@ public class ModelSerializerTest {
 
 	private RootNode createModel(int version) {
 
-		ChoiceNode choice = new ChoiceNode("choice", null, "0");
+		ChoiceNode choice = new ChoiceNode("choice", "0", null);
 
-		MethodParameterNode parameter = new MethodParameterNode("parameter", null, "int", "0", false);
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
 		parameter.addChoice(choice);
 
 		MethodNode methodNode = new MethodNode("testMethod1", null);
@@ -183,10 +172,11 @@ public class ModelSerializerTest {
 
 		Constraint constraint = new Constraint(
 				"constraint",
-				null, RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice),
-				RelationStatement.createStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice));
+				ConstraintType.EXTENDED_FILTER,
+				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
+        );
 
-		ConstraintNode constraintNode = new ConstraintNode("name1", null, constraint);
+		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
 		methodNode.addConstraint(constraintNode);
 
 		ClassNode classNode = new ClassNode("com.example.TestClass", null, false, null);
@@ -218,7 +208,7 @@ public class ModelSerializerTest {
 		RootNode convertedModel = null;
 		try {
 			convertedModel = ModelConverter.convertToCurrentVersion(createModel(0));
-		} catch (ModelOperationException e) {
+		} catch (Exception e) {
 			fail();
 		}
 		String convertedString = getSerializedString(convertedModel);

@@ -29,6 +29,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericRemoveNodesOperation extends BulkOperation {
 
@@ -43,12 +44,14 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			AbstractNode nodeToSelect,
-			AbstractNode nodeToSelectAfterReverseOperation) {
+			AbstractNode nodeToSelectAfterReverseOperation,
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_NODES, 
 				false,
 				nodeToSelect,
-				nodeToSelectAfterReverseOperation);
+				nodeToSelectAfterReverseOperation,
+				extLanguageManager);
 
 		fSelectedNodes = new HashSet<>(nodes);
 
@@ -142,7 +145,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			for (MethodParameterNode param : linkers) {
 				MethodNode method = param.getMethod();
 				if (addMethodToMap(method, duplicatesMap, methods)) {
-					duplicatesMap.get(method.getClassNode()).get(method.getFullName()).get(method).set(param.getMyIndex(), null);
+					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					isDependent = true;
 					if (!parameterMap.containsKey(method)) {
 						parameterMap.put(method, new ArrayList<AbstractParameterNode>());
@@ -177,7 +180,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			MethodNode method = param.getMethod();
 
 			if (addMethodToMap(method, duplicatesMap, methods)) {
-				duplicatesMap.get(method.getClassNode()).get(method.getFullName()).get(method).set(param.getMyIndex(), null);
+				duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 				if (!parameterMap.containsKey(method)) {
 					parameterMap.put(method, new ArrayList<AbstractParameterNode>());
 				}
@@ -240,9 +243,19 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes);
 								if (node instanceof MethodParameterNode) {
-									addOperation(new MethodOperationRemoveParameter(method, (MethodParameterNode)node, validate, true));
+
+									addOperation(
+											new MethodOperationRemoveParameter(
+													method, (MethodParameterNode)node, validate, false, getExtLanguageManager()));
+
 								} else if (node instanceof GlobalParameterNode) {
-									addOperation(new GenericOperationRemoveGlobalParameter(((GlobalParameterNode)node).getParametersParent(), (GlobalParameterNode)node, true));
+
+									addOperation(
+											new GenericOperationRemoveGlobalParameter(
+													((GlobalParameterNode)node).getParametersParent(), 
+													(GlobalParameterNode)node, 
+													true,
+													getExtLanguageManager()));	
 								}
 							}
 						}
@@ -256,13 +269,13 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		}
 
 		fAffectedConstraints.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguageManager())));
 
 		fAffectedTestCases.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguageManager())));
 
 		fAffectedNodes.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate)));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguageManager())));
 	}
 
 	private Set<ConstraintNode> getAllConstraintNodes() {
@@ -309,19 +322,19 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		ClassNode clazz = method.getClassNode();
 		boolean hasDuplicate = false;
 		for(MethodNode classMethod : clazz.getMethods()){
-			if(classMethod != method && classMethod.getFullName().equals(method.getFullName()) && !removedMethods.contains(classMethod)){
+			if(classMethod != method && classMethod.getName().equals(method.getName()) && !removedMethods.contains(classMethod)){
 				if(duplicatesMap.get(clazz) == null){
 					duplicatesMap.put(clazz, new HashMap<String, HashMap<MethodNode, List<String>>>());
 				}
-				if(!(duplicatesMap.get(clazz).containsKey(classMethod.getFullName()))){
-					duplicatesMap.get(clazz).put(classMethod.getFullName(), new HashMap<MethodNode, List<String>>());
+				if(!(duplicatesMap.get(clazz).containsKey(classMethod.getName()))){
+					duplicatesMap.get(clazz).put(classMethod.getName(), new HashMap<MethodNode, List<String>>());
 				}
-				if(!duplicatesMap.get(clazz).get(classMethod.getFullName()).containsKey(classMethod)){
-					duplicatesMap.get(clazz).get(classMethod.getFullName())
+				if(!duplicatesMap.get(clazz).get(classMethod.getName()).containsKey(classMethod)){
+					duplicatesMap.get(clazz).get(classMethod.getName())
 					.put(classMethod, new ArrayList<String>(classMethod.getParameterTypes()));
 				}
-				if(!duplicatesMap.get(clazz).get(classMethod.getFullName()).containsKey(method)){
-					duplicatesMap.get(clazz).get(classMethod.getFullName()).put(method, new ArrayList<String>(method.getParameterTypes()));
+				if(!duplicatesMap.get(clazz).get(classMethod.getName()).containsKey(method)){
+					duplicatesMap.get(clazz).get(classMethod.getName()).put(method, new ArrayList<String>(method.getParameterTypes()));
 				}
 				hasDuplicate = true;
 			}

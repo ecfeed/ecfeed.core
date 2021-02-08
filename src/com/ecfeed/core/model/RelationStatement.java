@@ -12,10 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.*;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -23,8 +20,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
 
-	public static RelationStatement createStatementWithLabelCondition(
-			MethodParameterNode parameter, EMathRelation relation, String label) {
+	public static RelationStatement createRelationStatementWithLabelCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		String label) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -32,32 +31,40 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}
+		}
 
-	public static RelationStatement createStatementWithChoiceCondition(
-			MethodParameterNode parameter, EMathRelation relation, ChoiceNode choiceNode) {
+	public static RelationStatement createRelationStatementWithChoiceCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		ChoiceNode choiceNode) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
 		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement);
+
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}
+		}
 
-	public static RelationStatement createStatementWithParameterCondition(
-			MethodParameterNode parameter, EMathRelation relation, MethodParameterNode rightParameter) {
+	public static RelationStatement createRelationStatementWithParameterCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		MethodParameterNode rightParameter) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
 		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement);
+
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}	
+		}
 
-	public static RelationStatement createStatementWithValueCondition(
-			MethodParameterNode parameter, EMathRelation relation, String textValue) {
+	public static RelationStatement createRelationStatementWithValueCondition(
+		MethodParameterNode parameter,
+		EMathRelation relation,
+		String textValue) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -65,9 +72,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-	}	
+		}
 
-	private RelationStatement(
+	protected RelationStatement(
 			MethodParameterNode parameter, 
 			EMathRelation relation, 
 			IStatementCondition condition) {
@@ -94,11 +101,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> testDomain, MessageStack messageStack) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> testDomain, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 
 		try {
-			if (fRightCondition.isAmbiguous(testDomain, messageStack)) {
-				ConditionHelper.addRelStatementToMesageStack(this, messageStack);
+			if (fRightCondition.isAmbiguous(testDomain, messageStack, extLanguageManager)) {
+				ConditionHelper.addRelStatementToMesageStack(this, messageStack, extLanguageManager);
 				return true;
 			}
 			return false;
@@ -120,25 +127,32 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public String getLeftOperandName() {
+	public String getLeftParameterName() {
 
-		return getLeftParameter().getFullName();
+		return getLeftParameter().getName();
 	}
 
 	@Override
 	public String toString() {
 
-		return getLeftOperandName() + getRelation() + fRightCondition.toString();
+		return getLeftParameterName() + getRelation() + fRightCondition.toString();
+	}
+
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		MethodParameterNode methodParameterNode = getLeftParameter();
+		return MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager) + getRelation() + fRightCondition.createSignature(extLanguageManager);
 	}
 
 	@Override
 	public EMathRelation[] getAvailableRelations() {
 
-		return EMathRelation.getAvailableRelations(getLeftParameter().getType());
+		return EMathRelation.getAvailableComparisonRelations(getLeftParameter().getType());
 	}
 
 	@Override
-	public RelationStatement getCopy() {
+	public RelationStatement makeClone() {
 
 		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.getCopy());
 	}
@@ -146,7 +160,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.getMethodParameter(fLeftParameter.getFullName());
+		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fLeftParameter.getName());
 
 		if (tmpParameterNode != null && !tmpParameterNode.isExpected()) {
 
@@ -159,7 +173,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean compare(IStatement statement) {
+	public boolean isEqualTo(IStatement statement) {
 
 		if ( !(statement instanceof RelationStatement) ) {
 			return false;
@@ -167,7 +181,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		RelationStatement compared = (RelationStatement)statement;
 
-		if ( !(getLeftParameter().getFullName().equals(compared.getLeftParameter().getFullName())) ) {
+		if ( !(getLeftParameter().getName().equals(compared.getLeftParameter().getName())) ) {
 			return false;
 		}
 
@@ -245,6 +259,18 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public void setCondition(IStatementCondition condition) {
+
+		if (condition instanceof ParameterCondition) {
+
+			ParameterCondition parameterCondition = (ParameterCondition)condition;
+
+			MethodParameterNode rightParameter = parameterCondition.getRightParameterNode();
+
+			if (!isRightParameterTypeAllowed(rightParameter.getType())) {
+				ExceptionHelper.reportRuntimeException("Invalid type of right parameter in relation statement.");
+			}
+		}
+
 		fRightCondition = condition;
 	}
 
@@ -272,10 +298,57 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return fRightCondition.toString();
 	}
 
+	public String getConditionSignature(IExtLanguageManager extLanguageManager) {
+		return fRightCondition.createSignature(extLanguageManager);
+	}
+
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return fRightCondition.getListOfChoices();
 	}
 
+	public boolean isRightParameterTypeAllowed(String rightParameterType) {
+
+		MethodParameterNode leftParameter = getLeftParameter();
+		String leftParameterType =  leftParameter.getType();
+		
+		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+			
+			return false;
+		}
+		
+		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
+				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
+				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
+				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
+				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+			
+			return false;
+		}
+
+		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
+				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
+			
+			return false;
+		}
+		
+		return true;
+	}
 }
 

@@ -14,12 +14,20 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class RootOperationAddClasses extends BulkOperation {
-	public RootOperationAddClasses(RootNode target, Collection<ClassNode> classes, int index) {
-		super(OperationNames.ADD_CLASSES, false, target, target);
+	
+	public RootOperationAddClasses(
+			RootNode target, 
+			Collection<ClassNode> classes, 
+			int index,
+			IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.ADD_CLASSES, false, target, target, extLanguageManager);
+		
 		for(ClassNode classNode : classes){
-			addOperation(new RootOperationAddNewClass(target, classNode, index++));
+			addOperation(new RootOperationAddClass(target, classNode, index++, extLanguageManager));
 		}
 	}
 }

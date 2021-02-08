@@ -10,20 +10,20 @@
 
 package com.ecfeed.core.testutils;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class TestUtilConstants {
 	public static final String USER_TYPE = "user.type";
 	public static final String[] SUPPORTED_TYPES = {
-		JavaTypeHelper.TYPE_NAME_BOOLEAN,
-		JavaTypeHelper.TYPE_NAME_BYTE,
-		JavaTypeHelper.TYPE_NAME_CHAR,
-		JavaTypeHelper.TYPE_NAME_DOUBLE,
-		JavaTypeHelper.TYPE_NAME_FLOAT,
-		JavaTypeHelper.TYPE_NAME_INT,
-		JavaTypeHelper.TYPE_NAME_LONG,
-		JavaTypeHelper.TYPE_NAME_SHORT,
-		JavaTypeHelper.TYPE_NAME_STRING,
+		JavaLanguageHelper.TYPE_NAME_BOOLEAN,
+		JavaLanguageHelper.TYPE_NAME_BYTE,
+		JavaLanguageHelper.TYPE_NAME_CHAR,
+		JavaLanguageHelper.TYPE_NAME_DOUBLE,
+		JavaLanguageHelper.TYPE_NAME_FLOAT,
+		JavaLanguageHelper.TYPE_NAME_INT,
+		JavaLanguageHelper.TYPE_NAME_LONG,
+		JavaLanguageHelper.TYPE_NAME_SHORT,
+		JavaLanguageHelper.TYPE_NAME_STRING,
 		USER_TYPE
 	};
 

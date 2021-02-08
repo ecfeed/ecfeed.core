@@ -20,6 +20,7 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
@@ -29,8 +30,8 @@ import com.ecfeed.core.model.IChoicesParentVisitor;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.ParameterCondition;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
@@ -40,10 +41,35 @@ import com.ecfeed.core.model.ValueCondition;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class MethodParameterOperationSetType extends BulkOperation {
+
+	private IExtLanguageManager fExtLanguageManager;
+
+	public MethodParameterOperationSetType(
+			MethodParameterNode targetMethodParameterNode, 
+			String newType, 
+			IExtLanguageManager extLanguageManager,
+			ITypeAdapterProvider adapterProvider) {
+
+		super(OperationNames.SET_TYPE, true, targetMethodParameterNode, targetMethodParameterNode, extLanguageManager);
+
+		fExtLanguageManager = extLanguageManager;
+
+		if (newType == null) {
+			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
+		}
+
+		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguageManager()));
+
+		if (targetMethodParameterNode.getMethod() != null) {
+			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getExtLanguageManager()));
+		}
+	}
 
 	private class SetTypeOperation extends AbstractParameterOperationSetType{
 
@@ -51,6 +77,193 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		private Map<AbstractStatement, String> fOriginalStatementValues;
 		private ArrayList<TestCaseNode> fOriginalTestCases;
 		private ArrayList<ConstraintNode> fOriginalConstraints;
+
+		private MethodParameterNode fMethodParameterNode;
+
+		public SetTypeOperation(
+				MethodParameterNode target, 
+				String newType, 
+				ITypeAdapterProvider adapterProvider, 
+				IExtLanguageManager extLanguageManager) {
+
+			super(target, newType, adapterProvider, extLanguageManager);
+
+			fMethodParameterNode = target;
+			fOriginalStatementValues = new HashMap<>();
+		}
+
+		@Override
+		public void execute() {
+
+			MethodNode methodNode = fMethodParameterNode.getMethod();
+
+			checkForDuplicateSignature(methodNode);
+
+			super.execute();
+
+			fOriginalTestCases = new ArrayList<>(methodNode.getTestCases());
+			fOriginalConstraints = new ArrayList<>(methodNode.getConstraintNodes());
+
+			adaptDefaultValue();
+
+			if (fMethodParameterNode.isExpected()) {
+				adaptTestCases();
+				adaptConstraints();
+			}
+
+			markModelUpdated();
+		}
+
+		private void checkForDuplicateSignature(MethodNode oldMethodNode) {
+
+			List<String> parameterTypesInExtLanguage = 
+					MethodNodeHelper.getParameterTypes(oldMethodNode, getExtLanguageManager());
+
+			String newParameterType = getNewType();
+
+			parameterTypesInExtLanguage.set(fMethodParameterNode.getMyIndex(), newParameterType);
+
+			ClassNode classNode = oldMethodNode.getClassNode();
+
+			String methodNameInExtLanguage = MethodNodeHelper.getName(oldMethodNode, fExtLanguageManager);
+
+			MethodNode foundMethodNode = 
+					ClassNodeHelper.findMethodByExtLanguage(
+							classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, fExtLanguageManager);
+
+			if (foundMethodNode == null) {
+				return;
+			}
+
+			if (foundMethodNode == oldMethodNode) {
+				return;
+			}
+
+			String message = 
+					ClassNodeHelper.createMethodSignatureDuplicateMessage(
+							classNode, foundMethodNode, false, getExtLanguageManager());
+
+			ExceptionHelper.reportRuntimeException(message);
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new ReverseSetTypeOperation(getExtLanguageManager());
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected List<ChoiceNode> getChoices(ChoicesParentNode parent) {
+			try {
+				return (List<ChoiceNode>)parent.accept(new RealChoicesProvider());
+			} catch(Exception e) {SystemLogger.logCatch(e);}
+			return null;
+		}
+
+		private void adaptDefaultValue() {
+
+			String newType = getNewType();
+
+			fOriginalDefaultValue = fMethodParameterNode.getDefaultValue();
+
+			ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
+			String newDefaultValue = 
+					adapter.adapt(fMethodParameterNode.getDefaultValue(), false, ERunMode.QUIET, getExtLanguageManager());
+
+			if (newDefaultValue == null) {
+				if (fMethodParameterNode.getLeafChoices().size() > 0) {
+					newDefaultValue = fMethodParameterNode.getLeafChoices().toArray(new ChoiceNode[]{})[0].getValueString();
+				}
+				else{
+					newDefaultValue = adapter.getDefaultValue();
+				}
+			}
+
+			if (JavaLanguageHelper.isUserType(newType)) {
+				if (fMethodParameterNode.getLeafChoices().size() > 0) {
+					if (fMethodParameterNode.getLeafChoiceValues().contains(newDefaultValue) == false) {
+						newDefaultValue = fMethodParameterNode.getLeafChoiceValues().toArray(new String[]{})[0];
+					}
+				}
+				//				else{
+				//					fMethodParameterNode.addChoice(
+				//							new ChoiceNode(
+				//									"choice1", 
+				//									newDefaultValue, 
+				//									fMethodParameterNode.getModelChangeRegistrator()));
+				//				}
+			}
+
+			fMethodParameterNode.setDefaultValueString(newDefaultValue);
+		}
+
+		private void adaptTestCases() {
+
+			MethodNode method = fMethodParameterNode.getMethod();
+			if (method != null) {
+				Iterator<TestCaseNode> tcIt = method.getTestCases().iterator();
+
+				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
+
+				while (tcIt.hasNext()) {
+					ChoiceNode expectedValue = tcIt.next().getTestData().get(fMethodParameterNode.getMyIndex());
+					String newValue = 
+							adapter.adapt(
+									expectedValue.getValueString(), false, ERunMode.QUIET, getExtLanguageManager());
+
+					if (JavaLanguageHelper.isUserType(getNewType())) {
+						if (fMethodParameterNode.getLeafChoiceValues().contains(newValue) == false) {
+							tcIt.remove();
+							continue;
+						}
+					}
+					if (newValue == null && adapter.isNullAllowed() == false) {
+						tcIt.remove();
+						continue;
+					}
+					else{
+						if (expectedValue.getValueString().equals(newValue) == false) {
+							expectedValue.setValueString(newValue);
+						}
+					}
+				}
+			}
+		}
+
+		private void adaptConstraints() {
+			MethodNode methodNode = fMethodParameterNode.getMethod();
+			MethodNode.ConstraintsItr constraintItr = methodNode.getIterator();
+
+			while (methodNode.hasNextConstraint(constraintItr)) {
+
+				ConstraintNode constraintNode = methodNode.getNextConstraint(constraintItr);
+				Constraint constraint = constraintNode.getConstraint();
+
+				if (isRelevantConstraint(constraint)) {
+
+					IStatementVisitor statementAdapter = new StatementAdapter();
+					try {
+						if (!(boolean) constraint.getPrecondition().accept(statementAdapter)
+								|| !(boolean) constraint.getPostcondition().accept(statementAdapter)) {
+							methodNode.removeConstraint(constraintItr);
+						}
+					} catch (Exception e) {
+						methodNode.removeConstraint(constraintItr);
+					}
+				}
+			}
+		}
+
+		private boolean isRelevantConstraint(Constraint constraint) {
+			if (constraint.getPostcondition() instanceof ExpectedValueStatement) {
+				ExpectedValueStatement expectedValueStatement = (ExpectedValueStatement)constraint.getPostcondition();
+				MethodParameterNode methodParameterNode = expectedValueStatement.getParameter();
+				if(fMethodParameterNode.equals(methodParameterNode)) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 		private class RealChoicesProvider implements IChoicesParentVisitor{
 
@@ -95,15 +308,18 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			public Object visit(ExpectedValueStatement statement) throws Exception {
 
 				boolean success = true;
-				
+
 				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
 				String newValue = 
-						adapter.convert(
-								statement.getCondition().getValueString(), false, ERunMode.QUIET);
+						adapter.adapt(
+								statement.getCondition().getValueString(), 
+								false, 
+								ERunMode.QUIET,
+								getExtLanguageManager());
 
 				fOriginalStatementValues.put(statement, statement.getCondition().getValueString());
 				statement.getCondition().setValueString(newValue);
-				if (JavaTypeHelper.isUserType(getNewType())) {
+				if (JavaLanguageHelper.isUserType(getNewType())) {
 					success = newValue != null && fMethodParameterNode.getLeafChoiceValues().contains(newValue);
 				}
 				else{
@@ -140,6 +356,11 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		}
 
 		private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
+
+			public ReverseSetTypeOperation(IExtLanguageManager extLanguageManager) {
+
+				super(extLanguageManager);
+			}
 
 			private class StatementValueRestorer implements IStatementVisitor{
 
@@ -198,7 +419,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			}
 
 			@Override
-			public void execute() throws ModelOperationException{
+			public void execute() {
 
 				super.execute();
 				fMethodParameterNode.getMethod().replaceTestCases(fOriginalTestCases);
@@ -211,7 +432,8 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			@Override
 			public IModelOperation getReverseOperation() {
 
-				return new SetTypeOperation(fMethodParameterNode, getNewType(), getTypeAdapterProvider());
+				return new SetTypeOperation(
+						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getExtLanguageManager());
 			}
 
 			private void restoreStatementValues() {
@@ -219,190 +441,14 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				IStatementVisitor valueRestorer = new StatementValueRestorer();
 				for(ConstraintNode constraint : fMethodParameterNode.getMethod().getConstraintNodes()) {
 					try {
-						constraint.getConstraint().getPremise().accept(valueRestorer);
-						constraint.getConstraint().getConsequence().accept(valueRestorer);
+						constraint.getConstraint().getPrecondition().accept(valueRestorer);
+						constraint.getConstraint().getPostcondition().accept(valueRestorer);
 					} catch(Exception e) {SystemLogger.logCatch(e);}
 				}
 			}
 
 		}
 
-		private MethodParameterNode fMethodParameterNode;
-
-		public SetTypeOperation(MethodParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
-			super(target, newType, adapterProvider);
-			fMethodParameterNode = target;
-			fOriginalStatementValues = new HashMap<>();
-		}
-
-		@Override
-		public void execute() throws ModelOperationException {
-
-			MethodNode methodNode = fMethodParameterNode.getMethod();
-
-			checkForDuplicateSignature(methodNode);
-
-			super.execute();
-
-			fOriginalTestCases = new ArrayList<>(methodNode.getTestCases());
-			fOriginalConstraints = new ArrayList<>(methodNode.getConstraintNodes());
-
-			adaptDefaultValue();
-
-			if (fMethodParameterNode.isExpected()) {
-				adaptTestCases();
-				adaptConstraints();
-			}
-
-			markModelUpdated();
-		}
-
-		private void checkForDuplicateSignature(MethodNode oldMethodNode) throws ModelOperationException {
-
-			List<String> types = oldMethodNode.getParameterTypes();
-			types.set(fMethodParameterNode.getMyIndex(), getNewType());
-
-			MethodNode newMethodNode = oldMethodNode.getClassNode().getMethod(oldMethodNode.getFullName(), types);
-
-			if ( newMethodNode == null) {
-				return;
-			}
-
-			if (newMethodNode == oldMethodNode) {
-				return;
-			}
-
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(oldMethodNode.getClassNode(), oldMethodNode.getFullName()));
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new ReverseSetTypeOperation();
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		protected List<ChoiceNode> getChoices(ChoicesParentNode parent) {
-			try {
-				return (List<ChoiceNode>)parent.accept(new RealChoicesProvider());
-			} catch(Exception e) {SystemLogger.logCatch(e);}
-			return null;
-		}
-
-		private void adaptDefaultValue() {
-
-			String newType = getNewType();
-
-			fOriginalDefaultValue = fMethodParameterNode.getDefaultValue();
-			
-			ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
-			String newDefaultValue = 
-					adapter.convert(fMethodParameterNode.getDefaultValue(), false, ERunMode.QUIET);
-
-			if (newDefaultValue == null) {
-				if (fMethodParameterNode.getLeafChoices().size() > 0) {
-					newDefaultValue = fMethodParameterNode.getLeafChoices().toArray(new ChoiceNode[]{})[0].getValueString();
-				}
-				else{
-					newDefaultValue = adapter.getDefaultValue();
-				}
-			}
-
-			if (JavaTypeHelper.isUserType(newType)) {
-				if (fMethodParameterNode.getLeafChoices().size() > 0) {
-					if (fMethodParameterNode.getLeafChoiceValues().contains(newDefaultValue) == false) {
-						newDefaultValue = fMethodParameterNode.getLeafChoiceValues().toArray(new String[]{})[0];
-					}
-				}
-				else{
-					fMethodParameterNode.addChoice(
-							new ChoiceNode(
-									newDefaultValue.toLowerCase(), 
-									fMethodParameterNode.getModelChangeRegistrator(), 
-									newDefaultValue));
-				}
-			}
-
-			fMethodParameterNode.setDefaultValueString(newDefaultValue);
-		}
-
-		private void adaptTestCases() {
-
-			MethodNode method = fMethodParameterNode.getMethod();
-			if (method != null) {
-				Iterator<TestCaseNode> tcIt = method.getTestCases().iterator();
-
-				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
-				
-				while (tcIt.hasNext()) {
-					ChoiceNode expectedValue = tcIt.next().getTestData().get(fMethodParameterNode.getMyIndex());
-					String newValue = 
-							adapter.convert(
-									expectedValue.getValueString(), false, ERunMode.QUIET);
-
-					if (JavaTypeHelper.isUserType(getNewType())) {
-						if (fMethodParameterNode.getLeafChoiceValues().contains(newValue) == false) {
-							tcIt.remove();
-							continue;
-						}
-					}
-					if (newValue == null && adapter.isNullAllowed() == false) {
-						tcIt.remove();
-						continue;
-					}
-					else{
-						if (expectedValue.getValueString().equals(newValue) == false) {
-							expectedValue.setValueString(newValue);
-						}
-					}
-				}
-			}
-		}
-
-		private void adaptConstraints() {
-			MethodNode methodNode = fMethodParameterNode.getMethod();
-			MethodNode.ConstraintsItr constraintItr = methodNode.getIterator();
-
-			while (methodNode.hasNextConstraint(constraintItr)) {
-
-				ConstraintNode constraintNode = methodNode.getNextConstraint(constraintItr);
-				Constraint constraint = constraintNode.getConstraint();
-				
-				if (isRelevantConstraint(constraint)) {
-
-					IStatementVisitor statementAdapter = new StatementAdapter();
-					try {
-						if (!(boolean) constraint.getPremise().accept(statementAdapter)
-								|| !(boolean) constraint.getConsequence().accept(statementAdapter)) {
-							methodNode.removeConstraint(constraintItr);
-						}
-					} catch (Exception e) {
-						methodNode.removeConstraint(constraintItr);
-					}
-				}
-			}
-		}
-		
-		private boolean isRelevantConstraint(Constraint constraint) {
-			if (constraint.getConsequence() instanceof ExpectedValueStatement) {
-				ExpectedValueStatement expectedValueStatement = (ExpectedValueStatement)constraint.getConsequence();
-				MethodParameterNode methodParameterNode = expectedValueStatement.getParameter();
-				if(fMethodParameterNode.equals(methodParameterNode)) {
-					return true;
-				}
-			}
-			return false;
-		}
 	}
-	
 
-
-	public MethodParameterOperationSetType(MethodParameterNode target, String newType, ITypeAdapterProvider adapterProvider) {
-
-		super(OperationNames.SET_TYPE, true, target, target);
-		addOperation(new SetTypeOperation(target, newType, adapterProvider));
-		if (target.getMethod() != null) {
-			addOperation(new MethodOperationMakeConsistent(target.getMethod()));
-		}
-	}
 }

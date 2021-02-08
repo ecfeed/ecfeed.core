@@ -18,7 +18,7 @@ public class DummyEvaluator<E> implements IConstraintEvaluator<E> {
         return EvaluationResult.TRUE;
     }
 
-    public List<E> adapt(List<E> valueAssignment) {
+    public List<E> setExpectedValues(List<E> valueAssignment) {
         return valueAssignment;
     }
 

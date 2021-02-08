@@ -19,9 +19,9 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelConstants;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ParameterOperationSetExpected extends AbstractModelOperation {
 
@@ -34,12 +34,12 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		public ReverseOperation() {
-			super(ParameterOperationSetExpected.this.getName());
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(ParameterOperationSetExpected.this.getName(), extLanguageManager);
 		}
 
 		@Override
-		public void execute() throws ModelOperationException {
+		public void execute() {
 
 			setOneNodeToSelect(fTarget);
 
@@ -55,13 +55,13 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ParameterOperationSetExpected(fTarget, fExpected);
+			return new ParameterOperationSetExpected(fTarget, fExpected, getExtLanguageManager());
 		}
 
 	}
 
-	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected){
-		super(OperationNames.SET_EXPECTED_STATUS);
+	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected, IExtLanguageManager extLanguageManager){
+		super(OperationNames.SET_EXPECTED_STATUS, extLanguageManager);
 		fTarget = target;
 		fExpected = expected;
 
@@ -78,13 +78,13 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fTarget);
 
 		fTarget.setExpected(fExpected);
 		String type = fTarget.getType();
-		if(fExpected && JavaTypeHelper.hasLimitedValuesSet(type)){
+		if(fExpected && JavaLanguageHelper.hasLimitedValuesSet(type)){
 			boolean validDefaultValue = false;
 			String currentDefaultValue = fTarget.getDefaultValue();
 			for(ChoiceNode leaf : fTarget.getLeafChoices()){
@@ -98,7 +98,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 					fTarget.setDefaultValueString(fTarget.getLeafChoices().toArray(new ChoiceNode[]{})[0].getValueString());
 				}
 				else{
-					fTarget.addChoice(new ChoiceNode("choice", fTarget.getModelChangeRegistrator(), currentDefaultValue));
+					fTarget.addChoice(new ChoiceNode("choice", currentDefaultValue, fTarget.getModelChangeRegistrator()));
 				}
 			}
 		}
@@ -113,8 +113,8 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 					ChoiceNode p = 
 							new ChoiceNode(
 									ModelConstants.EXPECTED_VALUE_CHOICE_NAME, 
-									fTarget.getModelChangeRegistrator(), 
-									fTarget.getDefaultValue());
+									fTarget.getDefaultValue(), 
+									fTarget.getModelChangeRegistrator());
 					
 					p.setParent(fTarget);
 					TestCaseNode newTestCase = testCase.makeClone();
@@ -139,7 +139,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ReverseOperation();
+		return new ReverseOperation(getExtLanguageManager());
 	}
 
 	protected MethodParameterNode getOwnNode(){

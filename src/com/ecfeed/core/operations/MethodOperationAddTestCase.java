@@ -13,11 +13,12 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
 public class MethodOperationAddTestCase extends AbstractModelOperation {
@@ -31,9 +32,10 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			MethodNode target, 
 			TestCaseNode testCase, 
 			ITypeAdapterProvider typeAdapterProvider, 
-			int index) {
+			int index,
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.ADD_TEST_CASE);
+		super(OperationNames.ADD_TEST_CASE, extLanguageManager);
 		fMethodNode = target;
 		fTestCase = testCase;
 		fIndex = index;
@@ -43,24 +45,25 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 	public MethodOperationAddTestCase(
 			MethodNode target, 
 			TestCaseNode testCase, 
-			ITypeAdapterProvider typeAdapterProvider) {
+			ITypeAdapterProvider typeAdapterProvider, 
+			IExtLanguageManager extLanguageManager) {
 
-		this(target, testCase, typeAdapterProvider, -1);
+		this(target, testCase, typeAdapterProvider, -1, extLanguageManager);
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
 		setOneNodeToSelect(fMethodNode);
 
 		if(fIndex == -1){
 			fIndex = fMethodNode.getTestCases().size();
 		}
-		if(fTestCase.getFullName().matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false){
-			ModelOperationException.report(OperationMessages.TEST_CASE_NAME_REGEX_PROBLEM);
+		if(fTestCase.getName().matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false){
+			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 		if(fTestCase.updateReferences(fMethodNode) == false){
-			ModelOperationException.report(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
+			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
 		}
 
 		//following must be done AFTER references are updated
@@ -71,13 +74,20 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			MethodParameterNode parameter = fTestCase.getMethodParameter(choice);
 
 			if(parameter.isExpected()){
+				
 				String type = parameter.getType();
+				
 				ITypeAdapter<?> adapter = fTypeAdapterProvider.getAdapter(type);
+				
 				String newValue = 
-						adapter.convert(
-								choice.getValueString(), choice.isRandomizedValue(), ERunMode.QUIET);
+						adapter.adapt(
+								choice.getValueString(), 
+								choice.isRandomizedValue(), 
+								ERunMode.QUIET, 
+								getExtLanguageManager());
+				
 				if(newValue == null){
-					ModelOperationException.report(OperationMessages.TEST_CASE_DATA_INCOMPATIBLE_WITH_METHOD);
+					ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_DATA_INCOMPATIBLE_WITH_METHOD);
 				}
 				choice.setValueString(newValue);
 			}
@@ -90,7 +100,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationRemoveTestCase(fMethodNode, fTestCase);
+		return new MethodOperationRemoveTestCase(fMethodNode, fTestCase, getExtLanguageManager());
 	}
 
 }

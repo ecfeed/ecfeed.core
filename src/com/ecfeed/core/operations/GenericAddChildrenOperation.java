@@ -14,12 +14,19 @@ import java.util.Collection;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SystemLogger;
 
 public class GenericAddChildrenOperation extends BulkOperation {
 
-	public GenericAddChildrenOperation(AbstractNode target, Collection<? extends AbstractNode> children, ITypeAdapterProvider adapterProvider, boolean validate) {
-		this(target, children, -1, adapterProvider, validate);
+	public GenericAddChildrenOperation(
+			AbstractNode target, 
+			Collection<? extends AbstractNode> children, 
+			ITypeAdapterProvider adapterProvider, 
+			boolean validate,
+			IExtLanguageManager extLanguageManager) {
+		
+		this(target, children, -1, adapterProvider, validate, extLanguageManager);
 	}
 
 	public GenericAddChildrenOperation(
@@ -27,17 +34,23 @@ public class GenericAddChildrenOperation extends BulkOperation {
 			Collection<? extends AbstractNode> children, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
-			boolean validate) {
+			boolean validate,
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.ADD_CHILDREN, false, target, target);
+		super(OperationNames.ADD_CHILDREN, false, target, target, extLanguageManager);
 
 		for (AbstractNode child : children) {
 			IModelOperation operation;
 			try {
 				if (index != -1) {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, index++, adapterProvider, validate));
+					operation = 
+							(IModelOperation)target.accept(
+									new FactoryAddChildOperation(
+											child, index++, adapterProvider, validate, getExtLanguageManager()));
 				} else {
-					operation = (IModelOperation)target.accept(new FactoryAddChildOperation(child, adapterProvider, validate));
+					operation = 
+							(IModelOperation)target.accept(
+									new FactoryAddChildOperation(child, adapterProvider, validate, getExtLanguageManager()));
 				}
 				if (operation != null) {
 					addOperation(operation);

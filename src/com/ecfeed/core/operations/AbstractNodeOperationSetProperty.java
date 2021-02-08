@@ -10,8 +10,8 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.NodePropertyDefs;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 
@@ -24,9 +24,11 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 	public AbstractNodeOperationSetProperty(
 			NodePropertyDefs.PropertyId propertyId, 
 			String value,
-			AbstractNode abstractNode) {
+			AbstractNode abstractNode,
+			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.SET_PROPERTY);
+		super(OperationNames.SET_PROPERTY, extLanguageManager);
+		
 		fPropertyId = propertyId;
 		fNewValue = value;
 		fAbstractNode = abstractNode;
@@ -35,7 +37,7 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		
 		setOneNodeToSelect(fAbstractNode);
 		fAbstractNode.setPropertyValue(fPropertyId, fNewValue);
@@ -45,7 +47,7 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new AbstractNodeOperationSetProperty(fPropertyId, fOriginalValue, fAbstractNode);
+		return new AbstractNodeOperationSetProperty(fPropertyId, fOriginalValue, fAbstractNode, getExtLanguageManager());
 	}
 
 }

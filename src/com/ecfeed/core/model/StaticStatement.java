@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public class StaticStatement extends AbstractStatement {
@@ -53,6 +54,12 @@ public class StaticStatement extends AbstractStatement {
 		return convertToString(fValue);
 	}
 
+	@Override
+	public String createSignature(IExtLanguageManager extLanguageManager) {
+
+		return convertToString(fValue);
+	}
+
 	public static String convertToString(EvaluationResult result) {
 
 		switch(result) {
@@ -69,7 +76,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public StaticStatement getCopy(){
+	public StaticStatement makeClone(){
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
@@ -79,7 +86,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean compare(IStatement statement){
+	public boolean isEqualTo(IStatement statement){
 		if(statement instanceof StaticStatement == false){
 			return false;
 		}
@@ -97,7 +104,7 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftOperandName(){
+	public String getLeftParameterName(){
 		return toString();
 	}
 
@@ -110,7 +117,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 		return false;
 	}
 

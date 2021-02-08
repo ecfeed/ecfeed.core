@@ -14,6 +14,10 @@ public class RangeHelper {
 	public static final String DELIMITER = ":";
 
 	public static boolean isRange(String value) {
+		
+		if (value == null) {
+			ExceptionHelper.reportRuntimeException("Invalid value during range checking.");
+		}
 
 		String[] values = value.split(DELIMITER);
 
@@ -58,11 +62,11 @@ public class RangeHelper {
 			EMathRelation relation, 
 			String substituteType) {
 
-		if (JavaTypeHelper.TYPE_NAME_STRING.equals(substituteType)) {
+		if (JavaLanguageHelper.TYPE_NAME_STRING.equals(substituteType)) {
 			return leftRange.matches(rightRange);
 		}
 
-		if (!JavaTypeHelper.isNumericTypeName(substituteType)) {
+		if (!JavaLanguageHelper.isNumericTypeName(substituteType)) {
 			return false;
 		}
 
@@ -180,7 +184,7 @@ public class RangeHelper {
 	public static boolean isRightRangeInLeftRange(
 			String leftValues, String rightValues, EMathRelation relation, String substituteType) {
 
-		if(!JavaTypeHelper.isNumericTypeName(substituteType)) {
+		if(!JavaLanguageHelper.isNumericTypeName(substituteType)) {
 			return false;
 		}
 

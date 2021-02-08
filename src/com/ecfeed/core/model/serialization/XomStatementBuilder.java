@@ -22,6 +22,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.STATEME
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE;
+import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME;
@@ -76,14 +77,22 @@ public class XomStatementBuilder implements IStatementVisitor {
 		Attribute operatorAttribute = null;
 
 		switch(statement.getOperator()) {
+		
 		case AND:
-			operatorAttribute = new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME,
-					STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE);
+			operatorAttribute = 
+				new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE);
 			break;
+			
 		case OR:
-			operatorAttribute = new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME,
-					STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE);
+			operatorAttribute = 
+				new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE);
 			break;
+			
+		case ASSIGN:
+			operatorAttribute = 
+			new Attribute(STATEMENT_OPERATOR_ATTRIBUTE_NAME, STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE);
+		break;
+			
 		}
 
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, operatorAttribute, fWhiteCharConverter);
@@ -97,7 +106,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
 
-		String parameterName = statement.getLeftOperandName();
+		String parameterName = statement.getLeftParameterName();
 		ChoiceNode condition = statement.getCondition();
 		Attribute parameterAttribute =
 				new Attribute(fStatementParameterAttributeName, parameterName);
@@ -115,7 +124,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {
 
-		String parameterName = statement.getLeftParameter().getFullName();
+		String parameterName = statement.getLeftParameter().getName();
 
 		Attribute parameterAttribute =
 				new Attribute(fStatementParameterAttributeName, parameterName);
@@ -167,7 +176,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		XomBuilder.encodeAndAddAttribute(
 				targetParameterElement, 
-				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, rightMethodParameterNode.getFullName()), 
+				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, rightMethodParameterNode.getName()), 
 				fWhiteCharConverter);
 
 		return targetParameterElement;

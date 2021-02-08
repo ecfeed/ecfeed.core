@@ -10,24 +10,18 @@
 
 package com.ecfeed.core.utils;
 
-public class PackageClassHelper {
+public class QualifiedNameHelper {
+
 
 	public static final String PACKAGE_CLASS_SEPARATOR = ".";
 
 	public static String getPackage(String packageWithClass) {
-		return StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);		
+		String result = StringHelper.getAllBeforeLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);	
+		return result == null ? "" : result;		
 	}
 
-	public static String getClass(String packageWithClass) {
-		return StringHelper.getLastToken(packageWithClass, PACKAGE_CLASS_SEPARATOR);
-	}
-
-	public static String createPackageWithClass(String thePackage, String className) {
-		return thePackage + PACKAGE_CLASS_SEPARATOR + className;
-	}
-
-	public static String removeDefaultPackagePrefix(String packageWithClass) {
-		return StringHelper.removeToPrefix(".", packageWithClass);
+	public static String getNonQualifiedName(String qualifiedName) {
+		return StringHelper.getLastTokenOrInputString(qualifiedName, PACKAGE_CLASS_SEPARATOR);
 	}
 
 	public static boolean hasPackageName(String packageWithClass) {

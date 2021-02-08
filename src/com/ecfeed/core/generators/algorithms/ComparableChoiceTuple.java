@@ -46,7 +46,7 @@ public class ComparableChoiceTuple implements Comparable<ComparableChoiceTuple> 
 			ChoiceNode thisChoice = this.fTuple.get(index);
 			ChoiceNode otherChoice = otherTuple.fTuple.get(index);
 
-			int result = thisChoice.getFullName().compareTo(otherChoice.getFullName());
+			int result = thisChoice.getName().compareTo(otherChoice.getName());
 
 			if (result != 0) {
 				return result;

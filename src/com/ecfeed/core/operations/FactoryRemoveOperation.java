@@ -21,18 +21,19 @@ import com.ecfeed.core.model.GlobalParametersParentNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryRemoveOperation {
 
 	private static class UnsupportedModelOperation implements IModelOperation{
 		@Override
-		public void execute() throws ModelOperationException {
-			ModelOperationException.report(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+		public void execute() {
+			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 		}
 
 		@Override
@@ -66,10 +67,12 @@ public class FactoryRemoveOperation {
 
 		private boolean fValidate;
 		private ITypeAdapterProvider fAdapterProvider;
+		IExtLanguageManager fExtLanguageManager;
 
-		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate){
+		public RemoveOperationVisitor(ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager) {
 			fValidate = validate;
 			fAdapterProvider = adapterProvider;
+			fExtLanguageManager = extLanguageManager;
 		}
 
 		@Override
@@ -79,48 +82,52 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node);
+			return new RootOperationRemoveClass(node.getRoot(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node);
+			return new ClassOperationRemoveMethod(node.getClassNode(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(MethodParameterNode node) throws Exception {
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate);
+			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GenericOperationRemoveGlobalParameter((GlobalParametersParentNode)node.getParametersParent(), node);
+			return new GenericOperationRemoveGlobalParameter(
+					(GlobalParametersParentNode)node.getParametersParent(), 
+					node,
+					fExtLanguageManager);
 		}
 		
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return new MethodOperationRemoveTestSuite(node.getMethod(), node);
+			return new MethodOperationRemoveTestSuite(node.getMethod(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new MethodOperationRemoveTestCase(node.getMethod(), node);
+			return new MethodOperationRemoveTestCase(node.getMethod(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new MethodOperationRemoveConstraint(node.getMethod(), node);
+			return new MethodOperationRemoveConstraint(node.getMethodNode(), node, fExtLanguageManager);
 		}
 
 		@Override
 		public Object visit(ChoiceNode node) throws Exception {
-			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate);
+			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 	}
 
-	public static IModelOperation getRemoveOperation(AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate){
+	public static IModelOperation getRemoveOperation(
+			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager){
 		try {
-			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate));
+			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, extLanguageManager));
 		} catch (Exception e) {
 			return new UnsupportedModelOperation();
 		}

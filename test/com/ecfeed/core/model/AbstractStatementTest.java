@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.MessageStack;
@@ -29,19 +30,25 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public String getLeftOperandName() {
+		public String getLeftParameterName() {
 			return null;
 		}
 		@Override
-		public AbstractStatement getCopy(){
+		public AbstractStatement makeClone(){
 			return null;
 		}
 		@Override
 		public boolean updateReferences(MethodNode method){
 			return true;
 		}
+
 		@Override
-		public boolean compare(IStatement statement) {
+		public String createSignature(IExtLanguageManager extLanguageManager) {
+			return null;
+		}
+
+		@Override
+		public boolean isEqualTo(IStatement statement) {
 			return false;
 		}
 		@Override
@@ -53,7 +60,7 @@ public class AbstractStatementTest {
 			return false;
 		}
 		@Override
-		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack) {
+		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 			return false;
 		}
 		@Override
@@ -73,7 +80,7 @@ public class AbstractStatementTest {
 
 	@Test
 	public void testGetChildren() {
-		StatementArray array = new StatementArray(EStatementOperator.AND, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.AND, null);
 		AbstractStatement statement2 = new StatementImplementation();
 		AbstractStatement statement3 = new StatementImplementation();
 
@@ -88,7 +95,7 @@ public class AbstractStatementTest {
 
 	@Test
 	public void testReplaceChild() {
-		StatementArray array = new StatementArray(EStatementOperator.AND, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.AND, null);
 		AbstractStatement statement2 = new StatementImplementation();
 		AbstractStatement statement3 = new StatementImplementation();
 
@@ -105,7 +112,7 @@ public class AbstractStatementTest {
 
 	@Test
 	public void testRemoveChild() {
-		StatementArray array = new StatementArray(EStatementOperator.AND, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.AND, null);
 		AbstractStatement statement2 = new StatementImplementation();
 		AbstractStatement statement3 = new StatementImplementation();
 

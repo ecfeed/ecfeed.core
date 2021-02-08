@@ -10,10 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.model.ChoiceCondition;
-import com.ecfeed.core.model.LabelCondition;
-import com.ecfeed.core.model.ParameterCondition;
-
 public interface IStatementVisitor {
 
 	public Object visit(StaticStatement statement) throws Exception;

@@ -11,8 +11,8 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ModelOperationException;
 import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class RootOperationRemoveClass extends AbstractModelOperation {
 
@@ -20,15 +20,15 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 	private RootNode fTarget;
 	private int fCurrentIndex;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass) {
-		super(OperationNames.REMOVE_CLASS);
+	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.REMOVE_CLASS, extLanguageManager);
 		fTarget = target;
 		fRemovedClass = removedClass;
 		fCurrentIndex = removedClass.getMyClassIndex();
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		setOneNodeToSelect(fTarget);
 		fCurrentIndex = fRemovedClass.getMyClassIndex();
 		fTarget.removeClass(fRemovedClass);
@@ -37,7 +37,7 @@ public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationAddNewClass(fTarget, fRemovedClass, fCurrentIndex);
+		return new RootOperationAddClass(fTarget, fRemovedClass, fCurrentIndex, getExtLanguageManager());
 	}
 
 }

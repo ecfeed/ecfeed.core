@@ -22,8 +22,8 @@ public class SerializationConstants {
 	public static final String TEST_PARAMETER_NODE_NAME = "TestParameter";
 	public static final String EXPECTED_PARAMETER_NODE_NAME = "ExpectedValue";
 	public static final String CONSTRAINT_NODE_NAME = "Constraint";
-	public static final String CONSTRAINT_PREMISE_NODE_NAME = "Premise";
-	public static final String CONSTRAINT_CONSEQUENCE_NODE_NAME = "Consequence";
+	public static final String CONSTRAINT_PRECONDITION_NODE_NAME = "Premise";
+	public static final String CONSTRAINT_POSTCONDITION_NODE_NAME = "Consequence";
 	public static final String CONSTRAINT_CHOICE_STATEMENT_NODE_NAME = "Statement";
 	public static final String CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME = "ParameterStatement";
 	public static final String CONSTRAINT_VALUE_STATEMENT_NODE_NAME = "ValueStatement"; 
@@ -54,6 +54,7 @@ public class SerializationConstants {
 	public static final String NULL_VALUE_STRING_REPRESENTATION = "/null";
 	public static final String TEST_SUITE_NAME_ATTRIBUTE = "testSuite";
 	public static final String LABEL_ATTRIBUTE_NAME = "label";
+	public static final String LABEL_ATTRIBUTE_TYPE = "type";
 	public static final String VALUE_ATTRIBUTE_NAME = "value";
 	public static final String STATIC_VALUE_ATTRIBUTE_NAME = "value";
 	public static final String STATEMENT_LABEL_ATTRIBUTE_NAME = "label";
@@ -64,6 +65,7 @@ public class SerializationConstants {
 	public static final String STATEMENT_STATIC_VALUE_ATTRIBUTE_NAME = "value";
 	public static final String STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE = "and";
 	public static final String STATEMENT_OPERATOR_OR_ATTRIBUTE_VALUE = "or";
+	public static final String STATEMENT_OPERATOR_ASSIGN_ATTRIBUTE_VALUE = "assign";
 	public static final String STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME = "value";
 	public static final String RUN_ON_ANDROID_ATTRIBUTE_NAME = "runOnAndroid";
 	public static final String ANDROID_RUNNER_ATTRIBUTE_NAME = "androidRunner";

@@ -20,13 +20,6 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.EStatementOperator;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 
@@ -45,14 +38,14 @@ public class StatementArrayTest {
 	@BeforeClass
 	public static void prepareModel(){
 		fMethod = new MethodNode("method", null);
-		fParameter1 = new MethodParameterNode("parameter1", null, "type", "0", false);
+		fParameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
 		fChoice11 = new ChoiceNode("choice11", null, null);
 		fChoice12 = new ChoiceNode("choice12", null, null);
 		fChoice13 = new ChoiceNode("choice13", null, null);
 		fParameter1.addChoice(fChoice11);
 		fParameter1.addChoice(fChoice12);
 		fParameter1.addChoice(fChoice13);
-		fParameter2 = new MethodParameterNode("parameter2", null, "type", "0", false);
+		fParameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
 		fChoice21 = new ChoiceNode("choice21", null, null);
 		fChoice22 = new ChoiceNode("choice22", null, null);
 		fChoice23 = new ChoiceNode("choice23", null, null);
@@ -66,13 +59,13 @@ public class StatementArrayTest {
 
 	@Test
 	public void testEvaluate() {
-		StatementArray arrayOr = new StatementArray(EStatementOperator.OR, null);
-		StatementArray arrayAnd = new StatementArray(EStatementOperator.AND, null);
+		StatementArray arrayOr = new StatementArray(StatementArrayOperator.OR, null);
+		StatementArray arrayAnd = new StatementArray(StatementArrayOperator.AND, null);
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
 
 		arrayOr.addStatement(statement1);
 		arrayOr.addStatement(statement2);
@@ -100,17 +93,17 @@ public class StatementArrayTest {
 
 	@Test
 	public void testEvaluateAndStatementsWithNulls() {
-		StatementArray arrayAnd = new StatementArray(EStatementOperator.AND, null);
+		StatementArray arrayAnd = new StatementArray(StatementArrayOperator.AND, null);
 
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		arrayAnd.addStatement(statement1);
 
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						fParameter2, EMathRelation.EQUAL, fChoice21);
 
 		arrayAnd.addStatement(statement2);
@@ -143,17 +136,17 @@ public class StatementArrayTest {
 
 	@Test
 	public void testEvaluateOrStatementsWithNulls() {
-		StatementArray arrayAnd = new StatementArray(EStatementOperator.OR, null);
+		StatementArray arrayAnd = new StatementArray(StatementArrayOperator.OR, null);
 
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		arrayAnd.addStatement(statement1);
 
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(
+				RelationStatement.createRelationStatementWithChoiceCondition(
 						fParameter2, EMathRelation.EQUAL, fChoice21);
 
 		arrayAnd.addStatement(statement2);
@@ -187,15 +180,15 @@ public class StatementArrayTest {
 
 	@Test
 	public void testGetChildren() {
-		StatementArray array = new StatementArray(EStatementOperator.OR, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.OR, null);
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
 
 		RelationStatement statement3 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
 
 		array.addStatement(statement1);
 		array.addStatement(statement2);
@@ -208,12 +201,12 @@ public class StatementArrayTest {
 
 	@Test
 	public void testMentionsChoiceNode() {
-		StatementArray array = new StatementArray(EStatementOperator.OR, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.OR, null);
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
 
 		array.addStatement(statement1);
 		array.addStatement(statement2);
@@ -223,9 +216,9 @@ public class StatementArrayTest {
 
 	@Test
 	public void testMentionsParameterNode() {
-		StatementArray array = new StatementArray(EStatementOperator.OR, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.OR, null);
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		array.addStatement(statement1);
 		assertTrue(array.mentions((MethodParameterNode)fChoice11.getParameter()));
@@ -234,18 +227,18 @@ public class StatementArrayTest {
 
 	@Test
 	public void testSetOperator() {
-		StatementArray array = new StatementArray(EStatementOperator.OR, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.OR, null);
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter2, EMathRelation.EQUAL, fChoice21);
 
 		array.addStatement(statement1);
 		array.addStatement(statement2);
-		assertEquals(EStatementOperator.OR, array.getOperator());
-		array.setOperator(EStatementOperator.AND);
-		assertEquals(EStatementOperator.AND, array.getOperator());
+		assertEquals(StatementArrayOperator.OR, array.getOperator());
+		array.setOperator(StatementArrayOperator.AND);
+		assertEquals(StatementArrayOperator.AND, array.getOperator());
 		//check that children statements were not changed
 		assertEquals(2, array.getChildren().size());
 		assertTrue(array.getChildren().contains(statement1));
@@ -254,15 +247,15 @@ public class StatementArrayTest {
 
 	@Test
 	public void testReplaceChild() {
-		StatementArray array = new StatementArray(EStatementOperator.OR, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.OR, null);
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice12);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice12);
 
 		RelationStatement statement3 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice13);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice13);
 
 		array.addStatement(statement1);
 		array.addStatement(statement2);
@@ -280,12 +273,12 @@ public class StatementArrayTest {
 
 	@Test
 	public void testRemoveChild() {
-		StatementArray array = new StatementArray(EStatementOperator.OR, null);
+		StatementArray array = new StatementArray(StatementArrayOperator.OR, null);
 		RelationStatement statement1 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		RelationStatement statement2 = 
-				RelationStatement.createStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice12);
+				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice12);
 
 		array.addStatement(statement1);
 		array.addStatement(statement2);
@@ -302,34 +295,34 @@ public class StatementArrayTest {
 	/*****************compare()**********************/
 	@Test
 	public void compareOperatorTest(){
-		StatementArray or1 = new StatementArray(EStatementOperator.OR, null);
-		StatementArray or2 = new StatementArray(EStatementOperator.OR, null);
-		StatementArray and1 = new StatementArray(EStatementOperator.AND, null);
-		StatementArray and2 = new StatementArray(EStatementOperator.AND, null);
+		StatementArray or1 = new StatementArray(StatementArrayOperator.OR, null);
+		StatementArray or2 = new StatementArray(StatementArrayOperator.OR, null);
+		StatementArray and1 = new StatementArray(StatementArrayOperator.AND, null);
+		StatementArray and2 = new StatementArray(StatementArrayOperator.AND, null);
 
-		assertTrue(or1.compare(or2));
-		assertTrue(and1.compare(and2));
-		assertFalse(or1.compare(and1));
-		assertFalse(and1.compare(or1));
+		assertTrue(or1.isEqualTo(or2));
+		assertTrue(and1.isEqualTo(and2));
+		assertFalse(or1.isEqualTo(and1));
+		assertFalse(and1.isEqualTo(or1));
 	}
 
 	@Test
 	public void compareChildrenTest(){
-		StatementArray s1 = new StatementArray(EStatementOperator.OR, null);
-		StatementArray s2 = new StatementArray(EStatementOperator.OR, null);
+		StatementArray s1 = new StatementArray(StatementArrayOperator.OR, null);
+		StatementArray s2 = new StatementArray(StatementArrayOperator.OR, null);
 
 		StaticStatement ss1 = new StaticStatement(true, null);
 		StaticStatement ss2 = new StaticStatement(true, null);
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 
 		s1.addStatement(ss1);
-		assertFalse(s1.compare(s2));
+		assertFalse(s1.isEqualTo(s2));
 		s2.addStatement(ss2);
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 
 		ss1.setValue(false);;
-		assertFalse(s1.compare(s2));
+		assertFalse(s1.isEqualTo(s2));
 		ss2.setValue(false);
-		assertTrue(s1.compare(s2));
+		assertTrue(s1.isEqualTo(s2));
 	}
 }

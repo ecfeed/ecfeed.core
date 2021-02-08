@@ -1,11 +1,14 @@
 package com.ecfeed.core.operations;
 
+import java.util.List;
+
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 
@@ -27,7 +30,7 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 					return null;
 				}
 				@Override
-				public String convert(String value, boolean isRandomized, ERunMode conversionMode) {
+				public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 					return value;
 				}
 				@Override
@@ -54,15 +57,15 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 		}
 
 	}
-	
-	public MethodOperationRemoveTestSuite(MethodNode target, TestSuiteNode testSuite) {
-		super(OperationNames.REMOVE_TEST_SUITE);
+
+	public MethodOperationRemoveTestSuite(MethodNode target, TestSuiteNode testSuite, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.REMOVE_TEST_SUITE, extLanguageManager);
 		fMethodNode = target;
 		fTestSuite = testSuite;
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 		setOneNodeToSelect(fMethodNode);
 		fMethodNode.removeTestSuite(fTestSuite);
 		markModelUpdated();
@@ -70,7 +73,14 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationAddTestSuite(fMethodNode, fTestSuite.getTestCaseNodes(), new DummyAdapterProvider());
+
+		List<TestCaseNode> testCaseNodes = fTestSuite.getTestCaseNodes();
+
+		return new MethodOperationAddTestSuite(
+				fMethodNode, 
+				testCaseNodes, 
+				new DummyAdapterProvider(), 
+				getExtLanguageManager());
 	}
 
 }

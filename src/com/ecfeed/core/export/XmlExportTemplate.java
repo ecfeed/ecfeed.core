@@ -13,11 +13,12 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class XmlExportTemplate extends AbstractExportTemplate {
 
-	public XmlExportTemplate(MethodNode methodNode) {
-		super(methodNode, createDefaultTemplateText(methodNode));
+	public XmlExportTemplate(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+		super(methodNode, createDefaultTemplateText(methodNode), extLanguageManager);
 	}
 
 	private static String createDefaultTemplateText(MethodNode methodNode) {
@@ -71,7 +72,7 @@ public class XmlExportTemplate extends AbstractExportTemplate {
 
 		for (AbstractParameterNode node : parameters) {
 			counter++;
-			template.append(createParameterString(node.getFullName(), counter));
+			template.append(createParameterString(node.getName(), counter));
 		}
 
 		return template.toString();

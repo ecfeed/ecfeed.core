@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.JavaTypeHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
 public class NodePropertyDefs {
@@ -38,38 +38,38 @@ public class NodePropertyDefs {
 	private static final String[] falseTrueArray = new String[]{FALSE_VALUE, TRUE_VALUE};
 
 	static final NodePropertyDef runOnAndroid = 
-			new NodePropertyDef("runOnAndroid", JavaTypeHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
+			new NodePropertyDef("runOnAndroid", JavaLanguageHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
 
 	static final NodePropertyDef androidRunner = 
-			new NodePropertyDef("androidRunner", JavaTypeHelper.TYPE_NAME_STRING, null, null);	
+			new NodePropertyDef("androidRunner", JavaLanguageHelper.TYPE_NAME_STRING, null, null);
 
 	static final NodePropertyDef methodRunner = 
 			new NodePropertyDef(
-					"methodRunner", JavaTypeHelper.TYPE_NAME_STRING, JAVA_RUNNER,
+					"methodRunner", JavaLanguageHelper.TYPE_NAME_STRING, JAVA_RUNNER,
 					new String[]{JAVA_RUNNER, WEB_DRIVER});
 
 	static final NodePropertyDef wbMapBrowserToParam =  
-			new NodePropertyDef("wbMapBrowserToParam", JavaTypeHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
+			new NodePropertyDef("wbMapBrowserToParam", JavaLanguageHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
 
 	static final NodePropertyDef webBrowser = 
 			new NodePropertyDef(
-					"wbBrowser", JavaTypeHelper.TYPE_NAME_STRING, BROWSER_CHROME, 
+					"wbBrowser", JavaLanguageHelper.TYPE_NAME_STRING, BROWSER_CHROME,
 					new String[]{BROWSER_CHROME, BROWSER_FIREFOX, BROWSER_IEXPLORER, BROWSER_OPERA, BROWSER_SAFARI});
 
-	static final NodePropertyDef browserDriver = new NodePropertyDef("wbBrowserDriver", JavaTypeHelper.TYPE_NAME_STRING, null, null);	
+	static final NodePropertyDef browserDriver = new NodePropertyDef("wbBrowserDriver", JavaLanguageHelper.TYPE_NAME_STRING, null, null);
 
 	static final NodePropertyDef mapStartUrlToParam = 
-			new NodePropertyDef("wbMapStartUrlToParam", JavaTypeHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
+			new NodePropertyDef("wbMapStartUrlToParam", JavaLanguageHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
 
-	static final NodePropertyDef startUrl = new NodePropertyDef("wbStartUrl", JavaTypeHelper.TYPE_NAME_STRING, null, null);
+	static final NodePropertyDef startUrl = new NodePropertyDef("wbStartUrl", JavaLanguageHelper.TYPE_NAME_STRING, null, null);
 
-	static final NodePropertyDef optional = new NodePropertyDef("wbIsOptional", JavaTypeHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
+	static final NodePropertyDef optional = new NodePropertyDef("wbIsOptional", JavaLanguageHelper.TYPE_NAME_BOOLEAN, FALSE_VALUE, falseTrueArray);
 
-	static final NodePropertyDef findByValueOfElement = new NodePropertyDef("wbFindByValue", JavaTypeHelper.TYPE_NAME_STRING, null, null);
+	static final NodePropertyDef findByValueOfElement = new NodePropertyDef("wbFindByValue", JavaLanguageHelper.TYPE_NAME_STRING, null, null);
 
 	static final NodePropertyDef action = 
 			new NodePropertyDef(
-					"wbAction", JavaTypeHelper.TYPE_NAME_STRING, UNMAPPED,
+					"wbAction", JavaLanguageHelper.TYPE_NAME_STRING, UNMAPPED,
 					new String[]{ UNMAPPED, ACTION_SEND_KEYS, ACTION_CLICK, ACTION_SUBMIT });
 
 

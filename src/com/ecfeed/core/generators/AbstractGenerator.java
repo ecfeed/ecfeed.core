@@ -64,8 +64,8 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 			 * Otherwise we would affect algorithm internal state (e.g.
 			 * if it keeps a history of generated vectors).
 			 */
-			List<E> copy = new ArrayList<E>(next);
-			return adapt(copy);
+			List<E> copyOfTestCase = new ArrayList<E>(next);
+			return adapt(copyOfTestCase);
 		}
 		else{
 			return null;
@@ -126,9 +126,9 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		getParameterDefinitions().add(definition);
 	}
 
-	protected List<E> adapt(List<E> values)
+	protected List<E> adapt(List<E> testCaseValues)
 	{
-		return fConstraintEvaluator.adapt(values);
+		return fConstraintEvaluator.setExpectedValues(testCaseValues);
 	}
 
 	private void validateInput(List<? extends List<E>> inputDomain) throws GeneratorException {

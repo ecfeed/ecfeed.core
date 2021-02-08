@@ -10,43 +10,61 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.List;
+
+import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelOperationException;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationConvertTo extends AbstractModelOperation {
 
-	private MethodNode fTarget;
-	private MethodNode fSource;
+	private MethodNode fTargetMethodNode;
+	private MethodNode fSourceMethodNode;
 
-	public MethodOperationConvertTo(MethodNode target, MethodNode source) {
-		super(OperationNames.CONVERT_METHOD);
-		fTarget = target;
-		fSource = source;
+	public MethodOperationConvertTo(MethodNode target, MethodNode source, IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.CONVERT_METHOD, extLanguageManager);
+
+		fTargetMethodNode = target;
+		fSourceMethodNode = source;
 	}
 
 	@Override
-	public void execute() throws ModelOperationException {
+	public void execute() {
 
-		setOneNodeToSelect(fTarget);
+		setOneNodeToSelect(fTargetMethodNode);
 
-		if(fTarget.getClassNode().getMethod(fSource.getFullName(), fSource.getParameterTypes()) != null){
-			String methodName = fSource.getFullName();
-			ModelOperationException.report(ClassNodeHelper.generateMethodSignatureDuplicateMessage(fTarget.getClassNode(), methodName));
+		ClassNode classNode = fTargetMethodNode.getClassNode();
+
+		String methodName = MethodNodeHelper.getName(fSourceMethodNode, getExtLanguageManager());
+		List<String> methodParameters = MethodNodeHelper.getParameterTypes(fSourceMethodNode, getExtLanguageManager());
+
+		if (ClassNodeHelper.findMethodByExtLanguage(
+				classNode, 
+				methodName, 
+				methodParameters, 
+				getExtLanguageManager()) != null) {
+
+			ExceptionHelper.reportRuntimeException(
+					ClassNodeHelper.createMethodSignatureDuplicateMessage(
+							classNode, fTargetMethodNode, false, getExtLanguageManager()));
 		}
 
-		if(fTarget.getParameterTypes().equals(fSource.getParameterTypes()) == false){
-			ModelOperationException.report(ClassNodeHelper.METHODS_INCOMPATIBLE_PROBLEM);
+		if(fTargetMethodNode.getParameterTypes().equals(fSourceMethodNode.getParameterTypes()) == false){
+			ExceptionHelper.reportRuntimeException(ClassNodeHelper.METHODS_INCOMPATIBLE_PROBLEM);
 		}
 
-		fTarget.setFullName(fSource.getFullName());
+		fTargetMethodNode.setName(methodName);
 
-		for(int i = 0; i < fTarget.getParameters().size(); i++){
-			MethodParameterNode targetParameter = fTarget.getMethodParameters().get(i);
-			MethodParameterNode sourceParameter = fSource.getMethodParameters().get(i);
+		for(int i = 0; i < fTargetMethodNode.getParameters().size(); i++){
+			MethodParameterNode targetParameter = fTargetMethodNode.getMethodParameters().get(i);
+			MethodParameterNode sourceParameter = fSourceMethodNode.getMethodParameters().get(i);
 
-			targetParameter.setFullName(sourceParameter.getFullName());
+			targetParameter.setName(sourceParameter.getName());
 		}
 
 		markModelUpdated();
@@ -54,7 +72,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationConvertTo(fSource, fTarget);
+		return new MethodOperationConvertTo(fSourceMethodNode, fTargetMethodNode, getExtLanguageManager());
 	}
 
 }
