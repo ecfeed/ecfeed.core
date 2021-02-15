@@ -15,7 +15,7 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class AbstractScoreBasedAlgorithm<E> {
 
-	private List<List<E>> fInput;
+	private List<List<E>> fInput; // input domain
 	private int fDimensionCount; // Total number of dimensions for an input domain
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
 	private IScoreEvaluator<E> fScoreEvaluator; 
@@ -23,7 +23,6 @@ public class AbstractScoreBasedAlgorithm<E> {
 	protected List<List<Integer>> fHistorydimensionOrder = new ArrayList<>(); // Store historical dimension orders (each randomly generated dimension order could be different)
 	
     public AbstractScoreBasedAlgorithm(List<List<E>> input, IScoreEvaluator ScoreEvaluator, int argCount, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
-		
     	this.fInput = input;
     	this.fDimensionCount = input.size();
     	this.fScoreEvaluator = ScoreEvaluator;
