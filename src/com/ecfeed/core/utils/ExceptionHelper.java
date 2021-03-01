@@ -10,12 +10,8 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.exception.GeneratorException;
 import com.ecfeed.core.exception.GeneratorExceptionClient;
 import com.ecfeed.core.exception.GeneratorExceptionServer;
-import com.ecfeed.web.service.service.json.JsonMessageHelper;
-import com.ecfeed.web.service.util.LogHelper;
-import com.ecfeed.web.service.util.RequestId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,32 +94,6 @@ public class ExceptionHelper {
 		RuntimeException runtimeException = new RuntimeException(message, e);
 
 		return createErrorMessage(runtimeException);
-	}
-
-	public static void createStreamErrorMessage(String description, RequestId requestId, GeneratorException generatorException) {
-		String tmpMessage = "Feedback failed. " + requestId.toString();
-
-		RuntimeException tmpRuntimeException = new RuntimeException(tmpMessage, generatorException);
-
-		String extendedErrorMessage =
-				ExceptionHelper.createErrorMessage(
-						tmpRuntimeException,
-						ExceptionHelper.LineSeparationType.MULTI_LINE,
-						ExceptionHelper.ExceptionStackType.FULL,
-						ExceptionHelper.CreateCallStack.YES);
-
-		LogHelper.logRequestMessage(extendedErrorMessage, requestId);
-
-		String errorMessage =
-				ExceptionHelper.createErrorMessage(
-						tmpRuntimeException,
-						ExceptionHelper.LineSeparationType.MULTI_LINE,
-						ExceptionHelper.ExceptionStackType.SIMPLE,
-						ExceptionHelper.CreateCallStack.NO);
-
-		generatorException.setStreamMessage(JsonMessageHelper.createErrorString(errorMessage));
-
-		throw generatorException;
 	}
 
 	public static String createErrorMessage(
