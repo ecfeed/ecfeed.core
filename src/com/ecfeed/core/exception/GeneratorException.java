@@ -6,7 +6,7 @@ public class GeneratorException extends RuntimeException {
 	 * 
 	 */
 	private static final long serialVersionUID = 7245190958322769521L;
-	private String streamMessage = "";
+	private String streamMessage = ""; // TODO GEN-ERR-HANDLING - remove ?
 
     public String getStreamMessage() {
         return this.streamMessage;

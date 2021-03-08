@@ -96,6 +96,13 @@ public class ExceptionHelper {
 		return createErrorMessage(runtimeException);
 	}
 
+	public static String createErrorMessageForUser(String topMessage, Exception e) {
+
+		Throwable deepestThrowable = getDeepestThrowable(e);
+
+		return topMessage + " " + deepestThrowable.getMessage();
+	}
+
 	public static String createErrorMessage(
 			Throwable throwable, 
 			LineSeparationType lineSeparationType,
