@@ -103,6 +103,17 @@ public class ExceptionHelper {
 		return topMessage + " " + deepestThrowable.getMessage();
 	}
 
+	public static String createErrorMessageForUser(Exception e) {
+
+		Throwable deepestThrowable = getDeepestThrowable(e);
+
+		if (deepestThrowable == e) {
+			return e.getMessage();
+		}
+
+		return e.getMessage() + " " + deepestThrowable.getMessage();
+	}
+
 	public static String createErrorMessage(
 			Throwable throwable, 
 			LineSeparationType lineSeparationType,
