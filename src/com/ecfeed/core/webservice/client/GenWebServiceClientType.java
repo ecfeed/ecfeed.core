@@ -21,15 +21,15 @@ public enum GenWebServiceClientType {
 
     public static GenWebServiceClientType parse(String clientTypeStr) {
 
-        if (clientTypeStr.equalsIgnoreCase(REGULAR.toString())) {
+        if (clientTypeStr.equals(REGULAR.getDescription())) {
             return REGULAR;
         }
 
-        if (clientTypeStr.equalsIgnoreCase(LOCAL_TEST_RUNNER.getDescription())) {
+        if (clientTypeStr.equals(LOCAL_TEST_RUNNER.getDescription())) {
             return LOCAL_TEST_RUNNER;
         }
 
-        if (clientTypeStr.equalsIgnoreCase(LOCAL_TEST_RAP.getDescription())) {
+        if (clientTypeStr.equals(LOCAL_TEST_RAP.getDescription())) {
             return LOCAL_TEST_RAP;
         }
 
