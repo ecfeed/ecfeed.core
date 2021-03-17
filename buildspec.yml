@@ -9,9 +9,8 @@ phases:
 reports:
   gradle:
     files:
-      - '**/*'                                                # Get all files.
-    base-directory: $CODEBUILD_SRC_DIR/build/test-results     # The default Gradle directory for test reports.
-#     discard-paths: yes                                        # Files are unique, there is no need to group them.
+      - '**/*'
+    base-directory: $CODEBUILD_SRC_DIR/build/test-results
 
 cache:
   paths:
