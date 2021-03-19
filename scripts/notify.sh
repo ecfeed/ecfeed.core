@@ -16,13 +16,13 @@ if [ -z ${1+x} ]; then
     body="${explanation}<br/><br/>Date: ${date}<br/>Committer: ${name}<br/>Hash: ${hash}<br/>Description: ${desc}"
     
     aws ses send-email \
-        --from k.skorupski@testify.no \
+        --from cicd@ecfeed.com \
         --destination "{\"ToAddresses\":  [\"${email}\"], \"CcAddresses\": [], \"BccAddresses\": []}" \
         --message "{\"Subject\": {\"Data\": \"AWS - CodePipeline - Test - Core\" }, \"Body\": {\"Text\": {\"Data\": \"$body\", \"Charset\": \"UTF-8\"}, \"Html\": { \"Data\": \"$body\", \"Charset\": \"UTF-8\"}}}" \
         || : 
 
     aws ses send-email \
-        --from k.skorupski@testify.no \
+        --from cicd@ecfeed.com \
         --destination "{\"ToAddresses\":  [\"k.skorupski@testify.no\"], \"CcAddresses\": [], \"BccAddresses\": []}" \
         --message "{\"Subject\": {\"Data\": \"AWS - CodePipeline - Test - Core\" }, \"Body\": {\"Text\": {\"Data\": \"$body\", \"Charset\": \"UTF-8\"}, \"Html\": { \"Data\": \"$body\", \"Charset\": \"UTF-8\"}}}" \
         || : 
