@@ -4,8 +4,11 @@ phases:
   build:            
     commands:
       - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
-      - ./gradlew test                     
-  
+      - ./gradlew test
+      - export success=1     
+    finally: 
+      - ./scripts/notify.sh $success
+                
 reports:
   gradle:
     files:
