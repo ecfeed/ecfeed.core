@@ -11,14 +11,21 @@ if [ -z ${1+x} ]; then
     desc=$(echo $commit | cut -d'|' -f4)
     hash=$(echo $commit | cut -d'|' -f5)
 
-    explanation="Some unit tests failed and the updated version of the generator is not going to be deployed on the requested stage. To see the detailed test report go to the AWS console, i.e. https://console.aws.amazon.com/codesuite/codebuild/testReports/reportGroups."
+    explanation="Some unit tests failed and the updated version of the ecFeed service will not be deployed on the requested stage. To see the detailed test report go to the AWS console, i.e. https://console.aws.amazon.com/codesuite/codebuild/testReports/reportGroups."
 
     body="${explanation}<br/><br/>Date: ${date}<br/>Committer: ${name}<br/>Hash: ${hash}<br/>Description: ${desc}"
     
     aws ses send-email \
-        --from sqorup@gmail.com \
+        --from k.skorupski@testify.no \
         --destination "{\"ToAddresses\":  [\"${email}\"], \"CcAddresses\": [], \"BccAddresses\": []}" \
-        --message "{\"Subject\": {\"Data\": \"AWS - CodePipeline - Build - Generator\" }, \"Body\": {\"Text\": {\"Data\": \"$body\", \"Charset\": \"UTF-8\"}, \"Html\": { \"Data\": \"$body\", \"Charset\": \"UTF-8\"}}}" \
+        --message "{\"Subject\": {\"Data\": \"AWS - CodePipeline - Test - Core\" }, \"Body\": {\"Text\": {\"Data\": \"$body\", \"Charset\": \"UTF-8\"}, \"Html\": { \"Data\": \"$body\", \"Charset\": \"UTF-8\"}}}" \
         || : 
+
+    aws ses send-email \
+        --from k.skorupski@testify.no \
+        --destination "{\"ToAddresses\":  [\"k.skorupski@testify.no\"], \"CcAddresses\": [], \"BccAddresses\": []}" \
+        --message "{\"Subject\": {\"Data\": \"AWS - CodePipeline - Test - Core\" }, \"Body\": {\"Text\": {\"Data\": \"$body\", \"Charset\": \"UTF-8\"}, \"Html\": { \"Data\": \"$body\", \"Charset\": \"UTF-8\"}}}" \
+        || : 
+
 
 fi
