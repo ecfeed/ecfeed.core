@@ -73,9 +73,7 @@ public class AbstractScoreBasedAlgorithm<E> {
 		return test;
 	}
 	
-	
-	// to generate one test case, evaluate in total k dimension orders 
-	// and pick up the one with the best score
+	// to generate one test case, evaluate in total k dimension orders and pick up the one with the best score
 	public List<E> nextTestwithKdimensionOrder(int k) {
 		List<E> test = new ArrayList<>();
 		List<E> tempTest = new ArrayList<>();
