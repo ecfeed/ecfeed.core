@@ -72,6 +72,22 @@ public class AbstractScoreBasedAlgorithm<E> {
 		fScoreEvaluator.update(test);
 		return test;
 	}
+	
+	
+	// to generate one test case, evaluate in total k dimension orders 
+	// and pick up the one with the best score
+	public List<E> nextTestwithKdimensionOrder(int k) {
+		List<E> test = new ArrayList<>();
+		List<E> tempTest = new ArrayList<>();
+		int bestScore = 0;
+		for (int i = 0; i < k; i++) {
+			tempTest = nextTest();
+			if (bestScore < fScoreEvaluator.getScore(tempTest)) {
+				test = tempTest;
+			}
+		}
+		return test;
+	}
 
 	// returns a shuffled list of indices of input parameters
 	private List<Integer> dimensions() {
