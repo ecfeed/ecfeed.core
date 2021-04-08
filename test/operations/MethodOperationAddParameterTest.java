@@ -10,17 +10,19 @@
 
 package operations;
 
-import com.ecfeed.core.model.*;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.operations.MethodOperationAddParameter;
-import com.ecfeed.core.operations.RootOperationAddClass;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.TestHelper;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class MethodOperationAddParameterTest {
 

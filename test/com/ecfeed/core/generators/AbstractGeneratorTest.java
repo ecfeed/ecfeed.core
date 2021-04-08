@@ -10,24 +10,21 @@
 
 package com.ecfeed.core.generators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.generators.api.IGeneratorValue;
-import com.ecfeed.core.generators.api.IParameterDefinition;
-import com.ecfeed.core.utils.GeneratorType;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.model.IConstraint;
+import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.generators.api.IParameterDefinition;
+import com.ecfeed.core.utils.GeneratorType;
 
 public class AbstractGeneratorTest {
 	

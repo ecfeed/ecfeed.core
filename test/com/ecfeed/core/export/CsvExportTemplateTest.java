@@ -14,11 +14,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import org.junit.Test;
 
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.StringHelper;
 
 

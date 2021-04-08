@@ -10,7 +10,8 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +22,6 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.ecfeed.core.generators.algorithms.Tuples;
 import com.google.common.collect.Sets;
 
 public class TupleTest{

@@ -1,18 +1,14 @@
 package com.ecfeed.core.generators.algorithms;
 
-import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
-import com.ecfeed.core.utils.SimpleProgressMonitor;
-import com.google.common.collect.Sets;
-import org.junit.Test;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.Test;
+
+import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
+import com.google.common.collect.Sets;
 
 public class AwesomeNWiseAlgorithmTest extends NWiseAlgorithmTest {
     @Test
