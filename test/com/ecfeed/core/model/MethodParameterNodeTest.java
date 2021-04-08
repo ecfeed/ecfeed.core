@@ -19,8 +19,6 @@ public class MethodParameterNodeTest {
 	@Test
 	public void createParameterTest() {
 
-		MethodParameterNode methodParameterNode;
-
 		try {
 			new MethodParameterNode("par%1", "int", "0", false, null);
 			fail();

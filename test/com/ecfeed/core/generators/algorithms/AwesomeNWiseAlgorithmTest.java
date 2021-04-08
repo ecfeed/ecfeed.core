@@ -1,14 +1,9 @@
 package com.ecfeed.core.generators.algorithms;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
-
-import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
-import com.google.common.collect.Sets;
 
 public class AwesomeNWiseAlgorithmTest extends NWiseAlgorithmTest {
     @Test
@@ -43,23 +38,23 @@ public class AwesomeNWiseAlgorithmTest extends NWiseAlgorithmTest {
 //        }
 //    }
 
-    private Set<List<String>> referenceResult(List<List<String>> input, int n) throws GeneratorException {
-        List<Set<String>> referenceInput = GeneratorTestUtils.referenceInput(input);
-        Set<List<String>> cartesianProduct = Sets.cartesianProduct(referenceInput);
-        Set<List<String>> referenceResult = new HashSet<List<String>>();
-        Set<List<String>> remainingTuples = getAllTuples(input, n);
-        for (int k = maxTuples(input, n); k > 0; k--) {
-            for (List<String> vector : cartesianProduct) {
-                Set<List<String>> originalTuples = getTuples(vector, n);
-                originalTuples.retainAll(remainingTuples);
-                if (originalTuples.size() == k) {
-                    referenceResult.add(vector);
-                    remainingTuples.removeAll(originalTuples);
-                }
-            }
-        }
-        return referenceResult;
-    }
+//    private Set<List<String>> referenceResult(List<List<String>> input, int n) throws GeneratorException {
+//        List<Set<String>> referenceInput = GeneratorTestUtils.referenceInput(input);
+//        Set<List<String>> cartesianProduct = Sets.cartesianProduct(referenceInput);
+//        Set<List<String>> referenceResult = new HashSet<List<String>>();
+//        Set<List<String>> remainingTuples = getAllTuples(input, n);
+//        for (int k = maxTuples(input, n); k > 0; k--) {
+//            for (List<String> vector : cartesianProduct) {
+//                Set<List<String>> originalTuples = getTuples(vector, n);
+//                originalTuples.retainAll(remainingTuples);
+//                if (originalTuples.size() == k) {
+//                    referenceResult.add(vector);
+//                    remainingTuples.removeAll(originalTuples);
+//                }
+//            }
+//        }
+//        return referenceResult;
+//    }
 
     protected int maxTuples(List<List<String>> input, int n) {
         return (new Tuples<List<String>>(input, n)).getAll().size();

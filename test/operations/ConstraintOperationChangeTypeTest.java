@@ -80,7 +80,7 @@ public class ConstraintOperationChangeTypeTest {
 
 		Constraint constraint = new Constraint("constraint", ConstraintType.EXTENDED_FILTER, initialPrecondition, initialPostcondition, null);
 
-		Constraint initialConstraint = constraint.makeClone();
+//		Constraint initialConstraint = constraint.makeClone();
 
 		ConstraintNode constraintNode = new ConstraintNode("cnode", constraint, null);
 
