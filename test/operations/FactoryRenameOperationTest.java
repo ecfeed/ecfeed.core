@@ -10,15 +10,24 @@
 
 package operations;
 
-import com.ecfeed.core.model.*;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.operations.FactoryRenameOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationMessages;
-import com.ecfeed.core.operations.RootOperationAddClass;
-import com.ecfeed.core.utils.*;
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
+import com.ecfeed.core.utils.TestHelper;
 
 public class FactoryRenameOperationTest {
 

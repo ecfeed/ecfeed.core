@@ -14,8 +14,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.ecfeed.core.utils.CheckSumHelper;
-
 public class CheckSumHelperTest{
 
 	@Test

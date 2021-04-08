@@ -10,12 +10,11 @@
 
 package com.ecfeed.core.type;
 
-import com.ecfeed.core.type.adapter.TypeAdapterForBoolean;
-import com.ecfeed.core.utils.DiskPathHelper;
-import com.ecfeed.core.utils.ERunMode;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import com.ecfeed.core.type.adapter.TypeAdapterForBoolean;
 
 public class TypeAdapterForBooleanTest {
 

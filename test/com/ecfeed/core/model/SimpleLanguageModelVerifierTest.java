@@ -105,7 +105,7 @@ public class SimpleLanguageModelVerifierTest {
 
 		// valid global parameter name
 
-		GlobalParameterNode globalParameterNodeOk = new GlobalParameterNode("par1", "int", null);
+		new GlobalParameterNode("par1", "int", null);
 		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
 		assertNull(errorMessage);
 
