@@ -10,17 +10,12 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.testutils.RandomModelGenerator;
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 public class ModelHelperTest {
 

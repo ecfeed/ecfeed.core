@@ -10,15 +10,12 @@
 
 package com.ecfeed.core.utils;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
-
-import com.ecfeed.core.utils.EcException;
-import com.ecfeed.core.utils.StreamHelper;
 
 public class StreamHelperTest{
 

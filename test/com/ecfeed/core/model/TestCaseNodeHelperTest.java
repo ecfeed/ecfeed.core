@@ -10,19 +10,15 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.ExtLanguage;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
 
 public class TestCaseNodeHelperTest {

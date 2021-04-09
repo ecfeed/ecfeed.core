@@ -23,4 +23,19 @@ public class ModelTestHelper {
 		return null;
 	}
 
+	public static RootNode createModel(String modelXml) {
+
+		try {
+			ModelParser parser = new ModelParser();
+			ByteArrayInputStream istream = new ByteArrayInputStream(modelXml.getBytes());
+
+			return parser.parseModel(istream, null, new ListOfStrings());
+
+		} catch(ParserException e) {
+			ExceptionHelper.reportRuntimeException(e.getMessage());
+		}
+
+		return null;
+	}
+	
 }

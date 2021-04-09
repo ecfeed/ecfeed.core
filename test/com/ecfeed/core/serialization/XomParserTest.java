@@ -11,33 +11,27 @@
 package com.ecfeed.core.serialization;
 
 import static com.ecfeed.core.testutils.TestUtilConstants.SUPPORTED_TYPES;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-
-import com.ecfeed.core.utils.ListOfStrings;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Serializer;
 
 import org.junit.Test;
 
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
+import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
@@ -52,6 +46,11 @@ import com.ecfeed.core.model.serialization.XomBuilderFactory;
 import com.ecfeed.core.model.serialization.XomStatementBuilder;
 import com.ecfeed.core.testutils.ModelStringifier;
 import com.ecfeed.core.testutils.RandomModelGenerator;
+import com.ecfeed.core.utils.ListOfStrings;
+
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Serializer;
 
 public class XomParserTest {
 

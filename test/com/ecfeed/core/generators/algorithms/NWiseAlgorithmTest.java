@@ -10,8 +10,6 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-import static com.ecfeed.core.generators.testutils.AlgorithmTestUtils.calculateCoveredTuples;
-import static com.ecfeed.core.generators.testutils.AlgorithmTestUtils.calculateTotalTuples;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -24,13 +22,12 @@ import java.util.Set;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
-import com.ecfeed.core.utils.SimpleProgressMonitor;
-
 import com.ecfeed.core.generators.CartesianProductGenerator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 public class NWiseAlgorithmTest{
 	

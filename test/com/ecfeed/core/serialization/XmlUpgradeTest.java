@@ -67,7 +67,7 @@ public class XmlUpgradeTest {
 
 		// convert model to version 4
 
-		RootNode convertedModel = ModelConverter.convertFrom3To4(parsedModel);
+		ModelConverter.convertFrom3To4(parsedModel);
 
 		// write model to xml
 

@@ -10,15 +10,19 @@
 
 package com.ecfeed.core.type;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
 import com.ecfeed.core.type.adapter.TypeAdapterForLong;
 import com.ecfeed.core.type.adapter.TypeAdapterForNumericType;
 import com.ecfeed.core.type.adapter.TypeAdapterHelper;
-import com.ecfeed.core.utils.*;
-import org.junit.Test;
-
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.TestHelper;
 
 public class TypeAdapterForLongTest {
 

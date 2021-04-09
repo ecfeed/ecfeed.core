@@ -10,15 +10,14 @@
 
 package com.ecfeed.core.model;
 
+import static com.ecfeed.core.model.ConstraintNodeHelper.createSignature;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import org.junit.Test;
-
-import static com.ecfeed.core.model.ConstraintNodeHelper.createSignature;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class ConstraintNodeHelperTest {
 
