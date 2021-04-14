@@ -34,8 +34,7 @@ public class TestCasesUserInput {
 	// each entry consists of method's parameter name and list of choices
 	private Object fChoices;
 
-	public TestCasesUserInput()
-	{
+	public TestCasesUserInput()	{
 		fProperties = new HashMap<>();
 	}
 
@@ -126,7 +125,6 @@ public class TestCasesUserInput {
 		fChoices = choices;
 	}
 
-	@JsonAnyGetter
 	public Map<String, String> getProperties() {
 		return fProperties;
 	}
