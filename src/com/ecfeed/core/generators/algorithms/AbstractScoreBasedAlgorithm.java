@@ -13,7 +13,7 @@ import com.ecfeed.core.utils.AlgoLogger;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
-public class AbstractScoreBasedAlgorithm<E> {
+public class AbstractScoreBasedAlgorithm<E> implements IAlgorithm<E> {
 
 	private List<List<E>> fInput;
 	private int fDimensionCount; // Total number of dimensions for an input domain
@@ -72,8 +72,9 @@ public class AbstractScoreBasedAlgorithm<E> {
 		fScoreEvaluator.update(test);
 		return test;
 	}
-	
-	// to generate one test case, evaluate in total k dimension orders and pick up the one with the best score
+
+	// to generate one test case, evaluate in total k dimension orders 
+	// and pick up the one with the best score
 	public List<E> nextTestwithKdimensionOrder(int k) {
 		List<E> test = new ArrayList<>();
 		List<E> tempTest = new ArrayList<>();
@@ -113,5 +114,60 @@ public class AbstractScoreBasedAlgorithm<E> {
 
 	public EvaluationResult constraintCheck(List<E> tuple) {
 		return fconstraintEvaluator.evaluate(tuple);
+	}
+
+	@Override
+	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator,
+			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<E> getNext() throws GeneratorException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setTaskBegin(int totalWork) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTaskEnd() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void incrementProgress(int progressIncrement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IConstraintEvaluator<E> getConstraintEvaluator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void cancel() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isCancelled() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
