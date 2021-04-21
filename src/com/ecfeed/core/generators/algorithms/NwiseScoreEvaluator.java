@@ -22,16 +22,25 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	private IConstraintEvaluator<E> fconstraintEvaluator;
 
-	public NwiseScoreEvaluator(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator, int argN)
-			throws GeneratorException {
+	public NwiseScoreEvaluator(int argN) throws GeneratorException {
 
 		this.fArgCount = argN;
+//		this.fDimensionCount = input.size();
+//		this.fconstraintEvaluator = constraintEvaluator;
+	}
+	
+	@Override
+	public void initialize(
+			List<List<E>> input, 
+			IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
+		
 		this.fDimensionCount = input.size();
 		this.fconstraintEvaluator = constraintEvaluator;
-
+		
 		if (input == null || constraintEvaluator == null) {
 			GeneratorException.report("input or constraints cannot be null");
 		}
+		
 		fconstraintEvaluator.initialize(input);
 
 		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
@@ -46,7 +55,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		calculateFrequency(); // calculate occurences in the constructed table
 		calculateScore(input.size()); //calculate scores for all the tuples in constructed table
-
+		
 	}
 
 	public int getdimensionCount() {

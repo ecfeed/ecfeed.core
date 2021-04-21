@@ -15,16 +15,15 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	private int fDimensionCount; // Total number of dimensions for an input domain
-	private int fArgCount; // TODO - is this a duplicate of fDimensionCount ? 
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
 	private IScoreEvaluator<E> fScoreEvaluator;
 	protected List<List<Integer>> fHistoryDimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
 																				// randomly generated dimension order
 																				// could be different)
 
-	public ScoreBasedNwiseAlgorithm(int argCount) throws GeneratorException {
+	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator) throws GeneratorException {
 
-		this.fArgCount = argCount;
+		this.fScoreEvaluator = fScoreEvaluator;
 	}
 	
 	@Override
@@ -33,7 +32,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 			IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 		
-		this.fScoreEvaluator = new NwiseScoreEvaluator<E>(input, constraintEvaluator, this.fArgCount);
+		this.fScoreEvaluator.initialize(input, constraintEvaluator);
 		this.fDimensionCount = input.size();
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
 		
