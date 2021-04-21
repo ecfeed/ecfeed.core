@@ -10,22 +10,34 @@ import java.util.stream.IntStream;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class AbstractScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	private int fDimensionCount; // Total number of dimensions for an input domain
+	private int fArgCount; // TODO - is this a duplicate of fDimensionCount ? 
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
 	private IScoreEvaluator<E> fScoreEvaluator;
-	protected List<List<Integer>> fHistorydimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
+	protected List<List<Integer>> fHistoryDimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
 																				// randomly generated dimension order
 																				// could be different)
 
-	public AbstractScoreBasedAlgorithm(List<List<E>> input, IScoreEvaluator<E> scoreEvaluator, int argCount,
-			IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
+	public AbstractScoreBasedAlgorithm(int argCount) throws GeneratorException {
 
+		this.fArgCount = argCount;
+	}
+	
+	@Override
+	public void initialize(
+			List<List<E>> input,
+			IConstraintEvaluator<E> constraintEvaluator,
+			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+		
+		this.fScoreEvaluator = new NwiseScoreEvaluator<E>(input, constraintEvaluator, this.fArgCount);
 		this.fDimensionCount = input.size();
-		this.fScoreEvaluator = scoreEvaluator;
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
+		
+		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 	}
 	
 	@Override
@@ -89,9 +101,9 @@ public class AbstractScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 		do {
 			attempt--;
 			Collections.shuffle(dimensions);
-		} while (fHistorydimensionOrder.contains(dimensions) && attempt > 0);
+		} while (fHistoryDimensionOrder.contains(dimensions) && attempt > 0);
 
-		fHistorydimensionOrder.add(dimensions);
+		fHistoryDimensionOrder.add(dimensions);
 		return dimensions.subList(0, fDimensionCount);
 	}
 

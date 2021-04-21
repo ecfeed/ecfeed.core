@@ -26,8 +26,9 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 	private IConstraintEvaluator<E> fConstraintEvaluator;
 
 	@Override
-	public void initialize(List<List<E>> input,
-						   IConstraintEvaluator<E> constraintEvaluator,
+	public void initialize(
+			List<List<E>> input,
+			IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
 
