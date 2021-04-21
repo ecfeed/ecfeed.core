@@ -13,11 +13,9 @@ import com.ecfeed.core.utils.EvaluationResult;
 
 public class AbstractScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 
-//	private List<List<E>> fInput;
 	private int fDimensionCount; // Total number of dimensions for an input domain
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
 	private IScoreEvaluator<E> fScoreEvaluator;
-//	private IConstraintEvaluator<E> fconstraintEvaluator;
 	protected List<List<Integer>> fHistorydimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
 																				// randomly generated dimension order
 																				// could be different)
@@ -25,16 +23,9 @@ public class AbstractScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 	public AbstractScoreBasedAlgorithm(List<List<E>> input, IScoreEvaluator<E> scoreEvaluator, int argCount,
 			IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
 
-//		this.fInput = input;
 		this.fDimensionCount = input.size();
 		this.fScoreEvaluator = scoreEvaluator;
-//		this.fconstraintEvaluator = constraintEvaluator;
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
-
-//		if (fInput == null || fconstraintEvaluator == null) {
-//			GeneratorException.report("input or constraints cannot be null");
-//		}
-//		fconstraintEvaluator.initialize(fInput);
 	}
 	
 	@Override
@@ -120,58 +111,4 @@ public class AbstractScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 		return getConstraintEvaluator().evaluate(tuple);
 	}
 
-//	@Override
-//	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator,
-//			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public List<E> getNext() throws GeneratorException {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public void setTaskBegin(int totalWork) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void setTaskEnd() {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void reset() {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public void incrementProgress(int progressIncrement) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public IConstraintEvaluator<E> getConstraintEvaluator() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public void cancel() {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public boolean isCancelled() {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
 }
