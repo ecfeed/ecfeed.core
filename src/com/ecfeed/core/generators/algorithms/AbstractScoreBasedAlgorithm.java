@@ -9,38 +9,40 @@ import java.util.stream.IntStream;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.utils.AlgoLogger;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.IEcfProgressMonitor;
 
-public class AbstractScoreBasedAlgorithm<E> implements IAlgorithm<E> {
+public class AbstractScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 
-	private List<List<E>> fInput;
+//	private List<List<E>> fInput;
 	private int fDimensionCount; // Total number of dimensions for an input domain
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
 	private IScoreEvaluator<E> fScoreEvaluator;
-	private IConstraintEvaluator<E> fconstraintEvaluator;
+//	private IConstraintEvaluator<E> fconstraintEvaluator;
 	protected List<List<Integer>> fHistorydimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
 																				// randomly generated dimension order
 																				// could be different)
 
-	public AbstractScoreBasedAlgorithm(List<List<E>> input, IScoreEvaluator scoreEvaluator, int argCount,
+	public AbstractScoreBasedAlgorithm(List<List<E>> input, IScoreEvaluator<E> scoreEvaluator, int argCount,
 			IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
 
-		this.fInput = input;
+//		this.fInput = input;
 		this.fDimensionCount = input.size();
 		this.fScoreEvaluator = scoreEvaluator;
-		this.fconstraintEvaluator = constraintEvaluator;
+//		this.fconstraintEvaluator = constraintEvaluator;
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
 
-		if (fInput == null || fconstraintEvaluator == null) {
-			GeneratorException.report("input or constraints cannot be null");
-		}
-		fconstraintEvaluator.initialize(fInput);
-
+//		if (fInput == null || fconstraintEvaluator == null) {
+//			GeneratorException.report("input or constraints cannot be null");
+//		}
+//		fconstraintEvaluator.initialize(fInput);
 	}
-
-	public List<E> nextTest() {
+	
+	@Override
+	public List<E> getNext() throws GeneratorException {
+		return nextTest();
+	}
+	
+	private List<E> nextTest() {
 		List<E> test = new ArrayList<>();
 		List<Integer> dimensionOrder = dimensions();
 		for (int i = 0; i < fDimensionCount; i++) {
@@ -104,7 +106,8 @@ public class AbstractScoreBasedAlgorithm<E> implements IAlgorithm<E> {
 
 	// return a list of choices for a specific parameter
 	private List<E> choices(int index) {
-		return fInput.get(index);
+		
+		return getInput().get(index);
 	}
 
 	private List<E> format(List<Integer> dimension, List<E> test) {
@@ -113,61 +116,62 @@ public class AbstractScoreBasedAlgorithm<E> implements IAlgorithm<E> {
 	}
 
 	public EvaluationResult constraintCheck(List<E> tuple) {
-		return fconstraintEvaluator.evaluate(tuple);
-	}
-
-	@Override
-	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator,
-			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException {
-		// TODO Auto-generated method stub
 		
+		return getConstraintEvaluator().evaluate(tuple);
 	}
 
-	@Override
-	public List<E> getNext() throws GeneratorException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setTaskBegin(int totalWork) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setTaskEnd() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void incrementProgress(int progressIncrement) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public IConstraintEvaluator<E> getConstraintEvaluator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void cancel() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isCancelled() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+//	@Override
+//	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator,
+//			IEcfProgressMonitor fGeneratorProgressMonitor) throws GeneratorException {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public List<E> getNext() throws GeneratorException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public void setTaskBegin(int totalWork) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void setTaskEnd() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void reset() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public void incrementProgress(int progressIncrement) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public IConstraintEvaluator<E> getConstraintEvaluator() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//
+//	@Override
+//	public void cancel() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public boolean isCancelled() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 }
