@@ -46,18 +46,28 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	
 	private List<E> nextTest() {
 		List<E> test = new ArrayList<>();
-		List<Integer> dimensionOrder = dimensions();
+		List<Integer> shuffledDimensions = dimensions(); 
+		List<E> expandedTest = initializeExpTest(shuffledDimensions.size());
+		
 		for (int i = 0; i < fDimensionCount; i++) {
-			int d = dimensionOrder.get(i);
+			
+			int dimension = shuffledDimensions.get(i);
 			int maxScore = -2;
 			E bestCandidateChoice = null;
-			c: for (E choice : choices(d)) {
+			
+			// checking choices for current dimension
+			List<E> choices = choices(dimension);
+			
+			c: for (E choice : choices) {
 				if (test.size() == i) {
 					test.add(i, choice);
 				} else {
 					test.set(i, choice);
 				}
-				if (constraintCheck(test) == EvaluationResult.FALSE) {
+				
+				expandedTest.set(dimension, choice);
+				
+				if (constraintCheck(expandedTest) == EvaluationResult.FALSE) {
 					continue c;
 				}
 				int score = fScoreEvaluator.getScore(test);
@@ -72,9 +82,20 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 				return null;
 			}
 		}
-		test = format(dimensionOrder, test);
+		test = format(shuffledDimensions, test);
 		fScoreEvaluator.update(test);
 		return test;
+	}
+
+	private List<E> initializeExpTest(int dimensionCount) {
+
+		List<E> expandedTest = new ArrayList<>();
+		
+		for (int counter = 0; counter < dimensionCount; counter++) {
+			expandedTest.add(null);
+		}
+		
+		return expandedTest;
 	}
 
 	// to generate one test case, evaluate in total k dimension orders 

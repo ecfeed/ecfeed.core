@@ -75,10 +75,36 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	private void add(int[] encode, List<List<E>> inputs) {
+		
 		List<E> tuple = decodeTuple(encode, inputs);
-		if (tuple.size() > fArgCount || constraintCheck(tuple) == EvaluationResult.FALSE)
+		
+		List<E> expandedTuple = expandTuple(tuple, encode);
+		
+		if (tuple.size() > fArgCount || constraintCheck(expandedTuple) == EvaluationResult.FALSE)
 			return;
+		
 		fTupleOccurences.put(tuple, (tuple.size() == fArgCount ? 1 : 0));
+	}
+
+	private List<E> expandTuple(List<E> compressedTuple, int[] encodePattern) {
+		
+		List<E> expandedTuple = new ArrayList<>();
+		
+		int compressedTupleIndex = 0;
+		
+		for (int index = 0; index < encodePattern.length; index++) {
+			
+			int positionCode = encodePattern[index];
+			
+			if (positionCode == NOT_INCLUDE) {
+				expandedTuple.add(null);
+			} else {
+				expandedTuple.add(compressedTuple.get(compressedTupleIndex));
+				compressedTupleIndex++;
+			}
+		}
+		
+		return expandedTuple;
 	}
 
 	private void calculateFrequency() {
