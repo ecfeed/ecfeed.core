@@ -17,14 +17,15 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	private final Map<List<E>, Integer> fScores = new HashMap<>(); // store all the scores
 	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>(); // store all the constructed tables
 	private static final int NOT_INCLUDE = -1;
-	private int fArgCount; // The number of dimensions to be covered
+	private static final int TUPLE_NOT_FOUND = -1;
+	private int fN; // The number of dimensions to be covered
 	private int fDimensionCount; // Total number of dimensions for an input domain
 
 	private IConstraintEvaluator<E> fconstraintEvaluator;
 
 	public NwiseScoreEvaluator(int argN) throws GeneratorException {
 
-		this.fArgCount = argN;
+		this.fN = argN;
 //		this.fDimensionCount = input.size();
 //		this.fconstraintEvaluator = constraintEvaluator;
 	}
@@ -80,10 +81,11 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		
 		List<E> expandedTuple = expandTuple(tuple, encode);
 		
-		if (tuple.size() > fArgCount || constraintCheck(expandedTuple) == EvaluationResult.FALSE)
+		if (tuple.size() > fN || constraintCheck(expandedTuple) == EvaluationResult.FALSE)
 			return;
 		
-		fTupleOccurences.put(tuple, (tuple.size() == fArgCount ? 1 : 0));
+		int isFullTuple = tuple.size() == fN ? 1 : 0;
+		fTupleOccurences.put(tuple, isFullTuple);
 	}
 
 	private List<E> expandTuple(List<E> compressedTuple, int[] encodePattern) {
@@ -108,12 +110,12 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	private void calculateFrequency() {
-		for (int m = fArgCount - 1; m > 0; m--) {
+		for (int m = fN - 1; m > 0; m--) {
 			List<List<E>> remove = new ArrayList<>();
 			for (List<E> key : fTupleOccurences.keySet()) {
 				if (key.size() == m) {
 					int freq = (int) fTupleOccurences.keySet().stream()
-							.filter(s -> s.size() == fArgCount && s.containsAll(key)).count();
+							.filter(s -> s.size() == fN && s.containsAll(key)).count();
 					if (freq > 0)
 						fTupleOccurences.put(key, freq);
 					else
@@ -156,7 +158,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	public void printSequence() {
-		for (int m = fArgCount; m > 0; m--) {
+		for (int m = fN; m > 0; m--) {
 			int finalM = m;
 			fTupleOccurences.keySet().stream().filter(s -> s.size() == finalM).forEach(s -> {
 				s.forEach(k -> System.out.print(k + ","));
@@ -166,29 +168,109 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	public int getScore(List<E> tuple) {
-		if (fScores.containsKey(tuple))
+		
+		if (tuple.size() > fN) {
+			return calculateScoreForTupleLongerThanN(tuple, fN);
+		}
+		
+		if (fScores.containsKey(tuple)) {
 			return fScores.get(tuple);
-		return -1;
+		}
+		
+		return 0;
 	}
 	
+	private int calculateScoreForTupleLongerThanN(List<E> tuple, int N) {
+		
+		IteratorForSubTuples<E> iterator = new IteratorForSubTuples<E>(tuple, N);
+		
+		int totalScore = 0;
+		
+		while(iterator.hasNext()) {
+			
+			@SuppressWarnings("unchecked")
+			List<E> subTuple = (List<E>) iterator.next();
+			
+			if (!tupleExistsInScoredTuples(subTuple)) {
+				return 0;
+			}
+			
+			int scoreForSubTuple = calculateScoreForTuple(subTuple);
+			
+			if (scoreForSubTuple == TUPLE_NOT_FOUND) {
+				return 0;
+			}
+			
+			totalScore += scoreForSubTuple;
+		}
+		
+		return totalScore;
+	}
+
+	private int calculateScoreForTuple(List<E> tuple) {
+		
+		if (!fScores.containsKey(tuple)) {
+			return TUPLE_NOT_FOUND;
+		}
+		
+		int scoreForMainTuple = fScores.get(tuple);
+		
+		int tupleSize = tuple.size();
+		
+		if (tupleSize == 1) {
+			return scoreForMainTuple;
+		}
+		
+		int totalScore = 0;
+		int subTupleSize = tupleSize - 1;
+		
+		IteratorForSubTuples<E> iterator = new IteratorForSubTuples<E>(tuple, subTupleSize);
+		
+		while(iterator.hasNext()) {
+			
+			@SuppressWarnings("unchecked")
+			List<E> subTuple = (List<E>) iterator.next();
+			
+			int scoreForSubTuple = calculateScoreForTuple(subTuple);
+			
+			if (scoreForSubTuple == TUPLE_NOT_FOUND) {
+				return TUPLE_NOT_FOUND;
+			}
+			
+			totalScore += scoreForSubTuple;
+		}
+		
+		return totalScore;
+	}
+	
+	private boolean tupleExistsInScoredTuples(List<E> tuple) {
+		
+		if (fScores.containsKey(tuple))
+			return true;
+
+		return false;
+	}
+
 	public void update(List<E> test) {
 		// if the test does not cover any argN-tuple, the scores does not update
-		if (test.size() < fArgCount)
+		if (test.size() < fN)
 			return;
 		// obtain all the argN-tuples covered by the test and remove them
-		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == fArgCount && test.containsAll(e.getKey()));
+		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == fN && test.containsAll(e.getKey()));
 		// update the occurences (i.e., fTupleOccurences) in the constructed table and scores (i.e., fScores)
 		calculateFrequency();
 		fScores.clear();
-		calculateScore(fArgCount);
+		calculateScore(fN);
+		
+		System.out.println(fScores);
 	}
 	
-	   public boolean existNDimensions(int argN){
-	        return fScores.keySet().stream().anyMatch(k-> k.size() == argN);
-	    }
-	   
-	   public List<List<E>> getNTuples(int argN){
-	        return fScores.keySet().stream().filter(k -> k.size() == argN).collect(Collectors.toList());
-	    }
+	public boolean existNDimensions(int argN){
+        return fScores.keySet().stream().anyMatch(k-> k.size() == argN);
+    }
+   
+	public List<List<E>> getNTuples(int argN){
+        return fScores.keySet().stream().filter(k -> k.size() == argN).collect(Collectors.toList());
+    }
 
 }
