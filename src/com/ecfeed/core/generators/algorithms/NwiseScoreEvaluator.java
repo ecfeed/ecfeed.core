@@ -17,7 +17,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	private final Map<List<E>, Integer> fScores = new HashMap<>(); // store all the scores
 	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>(); // store all the constructed tables
 	private static final int NOT_INCLUDE = -1;
-	private static final int TUPLE_NOT_FOUND = -1;
 	private int fN; // The number of dimensions to be covered
 	private int fDimensionCount; // Total number of dimensions for an input domain
 
@@ -26,23 +25,23 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	public NwiseScoreEvaluator(int argN) throws GeneratorException {
 
 		this.fN = argN;
-//		this.fDimensionCount = input.size();
-//		this.fconstraintEvaluator = constraintEvaluator;
 	}
 	
 	@Override
 	public void initialize(
 			List<List<E>> input, 
 			IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
+
+		if (input == null) {
+			GeneratorException.report("Input of N-wise score evaluator should not be empty.");
+		}
 		
 		this.fDimensionCount = input.size();
 		this.fconstraintEvaluator = constraintEvaluator;
 		
-		if (input == null || constraintEvaluator == null) {
-			GeneratorException.report("input or constraints cannot be null");
+		if (fconstraintEvaluator != null) {
+			fconstraintEvaluator.initialize(input);
 		}
-		
-		fconstraintEvaluator.initialize(input);
 
 		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
 		int[] range = input.stream().mapToInt(List::size).toArray();
@@ -150,6 +149,11 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	public EvaluationResult constraintCheck(List<E> tuple) {
+		
+		if (fconstraintEvaluator == null) {
+			return EvaluationResult.TRUE;
+		}
+		
 		return fconstraintEvaluator.evaluate(tuple);
 	}
 
@@ -162,7 +166,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 			int finalM = m;
 			fTupleOccurences.keySet().stream().filter(s -> s.size() == finalM).forEach(s -> {
 				s.forEach(k -> System.out.print(k + ","));
-				System.out.println(fTupleOccurences.get(s));
+//				System.out.println(fTupleOccurences.get(s));
 			});
 		}
 	}
@@ -191,66 +195,22 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 			@SuppressWarnings("unchecked")
 			List<E> subTuple = (List<E>) iterator.next();
 			
-			if (!tupleExistsInScoredTuples(subTuple)) {
-				return 0;
-			}
-			
-			int scoreForSubTuple = calculateScoreForTuple(subTuple);
-			
-			if (scoreForSubTuple == TUPLE_NOT_FOUND) {
-				return 0;
-			}
-			
+			int scoreForSubTuple = getScoreForTuple(subTuple);
 			totalScore += scoreForSubTuple;
 		}
 		
 		return totalScore;
 	}
 
-	private int calculateScoreForTuple(List<E> tuple) {
+	private int getScoreForTuple(List<E> tuple) {
 		
-		if (!fScores.containsKey(tuple)) {
-			return TUPLE_NOT_FOUND;
-		}
-		
-		int scoreForMainTuple = fScores.get(tuple);
-		
-		int tupleSize = tuple.size();
-		
-		if (tupleSize == 1) {
-			return scoreForMainTuple;
-		}
-		
-		int totalScore = 0;
-		int subTupleSize = tupleSize - 1;
-		
-		IteratorForSubTuples<E> iterator = new IteratorForSubTuples<E>(tuple, subTupleSize);
-		
-		while(iterator.hasNext()) {
-			
-			@SuppressWarnings("unchecked")
-			List<E> subTuple = (List<E>) iterator.next();
-			
-			int scoreForSubTuple = calculateScoreForTuple(subTuple);
-			
-			if (scoreForSubTuple == TUPLE_NOT_FOUND) {
-				return TUPLE_NOT_FOUND;
-			}
-			
-			totalScore += scoreForSubTuple;
-		}
-		
-		return totalScore;
+		if (fScores.containsKey(tuple)) {
+			return fScores.get(tuple);
+		} 
+
+		return 0;
 	}
 	
-	private boolean tupleExistsInScoredTuples(List<E> tuple) {
-		
-		if (fScores.containsKey(tuple))
-			return true;
-
-		return false;
-	}
-
 	public void update(List<E> test) {
 		// if the test does not cover any argN-tuple, the scores does not update
 		if (test.size() < fN)
@@ -262,7 +222,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		fScores.clear();
 		calculateScore(fN);
 		
-		System.out.println(fScores);
+//		System.out.println(fScores);
 	}
 	
 	public boolean existNDimensions(int argN){
