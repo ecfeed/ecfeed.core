@@ -13,10 +13,7 @@ package com.ecfeed.core.generators;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.generators.algorithms.ScoreBasedNwiseAlgorithm;
 import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
-import com.ecfeed.core.generators.algorithms.IScoreEvaluator;
-import com.ecfeed.core.generators.algorithms.NwiseScoreEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
@@ -55,17 +52,8 @@ public class NWiseGenerator<E> extends AbstractGenerator<E> {
         int N = (int) getParameterValue(getDefinitionN());
         int coverage = (int) getParameterValue(getDefinitionCoverage());
         
-        if (isScoreBasedAlgorithmActive()) {
-        	IScoreEvaluator<E> fScoreEvaluator = new NwiseScoreEvaluator<>(N);
-        	setAlgorithm(new ScoreBasedNwiseAlgorithm<E>(fScoreEvaluator));
-        } else {
-        	setAlgorithm(new AwesomeNWiseAlgorithm<>(N, coverage));
-        }
+        setAlgorithm(new AwesomeNWiseAlgorithm<>(N, coverage));
     }
-
-    private boolean isScoreBasedAlgorithmActive() {
-		return true;
-	}
 
 	@Override
     public GeneratorType getGeneratorType() {
