@@ -5,7 +5,7 @@ import java.util.List;
 
 public class IteratorForSubTuplesTest<E> {
 	
-  // TODO convert to tests
+  // TODO convert into tests
 	
 	public static void main(String[] args) {
 
