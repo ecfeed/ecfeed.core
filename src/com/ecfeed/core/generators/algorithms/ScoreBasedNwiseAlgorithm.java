@@ -2,7 +2,6 @@ package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -41,57 +40,127 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	
 	@Override
 	public List<E> getNext() throws GeneratorException {
-		return nextTest();
+		return getNextTest();
 	}
 	
-	private List<E> nextTest() {
-		List<E> test = new ArrayList<>();
-		List<Integer> shuffledDimensions = dimensions(); 
-		List<E> expandedTest = initializeExpTest(shuffledDimensions.size());
+	private List<E> getNextTest() {
+
+		List<E> resultTuple = initializeTuple(fDimensionCount);
+
+		if (evaluateConstraint(resultTuple) == EvaluationResult.FALSE) { // TODO - move initial constraint checking to initialization
+			return null; // conflicting constraints
+		}
+
+		List<Integer> shuffledDimensions = createShuffledIndicesToDimensions(); 
 		
-		for (int i = 0; i < fDimensionCount; i++) {
-			
-			int dimension = shuffledDimensions.get(i);
-			int maxScore = -2;
-			E bestCandidateChoice = null;
-			
-			// checking choices for current dimension
-			List<E> choices = choices(dimension);
-			
-			c: for (E choice : choices) {
-				if (test.size() == i) {
-					test.add(i, choice);
-				} else {
-					test.set(i, choice);
+		for (int dimension : shuffledDimensions) { 
+
+			int maxScore = 0;
+			E bestCandidate = null;
+
+			loopForChoices: for (E choice : getListOfChoicesForParameter(dimension)) {
+
+				List<E> candidateTuple = resultTuple;
+				candidateTuple.set(dimension, choice); 
+				   
+				if (evaluateConstraint(candidateTuple) == EvaluationResult.FALSE) {
+					continue loopForChoices;                   
 				}
-				
-				expandedTest.set(dimension, choice);
-				
-				if (constraintCheck(expandedTest) == EvaluationResult.FALSE) {
-					continue c;
-				}
-				int score = fScoreEvaluator.getScore(test);
-				if (score > maxScore) {
+
+				int score = getScore(candidateTuple);
+
+				if (score > maxScore) {                  
 					maxScore = score;
-					bestCandidateChoice = choice;
+					bestCandidate = choice;
 				}
 			}
-			if (bestCandidateChoice != null) {
-				test.set(i, bestCandidateChoice);
+
+			if (bestCandidate != null) {
+				resultTuple.set(dimension, bestCandidate);
 			} else {
-				return null;
+				//no choice got score bigger than 0 - we covered all N-tuples
+				return null;                            
+			}    
+		}
+
+		fScoreEvaluator.update(resultTuple);
+		return resultTuple;                              
+	}
+	
+	private int getScore(List<E> extendedTuple) {
+		
+		List<E> compressedTuple = new ArrayList<>();
+		
+		for (E choice : extendedTuple) {
+			
+			if (choice != null) {
+				compressedTuple.add(choice);
 			}
 		}
-		test = format(shuffledDimensions, test);
-		fScoreEvaluator.update(test);
-		return test;
-	}
 
-	private List<E> initializeExpTest(int dimensionCount) {
+		int score = fScoreEvaluator.getScore(compressedTuple);
+		return score;
+	}
+	
+//	private List<E> nextTest() {
+//
+//		debugCounter++;
+//		
+//		if (debugCounter > 10) {
+//			return null;
+//		}
+//		
+//		List<E> test = new ArrayList<>();
+//		List<Integer> shuffledDimensions = createShuffledDimensions(); 
+//		List<E> expandedTest = initializeTuple(shuffledDimensions.size());
+//		
+//		for (int i = 0; i < fDimensionCount; i++) {
+//			
+//			int dimension = shuffledDimensions.get(i);
+//			int maxScore = 0;
+//			E bestCandidateChoice = null;
+//			
+//			// checking choices for current dimension
+//			List<E> choices = choices(dimension);
+//			
+//			loopForChoices: for (E choice : choices) {
+//				
+//				if (test.size() == i) {
+//					test.add(i, choice);
+//				} else {
+//					test.set(i, choice);
+//				}
+//				
+//				expandedTest.set(dimension, choice);
+//				
+//				if (constraintCheck(expandedTest) == EvaluationResult.FALSE) {
+//					continue loopForChoices;
+//				}
+//				
+//				int score = fScoreEvaluator.getScore(test);
+//				
+//				if (score > maxScore) {
+//					maxScore = score;
+//					bestCandidateChoice = choice;
+//				}
+//			}
+//			if (bestCandidateChoice != null) {
+//				test.set(i, bestCandidateChoice);
+//			} else {
+//				System.out.println("Returning null from nextTest");
+//				return null;
+//			}
+//		}
+//		test = format(shuffledDimensions, test);
+//		fScoreEvaluator.update(test);
+//		return test;
+//	}
+
+	private List<E> initializeTuple(int countOfDimensions) {
 
 		List<E> expandedTest = new ArrayList<>();
 		
-		for (int counter = 0; counter < dimensionCount; counter++) {
+		for (int counter = 0; counter < countOfDimensions; counter++) {
 			expandedTest.add(null);
 		}
 		
@@ -100,21 +169,21 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	// to generate one test case, evaluate in total k dimension orders 
 	// and pick up the one with the best score
-	public List<E> nextTestwithKdimensionOrder(int k) {
-		List<E> test = new ArrayList<>();
-		List<E> tempTest = new ArrayList<>();
-		int bestScore = 0;
-		for (int i = 0; i < k; i++) {
-			tempTest = nextTest();
-			if (bestScore < fScoreEvaluator.getScore(tempTest)) {
-				test = tempTest;
-			}
-		}
-		return test;
-	}
+//	public List<E> nextTestwithKdimensionOrder(int k) {
+//		List<E> test = new ArrayList<>();
+//		List<E> tempTest = new ArrayList<>();
+//		int bestScore = 0;
+//		for (int i = 0; i < k; i++) {
+//			tempTest = getNextTest();
+//			if (bestScore < fScoreEvaluator.getScore(tempTest)) {
+//				test = tempTest;
+//			}
+//		}
+//		return test;
+//	}
 
 	// returns a shuffled list of indices of input parameters
-	private List<Integer> dimensions() {
+	private List<Integer> createShuffledIndicesToDimensions() {
 		List<Integer> dimensions = new ArrayList<>();
 		dimensions.addAll(fInputIndex);
 		int attempt = 3;
@@ -127,18 +196,17 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		return dimensions.subList(0, fDimensionCount);
 	}
 
-	// return a list of choices for a specific parameter
-	private List<E> choices(int index) {
+	private List<E> getListOfChoicesForParameter(int indexOfParameter) {
 		
-		return getInput().get(index);
+		return getInput().get(indexOfParameter);
 	}
 
-	private List<E> format(List<Integer> dimension, List<E> test) {
-		return test.stream().sorted(Comparator.comparingInt(o -> dimension.get(test.indexOf(o))))
-				.collect(Collectors.toList());
-	}
+//	private List<E> format(List<Integer> dimension, List<E> test) {
+//		return test.stream().sorted(Comparator.comparingInt(o -> dimension.get(test.indexOf(o))))
+//				.collect(Collectors.toList());
+//	}
 
-	public EvaluationResult constraintCheck(List<E> tuple) {
+	public EvaluationResult evaluateConstraint(List<E> tuple) {
 		
 		return getConstraintEvaluator().evaluate(tuple);
 	}
