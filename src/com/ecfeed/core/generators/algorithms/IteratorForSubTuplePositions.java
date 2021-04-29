@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
-public class IteratorForSubTuplePositions<E> implements Iterator<Object> {
+public class IteratorForSubTuplePositions implements Iterator<List<Integer>> {
 
 	private final static Integer NOT_SELECTED = 0;
 	private final static Integer SELECTED = 1;
@@ -48,7 +48,7 @@ public class IteratorForSubTuplePositions<E> implements Iterator<Object> {
 	}
 
 	@Override
-	public Object next() {
+	public List<Integer> next() {
 
 		fSubTuplePositions = prepareTuplePositions(fSubTuplePositions, fTupleSize, fSubTupleSize);
 
