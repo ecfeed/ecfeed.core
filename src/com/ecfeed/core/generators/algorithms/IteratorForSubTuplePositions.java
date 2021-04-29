@@ -8,8 +8,8 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 public class IteratorForSubTuplePositions implements Iterator<List<Integer>> {
 
-	private final static Integer NOT_SELECTED = 0;
-	private final static Integer SELECTED = 1;
+	public final static Integer NOT_SELECTED = 0;
+	public final static Integer SELECTED = 1;
 
 	private int fTupleSize;
 	private int fSubTupleSize;
