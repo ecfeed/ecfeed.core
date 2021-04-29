@@ -1,16 +1,20 @@
 package com.ecfeed.core.generators.algorithms;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.utils.ExceptionHelper;
 
 public class NwiseScoreEvaluatorTest {
 
-	// TODO convert into tests
 
-	public static void main(String[] args) {
+	@Test
+	public void basicTest() {
 
 		try {
 			decreaseScoreTest();
@@ -58,8 +62,6 @@ public class NwiseScoreEvaluatorTest {
 
 		checkScoreDecrease(score2BeforeUpdate, score2AfterUpdate);
 
-		// score after update should be smaller
-
 		int score3BeforeUpdate = evaluator.getScore(tuple3);
 		checkScoreAfterUpdate(evaluator, tuple2);
 		int score3AfterUpdate = evaluator.getScore(tuple3);
@@ -73,17 +75,15 @@ public class NwiseScoreEvaluatorTest {
 		if (score1 != score4) {
 			ExceptionHelper.reportRuntimeException("Scores 1 and 4 should be equal.");
 		}
-
-		System.out.println("END");
 	}
 
-	private static void checkScoreDecrease(int score2BeforeUpdate, int score2AfterUpdate) {
+	private static void checkScoreDecrease(int scoreBeforeUpdate, int scoreAfterUpdate) {
 
-		if (score2BeforeUpdate > score2AfterUpdate) {
+		if (scoreBeforeUpdate > scoreAfterUpdate) {
 			return;
 		}
 
-		ExceptionHelper.reportRuntimeException("Score before should be greater than score after.");
+		fail("Score before should be greater than score after.");
 
 	}
 
@@ -92,7 +92,7 @@ public class NwiseScoreEvaluatorTest {
 		int scoreBefore = evaluator.getScore(tuple);
 
 		if (scoreBefore == 0) {
-			ExceptionHelper.reportRuntimeException("Score must not be 0.");
+			fail("Score must not be 0.");
 		}
 
 		evaluator.update(tuple);
@@ -100,7 +100,7 @@ public class NwiseScoreEvaluatorTest {
 		int scoreAfter = evaluator.getScore(tuple);
 
 		if (scoreAfter != 0) {
-			ExceptionHelper.reportRuntimeException("Score must be 0 after update.");
+			fail("Score must be 0 after update.");
 		}
 	}
 

@@ -35,7 +35,7 @@ public class IteratorForSubTuplesTest {
 		IteratorForSubTuples<String> iterator = new IteratorForSubTuples<String>(tuple, 4);
 
 		for (int counter = 0; ; counter++) {
-			
+
 			if (!iterator.hasNext()) {
 				break;
 			}
@@ -48,32 +48,32 @@ public class IteratorForSubTuplesTest {
 			}
 		}
 	}
-	
+
 	private static List<String> createTuple4(String value1, String value2, String value3, String value4) {
-		
+
 		List<String> result = new ArrayList<>();
-		
+
 		result.add(value1);
 		result.add(value2);
 		result.add(value3);
 		result.add(value4);
-		
+
 		return result;
 	}
-	
+
 	private void checkSubTuples1(List<String> tuple) {
-		
+
 		List<List<String>> expectedSubTuples = new ArrayList<>();
 		expectedSubTuples.add(createTuple1("V5"));
 		expectedSubTuples.add(createTuple1("V4"));
 		expectedSubTuples.add(createTuple1("V3"));
 		expectedSubTuples.add(createTuple1("V2"));
 		expectedSubTuples.add(createTuple1("V1"));
-		
+
 		IteratorForSubTuples<String> iterator = new IteratorForSubTuples<String>(tuple, 1);
 
 		for (int counter = 0; ; counter++) {
-			
+
 			if (!iterator.hasNext()) {
 				break;
 			}
@@ -88,11 +88,11 @@ public class IteratorForSubTuplesTest {
 	}
 
 	private List<String> createTuple1(String value1) {
-		
+
 		List<String> result = new ArrayList<>();
-		
+
 		result.add(value1);
-		
+
 		return result;
 	}
 
