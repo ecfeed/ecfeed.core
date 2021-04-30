@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class IteratorForSubTuples<E> implements Iterator<Object> {
-
+public class IteratorForSubTuples<E> implements Iterator<List<E>> {
+	
 	// create list of sub-tuples of given length from tuple
 
 	private List<E> fTuple;
@@ -32,8 +32,9 @@ public class IteratorForSubTuples<E> implements Iterator<Object> {
 	}
 
 	@Override
-	public Object next() {
 
+	public List<E> next() {
+		
 		fSubTuplePositions = fIterator.next();
 
 		List<E> subTuple = createSubTuple(fTuple, fSubTuplePositions);

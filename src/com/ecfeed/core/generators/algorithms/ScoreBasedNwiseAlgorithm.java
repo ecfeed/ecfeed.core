@@ -13,6 +13,8 @@ import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
+	// TODO - remove println
+	
 	private int fDimensionCount; // Total number of dimensions for an input domain
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
 	private IScoreEvaluator<E> fScoreEvaluator;
@@ -45,6 +47,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	
 	private List<E> getNextTest() {
 
+		System.out.println("Get next ****************************************************************************************************************");
 		List<E> resultTuple = initializeTuple(fDimensionCount);
 
 		if (evaluateConstraint(resultTuple) == EvaluationResult.FALSE) { // TODO - move initial constraint checking to initialization
@@ -52,6 +55,8 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		}
 
 		List<Integer> shuffledDimensions = createShuffledIndicesToDimensions(); 
+		
+		System.out.println("Shuffled dimensions: " + shuffledDimensions);
 		
 		for (int dimension : shuffledDimensions) { 
 
@@ -68,6 +73,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 				}
 
 				int score = getScore(candidateTuple);
+				System.out.println("Candidate tuple: " + candidateTuple + " Score: " + score);
 
 				if (score > maxScore) {                  
 					maxScore = score;
@@ -78,6 +84,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 			if (bestCandidate != null) {
 				resultTuple.set(dimension, bestCandidate);
 			} else {
+				System.out.println("BEST CANDIDATE IS NULL");
 				//no choice got score bigger than 0 - we covered all N-tuples
 				return null;                            
 			}    
