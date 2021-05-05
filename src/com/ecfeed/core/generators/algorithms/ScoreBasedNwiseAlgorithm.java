@@ -86,11 +86,19 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 			} else {
 				System.out.println("BEST CANDIDATE IS NULL");
 				//no choice got score bigger than 0 - we covered all N-tuples
-				return null;                            
+				
+				List<E> bestFullTuple = fScoreEvaluator.findBestFullTuple();
+				
+				if (bestFullTuple == null) {
+					return null;
+				}
+				
+				fScoreEvaluator.updateScores(bestFullTuple);
+				return bestFullTuple;                            
 			}    
 		}
 
-		fScoreEvaluator.update(resultTuple);
+		fScoreEvaluator.updateScores(resultTuple);
 		return resultTuple;                              
 	}
 	
