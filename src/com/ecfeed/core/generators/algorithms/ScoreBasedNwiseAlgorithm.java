@@ -48,6 +48,11 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	private List<E> getNextTest() {
 
 		System.out.println("Get next ****************************************************************************************************************");
+		
+		if (fScoreEvaluator.allNTuplesCovered()) {
+			return null;
+		}
+		
 		List<E> resultTuple = initializeTuple(fDimensionCount);
 
 		if (evaluateConstraint(resultTuple) == EvaluationResult.FALSE) { // TODO - move initial constraint checking to initialization

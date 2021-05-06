@@ -34,13 +34,16 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	private static final int NOT_INCLUDE = -1;
 	private int fN; // The number of dimensions to be covered
 	private int fDimensionCount; // Total number of dimensions for an input domain
+	private int fInitialNTupleCount;
+	private int fCoverage;
 
 	private IConstraintEvaluator<E> fConstraintEvaluator;
 	private TupleDecompressor<E> fTupleDecompressor;
 
-	public NwiseScoreEvaluator(int argN) throws GeneratorException {
+	public NwiseScoreEvaluator(int argN, int coverage) throws GeneratorException {
 
 		this.fN = argN;
+		this.fCoverage = coverage;
 	}
 
 	@Override
@@ -66,6 +69,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
 		int[] range = input.stream().mapToInt(List::size).toArray();
+		
 		boolean flag = true;
 
 		while (flag) {
@@ -76,7 +80,9 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		calculateFrequency(); // calculate occurences in the constructed table
 		calculateScore(input.size()); //calculate scores for all the tuples in constructed table
-
+		
+		fInitialNTupleCount = countNTuples();
+		
 		printTuples();
 
 		fTupleDecompressor = new TupleDecompressor<>();
@@ -119,7 +125,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		calculateFrequency();
 		fScores.clear();
 		calculateScore(fN);
-
+		
 		printTuples();
 	}
 
@@ -160,6 +166,38 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return bestTuple;
 	}	
 
+	@Override
+	public boolean allNTuplesCovered() {
+		
+		int tuplesToCover = fInitialNTupleCount * fCoverage / 100;
+
+		int tuplesCovered = fInitialNTupleCount - countNTuples();
+		
+		if (tuplesCovered >= tuplesToCover) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
+	private int countNTuples() {
+
+		int count = 0;
+		
+		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
+
+			List<E> tuple = entry.getKey();
+			
+			if (tuple.size() == fN) {
+				count++;
+			}
+		}
+
+		return count;
+
+	}
+	
 	private void printTuples() {
 
 		printOccurences();
@@ -279,6 +317,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	private void calculateScore(int size) {
+		
 		IntStream.range(1, size + 1).forEach(l -> {
 			fTupleOccurences.keySet().forEach(k -> {
 				if (k.size() == l) {

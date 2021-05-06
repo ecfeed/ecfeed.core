@@ -21,7 +21,7 @@ public class NwiseScoreEvaluatorTest {
 
 	private static void runTest() throws GeneratorException {
 		
-		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<>(3);
+		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<>(3, 100);
 		
 		List<List<String>> input = prepareTestInput(5);
 		

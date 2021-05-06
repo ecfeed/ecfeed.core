@@ -11,4 +11,5 @@ public interface IScoreEvaluator<E> {
 	public int getScore(List<E> tuple);
 	public void updateScores(List<E> test);
 	public List<E> findBestFullTuple();
+	public boolean allNTuplesCovered();
 }

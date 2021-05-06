@@ -34,9 +34,9 @@ public class NWiseScoredGenerator<E> extends NWiseGeneratorBase<E> {
 
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
 		int N = (int) getParameterValue(getDefinitionN());
-//		int coverage = (int) getParameterValue(getDefinitionCoverage()); // TODO coverage ?
+		int coverage = (int) getParameterValue(getDefinitionCoverage());
 
-		IScoreEvaluator<E> fScoreEvaluator = new NwiseScoreEvaluator<>(N);
+		IScoreEvaluator<E> fScoreEvaluator = new NwiseScoreEvaluator<>(N, coverage);
 		setAlgorithm(new ScoreBasedNwiseAlgorithm<E>(fScoreEvaluator));
 
 	}
