@@ -55,7 +55,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		
 		List<E> resultTuple = initializeTuple(fDimensionCount);
 
-		if (evaluateConstraint(resultTuple) == EvaluationResult.FALSE) { // TODO - move initial constraint checking to initialization
+		if (evaluateConstraint(resultTuple) == EvaluationResult.FALSE) {
 			return null; // conflicting constraints
 		}
 
@@ -121,60 +121,6 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		int score = fScoreEvaluator.getScore(compressedTuple);
 		return score;
 	}
-	
-//	private List<E> nextTest() {
-//
-//		debugCounter++;
-//		
-//		if (debugCounter > 10) {
-//			return null;
-//		}
-//		
-//		List<E> test = new ArrayList<>();
-//		List<Integer> shuffledDimensions = createShuffledDimensions(); 
-//		List<E> expandedTest = initializeTuple(shuffledDimensions.size());
-//		
-//		for (int i = 0; i < fDimensionCount; i++) {
-//			
-//			int dimension = shuffledDimensions.get(i);
-//			int maxScore = 0;
-//			E bestCandidateChoice = null;
-//			
-//			// checking choices for current dimension
-//			List<E> choices = choices(dimension);
-//			
-//			loopForChoices: for (E choice : choices) {
-//				
-//				if (test.size() == i) {
-//					test.add(i, choice);
-//				} else {
-//					test.set(i, choice);
-//				}
-//				
-//				expandedTest.set(dimension, choice);
-//				
-//				if (constraintCheck(expandedTest) == EvaluationResult.FALSE) {
-//					continue loopForChoices;
-//				}
-//				
-//				int score = fScoreEvaluator.getScore(test);
-//				
-//				if (score > maxScore) {
-//					maxScore = score;
-//					bestCandidateChoice = choice;
-//				}
-//			}
-//			if (bestCandidateChoice != null) {
-//				test.set(i, bestCandidateChoice);
-//			} else {
-//				System.out.println("Returning null from nextTest");
-//				return null;
-//			}
-//		}
-//		test = format(shuffledDimensions, test);
-//		fScoreEvaluator.update(test);
-//		return test;
-//	}
 
 	private List<E> initializeTuple(int countOfDimensions) {
 
@@ -187,22 +133,6 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		return expandedTest;
 	}
 
-	// to generate one test case, evaluate in total k dimension orders 
-	// and pick up the one with the best score
-//	public List<E> nextTestwithKdimensionOrder(int k) {
-//		List<E> test = new ArrayList<>();
-//		List<E> tempTest = new ArrayList<>();
-//		int bestScore = 0;
-//		for (int i = 0; i < k; i++) {
-//			tempTest = getNextTest();
-//			if (bestScore < fScoreEvaluator.getScore(tempTest)) {
-//				test = tempTest;
-//			}
-//		}
-//		return test;
-//	}
-
-	// returns a shuffled list of indices of input parameters
 	private List<Integer> createShuffledIndicesToDimensions() {
 		List<Integer> dimensions = new ArrayList<>();
 		dimensions.addAll(fInputIndex);
@@ -220,11 +150,6 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		
 		return getInput().get(indexOfParameter);
 	}
-
-//	private List<E> format(List<Integer> dimension, List<E> test) {
-//		return test.stream().sorted(Comparator.comparingInt(o -> dimension.get(test.indexOf(o))))
-//				.collect(Collectors.toList());
-//	}
 
 	public EvaluationResult evaluateConstraint(List<E> tuple) {
 		

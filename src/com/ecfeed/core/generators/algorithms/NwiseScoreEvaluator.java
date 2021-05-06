@@ -1,6 +1,7 @@
 package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,24 +16,14 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
-
-	// TODO - remove println
-
-	// TODO - add constraint checking for getBestFullTuple
-
-	// TODO - add coverage 
-
-	// TODO - move getNext from algorithm here
-
-	// TODO - refactor functions to tuple helper
-
 	private List<List<E>> fInput;
 
-	private final Map<List<E>, Integer> fScores = new HashMap<>(); // store all the scores
-	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>(); // store all the constructed tables
+	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>();
+	private final Map<List<E>, Integer> fScores = new HashMap<>();
+
 	private static final int NOT_INCLUDE = -1;
-	private int fN; // The number of dimensions to be covered
-	private int fDimensionCount; // Total number of dimensions for an input domain
+	private int fN;
+	private int fDimensionCount;
 	private int fInitialNTupleCount;
 	private int fCoverage;
 
@@ -55,26 +46,22 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		}
 
 		fInput = input;
-		System.out.println("Input:" + input);
-
-		this.fDimensionCount = input.size();
-		this.fConstraintEvaluator = constraintEvaluator;
+		fDimensionCount = input.size();
+		fConstraintEvaluator = constraintEvaluator;
 
 		if (fConstraintEvaluator != null) {
 			fConstraintEvaluator.initialize(input);
 		}
 
-		System.out.println("Initialize BEG");
-
 		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
-		int[] range = input.stream().mapToInt(List::size).toArray();
+		int[] arrayOfDimensions = input.stream().mapToInt(List::size).toArray();
 
 		boolean flag = true;
 
 		while (flag) {
-			flag = plus(encode, range);
+			flag = plus(encode, arrayOfDimensions);
 			if (flag)
-				add(encode, input);
+				addTupleToOccurencesTab(encode, input);
 		}
 
 		calculateFrequency(); // calculate occurences in the constructed table
@@ -82,13 +69,8 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		fInitialNTupleCount = countNTuples();
 
-		printTuples();
-
 		fTupleDecompressor = new TupleDecompressor<>();
 		fTupleDecompressor.initialize(input);
-
-		System.out.println("Initialize END");
-
 	}
 
 	@Override
@@ -109,32 +91,20 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	@Override
 	public void updateScores(List<E> testCase) {
 
-		System.out.println("--- UPDATE --------------------------------------------------------------------------------------------------");
-		System.out.println("Test case: " + testCase);
-
-		//		printNSubTuplesOfUpdatedTuple(testCase);
-
-		// if the test does not cover any argN-tuple, the scores does not update
 		if (testCase.size() < fN)
 			return;
 
-		// obtain all the argN-tuples covered by the test and remove them
 		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == fN && testCase.containsAll(e.getKey()));
-		// update the occurences (i.e., fTupleOccurences) in the constructed table and scores (i.e., fScores)
+
 		calculateFrequency();
 		fScores.clear();
 		calculateScore(fN);
-
-		printTuples();
 	}
 
 	@Override
 	public List<E> findBestFullTuple() {
 
-		System.out.println("FIND BEST FULL TUPLE -----------------------------------------");
 		List<E> compressedBestTuple = findBestNTuple();
-
-		System.out.println("Best full N tuple: " + compressedBestTuple);
 
 		if (compressedBestTuple == null) {
 			return null;
@@ -142,11 +112,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		List<E> bestTuple = fTupleDecompressor.decompressTuple(compressedBestTuple); 
 
-		System.out.println("best tuple (decompressed):" + bestTuple);
-
 		while(!TuplesHelper.tupleIsComplete(bestTuple)) {
-
-			System.out.println("Tuple is complete: " + bestTuple);
 
 			List<E> bestRefillTuple = findBestRefillTuple(bestTuple);
 
@@ -154,14 +120,9 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 				return null;
 			}
 
-			System.out.println("Best refil tuple: " + bestRefillTuple);
-
 			bestTuple = TuplesHelper.mergeTuples(bestTuple, bestRefillTuple);
-
-			System.out.println("Best tuple after merging: " + bestTuple);
 		}
 
-		System.out.println("Best tuple found: " + bestTuple);
 		return bestTuple;
 	}	
 
@@ -180,6 +141,27 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 
+	private void addTupleToOccurencesTab(int[] dimensions, List<List<E>> input) {
+
+		List<E> tuple = decodeTuple(dimensions, input);
+
+		List<E> expandedTuple = expandTuple(tuple, dimensions);
+
+		if (tuple.size() > fN || constraintCheck(expandedTuple) == EvaluationResult.FALSE)
+			return;
+
+		int isFullTuple = tuple.size() == fN ? 1 : 0;
+
+		fTupleOccurences.put(tuple, isFullTuple);
+	}
+
+
+	private List<E> decodeTuple(int[] dimensions, List<List<E>> input) {
+
+		return IntStream.range(0, dimensions.length).mapToObj(i -> dimensions[i] == -1 ? null : input.get(i).get(dimensions[i]))
+				.filter(Objects::nonNull).collect(Collectors.toList());
+	}
+
 	private int countNTuples() {
 
 		int count = 0;
@@ -197,14 +179,14 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	}
 
-	private void printTuples() {
+	public void printTuples() {
 
-		printOccurences();
+		//		printOccurences();
 
-		printScores();
+		//		printScores();
 	}
 
-	private int printOccurences() {
+	public int printOccurences() {
 
 		System.out.println("Tuple occurences: ");
 
@@ -225,7 +207,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return counter;
 	}
 
-	private void printScores() {
+	public void printScores() {
 
 		System.out.println("\nScores: ");
 
@@ -254,24 +236,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return false;
 	}
 
-	private void add(int[] encode, List<List<E>> inputs) {
-
-		List<E> tuple = decodeTuple(encode, inputs);
-
-		List<E> expandedTuple = expandTuple(tuple, encode);
-
-		if (tuple.size() > fN || constraintCheck(expandedTuple) == EvaluationResult.FALSE)
-			return;
-
-		int isFullTuple = tuple.size() == fN ? 1 : 0;
-
-		//		if (isFullTuple == 1) {
-		//			System.out.println("tuple: " + tuple );
-		//		}
-
-		fTupleOccurences.put(tuple, isFullTuple);
-	}
-
 	private List<E> expandTuple(List<E> compressedTuple, int[] encodePattern) {
 
 		List<E> expandedTuple = new ArrayList<>();
@@ -294,6 +258,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	private void calculateFrequency() {
+
 		for (int m = fN - 1; m > 0; m--) {
 			List<List<E>> remove = new ArrayList<>();
 			for (List<E> key : fTupleOccurences.keySet()) {
@@ -308,11 +273,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 			}
 			remove.forEach(s -> fTupleOccurences.remove(s));
 		}
-	}
-
-	private List<E> decodeTuple(int[] encode, List<List<E>> inputs) {
-		return IntStream.range(0, encode.length).mapToObj(i -> encode[i] == -1 ? null : inputs.get(i).get(encode[i]))
-				.filter(Objects::nonNull).collect(Collectors.toList());
 	}
 
 	private void calculateScore(int size) {
@@ -331,7 +291,8 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	private int calculateScore(List<E> tuple) {
 		return fTupleOccurences.get(tuple) * fTupleOccurences.keySet().stream()
-				.filter(k -> tuple.containsAll(k) && k.size() == tuple.size() - 1).mapToInt(fScores::get).sum();
+				.filter(k -> tuple.containsAll(k) && k.size() == tuple.size() - 1).
+				mapToInt(fScores::get).sum();
 	}
 
 	public EvaluationResult constraintCheck(List<E> tuple) {
@@ -348,11 +309,11 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	public void printSequence() {
+
 		for (int m = fN; m > 0; m--) {
 			int finalM = m;
 			fTupleOccurences.keySet().stream().filter(s -> s.size() == finalM).forEach(s -> {
 				s.forEach(k -> System.out.print(k + ","));
-				//				System.out.println(fTupleOccurences.get(s));
 			});
 		}
 	}
@@ -382,68 +343,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return 0;
 	}
-
-	public boolean existNDimensions(int argN){
-		return fScores.keySet().stream().anyMatch(k-> k.size() == argN);
-	}
-
-	public List<List<E>> getNTuples(int argN){
-		return fScores.keySet().stream().filter(k -> k.size() == argN).collect(Collectors.toList());
-	}
-
-	//	private List<E> mergeTuples(List<E> mainTuple, List<E> tupleToMerge) {
-	//
-	//		if (mainTuple == null) {
-	//			ExceptionHelper.reportRuntimeException("Empty main tuple when merging tuples.");
-	//		}
-	//
-	//		if (tupleToMerge == null) {
-	//			ExceptionHelper.reportRuntimeException("Empty tuple to be merged.");
-	//		}
-	//
-	//		if (mainTuple.size() != tupleToMerge.size()) {
-	//			ExceptionHelper.reportRuntimeException("Invalid sizes of main and merged tuples.");
-	//		}
-	//
-	//		List<E> mergedTuple = new ArrayList<>();
-	//		
-	//		for (int index = 0; index < mainTuple.size(); index++) {
-	//			
-	//			E choice = createChoiceToMerge(mainTuple, tupleToMerge, index);
-	//			mergedTuple.add(choice);
-	//		}
-	//
-	//		return mergedTuple;
-	//	}
-	//
-	//	private E createChoiceToMerge(List<E> mainTuple, List<E> tupleToMerge, int index) {
-	//
-	//		E choiceToMerge = tupleToMerge.get(index);
-	//		E mainChoice = mainTuple.get(index);
-	//		
-	//		if (choiceToMerge == null) {
-	//			return mainChoice;
-	//		}
-	//
-	//		if (mainChoice != null) {
-	//			ExceptionHelper.reportRuntimeException("Attempt to overwrite tuple value during tuple merging.");
-	//		}
-	//
-	//		return choiceToMerge;
-	//		
-	//	}
-
-	//	private boolean tupleIsComplete(List<E> tuple) {
-	//
-	//		for (int index = 0; index < tuple.size(); index++) {
-	//
-	//			if (tuple.get(index) == null) {
-	//				return false;
-	//			}
-	//		}
-	//
-	//		return true;
-	//	}
 
 	private List<E> findBestRefillTuple(List<E> mainTuple) {
 
@@ -484,13 +383,9 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	private List<E> findRefillTupleFromTestDomain(List<E> mainTuple) {
 
-		System.out.println("Getting refill tuple from test domain. mainTuple: " + mainTuple);
-
 		List<E> refillTuple = new ArrayList<>();
 
 		for (int dimension = 0; dimension < mainTuple.size(); dimension++) {
-
-			System.out.println("----- Dimension: " + dimension +  " -----");
 
 			E mainChoice = mainTuple.get(dimension);
 
@@ -506,10 +401,8 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 			}
 
 			refillTuple.add(choice);
-			System.out.println("partial refillTuple at end of loop: " + refillTuple);
 		}
 
-		System.out.println("returned refill tuple: " + refillTuple);
 		return refillTuple;
 	}
 
@@ -517,11 +410,12 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		List<E> choices = fInput.get(dimension);
 
+		List<E> shuffledChoices = TuplesHelper.createCloneOfTuple(choices);
+		Collections.shuffle(shuffledChoices);
+
 		List<E> constraintTestTuple = TuplesHelper.createCloneOfTuple(mainTuple);
 
-		// TODO - shufle choices
-
-		for (int index = 0; index < choices.size(); index++) {
+		for (int index = 0; index < shuffledChoices.size(); index++) {
 
 			E choiceToAdd = choices.get(index);
 
@@ -534,50 +428,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return null;
 	}
-
-	//	private E chooseRandomChoiceFromTestDomain(int dimension) {
-	//
-	//		if (dimension < 0 || dimension >= fDimensionCount) {
-	//			ExceptionHelper.reportRuntimeException("Invalid dimension while choosing random choice.");
-	//		}
-	//
-	//		List<E> choices = fInput.get(dimension);
-	//
-	//		Random r = new Random(); 
-	//
-	//		int choiceIndex = r.nextInt(choices.size());
-	//
-	//		return choices.get(choiceIndex);
-	//	}
-
-	//	private List<E> createCloneOfTuple(List<E> sourceTuple) {
-	//		
-	//		List<E> cloneTuple = new ArrayList<>();
-	//		
-	//		for (int index = 0; index < sourceTuple.size(); index++) {
-	//			
-	//			cloneTuple.add(sourceTuple.get(index));
-	//		}
-	//		
-	//		return cloneTuple;
-	//		
-	//	}
-	//	
-	//	private int countFreeDimensions(List<E> tuple) {
-	//		
-	//		int counter = 0;
-	//		
-	//		for (int index = 0; index < tuple.size(); index++) {
-	//			
-	//			E choice = tuple.get(index);
-	//			
-	//			if (choice == null) {
-	//				counter++;
-	//			}
-	//		}
-	//		
-	//		return counter;
-	//	}
 
 	private List<E> findBestNTuple() {
 
@@ -592,7 +442,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 				continue;
 			}
 
-			List<E> decompressedTuple = fTupleDecompressor.decompressTuple(tuple); // XYX
+			List<E> decompressedTuple = fTupleDecompressor.decompressTuple(tuple);
 
 			if (constraintCheck(decompressedTuple) == EvaluationResult.FALSE) {
 				continue;
@@ -620,7 +470,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 			List<E> uncompressedTuple = fTupleDecompressor.decompressTuple(tuple);
 
-			if (!isDimensionsMatch(uncompressedTuple, dimensions)) {
+			if (!TuplesHelper.isDimensionsMatch(uncompressedTuple, dimensions)) {
 				continue;
 			}
 
@@ -634,32 +484,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return bestTuple;
 
-	}
-
-	private boolean isDimensionsMatch(List<E> uncompressedTuple, List<Integer> dimensions) {
-
-		int dimensionSize = dimensions.size();
-
-
-		if (uncompressedTuple.size()  != dimensionSize) {
-			return false;
-		}
-
-		for (int index = 0; index < dimensionSize; index++)  {
-
-			E choice = uncompressedTuple.get(index);
-			Integer dimension = dimensions.get(index);
-
-			if (choice == null && dimension != null) {
-				return false;
-			}
-
-			if (choice != null && dimension == null) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	private boolean isRefillDimensionsMatch(List<E> mainTuple, List<E> refillTuple) {

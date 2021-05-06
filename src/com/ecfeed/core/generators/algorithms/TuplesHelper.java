@@ -20,6 +20,33 @@ final public class TuplesHelper
 		return true;
 	}
 	
+	public static <E> boolean isDimensionsMatch(List<E> tuple, List<Integer> dimensions) {
+
+		int dimensionSize = dimensions.size();
+
+
+		if (tuple.size()  != dimensionSize) {
+			return false;
+		}
+
+		for (int index = 0; index < dimensionSize; index++)  {
+
+			E choice = tuple.get(index);
+			Integer dimension = dimensions.get(index);
+
+			if (choice == null && dimension != null) {
+				return false;
+			}
+
+			if (choice != null && dimension == null) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+	
+	
 	public static <E> List<E> createCloneOfTuple(List<E> sourceTuple) {
 		
 		List<E> cloneTuple = new ArrayList<>();
