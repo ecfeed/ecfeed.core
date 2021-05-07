@@ -222,7 +222,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return fConstraintEvaluator.evaluate(tuple);
 	}
 
-	private int countNTuples() {
+	public int countNTuples() {
 
 		int count = 0;
 

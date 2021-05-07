@@ -1,5 +1,6 @@
 package com.ecfeed.core.generators.algorithms;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -22,7 +23,86 @@ public class NwiseScoreEvaluatorTest {
 			System.out.println("Exception: " + e.getMessage());
 		}
 	}
+	
+	@Test
+	public void findBestTupleTest() {
+		
+		try {
+			runBestTupleTest();
+		} catch (GeneratorException e) {
+			fail();
+		}		
+	}
 
+	private void runBestTupleTest() throws GeneratorException {
+		
+		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<>(3, 100);
+		
+		List<List<String>> input = prepareTestInput(5);
+		
+		evaluator.initialize(input, null);
+		
+		List<String> bestTuple = null;
+		
+		for (int counter = 0; counter < 20; counter++) {
+			
+			int nTuplesBeforeUpdate = evaluator.countNTuples();
+			
+			if (nTuplesBeforeUpdate == 0) {
+				return;
+			}
+	
+			bestTuple = evaluator.findBestFullTuple();
+			
+			evaluator.updateScores(bestTuple);
+			
+			int nTuplesAfterUpdate = evaluator.countNTuples();
+			
+			assertTrue(nTuplesAfterUpdate < nTuplesBeforeUpdate);
+		}
+		
+		fail("Some N-tuples remain in table.");
+		
+	}
+
+
+	private static List<String> createTestCase(String string1, String string2, String string3, String string4, String string5) {
+		
+		List<String> testCase = new ArrayList<>();
+		
+		testCase.add(string1);
+		testCase.add(string2);
+		testCase.add(string3);
+		testCase.add(string4);
+		testCase.add(string5);
+		
+		return testCase;
+	}
+	
+	private static List<List<String>> prepareTestInput(int inputSize) {
+		
+		List<List<String>> input = new ArrayList<>();
+		
+		for (int firstDimension = 1; firstDimension <= inputSize; firstDimension++) {
+			
+			List<String> choices = prepareChoices(firstDimension);
+			
+			input.add(choices);
+		}
+		
+		return input;
+	}
+	
+	private static List<String> prepareChoices(int firstDimension) {
+		
+		List<String> choices = new ArrayList<>();
+		
+		choices.add("choice" + firstDimension + 1 );
+		choices.add("choice" + firstDimension + 2 );
+		
+		return choices;
+	}
+	
 	private static void decreaseScoreTest() throws GeneratorException {
 
 		List<String> dim1 = new ArrayList<String>();
@@ -46,7 +126,7 @@ public class NwiseScoreEvaluatorTest {
 		testInput.add(dim2);
 		testInput.add(dim3);
 
-		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2);
+		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2,100);
 		evaluator.initialize(testInput, null);
 
 		List<String> tuple1 = createTuple("V11", "V21", "V31");
@@ -95,7 +175,7 @@ public class NwiseScoreEvaluatorTest {
 			fail("Score must not be 0.");
 		}
 
-		evaluator.update(tuple);
+		evaluator.updateScores(tuple);
 
 		int scoreAfter = evaluator.getScore(tuple);
 
