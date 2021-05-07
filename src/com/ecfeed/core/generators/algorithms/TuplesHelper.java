@@ -19,7 +19,7 @@ final public class TuplesHelper
 
 		return true;
 	}
-	
+
 	public static <E> boolean isDimensionsMatch(List<E> tuple, List<Integer> dimensions) {
 
 		int dimensionSize = dimensions.size();
@@ -45,21 +45,21 @@ final public class TuplesHelper
 
 		return true;
 	}
-	
-	
+
+
 	public static <E> List<E> createCloneOfTuple(List<E> sourceTuple) {
-		
+
 		List<E> cloneTuple = new ArrayList<>();
-		
+
 		for (int index = 0; index < sourceTuple.size(); index++) {
-			
+
 			cloneTuple.add(sourceTuple.get(index));
 		}
-		
+
 		return cloneTuple;
-		
+
 	}
-	
+
 	public static <E> List<E> mergeTuples(List<E> mainTuple, List<E> tupleToMerge) {
 
 		if (mainTuple == null) {
@@ -75,21 +75,21 @@ final public class TuplesHelper
 		}
 
 		List<E> mergedTuple = new ArrayList<>();
-		
+
 		for (int index = 0; index < mainTuple.size(); index++) {
-			
+
 			E choice = createChoiceToMerge(mainTuple, tupleToMerge, index);
 			mergedTuple.add(choice);
 		}
 
 		return mergedTuple;
 	}	
-	
+
 	private static <E> E createChoiceToMerge(List<E> mainTuple, List<E> tupleToMerge, int index) {
 
 		E choiceToMerge = tupleToMerge.get(index);
 		E mainChoice = mainTuple.get(index);
-		
+
 		if (choiceToMerge == null) {
 			return mainChoice;
 		}

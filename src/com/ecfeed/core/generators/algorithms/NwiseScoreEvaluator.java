@@ -23,7 +23,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	private static final int NOT_INCLUDE = -1;
 	private int fN;
-	private int fDimensionCount;
 	private int fInitialNTupleCount;
 	private int fCoverage;
 
@@ -46,23 +45,13 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		}
 
 		fInput = input;
-		fDimensionCount = input.size();
 		fConstraintEvaluator = constraintEvaluator;
 
 		if (fConstraintEvaluator != null) {
 			fConstraintEvaluator.initialize(input);
 		}
 
-		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
-		int[] arrayOfDimensions = input.stream().mapToInt(List::size).toArray();
-
-		boolean flag = true;
-
-		while (flag) {
-			flag = plus(encode, arrayOfDimensions);
-			if (flag)
-				addTupleToOccurencesTab(encode, input);
-		}
+		createOccurenciesTab(input);
 
 		calculateOccurenciesOfTuples();
 		calculateScoresForTuples(input.size()); //calculate scores for all the tuples in constructed table
@@ -86,7 +75,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return 0;
 	}
-
 
 	@Override
 	public void updateScores(List<E> testCase) {
@@ -140,6 +128,32 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return false;
 	}
 
+	private void createOccurenciesTab(List<List<E>> input) {
+
+		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
+		int[] arrayOfDimensions = input.stream().mapToInt(List::size).toArray();
+
+		boolean shouldAdd = true;
+
+		while (shouldAdd) {
+			shouldAdd = shouldAddTuple(encode, arrayOfDimensions);
+			if (shouldAdd)
+				addTupleToOccurencesTab(encode, input);
+		}
+	}
+
+	private boolean shouldAddTuple(int[] encode, int[] range) {
+
+		for (int j = encode.length - 1; j >= 0; j--) {
+			if (encode[j] + 1 == range[j]) {
+				encode[j] = NOT_INCLUDE;
+			} else {
+				encode[j] = encode[j] + 1;
+				return true;
+			}
+		}
+		return false;
+	}
 
 	private void addTupleToOccurencesTab(int[] dimensions, List<List<E>> input) {
 
@@ -155,106 +169,10 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		fTupleOccurences.put(tuple, isFullTuple);
 	}
 
-
 	private List<E> decodeTuple(int[] dimensions, List<List<E>> input) {
 
 		return IntStream.range(0, dimensions.length).mapToObj(i -> dimensions[i] == -1 ? null : input.get(i).get(dimensions[i]))
 				.filter(Objects::nonNull).collect(Collectors.toList());
-	}
-
-	private int countNTuples() {
-
-		int count = 0;
-
-		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
-
-			List<E> tuple = entry.getKey();
-
-			if (tuple.size() == fN) {
-				count++;
-			}
-		}
-
-		return count;
-
-	}
-
-	public void printTuples() {
-
-		//		printOccurences();
-
-		//		printScores();
-	}
-
-	public int printOccurences() {
-
-		System.out.println("Tuple occurences: ");
-
-		int counter = 0;
-
-		for (Map.Entry<List<E>,Integer> entry : fTupleOccurences.entrySet()) {
-
-			List<E> key = entry.getKey();
-
-			if (key.size() == fN) {
-				counter++;
-			}
-
-			System.out.println("[" + entry.getValue() + "]  " + key );
-		}
-
-		System.out.println("End of tuple occurences");
-		return counter;
-	}
-
-	public void printScores() {
-
-		System.out.println("\nScores: ");
-
-		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
-
-			System.out.println("[" + entry.getValue() + "]  " + entry.getKey() );
-		}
-
-		System.out.println("End of scores");
-
-	}
-
-	public int getdimensionCount() {
-		return fDimensionCount;
-	}
-
-	private boolean plus(int[] encode, int[] range) {
-		for (int j = encode.length - 1; j >= 0; j--) {
-			if (encode[j] + 1 == range[j]) {
-				encode[j] = NOT_INCLUDE;
-			} else {
-				encode[j] = encode[j] + 1;
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private List<E> expandTuple(List<E> compressedTuple, int[] encodePattern) {
-
-		List<E> expandedTuple = new ArrayList<>();
-
-		int compressedTupleIndex = 0;
-
-		for (int index = 0; index < encodePattern.length; index++) {
-
-			int positionCode = encodePattern[index];
-
-			if (positionCode == NOT_INCLUDE) {
-				expandedTuple.add(null);
-			} else {
-				expandedTuple.add(compressedTuple.get(compressedTupleIndex));
-				compressedTupleIndex++;
-			}
-		}
-
-		return expandedTuple;
 	}
 
 	private void calculateOccurenciesOfTuples() {
@@ -295,13 +213,52 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 				mapToInt(fScores::get).sum();
 	}
 
-	public EvaluationResult constraintCheck(List<E> tuple) {
+	private EvaluationResult constraintCheck(List<E> tuple) {
 
 		if (fConstraintEvaluator == null) {
 			return EvaluationResult.TRUE;
 		}
 
 		return fConstraintEvaluator.evaluate(tuple);
+	}
+
+	private int countNTuples() {
+
+		int count = 0;
+
+		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
+
+			List<E> tuple = entry.getKey();
+
+			if (tuple.size() == fN) {
+				count++;
+			}
+		}
+
+		return count;
+
+	}
+
+
+	private List<E> expandTuple(List<E> compressedTuple, int[] encodePattern) {
+
+		List<E> expandedTuple = new ArrayList<>();
+
+		int compressedTupleIndex = 0;
+
+		for (int index = 0; index < encodePattern.length; index++) {
+
+			int positionCode = encodePattern[index];
+
+			if (positionCode == NOT_INCLUDE) {
+				expandedTuple.add(null);
+			} else {
+				expandedTuple.add(compressedTuple.get(compressedTupleIndex));
+				compressedTupleIndex++;
+			}
+		}
+
+		return expandedTuple;
 	}
 
 	public int getNumOfTuples() {
@@ -510,5 +467,47 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return true;
 	}
+
+	public void printTuples() {
+
+		//		printOccurences();
+
+		//		printScores();
+	}
+
+	public int printOccurences() {
+
+		System.out.println("Tuple occurences: ");
+
+		int counter = 0;
+
+		for (Map.Entry<List<E>,Integer> entry : fTupleOccurences.entrySet()) {
+
+			List<E> key = entry.getKey();
+
+			if (key.size() == fN) {
+				counter++;
+			}
+
+			System.out.println("[" + entry.getValue() + "]  " + key );
+		}
+
+		System.out.println("End of tuple occurences");
+		return counter;
+	}
+
+	public void printScores() {
+
+		System.out.println("\nScores: ");
+
+		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
+
+			System.out.println("[" + entry.getValue() + "]  " + entry.getKey() );
+		}
+
+		System.out.println("End of scores");
+
+	}
+
 
 }
