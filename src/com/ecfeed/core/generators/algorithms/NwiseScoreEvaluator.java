@@ -64,8 +64,8 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 				addTupleToOccurencesTab(encode, input);
 		}
 
-		calculateFrequency(); // calculate occurences in the constructed table
-		calculateScore(input.size()); //calculate scores for all the tuples in constructed table
+		calculateOccurenciesOfTuples();
+		calculateScoresForTuples(input.size()); //calculate scores for all the tuples in constructed table
 
 		fInitialNTupleCount = countNTuples();
 
@@ -96,9 +96,9 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == fN && testCase.containsAll(e.getKey()));
 
-		calculateFrequency();
+		calculateOccurenciesOfTuples();
 		fScores.clear();
-		calculateScore(fN);
+		calculateScoresForTuples(fN);
 	}
 
 	@Override
@@ -257,7 +257,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return expandedTuple;
 	}
 
-	private void calculateFrequency() {
+	private void calculateOccurenciesOfTuples() {
 
 		for (int m = fN - 1; m > 0; m--) {
 			List<List<E>> remove = new ArrayList<>();
@@ -275,7 +275,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		}
 	}
 
-	private void calculateScore(int size) {
+	private void calculateScoresForTuples(int size) {
 
 		IntStream.range(1, size + 1).forEach(l -> {
 			fTupleOccurences.keySet().forEach(k -> {
