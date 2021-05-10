@@ -29,16 +29,15 @@ public class NWiseScoredGenerator<E> extends NWiseGeneratorBase<E> {
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 			IConstraintEvaluator<E> constraintEvaluator,
-			List<IGeneratorValue> parameters,
+			List<IGeneratorValue> generatorParameters,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
-		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
+		super.initialize(inputDomain, constraintEvaluator, generatorParameters, generatorProgressMonitor);
 		int N = (int) getParameterValue(getDefinitionN());
 		int coverage = (int) getParameterValue(getDefinitionCoverage());
 
 		IScoreEvaluator<E> fScoreEvaluator = new NwiseScoreEvaluator<>(N, coverage);
 		setAlgorithm(new ScoreBasedNwiseAlgorithm<E>(fScoreEvaluator));
-
 	}
 
 }

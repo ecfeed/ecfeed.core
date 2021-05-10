@@ -28,14 +28,14 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	@Override
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
-						   List<IGeneratorValue> arguments,
+						   List<IGeneratorValue> generatorParameters,
 			IEcfProgressMonitor generatorProgressMonitor)
 			throws GeneratorException {
 		validateInput(inputDomain);
 //		validateArguments(arguments);
 
 		fArguments = new HashMap<>();
-		for(IGeneratorValue val : arguments)
+		for(IGeneratorValue val : generatorParameters)
 			fArguments.put(val.getDefinition(), val);
 
 		for(IParameterDefinition paramDef : getParameterDefinitions() )
@@ -132,6 +132,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 	private void validateInput(List<? extends List<E>> inputDomain) throws GeneratorException {
+		
 		for(List<E> parameter : inputDomain){
 			if(parameter.size() == 0){
 				GeneratorException.report("Generator input domain cannot contain empty vectors");

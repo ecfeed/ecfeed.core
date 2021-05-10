@@ -52,7 +52,7 @@ public class NwiseScoreEvaluatorTest {
 				return;
 			}
 	
-			bestTuple = evaluator.findBestFullTuple();
+			bestTuple = evaluator.findFullTupleWithGoodScore();
 			
 			evaluator.updateScores(bestTuple);
 			
@@ -65,20 +65,6 @@ public class NwiseScoreEvaluatorTest {
 		
 	}
 
-
-	private static List<String> createTestCase(String string1, String string2, String string3, String string4, String string5) {
-		
-		List<String> testCase = new ArrayList<>();
-		
-		testCase.add(string1);
-		testCase.add(string2);
-		testCase.add(string3);
-		testCase.add(string4);
-		testCase.add(string5);
-		
-		return testCase;
-	}
-	
 	private static List<List<String>> prepareTestInput(int inputSize) {
 		
 		List<List<String>> input = new ArrayList<>();
