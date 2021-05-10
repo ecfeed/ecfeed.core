@@ -10,6 +10,7 @@ public interface IScoreEvaluator<E> {
 	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator)	throws GeneratorException;
 	public int getScore(List<E> tuple);
 	public void updateScores(List<E> test);
-	public List<E> findBestFullTuple();
+	public List<E> findFullTupleWithGoodScore(); // not used so far but probably may by usable in some cases
 	public boolean allNTuplesCovered();
+	public E getChoiceFromInputDomain(List<E> resultTuple, int dimension);
 }

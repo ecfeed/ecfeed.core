@@ -1,5 +1,6 @@
 package com.ecfeed.core.generators.algorithms;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,8 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	// randomly generated dimension order
 	// could be different)
 
+	LocalDateTime fStartTime; 
+
 	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator) throws GeneratorException {
 
 		this.fScoreEvaluator = fScoreEvaluator;
@@ -36,6 +39,8 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
 
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
+
+		fStartTime = LocalDateTime.now();  
 	}
 
 	@Override
@@ -46,6 +51,11 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	private List<E> getNextTest() {
 
 		if (fScoreEvaluator.allNTuplesCovered()) {
+
+			//			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+			//			LocalDateTime now = LocalDateTime.now();  
+			//			System.out.print ln("START TIME :" + dtf.format(fStartTime) + " END TIME: " + dtf.format(now));
+
 			return null;
 		}
 
@@ -80,16 +90,18 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 			}
 
 			if (bestCandidate != null) {
-				resultTuple.set(dimension, bestCandidate);
-			} else {
-				List<E> bestFullTuple = fScoreEvaluator.findBestFullTuple();
 
-				if (bestFullTuple == null) {
+				resultTuple.set(dimension, bestCandidate);
+
+			} else {
+
+				E choice = fScoreEvaluator.getChoiceFromInputDomain(resultTuple, dimension);
+
+				if (choice == null) {
 					return null;
 				}
 
-				fScoreEvaluator.updateScores(bestFullTuple);
-				return bestFullTuple;                            
+				resultTuple.set(dimension, choice);
 			}    
 		}
 

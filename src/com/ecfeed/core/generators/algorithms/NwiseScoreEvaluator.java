@@ -90,7 +90,29 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	@Override
-	public List<E> findBestFullTuple() {
+	public E getChoiceFromInputDomain(List<E> sourceTuple, int dimension) {
+
+		List<E> choicesForDimension = fInput.get(dimension);
+
+		List<E> candidateTuple = TuplesHelper.createCloneOfTuple(sourceTuple);
+
+		for (int index = 0; index < choicesForDimension.size(); index++) {
+
+			E choice = choicesForDimension.get(index);
+
+			candidateTuple.set(dimension, choice);
+
+			if (constraintCheck(candidateTuple) != EvaluationResult.FALSE) {
+				return choice;                   
+			}
+		}
+
+		return null;
+	}
+
+
+	@Override
+	public List<E> findFullTupleWithGoodScore() {
 
 		List<E> compressedBestTuple = findBestNTuple();
 
@@ -119,7 +141,9 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		int tuplesToCover = fInitialNTupleCount * fCoverage / 100;
 
-		int tuplesCovered = fInitialNTupleCount - countNTuples();
+		int countNTuples = countNTuples();
+
+		int tuplesCovered = fInitialNTupleCount - countNTuples;
 
 		if (tuplesCovered >= tuplesToCover) {
 			return true;
@@ -508,6 +532,5 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		System.out.println("End of scores");
 
 	}
-
 
 }
