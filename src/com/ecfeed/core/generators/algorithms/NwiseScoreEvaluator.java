@@ -56,7 +56,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		calculateOccurenciesOfTuples();
 		calculateScoresForTuples(input.size()); //calculate scores for all the tuples in constructed table
 
-		fInitialNTupleCount = countNTuples();
+		fInitialNTupleCount = getCountOfNTuples();
 
 		fTupleDecompressor = new TupleDecompressor<>();
 		fTupleDecompressor.initialize(input);
@@ -141,7 +141,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		int tuplesToCover = fInitialNTupleCount * fCoverage / 100;
 
-		int countNTuples = countNTuples();
+		int countNTuples = getCountOfNTuples();
 
 		int tuplesCovered = fInitialNTupleCount - countNTuples;
 
@@ -152,6 +152,24 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return false;
 	}
 
+	@Override
+	public int getCountOfNTuples() {
+
+		int count = 0;
+
+		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
+
+			List<E> tuple = entry.getKey();
+
+			if (tuple.size() == fN) {
+				count++;
+			}
+		}
+
+		return count;
+
+	}
+	
 	private void createOccurenciesTab(List<List<E>> input) {
 
 		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
@@ -245,24 +263,6 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return fConstraintEvaluator.evaluate(tuple);
 	}
-
-	public int countNTuples() {
-
-		int count = 0;
-
-		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
-
-			List<E> tuple = entry.getKey();
-
-			if (tuple.size() == fN) {
-				count++;
-			}
-		}
-
-		return count;
-
-	}
-
 
 	private List<E> expandTuple(List<E> compressedTuple, int[] encodePattern) {
 

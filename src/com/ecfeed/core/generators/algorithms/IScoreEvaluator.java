@@ -12,5 +12,6 @@ public interface IScoreEvaluator<E> {
 	public void updateScores(List<E> test);
 	public List<E> findFullTupleWithGoodScore(); // not used so far but probably may by usable in some cases
 	public boolean allNTuplesCovered();
+	public int getCountOfNTuples();
 	public E getChoiceFromInputDomain(List<E> resultTuple, int dimension);
 }

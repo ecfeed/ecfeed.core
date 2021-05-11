@@ -20,6 +20,9 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	// randomly generated dimension order
 	// could be different)
 
+	private int fPreviousCountOfNTuples;
+	private int fGetNextCounter;
+
 	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator) throws GeneratorException {
 
 		this.fScoreEvaluator = fScoreEvaluator;
@@ -36,18 +39,43 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
 
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
+
+		fPreviousCountOfNTuples = fScoreEvaluator.getCountOfNTuples();
+		setTaskBegin(fPreviousCountOfNTuples);
+		
+		fGetNextCounter = 1;
 	}
 
 	@Override
 	public List<E> getNext() throws GeneratorException {
-		return getTupleWithBestScore();
+
+		List<E> tupleWithBestScore = getTupleWithBestScore();
+
+		if (tupleWithBestScore == null) {
+			setTaskEnd();
+			return null; 
+		}
+
+		int currentCountOfNTuples = fScoreEvaluator.getCountOfNTuples();
+		int increment = fPreviousCountOfNTuples - currentCountOfNTuples; 
+		incrementProgress(increment);
+		fPreviousCountOfNTuples = fScoreEvaluator.getCountOfNTuples();
+
+		return tupleWithBestScore;
 	}
 
 	private List<E> getTupleWithBestScore() {
 
+		System.out.println("Get tuple with best score. Counter: " + fGetNextCounter++);
+
+		Long startTime = System.currentTimeMillis();
+
 		if (fScoreEvaluator.allNTuplesCovered()) {
 			return null;
 		}
+
+		//		System.out.println("After all tuples covered: " + (System.currentTimeMillis() - startTime));
+
 
 		List<E> resultTuple = initializeTuple(fDimensionCount);
 
@@ -95,7 +123,10 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 			}    
 		}
 
+		//		System.out.println("After finding result tuple: " + (System.currentTimeMillis() - startTime));
 		fScoreEvaluator.updateScores(resultTuple);
+
+		//		System.out.println("After updating tuple scores: " + (System.currentTimeMillis() - startTime));
 		return resultTuple;                              
 	}
 
