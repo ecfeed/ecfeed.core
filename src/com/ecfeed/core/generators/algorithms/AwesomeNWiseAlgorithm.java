@@ -402,7 +402,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
                 }
             }
 
-            System.out.println("Tuple size: " + tupleSize + ". Generated tuples: " + newValidTuples.size());
+//            System.out.println("Tuple size: " + tupleSize + ". Generated tuples: " + newValidTuples.size());
             allValidTuples = newValidTuples; // TODO - do we need 2 variables ? why do we assign (what for did we calculate previous result ?)
         }
 

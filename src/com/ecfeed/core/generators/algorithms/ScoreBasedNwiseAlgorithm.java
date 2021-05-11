@@ -1,6 +1,5 @@
 package com.ecfeed.core.generators.algorithms;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,8 +20,6 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	// randomly generated dimension order
 	// could be different)
 
-	LocalDateTime fStartTime; 
-
 	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator) throws GeneratorException {
 
 		this.fScoreEvaluator = fScoreEvaluator;
@@ -39,23 +36,16 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
 
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
-
-		fStartTime = LocalDateTime.now();  
 	}
 
 	@Override
 	public List<E> getNext() throws GeneratorException {
-		return getNextTest();
+		return getTupleWithBestScore();
 	}
 
-	private List<E> getNextTest() {
+	private List<E> getTupleWithBestScore() {
 
 		if (fScoreEvaluator.allNTuplesCovered()) {
-
-			//			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-			//			LocalDateTime now = LocalDateTime.now();  
-			//			System.out.print ln("START TIME :" + dtf.format(fStartTime) + " END TIME: " + dtf.format(now));
-
 			return null;
 		}
 
