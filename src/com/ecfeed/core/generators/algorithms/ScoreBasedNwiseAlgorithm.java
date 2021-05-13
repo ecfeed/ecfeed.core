@@ -42,7 +42,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 		fPreviousCountOfNTuples = fScoreEvaluator.getCountOfNTuples();
 		setTaskBegin(fPreviousCountOfNTuples);
-		
+
 		fGetNextCounter = 1;
 	}
 
@@ -66,7 +66,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	private List<E> getTupleWithBestScore() {
 
-		System.out.println("Get tuple with best score. Counter: " + fGetNextCounter++);
+		//		System.out.println("Get tuple with best score. Counter: " + fGetNextCounter++);
 
 		Long startTime = System.currentTimeMillis();
 
