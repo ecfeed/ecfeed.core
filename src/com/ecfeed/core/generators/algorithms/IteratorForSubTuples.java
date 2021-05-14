@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class IteratorForSubTuples<E> implements Iterator<List<E>> {
+public class IteratorForSubTuples<E> implements Iterator<List<E>> { // TODO - remove and use version 2
 	
 	// create list of sub-tuples of given length from tuple
 

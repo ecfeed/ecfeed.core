@@ -2,12 +2,59 @@ package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.google.common.collect.Maps;
 
 final public class TuplesHelper 
 {
+	public static <E> List<E> createTuple(int size, E initialValue) {
+		
+		List<E> result = new ArrayList<>();
+		
+		for (int index = 0; index < size; index++) {
+			
+			result.add(initialValue);
+		}
+		
+		return result;
+	}
 
+	public static <E> SortedMap<Integer, E> compressTuple(List<E> longTuple) {
+	
+		SortedMap<Integer, E> compressedTuple = Maps.newTreeMap();
+		
+		for (int index = 0; index < longTuple.size(); index++) {
+			
+			E choice = longTuple.get(index);
+			
+			if (choice == null) {
+				continue;
+			}
+			
+			compressedTuple.put(index, choice);
+		}
+		
+		return compressedTuple;
+	}
+
+	public static <E> List<E> decompressTuple(SortedMap<Integer, E> compressedTuple, int decompressedTupleSize) {
+		
+		List<E> decompressedTuple = createTuple(decompressedTupleSize, null);
+
+		for (Map.Entry<Integer, E> entry : compressedTuple.entrySet()) {
+
+			int index = entry.getKey();
+			E value = entry.getValue();
+			
+			decompressedTuple.set(index, value);
+		}
+
+		return decompressedTuple;
+	}
+	
 	public static <E>  boolean tupleIsComplete(List<E> tuple) {
 
 		for (int index = 0; index < tuple.size(); index++) {
@@ -19,6 +66,21 @@ final public class TuplesHelper
 
 		return true;
 	}
+	
+	public static <E> int countUsedDimensions(List<E> tuple) {
+		
+		int count = 0;
+		
+		for (int index = 0; index < tuple.size(); index++) {
+
+			if (tuple.get(index) != null) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+	
 
 	public static <E> boolean isDimensionsMatch(List<E> tuple, List<Integer> dimensions) {
 

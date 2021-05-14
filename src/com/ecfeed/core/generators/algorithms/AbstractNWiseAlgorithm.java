@@ -21,21 +21,21 @@ import com.ecfeed.core.utils.SimpleProgressMonitor;
 public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
 
 	private CartesianProductAlgorithm<E> fCartesianAlgorithm;
-	protected int N;
+	private int fN;
 	private int fTuplesToGenerate;
 	protected int fProgress; // TODO - remove ?
 	protected int fCoverage;
 
 	public AbstractNWiseAlgorithm(int n, int coverage) {
 		fCoverage = coverage;
-		N = n;
+		fN = n;
 	}
 
 	public void initialize(List<List<E>> input,
 						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
-		if(N < 1 || N > input.size()){
+		if(fN < 1 || fN > input.size()){
 			GeneratorException.report("Value of N for this input must be between 1 and " + input.size());
 		}
 		if (fCoverage > 100 || fCoverage < 0) {
@@ -71,7 +71,7 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 	}
 
 	public int getN(){
-		return N;
+		return fN;
 	}
 
 	public int getCoverage() {
@@ -87,7 +87,7 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 	}
 
 	protected Set<List<E>> getTuples(List<E> vector){
-		return (new Tuples<E>(vector, N)).getAll();
+		return (new Tuples<E>(vector, fN)).getAll();
 	}
 
 	protected long tuplesToGenerate() {
@@ -100,7 +100,7 @@ public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> imp
 
 	private int calculateTotalTuples(){
 		int totalWork = 0;
-		Tuples<List<E>> tuples = new Tuples<List<E>>(getInput(), N);
+		Tuples<List<E>> tuples = new Tuples<List<E>>(getInput(), fN);
 		while(tuples.hasNext()){
 			long combinations = 1;
 			List<List<E>> tuple = tuples.next();
