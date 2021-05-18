@@ -23,11 +23,11 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 	static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
 	static final int MAX_TUPLES = 250000;
 
-	private Multiset<SortedMap<Integer, E>> fPartialNTo0Tuples = null;
+	private Multiset<SortedMap<Integer, E>> fPartialTuples = null;
 
 	private List<DimensionedItem<E>> fAllDimensionedItems = null;
 
-	private IntegerHolder fIgnoreCount;
+	private IntegerHolder fCoverageIgnoreCount;
 
 	private IntegerHolder fNTuplesCount;
 
@@ -42,14 +42,14 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 	@Override
 	public void reset() {
 
-		fIgnoreCount = new IntegerHolder(0);
+		fCoverageIgnoreCount = new IntegerHolder(0);
 		fDimCount = getInput().size();
 		try {
 			fAllDimensionedItems = createDimensionedItems(getInput());
 			List<SortedMap<Integer, E>> allNTuples = getAllNTuples(getInput(), N);
 			fNTuplesCount = calculateNTuplesCount(allNTuples);
-			fPartialNTo0Tuples = createPartialNTo0Tuples(allNTuples);
-			fIgnoreCount.set(calculateIgnoreCount());
+			fPartialTuples = createPartialTuples(allNTuples);
+			fCoverageIgnoreCount.set(calculateIgnoreCount());
 		} catch (Exception e) {
 
 			SystemLogger.logCatch(e);
@@ -92,7 +92,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		return tuple;
 	}
 
-	private Multiset<SortedMap<Integer, E>> createPartialNTo0Tuples(List<SortedMap<Integer, E>> remainingTuples) {
+	private Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
 
 		Multiset<SortedMap<Integer, E>> result = HashMultiset.create();
 
@@ -138,7 +138,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 				return null;
 			}
 
-			if (fNTuplesCount.get() <= fIgnoreCount.get()) {
+			if (fNTuplesCount.get() <= fCoverageIgnoreCount.get()) {
 				setTaskEnd();
 				return null;
 			}
@@ -155,7 +155,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
 
-		removeAffectedTuples(bestTuple, fPartialNTo0Tuples, fNTuplesCount);
+		removeAffectedTuples(bestTuple, fPartialTuples, fNTuplesCount);
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
 		final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
@@ -244,7 +244,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 			tmpTuple.put(dimension, item);
 
-			if (fPartialNTo0Tuples.contains(tmpTuple))
+			if (fPartialTuples.contains(tmpTuple))
 				score++;
 		}
 
@@ -273,7 +273,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 				tuple.put(dimension, dItem.getItem());
 
-				final int tupleScore = fPartialNTo0Tuples.count(tuple);
+				final int tupleScore = fPartialTuples.count(tuple);
 
 				if (tupleScore > bestTupleScore) {
 					bestItem = dItem;
@@ -355,7 +355,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			for (Integer dimension : combinationOfDimensions)
 				dTuple.put(dimension, nTuple.get(dimension));
 
-			if (fPartialNTo0Tuples.contains(dTuple))
+			if (fPartialTuples.contains(dTuple))
 				score++;
 		}
 
