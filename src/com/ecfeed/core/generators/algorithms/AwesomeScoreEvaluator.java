@@ -28,17 +28,15 @@ import com.google.common.collect.Ordering;
 public class AwesomeScoreEvaluator<E> {
 
 	private Multiset<SortedMap<Integer, E>> fPartialTuples = null;
-	private int fDimCount;
 	protected int N;
 
 	static final int fLogLevel = 0;
 
-	public void reset(List<SortedMap<Integer, E>> allNTuples, int dimCount, int N) {
+	public void reset(List<SortedMap<Integer, E>> allNTuples, int N) {
 		fPartialTuples = createPartialTuples(allNTuples);
-		fDimCount = dimCount;
 	}
 
-	public Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
+	private Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
 
 		Multiset<SortedMap<Integer, E>> result = HashMultiset.create();
 
@@ -115,12 +113,12 @@ public class AwesomeScoreEvaluator<E> {
 
 		return fPartialTuples.count(tuple);
 	}
-	
+
 	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple, Set<List<Integer>> allDimensionCombinations) {
 
 		int score = 0;
 
-//		final Set<List<Integer>> allDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
+		//		final Set<List<Integer>> allDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
 
 		for (List<Integer> combinationOfDimensions : allDimensionCombinations) {
 
@@ -135,5 +133,5 @@ public class AwesomeScoreEvaluator<E> {
 
 		return score;
 	}
-	
+
 }

@@ -1,7 +1,6 @@
 package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,6 @@ import java.util.stream.IntStream;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExceptionHelper;
 
 public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
@@ -111,30 +109,30 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 
-	@Override
-	public List<E> findFullTupleWithGoodScore() {
-
-		List<E> compressedBestTuple = findBestNTuple();
-
-		if (compressedBestTuple == null) {
-			return null;
-		}
-
-		List<E> bestTuple = fTupleDecompressor.decompressTuple(compressedBestTuple); 
-
-		while(!TuplesHelper.tupleIsComplete(bestTuple)) {
-
-			List<E> bestRefillTuple = findBestRefillTuple(bestTuple);
-
-			if (bestRefillTuple == null) {
-				return null;
-			}
-
-			bestTuple = TuplesHelper.mergeTuples(bestTuple, bestRefillTuple);
-		}
-
-		return bestTuple;
-	}	
+	//	@Override
+	//	public List<E> findFullTupleWithGoodScore() {
+	//
+	//		List<E> compressedBestTuple = findBestNTuple();
+	//
+	//		if (compressedBestTuple == null) {
+	//			return null;
+	//		}
+	//
+	//		List<E> bestTuple = fTupleDecompressor.decompressTuple(compressedBestTuple); 
+	//
+	//		while(!TuplesHelper.tupleIsComplete(bestTuple)) {
+	//
+	//			List<E> bestRefillTuple = findBestRefillTuple(bestTuple);
+	//
+	//			if (bestRefillTuple == null) {
+	//				return null;
+	//			}
+	//
+	//			bestTuple = TuplesHelper.mergeTuples(bestTuple, bestRefillTuple);
+	//		}
+	//
+	//		return bestTuple;
+	//	}	
 
 	@Override
 	public boolean allNTuplesCovered() {
@@ -325,120 +323,120 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return 0;
 	}
 
-	private List<E> findBestRefillTuple(List<E> mainTuple) {
+	//	private List<E> findBestRefillTuple(List<E> mainTuple) {
+	//
+	//		int bestScore = 0;
+	//		List<E> decompressedBestRefillTuple = null;
+	//
+	//		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
+	//
+	//			List<E> compressedTuple = entry.getKey();
+	//
+	//			List<E> decompressedTuple = fTupleDecompressor.decompressTuple(compressedTuple);
+	//
+	//			if (!isRefillDimensionsMatch(mainTuple, decompressedTuple)) {
+	//				continue;
+	//			}
+	//
+	//			List<E> mergedTuple = TuplesHelper.mergeTuples(mainTuple, decompressedTuple);
+	//
+	//			if (constraintCheck(mergedTuple) == EvaluationResult.FALSE) {
+	//				continue;
+	//			}
+	//
+	//			int score = entry.getValue();
+	//
+	//			if (score > bestScore) {
+	//				bestScore = score;
+	//
+	//				decompressedBestRefillTuple = decompressedTuple;
+	//			}
+	//		}
+	//
+	//		if (decompressedBestRefillTuple == null) {
+	//			return findRefillTupleFromTestDomain(mainTuple);
+	//		}
+	//
+	//		return decompressedBestRefillTuple;
+	//	}
 
-		int bestScore = 0;
-		List<E> decompressedBestRefillTuple = null;
+	//	private List<E> findRefillTupleFromTestDomain(List<E> mainTuple) {
+	//
+	//		List<E> refillTuple = new ArrayList<>();
+	//
+	//		for (int dimension = 0; dimension < mainTuple.size(); dimension++) {
+	//
+	//			E mainChoice = mainTuple.get(dimension);
+	//
+	//			if (mainChoice != null) {
+	//				refillTuple.add(null);
+	//				continue;
+	//			}
+	//
+	//			E choice = chooseChoiceFromTestDomainMatchingConstraints(dimension, mainTuple);
+	//
+	//			if (choice == null) {
+	//				return null;
+	//			}
+	//
+	//			refillTuple.add(choice);
+	//		}
+	//
+	//		return refillTuple;
+	//	}
 
-		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
+	//	private E chooseChoiceFromTestDomainMatchingConstraints(int dimension, List<E> mainTuple) {
+	//
+	//		List<E> choices = fInput.get(dimension);
+	//
+	//		List<E> shuffledChoices = TuplesHelper.createCloneOfTuple(choices);
+	//		Collections.shuffle(shuffledChoices);
+	//
+	//		List<E> constraintTestTuple = TuplesHelper.createCloneOfTuple(mainTuple);
+	//
+	//		for (int index = 0; index < shuffledChoices.size(); index++) {
+	//
+	//			E choiceToAdd = choices.get(index);
+	//
+	//			constraintTestTuple.set(dimension, choiceToAdd);
+	//
+	//			if (constraintCheck(constraintTestTuple) != EvaluationResult.FALSE) {
+	//				return choiceToAdd;
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
 
-			List<E> compressedTuple = entry.getKey();
-
-			List<E> decompressedTuple = fTupleDecompressor.decompressTuple(compressedTuple);
-
-			if (!isRefillDimensionsMatch(mainTuple, decompressedTuple)) {
-				continue;
-			}
-
-			List<E> mergedTuple = TuplesHelper.mergeTuples(mainTuple, decompressedTuple);
-
-			if (constraintCheck(mergedTuple) == EvaluationResult.FALSE) {
-				continue;
-			}
-
-			int score = entry.getValue();
-
-			if (score > bestScore) {
-				bestScore = score;
-
-				decompressedBestRefillTuple = decompressedTuple;
-			}
-		}
-
-		if (decompressedBestRefillTuple == null) {
-			return findRefillTupleFromTestDomain(mainTuple);
-		}
-
-		return decompressedBestRefillTuple;
-	}
-
-	private List<E> findRefillTupleFromTestDomain(List<E> mainTuple) {
-
-		List<E> refillTuple = new ArrayList<>();
-
-		for (int dimension = 0; dimension < mainTuple.size(); dimension++) {
-
-			E mainChoice = mainTuple.get(dimension);
-
-			if (mainChoice != null) {
-				refillTuple.add(null);
-				continue;
-			}
-
-			E choice = chooseChoiceFromTestDomainMatchingConstraints(dimension, mainTuple);
-
-			if (choice == null) {
-				return null;
-			}
-
-			refillTuple.add(choice);
-		}
-
-		return refillTuple;
-	}
-
-	private E chooseChoiceFromTestDomainMatchingConstraints(int dimension, List<E> mainTuple) {
-
-		List<E> choices = fInput.get(dimension);
-
-		List<E> shuffledChoices = TuplesHelper.createCloneOfTuple(choices);
-		Collections.shuffle(shuffledChoices);
-
-		List<E> constraintTestTuple = TuplesHelper.createCloneOfTuple(mainTuple);
-
-		for (int index = 0; index < shuffledChoices.size(); index++) {
-
-			E choiceToAdd = choices.get(index);
-
-			constraintTestTuple.set(dimension, choiceToAdd);
-
-			if (constraintCheck(constraintTestTuple) != EvaluationResult.FALSE) {
-				return choiceToAdd;
-			}
-		}
-
-		return null;
-	}
-
-	private List<E> findBestNTuple() {
-
-		int bestScore = 0;
-		List<E> bestTuple = null;
-
-		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
-
-			List<E> tuple = entry.getKey();
-
-			if (tuple.size() != fN) {
-				continue;
-			}
-
-			List<E> decompressedTuple = fTupleDecompressor.decompressTuple(tuple);
-
-			if (constraintCheck(decompressedTuple) == EvaluationResult.FALSE) {
-				continue;
-			}
-
-			int score = entry.getValue();
-
-			if (score > bestScore) {
-				bestScore = score;
-				bestTuple = tuple;
-			}
-		}
-
-		return bestTuple;
-	}
+	//	private List<E> findBestNTuple() {
+	//
+	//		int bestScore = 0;
+	//		List<E> bestTuple = null;
+	//
+	//		for (Map.Entry<List<E>,Integer> entry : fScores.entrySet()) {
+	//
+	//			List<E> tuple = entry.getKey();
+	//
+	//			if (tuple.size() != fN) {
+	//				continue;
+	//			}
+	//
+	//			List<E> decompressedTuple = fTupleDecompressor.decompressTuple(tuple);
+	//
+	//			if (constraintCheck(decompressedTuple) == EvaluationResult.FALSE) {
+	//				continue;
+	//			}
+	//
+	//			int score = entry.getValue();
+	//
+	//			if (score > bestScore) {
+	//				bestScore = score;
+	//				bestTuple = tuple;
+	//			}
+	//		}
+	//
+	//		return bestTuple;
+	//	}
 
 	public List<E> findBestSimpleTuple(List<Integer> dimensions) {
 
@@ -467,30 +465,30 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	}
 
-	private boolean isRefillDimensionsMatch(List<E> mainTuple, List<E> refillTuple) {
-
-		int dimensionCount = mainTuple.size();
-
-		if (dimensionCount != refillTuple.size()) {
-			ExceptionHelper.reportRuntimeException("Invalid sizes of tuples while matching dimensions.");
-		}
-
-		for (int index = 0; index < dimensionCount; index++)  {
-
-			E refillItem = refillTuple.get(index);
-
-			if (refillItem != null) {
-
-				E mainItem = mainTuple.get(index);
-
-				if (mainItem != null) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
+	//	private boolean isRefillDimensionsMatch(List<E> mainTuple, List<E> refillTuple) {
+	//
+	//		int dimensionCount = mainTuple.size();
+	//
+	//		if (dimensionCount != refillTuple.size()) {
+	//			ExceptionHelper.reportRuntimeException("Invalid sizes of tuples while matching dimensions.");
+	//		}
+	//
+	//		for (int index = 0; index < dimensionCount; index++)  {
+	//
+	//			E refillItem = refillTuple.get(index);
+	//
+	//			if (refillItem != null) {
+	//
+	//				E mainItem = mainTuple.get(index);
+	//
+	//				if (mainItem != null) {
+	//					return false;
+	//				}
+	//			}
+	//		}
+	//
+	//		return true;
+	//	}
 
 	public void printTuples() {
 
