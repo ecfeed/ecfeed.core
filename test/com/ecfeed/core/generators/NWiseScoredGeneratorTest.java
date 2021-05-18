@@ -27,14 +27,14 @@ public class NWiseScoredGeneratorTest {
 
 	@Test
 	public void basicTest() {
-		
+
 		try {
 			decreaseScoreTest();
 		} catch (GeneratorException e) {
 			fail(e.getMessage());
 		}
 	}
-	
+
 	private static void decreaseScoreTest() throws GeneratorException {
 
 		List<String> dim1 = new ArrayList<String>();
@@ -61,7 +61,7 @@ public class NWiseScoredGeneratorTest {
 		dim5.add("V51");
 		dim5.add("V52");
 		dim5.add("V53");
-		
+
 		List<List<String>> testInput = new ArrayList<>();
 
 		testInput.add(dim1);
@@ -70,28 +70,28 @@ public class NWiseScoredGeneratorTest {
 		testInput.add(dim4);
 		testInput.add(dim5);
 
-		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2,100);
+		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2);
 		evaluator.initialize(testInput, null);
 
 		NWiseScoredGenerator<String> generator = new NWiseScoredGenerator<>();
-		
+
 		List<IGeneratorValue> generatorParameters = new ArrayList<>();
 		generator.initialize(testInput, new DummyEvaluator<>(), generatorParameters, new SimpleProgressMonitor());
-		
+
 		int maxCounter = 20;
-		
+
 		for (int counter = 0; counter < 20; counter++) {
-		
+
 			List<String> testCase = generator.next();
-			
+
 			if (testCase == null) {
 				return;
 			}
-			
+
 			if (counter >= maxCounter) {
 				fail("Too many generated test cases");
 			}
 		}
 	}
-	
+
 }

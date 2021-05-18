@@ -17,12 +17,14 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
 	private IScoreEvaluator<E> fScoreEvaluator;
 	protected List<List<Integer>> fHistoryDimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
+	private int fCoverage;
 	// randomly generated dimension order
 	// could be different)
 
-	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator) throws GeneratorException {
+	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator, int coverage) throws GeneratorException {
 
 		this.fScoreEvaluator = fScoreEvaluator;
+		fCoverage = coverage;
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	private List<E> getTupleWithBestScore() {
 
-		if (fScoreEvaluator.allNTuplesCovered()) {
+		if (allRequiredNTuplesCovered()) {
 			return null;
 		}
 
@@ -99,6 +101,23 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		return resultTuple;                              
 	}
 
+	public boolean allRequiredNTuplesCovered() {
+
+		int initialNTupleCount = fScoreEvaluator.getInitialNTupleCount();
+		
+		int tuplesToCover = initialNTupleCount * fCoverage / 100;
+
+		int currentNTupleCount = fScoreEvaluator.getCurrentNTupleCount();
+
+		int tuplesCovered = initialNTupleCount - currentNTupleCount;
+
+		if (tuplesCovered >= tuplesToCover) {
+			return true;
+		}
+
+		return false;
+	}
+	
 	private int getScore(List<E> extendedTuple) {
 
 		List<E> compressedTuple = new ArrayList<>();

@@ -40,7 +40,6 @@ public class IteratorForSubTuplesTest {
 				break;
 			}
 
-			@SuppressWarnings("unchecked")
 			List<String> subTuple = (List<String>) iterator.next();
 
 			if (!subTuple.equals(expectedSubTuples.get(counter))) {
@@ -78,7 +77,6 @@ public class IteratorForSubTuplesTest {
 				break;
 			}
 
-			@SuppressWarnings("unchecked")
 			List<String> subTuple = (List<String>) iterator.next();
 
 			if (!subTuple.equals(expectedSubTuples.get(counter))) {

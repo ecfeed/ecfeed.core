@@ -111,7 +111,7 @@ public class NwiseScoreEvaluatorTest {
 		testInput.add(dim2);
 		testInput.add(dim3);
 
-		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2,100);
+		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2);
 		evaluator.initialize(testInput, null);
 
 		List<String> tuple1 = createTuple("V11", "V21", "V31");

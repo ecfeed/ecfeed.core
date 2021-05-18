@@ -22,15 +22,13 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	private static final int NOT_INCLUDE = -1;
 	private int fN;
 	private int fInitialNTupleCount;
-	private int fCoverage;
 
 	private IConstraintEvaluator<E> fConstraintEvaluator;
 	private TupleDecompressor<E> fTupleDecompressor;
 
-	public NwiseScoreEvaluator(int argN, int coverage) throws GeneratorException {
+	public NwiseScoreEvaluator(int argN) throws GeneratorException {
 
 		this.fN = argN;
-		this.fCoverage = coverage;
 	}
 
 	@Override
@@ -58,6 +56,16 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		fTupleDecompressor = new TupleDecompressor<>();
 		fTupleDecompressor.initialize(input);
+	}
+
+	@Override
+	public int getInitialNTupleCount() {
+		return fInitialNTupleCount;
+	}
+
+	@Override
+	public int getCurrentNTupleCount() {
+		return countNTuples(); // TODO - count full tuples during delete ?
 	}
 
 	@Override
@@ -134,21 +142,21 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	//		return bestTuple;
 	//	}	
 
-	@Override
-	public boolean allNTuplesCovered() {
-
-		int tuplesToCover = fInitialNTupleCount * fCoverage / 100;
-
-		int countNTuples = countNTuples();
-
-		int tuplesCovered = fInitialNTupleCount - countNTuples;
-
-		if (tuplesCovered >= tuplesToCover) {
-			return true;
-		}
-
-		return false;
-	}
+	//	@Override
+	//	public boolean allNTuplesCovered() {
+	//
+	//		int tuplesToCover = fInitialNTupleCount * fCoverage / 100;
+	//
+	//		int countNTuples = countNTuples();
+	//
+	//		int tuplesCovered = fInitialNTupleCount - countNTuples;
+	//
+	//		if (tuplesCovered >= tuplesToCover) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
 	private void createOccurenciesTab(List<List<E>> input) {
 
