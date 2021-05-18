@@ -35,6 +35,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 	private int fCountOfDimensions;
 
+	private int fCounter = 0;
+	
 	static final int fLogLevel = 0;
 
 	public AwesomeNWiseAlgorithm(int n, int coverage) {
@@ -64,6 +66,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
 		}
 
+		fCounter = 0;
+		
 		super.reset(fNTuplesCount.get() * getCoverage() / 100);
 	}
 
@@ -78,12 +82,18 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 	@Override
 	public List<E> getNext() throws GeneratorException {
 
+		System.out.println("Get next, counter :" + ++fCounter);
+		
+		if (fCounter >= 100) {
+			System.out.println("COUNTER");
+		}
+		
 		IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
 		List<E> goodFullTuple = null;
 
 		if (getGoodTupleNew()) {
-			goodFullTuple =	getFullTupleWithHighScoreNew(generatorProgressMonitor);
+			goodFullTuple =	findFullTupleWithHighScoreNew(generatorProgressMonitor);
 		} else {
 			goodFullTuple =	getFullTupleWithHighScoreOld(generatorProgressMonitor);
 		}
@@ -134,10 +144,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		return result;
 	}
 
-	private List<E> getFullTupleWithHighScoreNew(IEcfProgressMonitor generatorProgressMonitor) {
+	private List<E> findFullTupleWithHighScoreNew(IEcfProgressMonitor generatorProgressMonitor) {
 
-		printPartialTuples("before getting tuple");
-		
 		if (isGenerationCancelled(generatorProgressMonitor)) {
 			return null;
 		}
@@ -146,6 +154,15 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			setTaskEnd();
 			return null;
 		}
+		
+		List<E> tuple = findFullTupleWithHighScoreIntr();
+		
+		return tuple;
+	}
+
+	private List<E> findFullTupleWithHighScoreIntr() {
+		
+		printPartialTuples("Before getting tuple ----------------------------------------------------------------------");
 		
 		List<E> accumulatingTuple = TuplesHelper.createTuple(fCountOfDimensions, null);
 
@@ -161,6 +178,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		printPartialTuples("after getting tuple");
 		
+		System.out.println("Retured tuple: " + accumulatingTuple);
 		return accumulatingTuple;
 	}
 
@@ -172,6 +190,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		int bestScore = 0;
 
 		List<E> listOfChoicesForParameter = getListOfChoicesForParameter(dimension);
+		
+		E choiceWithScore0 = null;
 
 		for (E choice : listOfChoicesForParameter) {
 
@@ -181,8 +201,12 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 				continue;                   
 			}
 
-			int score = getScoreForCombinedTuple(accumulatingTuple, choice, dimension);
-
+			int score = getScoreForTupleWithOneChoice(choice, dimension);
+			
+			if (score == 0) {
+				choiceWithScore0 = choice;
+			}
+			
 			if (score > bestScore) {                  
 				bestScore = score;
 				bestChoice = choice;
@@ -190,13 +214,19 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		}
 
 		if (bestScore == 0) {
-			ExceptionHelper.reportRuntimeException("Can not find best choice.");
+			
+			if (choiceWithScore0 == null) {
+				ExceptionHelper.reportRuntimeException("Can not find best choice.");
+			}
+			
+			bestChoice = choiceWithScore0;
 		}
 
 		accumulatingTuple.set(dimension, bestChoice);
 	}
-
-	private int getScoreForCombinedTuple(List<E> baseTuple, E choiceToAdd, int dimensionOfChoice) {
+	
+	//  TODO
+	public int getScoreForCombinedTuple(List<E> baseTuple, E choiceToAdd, int dimensionOfChoice) {
 
 		int usedBaseDimensions = TuplesHelper.countUsedDimensions(baseTuple);
 

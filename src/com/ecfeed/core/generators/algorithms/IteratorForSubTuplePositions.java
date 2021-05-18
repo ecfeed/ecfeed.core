@@ -17,7 +17,7 @@ public class IteratorForSubTuplePositions implements Iterator<List<Integer>> {
 
 	public IteratorForSubTuplePositions(int tupleSize, int subTupleSize) {
 
-		if (subTupleSize >= tupleSize) {
+		if (subTupleSize > tupleSize) {
 			ExceptionHelper.reportRuntimeException("Invalid sub tuple size in iterator for sub tuples.");
 		}
 
