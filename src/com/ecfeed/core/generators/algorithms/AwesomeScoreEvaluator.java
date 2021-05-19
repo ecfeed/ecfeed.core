@@ -63,7 +63,6 @@ public class AwesomeScoreEvaluator<E> {
 	public void removeAffectedTuples(
 			SortedMap<Integer, E> affectingTuple,
 			IntegerHolder outRemainingTuplesCount,
-			int N,
 			Set<List<Integer>> allDimensionCombinations) {
 
 		for (List<Integer> dimCombinations : allDimensionCombinations) {
