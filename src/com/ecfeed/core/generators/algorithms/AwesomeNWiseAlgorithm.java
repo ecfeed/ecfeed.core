@@ -52,7 +52,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			List<SortedMap<Integer, E>> allNTuples = getAllNTuples(getInput(), N);
 			fNTuplesCount = calculateNTuplesCount(allNTuples);
 
-			fAwesomeScoreEvaluator.reset(allNTuples, N);
+			fAwesomeScoreEvaluator.reset(allNTuples, N, fDimCount);
 			fCoverageIgnoreCount.set(calculateIgnoreCount());
 		} catch (Exception e) {
 
@@ -130,9 +130,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 			SortedMap<Integer, E> nTuple = createNTuple();
 
-			int nTupleScore = 
-					fAwesomeScoreEvaluator.calculateScoreForNTuple(
-							nTuple, getAllDimensionCombinations(fDimCount, N)); // TODO - calculate once only
+			int nTupleScore = fAwesomeScoreEvaluator.calculateScoreForNTuple(nTuple);
 
 			if (nTupleScore > bestTupleScore) {
 				bestTupleScore = nTupleScore;
@@ -142,7 +140,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
 
-		fAwesomeScoreEvaluator.removeAffectedTuples(bestTuple, fNTuplesCount, getAllDimensionCombinations(fDimCount, N));
+		fAwesomeScoreEvaluator.removeAffectedTuples(bestTuple, fNTuplesCount);
 
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
@@ -279,15 +277,15 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		return randomDimensions;
 	}
 
-	private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount, int argN) {
-
-		List<Integer> dimensions = new ArrayList<>();
-
-		for (int i = 0; i < dimensionCount; i++)
-			dimensions.add(i);
-
-		return (new Tuples<>(dimensions, Math.min(dimensionCount, argN))).getAll();
-	}
+//	private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount, int argN) {
+//
+//		List<Integer> dimensions = new ArrayList<>();
+//
+//		for (int i = 0; i < dimensionCount; i++)
+//			dimensions.add(i);
+//
+//		return (new Tuples<>(dimensions, Math.min(dimensionCount, argN))).getAll();
+//	}
 
 	private List<SortedMap<Integer, E>> getAllNTuples(List<List<E>> input, int argN) {
 

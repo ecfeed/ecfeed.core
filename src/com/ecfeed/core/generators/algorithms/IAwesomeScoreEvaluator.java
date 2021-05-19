@@ -10,7 +10,9 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-public class IAwesomeScoreEvaluator<E> {
+import java.util.SortedMap;
+
+public interface IAwesomeScoreEvaluator<E> {
 
 //	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
 //
@@ -19,5 +21,8 @@ public class IAwesomeScoreEvaluator<E> {
 //
 //	public int getScore(List<E> tuple);
 //	public void updateScores(List<E> test);
+	
+	
+	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple);
 
 }

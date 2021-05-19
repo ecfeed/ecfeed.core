@@ -25,15 +25,20 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 
 
-public class AwesomeScoreEvaluator<E> {
+public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
+	
 	private Multiset<SortedMap<Integer, E>> fPartialTuples = null;
 	protected int N;
 
+	private int fDimCount;
+	Set<List<Integer>> fAllDimensionCombinations;
 	static final int fLogLevel = 0;
 
-	public void reset(List<SortedMap<Integer, E>> allNTuples, int N) {
+	public void reset(List<SortedMap<Integer, E>> allNTuples, int N, int dimCount) {
 		fPartialTuples = createPartialTuples(allNTuples);
+		fDimCount = dimCount;
+		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
 	}
 
 	private Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
@@ -55,6 +60,16 @@ public class AwesomeScoreEvaluator<E> {
 		return result;
 	}
 
+	private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount, int argN) {
+
+		List<Integer> dimensions = new ArrayList<>();
+
+		for (int i = 0; i < dimensionCount; i++)
+			dimensions.add(i);
+
+		return (new Tuples<>(dimensions, Math.min(dimensionCount, argN))).getAll();
+	}
+	
 	private ImmutableSortedMap<Integer, E> createOneCounter(List<Map.Entry<Integer, E>> sublist) {
 
 		return new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build();
@@ -62,10 +77,9 @@ public class AwesomeScoreEvaluator<E> {
 
 	public void removeAffectedTuples(
 			SortedMap<Integer, E> affectingTuple,
-			IntegerHolder outRemainingTuplesCount,
-			Set<List<Integer>> allDimensionCombinations) {
+			IntegerHolder outRemainingTuplesCount) {
 
-		for (List<Integer> dimCombinations : allDimensionCombinations) {
+		for (List<Integer> dimCombinations : fAllDimensionCombinations) {
 
 			SortedMap<Integer, E> dTuple = Maps.newTreeMap();
 
@@ -113,13 +127,12 @@ public class AwesomeScoreEvaluator<E> {
 		return fPartialTuples.count(tuple);
 	}
 
-	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple, Set<List<Integer>> allDimensionCombinations) {
+	@Override
+	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple) {
 
 		int score = 0;
 
-		//		final Set<List<Integer>> allDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
-
-		for (List<Integer> combinationOfDimensions : allDimensionCombinations) {
+		for (List<Integer> combinationOfDimensions : fAllDimensionCombinations) {
 
 			SortedMap<Integer, E> dTuple = Maps.newTreeMap();
 
