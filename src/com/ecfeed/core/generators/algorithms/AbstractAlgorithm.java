@@ -123,6 +123,11 @@ public abstract class AbstractAlgorithm<E> implements IAlgorithm<E> {
 	}
 
 	protected EvaluationResult checkConstraints(List<E> test) {
+		
+		if (fConstraintEvaluator == null) {
+			return EvaluationResult.TRUE;
+		}
+		
 		return fConstraintEvaluator.evaluate(test);
 	}
 

@@ -14,8 +14,6 @@ import com.ecfeed.core.utils.EvaluationResult;
 
 public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
-	private List<List<E>> fInput;
-
 	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>();
 	private final Map<List<E>, Integer> fScores = new HashMap<>();
 
@@ -33,14 +31,13 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	@Override
 	public void initialize(
-			List<List<E>> input, 
+			List<List<E>> input,
 			IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
 
 		if (input == null) {
 			GeneratorException.report("Input of N-wise score evaluator should not be empty.");
 		}
 
-		fInput = input;
 		fConstraintEvaluator = constraintEvaluator;
 
 		if (fConstraintEvaluator != null) {
@@ -90,31 +87,31 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		fTupleOccurences.entrySet().removeIf(e -> e.getKey().size() == fN && testCase.containsAll(e.getKey()));
 
-		calculateOccurenciesOfTuples();
+		calculateOccurenciesOfTuples();	
 		fScores.clear();
 		calculateScoresForTuples(fN);
 	}
 
-	@Override
-	public E getChoiceFromInputDomain(List<E> sourceTuple, int dimension) {
-
-		List<E> choicesForDimension = fInput.get(dimension);
-
-		List<E> candidateTuple = TuplesHelper.createCloneOfTuple(sourceTuple);
-
-		for (int index = 0; index < choicesForDimension.size(); index++) {
-
-			E choice = choicesForDimension.get(index);
-
-			candidateTuple.set(dimension, choice);
-
-			if (constraintCheck(candidateTuple) != EvaluationResult.FALSE) {
-				return choice;                   
-			}
-		}
-
-		return null;
-	}
+	//	@Override
+	//	public E getChoiceFromInputDomain(List<E> sourceTuple, int dimension) {
+	//
+	//		List<E> choicesForDimension = fInput.get(dimension);
+	//
+	//		List<E> candidateTuple = TuplesHelper.createCloneOfTuple(sourceTuple);
+	//
+	//		for (int index = 0; index < choicesForDimension.size(); index++) {
+	//
+	//			E choice = choicesForDimension.get(index);
+	//
+	//			candidateTuple.set(dimension, choice);
+	//
+	//			if (checkConstraints(candidateTuple) != EvaluationResult.FALSE) {
+	//				return choice;                   
+	//			}
+	//		}
+	//
+	//		return null;
+	//	}
 
 
 	//	@Override
@@ -191,7 +188,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		List<E> expandedTuple = expandTuple(tuple, dimensions);
 
-		if (tuple.size() > fN || constraintCheck(expandedTuple) == EvaluationResult.FALSE)
+		if (tuple.size() > fN || checkConstraints(expandedTuple) == EvaluationResult.FALSE)
 			return;
 
 		int isFullTuple = tuple.size() == fN ? 1 : 0;
@@ -243,7 +240,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 				mapToInt(fScores::get).sum();
 	}
 
-	private EvaluationResult constraintCheck(List<E> tuple) {
+	private EvaluationResult checkConstraints(List<E> tuple) {
 
 		if (fConstraintEvaluator == null) {
 			return EvaluationResult.TRUE;

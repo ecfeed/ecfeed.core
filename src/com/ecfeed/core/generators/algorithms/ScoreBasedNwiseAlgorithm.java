@@ -87,7 +87,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 			} else {
 
-				E choice = fScoreEvaluator.getChoiceFromInputDomain(resultTuple, dimension);
+				E choice = getChoiceFromInputDomain(resultTuple, dimension);
 
 				if (choice == null) {
 					return null;
@@ -99,6 +99,27 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 		fScoreEvaluator.updateScores(resultTuple);
 		return resultTuple;                              
+	}
+
+	
+	private E getChoiceFromInputDomain(List<E> sourceTuple, int dimension) {
+
+		List<E> choicesForDimension = getInput().get(dimension);
+
+		List<E> candidateTuple = TuplesHelper.createCloneOfTuple(sourceTuple);
+
+		for (int index = 0; index < choicesForDimension.size(); index++) {
+
+			E choice = choicesForDimension.get(index);
+
+			candidateTuple.set(dimension, choice);
+
+			if (checkConstraints(candidateTuple) != EvaluationResult.FALSE) {
+				return choice;                   
+			}
+		}
+
+		return null;
 	}
 
 	public boolean allRequiredNTuplesCovered() {
