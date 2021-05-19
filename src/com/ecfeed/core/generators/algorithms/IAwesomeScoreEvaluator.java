@@ -10,7 +10,11 @@
 
 package com.ecfeed.core.generators.algorithms;
 
+import java.util.List;
+import java.util.Set;
 import java.util.SortedMap;
+
+import com.ecfeed.core.utils.IntegerHolder;
 
 public interface IAwesomeScoreEvaluator<E> {
 
@@ -23,6 +27,18 @@ public interface IAwesomeScoreEvaluator<E> {
 //	public void updateScores(List<E> test);
 	
 	
+	public void initialize(List<SortedMap<Integer, E>> allNTuples, int N, int dimCount);
+	
 	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple);
+	public int calculateTupleScoreForOneDimension(
+			SortedMap<Integer, E> nTuple,	
+			Integer dimension, 
+			Set<List<Integer>> dimensionsToCountScores,
+			E item);
+	
+	int getCountOfTuple(SortedMap<Integer, E> tuple);
+	
+	public void update(SortedMap<Integer, E> affectingTuple, IntegerHolder outRemainingTuplesCount);
+
 
 }

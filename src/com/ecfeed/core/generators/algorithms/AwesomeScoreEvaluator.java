@@ -35,7 +35,8 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	Set<List<Integer>> fAllDimensionCombinations;
 	static final int fLogLevel = 0;
 
-	public void reset(List<SortedMap<Integer, E>> allNTuples, int N, int dimCount) {
+	@Override
+	public void initialize(List<SortedMap<Integer, E>> allNTuples, int N, int dimCount) {
 		fPartialTuples = createPartialTuples(allNTuples);
 		fDimCount = dimCount;
 		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
@@ -75,7 +76,8 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 		return new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build();
 	}
 
-	public void removeAffectedTuples(
+	@Override
+	public void update(
 			SortedMap<Integer, E> affectingTuple,
 			IntegerHolder outRemainingTuplesCount) {
 
@@ -98,6 +100,7 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	}
 
 
+	@Override
 	public int calculateTupleScoreForOneDimension(
 			SortedMap<Integer, E> nTuple,
 			Integer dimension,
@@ -122,6 +125,7 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 		return score;
 	}
 
+	@Override
 	public int getCountOfTuple(SortedMap<Integer, E> tuple) {
 
 		return fPartialTuples.count(tuple);

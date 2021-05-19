@@ -33,7 +33,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 	static final int fLogLevel = 0;
 
-	AwesomeScoreEvaluator<E> fAwesomeScoreEvaluator = null;
+	IAwesomeScoreEvaluator<E> fAwesomeScoreEvaluator = null;
 
 	public AwesomeNWiseAlgorithm(int n, int coverage) {
 		super(n, coverage);
@@ -52,7 +52,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			List<SortedMap<Integer, E>> allNTuples = getAllNTuples(getInput(), N);
 			fNTuplesCount = calculateNTuplesCount(allNTuples);
 
-			fAwesomeScoreEvaluator.reset(allNTuples, N, fDimCount);
+			fAwesomeScoreEvaluator.initialize(allNTuples, N, fDimCount);
 			fCoverageIgnoreCount.set(calculateIgnoreCount());
 		} catch (Exception e) {
 
@@ -140,7 +140,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
 
-		fAwesomeScoreEvaluator.removeAffectedTuples(bestTuple, fNTuplesCount);
+		fAwesomeScoreEvaluator.update(bestTuple, fNTuplesCount);
 
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
