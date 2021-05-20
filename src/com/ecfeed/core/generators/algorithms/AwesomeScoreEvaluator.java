@@ -35,6 +35,7 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	private int fDimCount;
 	Set<List<Integer>> fAllDimensionCombinations;
 
+	private int fInitialNTupleCount;
 	private int fCurrentNTupleCount;
 
 	static final int fLogLevel = 0;
@@ -53,13 +54,18 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 		List<SortedMap<Integer, E>> allValidNTuples = 
 				TuplesHelper.getAllValidNTuples(input, N, MAX_TUPLES, constraintEvaluator);
 
-		fCurrentNTupleCount = allValidNTuples.size();
-
+		fInitialNTupleCount = allValidNTuples.size();
+		fCurrentNTupleCount = fInitialNTupleCount;
+		
 		fPartialTuples = createPartialTuples(allValidNTuples);
 
 		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
 	}
 
+	public int getInitialNTupleCount() {
+		return fInitialNTupleCount;
+	}
+	
 	public int getCurrentNTupleCount() {
 		return fCurrentNTupleCount;
 	}
