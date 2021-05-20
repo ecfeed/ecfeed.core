@@ -2,8 +2,13 @@ package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.google.common.collect.Maps;
 
 final public class TuplesHelper 
 {
@@ -100,5 +105,90 @@ final public class TuplesHelper
 
 		return choiceToMerge;
 	}
+
+	public static <E> List<SortedMap<Integer, E>> getAllValidNTuples(
+			List<List<E>> input, int argN, int maxTuples, IConstraintEvaluator<E> fConstraintEvaluator) {
+
+		int dimensionCount = input.size();
+
+		List<SortedMap<Integer, E>> allValidNTuples = new ArrayList<>();
+		allValidNTuples.add(Maps.newTreeMap());
+
+		for (int tupleSize = 0; tupleSize < argN; tupleSize++) {
+
+			List<SortedMap<Integer, E>> newValidTuples = new ArrayList<>();
+
+			for (SortedMap<Integer, E> tuple : allValidNTuples) {
+
+				Integer maxDimension = -1;
+
+				if (!tuple.isEmpty()) {
+					maxDimension = tuple.lastKey();
+				}
+
+				addValidTuples(input, argN, dimensionCount, tupleSize, maxDimension, tuple, newValidTuples, fConstraintEvaluator);
+
+				if (newValidTuples.size() > maxTuples) {
+					ExceptionHelper.reportRuntimeException(
+							"The number of tuples is limited to " + maxTuples + ". " +
+									"The current value is: " + newValidTuples.size() + ". " +
+									"To fix this issue, limit the number of arguments, choices or include additional constraint."
+							);
+				}
+			}
+
+			allValidNTuples = newValidTuples;
+		}
+
+		return allValidNTuples;
+	}
+
+	private static <E> void addValidTuples(
+			List<List<E>> input,
+			int argN, int dimensionCount,
+			int tupleSize,
+			Integer maxDimension,
+			SortedMap<Integer, E> tuple,
+			List<SortedMap<Integer, E>> inOutValidTuples,
+			IConstraintEvaluator<E> fConstraintEvaluator) {
+
+		for (int dimension = maxDimension + 1; dimension < dimensionCount - (argN - 1 - tupleSize); dimension++) {
+
+			final List<E> inputForOneDimension = input.get(dimension);
+
+			addTuplesForOneDimension(dimension, inputForOneDimension, tuple, dimensionCount, inOutValidTuples, fConstraintEvaluator);
+
+			tuple.remove(dimension);
+		}
+	}
+
+	private static <E> void addTuplesForOneDimension(
+			int dimension,
+			List<E> inputForOneDimension,
+			SortedMap<Integer, E> tuple,
+			int dimensionCount,
+			List<SortedMap<Integer, E>> inOutTuples, 
+			IConstraintEvaluator<E> fConstraintEvaluator) {
+
+		for (E v : inputForOneDimension) {
+
+			tuple.put(dimension, v);
+
+			if (checkConstraints(AlgorithmHelper.uncompressTuple(tuple, dimensionCount), fConstraintEvaluator) == EvaluationResult.TRUE) {
+				SortedMap<Integer, E> newTuple = new TreeMap<>(tuple);
+				inOutTuples.add(newTuple);
+			}
+		}
+	}
+
+	private static <E> EvaluationResult checkConstraints(List<E> test, IConstraintEvaluator<E> fConstraintEvaluator) {
+
+		if (fConstraintEvaluator == null) {
+			return EvaluationResult.TRUE;
+		}
+
+		return fConstraintEvaluator.evaluate(test);
+	}
+
 
 }
