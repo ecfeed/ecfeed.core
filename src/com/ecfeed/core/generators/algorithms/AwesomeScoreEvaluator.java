@@ -27,7 +27,7 @@ import com.google.common.collect.Ordering;
 
 public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
-	
+
 	private Multiset<SortedMap<Integer, E>> fPartialTuples = null;
 	protected int N;
 
@@ -70,7 +70,7 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
 		return (new Tuples<>(dimensions, Math.min(dimensionCount, argN))).getAll();
 	}
-	
+
 	private ImmutableSortedMap<Integer, E> createOneCounter(List<Map.Entry<Integer, E>> sublist) {
 
 		return new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build();
@@ -99,30 +99,9 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 		AlgoLogger.log("partialNTo0Tuples after removal of best tuple", fPartialTuples, 1, fLogLevel);
 	}
 
-
 	@Override
-	public int calculateTupleScoreForOneDimension(
-			SortedMap<Integer, E> nTuple,
-			Integer dimension,
-			Set<List<Integer>> dimensionsToCountScores,
-			E item) {
-
-		int score = 0;
-
-		for (List<Integer> dimensionScores : dimensionsToCountScores) {
-
-			SortedMap<Integer, E> tmpTuple = Maps.newTreeMap();
-
-			for (Integer dimensionScore : dimensionScores) // TODO - names ?
-				tmpTuple.put(dimensionScore, nTuple.get(dimensionScore));
-
-			tmpTuple.put(dimension, item);
-
-			if (fPartialTuples.contains(tmpTuple))
-				score++;
-		}
-
-		return score;
+	public boolean contains(SortedMap<Integer, E> tmpTuple) {
+		return fPartialTuples.contains(tmpTuple);
 	}
 
 	@Override

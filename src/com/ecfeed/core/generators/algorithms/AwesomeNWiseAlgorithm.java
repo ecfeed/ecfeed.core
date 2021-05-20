@@ -201,7 +201,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 			if (checkConstraints(AlgorithmHelper.uncompressTuple(nTuple, fDimCount)) == EvaluationResult.TRUE) {
 
-				int score = fAwesomeScoreEvaluator.calculateTupleScoreForOneDimension(nTuple, dimension, dimensionsToCountScores, item);
+				int score = calculateTupleScoreForOneDimension(nTuple, dimension, dimensionsToCountScores, item);
 
 				if (score > bestScore) {
 					bestScore = score;
@@ -211,6 +211,30 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		}
 
 		return bestItem;
+	}
+
+	public int calculateTupleScoreForOneDimension(
+			SortedMap<Integer, E> nTuple,
+			Integer dimension,
+			Set<List<Integer>> dimensionsToCountScores,
+			E item) {
+
+		int score = 0;
+
+		for (List<Integer> dimensionScores : dimensionsToCountScores) {
+
+			SortedMap<Integer, E> tmpTuple = Maps.newTreeMap();
+
+			for (Integer dimensionScore : dimensionScores) // TODO - names ?
+				tmpTuple.put(dimensionScore, nTuple.get(dimensionScore));
+
+			tmpTuple.put(dimension, item);
+
+			if (fAwesomeScoreEvaluator.contains(tmpTuple))
+				score++;
+		}
+
+		return score;
 	}
 
 	private SortedMap<Integer, E> createNTupleWithBestScores() {
