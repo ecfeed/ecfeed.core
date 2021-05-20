@@ -160,7 +160,7 @@ public class NwiseScoreEvaluatorTest {
 			fail("Score must not be 0.");
 		}
 
-		evaluator.updateScores(tuple);
+		evaluator.update(tuple);
 
 		int scoreAfter = evaluator.getScore(tuple);
 
