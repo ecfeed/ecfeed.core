@@ -97,7 +97,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 			}    
 		}
 
-		fScoreEvaluator.updateScores(resultTuple);
+		fScoreEvaluator.update(resultTuple);
 		return resultTuple;                              
 	}
 

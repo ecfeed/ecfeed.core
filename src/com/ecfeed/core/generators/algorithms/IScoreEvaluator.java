@@ -13,5 +13,5 @@ public interface IScoreEvaluator<E> {
 	public int getCurrentNTupleCount();
 
 	public int getScore(List<E> tuple);
-	public void updateScores(List<E> test);
+	public void update(List<E> test);
 }

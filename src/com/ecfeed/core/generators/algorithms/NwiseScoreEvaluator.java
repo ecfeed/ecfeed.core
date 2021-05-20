@@ -80,7 +80,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	@Override
-	public void updateScores(List<E> testCase) {
+	public void update(List<E> testCase) {
 
 		if (testCase.size() < fN)
 			return;
