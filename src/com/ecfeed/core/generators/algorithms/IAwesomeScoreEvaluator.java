@@ -30,7 +30,6 @@ public interface IAwesomeScoreEvaluator<E> {
 	public void initialize(
 			List<List<E>> input, 
 			int N, 
-			int dimCount, 
 			IConstraintEvaluator<E> constraintEvaluator);
 
 	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple);

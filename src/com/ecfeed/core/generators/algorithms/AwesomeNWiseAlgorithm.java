@@ -66,7 +66,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 			fNTuplesCount = calculateNTuplesCount(allValidNTuples); // TODO - MOVE TO EVALUATOR
 
-			fAwesomeScoreEvaluator.initialize(getInput(), N, fDimCount, getConstraintEvaluator());
+			fAwesomeScoreEvaluator.initialize(getInput(), N, getConstraintEvaluator());
 			fCoverageIgnoreCount.set(calculateIgnoreCount());
 		} catch (Exception e) {
 

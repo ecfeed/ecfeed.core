@@ -39,11 +39,12 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
 	@Override
 	public void initialize(
-//			List<SortedMap<Integer, E>> allNTuples, 
 			List<List<E>> input, 
 			int N, 
-			int dimCount, 
+//			int dimCount, 
 			IConstraintEvaluator<E> constraintEvaluator) {
+		
+		fDimCount = input.size();
 		
 		List<SortedMap<Integer, E>> allValidNTuples = 
 				TuplesHelper.getAllValidNTuples(input, N, MAX_TUPLES, constraintEvaluator);
@@ -51,7 +52,6 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 		fPartialTuples = createPartialTuples(allValidNTuples);
 		
 //		fPartialTuples = createPartialTuples(allNTuples);
-		fDimCount = dimCount;
 		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
 	}
 
