@@ -13,21 +13,19 @@ package com.ecfeed.core.generators.algorithms;
 import java.util.List;
 import java.util.SortedMap;
 
+import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IntegerHolder;
 
 public interface IAwesomeScoreEvaluator<E> {
 
-	//	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
+	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
 	//
 	//	public int getInitialNTupleCount();
 	//	public int getCurrentNTupleCount();
 	//
 	//	public int getScore(List<E> tuple);
 	//	public void updateScores(List<E> test);
-
-
-	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator);
 
 	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple);
 
