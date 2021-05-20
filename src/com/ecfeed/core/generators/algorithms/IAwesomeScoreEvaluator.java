@@ -15,7 +15,6 @@ import java.util.SortedMap;
 
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.utils.IntegerHolder;
 
 public interface IAwesomeScoreEvaluator<E> {
 
@@ -33,7 +32,7 @@ public interface IAwesomeScoreEvaluator<E> {
 
 	public int getCountOfTuple(SortedMap<Integer, E> tuple);
 
-	public void update(SortedMap<Integer, E> affectingTuple, IntegerHolder outRemainingTuplesCount);
+	public void update(SortedMap<Integer, E> affectingTuple);
 
 
 }

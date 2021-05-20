@@ -139,8 +139,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
 
-		IntegerHolder tmp = new IntegerHolder(0); // TODO - remove
-		fAwesomeScoreEvaluator.update(bestTuple, tmp);
+		fAwesomeScoreEvaluator.update(bestTuple);
 		
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
