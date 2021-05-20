@@ -37,7 +37,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 	private IntegerHolder fCoverageIgnoreCount;
 
-	private IntegerHolder fNTuplesCount;
+	private IntegerHolder fNTuplesCount; // this holds current N tuples count
 
 	private int fDimCount;
 
@@ -64,9 +64,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			List<SortedMap<Integer, E>> allValidNTuples = 
 					TuplesHelper.getAllValidNTuples(getInput(), N, MAX_TUPLES, getConstraintEvaluator());
 
-			fNTuplesCount = calculateNTuplesCount(allValidNTuples);
+			fNTuplesCount = calculateNTuplesCount(allValidNTuples); // TODO - MOVE TO EVALUATOR
 
-			fAwesomeScoreEvaluator.initialize(allValidNTuples, N, fDimCount);
+			fAwesomeScoreEvaluator.initialize(getInput(), N, fDimCount, getConstraintEvaluator());
 			fCoverageIgnoreCount.set(calculateIgnoreCount());
 		} catch (Exception e) {
 

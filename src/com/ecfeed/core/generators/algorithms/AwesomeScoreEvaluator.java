@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.AlgoLogger;
 import com.ecfeed.core.utils.IntegerHolder;
 import com.google.common.collect.HashMultiset;
@@ -27,6 +28,7 @@ import com.google.common.collect.Ordering;
 
 public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
+	static final int MAX_TUPLES = 250000;	
 
 	private Multiset<SortedMap<Integer, E>> fPartialTuples = null;
 	protected int N;
@@ -36,8 +38,19 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	static final int fLogLevel = 0;
 
 	@Override
-	public void initialize(List<SortedMap<Integer, E>> allNTuples, int N, int dimCount) {
-		fPartialTuples = createPartialTuples(allNTuples);
+	public void initialize(
+//			List<SortedMap<Integer, E>> allNTuples, 
+			List<List<E>> input, 
+			int N, 
+			int dimCount, 
+			IConstraintEvaluator<E> constraintEvaluator) {
+		
+		List<SortedMap<Integer, E>> allValidNTuples = 
+				TuplesHelper.getAllValidNTuples(input, N, MAX_TUPLES, constraintEvaluator);
+		
+		fPartialTuples = createPartialTuples(allValidNTuples);
+		
+//		fPartialTuples = createPartialTuples(allNTuples);
 		fDimCount = dimCount;
 		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
 	}

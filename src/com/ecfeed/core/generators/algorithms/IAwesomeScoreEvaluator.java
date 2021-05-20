@@ -13,6 +13,7 @@ package com.ecfeed.core.generators.algorithms;
 import java.util.List;
 import java.util.SortedMap;
 
+import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IntegerHolder;
 
 public interface IAwesomeScoreEvaluator<E> {
@@ -26,7 +27,11 @@ public interface IAwesomeScoreEvaluator<E> {
 	//	public void updateScores(List<E> test);
 
 
-	public void initialize(List<SortedMap<Integer, E>> allNTuples, int N, int dimCount);
+	public void initialize(
+			List<List<E>> input, 
+			int N, 
+			int dimCount, 
+			IConstraintEvaluator<E> constraintEvaluator);
 
 	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple);
 
