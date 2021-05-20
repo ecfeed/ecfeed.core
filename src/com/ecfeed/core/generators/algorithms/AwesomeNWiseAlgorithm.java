@@ -48,7 +48,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 	public AwesomeNWiseAlgorithm(int n, int coverage) {
 		super(n, coverage);
 
-		fAwesomeScoreEvaluator = new AwesomeScoreEvaluator<>();
+		fAwesomeScoreEvaluator = new AwesomeScoreEvaluator<>(getN());
 	}
 
 	@Override
@@ -59,15 +59,14 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		try {
 			fAllDimensionedItems = createDimensionedItems(getInput());
 
-			//			List<SortedMap<Integer, E>> allNTuples = getAllValidNTuples(getInput(), N);
-
 			List<SortedMap<Integer, E>> allValidNTuples = 
 					TuplesHelper.getAllValidNTuples(getInput(), N, MAX_TUPLES, getConstraintEvaluator());
 
 			fNTuplesCount = calculateNTuplesCount(allValidNTuples); // TODO - MOVE TO EVALUATOR
 
-			fAwesomeScoreEvaluator.initialize(getInput(), N, getConstraintEvaluator());
+			fAwesomeScoreEvaluator.initialize(getInput(), getConstraintEvaluator());
 			fCoverageIgnoreCount.set(calculateIgnoreCount());
+			
 		} catch (Exception e) {
 
 			SystemLogger.logCatch(e);

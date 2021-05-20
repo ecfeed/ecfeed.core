@@ -37,10 +37,14 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	Set<List<Integer>> fAllDimensionCombinations;
 	static final int fLogLevel = 0;
 
+	public AwesomeScoreEvaluator(int argN) {
+		N = argN;
+	}
+	
 	@Override
 	public void initialize(
 			List<List<E>> input, 
-			int N, 
+//			int N, 
 //			int dimCount, 
 			IConstraintEvaluator<E> constraintEvaluator) {
 		
