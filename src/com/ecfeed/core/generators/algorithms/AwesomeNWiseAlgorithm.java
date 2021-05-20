@@ -37,8 +37,6 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 	private IntegerHolder fCoverageIgnoreCount;
 
-	private IntegerHolder fNTuplesCount; // this holds current N tuples count
-
 	private int fDimCount;
 
 	static final int fLogLevel = 0;
@@ -59,12 +57,8 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		try {
 			fAllDimensionedItems = createDimensionedItems(getInput());
 
-			List<SortedMap<Integer, E>> allValidNTuples = 
-					TuplesHelper.getAllValidNTuples(getInput(), N, MAX_TUPLES, getConstraintEvaluator());
-
-			fNTuplesCount = calculateNTuplesCount(allValidNTuples); // TODO - MOVE TO EVALUATOR
-
 			fAwesomeScoreEvaluator.initialize(getInput(), getConstraintEvaluator());
+			
 			fCoverageIgnoreCount.set(calculateIgnoreCount());
 			
 		} catch (Exception e) {
@@ -74,21 +68,13 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 			ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
 		}
 
-		super.reset(fNTuplesCount.get() * getCoverage() / 100);
+		super.reset(fAwesomeScoreEvaluator.getCurrentNTupleCount() * getCoverage() / 100);
 	}
 
 	private int calculateIgnoreCount() {
 
-		int result = fNTuplesCount.get() * (100 - getCoverage()) / 100;
+		int result = fAwesomeScoreEvaluator.getCurrentNTupleCount() * (100 - getCoverage()) / 100;
 		AlgoLogger.log("Ignore count", result, 1, fLogLevel);
-
-		return result;
-	}
-
-	private IntegerHolder calculateNTuplesCount(List<SortedMap<Integer, E>> remainingTuples) {
-
-		IntegerHolder result = new IntegerHolder(remainingTuples.size());
-		AlgoLogger.log("nTuplesCount", result.get(), 1, fLogLevel);
 
 		return result;
 	}
@@ -136,7 +122,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 				return null;
 			}
 
-			if (fNTuplesCount.get() <= fCoverageIgnoreCount.get()) {
+			if (fAwesomeScoreEvaluator.getCurrentNTupleCount() <= fCoverageIgnoreCount.get()) {
 				setTaskEnd();
 				return null;
 			}
@@ -153,8 +139,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
 
-		fAwesomeScoreEvaluator.update(bestTuple, fNTuplesCount);
-
+		IntegerHolder tmp = new IntegerHolder(0); // TODO - remove
+		fAwesomeScoreEvaluator.update(bestTuple, tmp);
+		
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
 		final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);

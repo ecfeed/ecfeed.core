@@ -22,7 +22,7 @@ public interface IAwesomeScoreEvaluator<E> {
 	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
 	//
 	//	public int getInitialNTupleCount();
-	//	public int getCurrentNTupleCount();
+		public int getCurrentNTupleCount();
 	//
 	//	public int getScore(List<E> tuple);
 	//	public void updateScores(List<E> test);

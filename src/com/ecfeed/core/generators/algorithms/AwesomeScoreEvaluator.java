@@ -35,6 +35,9 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
 	private int fDimCount;
 	Set<List<Integer>> fAllDimensionCombinations;
+	
+	private int fCurrentNTupleCount;
+	
 	static final int fLogLevel = 0;
 
 	public AwesomeScoreEvaluator(int argN) {
@@ -44,8 +47,6 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	@Override
 	public void initialize(
 			List<List<E>> input, 
-//			int N, 
-//			int dimCount, 
 			IConstraintEvaluator<E> constraintEvaluator) {
 		
 		fDimCount = input.size();
@@ -53,12 +54,17 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 		List<SortedMap<Integer, E>> allValidNTuples = 
 				TuplesHelper.getAllValidNTuples(input, N, MAX_TUPLES, constraintEvaluator);
 		
+		fCurrentNTupleCount = allValidNTuples.size();
+		
 		fPartialTuples = createPartialTuples(allValidNTuples);
 		
-//		fPartialTuples = createPartialTuples(allNTuples);
 		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
 	}
 
+	public int getCurrentNTupleCount() {
+		return fCurrentNTupleCount;
+	}
+	
 	private Multiset<SortedMap<Integer, E>> createPartialTuples(List<SortedMap<Integer, E>> remainingTuples) {
 
 		Multiset<SortedMap<Integer, E>> result = HashMultiset.create();
@@ -106,7 +112,9 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 				dTuple.put(dimension, affectingTuple.get(dimension));
 
 			if (fPartialTuples.contains(dTuple)) {
+				
 				outRemainingTuplesCount.decrement();
+				fCurrentNTupleCount--;
 
 				for (List<Map.Entry<Integer, E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(dTuple.entrySet())))
 					fPartialTuples.remove(createOneCounter(sublist), 1);
