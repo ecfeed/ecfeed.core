@@ -23,7 +23,6 @@ import com.ecfeed.core.utils.AlgoLogger;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
-import com.ecfeed.core.utils.IntegerHolder;
 import com.ecfeed.core.utils.SystemLogger;
 import com.google.common.collect.Maps;
 
@@ -35,7 +34,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 	private List<DimensionedItem<E>> fAllDimensionedItems = null;
 
-	private IntegerHolder fCoverageIgnoreCount;
+	private int fCountOfTuplesAllowedToRemain; // allowed to remain due to coverage parameter
 
 	private int fDimCount;
 
@@ -52,14 +51,20 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 	@Override
 	public void reset() {
 
-		fCoverageIgnoreCount = new IntegerHolder(0);
 		fDimCount = getInput().size();
+		
 		try {
 			fAllDimensionedItems = createDimensionedItems(getInput());
 
 			fAwesomeScoreEvaluator.initialize(getInput(), getConstraintEvaluator());
 			
-			fCoverageIgnoreCount.set(calculateIgnoreCount());
+			int countOfInitialNTuples = fAwesomeScoreEvaluator.getCountOfInitialNTuples();
+			
+			fCountOfTuplesAllowedToRemain = 
+					calculateCountOfTuplesAllowedToRemain(
+							getCoverage(), countOfInitialNTuples);
+		
+			super.reset(countOfInitialNTuples * getCoverage() / 100);
 			
 		} catch (Exception e) {
 
@@ -67,14 +72,11 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 			ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
 		}
-
-		super.reset(fAwesomeScoreEvaluator.getCurrentNTupleCount() * getCoverage() / 100);
 	}
 
-	private int calculateIgnoreCount() {
+	private static int calculateCountOfTuplesAllowedToRemain(int coverage, int countOfInitialNTuples) {
 
-		int result = fAwesomeScoreEvaluator.getCurrentNTupleCount() * (100 - getCoverage()) / 100;
-		AlgoLogger.log("Ignore count", result, 1, fLogLevel);
+		int result = countOfInitialNTuples * (100 - coverage) / 100;
 
 		return result;
 	}
@@ -122,7 +124,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 				return null;
 			}
 
-			if (fAwesomeScoreEvaluator.getCurrentNTupleCount() <= fCoverageIgnoreCount.get()) {
+			if (allRequiredTuplesGenerated()) {
 				setTaskEnd();
 				return null;
 			}
@@ -147,6 +149,17 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		AlgoLogger.log("Result of getNext - best max tuple", result, 1, fLogLevel);
 		return result;
+	}
+
+	private boolean allRequiredTuplesGenerated() {
+		
+		int countOfRemainingNTuples = fAwesomeScoreEvaluator.getCountOfRemainingNTuples();
+		
+		if (countOfRemainingNTuples > fCountOfTuplesAllowedToRemain) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	private SortedMap<Integer, E> createNTuple() {

@@ -62,11 +62,11 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
 	}
 
-	public int getInitialNTupleCount() {
+	public int getCountOfInitialNTuples() {
 		return fInitialNTupleCount;
 	}
 	
-	public int getCurrentNTupleCount() {
+	public int getCountOfRemainingNTuples() {
 		return fCurrentNTupleCount;
 	}
 
