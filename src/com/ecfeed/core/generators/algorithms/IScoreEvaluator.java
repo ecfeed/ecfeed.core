@@ -14,5 +14,5 @@ public interface IScoreEvaluator<E> {
 	public int getCurrentNTupleCount();
 
 	public int getScore(SortedMap<Integer, E> tuple);
-	public void update(List<E> test);
+	public void update(SortedMap<Integer, E> tuple);
 }

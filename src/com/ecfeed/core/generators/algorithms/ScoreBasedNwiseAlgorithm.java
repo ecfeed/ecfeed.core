@@ -98,8 +98,17 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 			}    
 		}
 
-		fScoreEvaluator.update(resultTuple);
+		updateScoreEvaluator(resultTuple);
+		
 		return resultTuple;                              
+	}
+
+	private void updateScoreEvaluator(List<E> resultTuple) {
+		
+		SortedMap<Integer, E> sortedMapTuple = 
+				TuplesHelper.convertExtendedTupleToSortedMapTuple(resultTuple);
+		
+		fScoreEvaluator.update(sortedMapTuple);
 	}
 
 	

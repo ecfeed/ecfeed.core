@@ -201,9 +201,6 @@ final public class TuplesHelper
 			tupleWithoutDimensions.add(choice);
 		}
 
-		System.out.println("\n convertSortedMapTupleToTupleWithoutDimensions, initial tuple: " + tuple);
-		System.out.println("Tuple without dimensions: " + tupleWithoutDimensions);
-		
 		return tupleWithoutDimensions;
 	}
 
@@ -220,9 +217,6 @@ final public class TuplesHelper
 			}
 		}
 
-		System.out.println("\n convertExtendedTupleToSortedMapTuple, extendedTuple: " + extendeTuple);
-		System.out.println("Sorted map tuple: " + sortedMapTuple);
-		
 		return sortedMapTuple;
 	}
 	

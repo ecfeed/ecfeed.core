@@ -78,19 +78,18 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return 0;
 	}
-	
+
 	@Override
 	public int getScore(SortedMap<Integer, E> tuple) {
-		
+
 		List<E> tupleWithoutDimensions = TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
-		
+
 		int score = getScore(tupleWithoutDimensions);
-		
+
 		return score;
 	}
 
-	@Override
-	public void update(List<E> testCase) {
+	private void update(List<E> testCase) {
 
 		if (testCase.size() < fN)
 			return;
@@ -100,6 +99,14 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		calculateOccurenciesOfTuples();	
 		fScores.clear();
 		calculateScoresForTuples(fN);
+	}
+
+	@Override
+	public void update(SortedMap<Integer, E> tuple) {
+
+		List<E> tupleWithoutDimensions = TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
+
+		update(tupleWithoutDimensions);
 	}
 
 	//	@Override
