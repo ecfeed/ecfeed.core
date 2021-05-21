@@ -13,6 +13,7 @@ public interface IScoreEvaluator<E> {
 	public int getInitialNTupleCount();
 	public int getCurrentNTupleCount();
 
+	public boolean contains(SortedMap<Integer, E> tmpTuple);
 	public int getScore(SortedMap<Integer, E> tuple);
 	public void update(SortedMap<Integer, E> tuple);
 }

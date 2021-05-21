@@ -66,6 +66,17 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return countNTuples(); // TODO - count full tuples during delete ?
 	}
 
+	@Override
+	public boolean contains(SortedMap<Integer, E> tuple) {
+
+		List<E> tupleWithoutDimensions = 
+				TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
+
+		boolean result = fTupleOccurences.containsKey(tupleWithoutDimensions);
+
+		return result;
+	}
+
 	private int getScore(List<E> tuple) {
 
 		if (tuple.size() > fN) {
