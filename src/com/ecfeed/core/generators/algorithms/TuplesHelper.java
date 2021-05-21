@@ -2,6 +2,7 @@ package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -190,5 +191,40 @@ final public class TuplesHelper
 		return fConstraintEvaluator.evaluate(test);
 	}
 
+	public static <E> List<E> convertSortedMapTupleToTupleWithoutDimensions(SortedMap<Integer, E> tuple) {
+
+		List<E> tupleWithoutDimensions = new ArrayList<>();
+
+		for (Map.Entry<Integer, E> entry : tuple.entrySet()) {
+			
+			E choice = entry.getValue();
+			tupleWithoutDimensions.add(choice);
+		}
+
+		System.out.println("\n convertSortedMapTupleToTupleWithoutDimensions, initial tuple: " + tuple);
+		System.out.println("Tuple without dimensions: " + tupleWithoutDimensions);
+		
+		return tupleWithoutDimensions;
+	}
+
+	public static <E> SortedMap<Integer, E> convertExtendedTupleToSortedMapTuple(List<E> extendeTuple) {
+
+		SortedMap<Integer, E> sortedMapTuple = new TreeMap<>(); 
+
+		for (int index = 0; index < extendeTuple.size(); index++) {
+			
+			E choice = extendeTuple.get(index);
+			
+			if (choice != null) {
+				sortedMapTuple.put(index, choice);
+			}
+		}
+
+		System.out.println("\n convertExtendedTupleToSortedMapTuple, extendedTuple: " + extendeTuple);
+		System.out.println("Sorted map tuple: " + sortedMapTuple);
+		
+		return sortedMapTuple;
+	}
+	
 
 }

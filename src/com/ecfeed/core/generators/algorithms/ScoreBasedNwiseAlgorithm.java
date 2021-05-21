@@ -3,6 +3,7 @@ package com.ecfeed.core.generators.algorithms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -139,21 +140,30 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		return false;
 	}
 	
+//	private int getScore(List<E> extendedTuple) {
+//
+//		List<E> compressedTuple = new ArrayList<>();
+//
+//		for (E choice : extendedTuple) {
+//
+//			if (choice != null) {
+//				compressedTuple.add(choice);
+//			}
+//		}
+//
+//		int score = fScoreEvaluator.getScore(compressedTuple);
+//		return score;
+//	}
+
 	private int getScore(List<E> extendedTuple) {
 
-		List<E> compressedTuple = new ArrayList<>();
-
-		for (E choice : extendedTuple) {
-
-			if (choice != null) {
-				compressedTuple.add(choice);
-			}
-		}
-
-		int score = fScoreEvaluator.getScore(compressedTuple);
+		SortedMap<Integer, E> sortedMapTuple = 
+				TuplesHelper.convertExtendedTupleToSortedMapTuple(extendedTuple);
+		
+		int score = fScoreEvaluator.getScore(sortedMapTuple);
 		return score;
 	}
-
+	
 	private List<E> initializeTuple(int countOfDimensions) {
 
 		List<E> expandedTest = new ArrayList<>();

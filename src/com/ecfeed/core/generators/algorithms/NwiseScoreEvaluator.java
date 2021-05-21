@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -65,8 +66,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return countNTuples(); // TODO - count full tuples during delete ?
 	}
 
-	@Override
-	public int getScore(List<E> tuple) {
+	private int getScore(List<E> tuple) {
 
 		if (tuple.size() > fN) {
 			return calculateScoreForTupleLongerThanN(tuple, fN);
@@ -77,6 +77,16 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		}
 
 		return 0;
+	}
+	
+	@Override
+	public int getScore(SortedMap<Integer, E> tuple) {
+		
+		List<E> tupleWithoutDimensions = TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
+		
+		int score = getScore(tupleWithoutDimensions);
+		
+		return score;
 	}
 
 	@Override
