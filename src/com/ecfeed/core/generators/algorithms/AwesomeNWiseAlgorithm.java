@@ -88,7 +88,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 		IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
-		List<E> tuple = getBestMaxTuple(generatorProgressMonitor);
+		List<E> tuple = findBestFullTuple(generatorProgressMonitor);
 
 		if (tuple == null) {
 			AlgoLogger.log("Tuple is null", 1, fLogLevel);
@@ -113,9 +113,9 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		return result;
 	}
 
-	private List<E> getBestMaxTuple(IEcfProgressMonitor generatorProgressMonitor) {
+	private List<E> findBestFullTuple(IEcfProgressMonitor generatorProgressMonitor) {
 
-		SortedMap<Integer, E> bestTuple = null;
+		SortedMap<Integer, E> bestFullTuple = null;
 		int bestTupleScore = -1;
 
 		for (int repetition = 0; repetition < MAX_REPETITIONS; repetition++) {
@@ -129,23 +129,23 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 				return null;
 			}
 
-			SortedMap<Integer, E> nTuple = createNTuple();
+			SortedMap<Integer, E> fullTuple = findFullTupleWithGoodScores();
 
-			int nTupleScore = fAwesomeScoreEvaluator.calculateScoreForNTuple(nTuple);
+			int nTupleScore = fAwesomeScoreEvaluator.calculateScoreForFullTuple(fullTuple);
 
 			if (nTupleScore > bestTupleScore) {
 				bestTupleScore = nTupleScore;
-				bestTuple = nTuple;
+				bestFullTuple = fullTuple;
 			}
 		}
 
-		AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
+		AlgoLogger.log("Best max tuple", bestFullTuple, 1, fLogLevel);
 
-		fAwesomeScoreEvaluator.update(bestTuple);
+		fAwesomeScoreEvaluator.update(bestFullTuple);
 		
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
-		final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
+		final List<E> result = AlgorithmHelper.uncompressTuple(bestFullTuple, fDimCount);
 
 		AlgoLogger.log("Result of getNext - best max tuple", result, 1, fLogLevel);
 		return result;
@@ -162,16 +162,16 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 		return true;
 	}
 
-	private SortedMap<Integer, E> createNTuple() {
+	private SortedMap<Integer, E> findFullTupleWithGoodScores() {
 
 		SortedMap<Integer, E> nTuple = createNTupleWithBestScores();
-
-		SortedMap<Integer, E> maxTuple = findBestMaxTupleAfterConstraints(nTuple);
-
-		return maxTuple;
+		
+		SortedMap<Integer, E> fullTuple = findBestFullTupleAfterConstraints(nTuple);
+		
+		return fullTuple;
 	}
 
-	private SortedMap<Integer, E> findBestMaxTupleAfterConstraints(SortedMap<Integer, E> nTuple) {
+	private SortedMap<Integer, E> findBestFullTupleAfterConstraints(SortedMap<Integer, E> nTuple) {
 
 		SortedMap<Integer, E> resultMaxTuple = nTuple;
 

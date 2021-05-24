@@ -23,7 +23,7 @@ public interface IAwesomeScoreEvaluator<E> {
 	public int getCountOfInitialNTuples();
 	public int getCountOfRemainingNTuples();
 
-	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple);
+	public int calculateScoreForFullTuple(SortedMap<Integer, E> nTuple);
 
 	public boolean contains(SortedMap<Integer, E> tmpTuple);
 

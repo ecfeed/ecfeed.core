@@ -56,7 +56,7 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
 		fInitialNTupleCount = allValidNTuples.size();
 		fCurrentNTupleCount = fInitialNTupleCount;
-		
+
 		fPartialTuples = createPartialTuples(allValidNTuples);
 
 		fAllDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
@@ -65,7 +65,7 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	public int getCountOfInitialNTuples() {
 		return fInitialNTupleCount;
 	}
-	
+
 	public int getCountOfRemainingNTuples() {
 		return fCurrentNTupleCount;
 	}
@@ -138,18 +138,18 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	}
 
 	@Override
-	public int calculateScoreForNTuple(SortedMap<Integer, E> nTuple) {
+	public int calculateScoreForFullTuple(SortedMap<Integer, E> fullTuple) {
 
 		int score = 0;
 
 		for (List<Integer> combinationOfDimensions : fAllDimensionCombinations) {
 
-			SortedMap<Integer, E> dTuple = Maps.newTreeMap();
+			SortedMap<Integer, E> nTuple = Maps.newTreeMap();
 
 			for (Integer dimension : combinationOfDimensions)
-				dTuple.put(dimension, nTuple.get(dimension));
+				nTuple.put(dimension, fullTuple.get(dimension));
 
-			if (fPartialTuples.contains(dTuple))
+			if (fPartialTuples.contains(nTuple))
 				score++;
 		}
 
