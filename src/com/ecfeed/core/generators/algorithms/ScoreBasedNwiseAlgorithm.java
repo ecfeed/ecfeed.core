@@ -134,11 +134,11 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	public boolean allRequiredNTuplesCovered() {
 
-		int initialNTupleCount = fScoreEvaluator.getInitialNTupleCount();
+		int initialNTupleCount = fScoreEvaluator.getCountOfInitialNTuples();
 		
 		int tuplesToCover = initialNTupleCount * fCoverage / 100;
 
-		int currentNTupleCount = fScoreEvaluator.getCurrentNTupleCount();
+		int currentNTupleCount = fScoreEvaluator.getCountOfRemainingNTuples();
 
 		int tuplesCovered = initialNTupleCount - currentNTupleCount;
 

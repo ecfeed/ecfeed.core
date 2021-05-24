@@ -57,12 +57,12 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	@Override
-	public int getInitialNTupleCount() {
+	public int getCountOfInitialNTuples() {
 		return fInitialNTupleCount;
 	}
 
 	@Override
-	public int getCurrentNTupleCount() {
+	public int getCountOfRemainingNTuples() {
 		return countNTuples(); // TODO - count full tuples during delete ?
 	}
 
