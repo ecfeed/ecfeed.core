@@ -132,13 +132,13 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 	}
 
 	@Override
-	public int getCountOfTuple(SortedMap<Integer, E> tuple) {
+	public int getCountOfTuples(SortedMap<Integer, E> tuple) {
 
 		return fPartialTuples.count(tuple);
 	}
 
 	@Override
-	public int calculateScoreForFullTuple(SortedMap<Integer, E> fullTuple) {
+	public int getScoreForTestCase(SortedMap<Integer, E> fullTuple) {
 
 		int score = 0;
 

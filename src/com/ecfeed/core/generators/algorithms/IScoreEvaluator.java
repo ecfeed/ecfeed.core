@@ -9,11 +9,11 @@ import com.ecfeed.core.generators.api.IConstraintEvaluator;
 public interface IScoreEvaluator<E> {
 
 	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
-
+	public int getScore(SortedMap<Integer, E> tuple);
+	public void update(SortedMap<Integer, E> testCase);
 	public int getCountOfInitialNTuples();
 	public int getCountOfRemainingNTuples();
-
+	
 	public boolean contains(SortedMap<Integer, E> tmpTuple);
-	public int getScore(SortedMap<Integer, E> tuple);
-	public void update(SortedMap<Integer, E> tuple);
+//	public int getCountOfTuples(SortedMap<Integer, E> tuple); // TODO implement
 }

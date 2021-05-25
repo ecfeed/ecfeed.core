@@ -131,7 +131,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 			SortedMap<Integer, E> fullTuple = findFullTupleWithGoodScores();
 
-			int nTupleScore = fAwesomeScoreEvaluator.calculateScoreForFullTuple(fullTuple);
+			int nTupleScore = fAwesomeScoreEvaluator.getScoreForTestCase(fullTuple);
 
 			if (nTupleScore > bestTupleScore) {
 				bestTupleScore = nTupleScore;
@@ -271,8 +271,7 @@ public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
 
 				tuple.put(dimension, dItem.getItem());
 
-				//				final int tupleScore = fPartialTuples.count(tuple);
-				final int tupleScore = fAwesomeScoreEvaluator.getCountOfTuple(tuple);
+				final int tupleScore = fAwesomeScoreEvaluator.getCountOfTuples(tuple);
 
 				if (tupleScore > bestTupleScore) {
 					bestItem = dItem;

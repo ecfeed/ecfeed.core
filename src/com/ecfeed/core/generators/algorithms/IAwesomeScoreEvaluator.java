@@ -19,15 +19,11 @@ import com.ecfeed.core.generators.api.IConstraintEvaluator;
 public interface IAwesomeScoreEvaluator<E> {
 
 	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
-
+	public int getScoreForTestCase(SortedMap<Integer, E> testCase);
+	public void update(SortedMap<Integer, E> testCase);
 	public int getCountOfInitialNTuples();
 	public int getCountOfRemainingNTuples();
-
-	public int calculateScoreForFullTuple(SortedMap<Integer, E> nTuple);
-
-	public boolean contains(SortedMap<Integer, E> tmpTuple);
-
-	public int getCountOfTuple(SortedMap<Integer, E> tuple);
-
-	public void update(SortedMap<Integer, E> affectingTuple);
+	
+	public int getCountOfTuples(SortedMap<Integer, E> tuple);
+	public boolean contains(SortedMap<Integer, E> tuple);
 }

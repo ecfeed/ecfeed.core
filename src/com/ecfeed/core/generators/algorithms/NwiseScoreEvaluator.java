@@ -91,7 +91,9 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	}
 
 	@Override
-	public int getScore(SortedMap<Integer, E> tuple) {
+	public int getScore(
+			SortedMap<Integer, E> tuple // this can be either a full or shorter tuple
+			) {
 
 		List<E> tupleWithoutDimensions = TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
 

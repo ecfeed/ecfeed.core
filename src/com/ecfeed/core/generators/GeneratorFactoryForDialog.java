@@ -43,7 +43,7 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 	}
 
 	public static boolean isScoredNWiseGeneratorActive() {
-		return false;
+		return true;
 	}
 	
 	public String[] getGeneratorNames() {
