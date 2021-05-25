@@ -1,6 +1,7 @@
 package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,37 +187,42 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	//	}
 
 	private void createOccurenciesTab(List<List<E>> input) {
-
-		int[] encode = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
-		int[] arrayOfDimensions = input.stream().mapToInt(List::size).toArray();
-
-		boolean shouldAdd = true;
-
-		while (shouldAdd) {
-			shouldAdd = shouldAddTuple(encode, arrayOfDimensions);
-			if (shouldAdd)
-				addTupleToOccurencesTab(encode, input);
+		
+		int[] countsOfChoicesForAllDimensions = input.stream().mapToInt(List::size).toArray();
+		
+		boolean isNextTuple = true;
+		int[] currentIndexesOfTuple = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
+		
+		while (isNextTuple) {
+			
+			isNextTuple = 
+					isNextTuple(
+							countsOfChoicesForAllDimensions, 
+							currentIndexesOfTuple); // in-out parameter !!
+			
+			if (isNextTuple)
+				addTupleToOccurencesTab(currentIndexesOfTuple, input);
 		}
 	}
 
-	private boolean shouldAddTuple(int[] encode, int[] range) {
+	private boolean isNextTuple(int[] range, int[] indexesOfTuple) {
 
-		for (int j = encode.length - 1; j >= 0; j--) {
-			if (encode[j] + 1 == range[j]) {
-				encode[j] = NOT_INCLUDE;
+		for (int j = indexesOfTuple.length - 1; j >= 0; j--) {
+			if (indexesOfTuple[j] + 1 == range[j]) {
+				indexesOfTuple[j] = NOT_INCLUDE;
 			} else {
-				encode[j] = encode[j] + 1;
+				indexesOfTuple[j] = indexesOfTuple[j] + 1;
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private void addTupleToOccurencesTab(int[] dimensions, List<List<E>> input) {
+	private void addTupleToOccurencesTab(int[] indexesOfTuple, List<List<E>> input) {
 
-		List<E> tuple = decodeTuple(dimensions, input);
+		List<E> tuple = decodeTuple(indexesOfTuple, input);
 
-		List<E> expandedTuple = expandTuple(tuple, dimensions);
+		List<E> expandedTuple = expandTuple(tuple, indexesOfTuple);
 
 		if (tuple.size() > fN || checkConstraints(expandedTuple) == EvaluationResult.FALSE)
 			return;
@@ -226,10 +232,17 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		fTupleOccurences.put(tuple, isFullTuple);
 	}
 
-	private List<E> decodeTuple(int[] dimensions, List<List<E>> input) {
+	private List<E> decodeTuple(int[] indexesOfTuple, List<List<E>> input) {
 
-		return IntStream.range(0, dimensions.length).mapToObj(i -> dimensions[i] == -1 ? null : input.get(i).get(dimensions[i]))
-				.filter(Objects::nonNull).collect(Collectors.toList());
+		IntStream stream = Arrays.stream(indexesOfTuple);
+		
+		List<E> tuple = IntStream
+				.range(0, indexesOfTuple.length)
+				.mapToObj(i -> indexesOfTuple[i] == -1 ? null : input.get(i).get(indexesOfTuple[i]))
+				.filter(Objects::nonNull)
+				.collect(Collectors.toList());
+		
+		return tuple;
 	}
 
 	private void calculateOccurenciesOfTuples() {
@@ -296,16 +309,15 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	}
 
-
-	private List<E> expandTuple(List<E> compressedTuple, int[] encodePattern) {
+	private List<E> expandTuple(List<E> compressedTuple, int[] indexesOfTuple) {
 
 		List<E> expandedTuple = new ArrayList<>();
 
 		int compressedTupleIndex = 0;
 
-		for (int index = 0; index < encodePattern.length; index++) {
+		for (int index = 0; index < indexesOfTuple.length; index++) {
 
-			int positionCode = encodePattern[index];
+			int positionCode = indexesOfTuple[index];
 
 			if (positionCode == NOT_INCLUDE) {
 				expandedTuple.add(null);
