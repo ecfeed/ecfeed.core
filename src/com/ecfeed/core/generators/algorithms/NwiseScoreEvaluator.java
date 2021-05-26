@@ -1,7 +1,6 @@
 package com.ecfeed.core.generators.algorithms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	@Override
 	public int getCountOfRemainingNTuples() {
-		return countNTuples(); // TODO - count full tuples during delete ?
+		return countNTuples();
 	}
 
 	@Override
@@ -76,6 +75,17 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		boolean result = fTupleOccurences.containsKey(tupleWithoutDimensions);
 
 		return result;
+	}
+
+	@Override
+	public int getCountOfTuples(SortedMap<Integer, E> tuple) {
+
+		List<E> tupleWithoutDimensions = 
+				TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
+
+		int occurences = fTupleOccurences.get(tupleWithoutDimensions);
+
+		return occurences;
 	}
 
 	private int getScore(List<E> tuple) {
@@ -187,19 +197,19 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	//	}
 
 	private void createOccurenciesTab(List<List<E>> input) {
-		
+
 		int[] countsOfChoicesForAllDimensions = input.stream().mapToInt(List::size).toArray();
-		
+
 		boolean isNextTuple = true;
 		int[] currentIndexesOfTuple = IntStream.range(0, input.size()).map(e -> NOT_INCLUDE).toArray();
-		
+
 		while (isNextTuple) {
-			
+
 			isNextTuple = 
 					isNextTuple(
 							countsOfChoicesForAllDimensions, 
 							currentIndexesOfTuple); // in-out parameter !!
-			
+
 			if (isNextTuple)
 				addTupleToOccurencesTab(currentIndexesOfTuple, input);
 		}
@@ -234,14 +244,12 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	private List<E> decodeTuple(int[] indexesOfTuple, List<List<E>> input) {
 
-		IntStream stream = Arrays.stream(indexesOfTuple);
-		
 		List<E> tuple = IntStream
 				.range(0, indexesOfTuple.length)
 				.mapToObj(i -> indexesOfTuple[i] == -1 ? null : input.get(i).get(indexesOfTuple[i]))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
-		
+
 		return tuple;
 	}
 

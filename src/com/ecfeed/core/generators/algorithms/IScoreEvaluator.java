@@ -15,5 +15,5 @@ public interface IScoreEvaluator<E> {
 	public int getCountOfRemainingNTuples();
 	
 	public boolean contains(SortedMap<Integer, E> tmpTuple);
-//	public int getCountOfTuples(SortedMap<Integer, E> tuple); // TODO implement
+	public int getCountOfTuples(SortedMap<Integer, E> tuple);
 }
