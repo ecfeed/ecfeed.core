@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
 
 public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
@@ -19,6 +20,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	private final Map<List<E>, Integer> fScores = new HashMap<>();
 
 	private static final int NOT_INCLUDE = -1;
+	private int fCountOfDimensions;
 	private int fN;
 	private int fInitialNTupleCount;
 
@@ -38,6 +40,8 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		if (input == null) {
 			GeneratorException.report("Input of N-wise score evaluator should not be empty.");
 		}
+		
+		fCountOfDimensions = input.size();
 
 		fConstraintEvaluator = constraintEvaluator;
 
@@ -88,19 +92,17 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return occurences;
 	}
 
-	private int getScore(List<E> tuple) {
-
-		if (tuple.size() > fN) {
-			return calculateScoreForTupleLongerThanN(tuple, fN);
+	@Override
+	public int getScoreForTestCase(SortedMap<Integer, E> testCase) {
+		
+		if (testCase.size() != fCountOfDimensions) {
+			ExceptionHelper.reportRuntimeException("Invalid size of test case.");
 		}
-
-		if (fScores.containsKey(tuple)) {
-			return fScores.get(tuple);
-		}
-
-		return 0;
+		
+		int score = getScore(testCase);
+		return score;
 	}
-
+	
 	@Override
 	public int getScore(
 			SortedMap<Integer, E> tuple // this can be either a full or shorter tuple
@@ -113,6 +115,19 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 		return score;
 	}
 
+	private int getScore(List<E> tuple) {
+
+		if (tuple.size() > fN) {
+			return calculateScoreForTupleLongerThanN(tuple, fN);
+		}
+
+		if (fScores.containsKey(tuple)) {
+			return fScores.get(tuple);
+		}
+
+		return 0;
+	}
+	
 	private void update(List<E> testCase) {
 
 		if (testCase.size() < fN)
