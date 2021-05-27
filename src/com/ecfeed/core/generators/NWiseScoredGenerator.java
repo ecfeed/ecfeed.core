@@ -12,7 +12,7 @@ package com.ecfeed.core.generators;
 
 import java.util.List;
 
-import com.ecfeed.core.generators.algorithms.IScoreEvaluator;
+import com.ecfeed.core.generators.algorithms.IAwesomeScoreEvaluator;
 import com.ecfeed.core.generators.algorithms.NwiseScoreEvaluator;
 import com.ecfeed.core.generators.algorithms.ScoreBasedNwiseAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
@@ -36,7 +36,7 @@ public class NWiseScoredGenerator<E> extends NWiseGeneratorBase<E> {
 		int N = (int) getParameterValue(getDefinitionN());
 		int coverage = (int) getParameterValue(getDefinitionCoverage());
 
-		IScoreEvaluator<E> fScoreEvaluator = new NwiseScoreEvaluator<>(N);
+		IAwesomeScoreEvaluator<E> fScoreEvaluator = new NwiseScoreEvaluator<>(N);
 		setAlgorithm(new ScoreBasedNwiseAlgorithm<E>(fScoreEvaluator, coverage));
 	}
 
