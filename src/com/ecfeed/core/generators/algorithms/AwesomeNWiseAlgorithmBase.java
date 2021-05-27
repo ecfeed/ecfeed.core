@@ -18,15 +18,14 @@ import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 
-public abstract class AbstractNWiseAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorithm<E> {
+public abstract class AwesomeNWiseAlgorithmBase<E> extends AbstractAlgorithm<E> {
 
 	private CartesianProductAlgorithm<E> fCartesianAlgorithm;
 	protected int N;
 	private int fTuplesToGenerate;
-	protected int fProgress; // TODO - remove ?
 	protected int fCoverage;
 
-	public AbstractNWiseAlgorithm(int n, int coverage) {
+	public AwesomeNWiseAlgorithmBase(int n, int coverage) {
 		fCoverage = coverage;
 		N = n;
 	}

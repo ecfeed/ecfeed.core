@@ -27,7 +27,7 @@ import com.ecfeed.core.utils.SystemLogger;
 import com.google.common.collect.Maps;
 
 
-public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
+public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 	static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
 	static final int MAX_TUPLES = 250000;
