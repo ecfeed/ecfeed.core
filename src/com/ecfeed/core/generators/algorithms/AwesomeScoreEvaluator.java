@@ -155,5 +155,15 @@ public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
 
 		return score;
 	}
+	
+	@Override
+	public int getScore(SortedMap<Integer, E> tuple) {
+		
+		if (fPartialTuples.contains(tuple)) {
+			return 1;
+		}
+		
+		return 0;
+	}
 
 }

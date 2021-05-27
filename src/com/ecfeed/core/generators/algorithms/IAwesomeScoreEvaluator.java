@@ -20,6 +20,7 @@ public interface IAwesomeScoreEvaluator<E> {
 
 	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
 	public int getScoreForTestCase(SortedMap<Integer, E> testCase);
+	public int getScore(SortedMap<Integer, E> tuple);
 	public void update(SortedMap<Integer, E> testCase);
 	public int getCountOfInitialNTuples();
 	public int getCountOfRemainingNTuples();
