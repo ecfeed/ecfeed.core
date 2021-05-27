@@ -25,7 +25,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 
 
-public class AwesomeScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
+public class AwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	static final int MAX_TUPLES = 250000;	
 

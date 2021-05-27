@@ -16,13 +16,13 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	private int fDimensionCount; // Total number of dimensions for an input domain
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
-	private IAwesomeScoreEvaluator<E> fScoreEvaluator;
+	private IScoreEvaluator<E> fScoreEvaluator;
 	protected List<List<Integer>> fHistoryDimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
 	private int fCoverage;
 	// randomly generated dimension order
 	// could be different)
 
-	public ScoreBasedNwiseAlgorithm(IAwesomeScoreEvaluator<E> fScoreEvaluator, int coverage) throws GeneratorException {
+	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator, int coverage) throws GeneratorException {
 
 		this.fScoreEvaluator = fScoreEvaluator;
 		fCoverage = coverage;

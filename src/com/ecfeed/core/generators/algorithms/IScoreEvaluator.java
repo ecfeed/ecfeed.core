@@ -16,7 +16,7 @@ import java.util.SortedMap;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 
-public interface IAwesomeScoreEvaluator<E> {
+public interface IScoreEvaluator<E> {
 
 	public void initialize(List<List<E>> input, IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException;
 	public int getScoreForTestCase(SortedMap<Integer, E> testCase);

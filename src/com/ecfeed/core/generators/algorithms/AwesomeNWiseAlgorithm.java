@@ -40,7 +40,7 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 	static final int fLogLevel = 0;
 
-	IAwesomeScoreEvaluator<E> fAwesomeScoreEvaluator = null;
+	IScoreEvaluator<E> fAwesomeScoreEvaluator = null;
 
 	public AwesomeNWiseAlgorithm(int n, int coverage) {
 		super(n, coverage);

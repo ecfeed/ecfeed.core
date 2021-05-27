@@ -14,7 +14,7 @@ import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 
-public class NwiseScoreEvaluator<E> implements IAwesomeScoreEvaluator<E> {
+public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	private final Map<List<E>, Integer> fTupleOccurences = new HashMap<>();
 	private final Map<List<E>, Integer> fScores = new HashMap<>();
