@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 
 import org.junit.Test;
 
@@ -119,23 +120,28 @@ public class NwiseScoreEvaluatorTest {
 		List<String> tuple3 = createTuple("V11", "V21", "V32"); // two choices from tuple1 used
 		List<String> tuple4 = createTuple("V13", "V23", "V33"); // choices not used before
 
-		int score1 = evaluator.getScore(tuple1);
+		SortedMap<Integer, String> tuple1e = TuplesHelper.convertExtendedTupleToSortedMapTuple(tuple1);
+		SortedMap<Integer, String> tuple2e = TuplesHelper.convertExtendedTupleToSortedMapTuple(tuple2);
+		SortedMap<Integer, String> tuple3e = TuplesHelper.convertExtendedTupleToSortedMapTuple(tuple3);
+		SortedMap<Integer, String> tuple4e = TuplesHelper.convertExtendedTupleToSortedMapTuple(tuple4);
+		
+		int score1 = evaluator.getScore(tuple1e);
 
-		int score2BeforeUpdate = evaluator.getScore(tuple2);	
-		checkScoreAfterUpdate(evaluator, tuple1);
-		int score2AfterUpdate = evaluator.getScore(tuple2);
+		int score2BeforeUpdate = evaluator.getScore(tuple2e);	
+		checkScoreAfterUpdate(evaluator, tuple1e);
+		int score2AfterUpdate = evaluator.getScore(tuple2e);
 
 		checkScoreDecrease(score2BeforeUpdate, score2AfterUpdate);
 
-		int score3BeforeUpdate = evaluator.getScore(tuple3);
-		checkScoreAfterUpdate(evaluator, tuple2);
-		int score3AfterUpdate = evaluator.getScore(tuple3);
+		int score3BeforeUpdate = evaluator.getScore(tuple3e);
+		checkScoreAfterUpdate(evaluator, tuple2e);
+		int score3AfterUpdate = evaluator.getScore(tuple3e);
 
 		checkScoreDecrease(score3BeforeUpdate, score3AfterUpdate);
 
-		checkScoreAfterUpdate(evaluator, tuple3);
+		checkScoreAfterUpdate(evaluator, tuple3e);
 
-		int score4 = evaluator.getScore(tuple4);
+		int score4 = evaluator.getScore(tuple4e);
 
 		if (score1 != score4) {
 			ExceptionHelper.reportRuntimeException("Scores 1 and 4 should be equal.");
@@ -152,7 +158,9 @@ public class NwiseScoreEvaluatorTest {
 
 	}
 
-	private static void checkScoreAfterUpdate(NwiseScoreEvaluator<String> evaluator, List<String> tuple) {
+	private static void checkScoreAfterUpdate(
+			NwiseScoreEvaluator<String> evaluator, 
+			SortedMap<Integer, String> tuple) {
 
 		int scoreBefore = evaluator.getScore(tuple);
 

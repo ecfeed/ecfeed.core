@@ -20,7 +20,7 @@ import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
 import org.junit.Test;
 
-import com.ecfeed.core.generators.algorithms.AbstractNWiseAlgorithm;
+import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithmBase;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
@@ -44,8 +44,8 @@ public class NWiseGeneratorTest {
 
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
-			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
-			assertEquals(2, ((AbstractNWiseAlgorithm<String>) algorithm).getN());
+			assertTrue(algorithm instanceof AwesomeNWiseAlgorithmBase);
+			assertEquals(2, ((AwesomeNWiseAlgorithmBase<String>) algorithm).getN());
 
 			try {
 				GeneratorValue generatorArgumentN2 = new GeneratorValue(generator.getDefinitionN(), "5");
@@ -91,9 +91,9 @@ public class NWiseGeneratorTest {
 
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
 			IAlgorithm<String> algorithm = generator.getAlgorithm();
-			assertTrue(algorithm instanceof AbstractNWiseAlgorithm);
+			assertTrue(algorithm instanceof AwesomeNWiseAlgorithmBase);
 			assertEquals(100,
-					((AbstractNWiseAlgorithm<String>) algorithm).getCoverage());
+					((AwesomeNWiseAlgorithmBase<String>) algorithm).getCoverage());
 
 			try {
 				GeneratorValue generatorArgumentCoverage2 = new GeneratorValue(generator.getDefinitionCoverage(), "101");
