@@ -40,12 +40,20 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 	static final int fLogLevel = 0;
 
-	IScoreEvaluator<E> fAwesomeScoreEvaluator = null;
+	IScoreEvaluator<E> fScoreEvaluator = null;
 
 	public AwesomeNWiseAlgorithm(int n, int coverage) {
 		super(n, coverage);
 
-		fAwesomeScoreEvaluator = new AwesomeScoreEvaluator<>(getN());
+		if (isShScoreEvaluatorActive()) {
+			fScoreEvaluator = new NwiseScoreEvaluator<>(getN());
+		} else {
+			fScoreEvaluator = new AwesomeScoreEvaluator<>(getN());
+		}
+	}
+
+	private boolean isShScoreEvaluatorActive() {
+		return false;
 	}
 
 	@Override
@@ -56,9 +64,9 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 		try {
 			fAllDimensionedItems = createDimensionedItems(getInput());
 
-			fAwesomeScoreEvaluator.initialize(getInput(), getConstraintEvaluator());
+			fScoreEvaluator.initialize(getInput(), getConstraintEvaluator());
 			
-			int countOfInitialNTuples = fAwesomeScoreEvaluator.getCountOfInitialNTuples();
+			int countOfInitialNTuples = fScoreEvaluator.getCountOfInitialNTuples();
 			
 			fCountOfTuplesAllowedToRemain = 
 					calculateCountOfTuplesAllowedToRemain(
@@ -131,7 +139,7 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 			SortedMap<Integer, E> fullTuple = findFullTupleWithGoodScores();
 
-			int nTupleScore = fAwesomeScoreEvaluator.getScoreForTestCase(fullTuple);
+			int nTupleScore = fScoreEvaluator.getScoreForTestCase(fullTuple);
 
 			if (nTupleScore > bestTupleScore) {
 				bestTupleScore = nTupleScore;
@@ -141,7 +149,7 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 		AlgoLogger.log("Best max tuple", bestFullTuple, 1, fLogLevel);
 
-		fAwesomeScoreEvaluator.update(bestFullTuple);
+		fScoreEvaluator.update(bestFullTuple);
 		
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
@@ -153,7 +161,7 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 	private boolean allRequiredTuplesGenerated() {
 		
-		int countOfRemainingNTuples = fAwesomeScoreEvaluator.getCountOfRemainingNTuples();
+		int countOfRemainingNTuples = fScoreEvaluator.getCountOfRemainingNTuples();
 		
 		if (countOfRemainingNTuples > fCountOfTuplesAllowedToRemain) {
 			return false;
@@ -242,7 +250,7 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 			tmpTuple.put(dimension, item);
 
-			if (fAwesomeScoreEvaluator.contains(tmpTuple))
+			if (fScoreEvaluator.contains(tmpTuple))
 				score++;
 		}
 
@@ -271,7 +279,7 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
 				tuple.put(dimension, dItem.getItem());
 
-				final int tupleScore = fAwesomeScoreEvaluator.getCountOfTuples(tuple);
+				final int tupleScore = fScoreEvaluator.getCountOfTuples(tuple);
 
 				if (tupleScore > bestTupleScore) {
 					bestItem = dItem;

@@ -27,7 +27,7 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 	private IConstraintEvaluator<E> fConstraintEvaluator;
 	private TupleDecompressor<E> fTupleDecompressor;
 
-	public NwiseScoreEvaluator(int argN) throws GeneratorException {
+	public NwiseScoreEvaluator(int argN) {
 
 		this.fN = argN;
 	}
@@ -86,9 +86,15 @@ public class NwiseScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		List<E> tupleWithoutDimensions = 
 				TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
-
-		int occurences = fTupleOccurences.get(tupleWithoutDimensions);
-
+		
+		fTupleOccurences.entrySet().forEach(e -> System.out.println(e));
+		
+		Integer occurences = fTupleOccurences.get(tupleWithoutDimensions);
+		
+		if (occurences == null) {
+			return 0;
+		}
+		
 		return occurences;
 	}
 
