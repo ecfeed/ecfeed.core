@@ -18,6 +18,7 @@ import java.util.SortedMap;
 
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.AlgoLogger;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Maps;
@@ -159,10 +160,21 @@ public class AwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 	@Override
 	public int getScore(SortedMap<Integer, E> tuple) {
 		
-		if (fPartialTuples.contains(tuple)) {
-			return 1;
+		if (tuple.size() == fDimCount) {
+			int score = getScoreForTestCase(tuple);
+			return score;
 		}
 		
+		if (tuple.size() <= N) {
+			
+			if (fPartialTuples.contains(tuple)) {
+				return 1;
+			}
+			
+			return 0;
+		}
+		
+		ExceptionHelper.reportRuntimeException("Calculating score of tuple of this size is not implemented.");
 		return 0;
 	}
 
