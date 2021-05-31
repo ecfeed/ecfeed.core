@@ -26,7 +26,7 @@ import com.google.common.collect.Multiset;
 import com.google.common.collect.Ordering;
 
 
-public class AwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
+public class NWiseAwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	static final int MAX_TUPLES = 250000;	
 
@@ -41,7 +41,7 @@ public class AwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 	static final int fLogLevel = 0;
 
-	public AwesomeScoreEvaluator(int argN) {
+	public NWiseAwesomeScoreEvaluator(int argN) {
 		N = argN;
 	}
 

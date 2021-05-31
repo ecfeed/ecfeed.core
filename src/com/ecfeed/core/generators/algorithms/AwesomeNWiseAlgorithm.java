@@ -48,7 +48,7 @@ public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 		if (isShScoreEvaluatorActive()) {
 			fScoreEvaluator = new NwiseScoreEvaluator<>(getN());
 		} else {
-			fScoreEvaluator = new AwesomeScoreEvaluator<>(getN());
+			fScoreEvaluator = new NWiseAwesomeScoreEvaluator<>(getN());
 		}
 	}
 
