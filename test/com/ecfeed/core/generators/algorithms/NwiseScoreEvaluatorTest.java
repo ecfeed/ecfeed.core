@@ -36,7 +36,7 @@ public class NwiseScoreEvaluatorTest {
 
 //	private void runBestTupleTest() throws GeneratorException {
 //		
-//		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<>(3, 100);
+//		NwiseShScoreEvaluator<String> evaluator = new NwiseShScoreEvaluator<>(3, 100);
 //		
 //		List<List<String>> input = prepareTestInput(5);
 //		
@@ -112,7 +112,7 @@ public class NwiseScoreEvaluatorTest {
 		testInput.add(dim2);
 		testInput.add(dim3);
 
-		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2);
+		NwiseShScoreEvaluator<String> evaluator = new NwiseShScoreEvaluator<String>(2);
 		evaluator.initialize(testInput, null);
 
 		List<String> tuple1 = createTuple("V11", "V21", "V31");
@@ -159,7 +159,7 @@ public class NwiseScoreEvaluatorTest {
 	}
 
 	private static void checkScoreAfterUpdate(
-			NwiseScoreEvaluator<String> evaluator, 
+			NwiseShScoreEvaluator<String> evaluator, 
 			SortedMap<Integer, String> tuple) {
 
 		int scoreBefore = evaluator.getScore(tuple);

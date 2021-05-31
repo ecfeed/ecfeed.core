@@ -18,7 +18,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.generators.algorithms.NwiseScoreEvaluator;
+import com.ecfeed.core.generators.algorithms.NwiseShScoreEvaluator;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
@@ -70,7 +70,7 @@ public class NWiseScoredGeneratorTest {
 		testInput.add(dim4);
 		testInput.add(dim5);
 
-		NwiseScoreEvaluator<String> evaluator = new NwiseScoreEvaluator<String>(2);
+		NwiseShScoreEvaluator<String> evaluator = new NwiseShScoreEvaluator<String>(2);
 		evaluator.initialize(testInput, null);
 
 		NWiseScoredGenerator<String> generator = new NWiseScoredGenerator<>();
