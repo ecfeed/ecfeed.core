@@ -10,453 +10,410 @@
 
 package com.ecfeed.core.generators.algorithms;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 
 import com.ecfeed.core.generators.DimensionedItem;
 import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.utils.*;
-import com.google.common.collect.*;
+import com.ecfeed.core.utils.AlgoLogger;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IEcfProgressMonitor;
+import com.ecfeed.core.utils.SystemLogger;
+import com.google.common.collect.Maps;
 
 
-public class AwesomeNWiseAlgorithm<E> extends AbstractNWiseAlgorithm<E> {
+public class AwesomeNWiseAlgorithm<E> extends AwesomeNWiseAlgorithmBase<E> {
 
-    static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
-    static final int MAX_TUPLES = 250000;
+	static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
+	static final int MAX_TUPLES = 250000;
 
-    private Multiset<SortedMap<Integer, E>> fPartialNTo0Tuples = null;
+	private List<DimensionedItem<E>> fAllDimensionedItems = null;
 
-    private List<DimensionedItem<E>> fAllDimensionedItems = null;
+	private int fCountOfTuplesAllowedToRemain; // allowed to remain due to coverage parameter
 
-    private IntegerHolder fIgnoreCount;
+	private int fDimCount;
 
-    private IntegerHolder fNTuplesCount;
+	static final int fLogLevel = 0;
 
-    private int fDimCount;
+	IScoreEvaluator<E> fScoreEvaluator = null;
 
-    static final int fLogLevel = 0;
+	public AwesomeNWiseAlgorithm(int n, int coverage) {
+		super(n, coverage);
 
-    public AwesomeNWiseAlgorithm(int n, int coverage) {
-        super(n, coverage);
-    }
+		if (isShScoreEvaluatorActive()) {
+			fScoreEvaluator = new NwiseShScoreEvaluator<>(getN());
+		} else {
+			fScoreEvaluator = new NWiseAwesomeScoreEvaluator<>(getN());
+		}
+	}
 
-    @Override
-    public void reset() {
+	private boolean isShScoreEvaluatorActive() {
+		return false;
+	}
 
-        fIgnoreCount = new IntegerHolder(0);
-        fDimCount = getInput().size();
-        try {
-            fAllDimensionedItems = createDimensionedItems(getInput());
-            List<SortedMap<Integer, E>> allNTuples = getAllNTuples(getInput(), N);
-            fNTuplesCount = calculateNTuplesCount(allNTuples);
-            fPartialNTo0Tuples = createPartialNTo0Tuples(allNTuples);
-            fIgnoreCount.set(calculateIgnoreCount());
-        } catch (Exception e) {
+	@Override
+	public void reset() {
 
-            SystemLogger.logCatch(e);
+		fDimCount = getInput().size();
+		
+		try {
+			fAllDimensionedItems = createDimensionedItems(getInput());
 
-            ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
-        }
+			fScoreEvaluator.initialize(getInput(), getConstraintEvaluator());
+			
+			int countOfInitialNTuples = fScoreEvaluator.getCountOfInitialNTuples();
+			
+			fCountOfTuplesAllowedToRemain = 
+					calculateCountOfTuplesAllowedToRemain(
+							getCoverage(), countOfInitialNTuples);
+		
+			super.reset(countOfInitialNTuples * getCoverage() / 100);
+			
+		} catch (Exception e) {
 
-        super.reset(fNTuplesCount.get() * getCoverage() / 100);
-    }
+			SystemLogger.logCatch(e);
 
-    private int calculateIgnoreCount() {
+			ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
+		}
+	}
 
-        int result = fNTuplesCount.get() * (100 - getCoverage()) / 100;
-        AlgoLogger.log("Ignore count", result, 1, fLogLevel);
+	private static int calculateCountOfTuplesAllowedToRemain(int coverage, int countOfInitialNTuples) {
 
-        return result;
-    }
+		int result = countOfInitialNTuples * (100 - coverage) / 100;
 
-    private IntegerHolder calculateNTuplesCount(List<SortedMap<Integer, E>> remainingTuples) {
+		return result;
+	}
 
-        IntegerHolder result = new IntegerHolder(remainingTuples.size());
-        AlgoLogger.log("nTuplesCount", result.get(), 1, fLogLevel);
+	@Override
+	public List<E> getNext() throws GeneratorException {
 
-        return result;
-    }
+		AlgoLogger.log("========== getNext test case ==========", 1, fLogLevel);
 
-    @Override
-    public List<E> getNext() throws GeneratorException {
+		IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
-        AlgoLogger.log("========== getNext test case ==========", 1, fLogLevel);
+		List<E> tuple = findBestFullTuple(generatorProgressMonitor);
 
-        IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
+		if (tuple == null) {
+			AlgoLogger.log("Tuple is null", 1, fLogLevel);
+		}
 
-        List<E> tuple = getBestMaxTuple(generatorProgressMonitor);
+		return tuple;
+	}
 
-        if (tuple == null) {
-            AlgoLogger.log("Tuple is null", 1, fLogLevel);
-        }
+	private List<DimensionedItem<E>> createDimensionedItems(List<List<E>> input) {
 
-        return tuple;
-    }
+		int dimCount = getInput().size();
 
-    private Multiset<SortedMap<Integer, E>> createPartialNTo0Tuples(List<SortedMap<Integer, E>> remainingTuples) {
+		List<DimensionedItem<E>> result = new ArrayList<>();
 
-        Multiset<SortedMap<Integer, E>> result = HashMultiset.create();
+		for (int dimension = 0; dimension < dimCount; dimension++) {
+			for (E value : input.get(dimension)) {
+				result.add(new DimensionedItem<>(dimension, value));
+			}
+		}
 
-        for (SortedMap<Integer, E> remainingTuple : remainingTuples) {
+		AlgoLogger.log("Dimensioned items", result, 1, fLogLevel);
+		return result;
+	}
 
-            final List<List<Map.Entry<Integer, E>>> allSublists =
-                    AlgorithmHelper.getAllSublists(new ArrayList<>(remainingTuple.entrySet()));
+	private List<E> findBestFullTuple(IEcfProgressMonitor generatorProgressMonitor) {
 
-            for (List<Map.Entry<Integer, E>> sublist : allSublists) {
+		SortedMap<Integer, E> bestFullTuple = null;
+		int bestTupleScore = -1;
 
-                result.add(createOneCounter((List<Map.Entry<Integer, E>>) sublist));
-            }
-        }
+		for (int repetition = 0; repetition < MAX_REPETITIONS; repetition++) {
 
-        AlgoLogger.log("partialNTo0Tuples", result, 1, fLogLevel);
-        return result;
-    }
+			if (isGenerationCancelled(generatorProgressMonitor)) {
+				return null;
+			}
 
-    private List<DimensionedItem<E>> createDimensionedItems(List<List<E>> input) {
+			if (allRequiredTuplesGenerated()) {
+				setTaskEnd();
+				return null;
+			}
 
-        int dimCount = getInput().size();
+			SortedMap<Integer, E> fullTuple = findFullTupleWithGoodScores();
 
-        List<DimensionedItem<E>> result = new ArrayList<>();
+			int nTupleScore = fScoreEvaluator.getScoreForTestCase(fullTuple);
 
-        for (int dimension = 0; dimension < dimCount; dimension++) {
-            for (E value : input.get(dimension)) {
-                result.add(new DimensionedItem<>(dimension, value));
-            }
-        }
+			if (nTupleScore > bestTupleScore) {
+				bestTupleScore = nTupleScore;
+				bestFullTuple = fullTuple;
+			}
+		}
 
-        AlgoLogger.log("Dimensioned items", result, 1, fLogLevel);
-        return result;
-    }
+		AlgoLogger.log("Best max tuple", bestFullTuple, 1, fLogLevel);
 
-    private List<E> getBestMaxTuple(IEcfProgressMonitor generatorProgressMonitor) {
+		fScoreEvaluator.update(bestFullTuple);
+		
+		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
-        SortedMap<Integer, E> bestTuple = null;
-        int bestTupleScore = -1;
+		final List<E> result = AlgorithmHelper.uncompressTuple(bestFullTuple, fDimCount);
 
-        for (int repetition = 0; repetition < MAX_REPETITIONS; repetition++) {
+		AlgoLogger.log("Result of getNext - best max tuple", result, 1, fLogLevel);
+		return result;
+	}
 
-            if (isGenerationCancelled(generatorProgressMonitor)) {
-                return null;
-            }
+	private boolean allRequiredTuplesGenerated() {
+		
+		int countOfRemainingNTuples = fScoreEvaluator.getCountOfRemainingNTuples();
+		
+		if (countOfRemainingNTuples > fCountOfTuplesAllowedToRemain) {
+			return false;
+		}
+		
+		return true;
+	}
 
-            if (fNTuplesCount.get() <= fIgnoreCount.get()) {
-                setTaskEnd();
-                return null;
-            }
+	private SortedMap<Integer, E> findFullTupleWithGoodScores() {
 
-            SortedMap<Integer, E> nTuple = createNTuple();
+		SortedMap<Integer, E> nTuple = createNTupleWithBestScores();
+		
+		SortedMap<Integer, E> fullTuple = findBestFullTupleAfterConstraints(nTuple);
+		
+		return fullTuple;
+	}
 
-            int nTupleScore = calculateScoreForNTuple(nTuple);
+	private SortedMap<Integer, E> findBestFullTupleAfterConstraints(SortedMap<Integer, E> nTuple) {
 
-            if (nTupleScore > bestTupleScore) {
-                bestTupleScore = nTupleScore;
-                bestTuple = nTuple;
-            }
-        }
+		SortedMap<Integer, E> resultMaxTuple = nTuple;
 
-        AlgoLogger.log("Best max tuple", bestTuple, 1, fLogLevel);
+		List<Integer> tupleDimensions = createTupleDimensions(resultMaxTuple);
 
-        removeAffectedTuples(bestTuple, fPartialNTo0Tuples, fNTuplesCount);
-        incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
+		List<Integer> randomDimensions = createRandomDimensions(fDimCount);
 
-        final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
+		for (Integer dimension : randomDimensions) {
 
-        AlgoLogger.log("Result of getNext - best max tuple", result, 1, fLogLevel);
-        return result;
-    }
+			if (resultMaxTuple.containsKey(dimension))
+				continue;
 
-    private SortedMap<Integer, E> createNTuple() {
+			E bestElement = findBestItemWithConstraintCheck(dimension, resultMaxTuple, tupleDimensions);
 
-        SortedMap<Integer, E> nTuple = createNTupleWithBestScores();
+			resultMaxTuple.put(dimension, bestElement);
+			tupleDimensions.add(dimension);
+		}
 
-        SortedMap<Integer, E> maxTuple = findBestMaxTupleAfterConstraints(nTuple);
+		return resultMaxTuple;
+	}
 
-        return maxTuple;
-    }
+	private E findBestItemWithConstraintCheck(
+			Integer dimension,
+			SortedMap<Integer, E> nTuple,
+			List<Integer> tupleDimensions) {
 
-    private SortedMap<Integer, E> findBestMaxTupleAfterConstraints(SortedMap<Integer, E> nTuple) {
+		List<E> inputForOneDimension = new ArrayList<>(getInput().get(dimension));
+		Collections.shuffle(inputForOneDimension);
 
-        SortedMap<Integer, E> resultMaxTuple = nTuple;
+		Set<List<Integer>> dimensionsToCountScores =
+				(new Tuples<>(tupleDimensions, Math.min(tupleDimensions.size(), N - 1))).getAll();
 
-        List<Integer> tupleDimensions = createTupleDimensions(resultMaxTuple);
+		int bestScore = -1;
+		E bestItem = null;
 
-        List<Integer> randomDimensions = createRandomDimensions(fDimCount);
+		for (E item : inputForOneDimension) {
 
-        for (Integer dimension : randomDimensions) {
+			nTuple.put(dimension, item);
 
-            if (resultMaxTuple.containsKey(dimension))
-                continue;
+			if (checkConstraints(AlgorithmHelper.uncompressTuple(nTuple, fDimCount)) == EvaluationResult.TRUE) {
 
-            E bestElement = findBestItemWithConstraintCheck(dimension, resultMaxTuple, tupleDimensions);
+				int score = calculateTupleScoreForOneDimension(nTuple, dimension, dimensionsToCountScores, item);
 
-            resultMaxTuple.put(dimension, bestElement);
-            tupleDimensions.add(dimension);
-        }
+				if (score > bestScore) {
+					bestScore = score;
+					bestItem = item;
+				}
+			}
+		}
 
-        return resultMaxTuple;
-    }
+		return bestItem;
+	}
 
-    private E findBestItemWithConstraintCheck(
-            Integer dimension,
-            SortedMap<Integer, E> nTuple,
-            List<Integer> tupleDimensions) {
+	public int calculateTupleScoreForOneDimension(
+			SortedMap<Integer, E> nTuple,
+			Integer dimension,
+			Set<List<Integer>> dimensionsToCountScores,
+			E item) {
 
-        List<E> inputForOneDimension = new ArrayList<>(getInput().get(dimension));
-        Collections.shuffle(inputForOneDimension);
+		int score = 0;
 
-        Set<List<Integer>> dimensionsToCountScores =
-                (new Tuples<>(tupleDimensions, Math.min(tupleDimensions.size(), N - 1))).getAll();
+		for (List<Integer> dimensionScores : dimensionsToCountScores) {
 
-        int bestScore = -1;
-        E bestItem = null;
+			SortedMap<Integer, E> tmpTuple = Maps.newTreeMap();
 
-        for (E item : inputForOneDimension) {
+			for (Integer dimensionScore : dimensionScores) // TODO - names ?
+				tmpTuple.put(dimensionScore, nTuple.get(dimensionScore));
 
-            nTuple.put(dimension, item);
+			tmpTuple.put(dimension, item);
 
-            if (checkConstraints(AlgorithmHelper.uncompressTuple(nTuple, fDimCount)) == EvaluationResult.TRUE) {
+			if (fScoreEvaluator.contains(tmpTuple))
+				score++;
+		}
 
-                int score = calculateTupleScoreForOneDimension(nTuple, dimension, dimensionsToCountScores, item);
+		return score;
+	}
 
-                if (score > bestScore) {
-                    bestScore = score;
-                    bestItem = item;
-                }
-            }
-        }
+	private SortedMap<Integer, E> createNTupleWithBestScores() {
 
-        return bestItem;
-    }
+		SortedMap<Integer, E> tuple = Maps.newTreeMap();
 
-    private int calculateTupleScoreForOneDimension(
-            SortedMap<Integer, E> nTuple,
-            Integer dimension,
-            Set<List<Integer>> dimensionsToCountScores,
-            E item) {
+		final int countOfDimensions = Math.min(N, fDimCount);
 
-        int score = 0;
+		for (int dim = 0; dim < countOfDimensions; dim++) {
 
-        for (List<Integer> dimensionScores : dimensionsToCountScores) {
+			Collections.shuffle(fAllDimensionedItems);
+			DimensionedItem<E> bestItem = null;
 
-            SortedMap<Integer, E> tmpTuple = Maps.newTreeMap();
+			int bestTupleScore = -1;
 
-            for (Integer dimensionScore : dimensionScores) // TODO - names ?
-                tmpTuple.put(dimensionScore, nTuple.get(dimensionScore));
+			for (DimensionedItem<E> dItem : fAllDimensionedItems) {
 
-            tmpTuple.put(dimension, item);
+				Integer dimension = dItem.getDimension();
 
-            if (fPartialNTo0Tuples.contains(tmpTuple))
-                score++;
-        }
+				if (tuple.containsKey(dimension))
+					continue;
 
-        return score;
-    }
+				tuple.put(dimension, dItem.getItem());
 
-    private SortedMap<Integer, E> createNTupleWithBestScores() {
+				final int tupleScore = fScoreEvaluator.getCountOfTuples(tuple);
 
-        SortedMap<Integer, E> tuple = Maps.newTreeMap();
+				if (tupleScore > bestTupleScore) {
+					bestItem = dItem;
+					bestTupleScore = tupleScore;
+				}
 
-        final int countOfDimensions = Math.min(N, fDimCount);
+				tuple.remove(dimension);
+			}
 
-        for (int dim = 0; dim < countOfDimensions; dim++) {
+			Integer dimension = bestItem.getDimension();
 
-            Collections.shuffle(fAllDimensionedItems);
-            DimensionedItem<E> bestItem = null;
+			tuple.put(dimension, bestItem.getItem());
+		}
 
-            int bestTupleScore = -1;
+		return tuple;
+	}
 
-            for (DimensionedItem<E> dItem : fAllDimensionedItems) {
+	List<Integer> createTupleDimensions(SortedMap<Integer, E> nTuple) {
 
-                Integer dimension = dItem.getDimension();
+		List<Integer> dimensions = new ArrayList<>();
 
-                if (tuple.containsKey(dimension))
-                    continue;
+		for (Map.Entry<Integer, E> entry : nTuple.entrySet()) {
 
-                tuple.put(dimension, dItem.getItem());
+			dimensions.add(entry.getKey());
+		}
 
-                final int tupleScore = fPartialNTo0Tuples.count(tuple);
+		return dimensions;
+	}
 
-                if (tupleScore > bestTupleScore) {
-                    bestItem = dItem;
-                    bestTupleScore = tupleScore;
-                }
+	private List<Integer> createRandomDimensions(int fDimCount) {
 
-                tuple.remove(dimension);
-            }
+		List<Integer> randomDimensions = new ArrayList<>();
 
-            Integer dimension = bestItem.getDimension();
+		for (int i = 0; i < fDimCount; i++)
+			randomDimensions.add(i);
 
-            tuple.put(dimension, bestItem.getItem());
-        }
+		Collections.shuffle(randomDimensions);
+		return randomDimensions;
+	}
 
-        return tuple;
-    }
+	//	private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount, int argN) {
+	//
+	//		List<Integer> dimensions = new ArrayList<>();
+	//
+	//		for (int i = 0; i < dimensionCount; i++)
+	//			dimensions.add(i);
+	//
+	//		return (new Tuples<>(dimensions, Math.min(dimensionCount, argN))).getAll();
+	//	}
 
-    List<Integer> createTupleDimensions(SortedMap<Integer, E> nTuple) {
+	//	private List<SortedMap<Integer, E>> getAllValidNTuples(List<List<E>> input, int argN) {
+	//
+	//		int dimensionCount = getInput().size();
+	//
+	//		List<SortedMap<Integer, E>> allValidTuples = new ArrayList<>();
+	//		allValidTuples.add(Maps.newTreeMap());
+	//
+	//		for (int tupleSize = 0; tupleSize < argN; tupleSize++) {
+	//
+	//			List<SortedMap<Integer, E>> newValidTuples = new ArrayList<>();
+	//
+	//			for (SortedMap<Integer, E> tuple : allValidTuples) {
+	//
+	//				Integer maxDimension = -1;
+	//
+	//				if (!tuple.isEmpty()) {
+	//					maxDimension = tuple.lastKey();
+	//				}
+	//
+	//				addValidTuples(input, argN, dimensionCount, tupleSize, maxDimension, tuple, newValidTuples);
+	//
+	//				if (newValidTuples.size() > MAX_TUPLES) {
+	//					ExceptionHelper.reportRuntimeException(
+	//							"The number of tuples is limited to " + MAX_TUPLES + ". " +
+	//									"The current value is: " + newValidTuples.size() + ". " +
+	//									"To fix this issue, limit the number of arguments, choices or include additional constraint."
+	//							);
+	//				}
+	//			}
+	//
+	//			allValidTuples = newValidTuples;
+	//		}
+	//
+	//		AlgoLogger.log("All N tuples", allValidTuples, 1, fLogLevel);
+	//		return allValidTuples;
+	//	}
 
-        List<Integer> dimensions = new ArrayList<>();
+	//	private void addValidTuples(
+	//			List<List<E>> input,
+	//			int argN, int dimensionCount,
+	//			int tupleSize,
+	//			Integer maxDimension,
+	//			SortedMap<Integer, E> tuple,
+	//			List<SortedMap<Integer, E>> inOutValidTuples) {
+	//
+	//		for (int dimension = maxDimension + 1; dimension < dimensionCount - (argN - 1 - tupleSize); dimension++) {
+	//
+	//			final List<E> inputForOneDimension = input.get(dimension);
+	//
+	//			addTuplesForOneDimension(dimension, inputForOneDimension, tuple, dimensionCount, inOutValidTuples);
+	//
+	//			tuple.remove(dimension);
+	//		}
+	//	}
 
-        for (Map.Entry<Integer, E> entry : nTuple.entrySet()) {
+	//	private void addTuplesForOneDimension(
+	//			int dimension,
+	//			List<E> inputForOneDimension,
+	//			SortedMap<Integer, E> tuple,
+	//			int dimensionCount,
+	//			List<SortedMap<Integer, E>> inOutTuples) {
+	//
+	//		for (E v : inputForOneDimension) {
+	//
+	//			tuple.put(dimension, v);
+	//
+	//			if (checkConstraints(AlgorithmHelper.uncompressTuple(tuple, dimensionCount)) == EvaluationResult.TRUE) {
+	//				SortedMap<Integer, E> newTuple = new TreeMap<>(tuple);
+	//				inOutTuples.add(newTuple);
+	//			}
+	//		}
+	//	}
 
-            dimensions.add(entry.getKey());
-        }
+	private boolean isGenerationCancelled(IEcfProgressMonitor generatorProgressMonitor) {
 
-        return dimensions;
-    }
+		if (generatorProgressMonitor == null) {
+			return false;
+		}
 
-    private List<Integer> createRandomDimensions(int fDimCount) {
+		if (generatorProgressMonitor.isCanceled()) {
+			return true;
+		}
 
-        List<Integer> randomDimensions = new ArrayList<>();
-
-        for (int i = 0; i < fDimCount; i++)
-            randomDimensions.add(i);
-
-        Collections.shuffle(randomDimensions);
-        return randomDimensions;
-    }
-
-    private void removeAffectedTuples(
-            SortedMap<Integer, E> affectingTuple,
-            Multiset<SortedMap<Integer, E>> outPartialNTo0Tuples,
-            IntegerHolder outRemainingTuplesCount) {
-
-        for (List<Integer> dimCombinations : getAllDimensionCombinations(fDimCount, N)) {
-
-            SortedMap<Integer, E> dTuple = Maps.newTreeMap();
-
-            for (Integer dimension : dimCombinations)
-                dTuple.put(dimension, affectingTuple.get(dimension));
-
-            if (outPartialNTo0Tuples.contains(dTuple)) {
-                outRemainingTuplesCount.decrement();
-
-                for (List<Map.Entry<Integer, E>> sublist : AlgorithmHelper.getAllSublists(new ArrayList<>(dTuple.entrySet())))
-                    outPartialNTo0Tuples.remove(createOneCounter(sublist), 1);
-            }
-        }
-
-        AlgoLogger.log("partialNTo0Tuples after removal of best tuple", outPartialNTo0Tuples, 1, fLogLevel);
-    }
-
-    private ImmutableSortedMap<Integer, E> createOneCounter(List<Map.Entry<Integer, E>> sublist) {
-
-        return new ImmutableSortedMap.Builder<Integer, E>(Ordering.natural()).putAll(sublist).build();
-    }
-
-    private int calculateScoreForNTuple(SortedMap<Integer, E> nTuple) {
-
-        int score = 0;
-
-        final Set<List<Integer>> allDimensionCombinations = getAllDimensionCombinations(fDimCount, N);
-
-        for (List<Integer> combinationOfDimensions : allDimensionCombinations) {
-
-            SortedMap<Integer, E> dTuple = Maps.newTreeMap();
-
-            for (Integer dimension : combinationOfDimensions)
-                dTuple.put(dimension, nTuple.get(dimension));
-
-            if (fPartialNTo0Tuples.contains(dTuple))
-                score++;
-        }
-
-        return score;
-    }
-
-    private Set<List<Integer>> getAllDimensionCombinations(int dimensionCount, int argN) {
-
-        List<Integer> dimensions = new ArrayList<>();
-
-        for (int i = 0; i < dimensionCount; i++)
-            dimensions.add(i);
-
-        return (new Tuples<>(dimensions, Math.min(dimensionCount, argN))).getAll();
-    }
-
-    private List<SortedMap<Integer, E>> getAllNTuples(List<List<E>> input, int argN) {
-
-        int dimensionCount = getInput().size();
-
-        List<SortedMap<Integer, E>> allValidTuples = new ArrayList<>();
-        allValidTuples.add(Maps.newTreeMap());
-
-        for (int tupleSize = 0; tupleSize < argN; tupleSize++) {
-
-            List<SortedMap<Integer, E>> newValidTuples = new ArrayList<>();
-
-            for (SortedMap<Integer, E> tuple : allValidTuples) {
-
-                Integer maxDimension = -1;
-
-                if (!tuple.isEmpty()) {
-                    maxDimension = tuple.lastKey();
-                }
-
-                addValidTuples(input, argN, dimensionCount, tupleSize, maxDimension, tuple, newValidTuples);
-
-                if (newValidTuples.size() > MAX_TUPLES) {
-                    ExceptionHelper.reportRuntimeException(
-                            "The number of tuples is limited to " + MAX_TUPLES + ". " +
-                            "The current value is: " + newValidTuples.size() + ". " +
-                            "To fix this issue, limit the number of arguments, choices or include additional constraint."
-                    );
-                }
-            }
-
-            System.out.println("Tuple size: " + tupleSize + ". Generated tuples: " + newValidTuples.size());
-            allValidTuples = newValidTuples; // TODO - do we need 2 variables ? why do we assign (what for did we calculate previous result ?)
-        }
-
-        AlgoLogger.log("All N tuples", allValidTuples, 1, fLogLevel);
-        return allValidTuples;
-    }
-
-    private void addValidTuples(
-            List<List<E>> input,
-            int argN, int dimensionCount,
-            int tupleSize,
-            Integer maxDimension,
-            SortedMap<Integer, E> tuple,
-            List<SortedMap<Integer, E>> inOutValidTuples) {
-
-        for (int dimension = maxDimension + 1; dimension < dimensionCount - (argN - 1 - tupleSize); dimension++) {
-
-            final List<E> inputForOneDimension = input.get(dimension);
-
-            addTuplesForOneDimension(dimension, inputForOneDimension, tuple, dimensionCount, inOutValidTuples);
-
-            tuple.remove(dimension);
-        }
-    }
-
-    private void addTuplesForOneDimension(
-            int dimension,
-            List<E> inputForOneDimension,
-            SortedMap<Integer, E> tuple,
-            int dimensionCount,
-            List<SortedMap<Integer, E>> inOutTuples) {
-
-        for (E v : inputForOneDimension) {
-
-            tuple.put(dimension, v);
-
-            if (checkConstraints(AlgorithmHelper.uncompressTuple(tuple, dimensionCount)) == EvaluationResult.TRUE) {
-                SortedMap<Integer, E> newTuple = new TreeMap<>(tuple);
-                inOutTuples.add(newTuple);
-            }
-        }
-    }
-
-    private boolean isGenerationCancelled(IEcfProgressMonitor generatorProgressMonitor) {
-
-        if (generatorProgressMonitor == null) {
-            return false;
-        }
-
-        if (generatorProgressMonitor.isCanceled()) {
-            return true;
-        }
-
-        return false;
-    }
+		return false;
+	}
 
 }

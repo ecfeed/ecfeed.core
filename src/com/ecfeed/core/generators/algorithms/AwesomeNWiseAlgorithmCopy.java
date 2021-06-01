@@ -19,7 +19,7 @@ import com.google.common.collect.*;
 
 
 // copy of algorithm before extracting score evaluator
-public class AwesomeNWiseAlgorithmCopy<E> extends AbstractNWiseAlgorithm<E> {
+public class AwesomeNWiseAlgorithmCopy<E> extends AwesomeNWiseAlgorithmBase<E> {
 
     static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
     static final int MAX_TUPLES = 250000;

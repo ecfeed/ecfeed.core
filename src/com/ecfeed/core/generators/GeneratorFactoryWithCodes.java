@@ -20,6 +20,10 @@ public class GeneratorFactoryWithCodes {
 	public IGenerator<ChoiceNode> createGenerator(GeneratorType type) throws GeneratorException {
 
 		if (type == GeneratorType.N_WISE) {
+			
+			if (GeneratorFactoryForDialog.isScoredNWiseGeneratorActive()) {
+				return new NWiseScoredGenerator<ChoiceNode>();
+			}
 			return new NWiseGenerator<ChoiceNode>();
 		}
 

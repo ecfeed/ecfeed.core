@@ -22,6 +22,11 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 	public IGenerator<E> createGenerator(String code) throws GeneratorException {
 
 		if (code.equals(N_WISE)) {
+			
+			if (isScoredNWiseGeneratorActive()) {
+				return new NWiseScoredGenerator<E>();
+			}
+			
 			return new NWiseGenerator<E>();
 		}
 
@@ -37,6 +42,10 @@ public class GeneratorFactoryForDialog<E> { // TODO - merge with GeneratorFactor
 		return null;
 	}
 
+	public static boolean isScoredNWiseGeneratorActive() {
+		return false;
+	}
+	
 	public String[] getGeneratorNames() {
 		
 		return new String[] { N_WISE, CARTESIAN, RANDOM };

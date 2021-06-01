@@ -28,7 +28,7 @@ public interface IGenerator<E> {
 
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
-		    List<IGeneratorValue> arguments,
+		    List<IGeneratorValue> generatorParameters,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException;
 	
 //	public void addConstraint(IConstraint<E> constraint);
