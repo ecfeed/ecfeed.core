@@ -19,7 +19,7 @@ import com.google.common.collect.*;
 
 
 // copy of algorithm before extracting score evaluator
-public class AwesomeNWiseAlgorithmCopy<E> extends AwesomeNWiseAlgorithmBase<E> {
+public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
 
     static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
     static final int MAX_TUPLES = 250000;
@@ -36,7 +36,7 @@ public class AwesomeNWiseAlgorithmCopy<E> extends AwesomeNWiseAlgorithmBase<E> {
 
     static final int fLogLevel = 0;
 
-    public AwesomeNWiseAlgorithmCopy(int n, int coverage) {
+    public NWiseAwesomeAlgorithmCopy(int n, int coverage) {
         super(n, coverage);
     }
 

@@ -12,7 +12,7 @@ package com.ecfeed.core.generators;
 
 import java.util.List;
 
-import com.ecfeed.core.generators.algorithms.AwesomeNWiseAlgorithm;
+import com.ecfeed.core.generators.algorithms.NWiseAwesomeAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
@@ -34,7 +34,7 @@ public class NWiseGenerator<E> extends NWiseGeneratorBase<E> {
         int N = (int) getParameterValue(getDefinitionN());
         int coverage = (int) getParameterValue(getDefinitionCoverage());
         
-        setAlgorithm(new AwesomeNWiseAlgorithm<>(N, coverage));
+        setAlgorithm(new NWiseAwesomeAlgorithm<>(N, coverage));
     }
 
 }
