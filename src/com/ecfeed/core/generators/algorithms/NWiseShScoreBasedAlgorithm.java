@@ -12,7 +12,7 @@ import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
-public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
+public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 
 	private int fDimensionCount; // Total number of dimensions for an input domain
 	private List<Integer> fInputIndex; // Store index of parameters in input domain
@@ -22,7 +22,7 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	// randomly generated dimension order
 	// could be different)
 
-	public ScoreBasedNwiseAlgorithm(IScoreEvaluator<E> fScoreEvaluator, int coverage) throws GeneratorException {
+	public NWiseShScoreBasedAlgorithm(IScoreEvaluator<E> fScoreEvaluator, int coverage) throws GeneratorException {
 
 		this.fScoreEvaluator = fScoreEvaluator;
 		fCoverage = coverage;
@@ -99,19 +99,19 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 		}
 
 		updateScoreEvaluator(resultTuple);
-		
+
 		return resultTuple;                              
 	}
 
 	private void updateScoreEvaluator(List<E> resultTuple) {
-		
+
 		SortedMap<Integer, E> sortedMapTuple = 
 				TuplesHelper.convertExtendedTupleToSortedMapTuple(resultTuple);
-		
+
 		fScoreEvaluator.update(sortedMapTuple);
 	}
 
-	
+
 	private E getChoiceFromInputDomain(List<E> sourceTuple, int dimension) {
 
 		List<E> choicesForDimension = getInput().get(dimension);
@@ -135,9 +135,9 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	public boolean allRequiredNTuplesCovered() {
 
 		int initialNTupleCount = fScoreEvaluator.getCountOfInitialNTuples();
-		
+
 		int tuplesCovered = initialNTupleCount - fScoreEvaluator.getCountOfRemainingNTuples();
-		
+
 		int tuplesToCover = calculateNumberOfTuplesToCover(fCoverage, initialNTupleCount);
 
 		if (tuplesCovered >= tuplesToCover) {
@@ -148,34 +148,34 @@ public class ScoreBasedNwiseAlgorithm<E> extends AbstractAlgorithm<E> {
 	}
 
 	protected int calculateNumberOfTuplesToCover(int coverage, int initialNTupleCount) {
-		
+
 		return (int) Math.ceil((double)initialNTupleCount * coverage / 100);
 	}
-	
-//	private int getScore(List<E> extendedTuple) {
-//
-//		List<E> compressedTuple = new ArrayList<>();
-//
-//		for (E choice : extendedTuple) {
-//
-//			if (choice != null) {
-//				compressedTuple.add(choice);
-//			}
-//		}
-//
-//		int score = fScoreEvaluator.getScore(compressedTuple);
-//		return score;
-//	}
+
+	//	private int getScore(List<E> extendedTuple) {
+	//
+	//		List<E> compressedTuple = new ArrayList<>();
+	//
+	//		for (E choice : extendedTuple) {
+	//
+	//			if (choice != null) {
+	//				compressedTuple.add(choice);
+	//			}
+	//		}
+	//
+	//		int score = fScoreEvaluator.getScore(compressedTuple);
+	//		return score;
+	//	}
 
 	private int getScore(List<E> extendedTuple) {
 
 		SortedMap<Integer, E> sortedMapTuple = 
 				TuplesHelper.convertExtendedTupleToSortedMapTuple(extendedTuple);
-		
+
 		int score = fScoreEvaluator.getScore(sortedMapTuple);
 		return score;
 	}
-	
+
 	private List<E> initializeTuple(int countOfDimensions) {
 
 		List<E> expandedTest = new ArrayList<>();

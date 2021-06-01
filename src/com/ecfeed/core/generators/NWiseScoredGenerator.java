@@ -14,7 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.generators.algorithms.IScoreEvaluator;
 import com.ecfeed.core.generators.algorithms.NwiseShScoreEvaluator;
-import com.ecfeed.core.generators.algorithms.ScoreBasedNwiseAlgorithm;
+import com.ecfeed.core.generators.algorithms.NWiseShScoreBasedAlgorithm;
 import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
@@ -37,7 +37,7 @@ public class NWiseScoredGenerator<E> extends NWiseGeneratorBase<E> {
 		int coverage = (int) getParameterValue(getDefinitionCoverage());
 
 		IScoreEvaluator<E> fScoreEvaluator = new NwiseShScoreEvaluator<>(N);
-		setAlgorithm(new ScoreBasedNwiseAlgorithm<E>(fScoreEvaluator, coverage));
+		setAlgorithm(new NWiseShScoreBasedAlgorithm<E>(fScoreEvaluator, coverage));
 	}
 
 }
