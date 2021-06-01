@@ -40,7 +40,7 @@ public class NwiseShScoreEvaluator<E> implements IScoreEvaluator<E> {
 		if (input == null) {
 			GeneratorException.report("Input of N-wise score evaluator should not be empty.");
 		}
-		
+
 		fCountOfDimensions = input.size();
 
 		fConstraintEvaluator = constraintEvaluator;
@@ -86,29 +86,29 @@ public class NwiseShScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		List<E> tupleWithoutDimensions = 
 				TuplesHelper.convertSortedMapTupleToTupleWithoutDimensions(tuple);
-		
-		fTupleOccurences.entrySet().forEach(e -> System.out.println(e));
-		
+
+		// fTupleOccurences.entrySet().forEach(e -> System.out.println(e));
+
 		Integer occurences = fTupleOccurences.get(tupleWithoutDimensions);
-		
+
 		if (occurences == null) {
 			return 0;
 		}
-		
+
 		return occurences;
 	}
 
 	@Override
 	public int getScoreForTestCase(SortedMap<Integer, E> testCase) {
-		
+
 		if (testCase.size() != fCountOfDimensions) {
 			ExceptionHelper.reportRuntimeException("Invalid size of test case.");
 		}
-		
+
 		int score = getScore(testCase);
 		return score;
 	}
-	
+
 	@Override
 	public int getScore(
 			SortedMap<Integer, E> tuple // this can be either a full or shorter tuple
@@ -133,7 +133,7 @@ public class NwiseShScoreEvaluator<E> implements IScoreEvaluator<E> {
 
 		return 0;
 	}
-	
+
 	private void update(List<E> testCase) {
 
 		if (testCase.size() < fN)
