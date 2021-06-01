@@ -8,12 +8,12 @@ import org.junit.Test;
 public class AwesomeNWiseAlgorithmTest extends NWiseAlgorithmTest {
     @Test
     public void testCorrectness() {
-        testCorrectness(AwesomeNWiseAlgorithm.class);
+        testCorrectness(NWiseAwesomeAlgorithm.class);
     }
 
     @Test
     public void testConstraints() {
-        testConstraints(AwesomeNWiseAlgorithm.class);
+        testConstraints(NWiseAwesomeAlgorithm.class);
     }
 
 //    @Test
@@ -23,7 +23,7 @@ public class AwesomeNWiseAlgorithmTest extends NWiseAlgorithmTest {
 //                for (int choices : new int[] { 1, 2, 5 }) {
 //                    for (int n = 1; n <= variables; n++) {
 //                        List<List<String>> input = GeneratorTestUtils.prepareInput(variables, choices);
-//                        IAlgorithm<String> algorithm = new AwesomeNWiseAlgorithm<>(n, 100);
+//                        IAlgorithm<String> algorithm = new NWiseAwesomeAlgorithm<>(n, 100);
 //
 //                        algorithm.initialize(input, new DummyEvaluator<>(), new SimpleProgressMonitor());
 //                        int generatedDataSize = GeneratorTestUtils.algorithmResult(algorithm).size();
