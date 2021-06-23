@@ -260,7 +260,9 @@ public class MethodNodeTest {
 		assertEquals(3, method.getTestCases().size());
 		assertFalse(method.getTestCases().contains(testCase1));
 
-		method.removeTestSuite("name2");
+		TestSuiteNode testSuiteNode = new TestSuiteNode();
+		testSuiteNode.setName("name2");
+		method.removeTestSuite(testSuiteNode);		
 		assertEquals(1, method.getTestCases().size());
 		assertFalse(method.getTestCases().contains(testCase3));
 		assertFalse(method.getTestCases().contains(testCase4));

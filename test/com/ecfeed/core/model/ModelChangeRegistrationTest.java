@@ -173,7 +173,9 @@ public class ModelChangeRegistrationTest {
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
-		methodNode.removeTestSuite("suite 1");
+		TestSuiteNode testSuiteNode = new TestSuiteNode();
+		testSuiteNode.setName("suite 1");
+		methodNode.removeTestSuite(testSuiteNode);
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
