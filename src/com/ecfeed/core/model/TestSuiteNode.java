@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class TestSuiteNode extends AbstractNode {
 	List<TestCaseNode> fTestCaseNodes;
 	String fSuiteName;
+	boolean fDisplayLimitExceeded;
 
 	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<TestCaseNode> testData) {
 		super(name, modelChangeRegistrator);
@@ -39,6 +40,15 @@ public class TestSuiteNode extends AbstractNode {
 		fTestCaseNodes = new ArrayList<>();
 	}
 
+	public void setDisplayLimitExceededFlag(boolean displayLimitExceeded) {
+		fDisplayLimitExceeded  = displayLimitExceeded;
+	}
+	
+	public boolean getDisplayLimitExceededFlag() {
+	
+		return fDisplayLimitExceeded;
+	}
+	
 	public List<TestCaseNode> getTestCaseNodes() { 
 
 		return fTestCaseNodes;

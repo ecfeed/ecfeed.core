@@ -473,10 +473,12 @@ public class MethodNodeHelper {
 
 			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
 			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
-				testSuiteNode.setName(testSuiteName + " - Display limit exceeded" );
+				testSuiteNode.setName(testSuiteName);
+				testSuiteNode.setDisplayLimitExceededFlag(true);
 			} else {
 				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
 				testSuiteNode.setName(testSuiteName);
+				testSuiteNode.setDisplayLimitExceededFlag(false);
 			}
 		}
 

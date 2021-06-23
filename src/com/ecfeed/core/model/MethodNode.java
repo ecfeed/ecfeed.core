@@ -409,20 +409,6 @@ public class MethodNode extends ParametersParentNode {
 		return names;
 	}
 
-	public boolean removeTestSuite(TestSuiteNode testSuite) {
-		testSuite.setParent(null);
-		
-		for (TestCaseNode testCase : testSuite.getTestCaseNodes()) {
-			testCase.setParent(null);
-			fTestCases.remove(testCase);
-			registerChange();
-		}
-		
-		boolean result = fTestSuites.remove(testSuite);
-		registerChange();
-		return result;
-	}
-	
 	public boolean removeTestCase(TestCaseNode testCase) {
 		testCase.setParent(null);
 		boolean result = fTestCases.remove(testCase);
@@ -444,18 +430,15 @@ public class MethodNode extends ParametersParentNode {
 		return result;
 	}
 
-	public void removeTestSuite(String suiteName) {
-		Iterator<TestCaseNode> iterator = getTestCases().iterator();
-		while(iterator.hasNext()){
-			TestCaseNode testCase = iterator.next();
-			if(testCase.getName().equals(suiteName)){
-				iterator.remove();
-			}
-		}
-
+	public void removeTestSuite(TestSuiteNode testSuite) {
+		
+		String testSuiteName = testSuite.getName();
+		fTestCases.removeIf(e -> testSuiteName.equals(e.getName()));
+		
+		fTestSuites.remove(testSuite);
 		registerChange();
 	}
-
+	
 	public boolean isChoiceMentioned(ChoiceNode choice){
 		for(ConstraintNode constraint : fConstraints){
 			if(constraint.mentions(choice)){
