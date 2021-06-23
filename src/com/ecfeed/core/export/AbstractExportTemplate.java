@@ -21,6 +21,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.ui.dialogs.basic.InfoDialog;
 
 
 public abstract class AbstractExportTemplate implements IExportTemplate {
@@ -84,24 +85,41 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	@Override
 	public String createPreview(Collection<TestCaseNode> selectedTestCases) {
 
+		InfoDialog.open("DEBUG createPreview 00");
+		
 		StringBuilder stringBuilder = new StringBuilder();
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
 					fMethodNode, fTemplateText.getHeaderTemplateText(), fExtLanguageManager));
 
+		InfoDialog.open("DEBUG createPreview 01");
 		stringBuilder.append("\n");
 
 		appendPreviewOfTestCases(selectedTestCases, stringBuilder);
+		
+		InfoDialog.open("DEBUG createPreview 02");
 
-		stringBuilder.append(
-				TestCasesExportHelper.generateSection(
-						fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguageManager));
+		String section = TestCasesExportHelper.generateSection(
+				fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguageManager);
+		
+		InfoDialog.open("DEBUG createPreview 03, section: " + section);
+		
+		stringBuilder.append(section);
+		
+		InfoDialog.open("DEBUG createPreview 04");
 
 		stringBuilder.append("\n");
+		
+		InfoDialog.open("DEBUG createPreview 05");
 
 		String result = stringBuilder.toString();
+		
+		InfoDialog.open("DEBUG createPreview 06");
+		
 		result = TestCasesExportHelper.evaluateMinWidthOperators(result);
+		
+		InfoDialog.open("DEBUG createPreview 07");
 
 		return result;
 	}
