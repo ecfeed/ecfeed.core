@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -160,20 +161,33 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		List<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
 
 		for (int index = 0; index < maxPreviewTestCases; index++) {
-			testCases.add(createRandomTestCaseNode(fMethodNode, index));
+			testCases.add(createTestCase(fMethodNode, index));
 		}
 
 		return testCases;
 	}
 
-	private TestCaseNode createRandomTestCaseNode(MethodNode methodNode, int testCaseNumber) {
+	private TestCaseNode createTestCase(MethodNode methodNode, int testCaseNumber) {
 
 		Random randomGenerator = new Random();
 		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
-		List<String> parameterNames = methodNode.getParametersNames();
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
-		for (String parameterName : parameterNames) {
-			choiceNodes.add(getRandomChoiceNode(methodNode, parameterName, randomGenerator));
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+			
+			MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
+			
+			ChoiceNode choiceNode;
+			
+			if (methodParameterNode.isExpected()) {
+				choiceNode = new ChoiceNode("@expected", methodParameterNode.getDefaultValue(), null);
+				choiceNode.setParent(methodParameterNode);
+			} else {
+				String parameterName = methodParameterNode.getName();
+				choiceNode = getRandomChoiceNode(methodNode, parameterName, randomGenerator);
+			}
+			
+			choiceNodes.add(choiceNode);
 		}
 
 		TestCaseNode testCaseNode = 
