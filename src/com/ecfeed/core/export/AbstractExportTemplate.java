@@ -131,42 +131,46 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		InfoDialog.open("appendPreviewOfTestCases 00");
 		
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
+		
 		InfoDialog.open("appendPreviewOfTestCases 01");
 		
 		int sequenceIndex = 0;
 
 		for (TestCaseNode testCase : testCases) {
 
-			InfoDialog.open("appendPreviewOfTestCases 02, loop sequence index: " + sequenceIndex);
-			
 			String testCaseString = TestCasesExportHelper.generateTestCaseString(
 					sequenceIndex++,
 					testCase,
 					fTemplateText.getTestCaseTemplateText(), 
 					fExtLanguageManager);
 			
-			InfoDialog.open("appendPreviewOfTestCases 03");
-			
 			inOutStringBuilder.append(testCaseString);
 			
-			InfoDialog.open("appendPreviewOfTestCases 04");
-
 			inOutStringBuilder.append("\n");
-			
-			InfoDialog.open("appendPreviewOfTestCases 05");
 		}
 
 	}
 
 	private List<TestCaseNode> createPreviewTestCasesSample(Collection<TestCaseNode> selectedTestCases) {
 
+		InfoDialog.open("createPreviewTestCasesSample 00");
+		
 		final int MAX_PREVIEW_TEST_CASES = 5;
 
 		if (selectedTestCases == null) {
+			
+			InfoDialog.open("createPreviewTestCasesSample 01");
 			return createRandomTestCasesSample(MAX_PREVIEW_TEST_CASES);
 		}
 
-		return createSampleFromSelectedTestCases(selectedTestCases, MAX_PREVIEW_TEST_CASES);
+		InfoDialog.open("createPreviewTestCasesSample 02");
+		
+		List<TestCaseNode> createSampleFromSelectedTestCases = 
+				createSampleFromSelectedTestCases(selectedTestCases, MAX_PREVIEW_TEST_CASES);
+		
+		InfoDialog.open("createPreviewTestCasesSample 03");
+		
+		return createSampleFromSelectedTestCases;
 	}
 
 	private List<TestCaseNode> createSampleFromSelectedTestCases(
