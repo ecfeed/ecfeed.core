@@ -85,7 +85,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	@Override
 	public String createPreview(Collection<TestCaseNode> selectedTestCases) {
 
-		InfoDialog.open("DEBUG createPreview 00-N");
+		InfoDialog.open("DEBUG createPreview 00-N2");
 		
 		StringBuilder stringBuilder = new StringBuilder();
 
