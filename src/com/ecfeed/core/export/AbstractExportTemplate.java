@@ -85,7 +85,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	@Override
 	public String createPreview(Collection<TestCaseNode> selectedTestCases) {
 
-		InfoDialog.open("DEBUG createPreview 00-N2");
+		InfoDialog.open("DEBUG createPreview 00");
 		
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -103,23 +103,23 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 		String section = TestCasesExportHelper.generateSection(
 				fMethodNode, fTemplateText.getFooterTemplateText(), fExtLanguageManager);
 		
-		InfoDialog.open("DEBUG createPreview 03, section: " + section);
+//		InfoDialog.open("DEBUG createPreview 03, section: " + section);
 		
 		stringBuilder.append(section);
 		
-		InfoDialog.open("DEBUG createPreview 04");
+//		InfoDialog.open("DEBUG createPreview 04");
 
 		stringBuilder.append("\n");
 		
-		InfoDialog.open("DEBUG createPreview 05");
+//		InfoDialog.open("DEBUG createPreview 05");
 
 		String result = stringBuilder.toString();
 		
-		InfoDialog.open("DEBUG createPreview 06");
+//		InfoDialog.open("DEBUG createPreview 06");
 		
 		result = TestCasesExportHelper.evaluateMinWidthOperators(result);
 		
-		InfoDialog.open("DEBUG createPreview 07");
+//		InfoDialog.open("DEBUG createPreview 07");
 
 		return result;
 	}
@@ -128,19 +128,32 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 			Collection<TestCaseNode> selectedTestCases,
 			StringBuilder inOutStringBuilder) {
 
+		InfoDialog.open("appendPreviewOfTestCases 00");
+		
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
+		InfoDialog.open("appendPreviewOfTestCases 01");
+		
 		int sequenceIndex = 0;
 
 		for (TestCaseNode testCase : testCases) {
 
-			inOutStringBuilder.append(
-					TestCasesExportHelper.generateTestCaseString(
-							sequenceIndex++,
-							testCase,
-							fTemplateText.getTestCaseTemplateText(), 
-							fExtLanguageManager));
+			InfoDialog.open("appendPreviewOfTestCases 02, loop sequence index: " + sequenceIndex);
+			
+			String testCaseString = TestCasesExportHelper.generateTestCaseString(
+					sequenceIndex++,
+					testCase,
+					fTemplateText.getTestCaseTemplateText(), 
+					fExtLanguageManager);
+			
+			InfoDialog.open("appendPreviewOfTestCases 03");
+			
+			inOutStringBuilder.append(testCaseString);
+			
+			InfoDialog.open("appendPreviewOfTestCases 04");
 
 			inOutStringBuilder.append("\n");
+			
+			InfoDialog.open("appendPreviewOfTestCases 05");
 		}
 
 	}
