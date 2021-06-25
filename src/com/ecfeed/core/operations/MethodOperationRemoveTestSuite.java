@@ -1,5 +1,6 @@
 package com.ecfeed.core.operations;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.MethodNode;
@@ -14,6 +15,7 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 
 	private MethodNode fMethodNode;
 	private TestSuiteNode fTestSuite;
+	private List<TestCaseNode> fTestCaseNodes;
 
 	private class DummyAdapterProvider implements ITypeAdapterProvider {
 
@@ -62,6 +64,7 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 		super(OperationNames.REMOVE_TEST_SUITE, extLanguageManager);
 		fMethodNode = target;
 		fTestSuite = testSuite;
+		fTestCaseNodes = new ArrayList<>(target.getTestCases(testSuite.getName()));
 	}
 
 	@Override
@@ -74,11 +77,9 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 	@Override
 	public IModelOperation getReverseOperation() {
 
-		List<TestCaseNode> testCaseNodes = fTestSuite.getTestCaseNodes();
-
 		return new MethodOperationAddTestSuite(
 				fMethodNode, 
-				testCaseNodes, 
+				fTestCaseNodes, 
 				new DummyAdapterProvider(), 
 				getExtLanguageManager());
 	}
