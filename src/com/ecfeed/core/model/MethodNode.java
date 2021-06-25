@@ -388,10 +388,10 @@ public class MethodNode extends ParametersParentNode {
 		return true;
 	}
 
-	public Collection<TestCaseNode> getTestCases(String testSuite) {
+	public Collection<TestCaseNode> getTestCases(String testSuiteName) {
 		ArrayList<TestCaseNode> testCases = new ArrayList<TestCaseNode>();
 		for(TestCaseNode testCase : getTestCases()){
-			if(testSuite.equals(testCase.getName())){
+			if(testSuiteName.equals(testCase.getName())){
 				testCases.add(testCase);
 			}
 		}
