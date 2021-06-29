@@ -153,7 +153,7 @@ public class SatSolverConstraintEvaluatorTest {
     }
 
     private String xmlOrderOfInts = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-            "<Model name='n0000wEct25656' version='2'>\n" +
+            "<Model name='n0000wEct25656' version='3'>\n" +
             "    <Class name='com.ecfeed.core.junit5.EcFeedModelTest'>\n" +
             "        <Properties>\n" +
             "            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
@@ -221,7 +221,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlInequalityOfInts = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-            "<Model name='n0000wEct25656' version='2'>\n" +
+            "<Model name='n0000wEct25656' version='3'>\n" +
             "    <Class name='com.ecfeed.core.junit5.EcFeedModelTest'>\n" +
             "        <Properties>\n" +
             "            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
@@ -296,7 +296,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlNondistinctValuesInts = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-            "<Model name='n0000wEct25656' version='2'>\n" +
+            "<Model name='n0000wEct25656' version='3'>\n" +
             "    <Class name='com.ecfeed.core.junit5.EcFeedModelTest'>\n" +
             "        <Properties>\n" +
             "            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
@@ -374,7 +374,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlDeeperConstraints1 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-            "<Model name='n0000wEct25656' version='2'>\n" +
+            "<Model name='n0000wEct25656' version='3'>\n" +
             "    <Class name='com.ecfeed.core.junit5.EcFeedModelTest'>\n" +
             "        <Properties>\n" +
             "            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
@@ -456,7 +456,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlDeeperConstraints2 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-            "<Model name='n0000wEct25656' version='2'>\n" +
+            "<Model name='n0000wEct25656' version='3'>\n" +
             "    <Class name='com.ecfeed.core.junit5.EcFeedModelTest'>\n" +
             "        <Properties>\n" +
             "            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
@@ -538,7 +538,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlDeeperConstraints3 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
-            "<Model name='n0000wEct25656' version='2'>\n" +
+            "<Model name='n0000wEct25656' version='3'>\n" +
             "    <Class name='com.ecfeed.core.junit5.EcFeedModelTest'>\n" +
             "        <Properties>\n" +
             "            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
@@ -650,7 +650,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlExpectedValue1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Root\" version=\"2\">\n" +
+            "<Model name=\"Root\" version=\"3\">\n" +
             "    <Class name=\"com.example.test.TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -685,7 +685,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlExpectedValue2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -746,7 +746,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlRanges1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -791,7 +791,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlRanges2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -857,7 +857,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlRanges3 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -923,7 +923,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlRangesDouble = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -990,7 +990,7 @@ public class SatSolverConstraintEvaluatorTest {
 
 
     private String xmlRangesDoubleSmall = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Root\" version=\"2\">\n" +
+            "<Model name=\"Root\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -1058,7 +1058,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlMixedTypeOrder = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"n0000wEct25656\" version=\"2\">\n" +
+            "<Model name=\"n0000wEct25656\" version=\"3\">\n" +
             "    <Class name=\"com.ecfeed.core.junit5.EcFeedModelTest\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -1123,7 +1123,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlNastyRanges = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -1208,7 +1208,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlMixedTypeEq1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -1285,7 +1285,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlMixedTypeEq2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -1345,7 +1345,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlMixedTypeEq3 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"Untitled_1\" version=\"2\">\n" +
+            "<Model name=\"Untitled_1\" version=\"3\">\n" +
             "    <Class name=\"TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -1388,7 +1388,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlMixedTypeOverflow = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"n0000wEct25656\" version=\"2\">\n" +
+            "<Model name=\"n0000wEct25656\" version=\"3\">\n" +
             "    <Class name=\"com.example.test.TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +
@@ -1436,7 +1436,7 @@ public class SatSolverConstraintEvaluatorTest {
             "</Model>\n";
 
     private String xmlCmpFixedVsRange = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<Model name=\"n0000wEct25656\" version=\"2\">\n" +
+            "<Model name=\"n0000wEct25656\" version=\"3\">\n" +
             "    <Class name=\"com.example.test.TestClass1\">\n" +
             "        <Properties>\n" +
             "            <Property name=\"runOnAndroid\" type=\"boolean\" value=\"false\"/>\n" +

@@ -16,12 +16,8 @@ public class XomAnalyserFactory {
 
 	public static XomAnalyser createXomAnalyser(int version) {
 
-		if (version == 0 || version == 1) {
+		if (version == 0 || version == 1 || version == 2) {
 			ExceptionHelper.reportRuntimeException("Version not supported.");
-		}
-
-		if (version == 2) {
-			return new XomAnalyserVersion2();
 		}
 
 		if (version == 3) {

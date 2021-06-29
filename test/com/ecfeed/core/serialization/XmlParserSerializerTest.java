@@ -86,8 +86,8 @@ public class XmlParserSerializerTest {
 	}
 
 	@Test
-	public void parseChoiceTestVersion2() {
-		parseChoiceTest(2);
+	public void parseChoiceTestVersion3() {
+		parseChoiceTest(3);
 	}	
 
 	@Test

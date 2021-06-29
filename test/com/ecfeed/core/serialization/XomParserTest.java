@@ -54,7 +54,7 @@ import nu.xom.Serializer;
 public class XomParserTest {
 
 	private final boolean DEBUG = true;
-	private final byte MIN_MODEL_VERSION = 2;
+	private final byte MIN_MODEL_VERSION = 3;
 
 	RandomModelGenerator fModelGenerator = new RandomModelGenerator();
 	ModelStringifier fStringifier = new ModelStringifier();

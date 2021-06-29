@@ -65,7 +65,7 @@ public class ModelSerializerTest {
 
 	@Test
 	public void classSerializerTestWithAndroidBaseRunner(){
-		classSerializerTest(true, "com.example.AndroidBaseRunner", 2);
+		classSerializerTest(true, "com.example.AndroidBaseRunner", 3);
 	}
 
 	@Test
