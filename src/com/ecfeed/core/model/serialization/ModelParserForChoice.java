@@ -28,17 +28,18 @@ import nu.xom.Element;
 import nu.xom.Elements;
 import nu.xom.Node;
 
-public abstract class ModelParserForChoice {
+public class ModelParserForChoice implements IModelParserForChoice {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
+	private IModelChangeRegistrator fModelChangeRegistrator;
 
-	protected abstract String getChoiceNodeName();
 
-	public ModelParserForChoice() {
+	public ModelParserForChoice(IModelChangeRegistrator modelChangeRegistrator) {
+		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
 	public Optional<ChoiceNode> parseChoice(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
+			Element element, ListOfStrings errorList) {
 
 		String name, value;
 		boolean isRandomized;
@@ -52,14 +53,14 @@ public abstract class ModelParserForChoice {
 			return Optional.empty();
 		}
 
-		ChoiceNode choice = new ChoiceNode(name, value, modelChangeRegistrator);
+		ChoiceNode choice = new ChoiceNode(name, value, fModelChangeRegistrator);
 		choice.setRandomizedValue(isRandomized);
 		choice.setDescription(parseComments(element));
 
 		for (Element child : getIterableChildren(element)) {
 
 			if (child.getLocalName() == getChoiceNodeName()) {
-				Optional<ChoiceNode> node = parseChoice(child, modelChangeRegistrator, errorList);
+				Optional<ChoiceNode> node = parseChoice(child, errorList);
 				if (node.isPresent()) {
 					choice.addChoice(node.get());
 				} else {
@@ -74,6 +75,11 @@ public abstract class ModelParserForChoice {
 		}
 
 		return Optional.ofNullable(choice);
+	}
+
+
+	public static String getChoiceNodeName() {
+		return SerializationHelperVersion1.getChoiceNodeName();
 	}
 
 	private static void assertNodeTag(
