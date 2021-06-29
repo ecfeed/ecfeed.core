@@ -17,7 +17,7 @@ public class XomBuilderFactory {
 	public static XomBuilder createXomBuilder(int modelVersion, SerializatorParams serializatorParams) {
 
 		if (modelVersion == 0) {
-			return new XomBuilderVersion0(serializatorParams);
+			ExceptionHelper.reportRuntimeException("Version not supported.");
 		}
 		if (modelVersion == 1) {
 			return new XomBuilderVersion1(serializatorParams);

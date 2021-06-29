@@ -34,7 +34,7 @@ public class ModelSerializerTest {
 
 	@Test
 	public void modelSerializerTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			modelSerializerTest(version);
 		}
 	}
@@ -65,17 +65,17 @@ public class ModelSerializerTest {
 
 	@Test
 	public void classSerializerTestWithAndroidBaseRunner(){
-		classSerializerTest(true, "com.example.AndroidBaseRunner", 0);
+		classSerializerTest(true, "com.example.AndroidBaseRunner", 1);
 	}
 
 	@Test
 	public void classSerializerTestWithoutAndroidBaseRunner(){
-		classSerializerTest(false, null, 0);
+		classSerializerTest(false, null, 1);
 	}
 
 	@Test
 	public void classSerializerTest() {
-		for (int version = 0; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
+		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			classSerializerTest(false, null, version);
 		}
 	}
