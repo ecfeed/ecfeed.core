@@ -33,7 +33,6 @@ public class ModelParserForChoice implements IModelParserForChoice {
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
-
 	public ModelParserForChoice(IModelChangeRegistrator modelChangeRegistrator) {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}

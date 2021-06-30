@@ -22,7 +22,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_IS_RADOMIZED_ATTRIBUTE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_LINKED_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
@@ -32,7 +31,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CA
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_SUITE_NAME_ATTRIBUTE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,9 +38,34 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.ExpectedValueStatement;
+import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.ModelVersionDistributor;
+import com.ecfeed.core.model.NodePropertyDefs;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StatementArrayOperator;
+import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.BooleanHelper;
+import com.ecfeed.core.utils.BooleanHolder;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.StringHolder;
 
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -787,40 +810,10 @@ public abstract class XomAnalyser {
 	public Optional<ChoiceNode> parseChoice(
 			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
 
-		String name, value;
-		boolean isRandomized;
 		
-		try {
-			assertNodeTag(element.getQualifiedName(), getChoiceNodeName(), errorList);
-			name = getElementName(element, errorList);
-			value = getAttributeValue(element, VALUE_ATTRIBUTE, errorList);
-			isRandomized = getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
-		} catch (ParserException e) {
-			return Optional.empty();
-		}
-
-		ChoiceNode choice = new ChoiceNode(name, value, modelChangeRegistrator);
-		choice.setRandomizedValue(isRandomized);
-		choice.setDescription(parseComments(element));
-
-		for (Element child : getIterableChildren(element)) {
-			
-			if (child.getLocalName() == getChoiceNodeName()) {
-				Optional<ChoiceNode> node = parseChoice(child, modelChangeRegistrator, errorList);
-				if (node.isPresent()) {
-					choice.addChoice(node.get());
-				} else {
-					return Optional.empty();
-				}
-
-			}
-			
-			if (child.getLocalName() == SerializationConstants.LABEL_NODE_NAME) {
-				choice.addLabel(fWhiteCharConverter.decode(child.getAttributeValue(SerializationConstants.LABEL_ATTRIBUTE_NAME)));
-			}
-		}
-
-		return Optional.ofNullable(choice);
+		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
+		
+		return modelParserForChoice.parseChoice(element, errorList);
 	}
 
 	private static void assertNodeTag(
