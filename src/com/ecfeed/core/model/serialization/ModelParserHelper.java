@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -153,5 +154,49 @@ public class ModelParserHelper  {
 
 		return null;
 	}
+
+	static String getPropertyValue(NodePropertyDefs.PropertyId propertyId, Element classElement) {
+
+		String propertyName = NodePropertyDefs.getPropertyName(propertyId);
+
+		Elements propertyElements = getPropertyElements(classElement);
+		if (propertyElements == null) {
+			return null;
+		}
+
+		int propertiesSize = propertyElements.size();
+
+		for (int cnt = 0; cnt < propertiesSize; cnt++) {
+			Element propertyElement = propertyElements.get(cnt);
+
+			String name = getNameFromPropertyElem(propertyElement);
+
+			if (name.equals(propertyName)) {
+				return getValueFromPropertyElem(propertyElement);
+			}
+		}
+
+		return null;		
+	}	
+
+	private static Elements getPropertyElements(Element parentElement) {
+
+		Elements propertyBlockElements = parentElement.getChildElements(SerializationConstants.PROPERTIES_BLOCK_TAG_NAME);
+		if (propertyBlockElements.size() == 0) {
+			return null;
+		}
+
+		Element firstBlockElement = propertyBlockElements.get(0);
+		return firstBlockElement.getChildElements(SerializationConstants.PROPERTY_TAG_NAME);
+	}
+
+	private static String getNameFromPropertyElem(Element property) {
+		return property.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_NAME);
+	}
+
+	private static String getValueFromPropertyElem(Element property) {
+		return property.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_VALUE);
+	}	
+
 
 }
