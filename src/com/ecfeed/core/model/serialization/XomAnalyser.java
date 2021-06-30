@@ -19,12 +19,8 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_LINKED_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.RUN_ON_ANDROID_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
@@ -217,7 +213,12 @@ public abstract class XomAnalyser {
 		parseMethodProperties(methodElement, targetMethodNode);
 
 		for (Element child : getIterableChildren(methodElement, getParameterNodeName())) {
-			Optional<MethodParameterNode> node = parseMethodParameter(child, targetMethodNode, errorList);
+			
+			ModelParserForMethodParameter modelParserForMethodParameter = 
+					new ModelParserForMethodParameter();
+			
+			Optional<MethodParameterNode> node = 
+					modelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
 			if (node.isPresent()) {
 				targetMethodNode.addParameter(node.get());
 			}
@@ -263,80 +264,80 @@ public abstract class XomAnalyser {
 		targetMethodNode.setPropertyValue(propertyId, value);		
 	}
 
-	public Optional<MethodParameterNode> parseMethodParameter(
-			Element parameterElement, MethodNode method, ListOfStrings errorList) {
-
-		String name, type;
-		String defaultValue = null;
-		String expected = String.valueOf(false);
-		
-		try {
-			assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
-			name = getElementName(parameterElement, errorList);
-			type = getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
-			
-			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
-				expected = getAttributeValue(parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
-				defaultValue = getAttributeValue(parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
-			}
-			
-		} catch (ParserException e) {
-			return Optional.empty();
-		}
-		
-		MethodParameterNode targetMethodParameterNode = 
-				new MethodParameterNode(
-						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
-                );
-
-		parseParameterProperties(parameterElement, targetMethodParameterNode);
-
-		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
-			boolean linked ;
-			
-			try {
-				linked = Boolean.parseBoolean(getAttributeValue(parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
-			} catch (ParserException e) {
-				return Optional.empty();
-			}
-			
-			targetMethodParameterNode.setLinked(linked);
-		}
-
-		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method != null && method.getClassNode() != null) {
-			String linkPath;
-			
-			try {
-				linkPath = getAttributeValue(parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
-			} catch (ParserException e) {
-				return Optional.empty();
-			}
-			
-			GlobalParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
-			
-			if (link != null) {
-				targetMethodParameterNode.setLink(link);
-			} else {
-				targetMethodParameterNode.setLinked(false);
-			}
-		} else {
-			targetMethodParameterNode.setLinked(false);
-		}
-
-		for (Element child : getIterableChildren(parameterElement, getChoiceNodeName())) {
-			Optional<ChoiceNode> node = parseChoice(child, targetMethodParameterNode.getModelChangeRegistrator(), errorList);
-			if (node.isPresent()) {
-				targetMethodParameterNode.addChoice(node.get());
-			}
-		}
-
-		targetMethodParameterNode.setDescription(parseComments(parameterElement));
-		if (targetMethodParameterNode.isLinked() == false) {
-			targetMethodParameterNode.setTypeComments(parseTypeComments(parameterElement));
-		}
-
-		return Optional.ofNullable(targetMethodParameterNode);
-	}
+//	public Optional<MethodParameterNode> parseMethodParameter(
+//			Element parameterElement, MethodNode method, ListOfStrings errorList) {
+//
+//		String name, type;
+//		String defaultValue = null;
+//		String expected = String.valueOf(false);
+//		
+//		try {
+//			assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
+//			name = getElementName(parameterElement, errorList);
+//			type = getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
+//			
+//			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
+//				expected = getAttributeValue(parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
+//				defaultValue = getAttributeValue(parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
+//			}
+//			
+//		} catch (ParserException e) {
+//			return Optional.empty();
+//		}
+//		
+//		MethodParameterNode targetMethodParameterNode = 
+//				new MethodParameterNode(
+//						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
+//                );
+//
+//		parseParameterProperties(parameterElement, targetMethodParameterNode);
+//
+//		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
+//			boolean linked ;
+//			
+//			try {
+//				linked = Boolean.parseBoolean(getAttributeValue(parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
+//			} catch (ParserException e) {
+//				return Optional.empty();
+//			}
+//			
+//			targetMethodParameterNode.setLinked(linked);
+//		}
+//
+//		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method != null && method.getClassNode() != null) {
+//			String linkPath;
+//			
+//			try {
+//				linkPath = getAttributeValue(parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
+//			} catch (ParserException e) {
+//				return Optional.empty();
+//			}
+//			
+//			GlobalParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+//			
+//			if (link != null) {
+//				targetMethodParameterNode.setLink(link);
+//			} else {
+//				targetMethodParameterNode.setLinked(false);
+//			}
+//		} else {
+//			targetMethodParameterNode.setLinked(false);
+//		}
+//
+//		for (Element child : getIterableChildren(parameterElement, getChoiceNodeName())) {
+//			Optional<ChoiceNode> node = parseChoice(child, targetMethodParameterNode.getModelChangeRegistrator(), errorList);
+//			if (node.isPresent()) {
+//				targetMethodParameterNode.addChoice(node.get());
+//			}
+//		}
+//
+//		targetMethodParameterNode.setDescription(parseComments(parameterElement));
+//		if (targetMethodParameterNode.isLinked() == false) {
+//			targetMethodParameterNode.setTypeComments(parseTypeComments(parameterElement));
+//		}
+//
+//		return Optional.ofNullable(targetMethodParameterNode);
+//	}
 
 	private void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
 		

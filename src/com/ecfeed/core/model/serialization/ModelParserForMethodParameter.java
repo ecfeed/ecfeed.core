@@ -30,7 +30,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Element;
 
-public abstract class ModelParserForMethodParameter {
+public class ModelParserForMethodParameter {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 

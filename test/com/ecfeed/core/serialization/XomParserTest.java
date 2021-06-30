@@ -36,6 +36,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.model.serialization.SerializationHelperVersion1;
 import com.ecfeed.core.model.serialization.XomAnalyser;
@@ -154,8 +155,8 @@ public class XomParserTest {
 					Element element = (Element)methodParameterNode.accept(builder);
 					TRACE(element);
 
-					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					Optional<MethodParameterNode> parsedMethodParameterNode = analyser.parseMethodParameter(element, methodNode, new ListOfStrings());
+					Optional<MethodParameterNode> parsedMethodParameterNode = 
+							new ModelParserForMethodParameter().parseMethodParameter(element, methodNode, new ListOfStrings());
 					assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
 				}
 			}
