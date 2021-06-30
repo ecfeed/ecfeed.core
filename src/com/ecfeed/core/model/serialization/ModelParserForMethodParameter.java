@@ -19,14 +19,11 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.ListOfStrings;
-import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Element;
 
@@ -64,7 +61,7 @@ public class ModelParserForMethodParameter {
 						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
 						);
 
-		parseParameterProperties(parameterElement, targetMethodParameterNode);
+		ModelParserHelper.parseParameterProperties(parameterElement, targetMethodParameterNode);
 
 		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
 			boolean linked ;
@@ -130,43 +127,5 @@ public class ModelParserForMethodParameter {
 		return SerializationHelperVersion1.getParameterNodeName();
 	}
 
-	private void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
 
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, 
-				parameterElement, 
-				targetAbstractParameterNode);		
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, 
-				parameterElement, 
-				targetAbstractParameterNode);
-
-		parseParameterProperty(
-				NodePropertyDefs.PropertyId.PROPERTY_ACTION, 
-				parameterElement, 
-				targetAbstractParameterNode);
-	}
-
-	private void parseParameterProperty(
-			NodePropertyDefs.PropertyId propertyId, 
-			Element methodElement, 
-			AbstractParameterNode targetAbstractParameterNode) {
-
-		String value = ModelParserHelper.getPropertyValue(propertyId, methodElement);
-		if (StringHelper.isNullOrEmpty(value)) {
-			return;
-		}
-		targetAbstractParameterNode.setPropertyValue(propertyId, value);		
-	}
 }

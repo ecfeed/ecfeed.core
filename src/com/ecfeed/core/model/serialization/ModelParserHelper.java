@@ -15,9 +15,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Element;
 import nu.xom.Elements;
@@ -198,5 +200,44 @@ public class ModelParserHelper  {
 		return property.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_VALUE);
 	}	
 
+	static void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
+
+		parseParameterProperty(
+				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
+				parameterElement, 
+				targetAbstractParameterNode);
+
+		parseParameterProperty(
+				NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, 
+				parameterElement, 
+				targetAbstractParameterNode);		
+
+		parseParameterProperty(
+				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_TYPE_OF_ELEMENT, 
+				parameterElement, 
+				targetAbstractParameterNode);
+
+		parseParameterProperty(
+				NodePropertyDefs.PropertyId.PROPERTY_FIND_BY_VALUE_OF_ELEMENT, 
+				parameterElement, 
+				targetAbstractParameterNode);
+
+		parseParameterProperty(
+				NodePropertyDefs.PropertyId.PROPERTY_ACTION, 
+				parameterElement, 
+				targetAbstractParameterNode);
+	}
+
+	static void parseParameterProperty(
+			NodePropertyDefs.PropertyId propertyId, 
+			Element methodElement, 
+			AbstractParameterNode targetAbstractParameterNode) {
+
+		String value = ModelParserHelper.getPropertyValue(propertyId, methodElement);
+		if (StringHelper.isNullOrEmpty(value)) {
+			return;
+		}
+		targetAbstractParameterNode.setPropertyValue(propertyId, value);		
+	}	
 
 }
