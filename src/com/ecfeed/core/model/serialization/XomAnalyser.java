@@ -15,7 +15,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_N
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
@@ -32,7 +31,6 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
@@ -232,8 +230,9 @@ public abstract class XomAnalyser {
 			}
 		}
 
+		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 		for (Element child : getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME)) {
-			Optional<ConstraintNode> node = parseConstraint(child, targetMethodNode, errorList);
+			Optional<ConstraintNode> node = modelParserForConstraint.parseConstraint(child, targetMethodNode, errorList);
 			if (node.isPresent()) {
 				targetMethodNode.addConstraint(node.get());
 			}
@@ -263,76 +262,6 @@ public abstract class XomAnalyser {
 			return;
 		}
 		targetMethodNode.setPropertyValue(propertyId, value);		
-	}
-
-	public Optional<ConstraintNode> parseConstraint(Element element, MethodNode method, ListOfStrings errorList) throws ParserException {
-		
-		String name;
-		
-		try {
-			assertNodeTag(element.getQualifiedName(), CONSTRAINT_NODE_NAME, errorList);
-			name = getElementName(element, errorList);
-		} catch (ParserException e) {
-			return Optional.empty();
-		}
-
-		ConstraintType constraintType = getConstraintType(element, errorList);
-		
-		Optional<AbstractStatement> precondition = null;
-		Optional<AbstractStatement> postcondition = null;
-
-		if ((getIterableChildren(element, SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME).size() != 1) ||
-				(getIterableChildren(element, SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME).size() != 1)) {
-			
-			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
-			return Optional.empty();
-		}
-		
-		for (Element child : getIterableChildren(element, SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME)) {
-			if (child.getLocalName().equals(SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME)) {
-				if (getIterableChildren(child).size() == 1) {
-					//there is only one statement per precondition or postcondition that is either
-					//a single statement or statement array
-					precondition = parseStatement(child.getChildElements().get(0), method, errorList);
-				} else {
-					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
-					return Optional.empty();
-				}
-			}
-		}
-		
-		for (Element child : getIterableChildren(element, SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME)) {
-			if (child.getLocalName().equals(SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME)) {
-				if (getIterableChildren(child).size() == 1) {
-					postcondition = parseStatement(child.getChildElements().get(0), method, errorList);
-				} else {
-					errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
-					return Optional.empty();
-				}
-			} else {
-				errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
-				return Optional.empty();
-			}
-		}
-		
-		if (!precondition.isPresent() || !postcondition.isPresent()) {
-			errorList.add(Messages.MALFORMED_CONSTRAINT_NODE_DEFINITION(method.getName(), name));
-			return Optional.empty();
-		}
-
-		Constraint constraint =
-				new Constraint(
-						name,
-						constraintType,
-						precondition.get(),
-						postcondition.get(),
-						method.getModelChangeRegistrator());
-
-		ConstraintNode targetConstraint = new ConstraintNode(name, constraint, method.getModelChangeRegistrator());
-
-		targetConstraint.setDescription(parseComments(element));
-
-		return Optional.ofNullable(targetConstraint);
 	}
 
 	public Optional<AbstractStatement> parseStatement(

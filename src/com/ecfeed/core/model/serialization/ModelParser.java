@@ -198,7 +198,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseConstraint(document.getRootElement(), method, outErrorList);
+			return new ModelParserForConstraint().parseConstraint(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
