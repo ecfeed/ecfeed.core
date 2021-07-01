@@ -26,7 +26,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.RUN_ON_
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_SUITE_NAME_ATTRIBUTE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -269,81 +268,6 @@ public abstract class XomAnalyser {
 		}
 		targetMethodNode.setPropertyValue(propertyId, value);		
 	}
-
-//	public Optional<MethodParameterNode> parseMethodParameter(
-//			Element parameterElement, MethodNode method, ListOfStrings errorList) {
-//
-//		String name, type;
-//		String defaultValue = null;
-//		String expected = String.valueOf(false);
-//		
-//		try {
-//			assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
-//			name = getElementName(parameterElement, errorList);
-//			type = getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
-//			
-//			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
-//				expected = getAttributeValue(parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
-//				defaultValue = getAttributeValue(parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
-//			}
-//			
-//		} catch (ParserException e) {
-//			return Optional.empty();
-//		}
-//		
-//		MethodParameterNode targetMethodParameterNode = 
-//				new MethodParameterNode(
-//						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
-//                );
-//
-//		parseParameterProperties(parameterElement, targetMethodParameterNode);
-//
-//		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
-//			boolean linked ;
-//			
-//			try {
-//				linked = Boolean.parseBoolean(getAttributeValue(parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
-//			} catch (ParserException e) {
-//				return Optional.empty();
-//			}
-//			
-//			targetMethodParameterNode.setLinked(linked);
-//		}
-//
-//		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method != null && method.getClassNode() != null) {
-//			String linkPath;
-//			
-//			try {
-//				linkPath = getAttributeValue(parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
-//			} catch (ParserException e) {
-//				return Optional.empty();
-//			}
-//			
-//			GlobalParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
-//			
-//			if (link != null) {
-//				targetMethodParameterNode.setLink(link);
-//			} else {
-//				targetMethodParameterNode.setLinked(false);
-//			}
-//		} else {
-//			targetMethodParameterNode.setLinked(false);
-//		}
-//
-//		for (Element child : getIterableChildren(parameterElement, getChoiceNodeName())) {
-//			Optional<ChoiceNode> node = parseChoice(child, targetMethodParameterNode.getModelChangeRegistrator(), errorList);
-//			if (node.isPresent()) {
-//				targetMethodParameterNode.addChoice(node.get());
-//			}
-//		}
-//
-//		targetMethodParameterNode.setDescription(parseComments(parameterElement));
-//		if (targetMethodParameterNode.isLinked() == false) {
-//			targetMethodParameterNode.setTypeComments(parseTypeComments(parameterElement));
-//		}
-//
-//		return Optional.ofNullable(targetMethodParameterNode);
-//	}
 
 	private void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
 		
