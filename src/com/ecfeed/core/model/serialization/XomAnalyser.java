@@ -94,8 +94,12 @@ public abstract class XomAnalyser {
 		targetRootNode.setDescription(parseComments(element));
 
 		//parameters must be parsed before classes
+		
+		IModelParserForGlobalParameter modelParserForGlobalParameter = 
+				new ModelParserForGlobalParameter();
+		
 		for (Element child : getIterableChildren(element, getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			Optional<GlobalParameterNode> node = modelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
 			if (node.isPresent()) {
 				targetRootNode.addParameter(node.get());
 			}
@@ -377,36 +381,6 @@ public abstract class XomAnalyser {
 			return;
 		}
 		targetAbstractParameterNode.setPropertyValue(propertyId, value);		
-	}
-
-	public Optional<GlobalParameterNode> parseGlobalParameter(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
-
-		String name, type;
-		
-		try {
-			assertNodeTag(element.getQualifiedName(), getParameterNodeName(), errorList);
-			name = getElementName(element, errorList);
-			type = getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errorList);
-		} catch (ParserException e) {
-			return Optional.empty();
-		}
-		
-		GlobalParameterNode targetGlobalParameterNode = new GlobalParameterNode(name, type, modelChangeRegistrator);
-
-		parseParameterProperties(element, targetGlobalParameterNode);
-
-		for (Element child : getIterableChildren(element, getChoiceNodeName())) {
-			Optional<ChoiceNode> node = parseChoice(child, modelChangeRegistrator, errorList);
-			if (node.isPresent()) {
-				targetGlobalParameterNode.addChoice(node.get());
-			}
-		}
-
-		targetGlobalParameterNode.setDescription(parseComments(element));
-		targetGlobalParameterNode.setTypeComments(parseTypeComments(element));
-
-		return Optional.ofNullable(targetGlobalParameterNode);
 	}
 
 	public Optional<TestCaseNode> parseTestCase(

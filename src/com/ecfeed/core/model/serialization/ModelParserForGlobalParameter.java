@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForGlobalParameter {
+public class ModelParserForGlobalParameter implements IModelParserForGlobalParameter {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 
