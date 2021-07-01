@@ -136,7 +136,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseGlobalParameter(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
+			return new ModelParserForGlobalParameter().parseGlobalParameter(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;

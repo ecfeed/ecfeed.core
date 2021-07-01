@@ -142,9 +142,11 @@ public abstract class XomAnalyser {
 		//we need to do it here, so the backward search for global parameters will work
 		targetClassNode.setParent(parent);
 
+		
+		ModelParserForGlobalParameter modelParserForGlobalParameter = new ModelParserForGlobalParameter();
 		//parameters must be parsed before classes
 		for (Element child : getIterableChildren(classElement, getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
+			Optional<GlobalParameterNode> node = modelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
 			if (node.isPresent()) {
 				targetClassNode.addParameter(node.get());
 			}
