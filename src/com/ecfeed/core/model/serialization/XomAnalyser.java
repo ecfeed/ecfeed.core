@@ -18,14 +18,7 @@ import nu.xom.Element;
 
 public abstract class XomAnalyser {
 
-	// TODO remove protected methods
 	protected abstract int getModelVersion();
-//	protected abstract String getChoiceNodeName();
-//	protected abstract String getChoiceAttributeName();
-//	protected abstract String getStatementChoiceAttributeName();
-//	protected abstract String getParameterNodeName();
-//	protected abstract String getStatementParameterAttributeName();
-//	protected abstract ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException;
 
 	public XomAnalyser() {
 	}
@@ -35,11 +28,16 @@ public abstract class XomAnalyser {
 
 		// TODO move construction to constructor
 
+		IModelParserForGlobalParameter modelParserForGlobalParameter = 
+				new ModelParserForGlobalParameter();
+
+
 		IModelParserForClass modelParserForClass = new ModelParserForClass();
 
 		IModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(
 						getModelVersion(), 
+						modelParserForGlobalParameter,
 						modelParserForClass,
 						modelChangeRegistrator);
 

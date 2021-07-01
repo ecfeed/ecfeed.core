@@ -27,14 +27,17 @@ public class ModelParserForRoot implements IModelParserForRoot {
 	IModelChangeRegistrator fModelChangeRegistrator;
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private int fModelVersion;
+	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private IModelParserForClass fModelParserForClass;
 
 	public ModelParserForRoot(
 			int modelVersion, 
+			IModelParserForGlobalParameter modelParserForGlobalParameter,
 			IModelParserForClass modelParserForClass,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelVersion = modelVersion;
+		fModelParserForGlobalParameter = modelParserForGlobalParameter;
 		fModelParserForClass = modelParserForClass;
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
@@ -49,11 +52,8 @@ public class ModelParserForRoot implements IModelParserForRoot {
 
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element, fWhiteCharConverter));
 
-		IModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter();
-
 		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = modelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			Optional<GlobalParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
 			if (node.isPresent()) {
 				targetRootNode.addParameter(node.get());
 			}
