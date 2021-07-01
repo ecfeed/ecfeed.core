@@ -269,9 +269,8 @@ public class XomParserTest {
 			TRACE(trueElement);
 			TRACE(falseElement);
 
-			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			StaticStatement parsedTrue = analyser.parseStaticStatement(trueElement, null, new ListOfStrings());
-			StaticStatement parsedFalse = analyser.parseStaticStatement(falseElement, null, new ListOfStrings());
+			StaticStatement parsedTrue = new ModelParserForConstraint().parseStaticStatement(trueElement, null, new ListOfStrings());
+			StaticStatement parsedFalse = new ModelParserForConstraint().parseStaticStatement(falseElement, null, new ListOfStrings());
 
 			assertStatementsEqual(trueStatement, parsedTrue);
 			assertStatementsEqual(falseStatement, parsedFalse);
@@ -301,15 +300,14 @@ public class XomParserTest {
 
 				Element element = (Element)s.accept(builder);
 				TRACE(element);
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 
 				AbstractStatement parsedS = null;
 				switch(element.getLocalName()){
 				case SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME:
-					parsedS = analyser.parseLabelStatement(element, m, new ListOfStrings());
+					parsedS = new ModelParserForConstraint().parseLabelStatement(element, m, new ListOfStrings());
 					break;
 				case SerializationConstants.CONSTRAINT_CHOICE_STATEMENT_NODE_NAME:
-					parsedS = analyser.parseChoiceStatement(element, m, new ListOfStrings());
+					parsedS = new ModelParserForConstraint().parseChoiceStatement(element, m, new ListOfStrings());
 					break;
 				}
 
@@ -353,8 +351,7 @@ public class XomParserTest {
 				Element element = (Element)s.accept(builder);
 				TRACE(element);
 
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-				ExpectedValueStatement parsedS = analyser.parseExpectedValueStatement(element, m, new ListOfStrings());
+				ExpectedValueStatement parsedS = new ModelParserForConstraint().parseExpectedValueStatement(element, m, new ListOfStrings());
 				assertStatementsEqual(s, parsedS);
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
@@ -382,8 +379,7 @@ public class XomParserTest {
 			Element element = (Element)s.accept(builder);
 			TRACE(element);
 
-			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-			StatementArray parsedS = analyser.parseStatementArray(element, m, new ListOfStrings());
+			StatementArray parsedS = new ModelParserForConstraint().parseStatementArray(element, m, new ListOfStrings());
 			assertStatementsEqual(s, parsedS);
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());

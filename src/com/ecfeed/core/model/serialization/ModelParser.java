@@ -213,7 +213,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseStatement(document.getRootElement(), method, outErrorList).get();
+			return new ModelParserForConstraint().parseStatement(document.getRootElement(), method, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -228,7 +228,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
+			return new ModelParserForConstraint().parseStaticStatement(document.getRootElement(), modelChangeRegistrator, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -243,7 +243,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseChoiceStatement(document.getRootElement(), method, outErrorList);
+			return new ModelParserForConstraint().parseChoiceStatement(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -258,7 +258,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
+			return new ModelParserForConstraint().parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return new ExpectedValueStatement(null, null, null);
@@ -273,7 +273,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseStatementArray(document.getRootElement(), method, outErrorList);
+			return new ModelParserForConstraint().parseStatementArray(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return new StatementArray(null, method.getModelChangeRegistrator());
