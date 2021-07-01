@@ -37,6 +37,7 @@ import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
+import com.ecfeed.core.model.serialization.ModelParserForTestCase;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.model.serialization.SerializationHelperVersion1;
 import com.ecfeed.core.model.serialization.XomAnalyser;
@@ -183,8 +184,8 @@ public class XomParserTest {
 					Element element = (Element)testCaseNode.accept(builder);
 					TRACE(element);
 
-					XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-					Optional<TestCaseNode> tc1 = analyser.parseTestCase(element, m, new ListOfStrings());
+					ModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+					Optional<TestCaseNode> tc1 = modelParserForTestCase.parseTestCase(element, m, new ListOfStrings());
 					assertElementsEqual(testCaseNode, tc1.get());
 				} catch (Exception e) {
 					fail("Unexpected exception: " + e.getMessage());

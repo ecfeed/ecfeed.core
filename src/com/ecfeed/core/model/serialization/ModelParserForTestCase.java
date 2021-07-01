@@ -28,7 +28,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public abstract class ModelParserForTestCase {
+public class ModelParserForTestCase implements IModelParserForTestCase {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 

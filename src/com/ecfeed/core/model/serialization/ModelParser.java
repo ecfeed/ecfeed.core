@@ -114,7 +114,6 @@ public class ModelParser {
 		}
 	}
 
-	// TODO
 	public MethodNode parseMethod(
 			InputStream istream, ListOfStrings outErrorList) throws ParserException {
 		
@@ -130,7 +129,6 @@ public class ModelParser {
 		}
 	}
 
-	// TODO
 	public GlobalParameterNode parseGlobalParameter(
 			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 		
@@ -146,7 +144,6 @@ public class ModelParser {
 		}
 	}
 
-	// TODO
 	public MethodParameterNode parseMethodParameter(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
@@ -162,7 +159,6 @@ public class ModelParser {
 		}
 	}
 
-	// TODO
 	public ChoiceNode parseChoice(
 			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 
@@ -182,13 +178,12 @@ public class ModelParser {
 		}
 	}
 
-	// TODO
 	public TestCaseNode parseTestCase(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseTestCase(document.getRootElement(), method, outErrorList).get();
+			return new ModelParserForTestCase().parseTestCase(document.getRootElement(), method, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
@@ -213,7 +208,6 @@ public class ModelParser {
 		}
 	}
 
-	// TODO
 	public AbstractStatement parseStatement(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
