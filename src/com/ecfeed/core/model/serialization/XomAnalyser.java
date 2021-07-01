@@ -594,14 +594,14 @@ public abstract class XomAnalyser {
 		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
 	}
 
-	public Optional<ChoiceNode> parseChoice(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
-
-		
-		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
-		
-		return modelParserForChoice.parseChoice(element, errorList);
-	}
+//	public Optional<ChoiceNode> parseChoice(
+//			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
+//
+//		
+//		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
+//		
+//		return modelParserForChoice.parseChoice(element, errorList);
+//	}
 
 	private static void assertNodeTag(
 			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {

@@ -164,7 +164,7 @@ public class ModelParser {
 
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseChoice(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
+			return new ModelParserForChoice(modelChangeRegistrator).parseChoice(document.getRootElement(), outErrorList).get();
 
 		} catch (ParsingException e) {
 

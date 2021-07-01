@@ -36,6 +36,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
 import com.ecfeed.core.model.serialization.ModelParserForTestCase;
 import com.ecfeed.core.model.serialization.SerializationConstants;
@@ -239,8 +240,7 @@ public class XomParserTest {
 				Element element = (Element)p.accept(builder);
 				TRACE(element);
 
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-				Optional<ChoiceNode> p1 = analyser.parseChoice(element, null, new ListOfStrings());
+				Optional<ChoiceNode> p1 = new ModelParserForChoice(null).parseChoice(element, new ListOfStrings());
 				assertElementsEqual(p, p1.get());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
