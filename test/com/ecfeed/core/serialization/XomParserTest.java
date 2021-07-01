@@ -77,7 +77,6 @@ public class XomParserTest {
 		try {
 			RootNode rootNode = fModelGenerator.generateModel(3);
 
-			ModelLogger.printModel("XYX", rootNode);
 			XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 			Element rootElement = (Element)rootNode.accept(builder);
 			TRACE(rootElement);
