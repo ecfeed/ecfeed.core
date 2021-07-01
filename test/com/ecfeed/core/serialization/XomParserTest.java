@@ -38,6 +38,7 @@ import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
+import com.ecfeed.core.model.serialization.ModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
 import com.ecfeed.core.model.serialization.ModelParserForTestCase;
 import com.ecfeed.core.model.serialization.SerializationConstants;
@@ -127,10 +128,8 @@ public class XomParserTest {
 				Element element = (Element)methodNode.accept(builder);
 				TRACE(element);
 
-				XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
-
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
-				Optional<MethodNode> parsedMethodNode = analyser.parseMethod(element, tmpClassNode, new ListOfStrings());
+				Optional<MethodNode> parsedMethodNode = new ModelParserForMethod().parseMethod(element, tmpClassNode, new ListOfStrings());
 				assertElementsEqual(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {

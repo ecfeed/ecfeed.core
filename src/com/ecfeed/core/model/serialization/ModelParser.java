@@ -119,7 +119,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return getXomAnalyser().parseMethod(document.getRootElement(), null, outErrorList).get();
+			return new ModelParserForMethod().parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;

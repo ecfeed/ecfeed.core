@@ -17,7 +17,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_LABEL_STATEMENT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.RUN_ON_ANDROID_ATTRIBUTE_NAME;
 
@@ -31,7 +30,6 @@ import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.GlobalParameterNode;
@@ -45,7 +43,6 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.BooleanHolder;
@@ -143,8 +140,10 @@ public abstract class XomAnalyser {
 			}
 		}
 
+		ModelParserForMethod modelParserForMethod = new ModelParserForMethod();
+		
 		for (Element child : getIterableChildren(classElement, SerializationConstants.METHOD_NODE_NAME)) {
-			Optional<MethodNode> node = parseMethod(child, targetClassNode, errorList);
+			Optional<MethodNode> node = modelParserForMethod.parseMethod(child, targetClassNode, errorList);
 			if (node.isPresent()) {
 				targetClassNode.addMethod(node.get());
 			}
@@ -190,78 +189,6 @@ public abstract class XomAnalyser {
 
 		String androidBaseRunnerStr = getPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, classElement);
 		androidBaseRunnerHolder.set(androidBaseRunnerStr);		
-	}
-
-	public Optional<MethodNode> parseMethod(
-			Element methodElement, ClassNode classNode, ListOfStrings errorList) throws ParserException {
-		
-		String name;
-		
-		try {
-			assertNodeTag(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
-			name = getElementName(methodElement, errorList);
-		} catch (ParserException e) {
-			return Optional.empty();
-		}
-		
-		MethodNode targetMethodNode = new MethodNode(name, classNode.getModelChangeRegistrator());
-		targetMethodNode.setParent(classNode);
-
-		parseMethodProperties(methodElement, targetMethodNode);
-
-		for (Element child : getIterableChildren(methodElement, getParameterNodeName())) {
-			
-			ModelParserForMethodParameter modelParserForMethodParameter = 
-					new ModelParserForMethodParameter();
-			
-			Optional<MethodParameterNode> node = 
-					modelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
-			if (node.isPresent()) {
-				targetMethodNode.addParameter(node.get());
-			}
-		}
-
-		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-		
-		for (Element child : getIterableChildren(methodElement, SerializationConstants.TEST_CASE_NODE_NAME)) {
-			Optional<TestCaseNode> node = modelParserForTestCase.parseTestCase(child, targetMethodNode, errorList);
-			if (node.isPresent()) {
-				targetMethodNode.addTestCase(node.get());
-			}
-		}
-
-		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-		for (Element child : getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME)) {
-			Optional<ConstraintNode> node = modelParserForConstraint.parseConstraint(child, targetMethodNode, errorList);
-			if (node.isPresent()) {
-				targetMethodNode.addConstraint(node.get());
-			}
-		}
-
-		targetMethodNode.setDescription(parseComments(methodElement));
-
-		return Optional.ofNullable(targetMethodNode);
-	}
-
-	private void parseMethodProperties(Element methodElement, MethodNode targetMethodNode) {
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_METHOD_RUNNER, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_BROWSER_TO_PARAM, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_BROWSER, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_BROWSER_DRIVER_PATH, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_MAP_START_URL_TO_PARAM, methodElement, targetMethodNode);
-		parseMethodProperty(NodePropertyDefs.PropertyId.PROPERTY_START_URL, methodElement, targetMethodNode);
-	}
-
-	private void parseMethodProperty(
-			NodePropertyDefs.PropertyId propertyId, 
-			Element methodElement, 
-			MethodNode targetMethodNode) {
-		
-		String value = getPropertyValue(propertyId, methodElement);
-		if (StringHelper.isNullOrEmpty(value)) {
-			return;
-		}
-		targetMethodNode.setPropertyValue(propertyId, value);		
 	}
 
 	public Optional<AbstractStatement> parseStatement(
