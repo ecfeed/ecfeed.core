@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public abstract class ModelParserForRoot {
+public class ModelParserForRoot {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private int fModelVersion;
