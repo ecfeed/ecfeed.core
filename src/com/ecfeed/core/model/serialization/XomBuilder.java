@@ -10,12 +10,11 @@
 
 package com.ecfeed.core.model.serialization;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.ANDROID_RUNNER_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.COMMENTS_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
+import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
@@ -33,7 +32,6 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERT
 import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_VALUE;
 import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_TAG_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.RUN_ON_ANDROID_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_SUITE_NAME_ATTRIBUTE;
@@ -54,13 +52,10 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.utils.BooleanHelper;
-import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -284,7 +279,6 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createTargetClassElement(ClassNode classNode) {
 		Element targetClassElement = createAbstractElement(CLASS_NODE_NAME, classNode);
 
-		addAndroidValues(classNode, targetClassElement);
 		return targetClassElement;
 	}
 
@@ -542,60 +536,6 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return NodePropertyDefs.getPropertyType(propertyId);
 	}	
-
-	private void addAndroidValues(ClassNode classNode, Element targetClassElement) {
-
-		if (ModelVersionDistributor.isAndroidAttributeInTheClass(getModelVersion())) {
-			addAndroidValuesAsAttributes(classNode, targetClassElement);
-		} else {
-
-			if (fSerializatorParams.getSerializeProperties()) {
-				addAndroidValuesAsProperties(classNode, targetClassElement);
-			}
-		}
-	}
-
-	private void addAndroidValuesAsAttributes(ClassNode classNode, Element classElement) {
-
-		boolean runOnAndroid = classNode.getRunOnAndroid();
-
-		classElement.addAttribute(
-				new Attribute(
-						RUN_ON_ANDROID_ATTRIBUTE_NAME,  
-						Boolean.toString(runOnAndroid)));
-
-		String androidBaseRunner = classNode.getAndroidRunner();
-
-		if (!runOnAndroid && StringHelper.isNullOrEmpty(androidBaseRunner)) {
-			return;
-		}
-
-		if (androidBaseRunner == null) {
-			androidBaseRunner = "";
-		}
-
-		classElement.addAttribute(new Attribute(ANDROID_RUNNER_ATTRIBUTE_NAME, androidBaseRunner));
-	}
-
-	private void addAndroidValuesAsProperties(ClassNode classNode, Element targetElement) {
-
-		boolean runOnAndroid = classNode.getRunOnAndroid();
-
-		appendProperty(
-				getPropertyName(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID),
-				getPropertyType(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID), 
-				BooleanHelper.toString(runOnAndroid), targetElement);
-
-		String androidBaseRunner = classNode.getAndroidRunner();
-		if (androidBaseRunner == null) {
-			return;
-		}
-
-		appendProperty(
-				getPropertyName(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER), 
-				getPropertyType(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER),  
-				androidBaseRunner, targetElement);
-	}
 
 	private void appendProperty(String key, String type, String value, Element targetElement) {
 

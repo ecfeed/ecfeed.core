@@ -15,10 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.BooleanHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.StringHelper;
 
 public class ClassNode extends GlobalParametersParentNode {
 
@@ -80,12 +78,6 @@ public class ClassNode extends GlobalParametersParentNode {
 
 		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
 
-		setRunOnAndroid(runOnAndroid);
-
-		if (!StringHelper.isNullOrEmpty(androidBaseRunner)) {
-			setAndroidRunner(androidBaseRunner);
-		}
-
 		fMethods = new ArrayList<MethodNode>();
 	}
 
@@ -118,27 +110,27 @@ public class ClassNode extends GlobalParametersParentNode {
 		return -1;
 	}
 
-	public String getAndroidRunner() {
-		return getPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER);
-	}
-
-	public void setAndroidRunner(String androidRunner) {
-		setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, androidRunner);
-	}	
-
-	public boolean getRunOnAndroid() {
-		String value = getPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID);
-
-		if (value == null) {
-			return false;
-		}
-
-		return BooleanHelper.parseBoolean(value);
-	}
-
-	public void setRunOnAndroid(boolean runOnAndroid) {
-		setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, BooleanHelper.toString(runOnAndroid));
-	}	
+//	public String getAndroidRunner() {
+//		return getPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER);
+//	}
+//
+//	public void setAndroidRunner(String androidRunner) {
+//		setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, androidRunner);
+//	}	
+//
+//	public boolean getRunOnAndroid() {
+//		String value = getPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID);
+//
+//		if (value == null) {
+//			return false;
+//		}
+//
+//		return BooleanHelper.parseBoolean(value);
+//	}
+//
+//	public void setRunOnAndroid(boolean runOnAndroid) {
+//		setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, BooleanHelper.toString(runOnAndroid));
+//	}	
 
 	public boolean addMethod(MethodNode method) {
 		return addMethod(method, fMethods.size());

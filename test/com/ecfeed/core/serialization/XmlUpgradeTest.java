@@ -125,9 +125,6 @@ public class XmlUpgradeTest {
 		String sourceTxtInVersion3 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='3'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
@@ -172,9 +169,6 @@ public class XmlUpgradeTest {
 		String expectedResultTextInVersion4 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='4'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
@@ -222,9 +216,6 @@ public class XmlUpgradeTest {
 		String sourceTxtInVersion3 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='3'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
@@ -269,9 +260,6 @@ public class XmlUpgradeTest {
 		String expectedResultTextInVersion4 = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 				"<Model name='root' version='4'>\n" +
 				"    <Class name='classNode'>\n" +
-				"        <Properties>\n" +
-				"            <Property name='runOnAndroid' type='boolean' value='false'/>\n" +
-				"        </Properties>\n" +
 				"        <Method name='method'>\n" +
 				"            <Properties>\n" +
 				"                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +

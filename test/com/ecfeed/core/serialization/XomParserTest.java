@@ -30,6 +30,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.ModelLogger;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
@@ -37,6 +38,7 @@ import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
+import com.ecfeed.core.model.serialization.ModelParserForClass;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
 import com.ecfeed.core.model.serialization.ModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
@@ -75,6 +77,7 @@ public class XomParserTest {
 		try {
 			RootNode rootNode = fModelGenerator.generateModel(3);
 
+			ModelLogger.printModel("XYX", rootNode);
 			XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 			Element rootElement = (Element)rootNode.accept(builder);
 			TRACE(rootElement);
@@ -97,15 +100,13 @@ public class XomParserTest {
 	private void parseClassTest(int version){
 		try {
 			ClassNode classNode = fModelGenerator.generateClass(3);
-			classNode.setRunOnAndroid(true);
 
 			XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 			Element element = (Element)classNode.accept(builder);
 			TRACE(element);
-			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 
 			RootNode tmpRoot = new RootNode("tmp", null);
-			Optional<ClassNode> parsedClass = analyser.parseClass(element, tmpRoot, new ListOfStrings());
+			Optional<ClassNode> parsedClass = new ModelParserForClass().parseClass(element, tmpRoot, new ListOfStrings());
 			assertElementsEqual(classNode, parsedClass.get());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -409,20 +410,20 @@ public class XomParserTest {
 			RootNode rootNode = analyser.parseRoot(rootElement, null, new ListOfStrings());
 
 			try {
-				analyser.parseClass(classElement, rootNode, new ListOfStrings());
+				new ModelParserForClass().parseClass(classElement, rootNode, new ListOfStrings());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
-			    ListOfStrings errorList = new ListOfStrings();
-				analyser.parseClass(rootElement, rootNode, errorList);
+				ListOfStrings errorList = new ListOfStrings();
+				new ModelParserForClass().parseClass(rootElement, rootNode, errorList);
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {
 			}
 
 			try {
-			    ListOfStrings errorList = new ListOfStrings();
+				ListOfStrings errorList = new ListOfStrings();
 				analyser.parseRoot(classElement, null, errorList);
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {

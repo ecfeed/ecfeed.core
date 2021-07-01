@@ -15,21 +15,17 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class ClassOperationSetRunOnAndroid extends AbstractModelOperation {
 
 	private ClassNode fClassNode;
-	private boolean fNewValue;
 	private boolean fOriginalValue;
 
 	public ClassOperationSetRunOnAndroid(ClassNode classNode, boolean newValue, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_ANDROID_BASE_RUNNER, extLanguageManager);
 		fClassNode = classNode;
-		fNewValue = newValue;
-		fOriginalValue = classNode.getRunOnAndroid();
 	}
 
 	@Override
 	public void execute() {
 
 		setOneNodeToSelect(fClassNode);
-		fClassNode.setRunOnAndroid(fNewValue);
 		markModelUpdated();
 	}
 

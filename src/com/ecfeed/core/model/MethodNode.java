@@ -238,11 +238,6 @@ public class MethodNode extends ParametersParentNode {
 		return (ClassNode)getParent();
 	}
 
-	public boolean getRunOnAndroid() {
-		ClassNode classNode = getClassNode();
-		return classNode.getRunOnAndroid();
-	}
-
 	public MethodParameterNode findMethodParameter(String name){
 		return (MethodParameterNode)findParameter(name);
 	}

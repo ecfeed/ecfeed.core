@@ -12,24 +12,20 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ClassOperationSetAndroidBaseRunner extends AbstractModelOperation {
+public class ClassOperationSetAndroidBaseRunner extends AbstractModelOperation { // TODO - REMOVE
 
 	private ClassNode fTarget;
-	private String fNewValue;
 	private String fOriginalValue;
 
 	public ClassOperationSetAndroidBaseRunner(ClassNode target, String newValue, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_ANDROID_BASE_RUNNER, extLanguageManager);
 		fTarget = target;
-		fNewValue = newValue;
-		fOriginalValue = target.getAndroidRunner();
 	}
 
 	@Override
 	public void execute() {
 
 		setOneNodeToSelect(fTarget);
-		fTarget.setAndroidRunner(fNewValue);
 		markModelUpdated();
 	}
 

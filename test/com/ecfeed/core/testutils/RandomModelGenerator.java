@@ -85,8 +85,8 @@ public class RandomModelGenerator {
 
 		ClassNode theClass = new ClassNode(name, null);
 
-		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, "true");
-		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, "runner");
+//		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, "true");
+//		theClass.setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, "runner");
 
 		for(int i = 0; i < methods; i++){
 			int parameters = rand.nextInt(MAX_PARAMETERS);
