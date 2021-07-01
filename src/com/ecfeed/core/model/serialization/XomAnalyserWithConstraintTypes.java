@@ -21,6 +21,7 @@ public abstract class XomAnalyserWithConstraintTypes extends XomAnalyserWithNewN
 		super();
 	}
 
+	// TODO - REMOVE
 	@Override
 	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
 		
