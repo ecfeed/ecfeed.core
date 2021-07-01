@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -21,12 +20,12 @@ public abstract class XomAnalyser {
 
 	// TODO remove protected methods
 	protected abstract int getModelVersion();
-	protected abstract String getChoiceNodeName();
-	protected abstract String getChoiceAttributeName();
-	protected abstract String getStatementChoiceAttributeName();
-	protected abstract String getParameterNodeName();
-	protected abstract String getStatementParameterAttributeName();
-	protected abstract ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException;
+//	protected abstract String getChoiceNodeName();
+//	protected abstract String getChoiceAttributeName();
+//	protected abstract String getStatementChoiceAttributeName();
+//	protected abstract String getParameterNodeName();
+//	protected abstract String getStatementParameterAttributeName();
+//	protected abstract ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException;
 
 	public XomAnalyser() {
 	}

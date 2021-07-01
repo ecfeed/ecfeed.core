@@ -16,29 +16,29 @@ public abstract class XomAnalyserWithNewNodeNames extends XomAnalyserWithBaseCon
 		super();
 	}
 
-	@Override
-	protected String getChoiceNodeName() {
-		return SerializationHelperVersion1.getChoiceNodeName();
-	}
-
-	@Override	
-	protected String getChoiceAttributeName() {
-		return SerializationHelperVersion1.getChoiceAttributeName();
-	}
-
-	@Override
-	protected String getStatementChoiceAttributeName() {
-		return SerializationHelperVersion1.getStatementChoiceAttributeName();
-	}
-
-	@Override
-	protected String getParameterNodeName() {
-		return SerializationHelperVersion1.getParameterNodeName();
-	}
-
-	@Override
-	protected String getStatementParameterAttributeName() {
-		return SerializationHelperVersion1.getStatementParameterAttributeName();
-	}
+//	@Override
+//	protected String getChoiceNodeName() {
+//		return SerializationHelperVersion1.getChoiceNodeName();
+//	}
+//
+//	@Override	
+//	protected String getChoiceAttributeName() {
+//		return SerializationHelperVersion1.getChoiceAttributeName();
+//	}
+//
+//	@Override
+//	protected String getStatementChoiceAttributeName() {
+//		return SerializationHelperVersion1.getStatementChoiceAttributeName();
+//	}
+//
+//	@Override
+//	protected String getParameterNodeName() {
+//		return SerializationHelperVersion1.getParameterNodeName();
+//	}
+//
+//	@Override
+//	protected String getStatementParameterAttributeName() {
+//		return SerializationHelperVersion1.getStatementParameterAttributeName();
+//	}
 
 }

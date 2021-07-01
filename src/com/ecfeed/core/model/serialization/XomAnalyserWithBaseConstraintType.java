@@ -10,21 +10,16 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.ConstraintType;
-import com.ecfeed.core.utils.ListOfStrings;
-
-import nu.xom.Element;
-
 public abstract class XomAnalyserWithBaseConstraintType extends XomAnalyser {
 
 	public XomAnalyserWithBaseConstraintType() {
 		super();
 	}
 
-	@Override
-	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
-
-		return ConstraintType.EXTENDED_FILTER;
-	}
+//	@Override
+//	protected ConstraintType getConstraintType(Element element, ListOfStrings errorList) throws ParserException {
+//
+//		return ConstraintType.EXTENDED_FILTER;
+//	}
 
 }
