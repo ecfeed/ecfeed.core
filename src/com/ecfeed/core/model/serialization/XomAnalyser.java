@@ -34,8 +34,19 @@ public abstract class XomAnalyser {
 	public RootNode parseRoot(
 			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 
-		return new ModelParserForRoot(getModelVersion()).parseRoot(element, modelChangeRegistrator, outErrorList);
+		// TODO move construction to constructor
 
+		IModelParserForClass modelParserForClass = new ModelParserForClass();
+
+		IModelParserForRoot modelParserForRoot = 
+				new ModelParserForRoot(
+						getModelVersion(), 
+						modelParserForClass,
+						modelChangeRegistrator);
+
+		return modelParserForRoot.parseRoot(
+				element, 
+				outErrorList);
 	}
 
 }

@@ -24,7 +24,7 @@ import com.ecfeed.core.utils.StringHolder;
 
 import nu.xom.Element;
 
-public class ModelParserForClass {
+public class ModelParserForClass implements IModelParserForClass {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 
