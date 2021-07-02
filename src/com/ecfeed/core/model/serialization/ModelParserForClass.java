@@ -57,8 +57,12 @@ public class ModelParserForClass implements IModelParserForClass {
 		//we need to do it here, so the backward search for global parameters will work
 		targetClassNode.setParent(parent);
 
+		IModelParserForChoice modelParserForChoice =
+				new ModelParserForChoice(null);
 		
-		ModelParserForGlobalParameter modelParserForGlobalParameter = new ModelParserForGlobalParameter();
+		ModelParserForGlobalParameter modelParserForGlobalParameter = 
+				new ModelParserForGlobalParameter(modelParserForChoice);
+		
 		//parameters must be parsed before classes
 		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeName())) {
 			Optional<GlobalParameterNode> node = modelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);

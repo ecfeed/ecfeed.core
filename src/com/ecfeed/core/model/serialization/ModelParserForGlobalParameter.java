@@ -25,9 +25,17 @@ import nu.xom.Element;
 public class ModelParserForGlobalParameter implements IModelParserForGlobalParameter {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
-
+	private IModelParserForChoice fModelParserForChoice;
+	
+	ModelParserForGlobalParameter(IModelParserForChoice modelParserForChoice) {
+		fModelParserForChoice = modelParserForChoice;
+	}
+	
 	public Optional<GlobalParameterNode> parseGlobalParameter(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) {
+			Element element, 
+			IModelChangeRegistrator modelChangeRegistrator, 
+			
+			ListOfStrings errorList) {
 
 		String name, type;
 
@@ -46,11 +54,9 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 		List<Element> children = 
 				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getChoiceNodeName());
 
-		ModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
-
 		for (Element child : children) {
 
-			Optional<ChoiceNode> node = modelParserForChoice.parseChoice(child, errorList);
+			Optional<ChoiceNode> node = fModelParserForChoice.parseChoice(child, errorList);
 			if (node.isPresent()) {
 				targetGlobalParameterNode.addChoice(node.get());
 			}

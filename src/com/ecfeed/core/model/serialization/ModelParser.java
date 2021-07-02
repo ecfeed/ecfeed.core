@@ -134,7 +134,18 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForGlobalParameter().parseGlobalParameter(document.getRootElement(), modelChangeRegistrator, outErrorList).get();
+			
+			IModelParserForChoice modelParserForChoice =
+					new ModelParserForChoice(null);
+			
+			ModelParserForGlobalParameter modelParserForGlobalParameter
+				= new ModelParserForGlobalParameter(modelParserForChoice);
+			
+			return modelParserForGlobalParameter.parseGlobalParameter(
+					document.getRootElement(), 
+					modelChangeRegistrator, 
+					outErrorList).get();
+			
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;

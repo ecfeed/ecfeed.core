@@ -28,9 +28,10 @@ public abstract class XomAnalyser {
 
 		// TODO move construction to constructor
 
+		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
+		
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter();
-
+				new ModelParserForGlobalParameter(modelParserForChoice);
 
 		IModelParserForClass modelParserForClass = new ModelParserForClass();
 
