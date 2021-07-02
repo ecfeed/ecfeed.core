@@ -28,9 +28,15 @@ public class ModelParserForClass implements IModelParserForClass {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private IModelParserForChoice fModelParserForChoice;
+	private IModelParserForMethod fModelParserForMethod;
 
-	public ModelParserForClass(IModelParserForChoice modelParserForChoice) {
+
+	public ModelParserForClass(
+			IModelParserForChoice modelParserForChoice, 
+			IModelParserForMethod modelParserForMethod) {
+		
 		fModelParserForChoice = modelParserForChoice;
+		fModelParserForMethod = modelParserForMethod;
 	}
 	
 	public Optional<ClassNode> parseClass(
@@ -70,10 +76,10 @@ public class ModelParserForClass implements IModelParserForClass {
 			}
 		}
 
-		ModelParserForMethod modelParserForMethod = new ModelParserForMethod();
-		
 		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationConstants.METHOD_NODE_NAME)) {
-			Optional<MethodNode> node = modelParserForMethod.parseMethod(child, targetClassNode, errorList);
+			Optional<MethodNode> node = 
+					fModelParserForMethod.parseMethod(child, targetClassNode, errorList);
+			
 			if (node.isPresent()) {
 				targetClassNode.addMethod(node.get());
 			}

@@ -108,7 +108,9 @@ public class ModelParser {
 			IModelParserForChoice modelParserForChoice = 
 					new ModelParserForChoice(null);
 			
-			return new ModelParserForClass(modelParserForChoice).parseClass(
+			IModelParserForMethod modelParserForMethod = new ModelParserForMethod();
+			
+			return new ModelParserForClass(modelParserForChoice, modelParserForMethod).parseClass(
 					document.getRootElement(), null, outErrorList).get();
 			
 		} catch (ParsingException e) {
