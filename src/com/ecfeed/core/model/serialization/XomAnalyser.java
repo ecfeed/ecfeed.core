@@ -33,7 +33,7 @@ public abstract class XomAnalyser {
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
 
-		IModelParserForClass modelParserForClass = new ModelParserForClass();
+		IModelParserForClass modelParserForClass = new ModelParserForClass(modelParserForChoice);
 
 		IModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(

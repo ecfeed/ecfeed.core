@@ -27,8 +27,10 @@ import nu.xom.Element;
 public class ModelParserForClass implements IModelParserForClass {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
+	private IModelParserForChoice fModelParserForChoice;
 
-	public ModelParserForClass() {
+	public ModelParserForClass(IModelParserForChoice modelParserForChoice) {
+		fModelParserForChoice = modelParserForChoice;
 	}
 	
 	public Optional<ClassNode> parseClass(
@@ -57,11 +59,8 @@ public class ModelParserForClass implements IModelParserForClass {
 		//we need to do it here, so the backward search for global parameters will work
 		targetClassNode.setParent(parent);
 
-		IModelParserForChoice modelParserForChoice =
-				new ModelParserForChoice(null);
-		
 		ModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter(modelParserForChoice);
+				new ModelParserForGlobalParameter(fModelParserForChoice);
 		
 		//parameters must be parsed before classes
 		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeName())) {

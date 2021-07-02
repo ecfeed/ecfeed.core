@@ -36,6 +36,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.serialization.IModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForClass;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
@@ -104,7 +105,12 @@ public class XomParserTest {
 			TRACE(element);
 
 			RootNode tmpRoot = new RootNode("tmp", null);
-			Optional<ClassNode> parsedClass = new ModelParserForClass().parseClass(element, tmpRoot, new ListOfStrings());
+			
+			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
+			
+			Optional<ClassNode> parsedClass = 
+					new ModelParserForClass(modelParserForChoice).parseClass(element, tmpRoot, new ListOfStrings());
+			
 			assertElementsEqual(classNode, parsedClass.get());
 		} catch (Exception e) {
 			fail("Unexpected exception: " + e.getMessage());
@@ -407,15 +413,18 @@ public class XomParserTest {
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 			RootNode rootNode = analyser.parseRoot(rootElement, null, new ListOfStrings());
 
+			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
+			
 			try {
-				new ModelParserForClass().parseClass(classElement, rootNode, new ListOfStrings());
+				new ModelParserForClass(modelParserForChoice).parseClass(classElement, rootNode, new ListOfStrings());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
 				ListOfStrings errorList = new ListOfStrings();
-				new ModelParserForClass().parseClass(rootElement, rootNode, errorList);
+				new ModelParserForClass(modelParserForChoice).parseClass(rootElement, rootNode, errorList);
+				
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {
 			}

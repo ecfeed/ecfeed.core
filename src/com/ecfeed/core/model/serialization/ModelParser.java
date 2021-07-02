@@ -104,7 +104,13 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForClass().parseClass(document.getRootElement(), null, outErrorList).get();
+			
+			IModelParserForChoice modelParserForChoice = 
+					new ModelParserForChoice(null);
+			
+			return new ModelParserForClass(modelParserForChoice).parseClass(
+					document.getRootElement(), null, outErrorList).get();
+			
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;
