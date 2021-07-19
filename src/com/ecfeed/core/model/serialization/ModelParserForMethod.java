@@ -27,11 +27,16 @@ import nu.xom.Element;
 
 public class ModelParserForMethod implements IModelParserForMethod {
 
-	ModelParserForMethodParameter fModelParserForMethodParameter;
+	IModelParserForMethodParameter fModelParserForMethodParameter;
+	IModelParserForTestCase fModelParserForTestCase;
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	
-	public  ModelParserForMethod(ModelParserForMethodParameter modelParserForMethodParameter) {
+	public  ModelParserForMethod(
+			IModelParserForMethodParameter modelParserForMethodParameter,
+			IModelParserForTestCase modelParserForTestCase) {
+		
 		fModelParserForMethodParameter = modelParserForMethodParameter;
+		fModelParserForTestCase = modelParserForTestCase;
 	}
 
 	public Optional<MethodNode> parseMethod(
@@ -60,15 +65,14 @@ public class ModelParserForMethod implements IModelParserForMethod {
 			}
 		}
 
-		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.TEST_CASE_NODE_NAME)) {
-			Optional<TestCaseNode> node = modelParserForTestCase.parseTestCase(child, targetMethodNode, errorList);
+			Optional<TestCaseNode> node = fModelParserForTestCase.parseTestCase(child, targetMethodNode, errorList);
 			if (node.isPresent()) {
 				targetMethodNode.addTestCase(node.get());
 			}
 		}
 
+		// TODO 
 		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME)) {
 			Optional<ConstraintNode> node = modelParserForConstraint.parseConstraint(child, targetMethodNode, errorList);

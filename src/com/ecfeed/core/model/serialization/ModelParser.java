@@ -108,9 +108,13 @@ public class ModelParser {
 			IModelParserForChoice modelParserForChoice = 
 					new ModelParserForChoice(null);
 			
-			ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 			
-			IModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
+			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+			
+			IModelParserForMethod modelParserForMethod = 
+					new ModelParserForMethod(
+							modelParserForMethodParameter, modelParserForTestCase);
 			
 			ModelParserForGlobalParameter modelParserForGlobalParameter = 
 					new ModelParserForGlobalParameter(modelParserForChoice);
@@ -137,9 +141,12 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 			
-			ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 			
-			ModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
+			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+			
+			IModelParserForMethod modelParserForMethod = 
+					new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase);
 			
 			return modelParserForMethod.parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (ParsingException e) {

@@ -27,7 +27,7 @@ import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
-public class ModelParserForMethodParameter {
+public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 

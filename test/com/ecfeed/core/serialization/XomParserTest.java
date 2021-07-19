@@ -39,6 +39,8 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.IModelParserForChoice;
 import com.ecfeed.core.model.serialization.IModelParserForGlobalParameter;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
+import com.ecfeed.core.model.serialization.IModelParserForMethodParameter;
+import com.ecfeed.core.model.serialization.IModelParserForTestCase;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForClass;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
@@ -111,9 +113,12 @@ public class XomParserTest {
 			
 			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
 			
-			ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 			
-			IModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
+			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+			
+			IModelParserForMethod modelParserForMethod = 
+					new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase);
 			
 			IModelParserForGlobalParameter modelParserForGlobalParameter = 
 					new ModelParserForGlobalParameter(modelParserForChoice);
@@ -148,9 +153,13 @@ public class XomParserTest {
 				TRACE(element);
 
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
-				ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 				
-				ModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
+				IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+				
+				IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+				
+				IModelParserForMethod modelParserForMethod = 
+						new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase);
 				
 				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
 				assertElementsEqual(methodNode, parsedMethodNode.get());
@@ -433,8 +442,10 @@ public class XomParserTest {
 
 			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
 			
-			ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
-			IModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
+			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+			IModelParserForMethod modelParserForMethod = 
+					new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase);
 			
 			IModelParserForGlobalParameter modelParserForGlobalParameter = 
 					new ModelParserForGlobalParameter(modelParserForChoice);
