@@ -111,7 +111,9 @@ public class XomParserTest {
 			
 			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
 			
-			IModelParserForMethod modelParserForMethod = new ModelParserForMethod();
+			ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+			
+			IModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
 			
 			IModelParserForGlobalParameter modelParserForGlobalParameter = 
 					new ModelParserForGlobalParameter(modelParserForChoice);
@@ -146,7 +148,11 @@ public class XomParserTest {
 				TRACE(element);
 
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
-				Optional<MethodNode> parsedMethodNode = new ModelParserForMethod().parseMethod(element, tmpClassNode, new ListOfStrings());
+				ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+				
+				ModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
+				
+				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
 				assertElementsEqual(methodNode, parsedMethodNode.get());
 			}
 			catch (Exception e) {
@@ -427,7 +433,8 @@ public class XomParserTest {
 
 			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
 			
-			IModelParserForMethod modelParserForMethod = new ModelParserForMethod();
+			ModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+			IModelParserForMethod modelParserForMethod = new ModelParserForMethod(modelParserForMethodParameter);
 			
 			IModelParserForGlobalParameter modelParserForGlobalParameter = 
 					new ModelParserForGlobalParameter(modelParserForChoice);

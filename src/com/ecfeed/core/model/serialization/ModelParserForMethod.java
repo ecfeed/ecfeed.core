@@ -27,7 +27,12 @@ import nu.xom.Element;
 
 public class ModelParserForMethod implements IModelParserForMethod {
 
+	ModelParserForMethodParameter fModelParserForMethodParameter;
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
+	
+	public  ModelParserForMethod(ModelParserForMethodParameter modelParserForMethodParameter) {
+		fModelParserForMethodParameter = modelParserForMethodParameter;
+	}
 
 	public Optional<MethodNode> parseMethod(
 			Element methodElement, ClassNode classNode, ListOfStrings errorList) throws ParserException {
@@ -48,11 +53,8 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeName())) {
 
-			ModelParserForMethodParameter modelParserForMethodParameter = 
-					new ModelParserForMethodParameter();
-
 			Optional<MethodParameterNode> node = 
-					modelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
+					fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
 			if (node.isPresent()) {
 				targetMethodNode.addParameter(node.get());
 			}
