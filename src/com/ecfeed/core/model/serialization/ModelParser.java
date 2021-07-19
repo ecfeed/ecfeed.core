@@ -115,7 +115,7 @@ public class ModelParser {
 
 			ModelParserForClass modelParserForClass = 
 					new ModelParserForClass(
-							modelParserForChoice, modelParserForGlobalParameter, modelParserForMethod);
+							modelParserForGlobalParameter, modelParserForMethod);
 			
 			return modelParserForClass.parseClass(
 					document.getRootElement(), null, outErrorList).get();

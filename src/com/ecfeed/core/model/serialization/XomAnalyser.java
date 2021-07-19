@@ -36,7 +36,7 @@ public abstract class XomAnalyser {
 		IModelParserForMethod modelParserForMethod = new ModelParserForMethod();
 		
 		IModelParserForClass modelParserForClass = 
-				new ModelParserForClass(modelParserForChoice, modelParserForGlobalParameter, modelParserForMethod);
+				new ModelParserForClass(modelParserForGlobalParameter, modelParserForMethod);
 
 		IModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(

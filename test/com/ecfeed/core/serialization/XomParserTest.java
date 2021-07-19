@@ -118,7 +118,7 @@ public class XomParserTest {
 			
 			ModelParserForClass modelParserForClass = 
 					new ModelParserForClass(
-							modelParserForChoice, modelParserForGlobalParameter, modelParserForMethod);
+							modelParserForGlobalParameter, modelParserForMethod);
 			
 			Optional<ClassNode> parsedClass = 
 					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
@@ -434,7 +434,7 @@ public class XomParserTest {
 			
 			ModelParserForClass modelParserForClass = 
 					new ModelParserForClass(
-							modelParserForChoice, modelParserForGlobalParameter, modelParserForMethod);
+							modelParserForGlobalParameter, modelParserForMethod);
 			try {
 				modelParserForClass.parseClass(classElement, rootNode, new ListOfStrings());
 			} catch (Exception e) {
