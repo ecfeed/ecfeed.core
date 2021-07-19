@@ -30,9 +30,6 @@ import nu.xom.Element;
 
 public class ModelParserForTestCase implements IModelParserForTestCase {
 
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
-
-
 	public Optional<TestCaseNode> parseTestCase(
 			Element element, MethodNode method, ListOfStrings errorList) {
 
@@ -40,7 +37,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 
 		try {
 			ModelParserHelper.assertNodeTag(element.getQualifiedName(), TEST_CASE_NODE_NAME, errorList);
-			name = ModelParserHelper.getAttributeValue(element, TEST_SUITE_NAME_ATTRIBUTE, fWhiteCharConverter, errorList);
+			name = ModelParserHelper.getAttributeValue(element, TEST_SUITE_NAME_ATTRIBUTE, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
@@ -67,7 +64,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 				try {
 					choiceName = ModelParserHelper.getAttributeValue(
 							testParameterElement, SerializationHelperVersion1.getChoiceAttributeName(), 
-							fWhiteCharConverter,  errorList);
+							errorList);
 				} catch (ParserException e) {
 					return Optional.empty();
 				}
@@ -84,7 +81,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 				try {
 					valueString = 
 							ModelParserHelper.getAttributeValue(
-									testParameterElement, SerializationConstants.VALUE_ATTRIBUTE_NAME, fWhiteCharConverter,  errorList);
+									testParameterElement, SerializationConstants.VALUE_ATTRIBUTE_NAME, errorList);
 				} catch (ParserException e) {
 					return Optional.empty();
 				}
@@ -102,7 +99,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		}
 
 		TestCaseNode targetTestCaseNode = new TestCaseNode(name, method.getModelChangeRegistrator(), testData);
-		targetTestCaseNode.setDescription(ModelParserHelper.parseComments(element, fWhiteCharConverter));
+		targetTestCaseNode.setDescription(ModelParserHelper.parseComments(element));
 
 		return Optional.ofNullable(targetTestCaseNode);
 	}

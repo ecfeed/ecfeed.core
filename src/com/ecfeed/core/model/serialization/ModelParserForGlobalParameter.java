@@ -24,7 +24,6 @@ import nu.xom.Element;
 
 public class ModelParserForGlobalParameter implements IModelParserForGlobalParameter {
 
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private IModelParserForChoice fModelParserForChoice;
 	
 	public ModelParserForGlobalParameter(IModelParserForChoice modelParserForChoice) {
@@ -41,8 +40,8 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 
 		try {
 			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(element, fWhiteCharConverter, errorList);
-			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, fWhiteCharConverter, errorList);
+			name = ModelParserHelper.getElementName(element, errorList);
+			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
@@ -62,8 +61,8 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 			}
 		}
 
-		targetGlobalParameterNode.setDescription(ModelParserHelper.parseComments(element, fWhiteCharConverter));
-		targetGlobalParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(element, fWhiteCharConverter));
+		targetGlobalParameterNode.setDescription(ModelParserHelper.parseComments(element));
+		targetGlobalParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(element));
 
 		return Optional.ofNullable(targetGlobalParameterNode);
 	}

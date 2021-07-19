@@ -83,7 +83,7 @@ public class ModelParserHelper  {
 	}
 
 	static String getElementName(
-			Element element, WhiteCharConverter fWhiteCharConverter, ListOfStrings errorList) throws ParserException {
+			Element element, ListOfStrings errorList) throws ParserException {
 
 		String name = element.getAttributeValue(SerializationConstants.NODE_NAME_ATTRIBUTE);
 
@@ -92,11 +92,11 @@ public class ModelParserHelper  {
 			ParserException.create();
 		}
 
-		return fWhiteCharConverter.decode(name);
+		return WhiteCharConverter.getInstance().decode(name);
 	}
 
 	static String getAttributeValue(
-			Element element, String attributeName, WhiteCharConverter fWhiteCharConverter, ListOfStrings errorList) throws ParserException {
+			Element element, String attributeName, ListOfStrings errorList) throws ParserException {
 
 		String value = element.getAttributeValue(attributeName);
 
@@ -105,17 +105,17 @@ public class ModelParserHelper  {
 			ParserException.create();
 		}
 
-		return fWhiteCharConverter.decode(value);
+		return WhiteCharConverter.getInstance().decode(value);
 	}
 
-	static boolean getIsRandomizedValue(Element element, String attributeName, WhiteCharConverter fWhiteCharConverter) throws ParserException {
+	static boolean getIsRandomizedValue(Element element, String attributeName) throws ParserException {
 		String isRandomizedValue = element.getAttributeValue(attributeName);
 
 		if (isRandomizedValue == null) {
 			return false;
 		}
 
-		return Boolean.parseBoolean(fWhiteCharConverter.decode(isRandomizedValue));
+		return Boolean.parseBoolean(WhiteCharConverter.getInstance().decode(isRandomizedValue));
 	}
 
 	static EMathRelation parseRelationName(
@@ -131,26 +131,26 @@ public class ModelParserHelper  {
 		return relation;
 	}
 
-	static String parseComments(Element element, WhiteCharConverter fWhiteCharConverter) {
+	static String parseComments(Element element) {
 
 		if (element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 			Element comments = element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).get(0);
 			if (comments.getChildElements(SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 				Element basicComments = comments.getChildElements(SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME).get(0);
-				return fWhiteCharConverter.decode(basicComments.getValue());
+				return WhiteCharConverter.getInstance().decode(basicComments.getValue());
 			}
 		}
 
 		return null;
 	}
 
-	static String parseTypeComments(Element element, WhiteCharConverter fWhiteCharConverter) {
+	static String parseTypeComments(Element element) {
 
 		if (element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 			Element comments = element.getChildElements(SerializationConstants.COMMENTS_BLOCK_TAG_NAME).get(0);
 			if (comments.getChildElements(SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME).size() > 0) {
 				Element typeComments = comments.getChildElements(SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME).get(0);
-				return fWhiteCharConverter.decode(typeComments.getValue());
+				return WhiteCharConverter.getInstance().decode(typeComments.getValue());
 			}
 		}
 

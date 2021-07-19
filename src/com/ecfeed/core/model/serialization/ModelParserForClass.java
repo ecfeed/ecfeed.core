@@ -26,7 +26,6 @@ import nu.xom.Element;
 
 public class ModelParserForClass implements IModelParserForClass {
 
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private IModelParserForMethod fModelParserForMethod;
 
@@ -46,7 +45,7 @@ public class ModelParserForClass implements IModelParserForClass {
 		
 		try {
 			ModelParserHelper.assertNodeTag(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
-			name = ModelParserHelper.getElementName(classElement, fWhiteCharConverter, errorList);
+			name = ModelParserHelper.getElementName(classElement, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
@@ -61,7 +60,7 @@ public class ModelParserForClass implements IModelParserForClass {
 						runOnAndroidHolder.get(), 
 						androidBaseRunnerHolder.get());
 
-		targetClassNode.setDescription(ModelParserHelper.parseComments(classElement, fWhiteCharConverter));
+		targetClassNode.setDescription(ModelParserHelper.parseComments(classElement));
 		//we need to do it here, so the backward search for global parameters will work
 		targetClassNode.setParent(parent);
 

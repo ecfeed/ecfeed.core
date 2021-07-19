@@ -31,8 +31,6 @@ public class ModelParserForMethod implements IModelParserForMethod {
 	IModelParserForTestCase fModelParserForTestCase;
 	IModelParserForConstraint fModelParserForConstraint;
 	
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter(); // TODO remove
-	
 	public  ModelParserForMethod(
 			IModelParserForMethodParameter modelParserForMethodParameter,
 			IModelParserForTestCase modelParserForTestCase,
@@ -50,7 +48,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		try {
 			ModelParserHelper.assertNodeTag(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
-			name = ModelParserHelper.getElementName(methodElement, fWhiteCharConverter, errorList);
+			name = ModelParserHelper.getElementName(methodElement, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
@@ -83,7 +81,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 			}
 		}
 
-		targetMethodNode.setDescription(ModelParserHelper.parseComments(methodElement, fWhiteCharConverter));
+		targetMethodNode.setDescription(ModelParserHelper.parseComments(methodElement));
 
 		return Optional.ofNullable(targetMethodNode);
 	}

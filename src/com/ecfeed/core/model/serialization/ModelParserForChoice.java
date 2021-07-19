@@ -23,7 +23,6 @@ import nu.xom.Element;
 
 public class ModelParserForChoice implements IModelParserForChoice {
 
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
 	public ModelParserForChoice(IModelChangeRegistrator modelChangeRegistrator) {
@@ -38,16 +37,16 @@ public class ModelParserForChoice implements IModelParserForChoice {
 
 		try {
 			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getChoiceNodeName(), errorList);
-			name = ModelParserHelper.getElementName(element, fWhiteCharConverter, errorList);
-			value = ModelParserHelper.getAttributeValue(element, VALUE_ATTRIBUTE, fWhiteCharConverter, errorList);
-			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE, fWhiteCharConverter);
+			name = ModelParserHelper.getElementName(element, errorList);
+			value = ModelParserHelper.getAttributeValue(element, VALUE_ATTRIBUTE, errorList);
+			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
 
 		ChoiceNode choice = new ChoiceNode(name, value, fModelChangeRegistrator);
 		choice.setRandomizedValue(isRandomized);
-		choice.setDescription(ModelParserHelper.parseComments(element, fWhiteCharConverter));
+		choice.setDescription(ModelParserHelper.parseComments(element));
 
 		for (Element child : ModelParserHelper.getIterableChildren(element)) {
 
@@ -61,7 +60,7 @@ public class ModelParserForChoice implements IModelParserForChoice {
 			}
 
 			if (child.getLocalName() == SerializationConstants.LABEL_NODE_NAME) {
-				choice.addLabel(fWhiteCharConverter.decode(child.getAttributeValue(SerializationConstants.LABEL_ATTRIBUTE_NAME)));
+				choice.addLabel(WhiteCharConverter.getInstance().decode(child.getAttributeValue(SerializationConstants.LABEL_ATTRIBUTE_NAME)));
 			}
 		}
 

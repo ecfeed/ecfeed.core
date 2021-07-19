@@ -15,7 +15,7 @@ import java.util.List;
 
 public class WhiteCharConverter {
 
-	WhiteCharConverter fWhiteCharConverter;
+	private static WhiteCharConverter fWhiteCharConverter;
 	
 	private static final String BACKSLASH_STR = "\\";
 	private static final String DBL_BACKSLASH_STR = "\\\\";
@@ -37,7 +37,7 @@ public class WhiteCharConverter {
 		new SpecialItem(SPACE_STR, BACKSLASH_S_STR)
 	}));
 
-	public WhiteCharConverter getInstance() {
+	public static WhiteCharConverter getInstance() {
 		
 		if (fWhiteCharConverter == null) {
 			fWhiteCharConverter = new WhiteCharConverter();

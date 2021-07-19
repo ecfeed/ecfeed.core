@@ -29,8 +29,6 @@ import nu.xom.Element;
 
 public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
 
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
-
 	public Optional<MethodParameterNode> parseMethodParameter(
 			Element parameterElement, MethodNode method, ListOfStrings errorList) {
 
@@ -40,16 +38,16 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 
 		try {
 			ModelParserHelper.assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(parameterElement, fWhiteCharConverter, errorList);
-			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, fWhiteCharConverter, errorList);
+			name = ModelParserHelper.getElementName(parameterElement, errorList);
+			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
 
 			if (parameterElement.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
 				expected = 
 						ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, fWhiteCharConverter, errorList);
+								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
 				defaultValue = 
 						ModelParserHelper.getAttributeValue(
-								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, fWhiteCharConverter, errorList);
+								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
 			}
 
 		} catch (ParserException e) {
@@ -69,7 +67,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			try {
 				linked = 
 						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, fWhiteCharConverter, errorList));
+								parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
 
 			} catch (ParserException e) {
 				return Optional.empty();
@@ -84,7 +82,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			try {
 				linkPath = 
 						ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, fWhiteCharConverter, errorList);
+								parameterElement, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
 			} catch (ParserException e) {
 				return Optional.empty();
 			}
@@ -114,10 +112,10 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			}
 		}
 
-		targetMethodParameterNode.setDescription(ModelParserHelper.parseComments(parameterElement, fWhiteCharConverter));
+		targetMethodParameterNode.setDescription(ModelParserHelper.parseComments(parameterElement));
 
 		if (targetMethodParameterNode.isLinked() == false) {
-			targetMethodParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(parameterElement, fWhiteCharConverter));
+			targetMethodParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(parameterElement));
 		}
 
 		return Optional.ofNullable(targetMethodParameterNode);

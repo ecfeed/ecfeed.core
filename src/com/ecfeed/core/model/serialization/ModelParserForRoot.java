@@ -25,7 +25,6 @@ import nu.xom.Element;
 public class ModelParserForRoot implements IModelParserForRoot {
 
 	IModelChangeRegistrator fModelChangeRegistrator;
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private int fModelVersion;
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private IModelParserForClass fModelParserForClass;
@@ -46,11 +45,11 @@ public class ModelParserForRoot implements IModelParserForRoot {
 			Element element, ListOfStrings outErrorList) throws ParserException {
 
 		ModelParserHelper.assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
-		String name = ModelParserHelper.getElementName(element, fWhiteCharConverter, outErrorList);
+		String name = ModelParserHelper.getElementName(element, outErrorList);
 
 		RootNode targetRootNode = new RootNode(name, fModelChangeRegistrator, fModelVersion);
 
-		targetRootNode.setDescription(ModelParserHelper.parseComments(element, fWhiteCharConverter));
+		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
 		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeName())) {
 			Optional<GlobalParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);

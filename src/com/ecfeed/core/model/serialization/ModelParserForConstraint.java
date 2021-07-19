@@ -42,7 +42,6 @@ import nu.xom.Element;
 public class ModelParserForConstraint implements IModelParserForConstraint {
 
 	private static final String EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT = "Empty parameter while parsing value statement.";
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 
 	public ModelParserForConstraint() {
 	}
@@ -53,7 +52,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		try {
 			ModelParserHelper.assertNodeTag(element.getQualifiedName(), CONSTRAINT_NODE_NAME, errorList);
-			name = ModelParserHelper.getElementName(element, fWhiteCharConverter, errorList);
+			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
@@ -112,7 +111,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		ConstraintNode targetConstraint = new ConstraintNode(name, constraint, method.getModelChangeRegistrator());
 
-		targetConstraint.setDescription(ModelParserHelper.parseComments(element, fWhiteCharConverter));
+		targetConstraint.setDescription(ModelParserHelper.parseComments(element));
 
 		return Optional.ofNullable(targetConstraint);
 	}
@@ -185,7 +184,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String operatorValue = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_OPERATOR_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		switch(operatorValue) {
 
@@ -223,7 +222,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		String valueString = 
 				ModelParserHelper.getAttributeValue(
-						element, SerializationConstants.STATIC_VALUE_ATTRIBUTE_NAME, fWhiteCharConverter, errorList);
+						element, SerializationConstants.STATIC_VALUE_ATTRIBUTE_NAME, errorList);
 
 		switch(valueString) {
 		case SerializationConstants.STATIC_STATEMENT_TRUE_VALUE:
@@ -245,7 +244,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		MethodParameterNode methodParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 
@@ -257,7 +256,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String relationName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
@@ -268,7 +267,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String choiceName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationHelperVersion1.getStatementChoiceAttributeName(), 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		ChoiceNode choice = methodParameterNode.getChoice(choiceName);
 		if (choice == null) {
@@ -291,7 +290,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 
@@ -303,7 +302,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String relationName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
@@ -314,7 +313,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String rightParameterName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		MethodParameterNode rightParameterNode = (MethodParameterNode)method.findParameter(rightParameterName);
 		if (rightParameterNode == null) {
@@ -337,7 +336,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
 
@@ -349,7 +348,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String relationName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
@@ -360,7 +359,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String value = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		if (relation == EMathRelation.ASSIGN) {
 			return AssignmentStatement.createAssignmentWithValueCondition(leftParameterNode, value);
@@ -400,17 +399,17 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		String label = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_LABEL_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		String relationName = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		MethodParameterNode parameter = method.findMethodParameter(parameterName);
 
@@ -430,12 +429,12 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
-						element, SerializationHelperVersion1.getStatementParameterAttributeName(), fWhiteCharConverter, errorList);
+						element, SerializationHelperVersion1.getStatementParameterAttributeName(), errorList);
 
 		String valueString = 
 				ModelParserHelper.getAttributeValue(
 						element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, 
-						fWhiteCharConverter, errorList);
+						errorList);
 
 		MethodParameterNode parameter = method.findMethodParameter(parameterName);
 
