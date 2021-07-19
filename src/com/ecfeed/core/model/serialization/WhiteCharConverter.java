@@ -15,37 +15,8 @@ import java.util.List;
 
 public class WhiteCharConverter {
 
-	class StringHolder{
-
-		private String fValue;
-
-		StringHolder(String initialValue) {
-			fValue = initialValue;
-		}
-
-		StringHolder() {
-			this("");
-		}
-
-		public void setValue(String newValue) {
-			fValue = newValue;
-		}
-
-		public String getValue() {
-			return fValue;
-		}
-	}
-
-	class SpecialItem {
-		public String decoded;
-		public String encoded;
-
-		SpecialItem(String decoded, String encoded) {
-			this.decoded = decoded;
-			this.encoded = encoded;
-		}
-	}
-
+	WhiteCharConverter fWhiteCharConverter;
+	
 	private static final String BACKSLASH_STR = "\\";
 	private static final String DBL_BACKSLASH_STR = "\\\\";
 
@@ -66,6 +37,15 @@ public class WhiteCharConverter {
 		new SpecialItem(SPACE_STR, BACKSLASH_S_STR)
 	}));
 
+	public WhiteCharConverter getInstance() {
+		
+		if (fWhiteCharConverter == null) {
+			fWhiteCharConverter = new WhiteCharConverter();
+		}
+		
+		return fWhiteCharConverter;
+	}
+	
 	public String encode(String value) {
 
 		if (value == null)
@@ -136,4 +116,36 @@ public class WhiteCharConverter {
 		int endIndex = startIndex + oldString.length();
 		builder.replace(startIndex, endIndex, newString);
 	}
+	
+	class StringHolder{
+
+		private String fValue;
+
+		StringHolder(String initialValue) {
+			fValue = initialValue;
+		}
+
+		StringHolder() {
+			this("");
+		}
+
+		public void setValue(String newValue) {
+			fValue = newValue;
+		}
+
+		public String getValue() {
+			return fValue;
+		}
+	}
+
+	class SpecialItem {
+		public String decoded;
+		public String encoded;
+
+		SpecialItem(String decoded, String encoded) {
+			this.decoded = decoded;
+			this.encoded = encoded;
+		}
+	}
+	
 }
