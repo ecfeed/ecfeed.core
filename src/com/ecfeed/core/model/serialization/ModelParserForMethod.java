@@ -29,14 +29,18 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 	IModelParserForMethodParameter fModelParserForMethodParameter;
 	IModelParserForTestCase fModelParserForTestCase;
-	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
+	IModelParserForConstraint fModelParserForConstraint;
+	
+	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter(); // TODO remove
 	
 	public  ModelParserForMethod(
 			IModelParserForMethodParameter modelParserForMethodParameter,
-			IModelParserForTestCase modelParserForTestCase) {
+			IModelParserForTestCase modelParserForTestCase,
+			IModelParserForConstraint modelParserForConstraint) {
 		
 		fModelParserForMethodParameter = modelParserForMethodParameter;
 		fModelParserForTestCase = modelParserForTestCase;
+		fModelParserForConstraint = modelParserForConstraint;
 	}
 
 	public Optional<MethodNode> parseMethod(
@@ -72,10 +76,8 @@ public class ModelParserForMethod implements IModelParserForMethod {
 			}
 		}
 
-		// TODO 
-		ModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME)) {
-			Optional<ConstraintNode> node = modelParserForConstraint.parseConstraint(child, targetMethodNode, errorList);
+			Optional<ConstraintNode> node = fModelParserForConstraint.parseConstraint(child, targetMethodNode, errorList);
 			if (node.isPresent()) {
 				targetMethodNode.addConstraint(node.get());
 			}

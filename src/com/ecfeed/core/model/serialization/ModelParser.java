@@ -98,13 +98,13 @@ public class ModelParser {
 		return fXomAnalyser;
 	}
 
-	// TODO
 	public ClassNode parseClass(
 			InputStream istream, ListOfStrings outErrorList) throws ParserException {
 		
 		try {
 			Document document = fBuilder.build(istream);
 			
+			// TODO PARSER
 			IModelParserForChoice modelParserForChoice = 
 					new ModelParserForChoice(null);
 			
@@ -112,9 +112,11 @@ public class ModelParser {
 			
 			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 			
+			IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+			
 			IModelParserForMethod modelParserForMethod = 
 					new ModelParserForMethod(
-							modelParserForMethodParameter, modelParserForTestCase);
+							modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
 			
 			ModelParserForGlobalParameter modelParserForGlobalParameter = 
 					new ModelParserForGlobalParameter(modelParserForChoice);
@@ -141,12 +143,17 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 			
+			// TODO PARSER
+			
 			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 			
 			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 			
+			IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+			
 			IModelParserForMethod modelParserForMethod = 
-					new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase);
+					new ModelParserForMethod(
+							modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
 			
 			return modelParserForMethod.parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (ParsingException e) {
