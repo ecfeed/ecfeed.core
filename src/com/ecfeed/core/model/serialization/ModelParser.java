@@ -110,7 +110,14 @@ public class ModelParser {
 			
 			IModelParserForMethod modelParserForMethod = new ModelParserForMethod();
 			
-			return new ModelParserForClass(modelParserForChoice, modelParserForMethod).parseClass(
+			ModelParserForGlobalParameter modelParserForGlobalParameter = 
+					new ModelParserForGlobalParameter(modelParserForChoice);
+
+			ModelParserForClass modelParserForClass = 
+					new ModelParserForClass(
+							modelParserForChoice, modelParserForGlobalParameter, modelParserForMethod);
+			
+			return modelParserForClass.parseClass(
 					document.getRootElement(), null, outErrorList).get();
 			
 		} catch (ParsingException e) {

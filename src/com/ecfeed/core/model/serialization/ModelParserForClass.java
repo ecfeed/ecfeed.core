@@ -28,14 +28,17 @@ public class ModelParserForClass implements IModelParserForClass {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private IModelParserForChoice fModelParserForChoice;
+	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
 	private IModelParserForMethod fModelParserForMethod;
 
 
 	public ModelParserForClass(
 			IModelParserForChoice modelParserForChoice, 
+			IModelParserForGlobalParameter modelParserForGlobalParameter,
 			IModelParserForMethod modelParserForMethod) {
 		
 		fModelParserForChoice = modelParserForChoice;
+		fModelParserForGlobalParameter = modelParserForGlobalParameter;
 		fModelParserForMethod = modelParserForMethod;
 	}
 	
@@ -65,12 +68,12 @@ public class ModelParserForClass implements IModelParserForClass {
 		//we need to do it here, so the backward search for global parameters will work
 		targetClassNode.setParent(parent);
 
-		ModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter(fModelParserForChoice);
+//		ModelParserForGlobalParameter modelParserForGlobalParameter = 
+//				new ModelParserForGlobalParameter(fModelParserForChoice);
 		
 		//parameters must be parsed before classes
 		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = modelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
+			Optional<GlobalParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
 			if (node.isPresent()) {
 				targetClassNode.addParameter(node.get());
 			}

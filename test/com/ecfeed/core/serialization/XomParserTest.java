@@ -37,10 +37,12 @@ import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.IModelParserForChoice;
+import com.ecfeed.core.model.serialization.IModelParserForGlobalParameter;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForChoice;
 import com.ecfeed.core.model.serialization.ModelParserForClass;
 import com.ecfeed.core.model.serialization.ModelParserForConstraint;
+import com.ecfeed.core.model.serialization.ModelParserForGlobalParameter;
 import com.ecfeed.core.model.serialization.ModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
 import com.ecfeed.core.model.serialization.ModelParserForTestCase;
@@ -111,9 +113,15 @@ public class XomParserTest {
 			
 			IModelParserForMethod modelParserForMethod = new ModelParserForMethod();
 			
-			Optional<ClassNode> parsedClass = 
-					new ModelParserForClass(modelParserForChoice, modelParserForMethod).parseClass(element, tmpRoot, new ListOfStrings());
+			IModelParserForGlobalParameter modelParserForGlobalParameter = 
+					new ModelParserForGlobalParameter(modelParserForChoice);
 			
+			ModelParserForClass modelParserForClass = 
+					new ModelParserForClass(
+							modelParserForChoice, modelParserForGlobalParameter, modelParserForMethod);
+			
+			Optional<ClassNode> parsedClass = 
+					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
 			
 			assertElementsEqual(classNode, parsedClass.get());
 		} catch (Exception e) {
@@ -421,15 +429,21 @@ public class XomParserTest {
 			
 			IModelParserForMethod modelParserForMethod = new ModelParserForMethod();
 			
+			IModelParserForGlobalParameter modelParserForGlobalParameter = 
+					new ModelParserForGlobalParameter(modelParserForChoice);
+			
+			ModelParserForClass modelParserForClass = 
+					new ModelParserForClass(
+							modelParserForChoice, modelParserForGlobalParameter, modelParserForMethod);
 			try {
-				new ModelParserForClass(modelParserForChoice, modelParserForMethod).parseClass(classElement, rootNode, new ListOfStrings());
+				modelParserForClass.parseClass(classElement, rootNode, new ListOfStrings());
 			} catch (Exception e) {
 				fail("Unexpected exception: " + e.getMessage());
 			}
 
 			try {
 				ListOfStrings errorList = new ListOfStrings();
-				new ModelParserForClass(modelParserForChoice, modelParserForMethod).parseClass(rootElement, rootNode, errorList);
+				modelParserForClass.parseClass(rootElement, rootNode, errorList);
 				
 				assertFalse(errorList.isEmpty());
 			} catch (Exception e) {

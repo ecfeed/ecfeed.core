@@ -27,7 +27,7 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private IModelParserForChoice fModelParserForChoice;
 	
-	ModelParserForGlobalParameter(IModelParserForChoice modelParserForChoice) {
+	public ModelParserForGlobalParameter(IModelParserForChoice modelParserForChoice) {
 		fModelParserForChoice = modelParserForChoice;
 	}
 	
