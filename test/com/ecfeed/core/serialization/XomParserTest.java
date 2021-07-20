@@ -37,6 +37,7 @@ import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.serialization.IModelParserForChoice;
+import com.ecfeed.core.model.serialization.IModelParserForClass;
 import com.ecfeed.core.model.serialization.IModelParserForConstraint;
 import com.ecfeed.core.model.serialization.IModelParserForGlobalParameter;
 import com.ecfeed.core.model.serialization.IModelParserForMethod;
@@ -49,6 +50,7 @@ import com.ecfeed.core.model.serialization.ModelParserForGlobalParameter;
 import com.ecfeed.core.model.serialization.ModelParserForMethod;
 import com.ecfeed.core.model.serialization.ModelParserForMethodParameter;
 import com.ecfeed.core.model.serialization.ModelParserForTestCase;
+import com.ecfeed.core.model.serialization.ModelParserHelper;
 import com.ecfeed.core.model.serialization.SerializationConstants;
 import com.ecfeed.core.model.serialization.SerializationHelperVersion1;
 import com.ecfeed.core.model.serialization.XomAnalyser;
@@ -112,25 +114,7 @@ public class XomParserTest {
 
 			RootNode tmpRoot = new RootNode("tmp", null);
 			
-			// TODO PARSER
-			
-			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
-			
-			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
-			
-			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-			
-			IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-			
-			IModelParserForMethod modelParserForMethod = 
-					new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
-			
-			IModelParserForGlobalParameter modelParserForGlobalParameter = 
-					new ModelParserForGlobalParameter(modelParserForChoice);
-			
-			ModelParserForClass modelParserForClass = 
-					new ModelParserForClass(
-							modelParserForGlobalParameter, modelParserForMethod);
+			IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			
 			Optional<ClassNode> parsedClass = 
 					modelParserForClass.parseClass(element, tmpRoot, new ListOfStrings());
@@ -159,16 +143,7 @@ public class XomParserTest {
 
 				ClassNode tmpClassNode = new ClassNode("tmp", null);
 				
-				// TODO PARSER
-				
-				IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
-				
-				IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-				
-				IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-				
-				IModelParserForMethod modelParserForMethod = 
-						new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
+				IModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
 				
 				Optional<MethodNode> parsedMethodNode = modelParserForMethod.parseMethod(element, tmpClassNode, new ListOfStrings());
 				assertElementsEqual(methodNode, parsedMethodNode.get());
@@ -449,24 +424,8 @@ public class XomParserTest {
 			XomAnalyser analyser = XomAnalyserFactory.createXomAnalyser(version);
 			RootNode rootNode = analyser.parseRoot(rootElement, null, new ListOfStrings());
 
-			// TODO PARSER
+			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			
-			IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
-			
-			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
-			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-			
-			IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-			
-			IModelParserForMethod modelParserForMethod = 
-					new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
-			
-			IModelParserForGlobalParameter modelParserForGlobalParameter = 
-					new ModelParserForGlobalParameter(modelParserForChoice);
-			
-			ModelParserForClass modelParserForClass = 
-					new ModelParserForClass(
-							modelParserForGlobalParameter, modelParserForMethod);
 			try {
 				modelParserForClass.parseClass(classElement, rootNode, new ListOfStrings());
 			} catch (Exception e) {

@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -27,6 +28,54 @@ import nu.xom.Node;
 
 public class ModelParserHelper  {
 
+	public static IModelParserForMethod createStandardModelParserForMethod() {
+		
+		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+		
+		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
+		
+		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+		
+		IModelParserForMethod modelParserForMethod = 
+				new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
+		return modelParserForMethod;
+	}
+	
+	public static ModelParserForClass createStandardModelParserForClass() {
+		
+		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
+		
+		IModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
+		
+		IModelParserForGlobalParameter modelParserForGlobalParameter = 
+				new ModelParserForGlobalParameter(modelParserForChoice);
+		
+		ModelParserForClass modelParserForClass = 
+				new ModelParserForClass(
+						modelParserForGlobalParameter, modelParserForMethod);
+		return modelParserForClass;
+	}
+	
+	public static IModelParserForRoot createStandardModelParserForRoot(
+			int modelVersion, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
+		
+		IModelParserForGlobalParameter modelParserForGlobalParameter = 
+				new ModelParserForGlobalParameter(modelParserForChoice);
+
+		IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
+		
+		IModelParserForRoot modelParserForRoot = 
+				new ModelParserForRoot(
+						modelVersion, 
+						modelParserForGlobalParameter,
+						modelParserForClass,
+						modelChangeRegistrator);
+		
+		return modelParserForRoot;
+	}
+	
 	public static void assertNodeTag(
 			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {
 

@@ -24,39 +24,13 @@ public abstract class XomAnalyser {
 	}
 
 	public RootNode parseRoot(
-			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
-
-		// TODO PARSER
-		
-		// TODO move construction to constructor
-
-		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(modelChangeRegistrator);
-		
-		IModelParserForGlobalParameter modelParserForGlobalParameter = 
-				new ModelParserForGlobalParameter(modelParserForChoice);
-		
-		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();		
-		
-		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-		
-		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-		
-		IModelParserForMethod modelParserForMethod = 
-				new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
-		
-		IModelParserForClass modelParserForClass = 
-				new ModelParserForClass(modelParserForGlobalParameter, modelParserForMethod);
+			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) 
+					throws ParserException {
 
 		IModelParserForRoot modelParserForRoot = 
-				new ModelParserForRoot(
-						getModelVersion(), 
-						modelParserForGlobalParameter,
-						modelParserForClass,
-						modelChangeRegistrator);
+				ModelParserHelper.createStandardModelParserForRoot(getModelVersion(), modelChangeRegistrator);
 
-		return modelParserForRoot.parseRoot(
-				element, 
-				outErrorList);
+		return modelParserForRoot.parseRoot(element, outErrorList);
 	}
 
 }

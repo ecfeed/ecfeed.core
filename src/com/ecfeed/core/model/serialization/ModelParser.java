@@ -104,27 +104,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 			
-			// TODO PARSER
-			IModelParserForChoice modelParserForChoice = 
-					new ModelParserForChoice(null);
-			
-			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
-			
-			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-			
-			IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-			
-			IModelParserForMethod modelParserForMethod = 
-					new ModelParserForMethod(
-							modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
-			
-			ModelParserForGlobalParameter modelParserForGlobalParameter = 
-					new ModelParserForGlobalParameter(modelParserForChoice);
-
-			ModelParserForClass modelParserForClass = 
-					new ModelParserForClass(
-							modelParserForGlobalParameter, modelParserForMethod);
-			
+			ModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 			return modelParserForClass.parseClass(
 					document.getRootElement(), null, outErrorList).get();
 			
@@ -143,17 +123,7 @@ public class ModelParser {
 		try {
 			Document document = fBuilder.build(istream);
 			
-			// TODO PARSER
-			
-			IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
-			
-			IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
-			
-			IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
-			
-			IModelParserForMethod modelParserForMethod = 
-					new ModelParserForMethod(
-							modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
+			IModelParserForMethod modelParserForMethod = ModelParserHelper.createStandardModelParserForMethod();
 			
 			return modelParserForMethod.parseMethod(document.getRootElement(), null, outErrorList).get();
 		} catch (ParsingException e) {
