@@ -39,7 +39,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 	private int fDimCount;
 	private IScoreEvaluator<E> fScoreEvaluator = null;
 	private Randomizer fRandomizer = null;
-	
+
 	public NWiseAwesomeAlgorithm(int n, int coverage) {
 		super(n, coverage);
 
@@ -56,24 +56,25 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 
 	@Override
 	public void reset() {
-		
+
 		fRandomizer = new Randomizer();
+		System.out.println("Randomizer seed for current generation: " + fRandomizer.getSeed());
 
 		fDimCount = getInput().size();
-		
+
 		try {
 			fAllDimensionedItems = createDimensionedItems(getInput());
 
 			fScoreEvaluator.initialize(getInput(), getConstraintEvaluator());
-			
+
 			int countOfInitialNTuples = fScoreEvaluator.getCountOfInitialNTuples();
-			
+
 			fCountOfTuplesAllowedToRemain = 
 					calculateCountOfTuplesAllowedToRemain(
 							getCoverage(), countOfInitialNTuples);
-		
+
 			super.reset(countOfInitialNTuples * getCoverage() / 100);
-			
+
 		} catch (Exception e) {
 
 			SystemLogger.logCatch(e);
@@ -150,7 +151,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 		AlgoLogger.log("Best max tuple", bestFullTuple, 1, fLogLevel);
 
 		fScoreEvaluator.update(bestFullTuple);
-		
+
 		incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
 		final List<E> result = AlgorithmHelper.uncompressTuple(bestFullTuple, fDimCount);
@@ -160,22 +161,22 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 	}
 
 	private boolean allRequiredTuplesGenerated() {
-		
+
 		int countOfRemainingNTuples = fScoreEvaluator.getCountOfRemainingNTuples();
-		
+
 		if (countOfRemainingNTuples > fCountOfTuplesAllowedToRemain) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	private SortedMap<Integer, E> findFullTupleWithGoodScores() {
 
 		SortedMap<Integer, E> nTuple = createNTupleWithBestScores();
-		
+
 		SortedMap<Integer, E> fullTuple = findBestFullTupleAfterConstraints(nTuple);
-		
+
 		return fullTuple;
 	}
 
