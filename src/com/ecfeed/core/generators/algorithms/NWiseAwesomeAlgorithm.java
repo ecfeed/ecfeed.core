@@ -23,6 +23,7 @@ import com.ecfeed.core.utils.AlgoLogger;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
+import com.ecfeed.core.utils.Randomizer;
 import com.ecfeed.core.utils.SystemLogger;
 import com.google.common.collect.Maps;
 
@@ -31,17 +32,14 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 
 	static final int MAX_REPETITIONS = 2; // TODO - calculate ? could be smaller for small number of dimensions or N ?
 	static final int MAX_TUPLES = 250000;
-
-	private List<DimensionedItem<E>> fAllDimensionedItems = null;
-
-	private int fCountOfTuplesAllowedToRemain; // allowed to remain due to coverage parameter
-
-	private int fDimCount;
-
 	static final int fLogLevel = 0;
 
-	IScoreEvaluator<E> fScoreEvaluator = null;
-
+	private List<DimensionedItem<E>> fAllDimensionedItems = null;
+	private int fCountOfTuplesAllowedToRemain; // allowed to remain due to coverage parameter
+	private int fDimCount;
+	private IScoreEvaluator<E> fScoreEvaluator = null;
+	private Randomizer fRandomizer = null;
+	
 	public NWiseAwesomeAlgorithm(int n, int coverage) {
 		super(n, coverage);
 
@@ -58,6 +56,8 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 
 	@Override
 	public void reset() {
+		
+		fRandomizer = new Randomizer();
 
 		fDimCount = getInput().size();
 		
@@ -207,7 +207,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 			List<Integer> tupleDimensions) {
 
 		List<E> inputForOneDimension = new ArrayList<>(getInput().get(dimension));
-		Collections.shuffle(inputForOneDimension);
+		Collections.shuffle(inputForOneDimension, fRandomizer.getRandom());
 
 		Set<List<Integer>> dimensionsToCountScores =
 				(new Tuples<>(tupleDimensions, Math.min(tupleDimensions.size(), N - 1))).getAll();
@@ -265,7 +265,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 
 		for (int dim = 0; dim < countOfDimensions; dim++) {
 
-			Collections.shuffle(fAllDimensionedItems);
+			Collections.shuffle(fAllDimensionedItems, fRandomizer.getRandom());
 			DimensionedItem<E> bestItem = null;
 
 			int bestTupleScore = -1;
@@ -316,7 +316,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 		for (int i = 0; i < fDimCount; i++)
 			randomDimensions.add(i);
 
-		Collections.shuffle(randomDimensions);
+		Collections.shuffle(randomDimensions, fRandomizer.getRandom());
 		return randomDimensions;
 	}
 

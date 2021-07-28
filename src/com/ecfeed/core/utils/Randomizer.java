@@ -15,25 +15,37 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class Randomizer {
 
-	private static final AtomicLong seedUniquifier = new AtomicLong(8682522807148012L);
+	private static final AtomicLong SEED_UNIQUIFIER = new AtomicLong(8682522807148012L);
 
-	public long createSeed() {
+	private long fSeed;
+	private Random fRandom;
 
-		return seedUniquifier() ^ System.nanoTime();
+	public Randomizer() {
+
+		this(seedUniquifier() ^ System.nanoTime());
+	}
+
+	public Randomizer(long seed) {
+
+		fSeed = seed;
+		fRandom = new Random(fSeed);
+	}
+
+	public long getSeed() {
+		return fSeed;
+	}
+
+	public Random getRandom() {
+		return fRandom;
 	}
 
 	private static long seedUniquifier() {
 		for (;;) {
-			long current = seedUniquifier.get();
+			long current = SEED_UNIQUIFIER.get();
 			long next = current * 181783497276652981L;
-			if (seedUniquifier.compareAndSet(current, next))
+			if (SEED_UNIQUIFIER.compareAndSet(current, next))
 				return next;
 		}
-	}
-
-	public Random createRandom(long seed) {
-
-		return new Random(seed);
 	}
 
 }
