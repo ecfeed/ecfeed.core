@@ -11,6 +11,7 @@ import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
+import com.ecfeed.core.utils.Randomizer;
 
 public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 
@@ -19,9 +20,8 @@ public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 	private IScoreEvaluator<E> fScoreEvaluator;
 	protected List<List<Integer>> fHistoryDimensionOrder = new ArrayList<>(); // Store historical dimension orders (each
 	private int fCoverage;
-	// randomly generated dimension order
-	// could be different)
-
+	private Randomizer fRandomizer = null;
+	
 	public NWiseShScoreBasedAlgorithm(IScoreEvaluator<E> fScoreEvaluator, int coverage) throws GeneratorException {
 
 		this.fScoreEvaluator = fScoreEvaluator;
@@ -34,6 +34,9 @@ public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 			IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
 
+		fRandomizer = new Randomizer();
+		System.out.println("Randomizer seed for current generation: " + fRandomizer.getSeed());
+		
 		this.fScoreEvaluator.initialize(input, constraintEvaluator);
 		this.fDimensionCount = input.size();
 		this.fInputIndex = IntStream.range(0, input.size()).boxed().collect(Collectors.toList());
@@ -193,7 +196,7 @@ public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 		int attempt = 3;
 		do {
 			attempt--;
-			Collections.shuffle(dimensions);
+			Collections.shuffle(dimensions, fRandomizer.getRandom());
 		} while (fHistoryDimensionOrder.contains(dimensions) && attempt > 0);
 
 		fHistoryDimensionOrder.add(dimensions);
