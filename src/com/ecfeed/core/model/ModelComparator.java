@@ -56,7 +56,7 @@ public class ModelComparator {
 		}
 	}
 
-	private static void compareParameters(MethodParameterNode parameter1, MethodParameterNode parameter2) {
+	public static void compareParameters(MethodParameterNode parameter1, MethodParameterNode parameter2) {
 		compareNames(parameter1.getName(), parameter2.getName());
 		compareNames(parameter1.getType(), parameter2.getType());
 		compareSizes(parameter1.getChoices(), parameter2.getChoices());
@@ -70,7 +70,7 @@ public class ModelComparator {
 		}
 	}
 
-	private static void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
+	public static void compareChoices(ChoiceNode choice1, ChoiceNode choice2) {
 
 		compareNames(choice1.getName(), choice2.getName());
 		compareValues(choice1.getValueString(),choice2.getValueString());
@@ -81,7 +81,7 @@ public class ModelComparator {
 		}
 	}
 
-	private static void compareMethodParameters(MethodParameterNode methodParameterNode1, MethodParameterNode methodParameterNode2) {
+	public static void compareMethodParameters(MethodParameterNode methodParameterNode1, MethodParameterNode methodParameterNode2) {
 
 		compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
 
@@ -137,7 +137,7 @@ public class ModelComparator {
 		compareStatements(constraint1.getPostcondition(), constraint2.getPostcondition());
 	}
 
-	private static void compareStatements(AbstractStatement statement1, AbstractStatement statement2) {
+	public static void compareStatements(AbstractStatement statement1, AbstractStatement statement2) {
 
 		if (statement1 instanceof StaticStatement && statement2 instanceof StaticStatement) {
 			compareStaticStatements((StaticStatement)statement1, (StaticStatement)statement2);
