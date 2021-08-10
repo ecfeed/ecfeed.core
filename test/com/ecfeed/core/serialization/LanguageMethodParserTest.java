@@ -37,14 +37,46 @@ import nu.xom.ParsingException;
 public class LanguageMethodParserTest {
 
 	@Test
-	public  void test1() {
+	public void shouldParseMethodWithoutParameters() {
 
 		String methodXml = 
 				"<Method name='test'>\n" + 
 				"</Method>";
 		
-		parseSignature("void test();",  methodXml);
+		try {
+			parseSignature("void test();",  methodXml);
+		} catch (Exception e) {
+			fail(e.getMessage()); 
+		}
 	}
+	
+	@Test
+	public void shouldFailWhenNoStartBrace() {
+
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"</Method>";
+		
+		try {
+			parseSignature("void test);",  methodXml);
+			fail();
+		} catch (Exception e) {
+		}
+	}	
+
+	@Test
+	public void shouldFailWhenNoEndBrace() {
+
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"</Method>";
+		
+		try {
+			parseSignature("void test(;",  methodXml);
+			fail();
+		} catch (Exception e) {
+		}
+	}	
 
 	private void parseSignature(String signature, String methodXml) {
 		
@@ -52,11 +84,7 @@ public class LanguageMethodParserTest {
 
 		MethodNode methodNodeFromXml = parseXml(methodXml);
 		
-		try {
-			ModelComparator.compareMethods(methodNodeFromSignature, methodNodeFromXml);
-		} catch (Exception e) {
-			fail(e.getMessage());
-		}
+		ModelComparator.compareMethods(methodNodeFromSignature, methodNodeFromXml);
 	}
 
 	private MethodNode parseXml(String methodXml) {
