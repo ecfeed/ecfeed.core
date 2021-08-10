@@ -38,8 +38,16 @@ public class ModelComparator {
 		}
 	}
 
-	private static void compareMethods(MethodNode method1, MethodNode method2) {
+	public static void compareMethods(MethodNode method1, MethodNode method2) {
 
+		if (method1 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 1.");
+		}
+		
+		if (method2 == null) {
+			ExceptionHelper.reportRuntimeException("Empty method 2.");
+		}
+		
 		compareNames(method1.getName(), method2.getName());
 		compareSizes(method1.getParameters(), method2.getParameters());
 		compareSizes(method1.getConstraintNodes(), method2.getConstraintNodes());

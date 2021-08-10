@@ -10,25 +10,90 @@
 
 package com.ecfeed.core.serialization;
 
+import static org.junit.Assert.fail;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
+
 import org.junit.Test;
 
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.ModelComparator;
+import com.ecfeed.core.model.serialization.IModelParserForMethod;
 import com.ecfeed.core.model.serialization.LanguageMethodParser;
+import com.ecfeed.core.model.serialization.ModelParserHelper;
+import com.ecfeed.core.model.serialization.ParserException;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ListOfStrings;
+
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.ParsingException;
 
 public class LanguageMethodParserTest {
 
 	@Test
 	public  void test1() {
 
-		String methodXml = ""; // TODO
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"</Method>";
+		
 		parseSignature("void test();",  methodXml);
 	}
 
 	private void parseSignature(String signature, String methodXml) {
-		//		MethodNode methodNode = 
-		LanguageMethodParser.parseJavaMethodSignature(signature);
+		
+		MethodNode methodNodeFromSignature = LanguageMethodParser.parseJavaMethodSignature(signature);
 
-		// TODO compare with method node created from methodXml
+		MethodNode methodNodeFromXml = parseXml(methodXml);
+		
+		try {
+			ModelComparator.compareMethods(methodNodeFromSignature, methodNodeFromXml);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
 
+	private MethodNode parseXml(String methodXml) {
+		
+		InputStream istream = new ByteArrayInputStream(methodXml.getBytes());
+		Builder builder = new Builder();
+
+		Document document = null;
+
+		try {
+			document = builder.build(istream);
+		} catch (ParsingException | IOException e1) {
+			ExceptionHelper.reportRuntimeException(e1.getMessage());;
+		}
+
+		Element element = document.getRootElement();
+
+		IModelParserForMethod modelParserForMethod = 
+				ModelParserHelper.createStandardModelParserForMethod();
+
+		ListOfStrings errorList = new ListOfStrings();
+
+		ClassNode classNode = new ClassNode("Class1", null);
+		Optional<MethodNode> optMethodNodeFromXml = Optional.empty();
+
+		try {
+			optMethodNodeFromXml = 
+					modelParserForMethod.parseMethod(
+							element, classNode, errorList);
+		} catch (ParserException e) {
+			ExceptionHelper.reportRuntimeException(e.getMessage());
+		}
+
+		if (!optMethodNodeFromXml.isPresent()) {
+			ExceptionHelper.reportRuntimeException("Failed to convert method from xml.");
+		}
+		return optMethodNodeFromXml.get();
 	}
 
 }

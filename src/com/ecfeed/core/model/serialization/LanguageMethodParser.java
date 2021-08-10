@@ -11,12 +11,29 @@
 package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class LanguageMethodParser {
 
 	public static MethodNode parseJavaMethodSignature(String methodSignature) {
 
-		return null;
+		
+		String firstPart = StringHelper.getFirstToken(methodSignature, "(");
+		
+		if (firstPart == null) {
+			ExceptionHelper.reportRuntimeException("Starting bracket not found.");
+		}
+		
+		String methodName = StringHelper.getLastToken(firstPart, " ");
+		
+		if (methodName == null) {
+			ExceptionHelper.reportRuntimeException("Method name not found.");
+		}
+		
+		MethodNode methodNode  = new MethodNode(methodName, null);
+		
+		return methodNode;
 	}
 
 }
