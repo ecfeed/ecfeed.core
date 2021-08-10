@@ -12,6 +12,7 @@ package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class LanguageMethodParser {
@@ -32,6 +33,10 @@ public class LanguageMethodParser {
 		}
 
 		String methodName = StringHelper.getLastToken(firstPart, " ");
+		
+		if (!JavaLanguageHelper.isValidJavaIdentifier(methodName)) {
+			ExceptionHelper.reportRuntimeException("Method name: " +  methodName + " is not a valid Java identifier.");
+		}
 
 		if (methodName == null) {
 			ExceptionHelper.reportRuntimeException("Method name not found.");

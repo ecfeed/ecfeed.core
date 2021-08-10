@@ -78,6 +78,20 @@ public class LanguageMethodParserTest {
 		}
 	}	
 
+	@Test
+	public void shouldFailWhenInvalidCharsInName() {
+
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"</Method>";
+		
+		try {
+			parseSignature("void te%st();",  methodXml);
+			fail();
+		} catch (Exception e) {
+		}
+	}	
+	
 	private void parseSignature(String signature, String methodXml) {
 		
 		MethodNode methodNodeFromSignature = LanguageMethodParser.parseJavaMethodSignature(signature);
