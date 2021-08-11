@@ -11,6 +11,7 @@
 package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -31,7 +32,7 @@ public class LanguageMethodParser {
 		if (mainPart == null) {
 			ExceptionHelper.reportRuntimeException("Ending bracket not found.");
 		}
-
+		
 		String methodName = StringHelper.getLastToken(firstPart, " ");
 		
 		if (!JavaLanguageHelper.isValidJavaIdentifier(methodName)) {
@@ -43,8 +44,51 @@ public class LanguageMethodParser {
 		}
 
 		MethodNode methodNode  = new MethodNode(methodName, null);
+		
+		String parametersPart = StringHelper.getLastToken(mainPart, "(");
+		
+		parseParameters(parametersPart, methodNode);
 
 		return methodNode;
+	}
+
+	private static void parseParameters(String parametersPart, MethodNode inOutMethodNode) {
+		
+		if (StringHelper.isTrimmedEmpty(parametersPart)) {
+			return;
+		}
+		
+		String[] parameters = parametersPart.split(",");
+		
+		for (String parameterText : parameters) {
+			
+			MethodParameterNode methodParameterNode = createMethodParameter(parameterText);
+			
+			inOutMethodNode.addParameter(methodParameterNode);
+		}
+	}
+
+	private static MethodParameterNode createMethodParameter(String parameterText) {
+		
+		String paramTextTrimmed = parameterText.trim();
+		
+		String type = StringHelper.getFirstToken(paramTextTrimmed, " ");
+		
+		type = type.trim();
+		
+		if (!JavaLanguageHelper.isJavaType(type)) {
+			ExceptionHelper.reportRuntimeException("Not allowed type: " + type);
+		}
+		
+		String name = StringHelper.getLastToken(paramTextTrimmed, " ");
+		
+		name = name.trim();
+		
+		MethodParameterNode methodParameterNode = 
+				new MethodParameterNode(
+						name, type, JavaLanguageHelper.getDefaultValue(type), false, false, null, null);
+				
+		return methodParameterNode;
 	}
 
 }

@@ -92,6 +92,36 @@ public class LanguageMethodParserTest {
 		}
 	}	
 	
+	@Test
+	public void shouldParseMethodWithOneParameter() {
+		
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"	<Properties>\n" + 
+				"		<Property name='methodRunner' type='String' value='Java Runner'/>\n" + 
+				"		<Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" + 
+				"		<Property name='wbBrowser' type='String' value='Chrome'/>\n" + 
+				"		<Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" + 
+				"	</Properties>\n" + 
+				"	<Parameter name='par0' type='int' isExpected='false' expected='0' linked='false'>\n" + 
+				"		<Properties>\n" + 
+				"			<Property name='wbIsOptional' type='boolean' value='false'/>\n" + 
+				"		</Properties>\n" + 
+				"		<Comments>\n" + 
+				"			<TypeComments/>\n" + 
+				"		</Comments>\n" + 
+				"	</Parameter>\n" + 
+				"</Method>";
+		
+		methodXml.replace("\"", "'");
+		
+		try {
+			parseSignature("void test(int par0);",  methodXml);
+		} catch (Exception e) {
+			fail(e.getMessage()); 
+		}
+	}
+	
 	private void parseSignature(String signature, String methodXml) {
 		
 		MethodNode methodNodeFromSignature = LanguageMethodParser.parseJavaMethodSignature(signature);
