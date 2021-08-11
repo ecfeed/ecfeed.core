@@ -18,25 +18,31 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class LanguageMethodParser {
 
+	public static final String NOT_A_VALID_JAVA_IDENTIFIER = "not a valid Java identifier";
+	public static final String ENDING_BRACKET_NOT_FOUND = "Ending bracket not found.";
+	public static final String STARTING_BRACKET_NOT_FOUND = "Starting bracket not found.";
+	public static final String MISSING_PARAMETER = "Missing parameter.";
+
 	public static MethodNode parseJavaMethodSignature(String methodSignature) {
 
 
 		String firstPart = StringHelper.getFirstToken(methodSignature, "(");
 
 		if (firstPart == null) {
-			ExceptionHelper.reportRuntimeException("Starting bracket not found.");
+			ExceptionHelper.reportRuntimeException(STARTING_BRACKET_NOT_FOUND);
 		}
 
 		String mainPart = StringHelper.getFirstToken(methodSignature, ")");
 
 		if (mainPart == null) {
-			ExceptionHelper.reportRuntimeException("Ending bracket not found.");
+			ExceptionHelper.reportRuntimeException(ENDING_BRACKET_NOT_FOUND);
 		}
 		
 		String methodName = StringHelper.getLastToken(firstPart, " ");
 		
 		if (!JavaLanguageHelper.isValidJavaIdentifier(methodName)) {
-			ExceptionHelper.reportRuntimeException("Method name: " +  methodName + " is not a valid Java identifier.");
+			ExceptionHelper.reportRuntimeException(
+					"Method name: " +  methodName + " is " + NOT_A_VALID_JAVA_IDENTIFIER + ".");
 		}
 
 		if (methodName == null) {
@@ -71,6 +77,10 @@ public class LanguageMethodParser {
 	private static MethodParameterNode createMethodParameter(String parameterText) {
 		
 		String paramTextTrimmed = parameterText.trim();
+		
+		if (paramTextTrimmed.isEmpty()) {
+			ExceptionHelper.reportRuntimeException(MISSING_PARAMETER);
+		}
 		
 		String type = StringHelper.getFirstToken(paramTextTrimmed, " ");
 		

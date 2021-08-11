@@ -28,6 +28,7 @@ import com.ecfeed.core.model.serialization.ModelParserHelper;
 import com.ecfeed.core.model.serialization.ParserException;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.TestHelper;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -61,6 +62,7 @@ public class LanguageMethodParserTest {
 			parseSignature("void test);",  methodXml);
 			fail();
 		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, LanguageMethodParser.STARTING_BRACKET_NOT_FOUND);
 		}
 	}	
 
@@ -75,6 +77,7 @@ public class LanguageMethodParserTest {
 			parseSignature("void test(;",  methodXml);
 			fail();
 		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, LanguageMethodParser.ENDING_BRACKET_NOT_FOUND);
 		}
 	}	
 
@@ -89,6 +92,7 @@ public class LanguageMethodParserTest {
 			parseSignature("void te%st();",  methodXml);
 			fail();
 		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, LanguageMethodParser.NOT_A_VALID_JAVA_IDENTIFIER);
 		}
 	}	
 	
@@ -119,6 +123,63 @@ public class LanguageMethodParserTest {
 			parseSignature("void test(int par0);",  methodXml);
 		} catch (Exception e) {
 			fail(e.getMessage()); 
+		}
+	}
+
+	@Test
+	public void shouldParseMethodWithThreeParameters() {
+		
+		String methodXml = createXmlForMethodWithThreeParameters();
+		
+		methodXml.replace("\"", "'");
+		
+		try {
+			parseSignature("void test(int par0, float par1, String par2);",  methodXml);
+		} catch (Exception e) {
+			fail(e.getMessage()); 
+		}
+	}
+
+	@Test
+	public void shouldFailWhenMissingParameter() {
+		
+		String methodXml = createXmlForMethodWithThreeParameters();
+		
+		methodXml.replace("\"", "'");
+		
+		try {
+			parseSignature("void test(int par0,, float par1, String par2);",  methodXml);
+			fail();			
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, LanguageMethodParser.MISSING_PARAMETER);
+		}
+	}
+
+	@Test
+	public void shoulIgnoreTwoOpeningBrackets() {
+		
+		String methodXml = createXmlForMethodWithThreeParameters();
+		
+		methodXml.replace("\"", "'");
+		
+		try {
+			parseSignature("void test((int par0, float par1, String par2);",  methodXml);
+		} catch (Exception e) {
+			fail();
+		}
+	}
+
+	@Test
+	public void shoulIgnoreTwoClosingBrackets() {
+		
+		String methodXml = createXmlForMethodWithThreeParameters();
+		
+		methodXml.replace("\"", "'");
+		
+		try {
+			parseSignature("void test(int par0, float par1, String par2));",  methodXml);
+		} catch (Exception e) {
+			fail();
 		}
 	}
 	
@@ -166,6 +227,16 @@ public class LanguageMethodParserTest {
 			ExceptionHelper.reportRuntimeException("Failed to convert method from xml.");
 		}
 		return optMethodNodeFromXml.get();
+	}
+
+	private String createXmlForMethodWithThreeParameters() {
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"	<Parameter name='par0' type='int' isExpected='false' expected='0' linked='false' />\n" + 
+				"	<Parameter name='par1' type='float' isExpected='false' expected='0' linked='false' />\n" + 
+				"	<Parameter name='par2' type='String' isExpected='false' expected='0' linked='false' />\n" + 
+				"</Method>";
+		return methodXml;
 	}
 
 }
