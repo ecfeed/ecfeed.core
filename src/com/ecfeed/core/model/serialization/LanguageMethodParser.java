@@ -18,12 +18,20 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class LanguageMethodParser {
 
+	public enum Language {
+
+		JAVA,
+		CPP,
+		CSHARP
+	}
+	
 	public static final String NOT_A_VALID_JAVA_IDENTIFIER = "not a valid Java identifier";
 	public static final String ENDING_BRACKET_NOT_FOUND = "Ending bracket not found.";
 	public static final String STARTING_BRACKET_NOT_FOUND = "Starting bracket not found.";
 	public static final String MISSING_PARAMETER = "Missing parameter.";
 
-	public static MethodNode parseJavaMethodSignature(String methodSignature) {
+	
+	public static MethodNode parseJavaMethodSignature(String methodSignature, Language language) {
 
 
 		String firstPart = StringHelper.getFirstToken(methodSignature, "(");

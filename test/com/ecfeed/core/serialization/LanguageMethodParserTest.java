@@ -45,7 +45,7 @@ public class LanguageMethodParserTest {
 				"</Method>";
 		
 		try {
-			parseSignature("void test();",  methodXml);
+			parseSignature("void test();",  LanguageMethodParser.Language.JAVA, methodXml);
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		}
@@ -59,7 +59,7 @@ public class LanguageMethodParserTest {
 				"</Method>";
 		
 		try {
-			parseSignature("void test);",  methodXml);
+			parseSignature("void test);",  LanguageMethodParser.Language.JAVA, methodXml);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, LanguageMethodParser.STARTING_BRACKET_NOT_FOUND);
@@ -74,7 +74,7 @@ public class LanguageMethodParserTest {
 				"</Method>";
 		
 		try {
-			parseSignature("void test(;",  methodXml);
+			parseSignature("void test(;",  LanguageMethodParser.Language.JAVA, methodXml);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, LanguageMethodParser.ENDING_BRACKET_NOT_FOUND);
@@ -89,7 +89,7 @@ public class LanguageMethodParserTest {
 				"</Method>";
 		
 		try {
-			parseSignature("void te%st();",  methodXml);
+			parseSignature("void te%st();",  LanguageMethodParser.Language.JAVA, methodXml);
 			fail();
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, LanguageMethodParser.NOT_A_VALID_JAVA_IDENTIFIER);
@@ -120,7 +120,7 @@ public class LanguageMethodParserTest {
 		methodXml.replace("\"", "'");
 		
 		try {
-			parseSignature("void test(int par0);",  methodXml);
+			parseSignature("void test(int par0);",  LanguageMethodParser.Language.JAVA, methodXml);
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		}
@@ -134,7 +134,10 @@ public class LanguageMethodParserTest {
 		methodXml.replace("\"", "'");
 		
 		try {
-			parseSignature("void test(int par0, float par1, String par2);",  methodXml);
+			parseSignature(
+					"void test(int par0, float par1, String par2);",  
+					LanguageMethodParser.Language.JAVA, 
+					methodXml);
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		}
@@ -148,7 +151,10 @@ public class LanguageMethodParserTest {
 		methodXml.replace("\"", "'");
 		
 		try {
-			parseSignature("void test(int par0,, float par1, String par2);",  methodXml);
+			parseSignature(
+					"void test(int par0,, float par1, String par2);",  
+					LanguageMethodParser.Language.JAVA, 
+					methodXml);
 			fail();			
 		} catch (Exception e) {
 			TestHelper.checkExceptionMessage(e, LanguageMethodParser.MISSING_PARAMETER);
@@ -163,7 +169,7 @@ public class LanguageMethodParserTest {
 		methodXml.replace("\"", "'");
 		
 		try {
-			parseSignature("void test((int par0, float par1, String par2);",  methodXml);
+			parseSignature("void test((int par0, float par1, String par2);",  LanguageMethodParser.Language.JAVA, methodXml);
 		} catch (Exception e) {
 			fail();
 		}
@@ -177,15 +183,15 @@ public class LanguageMethodParserTest {
 		methodXml.replace("\"", "'");
 		
 		try {
-			parseSignature("void test(int par0, float par1, String par2));",  methodXml);
+			parseSignature("void test(int par0, float par1, String par2));",  LanguageMethodParser.Language.JAVA, methodXml);
 		} catch (Exception e) {
 			fail();
 		}
 	}
 	
-	private void parseSignature(String signature, String methodXml) {
+	private void parseSignature(String signature, LanguageMethodParser.Language language, String methodXml) {
 		
-		MethodNode methodNodeFromSignature = LanguageMethodParser.parseJavaMethodSignature(signature);
+		MethodNode methodNodeFromSignature = LanguageMethodParser.parseJavaMethodSignature(signature, language);
 
 		MethodNode methodNodeFromXml = parseXml(methodXml);
 		
