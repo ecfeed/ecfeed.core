@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.model.serialization;
 
+import java.util.Arrays;
+
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.utils.CppLanguageHelper;
@@ -21,9 +23,30 @@ public class LanguageMethodParser {
 
 	public enum Language {
 
-		JAVA,
-		CPP,
-		CSHARP
+		JAVA("Java"),
+		CPP("C++");
+		
+		private String fLanguateName;
+		
+		Language(String languageName) {
+			fLanguateName = languageName;
+		}
+		
+		public static String[] getAvailableLanguageDescriptions() {
+			
+			return Arrays.stream(Language.values()).toArray(String[]::new);
+		}
+		
+		public static Language parse(String languageName) {
+			
+			for (Language language : Language.values()) { 
+			    if (language.fLanguateName.equals(languageName)) {
+			    	return language;
+			    }
+			}
+			
+			return null;
+		}
 	}
 
 	public static final String NOT_A_VALID_JAVA_IDENTIFIER = "not a valid Java identifier";
