@@ -49,6 +49,13 @@ public class LanguageMethodParserTest {
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		}
+		
+		try {
+			parseSignature("void test();",  LanguageMethodParser.Language.CPP, methodXml);
+		} catch (Exception e) {
+			fail(e.getMessage()); 
+		}
+		
 	}
 	
 	@Test
@@ -124,6 +131,13 @@ public class LanguageMethodParserTest {
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		}
+		
+		try {
+			parseSignature("void test(unsigned int* par0);",  LanguageMethodParser.Language.CPP, methodXml);
+		} catch (Exception e) {
+			fail(e.getMessage()); 
+		}
+		
 	}
 
 	@Test

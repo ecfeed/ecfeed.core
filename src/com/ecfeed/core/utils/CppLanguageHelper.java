@@ -10,62 +10,107 @@
 
 package com.ecfeed.core.utils;
 
-import java.util.Arrays;
-
 public final class CppLanguageHelper {
-	
-	private static String[] CPP_TYPES = {
-		
-//			"short",
-//			"short int",
-//			"signed short",
-//			"signed short int",
-//			"unsigned short",
-//			"unsigned short int",
-//			"unsigned short int",
-//			"int",
-//			"signed",
-//			signed int
-//			unsigned
-//			unsigned int
-//			long
-//			long int
-//			long int
-//			signed long
-//			signed long int
-//			unsigned long
-//			unsigned long int
-//			unsigned long int
-//			long long
-//			long long int
-//			long long int
-//			signed long long
-//			signed long long int
-//			unsigned long long
-//			unsigned long long int
-//			unsigned long long int
-//			
-//			"char",
-//			"char16_t",
-//			"char32_t",
-//			"wchar_t",
-//			"int",
-//			"double",
-//			
-//			"signed char",
-//			
-//			"string",
-//			"bool"
+
+	private static Type[] CPP_TYPES = {
+
+			new Type("short", "short"),
+			new Type("short int", "short"),
+			new Type("signed short", "short"),
+			new Type("signed short int","short"),
+			new Type("unsigned short", "short"),
+			new Type("unsigned short int", "short"),
+			
+			new Type("int", "int"),
+			new Type("signed", "int"),
+			new Type("signed int", "int"),
+			new Type("unsigned", "int"),
+			new Type("unsigned int", "int"),
+			
+			new Type("long", "long"),
+			new Type("long int", "long"),
+			new Type("long int", "long"),
+			new Type("signed long",  "long"),
+			new Type("signed long int", "long"),
+			new Type("unsigned long", "long"),
+			new Type("unsigned long int", "long"),
+			new Type("unsigned long int", "long"),
+			new Type("long long", "long"),
+			new Type("long long int", "long"),
+			new Type("long long int", "long"),
+			new Type("signed long long", "long"),
+			new Type("signed long long int", "long"),
+			new Type("unsigned long long", "long"),
+			new Type("unsigned long long int", "long"),
+			new Type("unsigned long long int", "long"),
+
+
+			new Type("float", "float"),
+			new Type("double", "double"),
+			new Type("long double", "double"),
+
+			new Type("bool", "boolean"),
+
+			new Type("signed char", "String"),
+			new Type("unsigned char", "String"),
+			new Type("unsigned char", "String"),
+			new Type("char16_t", "String"),
+			new Type("char32_t", "String"),
+			new Type("wchar_t", "String"),
+			new Type("string", "String"),
 	};
 
-//	private static class TypeConversion()
-	public static boolean isAllowedType(String typeName) {
+	private static class Type {
+		private String fCppTypeName;
+		private String fJavaTypeName;
 
-		if (Arrays.asList(CPP_TYPES).contains(typeName)) {
-			return true;
+		Type(String cppTypeName, String javaTypeName) {
+
+			fCppTypeName = cppTypeName;
+			fJavaTypeName = javaTypeName;
 		}
-		
+
+		String getCppTypeName() {
+			return fCppTypeName;
+		}
+
+		String getJavaTypeName() {
+			return fJavaTypeName;
+		}
+
+	}
+
+	public static boolean isAllowedType(String cppTypeName) {
+
+
+		for (Type type : CPP_TYPES)  {
+
+			String cppTypeName2 = type.getCppTypeName();
+
+			if (cppTypeName.equals(cppTypeName2)) {
+				return true;
+			}
+		}
+
 		return false;
+	}
+
+	public static String convertCppTypeToJavaType(String cppTypeName) {
+
+
+		for (Type type : CPP_TYPES)  {
+
+			String cppTypeName2 = type.getCppTypeName();
+
+			if (cppTypeName.equals(cppTypeName2)) {
+
+				String javaTypeName = type.getJavaTypeName();
+
+				return javaTypeName;
+			}
+		}
+
+		return null;
 	}
 
 	public String convertToJavaType(String cppType) {

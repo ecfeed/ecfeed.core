@@ -12,6 +12,7 @@ package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.utils.CppLanguageHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
@@ -24,13 +25,13 @@ public class LanguageMethodParser {
 		CPP,
 		CSHARP
 	}
-	
+
 	public static final String NOT_A_VALID_JAVA_IDENTIFIER = "not a valid Java identifier";
 	public static final String ENDING_BRACKET_NOT_FOUND = "Ending bracket not found.";
 	public static final String STARTING_BRACKET_NOT_FOUND = "Starting bracket not found.";
 	public static final String MISSING_PARAMETER = "Missing parameter.";
 
-	
+
 	public static MethodNode parseJavaMethodSignature(String methodSignature, Language language) {
 
 
@@ -45,9 +46,9 @@ public class LanguageMethodParser {
 		if (mainPart == null) {
 			ExceptionHelper.reportRuntimeException(ENDING_BRACKET_NOT_FOUND);
 		}
-		
+
 		String methodName = StringHelper.getLastToken(firstPart, " ");
-		
+
 		if (!JavaLanguageHelper.isValidJavaIdentifier(methodName)) {
 			ExceptionHelper.reportRuntimeException(
 					"Method name: " +  methodName + " is " + NOT_A_VALID_JAVA_IDENTIFIER + ".");
@@ -58,55 +59,97 @@ public class LanguageMethodParser {
 		}
 
 		MethodNode methodNode  = new MethodNode(methodName, null);
-		
+
 		String parametersPart = StringHelper.getLastToken(mainPart, "(");
-		
-		parseParameters(parametersPart, methodNode);
+
+		parseParameters(parametersPart, methodNode, language);
 
 		return methodNode;
 	}
 
-	private static void parseParameters(String parametersPart, MethodNode inOutMethodNode) {
-		
+	private static void parseParameters(String parametersPart, MethodNode inOutMethodNode, Language language) {
+
 		if (StringHelper.isTrimmedEmpty(parametersPart)) {
 			return;
 		}
-		
+
 		String[] parameters = parametersPart.split(",");
-		
+
 		for (String parameterText : parameters) {
-			
-			MethodParameterNode methodParameterNode = createMethodParameter(parameterText);
-			
+
+			MethodParameterNode methodParameterNode = createMethodParameter(parameterText, language);
+
 			inOutMethodNode.addParameter(methodParameterNode);
 		}
 	}
 
-	private static MethodParameterNode createMethodParameter(String parameterText) {
-		
+	private static MethodParameterNode createMethodParameter(String parameterText, Language language) {
+
 		String paramTextTrimmed = parameterText.trim();
-		
+
 		if (paramTextTrimmed.isEmpty()) {
 			ExceptionHelper.reportRuntimeException(MISSING_PARAMETER);
 		}
-		
-		String type = StringHelper.getFirstToken(paramTextTrimmed, " ");
-		
-		type = type.trim();
-		
-		if (!JavaLanguageHelper.isJavaType(type)) {
-			ExceptionHelper.reportRuntimeException("Not allowed type: " + type);
-		}
-		
+
+		String type = createJavaType(paramTextTrimmed, language);
+
 		String name = StringHelper.getLastToken(paramTextTrimmed, " ");
-		
+
 		name = name.trim();
-		
+
 		MethodParameterNode methodParameterNode = 
 				new MethodParameterNode(
 						name, type, JavaLanguageHelper.getDefaultValue(type), false, false, null, null);
-				
+
 		return methodParameterNode;
+	}
+
+	private static String createJavaType(String paramTextTrimmed, Language language) {
+
+		if (language == Language.JAVA) {
+			return createParameterFromTextInJava(paramTextTrimmed);
+		}
+
+		if (language == Language.CPP) {
+			return createParameterFromTextInCpp(paramTextTrimmed);
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid language.");
+		return null;
+	}
+
+	private static String createParameterFromTextInJava(String paramTextTrimmed) {
+
+		String type = StringHelper.getFirstToken(paramTextTrimmed, " ");
+
+		type = type.trim();
+
+		if (!JavaLanguageHelper.isJavaType(type)) {
+			ExceptionHelper.reportRuntimeException("Not allowed type: " + type);
+		}
+
+		return type;
+	}
+
+	private static String createParameterFromTextInCpp(String paramTextTrimmed) {
+
+		String argName = StringHelper.getLastToken(paramTextTrimmed, " ");
+		
+		String type = StringHelper.getFirstToken(paramTextTrimmed, argName);
+
+		type = type.trim();
+		
+		type = type.replace("*", "");
+
+		type = StringHelper.convertWhiteCharsToSingleSpaces(type);
+		
+		if (!CppLanguageHelper.isAllowedType(type)) {
+			ExceptionHelper.reportRuntimeException("Not allowed type: " + type);
+		}
+
+		String javaType = CppLanguageHelper.convertCppTypeToJavaType(type);
+		
+		return javaType;
 	}
 
 }
