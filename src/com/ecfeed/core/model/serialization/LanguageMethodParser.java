@@ -10,7 +10,8 @@
 
 package com.ecfeed.core.model.serialization;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -25,26 +26,42 @@ public class LanguageMethodParser {
 
 		JAVA("Java"),
 		CPP("C++");
-		
+
 		private String fLanguateName;
-		
+
 		Language(String languageName) {
 			fLanguateName = languageName;
 		}
-		
+
 		public static String[] getAvailableLanguageDescriptions() {
-			
-			return Arrays.stream(Language.values()).toArray(String[]::new);
+
+			List<String> names = new ArrayList<>();
+
+			for (Language language : Language.values()) { 
+				names.add(language.fLanguateName);
+			}
+
+			String[] namesArray = names.stream().toArray(String[]::new);
+
+			return namesArray;
+		}
+
+		public static Language getDefaultLanguage() {
+			return Language.JAVA;
+		}
+		
+		public static String getDefaultLanguageDescription() {
+			return Language.JAVA.fLanguateName;
 		}
 		
 		public static Language parse(String languageName) {
-			
+
 			for (Language language : Language.values()) { 
-			    if (language.fLanguateName.equals(languageName)) {
-			    	return language;
-			    }
+				if (language.fLanguateName.equals(languageName)) {
+					return language;
+				}
 			}
-			
+
 			return null;
 		}
 	}
@@ -157,21 +174,21 @@ public class LanguageMethodParser {
 	private static String createParameterFromTextInCpp(String paramTextTrimmed) {
 
 		String argName = StringHelper.getLastToken(paramTextTrimmed, " ");
-		
+
 		String type = StringHelper.getFirstToken(paramTextTrimmed, argName);
 
 		type = type.trim();
-		
+
 		type = type.replace("*", "");
 
 		type = StringHelper.convertWhiteCharsToSingleSpaces(type);
-		
+
 		if (!CppLanguageHelper.isAllowedType(type)) {
 			ExceptionHelper.reportRuntimeException("Not allowed type: " + type);
 		}
 
 		String javaType = CppLanguageHelper.convertCppTypeToJavaType(type);
-		
+
 		return javaType;
 	}
 
