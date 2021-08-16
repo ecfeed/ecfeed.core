@@ -137,6 +137,12 @@ public class LanguageMethodParserTest {
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		}
+
+		try {
+			parseSignature("int test(uint par0);",  LanguageMethodParser.Language.CSHARP, methodXml);
+		} catch (Exception e) {
+			fail(e.getMessage()); 
+		}
 		
 	}
 
