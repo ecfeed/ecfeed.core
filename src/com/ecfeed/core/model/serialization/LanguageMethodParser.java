@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.utils.CShartLanguageHelper;
 import com.ecfeed.core.utils.CppLanguageHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -25,6 +26,7 @@ public class LanguageMethodParser {
 	public enum Language {
 
 		JAVA("Java"),
+		CSHARP("C#"),
 		CPP("C++");
 
 		private String fLanguateName;
@@ -150,6 +152,10 @@ public class LanguageMethodParser {
 			return createParameterFromTextInJava(paramTextTrimmed);
 		}
 
+		if (language == Language.CSHARP) {
+			return createParameterFromTextInCSharp(paramTextTrimmed);
+		}
+		
 		if (language == Language.CPP) {
 			return createParameterFromTextInCpp(paramTextTrimmed);
 		}
@@ -171,6 +177,21 @@ public class LanguageMethodParser {
 		return type;
 	}
 
+	private static String createParameterFromTextInCSharp(String paramTextTrimmed) {
+
+		String type = StringHelper.getFirstToken(paramTextTrimmed, " ");
+
+		type = type.trim();
+
+		if (!CShartLanguageHelper.isAllowedType(type)) {
+			ExceptionHelper.reportRuntimeException("Not allowed type: " + type);
+		}
+
+		String javaType = CShartLanguageHelper.convertCppTypeToJavaType(type);
+		
+		return javaType;
+	}
+	
 	private static String createParameterFromTextInCpp(String paramTextTrimmed) {
 
 		String argName = StringHelper.getLastToken(paramTextTrimmed, " ");
