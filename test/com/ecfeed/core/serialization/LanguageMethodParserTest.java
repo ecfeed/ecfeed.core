@@ -143,9 +143,25 @@ public class LanguageMethodParserTest {
 		} catch (Exception e) {
 			fail(e.getMessage()); 
 		}
-		
 	}
 
+	@Test
+	public void shouldParseMethodWithOneParameterInPython() {
+		
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"	<Parameter name='par0' type='String' isExpected='false' expected='0' linked='false' />\n" + 
+				"</Method>";
+		
+		methodXml.replace("\"", "'");
+		
+		try {
+			parseSignature("def test(par0);",  LanguageMethodParser.Language.PYTHON, methodXml);
+		} catch (Exception e) {
+			fail(e.getMessage()); 
+		}		
+	}
+	
 	@Test
 	public void shouldParseMethodWithThreeParameters() {
 		

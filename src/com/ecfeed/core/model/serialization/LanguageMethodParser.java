@@ -27,7 +27,8 @@ public class LanguageMethodParser {
 
 		JAVA("Java"),
 		CSHARP("C#"),
-		CPP("C++");
+		CPP("C++"),
+		PYTHON("Python");
 
 		private String fLanguateName;
 
@@ -51,11 +52,11 @@ public class LanguageMethodParser {
 		public static Language getDefaultLanguage() {
 			return Language.JAVA;
 		}
-		
+
 		public static String getDefaultLanguageDescription() {
 			return Language.JAVA.fLanguateName;
 		}
-		
+
 		public static Language parse(String languageName) {
 
 			for (Language language : Language.values()) { 
@@ -135,7 +136,13 @@ public class LanguageMethodParser {
 
 		String type = createJavaType(paramTextTrimmed, language);
 
-		String name = StringHelper.getLastToken(paramTextTrimmed, " ");
+		String name;
+		
+		if (language == Language.PYTHON) {
+			name = parameterText;
+		} else {
+			name = StringHelper.getLastToken(paramTextTrimmed, " ");
+		}
 
 		name = name.trim();
 
@@ -149,22 +156,26 @@ public class LanguageMethodParser {
 	private static String createJavaType(String paramTextTrimmed, Language language) {
 
 		if (language == Language.JAVA) {
-			return createParameterFromTextInJava(paramTextTrimmed);
+			return createParameterTypeFromTextInJava(paramTextTrimmed);
 		}
 
 		if (language == Language.CSHARP) {
-			return createParameterFromTextInCSharp(paramTextTrimmed);
+			return createParameterTypeFromTextInCSharp(paramTextTrimmed);
 		}
-		
+
 		if (language == Language.CPP) {
-			return createParameterFromTextInCpp(paramTextTrimmed);
+			return createParameterTypeFromTextInCpp(paramTextTrimmed);
+		}
+
+		if (language == Language.PYTHON) {
+			return createParameterTypeFromTextInPython(paramTextTrimmed);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid language.");
 		return null;
 	}
 
-	private static String createParameterFromTextInJava(String paramTextTrimmed) {
+	private static String createParameterTypeFromTextInJava(String paramTextTrimmed) {
 
 		String type = StringHelper.getFirstToken(paramTextTrimmed, " ");
 
@@ -177,7 +188,7 @@ public class LanguageMethodParser {
 		return type;
 	}
 
-	private static String createParameterFromTextInCSharp(String paramTextTrimmed) {
+	private static String createParameterTypeFromTextInCSharp(String paramTextTrimmed) {
 
 		String type = StringHelper.getFirstToken(paramTextTrimmed, " ");
 
@@ -188,11 +199,11 @@ public class LanguageMethodParser {
 		}
 
 		String javaType = CShartLanguageHelper.convertCppTypeToJavaType(type);
-		
+
 		return javaType;
 	}
-	
-	private static String createParameterFromTextInCpp(String paramTextTrimmed) {
+
+	private static String createParameterTypeFromTextInCpp(String paramTextTrimmed) {
 
 		String argName = StringHelper.getLastToken(paramTextTrimmed, " ");
 
@@ -212,5 +223,11 @@ public class LanguageMethodParser {
 
 		return javaType;
 	}
+
+	private static String createParameterTypeFromTextInPython(String paramTextTrimmed) {
+
+		return "String";
+	}
+
 
 }
