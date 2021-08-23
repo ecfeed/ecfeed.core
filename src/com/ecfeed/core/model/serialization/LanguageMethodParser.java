@@ -91,25 +91,29 @@ public class LanguageMethodParser {
 		}
 
 		String methodName = StringHelper.getLastToken(firstPart, " ");
+		
+		if (methodName == null) {
+			ExceptionHelper.reportRuntimeException("Method name not found.");
+		}
 
 		if (!JavaLanguageHelper.isValidJavaIdentifier(methodName)) {
 			ExceptionHelper.reportRuntimeException(
-					"Method name: " +  methodName + " is " + NOT_A_VALID_JAVA_IDENTIFIER + ".");
-		}
-
-		if (methodName == null) {
-			ExceptionHelper.reportRuntimeException("Method name not found.");
+					"Method name: " +  methodName + " is " + NOT_A_VALID_JAVA_IDENTIFIER);
 		}
 
 		MethodNode methodNode  = new MethodNode(methodName, null);
 
 		String parametersPart = StringHelper.getLastToken(mainPart, "(");
+		
+		if (parametersPart == null) {
+			ExceptionHelper.reportRuntimeException("Parameters not found.");
+		}
 
 		parseParameters(parametersPart, methodNode, language);
 
 		return methodNode;
 	}
-
+	
 	private static void parseParameters(String parametersPart, MethodNode inOutMethodNode, Language language) {
 
 		if (StringHelper.isTrimmedEmpty(parametersPart)) {
