@@ -452,4 +452,15 @@ public class StringHelper {
 		return true;
 	}
 
+	public static String convertWhiteCharsToSingleSpaces(String str) {
+		
+		str = str.replace("\n", " ");
+		str = str.replace("\t", " ");
+		
+		while (str.contains("  ")) {
+			str = str.replace("  ", " ");
+		}
+		
+		return str;
+	}
 }
