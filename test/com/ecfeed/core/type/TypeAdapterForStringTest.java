@@ -24,17 +24,17 @@ public class TypeAdapterForStringTest {
 
 		TypeAdapterForString typeAdapterForString = new TypeAdapterForString();
 
-		String value = typeAdapterForString.generateValue("abc");
+		String value = typeAdapterForString.generateValue("abc", null);
 		assertEquals("abc",  value);
 
 		try {
-			typeAdapterForString.generateValue("{a-z}[6]{1-9}[3]@gmail.com");
+			typeAdapterForString.generateValue("{a-z}[6]{1-9}[3]@gmail.com", null);
 			fail();
 		} catch (Exception e) {
 		}
 
 		try {
-			typeAdapterForString.generateValue("[a-z]{6}[1-9]{3}\\@gmail\\.com");
+			typeAdapterForString.generateValue("[a-z]{6}[1-9]{3}\\@gmail\\.com", null);
 		} catch (Exception e) {
 			fail();
 		}

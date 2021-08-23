@@ -45,7 +45,7 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 	}
 
 	@Override
-	public Byte generateValue(String rangeTxt) {
+	public Byte generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 		

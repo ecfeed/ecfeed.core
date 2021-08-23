@@ -23,6 +23,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
+import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -376,7 +377,7 @@ public class TestCasesExportHelper {
 
 	private static String getValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
-		String convertedValue = convertValue(choice);
+		String convertedValue = convertValue(choice, extLanguageManager);
 
 		if (convertedValue != null) {
 			return convertedValue;
@@ -385,7 +386,7 @@ public class TestCasesExportHelper {
 		return ChoiceNodeHelper.getValueString(choice, extLanguageManager);
 	}
 
-	private static String convertValue(ChoiceNode choice) {
+	private static String convertValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode parameter = choice.getParameter();
 		if (parameter == null) {
@@ -398,7 +399,13 @@ public class TestCasesExportHelper {
 		}
 
 		FixedChoiceValueFactory fixedValueFactory = new FixedChoiceValueFactory(null, true);
-		Object parsedObject = fixedValueFactory.createValue(choice.getValueString(), choice.isRandomizedValue(), argType);
+		
+		String context = "Path: " + ModelHelper.getFullPath(choice, extLanguageManager);
+		
+		Object parsedObject = 
+				fixedValueFactory.createValue(
+						choice.getValueString(), choice.isRandomizedValue(), argType, context);
+		
 		if (parsedObject == null) {
 			return null;
 		}

@@ -60,13 +60,13 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 	}
 
 	@Override
-	public Character generateValue(String regex) {
+	public Character generateValue(String regex, String context) {
 		return new Xeger(regex).generate().charAt(0);
 	}
 
 	@Override
-	public String generateValueAsString(String range) {
-		return String.valueOf(generateValue(range));
+	public String generateValueAsString(String range, String context) {
+		return String.valueOf(generateValue(range, context));
 	}
 
 	@Override

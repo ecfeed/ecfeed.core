@@ -50,13 +50,13 @@ public class TypeAdapterBaseForUserType<T extends Enum<T>> implements ITypeAdapt
 	}
 
 	@Override
-	public T generateValue(String range) {
+	public T generateValue(String range, String context) {
 		return null;
 	}
 
 	@Override
-	public String generateValueAsString(String range) {
-		return String.valueOf(generateValue(range));
+	public String generateValueAsString(String range, String context) {
+		return String.valueOf(generateValue(range, context));
 	}
 
 	@Override

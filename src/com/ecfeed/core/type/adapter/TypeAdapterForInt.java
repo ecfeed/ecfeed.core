@@ -47,7 +47,7 @@ public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
 	}
 
 	@Override
-	public Integer generateValue(String rangeTxt) {
+	public Integer generateValue(String rangeTxt, String context) {
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 		
 		if (StringHelper.isEqual(range[0], range[1])) {

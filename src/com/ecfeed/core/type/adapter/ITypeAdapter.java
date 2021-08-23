@@ -20,8 +20,8 @@ public interface ITypeAdapter<T> {
 	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
 	public String getDefaultValue();
 	public boolean isNullAllowed();
-	public T generateValue(String range);
-	public String generateValueAsString(String range);
+	public T generateValue(String range, String context);
+	public String generateValueAsString(String range, String context);
 	public String getMyTypeName();
 
 }

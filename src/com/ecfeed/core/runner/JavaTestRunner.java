@@ -19,6 +19,8 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class JavaTestRunner {
@@ -113,7 +115,8 @@ public class JavaTestRunner {
 		List<Object> args = new ArrayList<Object>();
 		FixedChoiceValueFactory factory = new FixedChoiceValueFactory(fLoader, fIsExport);
 		for(ChoiceNode choice : testData){
-			Object value = factory.createValue(choice);
+			IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+			Object value = factory.createValue(choice, extLanguageManager);
 			if(value == null){
 				String type = choice.getParameter().getType();
 				//check if null value acceptable

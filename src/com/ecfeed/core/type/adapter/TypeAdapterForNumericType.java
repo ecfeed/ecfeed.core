@@ -59,8 +59,8 @@ public abstract class TypeAdapterForNumericType<T extends Number> extends TypeAd
 	}
 
 	@Override
-	public String generateValueAsString(String range) {
-		return String.valueOf(generateValue(range));
+	public String generateValueAsString(String range, String context) {
+		return String.valueOf(generateValue(range, context));
 	}
 
 }

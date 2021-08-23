@@ -108,13 +108,13 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	}
 
 	@Override
-	public Boolean generateValue(String range) {
+	public Boolean generateValue(String range, String context) {
 		return ThreadLocalRandom.current().nextBoolean();
 	}
 
 	@Override
-	public String generateValueAsString(String range) {
-		return String.valueOf(generateValue(range));
+	public String generateValueAsString(String range, String context) {
+		return String.valueOf(generateValue(range, context));
 	}
 
 }

@@ -36,7 +36,7 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 	}
 
 	@Override
-	public Long generateValue(String rangeTxt) {
+	public Long generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 

@@ -40,7 +40,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 	}
 
 	@Override
-	public Short generateValue(String rangeTxt) {
+	public Short generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 

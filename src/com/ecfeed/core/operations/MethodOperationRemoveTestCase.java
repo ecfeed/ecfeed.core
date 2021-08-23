@@ -46,11 +46,11 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 					return true;
 				}
 				@Override
-				public Object generateValue(String range) {
+				public Object generateValue(String range, String context) {
 					return null;
 				}
 				@Override
-				public String generateValueAsString(String range) {
+				public String generateValueAsString(String range, String context) {
 					return null;
 				}
 				@Override

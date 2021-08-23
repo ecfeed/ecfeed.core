@@ -53,7 +53,7 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 	}
 
 	@Override
-	public Number generateValue(String rangeTxt) {
+	public Number generateValue(String rangeTxt, String context) {
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 		String type = parseValue(range);
 

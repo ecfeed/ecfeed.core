@@ -68,7 +68,7 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 	}
 
 	@Override
-	public String generateValue(String regex) {
+	public String generateValue(String regex, String context) {
 
 		String result = null;
 
@@ -78,9 +78,7 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 			result = xeger.generate();
 		} catch (Throwable ex) {
 
-			final String CAN_NOT_GENERATE = 
-					"Cannot generate value from expression: " + regex + 
-					" (Xeger problem). Reason:" + ex.getClass().getName() + ", Message:" + ex.getMessage();
+			final String CAN_NOT_GENERATE =	"Cannot generate value from regex expression: " + regex + ". " + context ; 
 
 			ExceptionHelper.reportRuntimeException(CAN_NOT_GENERATE);
 		}
@@ -89,8 +87,8 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 	}
 
 	@Override
-	public String generateValueAsString(String range) {
-		return generateValue(range);
+	public String generateValueAsString(String range, String context) {
+		return generateValue(range, context);
 	}
 
 }

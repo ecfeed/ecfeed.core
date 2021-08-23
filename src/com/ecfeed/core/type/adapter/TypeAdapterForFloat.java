@@ -52,7 +52,7 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 	}
 
 	@Override
-	public Float generateValue(String rangeTxt) {
+	public Float generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 
