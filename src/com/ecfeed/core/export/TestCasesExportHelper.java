@@ -400,7 +400,7 @@ public class TestCasesExportHelper {
 
 		FixedChoiceValueFactory fixedValueFactory = new FixedChoiceValueFactory(null, true);
 		
-		String context = "Path: " + ModelHelper.getFullPath(choice, extLanguageManager);
+		String context = "Model path: " + ModelHelper.getFullPath(choice, extLanguageManager);
 		
 		Object parsedObject = 
 				fixedValueFactory.createValue(

@@ -32,7 +32,7 @@ public class FixedChoiceValueFactory {
 	public Object createValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
 		if(choice.getParameter() != null) {
-			String context = "Path: " + ModelHelper.getFullPath(choice, extLanguageManager);
+			String context = "Model path: " + ModelHelper.getFullPath(choice, extLanguageManager);
 			
 			return createValue(
 					choice.getValueString(), choice.isRandomizedValue(), choice.getParameter().getType(), context);
