@@ -91,17 +91,22 @@ public class ChoiceNodeHelper {
 
 	public static String createTestDataLabel(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
-		String result = "";
+		AbstractParameterNode abstractParameterNode = choice.getParameter();	
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode) choice.getParameter();	
-
-		if (methodParameterNode != null && methodParameterNode.isExpected()) {
-			result += "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
-		} else{
-			result += ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+		if (abstractParameterNode == null) {
+			return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
 		}
-
-		return result;
+		
+		if (abstractParameterNode instanceof MethodParameterNode) {
+			
+			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+			
+			if (methodParameterNode.isExpected()) {
+				return "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
+			}
+		}
+		
+		return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
