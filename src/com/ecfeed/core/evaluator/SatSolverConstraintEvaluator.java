@@ -395,7 +395,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		List<ChoiceNode> allLVals = new ArrayList<>(paramChoiceSets.sainitizedGet(lParam));
 
-
 		if (condition instanceof ParameterCondition) {
 			MethodParameterNode rParam = ((ParameterCondition) condition).getRightParameterNode();
 			List<ChoiceNode> allRVals = new ArrayList<>(paramChoiceSets.sainitizedGet(rParam));
@@ -552,6 +551,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		;
 
 		for (Constraint constraint : initConstraints) {
+
+			if (constraint.getType() == ConstraintType.ASSIGNMENT)  {
+				continue;
+			}
 			collectRelationStatements(constraint, result);
 		}
 
