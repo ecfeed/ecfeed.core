@@ -93,7 +93,8 @@ public class LanguageMethodParser {
 		String methodName = StringHelper.getLastToken(firstPart, " ");
 		
 		if (methodName == null) {
-			ExceptionHelper.reportRuntimeException("Method name not found.");
+			methodName = firstPart;
+//			ExceptionHelper.reportRuntimeException("Method name not found.");
 		}
 
 		if (!JavaLanguageHelper.isValidJavaIdentifier(methodName)) {

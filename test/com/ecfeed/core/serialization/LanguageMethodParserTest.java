@@ -59,6 +59,20 @@ public class LanguageMethodParserTest {
 	}
 	
 	@Test
+	public void shouldParseMethodWithoutReturnType() {
+
+		String methodXml = 
+				"<Method name='test'>\n" + 
+				"</Method>";
+		
+		try {
+			parseSignature("test();",  LanguageMethodParser.Language.CPP, methodXml);
+		} catch (Exception e) {
+			fail();
+		}
+	}	
+
+	@Test
 	public void shouldFailWhenNoStartBrace() {
 
 		String methodXml = 
