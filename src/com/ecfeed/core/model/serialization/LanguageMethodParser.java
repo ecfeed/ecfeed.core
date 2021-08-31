@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.utils.CShartLanguageHelper;
+import com.ecfeed.core.utils.CSharpLanguageHelper;
 import com.ecfeed.core.utils.CppLanguageHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -198,11 +198,11 @@ public class LanguageMethodParser {
 
 		type = type.trim();
 
-		if (!CShartLanguageHelper.isAllowedType(type)) {
+		if (!CSharpLanguageHelper.isAllowedType(type)) {
 			ExceptionHelper.reportRuntimeException("Not allowed type: " + type);
 		}
 
-		String javaType = CShartLanguageHelper.convertCppTypeToJavaType(type);
+		String javaType = CSharpLanguageHelper.convertCppTypeToJavaType(type);
 
 		return javaType;
 	}

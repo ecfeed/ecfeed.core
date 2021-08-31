@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.utils;
 
-public final class CShartLanguageHelper {
+public final class CSharpLanguageHelper {
 
 	private static Type[] CPP_TYPES = {
 
