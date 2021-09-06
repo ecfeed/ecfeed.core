@@ -3,14 +3,17 @@ package com.ecfeed.core.genservice.provider;
 import com.ecfeed.core.genservice.schema.*;
 import com.ecfeed.core.genservice.util.GenServiceProtocolHelper;
 import com.ecfeed.core.genservice.util.GenServiceProtocolState;
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.provider.ITCProvider;
 import com.ecfeed.core.provider.ITCProviderInitData;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 import com.ecfeed.core.utils.SystemLogger;
-import com.ecfeed.core.webservice.client.WebServiceResponse;
 import com.ecfeed.core.webservice.client.IWebServiceClient;
+import com.ecfeed.core.webservice.client.WebServiceResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RemoteTCProvider implements ITCProvider {
+public class RemoteTCProviderJson implements ITCProvider {
 
     private static final int PROGRESS_UNKNOWN = -1;
     private IWebServiceClient fWebServiceClient;
@@ -30,7 +33,7 @@ public class RemoteTCProvider implements ITCProvider {
     private int fTotalProgress;
 
 
-    public RemoteTCProvider(IWebServiceClient webServiceClient) {
+    public RemoteTCProviderJson(IWebServiceClient webServiceClient) {
         fWebServiceClient = webServiceClient;
         fGenServiceProtocolState = GenServiceProtocolState.BEFORE_BEG_DATA;
     }
