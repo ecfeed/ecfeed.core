@@ -18,6 +18,8 @@ public class TestCasesRequest {
 
 	private String fUserData;
 
+	private String fResponseFormat;
+
 	public TestCasesRequest() {};
 
 	@JsonGetter("sessionId")
@@ -68,6 +70,16 @@ public class TestCasesRequest {
 	@JsonSetter("template")
 	public void setExportTemplate(String exportTemplate) {
 		fExportTemplate = exportTemplate;
+	}
+
+	@JsonGetter("responseFormat")
+	public String getResponseFormat() {
+		return fResponseFormat;
+	}
+
+	@JsonSetter("responseFormat")
+	public void setResponseFormat(String responseFormat) {
+		fResponseFormat = responseFormat;
 	}
 
 }

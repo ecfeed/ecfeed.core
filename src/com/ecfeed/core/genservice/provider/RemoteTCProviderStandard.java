@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class RemoteTCProvider implements ITCProvider {
+public class RemoteTCProviderStandard implements ITCProvider {
 
     private static final int PROGRESS_UNKNOWN = -1;
     private IWebServiceClient fWebServiceClient;
@@ -30,7 +30,7 @@ public class RemoteTCProvider implements ITCProvider {
     private int fTotalProgress;
 
 
-    public RemoteTCProvider(IWebServiceClient webServiceClient) {
+    public RemoteTCProviderStandard(IWebServiceClient webServiceClient) {
         fWebServiceClient = webServiceClient;
         fGenServiceProtocolState = GenServiceProtocolState.BEFORE_BEG_DATA;
     }
