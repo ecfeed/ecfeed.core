@@ -51,6 +51,10 @@ public class GenWebServiceClient implements IWebServiceClient {
 		return "testCaseService";
 	}
 
+	public static String getTestCasesJsonEndPoint() {
+		return "testCaseServiceJson";
+	}
+
 	public static String getGenServiceVersionEndPoint() {
 		return "genServiceVersion";
 	}
