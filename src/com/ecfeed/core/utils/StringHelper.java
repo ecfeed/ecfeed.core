@@ -299,6 +299,11 @@ public class StringHelper {
 		return false;
 	}
 
+	public static boolean endsWithPostfix(String postfix, String str) {
+
+		return str.endsWith(postfix);
+	}
+
 	public static int countOccurencesOfChar(String str, char charToCount) {
 
 		int len = str.length();
