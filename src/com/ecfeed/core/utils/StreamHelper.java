@@ -82,7 +82,7 @@ public class StreamHelper {
 		outputStream.flush();
 	}
 
-	public static void writeStringToStream(String str, OutputStream outputStream) { // TODO - similar code in export streaming response body
+	public static void writeAndFlushString(String str, OutputStream outputStream) {
 
 		try {
 			outputStream.write(str.getBytes());
