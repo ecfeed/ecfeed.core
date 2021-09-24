@@ -75,21 +75,45 @@ public class StreamHelper {
 		}
 	}
 
-	public static void writeAndFlushLine(String strg, OutputStream outputStream) throws IOException {
+	public static void writeAndFlushLine(String strg, OutputStream outputStream) {
 
-		outputStream.write(strg.getBytes());
-		outputStream.write("\n".getBytes());
-		outputStream.flush();
+		try {
+			writeStringToStream(strg, outputStream);
+			writeStringToStream("\n", outputStream);
+			flushStream(outputStream);
+		} catch (IOException e) {
+			ExceptionHelper.reportServerException("", e);
+		}
+	}
+
+	public static void writeAndFlushNewLine(OutputStream outputStream) {
+
+		try {
+			writeStringToStream("\n", outputStream);
+			flushStream(outputStream);
+		} catch (IOException e) {
+			ExceptionHelper.reportServerException("", e);
+		}
 	}
 
 	public static void writeAndFlushString(String str, OutputStream outputStream) {
 
 		try {
-			outputStream.write(str.getBytes());
-			outputStream.flush();
+			writeStringToStream(str, outputStream);
+			flushStream(outputStream);
 		} catch (IOException e) {
 			ExceptionHelper.reportServerException("", e);
 		}
+	}
+
+	private static void writeStringToStream(String strg, OutputStream outputStream) throws IOException {
+
+		outputStream.write(strg.getBytes());
+	}
+
+	private static void flushStream(OutputStream outputStream) throws IOException {
+
+		outputStream.flush();
 	}
 
 }
