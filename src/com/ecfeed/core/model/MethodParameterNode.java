@@ -168,6 +168,23 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return null;
 	}
 
+	public ChoiceNode findFirstChoiceWithValue(String choiceValueString) {
+
+		Set<ChoiceNode> choiceNodes = getAllChoices();
+
+		Iterator<ChoiceNode> it = choiceNodes.iterator();
+
+		while(it.hasNext()) {
+			ChoiceNode choiceNode = it.next();
+
+			if (choiceNode.getValueString().equals(choiceValueString)) {
+				return choiceNode;
+			}
+		}
+
+		return null;
+	}
+
 	private boolean choiceListsMatch(List<ChoiceNode> list1,
 			List<ChoiceNode> list2) {
 		if(list1.size() != list2.size())
