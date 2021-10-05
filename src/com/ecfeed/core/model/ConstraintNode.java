@@ -326,6 +326,10 @@ public class ConstraintNode extends AbstractNode{
 	private boolean isConsistentForParameter(MethodParameterNode parameter) {
 
 		String typeName = parameter.getType();
+		
+		if (parameter.isExpected()) {
+			return true;
+		}
 
 		if (isForbiddenTypeForOrderRelations(typeName)) {
 
