@@ -32,9 +32,9 @@ public class ConditionHelper {
 			ChoiceNode leftChoiceNode,
 			RelationStatement parentRelationStatement) {
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)leftChoiceNode.getParameter();
+		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)leftChoiceNode.getParameter();
 
-		if (parentRelationStatement.mentions(methodParameterNode)) {
+		if (parentRelationStatement.mentions(abstractParameterNode)) {
 			return true;
 		}
 

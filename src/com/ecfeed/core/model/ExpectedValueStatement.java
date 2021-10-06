@@ -43,7 +43,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean mentions(MethodParameterNode parameter) {
+	public boolean mentions(AbstractParameterNode parameter) {
 		return parameter == fParameter;
 	}
 

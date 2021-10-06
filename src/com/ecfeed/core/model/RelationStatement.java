@@ -202,13 +202,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean mentions(MethodParameterNode methodParameterNode) {
+	public boolean mentions(AbstractParameterNode abstractParameterNode) {
 
-		if (getLeftParameter() == methodParameterNode) {
+		if (getLeftParameter() == abstractParameterNode) {
 			return true;
 		}
 
-		if (fRightCondition.mentions(methodParameterNode)) {
+		if (fRightCondition.mentions(abstractParameterNode)) {
 			return true;
 		}
 
