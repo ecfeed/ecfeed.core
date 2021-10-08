@@ -150,11 +150,16 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public boolean isRandomizedValue() {
+		
+		if (isAbstract()) {
+			return false;
+		}
+		
 		return fIsRandomizedValue;
 	}
 
 	public String getRandomizedValueStr() {
-		return fIsRandomizedValue ? "YES" : "NO";
+		return isRandomizedValue() ? "YES" : "NO";
 	}
 
 	public void setParent(ChoicesParentNode parent){
