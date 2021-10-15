@@ -193,7 +193,7 @@ public class AssignmentStatement extends RelationStatement {
 	@Override
 	public AssignmentStatement makeClone() {
 
-		return new AssignmentStatement(getLeftParameter(), getCondition().getCopy());
+		return new AssignmentStatement(getLeftParameter(), getCondition().makeClone());
 	}
 }
 

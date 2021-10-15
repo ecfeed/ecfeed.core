@@ -25,4 +25,8 @@ public class ConstraintNodeHelper {
 	}
 
 	// TODO EX-AM - add method to convert constraint to non-randomized constraint
+	
+	public static ConstraintNode makeCloneWithoutRandomization(ConstraintNode constraintNode) {
+		
+	}
 }
