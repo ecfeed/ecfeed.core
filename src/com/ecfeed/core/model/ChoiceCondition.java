@@ -230,6 +230,11 @@ public class ChoiceCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
+	public void unrandomize() {
+		fRightChoice.unrandomize();
+	}
+
 	private boolean isChoiceAmbiguous(
 			ChoiceNode leftChoiceNode,
 			EMathRelation relation,

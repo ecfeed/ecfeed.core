@@ -253,6 +253,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		return false;
 	}	
+	
+	@Override
+	public void unrandomize() {
+		fRightCondition.unrandomize();
+	}
+
 
 	public MethodParameterNode getLeftParameter(){
 		return fLeftParameter;
@@ -350,5 +356,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		
 		return true;
 	}
+
 }
 

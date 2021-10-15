@@ -309,6 +309,10 @@ public class ParameterCondition implements IStatementCondition {
 		return new ArrayList<ChoiceNode>();
 	}
 
+	@Override
+	public void unrandomize() {
+	}
+
 }	
 
 

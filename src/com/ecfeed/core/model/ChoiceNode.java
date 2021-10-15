@@ -15,6 +15,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ChoiceNode extends ChoicesParentNode {
@@ -74,6 +77,29 @@ public class ChoiceNode extends ChoicesParentNode {
 		return getQualifiedName() + " [" + getValueString() + "]";
 	}
 
+	public void unrandomize() { // TODO EX-AM
+		
+		if (!isRandomizedValue()) {
+			return;
+		}
+		
+		setRandomizedValue(false);
+		
+		String typeName = getParameter().getType();
+
+		if (!JavaLanguageHelper.isJavaType(typeName)) {
+			return;
+		}
+
+		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
+		
+		String convertedValueString = 
+				typeAdapter.generateValueAsString(getValueString(), "Cloning choice node");
+		
+		setValueString(convertedValueString);		
+	}
+	
 	public String toStringWithParenthesis() {
 
 		if(isAbstract()){

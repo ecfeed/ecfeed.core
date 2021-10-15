@@ -28,5 +28,12 @@ public class ConstraintNodeHelper {
 	
 	public static ConstraintNode makeCloneWithoutRandomization(ConstraintNode constraintNode) {
 		
+		ConstraintNode cloneConstraintNode = constraintNode.makeClone();
+		
+		Constraint cloneConstraint = cloneConstraintNode.getConstraint();
+		cloneConstraint.unrandomize();
+		
+		return cloneConstraintNode;
 	}
+
 }

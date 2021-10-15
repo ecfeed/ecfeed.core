@@ -544,26 +544,8 @@ public class ChoiceNodeHelper {
 	public static ChoiceNode makeCloneWithoutRandomization(ChoiceNode choiceNode) { // TODO EX-AM - check for Strings
 		
 		ChoiceNode cloneChoiceNode = choiceNode.makeClone();
-		
-		if (!cloneChoiceNode.isRandomizedValue()) {
-			return cloneChoiceNode;
-		}
-		
-		cloneChoiceNode.setRandomizedValue(false);
-		
-		String typeName = cloneChoiceNode.getParameter().getType();
-		
-		if (!JavaLanguageHelper.isJavaType(typeName)) {
-			return cloneChoiceNode;
-		}
 
-		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
-		
-		String convertedValueString = 
-				typeAdapter.generateValueAsString(cloneChoiceNode.getValueString(), "Cloning choice node");
-		
-		cloneChoiceNode.setValueString(convertedValueString);
+		cloneChoiceNode.unrandomize();
 		
 		return cloneChoiceNode;
 		

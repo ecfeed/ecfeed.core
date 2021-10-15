@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.MessageStack;
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
 	MethodParameterNode fParameter;
-	ChoiceNode fCondition;
+	ChoiceNode fChoiceNode;
 	private IPrimitiveTypePredicate fPredicate;
 
 	public ExpectedValueStatement(
@@ -33,7 +33,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		super(parameter.getModelChangeRegistrator());
 
 		fParameter = parameter;
-		fCondition = condition.makeClone();
+		fChoiceNode = condition.makeClone();
 		fPredicate = predicate;
 	}
 
@@ -63,7 +63,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		if  (fParameter.getMethod() != null) {
 
 			int index = fParameter.getMethod().getParameters().indexOf(fParameter);
-			testCaseChoices.set(index, fCondition.makeClone());
+			testCaseChoices.set(index, fChoiceNode.makeClone());
 		}
 
 		return true;
@@ -100,9 +100,15 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	public List<ChoiceNode> getListOfChoices() {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
-		result.add(fCondition);
+		result.add(fChoiceNode);
 
 		return result;
+	}
+	
+	@Override
+	public void unrandomize() {
+		fChoiceNode.unrandomize();
+		
 	}
 
 	public MethodParameterNode getParameter(){ // TODO RENAME TO getLeftParameter
@@ -110,12 +116,12 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	public ChoiceNode getCondition(){
-		return fCondition;
+		return fChoiceNode;
 	}
 
 	@Override
 	public String toString(){
-		return getParameter().getName() + getRelation().toString() + fCondition.getValueString();
+		return getParameter().getName() + getRelation().toString() + fChoiceNode.getValueString();
 	}
 
 	@Override
@@ -123,12 +129,12 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		final MethodParameterNode parameter = getParameter();
 
-		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fCondition.getValueString();
+		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fChoiceNode.getValueString();
 	}
 
 	@Override
 	public ExpectedValueStatement makeClone(){
-		return new ExpectedValueStatement(fParameter, fCondition.makeClone(), fPredicate);
+		return new ExpectedValueStatement(fParameter, fChoiceNode.makeClone(), fPredicate);
 	}
 
 	@Override
@@ -136,13 +142,13 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		MethodParameterNode parameter = (MethodParameterNode)method.findParameter(fParameter.getName());
 		if(parameter != null && parameter.isExpected()){
 			fParameter = parameter;
-			fCondition.setParent(parameter);
+			fChoiceNode.setParent(parameter);
 			String type = parameter.getType();
 
 			if(fPredicate.isPrimitive(type) == false){
-				ChoiceNode choice = parameter.getChoice(fCondition.getQualifiedName());
+				ChoiceNode choice = parameter.getChoice(fChoiceNode.getQualifiedName());
 				if(choice != null){
-					fCondition = choice;
+					fChoiceNode = choice;
 				}
 				else{
 					return false;

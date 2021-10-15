@@ -130,5 +130,11 @@ public class LabelCondition implements IStatementCondition {
 		return new ArrayList<ChoiceNode>();
 	}
 
+	@Override
+	public void unrandomize() {
+		// TODO EX-AM
+		
+	}
+
 }
 

@@ -173,5 +173,9 @@ public class ValueCondition implements IStatementCondition {
 	public List<ChoiceNode> getListOfChoices() {
 		return new ArrayList<ChoiceNode>();
 	}
+
+	@Override
+	public void unrandomize() {
+	}
 }	
 
