@@ -24,4 +24,5 @@ public class ConstraintNodeHelper {
 		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
 	}
 
+	// TODO EX-AM - add method to convert constraint to non-randomized constraint
 }

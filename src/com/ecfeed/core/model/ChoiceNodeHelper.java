@@ -23,6 +23,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -539,4 +541,32 @@ public class ChoiceNodeHelper {
 		return ret;
 	}
 
+	public static ChoiceNode makeCloneWithoutRandomization(ChoiceNode choiceNode) { // TODO EX-AM - check for Strings
+		
+		ChoiceNode cloneChoiceNode = choiceNode.makeClone();
+		
+		if (!cloneChoiceNode.isRandomizedValue()) {
+			return cloneChoiceNode;
+		}
+		
+		cloneChoiceNode.setRandomizedValue(false);
+		
+		String typeName = cloneChoiceNode.getParameter().getType();
+		
+		if (!JavaLanguageHelper.isJavaType(typeName)) {
+			return cloneChoiceNode;
+		}
+
+		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
+		
+		String convertedValueString = 
+				typeAdapter.generateValueAsString(cloneChoiceNode.getValueString(), "Cloning choice node");
+		
+		cloneChoiceNode.setValueString(convertedValueString);
+		
+		return cloneChoiceNode;
+		
+	}
+	
 }

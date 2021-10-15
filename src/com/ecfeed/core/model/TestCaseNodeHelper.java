@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -69,6 +70,26 @@ public class TestCaseNodeHelper {
 		}
 
 		return AbstractNodeHelper.getName(parent, extLanguageManager);
+	}
+
+	public static TestCaseNode makeCloneWithoutRandomization(TestCaseNode testCaseNode) {
+
+		List<ChoiceNode> testData = testCaseNode.getTestData();
+
+		List<ChoiceNode> clonedTestData = new ArrayList<>();
+
+		for (ChoiceNode choice : testData) {
+
+			ChoiceNode clonedChoiceNode = ChoiceNodeHelper.makeCloneWithoutRandomization(choice);
+			clonedTestData.add(clonedChoiceNode);
+		}
+
+		TestCaseNode clonedTestCaseNode = new TestCaseNode(testCaseNode.getName(), null, clonedTestData);
+
+		clonedTestCaseNode.setProperties(testCaseNode.getProperties());
+		clonedTestCaseNode.setParent(testCaseNode.getMethod());
+
+		return clonedTestCaseNode;
 	}
 
 }
