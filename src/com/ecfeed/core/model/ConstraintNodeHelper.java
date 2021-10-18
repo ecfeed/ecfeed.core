@@ -31,7 +31,7 @@ public class ConstraintNodeHelper {
 		ConstraintNode cloneConstraintNode = constraintNode.makeClone();
 		
 		Constraint cloneConstraint = cloneConstraintNode.getConstraint();
-		cloneConstraint.unrandomize();
+		cloneConstraint.derandomize();
 		
 		return cloneConstraintNode;
 	}

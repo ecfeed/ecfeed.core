@@ -175,7 +175,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void unrandomize() {
+	public void derandomize() {
 	}
 }	
 

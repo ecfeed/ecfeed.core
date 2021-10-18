@@ -334,10 +334,10 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public void unrandomize() {
+	public void derandomize() {
 		
 		for(IStatement statement : fStatements) {
-			statement.unrandomize();
+			statement.derandomize();
 		}
 	}
 

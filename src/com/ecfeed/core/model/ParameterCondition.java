@@ -310,7 +310,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void unrandomize() {
+	public void derandomize() {
 	}
 
 }	

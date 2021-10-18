@@ -231,8 +231,8 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void unrandomize() {
-		fRightChoice.unrandomize();
+	public void derandomize() {
+		fRightChoice.derandomize();
 	}
 
 	private boolean isChoiceAmbiguous(

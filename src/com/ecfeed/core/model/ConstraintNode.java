@@ -114,8 +114,8 @@ public class ConstraintNode extends AbstractNode{
 		return EvaluationResult.FALSE;
 	}
 
-	public void unrandomize() {
-		fConstraint.unrandomize();
+	public void derandomize() {
+		fConstraint.derandomize();
 	}
 	
 	public boolean mentions(ChoiceNode choice) {

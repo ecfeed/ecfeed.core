@@ -106,8 +106,8 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 	
 	@Override
-	public void unrandomize() {
-		fChoiceNode.unrandomize();
+	public void derandomize() {
+		fChoiceNode.derandomize();
 		
 	}
 

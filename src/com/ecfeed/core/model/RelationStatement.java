@@ -255,8 +255,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}	
 	
 	@Override
-	public void unrandomize() {
-		fRightCondition.unrandomize();
+	public void derandomize() {
+		fRightCondition.derandomize();
 	}
 
 

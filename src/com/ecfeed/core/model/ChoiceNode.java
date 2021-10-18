@@ -77,7 +77,7 @@ public class ChoiceNode extends ChoicesParentNode {
 		return getQualifiedName() + " [" + getValueString() + "]";
 	}
 
-	public void unrandomize() { // TODO EX-AM
+	public void derandomize() { // TODO EX-AM
 		
 		if (!isRandomizedValue()) {
 			return;

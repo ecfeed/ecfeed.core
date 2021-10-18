@@ -131,7 +131,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void unrandomize() {
+	public void derandomize() {
 		// TODO EX-AM
 		
 	}

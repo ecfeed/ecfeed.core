@@ -127,7 +127,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public void unrandomize() {
+	public void derandomize() {
 	}
 
 }

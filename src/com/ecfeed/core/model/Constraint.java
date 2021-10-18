@@ -435,15 +435,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@Override
-	public void unrandomize() {
+	public void derandomize() {
 		
 		// TODO EX-AM unit tests
 		
 		AbstractStatement precondition = getPrecondition();
-		precondition.unrandomize();
+		precondition.derandomize();
 		
 		AbstractStatement postcondition = getPostcondition();
-		postcondition.unrandomize();
+		postcondition.derandomize();
 		
 	}
 	public AbstractStatement getPrecondition() {

@@ -545,7 +545,7 @@ public class ChoiceNodeHelper {
 		
 		ChoiceNode cloneChoiceNode = choiceNode.makeClone();
 
-		cloneChoiceNode.unrandomize();
+		cloneChoiceNode.derandomize();
 		
 		return cloneChoiceNode;
 		
