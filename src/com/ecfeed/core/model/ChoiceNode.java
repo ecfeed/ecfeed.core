@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -85,7 +86,12 @@ public class ChoiceNode extends ChoicesParentNode {
 		
 		setRandomizedValue(false);
 		
-		String typeName = getParameter().getType();
+		AbstractParameterNode parameter = getParameter();
+		
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Method parameter unknownk.");
+		}
+		String typeName = parameter.getType();
 
 		if (!JavaLanguageHelper.isJavaType(typeName)) {
 			return;
@@ -94,8 +100,9 @@ public class ChoiceNode extends ChoicesParentNode {
 		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
 		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
 		
-		String convertedValueString = 
-				typeAdapter.generateValueAsString(getValueString(), "Cloning choice node");
+		String valueString = getValueString();
+		
+		String convertedValueString = typeAdapter.generateValueAsString(valueString, "Derandomizing.");
 		
 		setValueString(convertedValueString);		
 	}

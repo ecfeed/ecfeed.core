@@ -32,7 +32,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	public abstract Set<ConstraintNode> getMentioningConstraints(String label);
 
 
-	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
+	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) { // TODO EX-AM move change registrator to the end
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);

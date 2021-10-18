@@ -381,4 +381,34 @@ public class ChoiceNodeTest{
 		assertTrue(p1.isMatch(p2));
 	}
 
+	@Test
+	public void derandomiseTest(){
+		
+		MethodParameterNode methodParameterNode = 
+				new MethodParameterNode(
+						"par1", 
+						"int",
+						"0",
+						false,
+						null);
+		
+		for (int counter = 0; counter < 6; counter++) {
+			
+			ChoiceNode c1 = new ChoiceNode("c1", "1:5", null);
+
+			c1.setParent(methodParameterNode);
+			c1.setRandomizedValue(true);
+
+			c1.derandomize();
+
+			assertFalse(c1.isRandomizedValue());
+			String value = c1.getValueString();
+
+			Integer result = Integer.parseInt(value);
+
+			assertTrue(result <= 5);
+			assertTrue(result >= 1);
+		}
+	}
+
 }
