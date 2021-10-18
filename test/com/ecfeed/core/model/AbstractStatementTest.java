@@ -67,6 +67,10 @@ public class AbstractStatementTest {
 		public List<ChoiceNode> getListOfChoices() {
 			return null;
 		}
+
+		@Override
+		public void derandomize() {
+		}
 	}
 
 	@Test

@@ -27,6 +27,7 @@ import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
 
 public class GeneratorTestUtils{
+	
 	private static class Constraint implements IConstraint<String>{
 		private Set<String> fRestrictedValues;
 
@@ -57,6 +58,11 @@ public class GeneratorTestUtils{
 		@Override
 		public boolean mentions(int dimension) {
 			return false;
+		}
+
+
+		@Override
+		public void derandomize() {
 		}
 
 	}
