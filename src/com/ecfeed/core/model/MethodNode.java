@@ -25,9 +25,9 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodNode extends ParametersParentNode {
 
-	private List<TestCaseNode> fTestCases;
-	private List<TestSuiteNode> fTestSuites;
-	private List<ConstraintNode> fConstraints;
+	private List<TestCaseNode> fTestCaseNodes;
+	private List<TestSuiteNode> fTestSuiteNodes;
+	private List<ConstraintNode> fConstraintNodes;
 
 	@Override
 	protected String getNonQualifiedName() {
@@ -39,9 +39,9 @@ public class MethodNode extends ParametersParentNode {
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
-		fTestCases = new ArrayList<>();
-		fTestSuites = new ArrayList<>();
-		fConstraints = new ArrayList<>();
+		fTestCaseNodes = new ArrayList<>();
+		fTestSuiteNodes = new ArrayList<>();
+		fConstraintNodes = new ArrayList<>();
 
 		setDefaultPropertyValues();
 	}
@@ -78,7 +78,7 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public ConstraintsItr getIterator() {
-		return new ConstraintsItrImpl(fConstraints.iterator());
+		return new ConstraintsItrImpl(fConstraintNodes.iterator());
 	}
 
 	public boolean hasNextConstraint(ConstraintsItr contIterator) {
@@ -121,16 +121,16 @@ public class MethodNode extends ParametersParentNode {
 	@Override
 	public List<? extends AbstractNode> getChildren(){
 		List<AbstractNode> children = new ArrayList<AbstractNode>(super.getChildren());
-		children.addAll(fConstraints);
-		children.addAll(fTestCases);
-		children.addAll(fTestSuites);
+		children.addAll(fConstraintNodes);
+		children.addAll(fTestCaseNodes);
+		children.addAll(fTestSuiteNodes);
 
 		return children;
 	}
 
 	@Override
 	public boolean hasChildren(){
-		return(getParameters().size() != 0 || fConstraints.size() != 0 || fTestCases.size() != 0);
+		return(getParameters().size() != 0 || fConstraintNodes.size() != 0 || fTestCaseNodes.size() != 0);
 	}
 
 	@Override
@@ -143,13 +143,13 @@ public class MethodNode extends ParametersParentNode {
 			copy.addParameter(parameter.makeClone());
 		}
 		
-		for(TestCaseNode testcase : fTestCases){
+		for(TestCaseNode testcase : fTestCaseNodes){
 			TestCaseNode tcase = testcase.getCopy(copy);
 			if(tcase != null)
 				copy.addTestCase(tcase);
 		}
 
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			constraint = constraint.getCopy(copy);
 			if(constraint != null)
 				copy.addConstraint(constraint);
@@ -206,30 +206,30 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public void addConstraint(ConstraintNode constraint) {
-		addConstraint(constraint, fConstraints.size());
+		addConstraint(constraint, fConstraintNodes.size());
 	}
 
 	public void addConstraint(ConstraintNode constraint, int index) {
 		constraint.setParent(this);
-		fConstraints.add(index, constraint);
+		fConstraintNodes.add(index, constraint);
 		registerChange();
 	}
 
 	public void addTestSuite(TestSuiteNode testSuite) {
-		addTestSuite(testSuite, fTestSuites.size());
+		addTestSuite(testSuite, fTestSuiteNodes.size());
 	}
 
 	public void addTestSuite(TestSuiteNode testCase, int index) {
-		fTestSuites.add(index, testCase);
+		fTestSuiteNodes.add(index, testCase);
 		registerChange();
 	}
 	
 	public void addTestCase(TestCaseNode testCase){
-		addTestCase(testCase, fTestCases.size());
+		addTestCase(testCase, fTestCaseNodes.size());
 	}
 
 	public void addTestCase(TestCaseNode testCase, int index) {
-		fTestCases.add(index, testCase);
+		fTestCaseNodes.add(index, testCase);
 		testCase.setParent(this);
 		registerChange();
 	}
@@ -262,30 +262,46 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public List<ConstraintNode> getConstraintNodes(){
-		return fConstraints;
+		return fConstraintNodes;
 	}
 
 	public List<Constraint> getAllConstraints(){
 		List<Constraint> constraints = new ArrayList<Constraint>();
-		for(ConstraintNode node : fConstraints){
+		for(ConstraintNode node : fConstraintNodes){
 			constraints.add(node.getConstraint());
 		}
 		return constraints;
 	}
 
 	public List<Constraint> getConstraints(String name) {
+
 		List<Constraint> constraints = new ArrayList<Constraint>();
-		for(ConstraintNode node : fConstraints){
+
+		for(ConstraintNode node : fConstraintNodes){
 			if(node.getName().equals(name)){
 				constraints.add(node.getConstraint());
 			}
 		}
+
 		return constraints;
 	}
 
+	public List<ConstraintNode> getConstraintNodes(String name) {
+
+		List<ConstraintNode> constraintNodes = new ArrayList<ConstraintNode>();
+
+		for(ConstraintNode constraintNode : fConstraintNodes){
+			if(constraintNode.getName().equals(name)){
+				constraintNodes.add(constraintNode);
+			}
+		}
+
+		return constraintNodes;
+	}
+	
 	public Set<String> getConstraintsNames() {
 		Set<String> names = new HashSet<String>();
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			names.add(constraint.getName());
 		}
 		return names;
@@ -343,17 +359,17 @@ public class MethodNode extends ParametersParentNode {
 
 	public List<TestCaseNode> getTestCases() {
 		
-		return fTestCases;
+		return fTestCaseNodes;
 	}
 	
 	public List<TestSuiteNode> getTestSuites() {
 		
-		return fTestSuites;
+		return fTestSuiteNodes;
 	}
 	
 	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) {
 		
-		for (TestSuiteNode testSuite : fTestSuites) {
+		for (TestSuiteNode testSuite : fTestSuiteNodes) {
 			if (testSuite.getSuiteName().equalsIgnoreCase(testSuiteName)) {
 				return Optional.of(testSuite);
 			}
@@ -370,14 +386,14 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public boolean hasTestSuites() {
-		if (fTestSuites.isEmpty()) {
+		if (fTestSuiteNodes.isEmpty()) {
 			return false;
 		}
 		return true;
 	}
 	
 	public boolean hasTestCases() {
-		if (fTestCases.isEmpty()) {
+		if (fTestCaseNodes.isEmpty()) {
 			return false;
 		}
 		return true;
@@ -406,20 +422,20 @@ public class MethodNode extends ParametersParentNode {
 
 	public boolean removeTestCase(TestCaseNode testCase) {
 		testCase.setParent(null);
-		boolean result = fTestCases.remove(testCase);
+		boolean result = fTestCaseNodes.remove(testCase);
 		registerChange();
 		return result;
 	}
 
 	public void removeTestCases(){
-		fTestCases.clear();
+		fTestCaseNodes.clear();
 		registerChange();
 	}
 
 	public boolean removeConstraint(ConstraintNode constraint) {
 
 		constraint.setParent(null);
-		boolean result = fConstraints.remove(constraint);
+		boolean result = fConstraintNodes.remove(constraint);
 		registerChange();
 
 		return result;
@@ -428,19 +444,19 @@ public class MethodNode extends ParametersParentNode {
 	public void removeTestSuite(TestSuiteNode testSuite) {
 		
 		String testSuiteName = testSuite.getName();
-		fTestCases.removeIf(e -> testSuiteName.equals(e.getName()));
+		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));
 		
-		fTestSuites.remove(testSuite);
+		fTestSuiteNodes.remove(testSuite);
 		registerChange();
 	}
 	
 	public boolean isChoiceMentioned(ChoiceNode choice){
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			if(constraint.mentions(choice)){
 				return true;
 			}
 		}
-		for(TestCaseNode testCase: fTestCases){
+		for(TestCaseNode testCase: fTestCaseNodes){
 			if(testCase.mentions(choice)){
 				return true;
 			}
@@ -463,7 +479,7 @@ public class MethodNode extends ParametersParentNode {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			if(constraint.mentions(parameter)){
 				result.add(constraint);
 			}
@@ -476,7 +492,7 @@ public class MethodNode extends ParametersParentNode {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			if(constraint.mentions(parameter, label)){
 				result.add(constraint);
 			}
@@ -489,7 +505,7 @@ public class MethodNode extends ParametersParentNode {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			if(constraint.mentions(choice)){
 				result.add(constraint);
 			}
@@ -500,7 +516,7 @@ public class MethodNode extends ParametersParentNode {
 
 	public List<TestCaseNode> getMentioningTestCases(ChoiceNode choice){
 		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
-		for(TestCaseNode testCase : fTestCases){
+		for(TestCaseNode testCase : fTestCaseNodes){
 			if(testCase.getTestData().contains(choice)){
 				result.add(testCase);
 			}
@@ -509,12 +525,12 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public boolean isParameterMentioned(MethodParameterNode parameter){
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			if(constraint.mentions(parameter)){
 				return true;
 			}
 		}
-		if(fTestCases.isEmpty()){
+		if(fTestCaseNodes.isEmpty()){
 			return false;
 		}
 		return true;
@@ -522,25 +538,25 @@ public class MethodNode extends ParametersParentNode {
 
 	public void removeAllTestCases() {
 
-		fTestCases.clear();
+		fTestCaseNodes.clear();
 		registerChange();
 	}
 
 	public void replaceTestCases(List<TestCaseNode> testCases){
-		fTestCases.clear();
-		fTestCases.addAll(testCases);
+		fTestCaseNodes.clear();
+		fTestCaseNodes.addAll(testCases);
 		registerChange();
 	}
 
 	public void replaceConstraints(List<ConstraintNode> constraints){
-		fConstraints.clear();
-		fConstraints.addAll(constraints);
+		fConstraintNodes.clear();
+		fConstraintNodes.addAll(constraints);
 		registerChange();
 	}
 
 	public void removeAllConstraints() {
 
-		fConstraints.clear();
+		fConstraintNodes.clear();
 		registerChange();
 	}
 
@@ -652,14 +668,14 @@ public class MethodNode extends ParametersParentNode {
 
 		ArrayList<ConstraintNode> constraintsToDelete = new ArrayList<ConstraintNode>();  
 
-		for(ConstraintNode constraint : fConstraints){
+		for(ConstraintNode constraint : fConstraintNodes){
 			if (constraint.mentionsParameter(methodParameter)) {
 				constraintsToDelete.add(constraint);
 			}
 		}
 
 		for (ConstraintNode constraint : constraintsToDelete) {
-			fConstraints.remove(constraint);
+			fConstraintNodes.remove(constraint);
 		}
 
 		registerChange();
