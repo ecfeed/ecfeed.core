@@ -183,6 +183,17 @@ public class StringHelper {
 		return System.lineSeparator();
 	}
 
+	public static String getSubstringStartingFromFindString(String str, String findString) {
+
+		int separatorPosition = str.indexOf(findString);
+
+		if (separatorPosition == -1) {
+			return null;
+		}
+		
+		return str.substring(separatorPosition);
+	}
+	
 	public static String getLastToken(String tokenizedString, String tokenSeparator) {
 
 		int separatorPosition = tokenizedString.lastIndexOf(tokenSeparator);
@@ -218,15 +229,15 @@ public class StringHelper {
 		return tokenizedString.split(tokenSeparatorRegex);
 	}
 
-	// TODO - create specialized method for separating class from method in MethodSignatureHelper or MethodNode
-	public static String getAllBeforeLastToken(String packageWithClass, String tokenSeparator) { 
+	public static String getAllBeforeLastToken(String str, String tokenSeparator) { 
 
-		int separatorPosition = packageWithClass.lastIndexOf(tokenSeparator);
+		int separatorPosition = str.lastIndexOf(tokenSeparator);
 
 		if (separatorPosition == -1) {
 			return null;
 		}
-		return packageWithClass.substring(0, separatorPosition);
+		
+		return str.substring(0, separatorPosition);
 	}
 
 	public static String getPackageWithClass(String methodSignature) {
