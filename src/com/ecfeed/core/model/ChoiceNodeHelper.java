@@ -548,5 +548,18 @@ public class ChoiceNodeHelper {
 		return cloneChoiceNode;
 		
 	}
+
+	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCases) {
+		
+		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
+		
+		for (TestCaseNode testCaseNode : testCases) {
+			
+			TestCaseNode clonedCaseNode = TestCaseNodeHelper.makeCloneWithoutRandomization(testCaseNode);
+			clonedTestCaseNodes.add(clonedCaseNode);
+		}
+		
+		return clonedTestCaseNodes;
+	}
 	
 }

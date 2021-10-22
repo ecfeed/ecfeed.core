@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintNodeHelper {
@@ -25,15 +28,31 @@ public class ConstraintNodeHelper {
 	}
 
 	// TODO EX-AM - add method to convert constraint to non-randomized constraint
-	
+
 	public static ConstraintNode makeCloneWithoutRandomization(ConstraintNode constraintNode) {
-		
+
 		ConstraintNode cloneConstraintNode = constraintNode.makeClone();
-		
+
 		Constraint cloneConstraint = cloneConstraintNode.getConstraint();
 		cloneConstraint.derandomize();
-		
+
 		return cloneConstraintNode;
+	}
+
+	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(List<ConstraintNode> constraints) {
+
+		List<ConstraintNode> clonedConstraintNodes = new ArrayList<ConstraintNode>();
+
+		for (ConstraintNode constraint : constraints) {
+
+			ConstraintNode clonedConstraint = constraint.makeClone();
+
+			clonedConstraint.derandomize();
+			clonedConstraintNodes.add(clonedConstraint);
+		}
+
+		return clonedConstraintNodes;
+
 	}
 
 }
