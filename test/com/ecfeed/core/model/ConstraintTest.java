@@ -689,8 +689,6 @@ public class ConstraintTest {
 		return precondition;
 	}
 
-	// TODO EX-AM label condition
-
 	@Test
 	public void derandomizeNumbersTest() {
 
