@@ -78,16 +78,16 @@ public class ChoiceNode extends ChoicesParentNode {
 		return getQualifiedName() + " [" + getValueString() + "]";
 	}
 
-	public void derandomize() { // TODO EX-AM
-		
+	public void derandomize() {
+
 		if (!isRandomizedValue()) {
 			return;
 		}
-		
+
 		setRandomizedValue(false);
-		
+
 		AbstractParameterNode parameter = getParameter();
-		
+
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Method parameter unknownk.");
 		}
@@ -99,14 +99,14 @@ public class ChoiceNode extends ChoicesParentNode {
 
 		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
 		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
-		
+
 		String valueString = getValueString();
-		
+
 		String convertedValueString = typeAdapter.generateValueAsString(valueString, "Derandomizing.");
-		
+
 		setValueString(convertedValueString);		
 	}
-	
+
 	public String toStringWithParenthesis() {
 
 		if(isAbstract()){
@@ -183,11 +183,11 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public boolean isRandomizedValue() {
-		
+
 		if (isAbstract()) {
 			return false;
 		}
-		
+
 		return fIsRandomizedValue;
 	}
 
