@@ -382,8 +382,8 @@ public class ChoiceNodeTest{
 	}
 
 	@Test
-	public void derandomiseTest(){
-		
+	public void derandomizeNumberTest(){
+
 		MethodParameterNode methodParameterNode = 
 				new MethodParameterNode(
 						"par1", 
@@ -391,10 +391,40 @@ public class ChoiceNodeTest{
 						"0",
 						false,
 						null);
-		
+
 		for (int counter = 0; counter < 6; counter++) {
-			
+
 			ChoiceNode c1 = new ChoiceNode("c1", "1:5", null);
+
+			c1.setParent(methodParameterNode);
+			c1.setRandomizedValue(true);
+
+			c1.derandomize();
+
+			assertFalse(c1.isRandomizedValue());
+			String value = c1.getValueString();
+
+			Integer result = Integer.parseInt(value);
+
+			assertTrue(result <= 5);
+			assertTrue(result >= 1);
+		}
+	}
+
+	@Test
+	public void derandomizeTextTest(){
+
+		MethodParameterNode methodParameterNode = 
+				new MethodParameterNode(
+						"par1", 
+						"String",
+						"0",
+						false,
+						null);
+
+		for (int counter = 0; counter < 6; counter++) {
+
+			ChoiceNode c1 = new ChoiceNode("c1", "[1-5]", null);
 
 			c1.setParent(methodParameterNode);
 			c1.setRandomizedValue(true);
