@@ -40,7 +40,23 @@ public class ConstraintNodeHelper {
 		}
 
 		return clonedConstraintNodes;
-
 	}
+
+	public static List<ConstraintNode> createListOfConstraintNodes(
+			List<Constraint> constraints, 
+			MethodNode methodNode) {
+
+		List<ConstraintNode> constraintNodes = new ArrayList<>();
+
+		for (Constraint constraint: constraints) {
+
+			ConstraintNode constraintNode = new ConstraintNode(constraint.getName(), constraint, null);
+
+			constraintNodes.add(constraintNode);
+		}
+
+		return constraintNodes;
+	}
+
 
 }
