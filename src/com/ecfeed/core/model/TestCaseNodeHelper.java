@@ -92,4 +92,41 @@ public class TestCaseNodeHelper {
 		return clonedTestCaseNode;
 	}
 
+	public static List<TestCaseNode> createListOfTestCaseNodes(
+			List<TestCase> testCases, 
+			MethodNode methodNode) {
+
+		List<TestCaseNode> testCaseNodes = new ArrayList<>();
+
+		for (TestCase testCase : testCases) {
+
+			TestCaseNode testCaseNode = createTestCaseNode(testCase, methodNode);
+			testCaseNodes.add(testCaseNode);
+		}
+
+		return testCaseNodes;
+	}
+
+	private static TestCaseNode createTestCaseNode(TestCase testCase, MethodNode methodNode) {
+
+		TestCase newTestCase = new TestCase();
+
+		List<ChoiceNode> choiceNodes = testCase.getListOfChoiceNodes(); 
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			ChoiceNode newChoiceNode = choiceNode.makeClone();
+			newTestCase.add(newChoiceNode);
+		}
+
+		TestCaseNode testCaseNode = new TestCaseNode(newTestCase.getListOfChoiceNodes());
+		testCaseNode.setParent(methodNode);
+
+		for (ChoiceNode choiceNode : testCaseNode.getTestData()) {
+			choiceNode.setParent(testCaseNode);
+		}
+
+		return testCaseNode;
+	}
+
 }
