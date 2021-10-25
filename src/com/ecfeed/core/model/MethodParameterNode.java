@@ -34,7 +34,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 				GlobalParameterNode link,
 				IModelChangeRegistrator modelChangeRegistrator) {
 
-		super(name, modelChangeRegistrator, type);
+		super(name, type, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 

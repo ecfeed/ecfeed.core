@@ -20,7 +20,7 @@ import java.util.Set;
 public class GlobalParameterNode extends AbstractParameterNode {
 
 	public GlobalParameterNode(String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
-		super(name, modelChangeRegistrator, type);
+		super(name, type, modelChangeRegistrator);
 	}
 
 	//copy constructor creating a global parameter instance from other types, eg. MethodParameterNode
