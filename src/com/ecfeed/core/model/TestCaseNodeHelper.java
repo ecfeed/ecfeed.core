@@ -80,7 +80,7 @@ public class TestCaseNodeHelper {
 
 		for (ChoiceNode choice : testData) {
 
-			ChoiceNode clonedChoiceNode = ChoiceNodeHelper.makeCloneWithoutRandomization(choice);
+			ChoiceNode clonedChoiceNode = ChoiceNodeHelper.makeUnrandomizedClone(choice);
 			clonedTestData.add(clonedChoiceNode);
 		}
 
