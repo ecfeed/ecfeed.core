@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class TestCaseNodeHelper {
@@ -129,4 +130,42 @@ public class TestCaseNodeHelper {
 		return testCaseNode;
 	}
 
+	public static boolean evaluateConstraints(TestCaseNode testCase, List<ConstraintNode> constraintNodes) {
+		
+		for (ConstraintNode constraintNode : constraintNodes) {
+			
+			ConstraintType constraintType = constraintNode.getConstraint().getType();
+			
+			if (constraintType == ConstraintType.ASSIGNMENT) {
+				continue;
+			}
+
+			EvaluationResult evaluationResult =  constraintNode.evaluate(testCase.getTestData());
+
+			if (evaluationResult == EvaluationResult.FALSE) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean assignExpectedValues(TestCaseNode testCase, List<ConstraintNode> constraintNodes) {
+		
+		for (ConstraintNode constraintNode : constraintNodes) {
+			
+			Constraint constraint = constraintNode.getConstraint();
+			
+			ConstraintType constraintType = constraint.getType();
+			
+			if (constraintType != ConstraintType.ASSIGNMENT) {
+				continue;
+			}
+
+			constraint.setExpectedValues(testCase.getTestData());
+		}
+
+		return true;
+	}
+	
 }

@@ -350,7 +350,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@Override
-	public EvaluationResult evaluate(List<ChoiceNode> values) {
+	public EvaluationResult evaluate(List<ChoiceNode> choiceNodesFromTestCase) {
 
 		if (fConstraintType == ConstraintType.ASSIGNMENT) {
 			return EvaluationResult.TRUE;
@@ -360,7 +360,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return EvaluationResult.TRUE;
 		}
 
-		EvaluationResult preconditionEvaluationResult = fPrecondition.evaluate(values);
+		EvaluationResult preconditionEvaluationResult = fPrecondition.evaluate(choiceNodesFromTestCase);
 
 		if (preconditionEvaluationResult == EvaluationResult.FALSE) {
 			return EvaluationResult.TRUE;
@@ -374,7 +374,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return EvaluationResult.FALSE;
 		}
 
-		EvaluationResult postconditionEvaluationResult = fPostcondition.evaluate(values);
+		EvaluationResult postconditionEvaluationResult = fPostcondition.evaluate(choiceNodesFromTestCase);
 
 		if (postconditionEvaluationResult == EvaluationResult.TRUE) {
 			return EvaluationResult.TRUE;
@@ -388,14 +388,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@Override
-	public boolean setExpectedValues(List<ChoiceNode> testCaseNodes) {
+	public boolean setExpectedValues(List<ChoiceNode> choiceNodesFromTestCase) {
 
 		if (fPrecondition == null) {
 			return true;
 		}
 
-		if (fPrecondition.evaluate(testCaseNodes) == EvaluationResult.TRUE) {
-			return fPostcondition.setExpectedValues(testCaseNodes);
+		if (fPrecondition.evaluate(choiceNodesFromTestCase) == EvaluationResult.TRUE) {
+			return fPostcondition.setExpectedValues(choiceNodesFromTestCase);
 		}
 
 		return true;
