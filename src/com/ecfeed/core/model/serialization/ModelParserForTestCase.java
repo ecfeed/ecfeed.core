@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.model.serialization;
 
-import static com.ecfeed.core.model.ModelConstants.EXPECTED_VALUE_CHOICE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -91,7 +91,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 					return Optional.empty();
 				}
 
-				testValue = new ChoiceNode(EXPECTED_VALUE_CHOICE_NAME, valueString, parameter.getModelChangeRegistrator());
+				testValue = new ChoiceNode(AssignmentStatement.ASSIGNMENT_CHOICE_NAME, valueString, parameter.getModelChangeRegistrator());
 				testValue.setParent(parameter);
 			}
 

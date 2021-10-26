@@ -18,6 +18,8 @@ import java.util.List;
 
 public class AssignmentStatement extends RelationStatement {
 
+	public static final String ASSIGNMENT_CHOICE_NAME = "@assignment";
+
 	private AssignmentStatement(
 			MethodParameterNode parameter, 
 			IStatementCondition condition) {
@@ -174,7 +176,7 @@ public class AssignmentStatement extends RelationStatement {
 
 		String value = valueCondition.getRightValue();
 
-		ChoiceNode newChoiceNode =  new ChoiceNode(ModelConstants.EXPECTED_VALUE_CHOICE_NAME, value, null);
+		ChoiceNode newChoiceNode =  new ChoiceNode(AssignmentStatement.ASSIGNMENT_CHOICE_NAME, value, null);
 		newChoiceNode.setParent(methodParameterNode);
 
 		return newChoiceNode;
