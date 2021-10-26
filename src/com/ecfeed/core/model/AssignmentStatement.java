@@ -174,7 +174,7 @@ public class AssignmentStatement extends RelationStatement {
 
 		String value = valueCondition.getRightValue();
 
-		ChoiceNode newChoiceNode =  new ChoiceNode("assignment", value, null);
+		ChoiceNode newChoiceNode =  new ChoiceNode(ModelConstants.EXPECTED_VALUE_CHOICE_NAME, value, null);
 		newChoiceNode.setParent(methodParameterNode);
 
 		return newChoiceNode;

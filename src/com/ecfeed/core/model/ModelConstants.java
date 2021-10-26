@@ -11,5 +11,5 @@
 package com.ecfeed.core.model;
 
 public class ModelConstants {
-	public static final String EXPECTED_VALUE_CHOICE_NAME = "@expected";
+	public static final String EXPECTED_VALUE_CHOICE_NAME = "@assignment"; // TODO EX-AM move this .....
 }
