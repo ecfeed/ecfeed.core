@@ -55,7 +55,7 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 
 		return (byte) ThreadLocalRandom.current().nextInt(
 				JavaLanguageHelper.parseByteValue(range[0], ERunMode.QUIET),
-				JavaLanguageHelper.parseByteValue(range[1], ERunMode.QUIET));
+				1 + JavaLanguageHelper.parseByteValue(range[1], ERunMode.QUIET));
 	}
 
 }
