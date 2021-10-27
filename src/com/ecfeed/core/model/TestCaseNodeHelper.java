@@ -73,7 +73,7 @@ public class TestCaseNodeHelper {
 		return AbstractNodeHelper.getName(parent, extLanguageManager);
 	}
 
-	public static TestCaseNode makeCloneWithoutRandomization(TestCaseNode testCaseNode) {
+	public static TestCaseNode makeDerandomizedClone(TestCaseNode testCaseNode) {
 
 		List<ChoiceNode> testData = testCaseNode.getTestData();
 
@@ -81,7 +81,7 @@ public class TestCaseNodeHelper {
 
 		for (ChoiceNode choice : testData) {
 
-			ChoiceNode clonedChoiceNode = ChoiceNodeHelper.makeUnrandomizedClone(choice);
+			ChoiceNode clonedChoiceNode = ChoiceNodeHelper.makeDerandomizedClone(choice);
 			clonedTestData.add(clonedChoiceNode);
 		}
 

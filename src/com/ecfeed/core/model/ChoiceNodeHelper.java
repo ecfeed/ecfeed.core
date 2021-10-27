@@ -539,7 +539,7 @@ public class ChoiceNodeHelper {
 		return ret;
 	}
 
-	public static ChoiceNode makeUnrandomizedClone(ChoiceNode choiceNode) {
+	public static ChoiceNode makeDerandomizedClone(ChoiceNode choiceNode) {
 
 		ChoiceNode cloneChoiceNode = choiceNode.makeClone();
 
@@ -555,7 +555,7 @@ public class ChoiceNodeHelper {
 
 		for (TestCaseNode testCaseNode : testCases) {
 
-			TestCaseNode clonedCaseNode = TestCaseNodeHelper.makeCloneWithoutRandomization(testCaseNode);
+			TestCaseNode clonedCaseNode = TestCaseNodeHelper.makeDerandomizedClone(testCaseNode);
 			clonedTestCaseNodes.add(clonedCaseNode);
 		}
 
