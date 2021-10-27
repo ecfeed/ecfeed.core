@@ -12,12 +12,14 @@ package com.ecfeed.core.utils;
 
 public class TestModel {
 
+    // REMARK - this model must be a copy of model used in dbupdater (project ecfeed.db, ecfeed.db.util.TestModel
+
     public static String getModelXml() {
 
         String xml = new String();
 
         xml += "<?xml version='1.0' encoding='UTF-8'?>";
-        xml += "<Model name='TestModel' version='2'>";
+        xml += "<Model name='TestModel1' version='2'>";
         xml += "    <Class name='test.Class1'>";
         xml += "        <Properties>";
         xml += "            <Property name='runOnAndroid' type='boolean' value='false'/>";
@@ -142,6 +144,36 @@ public class TestModel {
         xml += "                <TestParameter choice='choice22'/>";
         xml += "            </TestCase>";
         xml += "        </Method>";
+
+
+        xml += "        <Method name='testMethodExpected'>";
+        xml += "            <Properties>";
+        xml += "                <Property name='methodRunner' type='String' value='Java Runner'/>";
+        xml += "                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>";
+        xml += "                <Property name='wbBrowser' type='String' value='Chrome'/>";
+        xml += "                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>";
+        xml += "            </Properties>";
+        xml += "            <Parameter name='arg1' type='String' isExpected='false' expected='0' linked='false'>";
+        xml += "                <Properties>";
+        xml += "                    <Property name='wbIsOptional' type='boolean' value='false'/>";
+        xml += "                </Properties>";
+        xml += "                <Comments>";
+        xml += "                    <TypeComments/>";
+        xml += "                </Comments>";
+        xml += "                <Choice name='choice11' value='V11' isRandomized='false'/>";
+        xml += "                <Choice name='choice12' value='V12' isRandomized='false'/>";
+        xml += "            </Parameter>";
+        xml += "            <Parameter name='arg2' type='String' isExpected='true' expected='5' linked='false'>";
+        xml += "                <Properties>";
+        xml += "                    <Property name='wbIsOptional' type='boolean' value='false'/>";
+        xml += "                </Properties>";
+        xml += "                <Comments>";
+        xml += "                    <TypeComments/>";
+        xml += "                </Comments>";
+        xml += "            </Parameter>";
+        xml += "        </Method>";
+
+
         xml += "        <Method name='testMethod'>";
         xml += "            <Properties>";
         xml += "                <Property name='methodRunner' type='String' value='Java Runner'/>";
@@ -262,50 +294,107 @@ public class TestModel {
         xml += "                <Choice name='choice78' value='8' isRandomized='false'/>";
         xml += "            </Parameter>";
         xml += "        </Method>";
-        xml += "        <Method name='randomized'>";
-        xml += "            <Properties>";
-        xml += "                <Property name='methodRunner' type='String' value='Java Runner'/>";
-        xml += "                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>";
-        xml += "                <Property name='wbBrowser' type='String' value='Chrome'/>";
-        xml += "                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>";
-        xml += "            </Properties>";
-        xml += "            <Parameter name='arg1' type='int' isExpected='false' expected='0' linked='false'>";
-        xml += "                <Properties>";
-        xml += "                    <Property name='wbIsOptional' type='boolean' value='false'/>";
-        xml += "                </Properties>";
-        xml += "                <Comments>";
-        xml += "                    <TypeComments/>";
-        xml += "                </Comments>";
-        xml += "                <Choice name='choiceR1-5' value='1:5' isRandomized='true'/>";
-        xml += "                <Choice name='choiceNR' value='2' isRandomized='false'/>";
-        xml += "            </Parameter>";
-        xml += "            <Parameter name='arg2' type='String' isExpected='false' expected='0' linked='false'>";
-        xml += "                <Properties>";
-        xml += "                    <Property name='wbIsOptional' type='boolean' value='false'/>";
-        xml += "                </Properties>";
-        xml += "                <Comments>";
-        xml += "                    <TypeComments/>";
-        xml += "                </Comments>";
-        xml += "                <Choice name='choiceR1' value='A[123]B' isRandomized='true'/>";
-        xml += "                <Choice name='choiceR2' value='1[ABCD]3' isRandomized='true'/>";
-        xml += "            </Parameter>";
-        xml += "            <TestCase testSuite='default'>";
-        xml += "                <TestParameter choice='choiceR1-5'/>";
-        xml += "                <TestParameter choice='choiceR1'/>";
-        xml += "            </TestCase>";
-        xml += "            <TestCase testSuite='default'>";
-        xml += "                <TestParameter choice='choiceNR'/>";
-        xml += "                <TestParameter choice='choiceR1'/>";
-        xml += "            </TestCase>";
-        xml += "            <TestCase testSuite='default'>";
-        xml += "                <TestParameter choice='choiceR1-5'/>";
-        xml += "                <TestParameter choice='choiceR2'/>";
-        xml += "            </TestCase>";
-        xml += "            <TestCase testSuite='default'>";
-        xml += "                <TestParameter choice='choiceNR'/>";
-        xml += "                <TestParameter choice='choiceR2'/>";
-        xml += "            </TestCase>";
-        xml += "        </Method>";
+
+        xml += 	"        <Method name='randomized'>\n" +
+                "            <Properties>\n" +
+                "                <Property name='methodRunner' type='String' value='Java Runner'/>\n" +
+                "                <Property name='wbMapBrowserToParam' type='boolean' value='false'/>\n" +
+                "                <Property name='wbBrowser' type='String' value='Chrome'/>\n" +
+                "                <Property name='wbMapStartUrlToParam' type='boolean' value='false'/>\n" +
+                "            </Properties>\n" +
+                "            <Parameter name='par1' type='int' isExpected='false' expected='0' linked='false'>\n" +
+                "                <Properties>\n" +
+                "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
+                "                </Properties>\n" +
+                "                <Comments>\n" +
+                "                    <TypeComments/>\n" +
+                "                </Comments>\n" +
+                "                <Choice name='choiceR' value='1:3' isRandomized='true'/>\n" +
+                "                <Choice name='choiceNR' value='2' isRandomized='false'/>\n" +
+                "            </Parameter>\n" +
+                "            <Parameter name='par2' type='String' isExpected='false' expected='0' linked='false'>\n" +
+                "                <Properties>\n" +
+                "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
+                "                </Properties>\n" +
+                "                <Comments>\n" +
+                "                    <TypeComments/>\n" +
+                "                </Comments>\n" +
+                "                <Choice name='choiceR1' value='A[123]B' isRandomized='true'/>\n" +
+                "                <Choice name='choiceR2' value='A[234]B' isRandomized='true'/>\n" +
+                "            </Parameter>\n" +
+                "            <Parameter name='expectedNumber' type='byte' isExpected='true' expected='0' linked='false'>\n" +
+                "                <Properties>\n" +
+                "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
+                "                </Properties>\n" +
+                "                <Comments>\n" +
+                "                    <TypeComments/>\n" +
+                "                </Comments>\n" +
+                "            </Parameter>\n" +
+                "            <Parameter name='expectedText' type='String' isExpected='true' expected='default-text' linked='false'>\n" +
+                "                <Properties>\n" +
+                "                    <Property name='wbIsOptional' type='boolean' value='false'/>\n" +
+                "                </Properties>\n" +
+                "                <Comments>\n" +
+                "                    <TypeComments/>\n" +
+                "                </Comments>\n" +
+                "            </Parameter>\n" +
+                "            <Constraint name='filterPar1' type='BF'>\n" +
+                "                <Premise>\n" +
+                "                    <StaticStatement value='true'/>\n" +
+                "                </Premise>\n" +
+                "                <Consequence>\n" +
+                "                    <ValueStatement rightValue='3' parameter='par1' relation='equal'/>\n" +
+                "                </Consequence>\n" +
+                "            </Constraint>\n" +
+                "            <Constraint name='assignValues' type='AS'>\n" +
+                "                <Premise>\n" +
+                "                    <StaticStatement value='true'/>\n" +
+                "                </Premise>\n" +
+                "                <Consequence>\n" +
+                "                    <StatementArray operator='assign'>\n" +
+                "                        <ValueStatement rightValue='7' parameter='expectedNumber' relation='assign'/>\n" +
+                "                        <ValueStatement rightValue='ok' parameter='expectedText' relation='assign'/>\n" +
+                "                    </StatementArray>\n" +
+                "                </Consequence>\n" +
+                "            </Constraint>\n" +
+                "            <TestCase testSuite='with-constraints'>\n" +
+                "                <TestParameter choice='choiceR'/>\n" +
+                "                <TestParameter choice='choiceR2'/>\n" +
+                "                <ExpectedValue value='7'/>\n" +
+                "                <ExpectedValue value='ok'/>\n" +
+                "            </TestCase>\n" +
+                "            <TestCase testSuite='with-constraints'>\n" +
+                "                <TestParameter choice='choiceR'/>\n" +
+                "                <TestParameter choice='choiceR1'/>\n" +
+                "                <ExpectedValue value='7'/>\n" +
+                "                <ExpectedValue value='ok'/>\n" +
+                "            </TestCase>\n" +
+                "            <TestCase testSuite='no-constraints'>\n" +
+                "                <TestParameter choice='choiceNR'/>\n" +
+                "                <TestParameter choice='choiceR2'/>\n" +
+                "                <ExpectedValue value='0'/>\n" +
+                "                <ExpectedValue value='default-text'/>\n" +
+                "            </TestCase>\n" +
+                "            <TestCase testSuite='no-constraints'>\n" +
+                "                <TestParameter choice='choiceR'/>\n" +
+                "                <TestParameter choice='choiceR1'/>\n" +
+                "                <ExpectedValue value='0'/>\n" +
+                "                <ExpectedValue value='default-text'/>\n" +
+                "            </TestCase>\n" +
+                "            <TestCase testSuite='no-constraints'>\n" +
+                "                <TestParameter choice='choiceR'/>\n" +
+                "                <TestParameter choice='choiceR2'/>\n" +
+                "                <ExpectedValue value='0'/>\n" +
+                "                <ExpectedValue value='default-text'/>\n" +
+                "            </TestCase>\n" +
+                "            <TestCase testSuite='no-constraints'>\n" +
+                "                <TestParameter choice='choiceNR'/>\n" +
+                "                <TestParameter choice='choiceR1'/>\n" +
+                "                <ExpectedValue value='0'/>\n" +
+                "                <ExpectedValue value='default-text'/>\n" +
+                "            </TestCase>\n" +
+                "        </Method>";
+
         xml += "        <Method name='alternative1'>";
         xml += "            <Properties>";
         xml += "                <Property name='methodRunner' type='String' value='Java Runner'/>";
