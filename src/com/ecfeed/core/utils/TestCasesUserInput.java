@@ -34,8 +34,6 @@ public class TestCasesUserInput {
 	// each entry consists of method's parameter name and list of choices
 	private Object fChoices;
 
-	private String fDerandomize;
-
 	public TestCasesUserInput()	{
 		fProperties = new HashMap<>();
 	}
@@ -98,18 +96,6 @@ public class TestCasesUserInput {
 	public void setConstraints(Object constraints) {
 
 		fConstraints = constraints;
-	}
-
-	@JsonGetter("derandomize")
-	public String getDerandomize() {
-
-		return fDerandomize;
-	}
-
-	@JsonSetter("derandomize")
-	public void setDerandomize(String derandomize) {
-
-		fDerandomize = derandomize;
 	}
 
 	public void setAllConstraints() {
