@@ -18,7 +18,7 @@ import java.util.List;
 
 public class TestCaseHelper {
 
-	public boolean isTestCaseAmbiguous(
+	public static boolean isTestCaseAmbiguous(
 			TestCase testCase,
 			List<Constraint> constraints,
 			MessageStack messageStack,
@@ -36,7 +36,7 @@ public class TestCaseHelper {
 		return false;
 	}
 
-	private List<List<ChoiceNode>> createTestDomainWithOneTestCase(TestCase testCase) {
+	private static List<List<ChoiceNode>> createTestDomainWithOneTestCase(TestCase testCase) {
 
 		List<List<ChoiceNode>> testDomainWithOneTestCase = new ArrayList<>();
 

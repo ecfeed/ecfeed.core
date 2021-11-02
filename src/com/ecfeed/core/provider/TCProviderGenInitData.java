@@ -11,13 +11,13 @@ import com.ecfeed.core.model.MethodNode;
 public class TCProviderGenInitData implements ITCProviderInitData {
 
 	private List<List<ChoiceNode>> fChoiceInput;
-	private Collection<Constraint> fConstraints;
+	private List<Constraint> fConstraints;
 	private List<IGeneratorValue> fGeneratorArguments;
 	private MethodNode fMethodNode;
 	
 	public TCProviderGenInitData(
 			List<List<ChoiceNode>> choiceInput,
-			Collection<Constraint> constraints,
+			List<Constraint> constraints,
 			List<IGeneratorValue> generatorArguments,
 			MethodNode methodNode) {
 		
@@ -35,7 +35,7 @@ public class TCProviderGenInitData implements ITCProviderInitData {
 		return fChoiceInput;
 	}
 	
-	public Collection<Constraint> getConstraints() {
+	public List<Constraint> getConstraints() {
 		return fConstraints;
 	}
 	

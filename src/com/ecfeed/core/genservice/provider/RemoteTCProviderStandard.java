@@ -115,6 +115,11 @@ public class RemoteTCProviderStandard implements ITCProvider {
         }
     }
 
+    @Override
+    public List<Constraint> getConstraints() {
+        return null;
+    }
+
     public void processInitialTags() {
 
         fBufferedLine = null;
