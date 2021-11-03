@@ -86,15 +86,24 @@ public class ChoiceNode extends ChoicesParentNode {
 
 		setRandomizedValue(false);
 
+		setValueString(getDerandomizedValue());
+	}
+
+	public String getDerandomizedValue() {
+
+		if (!isRandomizedValue()) {
+			return getValueString();
+		}
+
 		AbstractParameterNode parameter = getParameter();
 
 		if (parameter == null) {
-			ExceptionHelper.reportRuntimeException("Method parameter unknownk.");
+			ExceptionHelper.reportRuntimeException("Method parameter unknown.");
 		}
 		String typeName = parameter.getType();
 
 		if (!JavaLanguageHelper.isJavaType(typeName)) {
-			return;
+			return getValueString();
 		}
 
 		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
@@ -102,9 +111,9 @@ public class ChoiceNode extends ChoicesParentNode {
 
 		String valueString = getValueString();
 
-		String convertedValueString = typeAdapter.generateValueAsString(valueString, "Derandomizing.");
+		String derandomizedValueString = typeAdapter.generateValueAsString(valueString, "Derandomizing.");
 
-		setValueString(convertedValueString);		
+		return derandomizedValueString;
 	}
 
 	public String toStringWithParenthesis() {
