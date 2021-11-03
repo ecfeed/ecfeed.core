@@ -18,6 +18,20 @@ import java.util.List;
 
 public class TestCaseHelper {
 
+
+	public static TestCase createTestCase(TestCaseNode testCaseNode) {
+
+		TestCase testCase = new TestCase();
+
+		for (ChoiceNode choiceNode : testCaseNode.getTestData()) {
+
+			ChoiceNode newChoiceNode = choiceNode.makeClone();
+			testCase.add(newChoiceNode);
+		}
+
+		return testCase;
+	}
+
 	public static boolean isTestCaseAmbiguous(
 			TestCase testCase,
 			List<Constraint> constraints,
