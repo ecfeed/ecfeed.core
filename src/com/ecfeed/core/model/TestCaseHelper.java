@@ -50,6 +50,15 @@ public class TestCaseHelper {
 		return false;
 	}
 
+	public static void setExpectedValuesToTestCaseChoices(
+			List<ChoiceNode> listOfChoiceNodes,
+			List<Constraint> constraints) {
+
+		for (Constraint constraint : constraints) {
+			constraint.setExpectedValues(listOfChoiceNodes);
+		}
+	}
+
 	private static List<List<ChoiceNode>> createTestDomainWithOneTestCase(TestCase testCase) {
 
 		List<List<ChoiceNode>> testDomainWithOneTestCase = new ArrayList<>();
