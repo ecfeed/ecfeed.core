@@ -84,9 +84,8 @@ public class ChoiceNode extends ChoicesParentNode {
 			return;
 		}
 
-		setRandomizedValue(false);
-
 		setValueString(getDerandomizedValue());
+		setRandomizedValue(false);
 	}
 
 	public String getDerandomizedValue() {
