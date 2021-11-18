@@ -17,7 +17,6 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintHelper {
 
-
 	public static String createSignature(Constraint constraint, IExtLanguageManager extLanguageManager) {
 
 		if (constraint == null) {

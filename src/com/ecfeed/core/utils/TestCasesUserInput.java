@@ -116,13 +116,13 @@ public class TestCasesUserInput {
 	}
 
 	@JsonGetter("ambiguousConstraints")
-	public String getAmbiguousConstraints() {
+	public String getAmbiguousConstraintsFlag() {
 
 		return fAmbiguousConstraints;
 	}
 
 	@JsonSetter("ambiguousConstraints")
-	public void setAmbiguousConstraints(String ambiguousConstraints) {
+	public void setAmbiguousConstraintsFlag(String ambiguousConstraints) {
 
 		fAmbiguousConstraints = ambiguousConstraints;
 	}
