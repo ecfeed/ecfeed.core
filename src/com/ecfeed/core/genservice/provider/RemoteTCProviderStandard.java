@@ -49,8 +49,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
         fWebServiceResponse = fWebServiceClient.sendPostRequest(requestType, requestText);
 
         if (!fWebServiceResponse.isResponseStatusOk()) {
-            ExceptionHelper.reportRuntimeException(
-                    "Request failed. Response status: " + fWebServiceResponse.getResponseStatus());
+            ProviderHelper.reportInvalidResponseException(fWebServiceResponse);
         }
 
         fTotalProgress = PROGRESS_UNKNOWN;
@@ -60,7 +59,6 @@ public class RemoteTCProviderStandard implements ITCProvider {
         if (fEcfProgressMonitor.isCanceled()) {
             return;
         }
-
     }
 
     @Override
