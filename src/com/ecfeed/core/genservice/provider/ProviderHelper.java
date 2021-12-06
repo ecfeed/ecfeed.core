@@ -8,15 +8,21 @@ import java.io.BufferedReader;
 
 public class ProviderHelper {
 
-    public static void reportInvalidResponseException(WebServiceResponse webServiceResponse) {
+    public static void reportInvalidResponseException(
+            WebServiceResponse webServiceResponse,
+            boolean isJsonFormat) {
 
-        String jsonMessage = getErrorMessage(webServiceResponse);
+        String message = getErrorMessage(webServiceResponse);
 
-        String errorMessage = StringHelper.removeToPrefixAndFromPostfix("{\"error\":\"", "\"}", jsonMessage);
+        if (!isJsonFormat) {
+            message =
+                    StringHelper.removeToPrefixAndFromPostfix(
+                            "{\"error\":\"", "\"}", message);
+        }
 
         ExceptionHelper.reportRuntimeException(
                 "Request failed. Response status: " + webServiceResponse.getResponseStatus() +
-                        ". Message: " + errorMessage);
+                        ". Message: " + message);
     }
 
     private static String getErrorMessage(WebServiceResponse webServiceResponse) {

@@ -49,7 +49,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
         fWebServiceResponse = fWebServiceClient.sendPostRequest(requestType, requestText);
 
         if (!fWebServiceResponse.isResponseStatusOk()) {
-            ProviderHelper.reportInvalidResponseException(fWebServiceResponse);
+            ProviderHelper.reportInvalidResponseException(fWebServiceResponse, true);
         }
 
         fTotalProgress = PROGRESS_UNKNOWN;
