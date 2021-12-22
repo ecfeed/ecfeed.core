@@ -49,7 +49,13 @@ public class StringHelper {
 
 	public static boolean isTrimmedEmpty(String str) {
 
-		return str.trim().isEmpty();
+		String str2 = new String(str);
+
+		if (str2.trim().isEmpty()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static String cutToMaxSize(String stringToCut, int maxSize) {
