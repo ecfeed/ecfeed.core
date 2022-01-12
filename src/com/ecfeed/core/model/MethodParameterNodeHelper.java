@@ -79,7 +79,7 @@ public class MethodParameterNodeHelper {
 	public static ChoiceNode findChoice(MethodParameterNode methodParameterNode, String choiceQualifiedName) {
 
 		if (!methodParameterNode.isLinked()) {
-			return (ChoiceNode)methodParameterNode.getChild(choiceQualifiedName);
+			return findChoiceIntr(methodParameterNode, choiceQualifiedName);
 		}
 
 		GlobalParameterNode link = methodParameterNode.getLink();
@@ -88,6 +88,11 @@ public class MethodParameterNodeHelper {
 			ExceptionHelper.reportRuntimeException("Missing link for linked parameter.");
 		}
 
+		return findChoiceIntr(link, choiceQualifiedName);
+	}
+
+	private static ChoiceNode findChoiceIntr(AbstractParameterNode link, String choiceQualifiedName) {
+		
 		Set<ChoiceNode> choiceNodes = link.getAllChoices();
 		
 		for(ChoiceNode choiceNode : choiceNodes) {
