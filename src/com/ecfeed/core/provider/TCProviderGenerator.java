@@ -10,7 +10,6 @@
 
 package com.ecfeed.core.provider;
 
-import java.util.Collection;
 import java.util.List;
 
 import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
@@ -50,6 +49,8 @@ public class TCProviderGenerator implements ITCProvider {
 
         try {
             fConstraints = genInitData.getConstraints();
+            
+            // fAmbiguousConstraintAction = genInitData.getAmbiguousConstraintAction(); //  TODO EX-AM
 
             fGenerator.initialize(
                     genInitData.getChoiceInput(),
