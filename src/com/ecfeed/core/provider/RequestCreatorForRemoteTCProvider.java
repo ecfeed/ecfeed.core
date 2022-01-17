@@ -46,42 +46,64 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 			AmbiguousConstraintAction ambiguousConstraintAction,  // TODO - EX-AM
 			List<IGeneratorValue> generatorArguments) {
 
+		Map<String, List<String>> argsAndChoiceNames = 
+				convertToParamAndChoiceNames(
+						methodNode, algorithmInput, new ExtLanguageManagerForJava());
+
+		List<String> constraintNames = ConstraintHelper.createListOfConstraintNames(iConstraints);
+
+		String methodSignature = MethodNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForJava());
+
+		String requestText = createRequestText(
+				sessionId, 
+				modelUuidOrName, 
+				methodSignature,
+				generatorType, 
+				allChoicesSelected,
+				argsAndChoiceNames,
+				allConstraintsSelected, 
+				constraintNames,
+				ambiguousConstraintAction, 
+				generatorArguments);
+
+		System.out.println("Request:" + requestText);
+		return requestText;
+	}
+
+	public static String createRequestText(
+			String sessionId, 
+			String modelUuidOrName, 
+			String methodSignature,
+			GeneratorType generatorType, 
+			boolean allChoicesSelected, 
+			Map<String, List<String>> argsAndChoiceNames,
+			boolean allConstraintsSelected, 
+			List<String> constraintNames,
+			AmbiguousConstraintAction ambiguousConstraintAction, 
+			List<IGeneratorValue> generatorArguments) {
+
 		TestCasesRequest testCasesRequest = new TestCasesRequest();
 		TestCasesUserInput testCasesUserInput = new TestCasesUserInput();
 
 		testCasesRequest.setSessionId(sessionId);
 
-		testCasesRequest.setMethod(
-				MethodNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForJava()));
+		testCasesRequest.setMethod(methodSignature);
 
 		testCasesRequest.setModelIdentificationStr(modelUuidOrName); 
-		
+
 		testCasesUserInput.setDataSource(generatorType.toString());
 
-		setChoices(methodNode, allChoicesSelected, algorithmInput, testCasesUserInput);
-		setConstraints(allConstraintsSelected, iConstraints, testCasesUserInput);
+		if  (!allChoicesSelected) {
+			testCasesUserInput.setChoices(argsAndChoiceNames);
+		}
+
+		setConstraints(allConstraintsSelected, constraintNames, testCasesUserInput);
+
 		testCasesUserInput.setAmbiguousConstraintsFlag(ambiguousConstraintAction.getCode());
 		setGeneratorArguments(generatorArguments, testCasesUserInput);
 
 		String requestText = serializeRequest(testCasesRequest, testCasesUserInput);
-		System.out.println("Request:" + requestText);
 		return requestText;
-	}
-
-	private static void setChoices(
-			MethodNode methodNode, boolean allChoicesSelected,
-			List<List<ChoiceNode>> algorithmInput, 
-			TestCasesUserInput testCasesUserInput) {
-
-		if (allChoicesSelected) {
-			return;
-		}
-
-		Map<String, List<String>> argsAndChoiceNames = 
-				convertToParamAndChoiceNames(
-						methodNode, algorithmInput, new ExtLanguageManagerForJava());
-
-		testCasesUserInput.setChoices(argsAndChoiceNames);
 	}
 
 	private static Map<String, List<String>> convertToParamAndChoiceNames(
@@ -105,22 +127,21 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 	}
 
 	private static void setConstraints(
-			boolean allConstraintsSelected, 
-			List<Constraint> iConstraints,
+			boolean allConstraintsSelected,
+			List<String> constraintNames,
 			TestCasesUserInput testCasesUserInput) {
 
 		if (allConstraintsSelected) {
-			return;
+			testCasesUserInput.setAllConstraints();
 		}
 
-		if (ConstraintHelper.containsConstraints(iConstraints)) {
-			List<String> constraintNames = ConstraintHelper.createListOfConstraintNames(iConstraints);
-			testCasesUserInput.setConstraints(constraintNames);
+		if (constraintNames.isEmpty()) {
+			testCasesUserInput.setNoConstraints();
 			return;
-
 		} 
 
-		testCasesUserInput.setNoConstraints();
+		testCasesUserInput.setConstraints(constraintNames);
+
 	}
 
 	private static String serializeRequest(
