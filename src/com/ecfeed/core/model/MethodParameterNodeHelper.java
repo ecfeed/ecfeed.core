@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.model;
 
+import java.util.Set;
+
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterNodeHelper {
@@ -72,5 +75,35 @@ public class MethodParameterNodeHelper {
 
 		return type;
 	}
+	
+	public static ChoiceNode findChoice(MethodParameterNode methodParameterNode, String choiceQualifiedName) {
+
+		if (!methodParameterNode.isLinked()) {
+			return findChoiceIntr(methodParameterNode, choiceQualifiedName);
+		}
+
+		GlobalParameterNode link = methodParameterNode.getLink();
+		
+		if (link == null)  {
+			ExceptionHelper.reportRuntimeException("Missing link for linked parameter.");
+		}
+
+		return findChoiceIntr(link, choiceQualifiedName);
+	}
+
+	private static ChoiceNode findChoiceIntr(AbstractParameterNode link, String choiceQualifiedName) {
+		
+		Set<ChoiceNode> choiceNodes = link.getAllChoices();
+		
+		for(ChoiceNode choiceNode : choiceNodes) {
+			String choiceName = choiceNode.getName();
+			
+			if (choiceName.equals(choiceQualifiedName))
+				return choiceNode;
+		}
+		
+		return null;
+	}
+	
 
 }
