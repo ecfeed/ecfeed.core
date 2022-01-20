@@ -210,4 +210,8 @@ public class TestCaseNode extends AbstractNode {
 		return -1;
 	}
 
+	public TestCase getTestCase() {
+		return new TestCase(fTestData);
+	}
+
 }

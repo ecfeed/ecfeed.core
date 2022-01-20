@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.MessageStack;
 
 public class TestCaseNodeHelper {
 
@@ -168,4 +169,24 @@ public class TestCaseNodeHelper {
 		return true;
 	}
 	
+	public static boolean isTestCaseNodeAmbiguous(
+			TestCaseNode testCaseNode,
+			List<ConstraintNode> constraintNodes,
+			MessageStack messageStack,
+			IExtLanguageManager extLanguageManager) {
+		
+		TestCase testCase = testCaseNode.getTestCase();
+		
+		List<Constraint> constraints = ConstraintNodeHelper.createListOfConstraints(constraintNodes);
+		
+		boolean isAmbiguous = 
+			TestCaseHelper.isTestCaseAmbiguous(
+						testCase,
+						constraints,
+						messageStack,
+						extLanguageManager);
+		
+		return isAmbiguous;
+	}
+
 }
