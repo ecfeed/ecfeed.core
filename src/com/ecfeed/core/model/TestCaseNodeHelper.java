@@ -13,7 +13,9 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.AmbiguousConstraintAction;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
@@ -132,11 +134,11 @@ public class TestCaseNodeHelper {
 	}
 
 	public static boolean evaluateConstraints(TestCaseNode testCase, List<ConstraintNode> constraintNodes) {
-		
+
 		for (ConstraintNode constraintNode : constraintNodes) {
-			
+
 			ConstraintType constraintType = constraintNode.getConstraint().getType();
-			
+
 			if (constraintType == ConstraintType.ASSIGNMENT) {
 				continue;
 			}
@@ -152,13 +154,13 @@ public class TestCaseNodeHelper {
 	}
 
 	public static boolean assignExpectedValues(TestCaseNode testCase, List<ConstraintNode> constraintNodes) {
-		
+
 		for (ConstraintNode constraintNode : constraintNodes) {
-			
+
 			Constraint constraint = constraintNode.getConstraint();
-			
+
 			ConstraintType constraintType = constraint.getType();
-			
+
 			if (constraintType != ConstraintType.ASSIGNMENT) {
 				continue;
 			}
@@ -168,25 +170,64 @@ public class TestCaseNodeHelper {
 
 		return true;
 	}
-	
+
 	public static boolean isTestCaseNodeAmbiguous(
 			TestCaseNode testCaseNode,
 			List<ConstraintNode> constraintNodes,
 			MessageStack messageStack,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		TestCase testCase = testCaseNode.getTestCase();
-		
+
 		List<Constraint> constraints = ConstraintNodeHelper.createListOfConstraints(constraintNodes);
-		
+
 		boolean isAmbiguous = 
-			TestCaseHelper.isTestCaseAmbiguous(
+				TestCaseHelper.isTestCaseAmbiguous(
 						testCase,
 						constraints,
 						messageStack,
 						extLanguageManager);
-		
+
 		return isAmbiguous;
+	}
+
+	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCaseNodes) {
+
+		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+
+			TestCaseNode clonedCaseNode = makeDerandomizedClone(testCaseNode);
+			clonedTestCaseNodes.add(clonedCaseNode);
+		}
+
+		return clonedTestCaseNodes;
+	}
+
+	public static List<TestCaseNode> filterTestCaseNodes(
+			List<TestCaseNode> testCaseNodes, 
+			List<ConstraintNode> constraintNodes, 
+			AmbiguousConstraintAction ambiguousConstraintAction) {
+
+		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<TestCaseNode>();
+
+		// TODO EX-AM create overload of isTestCaseNodeAmbiguous without message stack and extLanguageManager 
+
+		MessageStack messageStack = new MessageStack();
+		ExtLanguageManagerForJava extLanguageManager = new ExtLanguageManagerForJava();
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+
+			if (isTestCaseNodeAmbiguous(
+					testCaseNode, constraintNodes, messageStack, extLanguageManager)) {
+				continue;
+			}
+
+			filteredTestCaseNodes.add(testCaseNode);
+		}
+
+
+		return filteredTestCaseNodes;
 	}
 
 }

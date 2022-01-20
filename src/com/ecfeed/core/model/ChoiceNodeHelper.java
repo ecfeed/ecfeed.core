@@ -23,12 +23,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.AmbiguousConstraintAction;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.Pair;
 
 public class ChoiceNodeHelper {
@@ -549,47 +546,6 @@ public class ChoiceNodeHelper {
 		cloneChoiceNode.derandomize();
 
 		return cloneChoiceNode;
-	}
-
-	// TODO EX-AM move to test case node helper
-	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCaseNodes) {
-
-		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
-
-		for (TestCaseNode testCaseNode : testCaseNodes) {
-
-			TestCaseNode clonedCaseNode = TestCaseNodeHelper.makeDerandomizedClone(testCaseNode);
-			clonedTestCaseNodes.add(clonedCaseNode);
-		}
-
-		return clonedTestCaseNodes;
-	}
-
-	// TODO EX-AM move to test case node helper
-	public static List<TestCaseNode> filterTestCaseNodes(
-			List<TestCaseNode> testCaseNodes, 
-			List<ConstraintNode> constraintNodes, 
-			AmbiguousConstraintAction ambiguousConstraintAction) {
-
-		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<TestCaseNode>();
-
-		// TODO EX-AM create overload of isTestCaseNodeAmbiguous without message stack and extLanguageManager 
-
-		MessageStack messageStack = new MessageStack();
-		ExtLanguageManagerForJava extLanguageManager = new ExtLanguageManagerForJava();
-
-		for (TestCaseNode testCaseNode : testCaseNodes) {
-
-			if (TestCaseNodeHelper.isTestCaseNodeAmbiguous(
-					testCaseNode, constraintNodes, messageStack, extLanguageManager)) {
-				continue;
-			}
-
-			filteredTestCaseNodes.add(testCaseNode);
-		}
-
-
-		return filteredTestCaseNodes;
 	}
 
 }
