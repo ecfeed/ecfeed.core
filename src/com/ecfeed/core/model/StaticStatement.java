@@ -122,6 +122,11 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
+	public boolean isAmbiguous(List<List<ChoiceNode>> values) {
+		return false;
+	}
+	
+	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return new ArrayList<ChoiceNode>();
 	}

@@ -274,6 +274,10 @@ public class ParameterCondition implements IStatementCondition {
 		if (areBothChoicesFixed(leftChoiceNode, rightChoiceNode)) {
 			return false;
 		}
+		
+		if (extLanguageManager == null) {
+			extLanguageManager = new ExtLanguageManagerForJava();
+		}
 
 		if (ConditionHelper.isRandomizedChoiceAmbiguous(
 				leftChoiceNode, rightChoiceNode.getValueString(),

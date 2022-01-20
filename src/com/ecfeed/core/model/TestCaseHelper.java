@@ -50,6 +50,22 @@ public class TestCaseHelper {
 		return false;
 	}
 
+	public static boolean isTestCaseAmbiguous(
+			TestCase testCase,
+			List<Constraint> constraints) {
+
+		List<List<ChoiceNode>> testDomainForOneTestCase = createTestDomainWithOneTestCase(testCase);
+
+		for (Constraint constraint : constraints) {
+
+			if (constraint.isAmbiguous(testDomainForOneTestCase)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 	public static void setExpectedValuesToTestCaseChoices(
 			List<ChoiceNode> listOfChoiceNodes,
 			List<Constraint> constraints) {

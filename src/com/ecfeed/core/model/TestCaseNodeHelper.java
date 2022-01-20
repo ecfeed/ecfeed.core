@@ -15,7 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.AmbiguousConstraintAction;
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
@@ -191,6 +191,19 @@ public class TestCaseNodeHelper {
 		return isAmbiguous;
 	}
 
+	public static boolean isTestCaseNodeAmbiguous(
+			TestCaseNode testCaseNode,
+			List<ConstraintNode> constraintNodes) {
+
+		TestCase testCase = testCaseNode.getTestCase();
+
+		List<Constraint> constraints = ConstraintNodeHelper.createListOfConstraints(constraintNodes);
+
+		boolean isAmbiguous = TestCaseHelper.isTestCaseAmbiguous(testCase, constraints);
+
+		return isAmbiguous;
+	}
+
 	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCaseNodes) {
 
 		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
@@ -211,15 +224,9 @@ public class TestCaseNodeHelper {
 
 		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<TestCaseNode>();
 
-		// TODO EX-AM create overload of isTestCaseNodeAmbiguous without message stack and extLanguageManager 
-
-		MessageStack messageStack = new MessageStack();
-		ExtLanguageManagerForJava extLanguageManager = new ExtLanguageManagerForJava();
-
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 
-			if (isTestCaseNodeAmbiguous(
-					testCaseNode, constraintNodes, messageStack, extLanguageManager)) {
+			if (!shouldIncludeTestCase(constraintNodes, testCaseNode, ambiguousConstraintAction)) {
 				continue;
 			}
 
@@ -228,6 +235,34 @@ public class TestCaseNodeHelper {
 
 
 		return filteredTestCaseNodes;
+	}
+
+	private static boolean shouldIncludeTestCase(
+			List<ConstraintNode> constraintNodes, 
+			TestCaseNode testCaseNode, 
+			AmbiguousConstraintAction ambiguousConstraintAction) {
+		
+		if (ambiguousConstraintAction == AmbiguousConstraintAction.INCLUDE) {
+			return true;
+		}
+		
+		if (ambiguousConstraintAction == AmbiguousConstraintAction.EVALUATE) {
+			return true;
+		}
+		
+		if (ambiguousConstraintAction == AmbiguousConstraintAction.EXCLUDE) {
+			
+			boolean isAmbiguous = isTestCaseNodeAmbiguous(testCaseNode, constraintNodes);
+			
+			if (isAmbiguous) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid ambiguous constraint action.");
+		return false;
 	}
 
 }
