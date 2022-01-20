@@ -58,5 +58,16 @@ public class ConstraintNodeHelper {
 		return constraintNodes;
 	}
 
+	public static List<Constraint> createListOfConstraints(List<ConstraintNode> constraintNodes) {
+		
+		List<Constraint> constraints = new ArrayList<>();
+		
+		for (ConstraintNode constraintNode : constraintNodes) {
+			constraints.add(constraintNode.getConstraint());
+		}
+		
+		return constraints;
+	}
+	
 
 }
