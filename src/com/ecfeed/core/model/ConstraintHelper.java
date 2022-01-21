@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.MessageStack;
 
 public class ConstraintHelper {
 
@@ -54,6 +55,23 @@ public class ConstraintHelper {
 		}
 
 		return false;
+	}
+
+	public static Constraint getFirstAmbiguousConstraint(
+			List<Constraint> constraints, 
+			List<List<ChoiceNode>> input,
+			IExtLanguageManager currentExtLanguageManager,
+			MessageStack inOutMessageStack) {
+		
+		for (Constraint constraint : constraints) {
+	
+			if (constraint.isAmbiguous(input, inOutMessageStack, currentExtLanguageManager)) {
+	
+				return constraint; 
+			}
+		}
+		
+		return null;
 	}
 
 }
