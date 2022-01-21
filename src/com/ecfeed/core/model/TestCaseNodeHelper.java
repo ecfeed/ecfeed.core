@@ -217,7 +217,7 @@ public class TestCaseNodeHelper {
 		return clonedTestCaseNodes;
 	}
 
-	public static List<TestCaseNode> filterTestCaseNodes(
+	public static List<TestCaseNode> filterTestCaseNodesVsAmbiguity(
 			List<TestCaseNode> testCaseNodes, 
 			List<ConstraintNode> constraintNodes, 
 			AmbiguousConstraintAction ambiguousConstraintAction) {
@@ -226,18 +226,17 @@ public class TestCaseNodeHelper {
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 
-			if (!shouldIncludeTestCase(constraintNodes, testCaseNode, ambiguousConstraintAction)) {
+			if (!shouldIncludeTestCase1(constraintNodes, testCaseNode, ambiguousConstraintAction)) {
 				continue;
 			}
 
 			filteredTestCaseNodes.add(testCaseNode);
 		}
 
-
 		return filteredTestCaseNodes;
 	}
 
-	private static boolean shouldIncludeTestCase(
+	private static boolean shouldIncludeTestCase1(
 			List<ConstraintNode> constraintNodes, 
 			TestCaseNode testCaseNode, 
 			AmbiguousConstraintAction ambiguousConstraintAction) {
@@ -264,5 +263,41 @@ public class TestCaseNodeHelper {
 		ExceptionHelper.reportRuntimeException("Invalid ambiguous constraint action.");
 		return false;
 	}
+
+	public static List<TestCaseNode> filterNotAmbiguousTestCases(
+			List<TestCaseNode> testCaseNodes,
+			List<ConstraintNode> constraintNodes) {
+		
+		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<TestCaseNode>();
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+			
+			if (!shouldIncludeTestCase2(constraintNodes, testCaseNode)) {
+				continue;
+			}
+
+			filteredTestCaseNodes.add(testCaseNode);
+		}
+
+		return filteredTestCaseNodes;
+	}
+	
+	private static boolean shouldIncludeTestCase2(
+			List<ConstraintNode> constraintNodes, 
+			TestCaseNode testCaseNode) {
+		
+		if (isTestCaseNodeAmbiguous(testCaseNode, constraintNodes)) {
+			return true;
+		}
+		
+		boolean isIncluded = TestCaseNodeHelper.evaluateConstraints(testCaseNode, constraintNodes);
+		
+		if (isIncluded) {
+			return true;
+		}
+		
+		return false;
+	}
+ 
 
 }
