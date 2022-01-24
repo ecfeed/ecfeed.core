@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.ecfeed.core.utils.AmbiguousConstraintAction;
@@ -299,5 +300,18 @@ public class TestCaseNodeHelper {
 		return false;
 	}
  
+	public static List<List<ChoiceNode>> convertToDoubleListOfChoices(Collection<TestCaseNode> testCaseNodes) {
+		
+		List<List<ChoiceNode>> result = new ArrayList<>();
+		
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+			
+			List<ChoiceNode> listOfChoiceNodes = testCaseNode.getTestCase().getListOfChoiceNodes();
+			
+			result.add(listOfChoiceNodes);
+		}
+		
+		return result;
+	}
 
 }
