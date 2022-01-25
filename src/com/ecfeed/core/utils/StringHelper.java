@@ -196,10 +196,10 @@ public class StringHelper {
 		if (separatorPosition == -1) {
 			return null;
 		}
-		
+
 		return str.substring(separatorPosition);
 	}
-	
+
 	public static String getLastToken(String tokenizedString, String tokenSeparator) {
 
 		int separatorPosition = tokenizedString.lastIndexOf(tokenSeparator);
@@ -242,7 +242,7 @@ public class StringHelper {
 		if (separatorPosition == -1) {
 			return null;
 		}
-		
+
 		return str.substring(0, separatorPosition);
 	}
 
@@ -475,14 +475,45 @@ public class StringHelper {
 	}
 
 	public static String convertWhiteCharsToSingleSpaces(String str) {
-		
+
 		str = str.replace("\n", " ");
 		str = str.replace("\t", " ");
-		
+
 		while (str.contains("  ")) {
 			str = str.replace("  ", " ");
 		}
-		
+
 		return str;
 	}
+
+	public static int findFirstDifference(String str1, String str2) {
+
+		if (str1 == null || str2 == null) {
+			ExceptionHelper.reportRuntimeException("Invalid parameters in function find first difference.");
+		}
+
+		int length1 = str1.length();
+		int length2 = str2.length();
+
+		int minLength = Math.min(length1, length2);
+
+		int index = 0;
+
+		for (; index < minLength; index++) {
+
+			char chr1 = str1.charAt(index);
+			char chr2 = str2.charAt(index);
+
+			if (chr1 != chr2) {
+				return index;
+			}
+		}
+
+		if (length1 == length2) {
+			return -1; // no differences
+		}
+
+		return index;  // the first char of the longer string
+	}
+
 }
