@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ClassNode extends GlobalParametersParentNode {
-
+	
 	private List<MethodNode> fMethods;
 
 	@Override
@@ -201,14 +201,20 @@ public class ClassNode extends GlobalParametersParentNode {
 			return false;
 		}
 		ClassNode compared = (ClassNode) node;
-		List<MethodNode> comparedMethods = compared.getMethods();
+		List<MethodNode> methodsToCompare = compared.getMethods();
 
-		if(getMethods().size() != comparedMethods.size()){
+		List<MethodNode> methods = getMethods();
+		
+		if(methods.size() != methodsToCompare.size()){
 			return false;
 		}
 
-		for(int i = 0; i < comparedMethods.size(); i++){
-			if(getMethods().get(i).isMatch(comparedMethods.get(i)) == false){
+		for (int i = 0; i < methodsToCompare.size(); i++) {
+			
+			MethodNode methodNode = methods.get(i);
+			MethodNode methodNodeToCompare = methodsToCompare.get(i);
+			
+			if (!methodNode.isMatch(methodNodeToCompare)) {
 				return false;
 			}
 		}

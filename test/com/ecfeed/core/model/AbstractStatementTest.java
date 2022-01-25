@@ -71,6 +71,11 @@ public class AbstractStatementTest {
 		@Override
 		public void derandomize() {
 		}
+
+		@Override
+		public boolean isAmbiguous(List<List<ChoiceNode>> values) {
+			return false;
+		}
 	}
 
 	@Test

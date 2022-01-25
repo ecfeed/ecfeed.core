@@ -164,24 +164,38 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
-		if(node instanceof TestCaseNode == false){
+	public boolean isMatch(AbstractNode testCaseNode){
+		
+		if(testCaseNode instanceof TestCaseNode == false){
 			return false;
 		}
 
-		TestCaseNode compared = (TestCaseNode)node;
+		TestCaseNode testCaseNodeToCompare = (TestCaseNode)testCaseNode;
 
-		if(getTestData().size() != compared.getTestData().size()){
+		List<ChoiceNode> testData = getTestData();
+		
+		List<ChoiceNode> testDataToCompare = testCaseNodeToCompare.getTestData();
+		if(testData.size() != testDataToCompare.size()){
 			return false;
 		}
 
-		for(int i = 0; i < getTestData().size(); i++){
-			if(getTestData().get(i).isMatch(compared.getTestData().get(i)) == false){
+		for (int i = 0; i < testData.size(); i++) {
+			
+			ChoiceNode choiceNode = testData.get(i);
+			ChoiceNode choiceNodeToCompare = testDataToCompare.get(i);
+			
+			if (choiceNode.isMatch(choiceNodeToCompare) == false){
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		boolean isMatch = super.isMatch(testCaseNode);
+		
+		if (!isMatch) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override

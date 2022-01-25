@@ -294,13 +294,16 @@ public abstract class AbstractNode{
 	}
 
 
-	public boolean isMatch(AbstractNode node) {
+	public boolean isMatch(AbstractNode nodeToCompare) {
 
-		if (!getName().equals(node.getName())) {
+		String name = getName();
+		String nameToCompare = nodeToCompare.getName();
+		
+		if (!name.equals(nameToCompare)) {
 			return false;
 		}
 
-		if (!fProperties.isMatch(node.fProperties)) {
+		if (!fProperties.isMatch(nodeToCompare.fProperties)) {
 			return false;
 		}
 

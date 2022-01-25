@@ -24,6 +24,7 @@ import com.ecfeed.core.utils.StringHelper;
 public class ChoiceNode extends ChoicesParentNode {
 
 	public static final String ABSTRACT_CHOICE_MARKER = "[ABSTRACT]";
+	public static final String ASSIGNMENT_NAME = "@assignment";
 
 	private ChoicesParentNode fParent;
 	private String fValueString;
@@ -316,32 +317,39 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
-		if(node instanceof ChoiceNode == false){
+	public boolean isMatch(AbstractNode choiceNode){
+		
+		if(choiceNode instanceof ChoiceNode == false){
 			return false;
 		}
 
-		ChoiceNode compared = (ChoiceNode)node;
+		ChoiceNode choiceNodeToCompare = (ChoiceNode)choiceNode;
 
-		if(getLabels().equals(compared.getLabels()) == false){
+		if (getLabels().equals(choiceNodeToCompare.getLabels()) == false){
 			return false;
 		}
 
-		if(getValueString().equals(compared.getValueString()) == false){
+		if(getValueString().equals(choiceNodeToCompare.getValueString()) == false){
 			return false;
 		}
 
-		if(getChoices().size() != compared.getChoices().size()){
+		if(getChoices().size() != choiceNodeToCompare.getChoices().size()){
 			return false;
 		}
 
 		for(int i = 0; i < getChoices().size(); i++){
-			if(getChoices().get(i).isMatch(compared.getChoices().get(i)) == false){
+			if(getChoices().get(i).isMatch(choiceNodeToCompare.getChoices().get(i)) == false){
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		boolean isMatch = super.isMatch(choiceNode);
+		
+		if (!isMatch) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override
