@@ -32,7 +32,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	public abstract Set<ConstraintNode> getMentioningConstraints(String label);
 
 
-	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator, String type) {
+	public AbstractParameterNode(String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
@@ -97,7 +97,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	public void setType(String type) {
-		
+
 		if (SimpleLanguageHelper.isSimpleType(type)) {
 			ExceptionHelper.reportRuntimeException("Attempt to set invalid parameter type: " + type);
 		}

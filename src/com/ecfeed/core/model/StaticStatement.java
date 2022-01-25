@@ -126,4 +126,8 @@ public class StaticStatement extends AbstractStatement {
 		return new ArrayList<ChoiceNode>();
 	}
 
+	@Override
+	public void derandomize() {
+	}
+
 }

@@ -48,7 +48,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition getCopy() {
+	public ChoiceCondition makeClone() {
 		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement);
 	}
 
@@ -228,6 +228,11 @@ public class ChoiceCondition implements IStatementCondition {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void derandomize() {
+		fRightChoice.derandomize();
 	}
 
 	private boolean isChoiceAmbiguous(

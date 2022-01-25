@@ -15,6 +15,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ChoiceNode extends ChoicesParentNode {
@@ -72,6 +76,35 @@ public class ChoiceNode extends ChoicesParentNode {
 			return getQualifiedName() + ABSTRACT_CHOICE_MARKER; 
 		}
 		return getQualifiedName() + " [" + getValueString() + "]";
+	}
+
+	public void derandomize() {
+
+		if (!isRandomizedValue()) {
+			return;
+		}
+
+		setRandomizedValue(false);
+
+		AbstractParameterNode parameter = getParameter();
+
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("Method parameter unknownk.");
+		}
+		String typeName = parameter.getType();
+
+		if (!JavaLanguageHelper.isJavaType(typeName)) {
+			return;
+		}
+
+		TypeAdapterProviderForJava typeAdapterProvider = new TypeAdapterProviderForJava();
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(typeName);
+
+		String valueString = getValueString();
+
+		String convertedValueString = typeAdapter.generateValueAsString(valueString, "Derandomizing.");
+
+		setValueString(convertedValueString);		
 	}
 
 	public String toStringWithParenthesis() {
@@ -150,11 +183,11 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public boolean isRandomizedValue() {
-		
+
 		if (isAbstract()) {
 			return false;
 		}
-		
+
 		return fIsRandomizedValue;
 	}
 

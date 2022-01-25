@@ -104,7 +104,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ValueCondition getCopy() {
+	public ValueCondition makeClone() {
 
 		return new ValueCondition(new String(fRightValue), fParentRelationStatement);
 	}
@@ -172,6 +172,10 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public void derandomize() {
 	}
 }	
 

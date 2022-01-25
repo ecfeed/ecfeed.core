@@ -25,8 +25,8 @@ public class ItemHolder<Type> {
 		return fItem;
 	}
 
-	public void set(Type str) {
-		fItem = str;
+	public void set(Type item) {
+		fItem = item;
 	}
 
 	public void reset() {

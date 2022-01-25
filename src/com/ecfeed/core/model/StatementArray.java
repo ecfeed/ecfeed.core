@@ -333,4 +333,12 @@ public class StatementArray extends AbstractStatement {
 		addStatement(statement, fStatements.size());
 	}
 
+	@Override
+	public void derandomize() {
+		
+		for(IStatement statement : fStatements) {
+			statement.derandomize();
+		}
+	}
+
 }

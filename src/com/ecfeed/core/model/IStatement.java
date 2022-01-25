@@ -24,4 +24,5 @@ public interface IStatement{
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
 	public List<ChoiceNode> getListOfChoices();
+	public void derandomize();
 }

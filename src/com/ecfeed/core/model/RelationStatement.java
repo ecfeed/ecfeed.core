@@ -154,7 +154,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public RelationStatement makeClone() {
 
-		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.getCopy());
+		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.makeClone());
 	}
 
 	@Override
@@ -253,6 +253,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		return false;
 	}	
+	
+	@Override
+	public void derandomize() {
+		fRightCondition.derandomize();
+	}
+
 
 	public MethodParameterNode getLeftParameter(){
 		return fLeftParameter;
@@ -350,5 +356,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		
 		return true;
 	}
+
 }
 

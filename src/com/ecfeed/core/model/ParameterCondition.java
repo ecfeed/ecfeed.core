@@ -147,7 +147,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ParameterCondition getCopy() {
+	public ParameterCondition makeClone() {
 
 		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement);
 	}
@@ -307,6 +307,10 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public void derandomize() {
 	}
 
 }	

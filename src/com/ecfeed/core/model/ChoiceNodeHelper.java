@@ -67,7 +67,7 @@ public class ChoiceNodeHelper {
 	}
 
 	public static String createSignature(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
-		
+
 		if (choiceNode == null) {
 			return "EMPTY";
 		}
@@ -79,7 +79,7 @@ public class ChoiceNodeHelper {
 		}
 
 		String value;
-		
+
 		if (choiceNode.getParent() == null) {
 			value = "N/A";
 		} else {
@@ -96,16 +96,16 @@ public class ChoiceNodeHelper {
 		if (abstractParameterNode == null) {
 			return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
 		}
-		
+
 		if (abstractParameterNode instanceof MethodParameterNode) {
-			
+
 			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
-			
+
 			if (methodParameterNode.isExpected()) {
 				return "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
 			}
 		}
-		
+
 		return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
 	}
 
@@ -114,13 +114,13 @@ public class ChoiceNodeHelper {
 		if (choiceNode == null) {
 			ExceptionHelper.reportRuntimeException("Cannot get value from empty string.");
 		}
-		
+
 		AbstractParameterNode parameter = choiceNode.getParameter();
-		
+
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Cannot get value. Empty parameter.");
 		}
-		
+
 		String type = parameter.getType();
 
 		String value = choiceNode.getValueString();
@@ -537,6 +537,29 @@ public class ChoiceNodeHelper {
 		}
 
 		return ret;
+	}
+
+	public static ChoiceNode makeUnrandomizedClone(ChoiceNode choiceNode) {
+
+		ChoiceNode cloneChoiceNode = choiceNode.makeClone();
+
+		cloneChoiceNode.derandomize();
+
+		return cloneChoiceNode;
+
+	}
+
+	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCases) {
+
+		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
+
+		for (TestCaseNode testCaseNode : testCases) {
+
+			TestCaseNode clonedCaseNode = TestCaseNodeHelper.makeCloneWithoutRandomization(testCaseNode);
+			clonedTestCaseNodes.add(clonedCaseNode);
+		}
+
+		return clonedTestCaseNodes;
 	}
 
 }

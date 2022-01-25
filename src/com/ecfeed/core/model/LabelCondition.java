@@ -88,7 +88,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public LabelCondition getCopy() {
+	public LabelCondition makeClone() {
 		return new LabelCondition(fRightLabel, fParentRelationStatement);
 	}
 
@@ -128,6 +128,10 @@ public class LabelCondition implements IStatementCondition {
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public void derandomize() {
 	}
 
 }

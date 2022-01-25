@@ -10,6 +10,9 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintNodeHelper {
@@ -23,5 +26,37 @@ public class ConstraintNodeHelper {
 
 		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
 	}
+
+	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(List<ConstraintNode> constraints) {
+
+		List<ConstraintNode> clonedConstraintNodes = new ArrayList<ConstraintNode>();
+
+		for (ConstraintNode constraint : constraints) {
+
+			ConstraintNode clonedConstraint = constraint.makeClone();
+
+			clonedConstraint.derandomize();
+			clonedConstraintNodes.add(clonedConstraint);
+		}
+
+		return clonedConstraintNodes;
+	}
+
+	public static List<ConstraintNode> createListOfConstraintNodes(
+			List<Constraint> constraints, 
+			MethodNode methodNode) {
+
+		List<ConstraintNode> constraintNodes = new ArrayList<>();
+
+		for (Constraint constraint: constraints) {
+
+			ConstraintNode constraintNode = new ConstraintNode(constraint.getName(), constraint, null);
+
+			constraintNodes.add(constraintNode);
+		}
+
+		return constraintNodes;
+	}
+
 
 }

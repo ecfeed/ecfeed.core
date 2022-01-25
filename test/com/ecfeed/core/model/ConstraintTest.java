@@ -191,9 +191,9 @@ public class ConstraintTest {
 
 		RelationStatement relationStatementWithChoice =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-					methodParameterNode1,
-					EMathRelation.EQUAL,
-					choiceNode1);
+						methodParameterNode1,
+						EMathRelation.EQUAL,
+						choiceNode1);
 
 		// constraints
 
@@ -580,7 +580,6 @@ public class ConstraintTest {
 		evaluateConstraintWithNullValues(constraint, choice1, choice2);			
 	}
 
-
 	@Test
 	public void testTupleWithNullPostconditionForChoiceCondition() {
 
@@ -688,6 +687,83 @@ public class ConstraintTest {
 						parameter1, EMathRelation.EQUAL, parameter2);
 
 		return precondition;
+	}
+
+	@Test
+	public void derandomizeNumbersTest() {
+
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
+
+		ChoiceNode c1 = new ChoiceNode("c1", "5:5", null);
+		c1.setRandomizedValue(true);
+		c1.setParent(parameter);
+
+		ChoiceNode c2 = new ChoiceNode("c2", "1:1", null);
+		c2.setRandomizedValue(true);
+		c2.setParent(parameter);
+
+		AbstractStatement precondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, EMathRelation.EQUAL, c1);
+
+		AbstractStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, EMathRelation.EQUAL, c2);
+
+		Constraint constraint = 
+				new Constraint(
+						"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintNode constraintNode  = 
+				new ConstraintNode("constraint", constraint, null);
+
+		constraintNode.derandomize();
+
+		assertFalse(c1.isRandomizedValue());
+		assertFalse(c2.isRandomizedValue());
+
+		String valueString1 = c1.getValueString();
+		assertEquals("5", valueString1);
+
+		String valueString2 = c2.getValueString();
+		assertEquals("1", valueString2);
+	}
+
+	@Test
+	public void derandomizeTextTest() {
+
+		MethodParameterNode parameter = new MethodParameterNode("parameter", "String", "0", false, null);
+
+		ChoiceNode c1 = new ChoiceNode("c1", "[5-5]", null);
+		c1.setRandomizedValue(true);
+		c1.setParent(parameter);
+
+		ChoiceNode c2 = new ChoiceNode("c2", "[1-1]", null);
+		c2.setRandomizedValue(true);
+		c2.setParent(parameter);
+
+		AbstractStatement precondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, EMathRelation.EQUAL, c1);
+
+		AbstractStatement postcondition = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, EMathRelation.EQUAL, c2);
+
+		Constraint constraint = 
+				new Constraint(
+						"constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
+
+		ConstraintNode constraintNode  = 
+				new ConstraintNode("constraint", constraint, null);
+
+		constraintNode.derandomize();
+
+		assertFalse(c1.isRandomizedValue());
+		assertFalse(c2.isRandomizedValue());
+
+		assertEquals("5", c1.getValueString());
+		assertEquals("1", c2.getValueString());
 	}
 
 }
