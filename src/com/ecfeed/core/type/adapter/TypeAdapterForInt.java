@@ -48,15 +48,19 @@ public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
 
 	@Override
 	public Integer generateValue(String rangeTxt, String context) {
+		
 		String[] range = RangeHelper.splitToRange(rangeTxt);
 		
-		if (StringHelper.isEqual(range[0], range[1])) {
-			return JavaLanguageHelper.parseIntValue(range[0], ERunMode.QUIET);
+		String range0 = range[0];
+		String range1 = range[1];
+		
+		if (StringHelper.isEqual(range0, range1)) {
+			return JavaLanguageHelper.parseIntValue(range0, ERunMode.QUIET);
 		}
 
 		return ThreadLocalRandom.current().nextInt(
-				JavaLanguageHelper.parseIntValue(range[0], ERunMode.QUIET),
-				JavaLanguageHelper.parseIntValue(range[1], ERunMode.QUIET));
+				JavaLanguageHelper.parseIntValue(range0, ERunMode.QUIET),
+				1 + JavaLanguageHelper.parseIntValue(range1, ERunMode.QUIET));
 	}
 	
 	@Override

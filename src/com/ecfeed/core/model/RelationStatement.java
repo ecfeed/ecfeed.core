@@ -117,6 +117,21 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
+	public boolean isAmbiguous(List<List<ChoiceNode>> testDomain) {
+
+		try {
+			if (fRightCondition.isAmbiguous(testDomain, null, null)) {
+				return true;
+			}
+			return false;
+		}
+		catch (Exception e) {
+			SystemLogger.logCatch(e);
+			return false;
+		}
+	}
+	
+	@Override
 	public void setRelation(EMathRelation relation) {
 		fRelation = relation;
 	}

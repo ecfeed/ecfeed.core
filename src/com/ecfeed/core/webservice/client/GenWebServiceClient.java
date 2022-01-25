@@ -72,6 +72,8 @@ public class GenWebServiceClient implements IWebServiceClient {
 
 		int responseStatus = response.getStatus();
 
+//		String responseText = response.readEntity(String.class);
+
 		BufferedReader responseBufferedReader =
 				new BufferedReader(new InputStreamReader(response.readEntity(InputStream.class)));
 

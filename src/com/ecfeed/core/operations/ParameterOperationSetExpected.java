@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ModelConstants;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -112,7 +112,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 				if(fExpected){
 					ChoiceNode p = 
 							new ChoiceNode(
-									ModelConstants.EXPECTED_VALUE_CHOICE_NAME, 
+									AssignmentStatement.ASSIGNMENT_CHOICE_NAME, 
 									fTarget.getDefaultValue(), 
 									fTarget.getModelChangeRegistrator());
 					

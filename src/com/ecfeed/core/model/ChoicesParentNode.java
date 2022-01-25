@@ -37,24 +37,37 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node) {
+	public boolean isMatch(AbstractNode choicesParentNode) {
 
-		if (node instanceof ChoicesParentNode == false) {
+		if (choicesParentNode instanceof ChoicesParentNode == false) {
 			return false;
 		}
 
-		ChoicesParentNode comparedChoiceParent = (ChoicesParentNode)node;
-		if (getChoices().size() != comparedChoiceParent.getChoices().size()){
+		ChoicesParentNode choicesParentNodeToCompare = (ChoicesParentNode)choicesParentNode;
+		
+		List<ChoiceNode> choices = getChoices();
+		List<ChoiceNode> choicesToCompare = choicesParentNodeToCompare.getChoices();
+		
+		if (choices.size() != choicesToCompare.size()){
 			return false;
 		}
 
-		for (int i = 0; i < getChoices().size(); i++) {
-			if (getChoices().get(i).isMatch(comparedChoiceParent.getChoices().get(i)) == false) {
+		for (int i = 0; i < choices.size(); i++) {
+			
+			ChoiceNode choiceNode = choices.get(i);
+			ChoiceNode choiceNodeToCompare = choicesToCompare.get(i);
+			
+			if (choiceNode.isMatch(choiceNodeToCompare) == false) {
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		boolean isMatch = super.isMatch(choicesParentNode);
+		
+		if (!isMatch) {
+			return false;
+		}
+		return true;
 	}
 
 	public abstract AbstractParameterNode getParameter();

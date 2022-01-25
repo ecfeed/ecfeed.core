@@ -4,7 +4,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 import java.util.List;
 
-public class ConstraintsParser { // TODO - REUSE IN JUNIT5
+public class ConstraintsDescription { // TODO - REUSE IN JUNIT5
 
     private enum ConstraintsValueType {
 
@@ -16,14 +16,14 @@ public class ConstraintsParser { // TODO - REUSE IN JUNIT5
     private static final String specialValueAllConstraints = "ALL";
     private static final String specialValueNoneConstraints = "NONE";
 
-    private ConstraintsParser.ConstraintsValueType fConstraintsValueType;
+    private ConstraintsDescription.ConstraintsValueType fConstraintsValueType;
     private List<String> fConstraintNames = null;
 
     @SuppressWarnings("unchecked")
-	public ConstraintsParser(Object constraintsObject) {
+	public ConstraintsDescription(Object constraintsObject) {
 
         if (constraintsObject == null) {
-            fConstraintsValueType = ConstraintsParser.ConstraintsValueType.ALL;
+            fConstraintsValueType = ConstraintsDescription.ConstraintsValueType.ALL;
             return;
         }
 

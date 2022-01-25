@@ -113,6 +113,11 @@ public class RemoteTCProviderStandard implements ITCProvider {
         }
     }
 
+    @Override
+    public List<Constraint> getConstraints() {
+        return null;
+    }
+
     public void processInitialTags() {
 
         fBufferedLine = null;
@@ -306,7 +311,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
             String choiceValue = choiceSchemas[paramIndex].getValue();
             ChoiceNode choiceNode;
 
-            if (methodParameterNode.isExpected() || choiceName.equals("@expected")) {
+            if (methodParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
                 choiceNode = new ChoiceNode(choiceName, choiceValue, methodParameterNode.getModelChangeRegistrator());
                 choiceNode.setParent(methodParameterNode);
             } else {

@@ -50,7 +50,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 		
 		return (short) ThreadLocalRandom.current().nextInt(
 				JavaLanguageHelper.parseShortValue(range[0], ERunMode.QUIET),
-				JavaLanguageHelper.parseShortValue(range[1], ERunMode.QUIET));
+				1 + JavaLanguageHelper.parseShortValue(range[1], ERunMode.QUIET));
 	}
 
 	@Override

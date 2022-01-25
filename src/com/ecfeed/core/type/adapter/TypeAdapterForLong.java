@@ -46,7 +46,7 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 		
 		return ThreadLocalRandom.current().nextLong(
 				JavaLanguageHelper.parseLongValue(range[0], ERunMode.QUIET),
-				JavaLanguageHelper.parseLongValue(range[1], ERunMode.QUIET));
+				1 + JavaLanguageHelper.parseLongValue(range[1], ERunMode.QUIET));
 	}
 
 	@Override

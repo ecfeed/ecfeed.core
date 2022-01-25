@@ -23,6 +23,7 @@ public interface IStatement{
 	public boolean isEqualTo(IStatement statement);
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
+	public boolean isAmbiguous(List<List<ChoiceNode>> values);
 	public List<ChoiceNode> getListOfChoices();
 	public void derandomize();
 }

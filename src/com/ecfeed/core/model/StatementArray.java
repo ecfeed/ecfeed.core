@@ -222,6 +222,18 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
+	public boolean isAmbiguous(List<List<ChoiceNode>> values) {
+
+		for (AbstractStatement statement : fStatements) {
+			if (statement.isAmbiguous(values, null, null)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
+	@Override
 	public List<ChoiceNode> getListOfChoices() {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();

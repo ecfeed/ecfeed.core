@@ -351,7 +351,7 @@ public class MethodNode extends ParametersParentNode {
 	private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
 		String defaultValue = methodParameterNode.getDefaultValue();
 
-		ChoiceNode choiceNode = new ChoiceNode("@expected", defaultValue, methodParameterNode.getModelChangeRegistrator());
+		ChoiceNode choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, defaultValue, methodParameterNode.getModelChangeRegistrator());
 		choiceNode.setParent(methodParameterNode);
 
 		return choiceNode;
@@ -585,33 +585,48 @@ public class MethodNode extends ParametersParentNode {
 
 	@Override
 	public boolean isMatch(AbstractNode node){
+		
 		if(node instanceof MethodNode == false){
 			return false;
 		}
 
-		MethodNode comparedMethod = (MethodNode)node;
+		MethodNode methodToCompare = (MethodNode)node;
 
-		int testCasesCount = getTestCases().size();
+		List<TestCaseNode> testCases = getTestCases();
+		
+		int testCasesCount = testCases.size();
 		int constraintsCount = getConstraintNodes().size();
 
-		if(testCasesCount != comparedMethod.getTestCases().size() ||
-				constraintsCount != comparedMethod.getConstraintNodes().size()){
+		List<TestCaseNode> testCasesToCompare = methodToCompare.getTestCases();
+		
+		if(testCasesCount != testCasesToCompare.size() ||
+				constraintsCount != methodToCompare.getConstraintNodes().size()){
 			return false;
 		}
 
-		for(int i = 0; i < testCasesCount; i++){
-			if(getTestCases().get(i).isMatch(comparedMethod.getTestCases().get(i)) == false){
+		for (int i = 0; i < testCasesCount; i++){
+			
+			TestCaseNode testCase = testCases.get(i);
+			TestCaseNode testCaseToCompare = testCasesToCompare.get(i);
+			
+			if (testCase.isMatch(testCaseToCompare) == false){
 				return false;
 			}
 		}
 
 		for(int i = 0; i < constraintsCount; i++){
-			if(getConstraintNodes().get(i).isMatch(comparedMethod.getConstraintNodes().get(i)) == false){
+			if(getConstraintNodes().get(i).isMatch(methodToCompare.getConstraintNodes().get(i)) == false){
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		boolean isMatch = super.isMatch(node);
+		
+		if (!isMatch) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override

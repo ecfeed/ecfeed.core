@@ -180,7 +180,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 			ChoiceNode choiceNode;
 			
 			if (methodParameterNode.isExpected()) {
-				choiceNode = new ChoiceNode("@expected", methodParameterNode.getDefaultValue(), null);
+				choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, methodParameterNode.getDefaultValue(), null);
 				choiceNode.setParent(methodParameterNode);
 			} else {
 				String parameterName = methodParameterNode.getName();

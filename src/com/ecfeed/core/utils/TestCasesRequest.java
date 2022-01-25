@@ -81,5 +81,4 @@ public class TestCasesRequest {
 	public void setResponseFormat(String responseFormat) {
 		fResponseFormat = responseFormat;
 	}
-
 }

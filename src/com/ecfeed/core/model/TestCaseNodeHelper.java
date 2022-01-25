@@ -11,10 +11,14 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import com.ecfeed.core.utils.AmbiguousConstraintAction;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.MessageStack;
 
 public class TestCaseNodeHelper {
 
@@ -73,7 +77,7 @@ public class TestCaseNodeHelper {
 		return AbstractNodeHelper.getName(parent, extLanguageManager);
 	}
 
-	public static TestCaseNode makeCloneWithoutRandomization(TestCaseNode testCaseNode) {
+	public static TestCaseNode makeDerandomizedClone(TestCaseNode testCaseNode) {
 
 		List<ChoiceNode> testData = testCaseNode.getTestData();
 
@@ -81,7 +85,7 @@ public class TestCaseNodeHelper {
 
 		for (ChoiceNode choice : testData) {
 
-			ChoiceNode clonedChoiceNode = ChoiceNodeHelper.makeUnrandomizedClone(choice);
+			ChoiceNode clonedChoiceNode = ChoiceNodeHelper.makeDerandomizedClone(choice);
 			clonedTestData.add(clonedChoiceNode);
 		}
 
@@ -131,11 +135,11 @@ public class TestCaseNodeHelper {
 	}
 
 	public static boolean evaluateConstraints(TestCaseNode testCase, List<ConstraintNode> constraintNodes) {
-		
+
 		for (ConstraintNode constraintNode : constraintNodes) {
-			
+
 			ConstraintType constraintType = constraintNode.getConstraint().getType();
-			
+
 			if (constraintType == ConstraintType.ASSIGNMENT) {
 				continue;
 			}
@@ -151,13 +155,13 @@ public class TestCaseNodeHelper {
 	}
 
 	public static boolean assignExpectedValues(TestCaseNode testCase, List<ConstraintNode> constraintNodes) {
-		
+
 		for (ConstraintNode constraintNode : constraintNodes) {
-			
+
 			Constraint constraint = constraintNode.getConstraint();
-			
+
 			ConstraintType constraintType = constraint.getType();
-			
+
 			if (constraintType != ConstraintType.ASSIGNMENT) {
 				continue;
 			}
@@ -167,5 +171,147 @@ public class TestCaseNodeHelper {
 
 		return true;
 	}
+
+	public static boolean isTestCaseNodeAmbiguous(
+			TestCaseNode testCaseNode,
+			List<ConstraintNode> constraintNodes,
+			MessageStack messageStack,
+			IExtLanguageManager extLanguageManager) {
+
+		TestCase testCase = testCaseNode.getTestCase();
+
+		List<Constraint> constraints = ConstraintNodeHelper.createListOfConstraints(constraintNodes);
+
+		boolean isAmbiguous = 
+				TestCaseHelper.isTestCaseAmbiguous(
+						testCase,
+						constraints,
+						messageStack,
+						extLanguageManager);
+
+		return isAmbiguous;
+	}
+
+	public static boolean isTestCaseNodeAmbiguous(
+			TestCaseNode testCaseNode,
+			List<ConstraintNode> constraintNodes) {
+
+		TestCase testCase = testCaseNode.getTestCase();
+
+		List<Constraint> constraints = ConstraintNodeHelper.createListOfConstraints(constraintNodes);
+
+		boolean isAmbiguous = TestCaseHelper.isTestCaseAmbiguous(testCase, constraints);
+
+		return isAmbiguous;
+	}
+
+	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCaseNodes) {
+
+		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+
+			TestCaseNode clonedCaseNode = makeDerandomizedClone(testCaseNode);
+			clonedTestCaseNodes.add(clonedCaseNode);
+		}
+
+		return clonedTestCaseNodes;
+	}
+
+	public static List<TestCaseNode> filterTestCaseNodesVsAmbiguity(
+			List<TestCaseNode> testCaseNodes, 
+			List<ConstraintNode> constraintNodes, 
+			AmbiguousConstraintAction ambiguousConstraintAction) {
+
+		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<TestCaseNode>();
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+
+			if (!shouldIncludeTestCase1(constraintNodes, testCaseNode, ambiguousConstraintAction)) {
+				continue;
+			}
+
+			filteredTestCaseNodes.add(testCaseNode);
+		}
+
+		return filteredTestCaseNodes;
+	}
+
+	private static boolean shouldIncludeTestCase1(
+			List<ConstraintNode> constraintNodes, 
+			TestCaseNode testCaseNode, 
+			AmbiguousConstraintAction ambiguousConstraintAction) {
+		
+		if (ambiguousConstraintAction == AmbiguousConstraintAction.INCLUDE) {
+			return true;
+		}
+		
+		if (ambiguousConstraintAction == AmbiguousConstraintAction.EVALUATE) {
+			return true;
+		}
+		
+		if (ambiguousConstraintAction == AmbiguousConstraintAction.EXCLUDE) {
+			
+			boolean isAmbiguous = isTestCaseNodeAmbiguous(testCaseNode, constraintNodes);
+			
+			if (isAmbiguous) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid ambiguous constraint action.");
+		return false;
+	}
+
+	public static List<TestCaseNode> filterNotAmbiguousTestCases(
+			List<TestCaseNode> testCaseNodes,
+			List<ConstraintNode> constraintNodes) {
+		
+		List<TestCaseNode> filteredTestCaseNodes = new ArrayList<TestCaseNode>();
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+			
+			if (!shouldIncludeTestCase2(constraintNodes, testCaseNode)) {
+				continue;
+			}
+
+			filteredTestCaseNodes.add(testCaseNode);
+		}
+
+		return filteredTestCaseNodes;
+	}
 	
+	private static boolean shouldIncludeTestCase2(
+			List<ConstraintNode> constraintNodes, 
+			TestCaseNode testCaseNode) {
+		
+		if (isTestCaseNodeAmbiguous(testCaseNode, constraintNodes)) {
+			return true;
+		}
+		
+		boolean isIncluded = TestCaseNodeHelper.evaluateConstraints(testCaseNode, constraintNodes);
+		
+		if (isIncluded) {
+			return true;
+		}
+		
+		return false;
+	}
+ 
+	public static List<List<ChoiceNode>> convertToDoubleListOfChoices(Collection<TestCaseNode> testCaseNodes) {
+		
+		List<List<ChoiceNode>> result = new ArrayList<>();
+		
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+			
+			List<ChoiceNode> listOfChoiceNodes = testCaseNode.getTestCase().getListOfChoiceNodes();
+			
+			result.add(listOfChoiceNodes);
+		}
+		
+		return result;
+	}
+
 }

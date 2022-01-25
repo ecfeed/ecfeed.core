@@ -335,6 +335,19 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
+	public boolean isAmbiguous(List<List<ChoiceNode>> testDomain) {
+
+		MessageStack outWhyAmbiguous = new MessageStack();
+		ExtLanguageManagerForJava extLanguageManager = new ExtLanguageManagerForJava();
+		
+		if (isAmbiguousForPreconditionOrPostcondition(testDomain, outWhyAmbiguous, extLanguageManager)) {
+			ConditionHelper.addConstraintNameToMesageStack(getName(), outWhyAmbiguous);
+			return true;
+		}
+
+		return false;
+	}
+	
 	private boolean isAmbiguousForPreconditionOrPostcondition(
 			List<List<ChoiceNode>> testDomain, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager) {
 

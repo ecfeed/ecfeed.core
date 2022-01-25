@@ -191,4 +191,9 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return false;
 	}
 
+	@Override
+	public boolean isAmbiguous(List<List<ChoiceNode>> values) {
+		return false;
+	}
+	
 }

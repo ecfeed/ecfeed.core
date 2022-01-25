@@ -539,27 +539,13 @@ public class ChoiceNodeHelper {
 		return ret;
 	}
 
-	public static ChoiceNode makeUnrandomizedClone(ChoiceNode choiceNode) {
+	public static ChoiceNode makeDerandomizedClone(ChoiceNode choiceNode) {
 
 		ChoiceNode cloneChoiceNode = choiceNode.makeClone();
 
 		cloneChoiceNode.derandomize();
 
 		return cloneChoiceNode;
-
-	}
-
-	public static List<TestCaseNode> makeDerandomizedCopyOfTestCaseNodes(List<TestCaseNode> testCases) {
-
-		List<TestCaseNode> clonedTestCaseNodes = new ArrayList<TestCaseNode>();
-
-		for (TestCaseNode testCaseNode : testCases) {
-
-			TestCaseNode clonedCaseNode = TestCaseNodeHelper.makeCloneWithoutRandomization(testCaseNode);
-			clonedTestCaseNodes.add(clonedCaseNode);
-		}
-
-		return clonedTestCaseNodes;
 	}
 
 }

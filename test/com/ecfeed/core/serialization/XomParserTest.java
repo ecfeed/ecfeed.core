@@ -54,6 +54,7 @@ import com.ecfeed.core.model.serialization.XomStatementBuilder;
 import com.ecfeed.core.testutils.ModelStringifier;
 import com.ecfeed.core.testutils.RandomModelGenerator;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.StringHelper;
 
 import nu.xom.Document;
 import nu.xom.Element;
@@ -92,6 +93,7 @@ public class XomParserTest {
 
 	@Test
 	public void parseClassTest() {
+		System.out.println("parseClassTest:");
 		for (int version = 1; version <= ModelVersionDistributor.getCurrentSoftwareVersion(); version++) {
 			parseClassTest(version);
 		}
@@ -99,6 +101,7 @@ public class XomParserTest {
 
 	private void parseClassTest(int version){
 		try {
+			System.out.println("parseClassTest, version: " + version);
 			ClassNode classNode = fModelGenerator.generateClass(3);
 
 			XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
@@ -453,9 +456,23 @@ public class XomParserTest {
 	}
 
 	private void assertElementsEqual(AbstractNode n, AbstractNode n1) {
-		if(n.isMatch(n1) == false){
-			fail("Parsed element differs from original\n" + fStringifier.stringify(n, 0) + "\n" + fStringifier.stringify(n1, 0));
+		
+		if (n.isMatch(n1)) {
+			return;
 		}
+		
+		String str1 = fStringifier.stringify(n, 0);
+		String str2 = fStringifier.stringify(n1, 0);
+		
+		int index = StringHelper.findFirstDifference(str1, str2);
+		
+		String substr1 = str1.substring(index, index + 20);
+		String substr2 = str2.substring(index, index + 20);
+		
+		System.out.println(substr1);
+		System.out.println(substr2);
+		
+		fail("Parsed element differs from original\n" + str1 + "\n" + str2);
 	}
 
 	private void TRACE(Element element){

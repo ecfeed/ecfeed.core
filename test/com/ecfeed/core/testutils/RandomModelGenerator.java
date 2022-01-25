@@ -155,7 +155,7 @@ public class RandomModelGenerator {
 
 		for(MethodParameterNode c : method.getMethodParameters()){
 			if(c.isExpected()){
-				ChoiceNode expectedValue = new ChoiceNode("@expected", randomChoiceValue(c.getType()), null);
+				ChoiceNode expectedValue = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, randomChoiceValue(c.getType()), null);
 				expectedValue.setParent(c);
 				testData.add(expectedValue);
 			}

@@ -254,14 +254,20 @@ public class ChoiceCondition implements IStatementCondition {
 				return false;
 			}
 
+			if (extLanguageManager == null) {
+				extLanguageManager = new ExtLanguageManagerForJava();
+			}
+			
 			String leftSignature = ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager);
 			String rightSignature = ChoiceNodeHelper.createSignature(fRightChoice, extLanguageManager);
 			
-			ConditionHelper.addValuesMessageToStack(
-					leftSignature, 
-					relation, 
-					rightSignature,
-					messageStack);
+			if (messageStack != null) {
+				ConditionHelper.addValuesMessageToStack(
+						leftSignature, 
+						relation, 
+						rightSignature,
+						messageStack);
+			}
 
 			return true;
 		}

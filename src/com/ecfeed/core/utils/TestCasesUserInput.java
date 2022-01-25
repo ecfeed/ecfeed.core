@@ -29,6 +29,8 @@ public class TestCasesUserInput {
 	// or special Strings ALL, NONE
 	private Object fConstraints;
 
+	private String fAmbiguousConstraints;
+
 	// takes special strings ALL, NONE
 	// or map of entries of type Map<String, List<String>> or
 	// each entry consists of method's parameter name and list of choices
@@ -111,6 +113,18 @@ public class TestCasesUserInput {
 	public void setConstraints(List<String> constraintNames) {
 
 		fConstraints = constraintNames;
+	}
+
+	@JsonGetter("ambiguousConstraints")
+	public String getAmbiguousConstraintsFlag() {
+
+		return fAmbiguousConstraints;
+	}
+
+	@JsonSetter("ambiguousConstraints")
+	public void setAmbiguousConstraintsFlag(String ambiguousConstraints) {
+
+		fAmbiguousConstraints = ambiguousConstraints;
 	}
 
 	@JsonGetter("choices")
