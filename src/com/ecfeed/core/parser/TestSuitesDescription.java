@@ -4,7 +4,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 import java.util.List;
 
-public class TestSuitesParser { // TODO - REUSE IN JUNIT5
+public class TestSuitesDescription { // TODO - REUSE IN JUNIT5
 
     private static final String specialValueAllSuites = "ALL";
 
@@ -12,7 +12,7 @@ public class TestSuitesParser { // TODO - REUSE IN JUNIT5
     private boolean fIsSpecialValueAllSuites = false;
 
     @SuppressWarnings("unchecked")
-	public TestSuitesParser(Object testSuitesObject) {
+	public TestSuitesDescription(Object testSuitesObject) {
 
         if (testSuitesObject == null) {
             setSpecialValueAllSuitesToTrue();

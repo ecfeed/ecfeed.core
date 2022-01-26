@@ -5,7 +5,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import java.util.List;
 import java.util.Map;
 
-public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
+public class ArgsAndChoicesDescription {  // TODO - REUSE IN JUNIT5
 
     private enum ChoicesValueType {
 
@@ -17,14 +17,14 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
     private static final String specialValueAllChoices = "ALL";
     private static final String specialValueNoneChoices = "NONE";
 
-    private ArgsAndChoicesParser.ChoicesValueType fChoicesValueType;
+    private ArgsAndChoicesDescription.ChoicesValueType fChoicesValueType;
     private Map<String, List<String>> fArgAndChoiceNames = null;
 
     @SuppressWarnings("unchecked")
-	public ArgsAndChoicesParser(Object choicesObject) {
+	public ArgsAndChoicesDescription(Object choicesObject) {
 
         if (choicesObject == null) {
-            fChoicesValueType = ArgsAndChoicesParser.ChoicesValueType.ALL;
+            fChoicesValueType = ArgsAndChoicesDescription.ChoicesValueType.ALL;
             return;
         }
 
@@ -70,7 +70,7 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
 
     public boolean isAllArgsAndChoices() {
 
-        if (fChoicesValueType == ArgsAndChoicesParser.ChoicesValueType.ALL) {
+        if (fChoicesValueType == ArgsAndChoicesDescription.ChoicesValueType.ALL) {
             return true;
         }
 
@@ -79,7 +79,7 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
 
     public boolean isNoneChoices() {
 
-        if (fChoicesValueType == ArgsAndChoicesParser.ChoicesValueType.NONE) {
+        if (fChoicesValueType == ArgsAndChoicesDescription.ChoicesValueType.NONE) {
             return true;
         }
 
@@ -91,14 +91,14 @@ public class ArgsAndChoicesParser {  // TODO - REUSE IN JUNIT5
         return fArgAndChoiceNames;
     }
 
-    private ArgsAndChoicesParser.ChoicesValueType getChoiceValueType(String choicesString) {
+    private ArgsAndChoicesDescription.ChoicesValueType getChoiceValueType(String choicesString) {
 
         if (choicesString.equals(specialValueNoneChoices)) {
-            return ArgsAndChoicesParser.ChoicesValueType.NONE;
+            return ArgsAndChoicesDescription.ChoicesValueType.NONE;
         }
 
         if (choicesString.equals(specialValueAllChoices)) {
-            return ArgsAndChoicesParser.ChoicesValueType.ALL;
+            return ArgsAndChoicesDescription.ChoicesValueType.ALL;
         }
 
         ExceptionHelper.reportRuntimeException("Invalid special value for choices: " + choicesString);
