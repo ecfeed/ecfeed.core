@@ -29,7 +29,7 @@ public class TestCasesUserInput {
 	// or special Strings ALL, NONE
 	private Object fConstraints;
 
-	private String fAmbiguousConstraints;
+	private String fAmbiguousTestCases;
 
 	// takes special strings ALL, NONE
 	// or map of entries of type Map<String, List<String>> or
@@ -115,16 +115,16 @@ public class TestCasesUserInput {
 		fConstraints = constraintNames;
 	}
 
-	@JsonGetter("ambiguousConstraints")
-	public String getAmbiguousConstraintsFlag() {
+	@JsonGetter("ambiguousTestCases")
+	public String getAmbiguousTestCasesFlag() {
 
-		return fAmbiguousConstraints;
+		return fAmbiguousTestCases;
 	}
 
-	@JsonSetter("ambiguousConstraints")
-	public void setAmbiguousConstraintsFlag(String ambiguousConstraints) {
+	@JsonSetter("ambiguousTestCases")
+	public void setAmbiguousTestCasesFlag(String ambiguousTestCases) {
 
-		fAmbiguousConstraints = ambiguousConstraints;
+		fAmbiguousTestCases = ambiguousTestCases;
 	}
 
 	@JsonGetter("choices")

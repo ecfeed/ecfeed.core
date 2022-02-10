@@ -99,7 +99,7 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		setConstraints(allConstraintsSelected, constraintNames, testCasesUserInput);
 
-		testCasesUserInput.setAmbiguousConstraintsFlag(ambiguousConstraintAction.getCode());
+		testCasesUserInput.setAmbiguousTestCasesFlag(ambiguousConstraintAction.getCode());
 		setGeneratorArguments(generatorArguments, testCasesUserInput);
 
 		String requestText = serializeRequest(testCasesRequest, testCasesUserInput);
