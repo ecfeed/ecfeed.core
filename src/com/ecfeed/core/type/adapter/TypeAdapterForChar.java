@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 
-public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
+public class TypeAdapterForChar implements ITypeAdapter<Character>{
 
 	private final String[] TYPES_CONVERTABLE_TO_CHAR = new String[]{
 			JavaLanguageHelper.TYPE_NAME_STRING,
@@ -37,16 +37,6 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 	@Override
 	public boolean isCompatible(String type){
 		return Arrays.asList(TYPES_CONVERTABLE_TO_CHAR).contains(type);
-	}
-
-	@Override
-	public String adaptSingleValue(String value, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-		
-		if (value.length() == 1) {
-			return value;
-		}
-
-		return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
 	}
 
 	@Override
@@ -70,8 +60,18 @@ public class TypeAdapterForChar extends TypeAdapterForTypeWithRange<Character>{
 	}
 
 	@Override
-	protected String[] getSymbolicValues() {
-		return null;
+	public boolean isRandomizable() {
+		return false;
+	}
+
+	@Override
+	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
+
+		if (value.length() == 1) {
+			return value;
+		}
+
+		return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
 	}
 
 }
