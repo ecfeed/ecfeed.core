@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodParameterNode extends AbstractParameterNode {
@@ -331,16 +332,24 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return getMethod().getMentioningConstraints(this, label);
 	}
 
-	public void detachAndDeleteChoiceNode(String name) {
+	public void detachChoiceNode(String name) {
 
-		ChoiceNode choiceNode = getChoice(name);
+		ChoiceNode oldChoiceNode = getChoice(name);
 
-		ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+		ChoiceNode clonedChoiceNode = oldChoiceNode.makeClone();
 		clonedChoiceNode.setDetached(true);
 
 		fDetachedChoices.add(clonedChoiceNode);
 
-		// TODO update references in constraints and test cases
+		MethodNode methodNode = oldChoiceNode.getMethodNode();
+
+		if (methodNode == null) {
+			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
+		}
+
+		methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, clonedChoiceNode);
+
+		// TODO update references in constraints
 
 		fChoices.remove(0);
 	}
@@ -350,12 +359,20 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return fDetachedChoices.size();
 	}
 
-	public void attachAndDeleteChoiceNode(String detachedChoiceName, String actualChoiceName) {
+	public void attachChoiceNode(String detachedChoiceName, String actualChoiceName) {
 
-		// ChoiceNode actualChoiceNode = getChoice(actualChoiceName);
-		// ChoiceNode detachedChoiceNode = getDetachedChoice(detachedChoiceName);
+		ChoiceNode actualChoiceNode = getChoice(actualChoiceName);
+		ChoiceNode detachedChoiceNode = getDetachedChoice(detachedChoiceName);
 
-		// TODO - update references in constraints and test cases
+		MethodNode methodNode = actualChoiceNode.getMethodNode();
+
+		if (methodNode == null) {
+			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
+		}
+
+		methodNode.updateChoiceReferencesInTestCases(detachedChoiceNode, actualChoiceNode);
+
+		// TODO - update references in constraints
 
 		int detachedIndex = getDetachedChoiceIndex(detachedChoiceName);
 		fDetachedChoices.remove(detachedIndex);

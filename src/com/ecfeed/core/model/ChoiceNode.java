@@ -380,4 +380,17 @@ public class ChoiceNode extends ChoicesParentNode {
 		fIsDetached = isDetached;
 	}
 
+	public MethodNode getMethodNode() {
+
+		MethodParameterNode methodParameterNode = (MethodParameterNode)getParameter();
+
+		if (methodParameterNode == null) {
+			return null;
+		}
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		return methodNode;
+	}
+
 }
