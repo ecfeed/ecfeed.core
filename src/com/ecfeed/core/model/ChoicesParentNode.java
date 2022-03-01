@@ -21,11 +21,14 @@ import com.ecfeed.core.utils.StringHelper;
 public abstract class ChoicesParentNode extends AbstractNode{
 
 	protected List<ChoiceNode> fChoices;
+	protected List<ChoiceNode> fDetachedChoices;
+
 
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 
 		fChoices = new ArrayList<ChoiceNode>();
+		fDetachedChoices = new ArrayList<ChoiceNode>();
 	}
 
 	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
@@ -44,26 +47,26 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		}
 
 		ChoicesParentNode choicesParentNodeToCompare = (ChoicesParentNode)choicesParentNode;
-		
+
 		List<ChoiceNode> choices = getChoices();
 		List<ChoiceNode> choicesToCompare = choicesParentNodeToCompare.getChoices();
-		
+
 		if (choices.size() != choicesToCompare.size()){
 			return false;
 		}
 
 		for (int i = 0; i < choices.size(); i++) {
-			
+
 			ChoiceNode choiceNode = choices.get(i);
 			ChoiceNode choiceNodeToCompare = choicesToCompare.get(i);
-			
+
 			if (choiceNode.isMatch(choiceNodeToCompare) == false) {
 				return false;
 			}
 		}
 
 		boolean isMatch = super.isMatch(choicesParentNode);
-		
+
 		if (!isMatch) {
 			return false;
 		}
@@ -103,7 +106,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 
 	@Override
 	public int getChildrenCount() {
-		
+
 		return fChoices.size();
 	}
 
@@ -115,6 +118,32 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public ChoiceNode getChoice(String qualifiedName) {
 
 		return (ChoiceNode)getChild(qualifiedName);
+	}
+
+	public ChoiceNode getDetachedChoice(String choiceNameToFind) {
+
+		for (ChoiceNode choiceNode : fDetachedChoices) {
+			if (choiceNode.getName().equals(choiceNameToFind)) {
+				return choiceNode;
+			}
+		}
+
+		return null;
+	}
+
+	public int getDetachedChoiceIndex(String choiceNameToFind) {
+
+		int index = 0;
+
+		for (ChoiceNode choiceNode : fDetachedChoices) {
+			if (choiceNode.getName().equals(choiceNameToFind)) {
+				return index;
+			}
+
+			index++;
+		}
+
+		return -1;
 	}
 
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
@@ -277,5 +306,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 				return newParameterName;
 			}
 		}
+	}
+
+	public List<ChoiceNode> getDetachedChoices() {
+		return fDetachedChoices;
 	}	
 }

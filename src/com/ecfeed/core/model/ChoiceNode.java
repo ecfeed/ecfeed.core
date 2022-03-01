@@ -30,6 +30,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	private String fValueString;
 	private Set<String> fLabels;
 	private boolean fIsRandomizedValue;
+	private boolean fIsDetached;
 
 	private ChoiceNode fOrigChoiceNode = null;
 
@@ -38,6 +39,7 @@ public class ChoiceNode extends ChoicesParentNode {
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
+		fIsDetached = false;
 	}
 
 	public ChoiceNode(String name, String value, boolean isRandomized, IModelChangeRegistrator modelChangeRegistrator) {
@@ -318,7 +320,7 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public boolean isMatch(AbstractNode choiceNode){
-		
+
 		if(choiceNode instanceof ChoiceNode == false){
 			return false;
 		}
@@ -344,11 +346,11 @@ public class ChoiceNode extends ChoicesParentNode {
 		}
 
 		boolean isMatch = super.isMatch(choiceNode);
-		
+
 		if (!isMatch) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -368,6 +370,14 @@ public class ChoiceNode extends ChoicesParentNode {
 			return (ChoiceNode)fParent;
 		}
 		return null;
+	}
+
+	public boolean isDetached() {
+		return fIsDetached;
+	}
+
+	public void setDetached(boolean isDetached) {
+		fIsDetached = isDetached;
 	}
 
 }

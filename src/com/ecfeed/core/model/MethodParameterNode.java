@@ -26,13 +26,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private List<ChoiceNode> fChoicesCopy;
 
 	public MethodParameterNode(
-				String name,
-				String type,
-				String defaultValue,
-				boolean expected,
-				boolean linked,
-				GlobalParameterNode link,
-				IModelChangeRegistrator modelChangeRegistrator) {
+			String name,
+			String type,
+			String defaultValue,
+			boolean expected,
+			boolean linked,
+			GlobalParameterNode link,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, type, modelChangeRegistrator);
 
@@ -61,7 +61,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		this(
 				source.getName(),
 				source.getType(), defaultValue, expected, linked, link, source.getModelChangeRegistrator()
-		);
+				);
 
 		addChoices(source.getChoices());
 	}
@@ -89,7 +89,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	public MethodParameterNode makeClone() {
 		MethodParameterNode copy = 
 				new MethodParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
-				);
+						);
 
 		copy.fLinked = fLinked;
 		copy.fLink = fLink;
@@ -329,6 +329,36 @@ public class MethodParameterNode extends AbstractParameterNode {
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(String label) {
 		return getMethod().getMentioningConstraints(this, label);
+	}
+
+	public void detachAndDeleteChoiceNode(String name) {
+
+		ChoiceNode choiceNode = getChoice(name);
+
+		ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+		clonedChoiceNode.setDetached(true);
+
+		fDetachedChoices.add(clonedChoiceNode);
+
+		// TODO update references in constraints and test cases
+
+		fChoices.remove(0);
+	}
+
+	public int getDetachedChoiceCount() {
+
+		return fDetachedChoices.size();
+	}
+
+	public void attachAndDeleteChoiceNode(String detachedChoiceName, String actualChoiceName) {
+
+		// ChoiceNode actualChoiceNode = getChoice(actualChoiceName);
+		// ChoiceNode detachedChoiceNode = getDetachedChoice(detachedChoiceName);
+
+		// TODO - update references in constraints and test cases
+
+		int detachedIndex = getDetachedChoiceIndex(detachedChoiceName);
+		fDetachedChoices.remove(detachedIndex);
 	}
 
 }
