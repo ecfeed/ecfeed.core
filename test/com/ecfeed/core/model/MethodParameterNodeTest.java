@@ -124,7 +124,7 @@ public class MethodParameterNodeTest {
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
 		MethodParameterNode methodParameterNode = new MethodParameterNode("name", "type", "0", false, null);
-		methodParameterNode.setParent(methodNode);
+		methodNode.addParameter(methodParameterNode);
 		return methodParameterNode;
 	}
 
