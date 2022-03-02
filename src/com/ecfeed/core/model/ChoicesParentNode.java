@@ -146,6 +146,21 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return -1;
 	}
 
+	public int getChoiceIndex(String choiceNameToFind) {
+
+		int index = 0;
+
+		for (ChoiceNode choiceNode : fChoices) {
+			if (choiceNode.getName().equals(choiceNameToFind)) {
+				return index;
+			}
+
+			index++;
+		}
+
+		return -1;
+	}
+	
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
 
 		for (ChoiceNode choiceNode : fChoices) {

@@ -350,7 +350,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 		methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, clonedChoiceNode);
 		methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, clonedChoiceNode);
 
-		fChoices.remove(0);
+		int index = getChoiceIndex(name); 
+		fChoices.remove(index);
 	}
 
 	public int getDetachedChoiceCount() {
