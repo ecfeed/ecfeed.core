@@ -339,7 +339,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		MessageStack outWhyAmbiguous = new MessageStack();
 		ExtLanguageManagerForJava extLanguageManager = new ExtLanguageManagerForJava();
-		
+
 		if (isAmbiguousForPreconditionOrPostcondition(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			ConditionHelper.addConstraintNameToMesageStack(getName(), outWhyAmbiguous);
 			return true;
@@ -347,7 +347,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return false;
 	}
-	
+
 	private boolean isAmbiguousForPreconditionOrPostcondition(
 			List<List<ChoiceNode>> testDomain, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager) {
 
@@ -418,6 +418,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	public String toString() {
 
 		return createSignature(new ExtLanguageManagerForJava());
+	}
+
+	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		fPrecondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+		fPostcondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
 	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
@@ -805,4 +811,5 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 	}
+
 }

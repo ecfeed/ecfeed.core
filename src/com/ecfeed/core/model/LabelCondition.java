@@ -134,5 +134,9 @@ public class LabelCondition implements IStatementCondition {
 	public void derandomize() {
 	}
 
+	@Override
+	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	}
+
 }
 

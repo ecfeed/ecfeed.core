@@ -83,13 +83,13 @@ public class StatementArray extends AbstractStatement {
 
 		case AND:
 			return evaluateForAndOperator(values);
-			
+
 		case OR:
 			return evaluateForOrOperator(values);
 		case ASSIGN:
-			
+
 			return EvaluationResult.FALSE;
-			
+
 		}
 
 		return EvaluationResult.FALSE;
@@ -232,7 +232,7 @@ public class StatementArray extends AbstractStatement {
 
 		return false;
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 
@@ -347,9 +347,18 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public void derandomize() {
-		
+
 		for(IStatement statement : fStatements) {
 			statement.derandomize();
+		}
+	}
+
+	// TODO DE-NO test
+	@Override
+	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		for (AbstractStatement child : fStatements) {
+			child.updateChoiceReferences(oldChoiceNode, newChoiceNode);
 		}
 	}
 

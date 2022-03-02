@@ -348,8 +348,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		}
 
 		methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, clonedChoiceNode);
-
-		// TODO update references in constraints
+		methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, clonedChoiceNode);
 
 		fChoices.remove(0);
 	}
@@ -371,8 +370,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		}
 
 		methodNode.updateChoiceReferencesInTestCases(detachedChoiceNode, actualChoiceNode);
-
-		// TODO - update references in constraints
+		methodNode.updateChoiceReferencesInConstraints(detachedChoiceNode, actualChoiceNode);
 
 		int detachedIndex = getDetachedChoiceIndex(detachedChoiceName);
 		fDetachedChoices.remove(detachedIndex);

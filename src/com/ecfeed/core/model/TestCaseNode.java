@@ -228,6 +228,7 @@ public class TestCaseNode extends AbstractNode {
 		return new TestCase(fTestData);
 	}
 
+	// TODO DE-NO unit test
 	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 
 		int index = 0;

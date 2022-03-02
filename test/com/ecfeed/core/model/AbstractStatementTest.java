@@ -76,6 +76,10 @@ public class AbstractStatementTest {
 		public boolean isAmbiguous(List<List<ChoiceNode>> values) {
 			return false;
 		}
+
+		@Override
+		protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+		}
 	}
 
 	@Test

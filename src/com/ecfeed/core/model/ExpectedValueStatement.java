@@ -104,11 +104,11 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		return result;
 	}
-	
+
 	@Override
 	public void derandomize() {
 		fChoiceNode.derandomize();
-		
+
 	}
 
 	public MethodParameterNode getParameter(){ // TODO RENAME TO getLeftParameter
@@ -195,5 +195,9 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	public boolean isAmbiguous(List<List<ChoiceNode>> values) {
 		return false;
 	}
-	
+
+	@Override
+	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	}
+
 }

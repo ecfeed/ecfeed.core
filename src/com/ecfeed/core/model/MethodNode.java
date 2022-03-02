@@ -703,4 +703,11 @@ public class MethodNode extends ParametersParentNode {
 		}
 	}
 
+	public void updateChoiceReferencesInConstraints(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		for (ConstraintNode constraintNode : fConstraintNodes) {
+			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+		}
+	}
+
 }

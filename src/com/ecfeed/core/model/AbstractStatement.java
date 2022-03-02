@@ -93,4 +93,6 @@ public abstract class AbstractStatement implements IStatement {
 	public abstract AbstractStatement makeClone();
 
 	public abstract boolean updateReferences(MethodNode method);
+
+	protected abstract void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode);
 }

@@ -257,10 +257,10 @@ public class ChoiceCondition implements IStatementCondition {
 			if (extLanguageManager == null) {
 				extLanguageManager = new ExtLanguageManagerForJava();
 			}
-			
+
 			String leftSignature = ChoiceNodeHelper.createSignature(leftChoiceNode, extLanguageManager);
 			String rightSignature = ChoiceNodeHelper.createSignature(fRightChoice, extLanguageManager);
-			
+
 			if (messageStack != null) {
 				ConditionHelper.addValuesMessageToStack(
 						leftSignature, 
@@ -273,6 +273,14 @@ public class ChoiceCondition implements IStatementCondition {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		if (fRightChoice == oldChoiceNode) {
+			fRightChoice = newChoiceNode;
+		}
 	}
 
 }

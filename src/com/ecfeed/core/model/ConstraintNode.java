@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
@@ -117,7 +118,7 @@ public class ConstraintNode extends AbstractNode{
 	public void derandomize() {
 		fConstraint.derandomize();
 	}
-	
+
 	public boolean mentions(ChoiceNode choice) {
 
 		if (fConstraint.mentions(choice)) {
@@ -330,7 +331,7 @@ public class ConstraintNode extends AbstractNode{
 	private boolean isConsistentForParameter(MethodParameterNode parameter) {
 
 		String typeName = parameter.getType();
-		
+
 		if (parameter.isExpected()) {
 			return true;
 		}
@@ -383,6 +384,17 @@ public class ConstraintNode extends AbstractNode{
 
 	boolean mentionsParameter(MethodParameterNode methodParameter) {
 		return fConstraint.mentionsParameter(methodParameter);
+	}
+
+	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		Constraint constraint = getConstraint();
+
+		if (constraint == null) {
+			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
+		}
+
+		constraint.updateChoiceReferences(oldChoiceNode, newChoiceNode);
 	}
 
 }

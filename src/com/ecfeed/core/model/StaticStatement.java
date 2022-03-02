@@ -125,7 +125,7 @@ public class StaticStatement extends AbstractStatement {
 	public boolean isAmbiguous(List<List<ChoiceNode>> values) {
 		return false;
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getListOfChoices() {
 		return new ArrayList<ChoiceNode>();
@@ -133,6 +133,10 @@ public class StaticStatement extends AbstractStatement {
 
 	@Override
 	public void derandomize() {
+	}
+
+	@Override
+	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 	}
 
 }

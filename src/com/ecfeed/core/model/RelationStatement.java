@@ -21,9 +21,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	private IStatementCondition fRightCondition;
 
 	public static RelationStatement createRelationStatementWithLabelCondition(
-		MethodParameterNode parameter,
-		EMathRelation relation,
-		String label) {
+			MethodParameterNode parameter,
+			EMathRelation relation,
+			String label) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -31,12 +31,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-		}
+	}
 
 	public static RelationStatement createRelationStatementWithChoiceCondition(
-		MethodParameterNode parameter,
-		EMathRelation relation,
-		ChoiceNode choiceNode) {
+			MethodParameterNode parameter,
+			EMathRelation relation,
+			ChoiceNode choiceNode) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -45,12 +45,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-		}
+	}
 
 	public static RelationStatement createRelationStatementWithParameterCondition(
-		MethodParameterNode parameter,
-		EMathRelation relation,
-		MethodParameterNode rightParameter) {
+			MethodParameterNode parameter,
+			EMathRelation relation,
+			MethodParameterNode rightParameter) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -59,12 +59,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-		}
+	}
 
 	public static RelationStatement createRelationStatementWithValueCondition(
-		MethodParameterNode parameter,
-		EMathRelation relation,
-		String textValue) {
+			MethodParameterNode parameter,
+			EMathRelation relation,
+			String textValue) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -72,7 +72,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		relationStatement.setCondition(condition);
 
 		return relationStatement;
-		}
+	}
 
 	protected RelationStatement(
 			MethodParameterNode parameter, 
@@ -130,7 +130,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void setRelation(EMathRelation relation) {
 		fRelation = relation;
@@ -268,7 +268,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		return false;
 	}	
-	
+
 	@Override
 	public void derandomize() {
 		fRightCondition.derandomize();
@@ -332,44 +332,50 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		MethodParameterNode leftParameter = getLeftParameter();
 		String leftParameterType =  leftParameter.getType();
-		
+
 		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
 				&& !JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-			
+
 			return false;
 		}
-		
+
 		if (!JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
 				&& JavaLanguageHelper.isBooleanTypeName(rightParameterType)) {
-			
+
 			return false;
 		}
 
 		if (JavaLanguageHelper.isTypeWithChars(leftParameterType)
 				&& !JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-			
+
 			return false;
 		}
 
 		if (!JavaLanguageHelper.isTypeWithChars(leftParameterType)
 				&& JavaLanguageHelper.isTypeWithChars(rightParameterType)) {
-			
+
 			return false;
 		}
 
 		if (JavaLanguageHelper.isNumericTypeName(leftParameterType)
 				&& !JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-			
+
 			return false;
 		}
 
 		if (!JavaLanguageHelper.isNumericTypeName(leftParameterType)
 				&& JavaLanguageHelper.isNumericTypeName(rightParameterType)) {
-			
+
 			return false;
 		}
-		
+
 		return true;
+	}
+
+	// TODO DE-NO test
+	@Override
+	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+		fRightCondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
 	}
 
 }

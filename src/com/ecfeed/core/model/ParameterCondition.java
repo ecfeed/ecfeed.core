@@ -274,7 +274,7 @@ public class ParameterCondition implements IStatementCondition {
 		if (areBothChoicesFixed(leftChoiceNode, rightChoiceNode)) {
 			return false;
 		}
-		
+
 		if (extLanguageManager == null) {
 			extLanguageManager = new ExtLanguageManagerForJava();
 		}
@@ -315,6 +315,10 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public void derandomize() {
+	}
+
+	@Override
+	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 	}
 
 }	

@@ -177,5 +177,9 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public void derandomize() {
 	}
+
+	@Override
+	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	}
 }	
 
