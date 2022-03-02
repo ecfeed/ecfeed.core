@@ -156,8 +156,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
+		String conditionSignature = fRightCondition.createSignature(extLanguageManager);
+		
 		MethodParameterNode methodParameterNode = getLeftParameter();
-		return MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager) + getRelation() + fRightCondition.createSignature(extLanguageManager);
+		String parameterName = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
+		
+		return parameterName + getRelation() + conditionSignature;
 	}
 
 	@Override

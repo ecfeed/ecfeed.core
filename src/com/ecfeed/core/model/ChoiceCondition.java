@@ -100,7 +100,9 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		return StatementConditionHelper.createChoiceDescription(ChoiceNodeHelper.getName(fRightChoice, extLanguageManager));
+		String choiceSignature = ChoiceNodeHelper.createShortSignature(fRightChoice);
+		
+		return StatementConditionHelper.createChoiceDescription(choiceSignature);
 	}
 
 	@Override

@@ -73,6 +73,8 @@ public class ChoiceNodeHelper {
 		}
 
 		String qualifiedName = getQualifiedName(choiceNode, extLanguageManager);
+		
+		qualifiedName = addDetachedMarker(choiceNode.isDetached(), qualifiedName);
 
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
@@ -89,24 +91,48 @@ public class ChoiceNodeHelper {
 		return qualifiedName + " [" + value + "]";
 	}
 
-	public static String createTestDataLabel(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
+	public static String createShortSignature(ChoiceNode choiceNode) {
 
-		AbstractParameterNode abstractParameterNode = choice.getParameter();	
-
-		if (abstractParameterNode == null) {
-			return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+		if (choiceNode == null) {
+			return "EMPTY";
 		}
 
-		if (abstractParameterNode instanceof MethodParameterNode) {
+		String qualifiedName = choiceNode.getName();
+		
+		qualifiedName = addDetachedMarker(choiceNode.isDetached(), qualifiedName);
 
-			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
-
-			if (methodParameterNode.isExpected()) {
-				return "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
-			}
+		return qualifiedName;
+	}
+	
+	private static String addDetachedMarker(boolean isDetached, String qualifiedName) {
+		
+		if  (isDetached) {
+			qualifiedName = "(!)" + qualifiedName;
 		}
+		
+		return qualifiedName;
+	}
 
-		return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+
+		return createSignature(choiceNode, extLanguageManager);
+		
+//		AbstractParameterNode abstractParameterNode = choice.getParameter();	
+//
+//		if (abstractParameterNode == null) {
+//			return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+//		}
+//
+//		if (abstractParameterNode instanceof MethodParameterNode) {
+//
+//			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+//
+//			if (methodParameterNode.isExpected()) {
+//				return "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
+//			}
+//		}
+//
+//		return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
