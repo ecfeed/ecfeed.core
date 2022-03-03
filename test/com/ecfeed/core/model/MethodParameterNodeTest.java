@@ -50,7 +50,7 @@ public class MethodParameterNodeTest {
 
 		MethodNode methodNode = new MethodNode(methodName, null);
 
-		// create and add parameter, choice, test case and constraint
+		// create and add parameter, choice
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
 		addNewChoiceToMethod(methodParameterNode, "choice1");
@@ -93,7 +93,7 @@ public class MethodParameterNodeTest {
 
 		MethodNode methodNode = new MethodNode(methodName, null);
 
-		// create and add parameter, 2 choices, test case and constraint
+		// create and add parameter, 2 choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
 		ChoiceNode oldChoiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1");
@@ -139,7 +139,7 @@ public class MethodParameterNodeTest {
 
 		MethodNode methodNode = new MethodNode(methodName, null);
 
-		// create and add parameter, 2 choices, test case and constraint
+		// create and add parameter, 2 choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
 		addNewChoiceToMethod(methodParameterNode, "choice1");
@@ -257,6 +257,42 @@ public class MethodParameterNodeTest {
 		assertEquals(newChoiceNode, choiceNodeFromPostcondition);
 	}
 
+	@Test
+	public void attachWithUniqueNamesTest() {
+
+		final String methodName = "method";
+
+		MethodNode methodNode = new MethodNode(methodName, null);
+
+		// create and add parameter, choice
+
+		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
+		addNewChoiceToMethod(methodParameterNode, "choice1");
+
+		String detachedChoiceName = methodParameterNode.detachChoiceNode("choice1");
+		assertEquals("choice1", detachedChoiceName);
+		
+		// add new choice node with the same name 
+
+		ChoiceNode newChoiceNode = new ChoiceNode("choice1", "0", null);
+		methodParameterNode.addChoice(newChoiceNode);
+
+		// detach - the name should be unique
+
+		detachedChoiceName = methodParameterNode.detachChoiceNode("choice1");
+		assertEquals("choice1-1", detachedChoiceName);
+
+		// add the second choice node with the same name
+		
+		newChoiceNode = new ChoiceNode("choice1", "0", null);
+		methodParameterNode.addChoice(newChoiceNode);
+		
+		// detach - the name should be unique
+
+		detachedChoiceName = methodParameterNode.detachChoiceNode("choice1");
+		assertEquals("choice1-2", detachedChoiceName);
+	}
+	
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
 		MethodParameterNode methodParameterNode = new MethodParameterNode("name", "type", "0", false, null);
 		methodNode.addParameter(methodParameterNode);

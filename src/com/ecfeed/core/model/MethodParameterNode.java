@@ -332,14 +332,14 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return getMethod().getMentioningConstraints(this, label);
 	}
 
-	public void detachChoiceNode(String name) {
+	public String detachChoiceNode(String name) {
 
 		ChoiceNode oldChoiceNode = getChoice(name);
 
 		ChoiceNode clonedChoiceNode = oldChoiceNode.makeClone();
 		clonedChoiceNode.setDetached(true);
 
-		addChoiceToDetached(clonedChoiceNode);
+		String detachedChoiceNewName = addChoiceToDetached(clonedChoiceNode);
 
 		MethodNode methodNode = oldChoiceNode.getMethodNode();
 
@@ -352,6 +352,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 		int index = getChoiceIndex(name); 
 		fChoices.remove(index);
+		
+		return detachedChoiceNewName;
 	}
 
 	public void attachChoiceNode(String detachedChoiceName, String actualChoiceName) {

@@ -32,11 +32,49 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		fDetachedChoices = new ArrayList<ChoiceNode>();
 	}
 
-	public void addChoiceToDetached(ChoiceNode choiceNode) {
+	public String addChoiceToDetached(ChoiceNode choiceNode) {
 		
-		fDetachedChoices.add(choiceNode);
+		String orginalChoiceName = choiceNode.getName();
+		
+		if (!choiceNameExistsInDetachedChoices(orginalChoiceName)) {
+			
+			fDetachedChoices.add(choiceNode);
+			return orginalChoiceName;
+		}
+
+		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
+			
+			String tmpName = orginalChoiceName + "-" + postfixCounter;
+			
+			if (!choiceNameExistsInDetachedChoices(tmpName)) {
+				
+				choiceNode.setName(tmpName);
+				fDetachedChoices.add(choiceNode);
+				
+				return tmpName;
+			}
+		}
+		
+		ExceptionHelper.reportRuntimeException("Cannot add choice to detached.");
+		return null;
 	}
 	
+	private boolean choiceNameExistsInDetachedChoices(String choiceNameToFind) {
+		
+		String choiceName = null;
+		
+		for (ChoiceNode choiceNode : fDetachedChoices)  {
+		
+			choiceName = choiceNode.getName();
+			
+			if (choiceName.equals(choiceNameToFind)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	public int getDetachedChoiceCount() {
 
 		return fDetachedChoices.size();
