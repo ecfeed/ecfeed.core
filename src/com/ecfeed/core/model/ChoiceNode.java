@@ -159,6 +159,7 @@ public class ChoiceNode extends ChoicesParentNode {
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
+		copy.setDetached(isDetached());
 		copy.setParent(fParent);
 
 		for(ChoiceNode choice : getChoices()){
