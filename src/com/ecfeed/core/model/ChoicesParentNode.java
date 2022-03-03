@@ -16,12 +16,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public abstract class ChoicesParentNode extends AbstractNode{
 
 	protected List<ChoiceNode> fChoices;
-	protected List<ChoiceNode> fDetachedChoices;
+	private List<ChoiceNode> fDetachedChoices;
 
 
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
@@ -31,6 +32,25 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		fDetachedChoices = new ArrayList<ChoiceNode>();
 	}
 
+	public void addChoiceToDetached(ChoiceNode choiceNode) {
+		
+		fDetachedChoices.add(choiceNode);
+	}
+	
+	public int getDetachedChoiceCount() {
+
+		return fDetachedChoices.size();
+	}
+	
+	public void removeDetachedChoiceByIndex(int index) {
+		
+		if (index < 0 || index >= fDetachedChoices.size()) {
+			ExceptionHelper.reportRuntimeException("Invalid index of detached choice.");
+		}
+		
+		fDetachedChoices.remove(index);
+	}
+	
 	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
 
 	@Override
