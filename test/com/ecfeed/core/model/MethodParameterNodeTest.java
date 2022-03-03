@@ -44,7 +44,7 @@ public class MethodParameterNodeTest {
 	}
 
 	@Test
-	public void attachDetachSingleChoiceTest() {
+	public void attachDetachSingleChoiceTest1() {
 
 		final String methodName = "method";
 
@@ -84,6 +84,52 @@ public class MethodParameterNodeTest {
 		ChoiceNode outChoiceNode1 = methodParameterNode.getChoices().get(0);
 		assertEquals(outChoiceNode1, newChoiceNode);
 		assertFalse(outChoiceNode1.isDetached());
+	}
+
+	@Test
+	public void attachDetachSingleChoiceTest2() {
+
+		final String methodName = "method";
+
+		MethodNode methodNode = new MethodNode(methodName, null);
+
+		// create and add parameter, 2 choices, test case and constraint
+
+		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
+		ChoiceNode oldChoiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1");
+		ChoiceNode oldChoiceNode2 = addNewChoiceToMethod(methodParameterNode, "choice2");
+
+		// detach the last choice node
+
+		methodParameterNode.detachChoiceNode("choice2");
+		assertEquals(1, methodParameterNode.getChoiceCount());
+
+		// check detached choice nodes
+
+		assertEquals(1, methodParameterNode.getDetachedChoiceCount());
+
+		ChoiceNode detachedChoiceNode = methodParameterNode.getDetachedChoices().get(0);
+		assertTrue(detachedChoiceNode.isDetached());
+		assertEquals("choice2", detachedChoiceNode.getName());
+
+		// add new choice node to parameter
+
+		ChoiceNode newChoiceNode = new ChoiceNode("newChoice2", "0", null);
+		methodParameterNode.addChoice(newChoiceNode);
+		assertEquals(2, methodParameterNode.getChoiceCount());
+
+		// attach detached choice node
+
+		methodParameterNode.attachChoiceNode(detachedChoiceNode.getName(), newChoiceNode.getName());
+		assertEquals(0, methodParameterNode.getDetachedChoiceCount());
+		assertEquals(2, methodParameterNode.getChoiceCount());
+
+		ChoiceNode outChoiceNode2 = methodParameterNode.getChoices().get(1);
+		assertEquals(outChoiceNode2, newChoiceNode);
+		assertFalse(outChoiceNode2.isDetached());
+		
+		ChoiceNode outChoiceNode1 = methodParameterNode.getChoices().get(0);
+		assertEquals(outChoiceNode1, oldChoiceNode1);
 	}
 	
 	@Test
