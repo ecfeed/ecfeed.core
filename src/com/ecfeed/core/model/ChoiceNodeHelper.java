@@ -74,7 +74,7 @@ public class ChoiceNodeHelper {
 
 		String qualifiedName = getQualifiedName(choiceNode, extLanguageManager);
 		
-		qualifiedName = addDetachedMarker(choiceNode.isDetached(), qualifiedName);
+		qualifiedName = getDetachedMarker(choiceNode.isDetached()) + qualifiedName;
 
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
@@ -99,40 +99,41 @@ public class ChoiceNodeHelper {
 
 		String qualifiedName = choiceNode.getName();
 		
-		qualifiedName = addDetachedMarker(choiceNode.isDetached(), qualifiedName);
+		qualifiedName = getDetachedMarker(choiceNode.isDetached()) + qualifiedName;
 
 		return qualifiedName;
 	}
 	
-	private static String addDetachedMarker(boolean isDetached, String qualifiedName) {
+private static String getDetachedMarker(boolean isDetached) {
 		
 		if  (isDetached) {
-			qualifiedName = "(!)" + qualifiedName;
+			return "[!]";
 		}
 		
-		return qualifiedName;
+		return "";
 	}
-
+	
 	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
-		return createSignature(choiceNode, extLanguageManager);
+		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();	
+
+		String detachedMarker = getDetachedMarker(choiceNode.isDetached());
 		
-//		AbstractParameterNode abstractParameterNode = choice.getParameter();	
-//
-//		if (abstractParameterNode == null) {
-//			return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
-//		}
-//
-//		if (abstractParameterNode instanceof MethodParameterNode) {
-//
-//			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
-//
-//			if (methodParameterNode.isExpected()) {
-//				return "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
-//			}
-//		}
-//
-//		return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+		if (abstractParameterNode == null) {
+			
+			return detachedMarker + ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		}
+
+		if (abstractParameterNode instanceof MethodParameterNode) {
+
+			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+
+			if (methodParameterNode.isExpected()) {
+				return detachedMarker +	"[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
+			}
+		}
+
+		return detachedMarker + ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
@@ -169,10 +170,8 @@ public class ChoiceNodeHelper {
 		List<ChoiceNode> copies = new ArrayList<ChoiceNode>();
 
 		for(;;) {
-			ChoiceNode copy = 
-					new ChoiceNode(
-							orgChoice.getName(), orgChoice.getValueString(), orgChoice.getModelChangeRegistrator());
-
+			
+			ChoiceNode copy = orgChoice.makeClone();
 			copies.add(copy);
 
 			AbstractNode orgParent = orgChoice.getParent();
