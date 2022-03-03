@@ -44,7 +44,50 @@ public class MethodParameterNodeTest {
 	}
 
 	@Test
-	public void basicAttachDetachChoiceTest() {
+	public void attachDetachSingleChoiceTest() {
+
+		final String methodName = "method";
+
+		MethodNode methodNode = new MethodNode(methodName, null);
+
+		// create and add parameter, choice, test case and constraint
+
+		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
+		ChoiceNode oldChoiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1");
+
+		// detach choice node
+
+		methodParameterNode.detachChoiceNode("choice1");
+		assertEquals(0, methodParameterNode.getChoiceCount());
+
+		// check detached choice nodes
+
+		assertEquals(1, methodParameterNode.getDetachedChoiceCount());
+
+		ChoiceNode detachedChoiceNode = methodParameterNode.getDetachedChoices().get(0);
+		assertTrue(detachedChoiceNode.isDetached());
+		assertEquals("choice1", detachedChoiceNode.getName());
+
+		// add new choice node to parameter
+
+		ChoiceNode newChoiceNode = new ChoiceNode("newChoice1", "0", null);
+		methodParameterNode.addChoice(newChoiceNode);
+		assertEquals(1, methodParameterNode.getChoiceCount());
+
+		// attach detached choice node
+
+		methodParameterNode.attachChoiceNode(detachedChoiceNode.getName(), newChoiceNode.getName());
+
+		assertEquals(0, methodParameterNode.getDetachedChoiceCount());
+		assertEquals(1, methodParameterNode.getChoiceCount());
+
+		ChoiceNode outChoiceNode1 = methodParameterNode.getChoices().get(0);
+		assertEquals(outChoiceNode1, newChoiceNode);
+		assertFalse(outChoiceNode1.isDetached());
+	}
+	
+	@Test
+	public void attachDetachChoiceWithConstraintAndTestCaseTest() {
 
 		final String methodName = "method";
 		final String oldChoiceNodeName = "old";
@@ -121,7 +164,7 @@ public class MethodParameterNodeTest {
 		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode);
 		assertEquals(newChoiceNode, choiceNodeFromPostcondition);
 	}
-
+	
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
 		MethodParameterNode methodParameterNode = new MethodParameterNode("name", "type", "0", false, null);
 		methodNode.addParameter(methodParameterNode);
