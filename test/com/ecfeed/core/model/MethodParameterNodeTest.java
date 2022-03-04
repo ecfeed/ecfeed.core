@@ -10,14 +10,17 @@
 
 package com.ecfeed.core.model;
 
-import org.junit.Test;
-
-import com.ecfeed.core.utils.EMathRelation;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
+
+import com.ecfeed.core.utils.EMathRelation;
 
 public class MethodParameterNodeTest {
 
@@ -269,8 +272,8 @@ public class MethodParameterNodeTest {
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
 		addNewChoiceToMethod(methodParameterNode, "choice1");
 
-		String detachedChoiceName = methodParameterNode.detachChoiceNode("choice1");
-		assertEquals("choice1", detachedChoiceName);
+		List<String> detachedChoiceNames = methodParameterNode.detachChoiceNode("choice1");
+		assertEquals("choice1", detachedChoiceNames.get(0));
 		
 		// add new choice node with the same name 
 
@@ -279,8 +282,8 @@ public class MethodParameterNodeTest {
 
 		// detach - the name should be unique
 
-		detachedChoiceName = methodParameterNode.detachChoiceNode("choice1");
-		assertEquals("choice1-1", detachedChoiceName);
+		detachedChoiceNames = methodParameterNode.detachChoiceNode("choice1");
+		assertEquals("choice1-1", detachedChoiceNames.get(0));
 
 		// add the second choice node with the same name
 		
@@ -289,12 +292,12 @@ public class MethodParameterNodeTest {
 		
 		// detach - the name should be unique
 
-		detachedChoiceName = methodParameterNode.detachChoiceNode("choice1");
-		assertEquals("choice1-2", detachedChoiceName);
+		detachedChoiceNames = methodParameterNode.detachChoiceNode("choice1");
+		assertEquals("choice1-2", detachedChoiceNames.get(0));
 	}
 
 	@Test
-	public void attachWithSortedNamesTest() {
+	public void detachWithSortedNamesTest() {
 
 		final String methodName = "method";
 
@@ -317,6 +320,31 @@ public class MethodParameterNodeTest {
 		assertEquals("choice2", detachedChoiceNodes.get(1).getName());
 		assertEquals("choice3", detachedChoiceNodes.get(2).getName());
 	}
+
+	@Test
+	public void detachAbstractChoiceTest() {
+
+		final String methodName = "method";
+
+		MethodNode methodNode = new MethodNode(methodName, null);
+
+		// create and add parameter and parent choice with two child choices
+
+		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
+		ChoiceNode choiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1");
+		
+		addNewChoiceToChoice(choiceNode1, "choice2");
+		addNewChoiceToChoice(choiceNode1, "choice3");
+		
+		methodParameterNode.detachChoiceNode("choice1");
+
+		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
+		assertEquals(3, detachedChoiceNodes.size());
+		
+		assertEquals("choice1", detachedChoiceNodes.get(0).getName());
+		assertEquals("choice1-choice2", detachedChoiceNodes.get(1).getName());
+		assertEquals("choice1-choice3", detachedChoiceNodes.get(2).getName());
+	}
 	
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
 		MethodParameterNode methodParameterNode = new MethodParameterNode("name", "type", "0", false, null);
@@ -324,19 +352,26 @@ public class MethodParameterNodeTest {
 		return methodParameterNode;
 	}
 
-	private ChoiceNode addNewChoiceToMethod(MethodParameterNode methodParameterNode, String oldChoiceNodeName) {
+	private ChoiceNode addNewChoiceToMethod(MethodParameterNode methodParameterNode, String choiceNodeName) {
 
-		ChoiceNode oldChoiceNode = new ChoiceNode(oldChoiceNodeName, "0", null);
-		assertFalse(oldChoiceNode.isDetached());
-		methodParameterNode.addChoice(oldChoiceNode);
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, "0", null);
+		methodParameterNode.addChoice(choiceNode);
 
-		return oldChoiceNode;
+		return choiceNode;
 	}
 
-	private void addNewTestCaseToMethod(MethodNode methodNode, ChoiceNode oldChoiceNode) {
+	private ChoiceNode addNewChoiceToChoice(ChoiceNode parentChoiceNode, String choiceNodeName) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, "0", null);
+		parentChoiceNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
+	
+	private void addNewTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
 
 		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
-		listOfChoicesForTestCase.add(oldChoiceNode);
+		listOfChoicesForTestCase.add(choiceNode);
 
 		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
 		methodNode.addTestCase(testCaseNode);
