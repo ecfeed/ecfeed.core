@@ -341,9 +341,9 @@ public class MethodParameterNodeTest {
 		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
 		assertEquals(3, detachedChoiceNodes.size());
 		
-		assertEquals("choice1", detachedChoiceNodes.get(0).getName());
-		assertEquals("choice1-choice2", detachedChoiceNodes.get(1).getName());
-		assertEquals("choice1-choice3", detachedChoiceNodes.get(2).getName());
+		assertEquals("choice1", detachedChoiceNodes.get(0).getQualifiedName());
+		assertEquals("choice1-choice2", detachedChoiceNodes.get(1).getQualifiedName());
+		assertEquals("choice1-choice3", detachedChoiceNodes.get(2).getQualifiedName());
 	}
 	
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
