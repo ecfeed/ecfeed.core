@@ -34,13 +34,13 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		fDetachedChoices = new ArrayList<ChoiceNode>();
 	}
 
-	public String addChoiceToDetached(ChoiceNode choiceNode) {
+	public String addChoiceToDetachedWithUniqueName(ChoiceNode choiceNode) {
 		
 		String orginalChoiceName = choiceNode.getName();
 		
 		if (!choiceNameExistsInDetachedChoices(orginalChoiceName)) {
 			
-			addToDetachedChoiceNodes(choiceNode);
+			addChoiceToListOfDetachedChoices(choiceNode);
 			return orginalChoiceName;
 		}
 
@@ -51,7 +51,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 			if (!choiceNameExistsInDetachedChoices(tmpName)) {
 				
 				choiceNode.setName(tmpName);
-				addToDetachedChoiceNodes(choiceNode);
+				addChoiceToListOfDetachedChoices(choiceNode);
 				
 				return tmpName;
 			}
@@ -61,7 +61,10 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return null;
 	}
 
-	private void addToDetachedChoiceNodes(ChoiceNode choiceNode) {
+	private void addChoiceToListOfDetachedChoices(ChoiceNode choiceNode) {
+		
+		choiceNode.setDetached(true);
+		choiceNode.clearChoices();
 		
 		fDetachedChoices.add(choiceNode);
 		
@@ -326,6 +329,11 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		}
 
 		registerChange();
+	}
+	
+	public void clearChoices() {
+		
+		fChoices.clear();
 	}
 
 	protected List<ChoiceNode> getLeafChoices(Collection<ChoiceNode> choices) {

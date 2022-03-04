@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -332,28 +333,67 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return getMethod().getMentioningConstraints(this, label);
 	}
 
-	public String detachChoiceNode(String name) {
-
-		ChoiceNode oldChoiceNode = getChoice(name);
-
-		ChoiceNode clonedChoiceNode = oldChoiceNode.makeClone();
-		clonedChoiceNode.setDetached(true);
-
-		String detachedChoiceNewName = addChoiceToDetached(clonedChoiceNode);
-
-		MethodNode methodNode = oldChoiceNode.getMethodNode();
-
+	public List<String> detachChoiceNode(String name) {
+	
+		// TODO DE-NO - find choice node among children also
+		
+		ChoiceNode choiceNode = getChoice(name);
+		
+		MethodNode methodNode = choiceNode.getMethodNode();
+		
+		MethodParameterNode methodParameterNode = (MethodParameterNode)choiceNode.getParameter();
+		
 		if (methodNode == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
 		}
-
-		methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, clonedChoiceNode);
-		methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, clonedChoiceNode);
-
-		int index = getChoiceIndex(name); 
-		fChoices.remove(index);
 		
-		return detachedChoiceNewName;
+		List<String> detachedChoiceNames = new ArrayList<String>();
+		
+		detachChoiceNodeWithChildren(choiceNode, methodParameterNode, methodNode, detachedChoiceNames);
+		
+		return detachedChoiceNames;
+	}
+	
+	public void detachChoiceNodeWithChildren(
+			ChoiceNode parentChoiceNode, 
+			MethodParameterNode methodParameterNode,
+			MethodNode methodNode, 
+			List<String> inOutDetachedChoiceNames) {
+		
+		List<ChoiceNode> choiceNodes = parentChoiceNode.getChoices();
+		
+		int countOfChoices = choiceNodes.size();
+		
+		for (int index = countOfChoices - 1; index >= 0; index--) {
+			
+			ChoiceNode currentChoiceNode = choiceNodes.get(index);
+			
+			detachChoiceNodeWithChildren(currentChoiceNode, methodParameterNode, methodNode, inOutDetachedChoiceNames);
+		}
+		
+		detachSingleChoiceNode(parentChoiceNode, methodParameterNode, methodNode, inOutDetachedChoiceNames);
+	}
+	
+	public void detachSingleChoiceNode(
+			ChoiceNode choiceNode, 
+			MethodParameterNode methodParameterNode,
+			MethodNode methodNode,
+			List<String> inOutDetachedChoiceNames) {
+
+		ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+		
+		String qualifiedNameForDetachedNodes = clonedChoiceNode.getQualifiedName("-");
+		clonedChoiceNode.setName(qualifiedNameForDetachedNodes);
+		clonedChoiceNode.setParent(methodParameterNode);
+		
+		String detachedChoiceNewName = addChoiceToDetachedWithUniqueName(clonedChoiceNode);
+
+		methodNode.updateChoiceReferencesInTestCases(choiceNode, clonedChoiceNode);
+		methodNode.updateChoiceReferencesInConstraints(choiceNode, clonedChoiceNode);
+
+		fChoices.remove(choiceNode);
+		
+		inOutDetachedChoiceNames.add(detachedChoiceNewName);
 	}
 
 	public void attachChoiceNode(String detachedChoiceName, String actualChoiceName) {
