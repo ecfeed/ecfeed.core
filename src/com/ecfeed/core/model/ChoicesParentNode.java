@@ -12,6 +12,8 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +40,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		
 		if (!choiceNameExistsInDetachedChoices(orginalChoiceName)) {
 			
-			fDetachedChoices.add(choiceNode);
+			addToDetachedChoiceNodes(choiceNode);
 			return orginalChoiceName;
 		}
 
@@ -49,7 +51,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 			if (!choiceNameExistsInDetachedChoices(tmpName)) {
 				
 				choiceNode.setName(tmpName);
-				fDetachedChoices.add(choiceNode);
+				addToDetachedChoiceNodes(choiceNode);
 				
 				return tmpName;
 			}
@@ -57,6 +59,22 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		
 		ExceptionHelper.reportRuntimeException("Cannot add choice to detached.");
 		return null;
+	}
+
+	private void addToDetachedChoiceNodes(ChoiceNode choiceNode) {
+		
+		fDetachedChoices.add(choiceNode);
+		
+		Comparator<ChoiceNode> comparatorByChoiceName = new Comparator<ChoiceNode>() {
+
+			@Override
+			public int compare(ChoiceNode choiceNode1, ChoiceNode choiceNode2) {
+				
+				return choiceNode1.getName().compareTo(choiceNode2.getName());
+			}
+		};
+		
+		Collections.sort(fDetachedChoices, comparatorByChoiceName);
 	}
 	
 	private boolean choiceNameExistsInDetachedChoices(String choiceNameToFind) {

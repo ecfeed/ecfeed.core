@@ -292,6 +292,31 @@ public class MethodParameterNodeTest {
 		detachedChoiceName = methodParameterNode.detachChoiceNode("choice1");
 		assertEquals("choice1-2", detachedChoiceName);
 	}
+
+	@Test
+	public void attachWithSortedNamesTest() {
+
+		final String methodName = "method";
+
+		MethodNode methodNode = new MethodNode(methodName, null);
+
+		// create and add parameter, choice
+
+		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
+		addNewChoiceToMethod(methodParameterNode, "choice1");
+		addNewChoiceToMethod(methodParameterNode, "choice2");
+		addNewChoiceToMethod(methodParameterNode, "choice3");
+
+		methodParameterNode.detachChoiceNode("choice3");
+		methodParameterNode.detachChoiceNode("choice2");
+		methodParameterNode.detachChoiceNode("choice1");
+
+		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
+		
+		assertEquals("choice1", detachedChoiceNodes.get(0).getName());
+		assertEquals("choice2", detachedChoiceNodes.get(1).getName());
+		assertEquals("choice3", detachedChoiceNodes.get(2).getName());
+	}
 	
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
 		MethodParameterNode methodParameterNode = new MethodParameterNode("name", "type", "0", false, null);
