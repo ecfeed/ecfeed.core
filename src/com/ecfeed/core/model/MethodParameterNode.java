@@ -333,11 +333,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return getMethod().getMentioningConstraints(this, label);
 	}
 
-	public List<String> detachChoiceNode(String name) {
+	public List<String> detachChoiceNode(String choiceQualifiedName) {
 	
-		// TODO DE-NO - find choice node among children also
+		ChoiceNode choiceNode = findChoice(choiceQualifiedName);
 		
-		ChoiceNode choiceNode = getChoice(name);
+		if (choiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot find choice node using qualified name.");
+		}
 		
 		MethodNode methodNode = choiceNode.getMethodNode();
 		
@@ -354,7 +356,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return detachedChoiceNames;
 	}
 	
-	public void detachChoiceNodeWithChildren(
+	private void detachChoiceNodeWithChildren(
 			ChoiceNode parentChoiceNode, 
 			MethodParameterNode methodParameterNode,
 			MethodNode methodNode, 
