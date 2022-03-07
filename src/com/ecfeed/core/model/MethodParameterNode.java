@@ -102,7 +102,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		if (getDefaultValue() != null)
 			copy.setDefaultValueString(getDefaultValue());
 
-		for (ChoiceNode choice : fChoices) {
+		for (ChoiceNode choice : getChoices()) {
 			copy.addChoice(choice.makeClone());
 		}
 
@@ -293,8 +293,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 			return false;
 		}
 
-		int choicesCount = fChoices.size();
-		if (choicesCount != comparedParameter.fChoices.size()) {
+		int choicesCount = getChoiceCount();
+		if (choicesCount != comparedParameter.getChoiceCount()) {
 			return false;
 		}
 
@@ -389,13 +389,12 @@ public class MethodParameterNode extends AbstractParameterNode {
 		clonedChoiceNode.setParent(methodParameterNode);
 		
 		String detachedChoiceNewName = addChoiceToDetachedWithUniqueName(clonedChoiceNode);
-
+		inOutDetachedChoiceNames.add(detachedChoiceNewName);
+		
 		methodNode.updateChoiceReferencesInTestCases(choiceNode, clonedChoiceNode);
 		methodNode.updateChoiceReferencesInConstraints(choiceNode, clonedChoiceNode);
-
-		fChoices.remove(choiceNode);
 		
-		inOutDetachedChoiceNames.add(detachedChoiceNewName);
+		removeChoice(choiceNode);
 	}
 
 	public void attachChoiceNode(String detachedChoiceName, String actualChoiceName) {

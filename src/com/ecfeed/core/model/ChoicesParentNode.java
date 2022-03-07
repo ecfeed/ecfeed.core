@@ -23,7 +23,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 public abstract class ChoicesParentNode extends AbstractNode{
 
-	protected List<ChoiceNode> fChoices;
+	private List<ChoiceNode> fChoices;
 	private List<ChoiceNode> fDetachedChoices;
 
 
@@ -178,7 +178,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return fChoices;
 	}
 
-	public int getChoiceCount() { // TODO SIMPLE-VIEW remove
+	public int getChoiceCount() {
 
 		return getChoices().size();
 	}
