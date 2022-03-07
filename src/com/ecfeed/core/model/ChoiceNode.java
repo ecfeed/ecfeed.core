@@ -185,7 +185,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	public String getQualifiedName(String separatorForChoiceNames) {
 
 		if (parentChoice() != null) {
-			return parentChoice().getQualifiedName() + separatorForChoiceNames + getName();
+			return parentChoice().getQualifiedName(separatorForChoiceNames) + separatorForChoiceNames + getName();
 		}
 
 		return getName();
