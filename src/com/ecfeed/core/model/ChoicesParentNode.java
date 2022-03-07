@@ -26,6 +26,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	private List<ChoiceNode> fChoices;
 	private List<ChoiceNode> fDetachedChoices;
 
+	public abstract AbstractParameterNode getParameter();
 
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
@@ -34,88 +35,16 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		fDetachedChoices = new ArrayList<ChoiceNode>();
 	}
 
-	public String addChoiceToDetachedWithUniqueName(ChoiceNode choiceNode) {
-		
-		String orginalChoiceName = choiceNode.getName();
-		
-		if (!choiceNameExistsInDetachedChoices(orginalChoiceName)) {
-			
-			addChoiceToListOfDetachedChoices(choiceNode);
-			return orginalChoiceName;
-		}
-
-		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
-			
-			String tmpName = orginalChoiceName + "-" + postfixCounter;
-			
-			if (!choiceNameExistsInDetachedChoices(tmpName)) {
-				
-				choiceNode.setName(tmpName);
-				addChoiceToListOfDetachedChoices(choiceNode);
-				
-				return tmpName;
-			}
-		}
-		
-		ExceptionHelper.reportRuntimeException("Cannot add choice to detached.");
-		return null;
-	}
-
-	private void addChoiceToListOfDetachedChoices(ChoiceNode choiceNode) {
-		
-		choiceNode.setDetached(true);
-		choiceNode.clearChoices();
-		
-		fDetachedChoices.add(choiceNode);
-		
-		Comparator<ChoiceNode> comparatorByChoiceName = new Comparator<ChoiceNode>() {
-
-			@Override
-			public int compare(ChoiceNode choiceNode1, ChoiceNode choiceNode2) {
-				
-				return choiceNode1.getName().compareTo(choiceNode2.getName());
-			}
-		};
-		
-		Collections.sort(fDetachedChoices, comparatorByChoiceName);
-	}
-	
-	private boolean choiceNameExistsInDetachedChoices(String choiceNameToFind) {
-		
-		String choiceName = null;
-		
-		for (ChoiceNode choiceNode : fDetachedChoices)  {
-		
-			choiceName = choiceNode.getName();
-			
-			if (choiceName.equals(choiceNameToFind)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-
-	public int getDetachedChoiceCount() {
-
-		return fDetachedChoices.size();
-	}
-	
-	public void removeDetachedChoiceByIndex(int index) {
-		
-		if (index < 0 || index >= fDetachedChoices.size()) {
-			ExceptionHelper.reportRuntimeException("Invalid index of detached choice.");
-		}
-		
-		fDetachedChoices.remove(index);
-	}
-	
-	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
-
 	@Override
 	public List<? extends AbstractNode> getChildren() {
 
 		return fChoices;
+	}
+
+	@Override
+	public int getChildrenCount() {
+
+		return fChoices.size();
 	}
 
 	@Override
@@ -152,7 +81,84 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return true;
 	}
 
-	public abstract AbstractParameterNode getParameter();
+	public String addChoiceToDetachedWithUniqueName(ChoiceNode choiceNode) {
+
+		String orginalChoiceName = choiceNode.getName();
+
+		if (!choiceNameExistsInDetachedChoices(orginalChoiceName)) {
+
+			addChoiceToListOfDetachedChoices(choiceNode);
+			return orginalChoiceName;
+		}
+
+		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
+
+			String tmpName = orginalChoiceName + "-" + postfixCounter;
+
+			if (!choiceNameExistsInDetachedChoices(tmpName)) {
+
+				choiceNode.setName(tmpName);
+				addChoiceToListOfDetachedChoices(choiceNode);
+
+				return tmpName;
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("Cannot add choice to detached.");
+		return null;
+	}
+
+	private void addChoiceToListOfDetachedChoices(ChoiceNode choiceNode) {
+
+		choiceNode.setDetached(true);
+		choiceNode.clearChoices();
+
+		fDetachedChoices.add(choiceNode);
+
+		Comparator<ChoiceNode> comparatorByChoiceName = new Comparator<ChoiceNode>() {
+
+			@Override
+			public int compare(ChoiceNode choiceNode1, ChoiceNode choiceNode2) {
+
+				return choiceNode1.getName().compareTo(choiceNode2.getName());
+			}
+		};
+
+		Collections.sort(fDetachedChoices, comparatorByChoiceName);
+	}
+
+	private boolean choiceNameExistsInDetachedChoices(String choiceNameToFind) {
+
+		String choiceName = null;
+
+		for (ChoiceNode choiceNode : fDetachedChoices)  {
+
+			choiceName = choiceNode.getName();
+
+			if (choiceName.equals(choiceNameToFind)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public int getDetachedChoiceCount() {
+
+		return fDetachedChoices.size();
+	}
+
+	public void removeDetachedChoiceByIndex(int index) {
+
+		if (index < 0 || index >= fDetachedChoices.size()) {
+			ExceptionHelper.reportRuntimeException("Invalid index of detached choice.");
+		}
+
+		fDetachedChoices.remove(index);
+	}
+
+	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
+
 
 	public void addChoice(ChoiceNode choice) {
 
@@ -181,12 +187,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public int getChoiceCount() {
 
 		return getChoices().size();
-	}
-
-	@Override
-	public int getChildrenCount() {
-
-		return fChoices.size();
 	}
 
 	public List<ChoiceNode> getChoicesWithCopies() {
@@ -239,7 +239,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 
 		return -1;
 	}
-	
+
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
 
 		for (ChoiceNode choiceNode : fChoices) {
@@ -330,9 +330,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 
 		registerChange();
 	}
-	
+
 	public void clearChoices() {
-		
+
 		fChoices.clear();
 	}
 
