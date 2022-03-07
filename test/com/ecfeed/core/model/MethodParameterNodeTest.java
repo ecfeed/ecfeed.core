@@ -56,7 +56,7 @@ public class MethodParameterNodeTest {
 		// create and add parameter, choice
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1");
+		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
 
 		// detach choice node
 
@@ -99,8 +99,8 @@ public class MethodParameterNodeTest {
 		// create and add parameter, 2 choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		ChoiceNode oldChoiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1");
-		addNewChoiceToMethod(methodParameterNode, "choice2");
+		ChoiceNode oldChoiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+		addNewChoiceToMethod(methodParameterNode, "choice2", "2");
 
 		// detach the last choice node
 
@@ -145,8 +145,8 @@ public class MethodParameterNodeTest {
 		// create and add parameter, 2 choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1");
-		ChoiceNode oldChoiceNode2 = addNewChoiceToMethod(methodParameterNode, "choice2");
+		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+		ChoiceNode oldChoiceNode2 = addNewChoiceToMethod(methodParameterNode, "choice2", "2");
 
 		// detach the first choice node
 
@@ -193,7 +193,7 @@ public class MethodParameterNodeTest {
 		// create and add parameter, choice, test case and constraint
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		ChoiceNode oldChoiceNode = addNewChoiceToMethod(methodParameterNode, oldChoiceNodeName);
+		ChoiceNode oldChoiceNode = addNewChoiceToMethod(methodParameterNode, oldChoiceNodeName, "0");
 		addNewTestCaseToMethod(methodNode, oldChoiceNode);
 		addNewSimpleConstraintToMethod(methodNode, methodParameterNode, oldChoiceNode);
 
@@ -270,11 +270,11 @@ public class MethodParameterNodeTest {
 		// create and add parameter, choice
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1");
+		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
 
 		List<String> detachedChoiceNames = methodParameterNode.detachChoiceNode("choice1");
 		assertEquals("choice1", detachedChoiceNames.get(0));
-		
+
 		// add new choice node with the same name 
 
 		ChoiceNode newChoiceNode = new ChoiceNode("choice1", "0", null);
@@ -286,10 +286,10 @@ public class MethodParameterNodeTest {
 		assertEquals("choice1-1", detachedChoiceNames.get(0));
 
 		// add the second choice node with the same name
-		
+
 		newChoiceNode = new ChoiceNode("choice1", "0", null);
 		methodParameterNode.addChoice(newChoiceNode);
-		
+
 		// detach - the name should be unique
 
 		detachedChoiceNames = methodParameterNode.detachChoiceNode("choice1");
@@ -306,23 +306,23 @@ public class MethodParameterNodeTest {
 		// create and add parameter, choice
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1");
-		addNewChoiceToMethod(methodParameterNode, "choice2");
-		addNewChoiceToMethod(methodParameterNode, "choice3");
+		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+		addNewChoiceToMethod(methodParameterNode, "choice2", "2");
+		addNewChoiceToMethod(methodParameterNode, "choice3", "3");
 
 		methodParameterNode.detachChoiceNode("choice3");
 		methodParameterNode.detachChoiceNode("choice2");
 		methodParameterNode.detachChoiceNode("choice1");
 
 		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
-		
+
 		assertEquals("choice1", detachedChoiceNodes.get(0).getName());
 		assertEquals("choice2", detachedChoiceNodes.get(1).getName());
 		assertEquals("choice3", detachedChoiceNodes.get(2).getName());
 	}
 
 	@Test
-	public void detachAbstractChoiceTest() {
+	public void detachAbstractChoiceTest1() {
 
 		final String methodName = "method";
 
@@ -331,43 +331,77 @@ public class MethodParameterNodeTest {
 		// create and add parameter and parent choice with two child choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		ChoiceNode choiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1");
-		
-		addNewChoiceToChoice(choiceNode1, "choice2");
-		addNewChoiceToChoice(choiceNode1, "choice3");
-		
+		ChoiceNode choiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+
+		addNewChoiceToChoice(choiceNode1, "choice2", "2");
+		addNewChoiceToChoice(choiceNode1, "choice3", "3");
+
 		methodParameterNode.detachChoiceNode("choice1");
 
 		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
 		assertEquals(3, detachedChoiceNodes.size());
-		
+
 		assertEquals("choice1", detachedChoiceNodes.get(0).getQualifiedName());
 		assertEquals("choice1-choice2", detachedChoiceNodes.get(1).getQualifiedName());
 		assertEquals("choice1-choice3", detachedChoiceNodes.get(2).getQualifiedName());
 	}
-	
+
+	@Test
+	public void detachAbstractChoiceTest2() {
+
+		final String methodName = "method";
+
+		MethodNode methodNode = new MethodNode(methodName, null);
+
+		// create and add parameter and parent choice with two child choices
+
+		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
+
+		ChoiceNode choiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+
+		ChoiceNode choiceNode2 = addNewChoiceToChoice(choiceNode1, "choice2", "2");
+		addNewChoiceToChoice(choiceNode2, "choice3a", "3");
+
+		ChoiceNode choiceNode3 = addNewChoiceToChoice(choiceNode2, "choice3b", "3");
+
+		addNewChoiceToChoice(choiceNode3, "choice4a", "4");
+		addNewChoiceToChoice(choiceNode3, "choice4b", "4");
+
+		methodParameterNode.detachChoiceNode("choice1:choice2:choice3b:choice4b");
+
+		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
+		assertEquals(1, detachedChoiceNodes.size());
+		assertEquals("choice1-choice2-choice3b-choice4b", detachedChoiceNodes.get(0).getQualifiedName());
+
+		List<ChoiceNode> choices = choiceNode3.getChoices();
+		assertEquals(1, choices.size());
+		assertEquals("choice1:choice2:choice3b:choice4a", choices.get(0).getQualifiedName());
+	}
+
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
 		MethodParameterNode methodParameterNode = new MethodParameterNode("name", "type", "0", false, null);
 		methodNode.addParameter(methodParameterNode);
 		return methodParameterNode;
 	}
 
-	private ChoiceNode addNewChoiceToMethod(MethodParameterNode methodParameterNode, String choiceNodeName) {
+	private ChoiceNode addNewChoiceToMethod(
+			MethodParameterNode methodParameterNode, String choiceNodeName, String valueString) {
 
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, "0", null);
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
 		methodParameterNode.addChoice(choiceNode);
 
 		return choiceNode;
 	}
 
-	private ChoiceNode addNewChoiceToChoice(ChoiceNode parentChoiceNode, String choiceNodeName) {
+	private ChoiceNode addNewChoiceToChoice(
+			ChoiceNode parentChoiceNode, String choiceNodeName, String valueString) {
 
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, "0", null);
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
 		parentChoiceNode.addChoice(choiceNode);
 
 		return choiceNode;
 	}
-	
+
 	private void addNewTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
 
 		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
