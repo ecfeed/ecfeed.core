@@ -349,9 +349,20 @@ public class MethodParameterNodeTest {
 	@Test
 	public void detachAbstractChoiceTest2() {
 
-		final String methodName = "method";
+		performDetachAbstractChoiceTest(
+				"choice1:choice2:choice3b",
+				"choice1:choice2:choice3b:choice4b", 
+				new String[] {"choice1-choice2-choice3b-choice4b"},
+				1);
+	}
 
-		MethodNode methodNode = new MethodNode(methodName, null);
+	private void performDetachAbstractChoiceTest(
+			String qualifiedNameOfParentChoice,
+			String qualifiedNameOfChoiceForDetach,
+			String[] namesOfDetachedChoices,
+			int countOfRemainingChildrenOfParentChoice) {
+
+		MethodNode methodNode = new MethodNode("method", null);
 
 		// create and add parameter and parent choice with two child choices
 
@@ -362,20 +373,34 @@ public class MethodParameterNodeTest {
 		ChoiceNode choiceNode2 = addNewChoiceToChoice(choiceNode1, "choice2", "2");
 		addNewChoiceToChoice(choiceNode2, "choice3a", "3");
 
-		ChoiceNode choiceNode3 = addNewChoiceToChoice(choiceNode2, "choice3b", "3");
+		ChoiceNode choiceNode3b = addNewChoiceToChoice(choiceNode2, "choice3b", "3");
 
-		addNewChoiceToChoice(choiceNode3, "choice4a", "4");
-		addNewChoiceToChoice(choiceNode3, "choice4b", "4");
+		addNewChoiceToChoice(choiceNode3b, "choice4a", "4");
+		addNewChoiceToChoice(choiceNode3b, "choice4b", "4");
 
-		methodParameterNode.detachChoiceNode("choice1:choice2:choice3b:choice4b");
+		methodParameterNode.detachChoiceNode(qualifiedNameOfChoiceForDetach);
 
 		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
 		assertEquals(1, detachedChoiceNodes.size());
-		assertEquals("choice1-choice2-choice3b-choice4b", detachedChoiceNodes.get(0).getQualifiedName());
+		checkNamesOfDetachedChoices(namesOfDetachedChoices, detachedChoiceNodes);
 
-		List<ChoiceNode> choices = choiceNode3.getChoices();
-		assertEquals(1, choices.size());
-		assertEquals("choice1:choice2:choice3b:choice4a", choices.get(0).getQualifiedName());
+		ChoiceNode parentChoiceNode = methodParameterNode.findChoice(qualifiedNameOfParentChoice);
+		assertEquals(1, parentChoiceNode.getChildrenCount());
+	}
+
+	private void checkNamesOfDetachedChoices(String[] namesOfDetachedChoice, List<ChoiceNode> detachedChoiceNodes) {
+
+		int countOfNames = namesOfDetachedChoice.length;
+		int countOfChoices = detachedChoiceNodes.size();
+
+		assertEquals(countOfNames, countOfChoices);
+
+		for (int index = 0; index < countOfChoices; index++) {
+
+			ChoiceNode choiceNode = detachedChoiceNodes.get(index);
+
+			assertEquals(namesOfDetachedChoice[index], choiceNode.getName());
+		}
 	}
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
