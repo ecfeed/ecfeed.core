@@ -27,6 +27,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	private List<ChoiceNode> fDetachedChoices;
 
 	public abstract AbstractParameterNode getParameter();
+	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
 
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
@@ -81,6 +82,60 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return true;
 	}
 
+	protected List<ChoiceNode> getLeafChoices(Collection<ChoiceNode> choices) {
+
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+
+		for (ChoiceNode p : choices) {
+			if (p.isAbstract() == false) {
+				result.add(p);
+			}
+
+			result.addAll(p.getLeafChoices());
+		}
+
+		return result;
+	}
+
+	protected Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
+
+		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
+
+		for (ChoiceNode p : choices) {
+			result.add(p);
+			result.addAll(p.getAllChoices());
+		}
+
+		return result;
+	}
+
+	protected Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
+
+		Set<String> result = new LinkedHashSet<String>();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+			result.add(choiceNode.getQualifiedName());
+		}
+
+		return result;
+	}
+
+	protected Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
+
+		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
+
+		for(ChoiceNode p : choices) {
+
+			if(p.getLabels().contains(label)){
+				result.add(p);
+			}
+
+			result.addAll(p.getLabeledChoices(label));
+		}
+
+		return result;
+	}
+
 	public String addChoiceToDetachedWithUniqueName(ChoiceNode choiceNode) {
 
 		String orginalChoiceName = choiceNode.getName();
@@ -108,41 +163,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return null;
 	}
 
-	private void addChoiceToListOfDetachedChoices(ChoiceNode choiceNode) {
-
-		choiceNode.setDetached(true);
-		choiceNode.clearChoices();
-
-		fDetachedChoices.add(choiceNode);
-
-		Comparator<ChoiceNode> comparatorByChoiceName = new Comparator<ChoiceNode>() {
-
-			@Override
-			public int compare(ChoiceNode choiceNode1, ChoiceNode choiceNode2) {
-
-				return choiceNode1.getName().compareTo(choiceNode2.getName());
-			}
-		};
-
-		Collections.sort(fDetachedChoices, comparatorByChoiceName);
-	}
-
-	private boolean choiceNameExistsInDetachedChoices(String choiceNameToFind) {
-
-		String choiceName = null;
-
-		for (ChoiceNode choiceNode : fDetachedChoices)  {
-
-			choiceName = choiceNode.getName();
-
-			if (choiceName.equals(choiceNameToFind)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public int getDetachedChoiceCount() {
 
 		return fDetachedChoices.size();
@@ -156,9 +176,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 
 		fDetachedChoices.remove(index);
 	}
-
-	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
-
 
 	public void addChoice(ChoiceNode choice) {
 
@@ -336,60 +353,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		fChoices.clear();
 	}
 
-	protected List<ChoiceNode> getLeafChoices(Collection<ChoiceNode> choices) {
-
-		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
-
-		for (ChoiceNode p : choices) {
-			if (p.isAbstract() == false) {
-				result.add(p);
-			}
-
-			result.addAll(p.getLeafChoices());
-		}
-
-		return result;
-	}
-
-	protected Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
-
-		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
-
-		for (ChoiceNode p : choices) {
-			result.add(p);
-			result.addAll(p.getAllChoices());
-		}
-
-		return result;
-	}
-
-	protected Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
-
-		Set<String> result = new LinkedHashSet<String>();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-			result.add(choiceNode.getQualifiedName());
-		}
-
-		return result;
-	}
-
-	protected Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
-
-		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
-
-		for(ChoiceNode p : choices) {
-
-			if(p.getLabels().contains(label)){
-				result.add(p);
-			}
-
-			result.addAll(p.getLabeledChoices(label));
-		}
-
-		return result;
-	}
-
 	public static String generateNewChoiceName(ChoicesParentNode fChoicesParentNode, String startChoiceName) {
 
 		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
@@ -410,4 +373,40 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public List<ChoiceNode> getDetachedChoices() {
 		return fDetachedChoices;
 	}	
+
+	private void addChoiceToListOfDetachedChoices(ChoiceNode choiceNode) {
+
+		choiceNode.setDetached(true);
+		choiceNode.clearChoices();
+
+		fDetachedChoices.add(choiceNode);
+
+		Comparator<ChoiceNode> comparatorByChoiceName = new Comparator<ChoiceNode>() {
+
+			@Override
+			public int compare(ChoiceNode choiceNode1, ChoiceNode choiceNode2) {
+
+				return choiceNode1.getName().compareTo(choiceNode2.getName());
+			}
+		};
+
+		Collections.sort(fDetachedChoices, comparatorByChoiceName);
+	}
+
+	private boolean choiceNameExistsInDetachedChoices(String choiceNameToFind) {
+
+		String choiceName = null;
+
+		for (ChoiceNode choiceNode : fDetachedChoices)  {
+
+			choiceName = choiceNode.getName();
+
+			if (choiceName.equals(choiceNameToFind)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }
