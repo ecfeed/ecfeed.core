@@ -334,48 +334,48 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	public List<String> detachChoiceNode(String choiceQualifiedName) {
-	
+
 		ChoiceNode choiceNode = findChoice(choiceQualifiedName);
-		
+
 		if (choiceNode == null) {
 			ExceptionHelper.reportRuntimeException("Cannot find choice node using qualified name.");
 		}
-		
+
 		MethodNode methodNode = choiceNode.getMethodNode();
-		
+
 		MethodParameterNode methodParameterNode = (MethodParameterNode)choiceNode.getParameter();
-		
+
 		if (methodNode == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
 		}
-		
+
 		List<String> detachedChoiceNames = new ArrayList<String>();
-		
+
 		detachChoiceNodeWithChildren(choiceNode, methodParameterNode, methodNode, detachedChoiceNames);
-		
+
 		return detachedChoiceNames;
 	}
-	
+
 	private void detachChoiceNodeWithChildren(
 			ChoiceNode parentChoiceNode, 
 			MethodParameterNode methodParameterNode,
 			MethodNode methodNode, 
 			List<String> inOutDetachedChoiceNames) {
-		
+
 		List<ChoiceNode> choiceNodes = parentChoiceNode.getChoices();
-		
+
 		int countOfChoices = choiceNodes.size();
-		
+
 		for (int index = countOfChoices - 1; index >= 0; index--) {
-			
+
 			ChoiceNode currentChoiceNode = choiceNodes.get(index);
-			
+
 			detachChoiceNodeWithChildren(currentChoiceNode, methodParameterNode, methodNode, inOutDetachedChoiceNames);
 		}
-		
+
 		detachSingleChoiceNode(parentChoiceNode, methodParameterNode, methodNode, inOutDetachedChoiceNames);
 	}
-	
+
 	public void detachSingleChoiceNode(
 			ChoiceNode choiceNode, 
 			MethodParameterNode methodParameterNode,
@@ -383,18 +383,19 @@ public class MethodParameterNode extends AbstractParameterNode {
 			List<String> inOutDetachedChoiceNames) {
 
 		ChoiceNode clonedChoiceNode = choiceNode.makeClone();
-		
+
 		String qualifiedNameForDetachedNodes = clonedChoiceNode.getQualifiedName("-");
 		clonedChoiceNode.setName(qualifiedNameForDetachedNodes);
 		clonedChoiceNode.setParent(methodParameterNode);
-		
+
 		String detachedChoiceNewName = addChoiceToDetachedWithUniqueName(clonedChoiceNode);
 		inOutDetachedChoiceNames.add(detachedChoiceNewName);
-		
+
 		methodNode.updateChoiceReferencesInTestCases(choiceNode, clonedChoiceNode);
 		methodNode.updateChoiceReferencesInConstraints(choiceNode, clonedChoiceNode);
-		
-		removeChoice(choiceNode);
+
+		ChoicesParentNode choicesParentNode = choiceNode.getParent();
+		choicesParentNode.removeChoice(choiceNode);
 	}
 
 	public void attachChoiceNode(String detachedChoiceName, String actualChoiceName) {
