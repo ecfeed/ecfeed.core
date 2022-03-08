@@ -350,17 +350,49 @@ public class MethodParameterNodeTest {
 	public void detachAbstractChoiceTest2() {
 
 		performDetachAbstractChoiceTest(
+				"choice1:choice2",
+				new String[] {
+						"choice1-choice2",
+						"choice1-choice2-choice3a",
+						"choice1-choice2-choice3b",
+						"choice1-choice2-choice3b-choice4a", 
+						"choice1-choice2-choice3b-choice4b"}, 
+				"choice1",
+				new String[] {});
+		
+		performDetachAbstractChoiceTest(
 				"choice1:choice2:choice3b",
-				"choice1:choice2:choice3b:choice4b", 
-				new String[] {"choice1-choice2-choice3b-choice4b"},
-				1);
+				new String[] {
+						"choice1-choice2-choice3b",
+						"choice1-choice2-choice3b-choice4a", 
+						"choice1-choice2-choice3b-choice4b"}, 
+				"choice1:choice2",
+				new String[] {"choice1:choice2:choice3a"});
+		
+		performDetachAbstractChoiceTest(
+				"choice1:choice2:choice3a",
+				new String[] {"choice1-choice2-choice3a"}, 
+				"choice1:choice2",
+				new String[] {"choice1:choice2:choice3b"});
+		
+		performDetachAbstractChoiceTest(
+				"choice1:choice2:choice3b:choice4a",
+				new String[] {"choice1-choice2-choice3b-choice4a"}, 
+				"choice1:choice2:choice3b",
+				new String[] {"choice1:choice2:choice3b:choice4b"});
+		
+		performDetachAbstractChoiceTest(
+				"choice1:choice2:choice3b:choice4b",
+				new String[] {"choice1-choice2-choice3b-choice4b"}, 
+				"choice1:choice2:choice3b",
+				new String[] {"choice1:choice2:choice3b:choice4a"});
 	}
 
 	private void performDetachAbstractChoiceTest(
-			String qualifiedNameOfParentChoice,
 			String qualifiedNameOfChoiceForDetach,
 			String[] namesOfDetachedChoices,
-			int countOfRemainingChildrenOfParentChoice) {
+			String qualifiedNameOfParentChoice,
+			String[] namesOfRemainingChildrenOfParentChoice) {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
@@ -381,26 +413,48 @@ public class MethodParameterNodeTest {
 		methodParameterNode.detachChoiceNode(qualifiedNameOfChoiceForDetach);
 
 		List<ChoiceNode> detachedChoiceNodes = methodParameterNode.getDetachedChoices();
-		assertEquals(1, detachedChoiceNodes.size());
-		checkNamesOfDetachedChoices(namesOfDetachedChoices, detachedChoiceNodes);
+		checkNamesOfChoices(namesOfDetachedChoices, detachedChoiceNodes, false);
 
 		ChoiceNode parentChoiceNode = methodParameterNode.findChoice(qualifiedNameOfParentChoice);
-		assertEquals(1, parentChoiceNode.getChildrenCount());
+		List<ChoiceNode> childChoices = parentChoiceNode.getChoices();
+		checkNamesOfChoices(namesOfRemainingChildrenOfParentChoice, childChoices, true);
 	}
 
-	private void checkNamesOfDetachedChoices(String[] namesOfDetachedChoice, List<ChoiceNode> detachedChoiceNodes) {
+	private void checkNamesOfChoices(
+			String[] namesOfChoicesToCheck, 
+			List<ChoiceNode> actualChoices,
+			boolean useQualifiedNameForActualChoices) {
 
-		int countOfNames = namesOfDetachedChoice.length;
-		int countOfChoices = detachedChoiceNodes.size();
+		int countOfNames = namesOfChoicesToCheck.length;
+		int countOfChoices = actualChoices.size();
 
 		assertEquals(countOfNames, countOfChoices);
 
 		for (int index = 0; index < countOfChoices; index++) {
 
-			ChoiceNode choiceNode = detachedChoiceNodes.get(index);
-
-			assertEquals(namesOfDetachedChoice[index], choiceNode.getName());
+			String choiceName = getChoiceNameOrQualifiedName(actualChoices, useQualifiedNameForActualChoices, index);
+			String name = namesOfChoicesToCheck[index];
+			
+			assertEquals(name, choiceName);
 		}
+	}
+
+	private String getChoiceNameOrQualifiedName(
+			List<ChoiceNode> actualChoices,
+			boolean useQualifiedNameForActualChoices, 
+			int index) {
+		
+		ChoiceNode choiceNode = actualChoices.get(index);
+		
+		String choiceName;
+		
+		if (useQualifiedNameForActualChoices) {
+			choiceName = choiceNode.getQualifiedName();
+		} else {
+			choiceName = choiceNode.getName();
+		}
+		
+		return choiceName;
 	}
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode) {
