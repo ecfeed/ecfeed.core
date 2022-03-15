@@ -81,12 +81,12 @@ public class ExceptionHelper {
 
 	public static String createErrorMessage(Throwable e) {
 
-		return createErrorMessage(e, LineSeparationType.ONE_LINE, ExceptionStackType.FULL, CreateCallStack.YES);
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, ExceptionStackType.FULL, CreateCallStack.NO);
 	}
 
 	public static String createErrorMessage(Exception e) {
 
-		return createErrorMessage(e, LineSeparationType.ONE_LINE, ExceptionStackType.FULL, CreateCallStack.YES);
+		return createErrorMessage(e, LineSeparationType.ONE_LINE, ExceptionStackType.FULL, CreateCallStack.NO);
 	}
 
 	public static String createErrorMessage(String message, Exception e) {
