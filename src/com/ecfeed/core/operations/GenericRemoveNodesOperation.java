@@ -347,9 +347,9 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		if (node instanceof ChoiceNode) {
 			Iterator<ConstraintNode> itr = allConstraintNodes.iterator();
 			while (itr.hasNext()) {
-				ConstraintNode constraint = itr.next();
-				if (constraint.mentions((ChoiceNode)node)) {
-					fAffectedConstraints.add(constraint);
+				ConstraintNode constraintNode = itr.next();
+				if (constraintMentionsChoiceNodeOrAnyChild((ChoiceNode)node, constraintNode)) {
+					fAffectedConstraints.add(constraintNode);
 				}
 			}
 		} else if (node instanceof AbstractParameterNode) {
@@ -361,7 +361,24 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				}
 			}
 		}
+	}
 
+	private boolean constraintMentionsChoiceNodeOrAnyChild(ChoiceNode choiceNode, ConstraintNode constraintNode) {
+
+		if (constraintNode.mentions(choiceNode)) {
+			return true;
+		}
+
+		List<ChoiceNode> childChoiceNodes = choiceNode.getChoices();
+
+		for (ChoiceNode childChoiceNode : childChoiceNodes) {
+
+			if (constraintMentionsChoiceNodeOrAnyChild(childChoiceNode, constraintNode)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private void createAffectedTestCases(AbstractNode node, Set<TestCaseNode> allTestCaseNodes) {
