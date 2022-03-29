@@ -1,17 +1,17 @@
 package com.ecfeed.core.exception;
 
-public class GeneratorExceptionClient extends GeneratorException {
+public class ClientException extends RuntimeException {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 616034714039396827L;
 
-	public GeneratorExceptionClient(String errorMessage) {
+	public ClientException(String errorMessage) {
         super(errorMessage);
     }
 
-    public GeneratorExceptionClient(String errorMessage, Throwable err) {
+    public ClientException(String errorMessage, Throwable err) {
         super(errorMessage, err);
     }
 

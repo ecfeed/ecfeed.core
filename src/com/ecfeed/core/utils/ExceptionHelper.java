@@ -10,8 +10,8 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.exception.GeneratorExceptionClient;
-import com.ecfeed.core.exception.GeneratorExceptionServer;
+import com.ecfeed.core.exception.ClientException;
+import com.ecfeed.core.exception.ServerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,23 +39,25 @@ public class ExceptionHelper {
 
 	public static void reportClientException(String message) {
 
-		throw new GeneratorExceptionClient(message);
+		throw new ClientException(message);
 	}
 
 	public static void reportClientException(String message, Throwable e) {
 
-		throw new GeneratorExceptionClient(message, e);
+		throw new ClientException(message, e);
 	}
 
 	public static void reportServerException(String message) {
 
-		throw new GeneratorExceptionServer(message);
+		throw new ServerException(message);
 	}
 
 	public static void reportServerException(String message, Throwable e) {
 
-		throw new GeneratorExceptionServer(message, e);
+		throw new ServerException(message, e);
 	}
+
+	// TODO ER-RE - remove runtime exceptions
 
 	public static void reportRuntimeException(String message) {
 
