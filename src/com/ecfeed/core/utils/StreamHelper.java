@@ -48,7 +48,7 @@ public class StreamHelper {
 		try {
 			outputStream = new FileOutputStream(pathWithFileName);
 		} catch (FileNotFoundException e) {
-			ExceptionHelper.reportServerException("Can not create output stream." + e.getMessage());
+			ExceptionHelper.reportRuntimeException("Can not create output stream." + e.getMessage());
 		}
 		return outputStream;
 	}
@@ -82,7 +82,7 @@ public class StreamHelper {
 			writeStringToStream("\n", outputStream);
 			flushStream(outputStream);
 		} catch (IOException e) {
-			ExceptionHelper.reportServerException("", e);
+			ExceptionHelper.reportRuntimeException("", e);
 		}
 	}
 
@@ -92,7 +92,7 @@ public class StreamHelper {
 			writeStringToStream("\n", outputStream);
 			flushStream(outputStream);
 		} catch (IOException e) {
-			ExceptionHelper.reportServerException("", e);
+			ExceptionHelper.reportRuntimeException("", e);
 		}
 	}
 
@@ -102,7 +102,7 @@ public class StreamHelper {
 			writeStringToStream(str, outputStream);
 			flushStream(outputStream);
 		} catch (IOException e) {
-			ExceptionHelper.reportServerException("", e);
+			ExceptionHelper.reportRuntimeException("", e);
 		}
 	}
 

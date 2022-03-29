@@ -11,7 +11,6 @@
 package com.ecfeed.core.utils;
 
 import com.ecfeed.core.exception.ClientException;
-import com.ecfeed.core.exception.ServerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,18 +45,6 @@ public class ExceptionHelper {
 
 		throw new ClientException(message, e);
 	}
-
-	public static void reportServerException(String message) {
-
-		throw new ServerException(message);
-	}
-
-	public static void reportServerException(String message, Throwable e) {
-
-		throw new ServerException(message, e);
-	}
-
-	// TODO ER-RE - remove runtime exceptions
 
 	public static void reportRuntimeException(String message) {
 
