@@ -38,7 +38,7 @@ public enum DataSource {
             return GEN_RANDOM;
         }
 
-        ExceptionHelper.reportRuntimeException("Can not convert string: " + dataSourceStr + " to data source." );
+        ExceptionHelper.reportClientException("Can not convert string: " + dataSourceStr + " to data source." );
         return null;
     }
 
@@ -53,8 +53,8 @@ public enum DataSource {
             case GEN_RANDOM:
                 return GeneratorType.RANDOM;
             default:
-                RuntimeException exception = new RuntimeException("Invalid generator name");
-                throw exception;
+                ExceptionHelper.reportRuntimeException("Invalid generator name");
+                return null;
         }
     }
 

@@ -43,7 +43,7 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 			List<List<ChoiceNode>> algorithmInput,
 			boolean allConstraintsSelected,
 			List<Constraint> iConstraints,	
-			AmbiguousConstraintAction ambiguousConstraintAction,  // TODO - EX-AM
+			AmbiguousConstraintAction ambiguousConstraintAction,
 			List<IGeneratorValue> generatorArguments) {
 
 		Map<String, List<String>> argsAndChoiceNames = 

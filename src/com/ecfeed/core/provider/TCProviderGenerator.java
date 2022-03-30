@@ -50,8 +50,6 @@ public class TCProviderGenerator implements ITCProvider {
         try {
             fConstraints = genInitData.getConstraints();
             
-            // fAmbiguousConstraintAction = genInitData.getAmbiguousConstraintAction(); //  TODO EX-AM
-
             fGenerator.initialize(
                     genInitData.getChoiceInput(),
                     new SatSolverConstraintEvaluator(fConstraints, genInitData.getMethodNode()),
