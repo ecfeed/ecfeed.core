@@ -38,7 +38,7 @@ public enum DataSource {
             return GEN_RANDOM;
         }
 
-        ExceptionHelper.reportClientException("Can not convert string: " + dataSourceStr + " to data source." );
+        ExceptionHelper.reportClientException("Invalid code of data source: " + dataSourceStr );
         return null;
     }
 
