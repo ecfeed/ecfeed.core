@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.generators;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 
 public class ParameterDefinitionBoolean extends AbstractParameterDefinition {
 
@@ -35,8 +35,7 @@ public class ParameterDefinitionBoolean extends AbstractParameterDefinition {
 	}
 
 	@Override
-	public Object parse(String value) throws GeneratorException
-	{
+	public Object parse(String value) {
 		if(value == null)
 			return fDefaultValue;
 
@@ -46,7 +45,7 @@ public class ParameterDefinitionBoolean extends AbstractParameterDefinition {
 		if(value.equals("false"))
 			return false;
 
-		GeneratorException.report("Unable to parse value to bool.");
+		GeneratorExceptionHelper.reportException("Unable to parse value to bool.");
 		return null;
 	}
 }

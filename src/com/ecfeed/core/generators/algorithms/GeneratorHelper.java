@@ -18,7 +18,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
 
@@ -26,7 +25,7 @@ public abstract class GeneratorHelper {
 
     public static List<List<ChoiceNode>> generateTestCasesForMethod(
             MethodNode methodNode,
-            AbstractAlgorithm<ChoiceNode> algorithm) throws GeneratorException {
+            AbstractAlgorithm<ChoiceNode> algorithm) {
 
         List<List<ChoiceNode>> choicesForParameters =
                 GeneratorHelper.getPossibleChoicesForMethodParameters(methodNode);

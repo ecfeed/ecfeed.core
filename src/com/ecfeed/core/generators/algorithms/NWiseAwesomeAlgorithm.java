@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import com.ecfeed.core.generators.DimensionedItem;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.Maps;
 
@@ -89,7 +88,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 	}
 
 	@Override
-	public List<E> getNext() throws GeneratorException {
+	public List<E> getNext() {
 
 		AlgoLogger.log("========== getNext test case ==========", 1, fLogLevel);
 

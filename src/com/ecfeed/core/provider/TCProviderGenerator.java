@@ -13,7 +13,6 @@ package com.ecfeed.core.provider;
 import java.util.List;
 
 import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.Constraint;
@@ -96,7 +95,7 @@ public class TCProviderGenerator implements ITCProvider {
 
         try {
             return fGenerator.next();
-        } catch (GeneratorException e) {
+        } catch (Exception e) {
             ExceptionHelper.reportRuntimeException("Cannot get next test case.", e);
             return null;
         }

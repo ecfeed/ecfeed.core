@@ -12,7 +12,7 @@ package com.ecfeed.core.generators;
 
 import java.util.Arrays;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 
 public class ParameterDefinitionString extends AbstractParameterDefinition {
@@ -20,12 +20,12 @@ public class ParameterDefinitionString extends AbstractParameterDefinition {
 	private String[] fAllowedValues = null;
 	private String fDefaultValue;
 
-	public ParameterDefinitionString(String name, String defaultValue, String[] allowedValues) throws GeneratorException {
+	public ParameterDefinitionString(String name, String defaultValue, String[] allowedValues) {
 		super(name, TYPE.STRING);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
 		if(!Arrays.asList(fAllowedValues).contains(fDefaultValue)){
-			GeneratorException.report("Inconsistent parameter definition");
+			GeneratorExceptionHelper.reportException("Inconsistent parameter definition");
 		}
 	}
 

@@ -8,7 +8,7 @@ public class ParameterConverter {
 
     public static List<IGeneratorValue> deserialize(
             Map<String, String> valueMap,
-            List<IParameterDefinition> paramList) throws GeneratorException {
+            List<IParameterDefinition> paramList) {
 
         Set<String> paramNames = new HashSet<>(valueMap.keySet());
         List<IGeneratorValue> retMap = new ArrayList<>();
@@ -25,7 +25,7 @@ public class ParameterConverter {
         }
 
         if (!paramNames.isEmpty()) {
-            GeneratorException.report("Unknown generator parameters " + paramNames);
+            GeneratorExceptionHelper.reportException("Unknown generator parameters " + paramNames);
         }
 
         return retMap;
