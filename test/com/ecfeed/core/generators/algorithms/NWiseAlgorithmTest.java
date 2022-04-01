@@ -23,7 +23,6 @@ import java.util.Set;
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
 import com.ecfeed.core.generators.CartesianProductGenerator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -67,7 +66,7 @@ public class NWiseAlgorithmTest{
 							assertTrue(constraint.evaluate(vector) == EvaluationResult.TRUE);
 						}
 					}
-				} catch (GeneratorException e) {
+				} catch (Exception e) {
 					fail("Unexpected algorithm exception: " + e.getMessage());
 					e.printStackTrace();
 				}
@@ -90,7 +89,7 @@ public class NWiseAlgorithmTest{
 	}
 
 	protected boolean containsAllTuples(Set<List<String>> algorithmResult,
-			List<List<String>> input, int n) throws GeneratorException {
+			List<List<String>> input, int n) throws Exception {
 		Set<List<String>> notCoveredTuples = getAllTuples(input, n);
 		for(List<String> vector : algorithmResult){
 			notCoveredTuples.removeAll((new Tuples<String>(vector, n)).getAll());
@@ -128,13 +127,13 @@ public class NWiseAlgorithmTest{
 //					assertTrue( nwiseTuplesCovered>= leastTuplesExpected);
 //				}
 //			}
-//		} catch (GeneratorException e) {
-//			fail("Unexpected GeneratorException: " + e.getMessage());
+//		} catch (Exception e) {
+//			fail("Unexpected Exception: " + e.getMessage());
 //		}
 //	}
 
 
-	protected Set<List<String>> getAllTuples(List<List<String>> input, int n) throws GeneratorException{
+	protected Set<List<String>> getAllTuples(List<List<String>> input, int n) throws Exception{
 			Set<List<String>> result  = new HashSet<List<String>>();
 			Tuples<List<String>> parameterTuples = new Tuples<List<String>>(input, n);
 			while(parameterTuples.hasNext()){

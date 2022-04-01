@@ -8,7 +8,6 @@ import java.util.SortedMap;
 
 import org.junit.Test;
 
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.utils.ExceptionHelper;
 
 public class NwiseScoreEvaluatorTest {
@@ -29,12 +28,12 @@ public class NwiseScoreEvaluatorTest {
 		
 //		try {
 ////			runBestTupleTest();
-//		} catch (GeneratorException e) {
+//		} catch (Exception e) {
 //			fail();
 //		}		
 	}
 
-//	private void runBestTupleTest() throws GeneratorException {
+//	private void runBestTupleTest() throws Exception {
 //		
 //		NwiseShScoreEvaluator<String> evaluator = new NwiseShScoreEvaluator<>(3, 100);
 //		
@@ -89,7 +88,7 @@ public class NwiseScoreEvaluatorTest {
 //		return choices;
 //	}
 	
-	private static void decreaseScoreTest() throws GeneratorException {
+	private static void decreaseScoreTest() throws Exception {
 
 		List<String> dim1 = new ArrayList<String>();
 		dim1.add("V11");

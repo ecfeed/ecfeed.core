@@ -3,7 +3,6 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
@@ -145,7 +144,7 @@ public class SatSolverConstraintEvaluatorTest {
             while (algorithm.getNext() != null)
                 cnt++;
 
-        } catch (GeneratorException e) {
+        } catch (Exception e) {
             fail("Unexpected generator exception: " + e.getMessage());
         }
 

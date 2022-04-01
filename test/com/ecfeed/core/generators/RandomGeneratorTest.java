@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 
 public class RandomGeneratorTest {
@@ -50,11 +49,11 @@ public class RandomGeneratorTest {
 				arguments.add(generatorArgumentDuplicates);
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, new SimpleProgressMonitor());
 				assertEquals(false, ((RandomAlgorithm<String>)algorithm).getDuplicates());
-			}catch(GeneratorException e) {
-				fail("Unexpected GeneratorException: " + e.getMessage());
+			}catch(Exception e) {
+				fail("Unexpected Exception: " + e.getMessage());
 			}
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
 
