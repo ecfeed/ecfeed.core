@@ -25,7 +25,12 @@ public class ParameterConverter {
         }
 
         if (!paramNames.isEmpty()) {
-            GeneratorExceptionHelper.reportException("Unknown generator parameters " + paramNames);
+
+            if (paramNames.size() == 1) {
+                GeneratorExceptionHelper.reportException("Unknown generator parameter " + paramNames + ".");
+            } else {
+                GeneratorExceptionHelper.reportException("Unknown generator parameters: " + paramNames + ".");
+            }
         }
 
         return retMap;
