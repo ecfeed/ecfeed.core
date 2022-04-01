@@ -112,7 +112,7 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 			try {
 				retValue = Integer.parseInt(value);
 			} catch (Exception e) {
-				GeneratorExceptionHelper.reportException("Unable to parse to Integer.");
+				GeneratorExceptionHelper.reportException("Cannot convert parameter " + getName() + " to integer.");
 				return null;
 			}
 		}
@@ -121,7 +121,7 @@ public class ParameterDefinitionInteger extends AbstractParameterDefinition {
 			return retValue;
 		else
 		{
-			GeneratorExceptionHelper.reportException("Integer value not allowed.");
+			GeneratorExceptionHelper.reportException("Integer value not allowed for parameter: " + getName() + ".");
 			return null;
 		}
 	}

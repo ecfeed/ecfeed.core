@@ -91,7 +91,7 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 			try {
 				retValue = Double.parseDouble(value);
 			} catch (Exception e) {
-				GeneratorExceptionHelper.reportException("Unable to parse to Double.");
+				GeneratorExceptionHelper.reportException("Cannot convert parameter " + getName() + " to double.");
 				return null;
 			}
 		}
@@ -99,7 +99,7 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 		if (test(retValue)) {
 			return retValue;
 		} else {
-			GeneratorExceptionHelper.reportException("Illegal value Double type parameter.");
+			GeneratorExceptionHelper.reportException("Illegal value for parameter" + getName() + ".");
 			return null;
 		}
 

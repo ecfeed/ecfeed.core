@@ -45,7 +45,7 @@ public class ParameterDefinitionBoolean extends AbstractParameterDefinition {
 		if(value.equals("false"))
 			return false;
 
-		GeneratorExceptionHelper.reportException("Unable to parse value to bool.");
+		GeneratorExceptionHelper.reportException("Cannot convert parameter " + getName() + " to boolean.");
 		return null;
 	}
 }

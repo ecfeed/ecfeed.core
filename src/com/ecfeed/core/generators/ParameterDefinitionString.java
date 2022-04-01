@@ -74,7 +74,7 @@ public class ParameterDefinitionString extends AbstractParameterDefinition {
 			return retValue;
 		else
 		{
-			ExceptionHelper.reportRuntimeException("Integer value not allowed.");
+			ExceptionHelper.reportRuntimeException("Integer value is not allowed for parameter " + getName() +	".");
 			return null;
 		}
 	}
