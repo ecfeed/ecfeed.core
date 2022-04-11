@@ -12,7 +12,7 @@ package com.ecfeed.core.generators;
 
 import java.util.Arrays;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 
 public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 
@@ -26,22 +26,22 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 		fDefaultValue = defaultValue;
 	}
 
-	public ParameterDefinitionDouble(String name, double defaultValue, Double[] allowedValues) throws GeneratorException {
+	public ParameterDefinitionDouble(String name, double defaultValue, Double[] allowedValues) {
 		super(name, TYPE.DOUBLE);
 		fDefaultValue = defaultValue;
 		fAllowedValues = allowedValues;
 		if(!Arrays.asList(fAllowedValues).contains(fDefaultValue)){
-			GeneratorException.report("Inconsistent parameter definition");
+			GeneratorExceptionHelper.reportException("Inconsistent parameter definition");
 		}
 	}
 
-	public ParameterDefinitionDouble(String name, double defaultValue, double min, double max) throws GeneratorException {
+	public ParameterDefinitionDouble(String name, double defaultValue, double min, double max) {
 		super(name, TYPE.DOUBLE);
 		fDefaultValue = defaultValue;
 		fMinValue = min;
 		fMaxValue = max;
 		if(fDefaultValue <= fMinValue || fDefaultValue >= fMaxValue){
-			GeneratorException.report("Inconsistent parameter definition");
+			GeneratorExceptionHelper.reportException("Inconsistent parameter definition");
 		}
 	}
 
@@ -82,8 +82,7 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 	}
 
 	@Override
-	public Object parse(String value) throws GeneratorException
-	{
+	public Object parse(String value) {
 		Double retValue;
 
 		if (value == null) {
@@ -92,7 +91,7 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 			try {
 				retValue = Double.parseDouble(value);
 			} catch (Exception e) {
-				GeneratorException.report("Unable to parse to Double.");
+				GeneratorExceptionHelper.reportException("Cannot convert parameter " + getName() + " to double.");
 				return null;
 			}
 		}
@@ -100,7 +99,7 @@ public class ParameterDefinitionDouble extends AbstractParameterDefinition {
 		if (test(retValue)) {
 			return retValue;
 		} else {
-			GeneratorException.report("Illegal value Double type parameter.");
+			GeneratorExceptionHelper.reportException("Illegal value for parameter" + getName() + ".");
 			return null;
 		}
 

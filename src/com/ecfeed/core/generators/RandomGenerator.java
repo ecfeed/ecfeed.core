@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.generators.algorithms.RandomAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
@@ -34,7 +33,7 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 	public static final int DEFAULT_TEST_SUITE_SIZE_PARAMETER_VALUE = 100;
 
 
-	public RandomGenerator() throws GeneratorException{
+	public RandomGenerator() {
 
 		if(fParameterDefinitions==null) {
 			fParameterDefinitions = new ArrayList<>();
@@ -58,7 +57,7 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
 			List<IGeneratorValue> parameters,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
+			IEcfProgressMonitor generatorProgressMonitor) {
 
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
 		int length = (int)getParameterValue(getDefinitionLength());
@@ -73,15 +72,15 @@ public class RandomGenerator<E> extends AbstractGenerator<E> implements
 		return GeneratorType.RANDOM;
 	}
 
-	public IParameterDefinition getDefinitionAdaptive() throws GeneratorException {
+	public IParameterDefinition getDefinitionAdaptive() {
 		return getParameterDefinition(PARAMETER_NAME_ADAPTIVE);
 	}
 
-	public IParameterDefinition getDefinitionDuplicates() throws GeneratorException {
+	public IParameterDefinition getDefinitionDuplicates() {
 		return getParameterDefinition(PARAMETER_NAME_DUPLICATES);
 	}
 
-	public IParameterDefinition getDefinitionLength() throws GeneratorException {
+	public IParameterDefinition getDefinitionLength() {
 		return getParameterDefinition(PARAMETER_NAME_LENGTH);
 	}
 

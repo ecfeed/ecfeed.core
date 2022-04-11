@@ -13,7 +13,6 @@ package com.ecfeed.core.generators;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.GeneratorType;
 
@@ -24,7 +23,7 @@ public abstract class NWiseGeneratorBase<E> extends AbstractGenerator<E> {
 
 	private static List<IParameterDefinition> fParameterDefinitions = null;
 
-	public NWiseGeneratorBase() throws GeneratorException {
+	public NWiseGeneratorBase() {
 
 		if(fParameterDefinitions==null) {
 			fParameterDefinitions = new ArrayList<>();
@@ -44,12 +43,12 @@ public abstract class NWiseGeneratorBase<E> extends AbstractGenerator<E> {
 		return GeneratorType.N_WISE;
 	}
 
-	public IParameterDefinition getDefinitionN() throws GeneratorException {
+	public IParameterDefinition getDefinitionN() {
 
 		return getParameterDefinition(PARAMETER_NAME_N);
 	}
 
-	public IParameterDefinition getDefinitionCoverage() throws GeneratorException {
+	public IParameterDefinition getDefinitionCoverage() {
 
 		return getParameterDefinition(PARAMETER_NAME_COVERAGE);
 	}

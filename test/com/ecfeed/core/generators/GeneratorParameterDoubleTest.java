@@ -14,22 +14,20 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.ecfeed.core.generators.api.GeneratorException;
-
 public class GeneratorParameterDoubleTest {
 	@Test
 	public void constructorWithAllowedValuesTest() {
 		try {
 			@SuppressWarnings("unused")
             ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  0.0f, new Double[]{-1.0, 0.0, 1.0});
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 		try {
 			@SuppressWarnings("unused")
             ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  5.0f, new Double[]{-1.0, 0.0, 1.0});
-			fail("GeneratorException expected");
-		} catch (GeneratorException e) {
+			fail("Exception expected");
+		} catch (Exception e) {
 		}
 	}
 
@@ -38,14 +36,14 @@ public class GeneratorParameterDoubleTest {
 		try {
 			@SuppressWarnings("unused")
             ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  0.0, -1.0, 1.0);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 		try {
 			@SuppressWarnings("unused")
             ParameterDefinitionDouble parameter = new ParameterDefinitionDouble("parameter",  2.0, -1.0, 1.0);
-			fail("GeneratorException expected");
-		} catch (GeneratorException e) {
+			fail("Exception expected");
+		} catch (Exception e) {
 		}
 	}
 
@@ -57,8 +55,8 @@ public class GeneratorParameterDoubleTest {
 			Double[] allowed = new Double[]{0.0, 1.0, 2.0};
 			parameter = new ParameterDefinitionDouble("parameter",  0.0, allowed);
 			assertArrayEquals(allowed, parameter.getAllowedValues());
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 	}
 
@@ -79,8 +77,8 @@ public class GeneratorParameterDoubleTest {
 			assertFalse(boundedParameter.test(3.0));
 			assertFalse(boundedParameter.test(3.0f));
 			assertFalse(boundedParameter.test("string"));
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 	}
 }

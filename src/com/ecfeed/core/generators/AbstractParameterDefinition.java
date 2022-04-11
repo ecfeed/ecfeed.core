@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.generators;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IParameterDefinition;
 
 public class AbstractParameterDefinition implements IParameterDefinition {
@@ -24,9 +24,8 @@ public class AbstractParameterDefinition implements IParameterDefinition {
 	}
 
 	@Override
-	public Object parse(String value) throws GeneratorException
-	{
-		GeneratorException.report("parsing into abstract value");
+	public Object parse(String value) {
+		GeneratorExceptionHelper.reportException("parsing into abstract value");
 		return null;
 	}
 

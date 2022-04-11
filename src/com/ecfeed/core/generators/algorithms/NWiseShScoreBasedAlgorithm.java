@@ -7,7 +7,6 @@ import java.util.SortedMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
@@ -22,7 +21,7 @@ public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 	private int fCoverage;
 	private Randomizer fRandomizer = null;
 	
-	public NWiseShScoreBasedAlgorithm(IScoreEvaluator<E> fScoreEvaluator, int coverage) throws GeneratorException {
+	public NWiseShScoreBasedAlgorithm(IScoreEvaluator<E> fScoreEvaluator, int coverage) {
 
 		this.fScoreEvaluator = fScoreEvaluator;
 		fCoverage = coverage;
@@ -32,7 +31,7 @@ public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 	public void initialize(
 			List<List<E>> input,
 			IConstraintEvaluator<E> constraintEvaluator,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) {
 
 		fRandomizer = new Randomizer();
 		System.out.println("Randomizer seed for current generation: " + fRandomizer.getSeed());
@@ -45,7 +44,7 @@ public class NWiseShScoreBasedAlgorithm<E> extends AbstractAlgorithm<E> {
 	}
 
 	@Override
-	public List<E> getNext() throws GeneratorException {
+	public List<E> getNext() {
 		return getTupleWithBestScore();
 	}
 

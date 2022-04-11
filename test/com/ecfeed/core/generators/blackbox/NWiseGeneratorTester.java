@@ -3,7 +3,6 @@ package com.ecfeed.core.generators.blackbox;
 import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
 import com.ecfeed.core.generators.GeneratorValue;
 import com.ecfeed.core.generators.NWiseGenerator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -28,7 +27,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
         try {
             initializeTester(modelXml);
 
-        } catch (GeneratorException e) {
+        } catch (Exception e) {
             ExceptionHelper.reportRuntimeException("Generator initialisation failed.", e);
         }
     }
@@ -43,7 +42,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
         }
     }
 
-    private void runGenerationIntr() throws GeneratorException {
+    private void runGenerationIntr() throws Exception {
 
         fGenResults = new ArrayList<>();
 
@@ -59,7 +58,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
         }
     }
 
-    private void initializeTester(String modelXml) throws GeneratorException {
+    private void initializeTester(String modelXml) throws Exception {
 
         fRootNode = ModelTestHelper.createModel(modelXml);
 
@@ -88,7 +87,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
         return rootNode.getClasses().get(0);
     }
 
-    private static NWiseGenerator<ChoiceNode> createGenerator(MethodNode methodNode) throws GeneratorException {
+    private static NWiseGenerator<ChoiceNode> createGenerator(MethodNode methodNode) throws Exception {
 
         List<List<ChoiceNode>> generatorInput = getAlgorithmInput(methodNode);
 
@@ -124,7 +123,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
     }
 
     private static List<IGeneratorValue> createGeneratorDefaultParameters(
-            NWiseGenerator<ChoiceNode> nWiseGenerator) throws GeneratorException {
+            NWiseGenerator<ChoiceNode> nWiseGenerator) throws Exception {
 
         List<IGeneratorValue> result = new ArrayList<>();
 

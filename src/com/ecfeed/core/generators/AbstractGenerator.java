@@ -29,8 +29,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
 						   List<IGeneratorValue> generatorParameters,
-			IEcfProgressMonitor generatorProgressMonitor)
-			throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) {
 		validateInput(inputDomain);
 //		validateArguments(arguments);
 
@@ -47,7 +46,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 			if(keyset.contains(paramDef))
 				keyset.remove(paramDef);
 		if(!keyset.isEmpty())
-			GeneratorException.report("Unknown parameters for generator: " + keyset);
+			GeneratorExceptionHelper.reportException("Unknown parameters for generator: " + keyset);
 
 
 		fInput = inputDomain;
@@ -56,7 +55,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 	}
 
 	@Override
-	public List<E> next() throws GeneratorException {
+	public List<E> next() {
 		List<E> next = fAlgorithm.getNext();
 		if(next != null){
 			/*
@@ -81,7 +80,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 
 
 	@Override
-	public IParameterDefinition getParameterDefinition(String name) throws GeneratorException {
+	public IParameterDefinition getParameterDefinition(String name) {
 
 		for(IParameterDefinition parameter : getParameterDefinitions() ){
 			if(parameter.getName().equals(name)){
@@ -89,7 +88,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 			}
 		}
 
-		GeneratorException.report("Parameter " + name + " is not defined for " + this.getClass().getName());
+		GeneratorExceptionHelper.reportException("Parameter " + name + " is not defined for " + this.getClass().getName());
 		return null;
 	}
 
@@ -99,7 +98,7 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		return fAlgorithm.getConstraintEvaluator();
 	}
 
-	protected void setAlgorithm(IAlgorithm<E> algorithm) throws GeneratorException{
+	protected void setAlgorithm(IAlgorithm<E> algorithm) {
 		fAlgorithm = algorithm;
 		fAlgorithm.initialize(fInput, fConstraintEvaluator, fGeneratorProgressMonitor);
 	}
@@ -131,11 +130,11 @@ public abstract class AbstractGenerator<E> implements IGenerator<E> {
 		return fConstraintEvaluator.setExpectedValues(testCaseValues);
 	}
 
-	private void validateInput(List<? extends List<E>> inputDomain) throws GeneratorException {
+	private void validateInput(List<? extends List<E>> inputDomain) {
 		
 		for(List<E> parameter : inputDomain){
 			if(parameter.size() == 0){
-				GeneratorException.report("Generator input domain cannot contain empty vectors");
+				GeneratorExceptionHelper.reportException("Generator input domain cannot contain empty vectors");
 			}
 		}
 	}

@@ -21,7 +21,6 @@ import java.util.Random;
 import java.util.Set;
 
 import com.ecfeed.core.generators.algorithms.IAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -99,7 +98,7 @@ public class GeneratorTestUtils{
 			while((next = initializedAlgorithm.getNext()) != null){
 				result.add(next);
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected algorithm exception: " + e.getMessage());
 			e.printStackTrace();
 		}
@@ -113,7 +112,7 @@ public class GeneratorTestUtils{
 			while((next = initializedGenerator.next()) != null){
 				result.add(next);
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected algorithm exception: " + e.getMessage());
 		}
 		return result;

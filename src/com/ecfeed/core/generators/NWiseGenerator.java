@@ -13,14 +13,13 @@ package com.ecfeed.core.generators;
 import java.util.List;
 
 import com.ecfeed.core.generators.algorithms.NWiseAwesomeAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class NWiseGenerator<E> extends NWiseGeneratorBase<E> {
 
-    public NWiseGenerator() throws GeneratorException {
+    public NWiseGenerator() {
     	super();
     }
 
@@ -28,7 +27,7 @@ public class NWiseGenerator<E> extends NWiseGeneratorBase<E> {
     public void initialize(List<List<E>> inputDomain,
                            IConstraintEvaluator<E> constraintEvaluator,
                            List<IGeneratorValue> parameters,
-                           IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+                           IEcfProgressMonitor generatorProgressMonitor) {
 
         super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
         int N = (int) getParameterValue(getDefinitionN());

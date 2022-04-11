@@ -25,7 +25,6 @@ import org.junit.Test;
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.GeneratorValue;
 import com.ecfeed.core.generators.RandomGenerator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
@@ -636,7 +635,7 @@ public class XmlParserSerializerTest {
 			while((next = generator.next()) != null){
 				result.add(new TestCaseNode(randomName(), null, next));
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected generator exception: " + e.getMessage());
 		}
 		return result;

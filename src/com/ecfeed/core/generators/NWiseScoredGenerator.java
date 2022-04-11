@@ -15,14 +15,13 @@ import java.util.List;
 import com.ecfeed.core.generators.algorithms.IScoreEvaluator;
 import com.ecfeed.core.generators.algorithms.NwiseShScoreEvaluator;
 import com.ecfeed.core.generators.algorithms.NWiseShScoreBasedAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
 public class NWiseScoredGenerator<E> extends NWiseGeneratorBase<E> {
 
-	public NWiseScoredGenerator() throws GeneratorException {
+	public NWiseScoredGenerator() {
 		super();
 	}
 
@@ -30,7 +29,7 @@ public class NWiseScoredGenerator<E> extends NWiseGeneratorBase<E> {
 	public void initialize(List<List<E>> inputDomain,
 			IConstraintEvaluator<E> constraintEvaluator,
 			List<IGeneratorValue> generatorParameters,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) {
 
 		super.initialize(inputDomain, constraintEvaluator, generatorParameters, generatorProgressMonitor);
 		int N = (int) getParameterValue(getDefinitionN());
