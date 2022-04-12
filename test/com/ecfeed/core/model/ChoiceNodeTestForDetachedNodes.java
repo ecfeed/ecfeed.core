@@ -33,7 +33,7 @@ public class ChoiceNodeTestForDetachedNodes {
 		// create and add parameter, choice
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+		addNewChoiceToMethodParameter(methodParameterNode, "choice1", "1");
 
 		// detach choice node
 
@@ -76,8 +76,8 @@ public class ChoiceNodeTestForDetachedNodes {
 		// create and add parameter, 2 choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		ChoiceNode oldChoiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1", "1");
-		addNewChoiceToMethod(methodParameterNode, "choice2", "2");
+		ChoiceNode oldChoiceNode1 = addNewChoiceToMethodParameter(methodParameterNode, "choice1", "1");
+		addNewChoiceToMethodParameter(methodParameterNode, "choice2", "2");
 
 		// detach the last choice node
 
@@ -122,8 +122,8 @@ public class ChoiceNodeTestForDetachedNodes {
 		// create and add parameter, 2 choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
-		ChoiceNode oldChoiceNode2 = addNewChoiceToMethod(methodParameterNode, "choice2", "2");
+		addNewChoiceToMethodParameter(methodParameterNode, "choice1", "1");
+		ChoiceNode oldChoiceNode2 = addNewChoiceToMethodParameter(methodParameterNode, "choice2", "2");
 
 		// detach the first choice node
 
@@ -170,7 +170,7 @@ public class ChoiceNodeTestForDetachedNodes {
 		// create and add parameter, choice, test case and constraint
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		ChoiceNode oldChoiceNode = addNewChoiceToMethod(methodParameterNode, oldChoiceNodeName, "0");
+		ChoiceNode oldChoiceNode = addNewChoiceToMethodParameter(methodParameterNode, oldChoiceNodeName, "0");
 		addNewTestCaseToMethod(methodNode, oldChoiceNode);
 		addNewSimpleConstraintToMethod(methodNode, methodParameterNode, oldChoiceNode);
 
@@ -247,7 +247,7 @@ public class ChoiceNodeTestForDetachedNodes {
 		// create and add parameter, choice
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+		addNewChoiceToMethodParameter(methodParameterNode, "choice1", "1");
 
 		List<String> detachedChoiceNames = methodParameterNode.detachChoiceNode("choice1");
 		assertEquals("choice1", detachedChoiceNames.get(0));
@@ -283,9 +283,9 @@ public class ChoiceNodeTestForDetachedNodes {
 		// create and add parameter, choice
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		addNewChoiceToMethod(methodParameterNode, "choice1", "1");
-		addNewChoiceToMethod(methodParameterNode, "choice2", "2");
-		addNewChoiceToMethod(methodParameterNode, "choice3", "3");
+		addNewChoiceToMethodParameter(methodParameterNode, "choice1", "1");
+		addNewChoiceToMethodParameter(methodParameterNode, "choice2", "2");
+		addNewChoiceToMethodParameter(methodParameterNode, "choice3", "3");
 
 		methodParameterNode.detachChoiceNode("choice3");
 		methodParameterNode.detachChoiceNode("choice2");
@@ -308,7 +308,7 @@ public class ChoiceNodeTestForDetachedNodes {
 		// create and add parameter and parent choice with two child choices
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
-		ChoiceNode choiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+		ChoiceNode choiceNode1 = addNewChoiceToMethodParameter(methodParameterNode, "choice1", "1");
 
 		addNewChoiceToChoice(choiceNode1, "choice2", "2");
 		addNewChoiceToChoice(choiceNode1, "choice3", "3");
@@ -377,7 +377,7 @@ public class ChoiceNodeTestForDetachedNodes {
 
 		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode);
 
-		ChoiceNode choiceNode1 = addNewChoiceToMethod(methodParameterNode, "choice1", "1");
+		ChoiceNode choiceNode1 = addNewChoiceToMethodParameter(methodParameterNode, "choice1", "1");
 
 		ChoiceNode choiceNode2 = addNewChoiceToChoice(choiceNode1, "choice2", "2");
 
@@ -440,8 +440,10 @@ public class ChoiceNodeTestForDetachedNodes {
 		return methodParameterNode;
 	}
 
-	private ChoiceNode addNewChoiceToMethod(
-			MethodParameterNode methodParameterNode, String choiceNodeName, String valueString) {
+	private ChoiceNode addNewChoiceToMethodParameter(
+			MethodParameterNode methodParameterNode, 
+			String choiceNodeName, 
+			String valueString) {
 
 		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
 		methodParameterNode.addChoice(choiceNode);
