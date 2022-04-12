@@ -10,9 +10,11 @@
 
 package com.ecfeed.core.model;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
-public class MethodParameterNodeTestDetached {
+public class MethodParameterNodeTestForDetached {
 
 	@Test
 	public void attachDetachParameterNodeTest() {
@@ -21,11 +23,14 @@ public class MethodParameterNodeTestDetached {
 
 		// create and add parameter, choice
 
-		String parameter1 = "par1";
+		String par1Name = "par1";
 
-		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode, parameter1, "String");		
+		addParameterToMethod(methodNode, par1Name, "String");		
 
-		methodNode.detachParameterNode(parameter1);
+		methodNode.detachParameterNode(par1Name);
+
+		assertEquals(0, methodNode.getParametersCount());
+		assertEquals(1, methodNode.getDetachedParametersCount());
 	}
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {

@@ -19,11 +19,13 @@ import com.ecfeed.core.utils.StringHelper;
 public abstract class ParametersParentNode extends AbstractNode {
 
 	private List<AbstractParameterNode> fParameters;
+	private List<AbstractParameterNode> fDetachedParameters;
 
 	public ParametersParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, modelChangeRegistrator);
 		fParameters = new ArrayList<AbstractParameterNode>();
+		fDetachedParameters = new ArrayList<AbstractParameterNode>();
 	}
 
 	public abstract List<MethodNode> getMethods(AbstractParameterNode parameter);	
@@ -51,6 +53,10 @@ public abstract class ParametersParentNode extends AbstractNode {
 	public int getParametersCount(){
 		return fParameters.size();
 	}	
+
+	public int getDetachedParametersCount() {
+		return fDetachedParameters.size();
+	}
 
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
 
@@ -146,10 +152,10 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		return fParameters;
 	}
-	
+
 	@Override
 	public int getChildrenCount() {
-		
+
 		return fParameters.size();
 	}
 
@@ -193,4 +199,26 @@ public abstract class ParametersParentNode extends AbstractNode {
 			}
 		}
 	}
+
+	public void addParameterToDetached(AbstractParameterNode abstractParameterNode) {
+
+		abstractParameterNode.setDetached(true);
+		fDetachedParameters.add(abstractParameterNode);
+	}
+
+	public void detachParameterNode(String name) {
+
+		AbstractParameterNode abstractParameterNode = findParameter(name);
+
+		if (abstractParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot find parameter " + name + ".");
+		}
+
+		addParameterToDetached(abstractParameterNode);
+
+		if (false == removeParameter(abstractParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Cannot remove parameter.");
+		}
+	}
+
 }

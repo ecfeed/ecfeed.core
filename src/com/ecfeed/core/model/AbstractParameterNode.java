@@ -20,6 +20,8 @@ import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public abstract class AbstractParameterNode extends ChoicesParentNode {
 
+	private boolean fIsDetached;
+
 	private String fType;
 	private String fTypeComments;
 
@@ -36,6 +38,8 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		fIsDetached = true;
 
 		fSuggestedType = Optional.empty();
 		fType = type;
@@ -127,6 +131,16 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
+	}
+
+	public void setDetached(boolean isDetached) {
+
+		fIsDetached = isDetached;
+	}
+
+	public boolean getIsDetached() {
+
+		return fIsDetached;
 	}
 
 }
