@@ -710,4 +710,9 @@ public class MethodNode extends ParametersParentNode {
 		}
 	}
 
+	public void detachParameterNode(String string) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
