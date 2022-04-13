@@ -19,6 +19,8 @@ public class MethodParameterNodeTestForDetached {
 	@Test
 	public void attachDetachParameterNodeTest() {
 
+		// TODO ADD CONSTRAINTS AND TEST CASES
+
 		MethodNode methodNode = new MethodNode("method", null);
 
 		// create and add parameter, choice
@@ -31,6 +33,14 @@ public class MethodParameterNodeTestForDetached {
 
 		assertEquals(0, methodNode.getParametersCount());
 		assertEquals(1, methodNode.getDetachedParametersCount());
+
+		String newPar1Name = "newPar1";
+		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode, newPar1Name, "String");
+
+		methodNode.attachParameterNode(par1Name, newPar1Name);
+
+		assertEquals(1, methodNode.getParametersCount());
+		assertEquals(0, methodNode.getDetachedParametersCount());
 	}
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {

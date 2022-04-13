@@ -71,6 +71,19 @@ public abstract class ParametersParentNode extends AbstractNode {
 		return null;
 	}
 
+	public AbstractParameterNode findDetachedParameter(String parameterNameToFind) {
+
+		for (AbstractParameterNode parameter : fDetachedParameters) {
+
+			final String parameterName = parameter.getName();
+
+			if (parameterName.equals(parameterNameToFind)) {
+				return parameter;
+			}
+		}
+		return null;
+	}
+
 	public AbstractParameterNode getParameter(int parameterIndex) {
 
 		return fParameters.get(parameterIndex);
@@ -219,6 +232,17 @@ public abstract class ParametersParentNode extends AbstractNode {
 		if (false == removeParameter(abstractParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Cannot remove parameter.");
 		}
+	}
+
+	public void attachParameterNode(String detachedParameterName, String destinationParameterName) {
+
+		AbstractParameterNode detachedParameterNode = findDetachedParameter(detachedParameterName);
+
+		if (detachedParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot find detached parameter " + detachedParameterName + ".");
+		}
+
+		fDetachedParameters.remove(detachedParameterNode);
 	}
 
 }
