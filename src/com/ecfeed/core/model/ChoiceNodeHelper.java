@@ -73,7 +73,7 @@ public class ChoiceNodeHelper {
 		}
 
 		String qualifiedName = getQualifiedName(choiceNode, extLanguageManager);
-		
+
 		qualifiedName = getDetachedMarker(choiceNode.isDetached()) + qualifiedName;
 
 		if (choiceNode.isAbstract()) {
@@ -98,29 +98,29 @@ public class ChoiceNodeHelper {
 		}
 
 		String qualifiedName = choiceNode.getName();
-		
+
 		qualifiedName = getDetachedMarker(choiceNode.isDetached()) + qualifiedName;
 
 		return qualifiedName;
 	}
-	
-private static String getDetachedMarker(boolean isDetached) {
-		
+
+	private static String getDetachedMarker(boolean isDetached) {
+
 		if  (isDetached) {
 			return "[!]";
 		}
-		
+
 		return "";
 	}
-	
+
 	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();	
 
 		String detachedMarker = getDetachedMarker(choiceNode.isDetached());
-		
+
 		if (abstractParameterNode == null) {
-			
+
 			return detachedMarker + ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 		}
 
@@ -170,7 +170,7 @@ private static String getDetachedMarker(boolean isDetached) {
 		List<ChoiceNode> copies = new ArrayList<ChoiceNode>();
 
 		for(;;) {
-			
+
 			ChoiceNode copy = orgChoice.makeClone();
 			copies.add(copy);
 
@@ -572,5 +572,17 @@ private static String getDetachedMarker(boolean isDetached) {
 
 		return cloneChoiceNode;
 	}
+
+	public static void setDetachedWithChildren(ChoiceNode topChoiceNode, boolean isDetached)  {
+
+		List<ChoiceNode> choiceNodes = topChoiceNode.getChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+			setDetachedWithChildren(choiceNode, isDetached);
+		}
+
+		topChoiceNode.setDetached(isDetached);
+	}
+
 
 }

@@ -138,7 +138,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		fIsDetached = isDetached;
 	}
 
-	public boolean getIsDetached() {
+	public boolean isDetached() {
 
 		return fIsDetached;
 	}

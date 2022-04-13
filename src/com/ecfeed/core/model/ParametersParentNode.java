@@ -227,11 +227,23 @@ public abstract class ParametersParentNode extends AbstractNode {
 			ExceptionHelper.reportRuntimeException("Cannot find parameter " + name + ".");
 		}
 
+		changeChoicesToDetached(abstractParameterNode);
+
 		addParameterToDetached(abstractParameterNode);
 
 		if (false == removeParameter(abstractParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Cannot remove parameter.");
 		}
+	}
+
+	private void changeChoicesToDetached(AbstractParameterNode abstractParameterNode) {
+
+		List<ChoiceNode> choiceNodes = abstractParameterNode.getChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+			ChoiceNodeHelper.setDetachedWithChildren(choiceNode, true);
+		}
+
 	}
 
 	public void attachParameterNode(String detachedParameterName, String destinationParameterName) {

@@ -11,34 +11,47 @@
 package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
+
+import com.ecfeed.core.utils.EMathRelation;
 
 public class MethodParameterNodeTestForDetached {
 
 	@Test
 	public void attachDetachParameterNodeTest() {
-
+		
 		// TODO ADD CONSTRAINTS AND TEST CASES
 
 		MethodNode methodNode = new MethodNode("method", null);
 
 		// create and add parameter, choice
-
+		
 		String par1Name = "par1";
+		final String oldChoiceNodeName = "old";
 
-		addParameterToMethod(methodNode, par1Name, "String");		
-
+		MethodParameterNode oldMethodParameterNode = addParameterToMethod(methodNode, par1Name, "String");
+		ChoiceNode oldChoiceNode = addNewChoiceToMethodParameter(oldMethodParameterNode, oldChoiceNodeName, "0");
+		
+		addNewTestCaseToMethod(methodNode, oldChoiceNode);
+		addNewSimpleConstraintToMethod(methodNode, oldMethodParameterNode, oldChoiceNode);
+		
 		methodNode.detachParameterNode(par1Name);
+		assertTrue(oldMethodParameterNode.isDetached());
+		assertTrue(oldChoiceNode.isDetached());
 
 		assertEquals(0, methodNode.getParametersCount());
 		assertEquals(1, methodNode.getDetachedParametersCount());
-
+		
 		String newPar1Name = "newPar1";
-		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode, newPar1Name, "String");
-
+		addParameterToMethod(methodNode, newPar1Name, "String");
+		
 		methodNode.attachParameterNode(par1Name, newPar1Name);
-
+		
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(0, methodNode.getDetachedParametersCount());
 	}
@@ -50,5 +63,51 @@ public class MethodParameterNodeTestForDetached {
 
 		return methodParameterNode;
 	}
+	
+	private ChoiceNode addNewChoiceToMethodParameter(
+			MethodParameterNode methodParameterNode, 
+			String choiceNodeName, 
+			String valueString) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
+		methodParameterNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
+	
+	private void addNewTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
+
+		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
+		listOfChoicesForTestCase.add(choiceNode);
+
+		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
+		methodNode.addTestCase(testCaseNode);
+	}
+
+	private void addNewSimpleConstraintToMethod(
+			MethodNode methodNode,
+			MethodParameterNode methodParameterNode,
+			ChoiceNode choiceNode) {
+
+		RelationStatement relationStatement1 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						methodParameterNode, EMathRelation.EQUAL, choiceNode);
+
+		RelationStatement relationStatement2 = 
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						methodParameterNode, EMathRelation.LESS_THAN, choiceNode);
+
+		Constraint constraint = new Constraint(
+				"c", 
+				ConstraintType.EXTENDED_FILTER, 
+				relationStatement1, 
+				relationStatement2, 
+				null);
+
+		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+	}
+	
 
 }
