@@ -40,12 +40,32 @@ public class MethodParameterNodeTestForDetached {
 		addNewTestCaseToMethod(methodNode, oldChoiceNode);
 		addNewSimpleConstraintToMethod(methodNode, oldMethodParameterNode, oldChoiceNode);
 		
+		// detaching
+		
 		methodNode.detachParameterNode(par1Name);
 		assertTrue(oldMethodParameterNode.isDetached());
 		assertTrue(oldChoiceNode.isDetached());
 
 		assertEquals(0, methodNode.getParametersCount());
 		assertEquals(1, methodNode.getDetachedParametersCount());
+		
+		
+		// check choice node from test case
+
+		TestCaseNode testCaseNode = methodNode.getTestCases().get(0);
+		List<ChoiceNode> testData = testCaseNode.getTestData();
+		ChoiceNode choiceFromTestCase = testData.get(0);
+		assertEquals(oldChoiceNode, choiceFromTestCase);
+
+		// check choice nodes from constraint
+
+		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode);
+		assertEquals(oldChoiceNode, choiceNodeFromPrecondition);
+
+		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode);
+		assertEquals(oldChoiceNode, choiceNodeFromPostcondition);
+
+		// adding new parameter
 		
 		String newPar1Name = "newPar1";
 		addParameterToMethod(methodNode, newPar1Name, "String");
@@ -107,6 +127,41 @@ public class MethodParameterNodeTestForDetached {
 		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
 
 		methodNode.addConstraint(constraintNode);
+	}
+	
+	private ChoiceNode getChoiceNodeFromConstraintPostcondition(MethodNode methodNode) {
+
+		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
+
+		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+
+		ChoiceNode choiceNode = getChoiceNodeFromChoiceCondition(postcondition);
+
+		return choiceNode;
+	}
+
+	private ChoiceNode getChoiceNodeFromConstraintPrecondition(MethodNode methodNode) {
+
+		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
+
+		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+		ChoiceNode choiceNode = getChoiceNodeFromChoiceCondition(precondition);
+
+		return choiceNode;
+	}
+
+	private ChoiceNode getChoiceNodeFromChoiceCondition(AbstractStatement abstractStatement) {
+
+		RelationStatement relationStatement = (RelationStatement)abstractStatement; 
+
+		IStatementCondition statementCondition = relationStatement.getCondition();
+
+		ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
+
+		ChoiceNode choiceNode = choiceCondition.getRightChoice();
+
+		return choiceNode;
 	}
 	
 
