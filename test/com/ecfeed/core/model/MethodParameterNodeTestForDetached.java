@@ -18,38 +18,38 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.EMathRelation;
 
 public class MethodParameterNodeTestForDetached {
 
 	@Test
 	public void attachDetachParameterNodeTest() {
-		
-		// TODO ADD CONSTRAINTS AND TEST CASES
+
+		// TODO ADD TEST CASES
 
 		MethodNode methodNode = new MethodNode("method", null);
 
 		// create and add parameter, choice
-		
+
 		String par1Name = "par1";
-		final String oldChoiceNodeName = "old";
+		final String oldChoiceName = "oldChoice";
 
 		MethodParameterNode oldMethodParameterNode = addParameterToMethod(methodNode, par1Name, "String");
-		ChoiceNode oldChoiceNode = addNewChoiceToMethodParameter(oldMethodParameterNode, oldChoiceNodeName, "0");
-		
+		ChoiceNode oldChoiceNode = addNewChoiceToMethodParameter(oldMethodParameterNode, oldChoiceName, "0");
+
 		addNewTestCaseToMethod(methodNode, oldChoiceNode);
 		addNewSimpleConstraintToMethod(methodNode, oldMethodParameterNode, oldChoiceNode);
-		
+
 		// detaching
-		
+
 		methodNode.detachParameterNode(par1Name);
 		assertTrue(oldMethodParameterNode.isDetached());
 		assertTrue(oldChoiceNode.isDetached());
 
 		assertEquals(0, methodNode.getParametersCount());
 		assertEquals(1, methodNode.getDetachedParametersCount());
-		
-		
+
 		// check choice node from test case
 
 		TestCaseNode testCaseNode = methodNode.getTestCases().get(0);
@@ -66,14 +66,44 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(oldChoiceNode, choiceNodeFromPostcondition);
 
 		// adding new parameter
-		
+
 		String newPar1Name = "newPar1";
-		addParameterToMethod(methodNode, newPar1Name, "String");
-		
-		methodNode.attachParameterNode(par1Name, newPar1Name);
-		
+		MethodParameterNode newMethodParameterNode = addParameterToMethod(methodNode, newPar1Name, "String");
+
+		// adding new choice
+		String newChoiceName = "newChoice";
+		ChoiceNode newChoiceNode = addNewChoiceToMethodParameter(newMethodParameterNode, newChoiceName, "0");
+
+		// choice conversion list 
+		List<ChoiceConversionItem> choiceConversionItems = new ArrayList<>();
+		ChoiceConversionItem choiceConversionItem = new ChoiceConversionItem(oldChoiceName, newChoiceName);
+		choiceConversionItems.add(choiceConversionItem);
+
+		// attach - should replace old choice with new choice and oldParameter with new parameter
+
+		methodNode.attachParameterNode(par1Name, newPar1Name, choiceConversionItems);
+
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(0, methodNode.getDetachedParametersCount());
+
+		// check parameter from constraint
+
+		MethodParameterNode methodParameterNodeFromConstraint = 
+				getMethodParameterNodeFromConstraintPrecondition(methodNode);
+		assertEquals(methodParameterNodeFromConstraint, newMethodParameterNode);
+
+		methodParameterNodeFromConstraint = 
+				getMethodParameterNodeFromConstraintPostcondition(methodNode);
+		assertEquals(methodParameterNodeFromConstraint, newMethodParameterNode);
+
+
+		// check choice nodes from constraint
+
+		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode);
+		assertEquals(choiceNodeFromPrecondition, newChoiceNode);
+
+		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode);
+		assertEquals(choiceNodeFromPostcondition, newChoiceNode);
 	}
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
@@ -83,7 +113,7 @@ public class MethodParameterNodeTestForDetached {
 
 		return methodParameterNode;
 	}
-	
+
 	private ChoiceNode addNewChoiceToMethodParameter(
 			MethodParameterNode methodParameterNode, 
 			String choiceNodeName, 
@@ -94,7 +124,7 @@ public class MethodParameterNodeTestForDetached {
 
 		return choiceNode;
 	}
-	
+
 	private void addNewTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
 
 		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
@@ -128,7 +158,7 @@ public class MethodParameterNodeTestForDetached {
 
 		methodNode.addConstraint(constraintNode);
 	}
-	
+
 	private ChoiceNode getChoiceNodeFromConstraintPostcondition(MethodNode methodNode) {
 
 		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
@@ -163,6 +193,31 @@ public class MethodParameterNodeTestForDetached {
 
 		return choiceNode;
 	}
-	
+
+	private MethodParameterNode getMethodParameterNodeFromConstraintPrecondition(MethodNode methodNode) {
+
+		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
+
+		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+		RelationStatement relationStatement = (RelationStatement)precondition; 
+
+		MethodParameterNode methodParameterNode = relationStatement.getLeftParameter();
+
+		return methodParameterNode;
+	}
+
+	private MethodParameterNode getMethodParameterNodeFromConstraintPostcondition(MethodNode methodNode) {
+
+		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
+
+		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+
+		RelationStatement relationStatement = (RelationStatement)postcondition; 
+
+		MethodParameterNode methodParameterNode = relationStatement.getLeftParameter();
+
+		return methodParameterNode;
+	}
 
 }

@@ -200,4 +200,10 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 	}
 
+	@Override
+	protected void updateParameterReferences(
+			MethodParameterNode oldMethodParameterNode,
+			MethodParameterNode newMethodParameterNode) {
+	}
+
 }

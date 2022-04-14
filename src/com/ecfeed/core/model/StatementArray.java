@@ -362,4 +362,15 @@ public class StatementArray extends AbstractStatement {
 		}
 	}
 
+	@Override
+	protected void updateParameterReferences(
+			MethodParameterNode oldMethodParameterNode,
+			MethodParameterNode newMethodParameterNode) {
+
+		for (AbstractStatement child : fStatements) {
+			child.updateParameterReferences(oldMethodParameterNode, newMethodParameterNode);
+		}
+
+	}
+
 }

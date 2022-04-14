@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -229,11 +230,14 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		changeChoicesToDetached(abstractParameterNode);
 
-		addParameterToDetached(abstractParameterNode);
+		MethodNode methodNode = (MethodNode)abstractParameterNode.getParent();
 
 		if (false == removeParameter(abstractParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Cannot remove parameter.");
 		}
+
+		abstractParameterNode.setParent(methodNode);
+		addParameterToDetached(abstractParameterNode);
 	}
 
 	private void changeChoicesToDetached(AbstractParameterNode abstractParameterNode) {
@@ -246,13 +250,34 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 	}
 
-	public void attachParameterNode(String detachedParameterName, String destinationParameterName) {
+	public void attachParameterNode(
+			String detachedParameterName, 
+			String destinationParameterName,
+			List<ChoiceConversionItem> choiceConversionItems) {
 
-		AbstractParameterNode detachedParameterNode = findDetachedParameter(detachedParameterName);
+		MethodParameterNode detachedParameterNode = (MethodParameterNode)findDetachedParameter(detachedParameterName);
+		MethodParameterNode destinationParameterNode = (MethodParameterNode)findParameter(destinationParameterName);
 
 		if (detachedParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Cannot find detached parameter " + detachedParameterName + ".");
 		}
+
+		MethodNode methodNode = (MethodNode)detachedParameterNode.getParent();
+
+		for (ChoiceConversionItem choiceConversionItem : choiceConversionItems) {
+
+			ChoiceNode oldChoiceNode = detachedParameterNode.getChoice(choiceConversionItem.getSrcName());
+			ChoiceNode newChoiceNode = destinationParameterNode.getChoice(choiceConversionItem.getDstName());
+
+			methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, newChoiceNode);
+			methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, newChoiceNode);
+		}
+
+		// todo replace parameter in constraints
+		methodNode.updateParameterReferencesInConstraints(
+				(MethodParameterNode)detachedParameterNode, 
+				(MethodParameterNode)destinationParameterNode);
+
 
 		fDetachedParameters.remove(detachedParameterNode);
 	}

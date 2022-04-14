@@ -157,10 +157,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
 		String conditionSignature = fRightCondition.createSignature(extLanguageManager);
-		
+
 		MethodParameterNode methodParameterNode = getLeftParameter();
 		String parameterName = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
-		
+
 		return parameterName + getRelation() + conditionSignature;
 	}
 
@@ -380,6 +380,16 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 		fRightCondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+	}
+
+	@Override
+	protected void updateParameterReferences(
+			MethodParameterNode oldMethodParameterNode,
+			MethodParameterNode newMethodParameterNode) {
+
+		if (fLeftParameter == oldMethodParameterNode) {
+			fLeftParameter = newMethodParameterNode;
+		}
 	}
 
 }

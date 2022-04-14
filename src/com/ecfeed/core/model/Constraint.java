@@ -426,6 +426,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fPostcondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
 	}
 
+	public void updateParameterReferences(
+			MethodParameterNode oldMethodParameterNode,
+			MethodParameterNode newMethodParameterNode) {
+		
+		fPrecondition.updateParameterReferences(oldMethodParameterNode, newMethodParameterNode);
+		fPostcondition.updateParameterReferences(oldMethodParameterNode, newMethodParameterNode);
+	}
+
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
 		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);

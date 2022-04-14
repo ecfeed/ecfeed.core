@@ -139,4 +139,10 @@ public class StaticStatement extends AbstractStatement {
 	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 	}
 
+	@Override
+	protected void updateParameterReferences(
+			MethodParameterNode oldMethodParameterNode,
+			MethodParameterNode newMethodParameterNode) {
+	}
+
 }
