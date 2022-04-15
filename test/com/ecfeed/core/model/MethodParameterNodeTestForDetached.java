@@ -28,54 +28,75 @@ public class MethodParameterNodeTestForDetached {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		// create and add parameter, choice
+		// create and add parameter, choice1, and child choice2
 
-		String par1Name = "par1";
-		final String oldChoiceName = "oldChoice";
+		final String par1Name = "par1";
+		final String oldChoiceName1 = "oldChoice1";
+		final String choiceNodeName2 = "oldChoice2";		
 
 		MethodParameterNode oldMethodParameterNode = addParameterToMethod(methodNode, par1Name, "String");
-		ChoiceNode oldChoiceNode = addNewChoiceToMethodParameter(oldMethodParameterNode, oldChoiceName, "0");
+		ChoiceNode oldChoiceNode1 = addNewChoiceToMethodParameter(oldMethodParameterNode, oldChoiceName1, "0");
+		ChoiceNode oldChoiceNode2 = addNewChoiceToChoice(oldChoiceNode1, choiceNodeName2, "0");
 
-		addNewTestCaseToMethod(methodNode, oldChoiceNode);
-		addNewSimpleConstraintToMethod(methodNode, oldMethodParameterNode, oldChoiceNode);
+		addNewTestCaseToMethod(methodNode, oldChoiceNode1);
+		addNewSimpleConstraintToMethod(methodNode, oldMethodParameterNode, oldChoiceNode1, oldChoiceNode2);
 
 		// detach parameter 
 
 		methodNode.detachParameterNode(par1Name);
 		assertTrue(oldMethodParameterNode.isDetached());
-		assertTrue(oldChoiceNode.isDetached());
+		assertTrue(oldChoiceNode1.isDetached());
 
 		assertEquals(0, methodNode.getParametersCount());
 		assertEquals(1, methodNode.getDetachedParametersCount());
 
-		// check choice node from test case - should not be changed
+		// check choice node 1 from test case - should not be changed
 
 		TestCaseNode testCaseNode = methodNode.getTestCases().get(0);
 		List<ChoiceNode> testData = testCaseNode.getTestData();
-		ChoiceNode choiceFromTestCase = testData.get(0);
-		assertEquals(oldChoiceNode, choiceFromTestCase);
+		ChoiceNode choiceFromTestCase1 = testData.get(0);
+		assertTrue(choiceFromTestCase1.isDetached());
+		assertEquals(oldChoiceNode1, choiceFromTestCase1);
+
+		// check choice node 2 from test case - should not be changed
+
+		ChoiceNode choiceFromTestCase2 = choiceFromTestCase1.getChoices().get(0);
+		assertTrue(choiceFromTestCase2.isDetached());
+		assertEquals(oldChoiceNode2, choiceFromTestCase2);
 
 		// check choice nodes from constraint - should not be changed
 
 		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode);
-		assertEquals(oldChoiceNode, choiceNodeFromPrecondition);
+		assertEquals(oldChoiceNode1, choiceNodeFromPrecondition);
 
 		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode);
-		assertEquals(oldChoiceNode, choiceNodeFromPostcondition);
+		assertEquals(oldChoiceNode2, choiceNodeFromPostcondition);
 
-		// add new parameter and choice to method
+		// add new parameter and two choices to method
 
 		String newPar1Name = "newPar1";
 		MethodParameterNode newMethodParameterNode = addParameterToMethod(methodNode, newPar1Name, "String");
 
-		String newChoiceName = "newChoice";
-		ChoiceNode newChoiceNode = addNewChoiceToMethodParameter(newMethodParameterNode, newChoiceName, "0");
+		String newChoiceName1 = "newChoice1";
+		ChoiceNode newChoiceNode1 = addNewChoiceToMethodParameter(newMethodParameterNode, newChoiceName1, "0");
+
+		String newChoiceName2 = "newChoice2";
+		ChoiceNode newChoiceNode2 = addNewChoiceToChoice(newChoiceNode1, newChoiceName2, "0");
 
 		// prepare choice conversion list for attachment
-		
+
 		List<ChoiceConversionItem> choiceConversionItems = new ArrayList<>();
-		ChoiceConversionItem choiceConversionItem = new ChoiceConversionItem(oldChoiceName, newChoiceName);
-		choiceConversionItems.add(choiceConversionItem);
+
+		ChoiceConversionItem choiceConversionItem1 = 
+				new ChoiceConversionItem(
+						oldChoiceNode1.getQualifiedName(), newChoiceNode1.getQualifiedName());
+		choiceConversionItems.add(choiceConversionItem1);
+
+		ChoiceConversionItem choiceConversionItem2 = 
+				new ChoiceConversionItem(
+						oldChoiceNode2.getQualifiedName(), newChoiceNode2.getQualifiedName());
+		choiceConversionItems.add(choiceConversionItem2);
+
 
 		// attach - should replace old choice with new choice and oldParameter with new parameter
 
@@ -94,20 +115,24 @@ public class MethodParameterNodeTestForDetached {
 				getMethodParameterNodeFromConstraintPostcondition(methodNode);
 		assertEquals(methodParameterNodeFromConstraint, newMethodParameterNode);
 
-		// check choice nodes from constraint - should be new
+		// check choices nodes from constraint - should be new
 
 		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode);
-		assertEquals(choiceNodeFromPrecondition, newChoiceNode);
+		assertEquals(choiceNodeFromPrecondition, newChoiceNode1);
 
 		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode);
-		assertEquals(choiceNodeFromPostcondition, newChoiceNode);
-		
-		// check choice node from test case - shold be new 
+		assertEquals(choiceNodeFromPostcondition, newChoiceNode2);
+
+		// check choice node from test case - should be new 
 
 		testCaseNode = methodNode.getTestCases().get(0);
 		testData = testCaseNode.getTestData();
-		choiceFromTestCase = testData.get(0);
-		assertEquals(choiceFromTestCase, newChoiceNode);
+
+		choiceFromTestCase1 = testData.get(0);
+		assertEquals(choiceFromTestCase1, newChoiceNode1);
+
+		choiceFromTestCase2 = choiceFromTestCase1.getChoices().get(0);
+		assertEquals(choiceFromTestCase2, newChoiceNode2);
 	}
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
@@ -129,6 +154,15 @@ public class MethodParameterNodeTestForDetached {
 		return choiceNode;
 	}
 
+	private ChoiceNode addNewChoiceToChoice(
+			ChoiceNode parentChoiceNode, String choiceNodeName, String valueString) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
+		parentChoiceNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
+
 	private void addNewTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
 
 		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
@@ -141,15 +175,16 @@ public class MethodParameterNodeTestForDetached {
 	private void addNewSimpleConstraintToMethod(
 			MethodNode methodNode,
 			MethodParameterNode methodParameterNode,
-			ChoiceNode choiceNode) {
+			ChoiceNode choiceNode1,
+			ChoiceNode choiceNode2) {
 
 		RelationStatement relationStatement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						methodParameterNode, EMathRelation.EQUAL, choiceNode);
+						methodParameterNode, EMathRelation.EQUAL, choiceNode1);
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						methodParameterNode, EMathRelation.LESS_THAN, choiceNode);
+						methodParameterNode, EMathRelation.LESS_THAN, choiceNode2);
 
 		Constraint constraint = new Constraint(
 				"c", 
