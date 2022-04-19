@@ -262,18 +262,25 @@ public abstract class ParametersParentNode extends AbstractNode {
 			ExceptionHelper.reportRuntimeException("Cannot find detached parameter " + detachedParameterName + ".");
 		}
 
-		MethodNode methodNode = (MethodNode)detachedParameterNode.getParent();
+		MethodNode methodNode = (MethodNode)this;
 
-		for (ChoiceConversionItem choiceConversionItem : choiceConversionItems) {
+		if (choiceConversionItems != null) {
+			for (ChoiceConversionItem choiceConversionItem : choiceConversionItems) {
 
-			ChoiceNode oldChoiceNode = detachedParameterNode.getChoice(choiceConversionItem.getSrcName());
-			ChoiceNode newChoiceNode = destinationParameterNode.getChoice(choiceConversionItem.getDstName());
+				ChoiceNode oldChoiceNode = detachedParameterNode.getChoice(choiceConversionItem.getSrcName());
+				ChoiceNode newChoiceNode = destinationParameterNode.getChoice(choiceConversionItem.getDstName());
 
-			methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, newChoiceNode);
-			methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, newChoiceNode);
+				methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, newChoiceNode);
+				methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, newChoiceNode);
+			}
+		}
+		
+		List<ChoiceNode> choiceNodes = detachedParameterNode.getChoices();
+		
+		for (ChoiceNode choiceNode : choiceNodes) {
+			destinationParameterNode.addChoice(choiceNode);
 		}
 
-		// todo replace parameter in constraints
 		methodNode.updateParameterReferencesInConstraints(
 				(MethodParameterNode)detachedParameterNode, 
 				(MethodParameterNode)destinationParameterNode);

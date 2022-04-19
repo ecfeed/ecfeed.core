@@ -135,6 +135,50 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(choiceFromTestCase2, newChoiceNode2);
 	}
 
+	@Test
+	public void attachWithoutChoicesTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		// create and add parameter, choice1, and child choice2
+
+		final String par1Name = "par1";
+		final String oldChoiceName1 = "oldChoice1";
+		final String oldChoiceName2 = "oldChoice2";		
+
+		MethodParameterNode oldMethodParameterNode = addParameterToMethod(methodNode, par1Name, "String");
+		ChoiceNode oldChoiceNode1 = addNewChoiceToMethodParameter(oldMethodParameterNode, oldChoiceName1, "0");
+		ChoiceNode oldChoiceNode2 = addNewChoiceToChoice(oldChoiceNode1, oldChoiceName2, "0");
+
+		// detach parameter 
+
+		methodNode.detachParameterNode(par1Name);
+
+		// add new parameter without choices
+
+		String newPar1Name = "newPar1";
+		MethodParameterNode newMethodParameterNode = addParameterToMethod(methodNode, newPar1Name, "String");
+
+		// attach - should create child choices in destination parameter
+
+		methodNode.attachParameterNode(par1Name, newPar1Name, null);
+
+		assertEquals(0, methodNode.getDetachedParametersCount());
+		assertEquals(1, methodNode.getParametersCount());
+
+		List<ChoiceNode> choiceNodes1 = newMethodParameterNode.getChoices();
+		assertEquals(1, choiceNodes1.size());
+
+		ChoiceNode newChoiceNode1 = choiceNodes1.get(0);
+		assertEquals(oldChoiceNode1.getQualifiedName(), newChoiceNode1.getQualifiedName());
+
+		List<ChoiceNode> choiceNodes2  = newChoiceNode1.getChoices();
+		assertEquals(1, choiceNodes2.size());
+
+		ChoiceNode newChoiceNode2 = choiceNodes2.get(0);
+		assertEquals(oldChoiceNode2.getQualifiedName(), newChoiceNode2.getQualifiedName());
+	}
+
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
 
 		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
