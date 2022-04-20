@@ -274,11 +274,11 @@ public abstract class ParametersParentNode extends AbstractNode {
 				methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, newChoiceNode);
 			}
 		}
-		
+
 		List<ChoiceNode> choiceNodes = detachedParameterNode.getChoices();
-		
+
 		for (ChoiceNode choiceNode : choiceNodes) {
-			destinationParameterNode.addChoice(choiceNode);
+			addChoiceWithUniqueName(choiceNode, destinationParameterNode);
 		}
 
 		methodNode.updateParameterReferencesInConstraints(
@@ -287,6 +287,49 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 
 		fDetachedParameters.remove(detachedParameterNode);
+	}
+
+	private void addChoiceWithUniqueName(ChoiceNode choiceNode, MethodParameterNode methodParameterNode) {
+
+
+		String orginalChoiceName = choiceNode.getName();
+
+		if (!choiceNameExistsAmongChildren(orginalChoiceName, methodParameterNode)) {
+
+			methodParameterNode.addChoice(choiceNode);
+			return;
+		}
+
+		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
+
+			String tmpName = orginalChoiceName + "-" + postfixCounter;
+
+			if (!choiceNameExistsAmongChildren(tmpName, methodParameterNode)) {
+
+				choiceNode.setName(tmpName);
+				methodParameterNode.addChoice(choiceNode);
+				return;
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("Cannot add choice to method parameter.");
+	}
+
+	// TODO DE-NO - move to choices parent node
+	private boolean choiceNameExistsAmongChildren(String choiceName, MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> choiceNodes = methodParameterNode.getChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			String currentChoiceName = choiceNode.getName();
+
+			if (currentChoiceName.equals(choiceName)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

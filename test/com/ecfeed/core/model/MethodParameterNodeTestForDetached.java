@@ -23,6 +23,8 @@ import com.ecfeed.core.utils.EMathRelation;
 
 public class MethodParameterNodeTestForDetached {
 
+	// TODO - add test to check if choice conversion list is complete
+
 	@Test
 	public void attachDetachParameterNodeTest() {
 
@@ -143,8 +145,8 @@ public class MethodParameterNodeTestForDetached {
 		// create and add parameter, choice1, and child choice2
 
 		final String par1Name = "par1";
-		final String oldChoiceName1 = "oldChoice1";
-		final String oldChoiceName2 = "oldChoice2";		
+		final String oldChoiceName1 = "choice1";
+		final String oldChoiceName2 = "choice2";		
 
 		MethodParameterNode oldMethodParameterNode = addParameterToMethod(methodNode, par1Name, "String");
 		ChoiceNode oldChoiceNode1 = addNewChoiceToMethodParameter(oldMethodParameterNode, oldChoiceName1, "0");
@@ -166,6 +168,8 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(0, methodNode.getDetachedParametersCount());
 		assertEquals(1, methodNode.getParametersCount());
 
+		// abstract choices with child choices should be transferred to destination parameter
+
 		List<ChoiceNode> choiceNodes1 = newMethodParameterNode.getChoices();
 		assertEquals(1, choiceNodes1.size());
 
@@ -177,6 +181,52 @@ public class MethodParameterNodeTestForDetached {
 
 		ChoiceNode newChoiceNode2 = choiceNodes2.get(0);
 		assertEquals(oldChoiceNode2.getQualifiedName(), newChoiceNode2.getQualifiedName());
+	}
+
+	@Test
+	public void attachWithTheSameChoiceNameTest() {
+
+		MethodNode methodNode = new MethodNode("method", null);
+
+		// create and add parameter and choice1
+
+		final String par1Name = "par1";
+		final String choiceName1 = "choice1";
+
+		MethodParameterNode oldMethodParameterNode = addParameterToMethod(methodNode, par1Name, "String");
+		ChoiceNode choiceNode1 = addNewChoiceToMethodParameter(oldMethodParameterNode, choiceName1, "0");
+
+		// detach parameter 
+
+		methodNode.detachParameterNode(par1Name);
+
+		// add new parameter without choices
+
+		String newPar1Name = "newPar1";
+		MethodParameterNode newMethodParameterNode = addParameterToMethod(methodNode, newPar1Name, "String");
+
+		//  add choice with the same name to new parameter
+
+		addNewChoiceToMethodParameter(newMethodParameterNode, choiceName1, "0");
+
+		// attach - should create choice with name choice1-1
+
+		methodNode.attachParameterNode(par1Name, newPar1Name, null);
+
+		assertEquals(0, methodNode.getDetachedParametersCount());
+		assertEquals(1, methodNode.getParametersCount());
+
+		// check old choice1 and new choice1-1
+
+		List<ChoiceNode> choiceNodes1 = newMethodParameterNode.getChoices();
+
+		ChoiceNode newChoiceNode1 = choiceNodes1.get(0);
+		String newName1 = newChoiceNode1.getQualifiedName();
+		assertEquals(newName1, choiceName1);
+
+		ChoiceNode newChoiceNode2 = choiceNodes1.get(1);
+		String newName2 = newChoiceNode2.getName();
+		assertEquals(newName2, choiceName1 + "-1");
 	}
 
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
