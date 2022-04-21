@@ -265,21 +265,14 @@ public abstract class ParametersParentNode extends AbstractNode {
 		MethodNode methodNode = (MethodNode)this;
 
 		if (choiceConversionItems != null) {
-			for (ChoiceConversionItem choiceConversionItem : choiceConversionItems) {
-
-				ChoiceNode oldChoiceNode = detachedParameterNode.getChoice(choiceConversionItem.getSrcName());
-				ChoiceNode newChoiceNode = destinationParameterNode.getChoice(choiceConversionItem.getDstName());
-
-				methodNode.updateChoiceReferencesInTestCases(oldChoiceNode, newChoiceNode);
-				methodNode.updateChoiceReferencesInConstraints(oldChoiceNode, newChoiceNode);
-			}
+			moveChoicesByConversionList(
+					choiceConversionItems, 
+					detachedParameterNode, 
+					destinationParameterNode,
+					methodNode);
 		}
 
-		List<ChoiceNode> choiceNodes = detachedParameterNode.getChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-			addChoiceWithUniqueName(choiceNode, destinationParameterNode);
-		}
+		moveRemainingTopChoices(detachedParameterNode, destinationParameterNode);
 
 		methodNode.updateParameterReferencesInConstraints(
 				(MethodParameterNode)detachedParameterNode, 
@@ -287,6 +280,57 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 
 		fDetachedParameters.remove(detachedParameterNode);
+	}
+
+	private void moveChoicesByConversionList(
+			List<ChoiceConversionItem> choiceConversionItems,
+			MethodParameterNode srcParameterNode, 
+			MethodParameterNode dstParameterNode,
+			MethodNode methodNode) {
+
+		for (ChoiceConversionItem choiceConversionItem : choiceConversionItems) {
+
+			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
+
+			if (srcChoiceNode == null) {
+				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
+			}
+
+			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(choiceConversionItem.getDstName());
+
+			if (dstChoiceNode == null) {
+				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
+			}
+
+			moveChildChoices(srcChoiceNode, dstChoiceNode);
+
+			methodNode.updateChoiceReferencesInTestCases(srcChoiceNode, dstChoiceNode);
+			methodNode.updateChoiceReferencesInConstraints(srcChoiceNode, dstChoiceNode);
+
+			// remove source choice
+
+			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
+			choicesParentNode.removeChoice(srcChoiceNode);
+		}
+	}
+
+	private void moveRemainingTopChoices(MethodParameterNode detachedParameterNode,
+			MethodParameterNode destinationParameterNode) {
+		List<ChoiceNode> choiceNodes = detachedParameterNode.getChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+			addChoiceWithUniqueName(choiceNode, destinationParameterNode);
+		}
+	}
+
+	private void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {
+
+		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
+
+		for (ChoiceNode childChoice : childChoices) {
+
+			dstChoiceNode.addChoice(childChoice);
+		}
 	}
 
 	private void addChoiceWithUniqueName(ChoiceNode choiceNode, MethodParameterNode methodParameterNode) {
