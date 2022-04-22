@@ -11,6 +11,8 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.ecfeed.core.utils.ChoiceConversionItem;
@@ -282,13 +284,52 @@ public abstract class ParametersParentNode extends AbstractNode {
 		fDetachedParameters.remove(detachedParameterNode);
 	}
 
+	private List<ChoiceConversionItem> createSortedCopyOfConversionItems(
+			List<ChoiceConversionItem> choiceConversionItems) {
+		
+		List<ChoiceConversionItem> sortedChoiceConversionItems = new ArrayList<>(choiceConversionItems);
+		
+		Comparator<ChoiceConversionItem> comparator = new Comparator<ChoiceConversionItem>() {
+
+			@Override
+			public int compare(ChoiceConversionItem leftItem, ChoiceConversionItem rightItem) {
+				
+				int leftItemLevel = getChoiceLevel(leftItem.getSrcName());
+				int rightItemLevel = getChoiceLevel(rightItem.getSrcName());
+				
+
+				if (rightItemLevel > leftItemLevel) {
+					return 1;
+				}
+				
+				if (rightItemLevel < leftItemLevel) {
+					return -1;
+				}
+				
+				return 0;
+			}
+		};
+		
+		Collections.sort(sortedChoiceConversionItems, comparator);
+		
+		return sortedChoiceConversionItems;
+	}
+
+	private int getChoiceLevel(String choiceName) {
+	
+		return StringHelper.countOccurencesOfChar(choiceName, ':');
+	}
+	
 	private void moveChoicesByConversionList(
 			List<ChoiceConversionItem> choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
 			MethodParameterNode dstParameterNode,
 			MethodNode methodNode) {
-
-		for (ChoiceConversionItem choiceConversionItem : choiceConversionItems) {
+		
+		List<ChoiceConversionItem> sortedChoiceConversionItems = 
+				createSortedCopyOfConversionItems(choiceConversionItems);
+		
+		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
 
 			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
 

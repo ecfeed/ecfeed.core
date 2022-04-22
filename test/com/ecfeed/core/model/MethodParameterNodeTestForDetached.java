@@ -90,18 +90,15 @@ public class MethodParameterNodeTestForDetached {
 
 		List<ChoiceConversionItem> choiceConversionItems = new ArrayList<>();
 
-		// TODO DE-NO - REVERSE LIST 
-		ChoiceConversionItem choiceConversionItem2 = 
-				new ChoiceConversionItem(
-						oldChoiceNode2.getQualifiedName(), newChoiceNode2.getQualifiedName());
-		choiceConversionItems.add(choiceConversionItem2);
-		
 		ChoiceConversionItem choiceConversionItem1 = 
 				new ChoiceConversionItem(
 						oldChoiceNode1.getQualifiedName(), newChoiceNode1.getQualifiedName());
 		choiceConversionItems.add(choiceConversionItem1);
 
-
+		ChoiceConversionItem choiceConversionItem2 = 
+				new ChoiceConversionItem(
+						oldChoiceNode2.getQualifiedName(), newChoiceNode2.getQualifiedName());
+		choiceConversionItems.add(choiceConversionItem2);
 
 		// attach - should replace old choice with new choice and oldParameter with new parameter
 
