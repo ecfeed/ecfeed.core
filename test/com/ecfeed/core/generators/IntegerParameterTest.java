@@ -14,22 +14,20 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.ecfeed.core.generators.api.GeneratorException;
-
 public class IntegerParameterTest {
 	@Test
 	public void constructorWithAllowedValuesTest() {
 		try {
 			@SuppressWarnings("unused")
             ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  0, new Integer[]{-1, 0, 1});
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 		try {
 			@SuppressWarnings("unused")
             ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  5, new Integer[]{-1, 0, 1});
-			fail("GeneratorException expected");
-		} catch (GeneratorException e) {
+			fail("Exception expected");
+		} catch (Exception e) {
 		}
 	}
 
@@ -41,11 +39,11 @@ public class IntegerParameterTest {
 			parameter = new ParameterDefinitionInteger("parameter",  -1, -1, 1);
 			parameter = new ParameterDefinitionInteger("parameter",  1, -1, 1);
 		} catch (Exception e) {
-			fail("Unexpected GeneratorException");
+			fail("Unexpected Exception");
 		}
 		try {
 			ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  2, -1, 1);
-			fail("GeneratorException expected");
+			fail("Exception expected");
 		} catch (Exception e) {
 		}
 	}
@@ -58,8 +56,8 @@ public class IntegerParameterTest {
 			Integer[] allowed = new Integer[]{0, 1, 2};
 			parameter = new ParameterDefinitionInteger("parameter",  0, allowed);
 			assertArrayEquals(allowed, parameter.getAllowedValues());
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 	}
 
@@ -77,8 +75,8 @@ public class IntegerParameterTest {
 			ParameterDefinitionInteger parameter = new ParameterDefinitionInteger("parameter",  0, new Integer[]{-1, 0, 1});
 			assertTrue(parameter.test(0));
 			assertFalse(parameter.test(5));
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 	}
 }

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.generators.api.IParameterDefinition;
@@ -25,7 +24,7 @@ public class CartesianProductGenerator<E> extends AbstractGenerator<E> {
 
 	private static List<IParameterDefinition> fParameterDefinitions = null;
 
-	public CartesianProductGenerator() throws GeneratorException {
+	public CartesianProductGenerator() {
 		if (fParameterDefinitions == null) {
 			fParameterDefinitions = new ArrayList<>();
 		}
@@ -35,7 +34,7 @@ public class CartesianProductGenerator<E> extends AbstractGenerator<E> {
 	public void initialize(List<List<E>> inputDomain,
 						   IConstraintEvaluator<E> constraintEvaluator,
 			List<IGeneratorValue> parameters,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) {
 		
 		super.initialize(inputDomain, constraintEvaluator, parameters, generatorProgressMonitor);
 		setAlgorithm(new CartesianProductAlgorithm<E>());

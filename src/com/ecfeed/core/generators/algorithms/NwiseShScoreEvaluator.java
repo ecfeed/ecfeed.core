@@ -9,7 +9,7 @@ import java.util.SortedMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -35,10 +35,10 @@ public class NwiseShScoreEvaluator<E> implements IScoreEvaluator<E> {
 	@Override
 	public void initialize(
 			List<List<E>> input,
-			IConstraintEvaluator<E> constraintEvaluator) throws GeneratorException {
+			IConstraintEvaluator<E> constraintEvaluator) {
 
 		if (input == null) {
-			GeneratorException.report("Input of N-wise score evaluator should not be empty.");
+			GeneratorExceptionHelper.reportException("Input of N-wise score evaluator should not be empty.");
 		}
 
 		fCountOfDimensions = input.size();

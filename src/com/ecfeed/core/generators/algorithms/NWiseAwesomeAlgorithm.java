@@ -18,13 +18,7 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import com.ecfeed.core.generators.DimensionedItem;
-import com.ecfeed.core.generators.api.GeneratorException;
-import com.ecfeed.core.utils.AlgoLogger;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.IEcfProgressMonitor;
-import com.ecfeed.core.utils.Randomizer;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.*;
 import com.google.common.collect.Maps;
 
 
@@ -58,7 +52,10 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 	public void reset() {
 
 		fRandomizer = new Randomizer();
-		System.out.println("Randomizer seed for current generation: " + fRandomizer.getSeed());
+
+		if (LoggingLevel.get() == LoggingLevel.DETAILED) {
+			System.out.println("Randomizer seed for current generation: " + fRandomizer.getSeed());
+		}
 
 		fDimCount = getInput().size();
 
@@ -91,7 +88,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 	}
 
 	@Override
-	public List<E> getNext() throws GeneratorException {
+	public List<E> getNext() {
 
 		AlgoLogger.log("========== getNext test case ==========", 1, fLogLevel);
 

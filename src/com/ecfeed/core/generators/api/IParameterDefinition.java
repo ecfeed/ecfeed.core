@@ -41,7 +41,7 @@ public interface IParameterDefinition {
 	 */
 	public boolean test(Object value);
 
-	public Object parse(String value) throws GeneratorException;
+	public Object parse(String value);
 	
 }
 
