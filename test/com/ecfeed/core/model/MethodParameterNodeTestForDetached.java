@@ -19,6 +19,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.ChoiceConversionItem;
+import com.ecfeed.core.utils.ChoiceConversionOperation;
 import com.ecfeed.core.utils.EMathRelation;
 
 public class MethodParameterNodeTestForDetached {
@@ -92,12 +93,16 @@ public class MethodParameterNodeTestForDetached {
 
 		ChoiceConversionItem choiceConversionItem1 = 
 				new ChoiceConversionItem(
-						oldChoiceNode1.getQualifiedName(), newChoiceNode1.getQualifiedName());
+						oldChoiceNode1.getQualifiedName(), 
+						ChoiceConversionOperation.MERGE, 
+						newChoiceNode1.getQualifiedName());
 		choiceConversionItems.add(choiceConversionItem1);
 
 		ChoiceConversionItem choiceConversionItem2 = 
 				new ChoiceConversionItem(
-						oldChoiceNode2.getQualifiedName(), newChoiceNode2.getQualifiedName());
+						oldChoiceNode2.getQualifiedName(),
+						ChoiceConversionOperation.MERGE,
+						newChoiceNode2.getQualifiedName());
 		choiceConversionItems.add(choiceConversionItem2);
 
 		// attach - should replace old choice with new choice and oldParameter with new parameter
@@ -289,7 +294,9 @@ public class MethodParameterNodeTestForDetached {
 
 		ChoiceConversionItem choiceConversionItem1 = 
 				new ChoiceConversionItem(
-						oldChoiceNode2.getQualifiedName(), newChoiceNode1.getQualifiedName());
+						oldChoiceNode2.getQualifiedName(),
+						ChoiceConversionOperation.MERGE,
+						newChoiceNode1.getQualifiedName());
 		choiceConversionItems.add(choiceConversionItem1);
 
 		// attach

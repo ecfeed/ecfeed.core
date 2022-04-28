@@ -14,13 +14,22 @@ public class ChoiceConversionItem {
 
 	private String fChoiceSrcName;
 	private String fChoiceDstName;
+	private ChoiceConversionOperation fChoiceConversionOperation;
 
-	public ChoiceConversionItem(String choiceSrcName, String choiceDstName) {
+	public ChoiceConversionItem(
+			String choiceSrcName, 
+			ChoiceConversionOperation choiceConversionOperation, 
+			String choiceDstName) {
 
 		fChoiceSrcName = choiceSrcName;
+		fChoiceConversionOperation = choiceConversionOperation;
 		fChoiceDstName = choiceDstName;
 	}
 
+	public ChoiceConversionOperation getOperation() {
+		return fChoiceConversionOperation;
+	}
+	
 	public String getSrcName() {
 		return fChoiceSrcName;
 	}
