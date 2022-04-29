@@ -16,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.ecfeed.core.utils.ChoiceConversionItem;
+import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -255,7 +256,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 	public void attachParameterNode(
 			String detachedParameterName, 
 			String destinationParameterName,
-			List<ChoiceConversionItem> choiceConversionItems) {
+			ChoiceConversionList choiceConversionList) {
 
 		MethodParameterNode detachedParameterNode = (MethodParameterNode)findDetachedParameter(detachedParameterName);
 		MethodParameterNode destinationParameterNode = (MethodParameterNode)findParameter(destinationParameterName);
@@ -266,9 +267,9 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		MethodNode methodNode = (MethodNode)this;
 
-		if (choiceConversionItems != null) {
+		if (choiceConversionList != null) {
 			moveChoicesByConversionList(
-					choiceConversionItems, 
+					choiceConversionList, 
 					detachedParameterNode, 
 					destinationParameterNode,
 					methodNode);
@@ -284,50 +285,14 @@ public abstract class ParametersParentNode extends AbstractNode {
 		fDetachedParameters.remove(detachedParameterNode);
 	}
 
-	private List<ChoiceConversionItem> createSortedCopyOfConversionItems(
-			List<ChoiceConversionItem> choiceConversionItems) {
-		
-		List<ChoiceConversionItem> sortedChoiceConversionItems = new ArrayList<>(choiceConversionItems);
-		
-		Comparator<ChoiceConversionItem> comparator = new Comparator<ChoiceConversionItem>() {
-
-			@Override
-			public int compare(ChoiceConversionItem leftItem, ChoiceConversionItem rightItem) {
-				
-				int leftItemLevel = getChoiceLevel(leftItem.getSrcName());
-				int rightItemLevel = getChoiceLevel(rightItem.getSrcName());
-				
-
-				if (rightItemLevel > leftItemLevel) {
-					return 1;
-				}
-				
-				if (rightItemLevel < leftItemLevel) {
-					return -1;
-				}
-				
-				return 0;
-			}
-		};
-		
-		Collections.sort(sortedChoiceConversionItems, comparator);
-		
-		return sortedChoiceConversionItems;
-	}
-
-	private int getChoiceLevel(String choiceName) {
-	
-		return StringHelper.countOccurencesOfChar(choiceName, ':');
-	}
-	
 	private void moveChoicesByConversionList(
-			List<ChoiceConversionItem> choiceConversionItems,
+			ChoiceConversionList choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
 			MethodParameterNode dstParameterNode,
 			MethodNode methodNode) {
 		
 		List<ChoiceConversionItem> sortedChoiceConversionItems = 
-				createSortedCopyOfConversionItems(choiceConversionItems);
+				choiceConversionItems.createSortedCopyOfConversionItems();
 		
 		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
 
