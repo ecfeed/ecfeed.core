@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ChoiceConversionOperation;
 import com.ecfeed.core.utils.EMathRelation;
@@ -90,22 +89,6 @@ public class MethodParameterNodeTestForDetached {
 
 		// prepare choice conversion list for attachment
 
-//		List<ChoiceConversionItem> choiceConversionItems = new ArrayList<>();
-//
-//		ChoiceConversionItem choiceConversionItem1 = 
-//				new ChoiceConversionItem(
-//						oldChoiceNode1.getQualifiedName(), 
-//						ChoiceConversionOperation.MERGE, 
-//						newChoiceNode1.getQualifiedName());
-//		choiceConversionItems.add(choiceConversionItem1);
-//
-//		ChoiceConversionItem choiceConversionItem2 = 
-//				new ChoiceConversionItem(
-//						oldChoiceNode2.getQualifiedName(),
-//						ChoiceConversionOperation.MERGE,
-//						newChoiceNode2.getQualifiedName());
-//		choiceConversionItems.add(choiceConversionItem2);
-		
 		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
 		
 		choiceConversionList.addItem(
@@ -117,11 +100,9 @@ public class MethodParameterNodeTestForDetached {
 				oldChoiceNode2.getQualifiedName(),
 				ChoiceConversionOperation.MERGE,
 				newChoiceNode2.getQualifiedName());
-		
 
 		// attach - should replace old choice with new choice and oldParameter with new parameter
-
-		methodNode.attachParameterNode(par1Name, newPar1Name, choiceConversionList);
+		ParameterAttacher.attach(oldMethodParameterNode, newMethodParameterNode, choiceConversionList);
 
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(0, methodNode.getDetachedParametersCount());
@@ -182,7 +163,7 @@ public class MethodParameterNodeTestForDetached {
 
 		// attach - should create child choices in destination parameter
 
-		methodNode.attachParameterNode(par1Name, newPar1Name, null);
+		ParameterAttacher.attach(oldMethodParameterNode, newMethodParameterNode, null);
 
 		assertEquals(0, methodNode.getDetachedParametersCount());
 		assertEquals(1, methodNode.getParametersCount());
@@ -230,7 +211,9 @@ public class MethodParameterNodeTestForDetached {
 
 		// attach - should create choice with name choice1-1
 
-		methodNode.attachParameterNode(par1Name, newPar1Name, null);
+		// TODO DE-NO USE ParameterAttacher
+//		methodNode.attachParameterNode(par1Name, newPar1Name, null);
+		ParameterAttacher.attach(oldMethodParameterNode, newMethodParameterNode, null);
 
 		assertEquals(0, methodNode.getDetachedParametersCount());
 		assertEquals(1, methodNode.getParametersCount());
@@ -304,15 +287,6 @@ public class MethodParameterNodeTestForDetached {
 
 		// prepare choice conversion list for attachment
 
-//		List<ChoiceConversionItem> choiceConversionItems = new ArrayList<>();
-//
-//		ChoiceConversionItem choiceConversionItem1 = 
-//				new ChoiceConversionItem(
-//						oldChoiceNode2.getQualifiedName(),
-//						ChoiceConversionOperation.MERGE,
-//						newChoiceNode1.getQualifiedName());
-//		choiceConversionItems.add(choiceConversionItem1);
-
 		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
 		
 		choiceConversionList.addItem(
@@ -322,7 +296,7 @@ public class MethodParameterNodeTestForDetached {
 		
 		// attach
 
-		methodNode.attachParameterNode(par1Name, newPar1Name, choiceConversionList);
+		ParameterAttacher.attach(oldMethodParameterNode, newMethodParameterNode, choiceConversionList);
 
 		// checking choices - children of parameter
 
@@ -383,16 +357,23 @@ public class MethodParameterNodeTestForDetached {
 //		
 //		// creating choice conversion list
 //		
-//		List<ChoiceConversionItem> choiceConversionItems = new ArrayList<>();
-//
-//		ChoiceConversionItem choiceConversionItem = 
-//				new ChoiceConversionItem(
-//						methodChoiceName, 
-//						ChoiceConversionOperation.MERGE, 
-//						globalChoiceName);
-//		choiceConversionItems.add(choiceConversionItem);
+////		List<ChoiceConversionItem> choiceConversionItems = new ArrayList<>();
+////
+////		ChoiceConversionItem choiceConversionItem = 
+////				new ChoiceConversionItem(
+////						methodChoiceName, 
+////						ChoiceConversionOperation.MERGE, 
+////						globalChoiceName);
+////		choiceConversionItems.add(choiceConversionItem);
 //		
-//		ParameterAttacher.attach(methodParameterNode, globalParameterNode, choiceConversionItems);
+//		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+//		
+//		choiceConversionList.addItem(
+//				methodChoiceName, 
+//				ChoiceConversionOperation.MERGE, 
+//				globalChoiceName);
+//		
+//		ParameterAttacher.attach(methodParameterNode, globalParameterNode, choiceConversionList);
 //		
 //		assertEquals(0, methodNode.getParametersCount());
 //		assertEquals(1, classNode.getParametersCount());
@@ -437,12 +418,6 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(name1, name2);
 	}
 
-	private MethodNode addMethodToClass(ClassNode classNode) {
-		MethodNode methodNode = new MethodNode("M1", null);
-		classNode.addMethod(methodNode);
-		return methodNode;
-	}
-
 	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
 
 		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
@@ -451,14 +426,6 @@ public class MethodParameterNodeTestForDetached {
 		return methodParameterNode;
 	}
 
-	private GlobalParameterNode addGlobalParameterClass(ClassNode classNode, String name, String type) {
-
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode(name, type, null);
-		classNode.addParameter(globalParameterNode);
-
-		return globalParameterNode;
-	}
-	
 	private ChoiceNode addNewChoiceToMethodParameter(
 			MethodParameterNode methodParameterNode, 
 			String choiceNodeName, 
@@ -470,17 +437,6 @@ public class MethodParameterNodeTestForDetached {
 		return choiceNode;
 	}
 
-	private ChoiceNode addNewChoiceToGlobalParameter(
-			GlobalParameterNode globalParameterNode, 
-			String choiceNodeName, 
-			String valueString) {
-
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
-		globalParameterNode.addChoice(choiceNode);
-
-		return choiceNode;
-	}
-	
 	private ChoiceNode addNewChoiceToChoice(
 			ChoiceNode parentChoiceNode, String choiceNodeName, String valueString) {
 

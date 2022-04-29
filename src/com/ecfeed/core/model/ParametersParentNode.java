@@ -11,12 +11,8 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import com.ecfeed.core.utils.ChoiceConversionItem;
-import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -156,6 +152,16 @@ public abstract class ParametersParentNode extends AbstractNode {
 		return result;
 	}
 
+	public boolean removeDetachedParameter(AbstractParameterNode parameter) {
+
+		parameter.setParent(null);
+
+		boolean result = fDetachedParameters.remove(parameter);
+		registerChange();
+
+		return result;
+	}
+	
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
 		fParameters.clear();
@@ -251,135 +257,6 @@ public abstract class ParametersParentNode extends AbstractNode {
 			ChoiceNodeHelper.setDetachedWithChildren(choiceNode, true);
 		}
 
-	}
-
-	public void attachParameterNode(
-			String detachedParameterName, 
-			String destinationParameterName,
-			ChoiceConversionList choiceConversionList) {
-
-		MethodParameterNode detachedParameterNode = (MethodParameterNode)findDetachedParameter(detachedParameterName);
-		MethodParameterNode destinationParameterNode = (MethodParameterNode)findParameter(destinationParameterName);
-
-		if (detachedParameterNode == null) {
-			ExceptionHelper.reportRuntimeException("Cannot find detached parameter " + detachedParameterName + ".");
-		}
-
-		MethodNode methodNode = (MethodNode)this;
-
-		if (choiceConversionList != null) {
-			moveChoicesByConversionList(
-					choiceConversionList, 
-					detachedParameterNode, 
-					destinationParameterNode,
-					methodNode);
-		}
-
-		moveRemainingTopChoices(detachedParameterNode, destinationParameterNode);
-
-		methodNode.updateParameterReferencesInConstraints(
-				(MethodParameterNode)detachedParameterNode, 
-				(MethodParameterNode)destinationParameterNode);
-
-
-		fDetachedParameters.remove(detachedParameterNode);
-	}
-
-	private void moveChoicesByConversionList(
-			ChoiceConversionList choiceConversionItems,
-			MethodParameterNode srcParameterNode, 
-			MethodParameterNode dstParameterNode,
-			MethodNode methodNode) {
-		
-		List<ChoiceConversionItem> sortedChoiceConversionItems = 
-				choiceConversionItems.createSortedCopyOfConversionItems();
-		
-		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
-
-			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
-
-			if (srcChoiceNode == null) {
-				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
-			}
-
-			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(choiceConversionItem.getDstName());
-
-			if (dstChoiceNode == null) {
-				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
-			}
-
-			moveChildChoices(srcChoiceNode, dstChoiceNode);
-
-			methodNode.updateChoiceReferencesInTestCases(srcChoiceNode, dstChoiceNode);
-			methodNode.updateChoiceReferencesInConstraints(srcChoiceNode, dstChoiceNode);
-
-			// remove source choice
-
-			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
-			choicesParentNode.removeChoice(srcChoiceNode);
-		}
-	}
-
-	private void moveRemainingTopChoices(MethodParameterNode detachedParameterNode,
-			MethodParameterNode destinationParameterNode) {
-		List<ChoiceNode> choiceNodes = detachedParameterNode.getChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-			addChoiceWithUniqueName(choiceNode, destinationParameterNode);
-		}
-	}
-
-	private void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {
-
-		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
-
-		for (ChoiceNode childChoice : childChoices) {
-
-			dstChoiceNode.addChoice(childChoice);
-		}
-	}
-
-	private void addChoiceWithUniqueName(ChoiceNode choiceNode, MethodParameterNode methodParameterNode) {
-
-
-		String orginalChoiceName = choiceNode.getName();
-
-		if (!choiceNameExistsAmongChildren(orginalChoiceName, methodParameterNode)) {
-
-			methodParameterNode.addChoice(choiceNode);
-			return;
-		}
-
-		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
-
-			String tmpName = orginalChoiceName + "-" + postfixCounter;
-
-			if (!choiceNameExistsAmongChildren(tmpName, methodParameterNode)) {
-
-				choiceNode.setName(tmpName);
-				methodParameterNode.addChoice(choiceNode);
-				return;
-			}
-		}
-
-		ExceptionHelper.reportRuntimeException("Cannot add choice to method parameter.");
-	}
-
-	// TODO DE-NO - move to choices parent node
-	private boolean choiceNameExistsAmongChildren(String choiceName, MethodParameterNode methodParameterNode) {
-
-		List<ChoiceNode> choiceNodes = methodParameterNode.getChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-
-			String currentChoiceName = choiceNode.getName();
-
-			if (currentChoiceName.equals(choiceName)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 }

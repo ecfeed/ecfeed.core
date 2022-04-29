@@ -13,74 +13,142 @@ package com.ecfeed.core.model;
 import java.util.List;
 
 import com.ecfeed.core.utils.ChoiceConversionItem;
+import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ExceptionHelper;
 
 public class ParameterAttacher {
 
-	public static void attach(MethodParameterNode methodParameterNode, GlobalParameterNode globalParameterNode,
-			List<ChoiceConversionItem> choiceConversionItems) {
-		// TODO Auto-generated method stub
+	public static void attach(
+			MethodParameterNode srcMethodParameterNode, 
+			ChoicesParentNode dstGlobalParameterNode,
+			ChoiceConversionList choiceConversionList) {
 		
-//		if (methodParameterNode == null) {
-//			ExceptionHelper.reportRuntimeException("Empty method parameter.");
-//		}
-//
-//		if (methodParameterNode == null) {
-//			ExceptionHelper.reportRuntimeException("Empty global parameter.");
-//		}
-//		
-//		if (choiceConversionItems != null) {
-//			moveChoicesByConversionList(
-//					choiceConversionItems, 
-//					detachedParameterNode, 
-//					destinationParameterNode,
-//					methodNode);
-//		}
-//
-//		moveRemainingTopChoices(detachedParameterNode, destinationParameterNode);
-//
-//		methodNode.updateParameterReferencesInConstraints(
-//				(MethodParameterNode)detachedParameterNode, 
-//				(MethodParameterNode)destinationParameterNode);
-//
-//
-//		fDetachedParameters.remove(detachedParameterNode);
-//	}
-//
-//	private void moveChoicesByConversionList(
-//			List<ChoiceConversionItem> choiceConversionItems,
-//			MethodParameterNode srcParameterNode, 
-//			MethodParameterNode dstParameterNode,
-//			MethodNode methodNode) {
-//		
-//		List<ChoiceConversionItem> sortedChoiceConversionItems = 
-//				createSortedCopyOfConversionItems(choiceConversionItems);
-//		
-//		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
-//
-//			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
-//
-//			if (srcChoiceNode == null) {
-//				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
-//			}
-//
-//			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(choiceConversionItem.getDstName());
-//
-//			if (dstChoiceNode == null) {
-//				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
-//			}
-//
-//			moveChildChoices(srcChoiceNode, dstChoiceNode);
-//
-//			methodNode.updateChoiceReferencesInTestCases(srcChoiceNode, dstChoiceNode);
-//			methodNode.updateChoiceReferencesInConstraints(srcChoiceNode, dstChoiceNode);
-//
-//			// remove source choice
-//
-//			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
-//			choicesParentNode.removeChoice(srcChoiceNode);
-//		}
+		if (srcMethodParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Empty method parameter.");
+		}
+
+		if (dstGlobalParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Empty global parameter.");
+		}
+		
+		if (choiceConversionList != null) {
+			moveChoicesByConversionList(
+					choiceConversionList, 
+					srcMethodParameterNode, 
+					dstGlobalParameterNode);
+		}
+
+		MethodNode methodNode = srcMethodParameterNode.getMethod();
+
+		moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode);
+
+		methodNode.updateParameterReferencesInConstraints(
+				(MethodParameterNode)srcMethodParameterNode, 
+				(MethodParameterNode)dstGlobalParameterNode);
+
+		if (srcMethodParameterNode.isDetached()) {
+			methodNode.removeDetachedParameter(srcMethodParameterNode);
+		} else {
+			methodNode.removeParameter(srcMethodParameterNode);
+		}
 	}
 
+	public static void moveChoicesByConversionList(
+			ChoiceConversionList choiceConversionItems,
+			MethodParameterNode srcParameterNode, 
+			ChoicesParentNode dstParameterNode) {
+		
+		List<ChoiceConversionItem> sortedChoiceConversionItems = 
+				choiceConversionItems.createSortedCopyOfConversionItems();
+		
+		MethodNode methodNode = srcParameterNode.getMethod();
+		
+		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
+
+			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
+
+			if (srcChoiceNode == null) {
+				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
+			}
+
+			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(choiceConversionItem.getDstName());
+
+			if (dstChoiceNode == null) {
+				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
+			}
+
+			moveChildChoices(srcChoiceNode, dstChoiceNode);
+
+			methodNode.updateChoiceReferencesInTestCases(srcChoiceNode, dstChoiceNode);
+			methodNode.updateChoiceReferencesInConstraints(srcChoiceNode, dstChoiceNode);
+
+			// remove source choice
+
+			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
+			choicesParentNode.removeChoice(srcChoiceNode);
+		}
+	}
+
+	private static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {
+
+		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
+
+		for (ChoiceNode childChoice : childChoices) {
+
+			dstChoiceNode.addChoice(childChoice);
+		}
+	}
+
+	private static void moveRemainingTopChoices(
+			MethodParameterNode srcMethodParameterNode,
+			ChoicesParentNode dstParameterNode) {
+		List<ChoiceNode> choiceNodes = srcMethodParameterNode.getChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+			addChoiceWithUniqueName(choiceNode, dstParameterNode);
+		}
+	}
+	
+	private static void addChoiceWithUniqueName(ChoiceNode choiceNode, ChoicesParentNode methodParameterNode) {
+
+		String orginalChoiceName = choiceNode.getName();
+
+		if (!choiceNameExistsAmongChildren(orginalChoiceName, methodParameterNode)) {
+
+			methodParameterNode.addChoice(choiceNode);
+			return;
+		}
+
+		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
+
+			String tmpName = orginalChoiceName + "-" + postfixCounter;
+
+			if (!choiceNameExistsAmongChildren(tmpName, methodParameterNode)) {
+
+				choiceNode.setName(tmpName);
+				methodParameterNode.addChoice(choiceNode);
+				return;
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("Cannot add choice to method parameter.");
+	}
+	
+	private static boolean choiceNameExistsAmongChildren(String choiceName, ChoicesParentNode methodParameterNode) {
+
+		List<ChoiceNode> choiceNodes = methodParameterNode.getChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			String currentChoiceName = choiceNode.getName();
+
+			if (currentChoiceName.equals(choiceName)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+	
 
 }
