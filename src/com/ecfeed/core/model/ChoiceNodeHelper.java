@@ -32,6 +32,16 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+
+	public static ChoiceNode addChoiceToChoice(
+			ChoiceNode parentChoiceNode, String choiceNodeName, String valueString) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
+		parentChoiceNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
+
 	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		String name = choiceNode.getName();

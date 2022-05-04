@@ -12,9 +12,6 @@ package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
 import com.ecfeed.core.utils.ChoiceConversionList;
@@ -33,19 +30,23 @@ public class MethodParameterNodeTestForDetached {
 
 		// add global parameter and choice
 
-		GlobalParameterNode globalParameterNode = addGlobalParameterToClass(classNode, globalParameterName, "String");
-		ChoiceNode globalChoiceNode = addNewChoiceToGlobalParameter(globalParameterNode, globalChoiceName, "0");
+		GlobalParameterNode globalParameterNode = ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String");
+		ChoiceNode globalChoiceNode = 
+				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(globalParameterNode, globalChoiceName, "0");
 
 		// add methodNode 
-		MethodNode methodNode = addMethodToClass(classNode, "method");
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method");
 
 		// add parameter and choice to method
 
 		final String methodParameterName = "P1";
 		final String methodChoiceName = "C1";
 
-		MethodParameterNode methodParameterNode = addParameterToMethod(methodNode, methodParameterName, "String");
-		ChoiceNode methodChoiceNode = addNewChoiceToMethodParameter(methodParameterNode, methodChoiceName, "0");
+		MethodParameterNode methodParameterNode = 
+				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
+
+		ChoiceNode methodChoiceNode = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName, "0");
 
 		// add constraint
 		addNewSimpleConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode, methodChoiceNode);
@@ -380,101 +381,37 @@ public class MethodParameterNodeTestForDetached {
 	//		checkChoicesInConstraint(methodNode, 1, oldChoiceNode1, oldChoiceNode3);
 	//	}
 
-	private void checkParametersFromConstraints(
-			MethodNode methodNode, 
-			int constraintIndex,
-			MethodParameterNode expectedParameterFromConstraint) {
+	//	private void checkParametersFromConstraints(
+	//			MethodNode methodNode, 
+	//			int constraintIndex,
+	//			MethodParameterNode expectedParameterFromConstraint) {
+	//
+	//		MethodParameterNode methodParameterNodeFromConstraint = 
+	//				getMethodParameterNodeFromConstraintPrecondition(methodNode, constraintIndex);
+	//		assertEquals(expectedParameterFromConstraint, methodParameterNodeFromConstraint);
+	//
+	//		methodParameterNodeFromConstraint = 
+	//				getMethodParameterNodeFromConstraintPostcondition(methodNode, constraintIndex);
+	//		assertEquals(expectedParameterFromConstraint, methodParameterNodeFromConstraint);
+	//	}
 
-		MethodParameterNode methodParameterNodeFromConstraint = 
-				getMethodParameterNodeFromConstraintPrecondition(methodNode, constraintIndex);
-		assertEquals(expectedParameterFromConstraint, methodParameterNodeFromConstraint);
-
-		methodParameterNodeFromConstraint = 
-				getMethodParameterNodeFromConstraintPostcondition(methodNode, constraintIndex);
-		assertEquals(expectedParameterFromConstraint, methodParameterNodeFromConstraint);
-	}
-
-	private void checkChoicesInConstraint(
-			MethodNode methodNode, 
-			int constraintIndex, 
-			ChoiceNode expectedChoiceNodeFromPrecondition,
-			ChoiceNode expectedChoiceNodeFromPostcondition) {
-
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, constraintIndex);
-		assertEquals(expectedChoiceNodeFromPrecondition.getName(), choiceNodeFromPrecondition.getName());
-
-		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, constraintIndex);
-		String name1 = expectedChoiceNodeFromPostcondition.getName();
-		String name2 = choiceNodeFromPostcondition.getName();
-		assertEquals(name1, name2);
-	}
+	//	private void checkChoicesInConstraint(
+	//			MethodNode methodNode, 
+	//			int constraintIndex, 
+	//			ChoiceNode expectedChoiceNodeFromPrecondition,
+	//			ChoiceNode expectedChoiceNodeFromPostcondition) {
+	//
+	//		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, constraintIndex);
+	//		assertEquals(expectedChoiceNodeFromPrecondition.getName(), choiceNodeFromPrecondition.getName());
+	//
+	//		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, constraintIndex);
+	//		String name1 = expectedChoiceNodeFromPostcondition.getName();
+	//		String name2 = choiceNodeFromPostcondition.getName();
+	//		assertEquals(name1, name2);
+	//	}
 
 
 	// TODO DE-NO - move funcitons to helpers
-	private MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
-
-		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
-		methodNode.addParameter(methodParameterNode);
-
-		return methodParameterNode;
-	}
-
-	private GlobalParameterNode addGlobalParameterToClass(ClassNode classNode, String name, String type) {
-
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode (name, type, null);
-		classNode.addParameter(globalParameterNode);
-
-		return globalParameterNode;
-	}
-
-	private MethodNode addMethodToClass(ClassNode classNode, String name) {
-
-		MethodNode globalParameterNode = new MethodNode(name, null);
-		classNode.addMethod(globalParameterNode);
-
-		return globalParameterNode;
-	}
-
-
-	private ChoiceNode addNewChoiceToMethodParameter(
-			MethodParameterNode methodParameterNode, 
-			String choiceNodeName, 
-			String valueString) {
-
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
-		methodParameterNode.addChoice(choiceNode);
-
-		return choiceNode;
-	}
-
-	private ChoiceNode addNewChoiceToGlobalParameter(
-			GlobalParameterNode globalParameterNode, 
-			String choiceNodeName, 
-			String valueString) {
-
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
-		globalParameterNode.addChoice(choiceNode);
-
-		return choiceNode;
-	}
-
-	private ChoiceNode addNewChoiceToChoice(
-			ChoiceNode parentChoiceNode, String choiceNodeName, String valueString) {
-
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
-		parentChoiceNode.addChoice(choiceNode);
-
-		return choiceNode;
-	}
-
-	private void addNewTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
-
-		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
-		listOfChoicesForTestCase.add(choiceNode);
-
-		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
-		methodNode.addTestCase(testCaseNode);
-	}
 
 	private void addNewSimpleConstraintToMethod(
 			MethodNode methodNode,
@@ -540,32 +477,32 @@ public class MethodParameterNodeTestForDetached {
 		return choiceNode;
 	}
 
-	private MethodParameterNode getMethodParameterNodeFromConstraintPrecondition(
-			MethodNode methodNode, int constraintIndex) {
+	//	private MethodParameterNode getMethodParameterNodeFromConstraintPrecondition(
+	//			MethodNode methodNode, int constraintIndex) {
+	//
+	//		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
+	//
+	//		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+	//
+	//		RelationStatement relationStatement = (RelationStatement)precondition; 
+	//
+	//		MethodParameterNode methodParameterNode = relationStatement.getLeftParameter();
+	//
+	//		return methodParameterNode;
+	//	}
 
-		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
-
-		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
-
-		RelationStatement relationStatement = (RelationStatement)precondition; 
-
-		MethodParameterNode methodParameterNode = relationStatement.getLeftParameter();
-
-		return methodParameterNode;
-	}
-
-	private MethodParameterNode getMethodParameterNodeFromConstraintPostcondition(
-			MethodNode methodNode, int constraintIndex) {
-
-		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
-
-		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
-
-		RelationStatement relationStatement = (RelationStatement)postcondition; 
-
-		MethodParameterNode methodParameterNode = relationStatement.getLeftParameter();
-
-		return methodParameterNode;
-	}
+	//	private MethodParameterNode getMethodParameterNodeFromConstraintPostcondition(
+	//			MethodNode methodNode, int constraintIndex) {
+	//
+	//		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
+	//
+	//		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
+	//
+	//		RelationStatement relationStatement = (RelationStatement)postcondition; 
+	//
+	//		MethodParameterNode methodParameterNode = relationStatement.getLeftParameter();
+	//
+	//		return methodParameterNode;
+	//	}
 
 }

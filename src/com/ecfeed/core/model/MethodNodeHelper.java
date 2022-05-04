@@ -24,6 +24,15 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
+	public static void addTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
+
+		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
+		listOfChoicesForTestCase.add(choiceNode);
+
+		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
+		methodNode.addTestCase(testCaseNode);
+	}
+
 	public static String getName(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(methodNode, extLanguageManager);
@@ -116,6 +125,14 @@ public class MethodNodeHelper {
 		}
 
 		return null;
+	}
+
+	public static MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
+
+		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
+		methodNode.addParameter(methodParameterNode);
+
+		return methodParameterNode;
 	}
 
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
@@ -486,7 +503,7 @@ public class MethodNodeHelper {
 
 		return testSuites;
 	}
-	
+
 	public static MethodParameterNode findExpectedParameterNotUsedInAssignment(MethodNode methodNode, Constraint constraint) {
 
 		if (constraint.getType() != ConstraintType.ASSIGNMENT) {

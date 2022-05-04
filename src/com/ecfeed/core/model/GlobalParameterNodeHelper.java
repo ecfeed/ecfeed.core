@@ -15,6 +15,18 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class GlobalParameterNodeHelper {
 
 
+	public static ChoiceNode addNewChoiceToGlobalParameter(
+			GlobalParameterNode globalParameterNode, 
+			String choiceNodeName, 
+			String valueString) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
+		globalParameterNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
+
+
 	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);

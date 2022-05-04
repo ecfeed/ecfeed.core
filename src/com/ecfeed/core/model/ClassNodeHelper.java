@@ -24,6 +24,23 @@ public class ClassNodeHelper {
 	public static final String METHODS_INCOMPATIBLE_PROBLEM = "The converted methods do not have the same parameter count and types";
 	public static final String CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE = "contains method with identical signature";
 
+
+	public static GlobalParameterNode addGlobalParameterToClass(ClassNode classNode, String name, String type) {
+
+		GlobalParameterNode globalParameterNode = new GlobalParameterNode (name, type, null);
+		classNode.addParameter(globalParameterNode);
+
+		return globalParameterNode;
+	}
+
+	public static MethodNode addMethodToClass(ClassNode classNode, String name) {
+
+		MethodNode globalParameterNode = new MethodNode(name, null);
+		classNode.addMethod(globalParameterNode);
+
+		return globalParameterNode;
+	}
+	
 	public static String getNonQualifiedName(ClassNode classNode, IExtLanguageManager extLanguageManager) {
 
 		String name = ModelHelper.getNonQualifiedName(classNode.getName());
@@ -174,7 +191,7 @@ public class ClassNodeHelper {
 		for (MethodNode methodNode : methods) {
 
 			String currentMethodName = MethodNodeHelper.getName(methodNode, extLanguageManager);
-			
+
 			List<String> currentParameterTypes = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 
 			if (currentMethodName.equals(methodNameInExternalLanguage) && currentParameterTypes.equals(parameterTypesInExternalLanguage)){
