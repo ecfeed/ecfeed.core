@@ -399,7 +399,7 @@ public class ConstraintNode extends AbstractNode{
 
 	public void updateParameterReferences(
 			MethodParameterNode oldMethodParameterNode,
-			MethodParameterNode newMethodParameterNode) {
+			ChoicesParentNode dstParameterForChoices) {
 		
 		Constraint constraint = getConstraint();
 
@@ -407,7 +407,7 @@ public class ConstraintNode extends AbstractNode{
 			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
 		}
 
-		constraint.updateParameterReferences(oldMethodParameterNode, newMethodParameterNode);
+		constraint.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	}
 
 }

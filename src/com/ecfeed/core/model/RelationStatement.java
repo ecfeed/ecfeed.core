@@ -384,12 +384,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	protected void updateParameterReferences(
-			MethodParameterNode oldMethodParameterNode,
-			MethodParameterNode newMethodParameterNode) {
+			MethodParameterNode srcMethodParameterNode,
+			ChoicesParentNode dstParameterForChoices) {
 
-		if (fLeftParameter == oldMethodParameterNode) {
-			fLeftParameter = newMethodParameterNode;
-		}
+//		if (fLeftParameter == oldMethodParameterNode) {
+//			fLeftParameter = newMethodParameterNode;
+//		}
 	}
 
 }

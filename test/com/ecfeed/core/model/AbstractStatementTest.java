@@ -83,8 +83,8 @@ public class AbstractStatementTest {
 
 		@Override
 		protected void updateParameterReferences(
-				MethodParameterNode oldMethodParameterNode,
-				MethodParameterNode newMethodParameterNode) {
+				MethodParameterNode srcMethodParameterNode,
+				ChoicesParentNode dstParameterForChoices) {
 		}
 	}
 

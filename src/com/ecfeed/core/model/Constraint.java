@@ -428,10 +428,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public void updateParameterReferences(
 			MethodParameterNode oldMethodParameterNode,
-			MethodParameterNode newMethodParameterNode) {
+			ChoicesParentNode dstParameterForChoices) {
 		
-		fPrecondition.updateParameterReferences(oldMethodParameterNode, newMethodParameterNode);
-		fPostcondition.updateParameterReferences(oldMethodParameterNode, newMethodParameterNode);
+		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {

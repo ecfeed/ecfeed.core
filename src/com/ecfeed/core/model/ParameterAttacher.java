@@ -20,49 +20,63 @@ public class ParameterAttacher {
 
 	public static void attach(
 			MethodParameterNode srcMethodParameterNode, 
-			ChoicesParentNode dstGlobalParameterNode,
+			ChoicesParentNode dstParameterForChoices,
 			ChoiceConversionList choiceConversionList) {
-		
+
+		MethodNode methodNode = 
+				attachInternal(srcMethodParameterNode, dstParameterForChoices, choiceConversionList);
+
+		if (srcMethodParameterNode.isDetached()) {
+			methodNode.removeDetachedParameter(srcMethodParameterNode);
+		} 
+	}
+
+	public static void attachChoices(
+			MethodParameterNode srcMethodParameterNode, 
+			ChoicesParentNode dstParameterForChoices,
+			ChoiceConversionList choiceConversionList) {
+
+		MethodNode methodNode = 
+				attachInternal(srcMethodParameterNode, dstParameterForChoices, choiceConversionList);
+	} 
+
+	private static MethodNode attachInternal(MethodParameterNode srcMethodParameterNode,
+			ChoicesParentNode dstParameterForChoices, ChoiceConversionList choiceConversionList) {
 		if (srcMethodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty method parameter.");
 		}
 
-		if (dstGlobalParameterNode == null) {
+		if (dstParameterForChoices == null) {
 			ExceptionHelper.reportRuntimeException("Empty global parameter.");
 		}
-		
+
 		if (choiceConversionList != null) {
 			moveChoicesByConversionList(
 					choiceConversionList, 
 					srcMethodParameterNode, 
-					dstGlobalParameterNode);
+					dstParameterForChoices);
 		}
 
 		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
-		moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode);
+		moveRemainingTopChoices(srcMethodParameterNode, dstParameterForChoices);
 
 		methodNode.updateParameterReferencesInConstraints(
-				(MethodParameterNode)srcMethodParameterNode, 
-				(MethodParameterNode)dstGlobalParameterNode);
-
-		if (srcMethodParameterNode.isDetached()) {
-			methodNode.removeDetachedParameter(srcMethodParameterNode);
-		} else {
-			methodNode.removeParameter(srcMethodParameterNode);
-		}
+				srcMethodParameterNode, 
+				dstParameterForChoices);
+		return methodNode;
 	}
 
 	public static void moveChoicesByConversionList(
 			ChoiceConversionList choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
 			ChoicesParentNode dstParameterNode) {
-		
+
 		List<ChoiceConversionItem> sortedChoiceConversionItems = 
 				choiceConversionItems.createSortedCopyOfConversionItems();
-		
+
 		MethodNode methodNode = srcParameterNode.getMethod();
-		
+
 		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
 
 			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
@@ -108,7 +122,7 @@ public class ParameterAttacher {
 			addChoiceWithUniqueName(choiceNode, dstParameterNode);
 		}
 	}
-	
+
 	private static void addChoiceWithUniqueName(ChoiceNode choiceNode, ChoicesParentNode methodParameterNode) {
 
 		String orginalChoiceName = choiceNode.getName();
@@ -133,7 +147,7 @@ public class ParameterAttacher {
 
 		ExceptionHelper.reportRuntimeException("Cannot add choice to method parameter.");
 	}
-	
+
 	private static boolean choiceNameExistsAmongChildren(String choiceName, ChoicesParentNode methodParameterNode) {
 
 		List<ChoiceNode> choiceNodes = methodParameterNode.getChoices();
@@ -149,6 +163,6 @@ public class ParameterAttacher {
 
 		return false;
 	}
-	
+
 
 }

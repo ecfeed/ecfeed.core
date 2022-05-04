@@ -141,8 +141,8 @@ public class StaticStatement extends AbstractStatement {
 
 	@Override
 	protected void updateParameterReferences(
-			MethodParameterNode oldMethodParameterNode,
-			MethodParameterNode newMethodParameterNode) {
+			MethodParameterNode srcMethodParameterNode,
+			ChoicesParentNode dstParameterForChoices) {
 	}
 
 }

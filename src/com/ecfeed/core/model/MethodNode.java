@@ -726,21 +726,22 @@ public class MethodNode extends ParametersParentNode {
 		}
 	}
 
+	// TODO DE-NO move to helper
 	public void updateParameterReferencesInConstraints(
 			MethodParameterNode oldMethodParameterNode,
-			MethodParameterNode newMethodParameterNode) {
+			ChoicesParentNode dstParameterForChoices) {
 
 		if (oldMethodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
 		}
 
-		if (newMethodParameterNode == null) {
+		if (dstParameterForChoices == null) {
 			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
 		}
 
 
 		for (ConstraintNode constraintNode : fConstraintNodes) {
-			constraintNode.updateParameterReferences(oldMethodParameterNode, newMethodParameterNode);
+			constraintNode.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 		}
 	}
 
