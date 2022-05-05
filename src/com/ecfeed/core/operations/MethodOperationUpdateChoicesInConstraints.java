@@ -13,40 +13,40 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationUpdateChoiceReferencesInTestCases extends AbstractModelOperation {
+public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOperation {
 
 	private static final String UPDATE_CHOICE_REFERENCES_IN_TEST_CASES = "Update choice references in test cases.";
 
 	ChoiceNode fOldChoiceNode; 
 	ChoiceNode fNewChoiceNode;
-	List<TestCaseNode> fTestCaseNodes;
+	List<ConstraintNode> fConstraintNodes;
 	IExtLanguageManager fExtLanguageManager;
 
-	public MethodOperationUpdateChoiceReferencesInTestCases(
+	public MethodOperationUpdateChoicesInConstraints(
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
-			List<TestCaseNode> testCaseNodes,
+			List<ConstraintNode> constraintNodes,
 			IExtLanguageManager extLanguageManager) {
 
 		super(UPDATE_CHOICE_REFERENCES_IN_TEST_CASES, extLanguageManager);
 
 		fOldChoiceNode = oldChoiceNode;
 		fNewChoiceNode = newChoiceNode;
-		fTestCaseNodes = testCaseNodes;
+		fConstraintNodes = constraintNodes;
 		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
 	public void execute() {
 
-		MethodNodeHelper.updateChoiceReferencesInTestCases(
+		MethodNodeHelper.updateChoiceReferencesInConstraints(
 				fOldChoiceNode, 
 				fNewChoiceNode,
-				fTestCaseNodes,
+				fConstraintNodes,
 				null,
 				fExtLanguageManager);
 	}
