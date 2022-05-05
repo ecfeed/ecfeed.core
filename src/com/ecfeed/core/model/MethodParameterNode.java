@@ -16,7 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodParameterNode extends AbstractParameterNode {
@@ -333,7 +335,10 @@ public class MethodParameterNode extends AbstractParameterNode {
 		return getMethod().getMentioningConstraints(this, label);
 	}
 
-	public List<String> detachChoiceNode(String choiceQualifiedName) {
+	public List<String> detachChoiceNode(
+			String choiceQualifiedName,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		ChoiceNode choiceNode = findChoice(choiceQualifiedName);
 
@@ -351,7 +356,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 		List<String> detachedChoiceNames = new ArrayList<String>();
 
-		detachChoiceNodeWithChildren(choiceNode, methodParameterNode, methodNode, detachedChoiceNames);
+		detachChoiceNodeWithChildren(
+				choiceNode, 
+				methodParameterNode, 
+				methodNode, 
+				detachedChoiceNames,
+				reverseOperations,
+				extLanguageManager);
 
 		return detachedChoiceNames;
 	}
@@ -360,7 +371,9 @@ public class MethodParameterNode extends AbstractParameterNode {
 			ChoiceNode parentChoiceNode, 
 			MethodParameterNode methodParameterNode,
 			MethodNode methodNode, 
-			List<String> inOutDetachedChoiceNames) {
+			List<String> inOutDetachedChoiceNames,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		List<ChoiceNode> choiceNodes = parentChoiceNode.getChoices();
 
@@ -370,17 +383,31 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 			ChoiceNode currentChoiceNode = choiceNodes.get(index);
 
-			detachChoiceNodeWithChildren(currentChoiceNode, methodParameterNode, methodNode, inOutDetachedChoiceNames);
+			detachChoiceNodeWithChildren(
+					currentChoiceNode, 
+					methodParameterNode, 
+					methodNode, 
+					inOutDetachedChoiceNames,
+					reverseOperations,
+					extLanguageManager);
 		}
 
-		detachSingleChoiceNode(parentChoiceNode, methodParameterNode, methodNode, inOutDetachedChoiceNames);
+		detachSingleChoiceNode(
+				parentChoiceNode, 
+				methodParameterNode, 
+				methodNode, 
+				inOutDetachedChoiceNames,
+				reverseOperations,
+				extLanguageManager);
 	}
 
 	public void detachSingleChoiceNode(
 			ChoiceNode choiceNode, 
 			MethodParameterNode methodParameterNode,
 			MethodNode methodNode,
-			List<String> inOutDetachedChoiceNames) {
+			List<String> inOutDetachedChoiceNames,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		ChoiceNode clonedChoiceNode = choiceNode.makeClone();
 
@@ -391,14 +418,18 @@ public class MethodParameterNode extends AbstractParameterNode {
 		String detachedChoiceNewName = addChoiceToDetachedWithUniqueName(clonedChoiceNode);
 		inOutDetachedChoiceNames.add(detachedChoiceNewName);
 
-		methodNode.updateChoiceReferencesInTestCases(choiceNode, clonedChoiceNode);
-		methodNode.updateChoiceReferencesInConstraints(choiceNode, clonedChoiceNode);
+		methodNode.updateChoiceReferencesInTestCases(choiceNode, clonedChoiceNode, reverseOperations, extLanguageManager);
+		methodNode.updateChoiceReferencesInConstraints(choiceNode, clonedChoiceNode, reverseOperations, extLanguageManager);
 
 		ChoicesParentNode choicesParentNode = choiceNode.getParent();
 		choicesParentNode.removeChoice(choiceNode);
 	}
 
-	public void attachChoiceNode(String detachedChoiceName, String actualChoiceName) {
+	public void attachChoiceNode(
+			String detachedChoiceName, 
+			String actualChoiceName,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		ChoiceNode actualChoiceNode = getChoice(actualChoiceName);
 		ChoiceNode detachedChoiceNode = getDetachedChoice(detachedChoiceName);
@@ -409,8 +440,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
 		}
 
-		methodNode.updateChoiceReferencesInTestCases(detachedChoiceNode, actualChoiceNode);
-		methodNode.updateChoiceReferencesInConstraints(detachedChoiceNode, actualChoiceNode);
+		methodNode.updateChoiceReferencesInTestCases(detachedChoiceNode, actualChoiceNode, reverseOperations, extLanguageManager);
+		methodNode.updateChoiceReferencesInConstraints(detachedChoiceNode, actualChoiceNode, reverseOperations, extLanguageManager);
 
 		int detachedIndex = getDetachedChoiceIndex(detachedChoiceName);
 		removeDetachedChoiceByIndex(detachedIndex);

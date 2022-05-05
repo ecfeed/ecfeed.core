@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.*;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
@@ -376,20 +377,26 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return true;
 	}
 
-	// TODO DE-NO test
 	@Override
-	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
-		fRightCondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+	protected void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		fRightCondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
 	}
 
 	@Override
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
+			ChoicesParentNode dstParameterForChoices,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
-//		if (fLeftParameter == oldMethodParameterNode) {
-//			fLeftParameter = newMethodParameterNode;
-//		}
+		//		if (fLeftParameter == oldMethodParameterNode) {
+		//			fLeftParameter = newMethodParameterNode;
+		//		}
 	}
 
 }

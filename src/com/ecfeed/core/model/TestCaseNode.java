@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.TestCaseOperationUpdateTestData;
 import com.ecfeed.core.utils.ExceptionHelper;
-
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public class TestCaseNode extends AbstractNode {
@@ -228,14 +230,24 @@ public class TestCaseNode extends AbstractNode {
 		return new TestCase(fTestData);
 	}
 
-	// TODO DE-NO unit test
-	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	// TODO DE-NO move to helper
+	public void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode, 
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		int index = 0;
 
 		for (ChoiceNode choiceNode : fTestData) {
 
 			if (choiceNode.equals(oldChoiceNode)) {
+
+				TestCaseOperationUpdateTestData testCaseOperationUpdateTestData = 
+						new TestCaseOperationUpdateTestData(this, index, oldChoiceNode, extLanguageManager);
+
+				reverseOperations.add(testCaseOperationUpdateTestData);
+
 				fTestData.set(index, newChoiceNode);
 			}
 

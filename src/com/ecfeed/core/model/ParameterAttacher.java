@@ -12,19 +12,25 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterAttacher {
 
 	public static void attach(
 			MethodParameterNode srcMethodParameterNode, 
 			ChoicesParentNode dstParameterForChoices,
-			ChoiceConversionList choiceConversionList) {
+			ChoiceConversionList choiceConversionList,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		MethodNode methodNode = 
-				attachInternal(srcMethodParameterNode, dstParameterForChoices, choiceConversionList);
+				attachChoicesInternal(
+						srcMethodParameterNode, dstParameterForChoices, 
+						choiceConversionList, reverseOperations, extLanguageManager);
 
 		if (srcMethodParameterNode.isDetached()) {
 			methodNode.removeDetachedParameter(srcMethodParameterNode);
@@ -34,14 +40,21 @@ public class ParameterAttacher {
 	public static void attachChoices(
 			MethodParameterNode srcMethodParameterNode, 
 			ChoicesParentNode dstParameterForChoices,
-			ChoiceConversionList choiceConversionList) {
+			ChoiceConversionList choiceConversionList,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
-		MethodNode methodNode = 
-				attachInternal(srcMethodParameterNode, dstParameterForChoices, choiceConversionList);
+		attachChoicesInternal(
+				srcMethodParameterNode, dstParameterForChoices, 
+				choiceConversionList, reverseOperations, extLanguageManager);
 	} 
 
-	private static MethodNode attachInternal(MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices, ChoiceConversionList choiceConversionList) {
+	private static MethodNode attachChoicesInternal(MethodParameterNode srcMethodParameterNode,
+			ChoicesParentNode dstParameterForChoices, 
+			ChoiceConversionList choiceConversionList,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
 		if (srcMethodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty method parameter.");
 		}
@@ -54,23 +67,30 @@ public class ParameterAttacher {
 			moveChoicesByConversionList(
 					choiceConversionList, 
 					srcMethodParameterNode, 
-					dstParameterForChoices);
+					dstParameterForChoices,
+					reverseOperations,
+					extLanguageManager);
 		}
 
 		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
-		moveRemainingTopChoices(srcMethodParameterNode, dstParameterForChoices);
+		moveRemainingTopChoices(srcMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
 
 		methodNode.updateParameterReferencesInConstraints(
 				srcMethodParameterNode, 
-				dstParameterForChoices);
+				dstParameterForChoices,
+				reverseOperations,
+				extLanguageManager);
+
 		return methodNode;
 	}
 
 	public static void moveChoicesByConversionList(
 			ChoiceConversionList choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
-			ChoicesParentNode dstParameterNode) {
+			ChoicesParentNode dstParameterNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		List<ChoiceConversionItem> sortedChoiceConversionItems = 
 				choiceConversionItems.createSortedCopyOfConversionItems();
@@ -93,8 +113,8 @@ public class ParameterAttacher {
 
 			moveChildChoices(srcChoiceNode, dstChoiceNode);
 
-			methodNode.updateChoiceReferencesInTestCases(srcChoiceNode, dstChoiceNode);
-			methodNode.updateChoiceReferencesInConstraints(srcChoiceNode, dstChoiceNode);
+			methodNode.updateChoiceReferencesInTestCases(srcChoiceNode, dstChoiceNode, reverseOperations, extLanguageManager);
+			methodNode.updateChoiceReferencesInConstraints(srcChoiceNode, dstChoiceNode, reverseOperations, extLanguageManager);
 
 			// remove source choice
 
@@ -115,15 +135,22 @@ public class ParameterAttacher {
 
 	private static void moveRemainingTopChoices(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterNode) {
+			ChoicesParentNode dstParameterNode,
+			List<IModelOperation> reverseOperations, 
+			IExtLanguageManager extLanguageManager) {
+
 		List<ChoiceNode> choiceNodes = srcMethodParameterNode.getChoices();
 
 		for (ChoiceNode choiceNode : choiceNodes) {
-			addChoiceWithUniqueName(choiceNode, dstParameterNode);
+			addChoiceWithUniqueName(choiceNode, dstParameterNode, reverseOperations, extLanguageManager);
 		}
 	}
 
-	private static void addChoiceWithUniqueName(ChoiceNode choiceNode, ChoicesParentNode methodParameterNode) {
+	private static void addChoiceWithUniqueName(
+			ChoiceNode choiceNode, 
+			ChoicesParentNode methodParameterNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		String orginalChoiceName = choiceNode.getName();
 

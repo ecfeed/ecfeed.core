@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
@@ -29,6 +30,10 @@ public interface IStatementCondition {
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager);
 	public List<ChoiceNode> getListOfChoices();
 	public void derandomize();
-	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode);
+	public void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager);
 }
 

@@ -12,7 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractStatement implements IStatement {
 
@@ -62,8 +64,6 @@ public abstract class AbstractStatement implements IStatement {
 		children.set(index, newStatement);
 	}
 
-
-
 	public boolean mentions(ChoiceNode choice) {
 		return false;
 	}
@@ -94,9 +94,15 @@ public abstract class AbstractStatement implements IStatement {
 
 	public abstract boolean updateReferences(MethodNode method);
 
-	protected abstract void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode);
+	protected abstract void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager);
 
 	protected abstract void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices);
+			ChoicesParentNode dstParameterForChoices,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager);
 }

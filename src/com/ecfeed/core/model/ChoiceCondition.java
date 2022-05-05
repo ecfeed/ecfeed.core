@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.*;
 
 public class ChoiceCondition implements IStatementCondition {
@@ -101,7 +102,7 @@ public class ChoiceCondition implements IStatementCondition {
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
 		String choiceSignature = ChoiceNodeHelper.createShortSignature(fRightChoice);
-		
+
 		return StatementConditionHelper.createChoiceDescription(choiceSignature);
 	}
 
@@ -278,7 +279,11 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	public void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		if (fRightChoice == oldChoiceNode) {
 			fRightChoice = newChoiceNode;

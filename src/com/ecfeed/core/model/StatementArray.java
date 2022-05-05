@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
@@ -353,22 +354,28 @@ public class StatementArray extends AbstractStatement {
 		}
 	}
 
-	// TODO DE-NO test
 	@Override
-	protected void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	protected void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		for (AbstractStatement child : fStatements) {
-			child.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+			child.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
 		}
 	}
 
 	@Override
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
+			ChoicesParentNode dstParameterForChoices,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		for (AbstractStatement child : fStatements) {
-			child.updateParameterReferences(srcMethodParameterNode, dstParameterForChoices);
+			child.updateParameterReferences(
+					srcMethodParameterNode, dstParameterForChoices, 
+					reverseOperations, extLanguageManager);
 		}
 
 	}

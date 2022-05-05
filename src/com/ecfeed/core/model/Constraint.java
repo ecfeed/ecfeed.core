@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
@@ -420,18 +421,27 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return createSignature(new ExtLanguageManagerForJava());
 	}
 
-	public void updateChoiceReferences(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 
-		fPrecondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
-		fPostcondition.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+	// TODO DE-NO Move to helper
+	public void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager
+			) {
+
+		fPrecondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		fPostcondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
 	}
 
 	public void updateParameterReferences(
 			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
-		
-		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+			ChoicesParentNode dstParameterForChoices,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
+		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
 	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {

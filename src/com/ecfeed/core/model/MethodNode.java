@@ -19,8 +19,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
@@ -697,21 +699,31 @@ public class MethodNode extends ParametersParentNode {
 		registerChange();
 	}
 
-	public void updateChoiceReferencesInTestCases(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	// TODO DE-NO move to helper
+	public void updateChoiceReferencesInTestCases(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (TestCaseNode testCaseNode : fTestCaseNodes)  {
-			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
 		}
 	}
 
-	public void updateChoiceReferencesInConstraints(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	// TODO DE-NO move to helper
+	public void updateChoiceReferencesInConstraints(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (ConstraintNode constraintNode : fConstraintNodes) {
-			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
 		}
 	}
 
@@ -729,7 +741,9 @@ public class MethodNode extends ParametersParentNode {
 	// TODO DE-NO move to helper
 	public void updateParameterReferencesInConstraints(
 			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
+			ChoicesParentNode dstParameterForChoices,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
 		if (oldMethodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
@@ -739,9 +753,9 @@ public class MethodNode extends ParametersParentNode {
 			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
 		}
 
-
 		for (ConstraintNode constraintNode : fConstraintNodes) {
-			constraintNode.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+			constraintNode.updateParameterReferences(
+					oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
 		}
 	}
 
