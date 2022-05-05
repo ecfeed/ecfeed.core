@@ -16,13 +16,76 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.CommonConstants;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
+
+
+	public static void updateParameterReferencesInConstraints(
+			MethodParameterNode oldMethodParameterNode,
+			ChoicesParentNode dstParameterForChoices,
+			List<ConstraintNode> constraintNodes,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		if (oldMethodParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
+		}
+
+		if (dstParameterForChoices == null) {
+			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
+		}
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+			constraintNode.updateParameterReferences(
+					oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
+		}
+	}
+
+	public static void updateChoiceReferencesInTestCases(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<TestCaseNode> testCaseNodes,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		checkChoices(oldChoiceNode, newChoiceNode);
+
+		for (TestCaseNode testCaseNode : testCaseNodes)  {
+			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		}
+	}
+
+	public static void updateChoiceReferencesInConstraints(
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			List<ConstraintNode> constraintNodes,
+			List<IModelOperation> reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		checkChoices(oldChoiceNode, newChoiceNode);
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		}
+	}
+
+	private static void checkChoices(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		if (oldChoiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Invalid old choice node.");
+		}
+
+		if (newChoiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Invalid new choice node.");
+		}
+	}
 
 	public static void addTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
 

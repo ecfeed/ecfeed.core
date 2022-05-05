@@ -69,8 +69,8 @@ public class MethodParameterNodeTestForDetached {
 		// attach
 
 		List<IModelOperation> reverseOperations = new ArrayList<>();
-
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+		
 		ParameterAttacher.attachChoices(
 				methodParameterNode, globalParameterNode, 
 				choiceConversionList, reverseOperations, extLanguageManager);

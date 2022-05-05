@@ -19,10 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
@@ -697,66 +694,6 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		registerChange();
-	}
-
-	// TODO DE-NO move to helper
-	public void updateChoiceReferencesInTestCases(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			List<IModelOperation> reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		checkChoices(oldChoiceNode, newChoiceNode);
-
-		for (TestCaseNode testCaseNode : fTestCaseNodes)  {
-			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
-		}
-	}
-
-	// TODO DE-NO move to helper
-	public void updateChoiceReferencesInConstraints(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			List<IModelOperation> reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		checkChoices(oldChoiceNode, newChoiceNode);
-
-		for (ConstraintNode constraintNode : fConstraintNodes) {
-			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
-		}
-	}
-
-	private void checkChoices(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
-
-		if (oldChoiceNode == null) {
-			ExceptionHelper.reportRuntimeException("Invalid old choice node.");
-		}
-
-		if (newChoiceNode == null) {
-			ExceptionHelper.reportRuntimeException("Invalid new choice node.");
-		}
-	}
-
-	// TODO DE-NO move to helper
-	public void updateParameterReferencesInConstraints(
-			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			List<IModelOperation> reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		if (oldMethodParameterNode == null) {
-			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
-		}
-
-		if (dstParameterForChoices == null) {
-			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
-		}
-
-		for (ConstraintNode constraintNode : fConstraintNodes) {
-			constraintNode.updateParameterReferences(
-					oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
-		}
 	}
 
 }

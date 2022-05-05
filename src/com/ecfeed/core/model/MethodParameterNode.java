@@ -418,8 +418,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 		String detachedChoiceNewName = addChoiceToDetachedWithUniqueName(clonedChoiceNode);
 		inOutDetachedChoiceNames.add(detachedChoiceNewName);
 
-		methodNode.updateChoiceReferencesInTestCases(choiceNode, clonedChoiceNode, reverseOperations, extLanguageManager);
-		methodNode.updateChoiceReferencesInConstraints(choiceNode, clonedChoiceNode, reverseOperations, extLanguageManager);
+		MethodNodeHelper.updateChoiceReferencesInTestCases(
+				choiceNode, clonedChoiceNode, methodNode.getTestCases(), reverseOperations, extLanguageManager);
+		
+		MethodNodeHelper.updateChoiceReferencesInConstraints(
+				choiceNode, clonedChoiceNode,
+				methodNode.getConstraintNodes(),
+				reverseOperations, extLanguageManager);
 
 		ChoicesParentNode choicesParentNode = choiceNode.getParent();
 		choicesParentNode.removeChoice(choiceNode);
@@ -440,8 +445,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
 		}
 
-		methodNode.updateChoiceReferencesInTestCases(detachedChoiceNode, actualChoiceNode, reverseOperations, extLanguageManager);
-		methodNode.updateChoiceReferencesInConstraints(detachedChoiceNode, actualChoiceNode, reverseOperations, extLanguageManager);
+		MethodNodeHelper.updateChoiceReferencesInTestCases(
+				detachedChoiceNode, actualChoiceNode, methodNode.getTestCases(), reverseOperations, extLanguageManager);
+		
+		MethodNodeHelper.updateChoiceReferencesInConstraints(
+				detachedChoiceNode, actualChoiceNode,
+				methodNode.getConstraintNodes(),
+				reverseOperations, extLanguageManager);
 
 		int detachedIndex = getDetachedChoiceIndex(detachedChoiceName);
 		removeDetachedChoiceByIndex(detachedIndex);

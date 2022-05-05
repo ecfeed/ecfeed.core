@@ -76,9 +76,10 @@ public class ParameterAttacher {
 
 		moveRemainingTopChoices(srcMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
 
-		methodNode.updateParameterReferencesInConstraints(
+		MethodNodeHelper.updateParameterReferencesInConstraints(
 				srcMethodParameterNode, 
 				dstParameterForChoices,
+				methodNode.getConstraintNodes(),
 				reverseOperations,
 				extLanguageManager);
 
@@ -113,8 +114,16 @@ public class ParameterAttacher {
 
 			moveChildChoices(srcChoiceNode, dstChoiceNode);
 
-			methodNode.updateChoiceReferencesInTestCases(srcChoiceNode, dstChoiceNode, reverseOperations, extLanguageManager);
-			methodNode.updateChoiceReferencesInConstraints(srcChoiceNode, dstChoiceNode, reverseOperations, extLanguageManager);
+			// TODO DE-NO create operation
+			MethodNodeHelper.updateChoiceReferencesInTestCases(
+					srcChoiceNode, dstChoiceNode, 
+					methodNode.getTestCases(),
+					reverseOperations, extLanguageManager);
+
+			MethodNodeHelper.updateChoiceReferencesInConstraints(
+					srcChoiceNode, dstChoiceNode,
+					methodNode.getConstraintNodes(),
+					reverseOperations, extLanguageManager);
 
 			// remove source choice
 
@@ -123,7 +132,7 @@ public class ParameterAttacher {
 		}
 	}
 
-	private static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {
+	private static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) { // TODO DE-NO reverse operation
 
 		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
 
