@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCases;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -25,7 +26,6 @@ import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
-
 
 	public static void updateParameterReferencesInConstraints(
 			MethodParameterNode oldMethodParameterNode,
@@ -58,7 +58,16 @@ public class MethodNodeHelper {
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (TestCaseNode testCaseNode : testCaseNodes)  {
-			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, extLanguageManager);
+		}
+		
+		if (reverseOperations != null) {
+			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
+				new MethodOperationUpdateChoiceReferencesInTestCases(
+						newChoiceNode, oldChoiceNode, 
+						testCaseNodes, extLanguageManager);
+			
+			reverseOperations.add(reverseOperation);
 		}
 	}
 
