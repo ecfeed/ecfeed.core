@@ -427,8 +427,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
 			List<IModelOperation> reverseOperations,
-			IExtLanguageManager extLanguageManager
-			) {
+			IExtLanguageManager extLanguageManager) {
 
 		fPrecondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
 		fPostcondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);

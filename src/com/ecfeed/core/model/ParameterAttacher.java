@@ -20,36 +20,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterAttacher {
 
-	public static void attach(
-			MethodParameterNode srcMethodParameterNode, 
-			ChoicesParentNode dstParameterForChoices,
-			ChoiceConversionList choiceConversionList,
-			List<IModelOperation> reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		MethodNode methodNode = 
-				attachChoicesInternal(
-						srcMethodParameterNode, dstParameterForChoices, 
-						choiceConversionList, reverseOperations, extLanguageManager);
-
-		if (srcMethodParameterNode.isDetached()) {
-			methodNode.removeDetachedParameter(srcMethodParameterNode);
-		} 
-	}
-
-	public static void attachChoices(
-			MethodParameterNode srcMethodParameterNode, 
-			ChoicesParentNode dstParameterForChoices,
-			ChoiceConversionList choiceConversionList,
-			List<IModelOperation> reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		attachChoicesInternal(
-				srcMethodParameterNode, dstParameterForChoices, 
-				choiceConversionList, reverseOperations, extLanguageManager);
-	} 
-
-	private static MethodNode attachChoicesInternal(MethodParameterNode srcMethodParameterNode,
+	public static MethodNode attachChoices(MethodParameterNode srcMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices, 
 			ChoiceConversionList choiceConversionList,
 			List<IModelOperation> reverseOperations,
@@ -86,6 +57,23 @@ public class ParameterAttacher {
 		return methodNode;
 	}
 
+	//	public static void attach(
+	//			MethodParameterNode srcMethodParameterNode, 
+	//			ChoicesParentNode dstParameterForChoices,
+	//			ChoiceConversionList choiceConversionList,
+	//			List<IModelOperation> reverseOperations,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		MethodNode methodNode = 
+	//				attachChoicesInternal(
+	//						srcMethodParameterNode, dstParameterForChoices, 
+	//						choiceConversionList, reverseOperations, extLanguageManager);
+	//
+	//		if (srcMethodParameterNode.isDetached()) {
+	//			methodNode.removeDetachedParameter(srcMethodParameterNode);
+	//		} 
+	//	}
+
 	public static void moveChoicesByConversionList(
 			ChoiceConversionList choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
@@ -114,7 +102,6 @@ public class ParameterAttacher {
 
 			moveChildChoices(srcChoiceNode, dstChoiceNode);
 
-			// TODO DE-NO create operation
 			MethodNodeHelper.updateChoiceReferencesInTestCases(
 					srcChoiceNode, dstChoiceNode, 
 					methodNode.getTestCases(),

@@ -59,7 +59,9 @@ public class MethodNodeHelper {
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (TestCaseNode testCaseNode : testCaseNodes)  {
-			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, extLanguageManager);
+			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+			
+			// TODO DE-NO reverse operation
 		}
 		
 		if (reverseOperations != null) {
@@ -82,6 +84,7 @@ public class MethodNodeHelper {
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (ConstraintNode constraintNode : constraintNodes) {
+			// TODO DE-NO is reverse operation needed in constraintNode.updateChoiceReferences ?
 			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
 		}
 		

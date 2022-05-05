@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
 
 
 public class TestCaseNode extends AbstractNode {
@@ -228,11 +227,8 @@ public class TestCaseNode extends AbstractNode {
 		return new TestCase(fTestData);
 	}
 
-	// TODO DE-NO move to helper
 	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode, 
-			IExtLanguageManager extLanguageManager) {
+			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 
 		int index = 0;
 
