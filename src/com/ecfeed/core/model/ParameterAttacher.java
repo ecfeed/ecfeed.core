@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
 import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -118,6 +119,11 @@ public class ParameterAttacher {
 			// TODO DE-NO add reverse operation
 			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
 			choicesParentNode.removeChoice(srcChoiceNode);
+			
+			OperationSimpleAddChoice reverseOperation = 
+					new OperationSimpleAddChoice(srcChoiceNode,choicesParentNode, extLanguageManager);
+			
+			inOutReverseOperations.add(reverseOperation);
 		}
 	}
 
