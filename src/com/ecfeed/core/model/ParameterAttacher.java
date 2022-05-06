@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import java.util.List;
 
 import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
-import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
@@ -25,7 +24,7 @@ public class ParameterAttacher {
 	public static MethodNode attachChoices(MethodParameterNode srcMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices, 
 			ChoiceConversionList choiceConversionList,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		if (srcMethodParameterNode == null) {
@@ -80,7 +79,7 @@ public class ParameterAttacher {
 			ChoiceConversionList choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
 			ChoicesParentNode dstParameterNode,
-			List<IModelOperation> inOutReverseOperations,
+			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		List<ChoiceConversionItem> sortedChoiceConversionItems = 
@@ -119,31 +118,31 @@ public class ParameterAttacher {
 			// TODO DE-NO add reverse operation
 			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
 			choicesParentNode.removeChoice(srcChoiceNode);
-			
+
 			OperationSimpleAddChoice reverseOperation = 
 					new OperationSimpleAddChoice(srcChoiceNode,choicesParentNode, extLanguageManager);
-			
+
 			inOutReverseOperations.add(reverseOperation);
 		}
 	}
 
 	private static void moveChildChoices(
 			ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode,
-			List<IModelOperation> inOutReverseOperations, 
+			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
 		ChoiceNodeHelper.moveChildChoices(srcChoiceNode, dstChoiceNode);
-		
+
 		ChoiceOperationMoveChildren choiceOperationMoveChildren = 
 				new ChoiceOperationMoveChildren(dstChoiceNode, srcChoiceNode, extLanguageManager);
-		
+
 		inOutReverseOperations.add(choiceOperationMoveChildren);
 	}
 
 	private static void moveRemainingTopChoices(
 			MethodParameterNode srcMethodParameterNode,
 			ChoicesParentNode dstParameterNode,
-			List<IModelOperation> reverseOperations, 
+			ListOfModelOperations reverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
 		List<ChoiceNode> choiceNodes = srcMethodParameterNode.getChoices();
@@ -156,7 +155,7 @@ public class ParameterAttacher {
 	private static void addChoiceWithUniqueName(
 			ChoiceNode choiceNode, 
 			ChoicesParentNode methodParameterNode,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		String orginalChoiceName = choiceNode.getName();

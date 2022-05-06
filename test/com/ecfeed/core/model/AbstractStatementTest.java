@@ -16,10 +16,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
 
 public class AbstractStatementTest {
@@ -82,7 +81,7 @@ public class AbstractStatementTest {
 		protected void updateChoiceReferences(
 				ChoiceNode oldChoiceNode, 
 				ChoiceNode newChoiceNode,
-				List<IModelOperation> reverseOperations,
+				ListOfModelOperations reverseOperations,
 				IExtLanguageManager extLanguageManager) {
 		}
 
@@ -90,7 +89,7 @@ public class AbstractStatementTest {
 		protected void updateParameterReferences(
 				MethodParameterNode srcMethodParameterNode,
 				ChoicesParentNode dstParameterForChoices,
-				List<IModelOperation> reverseOperations,
+				ListOfModelOperations reverseOperations,
 				IExtLanguageManager extLanguageManager) {
 		}
 	}

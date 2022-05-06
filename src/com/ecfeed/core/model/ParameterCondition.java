@@ -13,8 +13,14 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.RangeHelper;
+import com.ecfeed.core.utils.RelationMatcher;
 
 
 public class ParameterCondition implements IStatementCondition {
@@ -322,7 +328,7 @@ public class ParameterCondition implements IStatementCondition {
 	public void updateChoiceReferences(
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 	}
 

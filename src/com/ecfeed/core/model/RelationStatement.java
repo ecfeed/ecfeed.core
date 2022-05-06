@@ -12,8 +12,13 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.SystemLogger;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -381,7 +386,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	protected void updateChoiceReferences(
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		fRightCondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
@@ -391,7 +396,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		//		if (fLeftParameter == oldMethodParameterNode) {

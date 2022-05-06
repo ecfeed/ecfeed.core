@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -201,7 +200,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	protected void updateChoiceReferences(
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode, 
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 	}
 
@@ -209,7 +208,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 	}
 

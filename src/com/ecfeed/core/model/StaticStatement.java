@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
@@ -140,7 +139,7 @@ public class StaticStatement extends AbstractStatement {
 	protected void updateChoiceReferences(
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 	}
 
@@ -148,7 +147,7 @@ public class StaticStatement extends AbstractStatement {
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 	}
 

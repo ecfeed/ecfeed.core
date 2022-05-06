@@ -13,28 +13,37 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListOfTestCases {
+import com.ecfeed.core.operations.IModelOperation;
 
-	private List<TestCase> fTestCases;
+public class ListOfModelOperations {
 
-	public ListOfTestCases() {
-		
-		fTestCases = new ArrayList<>();
+	private List<IModelOperation> fOperations;
+
+	public ListOfModelOperations() {
+
+		fOperations = new ArrayList<>();
 	}
 
-	public void add(TestCase testCase) {
-		
-		fTestCases.add(testCase);
+	public void add(IModelOperation modelOperation) {
+
+		fOperations.add(modelOperation);
+	}
+
+	public void executeFromTail() {
+
+		int size = fOperations.size();
+
+		for (int index = size-1; index <= 0; index--) {
+
+			IModelOperation modelOperation = fOperations.get(index);
+
+			modelOperation.execute();
+		}
 	}
 
 	public int getSize() {
-		
-		return fTestCases.size();
+
+		return fOperations.size();
 	}
-	
-	public List<TestCase> getList() {
-		
-		return fTestCases;
-	}
-	
+
 }

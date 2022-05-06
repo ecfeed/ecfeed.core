@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCases;
 import com.ecfeed.core.operations.MethodOperationUpdateChoicesInConstraints;
 import com.ecfeed.core.utils.CommonConstants;
@@ -32,7 +31,7 @@ public class MethodNodeHelper {
 			MethodParameterNode oldMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices,
 			List<ConstraintNode> constraintNodes,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		if (oldMethodParameterNode == null) {
@@ -53,23 +52,23 @@ public class MethodNodeHelper {
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
 			List<TestCaseNode> testCaseNodes,
-			List<IModelOperation> inOutReverseOperations,
+			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (TestCaseNode testCaseNode : testCaseNodes)  {
 			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode);
-			
+
 			// TODO DE-NO reverse operation
 		}
-		
+
 		if (inOutReverseOperations != null) {
 			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
-				new MethodOperationUpdateChoiceReferencesInTestCases(
-						newChoiceNode, oldChoiceNode, 
-						testCaseNodes, extLanguageManager);
-			
+					new MethodOperationUpdateChoiceReferencesInTestCases(
+							newChoiceNode, oldChoiceNode, 
+							testCaseNodes, extLanguageManager);
+
 			inOutReverseOperations.add(reverseOperation);
 		}
 	}
@@ -78,7 +77,7 @@ public class MethodNodeHelper {
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
 			List<ConstraintNode> constraintNodes,
-			List<IModelOperation> inOutReverseOperations,
+			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
@@ -87,13 +86,13 @@ public class MethodNodeHelper {
 			// TODO DE-NO is reverse operation needed in constraintNode.updateChoiceReferences ?
 			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, inOutReverseOperations, extLanguageManager);
 		}
-		
+
 		if (inOutReverseOperations != null) {
 			MethodOperationUpdateChoicesInConstraints reverseOperation = 
-				new MethodOperationUpdateChoicesInConstraints(
-						newChoiceNode, oldChoiceNode, 
-						constraintNodes, extLanguageManager);
-			
+					new MethodOperationUpdateChoicesInConstraints(
+							newChoiceNode, oldChoiceNode, 
+							constraintNodes, extLanguageManager);
+
 			inOutReverseOperations.add(reverseOperation);
 		}
 	}

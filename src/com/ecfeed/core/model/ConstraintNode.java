@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -392,7 +391,7 @@ public class ConstraintNode extends AbstractNode{
 	public void updateChoiceReferences(
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		Constraint constraint = getConstraint();
@@ -407,7 +406,7 @@ public class ConstraintNode extends AbstractNode{
 	public void updateParameterReferences(
 			MethodParameterNode oldMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices,
-			List<IModelOperation> reverseOperations,
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		Constraint constraint = getConstraint();

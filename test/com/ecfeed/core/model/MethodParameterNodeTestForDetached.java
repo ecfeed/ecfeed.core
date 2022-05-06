@@ -12,12 +12,8 @@ package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 
-import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ChoiceConversionOperation;
 import com.ecfeed.core.utils.EMathRelation;
@@ -68,20 +64,26 @@ public class MethodParameterNodeTestForDetached {
 
 		// attach
 
-		List<IModelOperation> reverseOperations = new ArrayList<>();
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 		
 		ParameterAttacher.attachChoices(
 				methodParameterNode, globalParameterNode, 
 				choiceConversionList, reverseOperations, extLanguageManager);
 
-		// check
+		// check global parameter
 
 		assertEquals(1, classNode.getParametersCount());
+		assertEquals(1, globalParameterNode.getChoiceCount());
+		ChoiceNode choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName);
+		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
 
+		// check local parameter 
+		
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(0, methodParameterNode.getChoiceCount());
 
+		// check choices from constraints
 
 		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(globalChoiceNode, choiceNodeFromPrecondition);
@@ -91,7 +93,7 @@ public class MethodParameterNodeTestForDetached {
 
 		// TODO - reverse operation
 
-		 assertEquals(4, reverseOperations.size());
+		 assertEquals(4, reverseOperations.getSize());
 	}
 
 	// TODO - add test to check if choice conversion list is complete
