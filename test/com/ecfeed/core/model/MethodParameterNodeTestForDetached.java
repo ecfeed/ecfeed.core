@@ -91,7 +91,7 @@ public class MethodParameterNodeTestForDetached {
 
 		// TODO - reverse operation
 
-		 assertEquals(2, reverseOperations.size());
+		 assertEquals(3, reverseOperations.size());
 	}
 
 	// TODO - add test to check if choice conversion list is complete

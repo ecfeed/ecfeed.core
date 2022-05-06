@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
@@ -78,7 +79,7 @@ public class ParameterAttacher {
 			ChoiceConversionList choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
 			ChoicesParentNode dstParameterNode,
-			List<IModelOperation> reverseOperations,
+			List<IModelOperation> inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		List<ChoiceConversionItem> sortedChoiceConversionItems = 
@@ -100,33 +101,37 @@ public class ParameterAttacher {
 				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
 			}
 
-			moveChildChoices(srcChoiceNode, dstChoiceNode);
+			moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
 
 			MethodNodeHelper.updateChoiceReferencesInTestCases(
 					srcChoiceNode, dstChoiceNode, 
 					methodNode.getTestCases(),
-					reverseOperations, extLanguageManager);
+					inOutReverseOperations, extLanguageManager);
 
 			MethodNodeHelper.updateChoiceReferencesInConstraints(
 					srcChoiceNode, dstChoiceNode,
 					methodNode.getConstraintNodes(),
-					reverseOperations, extLanguageManager);
+					inOutReverseOperations, extLanguageManager);
 
 			// remove source choice
 
+			// TODO DE-NO add reverse operation
 			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
 			choicesParentNode.removeChoice(srcChoiceNode);
 		}
 	}
 
-	private static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) { // TODO DE-NO reverse operation
+	private static void moveChildChoices(
+			ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode,
+			List<IModelOperation> inOutReverseOperations, 
+			IExtLanguageManager extLanguageManager) {
 
-		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
-
-		for (ChoiceNode childChoice : childChoices) {
-
-			dstChoiceNode.addChoice(childChoice);
-		}
+		ChoiceNodeHelper.moveChildChoices(srcChoiceNode, dstChoiceNode);
+		
+		ChoiceOperationMoveChildren choiceOperationMoveChildren = 
+				new ChoiceOperationMoveChildren(dstChoiceNode, srcChoiceNode, extLanguageManager);
+		
+		inOutReverseOperations.add(choiceOperationMoveChildren);
 	}
 
 	private static void moveRemainingTopChoices(

@@ -10,45 +10,35 @@
 
 package com.ecfeed.core.operations;
 
-import java.util.List;
-
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOperation {
+public class ChoiceOperationMoveChildren extends AbstractModelOperation {
 
-	private static final String UPDATE_CHOICE_REFERENCES_IN_TEST_CASES = "Update choice references in test cases.";
+	private static final String MOVE_CHOICES = "Move choices.";
 
-	private ChoiceNode fOldChoiceNode; 
-	private ChoiceNode fNewChoiceNode;
-	private List<ConstraintNode> fConstraintNodes;
-	private IExtLanguageManager fExtLanguageManager;
+	private ChoiceNode fSrcChoiceNode; 
+	private ChoiceNode fDstChoiceNode;
+	IExtLanguageManager fExtLanguageManager;
 
-	public MethodOperationUpdateChoicesInConstraints(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			List<ConstraintNode> constraintNodes,
+	public ChoiceOperationMoveChildren(
+			ChoiceNode srcChoiceNode, 
+			ChoiceNode dstChoiceNode,
 			IExtLanguageManager extLanguageManager) {
 
-		super(UPDATE_CHOICE_REFERENCES_IN_TEST_CASES, extLanguageManager);
+		super(MOVE_CHOICES, extLanguageManager);
 
-		fOldChoiceNode = oldChoiceNode;
-		fNewChoiceNode = newChoiceNode;
-		fConstraintNodes = constraintNodes;
+		fSrcChoiceNode = srcChoiceNode;
+		fDstChoiceNode = dstChoiceNode;
+
 		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
 	public void execute() {
 
-		MethodNodeHelper.updateChoiceReferencesInConstraints(
-				fOldChoiceNode, 
-				fNewChoiceNode,
-				fConstraintNodes,
-				null,
-				fExtLanguageManager);
+		ChoiceNodeHelper.moveChildChoices(fSrcChoiceNode, fDstChoiceNode);
 	}
 
 	@Override
@@ -59,16 +49,17 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 	private class ReverseOperation extends AbstractModelOperation{
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(UPDATE_CHOICE_REFERENCES_IN_TEST_CASES, extLanguageManager);
+			super(MOVE_CHOICES, extLanguageManager);
 		}
 
 		@Override
 		public void execute() {
+			ChoiceNodeHelper.moveChildChoices(fDstChoiceNode, fSrcChoiceNode);
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return null; // TODO DE-NO
+			return new ChoiceOperationMoveChildren(fSrcChoiceNode, fDstChoiceNode, fExtLanguageManager);
 		}
 
 	}

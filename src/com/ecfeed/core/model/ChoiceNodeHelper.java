@@ -33,6 +33,18 @@ public class ChoiceNodeHelper {
 	private static final double eps = 0.000001;
 
 
+	public static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {
+
+		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
+
+		// TODO DE-NO reverse operation
+		for (ChoiceNode childChoice : childChoices) {
+
+			dstChoiceNode.addChoice(childChoice);
+			srcChoiceNode.removeChoice(childChoice);
+		}
+	}
+
 	public static ChoiceNode addChoiceToChoice(
 			ChoiceNode parentChoiceNode, String choiceNodeName, String valueString) {
 

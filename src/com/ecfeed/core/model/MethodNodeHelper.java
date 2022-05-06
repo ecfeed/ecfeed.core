@@ -53,7 +53,7 @@ public class MethodNodeHelper {
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
 			List<TestCaseNode> testCaseNodes,
-			List<IModelOperation> reverseOperations,
+			List<IModelOperation> inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
@@ -64,13 +64,13 @@ public class MethodNodeHelper {
 			// TODO DE-NO reverse operation
 		}
 		
-		if (reverseOperations != null) {
+		if (inOutReverseOperations != null) {
 			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
 				new MethodOperationUpdateChoiceReferencesInTestCases(
 						newChoiceNode, oldChoiceNode, 
 						testCaseNodes, extLanguageManager);
 			
-			reverseOperations.add(reverseOperation);
+			inOutReverseOperations.add(reverseOperation);
 		}
 	}
 
@@ -78,23 +78,23 @@ public class MethodNodeHelper {
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
 			List<ConstraintNode> constraintNodes,
-			List<IModelOperation> reverseOperations,
+			List<IModelOperation> inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 			// TODO DE-NO is reverse operation needed in constraintNode.updateChoiceReferences ?
-			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, inOutReverseOperations, extLanguageManager);
 		}
 		
-		if (reverseOperations != null) {
+		if (inOutReverseOperations != null) {
 			MethodOperationUpdateChoicesInConstraints reverseOperation = 
 				new MethodOperationUpdateChoicesInConstraints(
 						newChoiceNode, oldChoiceNode, 
 						constraintNodes, extLanguageManager);
 			
-			reverseOperations.add(reverseOperation);
+			inOutReverseOperations.add(reverseOperation);
 		}
 	}
 
