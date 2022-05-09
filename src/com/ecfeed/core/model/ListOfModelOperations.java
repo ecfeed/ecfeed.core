@@ -33,7 +33,7 @@ public class ListOfModelOperations {
 
 		int size = fOperations.size();
 
-		for (int index = size-1; index <= 0; index--) {
+		for (int index = size-1; index >= 0; index--) {
 
 			IModelOperation modelOperation = fOperations.get(index);
 

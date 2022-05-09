@@ -25,7 +25,10 @@ public class MethodParameterNodeTestForDetached {
 	@Test
 	public void attachMethodParameterToClassParameter() {
 
+		RootNode rootNode = new RootNode("Root", null);
+
 		ClassNode classNode = new ClassNode("class1", null);
+		rootNode.addClass(classNode);
 
 		final String globalParameterName = "GP1";
 		final String globalChoiceName = "GC1";
@@ -66,7 +69,7 @@ public class MethodParameterNodeTestForDetached {
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
-		
+
 		ParameterAttacher.attachChoices(
 				methodParameterNode, globalParameterNode, 
 				choiceConversionList, reverseOperations, extLanguageManager);
@@ -79,7 +82,7 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
 
 		// check local parameter 
-		
+
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(0, methodParameterNode.getChoiceCount());
 
@@ -91,9 +94,32 @@ public class MethodParameterNodeTestForDetached {
 		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(globalChoiceNode, choiceNodeFromPostcondition);
 
-		// TODO - reverse operation
+		// reverse operation
+		
+		assertEquals(4, reverseOperations.getSize());
+		reverseOperations.executeFromTail();
 
-		 assertEquals(4, reverseOperations.getSize());
+		// check global parameter
+
+		assertEquals(1, classNode.getParametersCount());
+		assertEquals(1, globalParameterNode.getChoiceCount());
+		choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName);
+		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
+
+		// check local parameter 
+
+		assertEquals(1, methodNode.getParametersCount());
+		assertEquals(1, methodParameterNode.getChoiceCount());
+		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName);
+		assertEquals(methodChoiceNode, choiceNodeFromMethodParam);
+
+		// check choices from constraints
+
+		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		assertEquals(methodChoiceNode, choiceNodeFromPrecondition);
+
+		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(methodChoiceNode, choiceNodeFromPostcondition);
 	}
 
 	// TODO - add test to check if choice conversion list is complete
