@@ -27,11 +27,11 @@ public class TestSuitesDescription { // TODO - REUSE IN JUNIT5
         try {
             fTestSuiteNames = (List<String>) testSuitesObject;
         } catch (Exception e) {
-            ExceptionHelper.reportRuntimeException("Invalid type of test suites object. Can not convert to list of names.");
+            ExceptionHelper.reportClientException("Invalid type of test suites object. Can not convert to list of names.");
         }
 
         if (fTestSuiteNames.size() == 0) {
-            ExceptionHelper.reportRuntimeException("List of test suite names should not be empty.");
+            ExceptionHelper.reportClientException("List of test suite names should not be empty.");
         }
     }
 
@@ -55,7 +55,7 @@ public class TestSuitesDescription { // TODO - REUSE IN JUNIT5
             return;
         }
 
-        ExceptionHelper.reportRuntimeException("Invalid special value for test suites: " + testSuitesString);
+        ExceptionHelper.reportClientException("Invalid special value for test suites: " + testSuitesString);
     }
 
     private void setSpecialValueAllSuitesToTrue() {

@@ -21,7 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.generators.api.IParameterDefinition;
 import com.ecfeed.core.utils.GeneratorType;
@@ -92,8 +91,8 @@ public class AbstractGeneratorTest {
 			arguments.add(generatorValueString);
 		
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
 
@@ -124,11 +123,11 @@ public class AbstractGeneratorTest {
 				arguments.add(argumentInteger);
 
 				generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
-				fail("GeneratorException expected");
-			} catch (GeneratorException e) {
+				fail("Exception expected");
+			} catch (Exception e) {
 			}
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 	}
 
@@ -158,11 +157,11 @@ public class AbstractGeneratorTest {
 				values.add(argumentInteger);
 
 				generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
-				fail("GeneratorException expected");
-			} catch (GeneratorException e) {
+				fail("Exception expected");
+			} catch (Exception e) {
 			}
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException");
+		} catch (Exception e) {
+			fail("Unexpected Exception");
 		}
 	}
 
@@ -179,24 +178,24 @@ public class AbstractGeneratorTest {
 		List<IGeneratorValue> arguments = new ArrayList<>();
 		try{
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 
 		try{
 			GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, "0");
 			arguments.add(generatorValueInteger);
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 
 		try{
 			GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, "0.0");
 			arguments.add(generatorValueDouble);
 			generator.initialize(inputDomain, new DummyEvaluator<>(), arguments, null);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
 
@@ -215,8 +214,8 @@ public class AbstractGeneratorTest {
 			GeneratorValue generatorValueInteger = new GeneratorValue(paramDefInt, "0");
 			values.add(generatorValueInteger);
 			generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 
 		ParameterDefinitionDouble paramDefDouble = new ParameterDefinitionDouble(DOUBLE_PARAMETER_NAME,  0.0);
@@ -225,8 +224,8 @@ public class AbstractGeneratorTest {
 			GeneratorValue generatorValueDouble = new GeneratorValue(paramDefDouble, "0.0");
 			values.add(generatorValueDouble);
 			generator.initialize(inputDomain, new DummyEvaluator<>(), values, null);
-			fail("GeneratorException expected");
-		} catch (GeneratorException e) {
+			fail("Exception expected");
+		} catch (Exception e) {
 		}
 	}
 	
@@ -270,8 +269,8 @@ public class AbstractGeneratorTest {
 			assertEquals(fDoubleParameterValue, doubleParameter, 0.0);
 			assertEquals(fBooleanParameterValue, booleanParameter);
 			assertEquals(fStringParameterValue, stringParameter);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
 	
@@ -303,8 +302,8 @@ public class AbstractGeneratorTest {
 			assertEquals(fDefaultDoubleParameterValue, doubleParameter, 0.0);
 			assertEquals(fDefaultBooleanParameterValue, booleanParameter);
 			assertEquals(fDefaultStringParameterValue, stringParameter);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 
 
@@ -332,8 +331,8 @@ public class AbstractGeneratorTest {
 			assertEquals(fDoubleParameterValue, doubleParameter, 0.0);
 			assertEquals(fBooleanParameterValue, booleanParameter);
 			assertEquals(fStringParameterValue, stringParameter);
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 	}
 	
@@ -345,8 +344,8 @@ public class AbstractGeneratorTest {
 
 		try{
 			generator.initialize(inputDomain, new DummyEvaluator<>(), null, null);
-			fail("GeneratorException expected");
-		} catch (GeneratorException e) {
+			fail("Exception expected");
+		} catch (Exception e) {
 		}
 	}
 
@@ -381,24 +380,24 @@ public class AbstractGeneratorTest {
 //		Map<String, Object> values = new HashMap<String, Object>();
 //		try {
 //			generator.getIntParameter("parameter");
-//			fail("GeneratorException expected");
-//		} catch (GeneratorException e) {
+//			fail("Exception expected");
+//		} catch (Exception e) {
 //		}
 //		
 //		values.put("parameter", 2);
 //		try {
 //			int parameter = generator.getIntParameter("parameter");
 //			assertEquals(2, parameter);
-//		} catch (GeneratorException e) {
-//			fail("Unexpected GeneratorException");
+//		} catch (Exception e) {
+//			fail("Unexpected Exception");
 //		}
 //
 //		//put forbidden value
 //		values.put("parameter", 0);
 //		try {
 //			generator.getIntParameter("parameter");
-//			fail("GeneratorException expected");
-//		} catch (GeneratorException e) {
+//			fail("Exception expected");
+//		} catch (Exception e) {
 //		}
 //	}
 //		
@@ -413,16 +412,16 @@ public class AbstractGeneratorTest {
 //		try {
 //			int parameter = generator.getIntParameter("parameter", values);
 //			assertEquals(defaultParameterValue, parameter);
-//		} catch (GeneratorException e) {
-//			fail("Unexpected GeneratorException");
+//		} catch (Exception e) {
+//			fail("Unexpected Exception");
 //		}
 //		
 //		values.put("parameter", parameterValue);
 //		try {
 //			int parameter = generator.getIntParameter("parameter", values);
 //			assertEquals(parameterValue, parameter);
-//		} catch (GeneratorException e) {
-//			fail("Unexpected GeneratorException");
+//		} catch (Exception e) {
+//			fail("Unexpected Exception");
 //		}
 //	}
 //		
@@ -433,8 +432,8 @@ public class AbstractGeneratorTest {
 //		try {
 //			//try to fetch a parameter that is not defined for this generator
 //			generator.getIntParameter("parameter", values);
-//			fail("GeneratorException expected");
-//		} catch (GeneratorException e) {
+//			fail("Exception expected");
+//		} catch (Exception e) {
 //		}
 //	}
 //	
@@ -445,7 +444,7 @@ public class AbstractGeneratorTest {
 //		
 //		try {
 //			generator.addParameterDefinition(new AbstractParameterDefinition("parameter", TYPE.INTEGER, true, 0, -5, 5));
-//		} catch (GeneratorException e) {
+//		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
 //	}

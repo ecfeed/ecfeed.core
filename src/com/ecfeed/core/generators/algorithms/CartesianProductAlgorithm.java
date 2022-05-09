@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
@@ -28,7 +28,7 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 	public void initialize(
 			List<List<E>> input,
 			IConstraintEvaluator<E> constraintEvaluator,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException{
+			IEcfProgressMonitor generatorProgressMonitor) {
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 			int totalProgress = calculateProductSize(input);
 
@@ -37,10 +37,10 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 	}
 
 	@Override
-	public List<E> getNext() throws GeneratorException{
+	public List<E> getNext() {
 
 		if (!fInitialized) {
-			GeneratorException.report("Generator not initialized");
+			GeneratorExceptionHelper.reportException("Generator not initialized");
 		}
 
 		if (isCancelled()) {

@@ -13,7 +13,7 @@ package com.ecfeed.core.generators.algorithms;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
@@ -32,13 +32,13 @@ public abstract class NWiseAwesomeAlgorithmBase<E> extends AbstractAlgorithm<E> 
 
 	public void initialize(List<List<E>> input,
 						   IConstraintEvaluator<E> constraintEvaluator,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) {
 
 		if(N < 1 || N > input.size()){
-			GeneratorException.report("Value of N for this input must be between 1 and " + input.size());
+			GeneratorExceptionHelper.reportException("Value of N for this input must be between 1 and " + input.size());
 		}
 		if (fCoverage > 100 || fCoverage < 0) {
-			GeneratorException.report("Coverage must be between 1 and 100");
+			GeneratorExceptionHelper.reportException("Coverage must be between 1 and 100");
 		}
 
 		fCartesianAlgorithm = new CartesianProductAlgorithm<E>();
@@ -77,7 +77,7 @@ public abstract class NWiseAwesomeAlgorithmBase<E> extends AbstractAlgorithm<E> 
 		return fCoverage;
 	}
 
-	protected List<E> cartesianNext() throws GeneratorException{
+	protected List<E> cartesianNext() {
 		return fCartesianAlgorithm.getNext();
 	}
 

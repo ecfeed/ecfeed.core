@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
@@ -48,7 +47,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 	@Override
 	public void initialize(List<List<E>> input,
 						   IConstraintEvaluator<E> constraintEvaluator,
-			IEcfProgressMonitor generatorProgressMonitor) throws GeneratorException {
+			IEcfProgressMonitor generatorProgressMonitor) {
 
 		if(fDuplicates == false){
 			for(List<E> assignment : fHistory)
@@ -62,7 +61,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 	}
 
 	@Override
-	public List<E> getNext() throws GeneratorException {
+	public List<E> getNext() {
 		if(fHistory.size() >= fLength){
 			return null;
 		}
@@ -99,7 +98,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 		return fHistory;
 	}
 
-	protected List<List<E>> getCandidates() throws GeneratorException {
+	protected List<List<E>> getCandidates() {
 		Set<List<E>> candidates = new HashSet<List<E>>();
 
 		int idleCounter = 0;
@@ -124,7 +123,7 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 		return new ArrayList<List<E>>(candidates);
 	}
 
-	protected List<E> getCandidate() throws GeneratorException{
+	protected List<E> getCandidate() {
 	//	fCartesianAlgorithm.addConstraint(blackList); //TODO: addConstraint goes away from IAlgorithm
 		List<Integer> random = randomVector(getInput());
 		List<Integer> result = fCartesianAlgorithm.getNext(random);

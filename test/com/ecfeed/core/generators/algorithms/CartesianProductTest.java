@@ -23,7 +23,6 @@ import org.junit.Test;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.evaluator.HomebrewConstraintEvaluator;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -51,7 +50,7 @@ public class CartesianProductTest {
 					for (List<String> element : referenceSet) {
 						assertTrue(algorithmResult.contains(element));
 					}
-				} catch (GeneratorException e) {
+				} catch (Exception e) {
 					fail("Unexpected generator exception: " + e.getMessage());
 				}
 			}
@@ -73,7 +72,7 @@ public class CartesianProductTest {
 							.algorithmResult(ALGORITHM);
 					assertEquals(0, algorithmResult.size());
 
-				} catch (GeneratorException e) {
+				} catch (Exception e) {
 					fail("Unexpected generator exception: " + e.getMessage());
 				}
 			}
@@ -100,7 +99,7 @@ public class CartesianProductTest {
 					}
 				}
 			}
-		} catch (GeneratorException e) {
+		} catch (Exception e) {
 			fail("Unexpected generator exception: " + e.getMessage());
 		}
 	}

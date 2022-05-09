@@ -76,7 +76,7 @@ public class ConstraintsDescription { // TODO - REUSE IN JUNIT5
             return ConstraintsValueType.ALL;
         }
 
-        ExceptionHelper.reportRuntimeException("Invalid special value for constraints: " + constraintsString);
+        ExceptionHelper.reportClientException("Invalid special value for constraints: " + constraintsString);
         return null;
     }
 

@@ -20,7 +20,6 @@ import org.junit.Test;
 
 import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.algorithms.CartesianProductAlgorithm;
-import com.ecfeed.core.generators.api.GeneratorException;
 import com.ecfeed.core.generators.api.IGeneratorValue;
 import com.ecfeed.core.generators.testutils.GeneratorTestUtils;
 import com.ecfeed.core.utils.SimpleProgressMonitor;
@@ -32,7 +31,7 @@ public class CartesianProductGeneratorTest{
 		try {
 			generator = new CartesianProductGenerator<String>();
 		}
-		catch (GeneratorException e)
+		catch (Exception e)
 		{
 
 		}
@@ -42,8 +41,8 @@ public class CartesianProductGeneratorTest{
 		List<IGeneratorValue> parameters = new ArrayList<>();
 		try {
 			generator.initialize(inputDomain, new DummyEvaluator<>(), parameters, new SimpleProgressMonitor());
-		} catch (GeneratorException e) {
-			fail("Unexpected GeneratorException: " + e.getMessage());
+		} catch (Exception e) {
+			fail("Unexpected Exception: " + e.getMessage());
 		}
 		assertTrue(generator.getAlgorithm() instanceof CartesianProductAlgorithm);
 	}

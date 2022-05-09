@@ -10,14 +10,14 @@
 
 package com.ecfeed.core.generators;
 
-import com.ecfeed.core.generators.api.GeneratorException;
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IGenerator;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.utils.GeneratorType;
 
 public class GeneratorFactoryWithCodes {
 
-	public IGenerator<ChoiceNode> createGenerator(GeneratorType type) throws GeneratorException {
+	public IGenerator<ChoiceNode> createGenerator(GeneratorType type) {
 
 		if (type == GeneratorType.N_WISE) {
 			
@@ -35,7 +35,7 @@ public class GeneratorFactoryWithCodes {
 			return new RandomGenerator<ChoiceNode>();
 		}
 
-		GeneratorException.report("Can not create generator. Unsupported generator type.");
+		GeneratorExceptionHelper.reportException("Can not create generator. Unsupported generator type.");
 		return null;
 	}
 }
