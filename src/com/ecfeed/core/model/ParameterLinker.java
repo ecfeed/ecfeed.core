@@ -14,16 +14,18 @@ import java.util.List;
 
 import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
+import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ParameterAttacher {
+public class ParameterLinker {
 
-	public static MethodNode attachChoices(
+
+	public static MethodNode linkMethodParameteToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices, 
+			GlobalParameterNode dstGlobalParameterNode, 
 			ChoiceConversionList choiceConversionList,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
@@ -32,7 +34,7 @@ public class ParameterAttacher {
 			ExceptionHelper.reportRuntimeException("Empty method parameter.");
 		}
 
-		if (dstParameterForChoices == null) {
+		if (dstGlobalParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty global parameter.");
 		}
 
@@ -40,41 +42,43 @@ public class ParameterAttacher {
 			moveChoicesByConversionList(
 					choiceConversionList, 
 					srcMethodParameterNode, 
-					dstParameterForChoices,
+					dstGlobalParameterNode,
 					reverseOperations,
 					extLanguageManager);
 		}
 
 		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
-		moveRemainingTopChoices(srcMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
+		moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
 
 		MethodNodeHelper.updateParameterReferencesInConstraints(
 				srcMethodParameterNode, 
-				dstParameterForChoices,
+				dstGlobalParameterNode,
 				methodNode.getConstraintNodes(),
 				reverseOperations,
 				extLanguageManager);
 
+		setLink(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
+
 		return methodNode;
 	}
 
-	//	public static void attach(
-	//			MethodParameterNode srcMethodParameterNode, 
-	//			ChoicesParentNode dstParameterForChoices,
-	//			ChoiceConversionList choiceConversionList,
-	//			List<IModelOperation> reverseOperations,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		MethodNode methodNode = 
-	//				attachChoicesInternal(
-	//						srcMethodParameterNode, dstParameterForChoices, 
-	//						choiceConversionList, reverseOperations, extLanguageManager);
-	//
-	//		if (srcMethodParameterNode.isDetached()) {
-	//			methodNode.removeDetachedParameter(srcMethodParameterNode);
-	//		} 
-	//	}
+	private static void setLink(
+			MethodParameterNode srcMethodParameterNode,
+			GlobalParameterNode dstParameterForChoices,
+			ListOfModelOperations inOutReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+
+		srcMethodParameterNode.setLink(dstParameterForChoices);
+		srcMethodParameterNode.setLinked(true);
+
+		OperationSimpleSetLink reverseOperationSimpleSetLink = 
+				new OperationSimpleSetLink(
+						srcMethodParameterNode, null, extLanguageManager);
+
+		inOutReverseOperations.add(reverseOperationSimpleSetLink);
+	}
 
 	public static void moveChoicesByConversionList(
 			ChoiceConversionList choiceConversionItems,
@@ -116,7 +120,6 @@ public class ParameterAttacher {
 
 			// remove source choice
 
-			// TODO DE-NO add reverse operation
 			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
 			choicesParentNode.removeChoice(srcChoiceNode);
 

@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class MethodParameterNodeTestForDetached {
 
 	@Test
-	public void attachMethodParameterToClassParameter() {
+	public void linkMethodParameterToClassParameter() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -70,7 +71,7 @@ public class MethodParameterNodeTestForDetached {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterAttacher.attachChoices(
+		ParameterLinker.linkMethodParameteToGlobalParameter(
 				methodParameterNode, globalParameterNode, 
 				choiceConversionList, reverseOperations, extLanguageManager);
 
@@ -84,7 +85,11 @@ public class MethodParameterNodeTestForDetached {
 		// check local parameter 
 
 		assertEquals(1, methodNode.getParametersCount());
-		assertEquals(0, methodParameterNode.getChoiceCount());
+		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
+
+		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		assertEquals(true, methodParameterNode2.isLinked());
+		assertEquals(globalParameterNode, methodParameterNode2.getLink());
 
 		// check choices from constraints
 
@@ -95,8 +100,8 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(globalChoiceNode, choiceNodeFromPostcondition);
 
 		// reverse operation
-		
-		assertEquals(4, reverseOperations.getSize());
+
+		assertEquals(5, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		// check global parameter
@@ -110,6 +115,11 @@ public class MethodParameterNodeTestForDetached {
 
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount());
+
+		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		assertEquals(false, methodParameterNode2.isLinked());
+		assertNull(methodParameterNode2.getLink());
+
 		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName);
 		assertEquals(methodChoiceNode, choiceNodeFromMethodParam);
 

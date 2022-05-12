@@ -10,17 +10,17 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ParameterAttacher;
+import com.ecfeed.core.model.ParameterLinker;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationLikToGlobalParameter extends AbstractModelOperation {
 
 	MethodParameterNode fSrcMethodParameterNode;
-	ChoicesParentNode fDstParameterForChoices;
+	GlobalParameterNode fDstParameterForChoices;
 	ChoiceConversionList fChoiceConversionList;
 
 	ListOfModelOperations fReverseOperations;
@@ -29,7 +29,7 @@ public class MethodOperationLikToGlobalParameter extends AbstractModelOperation 
 
 	public MethodOperationLikToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices, 
+			GlobalParameterNode dstParameterForChoices, 
 			ChoiceConversionList choiceConversionList,
 			IExtLanguageManager extLanguageManager) {
 
@@ -48,7 +48,7 @@ public class MethodOperationLikToGlobalParameter extends AbstractModelOperation 
 
 		fReverseOperations = new ListOfModelOperations();
 
-		ParameterAttacher.attachChoices(
+		ParameterLinker.linkMethodParameteToGlobalParameter(
 				fSrcMethodParameterNode,
 				fDstParameterForChoices, 
 				fChoiceConversionList,
