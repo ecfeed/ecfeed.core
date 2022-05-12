@@ -21,7 +21,8 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterAttacher {
 
-	public static MethodNode attachChoices(MethodParameterNode srcMethodParameterNode,
+	public static MethodNode attachChoices(
+			MethodParameterNode srcMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices, 
 			ChoiceConversionList choiceConversionList,
 			ListOfModelOperations reverseOperations,
