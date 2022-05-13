@@ -18,9 +18,10 @@ public class GlobalParameterNodeHelper {
 	public static ChoiceNode addNewChoiceToGlobalParameter(
 			GlobalParameterNode globalParameterNode, 
 			String choiceNodeName, 
-			String valueString) {
+			String valueString,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
 		globalParameterNode.addChoice(choiceNode);
 
 		return choiceNode;
