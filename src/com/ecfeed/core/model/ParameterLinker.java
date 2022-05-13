@@ -83,51 +83,88 @@ public class ParameterLinker {
 	public static void moveChoicesByConversionList(
 			ChoiceConversionList choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
-			ChoicesParentNode dstParameterNode,
+			GlobalParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		List<ChoiceConversionItem> sortedChoiceConversionItems = 
 				choiceConversionItems.createSortedCopyOfConversionItems();
 
-		MethodNode methodNode = srcParameterNode.getMethod();
-
 		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
 
-			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
-
-			if (srcChoiceNode == null) {
-				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
-			}
-
-			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(choiceConversionItem.getDstName());
-
-			if (dstChoiceNode == null) {
-				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
-			}
-
-			moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
-
-			MethodNodeHelper.updateChoiceReferencesInTestCases(
-					srcChoiceNode, dstChoiceNode, 
-					methodNode.getTestCases(),
+			moveChoicesByConversionItem(
+					choiceConversionItem, 
+					srcParameterNode, dstParameterNode,
 					inOutReverseOperations, extLanguageManager);
-
-			MethodNodeHelper.updateChoiceReferencesInConstraints(
-					srcChoiceNode, dstChoiceNode,
-					methodNode.getConstraintNodes(),
-					inOutReverseOperations, extLanguageManager);
-
-			// remove source choice
-
-			ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
-			choicesParentNode.removeChoice(srcChoiceNode);
-
-			OperationSimpleAddChoice reverseOperation = 
-					new OperationSimpleAddChoice(srcChoiceNode,choicesParentNode, extLanguageManager);
-
-			inOutReverseOperations.add(reverseOperation);
 		}
+	}
+
+	private static void moveChoicesByConversionItem(
+			ChoiceConversionItem choiceConversionItem, 
+			MethodParameterNode srcParameterNode, 
+			GlobalParameterNode dstParameterNode,
+			ListOfModelOperations inOutReverseOperations, 
+			IExtLanguageManager extLanguageManager) {
+
+		ChoiceNode srcChoiceNode = srcParameterNode.getChoice(choiceConversionItem.getSrcName());
+
+		if (srcChoiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot find source choice.");
+		}
+
+		ChoiceNode dstChoiceNode = dstParameterNode.getChoice(choiceConversionItem.getDstName());
+
+		if (dstChoiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
+		}
+
+		moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
+
+		MethodNode methodNode = srcParameterNode.getMethod();
+
+		updateChoiceReferencesInChoicesAndTestCases(
+				srcChoiceNode, 
+				dstChoiceNode, 
+				methodNode, 
+				inOutReverseOperations,
+				extLanguageManager);
+
+		removeSourceChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
+	}
+
+	private static void removeSourceChoice(
+			ChoiceNode srcChoiceNode, 
+			ListOfModelOperations inOutReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
+
+		choicesParentNode.removeChoice(srcChoiceNode);
+
+		OperationSimpleAddChoice reverseOperation = 
+				new OperationSimpleAddChoice(srcChoiceNode,choicesParentNode, extLanguageManager);
+
+		inOutReverseOperations.add(reverseOperation);
+	}
+
+	private static void updateChoiceReferencesInChoicesAndTestCases(
+			ChoiceNode srcChoiceNode,
+			ChoiceNode dstChoiceNode, 
+			MethodNode methodNode,
+			ListOfModelOperations inOutReverseOperations, 
+			IExtLanguageManager extLanguageManager) {
+
+
+
+		MethodNodeHelper.updateChoiceReferencesInTestCases(
+				srcChoiceNode, dstChoiceNode, 
+				methodNode.getTestCases(),
+				inOutReverseOperations, extLanguageManager);
+
+		MethodNodeHelper.updateChoiceReferencesInConstraints(
+				srcChoiceNode, dstChoiceNode,
+				methodNode.getConstraintNodes(),
+				inOutReverseOperations, extLanguageManager);
 	}
 
 	private static void moveChildChoices(

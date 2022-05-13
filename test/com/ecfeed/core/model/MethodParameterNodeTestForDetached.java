@@ -24,63 +24,83 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class MethodParameterNodeTestForDetached {
 
 	@Test
-	public void linkMethodParameterToClassParameter() {
+	public void linkMethodParameterToClassParameterBasicUseCase() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
-		ClassNode classNode = new ClassNode("class1", null);
-		rootNode.addClass(classNode);
+		// names of global parameters
+		// the same name for root global parameter and class global parameter
 
 		final String globalParameterName = "GP1";
-		final String globalChoiceName = "GC1";
+		final String globalChoiceName1 = "GC1";
 
-		// add global parameter and choice
+		// add global parameter and choice for root
 
-		GlobalParameterNode globalParameterNode = ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String");
-		ChoiceNode globalChoiceNode = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(globalParameterNode, globalChoiceName, "0");
+		GlobalParameterNode globalParameterNodeOfRoot = 
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, "String");
+
+		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				globalParameterNodeOfRoot, globalChoiceName1, "0");
+
+		// add class node
+
+		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+
+		// add global parameter and choice for class
+
+		GlobalParameterNode globalParameterNodeOfClass = 
+				ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String");
+
+		ChoiceNode globalChoiceNodeForClass = 
+				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+						globalParameterNodeOfClass, globalChoiceName1, "0");
 
 		// add methodNode 
+
 		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method");
 
 		// add parameter and choice to method
 
 		final String methodParameterName = "P1";
-		final String methodChoiceName = "C1";
+		final String methodChoiceName1 = "C1";
 
 		MethodParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
 
-		ChoiceNode methodChoiceNode = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName, "0");
+		ChoiceNode methodChoiceNode1 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
 
 		// add constraint
-		addNewSimpleConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode, methodChoiceNode);
+
+		addNewSimpleConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
 
 		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
 
 		choiceConversionList.addItem(
-				methodChoiceName, 
+				methodChoiceName1, 
 				ChoiceConversionOperation.MERGE, 
-				globalChoiceName);
+				globalChoiceName1);
 
-		// attach
+		// linking
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
 		ParameterLinker.linkMethodParameteToGlobalParameter(
-				methodParameterNode, globalParameterNode, 
-				choiceConversionList, reverseOperations, extLanguageManager);
+				methodParameterNode, 
+				globalParameterNodeOfClass, 
+				choiceConversionList, 
+				reverseOperations, 
+				extLanguageManager);
 
-		// check global parameter
+		// check global parameter of class
 
 		assertEquals(1, classNode.getParametersCount());
-		assertEquals(1, globalParameterNode.getChoiceCount());
-		ChoiceNode choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName);
-		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
+		assertEquals(1, globalParameterNodeOfClass.getChoiceCount());
+		ChoiceNode choiceNodeFromGlobalParam = globalParameterNodeOfClass.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNodeForClass, choiceNodeFromGlobalParam);
 
 		// check local parameter 
 
@@ -89,15 +109,15 @@ public class MethodParameterNodeTestForDetached {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNode, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLink());
 
 		// check choices from constraints
 
 		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
-		assertEquals(globalChoiceNode, choiceNodeFromPrecondition);
+		assertEquals(globalChoiceNodeForClass, choiceNodeFromPrecondition);
 
 		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
-		assertEquals(globalChoiceNode, choiceNodeFromPostcondition);
+		assertEquals(globalChoiceNodeForClass, choiceNodeFromPostcondition);
 
 		// reverse operation
 
@@ -107,9 +127,9 @@ public class MethodParameterNodeTestForDetached {
 		// check global parameter
 
 		assertEquals(1, classNode.getParametersCount());
-		assertEquals(1, globalParameterNode.getChoiceCount());
-		choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName);
-		assertEquals(globalChoiceNode, choiceNodeFromGlobalParam);
+		assertEquals(1, globalParameterNodeOfClass.getChoiceCount());
+		choiceNodeFromGlobalParam = globalParameterNodeOfClass.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNodeForClass, choiceNodeFromGlobalParam);
 
 		// check local parameter 
 
@@ -120,18 +140,266 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(false, methodParameterNode2.isLinked());
 		assertNull(methodParameterNode2.getLink());
 
-		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName);
-		assertEquals(methodChoiceNode, choiceNodeFromMethodParam);
+		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
+		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
 
 		// check choices from constraints
 
 		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
-		assertEquals(methodChoiceNode, choiceNodeFromPrecondition);
+		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
 
 		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
-		assertEquals(methodChoiceNode, choiceNodeFromPostcondition);
+		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
 	}
 
+	@Test
+	public void linkMethodParameterToRootParameterBasicUseCase() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// names of global parameters
+		// the same name for root global parameter and class global parameter
+
+		final String globalParameterName = "GP1";
+		final String globalChoiceName1 = "GC1";
+
+		// add global parameter and choice for root
+
+		GlobalParameterNode globalParameterNodeOfRoot = 
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, "String");
+
+		ChoiceNode globalChoiceNodeOfRoot = 
+				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+						globalParameterNodeOfRoot, globalChoiceName1, "0");
+
+		// add class node
+
+		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class1", null);
+
+		// add global parameter and choice for class
+
+		GlobalParameterNode globalParameterNodeOfClass = 
+				ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String");
+
+		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				globalParameterNodeOfClass, globalChoiceName1, "0");
+
+		// add methodNode 
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method");
+
+		// add parameter and choice to method
+
+		final String methodParameterName = "P1";
+		final String methodChoiceName1 = "C1";
+
+		MethodParameterNode methodParameterNode = 
+				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
+
+		ChoiceNode methodChoiceNode1 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+
+		// add constraint
+
+		addNewSimpleConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+
+		// creating choice conversion list
+
+		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+
+		choiceConversionList.addItem(
+				methodChoiceName1, 
+				ChoiceConversionOperation.MERGE, 
+				globalChoiceName1);
+
+		// linking
+
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+
+		ParameterLinker.linkMethodParameteToGlobalParameter(
+				methodParameterNode, 
+				globalParameterNodeOfRoot, 
+				choiceConversionList, 
+				reverseOperations, 
+				extLanguageManager);
+
+		// check global parameter of root
+
+		assertEquals(1, rootNode.getParametersCount());
+		assertEquals(1, globalParameterNodeOfRoot.getChoiceCount());
+		ChoiceNode choiceNodeFromGlobalParam = globalParameterNodeOfRoot.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNodeOfRoot, choiceNodeFromGlobalParam);
+
+		// check local parameter 
+
+		assertEquals(1, methodNode.getParametersCount());
+		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
+
+		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		assertEquals(true, methodParameterNode2.isLinked());
+		assertEquals(globalParameterNodeOfRoot, methodParameterNode2.getLink());
+
+		// check choices from constraints
+
+		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		assertEquals(globalChoiceNodeOfRoot, choiceNodeFromPrecondition);
+
+		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(globalChoiceNodeOfRoot, choiceNodeFromPostcondition);
+
+		// reverse operation
+
+		assertEquals(5, reverseOperations.getSize());
+		reverseOperations.executeFromTail();
+
+		// check global parameter
+
+		assertEquals(1, rootNode.getParametersCount());
+		assertEquals(1, globalParameterNodeOfRoot.getChoiceCount());
+		choiceNodeFromGlobalParam = globalParameterNodeOfRoot.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNodeOfRoot, choiceNodeFromGlobalParam);
+
+		// check local parameter 
+
+		assertEquals(1, methodNode.getParametersCount());
+		assertEquals(1, methodParameterNode.getChoiceCount());
+
+		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		assertEquals(false, methodParameterNode2.isLinked());
+		assertNull(methodParameterNode2.getLink());
+
+		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
+		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
+
+		// check choices from constraints
+
+		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
+
+		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
+	}
+
+	//	@Test
+	//	public void linkMethodParameterToClassParameter() {
+	//
+	//		RootNode rootNode = new RootNode("Root", null);
+	//
+	//		ClassNode classNode = new ClassNode("class1", null);
+	//		rootNode.addClass(classNode);
+	//
+	//		final String globalParameterName = "GP1";
+	//		final String globalChoiceName1 = "GC1";
+	//
+	//		// add global parameter and choice
+	//
+	//		GlobalParameterNode globalParameterNode = ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String");
+	//		
+	//		ChoiceNode globalChoiceNode1 = 
+	//				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+	//						globalParameterNode, globalChoiceName1, "0");
+	//
+	//		// add methodNode 
+	//		
+	//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method");
+	//
+	//		// add parameter and choice to method
+	//
+	//		final String methodParameterName = "P1";
+	//		final String methodChoiceName1 = "C1";
+	//
+	//		MethodParameterNode methodParameterNode = 
+	//				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
+	//
+	//		ChoiceNode methodChoiceNode1 = 
+	//				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName1, "0");
+	//
+	//		// add choice not used in constraint
+	//		
+	//		final String methodChoiceName2 = "C2";
+	//		ChoiceNode methodChoiceNode2 = 
+	//				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, methodChoiceName2, "0");
+	//
+	//		// add constraint
+	//		
+	//		addNewSimpleConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+	//
+	//		// creating choice conversion list
+	//
+	//		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+	//
+	//		choiceConversionList.addItem(
+	//				methodChoiceName1, 
+	//				ChoiceConversionOperation.MERGE, 
+	//				globalChoiceName1);
+	//
+	//		// linking
+	//
+	//		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+	//		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+	//
+	//		ParameterLinker.linkMethodParameteToGlobalParameter(
+	//				methodParameterNode, globalParameterNode, 
+	//				choiceConversionList, reverseOperations, extLanguageManager);
+	//
+	//		// check global parameter
+	//
+	//		assertEquals(1, classNode.getParametersCount());
+	//		assertEquals(1, globalParameterNode.getChoiceCount());
+	//		ChoiceNode choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName1);
+	//		assertEquals(globalChoiceNode1, choiceNodeFromGlobalParam);
+	//
+	//		// check local parameter 
+	//
+	//		assertEquals(1, methodNode.getParametersCount());
+	//		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
+	//
+	//		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+	//		assertEquals(true, methodParameterNode2.isLinked());
+	//		assertEquals(globalParameterNode, methodParameterNode2.getLink());
+	//
+	//		// check choices from constraints
+	//
+	//		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+	//		assertEquals(globalChoiceNode1, choiceNodeFromPrecondition);
+	//
+	//		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+	//		assertEquals(globalChoiceNode1, choiceNodeFromPostcondition);
+	//
+	//		// reverse operation
+	//
+	//		assertEquals(5, reverseOperations.getSize());
+	//		reverseOperations.executeFromTail();
+	//
+	//		// check global parameter
+	//
+	//		assertEquals(1, classNode.getParametersCount());
+	//		assertEquals(1, globalParameterNode.getChoiceCount());
+	//		choiceNodeFromGlobalParam = globalParameterNode.getChoice(globalChoiceName1);
+	//		assertEquals(globalChoiceNode1, choiceNodeFromGlobalParam);
+	//
+	//		// check local parameter 
+	//
+	//		assertEquals(1, methodNode.getParametersCount());
+	//		assertEquals(2, methodParameterNode.getChoiceCount());
+	//
+	//		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+	//		assertEquals(false, methodParameterNode2.isLinked());
+	//		assertNull(methodParameterNode2.getLink());
+	//
+	//		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
+	//		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
+	//
+	//		// check choices from constraints
+	//
+	//		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+	//		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
+	//
+	//		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+	//		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
+	//	}
+	//
 	// TODO - add test to check if choice conversion list is complete
 	// TODO - choice conversion list which includes top choices (children of parameter)
 
