@@ -29,13 +29,30 @@ public class ChoiceConversionItem {
 	public ChoiceConversionOperation getOperation() {
 		return fChoiceConversionOperation;
 	}
-	
+
 	public String getSrcName() {
 		return fChoiceSrcName;
 	}
 
 	public String getDstName() {
 		return fChoiceDstName;
+	}
+
+	public boolean isMatch(ChoiceConversionItem otherItem) {
+
+		if (!fChoiceSrcName.equals(otherItem.getSrcName())) {
+			return false;
+		}
+
+		if (fChoiceConversionOperation != otherItem.getOperation()) {
+			return false;
+		}
+
+		if (!fChoiceDstName.equals(otherItem.getDstName())) {
+			return false;
+		}
+
+		return true;
 	}
 
 }
