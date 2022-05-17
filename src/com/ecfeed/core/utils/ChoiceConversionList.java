@@ -140,4 +140,8 @@ public class ChoiceConversionList {
 
 		return fChoiceConversionItems.get(index);
 	}
+
+	public void clear() {
+		fChoiceConversionItems.clear();
+	}
 }
