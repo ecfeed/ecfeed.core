@@ -13,9 +13,44 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ConstraintNodeHelper {
+
+	public static void updateChoiceReferences(
+			ConstraintNode constraintNode,
+			ChoiceNode oldChoiceNode, 
+			ChoiceNode newChoiceNode,
+			ListOfModelOperations reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		Constraint constraint = constraintNode.getConstraint();
+
+		if (constraint == null) {
+			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
+		}
+
+		constraint.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+	}
+
+	public static void updateParameterReferences(
+			ConstraintNode constraintNode,
+			MethodParameterNode oldMethodParameterNode,
+			ChoicesParentNode dstParameterForChoices,
+			ListOfModelOperations reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		Constraint constraint = constraintNode.getConstraint();
+
+		if (constraint == null) {
+			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
+		}
+
+		constraint.updateParameterReferences(
+				oldMethodParameterNode, dstParameterForChoices, 
+				reverseOperations, extLanguageManager);
+	}
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
@@ -59,15 +94,15 @@ public class ConstraintNodeHelper {
 	}
 
 	public static List<Constraint> createListOfConstraints(List<ConstraintNode> constraintNodes) {
-		
+
 		List<Constraint> constraints = new ArrayList<>();
-		
+
 		for (ConstraintNode constraintNode : constraintNodes) {
 			constraints.add(constraintNode.getConstraint());
 		}
-		
+
 		return constraints;
 	}
-	
+
 
 }

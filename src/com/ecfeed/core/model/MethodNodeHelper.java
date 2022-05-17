@@ -27,6 +27,19 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
+//	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodNode method) {
+//
+//		List<ConstraintNode> constraintNodes = method.getConstraintNodes();
+//		
+//		for (ConstraintNode constraintNode : constraintNodes) {
+//			constraintNode.updateParameterReferences(
+//					oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
+//		}
+//
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
 	public static void updateParameterReferencesInConstraints(
 			MethodParameterNode oldMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices,
@@ -43,8 +56,10 @@ public class MethodNodeHelper {
 		}
 
 		for (ConstraintNode constraintNode : constraintNodes) {
-			constraintNode.updateParameterReferences(
-					oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
+			ConstraintNodeHelper.updateParameterReferences(
+					constraintNode,
+					oldMethodParameterNode, dstParameterForChoices, 
+					reverseOperations, extLanguageManager);
 		}
 	}
 
@@ -83,8 +98,10 @@ public class MethodNodeHelper {
 		checkChoices(oldChoiceNode, newChoiceNode);
 
 		for (ConstraintNode constraintNode : constraintNodes) {
-			// TODO DE-NO is reverse operation needed in constraintNode.updateChoiceReferences ?
-			constraintNode.updateChoiceReferences(oldChoiceNode, newChoiceNode, inOutReverseOperations, extLanguageManager);
+			ConstraintNodeHelper.updateChoiceReferences(
+					constraintNode, 
+					oldChoiceNode, newChoiceNode, 
+					inOutReverseOperations, extLanguageManager);
 		}
 
 		if (inOutReverseOperations != null) {

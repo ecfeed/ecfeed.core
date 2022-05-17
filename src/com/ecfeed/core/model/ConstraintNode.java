@@ -14,9 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ConstraintNode extends AbstractNode{
@@ -385,39 +383,6 @@ public class ConstraintNode extends AbstractNode{
 
 	boolean mentionsParameter(MethodParameterNode methodParameter) {
 		return fConstraint.mentionsParameter(methodParameter);
-	}
-
-	// TODO DE-NO move to helper
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		Constraint constraint = getConstraint();
-
-		if (constraint == null) {
-			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
-		}
-
-		constraint.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
-	}
-
-	public void updateParameterReferences(
-			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		Constraint constraint = getConstraint();
-
-		if (constraint == null) {
-			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
-		}
-
-		constraint.updateParameterReferences(
-				oldMethodParameterNode, dstParameterForChoices, 
-				reverseOperations, extLanguageManager);
 	}
 
 }
