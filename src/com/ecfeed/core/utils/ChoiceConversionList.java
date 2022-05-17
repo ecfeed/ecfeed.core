@@ -94,4 +94,14 @@ public class ChoiceConversionList {
 
 		return -1;
 	}
+
+	public int getSize() {
+		
+		return fChoiceConversionItems.size();
+	}
+	
+	public ChoiceConversionItem getItem(int index) {
+		
+		return fChoiceConversionItems.get(index);
+	}
 }

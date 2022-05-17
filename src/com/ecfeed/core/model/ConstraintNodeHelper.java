@@ -51,6 +51,15 @@ public class ConstraintNodeHelper {
 				oldMethodParameterNode, dstParameterForChoices, 
 				reverseOperations, extLanguageManager);
 	}
+	
+	public static void getChoicesUsedInConstraints(
+			ConstraintNode constraintNode,
+			List<ChoiceNode> inOutChoiceNodes) {
+		
+		ConstraintHelper.getChoicesUsedInConstraints(
+				constraintNode.getConstraint(),
+				inOutChoiceNodes);
+	}
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 

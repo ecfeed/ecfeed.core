@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -72,6 +73,26 @@ public class ConstraintHelper {
 		}
 		
 		return null;
+	}
+
+	public static void getChoicesUsedInConstraints(
+			Constraint constraint, List<ChoiceNode> inOutChoiceNodes) {
+		
+		AbstractStatement precondition = constraint.getPrecondition();
+		AbstractStatement postcondition = constraint.getPostcondition();
+		
+		inOutChoiceNodes.addAll(precondition.getListOfChoices());
+		inOutChoiceNodes.addAll(postcondition.getListOfChoices());
+		
+		inOutChoiceNodes = removeDuplicates(inOutChoiceNodes);
+	}
+
+	private static List<ChoiceNode> removeDuplicates(List<ChoiceNode> choiceNodes) {
+		
+		HashSet<ChoiceNode>set = new HashSet<ChoiceNode>(choiceNodes);
+	    List<ChoiceNode> choiceNodes2 = new ArrayList<ChoiceNode>(set);
+	    
+		return choiceNodes2;
 	}
 
 }
