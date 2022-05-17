@@ -67,6 +67,42 @@ public class ChoiceConversionList {
 		return sortedChoiceConversionItems;
 	}
 
+	public List<String> getSrcChoiceNames() {
+
+		List<String> choiceNames = new ArrayList<String>();
+
+		int size = fChoiceConversionItems.size();
+
+		for (int index = 0; index < size; index++) {
+
+			ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+
+			String choiceName = choiceConversionItem.getSrcName();
+
+			choiceNames.add(choiceName);
+		}
+
+		return choiceNames;
+	}
+
+	public List<String> getDstChoiceNames() {
+
+		List<String> choiceNames = new ArrayList<String>();
+
+		int size = fChoiceConversionItems.size();
+
+		for (int index = 0; index < size; index++) {
+
+			ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+
+			String choiceName = choiceConversionItem.getDstName();
+
+			choiceNames.add(choiceName);
+		}
+
+		return choiceNames;
+	}
+
 	private int getChoiceLevel(String choiceName) {
 
 		return StringHelper.countOccurencesOfChar(choiceName, ':');
@@ -96,12 +132,12 @@ public class ChoiceConversionList {
 	}
 
 	public int getSize() {
-		
+
 		return fChoiceConversionItems.size();
 	}
-	
+
 	public ChoiceConversionItem getItem(int index) {
-		
+
 		return fChoiceConversionItems.get(index);
 	}
 }
