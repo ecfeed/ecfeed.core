@@ -63,35 +63,54 @@ public class ConstraintHelper {
 			List<List<ChoiceNode>> input,
 			IExtLanguageManager currentExtLanguageManager,
 			MessageStack inOutMessageStack) {
-		
+
 		for (Constraint constraint : constraints) {
-	
+
 			if (constraint.isAmbiguous(input, inOutMessageStack, currentExtLanguageManager)) {
-	
+
 				return constraint; 
 			}
 		}
-		
+
 		return null;
 	}
 
 	public static void getChoicesUsedInConstraints(
-			Constraint constraint, List<ChoiceNode> inOutChoiceNodes) {
-		
+			Constraint constraint, 
+			MethodParameterNode methodParameterNode,
+			List<ChoiceNode> inOutChoiceNodes) {
+
 		AbstractStatement precondition = constraint.getPrecondition();
 		AbstractStatement postcondition = constraint.getPostcondition();
-		
-		inOutChoiceNodes.addAll(precondition.getListOfChoices());
-		inOutChoiceNodes.addAll(postcondition.getListOfChoices());
-		
+
+		List<ChoiceNode> choicesFromPrecondition = precondition.getListOfChoices();
+		addChoicesOfParameter(choicesFromPrecondition, methodParameterNode, inOutChoiceNodes);
+
+
+		List<ChoiceNode> choicesFromPostcondition = postcondition.getListOfChoices();
+		addChoicesOfParameter(choicesFromPostcondition, methodParameterNode, inOutChoiceNodes);
+
 		inOutChoiceNodes = removeDuplicates(inOutChoiceNodes);
 	}
 
+	private static void addChoicesOfParameter(List<ChoiceNode> choicesFromPrecondition,
+			MethodParameterNode methodParameterNode, List<ChoiceNode> inOutChoiceNodes) {
+
+		for (ChoiceNode choiceNode : choicesFromPrecondition) {
+
+			MethodParameterNode methodParameterNode2 = (MethodParameterNode)choiceNode.getParameter();
+
+			if (methodParameterNode.equals(methodParameterNode2)) {
+				inOutChoiceNodes.add(choiceNode);
+			}
+		}
+	}
+
 	private static List<ChoiceNode> removeDuplicates(List<ChoiceNode> choiceNodes) {
-		
+
 		HashSet<ChoiceNode>set = new HashSet<ChoiceNode>(choiceNodes);
-	    List<ChoiceNode> choiceNodes2 = new ArrayList<ChoiceNode>(set);
-	    
+		List<ChoiceNode> choiceNodes2 = new ArrayList<ChoiceNode>(set);
+
 		return choiceNodes2;
 	}
 

@@ -27,18 +27,21 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
-	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodNode method) {
+	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodParameterNode methodParameterNode) {
 
-		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
+		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
+		
+		MethodNode methodNode = methodParameterNode.getMethod();
 
-		List<ConstraintNode> constraintNodes = method.getConstraintNodes();
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
-			ConstraintNodeHelper.getChoicesUsedInConstraints(constraintNode, choiceNodes);
+			ConstraintNodeHelper.getChoicesUsedInConstraints(
+					constraintNode, methodParameterNode, resultChoiceNodes);
 		}
 
-		return choiceNodes;
+		return resultChoiceNodes;
 	}
 
 	public static void updateParameterReferencesInConstraints(

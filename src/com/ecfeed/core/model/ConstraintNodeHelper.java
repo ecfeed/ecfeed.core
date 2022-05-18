@@ -54,10 +54,12 @@ public class ConstraintNodeHelper {
 	
 	public static void getChoicesUsedInConstraints(
 			ConstraintNode constraintNode,
+			MethodParameterNode methodParameterNode,
 			List<ChoiceNode> inOutChoiceNodes) {
 		
 		ConstraintHelper.getChoicesUsedInConstraints(
 				constraintNode.getConstraint(),
+				methodParameterNode,
 				inOutChoiceNodes);
 	}
 
