@@ -304,11 +304,13 @@ public class TestCaseNodeHelper {
 		
 		List<List<ChoiceNode>> result = new ArrayList<>();
 		
-		for (TestCaseNode testCaseNode : testCaseNodes) {
-			
-			List<ChoiceNode> listOfChoiceNodes = testCaseNode.getTestCase().getListOfChoiceNodes();
-			
-			result.add(listOfChoiceNodes);
+		if (testCaseNodes != null) {
+			for (TestCaseNode testCaseNode : testCaseNodes) {
+				
+				List<ChoiceNode> listOfChoiceNodes = testCaseNode.getTestCase().getListOfChoiceNodes();
+				
+				result.add(listOfChoiceNodes);
+			}
 		}
 		
 		return result;
