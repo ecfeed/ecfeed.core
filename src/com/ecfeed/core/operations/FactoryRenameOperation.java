@@ -40,13 +40,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newNameInExtLanguage) {
 
-
-			String nonQualifiedNameInIntrLangage = 
-					getExtLanguageManager().convertTextFromExtToIntrLanguage(newNameInExtLanguage);
-
-			String newNameInIntrLanguage = JavaLanguageHelper.createQualifiedName(getNewPackageName(), nonQualifiedNameInIntrLangage);
-
-			String[] tokens = newNameInIntrLanguage.split("\\.");
+			String[] tokens = newNameInExtLanguage.split("\\.");
 
 			for (String token : tokens) {
 				if(JavaLanguageHelper.isJavaKeyword(token)){
@@ -54,7 +48,7 @@ public class FactoryRenameOperation {
 				}
 			}
 
-			if(getOwnNode().getSibling(newNameInIntrLanguage) != null){
+			if(getOwnNode().getSibling(newNameInExtLanguage) != null){
 				ExceptionHelper.reportRuntimeException(OperationMessages.CLASS_NAME_DUPLICATE_PROBLEM);
 			}
 		}
