@@ -37,10 +37,10 @@ public class MethodParameterNodeTestForDetached {
 		// add global parameter and choice for root
 
 		GlobalParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, "String");
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
-				globalParameterNodeOfRoot, globalChoiceName1, "0");
+				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
 
@@ -49,15 +49,15 @@ public class MethodParameterNodeTestForDetached {
 		// add global parameter and choice for class
 
 		GlobalParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String");
+				ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeForClass = 
 				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
-						globalParameterNodeOfClass, globalChoiceName1, "0");
+						globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method");
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
@@ -166,11 +166,11 @@ public class MethodParameterNodeTestForDetached {
 		// add global parameter and choice for root
 
 		GlobalParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, "String");
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeOfRoot = 
 				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
-						globalParameterNodeOfRoot, globalChoiceName1, "0");
+						globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
 
@@ -179,14 +179,14 @@ public class MethodParameterNodeTestForDetached {
 		// add global parameter and choice for class
 
 		GlobalParameterNode globalParameterNodeOfClass = 
-				ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String");
+				ClassNodeHelper.addGlobalParameterToClass(classNode, globalParameterName, "String", null);
 
 		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
-				globalParameterNodeOfClass, globalChoiceName1, "0");
+				globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		// add methodNode 
 
-		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method");
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "method", null);
 
 		// add parameter and choice to method
 
