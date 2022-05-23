@@ -36,12 +36,17 @@ public class ChoiceNodeHelper {
 	public static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {
 
 		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
+		List<ChoiceNode> childChoicesToRemove = new ArrayList<ChoiceNode>(childChoices);
 
 		// TODO DE-NO reverse operation
 		for (ChoiceNode childChoice : childChoices) {
 
-			dstChoiceNode.addChoice(childChoice);
-			srcChoiceNode.removeChoice(childChoice);
+			ChoiceNode clonedChoiceNode = childChoice.makeClone();
+			dstChoiceNode.addChoice(clonedChoiceNode);
+		}
+		
+		for (ChoiceNode choiceNodeToRemove : childChoicesToRemove) {
+			srcChoiceNode.removeChoice(choiceNodeToRemove);
 		}
 	}
 
