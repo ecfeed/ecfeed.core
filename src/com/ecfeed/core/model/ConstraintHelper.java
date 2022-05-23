@@ -75,7 +75,7 @@ public class ConstraintHelper {
 		return null;
 	}
 
-	public static void getChoicesUsedInConstraints(
+	public static List<ChoiceNode> getChoicesUsedInConstraints(
 			Constraint constraint, 
 			MethodParameterNode methodParameterNode,
 			List<ChoiceNode> inOutChoiceNodes) {
@@ -90,7 +90,8 @@ public class ConstraintHelper {
 		List<ChoiceNode> choicesFromPostcondition = postcondition.getListOfChoices();
 		addChoicesOfParameter(choicesFromPostcondition, methodParameterNode, inOutChoiceNodes);
 
-		inOutChoiceNodes = removeDuplicates(inOutChoiceNodes);
+		List<ChoiceNode> result = removeDuplicates(inOutChoiceNodes);
+		return result;
 	}
 
 	private static void addChoicesOfParameter(List<ChoiceNode> choicesFromPrecondition,

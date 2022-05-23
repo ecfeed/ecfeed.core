@@ -30,15 +30,16 @@ public class MethodNodeHelper {
 	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodParameterNode methodParameterNode) {
 
 		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
-		
+
 		MethodNode methodNode = methodParameterNode.getMethod();
 
 		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
-			ConstraintNodeHelper.getChoicesUsedInConstraints(
-					constraintNode, methodParameterNode, resultChoiceNodes);
+			resultChoiceNodes = 
+					ConstraintNodeHelper.addChoicesUsedInConstraints(
+							constraintNode, methodParameterNode, resultChoiceNodes);
 		}
 
 		return resultChoiceNodes;
