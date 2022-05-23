@@ -180,63 +180,62 @@ public class ParameterLinker {
 		inOutReverseOperations.add(choiceOperationMoveChildren);
 	}
 
-	private static void moveRemainingTopChoices(
-			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterNode,
-			ListOfModelOperations reverseOperations, 
-			IExtLanguageManager extLanguageManager) {
+	//	private static void moveRemainingTopChoices(
+	//			MethodParameterNode srcMethodParameterNode,
+	//			ChoicesParentNode dstParameterNode,
+	//			ListOfModelOperations reverseOperations, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		List<ChoiceNode> choiceNodes = srcMethodParameterNode.getChoices();
+	//
+	//		for (ChoiceNode choiceNode : choiceNodes) {
+	//			addChoiceWithUniqueName(choiceNode, dstParameterNode, reverseOperations, extLanguageManager);
+	//		}
+	//	}
 
-		List<ChoiceNode> choiceNodes = srcMethodParameterNode.getChoices();
+	//	private static void addChoiceWithUniqueName(
+	//			ChoiceNode choiceNode, 
+	//			ChoicesParentNode methodParameterNode,
+	//			ListOfModelOperations reverseOperations,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		String orginalChoiceName = choiceNode.getName();
+	//
+	//		if (!choiceNameExistsAmongChildren(orginalChoiceName, methodParameterNode)) {
+	//
+	//			methodParameterNode.addChoice(choiceNode);
+	//			return;
+	//		}
+	//
+	//		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
+	//
+	//			String tmpName = orginalChoiceName + "-" + postfixCounter;
+	//
+	//			if (!choiceNameExistsAmongChildren(tmpName, methodParameterNode)) {
+	//
+	//				choiceNode.setName(tmpName);
+	//				methodParameterNode.addChoice(choiceNode);
+	//				return;
+	//			}
+	//		}
+	//
+	//		ExceptionHelper.reportRuntimeException("Cannot add choice to method parameter.");
+	//	}
 
-		for (ChoiceNode choiceNode : choiceNodes) {
-			addChoiceWithUniqueName(choiceNode, dstParameterNode, reverseOperations, extLanguageManager);
-		}
-	}
-
-	private static void addChoiceWithUniqueName(
-			ChoiceNode choiceNode, 
-			ChoicesParentNode methodParameterNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		String orginalChoiceName = choiceNode.getName();
-
-		if (!choiceNameExistsAmongChildren(orginalChoiceName, methodParameterNode)) {
-
-			methodParameterNode.addChoice(choiceNode);
-			return;
-		}
-
-		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
-
-			String tmpName = orginalChoiceName + "-" + postfixCounter;
-
-			if (!choiceNameExistsAmongChildren(tmpName, methodParameterNode)) {
-
-				choiceNode.setName(tmpName);
-				methodParameterNode.addChoice(choiceNode);
-				return;
-			}
-		}
-
-		ExceptionHelper.reportRuntimeException("Cannot add choice to method parameter.");
-	}
-
-	private static boolean choiceNameExistsAmongChildren(String choiceName, ChoicesParentNode methodParameterNode) {
-
-		List<ChoiceNode> choiceNodes = methodParameterNode.getChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-
-			String currentChoiceName = choiceNode.getName();
-
-			if (currentChoiceName.equals(choiceName)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
+	//	private static boolean choiceNameExistsAmongChildren(String choiceName, ChoicesParentNode methodParameterNode) {
+	//
+	//		List<ChoiceNode> choiceNodes = methodParameterNode.getChoices();
+	//
+	//		for (ChoiceNode choiceNode : choiceNodes) {
+	//
+	//			String currentChoiceName = choiceNode.getName();
+	//
+	//			if (currentChoiceName.equals(choiceName)) {
+	//				return true;
+	//			}
+	//		}
+	//
+	//		return false;
+	//	}
 
 }
