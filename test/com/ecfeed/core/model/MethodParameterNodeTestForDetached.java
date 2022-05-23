@@ -281,6 +281,74 @@ public class MethodParameterNodeTestForDetached {
 		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
 	}
 
+	@Test
+	public void filterChoicesNotUsedInConstraints() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add global parameter of class and choice node
+
+		final String parameterType = "String";
+		final String choiceValueString = "1";
+
+		GlobalParameterNode globalParameterNodeOfClass1 = 
+				ClassNodeHelper.addGlobalParameterToClass(classNode, "CP1", parameterType, null);
+
+		ChoiceNode globalChoiceNodeOfMethod11 = 
+		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				globalParameterNodeOfClass1, "CC11", choiceValueString, null);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add parameter and choice to method
+
+		MethodParameterNode methodParameterNode1 = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
+
+		ChoiceNode choiceNodeOfMethod11 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
+
+		ChoiceNode choiceNodeOfMethod12 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC12", choiceValueString);
+
+		addNewSimpleConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
+		
+		
+		// creating choice conversion list
+
+		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+
+		choiceConversionList.addItem(
+				choiceNodeOfMethod11.getName(), 
+				ChoiceConversionOperation.MERGE, 
+				globalChoiceNodeOfMethod11.getName());
+		
+		// linking
+
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+
+		ParameterLinker.linkMethodParameteToGlobalParameter(
+				methodParameterNode1, 
+				globalParameterNodeOfClass1, 
+				choiceConversionList, 
+				reverseOperations, 
+				extLanguageManager);
+		
+		int globalParamChoiceCount = globalParameterNodeOfClass1.getChoiceCount();
+		assertEquals(1, globalParamChoiceCount);
+		
+		ChoiceNode resultChoiceNode = globalParameterNodeOfClass1.getChoices().get(0);
+		assertEquals(globalChoiceNodeOfMethod11.getName(), resultChoiceNode.getName());
+	}
+	
 	//	@Test
 	//	public void linkMethodParameterToClassParameter() {
 	//

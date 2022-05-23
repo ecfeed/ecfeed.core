@@ -49,7 +49,7 @@ public class ParameterLinker {
 
 		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
-		moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
+		// moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
 
 		MethodNodeHelper.updateParameterReferencesInConstraints(
 				srcMethodParameterNode, 
