@@ -13,6 +13,9 @@ package com.ecfeed.core.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.ecfeed.core.utils.ChoiceConversionList;
@@ -121,7 +124,7 @@ public class MethodParameterNodeTestForDetached {
 
 		// reverse operation
 
-		assertEquals(5, reverseOperations.getSize());
+		assertEquals(6, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		// check global parameter
@@ -250,7 +253,7 @@ public class MethodParameterNodeTestForDetached {
 
 		// reverse operation
 
-		assertEquals(5, reverseOperations.getSize());
+		assertEquals(6, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		// check global parameter
@@ -300,8 +303,8 @@ public class MethodParameterNodeTestForDetached {
 				ClassNodeHelper.addGlobalParameterToClass(classNode, "CP1", parameterType, null);
 
 		ChoiceNode globalChoiceNodeOfMethod11 = 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
-				globalParameterNodeOfClass1, "CC11", choiceValueString, null);
+				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+						globalParameterNodeOfClass1, "CC11", choiceValueString, null);
 
 		// add method node
 
@@ -315,12 +318,12 @@ public class MethodParameterNodeTestForDetached {
 		ChoiceNode choiceNodeOfMethod11 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
 
-		ChoiceNode choiceNodeOfMethod12 = 
-				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC12", choiceValueString);
+		//		ChoiceNode choiceNodeOfMethod12 = 
+		MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC12", choiceValueString);
 
 		addNewSimpleConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
-		
-		
+
+
 		// creating choice conversion list
 
 		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
@@ -329,7 +332,7 @@ public class MethodParameterNodeTestForDetached {
 				choiceNodeOfMethod11.getName(), 
 				ChoiceConversionOperation.MERGE, 
 				globalChoiceNodeOfMethod11.getName());
-		
+
 		// linking
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
@@ -341,14 +344,14 @@ public class MethodParameterNodeTestForDetached {
 				choiceConversionList, 
 				reverseOperations, 
 				extLanguageManager);
-		
+
 		int globalParamChoiceCount = globalParameterNodeOfClass1.getChoiceCount();
 		assertEquals(1, globalParamChoiceCount);
-		
+
 		ChoiceNode resultChoiceNode = globalParameterNodeOfClass1.getChoices().get(0);
 		assertEquals(globalChoiceNodeOfMethod11.getName(), resultChoiceNode.getName());
 	}
-	
+
 	@Test
 	public void moveChildChoices() {
 
@@ -388,7 +391,7 @@ public class MethodParameterNodeTestForDetached {
 
 		addNewSimpleConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
-		
+
 		// creating choice conversion list
 
 		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
@@ -397,7 +400,7 @@ public class MethodParameterNodeTestForDetached {
 				choiceNodeOfMethod11.getName(), 
 				ChoiceConversionOperation.MERGE, 
 				globalChoiceOfClass11.getName());
-		
+
 		// linking
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
@@ -409,14 +412,100 @@ public class MethodParameterNodeTestForDetached {
 				choiceConversionList, 
 				reverseOperations, 
 				extLanguageManager);
-		
-		
+
+
 		assertEquals(1, globalChoiceOfClass11.getChoiceCount()); 
 		ChoiceNode resultChoiceNode = globalChoiceOfClass11.getChoices().get(0);
-		
+
 		assertEquals(choiceNodeOfMethod111.getName(), resultChoiceNode.getName());
+
+		// TODO DE-NO reverse operation
 	}
-	
+
+	@Test
+	public void deletingTestCases() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add global parameter of class and choice node
+
+		final String parameterType = "String";
+		final String choiceValueString = "1";
+
+		GlobalParameterNode globalParameterNodeOfClass1 = 
+				ClassNodeHelper.addGlobalParameterToClass(classNode, "CP1", parameterType, null);
+
+		ChoiceNode globalChoiceOfClass11 =
+				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+						globalParameterNodeOfClass1, "CC11", choiceValueString, null);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add parameter and choice to method
+
+		MethodParameterNode methodParameterNode1 = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
+
+		ChoiceNode choiceNodeOfMethod11 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
+
+		addNewSimpleConstraintToMethod(
+				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
+
+		// add test case
+
+		List<ChoiceNode> choices = new ArrayList<>();
+		choices.add(choiceNodeOfMethod11);
+
+		TestCaseNode testCaseNode = new TestCaseNode(choices);
+		List<TestCaseNode> testCaseNodes = new ArrayList<TestCaseNode>();
+		testCaseNodes.add(testCaseNode);
+
+		methodNode.addTestCase(testCaseNode);
+
+
+		// creating choice conversion list
+
+		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+
+		choiceConversionList.addItem(
+				choiceNodeOfMethod11.getName(), 
+				ChoiceConversionOperation.MERGE, 
+				globalChoiceOfClass11.getName());
+
+		// linking
+
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+
+		ParameterLinker.linkMethodParameteToGlobalParameter(
+				methodParameterNode1, 
+				globalParameterNodeOfClass1, 
+				choiceConversionList, 
+				reverseOperations, 
+				extLanguageManager);
+
+		// checking test cases - should be deleted
+
+		List<TestCaseNode> resultTestCases = methodNode.getTestCases();
+
+		assertEquals(0, resultTestCases.size());
+
+		// reverse operation
+
+		assertEquals(6, reverseOperations.getSize());
+		reverseOperations.executeFromTail();
+
+		assertEquals(1, resultTestCases.size());
+	}
+
 	//	@Test
 	//	public void linkMethodParameterToClassParameter() {
 	//
