@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
+import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
@@ -58,9 +59,23 @@ public class ParameterLinker {
 				reverseOperations,
 				extLanguageManager);
 
+
+		removeTestCases(methodNode, reverseOperations, extLanguageManager);
+
 		setLink(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
 
 		return methodNode;
+	}
+
+	private static void removeTestCases(MethodNode methodNode, ListOfModelOperations reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		OperationSimpleSetTestCases inOutReverseOperation = 
+				new OperationSimpleSetTestCases(methodNode, methodNode.getTestCases(), extLanguageManager);
+
+		reverseOperations.add(inOutReverseOperation);
+
+		methodNode.removeAllTestCases();
 	}
 
 	private static void setLink(
