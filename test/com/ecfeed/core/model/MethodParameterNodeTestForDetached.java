@@ -414,13 +414,27 @@ public class MethodParameterNodeTestForDetached {
 				extLanguageManager);
 
 
+		// check 
+
 		assertEquals(1, globalChoiceOfClass11.getChoiceCount()); 
 		ChoiceNode resultChoiceNode = globalChoiceOfClass11.getChoices().get(0);
 
 		assertEquals(choiceNodeOfMethod111.getName(), resultChoiceNode.getName());
 
-		// TODO DE-NO reverse operation
+		// reverse operation
+
+		assertEquals(6, reverseOperations.getSize());
+		reverseOperations.executeFromTail();
+
+		// check
+
+		assertEquals(0, globalChoiceOfClass11.getChoiceCount()); 
+
+		assertEquals(1, choiceNodeOfMethod11.getChoiceCount());
+		ChoiceNode resultChoiceNode2 = choiceNodeOfMethod11.getChoices().get(0);
+		assertEquals(choiceNodeOfMethod111.getName(), resultChoiceNode2.getName());
 	}
+
 
 	@Test
 	public void deletingTestCases() {
