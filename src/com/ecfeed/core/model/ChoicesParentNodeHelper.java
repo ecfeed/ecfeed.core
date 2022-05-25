@@ -14,7 +14,23 @@ import java.util.List;
 
 public abstract class ChoicesParentNodeHelper {
 
-	public static void createCopyOfChoicesTree(ChoicesParentNode srcParentNode, ChoicesParentNode dstParentNode) {
+	public static void traverseSubTreesOfChoices(ChoicesParentNode srcParentNode, IChoiceNodeWorker choiceNodeWorker) {
+
+		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
+
+		if (childChoiceNodes.size() == 0) {
+			return;
+		}
+
+		for (ChoiceNode choiceNode : childChoiceNodes) {
+
+			choiceNodeWorker.doWork(choiceNode);
+
+			traverseSubTreesOfChoices(choiceNode, choiceNodeWorker);
+		}
+	}
+
+	public static void createCopyOfChoicesSubTrees(ChoicesParentNode srcParentNode, ChoicesParentNode dstParentNode) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -28,7 +44,7 @@ public abstract class ChoicesParentNodeHelper {
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			createCopyOfChoicesTree(choiceNode, clonedChoiceNode);
+			createCopyOfChoicesSubTrees(choiceNode, clonedChoiceNode);
 		}
 	}
 
