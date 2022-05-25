@@ -79,8 +79,6 @@ public class MethodNodeHelper {
 
 		for (TestCaseNode testCaseNode : testCaseNodes)  {
 			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode);
-
-			// TODO DE-NO reverse operation
 		}
 
 		if (inOutReverseOperations != null) {

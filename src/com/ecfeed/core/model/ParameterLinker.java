@@ -23,6 +23,14 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterLinker {
 
+	public static MethodNode unlinkMethodParameteFromGlobalParameter(
+			MethodParameterNode srcMethodParameterNode,
+			GlobalParameterNode dstGlobalParameterNode, 
+			ListOfModelOperations reverseOperations,
+			IExtLanguageManager extLanguageManager) {
+		
+		return null; // TODO DE-NO
+	}
 
 	public static MethodNode linkMethodParameteToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,

@@ -14,30 +14,26 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ParameterLinker;
-import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationLikToGlobalParameter extends AbstractModelOperation {
+public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOperation {
 
 	MethodParameterNode fSrcMethodParameterNode;
 	GlobalParameterNode fDstParameterForChoices;
-	ChoiceConversionList fChoiceConversionList;
 
 	ListOfModelOperations fReverseOperations;
 
 	IExtLanguageManager fExtLanguageManager;
 
-	public MethodOperationLikToGlobalParameter(
+	public MethodOperationUnlinkFromGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstParameterForChoices, 
-			ChoiceConversionList choiceConversionList,
 			IExtLanguageManager extLanguageManager) {
 
 		super("Link to global parameter", extLanguageManager);
 
 		fSrcMethodParameterNode = srcMethodParameterNode;
 		fDstParameterForChoices = dstParameterForChoices;
-		fChoiceConversionList = choiceConversionList;
 		fExtLanguageManager = extLanguageManager;
 
 		fReverseOperations = new ListOfModelOperations();
@@ -48,10 +44,9 @@ public class MethodOperationLikToGlobalParameter extends AbstractModelOperation 
 
 		fReverseOperations = new ListOfModelOperations();
 
-		ParameterLinker.linkMethodParameteToGlobalParameter(
+		ParameterLinker.unlinkMethodParameteFromGlobalParameter(
 				fSrcMethodParameterNode,
 				fDstParameterForChoices, 
-				fChoiceConversionList,
 				fReverseOperations,
 				fExtLanguageManager);
 
@@ -66,7 +61,7 @@ public class MethodOperationLikToGlobalParameter extends AbstractModelOperation 
 	private class ReverseOperation extends AbstractModelOperation {
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(MethodOperationLikToGlobalParameter.this.getName(), extLanguageManager);
+			super(MethodOperationUnlinkFromGlobalParameter.this.getName(), extLanguageManager);
 		}
 
 		@Override
@@ -78,10 +73,9 @@ public class MethodOperationLikToGlobalParameter extends AbstractModelOperation 
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodOperationLikToGlobalParameter(
+			return new MethodOperationUnlinkFromGlobalParameter(
 					fSrcMethodParameterNode,
 					fDstParameterForChoices, 
-					fChoiceConversionList,
 					fExtLanguageManager);
 		}
 
