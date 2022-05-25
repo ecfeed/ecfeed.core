@@ -12,12 +12,70 @@ package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
 
 public class ChoicesParentNodeHelperTest {
 
+	@Test
+	public void traversingChoiceNodes(){
+
+		// metod node 
+
+		MethodNode methodNode = new MethodNode("M", null);
+
+		// source parameter with two choices
+
+		MethodParameterNode methodParameterNode1 = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "P1", "String");
+
+		ChoiceNode choiceNode1 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(
+						methodParameterNode1, "C1", "1");
+
+		ChoiceNode choiceNode2 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(
+						methodParameterNode1, "C2", "1");
+
+		ChoiceNode choiceNode21 = 
+				ChoiceNodeHelper.addChoiceToChoice(choiceNode2, "C21", "1");
+
+		// traversing choices
+
+		ChoiceNodeWorker choiceNodeWorker = new ChoiceNodeWorker();
+		
+		ChoicesParentNodeHelper.traverseSubTreesOfChoices(methodParameterNode1, choiceNodeWorker);
+
+		// checks
+
+		List<String> resultChoiceNames = choiceNodeWorker.getChoiceNames();
+		assertEquals(choiceNode1.getName(), resultChoiceNames.get(0));
+		assertEquals(choiceNode2.getName(), resultChoiceNames.get(1));
+		assertEquals(choiceNode21.getName(), resultChoiceNames.get(2));
+	}
+	
+	static class ChoiceNodeWorker implements IChoiceNodeWorker {
+
+		List<String> fChoiceNames;
+		
+		public ChoiceNodeWorker() {
+			
+			fChoiceNames = new ArrayList<>();
+		}
+		
+		@Override
+		public void doWork(ChoiceNode choiceNode) {
+			
+			fChoiceNames.add(choiceNode.getName());
+		}
+		
+		public List<String> getChoiceNames() {
+			return fChoiceNames;
+		}
+	}
+	
 	@Test
 	public void copyChoicesOfOneLevel(){
 
@@ -51,7 +109,7 @@ public class ChoicesParentNodeHelperTest {
 
 		// creating copy
 
-		ChoicesParentNodeHelper.createCopyOfChoicesTree(methodParameterNode1, methodParameterNode2);
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(methodParameterNode1, methodParameterNode2);
 
 		// checks
 
@@ -99,7 +157,7 @@ public class ChoicesParentNodeHelperTest {
 
 		// creating copy
 
-		ChoicesParentNodeHelper.createCopyOfChoicesTree(methodParameterNode1, methodParameterNode2);
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(methodParameterNode1, methodParameterNode2);
 
 		// check choice 1
 
