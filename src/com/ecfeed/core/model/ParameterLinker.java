@@ -18,18 +18,98 @@ import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
+import com.ecfeed.core.utils.ChoiceConversionOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterLinker {
 
-	public static MethodNode unlinkMethodParameteFromGlobalParameter(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstGlobalParameterNode, 
-			ListOfModelOperations reverseOperations,
+	public static void unlinkMethodParameteFromGlobalParameter(
+			MethodParameterNode methodParameterNode,
+			GlobalParameterNode globalParameterNode, 
+			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
-		
-		return null; // TODO DE-NO
+
+		// TODO DE-NO add reverse operations
+
+		checkParametersForNotNull(methodParameterNode, globalParameterNode);
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		List<ChoiceConversionItem> choiceConversionList = createChoiceConversionList(globalParameterNode);
+
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(globalParameterNode, methodParameterNode);
+
+		convertChoicesInConstraints(
+				methodNode, 
+				methodParameterNode, globalParameterNode, 
+				choiceConversionList, outReverseOperations, 
+				extLanguageManager);
+	}
+
+	private static void convertChoicesInConstraints(
+			MethodNode methodNode, 
+			MethodParameterNode methodParameterNode,
+			GlobalParameterNode globalParameterNode, 
+			List<ChoiceConversionItem> choiceConversionList,
+			ListOfModelOperations outReverseOperations, 
+			IExtLanguageManager extLanguageManager) {
+
+		for (ChoiceConversionItem choiceConversionItem : choiceConversionList) {
+
+			ChoiceNode srcChoiceNode = globalParameterNode.getChoice(choiceConversionItem.getSrcName());
+
+			if (srcChoiceNode == null) {
+				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
+			}
+
+			ChoiceNode dstChoiceNode = methodParameterNode.getChoice(choiceConversionItem.getDstName());
+
+			if (dstChoiceNode == null) {
+				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
+			}
+
+			MethodNodeHelper.updateChoiceReferencesInConstraints(
+					srcChoiceNode, dstChoiceNode,
+					methodNode.getConstraintNodes(),
+					outReverseOperations, extLanguageManager);
+		}
+	}
+
+	private static List<ChoiceConversionItem> createChoiceConversionList(GlobalParameterNode globalParameterNode) {
+
+		ChoiceConversionListCreator choiceConversionListCreator = new ChoiceConversionListCreator();
+
+		ChoicesParentNodeHelper.traverseSubTreesOfChoices(globalParameterNode, choiceConversionListCreator);
+
+		List<ChoiceConversionItem> choiceConversionList = choiceConversionListCreator.getChoiceConversionList();
+		return choiceConversionList;
+	}
+
+	private static class ChoiceConversionListCreator implements IChoiceNodeWorker {
+
+		ChoiceConversionList fChoiceConversionList;
+
+		public ChoiceConversionListCreator() {
+
+			fChoiceConversionList = new ChoiceConversionList();
+		}
+
+		@Override
+		public void doWork(ChoiceNode choiceNode) {
+
+			String choiceName = choiceNode.getName();
+			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName);
+		}
+
+		public List<ChoiceConversionItem> getChoiceConversionList() {
+
+			List<ChoiceConversionItem> createSortedCopyOfConversionItems = 
+					fChoiceConversionList.createSortedCopyOfConversionItems();
+
+			return createSortedCopyOfConversionItems;
+		}
+
 	}
 
 	public static MethodNode linkMethodParameteToGlobalParameter(
@@ -39,13 +119,7 @@ public class ParameterLinker {
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		if (srcMethodParameterNode == null) {
-			ExceptionHelper.reportRuntimeException("Empty method parameter.");
-		}
-
-		if (dstGlobalParameterNode == null) {
-			ExceptionHelper.reportRuntimeException("Empty global parameter.");
-		}
+		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
 
 		if (choiceConversionList != null) {
 			moveChoicesByConversionList(
@@ -73,6 +147,19 @@ public class ParameterLinker {
 		setLink(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
 
 		return methodNode;
+	}
+
+	private static void checkParametersForNotNull(
+			MethodParameterNode methodParameterNode,
+			GlobalParameterNode dstGlobalParameterNode) {
+
+		if (methodParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Empty method parameter.");
+		}
+
+		if (dstGlobalParameterNode == null) {
+			ExceptionHelper.reportRuntimeException("Empty global parameter.");
+		}
 	}
 
 	private static void removeTestCases(MethodNode methodNode, ListOfModelOperations reverseOperations,
