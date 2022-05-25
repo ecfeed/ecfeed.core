@@ -22,6 +22,7 @@ public class ExceptionMessageHelper {
 
 	private static final int fMaxDepth = 100;
 	private static final String causedBy = "Caused by: ";
+	private static final String typeTokenNotFound = "Token not found";
 	private static final String fNoException = "NO-EXCEPTION";	
 
 	public static String createErrorMessage(
@@ -87,10 +88,21 @@ public class ExceptionMessageHelper {
 		String result = "";
 
 		if (!isFirstMessage) {
+<<<<<<< HEAD
 			result += (causedBy);
+=======
+			result += causedBy;
+>>>>>>> 3ffe4551 (fix)
 		}
 
-		result += getMessage(exceptionDescription, exceptionStackType);
+		String message = getMessage(exceptionDescription, exceptionStackType);
+		
+		if (message.contains(typeTokenNotFound)) {
+			result += (typeTokenNotFound + ".");
+		} else {
+			result += message;
+		}
+		
 		result += exceptionSeparator;
 
 		return result;
