@@ -88,11 +88,7 @@ public class ExceptionMessageHelper {
 		String result = "";
 
 		if (!isFirstMessage) {
-<<<<<<< HEAD
-			result += (causedBy);
-=======
 			result += causedBy;
->>>>>>> 3ffe4551 (fix)
 		}
 
 		String message = getMessage(exceptionDescription, exceptionStackType);
