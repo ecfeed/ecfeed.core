@@ -38,32 +38,38 @@ public class ParameterLinker {
 
 		List<ChoiceConversionItem> choiceConversionList = createChoiceConversionList(globalParameterNode);
 
+		removeLink(methodParameterNode, globalParameterNode, outReverseOperations, extLanguageManager);
+
 		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(globalParameterNode, methodParameterNode);
 
 		convertChoicesInConstraints(
 				methodNode, 
-				methodParameterNode, globalParameterNode, 
+				globalParameterNode, methodParameterNode, 
 				choiceConversionList, outReverseOperations, 
 				extLanguageManager);
+
+		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
 	}
 
 	private static void convertChoicesInConstraints(
 			MethodNode methodNode, 
-			MethodParameterNode methodParameterNode,
-			GlobalParameterNode globalParameterNode, 
+			AbstractParameterNode srcParameterNode,
+			AbstractParameterNode dstParameterNode, 
 			List<ChoiceConversionItem> choiceConversionList,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
 		for (ChoiceConversionItem choiceConversionItem : choiceConversionList) {
 
-			ChoiceNode srcChoiceNode = globalParameterNode.getChoice(choiceConversionItem.getSrcName());
+			String srcName = choiceConversionItem.getSrcName();
+			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(srcName);
 
 			if (srcChoiceNode == null) {
 				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
 			}
 
-			ChoiceNode dstChoiceNode = methodParameterNode.getChoice(choiceConversionItem.getDstName());
+			String dstName = choiceConversionItem.getDstName();
+			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(dstName);
 
 			if (dstChoiceNode == null) {
 				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
@@ -171,6 +177,24 @@ public class ParameterLinker {
 		reverseOperations.add(inOutReverseOperation);
 
 		methodNode.removeAllTestCases();
+	}
+
+	private static void removeLink(
+			MethodParameterNode srcMethodParameterNode,
+			GlobalParameterNode dstParameterForChoices,
+			ListOfModelOperations inOutReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+
+		srcMethodParameterNode.setLink(null);
+		srcMethodParameterNode.setLinked(false);
+
+		// TODO DE-NO reverse operations
+		//		OperationSimpleSetLink reverseOperationSimpleSetLink = 
+		//				new OperationSimpleSetLink(
+		//						srcMethodParameterNode, null, extLanguageManager);
+		//
+		//		inOutReverseOperations.add(reverseOperationSimpleSetLink);
 	}
 
 	private static void setLink(
