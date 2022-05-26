@@ -91,7 +91,7 @@ public class MethodParameterNodeTestForDetached {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterLinker.linkMethodParameteToGlobalParameter(
+		ParameterConverter.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				choiceConversionList, 
@@ -220,7 +220,7 @@ public class MethodParameterNodeTestForDetached {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterLinker.linkMethodParameteToGlobalParameter(
+		ParameterConverter.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfRoot, 
 				choiceConversionList, 
@@ -338,7 +338,7 @@ public class MethodParameterNodeTestForDetached {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterLinker.linkMethodParameteToGlobalParameter(
+		ParameterConverter.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				choiceConversionList, 
@@ -406,7 +406,7 @@ public class MethodParameterNodeTestForDetached {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterLinker.linkMethodParameteToGlobalParameter(
+		ParameterConverter.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				choiceConversionList, 
@@ -499,7 +499,7 @@ public class MethodParameterNodeTestForDetached {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterLinker.linkMethodParameteToGlobalParameter(
+		ParameterConverter.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				choiceConversionList, 
@@ -518,6 +518,85 @@ public class MethodParameterNodeTestForDetached {
 		reverseOperations.executeFromTail();
 
 		assertEquals(1, resultTestCases.size());
+	}
+
+	@Test
+	public void unlinkingMethodParameter() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global parameter of root and choice node
+
+		final String parameterType = "String";
+
+		GlobalParameterNode globalParameterNodeOfRoot1 = 
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, "RP1", parameterType, null);
+
+		final String choiceValueString = "1";
+
+		ChoiceNode globalChoiceNodeOfRoot1 = 
+				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+						globalParameterNodeOfRoot1, "C1", choiceValueString, null);
+
+		ChoiceNode globalChoiceNodeOfRoot2 = 
+				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+						globalParameterNodeOfRoot1, "C2", choiceValueString, null);
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add parameter and choice to method
+
+		MethodParameterNode methodParameterNode = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
+
+		methodParameterNode.setLink(globalParameterNodeOfRoot1);
+		methodParameterNode.setLinked(true);
+
+		// constraint
+
+		addNewSimpleConstraintToMethod(
+				methodNode, "constraint1", methodParameterNode, globalChoiceNodeOfRoot1, globalChoiceNodeOfRoot1);
+
+		// unlink
+
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
+
+		ParameterConverter.unlinkMethodParameteFromGlobalParameter(
+				methodParameterNode, globalParameterNodeOfRoot1, reverseOperations, extLanguageManager);
+
+
+		// change names of global choices to avoid confusion during check
+
+		globalChoiceNodeOfRoot1.setName("RC1");
+		globalChoiceNodeOfRoot2.setName("RC2");
+
+		// check choices copied to method parameter
+
+		List<ChoiceNode> resultChoices = methodParameterNode.getChoices();
+		assertEquals(2, resultChoices.size());
+
+		assertEquals("C1", resultChoices.get(0).getName());
+		assertEquals("C2", resultChoices.get(1).getName());
+
+		// check choices in constraints
+
+		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		assertEquals(resultChoices.get(0), choiceNodeFromPrecondition);
+
+		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(resultChoices.get(0), choiceNodeFromPostcondition);
+
+
+		// TODO DE-NO check reverse operation
+
 	}
 
 	//	@Test
@@ -578,7 +657,7 @@ public class MethodParameterNodeTestForDetached {
 	//		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 	//		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 	//
-	//		ParameterLinker.linkMethodParameteToGlobalParameter(
+	//		ParameterConverter.linkMethodParameteToGlobalParameter(
 	//				methodParameterNode, globalParameterNode, 
 	//				choiceConversionList, reverseOperations, extLanguageManager);
 	//
