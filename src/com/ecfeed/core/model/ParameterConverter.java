@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.ChoiceConversionOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ParameterLinker {
+public class ParameterConverter {
 
 	public static void unlinkMethodParameteFromGlobalParameter(
 			MethodParameterNode methodParameterNode,

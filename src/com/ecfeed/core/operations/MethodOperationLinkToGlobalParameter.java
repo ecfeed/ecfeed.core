@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ParameterLinker;
+import com.ecfeed.core.model.ParameterConverter;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -48,7 +48,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 
 		fReverseOperations = new ListOfModelOperations();
 
-		ParameterLinker.linkMethodParameteToGlobalParameter(
+		ParameterConverter.linkMethodParameteToGlobalParameter(
 				fSrcMethodParameterNode,
 				fDstParameterForChoices, 
 				fChoiceConversionList,
