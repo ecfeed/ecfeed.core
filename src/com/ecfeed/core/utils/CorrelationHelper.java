@@ -19,7 +19,15 @@ public class CorrelationHelper {
 		OFF
 	}
 
-	public static double calculateCorrelation(String str1, String str2, IgnoreCase ignoreCase) {
+	public static double calculateCorrelation(String str1, String str2) {
+
+		double corr1 = calculateCorrelation(str1, str2, IgnoreCase.ON);
+		double corr2 = calculateCorrelation(str1, str2, IgnoreCase.OFF);
+
+		return corr1 * corr2;
+	}
+
+	private static double calculateCorrelation(String str1, String str2, IgnoreCase ignoreCase) {
 
 		if (str1 == null) {
 			ExceptionHelper.reportRuntimeException("Empty string 1.");
@@ -131,52 +139,4 @@ public class CorrelationHelper {
 		return normalizedCovariation;
 	}	
 
-
-	public static void main(String args[]) 
-	{  
-		//		double result = calculateCorrelation(new int[] {1, 2, 3, 4}, new int[] {1, 2, 3, 4});
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation(new int[] {1, 2, 2, 4}, new int[] {1, 2, 3, 4});
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation(new int[] {1, 3, 2, 4}, new int[] {1, 2, 3, 4});
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation(new int[] {1, 1, 1, 4}, new int[] {1, 2, 3, 4});
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation(new int[] {1, 1, 2, 1}, new int[] {1, 2, 3, 4});
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation(new int[] {1, 1, 1, 1}, new int[] {1, 2, 3, 4});
-		//		System.out.println(result);
-
-		double result = calculateCorrelation("ABCD", "ABCD", IgnoreCase.ON);
-		System.out.println(result);
-
-		//		result = calculateCorrelation("abcd", "ABCD", IgnoreCase.OFF);
-		//		System.out.println(result);
-
-		result = calculateCorrelation("ABcD", "ABCD", IgnoreCase.OFF);
-		System.out.println(result);
-
-		result = calculateCorrelation("ABxD", "ABCD", IgnoreCase.OFF);
-		System.out.println(result);
-
-		//		result = calculateCorrelation("abcd", "ABCD", IgnoreCase.OFF);
-		//		System.out.println(result);
-		//		
-		//		result = calculateCorrelation("ABCD", "ABC", IgnoreCase.ON);
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation("ABC", "ABCD", IgnoreCase.ON);
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation("AAAD", "ABCD", IgnoreCase.ON);
-		//		System.out.println(result);
-		//
-		//		result = calculateCorrelation("AD", "ABCD", IgnoreCase.ON);
-		//		System.out.println(result);
-	}  
 }
