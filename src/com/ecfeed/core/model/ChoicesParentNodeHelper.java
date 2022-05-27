@@ -12,6 +12,9 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
+import com.ecfeed.core.operations.SimpleOperationRemoveAllChoices;
+import com.ecfeed.core.utils.IExtLanguageManager;
+
 public abstract class ChoicesParentNodeHelper {
 
 	public static void traverseSubTreesOfChoices(ChoicesParentNode srcParentNode, IChoiceNodeWorker choiceNodeWorker) {
@@ -30,8 +33,23 @@ public abstract class ChoicesParentNodeHelper {
 		}
 	}
 
-	public static void createCopyOfChoicesSubTrees(ChoicesParentNode srcParentNode, ChoicesParentNode dstParentNode) {
+	public static void createCopyOfChoicesSubTrees(
+			ChoicesParentNode srcParentNode, 
+			ChoicesParentNode dstParentNode,
+			ListOfModelOperations inOutReverseOperations,
+			IExtLanguageManager extLanguageManager) {
 
+		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode);
+		
+		SimpleOperationRemoveAllChoices reverseOperation = 
+				new SimpleOperationRemoveAllChoices(dstParentNode, extLanguageManager);
+		
+		inOutReverseOperations.add(reverseOperation);
+	}
+
+	private static void createCopyOfChoicesSubtreesRecursive(
+			ChoicesParentNode srcParentNode, ChoicesParentNode dstParentNode) {
+		
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
 		if (childChoiceNodes.size() == 0) {
@@ -44,7 +62,7 @@ public abstract class ChoicesParentNodeHelper {
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			createCopyOfChoicesSubTrees(choiceNode, clonedChoiceNode);
+			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode);
 		}
 	}
 

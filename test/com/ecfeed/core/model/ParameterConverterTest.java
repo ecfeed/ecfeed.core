@@ -11,7 +11,9 @@
 package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -572,6 +574,10 @@ public class ParameterConverterTest {
 		ParameterConverter.unlinkMethodParameteFromGlobalParameter(
 				methodParameterNode, globalParameterNodeOfRoot1, reverseOperations, extLanguageManager);
 
+		// check if linked
+
+		assertFalse(methodParameterNode.isLinked());
+		assertNull(methodParameterNode.getLink());
 
 		// change names of global choices to avoid confusion during check
 
@@ -594,9 +600,24 @@ public class ParameterConverterTest {
 		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(resultChoices.get(0), choiceNodeFromPostcondition);
 
+		// reverse operation
 
-		// TODO DE-NO check reverse operation
+		assertEquals(5, reverseOperations.getSize());
+		reverseOperations.executeFromTail();
 
+		// check if returned to original state
+
+		assertTrue(methodParameterNode.isLinked());
+		assertEquals(globalParameterNodeOfRoot1, methodParameterNode.getLink());
+
+		// change Linked property for checking child choices only
+
+		methodParameterNode.setLinked(false);
+
+		List<ChoiceNode> resultChoiceNodes = methodParameterNode.getChoices();
+		assertEquals(0, resultChoiceNodes.size());
+
+		methodParameterNode.setLinked(true);
 	}
 
 	//	@Test

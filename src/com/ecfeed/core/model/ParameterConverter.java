@@ -30,23 +30,26 @@ public class ParameterConverter {
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		// TODO DE-NO add reverse operations
-
 		checkParametersForNotNull(methodParameterNode, globalParameterNode);
 
 		MethodNode methodNode = methodParameterNode.getMethod();
 
 		List<ChoiceConversionItem> choiceConversionList = createChoiceConversionList(globalParameterNode);
 
-		removeLink(methodParameterNode, globalParameterNode, outReverseOperations, extLanguageManager);
+		removeLink(methodParameterNode, outReverseOperations, extLanguageManager);
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(globalParameterNode, methodParameterNode);
+		ListOfModelOperations reverseOperationsForChoicesCopy = new ListOfModelOperations();
+		
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
+				globalParameterNode, methodParameterNode, reverseOperationsForChoicesCopy, extLanguageManager);
 
 		convertChoicesInConstraints(
 				methodNode, 
 				globalParameterNode, methodParameterNode, 
 				choiceConversionList, outReverseOperations, 
 				extLanguageManager);
+		
+		outReverseOperations.addAll(reverseOperationsForChoicesCopy);
 
 		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
 	}
@@ -181,20 +184,19 @@ public class ParameterConverter {
 
 	private static void removeLink(
 			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstParameterForChoices,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
+		GlobalParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLink();
 
 		srcMethodParameterNode.setLink(null);
 		srcMethodParameterNode.setLinked(false);
 
-		// TODO DE-NO reverse operations
-		//		OperationSimpleSetLink reverseOperationSimpleSetLink = 
-		//				new OperationSimpleSetLink(
-		//						srcMethodParameterNode, null, extLanguageManager);
-		//
-		//		inOutReverseOperations.add(reverseOperationSimpleSetLink);
+		OperationSimpleSetLink reverseOperationSimpleSetLink = 
+				new OperationSimpleSetLink(
+						srcMethodParameterNode, oldGlobalParameterNode, extLanguageManager);
+
+		inOutReverseOperations.add(reverseOperationSimpleSetLink);
 	}
 
 	private static void setLink(
@@ -287,8 +289,6 @@ public class ParameterConverter {
 			MethodNode methodNode,
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
-
-
 
 		MethodNodeHelper.updateChoiceReferencesInTestCases(
 				srcChoiceNode, dstChoiceNode, 

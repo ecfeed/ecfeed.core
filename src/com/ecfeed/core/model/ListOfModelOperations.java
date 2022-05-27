@@ -29,6 +29,11 @@ public class ListOfModelOperations {
 		fOperations.add(modelOperation);
 	}
 
+	public void addAll(ListOfModelOperations listOfModelOperations) {
+
+		fOperations.addAll(listOfModelOperations.fOperations);
+	}
+
 	public void executeFromTail() {
 
 		int size = fOperations.size();

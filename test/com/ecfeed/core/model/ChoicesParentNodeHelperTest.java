@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+
 public class ChoicesParentNodeHelperTest {
 
 	@Test
@@ -109,7 +111,11 @@ public class ChoicesParentNodeHelperTest {
 
 		// creating copy
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(methodParameterNode1, methodParameterNode2);
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+		
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
+				methodParameterNode1, methodParameterNode2, 
+				reverseOperations, new ExtLanguageManagerForJava());
 
 		// checks
 
@@ -157,7 +163,11 @@ public class ChoicesParentNodeHelperTest {
 
 		// creating copy
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(methodParameterNode1, methodParameterNode2);
+		ListOfModelOperations reverseOperations = new ListOfModelOperations();
+		
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
+				methodParameterNode1, methodParameterNode2, 
+				reverseOperations, new ExtLanguageManagerForJava());
 
 		// check choice 1
 
