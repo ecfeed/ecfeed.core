@@ -24,7 +24,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterNodeTestForDetached {
+public class ParameterConverterTest {
 
 	@Test
 	public void linkMethodParameterToClassParameterBasicUseCase() {
