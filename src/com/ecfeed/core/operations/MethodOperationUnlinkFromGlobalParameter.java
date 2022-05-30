@@ -13,27 +13,27 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ParameterLinker;
+import com.ecfeed.core.model.ParameterConverter;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOperation {
 
-	MethodParameterNode fSrcMethodParameterNode;
-	GlobalParameterNode fDstParameterForChoices;
+	MethodParameterNode fMethodParameterNode;
+	GlobalParameterNode fGlobalParameterNode;
 
 	ListOfModelOperations fReverseOperations;
 
 	IExtLanguageManager fExtLanguageManager;
 
 	public MethodOperationUnlinkFromGlobalParameter(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstParameterForChoices, 
+			GlobalParameterNode globalParameterNode,
+			MethodParameterNode methodParameterNode, 
 			IExtLanguageManager extLanguageManager) {
 
-		super("Link to global parameter", extLanguageManager);
+		super("Unlink from global parameter", extLanguageManager);
 
-		fSrcMethodParameterNode = srcMethodParameterNode;
-		fDstParameterForChoices = dstParameterForChoices;
+		fMethodParameterNode = methodParameterNode;
+		fGlobalParameterNode = globalParameterNode;
 		fExtLanguageManager = extLanguageManager;
 
 		fReverseOperations = new ListOfModelOperations();
@@ -44,9 +44,9 @@ public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOpera
 
 		fReverseOperations = new ListOfModelOperations();
 
-		ParameterLinker.unlinkMethodParameteFromGlobalParameter(
-				fSrcMethodParameterNode,
-				fDstParameterForChoices, 
+		ParameterConverter.unlinkMethodParameteFromGlobalParameter(
+				fMethodParameterNode,
+				fGlobalParameterNode, 
 				fReverseOperations,
 				fExtLanguageManager);
 
@@ -74,8 +74,8 @@ public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOpera
 		@Override
 		public IModelOperation getReverseOperation() {
 			return new MethodOperationUnlinkFromGlobalParameter(
-					fSrcMethodParameterNode,
-					fDstParameterForChoices, 
+					fGlobalParameterNode, 
+					fMethodParameterNode,
 					fExtLanguageManager);
 		}
 

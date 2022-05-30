@@ -96,14 +96,26 @@ public class ConstraintHelper {
 
 	private static void addChoicesOfParameter(List<ChoiceNode> choicesFromPrecondition,
 			MethodParameterNode methodParameterNode, List<ChoiceNode> inOutChoiceNodes) {
-
+		
+		AbstractParameterNode abstractParameterNodeForComparison = 
+				getParameterNodeForComparison(methodParameterNode);
+		
 		for (ChoiceNode choiceNode : choicesFromPrecondition) {
 
-			MethodParameterNode methodParameterNode2 = (MethodParameterNode)choiceNode.getParameter();
+			AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
 
-			if (methodParameterNode.equals(methodParameterNode2)) {
+			if (abstractParameterNodeForComparison.equals(abstractParameterNode)) {
 				inOutChoiceNodes.add(choiceNode);
 			}
+		}
+	}
+
+	private static AbstractParameterNode getParameterNodeForComparison(MethodParameterNode methodParameterNode) {
+		
+		if (methodParameterNode.isLinked()) {
+			return methodParameterNode.getLink();
+		} else {
+			return methodParameterNode;
 		}
 	}
 

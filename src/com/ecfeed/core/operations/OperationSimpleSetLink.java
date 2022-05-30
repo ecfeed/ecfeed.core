@@ -58,7 +58,7 @@ public class OperationSimpleSetLink extends AbstractModelOperation {
 	private class ReverseOperation extends AbstractModelOperation {
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(OperationSimpleSetLink.this.getName(), extLanguageManager);
+			super(OperationSimpleSetLink.this.getName() + " - reverse operation", extLanguageManager);
 		}
 
 		@Override
