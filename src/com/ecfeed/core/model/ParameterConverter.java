@@ -36,10 +36,10 @@ public class ParameterConverter {
 
 		List<ChoiceConversionItem> choiceConversionList = createChoiceConversionList(globalParameterNode);
 
-		removeLink(methodParameterNode, outReverseOperations, extLanguageManager);
+		removeLinkOnMethodParameter(methodParameterNode, outReverseOperations, extLanguageManager);
 
 		ListOfModelOperations reverseOperationsForChoicesCopy = new ListOfModelOperations();
-		
+
 		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
 				globalParameterNode, methodParameterNode, reverseOperationsForChoicesCopy, extLanguageManager);
 
@@ -48,7 +48,7 @@ public class ParameterConverter {
 				globalParameterNode, methodParameterNode, 
 				choiceConversionList, outReverseOperations, 
 				extLanguageManager);
-		
+
 		outReverseOperations.addAll(reverseOperationsForChoicesCopy);
 
 		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
@@ -107,7 +107,7 @@ public class ParameterConverter {
 		@Override
 		public void doWork(ChoiceNode choiceNode) {
 
-			String choiceName = choiceNode.getName();
+			String choiceName = choiceNode.getQualifiedName();
 			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName);
 		}
 
@@ -182,7 +182,7 @@ public class ParameterConverter {
 		methodNode.removeAllTestCases();
 	}
 
-	private static void removeLink(
+	private static void removeLinkOnMethodParameter(
 			MethodParameterNode srcMethodParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {

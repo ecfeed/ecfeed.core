@@ -40,16 +40,16 @@ public abstract class ChoicesParentNodeHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode);
-		
+
 		SimpleOperationRemoveAllChoices reverseOperation = 
 				new SimpleOperationRemoveAllChoices(dstParentNode, extLanguageManager);
-		
+
 		inOutReverseOperations.add(reverseOperation);
 	}
 
 	private static void createCopyOfChoicesSubtreesRecursive(
 			ChoicesParentNode srcParentNode, ChoicesParentNode dstParentNode) {
-		
+
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
 		if (childChoiceNodes.size() == 0) {
@@ -59,6 +59,7 @@ public abstract class ChoicesParentNodeHelper {
 		for (ChoiceNode choiceNode : childChoiceNodes) {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
