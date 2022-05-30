@@ -18,44 +18,198 @@ import java.util.function.Predicate;
 
 public class StringMatcher {
 
-	public static void createListOfSimilarStringPairs(
-			List<String> strings1, List<String> strings2, double minimumIndex) {
-		
-		// TODO check if strings are unique withing tables
+	public static List<Pair<String,String>> createListOfSimilarStringPairs(
+			List<String> strings1, 
+			List<String> strings2, 
+			double minimumSimilarityIndex) {
 
-		List<SimilarityData> similarPairs = createListOfSimilarPairs(strings1, strings2);
-		
-		similarPairs.removeIf(new PredicateGreaterThanMinimumIndex(minimumIndex));
+		checkForAbsenceOfDuplicates(strings1);
+		checkForAbsenceOfDuplicates(strings2);
 
-		// extract pairs of strings with highest similarity index then remove 
+		List<SimilarityItem> similarityItems = 
+				createSortedSimilarityList(strings1, strings2, minimumSimilarityIndex);
+
+		List<SimilarityItem> compressedSimilarityItems = 
+				createListOfSimilarItemsWithoutDuplicates(similarityItems);
+
+		List<Pair<String,String>> resultListOfPairs = 
+				createListOfStringPairs(compressedSimilarityItems);
+
+		return resultListOfPairs;
 	}
 
-	private static class PredicateGreaterThanMinimumIndex implements Predicate<Object> {
-		
-		double fMinimumIndex = 0;
+	private static List<Pair<String, String>> createListOfStringPairs(
+			List<SimilarityItem> similarityItems) {
 
-		public PredicateGreaterThanMinimumIndex(double minimumIndex) {
-			
-			fMinimumIndex = minimumIndex;
+		List<Pair<String, String>> pairs = new ArrayList<>();
+
+		for (SimilarityItem similarityItem : similarityItems) {
+
+			String string1 = similarityItem.getString1();
+			String string2 = similarityItem.getString2();
+
+			Pair<String,String> pair = new Pair<>(string1, string2);
+
+			pairs.add(pair);
 		}
-		
+
+		return pairs;
+	}
+
+	private static List<SimilarityItem> createListOfSimilarItemsWithoutDuplicates(
+			List<SimilarityItem> similarityItems) {
+
+		List<SimilarityItem> resultSimilarityItems = new ArrayList<>();
+
+		while(similarityItems.size() > 0) {
+
+			SimilarityItem topSimilarityItem = similarityItems.get(0);
+
+			resultSimilarityItems.add(topSimilarityItem);
+
+			removeDuplicatedStrings(
+					topSimilarityItem.getString1(), 
+					topSimilarityItem.getString2(), 
+					similarityItems);
+		}
+
+		return resultSimilarityItems;
+	}
+
+	private static void removeDuplicatedStrings(
+			String string1, 
+			String string2,
+			List<SimilarityItem> similarItems) {
+
+		similarItems.removeIf(new PredicateFirstStringUsed(string1));
+		similarItems.removeIf(new PredicateSecondStringUsed(string2));
+	}
+
+	private static void removePairsWithTooLowSimilarity(double minimumIndex, List<SimilarityItem> similarItems) {
+
+		similarItems.removeIf(new PredicateSimilarityIndexSmallerThanMinimum(minimumIndex));
+
+	}
+
+	private static void checkForAbsenceOfDuplicates(List<String> strings) {
+
+		sortStringsAlphabetically(strings);
+
+		for (int index = 0; index < strings.size() - 1; index++) {
+
+			String currentStr = strings.get(index);
+			String nextStr = strings.get(index + 1);
+
+			if (StringHelper.isEqual(currentStr, nextStr)) {
+				ExceptionHelper.reportRuntimeException("Non unique strings in string list.");
+			}
+		}
+
+	}
+
+	private static void sortStringsAlphabetically(List<String> strings) {
+		Comparator<String> comparatorByAlphaOrder = new Comparator<String>() {
+
+			@Override
+			public int compare(String string1, String string2) {
+
+				return string1.compareTo(string2);
+			}
+		};
+
+		Collections.sort(strings, comparatorByAlphaOrder);
+	}
+
+
+	private static class PredicateFirstStringUsed implements Predicate<Object> {
+
+		private String fString1ToRemove;
+
+		public PredicateFirstStringUsed(String string1ToRemove) {
+
+			fString1ToRemove = string1ToRemove;
+		}
+
 		@Override
 		public boolean test(Object testedObject) {
-			
-			SimilarityData similarityData = (SimilarityData)testedObject;
-			
-			if (similarityData.getSimilarityIndex() < fMinimumIndex) {
-				return false;
-			}
-			
-			return true;
-		}
-		
-	}
-	
-	private static List<SimilarityData> createListOfSimilarPairs(List<String> strings1, List<String> strings2) {
 
-		List<SimilarityData> similarityDataList = new ArrayList<>();
+			SimilarityItem similarityItem = (SimilarityItem)testedObject;
+
+			String firstString = similarityItem.getString1();
+
+			if (StringHelper.isEqual(firstString, fString1ToRemove)) {
+				return true;
+			}
+
+			return false;
+		}
+
+	}
+
+	private static class PredicateSecondStringUsed implements Predicate<Object> {
+
+		private String fString1ToRemove;
+
+		public PredicateSecondStringUsed(String string1ToRemove) {
+
+			fString1ToRemove = string1ToRemove;
+		}
+
+		@Override
+		public boolean test(Object testedObject) {
+
+			SimilarityItem similarityItem = (SimilarityItem)testedObject;
+
+			String firstString = similarityItem.getString2();
+
+			if (StringHelper.isEqual(firstString, fString1ToRemove)) {
+				return true;
+			}
+
+			return false;
+		}
+
+	}
+
+	private static class PredicateSimilarityIndexSmallerThanMinimum implements Predicate<Object> {
+
+		double fMinimumIndex = 0;
+
+		public PredicateSimilarityIndexSmallerThanMinimum(double minimumIndex) {
+
+			fMinimumIndex = minimumIndex;
+		}
+
+		@Override
+		public boolean test(Object testedObject) {
+
+			SimilarityItem similarityItems = (SimilarityItem)testedObject;
+
+			if (similarityItems.getSimilarityIndex() < fMinimumIndex) {
+				return true;
+			}
+
+			return false;
+		}
+
+	}
+
+	private static List<SimilarityItem> createSortedSimilarityList(
+			List<String> strings1, 
+			List<String> strings2,
+			double minimumSimilarityIndex) {
+
+		List<SimilarityItem> similarityItems = createListOfSimilarityItems(strings1, strings2);
+
+		removePairsWithTooLowSimilarity(minimumSimilarityIndex, similarityItems);
+
+		sortSimilarityItemsByGreatestSimilarityAndAlphabeticallyByFirstString(similarityItems);
+
+		return similarityItems;
+	}
+
+	private static List<SimilarityItem> createListOfSimilarityItems(List<String> strings1, List<String> strings2) {
+		List<SimilarityItem> similarityItems = new ArrayList<>();
 
 		int count1 = strings1.size();
 		int count2 = strings2.size();
@@ -68,24 +222,29 @@ public class StringMatcher {
 
 				double similarityIndex = StringSimilarityCalculator.calculateSimilarityIndex(str1, str2);
 
-				similarityDataList.add(new SimilarityData(str1, str2, similarityIndex));
+				similarityItems.add(new SimilarityItem(str1, str2, similarityIndex));
 			}
 		}
-
-		sortSimilarityData(similarityDataList);
-
-		return similarityDataList;
+		return similarityItems;
 	}
 
-	private static void sortSimilarityData(List<SimilarityData> similarityDataList) {
+	private static void sortSimilarityItemsByGreatestSimilarityAndAlphabeticallyByFirstString(List<SimilarityItem> similarityDataList) {
 
-		Comparator<SimilarityData> comparatorBySimilarityIndex = new Comparator<StringMatcher.SimilarityData>() {
+		Comparator<SimilarityItem> comparatorBySimilarityIndex = new Comparator<StringMatcher.SimilarityItem>() {
 
 			@Override
-			public int compare(SimilarityData o1, SimilarityData o2) {
+			public int compare(SimilarityItem o1, SimilarityItem o2) {
 
 				Double result1 = o1.getSimilarityIndex();
 				Double result2 = o2.getSimilarityIndex();
+
+				if (result1 == result2) {
+
+					String str1 = o1.getString1();
+					String str2 = o1.getString2();
+
+					return str1.compareTo(str2);
+				}
 
 				return (-1) * result1.compareTo(result2);
 			}
@@ -94,14 +253,14 @@ public class StringMatcher {
 		Collections.sort(similarityDataList, comparatorBySimilarityIndex);
 	}
 
-	private static class SimilarityData {
+	private static class SimilarityItem {
 
-		String fStr1;
-		String fStr2;
+		private String fStr1;
+		private String fStr2;
 
 		double fSimilarityIndex;
 
-		public SimilarityData(String str1, String str2, double correlationResult) {
+		public SimilarityItem(String str1, String str2, double correlationResult) {
 			fStr1 = str1;
 			fStr2 = str2;
 			fSimilarityIndex = correlationResult;
@@ -109,6 +268,14 @@ public class StringMatcher {
 
 		public double getSimilarityIndex() {
 			return fSimilarityIndex;
+		}
+
+		public String getString1() {
+			return fStr1;
+		}
+
+		public String getString2() {
+			return fStr2;
 		}
 
 		@Override
