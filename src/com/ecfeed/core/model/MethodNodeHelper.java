@@ -27,6 +27,57 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
+	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
+
+		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
+			return null;
+		}
+
+		String parentName = getParentName(globalParameterExtendedName);
+		String parameterName = getParameterName(globalParameterExtendedName);
+
+		ClassNode classNode = fMethodNode.getClassNode();
+		String className = classNode.getName();
+
+		if (StringHelper.isEqual(className, parentName)) {
+			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			return (GlobalParameterNode)abstractParameterNode;
+		}
+
+		RootNode rootNode = classNode.getRoot();
+		String rootName = rootNode.getName();
+
+		if (parentName == null || rootName.equals(parentName)) {
+			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			return (GlobalParameterNode)abstractParameterNode;
+		}			
+
+		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
+		return null;
+	}
+
+	private static String getParentName(String parameterExtendedName) {
+
+		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
+
+		if (dstParamNameParts.length == 2) {
+			return dstParamNameParts[0]; 
+		}
+
+		return null;
+	}
+
+	private static String getParameterName(String parameterExtendedName) {
+
+		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
+
+		if (dstParamNameParts.length == 2) {
+			return dstParamNameParts[1]; 
+		}
+
+		return dstParamNameParts[0];
+	}
+
 	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodParameterNode methodParameterNode) {
 
 		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
