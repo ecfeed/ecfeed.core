@@ -144,4 +144,17 @@ public class ChoiceConversionList {
 	public void clear() {
 		fChoiceConversionItems.clear();
 	}
+	
+	public void setSrcName(String srcName, int index) {
+		
+		ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+		choiceConversionItem.setSrcName(srcName);
+	}
+	
+	public void setDstName(String dstName, int index) {
+		
+		ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+		choiceConversionItem.setDstName(dstName);
+	}
+	
 }

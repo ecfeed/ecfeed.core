@@ -38,6 +38,14 @@ public class ChoiceConversionItem {
 		return fChoiceDstName;
 	}
 
+	public void setSrcName(String srcName) {
+		fChoiceSrcName = srcName;
+	}
+
+	public void setDstName(String dstName) {
+		fChoiceDstName = dstName;
+	}
+
 	public boolean isMatch(ChoiceConversionItem otherItem) {
 
 		if (!fChoiceSrcName.equals(otherItem.getSrcName())) {
