@@ -26,13 +26,15 @@ public class ChoiceConversionList {
 	public void addItem(
 			String sourceChoiceQualifiedName, 
 			ChoiceConversionOperation choiceConversionOperation,
-			String dstChoiceQualifiedName) {
+			String dstChoiceQualifiedName,
+			String constraintsContainingSrcChoice) {
 
 		ChoiceConversionItem choiceConversionItem1 = 
 				new ChoiceConversionItem(
 						sourceChoiceQualifiedName,
 						choiceConversionOperation,
-						dstChoiceQualifiedName);
+						dstChoiceQualifiedName,
+						constraintsContainingSrcChoice);
 
 		fChoiceConversionItems.add(choiceConversionItem1);
 	}

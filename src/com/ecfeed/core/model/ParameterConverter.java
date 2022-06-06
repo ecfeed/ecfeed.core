@@ -109,7 +109,7 @@ public class ParameterConverter {
 
 			ChoiceNode choiceNode = (ChoiceNode)choiceNodeObj;
 			String choiceName = choiceNode.getQualifiedName();
-			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName);
+			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName, null);
 		}
 
 		public List<ChoiceConversionItem> getChoiceConversionList() {
