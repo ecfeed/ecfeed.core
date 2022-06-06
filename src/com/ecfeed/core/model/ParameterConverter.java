@@ -95,7 +95,7 @@ public class ParameterConverter {
 		return choiceConversionList;
 	}
 
-	private static class ChoiceConversionListCreator implements IChoiceNodeWorker {
+	private static class ChoiceConversionListCreator implements IObjectWorker {
 
 		ChoiceConversionList fChoiceConversionList;
 
@@ -105,8 +105,9 @@ public class ParameterConverter {
 		}
 
 		@Override
-		public void doWork(ChoiceNode choiceNode) {
+		public void doWork(Object choiceNodeObj) {
 
+			ChoiceNode choiceNode = (ChoiceNode)choiceNodeObj;
 			String choiceName = choiceNode.getQualifiedName();
 			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName);
 		}

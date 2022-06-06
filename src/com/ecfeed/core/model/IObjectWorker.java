@@ -10,8 +10,8 @@
 package com.ecfeed.core.model;
 
 
-public interface IChoiceNodeWorker {
+public interface IObjectWorker {
 
-	void doWork(ChoiceNode choiceNode);
+	void doWork(Object obj);
 
 }

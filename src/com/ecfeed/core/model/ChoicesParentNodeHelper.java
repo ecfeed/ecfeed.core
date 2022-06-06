@@ -17,7 +17,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class ChoicesParentNodeHelper {
 
-	public static void traverseSubTreesOfChoices(ChoicesParentNode srcParentNode, IChoiceNodeWorker choiceNodeWorker) {
+	public static void traverseSubTreesOfChoices(ChoicesParentNode srcParentNode, IObjectWorker choiceNodeWorker) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
