@@ -26,6 +26,49 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterConverter {
 
+	public static MethodNode linkMethodParameteToGlobalParameter(
+			MethodParameterNode srcMethodParameterNode,
+			GlobalParameterNode dstGlobalParameterNode, 
+			ChoiceConversionList choiceConversionList,
+			ListOfModelOperations outReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
+		
+		MethodOperationSetConstraints reverseOperation = 
+				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
+
+		outReverseOperations.add(reverseOperation);
+
+		
+		if (choiceConversionList != null) {
+			moveChoicesByConversionList(
+					choiceConversionList, 
+					srcMethodParameterNode, 
+					dstGlobalParameterNode,
+					outReverseOperations,
+					extLanguageManager);
+		}
+
+		MethodNode methodNode = srcMethodParameterNode.getMethod();
+
+		// moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
+
+		MethodNodeHelper.updateParameterReferencesInConstraints(
+				srcMethodParameterNode, 
+				dstGlobalParameterNode,
+				methodNode.getConstraintNodes(),
+				outReverseOperations,
+				extLanguageManager);
+
+
+		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
+
+		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
+
+		return methodNode;
+	}
+	
 	public static void unlinkMethodParameteFromGlobalParameter(
 			MethodParameterNode methodParameterNode,
 			GlobalParameterNode globalParameterNode, 
@@ -124,48 +167,6 @@ public class ParameterConverter {
 
 	}
 
-	public static MethodNode linkMethodParameteToGlobalParameter(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstGlobalParameterNode, 
-			ChoiceConversionList choiceConversionList,
-			ListOfModelOperations outReverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
-		
-		MethodOperationSetConstraints reverseOperation = 
-				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
-
-		outReverseOperations.add(reverseOperation);
-
-		
-		if (choiceConversionList != null) {
-			moveChoicesByConversionList(
-					choiceConversionList, 
-					srcMethodParameterNode, 
-					dstGlobalParameterNode,
-					outReverseOperations,
-					extLanguageManager);
-		}
-
-		MethodNode methodNode = srcMethodParameterNode.getMethod();
-
-		// moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
-
-		MethodNodeHelper.updateParameterReferencesInConstraints(
-				srcMethodParameterNode, 
-				dstGlobalParameterNode,
-				methodNode.getConstraintNodes(),
-				outReverseOperations,
-				extLanguageManager);
-
-
-		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
-
-		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
-
-		return methodNode;
-	}
 
 	private static void checkParametersForNotNull(
 			MethodParameterNode methodParameterNode,
