@@ -86,7 +86,8 @@ public class ParameterConverterTest {
 		choiceConversionList.addItem(
 				methodChoiceName1, 
 				ChoiceConversionOperation.MERGE, 
-				globalChoiceName1);
+				globalChoiceName1,
+				null);
 
 		// linking
 
@@ -215,7 +216,8 @@ public class ParameterConverterTest {
 		choiceConversionList.addItem(
 				methodChoiceName1, 
 				ChoiceConversionOperation.MERGE, 
-				globalChoiceName1);
+				globalChoiceName1,
+				null);
 
 		// linking
 
@@ -333,7 +335,8 @@ public class ParameterConverterTest {
 		choiceConversionList.addItem(
 				choiceNodeOfMethod11.getName(), 
 				ChoiceConversionOperation.MERGE, 
-				globalChoiceNodeOfMethod11.getName());
+				globalChoiceNodeOfMethod11.getName(),
+				null);
 
 		// linking
 
@@ -401,7 +404,8 @@ public class ParameterConverterTest {
 		choiceConversionList.addItem(
 				choiceNodeOfMethod11.getName(), 
 				ChoiceConversionOperation.MERGE, 
-				globalChoiceOfClass11.getName());
+				globalChoiceOfClass11.getName(),
+				null);
 
 		// linking
 
@@ -494,7 +498,8 @@ public class ParameterConverterTest {
 		choiceConversionList.addItem(
 				choiceNodeOfMethod11.getName(), 
 				ChoiceConversionOperation.MERGE, 
-				globalChoiceOfClass11.getName());
+				globalChoiceOfClass11.getName(),
+				null);
 
 		// linking
 

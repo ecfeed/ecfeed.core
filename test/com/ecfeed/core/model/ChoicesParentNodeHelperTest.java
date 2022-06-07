@@ -47,7 +47,7 @@ public class ChoicesParentNodeHelperTest {
 		// traversing choices
 
 		ChoiceNodeWorker choiceNodeWorker = new ChoiceNodeWorker();
-		
+
 		ChoicesParentNodeHelper.traverseSubTreesOfChoices(methodParameterNode1, choiceNodeWorker);
 
 		// checks
@@ -57,27 +57,28 @@ public class ChoicesParentNodeHelperTest {
 		assertEquals(choiceNode2.getName(), resultChoiceNames.get(1));
 		assertEquals(choiceNode21.getName(), resultChoiceNames.get(2));
 	}
-	
-	static class ChoiceNodeWorker implements IChoiceNodeWorker {
+
+	static class ChoiceNodeWorker implements IObjectWorker {
 
 		List<String> fChoiceNames;
-		
+
 		public ChoiceNodeWorker() {
-			
+
 			fChoiceNames = new ArrayList<>();
 		}
-		
+
 		@Override
-		public void doWork(ChoiceNode choiceNode) {
-			
+		public void doWork(Object choiceNodeObject) {
+
+			ChoiceNode choiceNode = (ChoiceNode)choiceNodeObject;
 			fChoiceNames.add(choiceNode.getName());
 		}
-		
+
 		public List<String> getChoiceNames() {
 			return fChoiceNames;
 		}
 	}
-	
+
 	@Test
 	public void copyChoicesOfOneLevel(){
 
@@ -112,7 +113,7 @@ public class ChoicesParentNodeHelperTest {
 		// creating copy
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
-		
+
 		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
 				methodParameterNode1, methodParameterNode2, 
 				reverseOperations, new ExtLanguageManagerForJava());
@@ -164,7 +165,7 @@ public class ChoicesParentNodeHelperTest {
 		// creating copy
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
-		
+
 		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
 				methodParameterNode1, methodParameterNode2, 
 				reverseOperations, new ExtLanguageManagerForJava());
