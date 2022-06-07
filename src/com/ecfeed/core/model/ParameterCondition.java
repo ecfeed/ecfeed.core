@@ -156,7 +156,8 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public ParameterCondition makeClone() {
 
-		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement);
+		// parameters are not cloned
+		return new ParameterCondition(fRightParameterNode, fParentRelationStatement);
 	}
 
 	@Override

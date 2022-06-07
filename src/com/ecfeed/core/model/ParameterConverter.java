@@ -10,9 +10,11 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
+import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
@@ -81,7 +83,7 @@ public class ParameterConverter {
 			MethodNodeHelper.updateChoiceReferencesInConstraints(
 					srcChoiceNode, dstChoiceNode,
 					methodNode.getConstraintNodes(),
-					outReverseOperations, extLanguageManager);
+					extLanguageManager);
 		}
 	}
 
@@ -126,17 +128,23 @@ public class ParameterConverter {
 			MethodParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstGlobalParameterNode, 
 			ChoiceConversionList choiceConversionList,
-			ListOfModelOperations reverseOperations,
+			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
+		
+		MethodOperationSetConstraints reverseOperation = 
+				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
 
+		outReverseOperations.add(reverseOperation);
+
+		
 		if (choiceConversionList != null) {
 			moveChoicesByConversionList(
 					choiceConversionList, 
 					srcMethodParameterNode, 
 					dstGlobalParameterNode,
-					reverseOperations,
+					outReverseOperations,
 					extLanguageManager);
 		}
 
@@ -148,13 +156,13 @@ public class ParameterConverter {
 				srcMethodParameterNode, 
 				dstGlobalParameterNode,
 				methodNode.getConstraintNodes(),
-				reverseOperations,
+				outReverseOperations,
 				extLanguageManager);
 
 
-		removeTestCases(methodNode, reverseOperations, extLanguageManager);
+		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
 
-		setLink(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
+		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
 
 		return methodNode;
 	}
@@ -232,8 +240,30 @@ public class ParameterConverter {
 			moveChoicesByConversionItem(
 					choiceConversionItem, 
 					srcParameterNode, dstParameterNode,
-					inOutReverseOperations, extLanguageManager);
+					inOutReverseOperations, extLanguageManager); 
 		}
+	}
+
+	private static MethodOperationSetConstraints createReverseOperationSetConstraints(
+			MethodParameterNode srcParameterNode,
+			IExtLanguageManager extLanguageManager) {
+
+		MethodNode methodNode = srcParameterNode.getMethod();
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+
+		List<ConstraintNode> listOfClonedConstraintNodes = new ArrayList<>();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			ConstraintNode clone = constraintNode.makeClone();
+			listOfClonedConstraintNodes.add(clone);
+		}
+
+		MethodOperationSetConstraints reverseOperation = 
+				new MethodOperationSetConstraints(methodNode, listOfClonedConstraintNodes, extLanguageManager);
+
+		return reverseOperation;
 	}
 
 	private static void moveChoicesByConversionItem(
@@ -259,12 +289,12 @@ public class ParameterConverter {
 
 		MethodNode methodNode = srcParameterNode.getMethod();
 
-		updateChoiceReferencesInChoicesAndTestCases(
+		updateChoiceReferencesInConstraints(
 				srcChoiceNode, 
 				dstChoiceNode, 
 				methodNode, 
-				inOutReverseOperations,
-				extLanguageManager);
+				inOutReverseOperations, // TODO DE-NO remove - not used
+				extLanguageManager); 
 
 		removeSourceChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
 	}
@@ -284,22 +314,17 @@ public class ParameterConverter {
 		inOutReverseOperations.add(reverseOperation);
 	}
 
-	private static void updateChoiceReferencesInChoicesAndTestCases(
+	private static void updateChoiceReferencesInConstraints(
 			ChoiceNode srcChoiceNode,
 			ChoiceNode dstChoiceNode, 
 			MethodNode methodNode,
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		MethodNodeHelper.updateChoiceReferencesInTestCases(
-				srcChoiceNode, dstChoiceNode, 
-				methodNode.getTestCases(),
-				inOutReverseOperations, extLanguageManager);
-
 		MethodNodeHelper.updateChoiceReferencesInConstraints(
 				srcChoiceNode, dstChoiceNode,
 				methodNode.getConstraintNodes(),
-				inOutReverseOperations, extLanguageManager);
+				extLanguageManager);
 	}
 
 	private static void moveChildChoices(

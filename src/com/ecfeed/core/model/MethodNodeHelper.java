@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCases;
-import com.ecfeed.core.operations.MethodOperationUpdateChoicesInConstraints;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -146,25 +145,17 @@ public class MethodNodeHelper {
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
 			List<ConstraintNode> constraintNodes,
-			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
+
+		ListOfModelOperations notUsed = new ListOfModelOperations(); // TODO DE-NO remove in updateChoiceReferences
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 			ConstraintNodeHelper.updateChoiceReferences(
 					constraintNode, 
 					oldChoiceNode, newChoiceNode, 
-					inOutReverseOperations, extLanguageManager);
-		}
-
-		if (inOutReverseOperations != null) {
-			MethodOperationUpdateChoicesInConstraints reverseOperation = 
-					new MethodOperationUpdateChoicesInConstraints(
-							newChoiceNode, oldChoiceNode, 
-							constraintNodes, extLanguageManager);
-
-			inOutReverseOperations.add(reverseOperation);
+					notUsed, extLanguageManager);
 		}
 	}
 

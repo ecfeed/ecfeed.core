@@ -58,7 +58,8 @@ public class ChoiceCondition implements IStatementCondition {
 
 	@Override
 	public ChoiceCondition makeClone() {
-		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement);
+		// choices are not cloned
+		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 
 	@Override

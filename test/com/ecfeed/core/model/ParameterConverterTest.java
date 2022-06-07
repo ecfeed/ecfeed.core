@@ -127,7 +127,6 @@ public class ParameterConverterTest {
 
 		// reverse operation
 
-		assertEquals(6, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		// check global parameter
@@ -257,7 +256,6 @@ public class ParameterConverterTest {
 
 		// reverse operation
 
-		assertEquals(6, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		// check global parameter
@@ -397,35 +395,34 @@ public class ParameterConverterTest {
 
 		// reverse operation
 
-		//		assertEquals(6, reverseOperations.getSize());
-		//		reverseOperations.executeFromTail();
-		//
-		//		// check global parameter
-		//
-		//		assertEquals(1, classNode.getParametersCount());
-		//		assertEquals(1, globalParameterNodeOfClass.getChoiceCount());
-		//		choiceNodeFromGlobalParam = globalParameterNodeOfClass.getChoice(globalChoiceName1);
-		//		assertEquals(globalChoiceNodeForClass, choiceNodeFromGlobalParam);
-		//
-		//		// check local parameter 
-		//
-		//		assertEquals(1, methodNode.getParametersCount());
-		//		assertEquals(1, methodParameterNode.getChoiceCount());
-		//
-		//		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
-		//		assertEquals(false, methodParameterNode2.isLinked());
-		//		assertNull(methodParameterNode2.getLink());
-		//
-		//		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
-		//		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
-		//
-		//		// check choices from constraints
-		//
-		//		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
-		//		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
-		//
-		//		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
-		//		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
+		reverseOperations.executeFromTail();
+
+		// check global parameter
+
+		assertEquals(1, classNode.getParametersCount());
+		assertEquals(1, globalParameterNodeOfClass.getChoiceCount());
+		choiceNodeFromGlobalParam = globalParameterNodeOfClass.getChoice(globalChoiceName1);
+		assertEquals(globalChoiceNodeForClass, choiceNodeFromGlobalParam);
+
+		// check local parameter 
+
+		assertEquals(1, methodNode.getParametersCount());
+		assertEquals(2, methodParameterNode.getChoiceCount());
+
+		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		assertEquals(false, methodParameterNode2.isLinked());
+		assertNull(methodParameterNode2.getLink());
+
+		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
+		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
+
+		// check choices from constraints
+
+		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
+
+		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		assertEquals(methodChoiceNode2, choiceNodeFromPostcondition);
 	}
 
 	@Test
@@ -569,7 +566,6 @@ public class ParameterConverterTest {
 
 		// reverse operation
 
-		assertEquals(6, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		// check
@@ -661,7 +657,6 @@ public class ParameterConverterTest {
 
 		// reverse operation
 
-		assertEquals(6, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		assertEquals(1, resultTestCases.size());
@@ -747,7 +742,6 @@ public class ParameterConverterTest {
 
 		// reverse operation
 
-		assertEquals(5, reverseOperations.getSize());
 		reverseOperations.executeFromTail();
 
 		// check if returned to original state
@@ -853,7 +847,6 @@ public class ParameterConverterTest {
 	//
 	//		// reverse operation
 	//
-	//		assertEquals(5, reverseOperations.getSize());
 	//		reverseOperations.executeFromTail();
 	//
 	//		// check global parameter
