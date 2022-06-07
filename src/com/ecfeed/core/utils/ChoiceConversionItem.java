@@ -29,7 +29,12 @@ public class ChoiceConversionItem {
 
 		fConstraintsContainingSrcChoice = constraintsContainingSrcChoice;
 	}
-
+	
+	@Override
+	public String toString() {
+		
+		return fChoiceSrcName + ", " + fChoiceDstName;
+	}
 
 	public ChoiceConversionOperation getOperation() {
 		return fChoiceConversionOperation;
