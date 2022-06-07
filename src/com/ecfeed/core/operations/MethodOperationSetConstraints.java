@@ -16,7 +16,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationSetConstraints extends AbstractModelOperation {
+public class MethodOperationSetConstraints extends AbstractOneWayModelOperation {
 
 	private MethodNode fMethodNode;
 	private List<ConstraintNode> fConstraintNodes;
@@ -38,11 +38,6 @@ public class MethodOperationSetConstraints extends AbstractModelOperation {
 		for (ConstraintNode constraintNode : fConstraintNodes) {
 			fMethodNode.addConstraint(constraintNode);
 		}
-	}
-
-	@Override
-	public IModelOperation getReverseOperation() {
-		return null;
 	}
 
 }
