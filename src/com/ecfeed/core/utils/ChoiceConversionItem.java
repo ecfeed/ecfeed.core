@@ -33,7 +33,7 @@ public class ChoiceConversionItem {
 	@Override
 	public String toString() {
 		
-		return fChoiceSrcName + ", " + fChoiceDstName;
+		return "(" + fChoiceSrcName + ", " + fChoiceDstName + ")";
 	}
 
 	public ChoiceConversionOperation getOperation() {

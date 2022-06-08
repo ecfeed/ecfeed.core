@@ -13,11 +13,10 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
 import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
-import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
+import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ChoiceConversionOperation;
@@ -34,13 +33,13 @@ public class ParameterConverter {
 			IExtLanguageManager extLanguageManager) {
 
 		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
-		
+
 		MethodOperationSetConstraints reverseOperation = 
 				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
 
 		outReverseOperations.add(reverseOperation);
 
-		
+
 		if (choiceConversionList != null) {
 			moveChoicesByConversionList(
 					choiceConversionList, 
@@ -68,7 +67,7 @@ public class ParameterConverter {
 
 		return methodNode;
 	}
-	
+
 	public static void unlinkMethodParameteFromGlobalParameter(
 			MethodParameterNode methodParameterNode,
 			GlobalParameterNode globalParameterNode, 
@@ -166,7 +165,6 @@ public class ParameterConverter {
 		}
 
 	}
-
 
 	private static void checkParametersForNotNull(
 			MethodParameterNode methodParameterNode,
@@ -286,7 +284,7 @@ public class ParameterConverter {
 			ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
 		}
 
-		moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
+		//		moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
 
 		MethodNode methodNode = srcParameterNode.getMethod();
 
@@ -328,18 +326,18 @@ public class ParameterConverter {
 				extLanguageManager);
 	}
 
-	private static void moveChildChoices(
-			ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode,
-			ListOfModelOperations inOutReverseOperations, 
-			IExtLanguageManager extLanguageManager) {
-
-		ChoiceNodeHelper.moveChildChoices(srcChoiceNode, dstChoiceNode);
-
-		ChoiceOperationMoveChildren choiceOperationMoveChildren = 
-				new ChoiceOperationMoveChildren(dstChoiceNode, srcChoiceNode, extLanguageManager);
-
-		inOutReverseOperations.add(choiceOperationMoveChildren);
-	}
+	//	private static void moveChildChoices(
+	//			ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode,
+	//			ListOfModelOperations inOutReverseOperations, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		ChoiceNodeHelper.moveChildChoices(srcChoiceNode, dstChoiceNode);
+	//
+	//		ChoiceOperationMoveChildren choiceOperationMoveChildren = 
+	//				new ChoiceOperationMoveChildren(dstChoiceNode, srcChoiceNode, extLanguageManager);
+	//
+	//		inOutReverseOperations.add(choiceOperationMoveChildren);
+	//	}
 
 	//	private static void moveRemainingTopChoices(
 	//			MethodParameterNode srcMethodParameterNode,
