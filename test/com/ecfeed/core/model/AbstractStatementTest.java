@@ -92,6 +92,11 @@ public class AbstractStatementTest {
 				ListOfModelOperations reverseOperations,
 				IExtLanguageManager extLanguageManager) {
 		}
+
+		@Override
+		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+			return false;
+		}
 	}
 
 	@Test
