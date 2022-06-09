@@ -192,5 +192,10 @@ public class ValueCondition implements IStatementCondition {
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+		return false;
+	}
 }	
 

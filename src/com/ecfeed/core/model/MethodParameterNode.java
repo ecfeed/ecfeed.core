@@ -423,7 +423,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		MethodNodeHelper.updateChoiceReferencesInConstraints(
 				choiceNode, clonedChoiceNode,
 				methodNode.getConstraintNodes(),
-				reverseOperations, extLanguageManager);
+				extLanguageManager);
 
 		ChoicesParentNode choicesParentNode = choiceNode.getParent();
 		choicesParentNode.removeChoice(choiceNode);
@@ -451,7 +451,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		MethodNodeHelper.updateChoiceReferencesInConstraints(
 				detachedChoiceNode, actualChoiceNode,
 				methodNode.getConstraintNodes(),
-				reverseOperations, extLanguageManager);
+				extLanguageManager);
 
 		int detachedIndex = getDetachedChoiceIndex(detachedChoiceName);
 		removeDetachedChoiceByIndex(detachedIndex);

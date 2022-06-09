@@ -610,13 +610,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	boolean mentionsParameter(MethodParameterNode methodParameter) {
+	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
 
-		if (fPrecondition.mentions(methodParameter)) {
+		if (fPrecondition.mentionsChoiceOfParameter(methodParameter)) {
 			return true;
 		}
 
-		if (fPostcondition.mentions(methodParameter)) {
+		if (fPostcondition.mentionsChoiceOfParameter(methodParameter)) {
 			return true;
 		}
 

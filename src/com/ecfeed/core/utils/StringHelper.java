@@ -12,6 +12,7 @@ package com.ecfeed.core.utils;
 
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -514,6 +515,25 @@ public class StringHelper {
 		}
 
 		return index;  // the first char of the longer string
+	}
+
+	public static String convertListToStringWithSeparators(List<String> listOfStrings, String separator) {
+		
+		int listSize = listOfStrings.size();
+		int lastIndex = listSize - 1;
+		
+		String convertedString = "";
+		
+		for (int index = 0; index < listSize; index++) {
+			
+			convertedString += listOfStrings.get(index);
+			
+			if (index < lastIndex) {
+				convertedString += separator;
+			}
+		}
+		
+		return convertedString;
 	}
 
 }

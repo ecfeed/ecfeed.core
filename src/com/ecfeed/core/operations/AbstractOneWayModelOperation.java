@@ -7,11 +7,20 @@
  * http://www.eclipse.org/legal/epl-v10.html 
  *  
  *******************************************************************************/
-package com.ecfeed.core.model;
 
+package com.ecfeed.core.operations;
 
-public interface IChoiceNodeWorker {
+import com.ecfeed.core.utils.IExtLanguageManager;
 
-	void doWork(ChoiceNode choiceNode);
+public abstract class AbstractOneWayModelOperation extends AbstractModelOperation {
+
+	public AbstractOneWayModelOperation(String name, IExtLanguageManager extLanguageManager) {
+		super(name, extLanguageManager);
+	}
+
+	@Override
+	public IModelOperation getReverseOperation() {
+		return null;
+	}
 
 }

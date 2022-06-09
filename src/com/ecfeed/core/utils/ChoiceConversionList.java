@@ -26,13 +26,15 @@ public class ChoiceConversionList {
 	public void addItem(
 			String sourceChoiceQualifiedName, 
 			ChoiceConversionOperation choiceConversionOperation,
-			String dstChoiceQualifiedName) {
+			String dstChoiceQualifiedName,
+			String constraintsContainingSrcChoice) {
 
 		ChoiceConversionItem choiceConversionItem1 = 
 				new ChoiceConversionItem(
 						sourceChoiceQualifiedName,
 						choiceConversionOperation,
-						dstChoiceQualifiedName);
+						dstChoiceQualifiedName,
+						constraintsContainingSrcChoice);
 
 		fChoiceConversionItems.add(choiceConversionItem1);
 	}
@@ -144,4 +146,17 @@ public class ChoiceConversionList {
 	public void clear() {
 		fChoiceConversionItems.clear();
 	}
+	
+	public void setSrcName(String srcName, int index) {
+		
+		ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+		choiceConversionItem.setSrcName(srcName);
+	}
+	
+	public void setDstName(String dstName, int index) {
+		
+		ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+		choiceConversionItem.setDstName(dstName);
+	}
+	
 }

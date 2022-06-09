@@ -156,7 +156,8 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public ParameterCondition makeClone() {
 
-		return new ParameterCondition(fRightParameterNode.makeClone(), fParentRelationStatement);
+		// parameters are not cloned
+		return new ParameterCondition(fRightParameterNode, fParentRelationStatement);
 	}
 
 	@Override
@@ -330,6 +331,11 @@ public class ParameterCondition implements IStatementCondition {
 			ChoiceNode newChoiceNode,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
+	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+		return false;
 	}
 
 }	

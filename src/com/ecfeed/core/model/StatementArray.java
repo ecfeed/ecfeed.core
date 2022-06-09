@@ -47,6 +47,7 @@ public class StatementArray extends AbstractStatement {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -58,6 +59,7 @@ public class StatementArray extends AbstractStatement {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -69,8 +71,22 @@ public class StatementArray extends AbstractStatement {
 				return true;
 			}
 		}
+
 		return false;
 	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+
+		for (AbstractStatement abstractStatement : fStatements) {
+			if (abstractStatement.mentionsChoiceOfParameter(parameter)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {

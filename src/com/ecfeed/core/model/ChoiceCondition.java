@@ -58,7 +58,8 @@ public class ChoiceCondition implements IStatementCondition {
 
 	@Override
 	public ChoiceCondition makeClone() {
-		return new ChoiceCondition(fRightChoice.makeClone(), fParentRelationStatement);
+		// choices are not cloned
+		return new ChoiceCondition(fRightChoice, fParentRelationStatement);
 	}
 
 	@Override
@@ -296,6 +297,16 @@ public class ChoiceCondition implements IStatementCondition {
 		if (fRightChoice == oldChoiceNode) {
 			fRightChoice = newChoiceNode;
 		}
+	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+		
+		if (fRightChoice.getParameter().equals(abstractParameterNode)) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

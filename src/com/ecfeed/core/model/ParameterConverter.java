@@ -10,12 +10,13 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.ChoiceOperationMoveChildren;
+import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
-import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
+import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.utils.ChoiceConversionItem;
 import com.ecfeed.core.utils.ChoiceConversionList;
 import com.ecfeed.core.utils.ChoiceConversionOperation;
@@ -23,6 +24,49 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterConverter {
+
+	public static MethodNode linkMethodParameteToGlobalParameter(
+			MethodParameterNode srcMethodParameterNode,
+			GlobalParameterNode dstGlobalParameterNode, 
+			ChoiceConversionList choiceConversionList,
+			ListOfModelOperations outReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
+
+		MethodOperationSetConstraints reverseOperation = 
+				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
+
+		outReverseOperations.add(reverseOperation);
+
+
+		if (choiceConversionList != null) {
+			moveChoicesByConversionList(
+					choiceConversionList, 
+					srcMethodParameterNode, 
+					dstGlobalParameterNode,
+					outReverseOperations,
+					extLanguageManager);
+		}
+
+		MethodNode methodNode = srcMethodParameterNode.getMethod();
+
+		// moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
+
+		MethodNodeHelper.updateParameterReferencesInConstraints(
+				srcMethodParameterNode, 
+				dstGlobalParameterNode,
+				methodNode.getConstraintNodes(),
+				outReverseOperations,
+				extLanguageManager);
+
+
+		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
+
+		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
+
+		return methodNode;
+	}
 
 	public static void unlinkMethodParameteFromGlobalParameter(
 			MethodParameterNode methodParameterNode,
@@ -81,7 +125,7 @@ public class ParameterConverter {
 			MethodNodeHelper.updateChoiceReferencesInConstraints(
 					srcChoiceNode, dstChoiceNode,
 					methodNode.getConstraintNodes(),
-					outReverseOperations, extLanguageManager);
+					extLanguageManager);
 		}
 	}
 
@@ -95,7 +139,7 @@ public class ParameterConverter {
 		return choiceConversionList;
 	}
 
-	private static class ChoiceConversionListCreator implements IChoiceNodeWorker {
+	private static class ChoiceConversionListCreator implements IObjectWorker {
 
 		ChoiceConversionList fChoiceConversionList;
 
@@ -105,10 +149,11 @@ public class ParameterConverter {
 		}
 
 		@Override
-		public void doWork(ChoiceNode choiceNode) {
+		public void doWork(Object choiceNodeObj) {
 
+			ChoiceNode choiceNode = (ChoiceNode)choiceNodeObj;
 			String choiceName = choiceNode.getQualifiedName();
-			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName);
+			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName, null);
 		}
 
 		public List<ChoiceConversionItem> getChoiceConversionList() {
@@ -119,43 +164,6 @@ public class ParameterConverter {
 			return createSortedCopyOfConversionItems;
 		}
 
-	}
-
-	public static MethodNode linkMethodParameteToGlobalParameter(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstGlobalParameterNode, 
-			ChoiceConversionList choiceConversionList,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
-
-		if (choiceConversionList != null) {
-			moveChoicesByConversionList(
-					choiceConversionList, 
-					srcMethodParameterNode, 
-					dstGlobalParameterNode,
-					reverseOperations,
-					extLanguageManager);
-		}
-
-		MethodNode methodNode = srcMethodParameterNode.getMethod();
-
-		// moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
-
-		MethodNodeHelper.updateParameterReferencesInConstraints(
-				srcMethodParameterNode, 
-				dstGlobalParameterNode,
-				methodNode.getConstraintNodes(),
-				reverseOperations,
-				extLanguageManager);
-
-
-		removeTestCases(methodNode, reverseOperations, extLanguageManager);
-
-		setLink(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
-
-		return methodNode;
 	}
 
 	private static void checkParametersForNotNull(
@@ -231,8 +239,30 @@ public class ParameterConverter {
 			moveChoicesByConversionItem(
 					choiceConversionItem, 
 					srcParameterNode, dstParameterNode,
-					inOutReverseOperations, extLanguageManager);
+					inOutReverseOperations, extLanguageManager); 
 		}
+	}
+
+	private static MethodOperationSetConstraints createReverseOperationSetConstraints(
+			MethodParameterNode srcParameterNode,
+			IExtLanguageManager extLanguageManager) {
+
+		MethodNode methodNode = srcParameterNode.getMethod();
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+
+		List<ConstraintNode> listOfClonedConstraintNodes = new ArrayList<>();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			ConstraintNode clone = constraintNode.makeClone();
+			listOfClonedConstraintNodes.add(clone);
+		}
+
+		MethodOperationSetConstraints reverseOperation = 
+				new MethodOperationSetConstraints(methodNode, listOfClonedConstraintNodes, extLanguageManager);
+
+		return reverseOperation;
 	}
 
 	private static void moveChoicesByConversionItem(
@@ -254,16 +284,16 @@ public class ParameterConverter {
 			ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
 		}
 
-		moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
+		//		moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
 
 		MethodNode methodNode = srcParameterNode.getMethod();
 
-		updateChoiceReferencesInChoicesAndTestCases(
+		updateChoiceReferencesInConstraints(
 				srcChoiceNode, 
 				dstChoiceNode, 
 				methodNode, 
-				inOutReverseOperations,
-				extLanguageManager);
+				inOutReverseOperations, // TODO DE-NO remove - not used
+				extLanguageManager); 
 
 		removeSourceChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
 	}
@@ -283,36 +313,31 @@ public class ParameterConverter {
 		inOutReverseOperations.add(reverseOperation);
 	}
 
-	private static void updateChoiceReferencesInChoicesAndTestCases(
+	private static void updateChoiceReferencesInConstraints(
 			ChoiceNode srcChoiceNode,
 			ChoiceNode dstChoiceNode, 
 			MethodNode methodNode,
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		MethodNodeHelper.updateChoiceReferencesInTestCases(
-				srcChoiceNode, dstChoiceNode, 
-				methodNode.getTestCases(),
-				inOutReverseOperations, extLanguageManager);
-
 		MethodNodeHelper.updateChoiceReferencesInConstraints(
 				srcChoiceNode, dstChoiceNode,
 				methodNode.getConstraintNodes(),
-				inOutReverseOperations, extLanguageManager);
+				extLanguageManager);
 	}
 
-	private static void moveChildChoices(
-			ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode,
-			ListOfModelOperations inOutReverseOperations, 
-			IExtLanguageManager extLanguageManager) {
-
-		ChoiceNodeHelper.moveChildChoices(srcChoiceNode, dstChoiceNode);
-
-		ChoiceOperationMoveChildren choiceOperationMoveChildren = 
-				new ChoiceOperationMoveChildren(dstChoiceNode, srcChoiceNode, extLanguageManager);
-
-		inOutReverseOperations.add(choiceOperationMoveChildren);
-	}
+	//	private static void moveChildChoices(
+	//			ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode,
+	//			ListOfModelOperations inOutReverseOperations, 
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		ChoiceNodeHelper.moveChildChoices(srcChoiceNode, dstChoiceNode);
+	//
+	//		ChoiceOperationMoveChildren choiceOperationMoveChildren = 
+	//				new ChoiceOperationMoveChildren(dstChoiceNode, srcChoiceNode, extLanguageManager);
+	//
+	//		inOutReverseOperations.add(choiceOperationMoveChildren);
+	//	}
 
 	//	private static void moveRemainingTopChoices(
 	//			MethodParameterNode srcMethodParameterNode,

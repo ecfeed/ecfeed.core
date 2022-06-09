@@ -15,15 +15,25 @@ public class ChoiceConversionItem {
 	private String fChoiceSrcName;
 	private String fChoiceDstName;
 	private ChoiceConversionOperation fChoiceConversionOperation;
+	private String fConstraintsContainingSrcChoice;
 
 	public ChoiceConversionItem(
 			String choiceSrcName, 
 			ChoiceConversionOperation choiceConversionOperation, 
-			String choiceDstName) {
+			String choiceDstName,
+			String constraintsContainingSrcChoice) {
 
 		fChoiceSrcName = choiceSrcName;
 		fChoiceConversionOperation = choiceConversionOperation;
 		fChoiceDstName = choiceDstName;
+
+		fConstraintsContainingSrcChoice = constraintsContainingSrcChoice;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "(" + fChoiceSrcName + ", " + fChoiceDstName + ")";
 	}
 
 	public ChoiceConversionOperation getOperation() {
@@ -36,6 +46,18 @@ public class ChoiceConversionItem {
 
 	public String getDstName() {
 		return fChoiceDstName;
+	}
+
+	public String getConstraintsContainingSrcChoice() {
+		return fConstraintsContainingSrcChoice;
+	}
+
+	public void setSrcName(String srcName) {
+		fChoiceSrcName = srcName;
+	}
+
+	public void setDstName(String dstName) {
+		fChoiceDstName = dstName;
 	}
 
 	public boolean isMatch(ChoiceConversionItem otherItem) {

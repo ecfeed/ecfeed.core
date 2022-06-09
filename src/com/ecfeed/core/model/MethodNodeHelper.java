@@ -17,7 +17,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCases;
-import com.ecfeed.core.operations.MethodOperationUpdateChoicesInConstraints;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -26,6 +25,57 @@ import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
+
+	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
+
+		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
+			return null;
+		}
+
+		String parentName = getParentName(globalParameterExtendedName);
+		String parameterName = getParameterName(globalParameterExtendedName);
+
+		ClassNode classNode = fMethodNode.getClassNode();
+		String className = classNode.getName();
+
+		if (StringHelper.isEqual(className, parentName)) {
+			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			return (GlobalParameterNode)abstractParameterNode;
+		}
+
+		RootNode rootNode = classNode.getRoot();
+		String rootName = rootNode.getName();
+
+		if (parentName == null || rootName.equals(parentName)) {
+			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			return (GlobalParameterNode)abstractParameterNode;
+		}			
+
+		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
+		return null;
+	}
+
+	private static String getParentName(String parameterExtendedName) {
+
+		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
+
+		if (dstParamNameParts.length == 2) {
+			return dstParamNameParts[0]; 
+		}
+
+		return null;
+	}
+
+	private static String getParameterName(String parameterExtendedName) {
+
+		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
+
+		if (dstParamNameParts.length == 2) {
+			return dstParamNameParts[1]; 
+		}
+
+		return dstParamNameParts[0];
+	}
 
 	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodParameterNode methodParameterNode) {
 
@@ -95,25 +145,17 @@ public class MethodNodeHelper {
 			ChoiceNode oldChoiceNode, 
 			ChoiceNode newChoiceNode,
 			List<ConstraintNode> constraintNodes,
-			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkChoices(oldChoiceNode, newChoiceNode);
+
+		ListOfModelOperations notUsed = new ListOfModelOperations(); // TODO DE-NO remove in updateChoiceReferences
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 			ConstraintNodeHelper.updateChoiceReferences(
 					constraintNode, 
 					oldChoiceNode, newChoiceNode, 
-					inOutReverseOperations, extLanguageManager);
-		}
-
-		if (inOutReverseOperations != null) {
-			MethodOperationUpdateChoicesInConstraints reverseOperation = 
-					new MethodOperationUpdateChoicesInConstraints(
-							newChoiceNode, oldChoiceNode, 
-							constraintNodes, extLanguageManager);
-
-			inOutReverseOperations.add(reverseOperation);
+					notUsed, extLanguageManager);
 		}
 	}
 

@@ -679,12 +679,12 @@ public class MethodNode extends ParametersParentNode {
 		return new ArrayList<>();
 	}
 
-	public void removeConstraintsWithParameter(MethodParameterNode methodParameter) {
+	public void removeConstraintsWithParameterChoices(MethodParameterNode methodParameter) {
 
 		ArrayList<ConstraintNode> constraintsToDelete = new ArrayList<ConstraintNode>();  
 
 		for(ConstraintNode constraint : fConstraintNodes){
-			if (constraint.mentionsParameter(methodParameter)) {
+			if (constraint.mentionsChoiceOfParameter(methodParameter)) {
 				constraintsToDelete.add(constraint);
 			}
 		}

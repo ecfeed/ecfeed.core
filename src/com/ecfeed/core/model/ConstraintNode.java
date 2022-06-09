@@ -381,8 +381,9 @@ public class ConstraintNode extends AbstractNode{
 		return -1;
 	}
 
-	boolean mentionsParameter(MethodParameterNode methodParameter) {
-		return fConstraint.mentionsParameter(methodParameter);
+	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
+		
+		return fConstraint.mentionsChoiceOfParameter(methodParameter);
 	}
 
 }

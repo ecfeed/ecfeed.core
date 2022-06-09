@@ -17,6 +17,8 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
+// TODO DE-NO remove?
+
 public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOperation {
 
 	private static final String UPDATE_CHOICE_REFERENCES_IN_TEST_CASES = "Update choice references in test cases.";
@@ -47,7 +49,6 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 				fOldChoiceNode, 
 				fNewChoiceNode,
 				fConstraintNodes,
-				null,
 				fExtLanguageManager);
 	}
 

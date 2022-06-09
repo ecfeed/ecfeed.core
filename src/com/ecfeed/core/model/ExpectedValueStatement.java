@@ -212,4 +212,9 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 			IExtLanguageManager extLanguageManager) {
 	}
 
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+		return false;
+	}
+
 }
