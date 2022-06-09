@@ -151,4 +151,9 @@ public class StaticStatement extends AbstractStatement {
 			IExtLanguageManager extLanguageManager) {
 	}
 
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+		return false;
+	}
+
 }

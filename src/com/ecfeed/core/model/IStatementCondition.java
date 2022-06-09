@@ -26,6 +26,7 @@ public interface IStatementCondition {
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean mentions(AbstractParameterNode abstractParameterNode);
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode);
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager);
 	public List<ChoiceNode> getListOfChoices();
 	public void derandomize();

@@ -142,5 +142,10 @@ public class LabelCondition implements IStatementCondition {
 			IExtLanguageManager extLanguageManager) {
 	}
 
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+		return false;
+	}
+
 }
 

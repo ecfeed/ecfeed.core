@@ -333,6 +333,11 @@ public class ParameterCondition implements IStatementCondition {
 			IExtLanguageManager extLanguageManager) {
 	}
 
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+		return false;
+	}
+
 }	
 
 

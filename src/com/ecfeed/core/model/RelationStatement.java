@@ -404,5 +404,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		//		}
 	}
 
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+		return fRightCondition.mentionsChoiceOfParameter(parameter);
+	}
+
 }
 
