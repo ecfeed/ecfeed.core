@@ -532,8 +532,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 
-		result.addAll(fPrecondition.getListOfChoices());
-		result.addAll(fPostcondition.getListOfChoices());
+		result.addAll(fPrecondition.getChoices());
+		result.addAll(fPostcondition.getChoices());
 
 		return result;
 	}

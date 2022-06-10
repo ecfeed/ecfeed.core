@@ -35,5 +35,6 @@ public interface IStatementCondition {
 			ChoiceNode newChoiceNode,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager);
+	public String getLabel(MethodParameterNode methodParameterNode);
 }
 

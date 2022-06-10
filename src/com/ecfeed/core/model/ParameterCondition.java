@@ -338,6 +338,9 @@ public class ParameterCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
+	public String getLabel(MethodParameterNode methodParameterNode) {
+		return null;
+	}
+
 }	
-
-

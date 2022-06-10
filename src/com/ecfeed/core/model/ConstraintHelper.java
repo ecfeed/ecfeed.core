@@ -11,11 +11,11 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ConstraintHelper {
 
@@ -77,54 +77,73 @@ public class ConstraintHelper {
 
 	public static List<ChoiceNode> getChoicesUsedInConstraints(
 			Constraint constraint, 
-			MethodParameterNode methodParameterNode,
-			List<ChoiceNode> inOutChoiceNodes) {
+			MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> result = new ArrayList<>();
 
 		AbstractStatement precondition = constraint.getPrecondition();
+		List<ChoiceNode> choicesFromPrecondition = precondition.getChoices();
+
+		List<ChoiceNode> choicesOfParameter = filterChoicesByParameter(choicesFromPrecondition, methodParameterNode);
+		result.addAll(choicesOfParameter);
+
 		AbstractStatement postcondition = constraint.getPostcondition();
+		List<ChoiceNode> choicesFromPostcondition = postcondition.getChoices();
 
-		List<ChoiceNode> choicesFromPrecondition = precondition.getListOfChoices();
-		addChoicesOfParameter(choicesFromPrecondition, methodParameterNode, inOutChoiceNodes);
+		choicesOfParameter = filterChoicesByParameter(choicesFromPostcondition, methodParameterNode);
+		result.addAll(choicesOfParameter);
 
+		result = ChoiceNodeHelper.removeDuplicates(result);
 
-		List<ChoiceNode> choicesFromPostcondition = postcondition.getListOfChoices();
-		addChoicesOfParameter(choicesFromPostcondition, methodParameterNode, inOutChoiceNodes);
-
-		List<ChoiceNode> result = removeDuplicates(inOutChoiceNodes);
 		return result;
 	}
 
-	private static void addChoicesOfParameter(List<ChoiceNode> choicesFromPrecondition,
-			MethodParameterNode methodParameterNode, List<ChoiceNode> inOutChoiceNodes) {
-		
+	public static List<String> getLabelsUsedInConstraints(Constraint constraint,
+			MethodParameterNode methodParameterNode) {
+
+		List<String> result = new ArrayList<>();
+
+		AbstractStatement precondition = constraint.getPrecondition();
+		List<String> labelsFromPrecondition = precondition.getLabels(methodParameterNode);
+		result.addAll(labelsFromPrecondition);
+
+		AbstractStatement postcondition = constraint.getPostcondition();
+		List<String> labelsFromPostcondition = postcondition.getLabels(methodParameterNode);
+		result.addAll(labelsFromPostcondition);
+
+		result = StringHelper.removeDuplicates(result);
+
+		return result;
+	}
+
+	private static List<ChoiceNode> filterChoicesByParameter(
+			List<ChoiceNode> choicesFromPrecondition,
+			MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> result = new ArrayList<>();
+
 		AbstractParameterNode abstractParameterNodeForComparison = 
 				getParameterNodeForComparison(methodParameterNode);
-		
+
 		for (ChoiceNode choiceNode : choicesFromPrecondition) {
 
 			AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
 
 			if (abstractParameterNodeForComparison.equals(abstractParameterNode)) {
-				inOutChoiceNodes.add(choiceNode);
+				result.add(choiceNode);
 			}
 		}
+
+		return result;
 	}
 
 	private static AbstractParameterNode getParameterNodeForComparison(MethodParameterNode methodParameterNode) {
-		
+
 		if (methodParameterNode.isLinked()) {
 			return methodParameterNode.getLink();
 		} else {
 			return methodParameterNode;
 		}
-	}
-
-	private static List<ChoiceNode> removeDuplicates(List<ChoiceNode> choiceNodes) {
-
-		HashSet<ChoiceNode>set = new HashSet<ChoiceNode>(choiceNodes);
-		List<ChoiceNode> choiceNodes2 = new ArrayList<ChoiceNode>(set);
-
-		return choiceNodes2;
 	}
 
 }

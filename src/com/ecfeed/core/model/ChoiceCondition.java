@@ -301,12 +301,17 @@ public class ChoiceCondition implements IStatementCondition {
 
 	@Override
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
-		
+
 		if (fRightChoice.getParameter().equals(abstractParameterNode)) {
 			return true;
 		}
-		
+
 		return false;
+	}
+
+	@Override
+	public String getLabel(MethodParameterNode methodParameterNode) {
+		return null;
 	}
 
 }
