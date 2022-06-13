@@ -21,6 +21,7 @@ import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_POSITIVE_
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -44,7 +45,7 @@ public class ChoiceNodeHelper {
 			ChoiceNode clonedChoiceNode = childChoice.makeClone();
 			dstChoiceNode.addChoice(clonedChoiceNode);
 		}
-		
+
 		for (ChoiceNode choiceNodeToRemove : childChoicesToRemove) {
 			srcChoiceNode.removeChoice(choiceNodeToRemove);
 		}
@@ -611,5 +612,12 @@ public class ChoiceNodeHelper {
 		topChoiceNode.setDetached(isDetached);
 	}
 
+	public static List<ChoiceNode> removeDuplicates(List<ChoiceNode> choiceNodes) {
+
+		HashSet<ChoiceNode>set = new HashSet<>(choiceNodes);
+		List<ChoiceNode> result = new ArrayList<>(set);
+
+		return result;
+	}
 
 }

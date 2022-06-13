@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.StringHelper;
 
 public class StatementArray extends AbstractStatement {
 
@@ -250,13 +251,13 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 
 		for (AbstractStatement abstractStatement : fStatements) {
 
-			List<ChoiceNode> listOfChoices = abstractStatement.getListOfChoices();
+			List<ChoiceNode> listOfChoices = abstractStatement.getChoices();
 
 			if (listOfChoices != null) {
 				result.addAll(listOfChoices);
@@ -265,6 +266,26 @@ public class StatementArray extends AbstractStatement {
 
 		return null;
 	}
+
+	@Override
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+
+		List<String> result = new ArrayList<>();
+
+		for (AbstractStatement abstractStatement : fStatements) {
+
+			List<String> labels = abstractStatement.getLabels(methodParameterNode);
+
+			if (labels != null) {
+				result.addAll(labels);
+			}
+		}
+
+		result = StringHelper.removeDuplicates(result);
+
+		return result;
+	}
+
 
 	@Override
 	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {

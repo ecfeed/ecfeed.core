@@ -10,8 +10,10 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Formatter;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -462,7 +464,7 @@ public class StringHelper {
 		return result;
 	}
 
-	public static boolean containsOnly(char character, String str) { // TODO SIMPLE-VIEW test
+	public static boolean containsOnly(char character, String str) {
 
 		for (int i = 0; i < str.length(); i++){
 			char charInStr = str.charAt(i);
@@ -518,22 +520,30 @@ public class StringHelper {
 	}
 
 	public static String convertListToStringWithSeparators(List<String> listOfStrings, String separator) {
-		
+
 		int listSize = listOfStrings.size();
 		int lastIndex = listSize - 1;
-		
+
 		String convertedString = "";
-		
+
 		for (int index = 0; index < listSize; index++) {
-			
+
 			convertedString += listOfStrings.get(index);
-			
+
 			if (index < lastIndex) {
 				convertedString += separator;
 			}
 		}
-		
+
 		return convertedString;
+	}
+
+	public static List<String> removeDuplicates(List<String> strings) {
+
+		HashSet<String> set = new HashSet<String>(strings);
+		List<String> result = new ArrayList<>(set);
+
+		return result;
 	}
 
 }

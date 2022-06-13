@@ -87,13 +87,40 @@ public class MethodNodeHelper {
 
 		for (ConstraintNode constraintNode : constraintNodes) {
 
-			resultChoiceNodes = 
-					ConstraintNodeHelper.addChoicesUsedInConstraints(
-							constraintNode, methodParameterNode, resultChoiceNodes);
+			List<ChoiceNode> choiceNodesForConstraint = 
+					ConstraintNodeHelper.getChoicesUsedInConstraint(
+							constraintNode, methodParameterNode);
+
+			resultChoiceNodes.addAll(choiceNodesForConstraint);
 		}
+
+		resultChoiceNodes = ChoiceNodeHelper.removeDuplicates(resultChoiceNodes);
 
 		return resultChoiceNodes;
 	}
+
+	public static List<String> getLabelsUsedInConstraints(MethodParameterNode methodParameterNode) {
+
+		List<String> resultLabels = new ArrayList<>();
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			List<String> labelsOfConstraint = 
+					ConstraintNodeHelper.getLabelsUsedInConstraint(
+							constraintNode, methodParameterNode);
+
+			resultLabels.addAll(labelsOfConstraint);
+
+			resultLabels = StringHelper.removeDuplicates(resultLabels);
+		}
+
+		return resultLabels;
+	}
+
 
 	public static void updateParameterReferencesInConstraints(
 			MethodParameterNode oldMethodParameterNode,

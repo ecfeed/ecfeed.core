@@ -147,5 +147,15 @@ public class LabelCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
+	public String getLabel(MethodParameterNode methodParameterNode) {
+
+		if (fParentRelationStatement.getLeftParameter() == methodParameterNode) {
+			return fRightLabel;
+		}
+
+		return null;
+	}
+
 }
 

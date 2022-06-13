@@ -97,7 +97,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}	
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 		result.add(fChoiceNode);
@@ -215,6 +215,11 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
 		return false;
+	}
+
+	@Override
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+		return null;
 	}
 
 }

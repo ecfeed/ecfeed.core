@@ -51,17 +51,28 @@ public class ConstraintNodeHelper {
 				oldMethodParameterNode, dstParameterForChoices, 
 				reverseOperations, extLanguageManager);
 	}
-	
-	public static List<ChoiceNode> addChoicesUsedInConstraints(
+
+	public static List<ChoiceNode> getChoicesUsedInConstraint(
 			ConstraintNode constraintNode,
-			MethodParameterNode methodParameterNode,
-			List<ChoiceNode> inOutChoiceNodes) {
-		
-		List<ChoiceNode> result = ConstraintHelper.getChoicesUsedInConstraints(
-				constraintNode.getConstraint(),
-				methodParameterNode,
-				inOutChoiceNodes);
-		
+			MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> result = 
+				ConstraintHelper.getChoicesUsedInConstraints(
+						constraintNode.getConstraint(),
+						methodParameterNode);
+
+		return result;
+	}
+
+	public static List<String> getLabelsUsedInConstraint(
+			ConstraintNode constraintNode,
+			MethodParameterNode methodParameterNode) {
+
+		List<String> result = 
+				ConstraintHelper.getLabelsUsedInConstraints(
+						constraintNode.getConstraint(),
+						methodParameterNode);
+
 		return result;
 	}
 
@@ -116,6 +127,5 @@ public class ConstraintNodeHelper {
 
 		return constraints;
 	}
-
 
 }

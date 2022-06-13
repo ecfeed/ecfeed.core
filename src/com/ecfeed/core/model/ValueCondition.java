@@ -197,5 +197,10 @@ public class ValueCondition implements IStatementCondition {
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
 		return false;
 	}
+
+	@Override
+	public String getLabel(MethodParameterNode methodParameterNode) {
+		return null;
+	}
 }	
 

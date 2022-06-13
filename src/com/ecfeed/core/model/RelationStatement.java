@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.EMathRelation;
@@ -334,7 +335,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 		return fRightCondition.getListOfChoices();
 	}
 
@@ -407,6 +408,17 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
 		return fRightCondition.mentionsChoiceOfParameter(parameter);
+	}
+
+	@Override
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+		
+		String label = fRightCondition.getLabel(methodParameterNode);
+		
+		List<String> result = new ArrayList<>();
+		result.add(label);
+		
+		return result;
 	}
 
 }
