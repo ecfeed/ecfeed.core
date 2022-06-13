@@ -26,7 +26,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ParameterConverterTest {
+public class ParameterTransformerTest {
 
 	@Test
 	public void linkMethodParameterToClassParameterBasicUseCase() {
@@ -94,7 +94,7 @@ public class ParameterConverterTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterConverter.linkMethodParameteToGlobalParameter(
+		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				choiceConversionList, 
@@ -223,7 +223,7 @@ public class ParameterConverterTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterConverter.linkMethodParameteToGlobalParameter(
+		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfRoot, 
 				choiceConversionList, 
@@ -362,7 +362,7 @@ public class ParameterConverterTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterConverter.linkMethodParameteToGlobalParameter(
+		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
 				choiceConversionList, 
@@ -480,7 +480,7 @@ public class ParameterConverterTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterConverter.linkMethodParameteToGlobalParameter(
+		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				choiceConversionList, 
@@ -550,7 +550,7 @@ public class ParameterConverterTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterConverter.linkMethodParameteToGlobalParameter(
+		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				choiceConversionList, 
@@ -683,7 +683,7 @@ public class ParameterConverterTest {
 	//		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 	//		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 	//
-	//		ParameterConverter.linkMethodParameteToGlobalParameter(
+	//		ParameterTransformer.linkMethodParameteToGlobalParameter(
 	//				methodParameterNode1, 
 	//				globalParameterNodeOfClass1, 
 	//				choiceConversionList, 
@@ -776,7 +776,7 @@ public class ParameterConverterTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterConverter.linkMethodParameteToGlobalParameter(
+		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
 				choiceConversionList, 
@@ -845,7 +845,7 @@ public class ParameterConverterTest {
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		ParameterConverter.unlinkMethodParameteFromGlobalParameter(
+		ParameterTransformer.unlinkMethodParameteFromGlobalParameter(
 				methodParameterNode, globalParameterNodeOfRoot1, reverseOperations, extLanguageManager);
 
 		// check if linked
@@ -951,7 +951,7 @@ public class ParameterConverterTest {
 	//		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 	//		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 	//
-	//		ParameterConverter.linkMethodParameteToGlobalParameter(
+	//		ParameterTransformer.linkMethodParameteToGlobalParameter(
 	//				methodParameterNode, globalParameterNode, 
 	//				choiceConversionList, reverseOperations, extLanguageManager);
 	//
