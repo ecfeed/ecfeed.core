@@ -62,6 +62,20 @@ public class UsageOfChoicesInConstraints {
 		return null;
 	}
 
+	public boolean choiceNameExists(String choiceName) {
+
+		for (ChoiceNode choiceNode : fMapOfUsages.keySet()) {
+		    
+			String currentChoiceName = choiceNode.getQualifiedName();
+
+			if (StringHelper.isEqual(currentChoiceName, choiceName)) {
+				return true;
+			}
+		}
+        	
+		return false;
+	}
+
 	private void updateMapOfUsages(Constraint constraint, List<ChoiceNode> choiceNodesUsedInConstraint) {
 
 		for (ChoiceNode choiceNode : choiceNodesUsedInConstraint) {
@@ -98,5 +112,6 @@ public class UsageOfChoicesInConstraints {
 
 		constraintNames.add(constraintName);
 	}
+
 
 }
