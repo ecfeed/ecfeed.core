@@ -105,11 +105,17 @@ public class ConstraintHelper {
 
 		AbstractStatement precondition = constraint.getPrecondition();
 		List<String> labelsFromPrecondition = precondition.getLabels(methodParameterNode);
-		result.addAll(labelsFromPrecondition);
+		
+		if (labelsFromPrecondition != null) {
+			result.addAll(labelsFromPrecondition);
+		}
 
 		AbstractStatement postcondition = constraint.getPostcondition();
 		List<String> labelsFromPostcondition = postcondition.getLabels(methodParameterNode);
-		result.addAll(labelsFromPostcondition);
+		
+		if (labelsFromPostcondition != null) {
+			result.addAll(labelsFromPostcondition);
+		}
 
 		result = StringHelper.removeDuplicates(result);
 
