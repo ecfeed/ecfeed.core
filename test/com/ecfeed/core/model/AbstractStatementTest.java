@@ -63,10 +63,6 @@ public class AbstractStatementTest {
 		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 			return false;
 		}
-		@Override
-		public List<ChoiceNode> getListOfChoices() {
-			return null;
-		}
 
 		@Override
 		public void derandomize() {
@@ -96,6 +92,16 @@ public class AbstractStatementTest {
 		@Override
 		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
 			return false;
+		}
+
+		@Override
+		public List<ChoiceNode> getChoices() {
+			return null;
+		}
+
+		@Override
+		public List<String> getLabels(MethodParameterNode methodParameterNode) {
+			return null;
 		}
 	}
 
