@@ -84,14 +84,18 @@ public class ConstraintHelper {
 		AbstractStatement precondition = constraint.getPrecondition();
 		List<ChoiceNode> choicesFromPrecondition = precondition.getChoices();
 
-		List<ChoiceNode> choicesOfParameter = filterChoicesByParameter(choicesFromPrecondition, methodParameterNode);
-		result.addAll(choicesOfParameter);
+		if (choicesFromPrecondition != null) {
+			List<ChoiceNode> choicesOfParameter = filterChoicesByParameter(choicesFromPrecondition, methodParameterNode);
+			result.addAll(choicesOfParameter);
+		}
 
 		AbstractStatement postcondition = constraint.getPostcondition();
 		List<ChoiceNode> choicesFromPostcondition = postcondition.getChoices();
 
-		choicesOfParameter = filterChoicesByParameter(choicesFromPostcondition, methodParameterNode);
-		result.addAll(choicesOfParameter);
+		if (choicesFromPostcondition != null) {
+			List<ChoiceNode> choicesOfParameter = filterChoicesByParameter(choicesFromPostcondition, methodParameterNode);
+			result.addAll(choicesOfParameter);
+		}
 
 		result = ChoiceNodeHelper.removeDuplicates(result);
 
@@ -105,15 +109,15 @@ public class ConstraintHelper {
 
 		AbstractStatement precondition = constraint.getPrecondition();
 		List<String> labelsFromPrecondition = precondition.getLabels(methodParameterNode);
-		
-		if (labelsFromPrecondition != null) {
+
+		if (labelsFromPrecondition != null && labelsFromPrecondition.size() > 0) {
 			result.addAll(labelsFromPrecondition);
 		}
 
 		AbstractStatement postcondition = constraint.getPostcondition();
 		List<String> labelsFromPostcondition = postcondition.getLabels(methodParameterNode);
-		
-		if (labelsFromPostcondition != null) {
+
+		if (labelsFromPostcondition != null && labelsFromPostcondition.size() > 0) {
 			result.addAll(labelsFromPostcondition);
 		}
 

@@ -413,10 +413,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
 		
+		List<String> result = new ArrayList<>();
+		
 		String label = fRightCondition.getLabel(methodParameterNode);
 		
-		List<String> result = new ArrayList<>();
-		result.add(label);
+		if (label != null) {
+			result.add(label);
+		}
 		
 		return result;
 	}

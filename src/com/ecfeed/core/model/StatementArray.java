@@ -264,7 +264,7 @@ public class StatementArray extends AbstractStatement {
 			}
 		}
 
-		return null;
+		return result;
 	}
 
 	@Override
@@ -276,7 +276,7 @@ public class StatementArray extends AbstractStatement {
 
 			List<String> labels = abstractStatement.getLabels(methodParameterNode);
 
-			if (labels != null) {
+			if (labels != null && labels.size() > 0) {
 				result.addAll(labels);
 			}
 		}
