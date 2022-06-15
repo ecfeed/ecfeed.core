@@ -596,6 +596,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return new HashSet<AbstractParameterNode>();
 		}
 	}
+	
+	public List<String> getStatementValuesForParameter() {
+		// TODO Auto-generated method stub // XYX
+		return null;
+	}
 
 	@SuppressWarnings("unchecked")
 	public Set<String> getReferencedLabels(MethodParameterNode parameter) {

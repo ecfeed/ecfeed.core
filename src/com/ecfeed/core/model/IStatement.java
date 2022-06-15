@@ -26,5 +26,6 @@ public interface IStatement{
 	public boolean isAmbiguous(List<List<ChoiceNode>> values);
 	public List<ChoiceNode> getChoices();
 	public List<String> getLabels(MethodParameterNode methodParameterNode);
+//	public List<String> getValues(MethodParameterNode methodParameterNode);
 	public void derandomize();
 }
