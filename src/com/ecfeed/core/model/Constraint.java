@@ -598,7 +598,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 	
 	public List<String> getStatementValuesForParameter() {
-		// TODO Auto-generated method stub // XYX
+		// TODO Auto-generated method stub
 		return null;
 	}
 
