@@ -49,9 +49,9 @@ public class ParameterTransformer {
 					extLanguageManager);
 		}
 
-		MethodNode methodNode = srcMethodParameterNode.getMethod();
+		deleteRemainingChoices(srcMethodParameterNode, outReverseOperations, extLanguageManager);
 
-		// moveRemainingTopChoices(srcMethodParameterNode, dstGlobalParameterNode, reverseOperations, extLanguageManager);
+		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
 		MethodNodeHelper.updateParameterReferencesInConstraints(
 				srcMethodParameterNode, 
@@ -66,6 +66,43 @@ public class ParameterTransformer {
 		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
 
 		return methodNode;
+	}
+
+	private static void deleteRemainingChoices(
+			ChoicesParentNode srcMethodParameterNode,
+			ListOfModelOperations outReverseOperations, 
+			IExtLanguageManager extLanguageManager) {
+
+		List<ChoiceNode> choices = new ArrayList<>(srcMethodParameterNode.getChoices());
+
+		for (ChoiceNode choiceNode : choices) {
+			deleteRemainingChoicesRecursive(choiceNode, outReverseOperations, extLanguageManager);
+		}
+	}
+
+	private static void deleteRemainingChoicesRecursive(
+			ChoiceNode topChoiceNode,
+			ListOfModelOperations outReverseOperations, 
+			IExtLanguageManager extLanguageManager) {
+
+		List<ChoiceNode> choices = new ArrayList<>(topChoiceNode.getChoices());
+
+		if (choices.size() == 0) {
+
+			ChoicesParentNode choicesParentNode = topChoiceNode.getParent();
+
+			OperationSimpleAddChoice operationSimpleAddChoice = 
+					new OperationSimpleAddChoice(topChoiceNode, choicesParentNode, extLanguageManager);
+
+			outReverseOperations.add(operationSimpleAddChoice);
+
+			choicesParentNode.removeChoice(topChoiceNode);
+			return;
+		}
+
+		for (ChoiceNode choiceNode : choices) {
+			deleteRemainingChoicesRecursive(choiceNode, outReverseOperations, extLanguageManager);
+		}
 	}
 
 	public static void unlinkMethodParameteFromGlobalParameter(
