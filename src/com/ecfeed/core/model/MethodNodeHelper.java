@@ -735,4 +735,26 @@ public class MethodNodeHelper {
 		return false;
 	}
 
+	public static List<String> getStatementValuesForParameter(
+			MethodNode methodNode,
+			MethodParameterNode methodParameterNode) {
+		
+		List<Constraint> constraints = methodNode.getAllConstraints();
+		
+		List<String> values = new ArrayList<>();
+		
+		for (Constraint constraint : constraints) {
+			
+			List<String> valuesOfConstraint = constraint.getStatementValuesForParameter(); 
+			
+			if (valuesOfConstraint != null && !valuesOfConstraint.isEmpty()) {
+				values.addAll(valuesOfConstraint);
+			}
+		}
+		
+		values = StringHelper.removeDuplicates(values);
+		
+		return values;
+	}
+
 }
