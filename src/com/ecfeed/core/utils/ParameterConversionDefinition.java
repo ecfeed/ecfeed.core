@@ -48,7 +48,7 @@ public class ParameterConversionDefinition {
 
 				int leftItemTypeLevel = leftItem.getItemTypeLevel();
 				int rightItemTypeLevel = rightItem.getItemTypeLevel();
-				
+
 				if (rightItemTypeLevel > leftItemTypeLevel) {
 					return 1;
 				}
@@ -56,7 +56,7 @@ public class ParameterConversionDefinition {
 				if (rightItemTypeLevel < leftItemTypeLevel) {
 					return -1;
 				}
-				
+
 				int leftItemLevel = leftItem.getItemLevel();
 				int rightItemLevel = rightItem.getItemLevel();
 
@@ -69,7 +69,7 @@ public class ParameterConversionDefinition {
 					return -1;
 				}
 
-				return 0;
+				return rightItem.getSrcName().compareTo(leftItem.getSrcName());
 			}
 		};
 
