@@ -10,9 +10,9 @@
 
 package com.ecfeed.core.utils;
 
-public class ParameterConversionItemForChoice extends ParameterConversionItem {
+public class ParameterConversionItemForLabel extends ParameterConversionItem {
 
-	public ParameterConversionItemForChoice(
+	public ParameterConversionItemForLabel(
 			String srcItemName, 
 			String dstItemName,
 			String constraintsContainingSrcItem) {
