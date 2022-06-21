@@ -443,7 +443,7 @@ public class ParameterTransformerTest {
 		GlobalParameterNode globalParameterNodeOfClass1 = 
 				ClassNodeHelper.addGlobalParameterToClass(classNode, "CP1", parameterType, null);
 
-		ChoiceNode globalChoiceNodeOfMethod11 = 
+		ChoiceNode globalChoiceNode11 = 
 				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
 						globalParameterNodeOfClass1, "CC11", choiceValueString, null);
 
@@ -459,9 +459,18 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod11 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
 
-		//		ChoiceNode choiceNodeOfMethod12 = 
-		MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC12", choiceValueString);
+		ChoiceNode choiceNodeOfMethod12 = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC12", choiceValueString);
+		
+		ChoiceNode choiceNodeOfMethod121 =	
+				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod12, "MC121", choiceValueString);
 
+		ChoiceNode choiceNodeOfMethod122 =		
+				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod12, "MC122", choiceValueString);
+
+		ChoiceNode choiceNodeOfMethod1221 =
+				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod122, "MC1221", choiceValueString);
+		
 		addNewSimpleConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 
@@ -472,7 +481,7 @@ public class ParameterTransformerTest {
 		choiceConversionList.addItem(
 				choiceNodeOfMethod11.getName(), 
 				ChoiceConversionOperation.MERGE, 
-				globalChoiceNodeOfMethod11.getName(),
+				globalChoiceNode11.getName(),
 				null);
 
 		// linking
@@ -491,7 +500,40 @@ public class ParameterTransformerTest {
 		assertEquals(1, globalParamChoiceCount);
 
 		ChoiceNode resultChoiceNode = globalParameterNodeOfClass1.getChoices().get(0);
-		assertEquals(globalChoiceNodeOfMethod11.getName(), resultChoiceNode.getName());
+		assertEquals(globalChoiceNode11.getName(), resultChoiceNode.getName());
+
+		methodParameterNode1.setLinked(false); // temporary change to check if all choices were deleted
+		List<ChoiceNode> methodParameterChoices = methodParameterNode1.getChoices();
+		assertEquals(0, methodParameterChoices.size());
+		methodParameterNode1.setLinked(true); 
+		
+		// reverting
+		reverseOperations.executeFromTail();
+		
+		// checking choices for method parameter
+		
+		List<ChoiceNode> tmpChoices = methodParameterNode1.getChoices();
+		assertEquals(2, methodParameterNode1.getChoiceCount());
+		
+		ChoiceNode tmpChoice11 = tmpChoices.get(0);
+		assertEquals(choiceNodeOfMethod11, tmpChoice11);
+		
+		ChoiceNode tmpChoice12 = tmpChoices.get(1);
+		assertEquals(choiceNodeOfMethod12, tmpChoice12);
+		
+		List<ChoiceNode> tmpChoices12 = tmpChoice12.getChoices();
+		assertEquals(2, tmpChoices12.size());
+		
+		ChoiceNode tmpChoice121 = tmpChoices12.get(0);
+		assertEquals(choiceNodeOfMethod121, tmpChoice121);
+		
+		ChoiceNode tmpChoice122 = tmpChoices12.get(1);
+		assertEquals(choiceNodeOfMethod122, tmpChoice122);
+		
+		List<ChoiceNode> tmpChoices122 = tmpChoice122.getChoices();
+		
+		ChoiceNode tmpChoice1221 = tmpChoices122.get(0);
+		assertEquals(choiceNodeOfMethod1221, tmpChoice1221);
 	}
 
 	@Test

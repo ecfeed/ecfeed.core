@@ -76,33 +76,40 @@ public class ParameterTransformer {
 		List<ChoiceNode> choices = new ArrayList<>(srcMethodParameterNode.getChoices());
 
 		for (ChoiceNode choiceNode : choices) {
-			deleteRemainingChoicesRecursive(choiceNode, outReverseOperations, extLanguageManager);
+			deleteChoiceWithChildrenRecursive(choiceNode, outReverseOperations, extLanguageManager);
 		}
 	}
 
-	private static void deleteRemainingChoicesRecursive(
-			ChoiceNode topChoiceNode,
+	private static void deleteChoiceWithChildrenRecursive(
+			ChoiceNode mainChoiceNode,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		List<ChoiceNode> choices = new ArrayList<>(topChoiceNode.getChoices());
-
-		if (choices.size() == 0) {
-
-			ChoicesParentNode choicesParentNode = topChoiceNode.getParent();
-
-			OperationSimpleAddChoice operationSimpleAddChoice = 
-					new OperationSimpleAddChoice(topChoiceNode, choicesParentNode, extLanguageManager);
-
-			outReverseOperations.add(operationSimpleAddChoice);
-
-			choicesParentNode.removeChoice(topChoiceNode);
-			return;
-		}
+		List<ChoiceNode> choices = new ArrayList<>(mainChoiceNode.getChoices());
 
 		for (ChoiceNode choiceNode : choices) {
-			deleteRemainingChoicesRecursive(choiceNode, outReverseOperations, extLanguageManager);
+			deleteChoiceWithChildrenRecursive(choiceNode, outReverseOperations, extLanguageManager);
 		}
+
+		deleteChoice(mainChoiceNode, outReverseOperations, extLanguageManager);
+		return;
+		
+	}
+
+	private static void deleteChoice(
+			ChoiceNode choiceNode, 
+			ListOfModelOperations outReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+		
+		ChoicesParentNode choicesParentNode = choiceNode.getParent();
+		int indexOfTopChoice = choiceNode.getMyIndex();
+
+		OperationSimpleAddChoice operationSimpleAddChoice = 
+				new OperationSimpleAddChoice(choiceNode, indexOfTopChoice, choicesParentNode, extLanguageManager);
+
+		outReverseOperations.add(operationSimpleAddChoice);
+
+		choicesParentNode.removeChoice(choiceNode);
 	}
 
 	public static void unlinkMethodParameteFromGlobalParameter(
@@ -340,14 +347,7 @@ public class ParameterTransformer {
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		ChoicesParentNode choicesParentNode = srcChoiceNode.getParent();
-
-		choicesParentNode.removeChoice(srcChoiceNode);
-
-		OperationSimpleAddChoice reverseOperation = 
-				new OperationSimpleAddChoice(srcChoiceNode,choicesParentNode, extLanguageManager);
-
-		inOutReverseOperations.add(reverseOperation);
+		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
 	}
 
 	private static void updateChoiceReferencesInConstraints(

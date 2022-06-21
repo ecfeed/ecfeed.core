@@ -19,7 +19,7 @@ public abstract class AbstractOneWayModelOperation extends AbstractModelOperatio
 	}
 
 	@Override
-	public IModelOperation getReverseOperation() {
+	public final IModelOperation getReverseOperation() {
 		return null;
 	}
 
