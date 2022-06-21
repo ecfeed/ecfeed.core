@@ -14,14 +14,14 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
-import com.ecfeed.core.utils.ChoiceConversionList;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation {
 
 	MethodParameterNode fSrcMethodParameterNode;
 	GlobalParameterNode fDstParameterForChoices;
-	ChoiceConversionList fChoiceConversionList;
+	ParameterConversionDefinition fChoiceConversionList;
 
 	ListOfModelOperations fReverseOperations;
 
@@ -30,7 +30,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 	public MethodOperationLinkToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstParameterForChoices, 
-			ChoiceConversionList choiceConversionList,
+			ParameterConversionDefinition choiceConversionList,
 			IExtLanguageManager extLanguageManager) {
 
 		super("Link to global parameter", extLanguageManager);

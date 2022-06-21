@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.utils.ChoiceConversionList;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ChoiceConversionOperation;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -81,7 +81,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
 		choiceConversionList.addItem(
 				methodChoiceName1, 
@@ -210,7 +210,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
 		choiceConversionList.addItem(
 				methodChoiceName1, 
@@ -343,7 +343,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list - to method choices to one global choice
 
-		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
 		choiceConversionList.addItem(
 				methodChoiceName1, 
@@ -476,7 +476,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
 		choiceConversionList.addItem(
 				choiceNodeOfMethod11.getName(), 
@@ -579,7 +579,7 @@ public class ParameterTransformerTest {
 		addNewSimpleConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
-		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
 		choiceConversionList.addItem(
 				choiceNodeOfMethod11.getQualifiedName(), 
@@ -805,7 +805,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ChoiceConversionList choiceConversionList = new ChoiceConversionList();
+		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
 		choiceConversionList.addItem(
 				choiceNodeOfMethod11.getName(), 

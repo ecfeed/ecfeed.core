@@ -15,12 +15,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ChoiceConversionList {
+public class ParameterConversionDefinition {
 
-	private List<ChoiceConversionItem> fChoiceConversionItems;
+	private List<ParameterConversionItem> fParameterConversionItems;
 
-	public ChoiceConversionList() {
-		fChoiceConversionItems = new ArrayList<>();
+	public ParameterConversionDefinition() {
+		fParameterConversionItems = new ArrayList<>();
 	}
 
 	public void addItem(
@@ -29,24 +29,24 @@ public class ChoiceConversionList {
 			String dstChoiceQualifiedName,
 			String constraintsContainingSrcChoice) {
 
-		ChoiceConversionItem choiceConversionItem1 = 
-				new ChoiceConversionItem(
+		ParameterConversionItem choiceConversionItem1 = 
+				new ParameterConversionItem(
 						sourceChoiceQualifiedName,
 						choiceConversionOperation,
 						dstChoiceQualifiedName,
 						constraintsContainingSrcChoice);
 
-		fChoiceConversionItems.add(choiceConversionItem1);
+		fParameterConversionItems.add(choiceConversionItem1);
 	}
 
-	public List<ChoiceConversionItem> createSortedCopyOfConversionItems() {
+	public List<ParameterConversionItem> createSortedCopyOfConversionItems() {
 
-		List<ChoiceConversionItem> sortedChoiceConversionItems = new ArrayList<>(fChoiceConversionItems);
+		List<ParameterConversionItem> sortedChoiceConversionItems = new ArrayList<>(fParameterConversionItems);
 
-		Comparator<ChoiceConversionItem> comparator = new Comparator<ChoiceConversionItem>() {
+		Comparator<ParameterConversionItem> comparator = new Comparator<ParameterConversionItem>() {
 
 			@Override
-			public int compare(ChoiceConversionItem leftItem, ChoiceConversionItem rightItem) {
+			public int compare(ParameterConversionItem leftItem, ParameterConversionItem rightItem) {
 
 				int leftItemLevel = getChoiceLevel(leftItem.getSrcName());
 				int rightItemLevel = getChoiceLevel(rightItem.getSrcName());
@@ -73,11 +73,11 @@ public class ChoiceConversionList {
 
 		List<String> choiceNames = new ArrayList<String>();
 
-		int size = fChoiceConversionItems.size();
+		int size = fParameterConversionItems.size();
 
 		for (int index = 0; index < size; index++) {
 
-			ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+			ParameterConversionItem choiceConversionItem = fParameterConversionItems.get(index);
 
 			String choiceName = choiceConversionItem.getSrcName();
 
@@ -91,11 +91,11 @@ public class ChoiceConversionList {
 
 		List<String> choiceNames = new ArrayList<String>();
 
-		int size = fChoiceConversionItems.size();
+		int size = fParameterConversionItems.size();
 
 		for (int index = 0; index < size; index++) {
 
-			ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+			ParameterConversionItem choiceConversionItem = fParameterConversionItems.get(index);
 
 			String choiceName = choiceConversionItem.getDstName();
 
@@ -110,18 +110,18 @@ public class ChoiceConversionList {
 		return StringHelper.countOccurencesOfChar(choiceName, ':');
 	}
 
-	public void removeItem(ChoiceConversionItem choiceConversionItemToFind) {
+	public void removeItem(ParameterConversionItem choiceConversionItemToFind) {
 
 		int index = findConversionItem(choiceConversionItemToFind);
 
-		fChoiceConversionItems.remove(index);
+		fParameterConversionItems.remove(index);
 	}
 
-	public int findConversionItem(ChoiceConversionItem choiceConversionItemToFind) {
+	public int findConversionItem(ParameterConversionItem choiceConversionItemToFind) {
 
 		int index = 0;
 
-		for (ChoiceConversionItem choiceConversionItem : fChoiceConversionItems) {
+		for (ParameterConversionItem choiceConversionItem : fParameterConversionItems) {
 
 			if (choiceConversionItem.isMatch(choiceConversionItemToFind)) {
 				return index;
@@ -135,27 +135,27 @@ public class ChoiceConversionList {
 
 	public int getSize() {
 
-		return fChoiceConversionItems.size();
+		return fParameterConversionItems.size();
 	}
 
-	public ChoiceConversionItem getItem(int index) {
+	public ParameterConversionItem getItem(int index) {
 
-		return fChoiceConversionItems.get(index);
+		return fParameterConversionItems.get(index);
 	}
 
 	public void clear() {
-		fChoiceConversionItems.clear();
+		fParameterConversionItems.clear();
 	}
 	
 	public void setSrcName(String srcName, int index) {
 		
-		ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+		ParameterConversionItem choiceConversionItem = fParameterConversionItems.get(index);
 		choiceConversionItem.setSrcName(srcName);
 	}
 	
 	public void setDstName(String dstName, int index) {
 		
-		ChoiceConversionItem choiceConversionItem = fChoiceConversionItems.get(index);
+		ParameterConversionItem choiceConversionItem = fParameterConversionItems.get(index);
 		choiceConversionItem.setDstName(dstName);
 	}
 	

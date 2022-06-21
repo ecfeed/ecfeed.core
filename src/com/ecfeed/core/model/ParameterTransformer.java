@@ -17,8 +17,8 @@ import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
-import com.ecfeed.core.utils.ChoiceConversionItem;
-import com.ecfeed.core.utils.ChoiceConversionList;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ChoiceConversionOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -28,7 +28,7 @@ public class ParameterTransformer {
 	public static MethodNode linkMethodParameteToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstGlobalParameterNode, 
-			ChoiceConversionList choiceConversionList,
+			ParameterConversionDefinition choiceConversionList,
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -122,7 +122,7 @@ public class ParameterTransformer {
 
 		MethodNode methodNode = methodParameterNode.getMethod();
 
-		List<ChoiceConversionItem> choiceConversionList = createChoiceConversionList(globalParameterNode);
+		List<ParameterConversionItem> choiceConversionList = createChoiceConversionList(globalParameterNode);
 
 		removeLinkOnMethodParameter(methodParameterNode, outReverseOperations, extLanguageManager);
 
@@ -146,11 +146,11 @@ public class ParameterTransformer {
 			MethodNode methodNode, 
 			AbstractParameterNode srcParameterNode,
 			AbstractParameterNode dstParameterNode, 
-			List<ChoiceConversionItem> choiceConversionList,
+			List<ParameterConversionItem> choiceConversionList,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		for (ChoiceConversionItem choiceConversionItem : choiceConversionList) {
+		for (ParameterConversionItem choiceConversionItem : choiceConversionList) {
 
 			String srcName = choiceConversionItem.getSrcName();
 			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(srcName);
@@ -173,23 +173,23 @@ public class ParameterTransformer {
 		}
 	}
 
-	private static List<ChoiceConversionItem> createChoiceConversionList(GlobalParameterNode globalParameterNode) {
+	private static List<ParameterConversionItem> createChoiceConversionList(GlobalParameterNode globalParameterNode) {
 
 		ChoiceConversionListCreator choiceConversionListCreator = new ChoiceConversionListCreator();
 
 		ChoicesParentNodeHelper.traverseSubTreesOfChoices(globalParameterNode, choiceConversionListCreator);
 
-		List<ChoiceConversionItem> choiceConversionList = choiceConversionListCreator.getChoiceConversionList();
+		List<ParameterConversionItem> choiceConversionList = choiceConversionListCreator.getChoiceConversionList();
 		return choiceConversionList;
 	}
 
 	private static class ChoiceConversionListCreator implements IObjectWorker {
 
-		ChoiceConversionList fChoiceConversionList;
+		ParameterConversionDefinition fChoiceConversionList;
 
 		public ChoiceConversionListCreator() {
 
-			fChoiceConversionList = new ChoiceConversionList();
+			fChoiceConversionList = new ParameterConversionDefinition();
 		}
 
 		@Override
@@ -200,9 +200,9 @@ public class ParameterTransformer {
 			fChoiceConversionList.addItem(choiceName, ChoiceConversionOperation.MERGE, choiceName, null);
 		}
 
-		public List<ChoiceConversionItem> getChoiceConversionList() {
+		public List<ParameterConversionItem> getChoiceConversionList() {
 
-			List<ChoiceConversionItem> createSortedCopyOfConversionItems = 
+			List<ParameterConversionItem> createSortedCopyOfConversionItems = 
 					fChoiceConversionList.createSortedCopyOfConversionItems();
 
 			return createSortedCopyOfConversionItems;
@@ -269,16 +269,16 @@ public class ParameterTransformer {
 	}
 
 	public static void moveChoicesByConversionList(
-			ChoiceConversionList choiceConversionItems,
+			ParameterConversionDefinition choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		List<ChoiceConversionItem> sortedChoiceConversionItems = 
+		List<ParameterConversionItem> sortedChoiceConversionItems = 
 				choiceConversionItems.createSortedCopyOfConversionItems();
 
-		for (ChoiceConversionItem choiceConversionItem : sortedChoiceConversionItems) {
+		for (ParameterConversionItem choiceConversionItem : sortedChoiceConversionItems) {
 
 			moveChoicesByConversionItem(
 					choiceConversionItem, 
@@ -310,7 +310,7 @@ public class ParameterTransformer {
 	}
 
 	private static void moveChoicesByConversionItem(
-			ChoiceConversionItem choiceConversionItem, 
+			ParameterConversionItem choiceConversionItem, 
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations, 

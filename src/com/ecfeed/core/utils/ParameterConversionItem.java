@@ -10,14 +10,14 @@
 
 package com.ecfeed.core.utils;
 
-public class ChoiceConversionItem {
+public class ParameterConversionItem {
 
 	private String fChoiceSrcName;
 	private String fChoiceDstName;
 	private ChoiceConversionOperation fChoiceConversionOperation;
 	private String fConstraintsContainingSrcChoice;
 
-	public ChoiceConversionItem(
+	public ParameterConversionItem(
 			String choiceSrcName, 
 			ChoiceConversionOperation choiceConversionOperation, 
 			String choiceDstName,
@@ -60,7 +60,7 @@ public class ChoiceConversionItem {
 		fChoiceDstName = dstName;
 	}
 
-	public boolean isMatch(ChoiceConversionItem otherItem) {
+	public boolean isMatch(ParameterConversionItem otherItem) {
 
 		if (!fChoiceSrcName.equals(otherItem.getSrcName())) {
 			return false;
