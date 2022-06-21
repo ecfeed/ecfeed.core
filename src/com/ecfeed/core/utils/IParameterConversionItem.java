@@ -17,5 +17,6 @@ public interface IParameterConversionItem {
 	public boolean isMatch(IParameterConversionItem otherItem);
 	public void setSrcName(String srcName);
 	public void setDstName(String dstName);
+	public int getItemTypeLevel();
 	public int getItemLevel();
 }

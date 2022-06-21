@@ -77,5 +77,10 @@ public class ParameterConversionItemForChoice implements IParameterConversionIte
 		return StringHelper.countOccurencesOfChar(fSrcItemName, ':');
 	}
 
+	@Override
+	public int getItemTypeLevel() {
+		return 2;
+	}
+
 }
 

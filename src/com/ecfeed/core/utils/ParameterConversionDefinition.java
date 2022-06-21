@@ -46,6 +46,17 @@ public class ParameterConversionDefinition {
 			@Override
 			public int compare(IParameterConversionItem leftItem, IParameterConversionItem rightItem) {
 
+				int leftItemTypeLevel = leftItem.getItemTypeLevel();
+				int rightItemTypeLevel = rightItem.getItemTypeLevel();
+				
+				if (rightItemTypeLevel > leftItemTypeLevel) {
+					return 1;
+				}
+
+				if (rightItemTypeLevel < leftItemTypeLevel) {
+					return -1;
+				}
+				
 				int leftItemLevel = leftItem.getItemLevel();
 				int rightItemLevel = rightItem.getItemLevel();
 
