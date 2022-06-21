@@ -10,71 +10,72 @@
 
 package com.ecfeed.core.utils;
 
-public class ParameterConversionItem {
+public class ParameterConversionItem implements IParameterConversionItem {
 
-	private String fChoiceSrcName;
-	private String fChoiceDstName;
-	private ChoiceConversionOperation fChoiceConversionOperation;
-	private String fConstraintsContainingSrcChoice;
+	private String fSrcItemName;
+	private String fDstItemName;
+	private String fConstraintsContainingSrcItem;
 
 	public ParameterConversionItem(
-			String choiceSrcName, 
-			ChoiceConversionOperation choiceConversionOperation, 
-			String choiceDstName,
-			String constraintsContainingSrcChoice) {
+			String srcItemName, 
+			String dstItemName,
+			String constraintsContainingSrcItem) {
 
-		fChoiceSrcName = choiceSrcName;
-		fChoiceConversionOperation = choiceConversionOperation;
-		fChoiceDstName = choiceDstName;
+		fSrcItemName = srcItemName;
+		fDstItemName = dstItemName;
 
-		fConstraintsContainingSrcChoice = constraintsContainingSrcChoice;
+		fConstraintsContainingSrcItem = constraintsContainingSrcItem;
 	}
-	
+
 	@Override
 	public String toString() {
-		
-		return "(" + fChoiceSrcName + ", " + fChoiceDstName + ")";
+
+		return "(" + fSrcItemName + ", " + fDstItemName + ")";
 	}
 
-	public ChoiceConversionOperation getOperation() {
-		return fChoiceConversionOperation;
-	}
-
+	@Override
 	public String getSrcName() {
-		return fChoiceSrcName;
+		return fSrcItemName;
 	}
 
+	@Override
 	public String getDstName() {
-		return fChoiceDstName;
+		return fDstItemName;
 	}
 
-	public String getConstraintsContainingSrcChoice() {
-		return fConstraintsContainingSrcChoice;
+	public String getConstraintsContainingSrcItem() {
+		return fConstraintsContainingSrcItem;
 	}
 
+	@Override
 	public void setSrcName(String srcName) {
-		fChoiceSrcName = srcName;
+		fSrcItemName = srcName;
 	}
 
+	@Override
 	public void setDstName(String dstName) {
-		fChoiceDstName = dstName;
+		fDstItemName = dstName;
 	}
 
-	public boolean isMatch(ParameterConversionItem otherItem) {
+	@Override
+	public boolean isMatch(IParameterConversionItem otherItem) {
 
-		if (!fChoiceSrcName.equals(otherItem.getSrcName())) {
+		if (!fSrcItemName.equals(otherItem.getSrcName())) {
 			return false;
 		}
 
-		if (fChoiceConversionOperation != otherItem.getOperation()) {
-			return false;
-		}
-
-		if (!fChoiceDstName.equals(otherItem.getDstName())) {
+		if (!fDstItemName.equals(otherItem.getDstName())) {
 			return false;
 		}
 
 		return true;
 	}
 
+	@Override
+	public int getItemLevel() {
+
+		return StringHelper.countOccurencesOfChar(fSrcItemName, ':');
+	}
+
 }
+
