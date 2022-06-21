@@ -10,13 +10,13 @@
 
 package com.ecfeed.core.utils;
 
-public class ParameterConversionItem implements IParameterConversionItem {
+public class ParameterConversionItemForChoice implements IParameterConversionItem {
 
 	private String fSrcItemName;
 	private String fDstItemName;
 	private String fConstraintsContainingSrcItem;
 
-	public ParameterConversionItem(
+	public ParameterConversionItemForChoice(
 			String srcItemName, 
 			String dstItemName,
 			String constraintsContainingSrcItem) {

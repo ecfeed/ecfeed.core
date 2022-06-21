@@ -28,8 +28,8 @@ public class ParameterConversionDefinition {
 			String dstItemQualifiedName,
 			String constraintsContainingSrcItem) {
 
-		ParameterConversionItem parameterConversionItem1 = 
-				new ParameterConversionItem(
+		ParameterConversionItemForChoice parameterConversionItem1 = 
+				new ParameterConversionItemForChoice(
 						sourceItemQualifiedName,
 						dstItemQualifiedName,
 						constraintsContainingSrcItem);
@@ -103,7 +103,7 @@ public class ParameterConversionDefinition {
 		return itemNames;
 	}
 
-	public void removeItem(ParameterConversionItem conversionItemToFind) {
+	public void removeItem(ParameterConversionItemForChoice conversionItemToFind) {
 
 		int index = findConversionItem(conversionItemToFind);
 
