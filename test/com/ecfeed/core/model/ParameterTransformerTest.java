@@ -24,6 +24,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.ParameterConversionItemForChoice;
 
 public class ParameterTransformerTest {
 
@@ -82,10 +83,10 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
-		choiceConversionList.addItem(
-				methodChoiceName1, 
-				globalChoiceName1,
-				null);
+		ParameterConversionItemForChoice parameterConversionItemForChoice = 
+				new ParameterConversionItemForChoice(methodChoiceNode1, globalChoiceNodeForClass, null);
+
+		choiceConversionList.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -210,10 +211,10 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
-		choiceConversionList.addItem(
-				methodChoiceName1, 
-				globalChoiceName1,
-				null);
+		ParameterConversionItemForChoice parameterConversionItemForChoice = 
+				new ParameterConversionItemForChoice(methodChoiceNode1, globalChoiceNodeOfRoot, null);
+
+		choiceConversionList.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -342,15 +343,16 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
-		choiceConversionList.addItem(
-				methodChoiceName1, 
-				globalChoiceName1,
-				null);
+		ParameterConversionItemForChoice parameterConversionItemForChoice1 = 
+				new ParameterConversionItemForChoice(methodChoiceNode1, globalChoiceNodeForClass, null);
 
-		choiceConversionList.addItem(
-				methodChoiceName2, 
-				globalChoiceName1,
-				null);
+		choiceConversionList.addItem(parameterConversionItemForChoice1);
+
+
+		ParameterConversionItemForChoice parameterConversionItemForChoice2 = 
+				new ParameterConversionItemForChoice(methodChoiceNode2, globalChoiceNodeForClass, null);
+
+		choiceConversionList.addItem(parameterConversionItemForChoice2);
 
 		// linking
 
@@ -473,10 +475,10 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
-		choiceConversionList.addItem(
-				choiceNodeOfMethod11.getName(), 
-				globalChoiceNode11.getName(),
-				null);
+		ParameterConversionItemForChoice parameterConversionItemForChoice =
+				new ParameterConversionItemForChoice(choiceNodeOfMethod11, globalChoiceNode11, null);
+
+		choiceConversionList.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -575,10 +577,10 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
-		choiceConversionList.addItem(
-				choiceNodeOfMethod11.getQualifiedName(), 
-				globalChoiceNode1.getNonQualifiedName(),
-				null);
+		ParameterConversionItemForChoice parameterConversionItemForChoice =
+				new ParameterConversionItemForChoice(choiceNodeOfMethod11, globalChoiceNode1, null);
+
+		choiceConversionList.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -800,10 +802,10 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
 
-		choiceConversionList.addItem(
-				choiceNodeOfMethod11.getName(), 
-				globalChoiceOfClass11.getName(),
-				null);
+		ParameterConversionItemForChoice parameterConversionItemForChoice = 
+				new ParameterConversionItemForChoice(choiceNodeOfMethod11, globalChoiceOfClass11, null);
+
+		choiceConversionList.addItem(parameterConversionItemForChoice);
 
 		// linking
 

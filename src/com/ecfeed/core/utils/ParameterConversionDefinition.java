@@ -23,18 +23,9 @@ public class ParameterConversionDefinition {
 		fParameterConversionItems = new ArrayList<>();
 	}
 
-	public void addItem(
-			String sourceItemQualifiedName, 
-			String dstItemQualifiedName,
-			String constraintsContainingSrcItem) {
+	public void addItem(IParameterConversionItem parameterConversionItem) {
 
-		ParameterConversionItemForChoice parameterConversionItem1 = 
-				new ParameterConversionItemForChoice(
-						sourceItemQualifiedName,
-						dstItemQualifiedName,
-						constraintsContainingSrcItem);
-
-		fParameterConversionItems.add(parameterConversionItem1);
+		fParameterConversionItems.add(parameterConversionItem);
 	}
 
 	public List<IParameterConversionItem> createSortedCopyOfConversionItems() {

@@ -10,14 +10,16 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.ChoiceNode;
+
 public class ParameterConversionItemForChoice extends ParameterConversionItem {
 
 	public ParameterConversionItemForChoice(
-			String srcItemName, 
-			String dstItemName,
+			ChoiceNode srcChoice, 
+			ChoiceNode dstChoice,
 			String constraintsContainingSrcItem) {
 
-		super(srcItemName, dstItemName, constraintsContainingSrcItem);	
+		super(srcChoice.getQualifiedName(), dstChoice.getQualifiedName(), constraintsContainingSrcItem);	
 	}
 
 }

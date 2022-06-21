@@ -21,6 +21,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class ParameterTransformer {
 
@@ -121,7 +122,7 @@ public class ParameterTransformer {
 
 		MethodNode methodNode = methodParameterNode.getMethod();
 
-		List<IParameterConversionItem> choiceConversionList = createChoiceConversionList(globalParameterNode);
+		List<IParameterConversionItem> choiceConversionList = createChoiceConversionListForUnlinking(globalParameterNode);
 
 		removeLinkOnMethodParameter(methodParameterNode, outReverseOperations, extLanguageManager);
 
@@ -172,9 +173,9 @@ public class ParameterTransformer {
 		}
 	}
 
-	private static List<IParameterConversionItem> createChoiceConversionList(GlobalParameterNode globalParameterNode) {
+	private static List<IParameterConversionItem> createChoiceConversionListForUnlinking(GlobalParameterNode globalParameterNode) {
 
-		ChoiceConversionListCreator choiceConversionListCreator = new ChoiceConversionListCreator();
+		ChoiceConversionListCreatorForUnlinking choiceConversionListCreator = new ChoiceConversionListCreatorForUnlinking();
 
 		ChoicesParentNodeHelper.traverseSubTreesOfChoices(globalParameterNode, choiceConversionListCreator);
 
@@ -182,11 +183,11 @@ public class ParameterTransformer {
 		return choiceConversionList;
 	}
 
-	private static class ChoiceConversionListCreator implements IObjectWorker {
+	private static class ChoiceConversionListCreatorForUnlinking implements IObjectWorker {
 
 		ParameterConversionDefinition fChoiceConversionList;
 
-		public ChoiceConversionListCreator() {
+		public ChoiceConversionListCreatorForUnlinking() {
 
 			fChoiceConversionList = new ParameterConversionDefinition();
 		}
@@ -196,7 +197,11 @@ public class ParameterTransformer {
 
 			ChoiceNode choiceNode = (ChoiceNode)choiceNodeObj;
 			String choiceName = choiceNode.getQualifiedName();
-			fChoiceConversionList.addItem(choiceName, choiceName, null);
+
+			ParameterConversionItem parameterConversionItem = 
+					new ParameterConversionItem(choiceName, choiceName, null);
+
+			fChoiceConversionList.addItem(parameterConversionItem);
 		}
 
 		public List<IParameterConversionItem> getChoiceConversionList() {
