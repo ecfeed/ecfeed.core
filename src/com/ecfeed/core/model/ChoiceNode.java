@@ -147,7 +147,9 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public ChoiceNode makeClone(){
+		
 		ChoiceNode copy = makeCloneUnlink();
+		
 		if(isClone())
 			copy.setOrigChoiceNode(getOrigChoiceNode());
 		else

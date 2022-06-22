@@ -12,32 +12,29 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 
 // TODO DE-NO remove?
 
-public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOperation {
+public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOperation { // TODO DE-NO RENAME to transform constraints or remove
 
 	private static final String UPDATE_CHOICE_REFERENCES_IN_TEST_CASES = "Update choice references in test cases.";
 
-	private ChoiceNode fOldChoiceNode; 
-	private ChoiceNode fNewChoiceNode;
+	IParameterConversionItem fParameterConversionItem;
 	private List<ConstraintNode> fConstraintNodes;
 	private IExtLanguageManager fExtLanguageManager;
 
 	public MethodOperationUpdateChoicesInConstraints(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
+			IParameterConversionItem parameterConversionItem,
 			List<ConstraintNode> constraintNodes,
 			IExtLanguageManager extLanguageManager) {
 
 		super(UPDATE_CHOICE_REFERENCES_IN_TEST_CASES, extLanguageManager);
 
-		fOldChoiceNode = oldChoiceNode;
-		fNewChoiceNode = newChoiceNode;
+		fParameterConversionItem = parameterConversionItem;
 		fConstraintNodes = constraintNodes;
 		fExtLanguageManager = extLanguageManager;
 	}
@@ -46,8 +43,7 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 	public void execute() {
 
 		MethodNodeHelper.updateChoiceReferencesInConstraints(
-				fOldChoiceNode, 
-				fNewChoiceNode,
+				fParameterConversionItem,
 				fConstraintNodes,
 				fExtLanguageManager);
 	}

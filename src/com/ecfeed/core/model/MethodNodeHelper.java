@@ -20,7 +20,9 @@ import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCas
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.ParameterConversionItemForChoice;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -146,56 +148,63 @@ public class MethodNodeHelper {
 	}
 
 	public static void updateChoiceReferencesInTestCases(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
+			IParameterConversionItem parameterConversionItem,
 			List<TestCaseNode> testCaseNodes,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		checkChoices(oldChoiceNode, newChoiceNode);
+		if (!(parameterConversionItem instanceof ParameterConversionItemForChoice)) {
+			return;
+		}
+
+		ParameterConversionItemForChoice parameterConversionItemForChoice = 
+				(ParameterConversionItemForChoice)parameterConversionItem;
+
+		ChoiceNode srcChoice = parameterConversionItemForChoice.getSrcChoice();
+		ChoiceNode dstChoice = parameterConversionItemForChoice.getDstChoice();
 
 		for (TestCaseNode testCaseNode : testCaseNodes)  {
-			testCaseNode.updateChoiceReferences(oldChoiceNode, newChoiceNode);
+
+			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
 		}
 
 		if (inOutReverseOperations != null) {
 			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
 					new MethodOperationUpdateChoiceReferencesInTestCases(
-							newChoiceNode, oldChoiceNode, 
+							parameterConversionItem, 
 							testCaseNodes, extLanguageManager);
 
 			inOutReverseOperations.add(reverseOperation);
 		}
 	}
 
-	public static void updateChoiceReferencesInConstraints(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
+	public static void updateChoiceReferencesInConstraints( // TODO DE-NO rename to transform constraints
+			IParameterConversionItem parameterConversionItem,
 			List<ConstraintNode> constraintNodes,
 			IExtLanguageManager extLanguageManager) {
 
-		checkChoices(oldChoiceNode, newChoiceNode);
+		//		checkChoices(oldChoiceNode, newChoiceNode);
 
 		ListOfModelOperations notUsed = new ListOfModelOperations(); // TODO DE-NO remove in updateChoiceReferences
 
 		for (ConstraintNode constraintNode : constraintNodes) {
-			ConstraintNodeHelper.updateChoiceReferences(
+			ConstraintNodeHelper.transformParameter(
 					constraintNode, 
-					oldChoiceNode, newChoiceNode, 
+					parameterConversionItem, 
 					notUsed, extLanguageManager);
 		}
 	}
 
-	private static void checkChoices(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
-
-		if (oldChoiceNode == null) {
-			ExceptionHelper.reportRuntimeException("Invalid old choice node.");
-		}
-
-		if (newChoiceNode == null) {
-			ExceptionHelper.reportRuntimeException("Invalid new choice node.");
-		}
-	}
+	//	private static void checkChoices(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+	//
+	//		if (oldChoiceNode == null) {
+	//			ExceptionHelper.reportRuntimeException("Invalid old choice node.");
+	//		}
+	//
+	//		if (newChoiceNode == null) {
+	//			ExceptionHelper.reportRuntimeException("Invalid new choice node.");
+	//		}
+	//	}
 
 	public static void addTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
 
@@ -738,22 +747,22 @@ public class MethodNodeHelper {
 	public static List<String> getStatementValuesForParameter(
 			MethodNode methodNode,
 			MethodParameterNode methodParameterNode) {
-		
+
 		List<Constraint> constraints = methodNode.getAllConstraints();
-		
+
 		List<String> values = new ArrayList<>();
-		
+
 		for (Constraint constraint : constraints) {
-			
+
 			List<String> valuesOfConstraint = constraint.getStatementValuesForParameter(); 
-			
+
 			if (valuesOfConstraint != null && !valuesOfConstraint.isEmpty()) {
 				values.addAll(valuesOfConstraint);
 			}
 		}
-		
+
 		values = StringHelper.removeDuplicates(values);
-		
+
 		return values;
 	}
 

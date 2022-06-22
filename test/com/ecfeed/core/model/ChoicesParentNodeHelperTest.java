@@ -114,9 +114,11 @@ public class ChoicesParentNodeHelperTest {
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
 				methodParameterNode1, methodParameterNode2, 
-				reverseOperations, new ExtLanguageManagerForJava());
+				reverseOperations, 
+				null,
+				new ExtLanguageManagerForJava());
 
 		// checks
 
@@ -166,9 +168,11 @@ public class ChoicesParentNodeHelperTest {
 
 		ListOfModelOperations reverseOperations = new ListOfModelOperations();
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
 				methodParameterNode1, methodParameterNode2, 
-				reverseOperations, new ExtLanguageManagerForJava());
+				reverseOperations, 
+				null,
+				new ExtLanguageManagerForJava());
 
 		// check choice 1
 

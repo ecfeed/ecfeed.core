@@ -14,6 +14,8 @@ import java.util.List;
 
 import com.ecfeed.core.operations.SimpleOperationRemoveAllChoices;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemForChoice;
 
 public abstract class ChoicesParentNodeHelper {
 
@@ -33,13 +35,14 @@ public abstract class ChoicesParentNodeHelper {
 		}
 	}
 
-	public static void createCopyOfChoicesSubTrees(
+	public static void createCopyOfChoicesSubTreesBetweenParameters(
 			ChoicesParentNode srcParentNode, 
 			ChoicesParentNode dstParentNode,
 			ListOfModelOperations inOutReverseOperations,
+			List<IParameterConversionItem> outChoiceConversionList,
 			IExtLanguageManager extLanguageManager) {
 
-		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode);
+		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, outChoiceConversionList);
 
 		SimpleOperationRemoveAllChoices reverseOperation = 
 				new SimpleOperationRemoveAllChoices(dstParentNode, extLanguageManager);
@@ -48,7 +51,9 @@ public abstract class ChoicesParentNodeHelper {
 	}
 
 	private static void createCopyOfChoicesSubtreesRecursive(
-			ChoicesParentNode srcParentNode, ChoicesParentNode dstParentNode) {
+			ChoicesParentNode srcParentNode, 
+			ChoicesParentNode dstParentNode,
+			List<IParameterConversionItem> inOutChoiceConversionList) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -63,7 +68,14 @@ public abstract class ChoicesParentNodeHelper {
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode);
+			if (inOutChoiceConversionList != null) {
+				ParameterConversionItemForChoice parameterConversionItemForChoice = 
+						new ParameterConversionItemForChoice(choiceNode, clonedChoiceNode, null);
+
+				inOutChoiceConversionList.add(parameterConversionItemForChoice);
+			}
+
+			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode, inOutChoiceConversionList);
 		}
 	}
 

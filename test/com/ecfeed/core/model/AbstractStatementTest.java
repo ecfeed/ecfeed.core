@@ -19,6 +19,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public class AbstractStatementTest {
@@ -75,8 +76,7 @@ public class AbstractStatementTest {
 
 		@Override
 		protected void updateChoiceReferences(
-				ChoiceNode oldChoiceNode, 
-				ChoiceNode newChoiceNode,
+				IParameterConversionItem parameterConversionItem,
 				ListOfModelOperations reverseOperations,
 				IExtLanguageManager extLanguageManager) {
 		}

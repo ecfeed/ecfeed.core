@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public interface IStatementCondition {
@@ -30,9 +31,8 @@ public interface IStatementCondition {
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager);
 	public List<ChoiceNode> getListOfChoices();
 	public void derandomize();
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
+	public void updateChoiceReferences(// TODO DE-NO rename
+			IParameterConversionItem parameterConversionItem,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager);
 	public String getLabel(MethodParameterNode methodParameterNode);

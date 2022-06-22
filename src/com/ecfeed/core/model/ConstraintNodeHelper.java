@@ -15,13 +15,13 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 
 public class ConstraintNodeHelper {
 
-	public static void updateChoiceReferences(
+	public static void transformParameter(
 			ConstraintNode constraintNode,
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
+			IParameterConversionItem parameterConversionItem,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -31,7 +31,7 @@ public class ConstraintNodeHelper {
 			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
 		}
 
-		constraint.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		constraint.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager); // TOOD DE-NO rename
 	}
 
 	public static void updateParameterReferences(

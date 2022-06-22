@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.IStatementCondition;
+
 public class ParameterConversionItem implements IParameterConversionItem {
 
 	private String fSrcItemName;
@@ -20,7 +22,15 @@ public class ParameterConversionItem implements IParameterConversionItem {
 			String srcItemName, 
 			String dstItemName,
 			String constraintsContainingSrcItem) {
+		
+		if (srcItemName == null) {
+			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src name should not be empty.");
+		}
 
+		if (dstItemName == null) {
+			ExceptionHelper.reportRuntimeException("Invalid conversion item. Dst name should not be empty.");
+		}
+		
 		fSrcItemName = srcItemName;
 		fDstItemName = dstItemName;
 
@@ -80,6 +90,10 @@ public class ParameterConversionItem implements IParameterConversionItem {
 	@Override
 	public int getItemTypeLevel() {
 		return 2;
+	}
+
+	@Override
+	public void convertStatementCondition(IStatementCondition statementCondition) {
 	}
 
 }

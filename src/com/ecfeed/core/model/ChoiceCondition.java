@@ -18,6 +18,7 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ObjectHelper;
@@ -288,15 +289,12 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
+	public void updateChoiceReferences( // TODO DE-NO extract to super class ?
+			IParameterConversionItem parameterConversionItem,
+			ListOfModelOperations reverseOperations, // TODO DE-NO remove parameters
 			IExtLanguageManager extLanguageManager) {
 
-		if (fRightChoice == oldChoiceNode) {
-			fRightChoice = newChoiceNode;
-		}
+		parameterConversionItem.convertStatementCondition(this);
 	}
 
 	@Override
@@ -312,6 +310,13 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public String getLabel(MethodParameterNode methodParameterNode) {
 		return null;
+	}
+	
+	public void conditionallyConvertChoice(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+		
+		if (fRightChoice == oldChoiceNode) {
+			fRightChoice = newChoiceNode;
+		}
 	}
 
 }

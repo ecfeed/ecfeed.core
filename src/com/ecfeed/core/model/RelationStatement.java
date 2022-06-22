@@ -17,6 +17,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.SystemLogger;
@@ -385,12 +386,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	protected void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
+			IParameterConversionItem parameterConversionItem,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		fRightCondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		fRightCondition.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
 	}
 
 	@Override

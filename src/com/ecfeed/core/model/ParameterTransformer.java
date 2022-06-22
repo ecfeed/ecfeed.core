@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
-import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemForChoice;
 
 public class ParameterTransformer {
 
@@ -122,16 +122,22 @@ public class ParameterTransformer {
 
 		MethodNode methodNode = methodParameterNode.getMethod();
 
-		List<IParameterConversionItem> choiceConversionList = createChoiceConversionListForUnlinking(globalParameterNode);
-
 		removeLinkOnMethodParameter(methodParameterNode, outReverseOperations, extLanguageManager);
 
 		ListOfModelOperations reverseOperationsForChoicesCopy = new ListOfModelOperations();
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTrees(
-				globalParameterNode, methodParameterNode, reverseOperationsForChoicesCopy, extLanguageManager);
+		List<IParameterConversionItem> choiceConversionList = new ArrayList<>();
 
-		convertChoicesInConstraints(
+		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
+				globalParameterNode, methodParameterNode, 
+				reverseOperationsForChoicesCopy,
+				choiceConversionList,
+				extLanguageManager);
+
+		//		List<IParameterConversionItem> choiceConversionList = 
+		//				createChoiceConversionListForUnlinking(globalParameterNode, methodParameterNode);
+
+		convertConstraints(
 				methodNode, 
 				globalParameterNode, methodParameterNode, 
 				choiceConversionList, outReverseOperations, 
@@ -142,7 +148,7 @@ public class ParameterTransformer {
 		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
 	}
 
-	private static void convertChoicesInConstraints(
+	private static void convertConstraints(
 			MethodNode methodNode, 
 			AbstractParameterNode srcParameterNode,
 			AbstractParameterNode dstParameterNode, 
@@ -152,67 +158,73 @@ public class ParameterTransformer {
 
 		for (IParameterConversionItem choiceConversionItem : choiceConversionList) {
 
-			String srcName = choiceConversionItem.getSrcName();
-			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(srcName);
-
-			if (srcChoiceNode == null) {
-				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
-			}
-
-			String dstName = choiceConversionItem.getDstName();
-			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(dstName);
-
-			if (dstChoiceNode == null) {
-				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
-			}
+			//			String srcName = choiceConversionItem.getSrcName();
+			//			ChoiceNode srcChoiceNode = srcParameterNode.getChoice(srcName);
+			//
+			//			if (srcChoiceNode == null) {
+			//				ExceptionHelper.reportRuntimeException("Cannot find source choice.");
+			//			}
+			//
+			//			String dstName = choiceConversionItem.getDstName();
+			//			ChoiceNode dstChoiceNode = dstParameterNode.getChoice(dstName);
+			//
+			//			if (dstChoiceNode == null) {
+			//				ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
+			//			}
 
 			MethodNodeHelper.updateChoiceReferencesInConstraints(
-					srcChoiceNode, dstChoiceNode,
+					choiceConversionItem,
 					methodNode.getConstraintNodes(),
 					extLanguageManager);
 		}
 	}
 
-	private static List<IParameterConversionItem> createChoiceConversionListForUnlinking(GlobalParameterNode globalParameterNode) {
+	//	private static List<IParameterConversionItem> createChoiceConversionListForUnlinking(
+	//			GlobalParameterNode globalParameterNode,
+	//			MethodParameterNode methodParameterNode) {
+	//
+	//		ChoiceConversionListCreatorForUnlinking choiceConversionListCreatorForUnlinking = 
+	//				new ChoiceConversionListCreatorForUnlinking();
+	//
+	//		ChoicesParentNodeHelper.traverseSubTreesOfChoices(
+	//				globalParameterNode, choiceConversionListCreatorForUnlinking);
+	//
+	//		List<IParameterConversionItem> choiceConversionList = 
+	//				choiceConversionListCreatorForUnlinking.getChoiceConversionList();
+	//
+	//		return choiceConversionList;
+	//	}
 
-		ChoiceConversionListCreatorForUnlinking choiceConversionListCreator = new ChoiceConversionListCreatorForUnlinking();
-
-		ChoicesParentNodeHelper.traverseSubTreesOfChoices(globalParameterNode, choiceConversionListCreator);
-
-		List<IParameterConversionItem> choiceConversionList = choiceConversionListCreator.getChoiceConversionList();
-		return choiceConversionList;
-	}
-
-	private static class ChoiceConversionListCreatorForUnlinking implements IObjectWorker {
-
-		ParameterConversionDefinition fChoiceConversionList;
-
-		public ChoiceConversionListCreatorForUnlinking() {
-
-			fChoiceConversionList = new ParameterConversionDefinition();
-		}
-
-		@Override
-		public void doWork(Object choiceNodeObj) {
-
-			ChoiceNode choiceNode = (ChoiceNode)choiceNodeObj;
-			String choiceName = choiceNode.getQualifiedName();
-
-			ParameterConversionItem parameterConversionItem = 
-					new ParameterConversionItem(choiceName, choiceName, null);
-
-			fChoiceConversionList.addItem(parameterConversionItem);
-		}
-
-		public List<IParameterConversionItem> getChoiceConversionList() {
-
-			List<IParameterConversionItem> createSortedCopyOfConversionItems = 
-					fChoiceConversionList.createSortedCopyOfConversionItems();
-
-			return createSortedCopyOfConversionItems;
-		}
-
-	}
+	//	private static class ChoiceConversionListCreatorForUnlinking implements IObjectWorker {
+	//
+	//		ParameterConversionDefinition fChoiceConversionList;
+	//
+	//		public ChoiceConversionListCreatorForUnlinking() {
+	//
+	//			fChoiceConversionList = new ParameterConversionDefinition();
+	//		}
+	//
+	//		@Override
+	//		public void doWork(Object choiceNodeObj) {
+	//
+	//			ChoiceNode srcChoiceNode = (ChoiceNode)choiceNodeObj;
+	//			ChoiceNode dstChoiceNode = srcChoiceNode.makeClone();
+	//
+	//			ParameterConversionItemForChoice parameterConversionItem = 
+	//					new ParameterConversionItemForChoice(srcChoiceNode, dstChoiceNode, null);
+	//
+	//			fChoiceConversionList.addItem(parameterConversionItem);
+	//		}
+	//
+	//		public List<IParameterConversionItem> getChoiceConversionList() {
+	//
+	//			List<IParameterConversionItem> createSortedCopyOfConversionItems = 
+	//					fChoiceConversionList.createSortedCopyOfConversionItems();
+	//
+	//			return createSortedCopyOfConversionItems;
+	//		}
+	//
+	//	}
 
 	private static void checkParametersForNotNull(
 			MethodParameterNode methodParameterNode,
@@ -320,30 +332,33 @@ public class ParameterTransformer {
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		ChoiceNode srcChoiceNode = srcParameterNode.getChoice(parameterConversionItem.getSrcName());
-
-		if (srcChoiceNode == null) {
-			ExceptionHelper.reportRuntimeException("Cannot find source choice.");
-		}
-
-		ChoiceNode dstChoiceNode = dstParameterNode.getChoice(parameterConversionItem.getDstName());
-
-		if (dstChoiceNode == null) {
-			ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
-		}
-
-		//		moveChildChoices(srcChoiceNode, dstChoiceNode, inOutReverseOperations, extLanguageManager);
+		//		ChoiceNode srcChoiceNode = srcParameterNode.getChoice(parameterConversionItem.getSrcName());
+		//
+		//		if (srcChoiceNode == null) {
+		//			ExceptionHelper.reportRuntimeException("Cannot find source choice.");
+		//		}
+		//
+		//		ChoiceNode dstChoiceNode = dstParameterNode.getChoice(parameterConversionItem.getDstName());
+		//
+		//		if (dstChoiceNode == null) {
+		//			ExceptionHelper.reportRuntimeException("Cannot find destination choice.");
+		//		}
 
 		MethodNode methodNode = srcParameterNode.getMethod();
 
-		updateChoiceReferencesInConstraints(
-				srcChoiceNode, 
-				dstChoiceNode, 
+		updateReferencesInConstraints(
+				parameterConversionItem, 
 				methodNode, 
 				inOutReverseOperations, // TODO DE-NO remove - not used
 				extLanguageManager); 
 
-		removeSourceChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
+		if (parameterConversionItem instanceof ParameterConversionItemForChoice) {
+
+			ParameterConversionItemForChoice parameterConversionItemForChoice = 
+					(ParameterConversionItemForChoice)parameterConversionItem;
+
+			removeSourceChoice(parameterConversionItemForChoice.getSrcChoice(), inOutReverseOperations, extLanguageManager);
+		}
 	}
 
 	private static void removeSourceChoice(
@@ -354,15 +369,14 @@ public class ParameterTransformer {
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
 	}
 
-	private static void updateChoiceReferencesInConstraints(
-			ChoiceNode srcChoiceNode,
-			ChoiceNode dstChoiceNode, 
+	private static void updateReferencesInConstraints(
+			IParameterConversionItem parameterConversionItem,
 			MethodNode methodNode,
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
 		MethodNodeHelper.updateChoiceReferencesInConstraints(
-				srcChoiceNode, dstChoiceNode,
+				parameterConversionItem,
 				methodNode.getConstraintNodes(),
 				extLanguageManager);
 	}

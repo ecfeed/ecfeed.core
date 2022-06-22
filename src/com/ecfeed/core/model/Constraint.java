@@ -24,6 +24,7 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public class Constraint implements IConstraint<ChoiceNode> {
@@ -429,13 +430,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	// TODO DE-NO Move to helper
 	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
+			IParameterConversionItem parameterConversionItem,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		fPrecondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
-		fPostcondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		fPrecondition.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
+		fPostcondition.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
 	}
 
 	public void updateParameterReferences(

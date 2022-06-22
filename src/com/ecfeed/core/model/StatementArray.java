@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -392,12 +393,12 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	protected void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode,
+			IParameterConversionItem parameterConversionItem,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		for (AbstractStatement child : fStatements) {
-			child.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+			child.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
 		}
 	}
 

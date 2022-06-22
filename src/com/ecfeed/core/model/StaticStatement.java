@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public class StaticStatement extends AbstractStatement {
@@ -136,10 +137,9 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	protected void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
+	public void updateChoiceReferences(
+			IParameterConversionItem parameterConversionItem,
+			ListOfModelOperations reverseOperations, // TODO DE-NO remove parameters
 			IExtLanguageManager extLanguageManager) {
 	}
 

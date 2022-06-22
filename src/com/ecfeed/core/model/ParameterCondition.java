@@ -17,6 +17,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.RangeHelper;
@@ -326,11 +327,12 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
+	public void updateChoiceReferences( // TODO DE-NO extract to super class ?
+			IParameterConversionItem parameterConversionItem,
+			ListOfModelOperations reverseOperations, // TODO DE-NO remove parameters
 			IExtLanguageManager extLanguageManager) {
+
+		parameterConversionItem.convertStatementCondition(this);
 	}
 
 	@Override
