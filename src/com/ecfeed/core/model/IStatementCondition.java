@@ -31,10 +31,7 @@ public interface IStatementCondition {
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager);
 	public List<ChoiceNode> getListOfChoices();
 	public void derandomize();
-	public void updateChoiceReferences(// TODO DE-NO rename
-			ParameterConversionItem parameterConversionItem,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager);
+	public void updateChoiceReferences(ParameterConversionItem parameterConversionItem); // TODO DE-NO rename
 	public String getLabel(MethodParameterNode methodParameterNode);
 }
 

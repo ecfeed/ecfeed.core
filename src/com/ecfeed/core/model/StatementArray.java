@@ -392,27 +392,21 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	protected void updateChoiceReferences(
-			ParameterConversionItem parameterConversionItem,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+	protected void updateChoiceReferences(ParameterConversionItem parameterConversionItem) {
 
 		for (AbstractStatement child : fStatements) {
-			child.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
+			child.updateChoiceReferences(parameterConversionItem);
 		}
 	}
 
 	@Override
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ChoicesParentNode dstParameterForChoices) {
 
 		for (AbstractStatement child : fStatements) {
 			child.updateParameterReferences(
-					srcMethodParameterNode, dstParameterForChoices, 
-					reverseOperations, extLanguageManager);
+					srcMethodParameterNode, dstParameterForChoices);
 		}
 
 	}

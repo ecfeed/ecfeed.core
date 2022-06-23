@@ -143,8 +143,7 @@ public class MethodNodeHelper {
 		for (ConstraintNode constraintNode : constraintNodes) {
 			ConstraintNodeHelper.updateParameterReferences(
 					constraintNode,
-					oldMethodParameterNode, dstParameterForChoices, 
-					reverseOperations, extLanguageManager);
+					oldMethodParameterNode, dstParameterForChoices);
 		}
 	}
 
@@ -192,28 +191,12 @@ public class MethodNodeHelper {
 			List<ConstraintNode> constraintNodes,
 			IExtLanguageManager extLanguageManager) {
 
-		//		checkChoices(oldChoiceNode, newChoiceNode);
-
-		ListOfModelOperations notUsed = new ListOfModelOperations(); // TODO DE-NO remove in updateChoiceReferences
-
 		for (ConstraintNode constraintNode : constraintNodes) {
-			ConstraintNodeHelper.transformParameter(
+			ConstraintNodeHelper.updateReferences(
 					constraintNode, 
-					parameterConversionItem, 
-					notUsed, extLanguageManager);
+					parameterConversionItem);
 		}
 	}
-
-	//	private static void checkChoices(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
-	//
-	//		if (oldChoiceNode == null) {
-	//			ExceptionHelper.reportRuntimeException("Invalid old choice node.");
-	//		}
-	//
-	//		if (newChoiceNode == null) {
-	//			ExceptionHelper.reportRuntimeException("Invalid new choice node.");
-	//		}
-	//	}
 
 	public static void addTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
 

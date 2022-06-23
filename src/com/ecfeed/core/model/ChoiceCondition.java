@@ -290,10 +290,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences( // TODO DE-NO extract to super class ?
-			ParameterConversionItem parameterConversionItem,
-			ListOfModelOperations reverseOperations, // TODO DE-NO remove parameters
-			IExtLanguageManager extLanguageManager) {
+	public void updateChoiceReferences(ParameterConversionItem parameterConversionItem) {
 
 		ChoiceNode srcChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getSrcPart());
 

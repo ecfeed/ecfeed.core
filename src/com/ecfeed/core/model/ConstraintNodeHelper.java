@@ -19,11 +19,9 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class ConstraintNodeHelper {
 
-	public static void transformParameter(
+	public static void updateReferences(
 			ConstraintNode constraintNode,
-			ParameterConversionItem parameterConversionItem,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ParameterConversionItem parameterConversionItem) {
 
 		Constraint constraint = constraintNode.getConstraint();
 
@@ -31,15 +29,13 @@ public class ConstraintNodeHelper {
 			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
 		}
 
-		constraint.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager); // TOOD DE-NO rename
+		constraint.updateChoiceReferences(parameterConversionItem); // TOOD DE-NO rename
 	}
 
 	public static void updateParameterReferences(
 			ConstraintNode constraintNode,
 			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ChoicesParentNode dstParameterForChoices) {
 
 		Constraint constraint = constraintNode.getConstraint();
 
@@ -47,9 +43,7 @@ public class ConstraintNodeHelper {
 			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
 		}
 
-		constraint.updateParameterReferences(
-				oldMethodParameterNode, dstParameterForChoices, 
-				reverseOperations, extLanguageManager);
+		constraint.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	}
 
 	public static List<ChoiceNode> getChoicesUsedInConstraint(

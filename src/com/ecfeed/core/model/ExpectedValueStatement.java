@@ -198,18 +198,13 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	protected void updateChoiceReferences(
-			ParameterConversionItem parameterConversionItem, 
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+	protected void updateChoiceReferences(ParameterConversionItem parameterConversionItem) {
 	}
 
 	@Override
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ChoicesParentNode dstParameterForChoices) {
 	}
 
 	@Override

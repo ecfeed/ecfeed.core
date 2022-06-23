@@ -427,25 +427,19 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return createSignature(new ExtLanguageManagerForJava());
 	}
 
-
-	// TODO DE-NO Move to helper
 	public void updateChoiceReferences(
-			ParameterConversionItem parameterConversionItem,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ParameterConversionItem parameterConversionItem) {
 
-		fPrecondition.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
-		fPostcondition.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
+		fPrecondition.updateChoiceReferences(parameterConversionItem);
+		fPostcondition.updateChoiceReferences(parameterConversionItem);
 	}
 
 	public void updateParameterReferences(
 			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ChoicesParentNode dstParameterForChoices) {
 
-		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
-		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
+		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
@@ -596,7 +590,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return new HashSet<AbstractParameterNode>();
 		}
 	}
-	
+
 	public List<String> getStatementValuesForParameter() {
 		// TODO Auto-generated method stub
 		return null;

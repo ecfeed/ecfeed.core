@@ -386,23 +386,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	protected void updateChoiceReferences(
-			ParameterConversionItem parameterConversionItem,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ParameterConversionItem parameterConversionItem) {
 
-		fRightCondition.updateChoiceReferences(parameterConversionItem, reverseOperations, extLanguageManager);
+		fRightCondition.updateChoiceReferences(parameterConversionItem);
 	}
 
 	@Override
-	protected void updateParameterReferences(
+	protected void updateParameterReferences( // TODO DE-NO remove ?
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		//		if (fLeftParameter == oldMethodParameterNode) {
-		//			fLeftParameter = newMethodParameterNode;
-		//		}
+			ChoicesParentNode dstParameterForChoices) {
 	}
 
 	@Override

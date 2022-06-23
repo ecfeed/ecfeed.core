@@ -138,17 +138,13 @@ public class StaticStatement extends AbstractStatement {
 
 	@Override
 	public void updateChoiceReferences(
-			ParameterConversionItem parameterConversionItem,
-			ListOfModelOperations reverseOperations, // TODO DE-NO remove parameters
-			IExtLanguageManager extLanguageManager) {
+			ParameterConversionItem parameterConversionItem) {
 	}
 
 	@Override
 	protected void updateParameterReferences(
 			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ChoicesParentNode dstParameterForChoices) {
 	}
 
 	@Override
