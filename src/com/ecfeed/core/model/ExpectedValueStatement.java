@@ -198,7 +198,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	protected void updateChoiceReferences(ParameterConversionItem parameterConversionItem) {
+	protected void convert(ParameterConversionItem parameterConversionItem) {
 	}
 
 	@Override

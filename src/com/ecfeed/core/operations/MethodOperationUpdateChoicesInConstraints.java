@@ -42,7 +42,7 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 	@Override
 	public void execute() {
 
-		MethodNodeHelper.updateChoiceReferencesInConstraints(
+		MethodNodeHelper.updateReferencesInConstraints(
 				fParameterConversionItem,
 				fConstraintNodes,
 				fExtLanguageManager);

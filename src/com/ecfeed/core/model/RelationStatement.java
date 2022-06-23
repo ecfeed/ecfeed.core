@@ -385,7 +385,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	protected void updateChoiceReferences(
+	protected void convert(
 			ParameterConversionItem parameterConversionItem) {
 
 		fRightCondition.updateChoiceReferences(parameterConversionItem);

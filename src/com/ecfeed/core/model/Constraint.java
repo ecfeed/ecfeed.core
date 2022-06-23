@@ -427,14 +427,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return createSignature(new ExtLanguageManagerForJava());
 	}
 
-	public void updateChoiceReferences(
-			ParameterConversionItem parameterConversionItem) {
+	public void convert(ParameterConversionItem parameterConversionItem) {
 
-		fPrecondition.updateChoiceReferences(parameterConversionItem);
-		fPostcondition.updateChoiceReferences(parameterConversionItem);
+		fPrecondition.convert(parameterConversionItem);
+		fPostcondition.convert(parameterConversionItem);
 	}
 
-	public void updateParameterReferences(
+	public void updateParameterReferences( // TODO DE-NO remove ?
 			MethodParameterNode oldMethodParameterNode,
 			ChoicesParentNode dstParameterForChoices) {
 

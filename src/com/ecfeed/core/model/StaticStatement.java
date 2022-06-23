@@ -137,7 +137,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public void updateChoiceReferences(
+	public void convert(
 			ParameterConversionItem parameterConversionItem) {
 	}
 

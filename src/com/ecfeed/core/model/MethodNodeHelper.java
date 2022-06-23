@@ -186,7 +186,7 @@ public class MethodNodeHelper {
 		}
 	}
 
-	public static void updateChoiceReferencesInConstraints( // TODO DE-NO rename to transform constraints
+	public static void updateReferencesInConstraints( // TODO DE-NO rename to transform constraints
 			ParameterConversionItem parameterConversionItem,
 			List<ConstraintNode> constraintNodes,
 			IExtLanguageManager extLanguageManager) {

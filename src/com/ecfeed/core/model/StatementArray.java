@@ -392,10 +392,10 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	protected void updateChoiceReferences(ParameterConversionItem parameterConversionItem) {
+	protected void convert(ParameterConversionItem parameterConversionItem) {
 
 		for (AbstractStatement child : fStatements) {
-			child.updateChoiceReferences(parameterConversionItem);
+			child.convert(parameterConversionItem);
 		}
 	}
 

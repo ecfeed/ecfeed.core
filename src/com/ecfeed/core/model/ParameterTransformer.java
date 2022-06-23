@@ -156,7 +156,7 @@ public class ParameterTransformer {
 
 		for (ParameterConversionItem choiceConversionItem : choiceConversionList) {
 
-			MethodNodeHelper.updateChoiceReferencesInConstraints(
+			MethodNodeHelper.updateReferencesInConstraints(
 					choiceConversionItem,
 					methodNode.getConstraintNodes(),
 					extLanguageManager);
@@ -305,7 +305,7 @@ public class ParameterTransformer {
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		MethodNodeHelper.updateChoiceReferencesInConstraints(
+		MethodNodeHelper.updateReferencesInConstraints(
 				parameterConversionItem,
 				methodNode.getConstraintNodes(),
 				extLanguageManager);
