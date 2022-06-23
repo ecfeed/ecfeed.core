@@ -10,14 +10,20 @@
 
 package com.ecfeed.core.utils;
 
-public class ParameterConversionItemForLabel extends ParameterConversionItem {
+public class ParameterConversionItemPartForLabel extends ParameterConversionItemPart {
 
-	public ParameterConversionItemForLabel(
-			String srcItemName, 
-			String dstItemName,
-			String constraintsContainingSrcItem) {
+	public ParameterConversionItemPartForLabel(String label) {
+		super(label);
+	}
 
-		super(srcItemName, dstItemName, constraintsContainingSrcItem);	
+	@Override
+	public int getItemTypeLevel() {
+		return 1;
+	}
+
+	@Override
+	public boolean isMatch(IParameterConversionItemPart otherPart) {
+		return false;
 	}
 
 }

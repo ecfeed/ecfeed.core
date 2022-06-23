@@ -10,16 +10,12 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.IStatementCondition;
+public interface IParameterConversionItemPart  {
 
-public interface IParameterConversionItem {
-
-	public String getSrcName();
-	public String getDstName();
-	public boolean isMatch(IParameterConversionItem otherItem);
-	public void setSrcName(String srcName);
-	public void setDstName(String dstName);
-	public int getItemTypeLevel();
+	public String getName();
+//	public void setName(String name);
+	public boolean isMatch(IParameterConversionItemPart otherPart);
+	public int getItemTypeLevel();	
 	public int getItemLevel();
-	public void convertStatementCondition(IStatementCondition statementCondition);
 }
+

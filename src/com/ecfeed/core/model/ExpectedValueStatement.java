@@ -17,7 +17,7 @@ import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
@@ -199,7 +199,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	protected void updateChoiceReferences(
-			IParameterConversionItem parameterConversionItem, 
+			ParameterConversionItem parameterConversionItem, 
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 	}

@@ -24,7 +24,7 @@ import com.ecfeed.core.utils.StringHelper;
 public abstract class ChoicesParentNode extends AbstractNode{
 
 	private List<ChoiceNode> fChoices;
-	private List<ChoiceNode> fDetachedChoices;
+	private List<ChoiceNode> fDetachedChoices; // TODO DE-NO remove
 
 	public abstract AbstractParameterNode getParameter();
 	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
@@ -168,7 +168,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return fDetachedChoices.size();
 	}
 
-	public void removeDetachedChoiceByIndex(int index) {
+	public void removeDetachedChoiceByIndex(int index) { // TODO DE-NO remove
 
 		if (index < 0 || index >= fDetachedChoices.size()) {
 			ExceptionHelper.reportRuntimeException("Invalid index of detached choice.");

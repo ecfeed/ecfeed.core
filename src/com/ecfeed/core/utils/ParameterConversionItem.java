@@ -10,90 +10,60 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.IStatementCondition;
+public class ParameterConversionItem {
 
-public class ParameterConversionItem implements IParameterConversionItem {
-
-	private String fSrcItemName;
-	private String fDstItemName;
-	private String fConstraintsContainingSrcItem;
+	private ParameterConversionItemPart fSrcPart;
+	private ParameterConversionItemPart fDstPart;
+	String fNodesContainingSrcItem;
 
 	public ParameterConversionItem(
-			String srcItemName, 
-			String dstItemName,
+			ParameterConversionItemPart srcPart, 
+			ParameterConversionItemPart dstPart,
 			String constraintsContainingSrcItem) {
-		
-		if (srcItemName == null) {
-			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src name should not be empty.");
+
+		if (srcPart == null) {
+			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src part should not be empty.");
 		}
 
-		if (dstItemName == null) {
-			ExceptionHelper.reportRuntimeException("Invalid conversion item. Dst name should not be empty.");
+		if (dstPart == null) {
+			ExceptionHelper.reportRuntimeException("Invalid conversion item. Dst part should not be empty.");
 		}
-		
-		fSrcItemName = srcItemName;
-		fDstItemName = dstItemName;
 
-		fConstraintsContainingSrcItem = constraintsContainingSrcItem;
+		fSrcPart = srcPart;
+		fDstPart = dstPart;
+
+		fNodesContainingSrcItem = constraintsContainingSrcItem;
 	}
 
 	@Override
 	public String toString() {
 
-		return "(" + fSrcItemName + ", " + fDstItemName + ")";
+		return "(" + fSrcPart.toString() + " -> " + fDstPart.toString() + ")";
 	}
 
-	@Override
-	public String getSrcName() {
-		return fSrcItemName;
+	public IParameterConversionItemPart getSrcPart() {
+		return fSrcPart;
 	}
 
-	@Override
-	public String getDstName() {
-		return fDstItemName;
+	public IParameterConversionItemPart getDstPart() {
+		return fDstPart;
 	}
 
 	public String getConstraintsContainingSrcItem() {
-		return fConstraintsContainingSrcItem;
+		return fNodesContainingSrcItem;
 	}
 
-	@Override
-	public void setSrcName(String srcName) {
-		fSrcItemName = srcName;
-	}
+	public boolean isMatch(ParameterConversionItem otherItem) {
 
-	@Override
-	public void setDstName(String dstName) {
-		fDstItemName = dstName;
-	}
-
-	@Override
-	public boolean isMatch(IParameterConversionItem otherItem) {
-
-		if (!fSrcItemName.equals(otherItem.getSrcName())) {
+		if (!fSrcPart.isMatch(otherItem.fSrcPart)) {
 			return false;
 		}
 
-		if (!fDstItemName.equals(otherItem.getDstName())) {
+		if (!fDstPart.isMatch(otherItem.fDstPart)) {
 			return false;
 		}
 
 		return true;
-	}
-
-	@Override
-	public int getItemLevel() {
-
-		return StringHelper.countOccurencesOfChar(fSrcItemName, ':');
-	}
-
-	@Override
-	public int getItemTypeLevel() {
-		return 2;
-	}
-
-	@Override
-	public void convertStatementCondition(IStatementCondition statementCondition) {
 	}
 
 }

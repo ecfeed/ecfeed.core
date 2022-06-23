@@ -17,28 +17,28 @@ import java.util.List;
 
 public class ParameterConversionDefinition {
 
-	private List<IParameterConversionItem> fParameterConversionItems;
+	private List<ParameterConversionItem> fParameterConversionItems;
 
 	public ParameterConversionDefinition() {
 		fParameterConversionItems = new ArrayList<>();
 	}
 
-	public void addItem(IParameterConversionItem parameterConversionItem) {
+	public void addItem(ParameterConversionItem parameterConversionItem) {
 
 		fParameterConversionItems.add(parameterConversionItem);
 	}
 
-	public List<IParameterConversionItem> createSortedCopyOfConversionItems() {
+	public List<ParameterConversionItem> createSortedCopyOfConversionItems() {
 
-		List<IParameterConversionItem> sortedConversionItems = new ArrayList<>(fParameterConversionItems);
+		List<ParameterConversionItem> sortedConversionItems = new ArrayList<>(fParameterConversionItems);
 
-		Comparator<IParameterConversionItem> comparator = new Comparator<IParameterConversionItem>() {
+		Comparator<ParameterConversionItem> comparator = new Comparator<ParameterConversionItem>() {
 
 			@Override
-			public int compare(IParameterConversionItem leftItem, IParameterConversionItem rightItem) {
+			public int compare(ParameterConversionItem leftItem, ParameterConversionItem rightItem) {
 
-				int leftItemTypeLevel = leftItem.getItemTypeLevel();
-				int rightItemTypeLevel = rightItem.getItemTypeLevel();
+				int leftItemTypeLevel = leftItem.getSrcPart().getItemTypeLevel();
+				int rightItemTypeLevel = rightItem.getSrcPart().getItemTypeLevel();
 
 				if (rightItemTypeLevel > leftItemTypeLevel) {
 					return 1;
@@ -48,9 +48,8 @@ public class ParameterConversionDefinition {
 					return -1;
 				}
 
-				int leftItemLevel = leftItem.getItemLevel();
-				int rightItemLevel = rightItem.getItemLevel();
-
+				int leftItemLevel = leftItem.getSrcPart().getItemLevel();
+				int rightItemLevel = rightItem.getSrcPart().getItemLevel();
 
 				if (rightItemLevel > leftItemLevel) {
 					return 1;
@@ -60,7 +59,7 @@ public class ParameterConversionDefinition {
 					return -1;
 				}
 
-				return rightItem.getSrcName().compareTo(leftItem.getSrcName());
+				return rightItem.getSrcPart().getName().compareTo(leftItem.getSrcPart().getName());
 			}
 		};
 
@@ -77,9 +76,9 @@ public class ParameterConversionDefinition {
 
 		for (int index = 0; index < size; index++) {
 
-			IParameterConversionItem conversionItem = fParameterConversionItems.get(index);
+			ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
 
-			String itemName = conversionItem.getSrcName();
+			String itemName = conversionItem.getSrcPart().getName();
 
 			itemNames.add(itemName);
 		}
@@ -95,9 +94,9 @@ public class ParameterConversionDefinition {
 
 		for (int index = 0; index < size; index++) {
 
-			IParameterConversionItem conversionItem = fParameterConversionItems.get(index);
+			ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
 
-			String itemName = conversionItem.getDstName();
+			String itemName = conversionItem.getDstPart().getName();
 
 			itemNames.add(itemName);
 		}
@@ -105,18 +104,18 @@ public class ParameterConversionDefinition {
 		return itemNames;
 	}
 
-	public void removeItem(ParameterConversionItemForChoice conversionItemToFind) {
+	//	public void removeItem(ParameterConversionItemForChoice conversionItemToFind) {
+	//
+	//		int index = findConversionItem(conversionItemToFind);
+	//
+	//		fParameterConversionItems.remove(index);
+	//	}
 
-		int index = findConversionItem(conversionItemToFind);
-
-		fParameterConversionItems.remove(index);
-	}
-
-	public int findConversionItem(IParameterConversionItem conversionItemToFind) {
+	public int findConversionItem(ParameterConversionItem conversionItemToFind) {
 
 		int index = 0;
 
-		for (IParameterConversionItem conversionItem : fParameterConversionItems) {
+		for (ParameterConversionItem conversionItem : fParameterConversionItems) {
 
 			if (conversionItem.isMatch(conversionItemToFind)) {
 				return index;
@@ -133,7 +132,7 @@ public class ParameterConversionDefinition {
 		return fParameterConversionItems.size();
 	}
 
-	public IParameterConversionItem getItem(int index) {
+	public ParameterConversionItem getItem(int index) {
 
 		return fParameterConversionItems.get(index);
 	}
@@ -142,16 +141,16 @@ public class ParameterConversionDefinition {
 		fParameterConversionItems.clear();
 	}
 
-	public void setSrcName(String srcName, int index) {
-
-		IParameterConversionItem conversionItem = fParameterConversionItems.get(index);
-		conversionItem.setSrcName(srcName);
-	}
-
-	public void setDstName(String dstName, int index) {
-
-		IParameterConversionItem conversionItem = fParameterConversionItems.get(index);
-		conversionItem.setDstName(dstName);
-	}
+//	public void setSrcName(String srcName, int index) {
+//
+//		ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
+//		conversionItem.setSrcName(srcName);
+//	}
+//
+//	public void setDstName(String dstName, int index) {
+//
+//		ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
+//		conversionItem.setDstName(dstName);
+//	}
 
 }

@@ -20,9 +20,10 @@ import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCas
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItem;
+import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.ParameterConversionItemForChoice;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -148,20 +149,28 @@ public class MethodNodeHelper {
 	}
 
 	public static void updateChoiceReferencesInTestCases(
-			IParameterConversionItem parameterConversionItem,
+			ParameterConversionItem parameterConversionItem,
 			List<TestCaseNode> testCaseNodes,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		if (!(parameterConversionItem instanceof ParameterConversionItemForChoice)) {
+		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
+
+		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
 			return;
 		}
 
-		ParameterConversionItemForChoice parameterConversionItemForChoice = 
-				(ParameterConversionItemForChoice)parameterConversionItem;
+		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
 
-		ChoiceNode srcChoice = parameterConversionItemForChoice.getSrcChoice();
-		ChoiceNode dstChoice = parameterConversionItemForChoice.getDstChoice();
+		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
+			return;
+		}
+
+		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
+		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
+
+		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
+		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
 
 		for (TestCaseNode testCaseNode : testCaseNodes)  {
 
@@ -179,7 +188,7 @@ public class MethodNodeHelper {
 	}
 
 	public static void updateChoiceReferencesInConstraints( // TODO DE-NO rename to transform constraints
-			IParameterConversionItem parameterConversionItem,
+			ParameterConversionItem parameterConversionItem,
 			List<ConstraintNode> constraintNodes,
 			IExtLanguageManager extLanguageManager) {
 

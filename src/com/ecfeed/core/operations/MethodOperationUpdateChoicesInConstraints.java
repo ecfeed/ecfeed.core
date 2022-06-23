@@ -15,7 +15,7 @@ import java.util.List;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 // TODO DE-NO remove?
 
@@ -23,12 +23,12 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 
 	private static final String UPDATE_CHOICE_REFERENCES_IN_TEST_CASES = "Update choice references in test cases.";
 
-	IParameterConversionItem fParameterConversionItem;
+	ParameterConversionItem fParameterConversionItem;
 	private List<ConstraintNode> fConstraintNodes;
 	private IExtLanguageManager fExtLanguageManager;
 
 	public MethodOperationUpdateChoicesInConstraints(
-			IParameterConversionItem parameterConversionItem,
+			ParameterConversionItem parameterConversionItem,
 			List<ConstraintNode> constraintNodes,
 			IExtLanguageManager extLanguageManager) {
 

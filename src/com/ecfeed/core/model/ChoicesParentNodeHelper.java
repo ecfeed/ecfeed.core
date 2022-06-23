@@ -14,8 +14,8 @@ import java.util.List;
 
 import com.ecfeed.core.operations.SimpleOperationRemoveAllChoices;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemForChoice;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 
 public abstract class ChoicesParentNodeHelper {
 
@@ -39,7 +39,7 @@ public abstract class ChoicesParentNodeHelper {
 			ChoicesParentNode srcParentNode, 
 			ChoicesParentNode dstParentNode,
 			ListOfModelOperations inOutReverseOperations,
-			List<IParameterConversionItem> outChoiceConversionList,
+			List<ParameterConversionItem> outChoiceConversionList,
 			IExtLanguageManager extLanguageManager) {
 
 		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, outChoiceConversionList);
@@ -53,7 +53,7 @@ public abstract class ChoicesParentNodeHelper {
 	private static void createCopyOfChoicesSubtreesRecursive(
 			ChoicesParentNode srcParentNode, 
 			ChoicesParentNode dstParentNode,
-			List<IParameterConversionItem> inOutChoiceConversionList) {
+			List<ParameterConversionItem> inOutChoiceConversionList) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -69,8 +69,12 @@ public abstract class ChoicesParentNodeHelper {
 			dstParentNode.addChoice(clonedChoiceNode);
 
 			if (inOutChoiceConversionList != null) {
-				ParameterConversionItemForChoice parameterConversionItemForChoice = 
-						new ParameterConversionItemForChoice(choiceNode, clonedChoiceNode, null);
+				
+				ParameterConversionItemPartForChoice srcPart = new ParameterConversionItemPartForChoice(choiceNode);
+				ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(clonedChoiceNode);
+				
+				ParameterConversionItem parameterConversionItemForChoice = 
+						new ParameterConversionItem(srcPart, dstPart, null);
 
 				inOutChoiceConversionList.add(parameterConversionItemForChoice);
 			}

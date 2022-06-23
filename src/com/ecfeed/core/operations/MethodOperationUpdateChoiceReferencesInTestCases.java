@@ -15,18 +15,18 @@ import java.util.List;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class MethodOperationUpdateChoiceReferencesInTestCases extends AbstractModelOperation { // TODO DE-NO rename
 
 	private static final String UPDATE_CHOICE_REFERENCES_IN_TEST_CASES = "Update choice references in test cases.";
 
-	IParameterConversionItem fParameterConversionItem;
+	ParameterConversionItem fParameterConversionItem;
 	List<TestCaseNode> fTestCaseNodes;
 	IExtLanguageManager fExtLanguageManager;
 
 	public MethodOperationUpdateChoiceReferencesInTestCases(
-			IParameterConversionItem parameterConversionItem,
+			ParameterConversionItem parameterConversionItem,
 			List<TestCaseNode> testCaseNodes,
 			IExtLanguageManager extLanguageManager) {
 

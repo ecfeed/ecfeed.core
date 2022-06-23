@@ -14,7 +14,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public abstract class AbstractStatement implements IStatement {
 
@@ -96,7 +96,7 @@ public abstract class AbstractStatement implements IStatement {
 	public abstract boolean updateReferences(MethodNode method);
 
 	protected abstract void updateChoiceReferences(
-			IParameterConversionItem parameterConversionItem,
+			ParameterConversionItem parameterConversionItem,
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager);
 

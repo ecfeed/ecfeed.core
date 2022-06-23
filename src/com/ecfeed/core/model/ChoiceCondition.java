@@ -18,10 +18,11 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItem;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ObjectHelper;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.RelationMatcher;
 
@@ -290,11 +291,27 @@ public class ChoiceCondition implements IStatementCondition {
 
 	@Override
 	public void updateChoiceReferences( // TODO DE-NO extract to super class ?
-			IParameterConversionItem parameterConversionItem,
+			ParameterConversionItem parameterConversionItem,
 			ListOfModelOperations reverseOperations, // TODO DE-NO remove parameters
 			IExtLanguageManager extLanguageManager) {
 
-		parameterConversionItem.convertStatementCondition(this);
+		ChoiceNode srcChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getSrcPart());
+
+		if (srcChoiceNode == null) {
+			return;
+		}
+
+		ChoiceNode dstChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getDstPart());
+
+		if (dstChoiceNode == null) {
+			return;
+		}
+
+		if (!srcChoiceNode.equals(fRightChoice)) {
+			return;
+		}
+
+		fRightChoice = dstChoiceNode;
 	}
 
 	@Override
@@ -311,9 +328,9 @@ public class ChoiceCondition implements IStatementCondition {
 	public String getLabel(MethodParameterNode methodParameterNode) {
 		return null;
 	}
-	
+
 	public void conditionallyConvertChoice(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
-		
+
 		if (fRightChoice == oldChoiceNode) {
 			fRightChoice = newChoiceNode;
 		}
