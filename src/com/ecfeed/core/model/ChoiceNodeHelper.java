@@ -39,7 +39,6 @@ public class ChoiceNodeHelper {
 		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
 		List<ChoiceNode> childChoicesToRemove = new ArrayList<ChoiceNode>(childChoices);
 
-		// TODO DE-NO reverse operation
 		for (ChoiceNode childChoice : childChoices) {
 
 			ChoiceNode clonedChoiceNode = childChoice.makeClone();
@@ -102,8 +101,6 @@ public class ChoiceNodeHelper {
 
 		String qualifiedName = getQualifiedName(choiceNode, extLanguageManager);
 
-		qualifiedName = getDetachedMarker(choiceNode.isDetached()) + qualifiedName;
-
 		if (choiceNode.isAbstract()) {
 			return qualifiedName + ChoiceNode.ABSTRACT_CHOICE_MARKER;
 		}
@@ -125,31 +122,16 @@ public class ChoiceNodeHelper {
 			return "EMPTY";
 		}
 
-		String qualifiedName = choiceNode.getName();
-
-		qualifiedName = getDetachedMarker(choiceNode.isDetached()) + qualifiedName;
-
-		return qualifiedName;
-	}
-
-	private static String getDetachedMarker(boolean isDetached) {
-
-		if  (isDetached) {
-			return "[!]";
-		}
-
-		return "";
+		return choiceNode.getName();
 	}
 
 	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();	
 
-		String detachedMarker = getDetachedMarker(choiceNode.isDetached());
-
 		if (abstractParameterNode == null) {
 
-			return detachedMarker + ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+			return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 		}
 
 		if (abstractParameterNode instanceof MethodParameterNode) {
@@ -157,11 +139,11 @@ public class ChoiceNodeHelper {
 			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
 
 			if (methodParameterNode.isExpected()) {
-				return detachedMarker +	"[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
+				return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
 			}
 		}
 
-		return detachedMarker + ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
@@ -599,17 +581,6 @@ public class ChoiceNodeHelper {
 		cloneChoiceNode.derandomize();
 
 		return cloneChoiceNode;
-	}
-
-	public static void setDetachedWithChildren(ChoiceNode topChoiceNode, boolean isDetached)  {
-
-		List<ChoiceNode> choiceNodes = topChoiceNode.getChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-			setDetachedWithChildren(choiceNode, isDetached);
-		}
-
-		topChoiceNode.setDetached(isDetached);
 	}
 
 	public static List<ChoiceNode> removeDuplicates(List<ChoiceNode> choiceNodes) {

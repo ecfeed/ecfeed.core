@@ -19,13 +19,11 @@ import com.ecfeed.core.utils.StringHelper;
 public abstract class ParametersParentNode extends AbstractNode {
 
 	private List<AbstractParameterNode> fParameters;
-	private List<AbstractParameterNode> fDetachedParameters;
 
 	public ParametersParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, modelChangeRegistrator);
 		fParameters = new ArrayList<AbstractParameterNode>();
-		fDetachedParameters = new ArrayList<AbstractParameterNode>();
 	}
 
 	public abstract List<MethodNode> getMethods(AbstractParameterNode parameter);	
@@ -54,26 +52,9 @@ public abstract class ParametersParentNode extends AbstractNode {
 		return fParameters.size();
 	}	
 
-	public int getDetachedParametersCount() {
-		return fDetachedParameters.size();
-	}
-
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
 
 		for (AbstractParameterNode parameter : fParameters) {
-
-			final String parameterName = parameter.getName();
-
-			if (parameterName.equals(parameterNameToFind)) {
-				return parameter;
-			}
-		}
-		return null;
-	}
-
-	public AbstractParameterNode findDetachedParameter(String parameterNameToFind) {
-
-		for (AbstractParameterNode parameter : fDetachedParameters) {
 
 			final String parameterName = parameter.getName();
 
@@ -152,16 +133,6 @@ public abstract class ParametersParentNode extends AbstractNode {
 		return result;
 	}
 
-	public boolean removeDetachedParameter(AbstractParameterNode parameter) {
-
-		parameter.setParent(null);
-
-		boolean result = fDetachedParameters.remove(parameter);
-		registerChange();
-
-		return result;
-	}
-	
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 
 		fParameters.clear();
@@ -221,42 +192,6 @@ public abstract class ParametersParentNode extends AbstractNode {
 				return newParameterName;
 			}
 		}
-	}
-
-	public void addParameterToDetached(AbstractParameterNode abstractParameterNode) {
-
-		abstractParameterNode.setDetached(true);
-		fDetachedParameters.add(abstractParameterNode);
-	}
-
-	public void detachParameterNode(String name) {
-
-		AbstractParameterNode abstractParameterNode = findParameter(name);
-
-		if (abstractParameterNode == null) {
-			ExceptionHelper.reportRuntimeException("Cannot find parameter " + name + ".");
-		}
-
-		changeChoicesToDetached(abstractParameterNode);
-
-		MethodNode methodNode = (MethodNode)abstractParameterNode.getParent();
-
-		if (false == removeParameter(abstractParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Cannot remove parameter.");
-		}
-
-		abstractParameterNode.setParent(methodNode);
-		addParameterToDetached(abstractParameterNode);
-	}
-
-	private void changeChoicesToDetached(AbstractParameterNode abstractParameterNode) {
-
-		List<ChoiceNode> choiceNodes = abstractParameterNode.getChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-			ChoiceNodeHelper.setDetachedWithChildren(choiceNode, true);
-		}
-
 	}
 
 }

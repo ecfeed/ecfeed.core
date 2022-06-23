@@ -30,7 +30,6 @@ public class ChoiceNode extends ChoicesParentNode {
 	private String fValueString;
 	private Set<String> fLabels;
 	private boolean fIsRandomizedValue;
-	private boolean fIsDetached;
 
 	private ChoiceNode fOrigChoiceNode = null;
 
@@ -39,7 +38,6 @@ public class ChoiceNode extends ChoicesParentNode {
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
-		fIsDetached = false;
 	}
 
 	public ChoiceNode(String name, String value, boolean isRandomized, IModelChangeRegistrator modelChangeRegistrator) {
@@ -147,9 +145,9 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public ChoiceNode makeClone(){
-		
+
 		ChoiceNode copy = makeCloneUnlink();
-		
+
 		if(isClone())
 			copy.setOrigChoiceNode(getOrigChoiceNode());
 		else
@@ -161,7 +159,6 @@ public class ChoiceNode extends ChoicesParentNode {
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
-		copy.setDetached(isDetached());
 		copy.setParent(fParent);
 
 		for(ChoiceNode choice : getChoices()){
@@ -378,14 +375,6 @@ public class ChoiceNode extends ChoicesParentNode {
 			return (ChoiceNode)fParent;
 		}
 		return null;
-	}
-
-	public boolean isDetached() {
-		return fIsDetached;
-	}
-
-	public void setDetached(boolean isDetached) {
-		fIsDetached = isDetached;
 	}
 
 	public MethodNode getMethodNode() {
