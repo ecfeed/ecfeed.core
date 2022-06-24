@@ -17,6 +17,8 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartHelper;
+import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.MessageStack;
 
 public class LabelCondition implements IStatementCondition {
@@ -136,8 +138,26 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
+	public void convert(
 			ParameterConversionItem parameterConversionItem) {
+
+		String srcLabel = ParameterConversionItemPartHelper.getLabel(parameterConversionItem.getSrcPart());
+
+		if (StringHelper.isNullOrEmpty(srcLabel)) {
+			return;
+		}
+
+		String dstLabel = ParameterConversionItemPartHelper.getLabel(parameterConversionItem.getDstPart());
+
+		if (dstLabel == null) {
+			return;
+		}
+
+		if (!StringHelper.isEqual(fRightLabel, srcLabel)) {
+			return;
+		}
+
+		fRightLabel = dstLabel;
 	}
 
 	@Override

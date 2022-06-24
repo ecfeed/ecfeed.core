@@ -54,12 +54,13 @@ public class ParameterTransformer {
 
 		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
-		MethodNodeHelper.updateParameterReferencesInConstraints(
-				srcMethodParameterNode, 
-				dstGlobalParameterNode,
-				methodNode.getConstraintNodes(),
-				outReverseOperations,
-				extLanguageManager);
+		// TODO DE-NO remove ?
+		//		MethodNodeHelper.updateParameterReferencesInConstraints(
+		//				srcMethodParameterNode, 
+		//				dstGlobalParameterNode,
+		//				methodNode.getConstraintNodes(),
+		//				outReverseOperations,
+		//				extLanguageManager);
 
 
 		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
@@ -158,8 +159,7 @@ public class ParameterTransformer {
 
 			MethodNodeHelper.updateReferencesInConstraints(
 					choiceConversionItem,
-					methodNode.getConstraintNodes(),
-					extLanguageManager);
+					methodNode.getConstraintNodes());
 		}
 	}
 
@@ -273,9 +273,7 @@ public class ParameterTransformer {
 
 		updateReferencesInConstraints(
 				parameterConversionItem, 
-				methodNode, 
-				inOutReverseOperations, // TODO DE-NO remove - not used
-				extLanguageManager); 
+				methodNode); 
 
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 
@@ -301,14 +299,11 @@ public class ParameterTransformer {
 
 	private static void updateReferencesInConstraints(
 			ParameterConversionItem parameterConversionItem,
-			MethodNode methodNode,
-			ListOfModelOperations inOutReverseOperations, 
-			IExtLanguageManager extLanguageManager) {
+			MethodNode methodNode) {
 
 		MethodNodeHelper.updateReferencesInConstraints(
 				parameterConversionItem,
-				methodNode.getConstraintNodes(),
-				extLanguageManager);
+				methodNode.getConstraintNodes());
 	}
 
 }

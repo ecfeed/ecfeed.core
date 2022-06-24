@@ -27,6 +27,20 @@ public abstract class ParameterConversionItemPartHelper {
 		
 		return srcChoiceNode;
 	}
+
+	public static String getLabel(IParameterConversionItemPart part) {
+		
+		if (!(part instanceof ParameterConversionItemPartForLabel)) {
+			return null;
+		}
+		
+		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
+				(ParameterConversionItemPartForLabel) part;
+		
+		String label = parameterConversionItemPartForLabel.getLabel();
+		
+		return label;
+	}
 	
 }
 

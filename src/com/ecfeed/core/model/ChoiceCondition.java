@@ -76,6 +76,7 @@ public class ChoiceCondition implements IStatementCondition {
 		if (choiceNode == null) {
 			return false;
 		}
+		
 		fRightChoice = choiceNode;
 
 		return true;
@@ -290,7 +291,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(ParameterConversionItem parameterConversionItem) {
+	public void convert(ParameterConversionItem parameterConversionItem) {
 
 		ChoiceNode srcChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getSrcPart());
 

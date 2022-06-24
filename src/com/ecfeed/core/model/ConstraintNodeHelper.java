@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class ConstraintNodeHelper {
 
-	public static void updateReferences(
+	public static void convertConstraint(
 			ConstraintNode constraintNode,
 			ParameterConversionItem parameterConversionItem) {
 

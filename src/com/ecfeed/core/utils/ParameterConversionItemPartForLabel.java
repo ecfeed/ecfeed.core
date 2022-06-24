@@ -26,5 +26,8 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 		return false;
 	}
 
+	public String getLabel() {
+		return super.getName();
+	}
 }
 

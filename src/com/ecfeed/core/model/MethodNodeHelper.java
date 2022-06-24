@@ -186,13 +186,12 @@ public class MethodNodeHelper {
 		}
 	}
 
-	public static void updateReferencesInConstraints( // TODO DE-NO rename to transform constraints
+	public static void updateReferencesInConstraints(
 			ParameterConversionItem parameterConversionItem,
-			List<ConstraintNode> constraintNodes,
-			IExtLanguageManager extLanguageManager) {
-
+			List<ConstraintNode> constraintNodes) {
+		
 		for (ConstraintNode constraintNode : constraintNodes) {
-			ConstraintNodeHelper.updateReferences(
+			ConstraintNodeHelper.convertConstraint(
 					constraintNode, 
 					parameterConversionItem);
 		}

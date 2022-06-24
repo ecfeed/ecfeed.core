@@ -327,7 +327,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
+	public void convert(
 			ParameterConversionItem parameterConversionItem) {
 	}
 

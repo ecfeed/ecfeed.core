@@ -25,7 +25,6 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 
 	ParameterConversionItem fParameterConversionItem;
 	private List<ConstraintNode> fConstraintNodes;
-	private IExtLanguageManager fExtLanguageManager;
 
 	public MethodOperationUpdateChoicesInConstraints(
 			ParameterConversionItem parameterConversionItem,
@@ -36,7 +35,6 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 
 		fParameterConversionItem = parameterConversionItem;
 		fConstraintNodes = constraintNodes;
-		fExtLanguageManager = extLanguageManager;
 	}
 
 	@Override
@@ -44,8 +42,7 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 
 		MethodNodeHelper.updateReferencesInConstraints(
 				fParameterConversionItem,
-				fConstraintNodes,
-				fExtLanguageManager);
+				fConstraintNodes);
 	}
 
 	@Override

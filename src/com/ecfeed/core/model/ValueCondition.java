@@ -187,7 +187,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
+	public void convert(
 			ParameterConversionItem parameterConversionItem) {
 	}
 

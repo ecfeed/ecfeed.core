@@ -388,7 +388,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	protected void convert(
 			ParameterConversionItem parameterConversionItem) {
 
-		fRightCondition.updateChoiceReferences(parameterConversionItem);
+		fRightCondition.convert(parameterConversionItem);
 	}
 
 	@Override
@@ -404,15 +404,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
-		
+
 		List<String> result = new ArrayList<>();
-		
+
 		String label = fRightCondition.getLabel(methodParameterNode);
-		
+
 		if (label != null) {
 			result.add(label);
 		}
-		
+
 		return result;
 	}
 
