@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.utils.LogHelperRap;
 
 public class RootOperationAddClass extends AbstractModelOperation {
 
@@ -26,6 +27,7 @@ public class RootOperationAddClass extends AbstractModelOperation {
 	
 	public RootOperationAddClass(RootNode rootNode, ClassNode classToAdd, int addIndex, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.ADD_CLASS, extLanguageManager);
+		LogHelperRap.logInfo("test");
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;
 		fAddIndex = addIndex;

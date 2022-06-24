@@ -45,7 +45,7 @@ public class ExceptionMessageHelper {
 
 			String stackMessage = createStackMessage(deepestThrowable);
 
-			return errorMessage + "\n" + stackMessage;
+			return errorMessage + " " + stackMessage;
 		}
 
 		return errorMessage;
@@ -53,11 +53,11 @@ public class ExceptionMessageHelper {
 
 	public static String createExceptionSeparator(LineSeparationType lineSeparationType) {
 
-		if (lineSeparationType == LineSeparationType.ONE_LINE) {
+//		if (lineSeparationType == LineSeparationType.ONE_LINE) {
 			return " ";
-		}
+//		}
 
-		return "\n";
+//		return "\n";
 	}
 
 	private static String createExceptionMessage(
@@ -168,7 +168,7 @@ public class ExceptionMessageHelper {
 
 	private static String createStackMessage(Throwable throwable) {
 
-		String result = "Call stack of root cause: \n";
+		String result = "Call stack of root cause: ";
 
 		StackTraceElement[] stackElements = throwable.getStackTrace();
 
@@ -177,9 +177,9 @@ public class ExceptionMessageHelper {
 			StackTraceElement element = stackElements[index];
 
 			result = result + 
-					"    Class: " + element.getClassName() +
+					" Class: " + element.getClassName() +
 					" Method: " + element.getMethodName() +
-					" Line: " + element.getLineNumber() + "\n";
+					" Line: " + element.getLineNumber() + " ";
 		}
 
 		return result;
