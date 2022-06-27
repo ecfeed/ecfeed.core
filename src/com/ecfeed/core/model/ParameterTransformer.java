@@ -40,7 +40,6 @@ public class ParameterTransformer {
 
 		outReverseOperations.add(reverseOperation);
 
-
 		if (parameterConversionDefinition != null) {
 			convertByConversionList(
 					parameterConversionDefinition, 

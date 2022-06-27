@@ -39,10 +39,10 @@ public abstract class ChoicesParentNodeHelper {
 			ChoicesParentNode srcParentNode, 
 			ChoicesParentNode dstParentNode,
 			ListOfModelOperations inOutReverseOperations,
-			List<ParameterConversionItem> outParameterConversionItems,
+			List<ParameterConversionItem> parameterConversionItems,
 			IExtLanguageManager extLanguageManager) {
 
-		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, outParameterConversionItems);
+		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, parameterConversionItems);
 
 		SimpleOperationRemoveAllChoices reverseOperation = 
 				new SimpleOperationRemoveAllChoices(dstParentNode, extLanguageManager);

@@ -83,7 +83,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItemPartForChoice srcPart = new ParameterConversionItemPartForChoice(methodChoiceNode1);
 		ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(globalChoiceNodeForClass);
@@ -91,7 +91,7 @@ public class ParameterTransformerTest {
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(srcPart, dstPart, null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -101,7 +101,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
