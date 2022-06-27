@@ -409,12 +409,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 			return;
 		}
 
-		//		if (srcType == IParameterConversionItemPart.ItemPartType.CHOICE && 
-		//				fRightCondition instanceof ChoiceCondition) {
-		//			
-		//			convertChoicePartToLabelPart(srcPart, dstPart);
-		//			return;
-		//		}
+		if (srcType == IParameterConversionItemPart.ItemPartType.CHOICE && 
+				fRightCondition instanceof ChoiceCondition) {
+
+			convertChoicePartToLabelPart(srcPart, dstPart);
+			return;
+		}
 
 	}
 
@@ -442,6 +442,33 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		ChoiceCondition choiceCondition = new ChoiceCondition(choiceNode,	this);
 
 		fRightCondition = choiceCondition;
+	}
+	
+	private void convertChoicePartToLabelPart(
+			IParameterConversionItemPart srcPart,
+			IParameterConversionItemPart dstPart) {
+		
+		ChoiceCondition choiceCondition = (ChoiceCondition) fRightCondition;
+		
+		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
+				(ParameterConversionItemPartForChoice) srcPart;
+		
+		ChoiceNode choiceOfCondition = choiceCondition.getRightChoice();
+		ChoiceNode choiceOfItemPart = parameterConversionItemPartForChoice.getChoiceNode();
+		
+		
+		if (!choiceOfCondition.equals(choiceOfItemPart)) {
+			return;
+		}
+		
+		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
+				(ParameterConversionItemPartForLabel) dstPart;
+		
+		String label = parameterConversionItemPartForLabel.getLabel();
+		
+		LabelCondition labelCondition = new LabelCondition(label, this);
+
+		fRightCondition = labelCondition;
 	}
 
 	@Override
