@@ -220,7 +220,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(
@@ -228,7 +228,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForLabel(globalLabel1), 
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -238,7 +238,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
@@ -354,7 +354,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(
@@ -362,7 +362,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -372,7 +372,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
@@ -490,15 +490,15 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
-		ParameterConversionItem parameterConversionItemForChoice = // XYX
+		ParameterConversionItem parameterConversionItemForChoice =
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForChoice(methodChoiceNode1),
 						new ParameterConversionItemPartForLabel(globalLabel1),
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -508,7 +508,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
@@ -621,7 +621,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItemPartForChoice srcPart = new ParameterConversionItemPartForChoice(methodChoiceNode1);
 		ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(globalChoiceNodeOfRoot);
@@ -629,7 +629,7 @@ public class ParameterTransformerTest {
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(srcPart, dstPart, null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -639,7 +639,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfRoot, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
@@ -756,7 +756,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list - to method choices to one global choice
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItem parameterConversionItemForChoice1 = 
 				new ParameterConversionItem(
@@ -764,7 +764,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice1);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice1);
 
 
 		ParameterConversionItem parameterConversionItemForChoice2 = 
@@ -773,7 +773,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice2);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice2);
 
 		// linking
 
@@ -783,7 +783,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode, 
 				globalParameterNodeOfClass, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
@@ -894,7 +894,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(
@@ -902,7 +902,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNode11), 
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -912,7 +912,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
@@ -999,7 +999,7 @@ public class ParameterTransformerTest {
 		addNewSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(
@@ -1007,7 +1007,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNode1), 
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -1017,7 +1017,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
@@ -1143,7 +1143,7 @@ public class ParameterTransformerTest {
 
 		// creating choice conversion list
 
-		ParameterConversionDefinition choiceConversionList = new ParameterConversionDefinition();
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(
@@ -1151,7 +1151,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceOfClass11), 
 						null);
 
-		choiceConversionList.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
 
 		// linking
 
@@ -1161,7 +1161,7 @@ public class ParameterTransformerTest {
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				methodParameterNode1, 
 				globalParameterNodeOfClass1, 
-				choiceConversionList, 
+				parameterConversionDefinition, 
 				reverseOperations, 
 				extLanguageManager);
 
