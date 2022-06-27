@@ -20,8 +20,8 @@ public interface IParameterConversionItemPart  {
 
 	public String getName();
 	public boolean isMatch(IParameterConversionItemPart otherPart);
-	public int getItemTypeLevel();
-	public int getItemLevel();
+	public int getTypeSortOrder();
+	public int getSortOrder();
 	public ItemPartType getType();
 }
 

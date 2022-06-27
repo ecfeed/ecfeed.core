@@ -37,25 +37,25 @@ public class ParameterConversionDefinition {
 			@Override
 			public int compare(ParameterConversionItem leftItem, ParameterConversionItem rightItem) {
 
-				int leftItemTypeLevel = leftItem.getSrcPart().getItemTypeLevel();
-				int rightItemTypeLevel = rightItem.getSrcPart().getItemTypeLevel();
+				int leftItemTypeSortOrder = leftItem.getSrcPart().getTypeSortOrder();
+				int rightItemTypeSortOrder = rightItem.getSrcPart().getTypeSortOrder();
 
-				if (rightItemTypeLevel > leftItemTypeLevel) {
+				if (rightItemTypeSortOrder > leftItemTypeSortOrder) {
 					return 1;
 				}
 
-				if (rightItemTypeLevel < leftItemTypeLevel) {
+				if (rightItemTypeSortOrder < leftItemTypeSortOrder) {
 					return -1;
 				}
 
-				int leftItemLevel = leftItem.getSrcPart().getItemLevel();
-				int rightItemLevel = rightItem.getSrcPart().getItemLevel();
+				int leftItemSortOrder = leftItem.getSrcPart().getSortOrder();
+				int rightItemSortOrder = rightItem.getSrcPart().getSortOrder();
 
-				if (rightItemLevel > leftItemLevel) {
+				if (rightItemSortOrder > leftItemSortOrder) {
 					return 1;
 				}
 
-				if (rightItemLevel < leftItemLevel) {
+				if (rightItemSortOrder < leftItemSortOrder) {
 					return -1;
 				}
 

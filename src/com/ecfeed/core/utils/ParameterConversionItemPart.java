@@ -14,7 +14,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 
 	private String fItemName;
 
-	public abstract int getItemTypeLevel();
+	public abstract int getTypeSortOrder();
 
 	public ParameterConversionItemPart(String itemName) {
 
@@ -36,7 +36,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		return fItemName;
 	}
 
-	public int getItemLevel() {
+	public int getSortOrder() {
 
 		return StringHelper.countOccurencesOfChar(fItemName, ':');
 	}

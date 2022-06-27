@@ -17,7 +17,7 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	}
 
 	@Override
-	public int getItemTypeLevel() {
+	public int getTypeSortOrder() {
 		return 1;
 	}
 
