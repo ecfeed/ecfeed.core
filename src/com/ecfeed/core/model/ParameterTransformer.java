@@ -29,7 +29,7 @@ public class ParameterTransformer {
 	public static MethodNode linkMethodParameteToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstGlobalParameterNode, 
-			ParameterConversionDefinition choiceConversionList,
+			ParameterConversionDefinition parameterConversionDefinition,
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -41,9 +41,9 @@ public class ParameterTransformer {
 		outReverseOperations.add(reverseOperation);
 
 
-		if (choiceConversionList != null) {
+		if (parameterConversionDefinition != null) {
 			convertByConversionList(
-					choiceConversionList, 
+					parameterConversionDefinition, 
 					srcMethodParameterNode, 
 					dstGlobalParameterNode,
 					outReverseOperations,
@@ -127,18 +127,18 @@ public class ParameterTransformer {
 
 		ListOfModelOperations reverseOperationsForChoicesCopy = new ListOfModelOperations();
 
-		List<ParameterConversionItem> choiceConversionList = new ArrayList<>();
+		List<ParameterConversionItem> parameterConversionItems = new ArrayList<>();
 
 		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
 				globalParameterNode, methodParameterNode, 
 				reverseOperationsForChoicesCopy,
-				choiceConversionList,
+				parameterConversionItems,
 				extLanguageManager);
 
 		convertConstraints(
 				methodNode, 
 				globalParameterNode, methodParameterNode, 
-				choiceConversionList, outReverseOperations, 
+				parameterConversionItems, outReverseOperations, 
 				extLanguageManager);
 
 		outReverseOperations.addAll(reverseOperationsForChoicesCopy);
@@ -150,15 +150,15 @@ public class ParameterTransformer {
 			MethodNode methodNode, 
 			AbstractParameterNode srcParameterNode,
 			AbstractParameterNode dstParameterNode, 
-			List<ParameterConversionItem> choiceConversionList,
+			List<ParameterConversionItem> parameterConversionItems,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		for (ParameterConversionItem choiceConversionItem : choiceConversionList) {
+		for (ParameterConversionItem parameterConversionItem : parameterConversionItems) {
 
 			MethodNodeHelper.convertConstraints(
 					methodNode.getConstraintNodes(),
-					choiceConversionItem);
+					parameterConversionItem);
 		}
 	}
 
@@ -221,19 +221,19 @@ public class ParameterTransformer {
 	}
 
 	public static void convertByConversionList(
-			ParameterConversionDefinition choiceConversionItems,
+			ParameterConversionDefinition parameterConversionItems,
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		List<ParameterConversionItem> sortedChoiceConversionItems = 
-				choiceConversionItems.createSortedCopyOfConversionItems();
+		List<ParameterConversionItem> sortedParameterConversionItems = 
+				parameterConversionItems.createSortedCopyOfConversionItems();
 
-		for (ParameterConversionItem choiceConversionItem : sortedChoiceConversionItems) {
+		for (ParameterConversionItem parameterConversionItem : sortedParameterConversionItems) {
 
 			convertByConversionItem(
-					choiceConversionItem, 
+					parameterConversionItem, 
 					srcParameterNode, dstParameterNode,
 					inOutReverseOperations, extLanguageManager); 
 		}

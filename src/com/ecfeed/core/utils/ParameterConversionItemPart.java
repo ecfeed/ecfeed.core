@@ -36,6 +36,11 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 		return fItemName;
 	}
 
+	@Override
+	public void setName(String name) {
+		fItemName = name;
+	}
+	
 	public int getSortOrder() {
 
 		return StringHelper.countOccurencesOfChar(fItemName, ':');

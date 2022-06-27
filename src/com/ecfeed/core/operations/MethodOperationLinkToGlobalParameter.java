@@ -21,7 +21,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 
 	MethodParameterNode fSrcMethodParameterNode;
 	GlobalParameterNode fDstParameterForChoices;
-	ParameterConversionDefinition fChoiceConversionList;
+	ParameterConversionDefinition fParameterConversionDefinition;
 
 	ListOfModelOperations fReverseOperations;
 
@@ -30,14 +30,14 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 	public MethodOperationLinkToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstParameterForChoices, 
-			ParameterConversionDefinition choiceConversionList,
+			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager) {
 
 		super("Link to global parameter", extLanguageManager);
 
 		fSrcMethodParameterNode = srcMethodParameterNode;
 		fDstParameterForChoices = dstParameterForChoices;
-		fChoiceConversionList = choiceConversionList;
+		fParameterConversionDefinition = parameterConversionDefinition;
 		fExtLanguageManager = extLanguageManager;
 
 		fReverseOperations = new ListOfModelOperations();
@@ -51,7 +51,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				fSrcMethodParameterNode,
 				fDstParameterForChoices, 
-				fChoiceConversionList,
+				fParameterConversionDefinition,
 				fReverseOperations,
 				fExtLanguageManager);
 
@@ -81,7 +81,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 			return new MethodOperationLinkToGlobalParameter(
 					fSrcMethodParameterNode,
 					fDstParameterForChoices, 
-					fChoiceConversionList,
+					fParameterConversionDefinition,
 					fExtLanguageManager);
 		}
 

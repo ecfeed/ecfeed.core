@@ -39,10 +39,10 @@ public abstract class ChoicesParentNodeHelper {
 			ChoicesParentNode srcParentNode, 
 			ChoicesParentNode dstParentNode,
 			ListOfModelOperations inOutReverseOperations,
-			List<ParameterConversionItem> outChoiceConversionList,
+			List<ParameterConversionItem> outParameterConversionItems,
 			IExtLanguageManager extLanguageManager) {
 
-		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, outChoiceConversionList);
+		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, outParameterConversionItems);
 
 		SimpleOperationRemoveAllChoices reverseOperation = 
 				new SimpleOperationRemoveAllChoices(dstParentNode, extLanguageManager);
@@ -53,7 +53,7 @@ public abstract class ChoicesParentNodeHelper {
 	private static void createCopyOfChoicesSubtreesRecursive(
 			ChoicesParentNode srcParentNode, 
 			ChoicesParentNode dstParentNode,
-			List<ParameterConversionItem> inOutChoiceConversionList) {
+			List<ParameterConversionItem> inOutParameterConversionItems) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -68,18 +68,18 @@ public abstract class ChoicesParentNodeHelper {
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			if (inOutChoiceConversionList != null) {
-				
+			if (inOutParameterConversionItems != null) {
+
 				ParameterConversionItemPartForChoice srcPart = new ParameterConversionItemPartForChoice(choiceNode);
 				ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(clonedChoiceNode);
-				
+
 				ParameterConversionItem parameterConversionItemForChoice = 
 						new ParameterConversionItem(srcPart, dstPart, null);
 
-				inOutChoiceConversionList.add(parameterConversionItemForChoice);
+				inOutParameterConversionItems.add(parameterConversionItemForChoice);
 			}
 
-			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode, inOutChoiceConversionList);
+			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode, inOutParameterConversionItems);
 		}
 	}
 

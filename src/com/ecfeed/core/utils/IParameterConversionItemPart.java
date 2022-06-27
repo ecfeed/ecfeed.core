@@ -19,6 +19,7 @@ public interface IParameterConversionItemPart  {
 	}
 
 	public String getName();
+	public void setName(String name);
 	public boolean isMatch(IParameterConversionItemPart otherPart);
 	public int getTypeSortOrder();
 	public int getSortOrder();

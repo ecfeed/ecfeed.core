@@ -19,7 +19,7 @@ public class ParameterConversionItem {
 	public ParameterConversionItem(
 			ParameterConversionItemPart srcPart, 
 			ParameterConversionItemPart dstPart,
-			String constraintsContainingSrcItem) {
+			String constraintsContainingSrcItem) { // TODO DE-NO rename
 
 		if (srcPart == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src part should not be empty.");
