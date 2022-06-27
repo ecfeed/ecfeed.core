@@ -125,27 +125,27 @@ public class MethodNodeHelper {
 	}
 
 
-	public static void updateParameterReferencesInConstraints(
-			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			List<ConstraintNode> constraintNodes,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		if (oldMethodParameterNode == null) {
-			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
-		}
-
-		if (dstParameterForChoices == null) {
-			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
-		}
-
-		for (ConstraintNode constraintNode : constraintNodes) {
-			ConstraintNodeHelper.updateParameterReferences(
-					constraintNode,
-					oldMethodParameterNode, dstParameterForChoices);
-		}
-	}
+	//	public static void updateParameterReferencesInConstraints(
+	//			MethodParameterNode oldMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices,
+	//			List<ConstraintNode> constraintNodes,
+	//			ListOfModelOperations reverseOperations,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		if (oldMethodParameterNode == null) {
+	//			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
+	//		}
+	//
+	//		if (dstParameterForChoices == null) {
+	//			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
+	//		}
+	//
+	//		for (ConstraintNode constraintNode : constraintNodes) {
+	//			ConstraintNodeHelper.updateParameterReferences(
+	//					constraintNode,
+	//					oldMethodParameterNode, dstParameterForChoices);
+	//		}
+	//	}
 
 	public static void updateChoiceReferencesInTestCases(
 			ParameterConversionItem parameterConversionItem,
@@ -189,7 +189,7 @@ public class MethodNodeHelper {
 	public static void convertConstraints(
 			List<ConstraintNode> constraintNodes,
 			ParameterConversionItem parameterConversionItem) {
-		
+
 		for (ConstraintNode constraintNode : constraintNodes) {
 			ConstraintNodeHelper.convertConstraint(
 					constraintNode, 

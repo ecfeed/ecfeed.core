@@ -433,13 +433,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fPostcondition.convert(parameterConversionItem);
 	}
 
-	public void updateParameterReferences( // TODO DE-NO remove ?
-			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
-
-		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-	}
+//	public void updateParameterReferences(
+//			MethodParameterNode oldMethodParameterNode,
+//			ChoicesParentNode dstParameterForChoices) {
+//
+//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+//	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 

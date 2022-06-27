@@ -32,19 +32,19 @@ public class ConstraintNodeHelper {
 		constraint.convert(parameterConversionItem);
 	}
 
-	public static void updateParameterReferences(
-			ConstraintNode constraintNode,
-			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
-
-		Constraint constraint = constraintNode.getConstraint();
-
-		if (constraint == null) {
-			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
-		}
-
-		constraint.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-	}
+	//	public static void updateParameterReferences(
+	//			ConstraintNode constraintNode,
+	//			MethodParameterNode oldMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//
+	//		Constraint constraint = constraintNode.getConstraint();
+	//
+	//		if (constraint == null) {
+	//			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
+	//		}
+	//
+	//		//		constraint.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+	//	}
 
 	public static List<ChoiceNode> getChoicesUsedInConstraint(
 			ConstraintNode constraintNode,
