@@ -186,9 +186,9 @@ public class MethodNodeHelper {
 		}
 	}
 
-	public static void updateReferencesInConstraints(
-			ParameterConversionItem parameterConversionItem,
-			List<ConstraintNode> constraintNodes) {
+	public static void convertConstraints(
+			List<ConstraintNode> constraintNodes,
+			ParameterConversionItem parameterConversionItem) {
 		
 		for (ConstraintNode constraintNode : constraintNodes) {
 			ConstraintNodeHelper.convertConstraint(

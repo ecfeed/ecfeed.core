@@ -40,9 +40,9 @@ public class MethodOperationUpdateChoicesInConstraints extends AbstractModelOper
 	@Override
 	public void execute() {
 
-		MethodNodeHelper.updateReferencesInConstraints(
-				fParameterConversionItem,
-				fConstraintNodes);
+		MethodNodeHelper.convertConstraints(
+				fConstraintNodes,
+				fParameterConversionItem);
 	}
 
 	@Override

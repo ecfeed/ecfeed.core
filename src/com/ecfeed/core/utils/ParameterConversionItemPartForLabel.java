@@ -29,5 +29,11 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	public String getLabel() {
 		return super.getName();
 	}
+	
+	@Override
+	public ItemPartType getType() {
+		return IParameterConversionItemPart.ItemPartType.LABEL;
+	}
+	
 }
 

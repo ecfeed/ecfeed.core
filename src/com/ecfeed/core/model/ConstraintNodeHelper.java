@@ -29,7 +29,7 @@ public class ConstraintNodeHelper {
 			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
 		}
 
-		constraint.convert(parameterConversionItem); // TOOD DE-NO rename
+		constraint.convert(parameterConversionItem);
 	}
 
 	public static void updateParameterReferences(

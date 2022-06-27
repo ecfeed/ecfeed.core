@@ -42,7 +42,7 @@ public class ParameterTransformer {
 
 
 		if (choiceConversionList != null) {
-			moveChoicesByConversionList(
+			convertByConversionList(
 					choiceConversionList, 
 					srcMethodParameterNode, 
 					dstGlobalParameterNode,
@@ -157,9 +157,9 @@ public class ParameterTransformer {
 
 		for (ParameterConversionItem choiceConversionItem : choiceConversionList) {
 
-			MethodNodeHelper.updateReferencesInConstraints(
-					choiceConversionItem,
-					methodNode.getConstraintNodes());
+			MethodNodeHelper.convertConstraints(
+					methodNode.getConstraintNodes(),
+					choiceConversionItem);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class ParameterTransformer {
 		inOutReverseOperations.add(reverseOperationSimpleSetLink);
 	}
 
-	public static void moveChoicesByConversionList(
+	public static void convertByConversionList(
 			ParameterConversionDefinition choiceConversionItems,
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
@@ -233,7 +233,7 @@ public class ParameterTransformer {
 
 		for (ParameterConversionItem choiceConversionItem : sortedChoiceConversionItems) {
 
-			moveChoicesByConversionItem(
+			convertByConversionItem(
 					choiceConversionItem, 
 					srcParameterNode, dstParameterNode,
 					inOutReverseOperations, extLanguageManager); 
@@ -262,7 +262,7 @@ public class ParameterTransformer {
 		return reverseOperation;
 	}
 
-	private static void moveChoicesByConversionItem(
+	private static void convertByConversionItem(
 			ParameterConversionItem parameterConversionItem, 
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
@@ -271,9 +271,9 @@ public class ParameterTransformer {
 
 		MethodNode methodNode = srcParameterNode.getMethod();
 
-		updateReferencesInConstraints(
-				parameterConversionItem, 
-				methodNode); 
+		MethodNodeHelper.convertConstraints(
+				methodNode.getConstraintNodes(),
+				parameterConversionItem); 
 
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 
@@ -295,15 +295,6 @@ public class ParameterTransformer {
 			IExtLanguageManager extLanguageManager) {
 
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
-	}
-
-	private static void updateReferencesInConstraints(
-			ParameterConversionItem parameterConversionItem,
-			MethodNode methodNode) {
-
-		MethodNodeHelper.updateReferencesInConstraints(
-				parameterConversionItem,
-				methodNode.getConstraintNodes());
 	}
 
 }

@@ -12,10 +12,16 @@ package com.ecfeed.core.utils;
 
 public interface IParameterConversionItemPart  {
 
+	enum ItemPartType {
+
+		CHOICE,
+		LABEL;
+	}
+
 	public String getName();
-//	public void setName(String name);
 	public boolean isMatch(IParameterConversionItemPart otherPart);
-	public int getItemTypeLevel();	
+	public int getItemTypeLevel();
 	public int getItemLevel();
+	public ItemPartType getType();
 }
 

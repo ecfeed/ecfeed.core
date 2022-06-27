@@ -36,5 +36,10 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 		return fChoiceNode;
 	}
 
+	@Override
+	public ItemPartType getType() {
+		return IParameterConversionItemPart.ItemPartType.CHOICE;
+	}
+
 }
 
