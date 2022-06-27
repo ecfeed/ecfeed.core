@@ -399,16 +399,15 @@ public class StatementArray extends AbstractStatement {
 		}
 	}
 
-	@Override
-	protected void updateParameterReferences(
-			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
-
-		for (AbstractStatement child : fStatements) {
-			child.updateParameterReferences(
-					srcMethodParameterNode, dstParameterForChoices);
-		}
-
-	}
+	//	@Override
+	//	protected void updateParameterReferences(
+	//			MethodParameterNode srcMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//
+	//		for (AbstractStatement child : fStatements) {
+	//			child.updateParameterReferences(
+	//					srcMethodParameterNode, dstParameterForChoices);
+	//		}
+	//	}
 
 }

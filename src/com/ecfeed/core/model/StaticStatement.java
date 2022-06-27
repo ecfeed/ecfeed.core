@@ -141,11 +141,11 @@ public class StaticStatement extends AbstractStatement {
 			ParameterConversionItem parameterConversionItem) {
 	}
 
-	@Override
-	protected void updateParameterReferences(
-			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
-	}
+	//	@Override
+	//	protected void updateParameterReferences(
+	//			MethodParameterNode srcMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//	}
 
 	@Override
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {

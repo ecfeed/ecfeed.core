@@ -471,11 +471,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		fRightCondition = labelCondition;
 	}
 
-	@Override
-	protected void updateParameterReferences( // TODO DE-NO remove ?
-			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices) {
-	}
+//	@Override
+//	protected void updateParameterReferences( // TODO DE-NO remove ?
+//			MethodParameterNode srcMethodParameterNode,
+//			ChoicesParentNode dstParameterForChoices) {
+//	}
 
 	@Override
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {

@@ -54,7 +54,6 @@ public class ParameterTransformer {
 
 		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
-		// TODO DE-NO remove ?
 		//		MethodNodeHelper.updateParameterReferencesInConstraints(
 		//				srcMethodParameterNode, 
 		//				dstGlobalParameterNode,

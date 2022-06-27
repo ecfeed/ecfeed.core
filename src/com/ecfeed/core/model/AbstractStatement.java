@@ -96,7 +96,7 @@ public abstract class AbstractStatement implements IStatement {
 
 	protected abstract void convert(ParameterConversionItem parameterConversionItem);
 
-	protected abstract void updateParameterReferences(
-			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices);
+//	protected abstract void updateParameterReferences(
+//			MethodParameterNode srcMethodParameterNode,
+//			ChoicesParentNode dstParameterForChoices);
 }
