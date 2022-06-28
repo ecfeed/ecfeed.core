@@ -15,7 +15,8 @@ public interface IParameterConversionItemPart  {
 	enum ItemPartType {
 
 		CHOICE,
-		LABEL;
+		LABEL,
+		NAME;
 	}
 
 	public String getName();

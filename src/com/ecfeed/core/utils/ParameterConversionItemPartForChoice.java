@@ -29,6 +29,18 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 
 	@Override
 	public boolean isMatch(IParameterConversionItemPart otherPart) {
+		
+		if (!(otherPart instanceof ParameterConversionItemPartForChoice)) {
+			return false;
+		}
+		
+		ChoiceNode choiceNode = getChoiceNode();
+		ChoiceNode otherChoiceNode = ((ParameterConversionItemPartForChoice)otherPart).getChoiceNode();
+		
+		if (choiceNode.equals(otherChoiceNode)) {
+			return true;
+		}
+		
 		return false;
 	}
 

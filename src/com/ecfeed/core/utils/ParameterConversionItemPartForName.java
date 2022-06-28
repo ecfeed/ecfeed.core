@@ -10,43 +10,39 @@
 
 package com.ecfeed.core.utils;
 
-public class ParameterConversionItemPartForLabel extends ParameterConversionItemPart {
+public class ParameterConversionItemPartForName extends ParameterConversionItemPart {
 
-	public ParameterConversionItemPartForLabel(String label) {
-		super(label);
+	public ParameterConversionItemPartForName(String name) {
+		super(name);
 	}
 
 	@Override
 	public ItemPartType getType() {
-		return IParameterConversionItemPart.ItemPartType.LABEL;
+		return IParameterConversionItemPart.ItemPartType.NAME;
 	}
 	
 	@Override
 	public int getTypeSortOrder() {
-		return 1;
+		return 2;
 	}
 
 	@Override
 	public boolean isMatch(IParameterConversionItemPart otherPart) {
 		
-		if (!(otherPart instanceof ParameterConversionItemPartForLabel)) {
+		if (!(otherPart instanceof ParameterConversionItemPartForName)) {
 			return false;
 		}
 		
-		String label = getLabel();
-		String otherLabel = ((ParameterConversionItemPartForLabel)otherPart).getLabel();
+		String name = getName();
+		String otherName = ((ParameterConversionItemPartForName)otherPart).getName();
 		
-		if (StringHelper.isEqual(label, otherLabel)) {
+		if (StringHelper.isEqual(name, otherName)) {
 			return true;
 		}
 		
 		return false;
-	}
 
-	public String getLabel() {
-		return super.getName();
 	}
-	
 	
 }
 

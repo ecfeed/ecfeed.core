@@ -127,7 +127,7 @@ public class ParameterConversionDefinition {
 		return -1;
 	}
 
-	public int getSize() {
+	public int getItemCount() {
 
 		return fParameterConversionItems.size();
 	}
