@@ -11,12 +11,12 @@
 package com.ecfeed.core.utils;
 
 public class ParameterConversionItemPartForRaw extends ParameterConversionItemPart {
-	
+
 	String fCode;
-	
+
 	public ParameterConversionItemPartForRaw(String code, String name) {
 		super(name);
-		
+
 		fCode = code;
 	}
 
@@ -24,12 +24,12 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	public String toString() {
 		return "(" + fCode + "," + getName() +")";
 	}
-	
+
 	@Override
 	public ItemPartType getType() {
 		return IParameterConversionItemPart.ItemPartType.RAW;
 	}
-	
+
 	@Override
 	public Integer getTypeSortOrder() {
 		return 0;
@@ -37,37 +37,37 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 
 	@Override
 	public boolean isMatch(IParameterConversionItemPart otherPart) {
-		
+
 		if (!(otherPart instanceof ParameterConversionItemPartForRaw)) {
 			return false;
 		}
 
 		ParameterConversionItemPartForRaw parameterConversionItemPartForRaw =
 				(ParameterConversionItemPartForRaw) otherPart;
-		
+
 		if (!(StringHelper.isEqual(fCode, parameterConversionItemPartForRaw.fCode))) {
 			return false;
 		}
-		
+
 		return super.isMatch(otherPart);
 	}
 
 	@Override
 	public int compareTo(IParameterConversionItemPart other) {
-		
+
 		int resultOfComparingTypes = getTypeSortOrder().compareTo(other.getSortOrder());
-		
+
 		if (resultOfComparingTypes != 0) {
 			return resultOfComparingTypes;
 		}
-		
+
 		return super.compareTo(other);
 	}
-	
+
 	public String getCode() {
-		
+
 		return fCode;
 	}
-	
+
 }
 

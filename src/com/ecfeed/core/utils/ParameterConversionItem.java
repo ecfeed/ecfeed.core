@@ -12,14 +12,14 @@ package com.ecfeed.core.utils;
 
 public class ParameterConversionItem {
 
-	private ParameterConversionItemPart fSrcPart;
-	private ParameterConversionItemPart fDstPart;
+	private IParameterConversionItemPart fSrcPart;
+	private IParameterConversionItemPart fDstPart;
 	String fNodesContainingSrcItem;
 
 	public ParameterConversionItem(
-			ParameterConversionItemPart srcPart, 
-			ParameterConversionItemPart dstPart,
-			String constraintsContainingSrcItem) { // TODO DE-NO rename
+			IParameterConversionItemPart srcPart, 
+			IParameterConversionItemPart dstPart,
+			String constraintsContainingSrcItem) {
 
 		if (srcPart == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src part should not be empty.");
