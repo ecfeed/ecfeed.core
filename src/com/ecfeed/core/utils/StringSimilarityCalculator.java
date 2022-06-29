@@ -12,29 +12,36 @@ package com.ecfeed.core.utils;
 
 public class StringSimilarityCalculator {
 
-	public static double calculateSimilarityIndex(String str1, String str2) {
+	public static double calculateSimilarityIndex(
+			ParameterConversionItemPartForRaw item1, 
+			ParameterConversionItemPartForRaw item2) {
 
-		if (str1 == null) {
+		if (item1 == null) {
 			ExceptionHelper.reportRuntimeException("Empty string 1.");
 		}
 
-		if (str2 == null) {
+		if (item2 == null) {
 			ExceptionHelper.reportRuntimeException("Empty string 2.");
 		}
 
-		if (str2.length() > str1.length()) {
+		if (item2.getName().length() > item1.getName().length()) {
 
-			String tmp = str1;
-			str1 = str2;
-			str2 = tmp;
+			ParameterConversionItemPartForRaw tmp = item1;
+			item1 = item2;
+			item2 = tmp;
 		}
 
-		double result = calculateSimilarityIntr(str1, str2);
+		double result1 = 
+				calculateSimilarityForStrings(
+						item1.getType().toString(), 
+						item2.getType().toString());
 
-		return result;
+		double result2 = calculateSimilarityForStrings(item1.getName(), item2.getName());
+
+		return result1 + result2;
 	}
 
-	private static double calculateSimilarityIntr(String str1, String str2) {
+	private static double calculateSimilarityForStrings(String str1, String str2) {
 
 		int similarityValue11 = calculateSimilarityValue(str1, 0, str1, 0, str1.length());
 		int similarityValue22 = calculateSimilarityValue(str2, 0, str2, 0, str2.length());

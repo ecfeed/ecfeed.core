@@ -22,7 +22,7 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	}
 	
 	@Override
-	public int getTypeSortOrder() {
+	public Integer getTypeSortOrder() {
 		return 1;
 	}
 

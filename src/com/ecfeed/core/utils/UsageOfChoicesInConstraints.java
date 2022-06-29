@@ -35,7 +35,7 @@ public class UsageOfChoicesInConstraints {
 
 		for (Constraint constraint : constraints) {
 
-			List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getListOfChoices();
+			List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getListOfChoices(methodParameterNode);
 
 			updateMapOfUsages(constraint, choiceNodesUsedInConstraint);
 		}
@@ -43,9 +43,9 @@ public class UsageOfChoicesInConstraints {
 
 	public List<String> getConstraintNames(ChoiceNode choiceNode) {
 
-		List<String> choiceNames = fMapOfUsages.get(choiceNode);
+		List<String> constraintNames = fMapOfUsages.get(choiceNode);
 
-		return choiceNames;
+		return constraintNames;
 	}
 
 	public List<String> getConstraintNames(String choiceName) {
@@ -88,7 +88,6 @@ public class UsageOfChoicesInConstraints {
 
 			addNewElement(choiceNode, constraint);
 		}
-
 	}
 
 	private void addNewElement(ChoiceNode choiceNode, Constraint constraint) {

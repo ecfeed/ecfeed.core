@@ -178,7 +178,12 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -200,5 +205,6 @@ public class ValueCondition implements IStatementCondition {
 	public String getLabel(MethodParameterNode methodParameterNode) {
 		return null;
 	}
+
 }	
 

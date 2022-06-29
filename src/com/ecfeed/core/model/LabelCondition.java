@@ -129,7 +129,12 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 

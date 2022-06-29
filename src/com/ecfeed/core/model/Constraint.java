@@ -521,9 +521,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return fPrecondition.mentions(choice) || fPostcondition.mentions(choice);
 	}
 
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getListOfChoices() { // TODO DE-NO rename to getChoices getContainingChoices
 
-		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+		List<ChoiceNode> result = new ArrayList<>();
 
 		result.addAll(fPrecondition.getChoices());
 		result.addAll(fPostcondition.getChoices());
@@ -531,6 +531,26 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return result;
 	}
 
+	public List<ChoiceNode> getListOfChoices(MethodParameterNode methodParameterNode) { // TODO DE-NO rename to getChoices getContainingChoices
+
+		List<ChoiceNode> result = new ArrayList<>();
+
+		result.addAll(fPrecondition.getChoices(methodParameterNode));
+		result.addAll(fPostcondition.getChoices(methodParameterNode));
+
+		return result;
+	}
+	
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+
+		List<String> result = new ArrayList<>();
+
+		result.addAll(fPrecondition.getLabels(methodParameterNode));
+		result.addAll(fPostcondition.getLabels(methodParameterNode));
+
+		return result;
+	}
+	
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 
 		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {

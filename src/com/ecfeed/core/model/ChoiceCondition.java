@@ -76,7 +76,7 @@ public class ChoiceCondition implements IStatementCondition {
 		if (choiceNode == null) {
 			return false;
 		}
-		
+
 		fRightChoice = choiceNode;
 
 		return true;
@@ -125,13 +125,29 @@ public class ChoiceCondition implements IStatementCondition {
 	}	
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 
 		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
 		choices.add(fRightChoice);
 
 		return choices;
 	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+
+		MethodParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
+
+		if (!(methodParameterNode.equals(methodParameterNode2))) {
+			return new ArrayList<ChoiceNode>();
+		}
+
+		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
+		choices.add(fRightChoice);
+
+		return choices;
+	}
+
 
 	public ChoiceNode getRightChoice() {
 		return fRightChoice;

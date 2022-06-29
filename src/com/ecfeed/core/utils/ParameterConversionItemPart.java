@@ -14,7 +14,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 
 	private String fItemName;
 
-	public abstract int getTypeSortOrder();
+	public abstract Integer getTypeSortOrder();
 
 	public ParameterConversionItemPart(String itemName) {
 
@@ -40,10 +40,28 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	public void setName(String name) {
 		fItemName = name;
 	}
-	
-	public int getSortOrder() {
+
+	@Override
+	public boolean isMatch(IParameterConversionItemPart otherPart) {
+
+		if (StringHelper.isEqual(fItemName, otherPart.getName())) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public Integer getSortOrder() {
 
 		return StringHelper.countOccurencesOfChar(fItemName, ':');
+	}
+
+	@Override
+	public int compareTo(IParameterConversionItemPart other) {
+
+		return getName().compareTo(other.getName());
+
 	}
 
 }

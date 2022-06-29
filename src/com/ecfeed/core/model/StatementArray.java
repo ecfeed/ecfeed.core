@@ -269,6 +269,23 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+
+		for (AbstractStatement abstractStatement : fStatements) {
+
+			List<ChoiceNode> listOfChoices = abstractStatement.getChoices(methodParameterNode);
+
+			if (listOfChoices != null) {
+				result.addAll(listOfChoices);
+			}
+		}
+
+		return result;
+	}
+	
+	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();

@@ -23,7 +23,7 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 	}
 
 	@Override
-	public int getTypeSortOrder() {
+	public Integer getTypeSortOrder() {
 		return 0;
 	}
 

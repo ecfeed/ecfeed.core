@@ -341,7 +341,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public List<ChoiceNode> getChoices() {
-		return fRightCondition.getListOfChoices();
+		return fRightCondition.getChoices();
+	}
+	
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		return fRightCondition.getChoices(methodParameterNode);
 	}
 
 	public boolean isRightParameterTypeAllowed(String rightParameterType) {

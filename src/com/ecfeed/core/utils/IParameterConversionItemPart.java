@@ -14,16 +14,34 @@ public interface IParameterConversionItemPart  {
 
 	enum ItemPartType {
 
-		CHOICE,
-		LABEL,
-		NAME;
+		CHOICE("C"),
+		LABEL("L"),
+		NAME("N"),
+		RAW("R");
+
+		private String fCode;
+
+		ItemPartType(String code) {
+			fCode = code;
+		}
+
+		public String getCode() {
+			return fCode;
+		}
+
+		@Override
+		public String toString() {
+			return fCode;
+		}
+
 	}
 
+	public ItemPartType getType();
 	public String getName();
 	public void setName(String name);
-	public boolean isMatch(IParameterConversionItemPart otherPart);
-	public int getTypeSortOrder();
-	public int getSortOrder();
-	public ItemPartType getType();
+	public boolean isMatch(IParameterConversionItemPart otherPart); // TODO DE-NO rename to isEqual
+	public Integer getTypeSortOrder(); // TODO DE-NO remove ?
+	public Integer getSortOrder(); // TODO DE-NO remove ?
+	public int compareTo(IParameterConversionItemPart other);
 }
 

@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -211,6 +212,28 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return getChoiceNames(getAllChoices());
 	}
 
+	public Set<String> getAllLabels() {
+
+		Set<String> result = new HashSet<>();
+		
+		Set<ChoiceNode> choices = getAllChoices();
+		
+		for (ChoiceNode choiceNode : choices) {
+			addLabelsForChoiceNode(choiceNode, result);
+		}
+		
+		return result;
+	}
+
+	private void addLabelsForChoiceNode(ChoiceNode choiceNode, Set<String> inOutResult) {
+		
+		Set<String> labelsOfChoice = choiceNode.getLabels();
+		
+		for (String label : labelsOfChoice) {
+			inOutResult.add(label);
+		}
+	}
+	
 	public Set<String> getLeafChoiceNames(){
 
 		return getChoiceNames(getLeafChoices());

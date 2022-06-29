@@ -105,6 +105,28 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		return result;
 	}
+	
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		
+		AbstractParameterNode abstractParameterNode = fChoiceNode.getParameter();
+		
+		if (!(abstractParameterNode instanceof MethodParameterNode)) {
+			return null;
+		}
+		
+		MethodParameterNode methodParameterNode2 = (MethodParameterNode) abstractParameterNode;
+		
+		if (!methodParameterNode2.equals(methodParameterNode)) {
+			return null;
+		}
+		
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+		result.add(fChoiceNode);
+
+		return result;
+	}
+	
 
 	@Override
 	public void derandomize() {

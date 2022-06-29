@@ -133,6 +133,11 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
 	public void derandomize() {
 	}
 
