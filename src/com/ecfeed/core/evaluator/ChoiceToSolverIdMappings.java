@@ -2,6 +2,7 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.utils.LogHelperCore;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,13 +18,13 @@ public class ChoiceToSolverIdMappings {
     public ChoiceToSolverIdMappings() {
 
         fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
-        Sat4jLogger.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
+        LogHelperCore.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
 
         fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");
-        Sat4jLogger.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
+        LogHelperCore.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
 
         fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
-        Sat4jLogger.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
+        LogHelperCore.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
     }
 
     Map<ChoiceNode, Integer> getEqMapping(MethodParameterNode methodParameterNode) {

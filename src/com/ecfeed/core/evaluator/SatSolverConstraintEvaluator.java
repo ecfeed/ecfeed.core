@@ -16,7 +16,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	ParamChoiceSets fParamChoiceSets;
 
-	//    private SimpleChoiceMapping fAtomicToSanitizedMappings;
 	private ChoicesMappingsBucket fChoiceMappingsBucket;
 
 	ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
@@ -85,37 +84,25 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		collectSanitizedValues(fParamChoiceSets,fChoiceMappingsBucket);
 
-		//        Sat4jLogger.log("fSanitizedToInputMappings", fSanitizedToInputMappings, 1, fLogLevel);
-
-
 		fAllRelationStatements = collectRelationStatements(initConstraints);
-		Sat4jLogger.log("fAllRelationStatements", fAllRelationStatements, 1, fLogLevel);
+		LogHelperCore.log("fAllRelationStatements", fAllRelationStatements, 1, fLogLevel);
 
 		sanitizeRelationStatementsWithRelation(
 				fAllRelationStatements,
 				fParamChoiceSets,
 				fChoiceMappingsBucket);
-		//        Sat4jLogger.log("fSanitizedToInputMappings after sanitize", fSanitizedToInputMappings, 1, fLogLevel);
-
 
 		createInputToSanitizedMapping(fParamChoiceSets, fChoiceMappingsBucket);
-		//        Sat4jLogger.log("fArgInputValToSanitizedVal", fArgInputValToSanitizedVal, 1, fLogLevel);
-
 
 		createSanitizedAndAtomicMappings(fParamChoiceSets, fChoiceMappingsBucket);
-		//        Sat4jLogger.log("fAtomicToSanitizedMappings", fAtomicToSanitizedMappings, 1, fLogLevel);
-		//        Sat4jLogger.log("fSanitizedValToAtomicVal", fSanitizedValToAtomicVal, 1, fLogLevel);
 
 		parseConstraintsToSat(
 				initConstraints,
 				fOldExpectedValueConstraintsData,
 				fExpectedValueAssignmentsData);
 
-
-
-
-		Sat4jLogger.log("fExpectedValConstraints", fOldExpectedValueConstraintsData, 1, fLogLevel);
-		Sat4jLogger.log("fExpectedValueAssignmentsData", fExpectedValueAssignmentsData, 1, fLogLevel);
+		LogHelperCore.log("fExpectedValConstraints", fOldExpectedValueConstraintsData, 1, fLogLevel);
+		LogHelperCore.log("fExpectedValueAssignmentsData", fExpectedValueAssignmentsData, 1, fLogLevel);
 	}
 
 	@Override

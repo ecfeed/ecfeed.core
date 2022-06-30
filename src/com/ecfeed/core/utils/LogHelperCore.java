@@ -10,6 +10,8 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import ch.qos.logback.core.util.FileSize;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multisets;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 
 public class LogHelperCore {
@@ -35,6 +38,8 @@ public class LogHelperCore {
     private static String patternLog = "%d{HH:mm:ss.SSS} [%thread] %-5level - %msg%n";
     private static String sizeCap = "500 mb";
     private static int historyCap = 3;
+
+    private static final String INDENT = "  ";
 
     static {
 
@@ -182,6 +187,73 @@ public class LogHelperCore {
         json.put("line", element.getLineNumber());
 
         return json;
+    }
+
+    public static void log(String message, int logLevel, int controllingVariable) {
+
+        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
+            return;
+        }
+
+        logHeaderAndMessage(message);
+    }
+
+    public static void log(String message, Object o, int logLevel, int controllingVariable) {
+
+        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
+            return;
+        }
+
+        logHeaderAndMessage(message);
+        LogHelperCore.logInfo(INDENT + o.toString());
+    }
+
+    public static void log(String message, List<?> o, int logLevel, int controllingVariable) {
+
+        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
+            return;
+        }
+
+        logHeaderAndMessage(message);
+
+        int counter = 0;
+
+        for (Object element : o) {
+            logCounterAndElement(counter, element);
+            counter++;
+        }
+    }
+
+    public static void log(String message, Multiset<?> o, int logLevel, int controllingVariable) {
+
+        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
+            return;
+        }
+
+        logHeaderAndMessage(message);
+
+        int counter = 0;
+
+        for (Object element : Multisets.copyHighestCountFirst(o).elementSet()) {
+            logCounterAndElement(counter, element);
+            counter++;
+        }
+
+    }
+
+    private static void logCounterAndElement(int counter, Object element) {
+
+        LogHelperCore.logInfo(INDENT + "[ " + counter + " ] [ " + element.toString() + " ]");
+    }
+
+    private static boolean shouldLogThisMessage(int logLevel, int controllingVariable) {
+
+        return (logLevel <= controllingVariable);
+    }
+
+    private static void logHeaderAndMessage(String message) {
+
+        LogHelperCore.logInfo("[ALG-LOG] " + message);
     }
 
 }
