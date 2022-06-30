@@ -237,7 +237,12 @@ public class LogHelperCore {
 
     private static void logCounterAndElement(int counter, Object element) {
 
-        LogHelperCore.logInfo(INDENT + "[ " + counter + " ] [ " + element.toString() + " ]");
+        if (element == null) {
+            LogHelperCore.logInfo(INDENT + "[ " + counter + " ]");
+        } else {
+            LogHelperCore.logInfo(INDENT + "[ " + counter + " ] [ " + element.toString() + " ]");
+        }
+
     }
 
 }
