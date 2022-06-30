@@ -50,7 +50,7 @@ public class LogHelperCore {
         }
 
         patternFileInstance = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss").format(new Date());
-        patternFile = parsedLocation + File.separator + "db." + patternFileInstance + ".%d{yyyy-MM-dd}.log";
+        patternFile = parsedLocation + File.separator + "core." + patternFileInstance + ".%d{yyyy-MM-dd}.log";
 
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
