@@ -18,13 +18,13 @@ public class ChoiceToSolverIdMappings {
     public ChoiceToSolverIdMappings() {
 
         fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
-        LogHelperCore.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings, 1, fLogLevel);
+        LogHelperCore.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings);
 
         fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");
-        LogHelperCore.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings, 1, fLogLevel);
+        LogHelperCore.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings);
 
         fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
-        LogHelperCore.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings, 1, fLogLevel);
+        LogHelperCore.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings);
     }
 
     Map<ChoiceNode, Integer> getEqMapping(MethodParameterNode methodParameterNode) {

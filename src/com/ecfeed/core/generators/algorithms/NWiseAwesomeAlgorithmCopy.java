@@ -63,7 +63,7 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
     private int calculateIgnoreCount() {
 
         int result = fNTuplesCount.get() * (100 - getCoverage()) / 100;
-        LogHelperCore.log("Ignore count", result, 1, fLogLevel);
+        LogHelperCore.log("Ignore count", result);
 
         return result;
     }
@@ -71,7 +71,7 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
     private IntegerHolder calculateNTuplesCount(List<SortedMap<Integer, E>> remainingTuples) {
 
         IntegerHolder result = new IntegerHolder(remainingTuples.size());
-        LogHelperCore.log("nTuplesCount", result.get(), 1, fLogLevel);
+        LogHelperCore.log("nTuplesCount", result.get());
 
         return result;
     }
@@ -79,14 +79,14 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
     @Override
     public List<E> getNext() {
 
-        LogHelperCore.log("========== getNext test case ==========", 1, fLogLevel);
+        LogHelperCore.log("========== getNext test case ==========");
 
         IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
         List<E> tuple = getBestMaxTuple(generatorProgressMonitor);
 
         if (tuple == null) {
-            LogHelperCore.log("Tuple is null", 1, fLogLevel);
+            LogHelperCore.log("Tuple is null");
         }
 
         return tuple;
@@ -107,7 +107,7 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
             }
         }
 
-        LogHelperCore.log("partialNTo0Tuples", result, 1, fLogLevel);
+        LogHelperCore.log("partialNTo0Tuples", result);
         return result;
     }
 
@@ -123,7 +123,7 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
             }
         }
 
-        LogHelperCore.log("Dimensioned items", result, 1, fLogLevel);
+        LogHelperCore.log("Dimensioned items", result);
         return result;
     }
 
@@ -153,14 +153,14 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
             }
         }
 
-        LogHelperCore.log("Best max tuple", bestTuple, 1, fLogLevel);
+        LogHelperCore.log("Best max tuple", bestTuple);
 
         removeAffectedTuples(bestTuple, fPartialNTo0Tuples, fNTuplesCount);
         incrementProgress(bestTupleScore);  // score == number of covered tuples, so its accurate progress measure
 
         final List<E> result = AlgorithmHelper.uncompressTuple(bestTuple, fDimCount);
 
-        LogHelperCore.log("Result of getNext - best max tuple", result, 1, fLogLevel);
+        LogHelperCore.log("Result of getNext - best max tuple", result);
         return result;
     }
 
@@ -334,7 +334,7 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
             }
         }
 
-        LogHelperCore.log("partialNTo0Tuples after removal of best tuple", outPartialNTo0Tuples, 1, fLogLevel);
+        LogHelperCore.log("partialNTo0Tuples after removal of best tuple", outPartialNTo0Tuples);
     }
 
     private ImmutableSortedMap<Integer, E> createOneCounter(List<Map.Entry<Integer, E>> sublist) {
@@ -406,7 +406,7 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
             allValidTuples = newValidTuples; // TODO - do we need 2 variables ? why do we assign (what for did we calculate previous result ?)
         }
 
-        LogHelperCore.log("All N tuples", allValidTuples, 1, fLogLevel);
+        LogHelperCore.log("All N tuples", allValidTuples);
         return allValidTuples;
     }
 

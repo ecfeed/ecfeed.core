@@ -90,14 +90,14 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 	@Override
 	public List<E> getNext() {
 
-		LogHelperCore.log("========== getNext test case ==========", 1, fLogLevel);
+		LogHelperCore.log("========== getNext test case ==========");
 
 		IEcfProgressMonitor generatorProgressMonitor = getGeneratorProgressMonitor();
 
 		List<E> tuple = findBestFullTuple(generatorProgressMonitor);
 
 		if (tuple == null) {
-			LogHelperCore.log("Tuple is null", 1, fLogLevel);
+			LogHelperCore.log("Tuple is null");
 		}
 
 		return tuple;
@@ -115,7 +115,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 			}
 		}
 
-		LogHelperCore.log("Dimensioned items", result, 1, fLogLevel);
+		LogHelperCore.log("Dimensioned items", result);
 		return result;
 	}
 
@@ -145,7 +145,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 			}
 		}
 
-		LogHelperCore.log("Best max tuple", bestFullTuple, 1, fLogLevel);
+		LogHelperCore.log("Best max tuple", bestFullTuple);
 
 		fScoreEvaluator.update(bestFullTuple);
 
@@ -153,7 +153,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 
 		final List<E> result = AlgorithmHelper.uncompressTuple(bestFullTuple, fDimCount);
 
-		LogHelperCore.log("Result of getNext - best max tuple", result, 1, fLogLevel);
+		LogHelperCore.log("Result of getNext - best max tuple", result);
 		return result;
 	}
 
