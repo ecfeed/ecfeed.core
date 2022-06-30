@@ -53,9 +53,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 
 		fRandomizer = new Randomizer();
 
-		if (LoggingLevel.get() == LoggingLevel.DETAILED) {
-			System.out.println("Randomizer seed for current generation: " + fRandomizer.getSeed());
-		}
+		System.out.println("Randomizer seed for current generation: " + fRandomizer.getSeed());
 
 		fDimCount = getInput().size();
 
