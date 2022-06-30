@@ -33,7 +33,7 @@ import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 
 public class JavaImplementationStatusResolver extends AbstractImplementationStatusResolver{
 	private ModelClassLoader fLoader;
@@ -183,7 +183,8 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 	private EImplementationStatus implementationStatus(AbstractNode node) {
 		try {
 			return (EImplementationStatus)node.accept(fStatusVisitor);
-		} catch (Exception e) {SystemLogger.logCatch(e);}
+		} catch (Exception e) {
+			LogHelperCore.logCatch(e);}
 		return EImplementationStatus.NOT_IMPLEMENTED;
 	}
 

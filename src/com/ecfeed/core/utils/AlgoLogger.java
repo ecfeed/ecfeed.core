@@ -16,7 +16,6 @@ public class AlgoLogger {
         }
 
         logHeaderAndMessage(message);
-        SystemLogger.logLine();
     }
 
     public static void log(String message, Object o, int logLevel, int controllingVariable) {
@@ -26,8 +25,7 @@ public class AlgoLogger {
         }
 
         logHeaderAndMessage(message);
-        SystemLogger.logLine(INDENT + o.toString());
-        SystemLogger.logLine();
+        LogHelperCore.logInfo(INDENT + o.toString());
     }
 
     public static void log(String message, List<?> o, int logLevel, int controllingVariable) {
@@ -44,8 +42,6 @@ public class AlgoLogger {
             logCounterAndElement(counter, element);
             counter++;
         }
-
-        SystemLogger.logLine();
     }
 
     public static void log(String message, Multiset<?> o, int logLevel, int controllingVariable) {
@@ -63,12 +59,11 @@ public class AlgoLogger {
             counter++;
         }
 
-        SystemLogger.logLine();
     }
 
     private static void logCounterAndElement(int counter, Object element) {
 
-        SystemLogger.logLine(INDENT + "[ " + counter + " ] [ " + element.toString() + " ]");
+        LogHelperCore.logInfo(INDENT + "[ " + counter + " ] [ " + element.toString() + " ]");
     }
 
     private static boolean shouldLogThisMessage(int logLevel, int controllingVariable) {
@@ -78,6 +73,6 @@ public class AlgoLogger {
 
     private static void logHeaderAndMessage(String message) {
 
-        SystemLogger.logLine("[ALG-LOG] " + message);
+        LogHelperCore.logInfo("[ALG-LOG] " + message);
     }
 }

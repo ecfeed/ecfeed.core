@@ -24,12 +24,12 @@ public class EcException extends RuntimeException {
 	}	
 
 	public static void report(String message) throws EcException {
-		SystemLogger.logThrow(message);
+		LogHelperCore.logThrow(message);
 		throw new EcException(message);
 	}	
 
 	public static void report(String message, Throwable throwable) throws EcException {
-		SystemLogger.logThrow(message);
+		LogHelperCore.logThrow(message);
 		throw new EcException(message, throwable);
 	}	
 }

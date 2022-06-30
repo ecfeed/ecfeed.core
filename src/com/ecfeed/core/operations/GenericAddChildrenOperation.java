@@ -15,7 +15,7 @@ import java.util.Collection;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 
 public class GenericAddChildrenOperation extends BulkOperation {
 
@@ -55,7 +55,8 @@ public class GenericAddChildrenOperation extends BulkOperation {
 				if (operation != null) {
 					addOperation(operation);
 				}
-			} catch (Exception e) {SystemLogger.logCatch(e);}
+			} catch (Exception e) {
+				LogHelperCore.logCatch(e);}
 		}
 	}
 

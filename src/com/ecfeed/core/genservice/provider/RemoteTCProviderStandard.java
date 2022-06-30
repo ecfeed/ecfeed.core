@@ -8,7 +8,7 @@ import com.ecfeed.core.provider.ITCProvider;
 import com.ecfeed.core.provider.ITCProviderInitData;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.webservice.client.WebServiceResponse;
 import com.ecfeed.core.webservice.client.IWebServiceClient;
 
@@ -67,7 +67,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
         try {
             fWebServiceResponse.getResponseBufferedReader().close();
         } catch (Exception e) {
-            SystemLogger.logCatch(e);
+            LogHelperCore.logCatch(e);
         }
 
         fWebServiceClient.close();

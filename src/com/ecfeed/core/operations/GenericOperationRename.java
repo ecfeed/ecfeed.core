@@ -26,13 +26,7 @@ import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.QualifiedNameHelper;
-import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.*;
 
 public class GenericOperationRename extends AbstractModelOperation {
 
@@ -182,14 +176,15 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private String getJavaNameRegex(AbstractNode target) {
 		try{
 			return (String)fTargetAbstractNode.accept(new JavaNameRegexProvider());
-		}catch(Exception e){SystemLogger.logCatch(e);}
+		}catch(Exception e){
+			LogHelperCore.logCatch(e);}
 		return "*";
 	}
 
 	private static String getRegexProblemMessage(AbstractNode abstractNode, IExtLanguageManager extLanguageManager){
 		try{
 			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguageManager));
-		}catch(Exception e){SystemLogger.logCatch(e);}
+		}catch(Exception e){LogHelperCore.logCatch(e);}
 		return "";
 	}
 

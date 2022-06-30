@@ -74,7 +74,7 @@ public class NWiseAwesomeAlgorithm<E> extends NWiseAwesomeAlgorithmBase<E> {
 
 		} catch (Exception e) {
 
-			SystemLogger.logCatch(e);
+			LogHelperCore.logCatch(e);
 
 			ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
 		}

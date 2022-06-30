@@ -52,7 +52,7 @@ public class NWiseAwesomeAlgorithmCopy<E> extends NWiseAwesomeAlgorithmBase<E> {
             fIgnoreCount.set(calculateIgnoreCount());
         } catch (Exception e) {
 
-            SystemLogger.logCatch(e);
+            LogHelperCore.logCatch(e);
 
             ExceptionHelper.reportRuntimeException("Generator reset failed.", e);
         }
