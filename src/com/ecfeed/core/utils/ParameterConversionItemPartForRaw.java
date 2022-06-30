@@ -22,7 +22,22 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 
 	@Override
 	public String toString() {
-		return "(" + fCode + "," + getName() +")";
+		
+		String description = getDescription(fCode);
+		return description + "[" + getName() +"]";
+	}
+
+	private String getDescription(String fCode2) {
+		
+		if (StringHelper.isEqual("C", fCode2)) {
+			return "choice";
+		}
+
+		if (StringHelper.isEqual("L", fCode2)) {
+			return "label";
+		}
+		
+		return "";
 	}
 
 	@Override
