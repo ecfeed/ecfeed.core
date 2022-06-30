@@ -43,6 +43,11 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 		return false;
 	}
 
+	@Override
+	public String getDescription() {
+		return super.getDescription(ItemPartType.LABEL.getCode());
+	}
+	
 	public String getLabel() {
 		return super.getName();
 	}

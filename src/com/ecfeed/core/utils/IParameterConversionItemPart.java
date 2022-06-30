@@ -14,19 +14,25 @@ public interface IParameterConversionItemPart  {
 
 	enum ItemPartType {
 
-		CHOICE("C"),
-		LABEL("L"),
-		NAME("N"),
-		RAW("R");
+		CHOICE("C", "choice"),
+		LABEL("L", "label"),
+		NAME("N", "name"),
+		RAW("R", "raw");
 
 		private String fCode;
+		private String fDescription;
 
-		ItemPartType(String code) {
+		ItemPartType(String code, String description) {
 			fCode = code;
+			fDescription = description;
 		}
 
 		public String getCode() {
 			return fCode;
+		}
+
+		public String getDescription() {
+			return fDescription;
 		}
 
 		@Override
@@ -34,10 +40,24 @@ public interface IParameterConversionItemPart  {
 			return fCode;
 		}
 
+		public static String getDescription(String code) {
+
+			ItemPartType itemTypes[] = ItemPartType.values();
+
+			for (ItemPartType itemPartType : itemTypes) {
+
+				if (StringHelper.isEqual(code, itemPartType.getCode())) {
+					return itemPartType.getDescription();
+				}
+			}
+
+			return "";
+		}
 	}
 
 	public ItemPartType getType();
 	public String getName();
+	public String getDescription();
 	public void setName(String name);
 	public boolean isMatch(IParameterConversionItemPart otherPart); // TODO DE-NO rename to isEqual
 	public Integer getTypeSortOrder(); // TODO DE-NO remove ?
