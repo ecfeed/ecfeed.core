@@ -34,7 +34,7 @@ public class LogHelperCore {
 
     private static Target target = Target.FILE;
     private static String tag = "[Core] ";
-    private static String location = "logs";
+    private static String[] locations = new String[]{"logs", "log", "/home/gradle/log"};
     private static String patternLog = "%d{HH:mm:ss.SSS} [%thread] %-5level - %msg%n";
     private static String sizeCap = "500 mb";
     private static int historyCap = 3;
@@ -42,23 +42,37 @@ public class LogHelperCore {
     private static final String INDENT = "  ";
 
     static {
+        String parsedLocation = getPath();
 
-        if (!Files.exists(Paths.get(location))) {
+        if (parsedLocation.isEmpty()) {
             target = Target.CONSOLE;
-            System.out.println("The " + location + "could not be accessed");
+            System.out.println("The location folder is not available");
         }
 
         patternFileInstance = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss").format(new Date());
-        patternFile = location + File.separator + "db." + patternFileInstance + ".%d{yyyy-MM-dd}.log";
+        patternFile = parsedLocation + File.separator + "db." + patternFileInstance + ".%d{yyyy-MM-dd}.log";
 
         LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
         Appender<ILoggingEvent> appender = getAppender(context);
 
-        logger = context.getLogger("Main");
+        logger = context.getLogger("MainCore");
         logger.setAdditive(false);
         logger.setLevel(Level.DEBUG);
         logger.addAppender(appender);
+
+        logInfo("Initialized");
+    }
+
+    private static String getPath() {
+
+        for (String location : locations) {
+            if (Files.exists(Paths.get(location))) {
+                return location;
+            }
+        }
+
+        return "";
     }
 
     private static Appender<ILoggingEvent> getAppender(LoggerContext context) {
@@ -105,7 +119,6 @@ public class LogHelperCore {
         return fileAppender;
     }
 
-
     private static PatternLayoutEncoder getEncoder(LoggerContext context) {
         PatternLayoutEncoder encoder = new PatternLayoutEncoder();
 
@@ -138,7 +151,7 @@ public class LogHelperCore {
         json.put("current", getCurrentStackElement(currentElement));
         json.put("stack", getStack(stackElements));
 
-        LogHelperCore.logError(json.toString());
+        logError(json.toString());
     }
 
     public static void logCatch(Exception e) {
@@ -151,7 +164,7 @@ public class LogHelperCore {
 
         json.put("current", getCurrentStackElement(element));
 
-        LogHelperCore.logError(json.toString());
+        logError(json.toString());
     }
 
     private static JSONObject getCurrentStackElement(StackTraceElement element) {
