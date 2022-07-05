@@ -75,5 +75,10 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 		return fCode;
 	}
 
+	public void setCode(String code) {
+
+		fCode = code;
+	}
+	
 }
 
