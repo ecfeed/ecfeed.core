@@ -66,7 +66,7 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 
 	public String getDescription(String code) {
 		
-		String typeDescription = ItemPartType.getDescription(code);
+		String typeDescription = ItemPartType.convertCodeToDescription(code);
 		return getName() + "[" + typeDescription +"]";
 	}
 }

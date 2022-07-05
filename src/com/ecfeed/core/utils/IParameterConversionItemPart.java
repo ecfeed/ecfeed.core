@@ -40,7 +40,7 @@ public interface IParameterConversionItemPart  {
 			return fCode;
 		}
 
-		public static String getDescription(String code) {
+		public static String convertCodeToDescription(String code) {
 
 			ItemPartType itemTypes[] = ItemPartType.values();
 
@@ -53,6 +53,21 @@ public interface IParameterConversionItemPart  {
 
 			return "";
 		}
+
+		public static String convertDescriptionToCode(String description) {
+
+			ItemPartType itemTypes[] = ItemPartType.values();
+
+			for (ItemPartType itemPartType : itemTypes) {
+
+				if (StringHelper.isEqual(description, itemPartType.getDescription())) {
+					return itemPartType.getCode();
+				}
+			}
+
+			return "";
+		}
+
 	}
 
 	public ItemPartType getType();
