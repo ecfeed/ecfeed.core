@@ -66,5 +66,15 @@ public class ParameterConversionItem {
 		return true;
 	}
 
+	public ParameterConversionItem makeClone() {
+
+		IParameterConversionItemPart srcPart = fSrcPart.makeClone();
+		IParameterConversionItemPart dstPart = fDstPart.makeClone();
+
+		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fNodesContainingSrcItem);
+
+		return clone;
+	}
+
 }
 

@@ -78,5 +78,6 @@ public interface IParameterConversionItemPart  {
 	public Integer getTypeSortOrder(); // TODO DE-NO remove ?
 	public Integer getSortOrder(); // TODO DE-NO remove ?
 	public int compareTo(IParameterConversionItemPart other);
+	public IParameterConversionItemPart makeClone();
 }
 

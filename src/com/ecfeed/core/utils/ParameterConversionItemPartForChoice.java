@@ -58,5 +58,14 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 		return super.getDescription(ItemPartType.CHOICE.getCode());
 	}
 
+	@Override
+	public IParameterConversionItemPart makeClone() {
+		
+		ParameterConversionItemPartForChoice clone = 
+				new ParameterConversionItemPartForChoice(fChoiceNode);
+		
+		return clone;
+	}
+
 }
 

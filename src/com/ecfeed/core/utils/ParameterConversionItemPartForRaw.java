@@ -79,6 +79,15 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 
 		fCode = code;
 	}
+
+	@Override
+	public IParameterConversionItemPart makeClone() {
+		
+		ParameterConversionItemPartForRaw clone = 
+				new ParameterConversionItemPartForRaw(getCode(), getName());
+		
+		return clone;
+	}
 	
 }
 

@@ -104,13 +104,6 @@ public class ParameterConversionDefinition {
 		return itemNames;
 	}
 
-	//	public void removeItem(ParameterConversionItemForChoice conversionItemToFind) {
-	//
-	//		int index = findConversionItem(conversionItemToFind);
-	//
-	//		fParameterConversionItems.remove(index);
-	//	}
-
 	public int findConversionItem(ParameterConversionItem conversionItemToFind) {
 
 		int index = 0;
@@ -132,25 +125,23 @@ public class ParameterConversionDefinition {
 		return fParameterConversionItems.size();
 	}
 
-	public ParameterConversionItem getItem(int index) { // TODO DE-NO remove ?
+	public ParameterConversionItem getCopyOfItem(int index) { // TODO DE-NO remove ?
 
-		return fParameterConversionItems.get(index);
+		ParameterConversionItem parameterConversionItem = fParameterConversionItems.get(index);
+		
+		ParameterConversionItem copy = parameterConversionItem.makeClone();
+		
+		return copy;
 	}
 
+	public void setItem(int index, ParameterConversionItem parameterConversionItem) {
+		
+		fParameterConversionItems.set(index, parameterConversionItem);
+	}
+	
 	public void clear() {
+		
 		fParameterConversionItems.clear();
 	}
-
-//	public void setSrcName(String srcName, int index) {
-//
-//		ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
-//		conversionItem.setSrcName(srcName);
-//	}
-//
-//	public void setDstName(String dstName, int index) {
-//
-//		ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
-//		conversionItem.setDstName(dstName);
-//	}
 
 }

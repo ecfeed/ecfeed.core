@@ -51,6 +51,15 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	public String getLabel() {
 		return super.getName();
 	}
+
+	@Override
+	public IParameterConversionItemPart makeClone() {
+		
+		ParameterConversionItemPartForLabel clone = 
+				new ParameterConversionItemPartForLabel(getLabel());
+		
+		return clone;
+	}
 	
 	
 }
