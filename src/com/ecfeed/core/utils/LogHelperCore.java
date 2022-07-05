@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-
 public class LogHelperCore {
 
     private enum Target { CONSOLE, FILE };
@@ -43,11 +42,9 @@ public class LogHelperCore {
 
     static {
         String parsedLocation = getPath();
+        String parsedLocationAbsolute = Paths.get(parsedLocation).toAbsolutePath().toString();
 
-        if (parsedLocation.isEmpty()) {
-            target = Target.CONSOLE;
-            System.out.println("The location folder is not available");
-        }
+        System.out.println("logs: " + parsedLocationAbsolute);
 
         patternFileInstance = new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss").format(new Date());
         patternFile = parsedLocation + File.separator + "core." + patternFileInstance + ".%d{yyyy-MM-dd}.log";
@@ -202,32 +199,20 @@ public class LogHelperCore {
         return json;
     }
 
-    public static void log(String message, int logLevel, int controllingVariable) {
+    public static void log(String message) {
 
-        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
-            return;
-        }
-
-        logHeaderAndMessage(message);
+        logInfo("[ALG-LOG] " + message);
     }
 
-    public static void log(String message, Object o, int logLevel, int controllingVariable) {
+    public static void log(String message, Object o) {
 
-        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
-            return;
-        }
-
-        logHeaderAndMessage(message);
-        LogHelperCore.logInfo(INDENT + o.toString());
+        logInfo("[ALG-LOG] " + message);
+        logInfo(INDENT + o.toString());
     }
 
-    public static void log(String message, List<?> o, int logLevel, int controllingVariable) {
+    public static void log(String message, List<?> o) {
 
-        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
-            return;
-        }
-
-        logHeaderAndMessage(message);
+        logInfo("[ALG-LOG] " + message);
 
         int counter = 0;
 
@@ -237,13 +222,9 @@ public class LogHelperCore {
         }
     }
 
-    public static void log(String message, Multiset<?> o, int logLevel, int controllingVariable) {
+    public static void log(String message, Multiset<?> o) {
 
-        if (!shouldLogThisMessage(logLevel, controllingVariable)) {
-            return;
-        }
-
-        logHeaderAndMessage(message);
+        logInfo("[ALG-LOG] " + message);
 
         int counter = 0;
 
@@ -256,17 +237,12 @@ public class LogHelperCore {
 
     private static void logCounterAndElement(int counter, Object element) {
 
-        LogHelperCore.logInfo(INDENT + "[ " + counter + " ] [ " + element.toString() + " ]");
-    }
+        if (element == null) {
+            LogHelperCore.logInfo(INDENT + "[ " + counter + " ]");
+        } else {
+            LogHelperCore.logInfo(INDENT + "[ " + counter + " ] [ " + element.toString() + " ]");
+        }
 
-    private static boolean shouldLogThisMessage(int logLevel, int controllingVariable) {
-
-        return (logLevel <= controllingVariable);
-    }
-
-    private static void logHeaderAndMessage(String message) {
-
-        LogHelperCore.logInfo("[ALG-LOG] " + message);
     }
 
 }

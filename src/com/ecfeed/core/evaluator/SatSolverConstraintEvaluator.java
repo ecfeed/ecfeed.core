@@ -85,7 +85,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		collectSanitizedValues(fParamChoiceSets,fChoiceMappingsBucket);
 
 		fAllRelationStatements = collectRelationStatements(initConstraints);
-		LogHelperCore.log("fAllRelationStatements", fAllRelationStatements, 1, fLogLevel);
+		LogHelperCore.log("fAllRelationStatements", fAllRelationStatements);
 
 		sanitizeRelationStatementsWithRelation(
 				fAllRelationStatements,
@@ -101,8 +101,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 				fOldExpectedValueConstraintsData,
 				fExpectedValueAssignmentsData);
 
-		LogHelperCore.log("fExpectedValConstraints", fOldExpectedValueConstraintsData, 1, fLogLevel);
-		LogHelperCore.log("fExpectedValueAssignmentsData", fExpectedValueAssignmentsData, 1, fLogLevel);
+		LogHelperCore.log("fExpectedValConstraints", fOldExpectedValueConstraintsData);
+		LogHelperCore.log("fExpectedValueAssignmentsData", fExpectedValueAssignmentsData);
 	}
 
 	@Override

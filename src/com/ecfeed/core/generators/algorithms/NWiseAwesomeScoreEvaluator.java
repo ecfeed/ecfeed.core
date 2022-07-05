@@ -86,7 +86,7 @@ public class NWiseAwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 			}
 		}
 
-		LogHelperCore.log("partialNTo0Tuples", result, 1, fLogLevel);
+		LogHelperCore.log("partialNTo0Tuples", result);
 		return result;
 	}
 
@@ -124,7 +124,7 @@ public class NWiseAwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 			}
 		}
 
-		LogHelperCore.log("partialNTo0Tuples after removal of best tuple", fPartialTuples, 1, fLogLevel);
+		LogHelperCore.log("partialNTo0Tuples after removal of best tuple", fPartialTuples);
 	}
 
 	@Override
