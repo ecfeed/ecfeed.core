@@ -28,7 +28,7 @@ public class ExceptionMessageHelper {
 			return fNoException;
 		}
 
-		var result = new JSONObject();
+		JSONObject result = new JSONObject();
 
 		result.put("message", createExceptionMessage(throwable, exceptionStackType));
 
@@ -42,15 +42,15 @@ public class ExceptionMessageHelper {
 
 	private static JSONObject createExceptionMessage(Throwable throwable, ExceptionStackType exceptionStackType) {
 
-		var exceptionDescriptions = createExceptionDescriptions(throwable, exceptionStackType);
+		List<ExceptionDescription> exceptionDescriptions = createExceptionDescriptions(throwable, exceptionStackType);
 
-		var array = new JSONArray();
+		JSONArray array = new JSONArray();
 
 		for (ExceptionDescription exceptionDescription : exceptionDescriptions) {
 			array.put(createOneMessage(exceptionDescription, exceptionStackType));
 		}
 
-		var json = new JSONObject();
+		JSONObject json = new JSONObject();
 
 		json.put("cause", array);
 
@@ -132,11 +132,11 @@ public class ExceptionMessageHelper {
 	private static JSONObject createStackMessage(Throwable throwable) {
 		StackTraceElement[] stackElements = throwable.getStackTrace();
 
-		var cause = new JSONArray();
+		JSONArray cause = new JSONArray();
 
 		for (int index = 0; index < stackElements.length; index++) {
 
-			var stack = new JSONObject();
+			JSONObject stack = new JSONObject();
 
 			StackTraceElement element = stackElements[index];
 
@@ -147,7 +147,7 @@ public class ExceptionMessageHelper {
 			cause.put(stack);
 		}
 
-		var root = new JSONObject();
+		JSONObject root = new JSONObject();
 
 		root.put("root", cause);
 
