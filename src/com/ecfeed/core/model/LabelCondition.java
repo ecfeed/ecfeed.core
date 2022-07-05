@@ -27,6 +27,7 @@ public class LabelCondition implements IStatementCondition {
 	private RelationStatement fParentRelationStatement;
 
 	public LabelCondition(String label, RelationStatement parentRelationStatement) {
+
 		fRightLabel = label;
 		fParentRelationStatement = parentRelationStatement;
 	}
@@ -52,7 +53,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public Object getCondition(){
+	public Object getCondition() {
 		return fRightLabel;
 	}
 
@@ -143,8 +144,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void convert(
-			ParameterConversionItem parameterConversionItem) {
+	public void convert(ParameterConversionItem parameterConversionItem) {
 
 		String srcLabel = ParameterConversionItemPartHelper.getLabel(parameterConversionItem.getSrcPart());
 
