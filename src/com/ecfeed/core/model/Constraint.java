@@ -18,7 +18,14 @@ import java.util.Set;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.MessageStack;
 
 public class Constraint implements IConstraint<ChoiceNode> {
 
@@ -339,7 +346,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		MessageStack outWhyAmbiguous = new MessageStack();
 		ExtLanguageManagerForJava extLanguageManager = new ExtLanguageManagerForJava();
-		
+
 		if (isAmbiguousForPreconditionOrPostcondition(testDomain, outWhyAmbiguous, extLanguageManager)) {
 			ConditionHelper.addConstraintNameToMesageStack(getName(), outWhyAmbiguous);
 			return true;
@@ -347,7 +354,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return false;
 	}
-	
+
 	private boolean isAmbiguousForPreconditionOrPostcondition(
 			List<List<ChoiceNode>> testDomain, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager) {
 
@@ -419,6 +426,20 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return createSignature(new ExtLanguageManagerForJava());
 	}
+
+	public void convert(ParameterConversionItem parameterConversionItem) {
+
+		fPrecondition.convert(parameterConversionItem);
+		fPostcondition.convert(parameterConversionItem);
+	}
+
+//	public void updateParameterReferences(
+//			MethodParameterNode oldMethodParameterNode,
+//			ChoicesParentNode dstParameterForChoices) {
+//
+//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+//	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
@@ -500,16 +521,36 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return fPrecondition.mentions(choice) || fPostcondition.mentions(choice);
 	}
 
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getListOfChoices() { // TODO DE-NO rename to getChoices getContainingChoices
 
-		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+		List<ChoiceNode> result = new ArrayList<>();
 
-		result.addAll(fPrecondition.getListOfChoices());
-		result.addAll(fPostcondition.getListOfChoices());
+		result.addAll(fPrecondition.getChoices());
+		result.addAll(fPostcondition.getChoices());
 
 		return result;
 	}
 
+	public List<ChoiceNode> getListOfChoices(MethodParameterNode methodParameterNode) { // TODO DE-NO rename to getChoices getContainingChoices
+
+		List<ChoiceNode> result = new ArrayList<>();
+
+		result.addAll(fPrecondition.getChoices(methodParameterNode));
+		result.addAll(fPostcondition.getChoices(methodParameterNode));
+
+		return result;
+	}
+	
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+
+		List<String> result = new ArrayList<>();
+
+		result.addAll(fPrecondition.getLabels(methodParameterNode));
+		result.addAll(fPostcondition.getLabels(methodParameterNode));
+
+		return result;
+	}
+	
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 
 		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {
@@ -569,6 +610,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
+	public List<String> getStatementValuesForParameter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@SuppressWarnings("unchecked")
 	public Set<String> getReferencedLabels(MethodParameterNode parameter) {
 
@@ -582,13 +628,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	boolean mentionsParameter(MethodParameterNode methodParameter) {
+	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
 
-		if (fPrecondition.mentions(methodParameter)) {
+		if (fPrecondition.mentionsChoiceOfParameter(methodParameter)) {
 			return true;
 		}
 
-		if (fPostcondition.mentions(methodParameter)) {
+		if (fPostcondition.mentionsChoiceOfParameter(methodParameter)) {
 			return true;
 		}
 
@@ -805,4 +851,5 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 
 	}
+
 }

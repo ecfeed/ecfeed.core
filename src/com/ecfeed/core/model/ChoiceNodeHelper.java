@@ -21,6 +21,7 @@ import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_POSITIVE_
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -31,6 +32,32 @@ import com.ecfeed.core.utils.Pair;
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
+
+
+	public static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {
+
+		List<ChoiceNode> childChoices = srcChoiceNode.getChoices();
+		List<ChoiceNode> childChoicesToRemove = new ArrayList<ChoiceNode>(childChoices);
+
+		for (ChoiceNode childChoice : childChoices) {
+
+			ChoiceNode clonedChoiceNode = childChoice.makeClone();
+			dstChoiceNode.addChoice(clonedChoiceNode);
+		}
+
+		for (ChoiceNode choiceNodeToRemove : childChoicesToRemove) {
+			srcChoiceNode.removeChoice(choiceNodeToRemove);
+		}
+	}
+
+	public static ChoiceNode addChoiceToChoice(
+			ChoiceNode parentChoiceNode, String choiceNodeName, String valueString) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
+		parentChoiceNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
 
 	public static String getName(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
@@ -89,12 +116,22 @@ public class ChoiceNodeHelper {
 		return qualifiedName + " [" + value + "]";
 	}
 
-	public static String createTestDataLabel(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
+	public static String createShortSignature(ChoiceNode choiceNode) {
 
-		AbstractParameterNode abstractParameterNode = choice.getParameter();	
+		if (choiceNode == null) {
+			return "EMPTY";
+		}
+
+		return choiceNode.getName();
+	}
+
+	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+
+		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();	
 
 		if (abstractParameterNode == null) {
-			return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+
+			return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 		}
 
 		if (abstractParameterNode instanceof MethodParameterNode) {
@@ -102,11 +139,11 @@ public class ChoiceNodeHelper {
 			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
 
 			if (methodParameterNode.isExpected()) {
-				return "[e]" + ChoiceNodeHelper.getValueString(choice, extLanguageManager);
+				return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
 			}
 		}
 
-		return ChoiceNodeHelper.getQualifiedName(choice, extLanguageManager);
+		return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
@@ -143,10 +180,8 @@ public class ChoiceNodeHelper {
 		List<ChoiceNode> copies = new ArrayList<ChoiceNode>();
 
 		for(;;) {
-			ChoiceNode copy = 
-					new ChoiceNode(
-							orgChoice.getName(), orgChoice.getValueString(), orgChoice.getModelChangeRegistrator());
 
+			ChoiceNode copy = orgChoice.makeClone();
 			copies.add(copy);
 
 			AbstractNode orgParent = orgChoice.getParent();
@@ -546,6 +581,14 @@ public class ChoiceNodeHelper {
 		cloneChoiceNode.derandomize();
 
 		return cloneChoiceNode;
+	}
+
+	public static List<ChoiceNode> removeDuplicates(List<ChoiceNode> choiceNodes) {
+
+		HashSet<ChoiceNode>set = new HashSet<>(choiceNodes);
+		List<ChoiceNode> result = new ArrayList<>(set);
+
+		return result;
 	}
 
 }

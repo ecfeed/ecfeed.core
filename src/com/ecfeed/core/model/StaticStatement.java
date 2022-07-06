@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public class StaticStatement extends AbstractStatement {
@@ -125,14 +126,40 @@ public class StaticStatement extends AbstractStatement {
 	public boolean isAmbiguous(List<List<ChoiceNode>> values) {
 		return false;
 	}
-	
+
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
 	@Override
 	public void derandomize() {
+	}
+
+	@Override
+	public void convert(
+			ParameterConversionItem parameterConversionItem) {
+	}
+
+	//	@Override
+	//	protected void updateParameterReferences(
+	//			MethodParameterNode srcMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+		return false;
+	}
+
+	@Override
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+		return null;
 	}
 
 }

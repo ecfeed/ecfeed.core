@@ -15,7 +15,9 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.StringHelper;
 
 public class StatementArray extends AbstractStatement {
 
@@ -47,6 +49,7 @@ public class StatementArray extends AbstractStatement {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -58,6 +61,7 @@ public class StatementArray extends AbstractStatement {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -69,8 +73,22 @@ public class StatementArray extends AbstractStatement {
 				return true;
 			}
 		}
+
 		return false;
 	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+
+		for (AbstractStatement abstractStatement : fStatements) {
+			if (abstractStatement.mentionsChoiceOfParameter(parameter)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
@@ -83,13 +101,13 @@ public class StatementArray extends AbstractStatement {
 
 		case AND:
 			return evaluateForAndOperator(values);
-			
+
 		case OR:
 			return evaluateForOrOperator(values);
 		case ASSIGN:
-			
+
 			return EvaluationResult.FALSE;
-			
+
 		}
 
 		return EvaluationResult.FALSE;
@@ -232,23 +250,60 @@ public class StatementArray extends AbstractStatement {
 
 		return false;
 	}
-	
+
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 
 		for (AbstractStatement abstractStatement : fStatements) {
 
-			List<ChoiceNode> listOfChoices = abstractStatement.getListOfChoices();
+			List<ChoiceNode> listOfChoices = abstractStatement.getChoices();
 
 			if (listOfChoices != null) {
 				result.addAll(listOfChoices);
 			}
 		}
 
-		return null;
+		return result;
 	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+
+		for (AbstractStatement abstractStatement : fStatements) {
+
+			List<ChoiceNode> listOfChoices = abstractStatement.getChoices(methodParameterNode);
+
+			if (listOfChoices != null) {
+				result.addAll(listOfChoices);
+			}
+		}
+
+		return result;
+	}
+	
+	@Override
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+
+		List<String> result = new ArrayList<>();
+
+		for (AbstractStatement abstractStatement : fStatements) {
+
+			List<String> labels = abstractStatement.getLabels(methodParameterNode);
+
+			if (labels != null && labels.size() > 0) {
+				result.addAll(labels);
+			}
+		}
+
+		result = StringHelper.removeDuplicates(result);
+
+		return result;
+	}
+
 
 	@Override
 	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
@@ -347,10 +402,29 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public void derandomize() {
-		
+
 		for(IStatement statement : fStatements) {
 			statement.derandomize();
 		}
 	}
+
+	@Override
+	protected void convert(ParameterConversionItem parameterConversionItem) {
+
+		for (AbstractStatement child : fStatements) {
+			child.convert(parameterConversionItem);
+		}
+	}
+
+	//	@Override
+	//	protected void updateParameterReferences(
+	//			MethodParameterNode srcMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//
+	//		for (AbstractStatement child : fStatements) {
+	//			child.updateParameterReferences(
+	//					srcMethodParameterNode, dstParameterForChoices);
+	//		}
+	//	}
 
 }

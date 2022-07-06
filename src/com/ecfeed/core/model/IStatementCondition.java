@@ -15,6 +15,7 @@ import java.util.List;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public interface IStatementCondition {
 	public String createSignature(IExtLanguageManager extLanguageManager);
@@ -26,8 +27,12 @@ public interface IStatementCondition {
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean mentions(AbstractParameterNode abstractParameterNode);
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode);
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager);
-	public List<ChoiceNode> getListOfChoices();
+	public List<ChoiceNode> getChoices();
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode);
 	public void derandomize();
+	public void convert(ParameterConversionItem parameterConversionItem);
+	public String getLabel(MethodParameterNode methodParameterNode);
 }
 

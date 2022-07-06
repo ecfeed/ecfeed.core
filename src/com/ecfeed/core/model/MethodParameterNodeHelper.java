@@ -17,6 +17,16 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterNodeHelper {
 
+	public static ChoiceNode addChoiceToMethodParameter(
+			MethodParameterNode methodParameterNode, 
+			String choiceNodeName, 
+			String valueString) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, null);
+		methodParameterNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
 
 	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
@@ -75,7 +85,7 @@ public class MethodParameterNodeHelper {
 
 		return type;
 	}
-	
+
 	public static ChoiceNode findChoice(MethodParameterNode methodParameterNode, String choiceQualifiedName) {
 
 		if (!methodParameterNode.isLinked()) {
@@ -83,7 +93,7 @@ public class MethodParameterNodeHelper {
 		}
 
 		GlobalParameterNode link = methodParameterNode.getLink();
-		
+
 		if (link == null)  {
 			ExceptionHelper.reportRuntimeException("Missing link for linked parameter.");
 		}
@@ -92,16 +102,16 @@ public class MethodParameterNodeHelper {
 	}
 
 	private static ChoiceNode findChoiceIntr(AbstractParameterNode link, String choiceQualifiedName) {
-		
+
 		Set<ChoiceNode> choiceNodes = link.getAllChoices();
-		
+
 		for(ChoiceNode choiceNode : choiceNodes) {
 			String choiceName = choiceNode.getName();
-			
+
 			if (choiceName.equals(choiceQualifiedName))
 				return choiceNode;
 		}
-		
+
 		return null;
 	}
 

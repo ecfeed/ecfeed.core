@@ -145,7 +145,9 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public ChoiceNode makeClone(){
+
 		ChoiceNode copy = makeCloneUnlink();
+
 		if(isClone())
 			copy.setOrigChoiceNode(getOrigChoiceNode());
 		else
@@ -176,8 +178,13 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	public String getQualifiedName() {
 
+		return getQualifiedName(":");
+	}
+
+	public String getQualifiedName(String separatorForChoiceNames) {
+
 		if (parentChoice() != null) {
-			return parentChoice().getQualifiedName() + ":" + getName();
+			return parentChoice().getQualifiedName(separatorForChoiceNames) + separatorForChoiceNames + getName();
 		}
 
 		return getName();
@@ -318,7 +325,7 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public boolean isMatch(AbstractNode choiceNode){
-		
+
 		if(choiceNode instanceof ChoiceNode == false){
 			return false;
 		}
@@ -344,11 +351,11 @@ public class ChoiceNode extends ChoicesParentNode {
 		}
 
 		boolean isMatch = super.isMatch(choiceNode);
-		
+
 		if (!isMatch) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -368,6 +375,19 @@ public class ChoiceNode extends ChoicesParentNode {
 			return (ChoiceNode)fParent;
 		}
 		return null;
+	}
+
+	public MethodNode getMethodNode() {
+
+		MethodParameterNode methodParameterNode = (MethodParameterNode)getParameter();
+
+		if (methodParameterNode == null) {
+			return null;
+		}
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		return methodNode;
 	}
 
 }

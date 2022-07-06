@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,10 @@ import com.ecfeed.core.utils.StringHelper;
 
 public abstract class ChoicesParentNode extends AbstractNode{
 
-	protected List<ChoiceNode> fChoices;
+	private List<ChoiceNode> fChoices;
+
+	public abstract AbstractParameterNode getParameter();
+	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
 
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
@@ -28,12 +32,16 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		fChoices = new ArrayList<ChoiceNode>();
 	}
 
-	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
-
 	@Override
 	public List<? extends AbstractNode> getChildren() {
 
 		return fChoices;
+	}
+
+	@Override
+	public int getChildrenCount() {
+
+		return fChoices.size();
 	}
 
 	@Override
@@ -44,33 +52,85 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		}
 
 		ChoicesParentNode choicesParentNodeToCompare = (ChoicesParentNode)choicesParentNode;
-		
+
 		List<ChoiceNode> choices = getChoices();
 		List<ChoiceNode> choicesToCompare = choicesParentNodeToCompare.getChoices();
-		
+
 		if (choices.size() != choicesToCompare.size()){
 			return false;
 		}
 
 		for (int i = 0; i < choices.size(); i++) {
-			
+
 			ChoiceNode choiceNode = choices.get(i);
 			ChoiceNode choiceNodeToCompare = choicesToCompare.get(i);
-			
+
 			if (choiceNode.isMatch(choiceNodeToCompare) == false) {
 				return false;
 			}
 		}
 
 		boolean isMatch = super.isMatch(choicesParentNode);
-		
+
 		if (!isMatch) {
 			return false;
 		}
 		return true;
 	}
 
-	public abstract AbstractParameterNode getParameter();
+	protected List<ChoiceNode> getLeafChoices(Collection<ChoiceNode> choices) {
+
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+
+		for (ChoiceNode p : choices) {
+			if (p.isAbstract() == false) {
+				result.add(p);
+			}
+
+			result.addAll(p.getLeafChoices());
+		}
+
+		return result;
+	}
+
+	protected Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
+
+		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
+
+		for (ChoiceNode p : choices) {
+			result.add(p);
+			result.addAll(p.getAllChoices());
+		}
+
+		return result;
+	}
+
+	protected Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
+
+		Set<String> result = new LinkedHashSet<String>();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+			result.add(choiceNode.getQualifiedName());
+		}
+
+		return result;
+	}
+
+	protected Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
+
+		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
+
+		for(ChoiceNode p : choices) {
+
+			if(p.getLabels().contains(label)){
+				result.add(p);
+			}
+
+			result.addAll(p.getLabeledChoices(label));
+		}
+
+		return result;
+	}
 
 	public void addChoice(ChoiceNode choice) {
 
@@ -96,15 +156,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return fChoices;
 	}
 
-	public int getChoiceCount() { // TODO SIMPLE-VIEW remove
+	public int getChoiceCount() {
 
 		return getChoices().size();
-	}
-
-	@Override
-	public int getChildrenCount() {
-		
-		return fChoices.size();
 	}
 
 	public List<ChoiceNode> getChoicesWithCopies() {
@@ -115,6 +169,21 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public ChoiceNode getChoice(String qualifiedName) {
 
 		return (ChoiceNode)getChild(qualifiedName);
+	}
+
+	public int getChoiceIndex(String choiceNameToFind) {
+
+		int index = 0;
+
+		for (ChoiceNode choiceNode : fChoices) {
+			if (choiceNode.getName().equals(choiceNameToFind)) {
+				return index;
+			}
+
+			index++;
+		}
+
+		return -1;
 	}
 
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
@@ -143,6 +212,28 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return getChoiceNames(getAllChoices());
 	}
 
+	public Set<String> getAllLabels() {
+
+		Set<String> result = new HashSet<>();
+		
+		Set<ChoiceNode> choices = getAllChoices();
+		
+		for (ChoiceNode choiceNode : choices) {
+			addLabelsForChoiceNode(choiceNode, result);
+		}
+		
+		return result;
+	}
+
+	private void addLabelsForChoiceNode(ChoiceNode choiceNode, Set<String> inOutResult) {
+		
+		Set<String> labelsOfChoice = choiceNode.getLabels();
+		
+		for (String label : labelsOfChoice) {
+			inOutResult.add(label);
+		}
+	}
+	
 	public Set<String> getLeafChoiceNames(){
 
 		return getChoiceNames(getLeafChoices());
@@ -208,58 +299,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		registerChange();
 	}
 
-	protected List<ChoiceNode> getLeafChoices(Collection<ChoiceNode> choices) {
+	public void clearChoices() {
 
-		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
-
-		for (ChoiceNode p : choices) {
-			if (p.isAbstract() == false) {
-				result.add(p);
-			}
-
-			result.addAll(p.getLeafChoices());
-		}
-
-		return result;
-	}
-
-	protected Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
-
-		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
-
-		for (ChoiceNode p : choices) {
-			result.add(p);
-			result.addAll(p.getAllChoices());
-		}
-
-		return result;
-	}
-
-	protected Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
-
-		Set<String> result = new LinkedHashSet<String>();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-			result.add(choiceNode.getQualifiedName());
-		}
-
-		return result;
-	}
-
-	protected Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
-
-		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
-
-		for(ChoiceNode p : choices) {
-
-			if(p.getLabels().contains(label)){
-				result.add(p);
-			}
-
-			result.addAll(p.getLabeledChoices(label));
-		}
-
-		return result;
+		fChoices.clear();
 	}
 
 	public static String generateNewChoiceName(ChoicesParentNode fChoicesParentNode, String startChoiceName) {
@@ -277,5 +319,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 				return newParameterName;
 			}
 		}
-	}	
+	}
+
 }

@@ -48,7 +48,7 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 	public Byte generateValue(String rangeTxt, String context) {
 
 		String[] range = RangeHelper.splitToRange(rangeTxt);
-		
+
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseByteValue(range[0], ERunMode.QUIET);
 		}		
@@ -56,6 +56,36 @@ public class TypeAdapterForByte extends TypeAdapterForNumericType<Byte>{
 		return (byte) ThreadLocalRandom.current().nextInt(
 				JavaLanguageHelper.parseByteValue(range[0], ERunMode.QUIET),
 				1 + JavaLanguageHelper.parseByteValue(range[1], ERunMode.QUIET));
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+		
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_DOUBLE)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_FLOAT)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_LONG)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_INT)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_SHORT)) {
+			return true;
+		}
+		
+		return false;
 	}
 
 }

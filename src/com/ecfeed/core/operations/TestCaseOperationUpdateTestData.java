@@ -22,7 +22,12 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 	private int fIndex;
 	private TestCaseNode fTarget;
 
-	public TestCaseOperationUpdateTestData(TestCaseNode target, int index, ChoiceNode value, IExtLanguageManager extLanguageManager) {
+	public TestCaseOperationUpdateTestData(
+			TestCaseNode target, 
+			int index, 
+			ChoiceNode value, 
+			IExtLanguageManager extLanguageManager) {
+
 		super(OperationNames.UPDATE_TEST_DATA, extLanguageManager);
 		fTarget = target;
 		fIndex = index;

@@ -13,9 +13,62 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class ConstraintNodeHelper {
+
+	public static void convertConstraint(
+			ConstraintNode constraintNode,
+			ParameterConversionItem parameterConversionItem) {
+
+		Constraint constraint = constraintNode.getConstraint();
+
+		if (constraint == null) {
+			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
+		}
+
+		constraint.convert(parameterConversionItem);
+	}
+
+	//	public static void updateParameterReferences(
+	//			ConstraintNode constraintNode,
+	//			MethodParameterNode oldMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//
+	//		Constraint constraint = constraintNode.getConstraint();
+	//
+	//		if (constraint == null) {
+	//			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
+	//		}
+	//
+	//		//		constraint.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+	//	}
+
+	public static List<ChoiceNode> getChoicesUsedInConstraint(
+			ConstraintNode constraintNode,
+			MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> result = 
+				ConstraintHelper.getChoicesUsedInConstraints(
+						constraintNode.getConstraint(),
+						methodParameterNode);
+
+		return result;
+	}
+
+	public static List<String> getLabelsUsedInConstraint(
+			ConstraintNode constraintNode,
+			MethodParameterNode methodParameterNode) {
+
+		List<String> result = 
+				ConstraintHelper.getLabelsUsedInConstraints(
+						constraintNode.getConstraint(),
+						methodParameterNode);
+
+		return result;
+	}
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
@@ -59,15 +112,14 @@ public class ConstraintNodeHelper {
 	}
 
 	public static List<Constraint> createListOfConstraints(List<ConstraintNode> constraintNodes) {
-		
+
 		List<Constraint> constraints = new ArrayList<>();
-		
+
 		for (ConstraintNode constraintNode : constraintNodes) {
 			constraints.add(constraintNode.getConstraint());
 		}
-		
+
 		return constraints;
 	}
-	
 
 }

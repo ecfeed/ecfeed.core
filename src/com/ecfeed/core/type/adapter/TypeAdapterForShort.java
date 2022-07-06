@@ -47,7 +47,7 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseShortValue(range[0], ERunMode.QUIET);
 		}
-		
+
 		return (short) ThreadLocalRandom.current().nextInt(
 				JavaLanguageHelper.parseShortValue(range[0], ERunMode.QUIET),
 				1 + JavaLanguageHelper.parseShortValue(range[1], ERunMode.QUIET));
@@ -56,6 +56,32 @@ public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
 	@Override
 	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_SHORT;
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_DOUBLE)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_FLOAT)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_LONG)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_INT)) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

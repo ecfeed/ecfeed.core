@@ -44,8 +44,8 @@ public class StatementConditionHelper {
 		return choices.get(index);
 	}
 
-	public static String createChoiceDescription(String parameterName) {
-		return parameterName + "[" + TYPE_INFO_CHOICE + "]";
+	public static String createChoiceDescription(String choiceName) {
+		return choiceName + "[" + TYPE_INFO_CHOICE + "]";
 	}
 
 	public static String createParameterDescription(String parameterName) {

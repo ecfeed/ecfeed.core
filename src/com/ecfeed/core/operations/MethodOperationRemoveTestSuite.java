@@ -55,6 +55,10 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 				public String getMyTypeName() {
 					return null;
 				}
+				@Override
+				public boolean isConvertibleTo(String type) {
+					return false;
+				}
 			};
 		}
 

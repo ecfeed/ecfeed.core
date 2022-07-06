@@ -26,13 +26,13 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private List<ChoiceNode> fChoicesCopy;
 
 	public MethodParameterNode(
-				String name,
-				String type,
-				String defaultValue,
-				boolean expected,
-				boolean linked,
-				GlobalParameterNode link,
-				IModelChangeRegistrator modelChangeRegistrator) {
+			String name,
+			String type,
+			String defaultValue,
+			boolean expected,
+			boolean linked,
+			GlobalParameterNode link,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, type, modelChangeRegistrator);
 
@@ -61,7 +61,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		this(
 				source.getName(),
 				source.getType(), defaultValue, expected, linked, link, source.getModelChangeRegistrator()
-		);
+				);
 
 		addChoices(source.getChoices());
 	}
@@ -89,7 +89,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	public MethodParameterNode makeClone() {
 		MethodParameterNode copy = 
 				new MethodParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
-				);
+						);
 
 		copy.fLinked = fLinked;
 		copy.fLink = fLink;
@@ -100,7 +100,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		if (getDefaultValue() != null)
 			copy.setDefaultValueString(getDefaultValue());
 
-		for (ChoiceNode choice : fChoices) {
+		for (ChoiceNode choice : getChoices()) {
 			copy.addChoice(choice.makeClone());
 		}
 
@@ -291,8 +291,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 			return false;
 		}
 
-		int choicesCount = fChoices.size();
-		if (choicesCount != comparedParameter.fChoices.size()) {
+		int choicesCount = getChoiceCount();
+		if (choicesCount != comparedParameter.getChoiceCount()) {
 			return false;
 		}
 

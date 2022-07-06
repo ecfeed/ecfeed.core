@@ -43,6 +43,16 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		return Arrays.asList(TYPES_CONVERTABLE_TO_BOOLEAN).contains(type);
 	}
 
+	@Override
+	public boolean isConvertibleTo(String otherType) {
+
+		if (otherType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (conversionMode == ERunMode.WITH_EXCEPTION) {
