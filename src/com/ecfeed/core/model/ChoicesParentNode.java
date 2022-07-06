@@ -12,19 +12,16 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public abstract class ChoicesParentNode extends AbstractNode{
 
 	private List<ChoiceNode> fChoices;
-	private List<ChoiceNode> fDetachedChoices;
 
 	public abstract AbstractParameterNode getParameter();
 	public abstract Object accept(IChoicesParentVisitor visitor) throws Exception;
@@ -33,7 +30,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		super(name, modelChangeRegistrator);
 
 		fChoices = new ArrayList<ChoiceNode>();
-		fDetachedChoices = new ArrayList<ChoiceNode>();
 	}
 
 	@Override
@@ -136,47 +132,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return result;
 	}
 
-	public String addChoiceToDetachedWithUniqueName(ChoiceNode choiceNode) {
-
-		String orginalChoiceName = choiceNode.getName();
-
-		if (!choiceNameExistsInDetachedChoices(orginalChoiceName)) {
-
-			addChoiceToListOfDetachedChoices(choiceNode);
-			return orginalChoiceName;
-		}
-
-		for (int postfixCounter = 1; postfixCounter < 999; postfixCounter++) {
-
-			String tmpName = orginalChoiceName + "-" + postfixCounter;
-
-			if (!choiceNameExistsInDetachedChoices(tmpName)) {
-
-				choiceNode.setName(tmpName);
-				addChoiceToListOfDetachedChoices(choiceNode);
-
-				return tmpName;
-			}
-		}
-
-		ExceptionHelper.reportRuntimeException("Cannot add choice to detached.");
-		return null;
-	}
-
-	public int getDetachedChoiceCount() {
-
-		return fDetachedChoices.size();
-	}
-
-	public void removeDetachedChoiceByIndex(int index) {
-
-		if (index < 0 || index >= fDetachedChoices.size()) {
-			ExceptionHelper.reportRuntimeException("Invalid index of detached choice.");
-		}
-
-		fDetachedChoices.remove(index);
-	}
-
 	public void addChoice(ChoiceNode choice) {
 
 		addChoice(choice, fChoices.size());
@@ -214,32 +169,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	public ChoiceNode getChoice(String qualifiedName) {
 
 		return (ChoiceNode)getChild(qualifiedName);
-	}
-
-	public ChoiceNode getDetachedChoice(String choiceNameToFind) {
-
-		for (ChoiceNode choiceNode : fDetachedChoices) {
-			if (choiceNode.getName().equals(choiceNameToFind)) {
-				return choiceNode;
-			}
-		}
-
-		return null;
-	}
-
-	public int getDetachedChoiceIndex(String choiceNameToFind) {
-
-		int index = 0;
-
-		for (ChoiceNode choiceNode : fDetachedChoices) {
-			if (choiceNode.getName().equals(choiceNameToFind)) {
-				return index;
-			}
-
-			index++;
-		}
-
-		return -1;
 	}
 
 	public int getChoiceIndex(String choiceNameToFind) {
@@ -283,6 +212,28 @@ public abstract class ChoicesParentNode extends AbstractNode{
 		return getChoiceNames(getAllChoices());
 	}
 
+	public Set<String> getAllLabels() {
+
+		Set<String> result = new HashSet<>();
+		
+		Set<ChoiceNode> choices = getAllChoices();
+		
+		for (ChoiceNode choiceNode : choices) {
+			addLabelsForChoiceNode(choiceNode, result);
+		}
+		
+		return result;
+	}
+
+	private void addLabelsForChoiceNode(ChoiceNode choiceNode, Set<String> inOutResult) {
+		
+		Set<String> labelsOfChoice = choiceNode.getLabels();
+		
+		for (String label : labelsOfChoice) {
+			inOutResult.add(label);
+		}
+	}
+	
 	public Set<String> getLeafChoiceNames(){
 
 		return getChoiceNames(getLeafChoices());
@@ -368,45 +319,6 @@ public abstract class ChoicesParentNode extends AbstractNode{
 				return newParameterName;
 			}
 		}
-	}
-
-	public List<ChoiceNode> getDetachedChoices() {
-		return fDetachedChoices;
-	}	
-
-	private void addChoiceToListOfDetachedChoices(ChoiceNode choiceNode) {
-
-		choiceNode.setDetached(true);
-		choiceNode.clearChoices();
-
-		fDetachedChoices.add(choiceNode);
-
-		Comparator<ChoiceNode> comparatorByChoiceName = new Comparator<ChoiceNode>() {
-
-			@Override
-			public int compare(ChoiceNode choiceNode1, ChoiceNode choiceNode2) {
-
-				return choiceNode1.getName().compareTo(choiceNode2.getName());
-			}
-		};
-
-		Collections.sort(fDetachedChoices, comparatorByChoiceName);
-	}
-
-	private boolean choiceNameExistsInDetachedChoices(String choiceNameToFind) {
-
-		String choiceName = null;
-
-		for (ChoiceNode choiceNode : fDetachedChoices)  {
-
-			choiceName = choiceNode.getName();
-
-			if (choiceName.equals(choiceNameToFind)) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 }

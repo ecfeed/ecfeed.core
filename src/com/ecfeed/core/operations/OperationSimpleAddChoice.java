@@ -14,54 +14,39 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OperationSimpleAddChoice extends AbstractModelOperation {
+public class OperationSimpleAddChoice extends AbstractOneWayModelOperation {
 
 	private static final String ADD_CHOICE = "Add choice";
 
 	private ChoiceNode fChoiceNode;
+	private int fIndexOfChoice;
 	private ChoicesParentNode fChoicesParentNode;
 
 	public OperationSimpleAddChoice(
 			ChoiceNode choiceNode, 
+			int indexOfChoice,
 			ChoicesParentNode choicesParentNode, 
 			IExtLanguageManager extLanguageManager){
 
 		super(ADD_CHOICE, extLanguageManager);
 
 		fChoiceNode = choiceNode;
+		fIndexOfChoice = indexOfChoice;
 		fChoicesParentNode = choicesParentNode;
 	}
 
 	@Override
 	public void execute() {
 
-		fChoicesParentNode.addChoice(fChoiceNode);
+		fChoicesParentNode.addChoice(fChoiceNode, fIndexOfChoice);
 		markModelUpdated();
 	}
 
 	@Override
-	public IModelOperation getReverseOperation() {
-		return new ReverseOperation(getExtLanguageManager());
-	}
+	public String toString() {
 
-	private class ReverseOperation extends AbstractModelOperation {
-
-		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(OperationSimpleAddChoice.this.getName(), extLanguageManager);
-		}
-
-		@Override
-		public void execute() {
-
-			fChoicesParentNode.removeChoice(fChoiceNode);
-			markModelUpdated();
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new OperationSimpleAddChoice(fChoiceNode, fChoicesParentNode, getExtLanguageManager());
-		}
-
+		return "Add choice " + fChoiceNode.getName() + " at index " + fIndexOfChoice +
+				" to parent " + fChoicesParentNode.getName() + ".";
 	}
 
 }

@@ -15,15 +15,13 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class ConstraintNodeHelper {
 
-	public static void updateChoiceReferences(
+	public static void convertConstraint(
 			ConstraintNode constraintNode,
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+			ParameterConversionItem parameterConversionItem) {
 
 		Constraint constraint = constraintNode.getConstraint();
 
@@ -31,26 +29,22 @@ public class ConstraintNodeHelper {
 			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
 		}
 
-		constraint.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		constraint.convert(parameterConversionItem);
 	}
 
-	public static void updateParameterReferences(
-			ConstraintNode constraintNode,
-			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		Constraint constraint = constraintNode.getConstraint();
-
-		if (constraint == null) {
-			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
-		}
-
-		constraint.updateParameterReferences(
-				oldMethodParameterNode, dstParameterForChoices, 
-				reverseOperations, extLanguageManager);
-	}
+	//	public static void updateParameterReferences(
+	//			ConstraintNode constraintNode,
+	//			MethodParameterNode oldMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//
+	//		Constraint constraint = constraintNode.getConstraint();
+	//
+	//		if (constraint == null) {
+	//			ExceptionHelper.reportRuntimeException("Cannot update choice references. Constraint is empty.");
+	//		}
+	//
+	//		//		constraint.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+	//	}
 
 	public static List<ChoiceNode> getChoicesUsedInConstraint(
 			ConstraintNode constraintNode,

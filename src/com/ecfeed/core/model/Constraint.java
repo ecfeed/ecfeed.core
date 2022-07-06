@@ -24,6 +24,7 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public class Constraint implements IConstraint<ChoiceNode> {
@@ -426,27 +427,19 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return createSignature(new ExtLanguageManagerForJava());
 	}
 
+	public void convert(ParameterConversionItem parameterConversionItem) {
 
-	// TODO DE-NO Move to helper
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		fPrecondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
-		fPostcondition.updateChoiceReferences(oldChoiceNode, newChoiceNode, reverseOperations, extLanguageManager);
+		fPrecondition.convert(parameterConversionItem);
+		fPostcondition.convert(parameterConversionItem);
 	}
 
-	public void updateParameterReferences(
-			MethodParameterNode oldMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
-		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices, reverseOperations, extLanguageManager);
-	}
+//	public void updateParameterReferences(
+//			MethodParameterNode oldMethodParameterNode,
+//			ChoicesParentNode dstParameterForChoices) {
+//
+//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+//	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
@@ -528,9 +521,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return fPrecondition.mentions(choice) || fPostcondition.mentions(choice);
 	}
 
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getListOfChoices() { // TODO DE-NO rename to getChoices getContainingChoices
 
-		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+		List<ChoiceNode> result = new ArrayList<>();
 
 		result.addAll(fPrecondition.getChoices());
 		result.addAll(fPostcondition.getChoices());
@@ -538,6 +531,26 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return result;
 	}
 
+	public List<ChoiceNode> getListOfChoices(MethodParameterNode methodParameterNode) { // TODO DE-NO rename to getChoices getContainingChoices
+
+		List<ChoiceNode> result = new ArrayList<>();
+
+		result.addAll(fPrecondition.getChoices(methodParameterNode));
+		result.addAll(fPostcondition.getChoices(methodParameterNode));
+
+		return result;
+	}
+	
+	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+
+		List<String> result = new ArrayList<>();
+
+		result.addAll(fPrecondition.getLabels(methodParameterNode));
+		result.addAll(fPostcondition.getLabels(methodParameterNode));
+
+		return result;
+	}
+	
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 
 		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {
@@ -596,7 +609,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return new HashSet<AbstractParameterNode>();
 		}
 	}
-	
+
 	public List<String> getStatementValuesForParameter() {
 		// TODO Auto-generated method stub
 		return null;

@@ -17,6 +17,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.RangeHelper;
@@ -317,7 +318,12 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -326,11 +332,8 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+	public void convert(
+			ParameterConversionItem parameterConversionItem) {
 	}
 
 	@Override

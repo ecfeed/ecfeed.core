@@ -16,6 +16,9 @@ import java.util.List;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartHelper;
+import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.MessageStack;
 
 public class LabelCondition implements IStatementCondition {
@@ -24,6 +27,7 @@ public class LabelCondition implements IStatementCondition {
 	private RelationStatement fParentRelationStatement;
 
 	public LabelCondition(String label, RelationStatement parentRelationStatement) {
+
 		fRightLabel = label;
 		fParentRelationStatement = parentRelationStatement;
 	}
@@ -49,7 +53,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public Object getCondition(){
+	public Object getCondition() {
 		return fRightLabel;
 	}
 
@@ -126,7 +130,12 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -135,11 +144,25 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+	public void convert(ParameterConversionItem parameterConversionItem) {
+
+		String srcLabel = ParameterConversionItemPartHelper.getLabel(parameterConversionItem.getSrcPart());
+
+		if (StringHelper.isNullOrEmpty(srcLabel)) {
+			return;
+		}
+
+		String dstLabel = ParameterConversionItemPartHelper.getLabel(parameterConversionItem.getDstPart());
+
+		if (dstLabel == null) {
+			return;
+		}
+
+		if (!StringHelper.isEqual(fRightLabel, srcLabel)) {
+			return;
+		}
+
+		fRightLabel = dstLabel;
 	}
 
 	@Override

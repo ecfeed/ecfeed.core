@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public abstract class AbstractStatement implements IStatement {
 
@@ -94,15 +94,9 @@ public abstract class AbstractStatement implements IStatement {
 
 	public abstract boolean updateReferences(MethodNode method);
 
-	protected abstract void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager);
+	protected abstract void convert(ParameterConversionItem parameterConversionItem);
 
-	protected abstract void updateParameterReferences(
-			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager);
+//	protected abstract void updateParameterReferences(
+//			MethodParameterNode srcMethodParameterNode,
+//			ChoicesParentNode dstParameterForChoices);
 }

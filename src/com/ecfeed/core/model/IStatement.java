@@ -25,7 +25,7 @@ public interface IStatement{
 	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
 	public boolean isAmbiguous(List<List<ChoiceNode>> values);
 	public List<ChoiceNode> getChoices();
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode);
 	public List<String> getLabels(MethodParameterNode methodParameterNode);
-//	public List<String> getValues(MethodParameterNode methodParameterNode);
 	public void derandomize();
 }

@@ -17,6 +17,7 @@ import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
@@ -104,6 +105,28 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		return result;
 	}
+	
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		
+		AbstractParameterNode abstractParameterNode = fChoiceNode.getParameter();
+		
+		if (!(abstractParameterNode instanceof MethodParameterNode)) {
+			return null;
+		}
+		
+		MethodParameterNode methodParameterNode2 = (MethodParameterNode) abstractParameterNode;
+		
+		if (!methodParameterNode2.equals(methodParameterNode)) {
+			return null;
+		}
+		
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+		result.add(fChoiceNode);
+
+		return result;
+	}
+	
 
 	@Override
 	public void derandomize() {
@@ -197,20 +220,14 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	protected void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode, 
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+	protected void convert(ParameterConversionItem parameterConversionItem) {
 	}
 
-	@Override
-	protected void updateParameterReferences(
-			MethodParameterNode srcMethodParameterNode,
-			ChoicesParentNode dstParameterForChoices,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-	}
+	//	@Override
+	//	protected void updateParameterReferences(
+	//			MethodParameterNode srcMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//	}
 
 	@Override
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {

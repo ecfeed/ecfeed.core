@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class AbstractStatementTest {
 
@@ -74,20 +75,14 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		protected void updateChoiceReferences(
-				ChoiceNode oldChoiceNode, 
-				ChoiceNode newChoiceNode,
-				ListOfModelOperations reverseOperations,
-				IExtLanguageManager extLanguageManager) {
+		protected void convert(ParameterConversionItem parameterConversionItem) {
 		}
 
-		@Override
-		protected void updateParameterReferences(
-				MethodParameterNode srcMethodParameterNode,
-				ChoicesParentNode dstParameterForChoices,
-				ListOfModelOperations reverseOperations,
-				IExtLanguageManager extLanguageManager) {
-		}
+		//		@Override
+		//		protected void updateParameterReferences(
+		//				MethodParameterNode srcMethodParameterNode,
+		//				ChoicesParentNode dstParameterForChoices) {
+		//		}
 
 		@Override
 		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {

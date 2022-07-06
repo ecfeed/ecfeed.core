@@ -10,14 +10,11 @@
 
 package com.ecfeed.core.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodParameterNode extends AbstractParameterNode {
@@ -332,129 +329,6 @@ public class MethodParameterNode extends AbstractParameterNode {
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(String label) {
 		return getMethod().getMentioningConstraints(this, label);
-	}
-
-	public List<String> detachChoiceNode(
-			String choiceQualifiedName,
-			ListOfModelOperations inOutReverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		ChoiceNode choiceNode = findChoice(choiceQualifiedName);
-
-		if (choiceNode == null) {
-			ExceptionHelper.reportRuntimeException("Cannot find choice node using qualified name.");
-		}
-
-		MethodNode methodNode = choiceNode.getMethodNode();
-
-		MethodParameterNode methodParameterNode = (MethodParameterNode)choiceNode.getParameter();
-
-		if (methodNode == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
-		}
-
-		List<String> detachedChoiceNames = new ArrayList<String>();
-
-		detachChoiceNodeWithChildren(
-				choiceNode, 
-				methodParameterNode, 
-				methodNode, 
-				detachedChoiceNames,
-				inOutReverseOperations,
-				extLanguageManager);
-
-		return detachedChoiceNames;
-	}
-
-	private void detachChoiceNodeWithChildren(
-			ChoiceNode parentChoiceNode, 
-			MethodParameterNode methodParameterNode,
-			MethodNode methodNode, 
-			List<String> inOutDetachedChoiceNames,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		List<ChoiceNode> choiceNodes = parentChoiceNode.getChoices();
-
-		int countOfChoices = choiceNodes.size();
-
-		for (int index = countOfChoices - 1; index >= 0; index--) {
-
-			ChoiceNode currentChoiceNode = choiceNodes.get(index);
-
-			detachChoiceNodeWithChildren(
-					currentChoiceNode, 
-					methodParameterNode, 
-					methodNode, 
-					inOutDetachedChoiceNames,
-					reverseOperations,
-					extLanguageManager);
-		}
-
-		detachSingleChoiceNode(
-				parentChoiceNode, 
-				methodParameterNode, 
-				methodNode, 
-				inOutDetachedChoiceNames,
-				reverseOperations,
-				extLanguageManager);
-	}
-
-	public void detachSingleChoiceNode(
-			ChoiceNode choiceNode, 
-			MethodParameterNode methodParameterNode,
-			MethodNode methodNode,
-			List<String> inOutDetachedChoiceNames,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		ChoiceNode clonedChoiceNode = choiceNode.makeClone();
-
-		String qualifiedNameForDetachedNodes = clonedChoiceNode.getQualifiedName("-");
-		clonedChoiceNode.setName(qualifiedNameForDetachedNodes);
-		clonedChoiceNode.setParent(methodParameterNode);
-
-		String detachedChoiceNewName = addChoiceToDetachedWithUniqueName(clonedChoiceNode);
-		inOutDetachedChoiceNames.add(detachedChoiceNewName);
-
-		MethodNodeHelper.updateChoiceReferencesInTestCases(
-				choiceNode, clonedChoiceNode, methodNode.getTestCases(), reverseOperations, extLanguageManager);
-
-		MethodNodeHelper.updateChoiceReferencesInConstraints(
-				choiceNode, clonedChoiceNode,
-				methodNode.getConstraintNodes(),
-				extLanguageManager);
-
-		ChoicesParentNode choicesParentNode = choiceNode.getParent();
-		choicesParentNode.removeChoice(choiceNode);
-	}
-
-	public void attachChoiceNode(
-			String detachedChoiceName, 
-			String actualChoiceName,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		ChoiceNode actualChoiceNode = getChoice(actualChoiceName);
-		ChoiceNode detachedChoiceNode = getDetachedChoice(detachedChoiceName);
-
-		MethodNode methodNode = actualChoiceNode.getMethodNode();
-
-		if (methodNode == null) {
-			ExceptionHelper.reportRuntimeException("Attempt to detach choice without method.");
-		}
-
-		MethodNodeHelper.updateChoiceReferencesInTestCases(
-				detachedChoiceNode, actualChoiceNode, methodNode.getTestCases(), 
-				reverseOperations, extLanguageManager);
-
-		MethodNodeHelper.updateChoiceReferencesInConstraints(
-				detachedChoiceNode, actualChoiceNode,
-				methodNode.getConstraintNodes(),
-				extLanguageManager);
-
-		int detachedIndex = getDetachedChoiceIndex(detachedChoiceName);
-		removeDetachedChoiceByIndex(detachedIndex);
 	}
 
 }

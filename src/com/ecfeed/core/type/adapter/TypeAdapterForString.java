@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterForString implements ITypeAdapter<String>{
 
-	private final String[] TYPES_CONVERTABLE_TO_STRING = new String[]{
+	private final String[] TYPES_CONVERTIBLE_TO_STRING = new String[]{
 			JavaLanguageHelper.TYPE_NAME_INT,
 			JavaLanguageHelper.TYPE_NAME_FLOAT,
 			JavaLanguageHelper.TYPE_NAME_DOUBLE,
@@ -49,7 +49,17 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 
 	@Override
 	public boolean isCompatible(String type){
-		return Arrays.asList(TYPES_CONVERTABLE_TO_STRING).contains(type);
+		return Arrays.asList(TYPES_CONVERTIBLE_TO_STRING).contains(type);
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override

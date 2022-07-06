@@ -48,12 +48,12 @@ public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
 
 	@Override
 	public Integer generateValue(String rangeTxt, String context) {
-		
+
 		String[] range = RangeHelper.splitToRange(rangeTxt);
-		
+
 		String range0 = range[0];
 		String range1 = range[1];
-		
+
 		if (StringHelper.isEqual(range0, range1)) {
 			return JavaLanguageHelper.parseIntValue(range0, ERunMode.QUIET);
 		}
@@ -62,10 +62,28 @@ public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
 				JavaLanguageHelper.parseIntValue(range0, ERunMode.QUIET),
 				1 + JavaLanguageHelper.parseIntValue(range1, ERunMode.QUIET));
 	}
-	
+
 	@Override
 	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_INTEGER;
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_DOUBLE)) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_LONG)) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

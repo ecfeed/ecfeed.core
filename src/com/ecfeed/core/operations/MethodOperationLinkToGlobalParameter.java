@@ -14,14 +14,14 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
-import com.ecfeed.core.utils.ChoiceConversionList;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation {
 
 	MethodParameterNode fSrcMethodParameterNode;
 	GlobalParameterNode fDstParameterForChoices;
-	ChoiceConversionList fChoiceConversionList;
+	ParameterConversionDefinition fParameterConversionDefinition;
 
 	ListOfModelOperations fReverseOperations;
 
@@ -30,14 +30,14 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 	public MethodOperationLinkToGlobalParameter(
 			MethodParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstParameterForChoices, 
-			ChoiceConversionList choiceConversionList,
+			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager) {
 
 		super("Link to global parameter", extLanguageManager);
 
 		fSrcMethodParameterNode = srcMethodParameterNode;
 		fDstParameterForChoices = dstParameterForChoices;
-		fChoiceConversionList = choiceConversionList;
+		fParameterConversionDefinition = parameterConversionDefinition;
 		fExtLanguageManager = extLanguageManager;
 
 		fReverseOperations = new ListOfModelOperations();
@@ -51,7 +51,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 		ParameterTransformer.linkMethodParameteToGlobalParameter(
 				fSrcMethodParameterNode,
 				fDstParameterForChoices, 
-				fChoiceConversionList,
+				fParameterConversionDefinition,
 				fReverseOperations,
 				fExtLanguageManager);
 
@@ -81,7 +81,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 			return new MethodOperationLinkToGlobalParameter(
 					fSrcMethodParameterNode,
 					fDstParameterForChoices, 
-					fChoiceConversionList,
+					fParameterConversionDefinition,
 					fExtLanguageManager);
 		}
 

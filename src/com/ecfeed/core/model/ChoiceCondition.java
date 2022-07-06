@@ -21,6 +21,8 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ObjectHelper;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.RelationMatcher;
 
@@ -74,6 +76,7 @@ public class ChoiceCondition implements IStatementCondition {
 		if (choiceNode == null) {
 			return false;
 		}
+
 		fRightChoice = choiceNode;
 
 		return true;
@@ -122,13 +125,29 @@ public class ChoiceCondition implements IStatementCondition {
 	}	
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
 
 		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
 		choices.add(fRightChoice);
 
 		return choices;
 	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+
+		MethodParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
+
+		if (!(methodParameterNode.equals(methodParameterNode2))) {
+			return new ArrayList<ChoiceNode>();
+		}
+
+		List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
+		choices.add(fRightChoice);
+
+		return choices;
+	}
+
 
 	public ChoiceNode getRightChoice() {
 		return fRightChoice;
@@ -288,15 +307,25 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void updateChoiceReferences(
-			ChoiceNode oldChoiceNode, 
-			ChoiceNode newChoiceNode,
-			ListOfModelOperations reverseOperations,
-			IExtLanguageManager extLanguageManager) {
+	public void convert(ParameterConversionItem parameterConversionItem) {
 
-		if (fRightChoice == oldChoiceNode) {
-			fRightChoice = newChoiceNode;
+		ChoiceNode srcChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getSrcPart());
+
+		if (srcChoiceNode == null) {
+			return;
 		}
+
+		ChoiceNode dstChoiceNode = ParameterConversionItemPartHelper.getChoice(parameterConversionItem.getDstPart());
+
+		if (dstChoiceNode == null) {
+			return;
+		}
+
+		if (!srcChoiceNode.equals(fRightChoice)) {
+			return;
+		}
+
+		fRightChoice = dstChoiceNode;
 	}
 
 	@Override
@@ -312,6 +341,13 @@ public class ChoiceCondition implements IStatementCondition {
 	@Override
 	public String getLabel(MethodParameterNode methodParameterNode) {
 		return null;
+	}
+
+	public void conditionallyConvertChoice(ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		if (fRightChoice == oldChoiceNode) {
+			fRightChoice = newChoiceNode;
+		}
 	}
 
 }

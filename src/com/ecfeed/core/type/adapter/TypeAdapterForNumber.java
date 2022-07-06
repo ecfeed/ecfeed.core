@@ -135,4 +135,10 @@ public class TypeAdapterForNumber extends TypeAdapterForNumericType<Number>{
 		return new String[0];
 	}
 
+	@Override
+	public boolean isConvertibleTo(String type) {
+
+		return false;
+	}
+
 }

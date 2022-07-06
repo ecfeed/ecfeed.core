@@ -14,6 +14,8 @@ import java.util.List;
 
 import com.ecfeed.core.operations.SimpleOperationRemoveAllChoices;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 
 public abstract class ChoicesParentNodeHelper {
 
@@ -33,13 +35,14 @@ public abstract class ChoicesParentNodeHelper {
 		}
 	}
 
-	public static void createCopyOfChoicesSubTrees(
+	public static void createCopyOfChoicesSubTreesBetweenParameters(
 			ChoicesParentNode srcParentNode, 
 			ChoicesParentNode dstParentNode,
 			ListOfModelOperations inOutReverseOperations,
+			List<ParameterConversionItem> parameterConversionItems,
 			IExtLanguageManager extLanguageManager) {
 
-		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode);
+		createCopyOfChoicesSubtreesRecursive(srcParentNode, dstParentNode, parameterConversionItems);
 
 		SimpleOperationRemoveAllChoices reverseOperation = 
 				new SimpleOperationRemoveAllChoices(dstParentNode, extLanguageManager);
@@ -48,7 +51,9 @@ public abstract class ChoicesParentNodeHelper {
 	}
 
 	private static void createCopyOfChoicesSubtreesRecursive(
-			ChoicesParentNode srcParentNode, ChoicesParentNode dstParentNode) {
+			ChoicesParentNode srcParentNode, 
+			ChoicesParentNode dstParentNode,
+			List<ParameterConversionItem> inOutParameterConversionItems) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -63,7 +68,18 @@ public abstract class ChoicesParentNodeHelper {
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode);
+			if (inOutParameterConversionItems != null) {
+
+				ParameterConversionItemPartForChoice srcPart = new ParameterConversionItemPartForChoice(choiceNode);
+				ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(clonedChoiceNode);
+
+				ParameterConversionItem parameterConversionItemForChoice = 
+						new ParameterConversionItem(srcPart, dstPart, null);
+
+				inOutParameterConversionItems.add(parameterConversionItemForChoice);
+			}
+
+			createCopyOfChoicesSubtreesRecursive(choiceNode, clonedChoiceNode, inOutParameterConversionItems);
 		}
 	}
 
