@@ -77,6 +77,16 @@ public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
 	@Override
 	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_DOUBLE;
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		return false;
 	}	
 
 }

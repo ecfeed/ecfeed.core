@@ -20,7 +20,7 @@ public abstract class TypeAdapterFloatingPoint<T extends Number> extends TypeAda
 
 	@Override
 	public boolean isCompatible(String type){
-		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTABLE_TO_NUMBERS).contains(type);
+		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTIBLE_TO_NUMBERS).contains(type);
 	}
 
 	@Override

@@ -69,4 +69,14 @@ public class TypeAdapterBaseForUserType<T extends Enum<T>> implements ITypeAdapt
 		return "USER-TYPE";
 	}
 
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+		
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+		
+		return false;
+	}
+
 }

@@ -74,4 +74,18 @@ public class TypeAdapterForChar implements ITypeAdapter<Character>{
 		return TypeAdapterHelper.handleConversionError(value, getMyTypeName(), conversionMode);
 	}
 
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_STRING)) {
+			return true;
+		}
+
+		return false;
+	}
+
 }
