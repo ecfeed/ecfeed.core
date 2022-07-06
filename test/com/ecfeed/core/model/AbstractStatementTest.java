@@ -98,6 +98,11 @@ public class AbstractStatementTest {
 		public List<String> getLabels(MethodParameterNode methodParameterNode) {
 			return null;
 		}
+
+		@Override
+		public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+			return null;
+		}
 	}
 
 	@Test
