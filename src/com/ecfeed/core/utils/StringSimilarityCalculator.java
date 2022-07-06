@@ -17,11 +17,11 @@ public class StringSimilarityCalculator {
 			ParameterConversionItemPartForRaw item2) {
 
 		if (item1 == null) {
-			ExceptionHelper.reportRuntimeException("Empty string 1.");
+			ExceptionHelper.reportRuntimeException("Empty item1 1.");
 		}
 
 		if (item2 == null) {
-			ExceptionHelper.reportRuntimeException("Empty string 2.");
+			ExceptionHelper.reportRuntimeException("Empty item 2.");
 		}
 
 		if (item2.getName().length() > item1.getName().length()) {
@@ -38,7 +38,7 @@ public class StringSimilarityCalculator {
 
 		double result2 = calculateSimilarityForStrings(item1.getName(), item2.getName());
 
-		return result1 + result2;
+		return (result1 + result2) / 2;
 	}
 
 	private static double calculateSimilarityForStrings(String str1, String str2) {

@@ -33,12 +33,12 @@ public class ConversionPartMatcher {
 				createListOfSimilarItemsWithoutDuplicates(similarityItems);
 
 		List<Pair<ParameterConversionItemPartForRaw, ParameterConversionItemPartForRaw>> resultListOfPairs = 
-				createListOfStringPairs(compressedSimilarityItems);
+				createListOfPairs(compressedSimilarityItems);
 
 		return resultListOfPairs;
 	}
 
-	private static List<Pair<ParameterConversionItemPartForRaw, ParameterConversionItemPartForRaw>> createListOfStringPairs(
+	private static List<Pair<ParameterConversionItemPartForRaw, ParameterConversionItemPartForRaw>> createListOfPairs(
 			List<SimilarityItem> similarityItems) {
 
 		List<Pair<ParameterConversionItemPartForRaw, ParameterConversionItemPartForRaw>> pairs = new ArrayList<>();
