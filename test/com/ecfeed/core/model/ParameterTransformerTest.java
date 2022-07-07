@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -23,6 +24,7 @@ import org.junit.Test;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
@@ -79,7 +81,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
 
@@ -216,7 +218,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
+		addSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
 
 		// creating choice conversion list
 
@@ -350,7 +352,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
+		addSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
 
 		// creating choice conversion list
 
@@ -485,7 +487,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
@@ -617,7 +619,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
 
@@ -752,7 +754,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
+		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
 
 		// creating choice conversion list - to method choices to one global choice
 
@@ -889,7 +891,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod1221 =
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod122, "MC1221", choiceValueString);
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
+		addSimpleChoiceConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 
 		// creating choice conversion list
@@ -996,7 +998,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod11 = 
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod1, "MC11", choiceValueString);
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
@@ -1126,7 +1128,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod11 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 		// add test case
@@ -1219,7 +1221,7 @@ public class ParameterTransformerTest {
 
 		// constraint
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode, globalChoiceNodeOfRoot1, globalChoiceNodeOfRoot1);
 
 		// unlink
@@ -1275,7 +1277,90 @@ public class ParameterTransformerTest {
 		methodParameterNode.setLinked(true);
 	}
 
-	private void addNewSimpleChoiceConstraintToMethod(
+	@Test
+	public void XcanCovertChoices() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global parameter of root and choice node
+
+		final String stringParameterType = "String";
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add parameter and choice to method
+
+		MethodParameterNode methodParameterNode = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
+
+		ChoiceNode choiceNodeOfMethod = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, "MC1", "");
+
+		String errorMessage = "";
+
+		// check string ABC to int
+
+		choiceNodeOfMethod.setValueString("ABC");
+
+		errorMessage = 
+				ParameterTransformer.canConvertToType(
+						methodParameterNode, JavaLanguageHelper.TYPE_NAME_INT);
+
+
+		assertNotNull(errorMessage);
+
+		// check string 1 to int
+
+		choiceNodeOfMethod.setValueString("1");
+
+		errorMessage = 
+				ParameterTransformer.canConvertToType(
+						methodParameterNode, JavaLanguageHelper.TYPE_NAME_INT);
+
+		assertNull(errorMessage);
+
+		// check double 123.0 to int
+
+		methodParameterNode.setType(JavaLanguageHelper.DEFAULT_EXPECTED_DOUBLE_VALUE);
+
+		choiceNodeOfMethod.setValueString("123.0");
+
+		errorMessage = 
+				ParameterTransformer.canConvertToType(
+						methodParameterNode, JavaLanguageHelper.TYPE_NAME_INT);
+
+		assertNull(errorMessage);
+
+
+		//		// constraint
+		//		
+		//		addSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, value1, value1);		
+		//		
+		//		
+		//		// creating choice conversion list
+		//
+		//		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+		//
+		//		ParameterConversionItem parameterConversionItemForChoice = 
+		//				new ParameterConversionItem(
+		//						new ParameterConversionItemPartForLabel(choiceNodeOfMethod11), 
+		//						new ParameterConversionItemPartForChoice(globalChoiceOfClass11), 
+		//						null);
+		//
+		//		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		//
+		//		
+		//		
+	}
+
+	private void addSimpleChoiceConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
 			MethodParameterNode methodParameterNode,
@@ -1302,7 +1387,7 @@ public class ParameterTransformerTest {
 		methodNode.addConstraint(constraintNode);
 	}
 
-	private void addNewSimpleLabelConstraintToMethod(
+	private void addSimpleLabelConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
 			MethodParameterNode methodParameterNode,
@@ -1328,6 +1413,33 @@ public class ParameterTransformerTest {
 
 		methodNode.addConstraint(constraintNode);
 	}
+
+//	private void addSimpleValueConstraintToMethod(
+//			MethodNode methodNode,
+//			String constraintName,
+//			MethodParameterNode methodParameterNode,
+//			String value1,
+//			String value2) {
+//
+//		RelationStatement relationStatement1 = 
+//				RelationStatement.createRelationStatementWithValueCondition(
+//						methodParameterNode, EMathRelation.EQUAL, value1);
+//
+//		RelationStatement relationStatement2 = 
+//				RelationStatement.createRelationStatementWithValueCondition(
+//						methodParameterNode, EMathRelation.LESS_THAN, value2);
+//
+//		Constraint constraint = new Constraint(
+//				constraintName, 
+//				ConstraintType.EXTENDED_FILTER, 
+//				relationStatement1, 
+//				relationStatement2, 
+//				null);
+//
+//		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
+//
+//		methodNode.addConstraint(constraintNode);
+//	}
 
 	private ChoiceNode getChoiceNodeFromConstraintPostcondition(
 			MethodNode methodNode, int constraintIndex) {
@@ -1366,7 +1478,7 @@ public class ParameterTransformerTest {
 	}
 
 	private String getLabelFromConstraintPostcondition(MethodNode methodNode, int constraintIndex) {
-		
+
 		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
 
 		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();

@@ -95,7 +95,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
 
         List<IGeneratorValue> generatorParameters = createGeneratorDefaultParameters(generator);
 
-        Collection<Constraint> constraints = methodNode.getAllConstraints();
+        Collection<Constraint> constraints = methodNode.getConstraints();
 
         SatSolverConstraintEvaluator sat4jEvaluator = new SatSolverConstraintEvaluator(constraints, methodNode);
 

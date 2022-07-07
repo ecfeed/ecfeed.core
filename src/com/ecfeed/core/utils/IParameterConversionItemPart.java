@@ -71,7 +71,7 @@ public interface IParameterConversionItemPart  {
 	}
 
 	public ItemPartType getType();
-	public String getName();
+	public String getStr();
 	public String getDescription();
 	public void setName(String name);
 	public boolean isMatch(IParameterConversionItemPart otherPart); // TODO DE-NO rename to isEqual

@@ -53,6 +53,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		return false;
 	}
 
+	@Override
 	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (conversionMode == ERunMode.WITH_EXCEPTION) {

@@ -59,7 +59,7 @@ public class ParameterConversionDefinition {
 					return -1;
 				}
 
-				return rightItem.getSrcPart().getName().compareTo(leftItem.getSrcPart().getName());
+				return rightItem.getSrcPart().getStr().compareTo(leftItem.getSrcPart().getStr());
 			}
 		};
 
@@ -78,7 +78,7 @@ public class ParameterConversionDefinition {
 
 			ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
 
-			String itemName = conversionItem.getSrcPart().getName();
+			String itemName = conversionItem.getSrcPart().getStr();
 
 			itemNames.add(itemName);
 		}
@@ -96,7 +96,7 @@ public class ParameterConversionDefinition {
 
 			ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
 
-			String itemName = conversionItem.getDstPart().getName();
+			String itemName = conversionItem.getDstPart().getStr();
 
 			itemNames.add(itemName);
 		}

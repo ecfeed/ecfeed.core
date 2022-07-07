@@ -12,11 +12,15 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
@@ -293,6 +297,72 @@ public class ParameterTransformer {
 			IExtLanguageManager extLanguageManager) {
 
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
+	}
+
+	public static String canConvertToType(MethodParameterNode methodParameterNode, String newType) {
+
+		String errorMessage = canConvertChoices(methodParameterNode, newType);
+
+		if (errorMessage != null) {
+			return errorMessage;
+		}
+
+		//		errorMessage = canConvertConstraints(methodParameterNode, newType);
+		//		
+		//		if (errorMessage != null) {
+		//			return errorMessage;
+		//		}
+
+		return null;
+	}
+
+	private static String canConvertChoices(MethodParameterNode methodParameterNode, String newType) {
+
+		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			if (!canConvertValueToType(choiceNode.getValueString(), choiceNode.isRandomizedValue(), newType)) {
+
+				return 
+						"Cannot convert choice " + choiceNode.getQualifiedName() + 
+						" with value: " + choiceNode.getValueString() + ".";
+			}
+
+		}
+
+		return null;
+	}
+
+	//	private static String canConvertConstraints(MethodParameterNode methodParameterNode, String newType) {
+	//
+	//		MethodNode methodNode = methodParameterNode.getMethod();
+	//		
+	//		List<Constraint> constraints = methodNode.getConstraints();
+	//		
+	//		for (Constraint constraint : constraints) {
+	//			
+	//			String errorMessage = constraint.canConvertToType(newType);
+	//			
+	//			if (errorMessage != null) {
+	//				return errorMessage;
+	//			}
+	//		}
+	//		
+	//		return null;
+	//	}
+	//
+
+	private static boolean canConvertValueToType(
+			String value, boolean isChoiceRandomized, String newType) {
+
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+
+		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(value, isChoiceRandomized);
+
+		return canConvert;
 	}
 
 }

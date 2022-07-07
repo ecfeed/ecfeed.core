@@ -88,9 +88,9 @@ public class MethodNodeTest {
 		assertEquals(method, constraintNode1.getParent());
 		assertEquals(method, constraintNode2.getParent());
 
-		assertEquals(2, method.getAllConstraints().size());
-		assertTrue(method.getAllConstraints().contains(constraint1));
-		assertTrue(method.getAllConstraints().contains(constraint2));
+		assertEquals(2, method.getConstraints().size());
+		assertTrue(method.getConstraints().contains(constraint1));
+		assertTrue(method.getConstraints().contains(constraint2));
 
 		assertEquals(2, method.getConstraintNodes().size());
 		assertEquals(1, method.getConstraints("name1").size());

@@ -265,12 +265,15 @@ public class MethodNode extends ParametersParentNode {
 		return fConstraintNodes;
 	}
 
-	public List<Constraint> getAllConstraints(){
-		List<Constraint> constraints = new ArrayList<Constraint>();
+	public List<Constraint> getConstraints(){
+		
+		List<Constraint> result = new ArrayList<Constraint>();
+		
 		for(ConstraintNode node : fConstraintNodes){
-			constraints.add(node.getConstraint());
+			result.add(node.getConstraint());
 		}
-		return constraints;
+		
+		return result;
 	}
 
 	public List<Constraint> getConstraints(String name) {

@@ -59,6 +59,10 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 				public boolean isConvertibleTo(String type) {
 					return false;
 				}
+				@Override
+				public boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
+					return false;
+				}
 			};
 		}
 

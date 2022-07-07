@@ -40,8 +40,8 @@ public class ConversionPartMatcherTest {
 	}
 
 	private void assertPairMatches(Pair<ParameterConversionItemPartForRaw, ParameterConversionItemPartForRaw> pair, String value1, String value2) {
-		assertEquals(value1, pair.getFirst().getName());
-		assertEquals(value2, pair.getSecond().getName());
+		assertEquals(value1, pair.getFirst().getStr());
+		assertEquals(value2, pair.getSecond().getStr());
 	}
 
 	@Test

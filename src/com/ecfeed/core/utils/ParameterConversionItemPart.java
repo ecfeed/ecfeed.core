@@ -12,39 +12,39 @@ package com.ecfeed.core.utils;
 
 public abstract class ParameterConversionItemPart implements IParameterConversionItemPart {
 
-	private String fItemName;
+	private String fStr;
 
 	public abstract Integer getTypeSortOrder();
 
-	public ParameterConversionItemPart(String itemName) {
+	public ParameterConversionItemPart(String str) {
 
-		if (itemName == null) {
+		if (str == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src name should not be empty.");
 		}
 
-		fItemName = itemName;
+		fStr = str;
 	}
 
 	@Override
 	public String toString() {
 
-		return fItemName;
+		return fStr;
 	}
 
 	@Override
-	public String getName() {
-		return fItemName;
+	public String getStr() {
+		return fStr;
 	}
 
 	@Override
 	public void setName(String name) {
-		fItemName = name;
+		fStr = name;
 	}
 
 	@Override
 	public boolean isMatch(IParameterConversionItemPart otherPart) {
 
-		if (StringHelper.isEqual(fItemName, otherPart.getName())) {
+		if (StringHelper.isEqual(fStr, otherPart.getStr())) {
 			return true;
 		}
 
@@ -54,20 +54,20 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	@Override
 	public Integer getSortOrder() {
 
-		return StringHelper.countOccurencesOfChar(fItemName, ':');
+		return StringHelper.countOccurencesOfChar(fStr, ':');
 	}
 
 	@Override
 	public int compareTo(IParameterConversionItemPart other) {
 
-		return getName().compareTo(other.getName());
+		return getStr().compareTo(other.getStr());
 
 	}
 
 	public String getDescription(String code) {
 		
 		String typeDescription = ItemPartType.convertCodeToDescription(code);
-		return getName() + "[" + typeDescription +"]";
+		return getStr() + "[" + typeDescription +"]";
 	}
 }
 

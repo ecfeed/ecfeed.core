@@ -84,7 +84,7 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	public IParameterConversionItemPart makeClone() {
 		
 		ParameterConversionItemPartForRaw clone = 
-				new ParameterConversionItemPartForRaw(getCode(), getName());
+				new ParameterConversionItemPartForRaw(getCode(), getStr());
 		
 		return clone;
 	}

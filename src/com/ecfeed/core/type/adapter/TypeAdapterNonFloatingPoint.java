@@ -12,35 +12,31 @@ package com.ecfeed.core.type.adapter;
 
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public interface ITypeAdapter<T> {
+public abstract class TypeAdapterNonFloatingPoint<T extends Number> extends TypeAdapterForNumericType<T>{
 
-	public boolean isRandomizable();
-	public boolean isCompatible(String type); // TODO DE-NO remove ?
-	public boolean isConvertibleTo(String otherType);
-	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
-	public String getDefaultValue();
-	public boolean isNullAllowed();
-	public T generateValue(String range, String context);
-	public String generateValueAsString(String range, String context);
-	public String getMyTypeName();
-	
-	public default boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
-		
+	@Override
+	public boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
+
 		if (isRandomized) {
 			return false; // TODO DE-NO 
 		}
-		
+
 		String newValue = adapt(value, isRandomized, ERunMode.QUIET, new ExtLanguageManagerForJava());
-		
+
 		if (StringHelper.isEqual(newValue, value)) {
 			return true;
 		}
-		
+
+		String valueTrimmedConditionally = StringHelper.getFirstToken(value, ".0");
+
+		if (StringHelper.isEqual(newValue, valueTrimmedConditionally)) {
+			return true;
+		}
+
 		return false;
 	}
 
-
 }
+

@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForInt extends TypeAdapterForNumericType<Integer> {
+public class TypeAdapterForInt extends TypeAdapterNonFloatingPoint<Integer> {
 
 	@Override
 	public String getMyTypeName() {
