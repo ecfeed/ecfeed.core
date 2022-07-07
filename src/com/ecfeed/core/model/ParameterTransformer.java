@@ -24,6 +24,7 @@ import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
@@ -299,7 +300,7 @@ public class ParameterTransformer {
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
 	}
 
-	public static String canConvertToType(MethodParameterNode methodParameterNode, String newType) {
+	public static String canConvertParameterToType(String newType, MethodParameterNode methodParameterNode) {
 
 		String errorMessage = canConvertChoices(methodParameterNode, newType);
 
@@ -322,11 +323,13 @@ public class ParameterTransformer {
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
-			if (!canConvertValueToType(choiceNode.getValueString(), choiceNode.isRandomizedValue(), newType)) {
+			if (!canConvertValueFromToType(
+					choiceNode.getValueString(), choiceNode.isRandomizedValue(), 
+					methodParameterNode.getType(), newType)) {
 
 				return 
 						"Cannot convert choice " + choiceNode.getQualifiedName() + 
-						" with value: " + choiceNode.getValueString() + ".";
+						" with value: " + choiceNode.getValueString() + " to type " + newType + ".";
 			}
 
 		}
@@ -353,8 +356,15 @@ public class ParameterTransformer {
 	//	}
 	//
 
-	private static boolean canConvertValueToType(
-			String value, boolean isChoiceRandomized, String newType) {
+	private static boolean canConvertValueFromToType(
+			String value, boolean isChoiceRandomized, 
+			String oldType, String newType) {
+
+		if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN) 
+				|| newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+
+			return checkConversionForBoolean(oldType, newType);
+		}
 
 		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
 
@@ -363,6 +373,29 @@ public class ParameterTransformer {
 		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(value, isChoiceRandomized);
 
 		return canConvert;
+	}
+
+	private static boolean checkConversionForBoolean(String oldType, String newType) {
+
+		if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+
+			if (newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		if (newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+
+			if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		return false;
 	}
 
 }

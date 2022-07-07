@@ -1310,8 +1310,8 @@ public class ParameterTransformerTest {
 		choiceNodeOfMethod.setValueString("ABC");
 
 		errorMessage = 
-				ParameterTransformer.canConvertToType(
-						methodParameterNode, JavaLanguageHelper.TYPE_NAME_INT);
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
 
 
 		assertNotNull(errorMessage);
@@ -1321,23 +1321,122 @@ public class ParameterTransformerTest {
 		choiceNodeOfMethod.setValueString("1");
 
 		errorMessage = 
-				ParameterTransformer.canConvertToType(
-						methodParameterNode, JavaLanguageHelper.TYPE_NAME_INT);
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
 
 		assertNull(errorMessage);
 
 		// check double 123.0 to int
 
-		methodParameterNode.setType(JavaLanguageHelper.DEFAULT_EXPECTED_DOUBLE_VALUE);
+		methodParameterNode.setType(JavaLanguageHelper.TYPE_NAME_DOUBLE);
 
 		choiceNodeOfMethod.setValueString("123.0");
 
 		errorMessage = 
-				ParameterTransformer.canConvertToType(
-						methodParameterNode, JavaLanguageHelper.TYPE_NAME_INT);
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
 
 		assertNull(errorMessage);
 
+		//
+
+		choiceNodeOfMethod.setValueString("123.54e+7");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
+
+		assertNotNull(errorMessage);
+
+		//
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_DOUBLE, methodParameterNode);
+
+		assertNull(errorMessage);
+
+		//
+
+		choiceNodeOfMethod.setValueString("123.540");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
+
+		assertNotNull(errorMessage);
+
+		//
+
+		choiceNodeOfMethod.setValueString("1234");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_DOUBLE, methodParameterNode);
+
+		assertNull(errorMessage);
+
+		//
+
+		choiceNodeOfMethod.setValueString("1234");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
+
+		assertNull(errorMessage);
+
+		//
+
+		choiceNodeOfMethod.setValueString("1234");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_BYTE, methodParameterNode);
+
+		assertNotNull(errorMessage);
+
+		//
+
+		choiceNodeOfMethod.setValueString("123");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_BYTE, methodParameterNode);
+
+		assertNull(errorMessage);
+
+		//
+
+		methodParameterNode.setType(JavaLanguageHelper.TYPE_NAME_BOOLEAN);
+
+		choiceNodeOfMethod.setValueString("false");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_BYTE, methodParameterNode);
+
+		assertNotNull(errorMessage);
+
+		//
+
+		choiceNodeOfMethod.setValueString("false");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_STRING, methodParameterNode);
+
+		assertNotNull(errorMessage);
+
+		//
+
+		choiceNodeOfMethod.setValueString("false");
+
+		errorMessage = 
+				ParameterTransformer.canConvertParameterToType(
+						JavaLanguageHelper.TYPE_NAME_BOOLEAN, methodParameterNode);
+
+		assertNull(errorMessage);
 
 		//		// constraint
 		//		
@@ -1414,32 +1513,32 @@ public class ParameterTransformerTest {
 		methodNode.addConstraint(constraintNode);
 	}
 
-//	private void addSimpleValueConstraintToMethod(
-//			MethodNode methodNode,
-//			String constraintName,
-//			MethodParameterNode methodParameterNode,
-//			String value1,
-//			String value2) {
-//
-//		RelationStatement relationStatement1 = 
-//				RelationStatement.createRelationStatementWithValueCondition(
-//						methodParameterNode, EMathRelation.EQUAL, value1);
-//
-//		RelationStatement relationStatement2 = 
-//				RelationStatement.createRelationStatementWithValueCondition(
-//						methodParameterNode, EMathRelation.LESS_THAN, value2);
-//
-//		Constraint constraint = new Constraint(
-//				constraintName, 
-//				ConstraintType.EXTENDED_FILTER, 
-//				relationStatement1, 
-//				relationStatement2, 
-//				null);
-//
-//		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
-//
-//		methodNode.addConstraint(constraintNode);
-//	}
+	//	private void addSimpleValueConstraintToMethod(
+	//			MethodNode methodNode,
+	//			String constraintName,
+	//			MethodParameterNode methodParameterNode,
+	//			String value1,
+	//			String value2) {
+	//
+	//		RelationStatement relationStatement1 = 
+	//				RelationStatement.createRelationStatementWithValueCondition(
+	//						methodParameterNode, EMathRelation.EQUAL, value1);
+	//
+	//		RelationStatement relationStatement2 = 
+	//				RelationStatement.createRelationStatementWithValueCondition(
+	//						methodParameterNode, EMathRelation.LESS_THAN, value2);
+	//
+	//		Constraint constraint = new Constraint(
+	//				constraintName, 
+	//				ConstraintType.EXTENDED_FILTER, 
+	//				relationStatement1, 
+	//				relationStatement2, 
+	//				null);
+	//
+	//		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
+	//
+	//		methodNode.addConstraint(constraintNode);
+	//	}
 
 	private ChoiceNode getChoiceNodeFromConstraintPostcondition(
 			MethodNode methodNode, int constraintIndex) {
