@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -1309,9 +1310,22 @@ public class ParameterTransformerTest {
 		String typeDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		String typeString = JavaLanguageHelper.TYPE_NAME_STRING;
 
-		ValueConversionChecker checker = new ValueConversionChecker(methodParameterNode, choiceNodeOfMethod);
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+		
+		ValueConversionChecker checker = 
+				new ValueConversionChecker(
+						methodParameterNode, 
+						choiceNodeOfMethod,
+						parameterConversionDefinition);
 
 		checker.test(typeString, typeInt, "ABC", false, false);
+		
+		ParameterConversionDefinition resultConversionDefinition = checker.getParameterConversionDefinition();
+		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
+		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
+		String description = srcPart.getDescription();
+		assertEquals("ABC[value]", description);
+		
 		checker.test(typeString, typeString, "ABC", false, true);
 		checker.test(typeString, typeInt, "1", false, true);
 
@@ -1345,30 +1359,39 @@ public class ParameterTransformerTest {
 
 		private MethodParameterNode fMethodParameterNode;
 		private ChoiceNode fChoiceNodeOfMethod;
+		private ParameterConversionDefinition fParameterConversionDefinition;
 
-		public ValueConversionChecker(MethodParameterNode methodParameterNode, ChoiceNode choiceNodeOfMethod) {
+		public ValueConversionChecker(
+				MethodParameterNode methodParameterNode, 
+				ChoiceNode choiceNodeOfMethod,
+				ParameterConversionDefinition parameterConversionDefinition) {
 
 			fMethodParameterNode = methodParameterNode;
 			fChoiceNodeOfMethod = choiceNodeOfMethod;
+			fParameterConversionDefinition = parameterConversionDefinition;
 		}
 
 		public void test(String typeFrom, String typeTo, String choiceValue, boolean isRandomized, boolean successExpected) {
 
+			fParameterConversionDefinition.clear();
+			
 			fMethodParameterNode.setType(typeFrom);
 
 			fChoiceNodeOfMethod.setValueString(choiceValue);
 			fChoiceNodeOfMethod.setRandomizedValue(isRandomized);
 
-			ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
-
 			ParameterTransformer.verifyConversionOfParameterToType(
-					typeTo, fMethodParameterNode, parameterConversionDefinition);
+					typeTo, fMethodParameterNode, fParameterConversionDefinition);
 
 			if (successExpected) {
-				assertFalse(parameterConversionDefinition.hasItems());
+				assertFalse(fParameterConversionDefinition.hasItems());
 			} else {
-				assertTrue(parameterConversionDefinition.hasItems());
+				assertTrue(fParameterConversionDefinition.hasItems());
 			}
+		}
+		
+		public ParameterConversionDefinition getParameterConversionDefinition() {
+			return fParameterConversionDefinition;
 		}
 	}
 

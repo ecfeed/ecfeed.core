@@ -133,7 +133,7 @@ public class ParameterConversionDefinition {
 		return fParameterConversionItems.size();
 	}
 
-	public ParameterConversionItem getCopyOfItem(int index) { // TODO DE-NO remove ?
+	public ParameterConversionItem getCopyOfItem(int index) {
 
 		ParameterConversionItem parameterConversionItem = fParameterConversionItems.get(index);
 		

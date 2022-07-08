@@ -34,7 +34,13 @@ public class ParameterConversionItem {
 	@Override
 	public String toString() {
 
-		return "(" + fSrcPart.toString() + " -> " + fDstPart.toString() + ")";
+		String dstPartDescription = "EMPTY";
+		
+		if (fDstPart != null) {
+			dstPartDescription = fDstPart.toString();
+		}
+		
+		return "(" + fSrcPart.toString() + " -> " + dstPartDescription + ")";
 	}
 
 	public IParameterConversionItemPart getSrcPart() {
@@ -65,7 +71,12 @@ public class ParameterConversionItem {
 	public ParameterConversionItem makeClone() {
 
 		IParameterConversionItemPart srcPart = fSrcPart.makeClone();
-		IParameterConversionItemPart dstPart = fDstPart.makeClone();
+		
+		IParameterConversionItemPart dstPart = null;
+		
+		if (fDstPart != null) {
+			dstPart = fDstPart.makeClone();
+		}
 
 		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fObjectsContainingSrcItem);
 
