@@ -1303,160 +1303,59 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, "MC1", "");
 
-		String errorMessage = "";
+		String typeBoolean = JavaLanguageHelper.TYPE_NAME_BOOLEAN;
+		String typeByte = JavaLanguageHelper.TYPE_NAME_BYTE;
+		String typeInt = JavaLanguageHelper.TYPE_NAME_INT;
+		String typeFloat = JavaLanguageHelper.TYPE_NAME_FLOAT;
+		String typeDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
+		String typeString = JavaLanguageHelper.TYPE_NAME_STRING;
 
-		// check string ABC to int
+		ValueConversionChecker checker = new ValueConversionChecker(methodParameterNode, choiceNodeOfMethod);
 
-		choiceNodeOfMethod.setValueString("ABC");
+		checker.test(typeString, typeInt, "ABC", false);
+		checker.test(typeString, typeString, "ABC", true);
+		checker.test(typeString, typeInt, "1", true);
 
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
+		checker.test(typeDouble, typeInt, "123.0", true);
+		checker.test(typeDouble, typeInt, "123.54e+7", false);
+		checker.test(typeDouble, typeInt, "123.540", false);
 
+		checker.test(typeFloat, typeDouble, "1234", true);
+		checker.test(typeFloat, typeInt, "1234", true);
+		checker.test(typeFloat, typeByte, "1234", false);
+		checker.test(typeFloat, typeByte, "123", true);
 
-		assertNotNull(errorMessage);
+		checker.test(typeBoolean, typeByte, "false", false);
+		checker.test(typeBoolean, typeString, "false", false);
+		checker.test(typeBoolean, typeBoolean, "false", true);
+	}
 
-		// check string 1 to int
+	private static class ValueConversionChecker {
 
-		choiceNodeOfMethod.setValueString("1");
+		private MethodParameterNode fMethodParameterNode;
+		private ChoiceNode fChoiceNodeOfMethod;
 
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
+		public ValueConversionChecker(MethodParameterNode methodParameterNode, ChoiceNode choiceNodeOfMethod) {
 
-		assertNull(errorMessage);
+			fMethodParameterNode = methodParameterNode;
+			fChoiceNodeOfMethod = choiceNodeOfMethod;
+		}
 
-		// check double 123.0 to int
+		public void test(String typeFrom, String typeTo, String choiceValue, boolean successExpected) {
 
-		methodParameterNode.setType(JavaLanguageHelper.TYPE_NAME_DOUBLE);
+			fMethodParameterNode.setType(typeFrom);
+			fChoiceNodeOfMethod.setValueString(choiceValue);
 
-		choiceNodeOfMethod.setValueString("123.0");
+			String errorMessage = 
+					ParameterTransformer.canConvertParameterToType(
+							typeTo, fMethodParameterNode);
 
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
-
-		assertNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("123.54e+7");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
-
-		assertNotNull(errorMessage);
-
-		//
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_DOUBLE, methodParameterNode);
-
-		assertNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("123.540");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
-
-		assertNotNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("1234");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_DOUBLE, methodParameterNode);
-
-		assertNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("1234");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_INT, methodParameterNode);
-
-		assertNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("1234");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_BYTE, methodParameterNode);
-
-		assertNotNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("123");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_BYTE, methodParameterNode);
-
-		assertNull(errorMessage);
-
-		//
-
-		methodParameterNode.setType(JavaLanguageHelper.TYPE_NAME_BOOLEAN);
-
-		choiceNodeOfMethod.setValueString("false");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_BYTE, methodParameterNode);
-
-		assertNotNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("false");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_STRING, methodParameterNode);
-
-		assertNotNull(errorMessage);
-
-		//
-
-		choiceNodeOfMethod.setValueString("false");
-
-		errorMessage = 
-				ParameterTransformer.canConvertParameterToType(
-						JavaLanguageHelper.TYPE_NAME_BOOLEAN, methodParameterNode);
-
-		assertNull(errorMessage);
-
-		//		// constraint
-		//		
-		//		addSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, value1, value1);		
-		//		
-		//		
-		//		// creating choice conversion list
-		//
-		//		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
-		//
-		//		ParameterConversionItem parameterConversionItemForChoice = 
-		//				new ParameterConversionItem(
-		//						new ParameterConversionItemPartForLabel(choiceNodeOfMethod11), 
-		//						new ParameterConversionItemPartForChoice(globalChoiceOfClass11), 
-		//						null);
-		//
-		//		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
-		//
-		//		
-		//		
+			if (successExpected) {
+				assertNull(errorMessage);
+			} else {
+				assertNotNull(errorMessage);
+			}
+		}
 	}
 
 	private void addSimpleChoiceConstraintToMethod(
