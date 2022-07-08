@@ -28,6 +28,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
+import com.ecfeed.core.utils.ParameterConversionItemPartForRaw;
 
 public class ParameterTransformer {
 
@@ -300,24 +301,24 @@ public class ParameterTransformer {
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
 	}
 
-	public static String canConvertParameterToType(String newType, MethodParameterNode methodParameterNode) {
+	public static void verifyConversionOfParameterToType(
+			String newType, 
+			MethodParameterNode methodParameterNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		String errorMessage = canConvertChoices(methodParameterNode, newType);
-
-		if (errorMessage != null) {
-			return errorMessage;
-		}
+		verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
 
 		//		errorMessage = canConvertConstraints(methodParameterNode, newType);
 		//		
 		//		if (errorMessage != null) {
 		//			return errorMessage;
 		//		}
-
-		return null;
 	}
 
-	private static String canConvertChoices(MethodParameterNode methodParameterNode, String newType) {
+	private static void verifyConversionOfChoices(
+			MethodParameterNode methodParameterNode, 
+			String newType, 
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
 
@@ -327,14 +328,26 @@ public class ParameterTransformer {
 					choiceNode.getValueString(), choiceNode.isRandomizedValue(), 
 					methodParameterNode.getType(), newType)) {
 
-				return 
-						"Cannot convert choice " + choiceNode.getQualifiedName() + 
-						" with value: " + choiceNode.getValueString() + " to type " + newType + ".";
+				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
 			}
-
 		}
+	}
 
-		return null;
+	private static void addConversionDefinitionItem(
+			ChoiceNode choiceNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		IParameterConversionItemPart srcPart = 
+				new ParameterConversionItemPartForRaw(
+						IParameterConversionItemPart.ItemPartType.VALUE.getCode(), 
+						choiceNode.getValueString());
+
+		String objectsContainingSrcItem = choiceNode.getName();
+
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, null, objectsContainingSrcItem);
+
+		inOutParameterConversionDefinition.addItem(parameterConversionItem);
 	}
 
 	//	private static String canConvertConstraints(MethodParameterNode methodParameterNode, String newType) {

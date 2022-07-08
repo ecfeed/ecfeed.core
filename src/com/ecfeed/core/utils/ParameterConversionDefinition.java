@@ -28,6 +28,14 @@ public class ParameterConversionDefinition {
 		fParameterConversionItems.add(parameterConversionItem);
 	}
 
+	public boolean hasItems() {
+		
+		if (fParameterConversionItems.size() > 0) {
+			return true;
+		}
+		
+		return false;
+	}
 	public List<ParameterConversionItem> createSortedCopyOfConversionItems() {
 
 		List<ParameterConversionItem> sortedConversionItems = new ArrayList<>(fParameterConversionItems);

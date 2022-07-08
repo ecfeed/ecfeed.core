@@ -16,7 +16,8 @@ public interface IParameterConversionItemPart  {
 
 		CHOICE("C", "choice"),
 		LABEL("L", "label"),
-		NAME("N", "name"),
+		VALUE("V", "value"),
+		NAME("N", "name"), // TODO DE-NO remove ?
 		RAW("R", "raw");
 
 		private String fCode;

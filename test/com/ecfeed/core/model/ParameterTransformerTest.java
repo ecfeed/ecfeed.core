@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -1278,7 +1277,7 @@ public class ParameterTransformerTest {
 	}
 
 	@Test
-	public void XcanCovertChoices() {
+	public void canCovertChoices() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -1318,22 +1317,22 @@ public class ParameterTransformerTest {
 
 		checker.test(typeDouble, typeInt, "123.0", false, true);
 		checker.test(typeDouble, typeInt, "123.0:123.0", true, true);
-		
+
 		checker.test(typeDouble, typeInt, "123.54e+7", false, false);
 		checker.test(typeDouble, typeInt, "123.54e+7:123.54e+7", true, false);
-		
+
 		checker.test(typeDouble, typeInt, "123.540", false, false);
 		checker.test(typeDouble, typeInt, "123.540:123.540", true, false);
 
 		checker.test(typeFloat, typeDouble, "1234", false, true);
 		checker.test(typeFloat, typeDouble, "1234:1234", true, true);
-		
+
 		checker.test(typeFloat, typeInt, "1234", false, true);
 		checker.test(typeFloat, typeInt, "1234:1234", true, true);
-		
+
 		checker.test(typeFloat, typeByte, "1234", false, false);
 		checker.test(typeFloat, typeByte, "1234:1234", true, false);
-		
+
 		checker.test(typeFloat, typeByte, "123", false, true);
 		checker.test(typeFloat, typeByte, "123:123", true, true);
 
@@ -1356,18 +1355,19 @@ public class ParameterTransformerTest {
 		public void test(String typeFrom, String typeTo, String choiceValue, boolean isRandomized, boolean successExpected) {
 
 			fMethodParameterNode.setType(typeFrom);
-			
+
 			fChoiceNodeOfMethod.setValueString(choiceValue);
 			fChoiceNodeOfMethod.setRandomizedValue(isRandomized);
 
-			String errorMessage = 
-					ParameterTransformer.canConvertParameterToType(
-							typeTo, fMethodParameterNode);
+			ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+
+			ParameterTransformer.verifyConversionOfParameterToType(
+					typeTo, fMethodParameterNode, parameterConversionDefinition);
 
 			if (successExpected) {
-				assertNull(errorMessage);
+				assertFalse(parameterConversionDefinition.hasItems());
 			} else {
-				assertNotNull(errorMessage);
+				assertTrue(parameterConversionDefinition.hasItems());
 			}
 		}
 	}
