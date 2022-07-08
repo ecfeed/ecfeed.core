@@ -16,32 +16,49 @@ import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public abstract class TypeAdapterFloatingPoint<T extends Number> extends TypeAdapterForNumericType<T>{
+public abstract class TypeAdapterForFloatingPoint<T extends Number> extends TypeAdapterForNumericType<T>{
 
 	@Override
 	public boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
-		
-		if (isRandomized) {
-			return false; // TODO DE-NO 
-		}
-		
+
 		String newValue = adapt(value, isRandomized, ERunMode.QUIET, new ExtLanguageManagerForJava());
-		
+
+		if (!isRandomized) {
+			return isMatchForFloatingPointStrings(value, newValue);
+		}
+
+		String[] range1 = RangeHelper.splitToRange(value);
+		String[] range2 = RangeHelper.splitToRange(value);
+
+		if (!isMatchForFloatingPointStrings(range1[0], range2[0])) {
+			return false;
+		}
+
+		if (!isMatchForFloatingPointStrings(range1[1], range2[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isMatchForFloatingPointStrings(String value, String newValue) {
+
 		Double parsedValue = Double.parseDouble(value);
 		Double parsedNewValue = Double.parseDouble(newValue);
-		
+
 		String formattedValueStr = parsedValue.toString();
 		String formattedNewValueStr = parsedNewValue.toString();
-		
+
 		if (StringHelper.isEqual(formattedValueStr, formattedNewValueStr)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean isCompatible(String type){
 		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTIBLE_TO_NUMBERS).contains(type);

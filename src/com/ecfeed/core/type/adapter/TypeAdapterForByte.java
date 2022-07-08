@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForByte extends TypeAdapterNonFloatingPoint<Byte>{
+public class TypeAdapterForByte extends TypeAdapterForNonFloatingPoint<Byte>{
 
 	@Override
 	public String getMyTypeName() {

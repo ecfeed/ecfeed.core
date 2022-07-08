@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.*;
 
-public class TypeAdapterForLong extends TypeAdapterNonFloatingPoint<Long>{
+public class TypeAdapterForLong extends TypeAdapterForNonFloatingPoint<Long>{
 
 	@Override
 	public String getMyTypeName() {

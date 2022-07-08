@@ -1312,22 +1312,34 @@ public class ParameterTransformerTest {
 
 		ValueConversionChecker checker = new ValueConversionChecker(methodParameterNode, choiceNodeOfMethod);
 
-		checker.test(typeString, typeInt, "ABC", false);
-		checker.test(typeString, typeString, "ABC", true);
-		checker.test(typeString, typeInt, "1", true);
+		checker.test(typeString, typeInt, "ABC", false, false);
+		checker.test(typeString, typeString, "ABC", false, true);
+		checker.test(typeString, typeInt, "1", false, true);
 
-		checker.test(typeDouble, typeInt, "123.0", true);
-		checker.test(typeDouble, typeInt, "123.54e+7", false);
-		checker.test(typeDouble, typeInt, "123.540", false);
+		checker.test(typeDouble, typeInt, "123.0", false, true);
+		checker.test(typeDouble, typeInt, "123.0:123.0", true, true);
+		
+		checker.test(typeDouble, typeInt, "123.54e+7", false, false);
+		checker.test(typeDouble, typeInt, "123.54e+7:123.54e+7", true, false);
+		
+		checker.test(typeDouble, typeInt, "123.540", false, false);
+		checker.test(typeDouble, typeInt, "123.540:123.540", true, false);
 
-		checker.test(typeFloat, typeDouble, "1234", true);
-		checker.test(typeFloat, typeInt, "1234", true);
-		checker.test(typeFloat, typeByte, "1234", false);
-		checker.test(typeFloat, typeByte, "123", true);
+		checker.test(typeFloat, typeDouble, "1234", false, true);
+		checker.test(typeFloat, typeDouble, "1234:1234", true, true);
+		
+		checker.test(typeFloat, typeInt, "1234", false, true);
+		checker.test(typeFloat, typeInt, "1234:1234", true, true);
+		
+		checker.test(typeFloat, typeByte, "1234", false, false);
+		checker.test(typeFloat, typeByte, "1234:1234", true, false);
+		
+		checker.test(typeFloat, typeByte, "123", false, true);
+		checker.test(typeFloat, typeByte, "123:123", true, true);
 
-		checker.test(typeBoolean, typeByte, "false", false);
-		checker.test(typeBoolean, typeString, "false", false);
-		checker.test(typeBoolean, typeBoolean, "false", true);
+		checker.test(typeBoolean, typeByte, "false", false, false);
+		checker.test(typeBoolean, typeString, "false", false, false);
+		checker.test(typeBoolean, typeBoolean, "false", false, true);
 	}
 
 	private static class ValueConversionChecker {
@@ -1341,10 +1353,12 @@ public class ParameterTransformerTest {
 			fChoiceNodeOfMethod = choiceNodeOfMethod;
 		}
 
-		public void test(String typeFrom, String typeTo, String choiceValue, boolean successExpected) {
+		public void test(String typeFrom, String typeTo, String choiceValue, boolean isRandomized, boolean successExpected) {
 
 			fMethodParameterNode.setType(typeFrom);
+			
 			fChoiceNodeOfMethod.setValueString(choiceValue);
+			fChoiceNodeOfMethod.setRandomizedValue(isRandomized);
 
 			String errorMessage = 
 					ParameterTransformer.canConvertParameterToType(

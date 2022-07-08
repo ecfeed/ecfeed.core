@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForDouble extends TypeAdapterFloatingPoint<Double>{
+public class TypeAdapterForDouble extends TypeAdapterForFloatingPoint<Double>{
 
 	@Override
 	public String getMyTypeName() {

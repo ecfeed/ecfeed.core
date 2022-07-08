@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
+public class TypeAdapterForFloat extends TypeAdapterForFloatingPoint<Float>{
 
 	@Override
 	public String getMyTypeName() {
