@@ -1303,6 +1303,21 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, "MC1", "");
 
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+
+		ValueConversionChecker checker = 
+				new ValueConversionChecker(
+						methodParameterNode, 
+						choiceNodeOfMethod,
+						parameterConversionDefinition);
+
+		boolean testChoiceValue = true;
+
+		performTypeCheck(testChoiceValue, checker);
+	}
+
+	private void performTypeCheck(boolean testChoiceValue, ValueConversionChecker checker) {
+
 		String typeBoolean = JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 		String typeByte = JavaLanguageHelper.TYPE_NAME_BYTE;
 		String typeInt = JavaLanguageHelper.TYPE_NAME_INT;
@@ -1310,50 +1325,43 @@ public class ParameterTransformerTest {
 		String typeDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		String typeString = JavaLanguageHelper.TYPE_NAME_STRING;
 
-		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
-		
-		ValueConversionChecker checker = 
-				new ValueConversionChecker(
-						methodParameterNode, 
-						choiceNodeOfMethod,
-						parameterConversionDefinition);
+		checker.test(testChoiceValue, typeString, typeInt, "ABC", false, false);
 
-		checker.test(typeString, typeInt, "ABC", false, false);
-		
 		ParameterConversionDefinition resultConversionDefinition = checker.getParameterConversionDefinition();
 		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		String description = srcPart.getDescription();
 		assertEquals("ABC[value]", description);
-		
-		checker.test(typeString, typeString, "ABC", false, true);
-		checker.test(typeString, typeInt, "1", false, true);
 
-		checker.test(typeDouble, typeInt, "123.0", false, true);
-		checker.test(typeDouble, typeInt, "123.0:123.0", true, true);
+		checker.test(testChoiceValue, typeString, typeString, "ABC", false, testChoiceValue);
+		checker.test(testChoiceValue, typeString, typeInt, "1", false, testChoiceValue);
 
-		checker.test(typeDouble, typeInt, "123.54e+7", false, false);
-		checker.test(typeDouble, typeInt, "123.54e+7:123.54e+7", true, false);
+		checker.test(testChoiceValue, typeDouble, typeInt, "123.0", false, testChoiceValue);
+		checker.test(testChoiceValue, typeDouble, typeInt, "123.0:123.0", testChoiceValue, testChoiceValue);
 
-		checker.test(typeDouble, typeInt, "123.540", false, false);
-		checker.test(typeDouble, typeInt, "123.540:123.540", true, false);
+		checker.test(testChoiceValue, typeDouble, typeInt, "123.54e+7", false, false);
+		checker.test(testChoiceValue, typeDouble, typeInt, "123.54e+7:123.54e+7", testChoiceValue, false);
 
-		checker.test(typeFloat, typeDouble, "1234", false, true);
-		checker.test(typeFloat, typeDouble, "1234:1234", true, true);
+		checker.test(testChoiceValue, typeDouble, typeInt, "123.540", false, false);
+		checker.test(testChoiceValue, typeDouble, typeInt, "123.540:123.540", testChoiceValue, false);
 
-		checker.test(typeFloat, typeInt, "1234", false, true);
-		checker.test(typeFloat, typeInt, "1234:1234", true, true);
+		checker.test(testChoiceValue, typeFloat, typeDouble, "1234", false, testChoiceValue);
+		checker.test(testChoiceValue, typeFloat, typeDouble, "1234:1234", testChoiceValue, testChoiceValue);
 
-		checker.test(typeFloat, typeByte, "1234", false, false);
-		checker.test(typeFloat, typeByte, "1234:1234", true, false);
+		checker.test(testChoiceValue, typeFloat, typeInt, "1234", false, testChoiceValue);
+		checker.test(testChoiceValue, typeFloat, typeInt, "1234:1234", testChoiceValue, testChoiceValue);
 
-		checker.test(typeFloat, typeByte, "123", false, true);
-		checker.test(typeFloat, typeByte, "123:123", true, true);
+		checker.test(testChoiceValue, typeFloat, typeByte, "1234", false, false);
+		checker.test(testChoiceValue, typeFloat, typeByte, "1234:1234", testChoiceValue, false);
 
-		checker.test(typeBoolean, typeByte, "false", false, false);
-		checker.test(typeBoolean, typeString, "false", false, false);
-		checker.test(typeBoolean, typeBoolean, "false", false, true);
+		checker.test(testChoiceValue, typeFloat, typeByte, "123", false, testChoiceValue);
+		checker.test(testChoiceValue, typeFloat, typeByte, "123:123", testChoiceValue, testChoiceValue);
+
+		checker.test(testChoiceValue, typeBoolean, typeByte, "false", false, false);
+		checker.test(testChoiceValue, typeBoolean, typeString, "false", false, false);
+		checker.test(testChoiceValue, typeBoolean, typeBoolean, "false", false, testChoiceValue);
 	}
+
 
 	private static class ValueConversionChecker {
 
@@ -1371,13 +1379,19 @@ public class ParameterTransformerTest {
 			fParameterConversionDefinition = parameterConversionDefinition;
 		}
 
-		public void test(String typeFrom, String typeTo, String choiceValue, boolean isRandomized, boolean successExpected) {
+		public void test(
+				boolean testChoiceValue, 
+				String typeFrom, 
+				String typeTo, 
+				String value, 
+				boolean isRandomized, 
+				boolean successExpected) {
 
 			fParameterConversionDefinition.clear();
-			
+
 			fMethodParameterNode.setType(typeFrom);
 
-			fChoiceNodeOfMethod.setValueString(choiceValue);
+			fChoiceNodeOfMethod.setValueString(value);
 			fChoiceNodeOfMethod.setRandomizedValue(isRandomized);
 
 			ParameterTransformer.verifyConversionOfParameterToType(
@@ -1389,7 +1403,7 @@ public class ParameterTransformerTest {
 				assertTrue(fParameterConversionDefinition.hasItems());
 			}
 		}
-		
+
 		public ParameterConversionDefinition getParameterConversionDefinition() {
 			return fParameterConversionDefinition;
 		}
