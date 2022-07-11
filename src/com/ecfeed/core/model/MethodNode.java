@@ -142,7 +142,7 @@ public class MethodNode extends ParametersParentNode {
 		for(MethodParameterNode parameter : getMethodParameters()){
 			copy.addParameter(parameter.makeClone());
 		}
-		
+
 		for(TestCaseNode testcase : fTestCaseNodes){
 			TestCaseNode tcase = testcase.getCopy(copy);
 			if(tcase != null)
@@ -223,7 +223,7 @@ public class MethodNode extends ParametersParentNode {
 		fTestSuiteNodes.add(index, testCase);
 		registerChange();
 	}
-	
+
 	public void addTestCase(TestCaseNode testCase){
 		addTestCase(testCase, fTestCaseNodes.size());
 	}
@@ -233,7 +233,7 @@ public class MethodNode extends ParametersParentNode {
 		testCase.setParent(this);
 		registerChange();
 	}
-	
+
 	public ClassNode getClassNode() {
 		return (ClassNode)getParent();
 	}
@@ -298,7 +298,7 @@ public class MethodNode extends ParametersParentNode {
 
 		return constraintNodes;
 	}
-	
+
 	public Set<String> getConstraintsNames() {
 		Set<String> names = new HashSet<String>();
 		for(ConstraintNode constraint : fConstraintNodes){
@@ -358,23 +358,23 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public List<TestCaseNode> getTestCases() {
-		
+
 		return fTestCaseNodes;
 	}
-	
+
 	public List<TestSuiteNode> getTestSuites() {
-		
+
 		return fTestSuiteNodes;
 	}
-	
+
 	public Optional<TestSuiteNode> getTestSuite(String testSuiteName) {
-		
+
 		for (TestSuiteNode testSuite : fTestSuiteNodes) {
 			if (testSuite.getSuiteName().equalsIgnoreCase(testSuiteName)) {
 				return Optional.of(testSuite);
 			}
 		}
-		
+
 		return Optional.empty();
 	}
 
@@ -391,7 +391,7 @@ public class MethodNode extends ParametersParentNode {
 		}
 		return true;
 	}
-	
+
 	public boolean hasTestCases() {
 		if (fTestCaseNodes.isEmpty()) {
 			return false;
@@ -442,14 +442,14 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public void removeTestSuite(TestSuiteNode testSuite) {
-		
+
 		String testSuiteName = testSuite.getName();
 		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));
-		
+
 		fTestSuiteNodes.remove(testSuite);
 		registerChange();
 	}
-	
+
 	public boolean isChoiceMentioned(ChoiceNode choice){
 		for(ConstraintNode constraint : fConstraintNodes){
 			if(constraint.mentions(choice)){
@@ -585,7 +585,7 @@ public class MethodNode extends ParametersParentNode {
 
 	@Override
 	public boolean isMatch(AbstractNode node){
-		
+
 		if(node instanceof MethodNode == false){
 			return false;
 		}
@@ -593,22 +593,22 @@ public class MethodNode extends ParametersParentNode {
 		MethodNode methodToCompare = (MethodNode)node;
 
 		List<TestCaseNode> testCases = getTestCases();
-		
+
 		int testCasesCount = testCases.size();
 		int constraintsCount = getConstraintNodes().size();
 
 		List<TestCaseNode> testCasesToCompare = methodToCompare.getTestCases();
-		
+
 		if(testCasesCount != testCasesToCompare.size() ||
 				constraintsCount != methodToCompare.getConstraintNodes().size()){
 			return false;
 		}
 
 		for (int i = 0; i < testCasesCount; i++){
-			
+
 			TestCaseNode testCase = testCases.get(i);
 			TestCaseNode testCaseToCompare = testCasesToCompare.get(i);
-			
+
 			if (testCase.isMatch(testCaseToCompare) == false){
 				return false;
 			}
@@ -621,11 +621,11 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		boolean isMatch = super.isMatch(node);
-		
+
 		if (!isMatch) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -679,12 +679,12 @@ public class MethodNode extends ParametersParentNode {
 		return new ArrayList<>();
 	}
 
-	public void removeConstraintsWithParameter(MethodParameterNode methodParameter) {
+	public void removeConstraintsWithParameterChoices(MethodParameterNode methodParameter) {
 
 		ArrayList<ConstraintNode> constraintsToDelete = new ArrayList<ConstraintNode>();  
 
 		for(ConstraintNode constraint : fConstraintNodes){
-			if (constraint.mentionsParameter(methodParameter)) {
+			if (constraint.mentionsChoiceOfParameter(methodParameter)) {
 				constraintsToDelete.add(constraint);
 			}
 		}

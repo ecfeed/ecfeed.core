@@ -16,13 +16,195 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCases;
 import com.ecfeed.core.utils.CommonConstants;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
+
+	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
+
+		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
+			return null;
+		}
+
+		String parentName = getParentName(globalParameterExtendedName);
+		String parameterName = getParameterName(globalParameterExtendedName);
+
+		ClassNode classNode = fMethodNode.getClassNode();
+		String className = classNode.getName();
+
+		if (StringHelper.isEqual(className, parentName)) {
+			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			return (GlobalParameterNode)abstractParameterNode;
+		}
+
+		RootNode rootNode = classNode.getRoot();
+		String rootName = rootNode.getName();
+
+		if (parentName == null || rootName.equals(parentName)) {
+			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			return (GlobalParameterNode)abstractParameterNode;
+		}			
+
+		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
+		return null;
+	}
+
+	private static String getParentName(String parameterExtendedName) {
+
+		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
+
+		if (dstParamNameParts.length == 2) {
+			return dstParamNameParts[0]; 
+		}
+
+		return null;
+	}
+
+	private static String getParameterName(String parameterExtendedName) {
+
+		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
+
+		if (dstParamNameParts.length == 2) {
+			return dstParamNameParts[1]; 
+		}
+
+		return dstParamNameParts[0];
+	}
+
+	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			List<ChoiceNode> choiceNodesForConstraint = 
+					ConstraintNodeHelper.getChoicesUsedInConstraint(
+							constraintNode, methodParameterNode);
+
+			resultChoiceNodes.addAll(choiceNodesForConstraint);
+		}
+
+		resultChoiceNodes = ChoiceNodeHelper.removeDuplicates(resultChoiceNodes);
+
+		return resultChoiceNodes;
+	}
+
+	public static List<String> getLabelsUsedInConstraints(MethodParameterNode methodParameterNode) {
+
+		List<String> resultLabels = new ArrayList<>();
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+
+			List<String> labelsOfConstraint = 
+					ConstraintNodeHelper.getLabelsUsedInConstraint(
+							constraintNode, methodParameterNode);
+
+			resultLabels.addAll(labelsOfConstraint);
+
+			resultLabels = StringHelper.removeDuplicates(resultLabels);
+		}
+
+		return resultLabels;
+	}
+
+
+	//	public static void updateParameterReferencesInConstraints(
+	//			MethodParameterNode oldMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices,
+	//			List<ConstraintNode> constraintNodes,
+	//			ListOfModelOperations reverseOperations,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		if (oldMethodParameterNode == null) {
+	//			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
+	//		}
+	//
+	//		if (dstParameterForChoices == null) {
+	//			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
+	//		}
+	//
+	//		for (ConstraintNode constraintNode : constraintNodes) {
+	//			ConstraintNodeHelper.updateParameterReferences(
+	//					constraintNode,
+	//					oldMethodParameterNode, dstParameterForChoices);
+	//		}
+	//	}
+
+	public static void updateChoiceReferencesInTestCases(
+			ParameterConversionItem parameterConversionItem,
+			List<TestCaseNode> testCaseNodes,
+			ListOfModelOperations inOutReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
+
+		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
+			return;
+		}
+
+		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
+
+		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
+			return;
+		}
+
+		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
+		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
+
+		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
+		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
+
+		for (TestCaseNode testCaseNode : testCaseNodes)  {
+
+			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
+		}
+
+		if (inOutReverseOperations != null) {
+			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
+					new MethodOperationUpdateChoiceReferencesInTestCases(
+							parameterConversionItem, 
+							testCaseNodes, extLanguageManager);
+
+			inOutReverseOperations.add(reverseOperation);
+		}
+	}
+
+	public static void convertConstraints(
+			List<ConstraintNode> constraintNodes,
+			ParameterConversionItem parameterConversionItem) {
+
+		for (ConstraintNode constraintNode : constraintNodes) {
+			ConstraintNodeHelper.convertConstraint(
+					constraintNode, 
+					parameterConversionItem);
+		}
+	}
+
+	public static void addTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
+
+		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
+		listOfChoicesForTestCase.add(choiceNode);
+
+		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
+		methodNode.addTestCase(testCaseNode);
+	}
 
 	public static String getName(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
@@ -116,6 +298,14 @@ public class MethodNodeHelper {
 		}
 
 		return null;
+	}
+
+	public static MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
+
+		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
+		methodNode.addParameter(methodParameterNode);
+
+		return methodParameterNode;
 	}
 
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
@@ -486,7 +676,7 @@ public class MethodNodeHelper {
 
 		return testSuites;
 	}
-	
+
 	public static MethodParameterNode findExpectedParameterNotUsedInAssignment(MethodNode methodNode, Constraint constraint) {
 
 		if (constraint.getType() != ConstraintType.ASSIGNMENT) {
@@ -543,6 +733,28 @@ public class MethodNodeHelper {
 		}
 
 		return false;
+	}
+
+	public static List<String> getStatementValuesForParameter(
+			MethodNode methodNode,
+			MethodParameterNode methodParameterNode) {
+
+		List<Constraint> constraints = methodNode.getAllConstraints();
+
+		List<String> values = new ArrayList<>();
+
+		for (Constraint constraint : constraints) {
+
+			List<String> valuesOfConstraint = constraint.getStatementValuesForParameter(); 
+
+			if (valuesOfConstraint != null && !valuesOfConstraint.isEmpty()) {
+				values.addAll(valuesOfConstraint);
+			}
+		}
+
+		values = StringHelper.removeDuplicates(values);
+
+		return values;
 	}
 
 }

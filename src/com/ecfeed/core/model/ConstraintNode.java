@@ -117,7 +117,7 @@ public class ConstraintNode extends AbstractNode{
 	public void derandomize() {
 		fConstraint.derandomize();
 	}
-	
+
 	public boolean mentions(ChoiceNode choice) {
 
 		if (fConstraint.mentions(choice)) {
@@ -330,7 +330,7 @@ public class ConstraintNode extends AbstractNode{
 	private boolean isConsistentForParameter(MethodParameterNode parameter) {
 
 		String typeName = parameter.getType();
-		
+
 		if (parameter.isExpected()) {
 			return true;
 		}
@@ -381,8 +381,9 @@ public class ConstraintNode extends AbstractNode{
 		return -1;
 	}
 
-	boolean mentionsParameter(MethodParameterNode methodParameter) {
-		return fConstraint.mentionsParameter(methodParameter);
+	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
+		
+		return fConstraint.mentionsChoiceOfParameter(methodParameter);
 	}
 
 }

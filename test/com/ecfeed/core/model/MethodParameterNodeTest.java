@@ -10,9 +10,9 @@
 
 package com.ecfeed.core.model;
 
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class MethodParameterNodeTest {
 
@@ -37,6 +37,5 @@ public class MethodParameterNodeTest {
 		} catch (Exception e) {
 		}
 	}
-
 
 }

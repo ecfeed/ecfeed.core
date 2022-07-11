@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ConstraintHelper {
 
@@ -62,16 +63,97 @@ public class ConstraintHelper {
 			List<List<ChoiceNode>> input,
 			IExtLanguageManager currentExtLanguageManager,
 			MessageStack inOutMessageStack) {
-		
+
 		for (Constraint constraint : constraints) {
-	
+
 			if (constraint.isAmbiguous(input, inOutMessageStack, currentExtLanguageManager)) {
-	
+
 				return constraint; 
 			}
 		}
-		
+
 		return null;
+	}
+
+	public static List<ChoiceNode> getChoicesUsedInConstraints(
+			Constraint constraint, 
+			MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> result = new ArrayList<>();
+
+		AbstractStatement precondition = constraint.getPrecondition();
+		List<ChoiceNode> choicesFromPrecondition = precondition.getChoices();
+
+		if (choicesFromPrecondition != null) {
+			List<ChoiceNode> choicesOfParameter = filterChoicesByParameter(choicesFromPrecondition, methodParameterNode);
+			result.addAll(choicesOfParameter);
+		}
+
+		AbstractStatement postcondition = constraint.getPostcondition();
+		List<ChoiceNode> choicesFromPostcondition = postcondition.getChoices();
+
+		if (choicesFromPostcondition != null) {
+			List<ChoiceNode> choicesOfParameter = filterChoicesByParameter(choicesFromPostcondition, methodParameterNode);
+			result.addAll(choicesOfParameter);
+		}
+
+		result = ChoiceNodeHelper.removeDuplicates(result);
+
+		return result;
+	}
+
+	public static List<String> getLabelsUsedInConstraints(Constraint constraint,
+			MethodParameterNode methodParameterNode) {
+
+		List<String> result = new ArrayList<>();
+
+		AbstractStatement precondition = constraint.getPrecondition();
+		List<String> labelsFromPrecondition = precondition.getLabels(methodParameterNode);
+
+		if (labelsFromPrecondition != null && labelsFromPrecondition.size() > 0) {
+			result.addAll(labelsFromPrecondition);
+		}
+
+		AbstractStatement postcondition = constraint.getPostcondition();
+		List<String> labelsFromPostcondition = postcondition.getLabels(methodParameterNode);
+
+		if (labelsFromPostcondition != null && labelsFromPostcondition.size() > 0) {
+			result.addAll(labelsFromPostcondition);
+		}
+
+		result = StringHelper.removeDuplicates(result);
+
+		return result;
+	}
+
+	private static List<ChoiceNode> filterChoicesByParameter(
+			List<ChoiceNode> choicesFromPrecondition,
+			MethodParameterNode methodParameterNode) {
+
+		List<ChoiceNode> result = new ArrayList<>();
+
+		AbstractParameterNode abstractParameterNodeForComparison = 
+				getParameterNodeForComparison(methodParameterNode);
+
+		for (ChoiceNode choiceNode : choicesFromPrecondition) {
+
+			AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
+
+			if (abstractParameterNodeForComparison.equals(abstractParameterNode)) {
+				result.add(choiceNode);
+			}
+		}
+
+		return result;
+	}
+
+	private static AbstractParameterNode getParameterNodeForComparison(MethodParameterNode methodParameterNode) {
+
+		if (methodParameterNode.isLinked()) {
+			return methodParameterNode.getLink();
+		} else {
+			return methodParameterNode;
+		}
 	}
 
 }

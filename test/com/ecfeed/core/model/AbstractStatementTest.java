@@ -16,10 +16,11 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.IExtLanguageManager;
 import org.junit.Test;
 
+import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class AbstractStatementTest {
 
@@ -63,10 +64,6 @@ public class AbstractStatementTest {
 		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 			return false;
 		}
-		@Override
-		public List<ChoiceNode> getListOfChoices() {
-			return null;
-		}
 
 		@Override
 		public void derandomize() {
@@ -75,6 +72,36 @@ public class AbstractStatementTest {
 		@Override
 		public boolean isAmbiguous(List<List<ChoiceNode>> values) {
 			return false;
+		}
+
+		@Override
+		protected void convert(ParameterConversionItem parameterConversionItem) {
+		}
+
+		//		@Override
+		//		protected void updateParameterReferences(
+		//				MethodParameterNode srcMethodParameterNode,
+		//				ChoicesParentNode dstParameterForChoices) {
+		//		}
+
+		@Override
+		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+			return false;
+		}
+
+		@Override
+		public List<ChoiceNode> getChoices() {
+			return null;
+		}
+
+		@Override
+		public List<String> getLabels(MethodParameterNode methodParameterNode) {
+			return null;
+		}
+
+		@Override
+		public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+			return null;
 		}
 	}
 

@@ -146,10 +146,10 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		return fParameters;
 	}
-	
+
 	@Override
 	public int getChildrenCount() {
-		
+
 		return fParameters.size();
 	}
 
@@ -193,4 +193,5 @@ public abstract class ParametersParentNode extends AbstractNode {
 			}
 		}
 	}
+
 }

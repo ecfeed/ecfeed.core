@@ -43,7 +43,7 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseLongValue(range[0], ERunMode.QUIET);
 		}		
-		
+
 		return ThreadLocalRandom.current().nextLong(
 				JavaLanguageHelper.parseLongValue(range[0], ERunMode.QUIET),
 				1 + JavaLanguageHelper.parseLongValue(range[1], ERunMode.QUIET));
@@ -52,6 +52,16 @@ public class TypeAdapterForLong extends TypeAdapterForNumericType<Long>{
 	@Override
 	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_LONG;
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

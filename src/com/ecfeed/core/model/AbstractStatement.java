@@ -13,11 +13,13 @@ package com.ecfeed.core.model;
 import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public abstract class AbstractStatement implements IStatement {
 
 	AbstractStatement fParent = null;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
+	public abstract boolean mentionsChoiceOfParameter(AbstractParameterNode parameter);
 
 	public AbstractStatement(IModelChangeRegistrator modelChangeRegistrator) {
 
@@ -62,8 +64,6 @@ public abstract class AbstractStatement implements IStatement {
 		children.set(index, newStatement);
 	}
 
-
-
 	public boolean mentions(ChoiceNode choice) {
 		return false;
 	}
@@ -93,4 +93,10 @@ public abstract class AbstractStatement implements IStatement {
 	public abstract AbstractStatement makeClone();
 
 	public abstract boolean updateReferences(MethodNode method);
+
+	protected abstract void convert(ParameterConversionItem parameterConversionItem);
+
+//	protected abstract void updateParameterReferences(
+//			MethodParameterNode srcMethodParameterNode,
+//			ChoicesParentNode dstParameterForChoices);
 }

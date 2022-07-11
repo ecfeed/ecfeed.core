@@ -20,6 +20,7 @@ public class TypeAdapterProviderForJava implements ITypeAdapterProvider{
 		return new TypeAdapterBaseForUserType(type);
 	}
 
+	@Override
 	public ITypeAdapter<?> getAdapter(String type){
 		if(!JavaLanguageHelper.isJavaType(type) && !SimpleLanguageHelper.isSimpleType(type)){
 			type = TypeAdapterHelper.USER_TYPE;

@@ -13,7 +13,15 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.RangeHelper;
+import com.ecfeed.core.utils.RelationMatcher;
+import com.ecfeed.core.utils.StringHelper;
 
 
 public class ValueCondition implements IStatementCondition {
@@ -170,12 +178,33 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getListOfChoices() {
+	public List<ChoiceNode> getChoices() {
+		return new ArrayList<ChoiceNode>();
+	}
+
+	@Override
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
 	@Override
 	public void derandomize() {
 	}
+
+	@Override
+	public void convert(
+			ParameterConversionItem parameterConversionItem) {
+	}
+
+	@Override
+	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+		return false;
+	}
+
+	@Override
+	public String getLabel(MethodParameterNode methodParameterNode) {
+		return null;
+	}
+
 }	
 

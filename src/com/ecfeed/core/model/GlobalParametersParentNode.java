@@ -34,11 +34,16 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode {
 	}
 
 	public GlobalParameterNode findGlobalParameter(String qualifiedName){
-		for(GlobalParameterNode parameter : getAvailableGlobalParameters()){
-			if(parameter.getQualifiedName().equals(qualifiedName)){
+		
+		for (GlobalParameterNode parameter : getAvailableGlobalParameters()) {
+			
+			String currentQualifiedName = parameter.getQualifiedName();
+			
+			if(currentQualifiedName.equals(qualifiedName)){
 				return parameter;
 			}
 		}
+		
 		return null;
 	}
 

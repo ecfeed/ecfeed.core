@@ -59,7 +59,7 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 		if (StringHelper.isEqual(range[0], range[1])) {
 			return JavaLanguageHelper.parseFloatValue(range[0], ERunMode.QUIET);
 		}
-		
+
 		return (float) ThreadLocalRandom.current().nextDouble(
 				JavaLanguageHelper.parseFloatValue(range[0], ERunMode.QUIET),
 				JavaLanguageHelper.parseFloatValue(range[1], ERunMode.QUIET));
@@ -68,6 +68,20 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 	@Override
 	protected String[] getSymbolicValues() {
 		return JavaLanguageHelper.SPECIAL_VALUES_FOR_FLOAT;
+	}
+
+	@Override
+	public boolean isConvertibleTo(String destinationType) {
+
+		if (destinationType.equals(getMyTypeName())) {
+			return true;
+		}
+
+		if (destinationType.equals(JavaLanguageHelper.TYPE_NAME_DOUBLE)) {
+			return true;
+		}
+
+		return false;
 	}	
 
 }

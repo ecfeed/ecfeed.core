@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
-
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 
@@ -44,12 +43,12 @@ public class TestCaseNode extends AbstractNode {
 
 		return TestCaseNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava());
 	}
-	
+
 	@Override
 	public int getChildrenCount() {
 		return 0;
 	}
-	
+
 	@Override
 	public TestCaseNode makeClone(){
 		List<ChoiceNode> testdata = new ArrayList<>();
@@ -77,15 +76,15 @@ public class TestCaseNode extends AbstractNode {
 
 		return (MethodNode)getParent();
 	}
-	
+
 	public TestSuiteNode getTestSuite() {
-		
+
 		Optional<TestSuiteNode> testSuite = getMethod().getTestSuites().stream().filter(e -> e.getTestCaseNodes().contains(this)).findAny(); 
-		
+
 		if (testSuite.isPresent()) {
 			return testSuite.get();
 		}
-		
+
 		ExceptionHelper.reportRuntimeException("The selected TestCaseNode does not belong to any test suite");
 		return null;
 	}
@@ -165,7 +164,7 @@ public class TestCaseNode extends AbstractNode {
 
 	@Override
 	public boolean isMatch(AbstractNode testCaseNode){
-		
+
 		if(testCaseNode instanceof TestCaseNode == false){
 			return false;
 		}
@@ -173,28 +172,28 @@ public class TestCaseNode extends AbstractNode {
 		TestCaseNode testCaseNodeToCompare = (TestCaseNode)testCaseNode;
 
 		List<ChoiceNode> testData = getTestData();
-		
+
 		List<ChoiceNode> testDataToCompare = testCaseNodeToCompare.getTestData();
 		if(testData.size() != testDataToCompare.size()){
 			return false;
 		}
 
 		for (int i = 0; i < testData.size(); i++) {
-			
+
 			ChoiceNode choiceNode = testData.get(i);
 			ChoiceNode choiceNodeToCompare = testDataToCompare.get(i);
-			
+
 			if (choiceNode.isMatch(choiceNodeToCompare) == false){
 				return false;
 			}
 		}
 
 		boolean isMatch = super.isMatch(testCaseNode);
-		
+
 		if (!isMatch) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -226,6 +225,21 @@ public class TestCaseNode extends AbstractNode {
 
 	public TestCase getTestCase() {
 		return new TestCase(fTestData);
+	}
+
+	public void updateChoiceReferences(
+			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
+
+		int index = 0;
+
+		for (ChoiceNode choiceNode : fTestData) {
+
+			if (choiceNode.equals(oldChoiceNode)) {
+				fTestData.set(index, newChoiceNode);
+			}
+
+			index++;
+		}
 	}
 
 }
