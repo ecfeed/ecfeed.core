@@ -12,8 +12,13 @@ public class ExceptionMessageHelper {
 		YES,
 		NO
 	};
-
-	public enum ExceptionStackType {
+	
+	public enum MessageFormat {
+		TEXT,
+		JSON
+	};
+	
+	public enum StackType {
 		SIMPLE,
 		FULL
 	};
@@ -22,25 +27,65 @@ public class ExceptionMessageHelper {
 	private static final String typeTokenNotFound = "Token not found";
 	private static final String fNoException = "NO-EXCEPTION";
 
-	public static String createErrorMessage(Throwable throwable, ExceptionStackType exceptionStackType, CreateCallStack createCallStack) {
+	public static String createErrorMessage(Throwable throwable, StackType stackType, 
+			CreateCallStack createCallStack, MessageFormat messageFormat) {
 
 		if (throwable == null) {
 			return fNoException;
 		}
 
+		switch (messageFormat) {
+		case JSON:
+			return createExceptionMessageJSON(throwable, createCallStack, stackType);
+		case TEXT:
+			return createExceptionMessageTEXT(throwable, createCallStack, stackType);
+		}
+		
+		return "";
+	}
+
+	private static String createExceptionMessageJSON(Throwable throwable, CreateCallStack createCallStack, StackType exceptionStackType) {
+		List<ExceptionDescription> exceptionDescriptions = createExceptionDescriptions(throwable, exceptionStackType);
 		JSONObject result = new JSONObject();
+		
+		JSONArray cause = new JSONArray();
+
+		for (ExceptionDescription exceptionDescription : exceptionDescriptions) {
+			cause.put(createOneMessage(exceptionDescription, exceptionStackType));
+		}
+
+		JSONObject json = new JSONObject();
+
+		json.put("cause", cause);
 
 		result.put("message", createExceptionMessage(throwable, exceptionStackType));
 
 		if (createCallStack == CreateCallStack.YES) {
 			Throwable deepestThrowable = getDeepestThrowable(throwable);
-			result.put("stack", createStackMessage(deepestThrowable));
+			result.put("stack", createStackMessageJSON(deepestThrowable));
 		}
 
 		return result.toString();
 	}
+	
+	private static String createExceptionMessageTEXT(Throwable throwable, CreateCallStack createCallStack, StackType exceptionStackType) {
+		List<ExceptionDescription> exceptionDescriptions = createExceptionDescriptions(throwable, exceptionStackType);
+		StringBuilder result = new StringBuilder();
+		
+		for (ExceptionDescription exceptionDescription : exceptionDescriptions) {
+			result.append(createOneMessage(exceptionDescription, exceptionStackType) + "\n");
+		}
 
-	private static JSONObject createExceptionMessage(Throwable throwable, ExceptionStackType exceptionStackType) {
+		if (createCallStack == CreateCallStack.YES) {
+			Throwable deepestThrowable = getDeepestThrowable(throwable);
+			result.append(createStackMessageTEXT(deepestThrowable));
+		}
+
+		return result.toString();
+		
+	}
+	
+	private static JSONObject createExceptionMessage(Throwable throwable, StackType exceptionStackType) {
 
 		List<ExceptionDescription> exceptionDescriptions = createExceptionDescriptions(throwable, exceptionStackType);
 
@@ -57,7 +102,7 @@ public class ExceptionMessageHelper {
 		return json;
 	}
 
-	public static String createOneMessage(ExceptionDescription exceptionDescription, ExceptionStackType exceptionStackType) {
+	public static String createOneMessage(ExceptionDescription exceptionDescription, StackType exceptionStackType) {
 
 		String message = getMessage(exceptionDescription, exceptionStackType);
 		
@@ -68,20 +113,20 @@ public class ExceptionMessageHelper {
 		}
 	}
 
-	public static String getMessage(ExceptionDescription exceptionDescription, ExceptionStackType exceptionStackType) {
+	public static String getMessage(ExceptionDescription exceptionDescription, StackType exceptionStackType) {
 
-		if (exceptionStackType == ExceptionStackType.SIMPLE) {
+		if (exceptionStackType == StackType.SIMPLE) {
 			return exceptionDescription.getShortMessage();
 		} else {
 			return exceptionDescription.getFullMessage(); 
 		}
 	}
 
-	private static List<ExceptionDescription> createExceptionDescriptions(Throwable e, ExceptionStackType exceptionStackType) {
+	private static List<ExceptionDescription> createExceptionDescriptions(Throwable e, StackType exceptionStackType) {
 
 		List<ExceptionDescription> exceptionDescriptions = createExceptionDescriptions(e);
 
-		if (exceptionStackType == ExceptionStackType.SIMPLE) {
+		if (exceptionStackType == StackType.SIMPLE) {
 			exceptionDescriptions = compressDescriptions(exceptionDescriptions);
 		}
 
@@ -129,7 +174,7 @@ public class ExceptionMessageHelper {
 		}
 	}
 
-	private static JSONObject createStackMessage(Throwable throwable) {
+	private static JSONObject createStackMessageJSON(Throwable throwable) {
 		StackTraceElement[] stackElements = throwable.getStackTrace();
 
 		JSONArray cause = new JSONArray();
@@ -152,6 +197,22 @@ public class ExceptionMessageHelper {
 		root.put("root", cause);
 
 		return root;
+	}
+	
+	private static String createStackMessageTEXT(Throwable throwable) {
+		StackTraceElement[] stackElements = throwable.getStackTrace();
+		StringBuilder message = new StringBuilder();
+
+		for (int index = 0; index < stackElements.length; index++) {
+
+			StackTraceElement element = stackElements[index];
+
+			message.append("Class: " + element.getClassName() + ", ");
+			message.append("Method: " + element.getMethodName() + ", ");
+			message.append("Line: " + element.getLineNumber() + "\n");
+		}
+
+		return message.toString();
 	}
 
 	private static Throwable getDeepestThrowable(Throwable e) {
@@ -177,12 +238,27 @@ public class ExceptionMessageHelper {
 		}
 	}
 
+	@Deprecated
 	public static String createSimpleErrorMessageWithoutStack(Exception e) {
-		return createErrorMessage(e, ExceptionStackType.SIMPLE, CreateCallStack.NO);
+		return createErrorMessage(e, StackType.SIMPLE, CreateCallStack.NO, MessageFormat.JSON);
+	}
+	
+	public static String createMessageWithoutFullStack(Exception e, MessageFormat messageFormat) {
+		return createErrorMessage(e, StackType.SIMPLE, CreateCallStack.NO, messageFormat);
 	}
 
+	@Deprecated
 	public static String createErrorMessageWithFullStack(Exception e) {
-		return createErrorMessage(e, ExceptionStackType.FULL, CreateCallStack.YES);
+		return createErrorMessage(e, StackType.FULL, CreateCallStack.YES, MessageFormat.JSON);
+	}
+	
+	public static String createMessageWithFullStack(Exception e, MessageFormat messageFormat) {
+		return createErrorMessage(e, StackType.FULL, CreateCallStack.YES, messageFormat);
+	}
+	
+	public static String createErrorMessage(Throwable e) {
+
+		return createErrorMessage(e, StackType.FULL, CreateCallStack.NO, MessageFormat.TEXT);
 	}
 
 }

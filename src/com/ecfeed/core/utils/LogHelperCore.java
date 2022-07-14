@@ -155,7 +155,7 @@ public class LogHelperCore {
         JSONObject json = new JSONObject();
 
         json.put("type", "Exception caught");
-        json.put("message", ExceptionHelper.createErrorMessage(e));
+        json.put("message", ExceptionMessageHelper.createErrorMessage(e));
 
         StackTraceElement element = new Throwable().getStackTrace()[1];
 

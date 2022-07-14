@@ -11,8 +11,6 @@
 package com.ecfeed.core.utils;
 
 import com.ecfeed.core.exception.ClientException;
-import com.ecfeed.core.utils.ExceptionMessageHelper.CreateCallStack;
-import com.ecfeed.core.utils.ExceptionMessageHelper.ExceptionStackType;
 
 public class ExceptionHelper {
 
@@ -44,22 +42,5 @@ public class ExceptionHelper {
 	public static void reportRuntimeExceptionCanNotCreateObject() {
 
 		ExceptionHelper.reportRuntimeException("Can not create object.");
-	}
-
-	public static String createErrorMessage(Throwable e) {
-
-		return ExceptionMessageHelper.createErrorMessage(e, ExceptionStackType.FULL, CreateCallStack.NO);
-	}
-
-	public static String createErrorMessage(Exception e) {
-
-		return ExceptionMessageHelper.createErrorMessage(e, ExceptionStackType.FULL, CreateCallStack.NO);
-	}
-
-	public static String createErrorMessage(String message, Exception e) {
-
-		RuntimeException runtimeException = new RuntimeException(message, e);
-
-		return createErrorMessage(runtimeException);
 	}
 }
