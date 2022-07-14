@@ -238,27 +238,25 @@ public class ExceptionMessageHelper {
 		}
 	}
 
-	@Deprecated
-	public static String createSimpleErrorMessageWithoutStack(Exception e) {
-		return createErrorMessage(e, StackType.SIMPLE, CreateCallStack.NO, MessageFormat.JSON);
-	}
-	
-	public static String createMessageWithoutFullStack(Exception e, MessageFormat messageFormat) {
-		return createErrorMessage(e, StackType.SIMPLE, CreateCallStack.NO, messageFormat);
-	}
+	public static String createErrorMessage(Exception e, MessageFormat messageFormat, boolean fullStack) {
 
-	@Deprecated
-	public static String createErrorMessageWithFullStack(Exception e) {
-		return createErrorMessage(e, StackType.FULL, CreateCallStack.YES, MessageFormat.JSON);
-	}
-	
-	public static String createMessageWithFullStack(Exception e, MessageFormat messageFormat) {
-		return createErrorMessage(e, StackType.FULL, CreateCallStack.YES, messageFormat);
+		if (fullStack) {
+			return createErrorMessage(e, StackType.FULL, CreateCallStack.YES, messageFormat);
+		} else {
+			return createErrorMessage(e, StackType.SIMPLE, CreateCallStack.NO, messageFormat);
+		}
 	}
 	
 	public static String createErrorMessage(Throwable e) {
 
 		return createErrorMessage(e, StackType.FULL, CreateCallStack.NO, MessageFormat.TEXT);
+	}
+
+	public static String createErrorMessage(String message, Throwable e) {
+
+		RuntimeException runtimeException = new RuntimeException(message, e);
+
+		return createErrorMessage(runtimeException);
 	}
 
 }
