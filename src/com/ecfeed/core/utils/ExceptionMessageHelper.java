@@ -47,17 +47,15 @@ public class ExceptionMessageHelper {
 	private static String createExceptionMessageJSON(Throwable throwable, CreateCallStack createCallStack, StackType exceptionStackType) {
 		List<ExceptionDescription> exceptionDescriptions = createExceptionDescriptions(throwable, exceptionStackType);
 		JSONObject result = new JSONObject();
-		
-		JSONArray cause = new JSONArray();
 
+		JSONArray cause = new JSONArray();
 		for (ExceptionDescription exceptionDescription : exceptionDescriptions) {
 			cause.put(createOneMessage(exceptionDescription, exceptionStackType));
 		}
 
-		JSONObject json = new JSONObject();
+		JSONObject message = new JSONObject();
 
-		json.put("cause", cause);
-
+		message.put("cause", cause);
 		result.put("message", createExceptionMessage(throwable, exceptionStackType));
 
 		if (createCallStack == CreateCallStack.YES) {
@@ -238,12 +236,12 @@ public class ExceptionMessageHelper {
 		}
 	}
 
-	public static String createErrorMessage(Exception e, MessageFormat messageFormat, boolean fullStack) {
+	public static String createErrorMessage(Exception e, MessageFormat format, boolean fullStack) {
 
 		if (fullStack) {
-			return createErrorMessage(e, StackType.FULL, CreateCallStack.YES, messageFormat);
+			return createErrorMessage(e, StackType.FULL, CreateCallStack.YES, format);
 		} else {
-			return createErrorMessage(e, StackType.SIMPLE, CreateCallStack.NO, messageFormat);
+			return createErrorMessage(e, StackType.SIMPLE, CreateCallStack.NO, format);
 		}
 	}
 	
@@ -253,7 +251,6 @@ public class ExceptionMessageHelper {
 	}
 
 	public static String createErrorMessage(String message, Throwable e) {
-
 		RuntimeException runtimeException = new RuntimeException(message, e);
 
 		return createErrorMessage(runtimeException);
