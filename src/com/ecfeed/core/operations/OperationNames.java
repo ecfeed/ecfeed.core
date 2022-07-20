@@ -62,4 +62,5 @@ public interface OperationNames {
 	public static final String REPLACE_PARAMETER_WITH_LINK = "Replace parameter with link";
 	public static final String SET_ANDROID_BASE_RUNNER = "Set Android base runner";
 	public static final String SET_PROPERTY = "Set property";
+	public static final String IMPORT_PARAMETERS = "Import parameters";
 }
