@@ -1,7 +1,5 @@
 package com.ecfeed.core.parser.model;
 
-import com.ecfeed.core.model.*;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +8,15 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.ParametersParentNode;
+import com.ecfeed.core.model.RootNode;
 
 abstract class ModelDataAbstract implements ModelData {
 
@@ -86,16 +93,32 @@ abstract class ModelDataAbstract implements ModelData {
     protected abstract void process();
 
     @Override
-    public List<AbstractParameterNode> parse(MethodNode node) {
+    public List<AbstractParameterNode> parse(ParametersParentNode node) {
     	List<AbstractParameterNode> list = new ArrayList<>();
     	
         for (int i = 0 ; i < this.header.size() ; i++) {
-            AbstractParameterNode parameter = new MethodParameterNode(this.header.get(i), "String", "", false, node.getModelChangeRegistrator());
+        	List<ChoiceNode> choices = new ArrayList<>();
+        	DataType type = DataTypeFactory.create();
 
             int j = 0;
             for (String choice : this.body.get(i)) {
-                parameter.addChoice(new ChoiceNode("choice" + (j++), choice, null));
+            	type.feed(choice);
+                choices.add(new ChoiceNode("choice" + (j++), choice, null));
             }
+            
+            AbstractParameterNode parameter = null;
+            
+            if (node instanceof MethodNode) {
+            	parameter = new MethodParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
+            } else if (node instanceof ClassNode) {
+            	parameter = new GlobalParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            } else if (node instanceof RootNode) {
+            	parameter = new GlobalParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            } else {
+            	throw new IllegalArgumentException("The node type is not supported.");
+            }
+            
+            choices.forEach(parameter::addChoice);
 
             list.add(parameter);
         }
