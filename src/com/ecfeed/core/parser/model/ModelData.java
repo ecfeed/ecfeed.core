@@ -1,6 +1,7 @@
 package com.ecfeed.core.parser.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.AbstractParameterNode;
@@ -19,4 +20,8 @@ public interface ModelData {
     List<Set<String>> getParameters();
 
     int getLimit();
+    
+    void setLimit(int limit);
+    
+    Optional<String> getWarning();
 }

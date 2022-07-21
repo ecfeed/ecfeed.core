@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
@@ -20,8 +22,7 @@ import com.ecfeed.core.model.RootNode;
 
 abstract class ModelDataAbstract implements ModelData {
 
-    private final int limit = 100;
-
+    protected int limit = 100;
     protected List<String> raw;
     protected List<String> header;
     protected List<String> headerAffected;
@@ -57,6 +58,12 @@ abstract class ModelDataAbstract implements ModelData {
         return this.limit;
     }
 
+    @Override
+    public void setLimit(int limit) {
+    	
+    	this.limit = limit;
+    }
+    
     protected final void create(Path path) {
         this.headerAffected = new ArrayList<>();
 
@@ -66,6 +73,7 @@ abstract class ModelDataAbstract implements ModelData {
         initializeHeader();
         initializeBody();
         process();
+        validateSize();
     }
 
     protected final void create(String data) {
@@ -77,6 +85,7 @@ abstract class ModelDataAbstract implements ModelData {
         initializeHeader();
         initializeBody();
         process();
+        validateSize();
     }
 
     private final void validateFile(Path path) {
@@ -115,7 +124,7 @@ abstract class ModelDataAbstract implements ModelData {
     	this.raw = Arrays.asList(data.split("\n"));
     }
 
-	protected final void initializeBody() {
+	private final void initializeBody() {
         this.body = new ArrayList<>();
 
         for (int i = 0 ; i < this.header.size() ; i++) {
@@ -127,6 +136,15 @@ abstract class ModelDataAbstract implements ModelData {
 
     protected abstract void process();
 
+    private final void validateSize() {
+    	
+    	IntStream.range(0, this.body.size()).forEach(i -> {
+        	if (this.body.get(i).size() > this.limit) {
+        		this.headerAffected.add(this.header.get(i));
+        	}
+        });
+    }
+    
     @Override
     public List<AbstractParameterNode> parse(ParametersParentNode node) {
     	List<AbstractParameterNode> list = new ArrayList<>();
@@ -139,8 +157,6 @@ abstract class ModelDataAbstract implements ModelData {
             for (String choice : this.body.get(i)) {
 
                 if (j >= this.limit) {
-                    this.headerAffected.add(this.header.get(i));
-
                     break;
                 }
 
@@ -166,5 +182,16 @@ abstract class ModelDataAbstract implements ModelData {
         }
         
         return list;
+    }
+
+    @Override
+    public Optional<String> getWarning() {
+    	
+    	if (this.headerAffected.size() > 0) {
+			return Optional.of("The hard limit for the number of choices is " + this.limit +".\n"
+					+ "Affected parameters: " + String.join(", ", this.headerAffected) + ".");
+		}
+    	
+    	return Optional.empty();
     }
 }

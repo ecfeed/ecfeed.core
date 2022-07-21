@@ -47,7 +47,9 @@ public class ModelDataCSV extends ModelDataAbstract {
 
         lineValidate(line, arg.length);
 
-        IntStream.range(0, arg.length).forEach(i -> this.body.get(i).add(arg[i]));
+        IntStream.range(0, arg.length).forEach(i -> {
+        	this.body.get(i).add(arg[i]);
+        });
     }
 
     private void lineValidate(String line, int length) {
