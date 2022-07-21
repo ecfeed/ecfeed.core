@@ -60,8 +60,10 @@ abstract class ModelDataAbstract implements ModelData {
 
     @Override
     public void setLimit(int limit) {
-    	
+
     	this.limit = limit;
+
+        validateSize();
     }
     
     protected final void create(Path path) {
@@ -73,6 +75,7 @@ abstract class ModelDataAbstract implements ModelData {
         initializeHeader();
         initializeBody();
         process();
+
         validateSize();
     }
 
@@ -85,6 +88,7 @@ abstract class ModelDataAbstract implements ModelData {
         initializeHeader();
         initializeBody();
         process();
+
         validateSize();
     }
 
@@ -137,7 +141,8 @@ abstract class ModelDataAbstract implements ModelData {
     protected abstract void process();
 
     private final void validateSize() {
-    	
+    	this.headerAffected.clear();
+
     	IntStream.range(0, this.body.size()).forEach(i -> {
         	if (this.body.get(i).size() > this.limit) {
         		this.headerAffected.add(this.header.get(i));
