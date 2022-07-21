@@ -20,11 +20,45 @@ import com.ecfeed.core.model.RootNode;
 
 abstract class ModelDataAbstract implements ModelData {
 
-    protected List<String> data;
+    private final int limit = 100;
+
+    protected List<String> raw;
     protected List<String> header;
+    protected List<String> headerAffected;
     protected List<Set<String>> body;
 
+    @Override
+    public List<String> getRaw() {
+
+        return raw;
+    }
+
+    @Override
+    public List<String> getHeader() {
+
+        return header;
+    }
+
+    @Override
+    public List<String> getHeaderAffected() {
+
+        return headerAffected;
+    }
+
+    @Override
+    public List<Set<String>> getParameters() {
+
+        return body;
+    }
+
+    @Override
+    public int getLimit() {
+
+        return this.limit;
+    }
+
     protected final void create(Path path) {
+        this.headerAffected = new ArrayList<>();
 
         validateFile(path);
         initializeDataFile(path);
@@ -35,6 +69,7 @@ abstract class ModelDataAbstract implements ModelData {
     }
 
     protected final void create(String data) {
+        this.headerAffected = new ArrayList<>();
 
         validateText(data);
         initializeDataText(data);
@@ -66,7 +101,7 @@ abstract class ModelDataAbstract implements ModelData {
     private final void initializeDataFile(Path path) {
 
         try {
-            this.data = Files.readAllLines(path);
+            this.raw = Files.readAllLines(path);
         } catch (IOException e) {
             throw new RuntimeException("An I/O error occurred while opening the file: '" + path.toAbsolutePath() + "'.", e);
         }
@@ -77,7 +112,7 @@ abstract class ModelDataAbstract implements ModelData {
 
     private final void initializeDataText(String data) {
 
-    	this.data = Arrays.asList(data.split("\n"));
+    	this.raw = Arrays.asList(data.split("\n"));
     }
 
 	protected final void initializeBody() {
@@ -102,11 +137,18 @@ abstract class ModelDataAbstract implements ModelData {
 
             int j = 0;
             for (String choice : this.body.get(i)) {
+
+                if (j >= this.limit) {
+                    this.headerAffected.add(this.header.get(i));
+
+                    break;
+                }
+
             	type.feed(choice);
                 choices.add(new ChoiceNode("choice" + (j++), choice, null));
             }
             
-            AbstractParameterNode parameter = null;
+            AbstractParameterNode parameter;
             
             if (node instanceof MethodNode) {
             	parameter = new MethodParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());

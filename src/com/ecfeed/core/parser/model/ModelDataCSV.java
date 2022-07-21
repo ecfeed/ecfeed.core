@@ -29,17 +29,17 @@ public class ModelDataCSV extends ModelDataAbstract {
     @Override
     protected final void initializeHeader() {
 
-        if (this.data.size() < 1) {
+        if (this.raw.size() < 1) {
             throw new IllegalArgumentException("The data must contain at least one line.");
         }
 
-        this.header = Arrays.asList(this.data.get(0).split(","));
+        this.header = Arrays.asList(this.raw.get(0).split(","));
     }
 
     @Override
     protected final void process() {
 
-        this.data.stream().skip(1).forEach(this::lineParse);
+        this.raw.stream().skip(1).forEach(this::lineParse);
     }
 
     private void lineParse(String line) {
