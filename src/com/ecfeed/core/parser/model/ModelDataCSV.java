@@ -53,7 +53,8 @@ public class ModelDataCSV extends ModelDataAbstract {
     private void lineValidate(String line, int length) {
 
         if (length != this.body.size()) {
-            throw new IllegalArgumentException("The line '" + line + "' consists of an incorrect number elements. " +
+            throw new IllegalArgumentException("The file is corrupted. "
+            		+ "The line '" + line + "' consists of an incorrect number elements. " +
                     "Expected '" + this.body.size() + "'. Got '" + length + "'.");
         }
     }
