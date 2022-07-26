@@ -686,7 +686,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			Set<ChoiceNode> result = new HashSet<>();
 
 			if (statement.isParameterPrimitive()) {
-				result.add(statement.getCondition());
+				result.add(statement.getChoice());
 			}
 
 			return result;
@@ -751,7 +751,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		public Object visit(ExpectedValueStatement statement) throws Exception {
 
 			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
-			set.add(statement.getParameter());
+			set.add(statement.getLeftParameter());
 
 			return set;
 		}

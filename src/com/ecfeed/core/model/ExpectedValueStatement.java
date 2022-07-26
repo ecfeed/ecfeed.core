@@ -105,28 +105,28 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		return result;
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
-		
+
 		AbstractParameterNode abstractParameterNode = fChoiceNode.getParameter();
-		
+
 		if (!(abstractParameterNode instanceof MethodParameterNode)) {
 			return null;
 		}
-		
+
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode) abstractParameterNode;
-		
+
 		if (!methodParameterNode2.equals(methodParameterNode)) {
 			return null;
 		}
-		
+
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 		result.add(fChoiceNode);
 
 		return result;
 	}
-	
+
 
 	@Override
 	public void derandomize() {
@@ -134,23 +134,23 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	}
 
-	public MethodParameterNode getParameter(){ // TODO DE-NO rename to getLeftParameter
+	public MethodParameterNode getLeftParameter() {
 		return fLeftParameter;
 	}
 
-	public ChoiceNode getCondition(){ // TODO DE-NO rename to getChoiceNode
+	public ChoiceNode getChoice() {
 		return fChoiceNode;
 	}
 
 	@Override
 	public String toString(){
-		return getParameter().getName() + getRelation().toString() + fChoiceNode.getValueString();
+		return getLeftParameter().getName() + getRelation().toString() + fChoiceNode.getValueString();
 	}
 
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager){
 
-		final MethodParameterNode parameter = getParameter();
+		final MethodParameterNode parameter = getLeftParameter();
 
 		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fChoiceNode.getValueString();
 	}
@@ -189,11 +189,11 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		}
 
 		ExpectedValueStatement compared = (ExpectedValueStatement)statement;
-		if(getParameter().getName().equals(compared.getParameter().getName()) == false){
+		if(getLeftParameter().getName().equals(compared.getLeftParameter().getName()) == false){
 			return false;
 		}
 
-		if(getCondition().getValueString().equals(compared.getCondition().getValueString()) == false){
+		if(getChoice().getValueString().equals(compared.getChoice().getValueString()) == false){
 			return false;
 		}
 

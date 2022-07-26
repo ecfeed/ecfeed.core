@@ -34,7 +34,7 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
 
-		ChoiceNode choiceNode = statement.getCondition();
+		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
 		verifyConversionOfValue(statement.toString(), valueString);
