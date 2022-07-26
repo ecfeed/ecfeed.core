@@ -159,7 +159,7 @@ public class StaticStatement extends AbstractStatement {
 
 	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
-		return null;
+		return new ArrayList<>();
 	}
 
 }
