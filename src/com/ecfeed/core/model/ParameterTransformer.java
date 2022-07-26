@@ -305,14 +305,10 @@ public class ParameterTransformer {
 			String newType, 
 			MethodParameterNode methodParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
-
+		
 		verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
 
-		//		errorMessage = canConvertConstraints(methodParameterNode, newType);
-		//		
-		//		if (errorMessage != null) {
-		//			return errorMessage;
-		//		}
+		verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
 	}
 
 	private static void verifyConversionOfChoices(
@@ -324,7 +320,7 @@ public class ParameterTransformer {
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
-			if (!canConvertValueFromToType(
+			if (!canConvertChoiceValueFromToType(
 					choiceNode.getValueString(), choiceNode.isRandomizedValue(), 
 					methodParameterNode.getType(), newType)) {
 
@@ -350,26 +346,23 @@ public class ParameterTransformer {
 		inOutParameterConversionDefinition.addItem(parameterConversionItem);
 	}
 
-	//	private static String canConvertConstraints(MethodParameterNode methodParameterNode, String newType) {
-	//
-	//		MethodNode methodNode = methodParameterNode.getMethod();
-	//		
-	//		List<Constraint> constraints = methodNode.getConstraints();
-	//		
-	//		for (Constraint constraint : constraints) {
-	//			
-	//			String errorMessage = constraint.canConvertToType(newType);
-	//			
-	//			if (errorMessage != null) {
-	//				return errorMessage;
-	//			}
-	//		}
-	//		
-	//		return null;
-	//	}
-	//
+	private static void verifyConversionOfConstraints(
+			MethodParameterNode methodParameterNode, 
+			String newType,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-	private static boolean canConvertValueFromToType(
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		List<Constraint> constraints = methodNode.getConstraints();
+
+		for (Constraint constraint : constraints) {
+
+			constraint.verifyConversionToNewType(newType, inOutParameterConversionDefinition);
+		}
+	}
+
+
+	private static boolean canConvertChoiceValueFromToType(
 			String value, boolean isChoiceRandomized, 
 			String oldType, String newType) {
 

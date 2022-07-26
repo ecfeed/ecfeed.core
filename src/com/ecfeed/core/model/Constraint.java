@@ -24,8 +24,9 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class Constraint implements IConstraint<ChoiceNode> {
 
@@ -433,13 +434,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fPostcondition.convert(parameterConversionItem);
 	}
 
-//	public void updateParameterReferences(
-//			MethodParameterNode oldMethodParameterNode,
-//			ChoicesParentNode dstParameterForChoices) {
-//
-//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-//	}
+	//	public void updateParameterReferences(
+	//			MethodParameterNode oldMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//
+	//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+	//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+	//	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
@@ -540,7 +541,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return result;
 	}
-	
+
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();
@@ -550,7 +551,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return result;
 	}
-	
+
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 
 		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {
@@ -579,6 +580,24 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		AbstractStatement postcondition = fPostcondition.makeClone();
 
 		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+
+	public void verifyConversionToNewType(
+			String newType,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		TypeChangeVerificationVisitor typeChangeVerificationProvider = 
+				new TypeChangeVerificationVisitor(
+						newType, inOutParameterConversionDefinition);
+		try {
+			fPrecondition.accept(typeChangeVerificationProvider);
+			fPostcondition.accept(typeChangeVerificationProvider);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot convert value", e);
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -778,7 +797,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return new HashSet<MethodParameterNode>();
 		}
 	}
-
 
 	private class ReferencedLabelsProvider implements IStatementVisitor {
 

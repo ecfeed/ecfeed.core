@@ -32,6 +32,21 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
 
 public class ParameterTransformerTest {
 
+	private enum WhatToTest {
+		CONSTRAINTS,
+		CHOICES
+	}
+
+	private enum IsChoiceRandomized {
+		FALSE,
+		TRUE
+	}
+
+	private enum SuccessExpected {
+		FALSE,
+		TRUE
+	}
+
 	@Test
 	public void linkMethodParameterToClassParameterBasicUseCaseForChoices() {
 
@@ -1311,57 +1326,91 @@ public class ParameterTransformerTest {
 						choiceNodeOfMethod,
 						parameterConversionDefinition);
 
-		boolean testChoiceValue = true;
-
-		performTypeCheck(testChoiceValue, checker);
+		performTypeCheck(WhatToTest.CHOICES, checker);
 	}
 
-	private void performTypeCheck(boolean testChoiceValue, ValueConversionChecker checker) {
+	@Test
+	public void canCovertConstraints() {
 
-		String typeBoolean = JavaLanguageHelper.TYPE_NAME_BOOLEAN;
-		String typeByte = JavaLanguageHelper.TYPE_NAME_BYTE;
-		String typeInt = JavaLanguageHelper.TYPE_NAME_INT;
-		String typeFloat = JavaLanguageHelper.TYPE_NAME_FLOAT;
-		String typeDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
-		String typeString = JavaLanguageHelper.TYPE_NAME_STRING;
+		RootNode rootNode = new RootNode("Root", null);
 
-		checker.test(testChoiceValue, typeString, typeInt, "ABC", false, false);
+		// add global parameter of root and choice node
 
+		final String stringParameterType = "String";
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add parameter and choice to method
+
+		MethodParameterNode methodParameterNode = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
+
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+
+		ValueConversionChecker checker = 
+				new ValueConversionChecker(
+						methodParameterNode, 
+						null,
+						parameterConversionDefinition);
+
+		performTypeCheck(WhatToTest.CONSTRAINTS,	checker);
+	}
+
+	private void performTypeCheck(WhatToTest whatToTest, ValueConversionChecker checker) {
+
+		String tBoolean = JavaLanguageHelper.TYPE_NAME_BOOLEAN;
+		String tByte = JavaLanguageHelper.TYPE_NAME_BYTE;
+		String tInt = JavaLanguageHelper.TYPE_NAME_INT;
+		String tFloat = JavaLanguageHelper.TYPE_NAME_FLOAT;
+		String tDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
+		String tString = JavaLanguageHelper.TYPE_NAME_STRING;
+
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE);
 		ParameterConversionDefinition resultConversionDefinition = checker.getParameterConversionDefinition();
 		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		String description = srcPart.getDescription();
 		assertEquals("ABC[value]", description);
 
-		checker.test(testChoiceValue, typeString, typeString, "ABC", false, testChoiceValue);
-		checker.test(testChoiceValue, typeString, typeInt, "1", false, testChoiceValue);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "1", SuccessExpected.TRUE);
 
-		checker.test(testChoiceValue, typeDouble, typeInt, "123.0", false, testChoiceValue);
-		checker.test(testChoiceValue, typeDouble, typeInt, "123.0:123.0", testChoiceValue, testChoiceValue);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.0", SuccessExpected.TRUE);
+		checker.test(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.0:123.0", SuccessExpected.TRUE);
 
-		checker.test(testChoiceValue, typeDouble, typeInt, "123.54e+7", false, false);
-		checker.test(testChoiceValue, typeDouble, typeInt, "123.54e+7:123.54e+7", testChoiceValue, false);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.54e+7", SuccessExpected.FALSE);
+		checker.test(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.54e+7:123.54e+7", SuccessExpected.FALSE);
 
-		checker.test(testChoiceValue, typeDouble, typeInt, "123.540", false, false);
-		checker.test(testChoiceValue, typeDouble, typeInt, "123.540:123.540", testChoiceValue, false);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.540", SuccessExpected.FALSE);
+		checker.test(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.540:123.540", SuccessExpected.FALSE);
 
-		checker.test(testChoiceValue, typeFloat, typeDouble, "1234", false, testChoiceValue);
-		checker.test(testChoiceValue, typeFloat, typeDouble, "1234:1234", testChoiceValue, testChoiceValue);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tDouble, "1234", SuccessExpected.TRUE);
+		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tDouble, "1234:1234", SuccessExpected.TRUE);
 
-		checker.test(testChoiceValue, typeFloat, typeInt, "1234", false, testChoiceValue);
-		checker.test(testChoiceValue, typeFloat, typeInt, "1234:1234", testChoiceValue, testChoiceValue);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tInt, "1234", SuccessExpected.TRUE);
+		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tInt, "1234:1234", SuccessExpected.TRUE);
 
-		checker.test(testChoiceValue, typeFloat, typeByte, "1234", false, false);
-		checker.test(testChoiceValue, typeFloat, typeByte, "1234:1234", testChoiceValue, false);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "1234", SuccessExpected.FALSE);
+		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "1234:1234", SuccessExpected.FALSE);
 
-		checker.test(testChoiceValue, typeFloat, typeByte, "123", false, testChoiceValue);
-		checker.test(testChoiceValue, typeFloat, typeByte, "123:123", testChoiceValue, testChoiceValue);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "123", SuccessExpected.TRUE);
+		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "123:123", SuccessExpected.TRUE);
 
-		checker.test(testChoiceValue, typeBoolean, typeByte, "false", false, false);
-		checker.test(testChoiceValue, typeBoolean, typeString, "false", false, false);
-		checker.test(testChoiceValue, typeBoolean, typeBoolean, "false", false, testChoiceValue);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tByte, "false", SuccessExpected.FALSE);
+
+		// TODO DE-NO 
+		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tString, "false", SuccessExpected.TRUE);
+		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "false", SuccessExpected.TRUE);
+		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "true", SuccessExpected.TRUE);
+		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "1", SuccessExpected.FALSE);
 	}
-
 
 	private static class ValueConversionChecker {
 
@@ -1380,24 +1429,47 @@ public class ParameterTransformerTest {
 		}
 
 		public void test(
-				boolean testChoiceValue, 
+				WhatToTest testChoices, 
+				IsChoiceRandomized isRandomized, 
 				String typeFrom, 
 				String typeTo, 
 				String value, 
-				boolean isRandomized, 
-				boolean successExpected) {
+				SuccessExpected successExpected) {
+
+			if (isRandomized == IsChoiceRandomized.TRUE && testChoices == WhatToTest.CONSTRAINTS) {
+				return; // randomized for choices only
+			}
 
 			fParameterConversionDefinition.clear();
 
 			fMethodParameterNode.setType(typeFrom);
 
-			fChoiceNodeOfMethod.setValueString(value);
-			fChoiceNodeOfMethod.setRandomizedValue(isRandomized);
+			if (testChoices == WhatToTest.CHOICES) {
+				fChoiceNodeOfMethod.setValueString(value);
+
+				if (isRandomized == IsChoiceRandomized.TRUE) {
+					fChoiceNodeOfMethod.setRandomizedValue(true);
+				} else {
+					fChoiceNodeOfMethod.setRandomizedValue(false);
+				}
+
+			} else {
+				MethodNode methodNode = fMethodParameterNode.getMethod();
+
+				methodNode.removeAllConstraints();
+
+				addSimpleValueConstraintToMethod(
+						methodNode,
+						"C1",
+						fMethodParameterNode,
+						value,
+						value);
+			}
 
 			ParameterTransformer.verifyConversionOfParameterToType(
 					typeTo, fMethodParameterNode, fParameterConversionDefinition);
 
-			if (successExpected) {
+			if (successExpected == SuccessExpected.TRUE) {
 				assertFalse(fParameterConversionDefinition.hasItems());
 			} else {
 				assertTrue(fParameterConversionDefinition.hasItems());
@@ -1463,32 +1535,32 @@ public class ParameterTransformerTest {
 		methodNode.addConstraint(constraintNode);
 	}
 
-	//	private void addSimpleValueConstraintToMethod(
-	//			MethodNode methodNode,
-	//			String constraintName,
-	//			MethodParameterNode methodParameterNode,
-	//			String value1,
-	//			String value2) {
-	//
-	//		RelationStatement relationStatement1 = 
-	//				RelationStatement.createRelationStatementWithValueCondition(
-	//						methodParameterNode, EMathRelation.EQUAL, value1);
-	//
-	//		RelationStatement relationStatement2 = 
-	//				RelationStatement.createRelationStatementWithValueCondition(
-	//						methodParameterNode, EMathRelation.LESS_THAN, value2);
-	//
-	//		Constraint constraint = new Constraint(
-	//				constraintName, 
-	//				ConstraintType.EXTENDED_FILTER, 
-	//				relationStatement1, 
-	//				relationStatement2, 
-	//				null);
-	//
-	//		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
-	//
-	//		methodNode.addConstraint(constraintNode);
-	//	}
+	private static void addSimpleValueConstraintToMethod(
+			MethodNode methodNode,
+			String constraintName,
+			MethodParameterNode methodParameterNode,
+			String value1,
+			String value2) {
+
+		RelationStatement relationStatement1 = 
+				RelationStatement.createRelationStatementWithValueCondition(
+						methodParameterNode, EMathRelation.EQUAL, value1);
+
+		RelationStatement relationStatement2 = 
+				RelationStatement.createRelationStatementWithValueCondition(
+						methodParameterNode, EMathRelation.LESS_THAN, value2);
+
+		Constraint constraint = new Constraint(
+				constraintName, 
+				ConstraintType.EXTENDED_FILTER, 
+				relationStatement1, 
+				relationStatement2, 
+				null);
+
+		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+	}
 
 	private ChoiceNode getChoiceNodeFromConstraintPostcondition(
 			MethodNode methodNode, int constraintIndex) {

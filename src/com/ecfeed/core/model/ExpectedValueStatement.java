@@ -134,11 +134,11 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	}
 
-	public MethodParameterNode getParameter(){ // TODO RENAME TO getLeftParameter
+	public MethodParameterNode getParameter(){ // TODO DE-NO rename to getLeftParameter
 		return fLeftParameter;
 	}
 
-	public ChoiceNode getCondition(){
+	public ChoiceNode getCondition(){ // TODO DE-NO rename to getChoiceNode
 		return fChoiceNode;
 	}
 

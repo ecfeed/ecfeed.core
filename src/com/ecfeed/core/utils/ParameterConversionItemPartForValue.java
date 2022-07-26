@@ -18,7 +18,7 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 
 	@Override
 	public ItemPartType getType() {
-		return IParameterConversionItemPart.ItemPartType.LABEL;
+		return IParameterConversionItemPart.ItemPartType.VALUE;
 	}
 	
 	@Override
@@ -33,10 +33,10 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 			return false;
 		}
 		
-		String label = getValue();
-		String otherLabel = ((ParameterConversionItemPartForValue)otherPart).getValue();
+		String value = getValue();
+		String otherValue = ((ParameterConversionItemPartForValue)otherPart).getValue();
 		
-		if (StringHelper.isEqual(label, otherLabel)) {
+		if (StringHelper.isEqual(value, otherValue)) {
 			return true;
 		}
 		
@@ -45,7 +45,7 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 
 	@Override
 	public String getDescription() {
-		return super.getDescription(ItemPartType.LABEL.getCode());
+		return super.getDescription(ItemPartType.VALUE.getCode());
 	}
 	
 	public String getValue() {

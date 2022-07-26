@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
@@ -66,22 +65,22 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 
 	@Override
 	public boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
-		
+
 		if (isRandomized) {
 			return false; // TODO DE-NO 
 		}
-		
+
 		if (StringHelper.isEqual(Boolean.toString(true), value)) {
 			return true;
 		}
-		
+
 		if (StringHelper.isEqual(Boolean.toString(false), value)) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private String convertForExceptionMode(String value) {
 
 		if (value.equals(JavaLanguageHelper.SPECIAL_VALUE_TRUE)) {
