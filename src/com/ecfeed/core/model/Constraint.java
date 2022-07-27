@@ -582,13 +582,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
-	public void verifyConversionToNewType(
+	public void verifyConversionFromToType(
+			String oldType,
 			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		TypeChangeVerificationVisitor typeChangeVerificationProvider = 
 				new TypeChangeVerificationVisitor(
-						newType, inOutParameterConversionDefinition);
+						oldType, newType, inOutParameterConversionDefinition);
 		try {
 			fPrecondition.accept(typeChangeVerificationProvider);
 			fPostcondition.accept(typeChangeVerificationProvider);

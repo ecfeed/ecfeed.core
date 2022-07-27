@@ -22,7 +22,11 @@ import com.ecfeed.core.utils.StringHelper;
 public abstract class TypeAdapterForFloatingPoint<T extends Number> extends TypeAdapterForNumericType<T>{
 
 	@Override
-	public boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
+	public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
+
+		if (!canConvertFromToBoolean(oldType, getMyTypeName())) {
+			return false;
+		}
 
 		String newValue = adapt(value, isRandomized, ERunMode.QUIET, new ExtLanguageManagerForJava());
 

@@ -64,7 +64,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	}
 
 	@Override
-	public boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
+	public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
 
 		if (isRandomized) {
 			return false; // TODO DE-NO 

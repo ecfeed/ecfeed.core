@@ -24,7 +24,6 @@ import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
-import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
@@ -305,7 +304,7 @@ public class ParameterTransformer {
 			String newType, 
 			MethodParameterNode methodParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
-		
+
 		verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
 
 		verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
@@ -321,12 +320,27 @@ public class ParameterTransformer {
 		for (ChoiceNode choiceNode : choiceNodes) {
 
 			if (!canConvertChoiceValueFromToType(
-					choiceNode.getValueString(), choiceNode.isRandomizedValue(), 
-					methodParameterNode.getType(), newType)) {
+					choiceNode.getValueString(), 
+					choiceNode.isRandomizedValue(), 
+					methodParameterNode.getType(), 
+					newType)) {
 
 				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
 			}
 		}
+	}
+
+	private static boolean canConvertChoiceValueFromToType(
+			String value, boolean isChoiceRandomized, 
+			String oldType, String newType) {
+
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+
+		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
+
+		return canConvert;
 	}
 
 	private static void addConversionDefinitionItem(
@@ -352,56 +366,15 @@ public class ParameterTransformer {
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		MethodNode methodNode = methodParameterNode.getMethod();
+		String oldType = methodParameterNode.getType();
 
 		List<Constraint> constraints = methodNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
-			constraint.verifyConversionToNewType(newType, inOutParameterConversionDefinition);
+			constraint.verifyConversionFromToType(oldType, newType, inOutParameterConversionDefinition);
 		}
 	}
 
-
-	private static boolean canConvertChoiceValueFromToType(
-			String value, boolean isChoiceRandomized, 
-			String oldType, String newType) {
-
-		if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN) 
-				|| newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
-
-			return checkConversionForBoolean(oldType, newType);
-		}
-
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
-
-		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(value, isChoiceRandomized);
-
-		return canConvert;
-	}
-
-	private static boolean checkConversionForBoolean(String oldType, String newType) {
-
-		if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
-
-			if (newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
-				return true;
-			}
-
-			return false;
-		}
-
-		if (newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
-
-			if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
-				return true;
-			}
-
-			return false;
-		}
-
-		return false;
-	}
 
 }

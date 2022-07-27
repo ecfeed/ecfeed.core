@@ -1405,11 +1405,10 @@ public class ParameterTransformerTest {
 
 		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tByte, "false", SuccessExpected.FALSE);
 
-		// TODO DE-NO 
-		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tString, "false", SuccessExpected.TRUE);
-		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "false", SuccessExpected.TRUE);
-		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "true", SuccessExpected.TRUE);
-		//		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "1", SuccessExpected.FALSE);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tString, "false", SuccessExpected.FALSE);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "false", SuccessExpected.TRUE);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "true", SuccessExpected.TRUE);
+		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "1", SuccessExpected.FALSE);
 	}
 
 	private static class ValueConversionChecker {

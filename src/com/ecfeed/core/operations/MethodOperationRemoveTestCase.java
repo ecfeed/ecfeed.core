@@ -66,7 +66,7 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 					return false;
 				}
 				@Override
-				public boolean canCovertWithoutLossOfData(String value, boolean isRandomized) {
+				public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
 					return false;
 				}
 			};

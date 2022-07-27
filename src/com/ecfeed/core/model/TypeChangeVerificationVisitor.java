@@ -19,12 +19,16 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class TypeChangeVerificationVisitor implements IStatementVisitor {
 
+	private String fOldType;
 	private ParameterConversionDefinition fInOutParameterConversionDefinition;
-	ITypeAdapter<?> fNewTypeAdapter;
+	private ITypeAdapter<?> fNewTypeAdapter;
 
-	public TypeChangeVerificationVisitor(String newType,
+	public TypeChangeVerificationVisitor(
+			String oldType,
+			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
+		fOldType = oldType;
 		fInOutParameterConversionDefinition = inOutParameterConversionDefinition;
 
 		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
@@ -37,7 +41,7 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
-		verifyConversionOfValue(statement.toString(), valueString);
+		verifyConversionOfValue(fOldType, valueString, statement.toString());
 
 		return null;
 	}
@@ -55,7 +59,7 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 	public Object visit(ValueCondition condition) throws Exception {
 
 		String valueString = condition.getRightValue();
-		verifyConversionOfValue(condition.toString(), valueString);
+		verifyConversionOfValue(fOldType, valueString, condition.toString());
 
 		return null;
 	}
@@ -91,9 +95,9 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 		return null;
 	}
 
-	private void verifyConversionOfValue(String objectsContainingItem, String valueString) {
+	private void verifyConversionOfValue(String oldType, String valueString, String objectsContainingItem) {
 
-		boolean canConvert = fNewTypeAdapter.canCovertWithoutLossOfData(valueString, false);
+		boolean canConvert = fNewTypeAdapter.canCovertWithoutLossOfData(oldType, valueString, false);
 
 		if (!canConvert) {
 
