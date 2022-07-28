@@ -25,7 +25,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 
 
 public abstract class CachedImplementationStatusResolver extends AbstractImplementationStatusResolver {
@@ -59,7 +59,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 		try {
 			node.accept(new CacheCleaner());
 		} catch(Exception e) {
-			SystemLogger.logCatch(e);
+			LogHelperCore.logCatch(e);
 		}
 
 		clearCache(node.getParent());

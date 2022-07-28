@@ -20,11 +20,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.*;
 
 public class GenericOperationRemoveChoice extends BulkOperation {
 
@@ -74,7 +70,8 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 			private void reverseAdaptParameter() {
 				try{
 					fTarget.getParameter().accept(new ReverseParameterAdapter());
-				}catch(Exception e){SystemLogger.logCatch(e);}
+				}catch(Exception e){
+					LogHelperCore.logCatch(e);}
 			}
 
 		}
@@ -171,7 +168,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 		private void adaptParameter() {
 			try{
 				fTarget.getParameter().accept(new ParameterAdapter());
-			}catch(Exception e){SystemLogger.logCatch(e);}
+			}catch(Exception e){LogHelperCore.logCatch(e);}
 		}
 
 		private void validateOperation() {

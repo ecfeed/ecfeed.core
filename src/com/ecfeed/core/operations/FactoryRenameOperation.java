@@ -258,7 +258,7 @@ public class FactoryRenameOperation {
 			return (IModelOperation)target.accept(new RenameOperationProvider(
 					newPackageName, newNonQualifiedNameInExtLanguage, extLanguageManager));
 		} catch(Exception e) {
-			SystemLogger.logCatch(e);
+			LogHelperCore.logCatch(e);
 		}
 
 		return null;

@@ -25,8 +25,8 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.EcException;
+import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.StrgList;
-import com.ecfeed.core.utils.SystemLogger;
 
 public abstract class AbstractModelImplementer implements IModelImplementer {
 
@@ -156,7 +156,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		try {
 			return (boolean)node.accept(fImplementableVisitor);
 		} catch(Exception e) {
-			SystemLogger.logCatch(e);
+			LogHelperCore.logCatch(e);
 		}
 		
 		return false;

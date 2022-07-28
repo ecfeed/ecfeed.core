@@ -26,7 +26,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EcException;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.LogHelperCore;
 
 public abstract class AbstractImplementationStatusResolver implements
 IImplementationStatusResolver {
@@ -97,7 +97,7 @@ IImplementationStatusResolver {
 		try {
 			return (EImplementationStatus)node.accept(fStatusResolver);
 		} catch(Exception e) {
-			SystemLogger.logCatch(e);
+			LogHelperCore.logCatch(e);
 
 		}
 

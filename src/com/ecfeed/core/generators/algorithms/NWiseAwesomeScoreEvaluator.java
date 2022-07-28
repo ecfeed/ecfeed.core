@@ -17,8 +17,8 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
-import com.ecfeed.core.utils.AlgoLogger;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.LogHelperCore;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Maps;
@@ -86,7 +86,7 @@ public class NWiseAwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 			}
 		}
 
-		AlgoLogger.log("partialNTo0Tuples", result, 1, fLogLevel);
+		LogHelperCore.log("partialNTo0Tuples", result);
 		return result;
 	}
 
@@ -124,7 +124,7 @@ public class NWiseAwesomeScoreEvaluator<E> implements IScoreEvaluator<E> {
 			}
 		}
 
-		AlgoLogger.log("partialNTo0Tuples after removal of best tuple", fPartialTuples, 1, fLogLevel);
+		LogHelperCore.log("partialNTo0Tuples after removal of best tuple", fPartialTuples);
 	}
 
 	@Override

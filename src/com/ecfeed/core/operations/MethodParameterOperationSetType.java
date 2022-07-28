@@ -40,11 +40,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.ValueCondition;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ERunMode;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SystemLogger;
+import com.ecfeed.core.utils.*;
 
 public class MethodParameterOperationSetType extends BulkOperation {
 
@@ -156,7 +152,8 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		protected List<ChoiceNode> getChoices(ChoicesParentNode parent) {
 			try {
 				return (List<ChoiceNode>)parent.accept(new RealChoicesProvider());
-			} catch(Exception e) {SystemLogger.logCatch(e);}
+			} catch(Exception e) {
+				LogHelperCore.logCatch(e);}
 			return null;
 		}
 
@@ -375,7 +372,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 					for(AbstractStatement child : statement.getChildren()) {
 						try {
 							child.accept(this);
-						} catch(Exception e) {SystemLogger.logCatch(e);}
+						} catch(Exception e) {LogHelperCore.logCatch(e);}
 					}
 					return null;
 				}
@@ -443,7 +440,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 					try {
 						constraint.getConstraint().getPrecondition().accept(valueRestorer);
 						constraint.getConstraint().getPostcondition().accept(valueRestorer);
-					} catch(Exception e) {SystemLogger.logCatch(e);}
+					} catch(Exception e) {LogHelperCore.logCatch(e);}
 				}
 			}
 
