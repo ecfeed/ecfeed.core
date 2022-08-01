@@ -25,10 +25,6 @@ public class ParameterConversionItem {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src part should not be empty.");
 		}
 
-		if (dstPart == null) {
-			ExceptionHelper.reportRuntimeException("Invalid conversion item. Dst part should not be empty.");
-		}
-
 		fSrcPart = srcPart;
 		fDstPart = dstPart;
 
@@ -69,7 +65,12 @@ public class ParameterConversionItem {
 	public ParameterConversionItem makeClone() {
 
 		IParameterConversionItemPart srcPart = fSrcPart.makeClone();
-		IParameterConversionItemPart dstPart = fDstPart.makeClone();
+		
+		IParameterConversionItemPart dstPart = null;
+		
+		if (fDstPart != null) {
+			dstPart = fDstPart.makeClone();
+		}
 
 		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fNodesContainingSrcItem);
 

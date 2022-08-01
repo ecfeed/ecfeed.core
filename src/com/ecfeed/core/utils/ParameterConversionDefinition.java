@@ -96,9 +96,12 @@ public class ParameterConversionDefinition {
 
 			ParameterConversionItem conversionItem = fParameterConversionItems.get(index);
 
-			String itemName = conversionItem.getDstPart().getName();
+			IParameterConversionItemPart dstPart = conversionItem.getDstPart();
 
-			itemNames.add(itemName);
+			if (dstPart != null) {
+				String itemName = dstPart.getName();
+				itemNames.add(itemName);
+			}
 		}
 
 		return itemNames;
@@ -128,19 +131,19 @@ public class ParameterConversionDefinition {
 	public ParameterConversionItem getCopyOfItem(int index) { // TODO DE-NO remove ?
 
 		ParameterConversionItem parameterConversionItem = fParameterConversionItems.get(index);
-		
+
 		ParameterConversionItem copy = parameterConversionItem.makeClone();
-		
+
 		return copy;
 	}
 
 	public void setItem(int index, ParameterConversionItem parameterConversionItem) {
-		
+
 		fParameterConversionItems.set(index, parameterConversionItem);
 	}
-	
+
 	public void clear() {
-		
+
 		fParameterConversionItems.clear();
 	}
 
