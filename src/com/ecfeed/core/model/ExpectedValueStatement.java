@@ -236,7 +236,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
-		return null;
+		return new ArrayList<>();
 	}
 
 }
