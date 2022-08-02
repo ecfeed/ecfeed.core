@@ -86,7 +86,7 @@ public class ParameterConversionDefinition {
 		return itemNames;
 	}
 
-	public List<String> getNamesOfDstItems() {
+	public List<String> getNotEmptyNamesOfDstItems() {
 
 		List<String> itemNames = new ArrayList<String>();
 
