@@ -14,6 +14,10 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GlobalParameterNodeHelper {
 
+	public enum SignatureType {
+		WITH_TYPE,
+		WITHOUT_TYPE
+	}
 
 	public static ChoiceNode addNewChoiceToGlobalParameter(
 			GlobalParameterNode globalParameterNode, 
@@ -33,10 +37,18 @@ public class GlobalParameterNodeHelper {
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
-	public static String createSignature(GlobalParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignature(
+			GlobalParameterNode globalParameterNode, 
+			SignatureType signatureType,
+			IExtLanguageManager extLanguageManager) {
+
+		String qualifiedName = getQualifiedName(globalParameterNode, extLanguageManager);
+
+		if (signatureType == SignatureType.WITHOUT_TYPE) {
+			return qualifiedName;
+		}
 
 		String type = getType(globalParameterNode, extLanguageManager);
-		String qualifiedName = getQualifiedName(globalParameterNode, extLanguageManager);
 
 		return type + " " + qualifiedName;
 	}
