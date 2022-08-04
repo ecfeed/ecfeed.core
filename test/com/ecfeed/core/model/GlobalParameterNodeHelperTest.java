@@ -49,10 +49,20 @@ public class GlobalParameterNodeHelperTest {
 		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", "String", null);
 		globalParameterNode.setParent(rootNode);
 
-		String signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, new ExtLanguageManagerForJava());
+		String signature = 
+				GlobalParameterNodeHelper.createSignature(
+						globalParameterNode,
+						GlobalParameterNodeHelper.SignatureType.WITH_TYPE,
+						new ExtLanguageManagerForJava());
+		
 		assertEquals("String global_1", signature);
 
-		signature = GlobalParameterNodeHelper.createSignature(globalParameterNode, new ExtLanguageManagerForSimple());
+		signature = 
+				GlobalParameterNodeHelper.createSignature(
+						globalParameterNode, 
+						GlobalParameterNodeHelper.SignatureType.WITH_TYPE, 
+						new ExtLanguageManagerForSimple());
+		
 		assertEquals("Text global 1", signature);
 	}
 
