@@ -8,12 +8,16 @@
 	</classpathentry>
 	<classpathentry kind="src" output="bin/test" path="test">
 		<attributes>
+			<attribute name="test" value="true"/>
 			<attribute name="gradle_scope" value="test"/>
 			<attribute name="gradle_used_by_scope" value="test"/>
-			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry kind="lib" path="/home/marekq/.gradle/caches/modules-2/files-2.1/org.json/json/20220320/6df2c050972619466f6dcef7654ef9bcc01dfd0/json-20220320.jar"/>
+	<classpathentry kind="lib" path="/home/marekq/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-classic/1.3.0-alpha16/48f9328cc71d9c496ef9987fe5dc028a6c82b10f/logback-classic-1.3.0-alpha16.jar"/>
+	<classpathentry kind="lib" path="/home/marekq/.gradle/caches/modules-2/files-2.1/ch.qos.logback/logback-core/1.3.0-alpha16/a0ce2fd91636ee18abca4b67e6e4adc3b4948cc7/logback-core-1.3.0-alpha16.jar"/>
+	<classpathentry kind="lib" path="/home/marekq/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.0-alpha7/30d326fc10810e7d6d948dfad32f6bb542487e8f/slf4j-api-2.0.0-alpha7.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
