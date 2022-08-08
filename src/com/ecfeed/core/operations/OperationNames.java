@@ -63,4 +63,6 @@ public interface OperationNames {
 	public static final String SET_ANDROID_BASE_RUNNER = "Set Android base runner";
 	public static final String SET_PROPERTY = "Set property";
 	public static final String IMPORT_PARAMETERS = "Import parameters";
+	public static final String POPULATE_PARAMETER_WITH_CHOICES = "Populate parameter with choices";
+	public static final String POPULATE_WITH_CHOICES = "Populate with choices";
 }
