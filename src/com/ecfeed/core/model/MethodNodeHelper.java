@@ -739,7 +739,7 @@ public class MethodNodeHelper {
 			MethodNode methodNode,
 			MethodParameterNode methodParameterNode) {
 
-		List<Constraint> constraints = methodNode.getAllConstraints();
+		List<Constraint> constraints = methodNode.getConstraints();
 
 		List<String> values = new ArrayList<>();
 

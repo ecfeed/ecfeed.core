@@ -18,12 +18,12 @@ public class TypeAdapterForLogical extends TypeAdapterForBoolean {
 	public String getMyTypeName() {
 		return SimpleLanguageHelper.TYPE_NAME_LOGICAL;
 	}
-	
+
 	@Override
 	public String getDefaultValue() {
 		return SimpleLanguageHelper.DEFAULT_EXPECTED_LOGICAL_VALUE;
 	}
-	
+
 	@Override
 	protected void reportRuntimeException(String value) {
 		TypeAdapterHelper.reportRuntimeExceptionCannotConvert(value, SimpleLanguageHelper.TYPE_NAME_LOGICAL);

@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForShort extends TypeAdapterForNumericType<Short> {
+public class TypeAdapterForShort extends TypeAdapterForNonFloatingPoint<Short> {
 
 	@Override
 	public String getMyTypeName() {

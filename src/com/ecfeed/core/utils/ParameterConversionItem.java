@@ -14,12 +14,12 @@ public class ParameterConversionItem {
 
 	private IParameterConversionItemPart fSrcPart;
 	private IParameterConversionItemPart fDstPart;
-	String fNodesContainingSrcItem;
+	String fObjectsContainingSrcItem;
 
 	public ParameterConversionItem(
 			IParameterConversionItemPart srcPart, 
 			IParameterConversionItemPart dstPart,
-			String constraintsContainingSrcItem) {
+			String objectsContainingSrcItem) {
 
 		if (srcPart == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src part should not be empty.");
@@ -28,13 +28,19 @@ public class ParameterConversionItem {
 		fSrcPart = srcPart;
 		fDstPart = dstPart;
 
-		fNodesContainingSrcItem = constraintsContainingSrcItem;
+		fObjectsContainingSrcItem = objectsContainingSrcItem;
 	}
 
 	@Override
 	public String toString() {
 
-		return "(" + fSrcPart.toString() + " -> " + fDstPart.toString() + ")";
+		String dstPartDescription = "EMPTY";
+		
+		if (fDstPart != null) {
+			dstPartDescription = fDstPart.toString();
+		}
+		
+		return "(" + fSrcPart.toString() + " -> " + dstPartDescription + ")";
 	}
 
 	public IParameterConversionItemPart getSrcPart() {
@@ -46,7 +52,7 @@ public class ParameterConversionItem {
 	}
 
 	public String getConstraintsContainingSrcItem() {
-		return fNodesContainingSrcItem;
+		return fObjectsContainingSrcItem;
 	}
 
 	public boolean isMatch(ParameterConversionItem otherItem) {
@@ -72,7 +78,7 @@ public class ParameterConversionItem {
 			dstPart = fDstPart.makeClone();
 		}
 
-		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fNodesContainingSrcItem);
+		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fObjectsContainingSrcItem);
 
 		return clone;
 	}

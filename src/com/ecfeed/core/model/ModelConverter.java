@@ -117,8 +117,8 @@ public class ModelConverter {
 
 		ExpectedValueStatement oldExpectedValueStatement = (ExpectedValueStatement)oldAbstractStatement;
 
-		MethodParameterNode methodParameterNode = oldExpectedValueStatement.getParameter();
-		String value = oldExpectedValueStatement.getCondition().getValueString();
+		MethodParameterNode methodParameterNode = oldExpectedValueStatement.getLeftParameter();
+		String value = oldExpectedValueStatement.getChoice().getValueString();
 
 		AbstractStatement newPostcondition =
 				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode, value);

@@ -24,7 +24,7 @@ public class StringSimilarityCalculator {
 			ExceptionHelper.reportRuntimeException("Empty item 2.");
 		}
 
-		if (item2.getName().length() > item1.getName().length()) {
+		if (item2.getStr().length() > item1.getStr().length()) {
 
 			ParameterConversionItemPartForRaw tmp = item1;
 			item1 = item2;
@@ -36,7 +36,7 @@ public class StringSimilarityCalculator {
 						item1.getType().toString(), 
 						item2.getType().toString());
 
-		double result2 = calculateSimilarityForStrings(item1.getName(), item2.getName());
+		double result2 = calculateSimilarityForStrings(item1.getStr(), item2.getStr());
 
 		return (result1 + result2) / 2;
 	}

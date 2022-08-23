@@ -53,6 +53,7 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		return false;
 	}
 
+	@Override
 	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
 
 		if (conversionMode == ERunMode.WITH_EXCEPTION) {
@@ -60,6 +61,24 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		}
 
 		return convertForQuietMode(value, getDefaultValue());
+	}
+
+	@Override
+	public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
+
+		if (isRandomized) {
+			return false; // TODO DE-NO 
+		}
+
+		if (StringHelper.isEqual(Boolean.toString(true), value)) {
+			return true;
+		}
+
+		if (StringHelper.isEqual(Boolean.toString(false), value)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private String convertForExceptionMode(String value) {

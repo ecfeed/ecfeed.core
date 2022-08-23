@@ -12,17 +12,22 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
+import com.ecfeed.core.utils.ParameterConversionItemPartForRaw;
 
 public class ParameterTransformer {
 
@@ -294,5 +299,82 @@ public class ParameterTransformer {
 
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
 	}
+
+	public static void verifyConversionOfParameterToType(
+			String newType, 
+			MethodParameterNode methodParameterNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
+
+		verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
+	}
+
+	private static void verifyConversionOfChoices(
+			MethodParameterNode methodParameterNode, 
+			String newType, 
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			if (!canConvertChoiceValueFromToType(
+					choiceNode.getValueString(), 
+					choiceNode.isRandomizedValue(), 
+					methodParameterNode.getType(), 
+					newType)) {
+
+				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
+			}
+		}
+	}
+
+	private static boolean canConvertChoiceValueFromToType(
+			String value, boolean isChoiceRandomized, 
+			String oldType, String newType) {
+
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+
+		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
+
+		return canConvert;
+	}
+
+	private static void addConversionDefinitionItem(
+			ChoiceNode choiceNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		IParameterConversionItemPart srcPart = 
+				new ParameterConversionItemPartForRaw(
+						IParameterConversionItemPart.ItemPartType.VALUE.getCode(), 
+						choiceNode.getValueString());
+
+		String objectsContainingSrcItem = choiceNode.getName();
+
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, null, objectsContainingSrcItem);
+
+		inOutParameterConversionDefinition.addItem(parameterConversionItem);
+	}
+
+	private static void verifyConversionOfConstraints(
+			MethodParameterNode methodParameterNode, 
+			String newType,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+		String oldType = methodParameterNode.getType();
+
+		List<Constraint> constraints = methodNode.getConstraints();
+
+		for (Constraint constraint : constraints) {
+
+			constraint.verifyConversionFromToType(oldType, newType, inOutParameterConversionDefinition);
+		}
+	}
+
 
 }

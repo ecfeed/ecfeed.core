@@ -11,7 +11,10 @@
 package com.ecfeed.core.type.adapter;
 
 import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public interface ITypeAdapter<T> {
 
@@ -24,5 +27,52 @@ public interface ITypeAdapter<T> {
 	public T generateValue(String range, String context);
 	public String generateValueAsString(String range, String context);
 	public String getMyTypeName();
+
+	public default boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
+
+		String newType = getMyTypeName();
+
+		if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN) 
+				|| newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+
+			return canConvertFromToBoolean(oldType, newType);
+		}
+
+
+		if (isRandomized) {
+			return false; // TODO DE-NO 
+		}
+
+		String newValue = adapt(value, isRandomized, ERunMode.QUIET, new ExtLanguageManagerForJava());
+
+		if (StringHelper.isEqual(newValue, value)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	default boolean canConvertFromToBoolean(String oldType, String newType) {
+
+		if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+
+			if (newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		if (newType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+
+			if (oldType.equals(JavaLanguageHelper.TYPE_NAME_BOOLEAN)) {
+				return true;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
 
 }

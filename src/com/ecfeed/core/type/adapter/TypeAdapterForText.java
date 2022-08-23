@@ -18,7 +18,7 @@ public class TypeAdapterForText extends TypeAdapterForString {
 	public String getMyTypeName() {
 		return SimpleLanguageHelper.TYPE_NAME_TEXT;
 	}
-	
+
 	@Override
 	public String getDefaultValue() {
 		return SimpleLanguageHelper.DEFAULT_EXPECTED_TEXT_VALUE;

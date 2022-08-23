@@ -10,17 +10,17 @@
 
 package com.ecfeed.core.utils;
 
-public class ParameterConversionItemPartForLabel extends ParameterConversionItemPart {
+public class ParameterConversionItemPartForValue extends ParameterConversionItemPart {
 
-	public ParameterConversionItemPartForLabel(String label) {
-		super(label);
+	public ParameterConversionItemPartForValue(String value) {
+		super(value);
 	}
 
 	@Override
 	public ItemPartType getType() {
-		return IParameterConversionItemPart.ItemPartType.LABEL;
+		return IParameterConversionItemPart.ItemPartType.VALUE;
 	}
-
+	
 	@Override
 	public Integer getTypeSortOrder() {
 		return 1;
@@ -28,39 +28,39 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 
 	@Override
 	public boolean isMatch(IParameterConversionItemPart otherPart) {
-
-		if (!(otherPart instanceof ParameterConversionItemPartForLabel)) {
+		
+		if (!(otherPart instanceof ParameterConversionItemPartForValue)) {
 			return false;
 		}
-
-		String label = getLabel();
-		String otherLabel = ((ParameterConversionItemPartForLabel)otherPart).getLabel();
-
-		if (StringHelper.isEqual(label, otherLabel)) {
+		
+		String value = getValue();
+		String otherValue = ((ParameterConversionItemPartForValue)otherPart).getValue();
+		
+		if (StringHelper.isEqual(value, otherValue)) {
 			return true;
 		}
-
+		
 		return false;
 	}
 
 	@Override
 	public String getDescription() {
-		return super.getDescription(ItemPartType.LABEL.getCode());
+		return super.getDescription(ItemPartType.VALUE.getCode());
 	}
-
-	public String getLabel() {
+	
+	public String getValue() {
 		return super.getStr();
 	}
 
 	@Override
 	public IParameterConversionItemPart makeClone() {
-
-		ParameterConversionItemPartForLabel clone = 
-				new ParameterConversionItemPartForLabel(getLabel());
-
+		
+		ParameterConversionItemPartForValue clone = 
+				new ParameterConversionItemPartForValue(getValue());
+		
 		return clone;
 	}
-
-
+	
+	
 }
 

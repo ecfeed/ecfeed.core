@@ -131,7 +131,7 @@ public class SatSolverConstraintEvaluatorTest {
                 input.add(arg.getLeafChoicesWithCopies());
 
 
-        IConstraintEvaluator<ChoiceNode> evaluator = new SatSolverConstraintEvaluator(methodNode.getAllConstraints(), methodNode);
+        IConstraintEvaluator<ChoiceNode> evaluator = new SatSolverConstraintEvaluator(methodNode.getConstraints(), methodNode);
 
         IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
 //        IAlgorithm<ChoiceNode> algorithm = new AwesomeNWiseAlgorithm<>(2,100);

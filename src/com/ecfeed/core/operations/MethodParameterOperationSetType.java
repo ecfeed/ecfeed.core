@@ -254,7 +254,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		private boolean isRelevantConstraint(Constraint constraint) {
 			if (constraint.getPostcondition() instanceof ExpectedValueStatement) {
 				ExpectedValueStatement expectedValueStatement = (ExpectedValueStatement)constraint.getPostcondition();
-				MethodParameterNode methodParameterNode = expectedValueStatement.getParameter();
+				MethodParameterNode methodParameterNode = expectedValueStatement.getLeftParameter();
 				if(fMethodParameterNode.equals(methodParameterNode)) {
 					return true;
 				}
@@ -309,13 +309,13 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(getNewType());
 				String newValue = 
 						adapter.adapt(
-								statement.getCondition().getValueString(), 
+								statement.getChoice().getValueString(), 
 								false, 
 								ERunMode.QUIET,
 								getExtLanguageManager());
 
-				fOriginalStatementValues.put(statement, statement.getCondition().getValueString());
-				statement.getCondition().setValueString(newValue);
+				fOriginalStatementValues.put(statement, statement.getChoice().getValueString());
+				statement.getChoice().setValueString(newValue);
 				if (JavaLanguageHelper.isUserType(getNewType())) {
 					success = newValue != null && fMethodParameterNode.getLeafChoiceValues().contains(newValue);
 				}
@@ -381,7 +381,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				public Object visit(ExpectedValueStatement statement)
 						throws Exception {
 					if (fOriginalStatementValues.containsKey(statement)) {
-						statement.getCondition().setValueString(fOriginalStatementValues.get(statement));
+						statement.getChoice().setValueString(fOriginalStatementValues.get(statement));
 					}
 					return null;
 				}
