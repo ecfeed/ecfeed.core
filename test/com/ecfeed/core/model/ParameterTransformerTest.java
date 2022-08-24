@@ -47,6 +47,11 @@ public class ParameterTransformerTest {
 		TRUE
 	}
 
+	enum ValueOperatorFunction {
+		CHECK,
+		CONVERT
+	}
+
 	@Test
 	public void linkMethodParameterToClassParameterBasicUseCaseForChoices() {
 
@@ -1320,8 +1325,9 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
-		ValueConversionChecker checker = 
-				new ValueConversionChecker(
+		ValueConversionOperator checker = 
+				new ValueConversionOperator(
+						ValueOperatorFunction.CHECK,
 						methodParameterNode, 
 						choiceNodeOfMethod,
 						parameterConversionDefinition);
@@ -1354,16 +1360,17 @@ public class ParameterTransformerTest {
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
 
-		ValueConversionChecker checker = 
-				new ValueConversionChecker(
+		ValueConversionOperator valueOperator = 
+				new ValueConversionOperator(
+						ValueOperatorFunction.CHECK,
 						methodParameterNode, 
 						null,
 						parameterConversionDefinition);
 
-		performTypeCheck(WhatToTest.CONSTRAINTS,	checker);
+		performTypeCheck(WhatToTest.CONSTRAINTS,	valueOperator);
 	}
 
-	private void performTypeCheck(WhatToTest whatToTest, ValueConversionChecker checker) {
+	private void performTypeCheck(WhatToTest whatToTest, ValueConversionOperator operator) {
 
 		String tBoolean = JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 		String tByte = JavaLanguageHelper.TYPE_NAME_BYTE;
@@ -1372,52 +1379,53 @@ public class ParameterTransformerTest {
 		String tDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		String tString = JavaLanguageHelper.TYPE_NAME_STRING;
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE);
-		ParameterConversionDefinition resultConversionDefinition = checker.getParameterConversionDefinition();
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE);
+		ParameterConversionDefinition resultConversionDefinition = operator.getParameterConversionDefinition();
 		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		String description = srcPart.getDescription();
 		assertEquals("ABC[value]", description);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE);
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "1", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "1", SuccessExpected.TRUE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.0", SuccessExpected.TRUE);
-		checker.test(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.0:123.0", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.0", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.0:123.0", SuccessExpected.TRUE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.54e+7", SuccessExpected.FALSE);
-		checker.test(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.54e+7:123.54e+7", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.54e+7", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.54e+7:123.54e+7", SuccessExpected.FALSE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.540", SuccessExpected.FALSE);
-		checker.test(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.540:123.540", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.540", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.540:123.540", SuccessExpected.FALSE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tDouble, "1234", SuccessExpected.TRUE);
-		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tDouble, "1234:1234", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tDouble, "1234", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tDouble, "1234:1234", SuccessExpected.TRUE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tInt, "1234", SuccessExpected.TRUE);
-		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tInt, "1234:1234", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tInt, "1234", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tInt, "1234:1234", SuccessExpected.TRUE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "1234", SuccessExpected.FALSE);
-		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "1234:1234", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "1234", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "1234:1234", SuccessExpected.FALSE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "123", SuccessExpected.TRUE);
-		checker.test(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "123:123", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "123", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "123:123", SuccessExpected.TRUE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tByte, "false", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tByte, "false", SuccessExpected.FALSE);
 
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tString, "false", SuccessExpected.FALSE);
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "false", SuccessExpected.TRUE);
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "true", SuccessExpected.TRUE);
-		checker.test(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "1", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tString, "false", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "false", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "true", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "1", SuccessExpected.FALSE);
 	}
 
-	private static class ValueConversionChecker {
+	private static class ValueConversionOperator {
 
 		private MethodParameterNode fMethodParameterNode;
 		private ChoiceNode fChoiceNodeOfMethod;
 		private ParameterConversionDefinition fParameterConversionDefinition;
 
-		public ValueConversionChecker(
+		public ValueConversionOperator(
+				ValueOperatorFunction valueOperatorFunction,
 				MethodParameterNode methodParameterNode, 
 				ChoiceNode choiceNodeOfMethod,
 				ParameterConversionDefinition parameterConversionDefinition) {
@@ -1427,7 +1435,7 @@ public class ParameterTransformerTest {
 			fParameterConversionDefinition = parameterConversionDefinition;
 		}
 
-		public void test(
+		public void operate(
 				WhatToTest testChoices, 
 				IsChoiceRandomized isRandomized, 
 				String typeFrom, 
