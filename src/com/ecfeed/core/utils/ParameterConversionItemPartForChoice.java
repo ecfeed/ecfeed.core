@@ -27,23 +27,6 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 		return 0;
 	}
 
-	@Override
-	public boolean isMatch(IParameterConversionItemPart otherPart) {
-
-		if (!(otherPart instanceof ParameterConversionItemPartForChoice)) {
-			return false;
-		}
-
-		ChoiceNode choiceNode = getChoiceNode();
-		ChoiceNode otherChoiceNode = ((ParameterConversionItemPartForChoice)otherPart).getChoiceNode();
-
-		if (choiceNode.equals(otherChoiceNode)) {
-			return true;
-		}
-
-		return false;
-	}
-
 	public ChoiceNode getChoiceNode() {
 		return fChoiceNode;
 	}
@@ -60,10 +43,10 @@ public class ParameterConversionItemPartForChoice extends ParameterConversionIte
 
 	@Override
 	public IParameterConversionItemPart makeClone() {
-		
+
 		ParameterConversionItemPartForChoice clone = 
 				new ParameterConversionItemPartForChoice(fChoiceNode);
-		
+
 		return clone;
 	}
 

@@ -35,11 +35,11 @@ public class ParameterConversionItem {
 	public String toString() {
 
 		String dstPartDescription = "EMPTY";
-		
+
 		if (fDstPart != null) {
 			dstPartDescription = fDstPart.toString();
 		}
-		
+
 		return "(" + fSrcPart.toString() + " -> " + dstPartDescription + ")";
 	}
 
@@ -57,11 +57,11 @@ public class ParameterConversionItem {
 
 	public boolean isMatch(ParameterConversionItem otherItem) {
 
-		if (!fSrcPart.isMatch(otherItem.fSrcPart)) {
+		if (!ParameterConversionItemPart.isMatch(fSrcPart, otherItem.fSrcPart)) {
 			return false;
 		}
 
-		if (!fDstPart.isMatch(otherItem.fDstPart)) {
+		if (!ParameterConversionItemPart.isMatch(fDstPart, otherItem.fDstPart)) {
 			return false;
 		}
 
@@ -71,9 +71,9 @@ public class ParameterConversionItem {
 	public ParameterConversionItem makeClone() {
 
 		IParameterConversionItemPart srcPart = fSrcPart.makeClone();
-		
+
 		IParameterConversionItemPart dstPart = null;
-		
+
 		if (fDstPart != null) {
 			dstPart = fDstPart.makeClone();
 		}

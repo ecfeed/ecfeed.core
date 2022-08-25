@@ -27,23 +27,6 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	}
 
 	@Override
-	public boolean isMatch(IParameterConversionItemPart otherPart) {
-
-		if (!(otherPart instanceof ParameterConversionItemPartForLabel)) {
-			return false;
-		}
-
-		String label = getLabel();
-		String otherLabel = ((ParameterConversionItemPartForLabel)otherPart).getLabel();
-
-		if (StringHelper.isEqual(label, otherLabel)) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
 	public String getDescription() {
 		return super.getDescription(ItemPartType.LABEL.getCode());
 	}

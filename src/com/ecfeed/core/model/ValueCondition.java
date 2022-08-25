@@ -177,6 +177,10 @@ public class ValueCondition implements IStatementCondition {
 		return fRightValue;
 	}
 
+	public void setRightValue(String rightValue) {
+		fRightValue = rightValue;
+	}
+	
 	@Override
 	public List<ChoiceNode> getChoices() {
 		return new ArrayList<ChoiceNode>();

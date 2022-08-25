@@ -20,47 +20,30 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 	public ItemPartType getType() {
 		return IParameterConversionItemPart.ItemPartType.VALUE;
 	}
-	
+
 	@Override
 	public Integer getTypeSortOrder() {
 		return 1;
 	}
 
 	@Override
-	public boolean isMatch(IParameterConversionItemPart otherPart) {
-		
-		if (!(otherPart instanceof ParameterConversionItemPartForValue)) {
-			return false;
-		}
-		
-		String value = getValue();
-		String otherValue = ((ParameterConversionItemPartForValue)otherPart).getValue();
-		
-		if (StringHelper.isEqual(value, otherValue)) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	@Override
 	public String getDescription() {
 		return super.getDescription(ItemPartType.VALUE.getCode());
 	}
-	
+
 	public String getValue() {
 		return super.getStr();
 	}
 
 	@Override
 	public IParameterConversionItemPart makeClone() {
-		
+
 		ParameterConversionItemPartForValue clone = 
 				new ParameterConversionItemPartForValue(getValue());
-		
+
 		return clone;
 	}
-	
-	
+
+
 }
 

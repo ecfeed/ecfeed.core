@@ -590,6 +590,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		TypeChangeVerificationVisitor typeChangeVerificationProvider = 
 				new TypeChangeVerificationVisitor(
 						oldType, newType, inOutParameterConversionDefinition);
+		
 		try {
 			fPrecondition.accept(typeChangeVerificationProvider);
 			fPostcondition.accept(typeChangeVerificationProvider);
@@ -598,9 +599,23 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 			ExceptionHelper.reportRuntimeException("Cannot convert value", e);
 		}
-
 	}
 
+	public void convertValues(ParameterConversionDefinition parameterConversionDefinition) {
+
+		TypeChangeVisitor typeChangeVerificationProvider = 
+				new TypeChangeVisitor(parameterConversionDefinition);
+		
+		try {
+			fPrecondition.accept(typeChangeVerificationProvider);
+			fPostcondition.accept(typeChangeVerificationProvider);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot convert value", e);
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Set<ChoiceNode> getReferencedChoices() {
 

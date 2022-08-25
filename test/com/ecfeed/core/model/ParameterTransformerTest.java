@@ -29,6 +29,7 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class ParameterTransformerTest {
 
@@ -45,11 +46,6 @@ public class ParameterTransformerTest {
 	private enum SuccessExpected {
 		FALSE,
 		TRUE
-	}
-
-	enum ValueOperatorFunction {
-		CHECK,
-		CONVERT
 	}
 
 	@Test
@@ -113,7 +109,7 @@ public class ParameterTransformerTest {
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(srcPart, dstPart, null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -250,7 +246,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForLabel(globalLabel1), 
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -384,7 +380,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -520,7 +516,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForLabel(globalLabel1),
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -651,7 +647,7 @@ public class ParameterTransformerTest {
 		ParameterConversionItem parameterConversionItemForChoice = 
 				new ParameterConversionItem(srcPart, dstPart, null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -786,7 +782,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice1);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice1);
 
 
 		ParameterConversionItem parameterConversionItemForChoice2 = 
@@ -795,7 +791,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice2);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice2);
 
 		// linking
 
@@ -924,7 +920,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNode11), 
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -1029,7 +1025,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceNode1), 
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -1173,7 +1169,7 @@ public class ParameterTransformerTest {
 						new ParameterConversionItemPartForChoice(globalChoiceOfClass11), 
 						null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItemForChoice);
 
 		// linking
 
@@ -1298,7 +1294,7 @@ public class ParameterTransformerTest {
 	}
 
 	@Test
-	public void canCovertChoices() {
+	public void convertChoicesWithCheckIfPossible() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -1327,16 +1323,15 @@ public class ParameterTransformerTest {
 
 		ValueConversionOperator checker = 
 				new ValueConversionOperator(
-						ValueOperatorFunction.CHECK,
 						methodParameterNode, 
 						choiceNodeOfMethod,
 						parameterConversionDefinition);
 
-		performTypeCheck(WhatToTest.CHOICES, checker);
+		performTypeOperation(WhatToTest.CHOICES, checker);
 	}
 
 	@Test
-	public void canCovertConstraints() {
+	public void covertConstraintsWithCheckIfPossible() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -1353,7 +1348,7 @@ public class ParameterTransformerTest {
 
 		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
 
-		// add parameter and choice to method
+		// add parameter
 
 		MethodParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
@@ -1362,15 +1357,14 @@ public class ParameterTransformerTest {
 
 		ValueConversionOperator valueOperator = 
 				new ValueConversionOperator(
-						ValueOperatorFunction.CHECK,
 						methodParameterNode, 
 						null,
 						parameterConversionDefinition);
 
-		performTypeCheck(WhatToTest.CONSTRAINTS,	valueOperator);
+		performTypeOperation(WhatToTest.CONSTRAINTS, valueOperator);
 	}
 
-	private void performTypeCheck(WhatToTest whatToTest, ValueConversionOperator operator) {
+	private void performTypeOperation(WhatToTest whatToTest, ValueConversionOperator operator) {
 
 		String tBoolean = JavaLanguageHelper.TYPE_NAME_BOOLEAN;
 		String tByte = JavaLanguageHelper.TYPE_NAME_BYTE;
@@ -1379,43 +1373,43 @@ public class ParameterTransformerTest {
 		String tDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
 		String tString = JavaLanguageHelper.TYPE_NAME_STRING;
 
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE, "123");
 		ParameterConversionDefinition resultConversionDefinition = operator.getParameterConversionDefinition();
 		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
 		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
 		String description = srcPart.getDescription();
 		assertEquals("ABC[value]", description);
 
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE);
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "1", SuccessExpected.TRUE);
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE, "ABC");
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "1", SuccessExpected.TRUE, "1");
+		//
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.0", SuccessExpected.TRUE, "123.0");
+		//		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.0:123.0", SuccessExpected.TRUE, "123.0:123.0");
+		//
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.54e+7", SuccessExpected.FALSE, "123");
+		//		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.54e+7:123.54e+7", SuccessExpected.FALSE, "123:123");
 
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.0", SuccessExpected.TRUE);
-		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.0:123.0", SuccessExpected.TRUE);
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.540", SuccessExpected.FALSE, "123");
+		//		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.540:123.540", SuccessExpected.FALSE, "123:123");
+		//
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tDouble, "1234", SuccessExpected.TRUE, "1234");
+		//		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tDouble, "1234:1234", SuccessExpected.TRUE, "1234:1234");
 
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.54e+7", SuccessExpected.FALSE);
-		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.54e+7:123.54e+7", SuccessExpected.FALSE);
-
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tDouble, tInt, "123.540", SuccessExpected.FALSE);
-		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tDouble, tInt, "123.540:123.540", SuccessExpected.FALSE);
-
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tDouble, "1234", SuccessExpected.TRUE);
-		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tDouble, "1234:1234", SuccessExpected.TRUE);
-
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tInt, "1234", SuccessExpected.TRUE);
-		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tInt, "1234:1234", SuccessExpected.TRUE);
-
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "1234", SuccessExpected.FALSE);
-		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "1234:1234", SuccessExpected.FALSE);
-
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "123", SuccessExpected.TRUE);
-		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "123:123", SuccessExpected.TRUE);
-
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tByte, "false", SuccessExpected.FALSE);
-
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tString, "false", SuccessExpected.FALSE);
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "false", SuccessExpected.TRUE);
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "true", SuccessExpected.TRUE);
-		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "1", SuccessExpected.FALSE);
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tInt, "1234", SuccessExpected.TRUE, "1234");
+		//		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tInt, "1234:1234", SuccessExpected.TRUE, "1234:1234");
+		//
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "1234", SuccessExpected.FALSE, "123");
+		//		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "1234:1234", SuccessExpected.FALSE, "123:123");
+		//
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tFloat, tByte, "123", SuccessExpected.TRUE, "123");
+		//		operator.operate(whatToTest, IsChoiceRandomized.TRUE, tFloat, tByte, "123:123", SuccessExpected.TRUE, "123:123");
+		//
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tByte, "false", SuccessExpected.FALSE, "10");
+		//
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tString, "false", SuccessExpected.FALSE, "ABC");
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "false", SuccessExpected.TRUE, "false");
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "true", SuccessExpected.TRUE, "true");
+		//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tBoolean, tBoolean, "1", SuccessExpected.FALSE, "true");
 	}
 
 	private static class ValueConversionOperator {
@@ -1425,7 +1419,6 @@ public class ParameterTransformerTest {
 		private ParameterConversionDefinition fParameterConversionDefinition;
 
 		public ValueConversionOperator(
-				ValueOperatorFunction valueOperatorFunction,
 				MethodParameterNode methodParameterNode, 
 				ChoiceNode choiceNodeOfMethod,
 				ParameterConversionDefinition parameterConversionDefinition) {
@@ -1438,10 +1431,11 @@ public class ParameterTransformerTest {
 		public void operate(
 				WhatToTest testChoices, 
 				IsChoiceRandomized isRandomized, 
-				String typeFrom, 
-				String typeTo, 
+				String oldType, 
+				String newType, 
 				String value, 
-				SuccessExpected successExpected) {
+				SuccessExpected successExpected,
+				String newValue) {
 
 			if (isRandomized == IsChoiceRandomized.TRUE && testChoices == WhatToTest.CONSTRAINTS) {
 				return; // randomized for choices only
@@ -1449,7 +1443,7 @@ public class ParameterTransformerTest {
 
 			fParameterConversionDefinition.clear();
 
-			fMethodParameterNode.setType(typeFrom);
+			fMethodParameterNode.setType(oldType);
 
 			if (testChoices == WhatToTest.CHOICES) {
 				fChoiceNodeOfMethod.setValueString(value);
@@ -1474,13 +1468,64 @@ public class ParameterTransformerTest {
 			}
 
 			ParameterTransformer.verifyConversionOfParameterToType(
-					typeTo, fMethodParameterNode, fParameterConversionDefinition);
+					newType, fMethodParameterNode, fParameterConversionDefinition);
 
 			if (successExpected == SuccessExpected.TRUE) {
 				assertFalse(fParameterConversionDefinition.hasItems());
 			} else {
 				assertTrue(fParameterConversionDefinition.hasItems());
 			}
+
+			convertParameter(newType, newValue);
+
+			if (testChoices == WhatToTest.CHOICES) {
+				checkValueOfChoice(fChoiceNodeOfMethod, newValue);
+			} else {
+				checkValueFromConstraint(fMethodParameterNode.getMethod(), newValue);
+			}
+		}
+
+		private void checkValueFromConstraint(MethodNode methodNode, String newValue) {
+
+			ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
+
+			AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+			RelationStatement relationStatement = (RelationStatement)precondition; 
+
+			IStatementCondition statementCondition = relationStatement.getCondition();
+
+			ValueCondition choiceCondition = (ValueCondition)statementCondition;
+
+			String currentValue = choiceCondition.getRightValue();
+
+			assertEquals(newValue, currentValue);
+		}
+
+		private void checkValueOfChoice(ChoiceNode choiceNode, String expectedValue) {
+
+			String currentValue = choiceNode.getValueString();
+			assertEquals(expectedValue, currentValue);
+		}
+
+		private void convertParameter(String newType, String newValue) {
+
+			if (fParameterConversionDefinition.getItemCount() == 0) {
+				return;
+			}
+
+			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(0);
+
+			IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
+			ParameterConversionItemPartForValue dstPart = new ParameterConversionItemPartForValue(newValue);
+
+			ParameterConversionItem newParameterConversionItem = 
+					new ParameterConversionItem(srcPart, dstPart, null);
+
+			fParameterConversionDefinition.setItem(0, newParameterConversionItem);
+
+			ParameterTransformer.convertParameterToType(
+					fMethodParameterNode, newType, fParameterConversionDefinition);
 		}
 
 		public ParameterConversionDefinition getParameterConversionDefinition() {

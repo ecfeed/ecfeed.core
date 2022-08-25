@@ -24,13 +24,13 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	public String toString() {
 		return getDescription();
 	}
-	
+
 	@Override
 	public String getDescription() {
-		
+
 		return super.getDescription(fCode);
 	}
-	
+
 	@Override
 	public ItemPartType getType() {
 		return IParameterConversionItemPart.ItemPartType.RAW;
@@ -39,23 +39,6 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 	@Override
 	public Integer getTypeSortOrder() {
 		return 0;
-	}
-
-	@Override
-	public boolean isMatch(IParameterConversionItemPart otherPart) {
-
-		if (!(otherPart instanceof ParameterConversionItemPartForRaw)) {
-			return false;
-		}
-
-		ParameterConversionItemPartForRaw parameterConversionItemPartForRaw =
-				(ParameterConversionItemPartForRaw) otherPart;
-
-		if (!(StringHelper.isEqual(fCode, parameterConversionItemPartForRaw.fCode))) {
-			return false;
-		}
-
-		return super.isMatch(otherPart);
 	}
 
 	@Override
@@ -82,12 +65,12 @@ public class ParameterConversionItemPartForRaw extends ParameterConversionItemPa
 
 	@Override
 	public IParameterConversionItemPart makeClone() {
-		
+
 		ParameterConversionItemPartForRaw clone = 
 				new ParameterConversionItemPartForRaw(getCode(), getStr());
-		
+
 		return clone;
 	}
-	
+
 }
 

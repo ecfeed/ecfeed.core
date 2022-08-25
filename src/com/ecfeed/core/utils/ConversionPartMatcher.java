@@ -100,7 +100,7 @@ public class ConversionPartMatcher {
 			ParameterConversionItemPartForRaw currentItem = items.get(index);
 			ParameterConversionItemPartForRaw nextItem = items.get(index + 1);
 
-			if (currentItem.isMatch(nextItem)) {
+			if (ParameterConversionItemPart.isMatch(currentItem, nextItem)) {
 				ExceptionHelper.reportRuntimeException("Non unique items in list.");
 			}
 		}
@@ -137,7 +137,7 @@ public class ConversionPartMatcher {
 
 			ParameterConversionItemPartForRaw item1 = similarityItem.getItem1();
 
-			return item1.isMatch(fItem);
+			return ParameterConversionItemPart.isMatch(item1, fItem);
 		}
 
 	}
@@ -158,7 +158,7 @@ public class ConversionPartMatcher {
 
 			ParameterConversionItemPartForRaw item2 = similarityItem.getItem2();
 
-			return item2.isMatch(fItem);
+			return ParameterConversionItemPart.isMatch(item2, fItem);
 		}
 
 	}

@@ -23,9 +23,43 @@ public class ParameterConversionDefinition {
 		fParameterConversionItems = new ArrayList<>();
 	}
 
-	public void addItem(ParameterConversionItem parameterConversionItem) {
+	public void addItemWithoutDuplicates(ParameterConversionItem parameterConversionItem) {
+
+		if (itemExists(parameterConversionItem)) {
+			return;
+		}
 
 		fParameterConversionItems.add(parameterConversionItem);
+	}
+
+	private boolean itemExists(ParameterConversionItem parameterConversionItem) {
+
+		for(ParameterConversionItem currentItem : fParameterConversionItems) {
+			if (isMatch(currentItem, parameterConversionItem)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isMatch(ParameterConversionItem item1, ParameterConversionItem item2) {
+
+		IParameterConversionItemPart srcPart1 = item1.getSrcPart();
+		IParameterConversionItemPart srcPart2 = item2.getSrcPart();
+
+		if (!ParameterConversionItemPart.isMatch(srcPart1, srcPart2)) {
+			return false;
+		}
+		
+		IParameterConversionItemPart dstPart1 = item1.getDstPart();
+		IParameterConversionItemPart dstPart2 = item2.getDstPart();
+
+		if (!ParameterConversionItemPart.isMatch(dstPart1, dstPart2)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public boolean hasItems() {
@@ -36,6 +70,7 @@ public class ParameterConversionDefinition {
 
 		return false;
 	}
+
 	public List<ParameterConversionItem> createSortedCopyOfConversionItems() {
 
 		List<ParameterConversionItem> sortedConversionItems = new ArrayList<>(fParameterConversionItems);

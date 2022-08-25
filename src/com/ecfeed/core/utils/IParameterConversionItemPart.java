@@ -75,7 +75,6 @@ public interface IParameterConversionItemPart  {
 	public String getStr();
 	public String getDescription();
 	public void setName(String name);
-	public boolean isMatch(IParameterConversionItemPart otherPart); // TODO DE-NO rename to isEqual
 	public Integer getTypeSortOrder(); // TODO DE-NO remove ?
 	public Integer getSortOrder(); // TODO DE-NO remove ?
 	public int compareTo(IParameterConversionItemPart other);

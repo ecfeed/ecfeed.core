@@ -10,29 +10,17 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
+import com.ecfeed.core.utils.StringHelper;
 
-public class TypeChangeVerificationVisitor implements IStatementVisitor {
+public class TypeChangeVisitor implements IStatementVisitor {
 
-	private String fOldType;
-	private ParameterConversionDefinition fInOutParameterConversionDefinition;
-	private ITypeAdapter<?> fNewTypeAdapter;
+	private ParameterConversionDefinition fParameterConversionDefinition;
 
-	public TypeChangeVerificationVisitor(
-			String oldType,
-			String newType,
-			ParameterConversionDefinition inOutParameterConversionDefinition) {
+	public TypeChangeVisitor(ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		fOldType = oldType;
-		fInOutParameterConversionDefinition = inOutParameterConversionDefinition;
-
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-		fNewTypeAdapter = typeAdapterProvider.getAdapter(newType);
+		fParameterConversionDefinition = inOutParameterConversionDefinition;
 	}
 
 	@Override
@@ -41,7 +29,18 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
-		verifyConversionOfValue(fOldType, valueString, statement.toString());
+		int itemCount = fParameterConversionDefinition.getItemCount();
+
+		for (int index = 0; index < itemCount; index++) {
+			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(index);
+
+			String srcString = parameterConversionItem.getSrcPart().getStr();
+
+			if (StringHelper.isEqual(srcString, valueString)) {
+				String dstString = parameterConversionItem.getDstPart().getStr();
+				choiceNode.setValueString(dstString);
+			}
+		}
 
 		return null;
 	}
@@ -59,7 +58,19 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 	public Object visit(ValueCondition condition) throws Exception {
 
 		String valueString = condition.getRightValue();
-		verifyConversionOfValue(fOldType, valueString, condition.toString());
+
+		int itemCount = fParameterConversionDefinition.getItemCount();
+
+		for (int index = 0; index < itemCount; index++) {
+			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(index);
+
+			String srcString = parameterConversionItem.getSrcPart().getStr();
+
+			if (StringHelper.isEqual(srcString, valueString)) {
+				String dstString = parameterConversionItem.getDstPart().getStr();
+				condition.setRightValue(dstString);
+			}
+		}
 
 		return null;
 	}
@@ -93,23 +104,6 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 	@Override
 	public Object visit(ParameterCondition condition) throws Exception {
 		return null;
-	}
-
-	private void verifyConversionOfValue(String oldType, String valueString, String objectsContainingItem) {
-
-		boolean canConvert = fNewTypeAdapter.canCovertWithoutLossOfData(oldType, valueString, false);
-
-		if (!canConvert) {
-
-			ParameterConversionItemPartForValue srcPart = 
-					new ParameterConversionItemPartForValue(valueString);
-
-			ParameterConversionItem parameterConversionItem = 
-					new ParameterConversionItem(
-							srcPart, null, objectsContainingItem);
-
-			fInOutParameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItem);
-		}
 	}
 
 }

@@ -28,6 +28,7 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForRaw;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ParameterTransformer {
 
@@ -46,7 +47,7 @@ public class ParameterTransformer {
 		outReverseOperations.add(reverseOperation);
 
 		if (parameterConversionDefinition != null) {
-			convertByConversionList(
+			convertByConversionListForLinking(
 					parameterConversionDefinition, 
 					srcMethodParameterNode, 
 					dstGlobalParameterNode,
@@ -224,7 +225,7 @@ public class ParameterTransformer {
 		inOutReverseOperations.add(reverseOperationSimpleSetLink);
 	}
 
-	public static void convertByConversionList(
+	public static void convertByConversionListForLinking(
 			ParameterConversionDefinition parameterConversionItems,
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
@@ -236,7 +237,7 @@ public class ParameterTransformer {
 
 		for (ParameterConversionItem parameterConversionItem : sortedParameterConversionItems) {
 
-			convertByConversionItem(
+			convertByConversionItemForLinking(
 					parameterConversionItem, 
 					srcParameterNode, dstParameterNode,
 					inOutReverseOperations, extLanguageManager); 
@@ -265,7 +266,7 @@ public class ParameterTransformer {
 		return reverseOperation;
 	}
 
-	private static void convertByConversionItem(
+	private static void convertByConversionItemForLinking(
 			ParameterConversionItem parameterConversionItem, 
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
@@ -310,6 +311,18 @@ public class ParameterTransformer {
 		verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
 	}
 
+	public static void convertParameterToType(
+			MethodParameterNode methodParameterNode,
+			String typeTo,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		// TODO DE-NO check if all values from conversion definition are compatible with new type
+		
+		convertValuesOfChoicesToType(methodParameterNode, parameterConversionDefinition);
+
+		convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
+	}
+	
 	private static void verifyConversionOfChoices(
 			MethodParameterNode methodParameterNode, 
 			String newType, 
@@ -326,6 +339,37 @@ public class ParameterTransformer {
 					newType)) {
 
 				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
+			}
+		}
+	}
+
+	private static void convertValuesOfChoicesToType(
+			MethodParameterNode methodParameterNode, 
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			convertChoiceValueConditionally(choiceNode, parameterConversionDefinition);
+		}
+	}
+	
+	public static void convertChoiceValueConditionally(ChoiceNode choiceNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+		
+		String valueString = choiceNode.getValueString();
+		
+		int itemCount = parameterConversionDefinition.getItemCount();
+		
+		for (int index = 0; index < itemCount; index++) {
+			ParameterConversionItem parameterConversionItem = parameterConversionDefinition.getCopyOfItem(index);
+			
+			String srcString = parameterConversionItem.getSrcPart().getStr();
+			
+			if (StringHelper.isEqual(srcString, valueString)) {
+				String dstString = parameterConversionItem.getDstPart().getStr();
+				choiceNode.setValueString(dstString);
 			}
 		}
 	}
@@ -357,7 +401,7 @@ public class ParameterTransformer {
 		ParameterConversionItem parameterConversionItem = 
 				new ParameterConversionItem(srcPart, null, objectsContainingSrcItem);
 
-		inOutParameterConversionDefinition.addItem(parameterConversionItem);
+		inOutParameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItem);
 	}
 
 	private static void verifyConversionOfConstraints(
@@ -376,5 +420,18 @@ public class ParameterTransformer {
 		}
 	}
 
+	private static void convertValuesOfConstraintsToType(
+			MethodParameterNode methodParameterNode, 
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		List<Constraint> constraints = methodNode.getConstraints();
+
+		for (Constraint constraint : constraints) {
+
+			constraint.convertValues(parameterConversionDefinition);
+		}
+	}
 
 }

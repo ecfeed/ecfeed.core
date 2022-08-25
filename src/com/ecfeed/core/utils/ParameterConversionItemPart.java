@@ -42,16 +42,6 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	}
 
 	@Override
-	public boolean isMatch(IParameterConversionItemPart otherPart) {
-
-		if (StringHelper.isEqual(fStr, otherPart.getStr())) {
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
 	public Integer getSortOrder() {
 
 		return StringHelper.countOccurencesOfChar(fStr, ':');
@@ -65,9 +55,34 @@ public abstract class ParameterConversionItemPart implements IParameterConversio
 	}
 
 	public String getDescription(String code) {
-		
+
 		String typeDescription = ItemPartType.convertCodeToDescription(code);
 		return getStr() + "[" + typeDescription +"]";
+	}
+
+	public static boolean isMatch(IParameterConversionItemPart part1, IParameterConversionItemPart part2) {
+
+		if (part1 == null && part2 == null) {
+			return true;
+		}
+
+		if (part1 == null && part2 != null) {
+			return false;
+		}
+
+		if (part1 != null && part2 == null) {
+			return false;
+		}
+
+		if ( part1.getType() != part2.getType()) {
+			return false;
+		}
+
+		if (!StringHelper.isEqual(part1.getStr(), part2.getStr())) {
+			return false;
+		}
+
+		return true;
 	}
 }
 
