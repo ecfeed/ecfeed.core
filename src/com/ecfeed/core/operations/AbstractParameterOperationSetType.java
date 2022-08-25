@@ -117,67 +117,98 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		// Check for duplicate signatures possibly caused by global parameter type change
 		if(fTarget instanceof GlobalParameterNode){
-			GlobalParameterNode target = (GlobalParameterNode)fTarget;
-			List<MethodNode> linkingMethods = new ArrayList<MethodNode>(target.getMethods());
-			MethodNode testedMethod;
-			// Iterate through methods. Methods of same class and name are matched just once and then removed from iteration.
-			for(int i = 0; i < linkingMethods.size();){
-				testedMethod = linkingMethods.get(i);
-				ClassNode classNode = testedMethod.getClassNode();
-				// Map of methods and their parameter lists
-				HashMap<MethodNode, List<String>> methods = new HashMap<>();
-				//searching for methods with same name as currently investigated
-				for(MethodNode methodNode: classNode.getMethods()){
-					if(methodNode.getName().equals(testedMethod.getName())
-							&& methodNode.getParameters().size() == testedMethod.getParameters().size()){
-						// if method links edited global parameter - replace types before matching
-						if(target.getMethods().contains(methodNode)){
-							List<String> types = methodNode.getParameterTypes();
-							for(AbstractParameterNode parameter: methodNode.getParameters()){
-								MethodParameterNode param = (MethodParameterNode)parameter;
-								if(param.isLinked() && param.getLink().equals(target)){
-									types.set(parameter.getMyIndex(), fNewTypeInExtLanguage);
-								}			
-							}
-							methods.put(methodNode, types);
-						}
-						// else add parameter list without alterations
-						else {
-							methods.put(methodNode, methodNode.getParameterTypes());
-						}		
-						// remove from linking parameter list, so no methods are matched twice
-						linkingMethods.remove(methodNode);	
-					}
-				}
-				// if less than 2 methods of same name found - skip matching
-				if(methods.size() < 2) continue;
-				// else match all found methods with each other
-				else{
-					ArrayList<MethodNode> remainingMethods = new ArrayList<MethodNode>(methods.keySet());
-					MethodNode method;
-					// match with not yet iterated through methods till duplicate found or there is just 1 method left
-					for(int n = 0; n < remainingMethods.size() -1; n++){
-						method = remainingMethods.get(n);
-						for(int k = n+1; k < remainingMethods.size(); k++){
-							if(methods.get(method).equals(methods.get(remainingMethods.get(k)))){
-								ExceptionHelper.reportRuntimeException(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
-										method.getClassNode().getName(), method.getName(), method.getParameters().toString(),
-										remainingMethods.get(k).getParameters().toString()));
-							}
-						}
-					}
-				}
-			}
+			checkForSignatureDuplicates();
 		}
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 		String newTypeInIntrLanguage = 
 				extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
-		
+
 		fTarget.setType(newTypeInIntrLanguage);
 
 		adaptChoices(fTarget);
+	}
+
+	private void checkForSignatureDuplicates() {
+
+		GlobalParameterNode target = (GlobalParameterNode)fTarget;
+		List<MethodNode> linkingMethods = new ArrayList<MethodNode>(target.getMethods());
+		MethodNode testedMethod;
+
+		// Iterate through methods. Methods of same class and name are matched just once and then removed from iteration.
+		for(int i = 0; i < linkingMethods.size();){
+			testedMethod = linkingMethods.get(i);
+			checkOneMethodForSignatureDuplicates(target, testedMethod, linkingMethods);
+		}
+	}
+
+	private void checkOneMethodForSignatureDuplicates(
+			GlobalParameterNode target, 
+			MethodNode testedMethod,
+			List<MethodNode> inOutLinkingMethods) {
+
+		ClassNode classNode = testedMethod.getClassNode();
+		// Map of methods and their parameter lists
+		HashMap<MethodNode, List<String>> methods = new HashMap<>();
+
+		//searching for methods with same name as currently investigated
+		for(MethodNode methodNode: classNode.getMethods()){
+			prepareCollectionsOfMethods(target, methodNode, testedMethod, inOutLinkingMethods, methods);
+		}
+
+		if(methods.size() < 2) {
+			return;
+		}
+
+		checkMethodSignaturesForDuplicates(methods);
+	}
+
+	private void checkMethodSignaturesForDuplicates(HashMap<MethodNode, List<String>> methods) {
+
+		ArrayList<MethodNode> remainingMethods = new ArrayList<MethodNode>(methods.keySet());
+		MethodNode method;
+
+		// match with not yet iterated through methods till duplicate found or there is just 1 method left
+		for(int n = 0; n < remainingMethods.size() -1; n++){
+			method = remainingMethods.get(n);
+			for(int k = n+1; k < remainingMethods.size(); k++){
+				if(methods.get(method).equals(methods.get(remainingMethods.get(k)))){
+					ExceptionHelper.reportRuntimeException(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
+							method.getClassNode().getName(), method.getName(), method.getParameters().toString(),
+							remainingMethods.get(k).getParameters().toString()));
+				}
+			}
+		}
+	}
+
+	private void prepareCollectionsOfMethods(
+			GlobalParameterNode target, 
+			MethodNode methodNode, 
+			MethodNode testedMethod,
+			List<MethodNode> inOutLinkingMethods, 
+			HashMap<MethodNode,	List<String>> inOutMethods) {
+
+		if(methodNode.getName().equals(testedMethod.getName())
+				&& methodNode.getParameters().size() == testedMethod.getParameters().size()){
+			// if method links edited global parameter - replace types before matching
+			if(target.getMethods().contains(methodNode)){
+				List<String> types = methodNode.getParameterTypes();
+				for(AbstractParameterNode parameter: methodNode.getParameters()){
+					MethodParameterNode param = (MethodParameterNode)parameter;
+					if(param.isLinked() && param.getLink().equals(target)){
+						types.set(parameter.getMyIndex(), fNewTypeInExtLanguage);
+					}			
+				}
+				inOutMethods.put(methodNode, types);
+			}
+			// else add parameter list without alterations
+			else {
+				inOutMethods.put(methodNode, methodNode.getParameterTypes());
+			}		
+			// remove from linking parameter list, so no methods are matched twice
+			inOutLinkingMethods.remove(methodNode);	
+		}
 	}
 
 	public void checkType(String newTypeInExtLanguage) {
