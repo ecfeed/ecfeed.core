@@ -34,9 +34,12 @@ public abstract class NWiseAwesomeAlgorithmBase<E> extends AbstractAlgorithm<E> 
 						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) {
 
-		if(N < 1 || N > input.size()){
+		if (input.size() == 0) {
+			GeneratorExceptionHelper.reportException("The method contains no parameters.");
+		} else if(N < 1 || N > input.size()){
 			GeneratorExceptionHelper.reportException("Value of N for this input must be between 1 and " + input.size());
 		}
+		
 		if (fCoverage > 100 || fCoverage < 0) {
 			GeneratorExceptionHelper.reportException("Coverage must be between 1 and 100");
 		}

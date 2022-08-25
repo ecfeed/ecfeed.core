@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ecfeed.core.generators.api.GeneratorExceptionHelper;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.utils.IEcfProgressMonitor;
 
@@ -49,6 +50,10 @@ public class RandomAlgorithm<E> extends AbstractAlgorithm<E> implements IAlgorit
 						   IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) {
 
+		if (input.size() == 0) {
+			GeneratorExceptionHelper.reportException("The method contains no parameters.");
+		} 
+		
 		if(fDuplicates == false){
 			for(List<E> assignment : fHistory)
 				getConstraintEvaluator().excludeAssignment(assignment);

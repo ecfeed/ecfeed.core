@@ -29,6 +29,11 @@ public class CartesianProductAlgorithm<E> extends AbstractAlgorithm<E>{
 			List<List<E>> input,
 			IConstraintEvaluator<E> constraintEvaluator,
 			IEcfProgressMonitor generatorProgressMonitor) {
+		
+		if (input.size() == 0) {
+			GeneratorExceptionHelper.reportException("The method contains no parameters.");
+		} 
+		
 		super.initialize(input, constraintEvaluator, generatorProgressMonitor);
 			int totalProgress = calculateProductSize(input);
 
