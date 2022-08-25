@@ -317,12 +317,12 @@ public class ParameterTransformer {
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		// TODO DE-NO check if all values from conversion definition are compatible with new type
-		
+
 		convertValuesOfChoicesToType(methodParameterNode, parameterConversionDefinition);
 
 		convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
 	}
-	
+
 	private static void verifyConversionOfChoices(
 			MethodParameterNode methodParameterNode, 
 			String newType, 
@@ -334,9 +334,9 @@ public class ParameterTransformer {
 
 			if (!canConvertChoiceValueFromToType(
 					choiceNode.getValueString(), 
-					choiceNode.isRandomizedValue(), 
 					methodParameterNode.getType(), 
-					newType)) {
+					newType, 
+					choiceNode.isRandomizedValue())) {
 
 				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
 			}
@@ -354,19 +354,19 @@ public class ParameterTransformer {
 			convertChoiceValueConditionally(choiceNode, parameterConversionDefinition);
 		}
 	}
-	
+
 	public static void convertChoiceValueConditionally(ChoiceNode choiceNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
-		
+
 		String valueString = choiceNode.getValueString();
-		
+
 		int itemCount = parameterConversionDefinition.getItemCount();
-		
+
 		for (int index = 0; index < itemCount; index++) {
 			ParameterConversionItem parameterConversionItem = parameterConversionDefinition.getCopyOfItem(index);
-			
+
 			String srcString = parameterConversionItem.getSrcPart().getStr();
-			
+
 			if (StringHelper.isEqual(srcString, valueString)) {
 				String dstString = parameterConversionItem.getDstPart().getStr();
 				choiceNode.setValueString(dstString);
@@ -374,9 +374,11 @@ public class ParameterTransformer {
 		}
 	}
 
-	private static boolean canConvertChoiceValueFromToType(
-			String value, boolean isChoiceRandomized, 
-			String oldType, String newType) {
+	public static boolean canConvertChoiceValueFromToType(
+			String value, 
+			String oldType, 
+			String newType, 
+			boolean isChoiceRandomized) {
 
 		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
 
