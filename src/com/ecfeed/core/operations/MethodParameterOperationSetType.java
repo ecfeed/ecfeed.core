@@ -49,6 +49,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 	public MethodParameterOperationSetType(
 			MethodParameterNode targetMethodParameterNode, 
 			String newType, 
+			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager,
 			ITypeAdapterProvider adapterProvider) {
 
@@ -60,10 +61,27 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
 		}
 
-		addOperation(new SetTypeOperation(targetMethodParameterNode, newType, adapterProvider, getExtLanguageManager()));
+		SetTypeOperation setTypeOperation = 
+				new SetTypeOperation(
+						targetMethodParameterNode, 
+						newType, 
+						parameterConversionDefinition, 
+						adapterProvider, 
+						getExtLanguageManager());
+
+		addOperation(setTypeOperation);
 
 		if (targetMethodParameterNode.getMethod() != null) {
-			addOperation(new MethodOperationMakeConsistent(targetMethodParameterNode.getMethod(), getExtLanguageManager()));
+
+			MethodParameterOperationConvertValues methodParameterOperationConvertValues =
+
+					new MethodParameterOperationConvertValues(
+							targetMethodParameterNode, 
+							newType,
+							parameterConversionDefinition,
+							extLanguageManager);
+
+			addOperation(methodParameterOperationConvertValues);
 		}
 	}
 
@@ -73,18 +91,21 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		private Map<AbstractStatement, String> fOriginalStatementValues;
 		private ArrayList<TestCaseNode> fOriginalTestCases;
 		private ArrayList<ConstraintNode> fOriginalConstraints;
+		private ParameterConversionDefinition fParameterConversionDefinition; // TODO DE-NO - is this needed ?
 
 		private MethodParameterNode fMethodParameterNode;
 
 		public SetTypeOperation(
 				MethodParameterNode target, 
 				String newType, 
+				ParameterConversionDefinition parameterConversionDefinition,
 				ITypeAdapterProvider adapterProvider, 
 				IExtLanguageManager extLanguageManager) {
 
 			super(target, newType, adapterProvider, extLanguageManager);
 
 			fMethodParameterNode = target;
+			fParameterConversionDefinition = parameterConversionDefinition;
 			fOriginalStatementValues = new HashMap<>();
 		}
 
@@ -157,7 +178,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			return null;
 		}
 
-		private void adaptDefaultValue() {
+		private void adaptDefaultValue() { 
 
 			String newType = getNewType();
 
@@ -430,7 +451,11 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			public IModelOperation getReverseOperation() {
 
 				return new SetTypeOperation(
-						fMethodParameterNode, getNewType(), getTypeAdapterProvider(), getExtLanguageManager());
+						fMethodParameterNode, 
+						getNewType(), 
+						fParameterConversionDefinition, 
+						getTypeAdapterProvider(), 
+						getExtLanguageManager());
 			}
 
 			private void restoreStatementValues() {
