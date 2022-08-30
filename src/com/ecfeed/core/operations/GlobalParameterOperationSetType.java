@@ -26,7 +26,15 @@ public class GlobalParameterOperationSetType extends BulkOperation {
 
 		super(OperationNames.SET_TYPE, true, target, target, extLanguageManager);
 
-		addOperation(new AbstractParameterOperationSetType(target, newType, adapterProvider, extLanguageManager));
+		AbstractParameterOperationSetType abstractParameterOperationSetType = 
+				new AbstractParameterOperationSetType(
+						target, 
+						newType, 
+						null, // TODO DE-NO 
+						adapterProvider, 
+						extLanguageManager);
+		
+		addOperation(abstractParameterOperationSetType);
 
 		for (MethodNode method : target.getMethods()) {
 			addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));

@@ -38,10 +38,18 @@ public interface ITypeAdapter<T> {
 			return canConvertFromToBoolean(oldType, newType);
 		}
 
-
 		if (isRandomized) {
 			return false; // TODO DE-NO 
 		}
+
+		if (isValueCompatibleWithType(value, isRandomized)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public default boolean isValueCompatibleWithType(String value, boolean isRandomized) {
 
 		String newValue = adapt(value, isRandomized, ERunMode.QUIET, new ExtLanguageManagerForJava());
 

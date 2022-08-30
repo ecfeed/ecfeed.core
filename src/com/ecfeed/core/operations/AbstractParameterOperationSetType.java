@@ -28,59 +28,22 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
-	private AbstractParameterNode fTarget;
+	private AbstractParameterNode fAbstractParameterNode;
+	private ParameterConversionDefinition fParameterConversionDefinition;
 	private String fNewTypeInExtLanguage;
 	private String fCurrentType;
 	private ITypeAdapterProvider fAdapterProvider;
 	private Map<ChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
 	private Map<ChoiceNode, String> fOriginalValues;
 
-	protected class ReverseOperation extends AbstractReverseOperation {
-
-		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(AbstractParameterOperationSetType.this, extLanguageManager);
-		}
-
-		@Override
-		public void execute() {
-
-			setOneNodeToSelect(fTarget);
-
-			restoreOriginalChoices(fTarget);
-			restoreOriginalValues(fTarget);
-
-			fTarget.setType(fCurrentType);
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new AbstractParameterOperationSetType(fTarget, fNewTypeInExtLanguage, fAdapterProvider, getExtLanguageManager());
-		}
-
-		protected void restoreOriginalChoices(ChoicesParentNode parent) {
-			parent.replaceChoices(getOriginalChoices().get(parent));
-			for(ChoiceNode child : getChoices(parent)){
-				restoreOriginalChoices(child);
-			}
-		}
-
-		protected void restoreOriginalValues(ChoicesParentNode parent) {
-			for(ChoiceNode choice : getChoices(parent)){
-				if(getOriginalValues().containsKey(choice)){
-					choice.setValueString(getOriginalValues().get(choice));
-				}
-				restoreOriginalValues(choice);
-			}
-		}
-
-	}
-
 	public AbstractParameterOperationSetType(
-			AbstractParameterNode target, 
+			AbstractParameterNode abstractParameterNode, 
 			String newType, 
+			ParameterConversionDefinition parameterConversionDefinition,
 			ITypeAdapterProvider adapterProvider, 
 			IExtLanguageManager extLanguageManager) {
 
@@ -90,8 +53,9 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			ExceptionHelper.reportRuntimeException("Type adapter is empty.");
 		}
 
-		fTarget = target;
+		fAbstractParameterNode = abstractParameterNode;
 		fNewTypeInExtLanguage = newType;
+		fParameterConversionDefinition = parameterConversionDefinition;
 		fAdapterProvider = adapterProvider;
 		fOriginalChoices = new HashMap<>();
 		fOriginalValues = new HashMap<>();
@@ -104,19 +68,19 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	@Override
 	public void execute() {
 
-		setOneNodeToSelect(fTarget);
+		setOneNodeToSelect(fAbstractParameterNode);
 
-		fCurrentType = fTarget.getType();
+		fCurrentType = fAbstractParameterNode.getType();
 		getOriginalChoices().clear();
 		getOriginalValues().clear();
 
-		saveChoices(fTarget);
-		saveValues(fTarget);
+		saveChoices(fAbstractParameterNode);
+		saveValues(fAbstractParameterNode);
 
 		checkType(fNewTypeInExtLanguage);
 
 		// Check for duplicate signatures possibly caused by global parameter type change
-		if(fTarget instanceof GlobalParameterNode){
+		if(fAbstractParameterNode instanceof GlobalParameterNode){
 			checkForSignatureDuplicates();
 		}
 
@@ -125,14 +89,16 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		String newTypeInIntrLanguage = 
 				extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
 
-		fTarget.setType(newTypeInIntrLanguage);
+		fAbstractParameterNode.setType(newTypeInIntrLanguage);
 
-		adaptChoices(fTarget);
+		if (fParameterConversionDefinition == null) {
+			adaptChoices(fAbstractParameterNode);
+		}
 	}
 
 	private void checkForSignatureDuplicates() {
 
-		GlobalParameterNode target = (GlobalParameterNode)fTarget;
+		GlobalParameterNode target = (GlobalParameterNode)fAbstractParameterNode;
 		List<MethodNode> linkingMethods = new ArrayList<MethodNode>(target.getMethods());
 		MethodNode testedMethod;
 
@@ -318,6 +284,51 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	protected String getNewType(){
 		return fNewTypeInExtLanguage;
+	}
+
+	protected class ReverseOperation extends AbstractReverseOperation {
+
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(AbstractParameterOperationSetType.this, extLanguageManager);
+		}
+
+		@Override
+		public void execute() {
+
+			setOneNodeToSelect(fAbstractParameterNode);
+
+			restoreOriginalChoices(fAbstractParameterNode);
+			restoreOriginalValues(fAbstractParameterNode);
+
+			fAbstractParameterNode.setType(fCurrentType);
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new AbstractParameterOperationSetType(
+					fAbstractParameterNode, 
+					fNewTypeInExtLanguage,
+					fParameterConversionDefinition,
+					fAdapterProvider, 
+					getExtLanguageManager());
+		}
+
+		protected void restoreOriginalChoices(ChoicesParentNode parent) {
+			parent.replaceChoices(getOriginalChoices().get(parent));
+			for(ChoiceNode child : getChoices(parent)){
+				restoreOriginalChoices(child);
+			}
+		}
+
+		protected void restoreOriginalValues(ChoicesParentNode parent) {
+			for(ChoiceNode choice : getChoices(parent)){
+				if(getOriginalValues().containsKey(choice)){
+					choice.setValueString(getOriginalValues().get(choice));
+				}
+				restoreOriginalValues(choice);
+			}
+		}
+
 	}
 
 }

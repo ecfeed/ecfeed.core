@@ -91,7 +91,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 		private Map<AbstractStatement, String> fOriginalStatementValues;
 		private ArrayList<TestCaseNode> fOriginalTestCases;
 		private ArrayList<ConstraintNode> fOriginalConstraints;
-		private ParameterConversionDefinition fParameterConversionDefinition; // TODO DE-NO - is this needed ?
+		private ParameterConversionDefinition fParameterConversionDefinition;
 
 		private MethodParameterNode fMethodParameterNode;
 
@@ -102,7 +102,7 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				ITypeAdapterProvider adapterProvider, 
 				IExtLanguageManager extLanguageManager) {
 
-			super(target, newType, adapterProvider, extLanguageManager);
+			super(target, newType, parameterConversionDefinition, adapterProvider, extLanguageManager);
 
 			fMethodParameterNode = target;
 			fParameterConversionDefinition = parameterConversionDefinition;

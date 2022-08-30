@@ -389,6 +389,20 @@ public class ParameterTransformer {
 		return canConvert;
 	}
 
+	public static boolean isValueCompatibleWithType(
+			String value, 
+			String newType, 
+			boolean isChoiceRandomized) {
+
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+
+		boolean canConvert = typeAdapter.isValueCompatibleWithType(value, isChoiceRandomized);
+
+		return canConvert;
+	}
+
 	private static void addConversionDefinitionItem(
 			ChoiceNode choiceNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
