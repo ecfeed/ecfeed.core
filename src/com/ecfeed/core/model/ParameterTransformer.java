@@ -28,6 +28,7 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForRaw;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ParameterTransformer {
@@ -408,9 +409,7 @@ public class ParameterTransformer {
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		IParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForRaw(
-						IParameterConversionItemPart.ItemPartType.VALUE.getCode(), 
-						choiceNode.getValueString());
+				new ParameterConversionItemPartForValue(choiceNode.getValueString());
 
 		String objectsContainingSrcItem = choiceNode.getName();
 
