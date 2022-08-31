@@ -589,7 +589,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		TypeChangeVerificationVisitor typeChangeVerificationProvider = 
 				new TypeChangeVerificationVisitor(
-						oldType, newType, inOutParameterConversionDefinition);
+						oldType, newType, getName(), inOutParameterConversionDefinition);
 		
 		try {
 			fPrecondition.accept(typeChangeVerificationProvider);

@@ -44,6 +44,5 @@ public class ParameterConversionItemPartForValue extends ParameterConversionItem
 		return clone;
 	}
 
-
 }
 

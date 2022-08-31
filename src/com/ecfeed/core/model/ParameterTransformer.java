@@ -27,7 +27,6 @@ import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
-import com.ecfeed.core.utils.ParameterConversionItemPartForRaw;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -411,12 +410,12 @@ public class ParameterTransformer {
 		IParameterConversionItemPart srcPart = 
 				new ParameterConversionItemPartForValue(choiceNode.getValueString());
 
-		String objectsContainingSrcItem = choiceNode.getName();
+		String objectsContainingSrcItem = choiceNode.getName() + "(choice)";
 
 		ParameterConversionItem parameterConversionItem = 
 				new ParameterConversionItem(srcPart, null, objectsContainingSrcItem);
 
-		inOutParameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItem);
+		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 	}
 
 	private static void verifyConversionOfConstraints(

@@ -23,24 +23,30 @@ public class ParameterConversionDefinition {
 		fParameterConversionItems = new ArrayList<>();
 	}
 
-	public void addItemWithoutDuplicates(ParameterConversionItem parameterConversionItem) {
+	public void addItemWithMergingDescriptions(ParameterConversionItem parameterConversionItem) {
 
-		if (itemExists(parameterConversionItem)) {
+		ParameterConversionItem existingParameterConversionItem = 
+				getItemBySrcAndDst(parameterConversionItem);
+
+		if (existingParameterConversionItem != null) {
+
+			existingParameterConversionItem.mergeDescriptions(parameterConversionItem);
 			return;
 		}
 
 		fParameterConversionItems.add(parameterConversionItem);
 	}
 
-	private boolean itemExists(ParameterConversionItem parameterConversionItem) {
+	private ParameterConversionItem getItemBySrcAndDst(ParameterConversionItem parameterConversionItemToFind) {
 
 		for(ParameterConversionItem currentItem : fParameterConversionItems) {
-			if (isMatch(currentItem, parameterConversionItem)) {
-				return true;
+			if (isMatch(currentItem, parameterConversionItemToFind)) {
+				return currentItem;
 			}
 		}
 
-		return false;
+		return null;
+
 	}
 
 	private boolean isMatch(ParameterConversionItem item1, ParameterConversionItem item2) {
@@ -51,7 +57,7 @@ public class ParameterConversionDefinition {
 		if (!ParameterConversionItemPart.isMatch(srcPart1, srcPart2)) {
 			return false;
 		}
-		
+
 		IParameterConversionItemPart dstPart1 = item1.getDstPart();
 		IParameterConversionItemPart dstPart2 = item2.getDstPart();
 

@@ -20,15 +20,18 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 public class TypeChangeVerificationVisitor implements IStatementVisitor {
 
 	private String fOldType;
+	private String fConstraintName;
 	private ParameterConversionDefinition fInOutParameterConversionDefinition;
 	private ITypeAdapter<?> fNewTypeAdapter;
 
 	public TypeChangeVerificationVisitor(
 			String oldType,
 			String newType,
+			String constraintName,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		fOldType = oldType;
+		fConstraintName = constraintName;
 		fInOutParameterConversionDefinition = inOutParameterConversionDefinition;
 
 		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
@@ -59,7 +62,7 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 	public Object visit(ValueCondition condition) throws Exception {
 
 		String valueString = condition.getRightValue();
-		verifyConversionOfValue(fOldType, valueString, condition.toString());
+		verifyConversionOfValue(fOldType, valueString, fConstraintName + "(constraint)");
 
 		return null;
 	}
@@ -108,7 +111,7 @@ public class TypeChangeVerificationVisitor implements IStatementVisitor {
 					new ParameterConversionItem(
 							srcPart, null, objectsContainingItem);
 
-			fInOutParameterConversionDefinition.addItemWithoutDuplicates(parameterConversionItem);
+			fInOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 		}
 	}
 
