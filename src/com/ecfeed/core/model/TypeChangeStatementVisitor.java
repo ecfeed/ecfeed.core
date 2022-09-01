@@ -14,11 +14,11 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeChangeVisitor implements IStatementVisitor {
+public class TypeChangeStatementVisitor implements IStatementVisitor {
 
 	private ParameterConversionDefinition fParameterConversionDefinition;
 
-	public TypeChangeVisitor(ParameterConversionDefinition inOutParameterConversionDefinition) {
+	public TypeChangeStatementVisitor(ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		fParameterConversionDefinition = inOutParameterConversionDefinition;
 	}

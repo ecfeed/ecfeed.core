@@ -10,14 +10,12 @@
 
 package com.ecfeed.core.operations;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 
@@ -29,8 +27,8 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 	private ParameterConversionDefinition fParameterConversionDefinition;
 	private IExtLanguageManager fExtLanguageManager;
 
-	private List<ConstraintNode> fOriginalConstraints;
-	private List<TestCaseNode> fOriginalTestCases;
+	private Map<Integer, String> fOriginalConstraintValues;
+	//	private Map<Integer, String> fOriginalChoiceValues;  // TODO DE-NO
 
 	public MethodParameterOperationConvertValues(
 			MethodParameterNode methodParameterNode, 
@@ -46,8 +44,8 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 		fExtLanguageManager = extLanguageManager;
 
 		fMethodNode = fMethodParameterNode.getMethod();
-		fOriginalConstraints = new ArrayList<ConstraintNode>(fMethodNode.getConstraintNodes());
-		fOriginalTestCases = new ArrayList<TestCaseNode>(fMethodNode.getTestCases());
+
+		fOriginalConstraintValues = ConstraintHelper.getOriginalConstraintValues(fMethodNode);
 	}
 
 	@Override
@@ -76,8 +74,9 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 		public void execute() {
 
 			setOneNodeToSelect(fMethodNode);
-			fMethodNode.replaceTestCases(fOriginalTestCases);
-			fMethodNode.replaceConstraints(fOriginalConstraints);
+
+			ConstraintHelper.restoreOriginalConstraintValues(fMethodNode, fOriginalConstraintValues);
+
 			markModelUpdated();
 		}
 
@@ -91,6 +90,5 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 		}
 
 	}
-
 
 }

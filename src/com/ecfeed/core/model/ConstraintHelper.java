@@ -11,13 +11,72 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ConstraintHelper {
+
+	public static void verifyConversionOfConstraints(
+			MethodParameterNode methodParameterNode, 
+			String newType,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+		String oldType = methodParameterNode.getType();
+
+		List<Constraint> constraints = methodNode.getConstraints();
+
+		for (Constraint constraint : constraints) {
+
+			constraint.verifyConversionFromToType(oldType, newType, inOutParameterConversionDefinition);
+		}
+	}
+
+	public static void convertValuesOfConstraintsToType(
+			MethodParameterNode methodParameterNode, 
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		MethodNode methodNode = methodParameterNode.getMethod();
+
+		List<Constraint> constraints = methodNode.getConstraints();
+
+		for (Constraint constraint : constraints) {
+
+			constraint.convertValues(parameterConversionDefinition);
+		}
+	}
+	
+	public static Map<Integer, String> getOriginalConstraintValues(MethodNode methodNode) {
+
+		Map<Integer, String> resultValues = new HashMap<>();
+
+		List<Constraint> constraints = methodNode.getConstraints();
+
+		for (Constraint constraint : constraints) {
+
+			constraint.saveValues(resultValues);
+		}
+
+		return resultValues;
+	}
+
+	public static void restoreOriginalConstraintValues(
+			MethodNode methodNode,
+			Map<Integer, String> originalValues) {
+
+		List<Constraint> constraints = methodNode.getConstraints();
+
+		for (Constraint constraint : constraints) {
+
+			constraint.restoreValues(originalValues);
+		}
+	}
 
 	public static String createSignature(Constraint constraint, IExtLanguageManager extLanguageManager) {
 

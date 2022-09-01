@@ -17,14 +17,14 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
-public class TypeChangeVerificationVisitor implements IStatementVisitor {
+public class TypeChangeVerificationStatementVisitor implements IStatementVisitor {
 
 	private String fOldType;
 	private String fConstraintName;
 	private ParameterConversionDefinition fInOutParameterConversionDefinition;
 	private ITypeAdapter<?> fNewTypeAdapter;
 
-	public TypeChangeVerificationVisitor(
+	public TypeChangeVerificationStatementVisitor(
 			String oldType,
 			String newType,
 			String constraintName,

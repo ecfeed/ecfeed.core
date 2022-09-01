@@ -23,15 +23,106 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.Pair;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
+
+
+	public static void verifyConversionOfChoices(
+			MethodParameterNode methodParameterNode, 
+			String newType, 
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			if (!canConvertChoiceValueFromToType(
+					choiceNode.getValueString(), 
+					methodParameterNode.getType(), 
+					newType, 
+					choiceNode.isRandomizedValue())) {
+
+				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
+			}
+		}
+	}
+
+	public static void convertValuesOfChoicesToType(
+			MethodParameterNode methodParameterNode, 
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+
+			convertChoiceValueConditionally(choiceNode, parameterConversionDefinition);
+		}
+	}
+
+	private static void convertChoiceValueConditionally(ChoiceNode choiceNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		String valueString = choiceNode.getValueString();
+
+		int itemCount = parameterConversionDefinition.getItemCount();
+
+		for (int index = 0; index < itemCount; index++) {
+			ParameterConversionItem parameterConversionItem = parameterConversionDefinition.getCopyOfItem(index);
+
+			String srcString = parameterConversionItem.getSrcPart().getStr();
+
+			if (StringHelper.isEqual(srcString, valueString)) {
+				String dstString = parameterConversionItem.getDstPart().getStr();
+				choiceNode.setValueString(dstString);
+			}
+		}
+	}
+
+	private static boolean canConvertChoiceValueFromToType(
+			String value, 
+			String oldType, 
+			String newType, 
+			boolean isChoiceRandomized) {
+
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+
+		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
+
+		return canConvert;
+	}
+
+	private static void addConversionDefinitionItem(
+			ChoiceNode choiceNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		IParameterConversionItemPart srcPart = 
+				new ParameterConversionItemPartForValue(choiceNode.getValueString());
+
+		String objectsContainingSrcItem = choiceNode.getName() + "(choice)";
+
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, null, objectsContainingSrcItem);
+
+		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
+	}
 
 
 	public static void moveChildChoices(ChoiceNode srcChoiceNode, ChoiceNode dstChoiceNode) {

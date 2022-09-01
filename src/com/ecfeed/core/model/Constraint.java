@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -587,10 +588,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		TypeChangeVerificationVisitor typeChangeVerificationProvider = 
-				new TypeChangeVerificationVisitor(
+		TypeChangeVerificationStatementVisitor typeChangeVerificationProvider = 
+				new TypeChangeVerificationStatementVisitor(
 						oldType, newType, getName(), inOutParameterConversionDefinition);
-		
+
 		try {
 			fPrecondition.accept(typeChangeVerificationProvider);
 			fPostcondition.accept(typeChangeVerificationProvider);
@@ -603,9 +604,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public void convertValues(ParameterConversionDefinition parameterConversionDefinition) {
 
-		TypeChangeVisitor typeChangeVerificationProvider = 
-				new TypeChangeVisitor(parameterConversionDefinition);
-		
+		TypeChangeStatementVisitor typeChangeVerificationProvider = 
+				new TypeChangeStatementVisitor(parameterConversionDefinition);
+
 		try {
 			fPrecondition.accept(typeChangeVerificationProvider);
 			fPostcondition.accept(typeChangeVerificationProvider);
@@ -615,7 +616,37 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			ExceptionHelper.reportRuntimeException("Cannot convert value", e);
 		}
 	}
-	
+
+	public void saveValues(Map<Integer, String> inOutValues) {
+
+		SaveValuesStatementVisitor saveValuesStatementVisitor = 
+				new SaveValuesStatementVisitor(inOutValues);
+
+		try {
+			fPrecondition.accept(saveValuesStatementVisitor);
+			fPostcondition.accept(saveValuesStatementVisitor);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot save value", e);
+		}
+	}
+
+	public void restoreValues(Map<Integer, String> originalValues) {
+
+		RestoreValuesStatementVisitor restoreValuesStatementVisitor = 
+				new RestoreValuesStatementVisitor(originalValues);
+
+		try {
+			fPrecondition.accept(restoreValuesStatementVisitor);
+			fPostcondition.accept(restoreValuesStatementVisitor);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot restore value", e);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public Set<ChoiceNode> getReferencedChoices() {
 

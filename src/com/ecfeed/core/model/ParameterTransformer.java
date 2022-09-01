@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
@@ -27,8 +26,6 @@ import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
-import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
-import com.ecfeed.core.utils.StringHelper;
 
 public class ParameterTransformer {
 
@@ -306,9 +303,9 @@ public class ParameterTransformer {
 			MethodParameterNode methodParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
+		ChoiceNodeHelper.verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
 
-		verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
+		ConstraintHelper.verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
 	}
 
 	public static void convertParameterToType(
@@ -316,77 +313,9 @@ public class ParameterTransformer {
 			String typeTo,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
-		// TODO DE-NO check if all values from conversion definition are compatible with new type
+		ChoiceNodeHelper.convertValuesOfChoicesToType(methodParameterNode, parameterConversionDefinition);
 
-		convertValuesOfChoicesToType(methodParameterNode, parameterConversionDefinition);
-
-		convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
-	}
-
-	private static void verifyConversionOfChoices(
-			MethodParameterNode methodParameterNode, 
-			String newType, 
-			ParameterConversionDefinition inOutParameterConversionDefinition) {
-
-		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-
-			if (!canConvertChoiceValueFromToType(
-					choiceNode.getValueString(), 
-					methodParameterNode.getType(), 
-					newType, 
-					choiceNode.isRandomizedValue())) {
-
-				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
-			}
-		}
-	}
-
-	private static void convertValuesOfChoicesToType(
-			MethodParameterNode methodParameterNode, 
-			ParameterConversionDefinition parameterConversionDefinition) {
-
-		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-
-			convertChoiceValueConditionally(choiceNode, parameterConversionDefinition);
-		}
-	}
-
-	public static void convertChoiceValueConditionally(ChoiceNode choiceNode,
-			ParameterConversionDefinition parameterConversionDefinition) {
-
-		String valueString = choiceNode.getValueString();
-
-		int itemCount = parameterConversionDefinition.getItemCount();
-
-		for (int index = 0; index < itemCount; index++) {
-			ParameterConversionItem parameterConversionItem = parameterConversionDefinition.getCopyOfItem(index);
-
-			String srcString = parameterConversionItem.getSrcPart().getStr();
-
-			if (StringHelper.isEqual(srcString, valueString)) {
-				String dstString = parameterConversionItem.getDstPart().getStr();
-				choiceNode.setValueString(dstString);
-			}
-		}
-	}
-
-	public static boolean canConvertChoiceValueFromToType(
-			String value, 
-			String oldType, 
-			String newType, 
-			boolean isChoiceRandomized) {
-
-		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
-
-		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
-
-		boolean canConvert = typeAdapter.canCovertWithoutLossOfData(oldType, value, isChoiceRandomized);
-
-		return canConvert;
+		ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
 	}
 
 	public static boolean isValueCompatibleWithType(
@@ -401,51 +330,6 @@ public class ParameterTransformer {
 		boolean canConvert = typeAdapter.isValueCompatibleWithType(value, isChoiceRandomized);
 
 		return canConvert;
-	}
-
-	private static void addConversionDefinitionItem(
-			ChoiceNode choiceNode,
-			ParameterConversionDefinition inOutParameterConversionDefinition) {
-
-		IParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForValue(choiceNode.getValueString());
-
-		String objectsContainingSrcItem = choiceNode.getName() + "(choice)";
-
-		ParameterConversionItem parameterConversionItem = 
-				new ParameterConversionItem(srcPart, null, objectsContainingSrcItem);
-
-		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
-	}
-
-	private static void verifyConversionOfConstraints(
-			MethodParameterNode methodParameterNode, 
-			String newType,
-			ParameterConversionDefinition inOutParameterConversionDefinition) {
-
-		MethodNode methodNode = methodParameterNode.getMethod();
-		String oldType = methodParameterNode.getType();
-
-		List<Constraint> constraints = methodNode.getConstraints();
-
-		for (Constraint constraint : constraints) {
-
-			constraint.verifyConversionFromToType(oldType, newType, inOutParameterConversionDefinition);
-		}
-	}
-
-	private static void convertValuesOfConstraintsToType(
-			MethodParameterNode methodParameterNode, 
-			ParameterConversionDefinition parameterConversionDefinition) {
-
-		MethodNode methodNode = methodParameterNode.getMethod();
-
-		List<Constraint> constraints = methodNode.getConstraints();
-
-		for (Constraint constraint : constraints) {
-
-			constraint.convertValues(parameterConversionDefinition);
-		}
 	}
 
 }
