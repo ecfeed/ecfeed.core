@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +22,7 @@ import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.GlobalParameterNode;
@@ -33,6 +33,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ParameterCondition;
+import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
@@ -40,7 +41,12 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.ValueCondition;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.LogHelperCore;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class MethodParameterOperationSetType extends BulkOperation {
 
@@ -71,24 +77,25 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 		addOperation(setTypeOperation);
 
-		if (targetMethodParameterNode.getMethod() != null) {
-
-			MethodParameterOperationConvertValues methodParameterOperationConvertValues =
-
-					new MethodParameterOperationConvertValues(
-							targetMethodParameterNode, 
-							newType,
-							parameterConversionDefinition,
-							extLanguageManager);
-
-			addOperation(methodParameterOperationConvertValues);
-		}
+//		if (targetMethodParameterNode.getMethod() != null) {
+//
+//			MethodParameterOperationConvertValues methodParameterOperationConvertValues =
+//
+//					new MethodParameterOperationConvertValues(
+//							targetMethodParameterNode, 
+//							newType,
+//							parameterConversionDefinition,
+//							extLanguageManager);
+//
+//			addOperation(methodParameterOperationConvertValues);
+//		}
 	}
 
 	private class SetTypeOperation extends AbstractParameterOperationSetType{
 
 		private String fOriginalDefaultValue;
-		private Map<AbstractStatement, String> fOriginalStatementValues;
+//		private Map<AbstractStatement, String> fOriginalStatementValues;
+		private Map<Integer, String> fOriginalConstraintValues;
 		private ArrayList<TestCaseNode> fOriginalTestCases;
 		private ArrayList<ConstraintNode> fOriginalConstraints;
 		private ParameterConversionDefinition fParameterConversionDefinition;
@@ -106,7 +113,9 @@ public class MethodParameterOperationSetType extends BulkOperation {
 
 			fMethodParameterNode = target;
 			fParameterConversionDefinition = parameterConversionDefinition;
-			fOriginalStatementValues = new HashMap<>();
+			
+			//fOriginalStatementValues = new HashMap<>();
+			fOriginalConstraintValues = ConstraintHelper.getOriginalConstraintValues(fMethodParameterNode.getMethod());
 		}
 
 		@Override
@@ -124,9 +133,14 @@ public class MethodParameterOperationSetType extends BulkOperation {
 			adaptDefaultValue();
 
 			if (fMethodParameterNode.isExpected()) {
+				
+				// TODO DE-NO - convert instead of adapting
 				adaptTestCases();
 				adaptConstraints();
 			}
+
+			ParameterTransformer.convertChoicesAndConstraintsToType(
+					fMethodParameterNode, getNewType(), fParameterConversionDefinition);		
 
 			markModelUpdated();
 		}
@@ -335,7 +349,8 @@ public class MethodParameterOperationSetType extends BulkOperation {
 								ERunMode.QUIET,
 								getExtLanguageManager());
 
-				fOriginalStatementValues.put(statement, statement.getChoice().getValueString());
+				// TODO DE-NO
+				//				fOriginalStatementValues.put(statement, statement.getChoice().getValueString());
 				statement.getChoice().setValueString(newValue);
 				if (JavaLanguageHelper.isUserType(getNewType())) {
 					success = newValue != null && fMethodParameterNode.getLeafChoiceValues().contains(newValue);
@@ -401,9 +416,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				@Override
 				public Object visit(ExpectedValueStatement statement)
 						throws Exception {
-					if (fOriginalStatementValues.containsKey(statement)) {
-						statement.getChoice().setValueString(fOriginalStatementValues.get(statement));
-					}
+					// TODO DE-NO
+					//					if (fOriginalStatementValues.containsKey(statement)) {
+					//						statement.getChoice().setValueString(fOriginalStatementValues.get(statement));
+					//					}
 					return null;
 				}
 
@@ -444,6 +460,10 @@ public class MethodParameterOperationSetType extends BulkOperation {
 				fMethodParameterNode.getMethod().replaceConstraints(fOriginalConstraints);
 				fMethodParameterNode.setDefaultValueString(fOriginalDefaultValue);
 				restoreStatementValues();
+				
+				ConstraintHelper.restoreOriginalConstraintValues(
+						fMethodParameterNode.getMethod(), fOriginalConstraintValues);
+				
 				markModelUpdated();
 			}
 

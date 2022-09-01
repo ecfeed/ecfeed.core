@@ -308,7 +308,7 @@ public class ParameterTransformer {
 		ConstraintHelper.verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
 	}
 
-	public static void convertParameterToType(
+	public static void convertChoicesAndConstraintsToType(
 			MethodParameterNode methodParameterNode,
 			String typeTo,
 			ParameterConversionDefinition parameterConversionDefinition) {

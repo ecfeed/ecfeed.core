@@ -19,7 +19,7 @@ import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 
-public class MethodParameterOperationConvertValues extends AbstractModelOperation {
+public class MethodParameterOperationConvertValues extends AbstractModelOperation { // TODO DE-NO delete ??
 
 	private MethodNode fMethodNode;
 	private MethodParameterNode fMethodParameterNode;
@@ -36,7 +36,7 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.MAKE_CONSISTENT, extLanguageManager);
+		super(OperationNames.CONVERT_VALUES, extLanguageManager);
 
 		fMethodParameterNode = methodParameterNode;
 		fNewType = newType;
@@ -53,7 +53,7 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 
 		setOneNodeToSelect(fMethodNode);
 
-		ParameterTransformer.convertParameterToType(
+		ParameterTransformer.convertChoicesAndConstraintsToType(
 				fMethodParameterNode, fNewType, fParameterConversionDefinition);		
 
 		markModelUpdated();
