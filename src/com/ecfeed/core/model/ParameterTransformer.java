@@ -25,7 +25,9 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class ParameterTransformer {
 
@@ -303,9 +305,26 @@ public class ParameterTransformer {
 			MethodParameterNode methodParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
+		if (methodParameterNode.isExpected()) {
+			addDefaultValueToConversionDefinition(
+					methodParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
+		}
+		
 		ChoiceNodeHelper.verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
 
 		ConstraintHelper.verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
+	}
+
+	private static void addDefaultValueToConversionDefinition(
+			String defaultValue,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+		
+		ParameterConversionItemPart srcPart = new ParameterConversionItemPartForValue(defaultValue);
+		
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, null, "default value");
+		
+		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 	}
 
 	public static void convertChoicesAndConstraintsToType(
