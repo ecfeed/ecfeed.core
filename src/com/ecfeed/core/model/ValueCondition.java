@@ -95,6 +95,10 @@ public class ValueCondition implements IStatementCondition {
 		return false;
 	}
 
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
+	
 	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);

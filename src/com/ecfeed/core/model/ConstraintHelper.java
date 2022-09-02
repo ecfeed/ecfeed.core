@@ -34,7 +34,8 @@ public class ConstraintHelper {
 
 		for (Constraint constraint : constraints) {
 
-			constraint.verifyConversionFromToType(oldType, newType, inOutParameterConversionDefinition);
+			constraint.verifyConversionOfParameterFromToType(
+					methodParameterNode, oldType, newType, inOutParameterConversionDefinition);
 		}
 	}
 
@@ -48,7 +49,7 @@ public class ConstraintHelper {
 
 		for (Constraint constraint : constraints) {
 
-			constraint.convertValues(parameterConversionDefinition);
+			constraint.convertValues(methodParameterNode, parameterConversionDefinition);
 		}
 	}
 	

@@ -583,14 +583,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
-	public void verifyConversionFromToType(
+	public void verifyConversionOfParameterFromToType(
+			MethodParameterNode methodParameterNode,
 			String oldType,
 			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		TypeChangeVerificationStatementVisitor typeChangeVerificationProvider = 
 				new TypeChangeVerificationStatementVisitor(
-						oldType, newType, getName(), inOutParameterConversionDefinition);
+						methodParameterNode, oldType, newType, getName(), inOutParameterConversionDefinition);
 
 		try {
 			fPrecondition.accept(typeChangeVerificationProvider);
@@ -602,10 +603,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	public void convertValues(ParameterConversionDefinition parameterConversionDefinition) {
+	public void convertValues(
+			MethodParameterNode methodParameterNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
 
 		TypeChangeStatementVisitor typeChangeVerificationProvider = 
-				new TypeChangeStatementVisitor(parameterConversionDefinition);
+				new TypeChangeStatementVisitor(methodParameterNode, parameterConversionDefinition);
 
 		try {
 			fPrecondition.accept(typeChangeVerificationProvider);
@@ -798,7 +801,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		public Object visit(ExpectedValueStatement statement) throws Exception {
 
 			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
-			set.add(statement.getLeftParameter());
+			set.add(statement.getLeftMethodParameterNode());
 
 			return set;
 		}

@@ -16,16 +16,26 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class TypeChangeStatementVisitor implements IStatementVisitor {
 
+	private MethodParameterNode fMethodParameterNode;
 	private ParameterConversionDefinition fParameterConversionDefinition;
+	
+	public TypeChangeStatementVisitor(
+			MethodParameterNode methodParameterNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-	public TypeChangeStatementVisitor(ParameterConversionDefinition inOutParameterConversionDefinition) {
-
+		fMethodParameterNode = methodParameterNode;
 		fParameterConversionDefinition = inOutParameterConversionDefinition;
 	}
 
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
+		
+		MethodParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
 
+		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
+			return null;
+		}
+		
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
@@ -56,7 +66,15 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 
 	@Override
 	public Object visit(ValueCondition condition) throws Exception {
-
+		
+		RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+		
+		MethodParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
+		
+		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
+			return null;
+		}
+		
 		String valueString = condition.getRightValue();
 
 		int itemCount = fParameterConversionDefinition.getItemCount();

@@ -19,17 +19,20 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class TypeChangeVerificationStatementVisitor implements IStatementVisitor {
 
+	private MethodParameterNode fMethodParameterNode;
 	private String fOldType;
 	private String fConstraintName;
 	private ParameterConversionDefinition fInOutParameterConversionDefinition;
 	private ITypeAdapter<?> fNewTypeAdapter;
 
 	public TypeChangeVerificationStatementVisitor(
+			MethodParameterNode methodParameterNode,
 			String oldType,
 			String newType,
 			String constraintName,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
+		fMethodParameterNode = methodParameterNode;
 		fOldType = oldType;
 		fConstraintName = constraintName;
 		fInOutParameterConversionDefinition = inOutParameterConversionDefinition;
@@ -40,7 +43,13 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
+		
+		MethodParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
 
+		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
+			return null;
+		}
+		
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
@@ -61,6 +70,14 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 	@Override
 	public Object visit(ValueCondition condition) throws Exception {
 
+		RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+		
+		MethodParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
+		
+		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
+			return null;
+		}
+		
 		String valueString = condition.getRightValue();
 		verifyConversionOfValue(fOldType, valueString, fConstraintName + "(constraint)");
 
