@@ -50,17 +50,29 @@ public abstract class TypeAdapterForFloatingPoint<T extends Number> extends Type
 
 	private boolean isMatchForFloatingPointStrings(String value, String newValue) {
 
-		Double parsedValue = Double.parseDouble(value);
-		Double parsedNewValue = Double.parseDouble(newValue);
-
-		String formattedValueStr = parsedValue.toString();
-		String formattedNewValueStr = parsedNewValue.toString();
+		String formattedValueStr = formatValueStringForMatching(value);
+		String formattedNewValueStr = formatValueStringForMatching(newValue);
 
 		if (StringHelper.isEqual(formattedValueStr, formattedNewValueStr)) {
 			return true;
 		}
 
 		return false;
+	}
+
+	String formatValueStringForMatching(String valueString) {
+
+		if (isSymbolicValue(valueString)) {
+			return valueString;
+		}
+
+		try {
+			Double number = Double.parseDouble(valueString);
+			return number.toString();
+
+		} catch (NumberFormatException e) {
+			return valueString;
+		}
 	}
 
 	@Override
