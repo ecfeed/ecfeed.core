@@ -34,6 +34,37 @@ public class TypeAdapterForFloat extends TypeAdapterForFloatingPoint<Float>{
 		return result;
 	}
 
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatible(value);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		if (!isSingleValueCompatible(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatible(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatible(String value) {
+
+		try {
+			Float.parseFloat(value);
+			return true;
+
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
 	public String convert2(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {
 
 		if (isSymbolicValue(value)) {

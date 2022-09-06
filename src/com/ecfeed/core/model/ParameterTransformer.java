@@ -309,7 +309,7 @@ public class ParameterTransformer {
 			addDefaultValueToConversionDefinition(
 					methodParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
 		}
-		
+
 		ChoiceNodeHelper.verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
 
 		ConstraintHelper.verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
@@ -318,12 +318,12 @@ public class ParameterTransformer {
 	private static void addDefaultValueToConversionDefinition(
 			String defaultValue,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
-		
+
 		ParameterConversionItemPart srcPart = new ParameterConversionItemPartForValue(defaultValue);
-		
+
 		ParameterConversionItem parameterConversionItem = 
 				new ParameterConversionItem(srcPart, null, "default value");
-		
+
 		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 	}
 
