@@ -192,7 +192,7 @@ public class ModelStringifier {
 	public String stringify(ExpectedValueStatement s, int indent){
 		String result = intendentString(indent);
 		result += "Expected value statement ";
-		result += s.getLeftParameter().getName() + "[" + s.getLeftParameter().getType() + "] " + s.getRelation() + " " + s.getChoice().getValueString();
+		result += s.getLeftMethodParameterNode().getName() + "[" + s.getLeftMethodParameterNode().getType() + "] " + s.getRelation() + " " + s.getChoice().getValueString();
 		return result;
 	}
 
