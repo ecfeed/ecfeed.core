@@ -10,16 +10,28 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 public class ParameterConversionItem {
 
 	private IParameterConversionItemPart fSrcPart;
 	private IParameterConversionItemPart fDstPart;
-	String fNodesContainingSrcItem;
+	List<String> fDescription;
 
 	public ParameterConversionItem(
 			IParameterConversionItemPart srcPart, 
 			IParameterConversionItemPart dstPart,
-			String constraintsContainingSrcItem) {
+			String objectContainingSrcItem) {
+
+		this(srcPart, dstPart, createListFromString(objectContainingSrcItem));
+	}
+
+	public ParameterConversionItem(
+			IParameterConversionItemPart srcPart, 
+			IParameterConversionItemPart dstPart,
+			List<String> objectsContainingSrcItem) {
 
 		if (srcPart == null) {
 			ExceptionHelper.reportRuntimeException("Invalid conversion item. Src part should not be empty.");
@@ -28,13 +40,19 @@ public class ParameterConversionItem {
 		fSrcPart = srcPart;
 		fDstPart = dstPart;
 
-		fNodesContainingSrcItem = constraintsContainingSrcItem;
+		fDescription = new ArrayList<>(objectsContainingSrcItem);
 	}
 
 	@Override
 	public String toString() {
 
-		return "(" + fSrcPart.toString() + " -> " + fDstPart.toString() + ")";
+		String dstPartDescription = "EMPTY";
+
+		if (fDstPart != null) {
+			dstPartDescription = fDstPart.toString();
+		}
+
+		return "(" + fSrcPart.toString() + " -> " + dstPartDescription + ")";
 	}
 
 	public IParameterConversionItemPart getSrcPart() {
@@ -46,35 +64,66 @@ public class ParameterConversionItem {
 	}
 
 	public String getConstraintsContainingSrcItem() {
-		return fNodesContainingSrcItem;
+
+		String result = "";
+		boolean isFirst = true;
+
+		for (String objectContainingSrcItem : fDescription) {
+
+			if (!isFirst) {
+				result += ", ";
+			}
+
+			result += objectContainingSrcItem;
+			isFirst = false;
+		}
+
+		return result;
 	}
 
 	public boolean isMatch(ParameterConversionItem otherItem) {
 
-		if (!fSrcPart.isMatch(otherItem.fSrcPart)) {
+		if (!ParameterConversionItemPart.isMatch(fSrcPart, otherItem.fSrcPart)) {
 			return false;
 		}
 
-		if (!fDstPart.isMatch(otherItem.fDstPart)) {
+		if (!ParameterConversionItemPart.isMatch(fDstPart, otherItem.fDstPart)) {
 			return false;
 		}
 
 		return true;
 	}
 
+	public void mergeDescriptions(ParameterConversionItem otherParameterConversionItem) {
+
+		fDescription.addAll(otherParameterConversionItem.fDescription);
+		removeDuplicates();
+	}
+
 	public ParameterConversionItem makeClone() {
 
 		IParameterConversionItemPart srcPart = fSrcPart.makeClone();
-		
+
 		IParameterConversionItemPart dstPart = null;
-		
+
 		if (fDstPart != null) {
 			dstPart = fDstPart.makeClone();
 		}
 
-		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fNodesContainingSrcItem);
+		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fDescription);
 
 		return clone;
+	}
+
+	private static List<String> createListFromString(String objectContainingSrcItem) {
+		List<String> tmp = new ArrayList<>();
+		tmp.add(objectContainingSrcItem);
+		return tmp;
+	}
+
+	private void removeDuplicates() {
+		HashSet<String>set = new HashSet<>(fDescription);
+		fDescription = new ArrayList<>(set);
 	}
 
 }

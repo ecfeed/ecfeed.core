@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
+public class TypeAdapterForFloat extends TypeAdapterForFloatingPoint<Float>{
 
 	@Override
 	public String getMyTypeName() {
@@ -32,6 +32,37 @@ public class TypeAdapterForFloat extends TypeAdapterFloatingPoint<Float>{
 		result = extLanguageManager.formatNumber(result);
 
 		return result;
+	}
+
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatible(value);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		if (!isSingleValueCompatible(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatible(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatible(String value) {
+
+		try {
+			Float.parseFloat(value);
+			return true;
+
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	public String convert2(String value, ERunMode runMode, IExtLanguageManager extLanguageManager) {

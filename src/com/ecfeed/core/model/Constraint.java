@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -24,8 +25,9 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class Constraint implements IConstraint<ChoiceNode> {
 
@@ -433,13 +435,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fPostcondition.convert(parameterConversionItem);
 	}
 
-//	public void updateParameterReferences(
-//			MethodParameterNode oldMethodParameterNode,
-//			ChoicesParentNode dstParameterForChoices) {
-//
-//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
-//	}
+	//	public void updateParameterReferences(
+	//			MethodParameterNode oldMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
+	//
+	//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+	//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
+	//	}
 
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
@@ -540,7 +542,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return result;
 	}
-	
+
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();
@@ -550,7 +552,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		return result;
 	}
-	
+
 	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
 
 		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {
@@ -579,6 +581,73 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		AbstractStatement postcondition = fPostcondition.makeClone();
 
 		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+
+	public void verifyConversionOfParameterFromToType(
+			MethodParameterNode methodParameterNode,
+			String oldType,
+			String newType,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		TypeChangeVerificationStatementVisitor typeChangeVerificationProvider = 
+				new TypeChangeVerificationStatementVisitor(
+						methodParameterNode, oldType, newType, getName(), inOutParameterConversionDefinition);
+
+		try {
+			fPrecondition.accept(typeChangeVerificationProvider);
+			fPostcondition.accept(typeChangeVerificationProvider);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot convert value", e);
+		}
+	}
+
+	public void convertValues(
+			MethodParameterNode methodParameterNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		TypeChangeStatementVisitor typeChangeVerificationProvider = 
+				new TypeChangeStatementVisitor(methodParameterNode, parameterConversionDefinition);
+
+		try {
+			fPrecondition.accept(typeChangeVerificationProvider);
+			fPostcondition.accept(typeChangeVerificationProvider);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot convert value", e);
+		}
+	}
+
+	public void saveValues(Map<Integer, String> inOutValues) {
+
+		SaveValuesStatementVisitor saveValuesStatementVisitor = 
+				new SaveValuesStatementVisitor(inOutValues);
+
+		try {
+			fPrecondition.accept(saveValuesStatementVisitor);
+			fPostcondition.accept(saveValuesStatementVisitor);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot save value", e);
+		}
+	}
+
+	public void restoreValues(Map<Integer, String> originalValues) {
+
+		RestoreValuesStatementVisitor restoreValuesStatementVisitor = 
+				new RestoreValuesStatementVisitor(originalValues);
+
+		try {
+			fPrecondition.accept(restoreValuesStatementVisitor);
+			fPostcondition.accept(restoreValuesStatementVisitor);
+
+		} catch (Exception e) {
+
+			ExceptionHelper.reportRuntimeException("Cannot restore value", e);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -667,7 +736,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			Set<ChoiceNode> result = new HashSet<>();
 
 			if (statement.isParameterPrimitive()) {
-				result.add(statement.getCondition());
+				result.add(statement.getChoice());
 			}
 
 			return result;
@@ -732,7 +801,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		public Object visit(ExpectedValueStatement statement) throws Exception {
 
 			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
-			set.add(statement.getParameter());
+			set.add(statement.getLeftMethodParameterNode());
 
 			return set;
 		}
@@ -778,7 +847,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 			return new HashSet<MethodParameterNode>();
 		}
 	}
-
 
 	private class ReferencedLabelsProvider implements IStatementVisitor {
 

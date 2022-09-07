@@ -28,59 +28,22 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
-	private AbstractParameterNode fTarget;
+	private AbstractParameterNode fAbstractParameterNode;
+	private ParameterConversionDefinition fParameterConversionDefinition;
 	private String fNewTypeInExtLanguage;
 	private String fCurrentType;
 	private ITypeAdapterProvider fAdapterProvider;
 	private Map<ChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
 	private Map<ChoiceNode, String> fOriginalValues;
 
-	protected class ReverseOperation extends AbstractReverseOperation {
-
-		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(AbstractParameterOperationSetType.this, extLanguageManager);
-		}
-
-		@Override
-		public void execute() {
-
-			setOneNodeToSelect(fTarget);
-
-			restoreOriginalChoices(fTarget);
-			restoreOriginalValues(fTarget);
-
-			fTarget.setType(fCurrentType);
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new AbstractParameterOperationSetType(fTarget, fNewTypeInExtLanguage, fAdapterProvider, getExtLanguageManager());
-		}
-
-		protected void restoreOriginalChoices(ChoicesParentNode parent) {
-			parent.replaceChoices(getOriginalChoices().get(parent));
-			for(ChoiceNode child : getChoices(parent)){
-				restoreOriginalChoices(child);
-			}
-		}
-
-		protected void restoreOriginalValues(ChoicesParentNode parent) {
-			for(ChoiceNode choice : getChoices(parent)){
-				if(getOriginalValues().containsKey(choice)){
-					choice.setValueString(getOriginalValues().get(choice));
-				}
-				restoreOriginalValues(choice);
-			}
-		}
-
-	}
-
 	public AbstractParameterOperationSetType(
-			AbstractParameterNode target, 
+			AbstractParameterNode abstractParameterNode, 
 			String newType, 
+			ParameterConversionDefinition parameterConversionDefinition,
 			ITypeAdapterProvider adapterProvider, 
 			IExtLanguageManager extLanguageManager) {
 
@@ -90,8 +53,9 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			ExceptionHelper.reportRuntimeException("Type adapter is empty.");
 		}
 
-		fTarget = target;
+		fAbstractParameterNode = abstractParameterNode;
 		fNewTypeInExtLanguage = newType;
+		fParameterConversionDefinition = parameterConversionDefinition;
 		fAdapterProvider = adapterProvider;
 		fOriginalChoices = new HashMap<>();
 		fOriginalValues = new HashMap<>();
@@ -104,80 +68,113 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	@Override
 	public void execute() {
 
-		setOneNodeToSelect(fTarget);
+		setOneNodeToSelect(fAbstractParameterNode);
 
-		fCurrentType = fTarget.getType();
+		fCurrentType = fAbstractParameterNode.getType();
 		getOriginalChoices().clear();
 		getOriginalValues().clear();
 
-		saveChoices(fTarget);
-		saveValues(fTarget);
+		saveChoices(fAbstractParameterNode);
+		saveValues(fAbstractParameterNode);
 
 		checkType(fNewTypeInExtLanguage);
 
 		// Check for duplicate signatures possibly caused by global parameter type change
-		if(fTarget instanceof GlobalParameterNode){
-			GlobalParameterNode target = (GlobalParameterNode)fTarget;
-			List<MethodNode> linkingMethods = new ArrayList<MethodNode>(target.getMethods());
-			MethodNode testedMethod;
-			// Iterate through methods. Methods of same class and name are matched just once and then removed from iteration.
-			for(int i = 0; i < linkingMethods.size();){
-				testedMethod = linkingMethods.get(i);
-				ClassNode classNode = testedMethod.getClassNode();
-				// Map of methods and their parameter lists
-				HashMap<MethodNode, List<String>> methods = new HashMap<>();
-				//searching for methods with same name as currently investigated
-				for(MethodNode methodNode: classNode.getMethods()){
-					if(methodNode.getName().equals(testedMethod.getName())
-							&& methodNode.getParameters().size() == testedMethod.getParameters().size()){
-						// if method links edited global parameter - replace types before matching
-						if(target.getMethods().contains(methodNode)){
-							List<String> types = methodNode.getParameterTypes();
-							for(AbstractParameterNode parameter: methodNode.getParameters()){
-								MethodParameterNode param = (MethodParameterNode)parameter;
-								if(param.isLinked() && param.getLink().equals(target)){
-									types.set(parameter.getMyIndex(), fNewTypeInExtLanguage);
-								}			
-							}
-							methods.put(methodNode, types);
-						}
-						// else add parameter list without alterations
-						else {
-							methods.put(methodNode, methodNode.getParameterTypes());
-						}		
-						// remove from linking parameter list, so no methods are matched twice
-						linkingMethods.remove(methodNode);	
-					}
-				}
-				// if less than 2 methods of same name found - skip matching
-				if(methods.size() < 2) continue;
-				// else match all found methods with each other
-				else{
-					ArrayList<MethodNode> remainingMethods = new ArrayList<MethodNode>(methods.keySet());
-					MethodNode method;
-					// match with not yet iterated through methods till duplicate found or there is just 1 method left
-					for(int n = 0; n < remainingMethods.size() -1; n++){
-						method = remainingMethods.get(n);
-						for(int k = n+1; k < remainingMethods.size(); k++){
-							if(methods.get(method).equals(methods.get(remainingMethods.get(k)))){
-								ExceptionHelper.reportRuntimeException(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
-										method.getClassNode().getName(), method.getName(), method.getParameters().toString(),
-										remainingMethods.get(k).getParameters().toString()));
-							}
-						}
-					}
-				}
-			}
+		if(fAbstractParameterNode instanceof GlobalParameterNode){
+			checkForSignatureDuplicates();
 		}
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 		String newTypeInIntrLanguage = 
 				extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
-		
-		fTarget.setType(newTypeInIntrLanguage);
 
-		adaptChoices(fTarget);
+		fAbstractParameterNode.setType(newTypeInIntrLanguage);
+
+		if (fParameterConversionDefinition == null) {
+			adaptChoices(fAbstractParameterNode);
+		}
+	}
+
+	private void checkForSignatureDuplicates() {
+
+		GlobalParameterNode target = (GlobalParameterNode)fAbstractParameterNode;
+		List<MethodNode> linkingMethods = new ArrayList<MethodNode>(target.getMethods());
+		MethodNode testedMethod;
+
+		// Iterate through methods. Methods of same class and name are matched just once and then removed from iteration.
+		for(int i = 0; i < linkingMethods.size();){
+			testedMethod = linkingMethods.get(i);
+			checkOneMethodForSignatureDuplicates(target, testedMethod, linkingMethods);
+		}
+	}
+
+	private void checkOneMethodForSignatureDuplicates(
+			GlobalParameterNode target, 
+			MethodNode testedMethod,
+			List<MethodNode> inOutLinkingMethods) {
+
+		ClassNode classNode = testedMethod.getClassNode();
+		// Map of methods and their parameter lists
+		HashMap<MethodNode, List<String>> methods = new HashMap<>();
+
+		//searching for methods with same name as currently investigated
+		for(MethodNode methodNode: classNode.getMethods()){
+			prepareCollectionsOfMethods(target, methodNode, testedMethod, inOutLinkingMethods, methods);
+		}
+
+		if(methods.size() < 2) {
+			return;
+		}
+
+		checkMethodSignaturesForDuplicates(methods);
+	}
+
+	private void checkMethodSignaturesForDuplicates(HashMap<MethodNode, List<String>> methods) {
+
+		ArrayList<MethodNode> remainingMethods = new ArrayList<MethodNode>(methods.keySet());
+		MethodNode method;
+
+		// match with not yet iterated through methods till duplicate found or there is just 1 method left
+		for(int n = 0; n < remainingMethods.size() -1; n++){
+			method = remainingMethods.get(n);
+			for(int k = n+1; k < remainingMethods.size(); k++){
+				if(methods.get(method).equals(methods.get(remainingMethods.get(k)))){
+					ExceptionHelper.reportRuntimeException(METHOD_GLOBAL_PARAMETER_SIGNATURE_DUPLICATE_PROBLEM(
+							method.getClassNode().getName(), method.getName(), method.getParameters().toString(),
+							remainingMethods.get(k).getParameters().toString()));
+				}
+			}
+		}
+	}
+
+	private void prepareCollectionsOfMethods(
+			GlobalParameterNode target, 
+			MethodNode methodNode, 
+			MethodNode testedMethod,
+			List<MethodNode> inOutLinkingMethods, 
+			HashMap<MethodNode,	List<String>> inOutMethods) {
+
+		if(methodNode.getName().equals(testedMethod.getName())
+				&& methodNode.getParameters().size() == testedMethod.getParameters().size()){
+			// if method links edited global parameter - replace types before matching
+			if(target.getMethods().contains(methodNode)){
+				List<String> types = methodNode.getParameterTypes();
+				for(AbstractParameterNode parameter: methodNode.getParameters()){
+					MethodParameterNode param = (MethodParameterNode)parameter;
+					if(param.isLinked() && param.getLink().equals(target)){
+						types.set(parameter.getMyIndex(), fNewTypeInExtLanguage);
+					}			
+				}
+				inOutMethods.put(methodNode, types);
+			}
+			// else add parameter list without alterations
+			else {
+				inOutMethods.put(methodNode, methodNode.getParameterTypes());
+			}		
+			// remove from linking parameter list, so no methods are matched twice
+			inOutLinkingMethods.remove(methodNode);	
+		}
 	}
 
 	public void checkType(String newTypeInExtLanguage) {
@@ -287,6 +284,51 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	protected String getNewType(){
 		return fNewTypeInExtLanguage;
+	}
+
+	protected class ReverseOperation extends AbstractReverseOperation {
+
+		public ReverseOperation(IExtLanguageManager extLanguageManager) {
+			super(AbstractParameterOperationSetType.this, extLanguageManager);
+		}
+
+		@Override
+		public void execute() {
+
+			setOneNodeToSelect(fAbstractParameterNode);
+
+			restoreOriginalChoices(fAbstractParameterNode);
+			restoreOriginalValues(fAbstractParameterNode);
+
+			fAbstractParameterNode.setType(fCurrentType);
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new AbstractParameterOperationSetType(
+					fAbstractParameterNode, 
+					fNewTypeInExtLanguage,
+					fParameterConversionDefinition,
+					fAdapterProvider, 
+					getExtLanguageManager());
+		}
+
+		protected void restoreOriginalChoices(ChoicesParentNode parent) {
+			parent.replaceChoices(getOriginalChoices().get(parent));
+			for(ChoiceNode child : getChoices(parent)){
+				restoreOriginalChoices(child);
+			}
+		}
+
+		protected void restoreOriginalValues(ChoicesParentNode parent) {
+			for(ChoiceNode choice : getChoices(parent)){
+				if(getOriginalValues().containsKey(choice)){
+					choice.setValueString(getOriginalValues().get(choice));
+				}
+				restoreOriginalValues(choice);
+			}
+		}
+
 	}
 
 }

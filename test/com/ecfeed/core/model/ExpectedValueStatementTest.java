@@ -82,9 +82,9 @@ public class ExpectedValueStatementTest{
 		c2.setName("c1");
 		assertTrue(s1.isEqualTo(s2));
 
-		s1.getCondition().setValueString("v1");
+		s1.getChoice().setValueString("v1");
 		assertFalse(s1.isEqualTo(s2));
-		s2.getCondition().setValueString("v1");
+		s2.getChoice().setValueString("v1");
 		assertTrue(s1.isEqualTo(s2));
 
 	}
