@@ -27,7 +27,9 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
@@ -76,6 +78,7 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 		private ParameterConversionDefinition fParameterConversionDefinition;
 
 		private MethodParameterNode fMethodParameterNode;
+		private String fNewType;
 
 		public SetTypeOperation(
 				MethodParameterNode target, 
@@ -87,10 +90,10 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 			super(target, newType, parameterConversionDefinition, adapterProvider, extLanguageManager);
 
 			fMethodParameterNode = target;
+			fNewType = newType;
 			fParameterConversionDefinition = parameterConversionDefinition;
 
 			fOriginalDefaultValue = fMethodParameterNode.getDefaultValue();
-			//fOriginalStatementValues = new HashMap<>();
 			fOriginalConstraintValues = ConstraintHelper.getOriginalConstraintValues(fMethodParameterNode.getMethod());
 		}
 
@@ -106,7 +109,7 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 			fOriginalTestCases = new ArrayList<>(methodNode.getTestCases());
 			fOriginalConstraints = new ArrayList<>(methodNode.getConstraintNodes());
 
-			convertDefaultValue(fMethodParameterNode, fParameterConversionDefinition);
+			convertDefaultValue(fMethodParameterNode, fNewType, fParameterConversionDefinition, getExtLanguageManager());
 
 			//			if (fMethodParameterNode.isExpected()) {
 			//
@@ -170,10 +173,26 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 		private void convertDefaultValue(
 				MethodParameterNode methodParameterNode,
-				ParameterConversionDefinition parameterConversionDefinition) {
+				String newType,
+				ParameterConversionDefinition parameterConversionDefinition,
+				IExtLanguageManager extLanguageManager) {
 
 			String currentDefaultValue = methodParameterNode.getDefaultValue();
 
+			if (parameterConversionDefinition == null) {
+				setAdaptedValueAsDefault(methodParameterNode, newType, extLanguageManager, currentDefaultValue);
+				return;
+			}
+
+			convertDefaultValueUsingConversionDefinition(
+					methodParameterNode, parameterConversionDefinition,	currentDefaultValue);
+		}
+
+		private void convertDefaultValueUsingConversionDefinition(
+				MethodParameterNode methodParameterNode,
+				ParameterConversionDefinition parameterConversionDefinition, 
+				String currentDefaultValue) {
+			
 			int itemCount = parameterConversionDefinition.getItemCount();
 
 			for (int index = 0; index < itemCount; index++) {
@@ -192,6 +211,16 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 				}
 
 			}
+		}
+
+		private void setAdaptedValueAsDefault(MethodParameterNode methodParameterNode, String newType,
+				IExtLanguageManager extLanguageManager, String currentDefaultValue) {
+			ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(newType);
+
+			String newDefaultValue = 
+					adapter.adapt(currentDefaultValue, false, ERunMode.QUIET, extLanguageManager);
+
+			methodParameterNode.setDefaultValueString(newDefaultValue);
 		}
 
 		//		private void adaptDefaultValue() { 
