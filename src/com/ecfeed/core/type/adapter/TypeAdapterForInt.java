@@ -86,4 +86,45 @@ public class TypeAdapterForInt extends TypeAdapterForNonFloatingPoint<Integer> {
 		return false;
 	}
 
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatibleWithType(value);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		if (!isSingleValueCompatibleWithType(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatibleWithType(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatibleWithType(String value) {
+
+		try {
+			Integer.parseInt(value);
+			return true;
+
+		} catch (NumberFormatException e) {
+		}
+		
+		value = StringHelper.removeFromPostfix(".0", value);
+		
+		try {
+			Integer.parseInt(value);
+			return true;
+
+		} catch (NumberFormatException e) {
+			return false;
+		}
+		
+	}
+	
 }

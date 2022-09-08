@@ -38,23 +38,23 @@ public class TypeAdapterForFloat extends TypeAdapterForFloatingPoint<Float>{
 	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
 
 		if (!isRandomized) {
-			return isSingleValueCompatible(value);
+			return isSingleValueCompatibleWithType(value);
 		}
 
 		String[] range = RangeHelper.splitToRange(value);
 
-		if (!isSingleValueCompatible(range[0])) {
+		if (!isSingleValueCompatibleWithType(range[0])) {
 			return false;
 		}
 
-		if (!isSingleValueCompatible(range[1])) {
+		if (!isSingleValueCompatibleWithType(range[1])) {
 			return false;
 		}
 
 		return true;
 	}
 
-	private boolean isSingleValueCompatible(String value) {
+	private boolean isSingleValueCompatibleWithType(String value) {
 
 		try {
 			Float.parseFloat(value);

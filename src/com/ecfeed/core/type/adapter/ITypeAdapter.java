@@ -49,7 +49,7 @@ public interface ITypeAdapter<T> {
 		return false;
 	}
 
-	public default boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+	public default boolean isValueCompatibleWithType(String value, boolean isRandomized) { // TODO DE-NO isRandomized + descending methods
 
 		String newValue = adapt(value, isRandomized, ERunMode.QUIET, new ExtLanguageManagerForJava());
 

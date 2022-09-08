@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -63,6 +64,39 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		return convertForQuietMode(value, getDefaultValue());
 	}
 
+	@Override
+	public boolean isValueCompatibleWithType(String value, boolean isRandomized) {
+
+		if (!isRandomized) {
+			return isSingleValueCompatibleWithType(value);
+		}
+
+		String[] range = RangeHelper.splitToRange(value);
+
+		if (!isSingleValueCompatibleWithType(range[0])) {
+			return false;
+		}
+
+		if (!isSingleValueCompatibleWithType(range[1])) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private boolean isSingleValueCompatibleWithType(String value) {
+
+		if (StringHelper.isEqual(value, "true")) {
+			return true;
+		}
+		
+		if (StringHelper.isEqual(value, "false")) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
 

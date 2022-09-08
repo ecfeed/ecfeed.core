@@ -23,13 +23,13 @@ import org.junit.Test;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-//import com.ecfeed.core.utils.IParameterConversionItemPart; // TODO DE-NO TEST!
+import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
-// import com.ecfeed.core.utils.ParameterConversionItemPartForValue; // TODO DE-NO TEST!
+ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class ParameterTransformerTest {
 
@@ -41,22 +41,20 @@ public class ParameterTransformerTest {
 	String tString = JavaLanguageHelper.TYPE_NAME_STRING;
 
 
-	// TODO DE-NO TEST!
-//	private enum WhatToTest {
-//		CONSTRAINTS,
-//		CHOICES
-//	}
+	private enum WhatToTest {
+		CONSTRAINTS,
+		CHOICES
+	}
 
-	// TODO DE-NO TEST!
-//	private enum IsChoiceRandomized {
-//		FALSE,
-//		TRUE
-//	}
-//
-//	private enum SuccessExpected {
-//		FALSE,
-//		TRUE
-//	}
+	private enum IsChoiceRandomized {
+		FALSE,
+		TRUE
+	}
+
+	private enum SuccessExpected {
+		FALSE,
+		TRUE
+	}
 
 	@Test
 	public void linkMethodParameterToClassParameterBasicUseCaseForChoices() {
@@ -1303,270 +1301,266 @@ public class ParameterTransformerTest {
 		methodParameterNode.setLinked(true);
 	}
 
-//	@Test
-//	public void checkValueConversionsForDifferentTypesAndValues() {
-//	
-//		assertFalse(canConvert("ABC", tString, tInt, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("ABC", tString, tString, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("1", tString, tInt, IsChoiceRandomized.FALSE));
-//		
-//		assertTrue(canConvert("123.0", tDouble, tInt, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("123.0:123.0", tDouble, tInt, IsChoiceRandomized.TRUE));
-//
-//		assertFalse(canConvert("123.1", tDouble, tInt, IsChoiceRandomized.FALSE));
-//		assertFalse(canConvert("123.1:123.1", tDouble, tInt, IsChoiceRandomized.TRUE));
-//
-//		assertFalse(canConvert("123.54e+7", tDouble, tInt, IsChoiceRandomized.FALSE));
-//		assertFalse(canConvert("123.54e+7:123.54e+7", tDouble, tInt, IsChoiceRandomized.TRUE));
-//
-//		assertTrue(canConvert("1234", tFloat, tDouble, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("1234:1234", tFloat, tDouble, IsChoiceRandomized.TRUE));
-//
-//		assertTrue(canConvert("1234", tFloat, tInt, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("1234:1234", tFloat, tInt, IsChoiceRandomized.TRUE));
-//
-//		assertFalse(canConvert("1234", tFloat, tByte, IsChoiceRandomized.FALSE));
-//		assertFalse(canConvert("1234:1234", tFloat, tByte, IsChoiceRandomized.TRUE));
-//
-//		assertTrue(canConvert("123", tFloat, tByte, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("123:123", tFloat, tByte, IsChoiceRandomized.TRUE));
-//		
-//		assertFalse(canConvert("false", tBoolean, tByte, IsChoiceRandomized.TRUE));
-//		assertFalse(canConvert("false", tBoolean, tString, IsChoiceRandomized.TRUE));
-//		
-//		assertTrue(canConvert("false", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("true", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
-//		
-//		assertFalse(canConvert("1", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
-//		assertTrue(canConvert("false", tString, tBoolean, IsChoiceRandomized.FALSE));
-//	}
-
-	// TODO DE-NO TEST!
-//	private boolean canConvert(
-//			String value, 
-//			String oldType, 
-//			String newType, 
-//			IsChoiceRandomized isChoiceRandomized) {
-//		
-//		boolean isRandomized = false;
-//		
-//		if (isChoiceRandomized == IsChoiceRandomized.TRUE) {
-//			isRandomized = true;
-//		}
-//		
-//		return ParameterTransformer.canConvertChoiceValueFromToType(value, oldType, newType, isRandomized);
-//	}
+	@Test
+	public void checkValueConversionsForDifferentTypesAndValues() {
 	
-	// TODO DE-NO TEST!
-//	@Test
-//	public void convertChoicesWithCheckIfPossible() {
-//
-//		RootNode rootNode = new RootNode("Root", null);
-//
-//		// add global parameter of root and choice node
-//
-//		final String stringParameterType = "String";
-//
-//		// add class node
-//
-//		ClassNode classNode = new ClassNode("Class", null);
-//		rootNode.addClass(classNode);
-//
-//		// add method node
-//
-//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
-//
-//		// add parameter and choice to method
-//
-//		MethodParameterNode methodParameterNode = 
-//				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
-//
-//		ChoiceNode choiceNodeOfMethod = 
-//				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, "MC1", "");
-//
-//		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
-//
-//		ValueConversionOperator checker = 
-//				new ValueConversionOperator(
-//						methodParameterNode, 
-//						choiceNodeOfMethod,
-//						parameterConversionDefinition);
-//
-//		performTypeOperation(WhatToTest.CHOICES, checker);
-//	}
+		assertFalse(canConvert("ABC", tString, tInt, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("ABC", tString, tString, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("1", tString, tInt, IsChoiceRandomized.FALSE));
+		
+		assertTrue(canConvert("123.0", tDouble, tInt, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("123.0:123.0", tDouble, tInt, IsChoiceRandomized.TRUE));
 
-	// TODO DE-NO TEST!
-//	@Test
-//	public void covertConstraintsWithCheckIfPossible() {
-//
-//		RootNode rootNode = new RootNode("Root", null);
-//
-//		// add global parameter of root and choice node
-//
-//		final String stringParameterType = "String";
-//
-//		// add class node
-//
-//		ClassNode classNode = new ClassNode("Class", null);
-//		rootNode.addClass(classNode);
-//
-//		// add method node
-//
-//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
-//
-//		// add parameter
-//
-//		MethodParameterNode methodParameterNode = 
-//				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
-//
-//		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
-//
-//		ValueConversionOperator valueOperator = 
-//				new ValueConversionOperator(
-//						methodParameterNode, 
-//						null,
-//						parameterConversionDefinition);
-//
-//		performTypeOperation(WhatToTest.CONSTRAINTS, valueOperator);
-//	}
+		assertFalse(canConvert("123.1", tDouble, tInt, IsChoiceRandomized.FALSE));
+		assertFalse(canConvert("123.1:123.1", tDouble, tInt, IsChoiceRandomized.TRUE));
 
-	// TODO DE-NO TEST!
-//	private void performTypeOperation(WhatToTest whatToTest, ValueConversionOperator operator) {
-//		
-//		ParameterConversionDefinition resultConversionDefinition = operator.getParameterConversionDefinition();
-//
-//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE, "ABC");
-//		assertEquals(0, resultConversionDefinition.getItemCount());
-//		
-//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE, "123");
-//		assertEquals(1, resultConversionDefinition.getItemCount());
-//		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
-//		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
-//		String description = srcPart.getDescription();
-//		assertEquals("ABC[value]", description);
-//	}
+		assertFalse(canConvert("123.54e+7", tDouble, tInt, IsChoiceRandomized.FALSE));
+		assertFalse(canConvert("123.54e+7:123.54e+7", tDouble, tInt, IsChoiceRandomized.TRUE));
 
-	// TODO DE-NO TEST!
-//	private static class ValueConversionOperator {
-//
-//		private MethodParameterNode fMethodParameterNode;
-//		private ChoiceNode fChoiceNodeOfMethod;
-//		private ParameterConversionDefinition fParameterConversionDefinition;
-//
-//		public ValueConversionOperator(
-//				MethodParameterNode methodParameterNode, 
-//				ChoiceNode choiceNodeOfMethod,
-//				ParameterConversionDefinition parameterConversionDefinition) {
-//
-//			fMethodParameterNode = methodParameterNode;
-//			fChoiceNodeOfMethod = choiceNodeOfMethod;
-//			fParameterConversionDefinition = parameterConversionDefinition;
-//		}
-//
-//		public void operate(
-//				WhatToTest testChoices, 
-//				IsChoiceRandomized isRandomized, 
-//				String oldType, 
-//				String newType, 
-//				String value, 
-//				SuccessExpected successExpected,
-//				String newValue) {
-//
-//			if (isRandomized == IsChoiceRandomized.TRUE && testChoices == WhatToTest.CONSTRAINTS) {
-//				return; // randomized for choices only
-//			}
-//
-//			fParameterConversionDefinition.clear();
-//
-//			fMethodParameterNode.setType(oldType);
-//
-//			if (testChoices == WhatToTest.CHOICES) {
-//				fChoiceNodeOfMethod.setValueString(value);
-//
-//				if (isRandomized == IsChoiceRandomized.TRUE) {
-//					fChoiceNodeOfMethod.setRandomizedValue(true);
-//				} else {
-//					fChoiceNodeOfMethod.setRandomizedValue(false);
-//				}
-//
-//			} else {
-//				MethodNode methodNode = fMethodParameterNode.getMethod();
-//
-//				methodNode.removeAllConstraints();
-//
-//				addSimpleValueConstraintToMethod(
-//						methodNode,
-//						"C1",
-//						fMethodParameterNode,
-//						value,
-//						value);
-//			}
-//
-//			ParameterTransformer.verifyConversionOfParameterToType(
-//					newType, fMethodParameterNode, fParameterConversionDefinition);
-//
-//			if (successExpected == SuccessExpected.TRUE) {
-//				assertFalse(fParameterConversionDefinition.hasItems());
-//			} else {
-//				assertTrue(fParameterConversionDefinition.hasItems());
-//			}
-//
-//			convertParameter(newType, newValue);
-//
-//			if (testChoices == WhatToTest.CHOICES) {
-//				checkValueOfChoice(fChoiceNodeOfMethod, newValue);
-//			} else {
-//				checkValueFromConstraint(fMethodParameterNode.getMethod(), newValue);
-//			}
-//		}
-//
-//		private void checkValueFromConstraint(MethodNode methodNode, String newValue) {
-//
-//			ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
-//
-//			AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
-//
-//			RelationStatement relationStatement = (RelationStatement)precondition; 
-//
-//			IStatementCondition statementCondition = relationStatement.getCondition();
-//
-//			ValueCondition choiceCondition = (ValueCondition)statementCondition;
-//
-//			String currentValue = choiceCondition.getRightValue();
-//
-//			assertEquals(newValue, currentValue);
-//		}
-//
-//		private void checkValueOfChoice(ChoiceNode choiceNode, String expectedValue) {
-//
-//			String currentValue = choiceNode.getValueString();
-//			assertEquals(expectedValue, currentValue);
-//		}
-//
-//		private void convertParameter(String newType, String newValue) {
-//
-//			if (fParameterConversionDefinition.getItemCount() == 0) {
-//				return;
-//			}
-//
-//			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(0);
-//
-//			IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
-//			ParameterConversionItemPartForValue dstPart = new ParameterConversionItemPartForValue(newValue);
-//
-//			ParameterConversionItem newParameterConversionItem = 
-//					new ParameterConversionItem(srcPart, dstPart, (String)null);
-//
-//			fParameterConversionDefinition.setItem(0, newParameterConversionItem);
-//
-//			ParameterTransformer.convertParameterToType(
-//					fMethodParameterNode, newType, fParameterConversionDefinition);
-//		}
-//
-//		public ParameterConversionDefinition getParameterConversionDefinition() {
-//			return fParameterConversionDefinition;
-//		}
-//	}
+		assertTrue(canConvert("1234", tFloat, tDouble, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("1234:1234", tFloat, tDouble, IsChoiceRandomized.TRUE));
+
+		assertTrue(canConvert("1234", tFloat, tInt, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("1234:1234", tFloat, tInt, IsChoiceRandomized.TRUE));
+
+		assertFalse(canConvert("1234", tFloat, tByte, IsChoiceRandomized.FALSE));
+		assertFalse(canConvert("1234:1234", tFloat, tByte, IsChoiceRandomized.TRUE));
+
+		assertTrue(canConvert("123", tFloat, tByte, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("123:123", tFloat, tByte, IsChoiceRandomized.TRUE));
+		
+		assertFalse(canConvert("false", tBoolean, tByte, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("false", tBoolean, tString, IsChoiceRandomized.FALSE));
+		
+		assertTrue(canConvert("false", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("true", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
+		
+		assertFalse(canConvert("1", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
+		assertTrue(canConvert("false", tString, tBoolean, IsChoiceRandomized.FALSE));
+	}
+
+	private boolean canConvert(
+			String value, 
+			String oldType, 
+			String newType, 
+			IsChoiceRandomized isChoiceRandomized) {
+		
+		boolean isRandomized = false;
+		
+		if (isChoiceRandomized == IsChoiceRandomized.TRUE) {
+			isRandomized = true;
+		}
+		
+		boolean isCompatible = ParameterTransformer.isValueCompatibleWithType(value, newType, isRandomized);
+		return isCompatible;
+	}
+	
+	@Test
+	public void convertChoicesWithCheckIfPossible() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global parameter of root and choice node
+
+		final String stringParameterType = "String";
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add parameter and choice to method
+
+		MethodParameterNode methodParameterNode = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
+
+		ChoiceNode choiceNodeOfMethod = 
+				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, "MC1", "");
+
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+
+		ValueConversionOperator checker = 
+				new ValueConversionOperator(
+						methodParameterNode, 
+						choiceNodeOfMethod,
+						parameterConversionDefinition);
+
+		performTypeOperation(WhatToTest.CHOICES, checker);
+	}
+
+	@Test
+	public void covertConstraintsWithCheckIfPossible() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global parameter of root and choice node
+
+		final String stringParameterType = "String";
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add parameter
+
+		MethodParameterNode methodParameterNode = 
+				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
+
+		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+
+		ValueConversionOperator valueOperator = 
+				new ValueConversionOperator(
+						methodParameterNode, 
+						null,
+						parameterConversionDefinition);
+
+		performTypeOperation(WhatToTest.CONSTRAINTS, valueOperator);
+	}
+
+	private void performTypeOperation(WhatToTest whatToTest, ValueConversionOperator operator) {
+		
+		ParameterConversionDefinition resultConversionDefinition = operator.getParameterConversionDefinition();
+
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE, "ABC");
+		assertEquals(0, resultConversionDefinition.getItemCount());
+		
+		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE, "123");
+		assertEquals(1, resultConversionDefinition.getItemCount());
+		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
+		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
+		String description = srcPart.getDescription();
+		assertEquals("ABC[value]", description);
+	}
+
+	private static class ValueConversionOperator {
+
+		private MethodParameterNode fMethodParameterNode;
+		private ChoiceNode fChoiceNodeOfMethod;
+		private ParameterConversionDefinition fParameterConversionDefinition;
+
+		public ValueConversionOperator(
+				MethodParameterNode methodParameterNode, 
+				ChoiceNode choiceNodeOfMethod,
+				ParameterConversionDefinition parameterConversionDefinition) {
+
+			fMethodParameterNode = methodParameterNode;
+			fChoiceNodeOfMethod = choiceNodeOfMethod;
+			fParameterConversionDefinition = parameterConversionDefinition;
+		}
+
+		public void operate(
+				WhatToTest testChoices, 
+				IsChoiceRandomized isRandomized, 
+				String oldType, 
+				String newType, 
+				String value, 
+				SuccessExpected successExpected,
+				String newValue) {
+
+			if (isRandomized == IsChoiceRandomized.TRUE && testChoices == WhatToTest.CONSTRAINTS) {
+				return; // randomized for choices only
+			}
+
+			fParameterConversionDefinition.clear();
+
+			fMethodParameterNode.setType(oldType);
+
+			if (testChoices == WhatToTest.CHOICES) {
+				fChoiceNodeOfMethod.setValueString(value);
+
+				if (isRandomized == IsChoiceRandomized.TRUE) {
+					fChoiceNodeOfMethod.setRandomizedValue(true);
+				} else {
+					fChoiceNodeOfMethod.setRandomizedValue(false);
+				}
+
+			} else {
+				MethodNode methodNode = fMethodParameterNode.getMethod();
+
+				methodNode.removeAllConstraints();
+
+				addSimpleValueConstraintToMethod(
+						methodNode,
+						"C1",
+						fMethodParameterNode,
+						value,
+						value);
+			}
+
+			ParameterTransformer.verifyConversionOfParameterToType(
+					newType, fMethodParameterNode, fParameterConversionDefinition);
+
+			if (successExpected == SuccessExpected.TRUE) {
+				assertFalse(fParameterConversionDefinition.hasItems());
+			} else {
+				assertTrue(fParameterConversionDefinition.hasItems());
+			}
+
+			convertParameter(newType, newValue);
+
+			if (testChoices == WhatToTest.CHOICES) {
+				checkValueOfChoice(fChoiceNodeOfMethod, newValue);
+			} else {
+				checkValueFromConstraint(fMethodParameterNode.getMethod(), newValue);
+			}
+		}
+
+		private void checkValueFromConstraint(MethodNode methodNode, String newValue) {
+
+			ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
+
+			AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+
+			RelationStatement relationStatement = (RelationStatement)precondition; 
+
+			IStatementCondition statementCondition = relationStatement.getCondition();
+
+			ValueCondition choiceCondition = (ValueCondition)statementCondition;
+
+			String currentValue = choiceCondition.getRightValue();
+
+			assertEquals(newValue, currentValue);
+		}
+
+		private void checkValueOfChoice(ChoiceNode choiceNode, String expectedValue) {
+
+			String currentValue = choiceNode.getValueString();
+			assertEquals(expectedValue, currentValue);
+		}
+
+		private void convertParameter(String newType, String newValue) {
+
+			if (fParameterConversionDefinition.getItemCount() == 0) {
+				return;
+			}
+
+			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(0);
+
+			IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
+			ParameterConversionItemPartForValue dstPart = new ParameterConversionItemPartForValue(newValue);
+
+			ParameterConversionItem newParameterConversionItem = 
+					new ParameterConversionItem(srcPart, dstPart, (String)null);
+
+			fParameterConversionDefinition.setItem(0, newParameterConversionItem);
+
+			ParameterTransformer.convertChoicesAndConstraintsToType(
+					fMethodParameterNode, newType, fParameterConversionDefinition);
+		}
+
+		public ParameterConversionDefinition getParameterConversionDefinition() {
+			return fParameterConversionDefinition;
+		}
+	}
 
 	private void addSimpleChoiceConstraintToMethod(
 			MethodNode methodNode,
@@ -1622,33 +1616,32 @@ public class ParameterTransformerTest {
 		methodNode.addConstraint(constraintNode);
 	}
 
-	// TODO DE-NO TEST!
-//	private static void addSimpleValueConstraintToMethod(
-//			MethodNode methodNode,
-//			String constraintName,
-//			MethodParameterNode methodParameterNode,
-//			String value1,
-//			String value2) {
-//
-//		RelationStatement relationStatement1 = 
-//				RelationStatement.createRelationStatementWithValueCondition(
-//						methodParameterNode, EMathRelation.EQUAL, value1);
-//
-//		RelationStatement relationStatement2 = 
-//				RelationStatement.createRelationStatementWithValueCondition(
-//						methodParameterNode, EMathRelation.LESS_THAN, value2);
-//
-//		Constraint constraint = new Constraint(
-//				constraintName, 
-//				ConstraintType.EXTENDED_FILTER, 
-//				relationStatement1, 
-//				relationStatement2, 
-//				null);
-//
-//		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
-//
-//		methodNode.addConstraint(constraintNode);
-//	}
+	private static void addSimpleValueConstraintToMethod(
+			MethodNode methodNode,
+			String constraintName,
+			MethodParameterNode methodParameterNode,
+			String value1,
+			String value2) {
+
+		RelationStatement relationStatement1 = 
+				RelationStatement.createRelationStatementWithValueCondition(
+						methodParameterNode, EMathRelation.EQUAL, value1);
+
+		RelationStatement relationStatement2 = 
+				RelationStatement.createRelationStatementWithValueCondition(
+						methodParameterNode, EMathRelation.LESS_THAN, value2);
+
+		Constraint constraint = new Constraint(
+				constraintName, 
+				ConstraintType.EXTENDED_FILTER, 
+				relationStatement1, 
+				relationStatement2, 
+				null);
+
+		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
+
+		methodNode.addConstraint(constraintNode);
+	}
 
 	private ChoiceNode getChoiceNodeFromConstraintPostcondition(
 			MethodNode methodNode, int constraintIndex) {
