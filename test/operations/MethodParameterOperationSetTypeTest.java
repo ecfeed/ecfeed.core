@@ -27,10 +27,13 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
 
+
 public class MethodParameterOperationSetTypeTest {
 
+	// TODO DE-NO add tests for MethodParameterOperationSetType with parameterConversionDefinition not empty
+
 	@Test
-	public void setTypeInSimpleModeForOneParam() {
+	public void XsetTypeInSimpleModeForOneParam() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -66,7 +69,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "Number", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode2, "Number", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -81,7 +84,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "Text", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode1, "Text", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -96,7 +99,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "Logical", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode1, "Logical", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
@@ -107,7 +110,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "Logical", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode2, "Logical", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -142,7 +145,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "Number", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode1, "Number", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
@@ -200,7 +203,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode22, "Logical", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode22, "Logical", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
@@ -211,7 +214,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode22, "Number", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode22, "Number", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -226,7 +229,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode12, "Logical", extLanguageManagerForSimple, typeAdapterProvider);
+							methodParameterNode12, "Logical", null, extLanguageManagerForSimple, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -273,7 +276,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "int", extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode2, "int", null, extLanguageManagerForJava, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -288,7 +291,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "String", extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode1, "String", null, extLanguageManagerForJava, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -303,7 +306,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "boolean", extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode1, "boolean", null, extLanguageManagerForJava, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
@@ -314,7 +317,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "boolean", extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode2, "boolean", null, extLanguageManagerForJava, typeAdapterProvider);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {

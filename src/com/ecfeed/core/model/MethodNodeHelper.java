@@ -308,6 +308,15 @@ public class MethodNodeHelper {
 		return methodParameterNode;
 	}
 
+	public static MethodParameterNode addExpectedParameterToMethod(
+			MethodNode methodNode, String name, String type, String defaultValue) {
+
+		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, defaultValue, true, null);
+		methodNode.addParameter(methodParameterNode);
+
+		return methodParameterNode;
+	}
+	
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
 		return MethodNodeHelper.createSignature(
@@ -739,7 +748,7 @@ public class MethodNodeHelper {
 			MethodNode methodNode,
 			MethodParameterNode methodParameterNode) {
 
-		List<Constraint> constraints = methodNode.getAllConstraints();
+		List<Constraint> constraints = methodNode.getConstraints();
 
 		List<String> values = new ArrayList<>();
 

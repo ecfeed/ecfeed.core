@@ -23,12 +23,40 @@ import org.junit.Test;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
+//import com.ecfeed.core.utils.IParameterConversionItemPart; // TODO DE-NO TEST!
+import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
+// import com.ecfeed.core.utils.ParameterConversionItemPartForValue; // TODO DE-NO TEST!
 
 public class ParameterTransformerTest {
+
+	String tBoolean = JavaLanguageHelper.TYPE_NAME_BOOLEAN;
+	String tByte = JavaLanguageHelper.TYPE_NAME_BYTE;
+	String tInt = JavaLanguageHelper.TYPE_NAME_INT;
+	String tFloat = JavaLanguageHelper.TYPE_NAME_FLOAT;
+	String tDouble = JavaLanguageHelper.TYPE_NAME_DOUBLE;
+	String tString = JavaLanguageHelper.TYPE_NAME_STRING;
+
+
+	// TODO DE-NO TEST!
+//	private enum WhatToTest {
+//		CONSTRAINTS,
+//		CHOICES
+//	}
+
+	// TODO DE-NO TEST!
+//	private enum IsChoiceRandomized {
+//		FALSE,
+//		TRUE
+//	}
+//
+//	private enum SuccessExpected {
+//		FALSE,
+//		TRUE
+//	}
 
 	@Test
 	public void linkMethodParameterToClassParameterBasicUseCaseForChoices() {
@@ -79,7 +107,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
 
@@ -89,9 +117,9 @@ public class ParameterTransformerTest {
 		ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(globalChoiceNodeForClass);
 
 		ParameterConversionItem parameterConversionItemForChoice = 
-				new ParameterConversionItem(srcPart, dstPart, null);
+				new ParameterConversionItem(srcPart, dstPart, (String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -216,7 +244,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
+		addSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
 
 		// creating choice conversion list
 
@@ -226,9 +254,9 @@ public class ParameterTransformerTest {
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForLabel(methodLabel1), 
 						new ParameterConversionItemPartForLabel(globalLabel1), 
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -350,7 +378,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
+		addSimpleLabelConstraintToMethod(methodNode, "c1", methodParameterNode, methodLabel1, methodLabel1);
 
 		// creating choice conversion list
 
@@ -360,9 +388,9 @@ public class ParameterTransformerTest {
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForLabel(methodLabel1), 
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -485,7 +513,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
@@ -496,9 +524,9 @@ public class ParameterTransformerTest {
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForChoice(methodChoiceNode1),
 						new ParameterConversionItemPartForLabel(globalLabel1),
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -617,7 +645,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
 
@@ -627,9 +655,9 @@ public class ParameterTransformerTest {
 		ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(globalChoiceNodeOfRoot);
 
 		ParameterConversionItem parameterConversionItemForChoice = 
-				new ParameterConversionItem(srcPart, dstPart, null);
+				new ParameterConversionItem(srcPart, dstPart, (String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -752,7 +780,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
+		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
 
 		// creating choice conversion list - to method choices to one global choice
 
@@ -762,18 +790,18 @@ public class ParameterTransformerTest {
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForChoice(methodChoiceNode1), 
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice1);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice1);
 
 
 		ParameterConversionItem parameterConversionItemForChoice2 = 
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForChoice(methodChoiceNode2), 
 						new ParameterConversionItemPartForChoice(globalChoiceNodeForClass), 
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice2);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice2);
 
 		// linking
 
@@ -889,7 +917,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod1221 =
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod122, "MC1221", choiceValueString);
 
-		addNewSimpleChoiceConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
+		addSimpleChoiceConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 
 		// creating choice conversion list
@@ -900,9 +928,9 @@ public class ParameterTransformerTest {
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForChoice(choiceNodeOfMethod11), 
 						new ParameterConversionItemPartForChoice(globalChoiceNode11), 
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -996,7 +1024,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod11 = 
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod1, "MC11", choiceValueString);
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
@@ -1005,9 +1033,9 @@ public class ParameterTransformerTest {
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForChoice(choiceNodeOfMethod11), 
 						new ParameterConversionItemPartForChoice(globalChoiceNode1), 
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -1126,7 +1154,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod11 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 		// add test case
@@ -1149,9 +1177,9 @@ public class ParameterTransformerTest {
 				new ParameterConversionItem(
 						new ParameterConversionItemPartForChoice(choiceNodeOfMethod11), 
 						new ParameterConversionItemPartForChoice(globalChoiceOfClass11), 
-						null);
+						(String)null);
 
-		parameterConversionDefinition.addItem(parameterConversionItemForChoice);
+		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItemForChoice);
 
 		// linking
 
@@ -1219,7 +1247,7 @@ public class ParameterTransformerTest {
 
 		// constraint
 
-		addNewSimpleChoiceConstraintToMethod(
+		addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode, globalChoiceNodeOfRoot1, globalChoiceNodeOfRoot1);
 
 		// unlink
@@ -1275,7 +1303,272 @@ public class ParameterTransformerTest {
 		methodParameterNode.setLinked(true);
 	}
 
-	private void addNewSimpleChoiceConstraintToMethod(
+//	@Test
+//	public void checkValueConversionsForDifferentTypesAndValues() {
+//	
+//		assertFalse(canConvert("ABC", tString, tInt, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("ABC", tString, tString, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("1", tString, tInt, IsChoiceRandomized.FALSE));
+//		
+//		assertTrue(canConvert("123.0", tDouble, tInt, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("123.0:123.0", tDouble, tInt, IsChoiceRandomized.TRUE));
+//
+//		assertFalse(canConvert("123.1", tDouble, tInt, IsChoiceRandomized.FALSE));
+//		assertFalse(canConvert("123.1:123.1", tDouble, tInt, IsChoiceRandomized.TRUE));
+//
+//		assertFalse(canConvert("123.54e+7", tDouble, tInt, IsChoiceRandomized.FALSE));
+//		assertFalse(canConvert("123.54e+7:123.54e+7", tDouble, tInt, IsChoiceRandomized.TRUE));
+//
+//		assertTrue(canConvert("1234", tFloat, tDouble, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("1234:1234", tFloat, tDouble, IsChoiceRandomized.TRUE));
+//
+//		assertTrue(canConvert("1234", tFloat, tInt, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("1234:1234", tFloat, tInt, IsChoiceRandomized.TRUE));
+//
+//		assertFalse(canConvert("1234", tFloat, tByte, IsChoiceRandomized.FALSE));
+//		assertFalse(canConvert("1234:1234", tFloat, tByte, IsChoiceRandomized.TRUE));
+//
+//		assertTrue(canConvert("123", tFloat, tByte, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("123:123", tFloat, tByte, IsChoiceRandomized.TRUE));
+//		
+//		assertFalse(canConvert("false", tBoolean, tByte, IsChoiceRandomized.TRUE));
+//		assertFalse(canConvert("false", tBoolean, tString, IsChoiceRandomized.TRUE));
+//		
+//		assertTrue(canConvert("false", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("true", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
+//		
+//		assertFalse(canConvert("1", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
+//		assertTrue(canConvert("false", tString, tBoolean, IsChoiceRandomized.FALSE));
+//	}
+
+	// TODO DE-NO TEST!
+//	private boolean canConvert(
+//			String value, 
+//			String oldType, 
+//			String newType, 
+//			IsChoiceRandomized isChoiceRandomized) {
+//		
+//		boolean isRandomized = false;
+//		
+//		if (isChoiceRandomized == IsChoiceRandomized.TRUE) {
+//			isRandomized = true;
+//		}
+//		
+//		return ParameterTransformer.canConvertChoiceValueFromToType(value, oldType, newType, isRandomized);
+//	}
+	
+	// TODO DE-NO TEST!
+//	@Test
+//	public void convertChoicesWithCheckIfPossible() {
+//
+//		RootNode rootNode = new RootNode("Root", null);
+//
+//		// add global parameter of root and choice node
+//
+//		final String stringParameterType = "String";
+//
+//		// add class node
+//
+//		ClassNode classNode = new ClassNode("Class", null);
+//		rootNode.addClass(classNode);
+//
+//		// add method node
+//
+//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+//
+//		// add parameter and choice to method
+//
+//		MethodParameterNode methodParameterNode = 
+//				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
+//
+//		ChoiceNode choiceNodeOfMethod = 
+//				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode, "MC1", "");
+//
+//		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+//
+//		ValueConversionOperator checker = 
+//				new ValueConversionOperator(
+//						methodParameterNode, 
+//						choiceNodeOfMethod,
+//						parameterConversionDefinition);
+//
+//		performTypeOperation(WhatToTest.CHOICES, checker);
+//	}
+
+	// TODO DE-NO TEST!
+//	@Test
+//	public void covertConstraintsWithCheckIfPossible() {
+//
+//		RootNode rootNode = new RootNode("Root", null);
+//
+//		// add global parameter of root and choice node
+//
+//		final String stringParameterType = "String";
+//
+//		// add class node
+//
+//		ClassNode classNode = new ClassNode("Class", null);
+//		rootNode.addClass(classNode);
+//
+//		// add method node
+//
+//		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+//
+//		// add parameter
+//
+//		MethodParameterNode methodParameterNode = 
+//				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
+//
+//		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+//
+//		ValueConversionOperator valueOperator = 
+//				new ValueConversionOperator(
+//						methodParameterNode, 
+//						null,
+//						parameterConversionDefinition);
+//
+//		performTypeOperation(WhatToTest.CONSTRAINTS, valueOperator);
+//	}
+
+	// TODO DE-NO TEST!
+//	private void performTypeOperation(WhatToTest whatToTest, ValueConversionOperator operator) {
+//		
+//		ParameterConversionDefinition resultConversionDefinition = operator.getParameterConversionDefinition();
+//
+//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE, "ABC");
+//		assertEquals(0, resultConversionDefinition.getItemCount());
+//		
+//		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE, "123");
+//		assertEquals(1, resultConversionDefinition.getItemCount());
+//		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);
+//		IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
+//		String description = srcPart.getDescription();
+//		assertEquals("ABC[value]", description);
+//	}
+
+	// TODO DE-NO TEST!
+//	private static class ValueConversionOperator {
+//
+//		private MethodParameterNode fMethodParameterNode;
+//		private ChoiceNode fChoiceNodeOfMethod;
+//		private ParameterConversionDefinition fParameterConversionDefinition;
+//
+//		public ValueConversionOperator(
+//				MethodParameterNode methodParameterNode, 
+//				ChoiceNode choiceNodeOfMethod,
+//				ParameterConversionDefinition parameterConversionDefinition) {
+//
+//			fMethodParameterNode = methodParameterNode;
+//			fChoiceNodeOfMethod = choiceNodeOfMethod;
+//			fParameterConversionDefinition = parameterConversionDefinition;
+//		}
+//
+//		public void operate(
+//				WhatToTest testChoices, 
+//				IsChoiceRandomized isRandomized, 
+//				String oldType, 
+//				String newType, 
+//				String value, 
+//				SuccessExpected successExpected,
+//				String newValue) {
+//
+//			if (isRandomized == IsChoiceRandomized.TRUE && testChoices == WhatToTest.CONSTRAINTS) {
+//				return; // randomized for choices only
+//			}
+//
+//			fParameterConversionDefinition.clear();
+//
+//			fMethodParameterNode.setType(oldType);
+//
+//			if (testChoices == WhatToTest.CHOICES) {
+//				fChoiceNodeOfMethod.setValueString(value);
+//
+//				if (isRandomized == IsChoiceRandomized.TRUE) {
+//					fChoiceNodeOfMethod.setRandomizedValue(true);
+//				} else {
+//					fChoiceNodeOfMethod.setRandomizedValue(false);
+//				}
+//
+//			} else {
+//				MethodNode methodNode = fMethodParameterNode.getMethod();
+//
+//				methodNode.removeAllConstraints();
+//
+//				addSimpleValueConstraintToMethod(
+//						methodNode,
+//						"C1",
+//						fMethodParameterNode,
+//						value,
+//						value);
+//			}
+//
+//			ParameterTransformer.verifyConversionOfParameterToType(
+//					newType, fMethodParameterNode, fParameterConversionDefinition);
+//
+//			if (successExpected == SuccessExpected.TRUE) {
+//				assertFalse(fParameterConversionDefinition.hasItems());
+//			} else {
+//				assertTrue(fParameterConversionDefinition.hasItems());
+//			}
+//
+//			convertParameter(newType, newValue);
+//
+//			if (testChoices == WhatToTest.CHOICES) {
+//				checkValueOfChoice(fChoiceNodeOfMethod, newValue);
+//			} else {
+//				checkValueFromConstraint(fMethodParameterNode.getMethod(), newValue);
+//			}
+//		}
+//
+//		private void checkValueFromConstraint(MethodNode methodNode, String newValue) {
+//
+//			ConstraintNode constraintNode = methodNode.getConstraintNodes().get(0);
+//
+//			AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
+//
+//			RelationStatement relationStatement = (RelationStatement)precondition; 
+//
+//			IStatementCondition statementCondition = relationStatement.getCondition();
+//
+//			ValueCondition choiceCondition = (ValueCondition)statementCondition;
+//
+//			String currentValue = choiceCondition.getRightValue();
+//
+//			assertEquals(newValue, currentValue);
+//		}
+//
+//		private void checkValueOfChoice(ChoiceNode choiceNode, String expectedValue) {
+//
+//			String currentValue = choiceNode.getValueString();
+//			assertEquals(expectedValue, currentValue);
+//		}
+//
+//		private void convertParameter(String newType, String newValue) {
+//
+//			if (fParameterConversionDefinition.getItemCount() == 0) {
+//				return;
+//			}
+//
+//			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(0);
+//
+//			IParameterConversionItemPart srcPart = parameterConversionItem.getSrcPart();
+//			ParameterConversionItemPartForValue dstPart = new ParameterConversionItemPartForValue(newValue);
+//
+//			ParameterConversionItem newParameterConversionItem = 
+//					new ParameterConversionItem(srcPart, dstPart, (String)null);
+//
+//			fParameterConversionDefinition.setItem(0, newParameterConversionItem);
+//
+//			ParameterTransformer.convertParameterToType(
+//					fMethodParameterNode, newType, fParameterConversionDefinition);
+//		}
+//
+//		public ParameterConversionDefinition getParameterConversionDefinition() {
+//			return fParameterConversionDefinition;
+//		}
+//	}
+
+	private void addSimpleChoiceConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
 			MethodParameterNode methodParameterNode,
@@ -1302,7 +1595,7 @@ public class ParameterTransformerTest {
 		methodNode.addConstraint(constraintNode);
 	}
 
-	private void addNewSimpleLabelConstraintToMethod(
+	private void addSimpleLabelConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
 			MethodParameterNode methodParameterNode,
@@ -1328,6 +1621,34 @@ public class ParameterTransformerTest {
 
 		methodNode.addConstraint(constraintNode);
 	}
+
+	// TODO DE-NO TEST!
+//	private static void addSimpleValueConstraintToMethod(
+//			MethodNode methodNode,
+//			String constraintName,
+//			MethodParameterNode methodParameterNode,
+//			String value1,
+//			String value2) {
+//
+//		RelationStatement relationStatement1 = 
+//				RelationStatement.createRelationStatementWithValueCondition(
+//						methodParameterNode, EMathRelation.EQUAL, value1);
+//
+//		RelationStatement relationStatement2 = 
+//				RelationStatement.createRelationStatementWithValueCondition(
+//						methodParameterNode, EMathRelation.LESS_THAN, value2);
+//
+//		Constraint constraint = new Constraint(
+//				constraintName, 
+//				ConstraintType.EXTENDED_FILTER, 
+//				relationStatement1, 
+//				relationStatement2, 
+//				null);
+//
+//		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
+//
+//		methodNode.addConstraint(constraintNode);
+//	}
 
 	private ChoiceNode getChoiceNodeFromConstraintPostcondition(
 			MethodNode methodNode, int constraintIndex) {
@@ -1366,7 +1687,7 @@ public class ParameterTransformerTest {
 	}
 
 	private String getLabelFromConstraintPostcondition(MethodNode methodNode, int constraintIndex) {
-		
+
 		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
 
 		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();

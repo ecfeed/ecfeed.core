@@ -31,7 +31,7 @@ public class UsageOfChoicesInConstraints {
 
 		fMapOfUsages = new HashMap<>();
 
-		List<Constraint> constraints = methodNode.getAllConstraints();
+		List<Constraint> constraints = methodNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 

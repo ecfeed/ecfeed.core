@@ -17,12 +17,17 @@ import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
+import com.ecfeed.core.type.adapter.ITypeAdapter;
+import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.ParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class ParameterTransformer {
 
@@ -41,7 +46,7 @@ public class ParameterTransformer {
 		outReverseOperations.add(reverseOperation);
 
 		if (parameterConversionDefinition != null) {
-			convertByConversionList(
+			convertByConversionListForLinking(
 					parameterConversionDefinition, 
 					srcMethodParameterNode, 
 					dstGlobalParameterNode,
@@ -219,7 +224,7 @@ public class ParameterTransformer {
 		inOutReverseOperations.add(reverseOperationSimpleSetLink);
 	}
 
-	public static void convertByConversionList(
+	public static void convertByConversionListForLinking(
 			ParameterConversionDefinition parameterConversionItems,
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
@@ -231,7 +236,7 @@ public class ParameterTransformer {
 
 		for (ParameterConversionItem parameterConversionItem : sortedParameterConversionItems) {
 
-			convertByConversionItem(
+			convertByConversionItemForLinking(
 					parameterConversionItem, 
 					srcParameterNode, dstParameterNode,
 					inOutReverseOperations, extLanguageManager); 
@@ -260,7 +265,7 @@ public class ParameterTransformer {
 		return reverseOperation;
 	}
 
-	private static void convertByConversionItem(
+	private static void convertByConversionItemForLinking(
 			ParameterConversionItem parameterConversionItem, 
 			MethodParameterNode srcParameterNode, 
 			GlobalParameterNode dstParameterNode,
@@ -293,6 +298,57 @@ public class ParameterTransformer {
 			IExtLanguageManager extLanguageManager) {
 
 		deleteChoice(srcChoiceNode, inOutReverseOperations, extLanguageManager);
+	}
+
+	public static void verifyConversionOfParameterToType(
+			String newType, 
+			MethodParameterNode methodParameterNode,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		if (methodParameterNode.isExpected()) {
+			addDefaultValueToConversionDefinition(
+					methodParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
+		}
+
+		ChoiceNodeHelper.verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
+
+		ConstraintHelper.verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
+	}
+
+	private static void addDefaultValueToConversionDefinition(
+			String defaultValue,
+			ParameterConversionDefinition inOutParameterConversionDefinition) {
+
+		ParameterConversionItemPart srcPart = new ParameterConversionItemPartForValue(defaultValue);
+
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, null, "default value");
+
+		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
+	}
+
+	public static void convertChoicesAndConstraintsToType(
+			MethodParameterNode methodParameterNode,
+			String typeTo,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		ChoiceNodeHelper.convertValuesOfChoicesToType(methodParameterNode, parameterConversionDefinition);
+
+		ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
+	}
+
+	public static boolean isValueCompatibleWithType(
+			String value, 
+			String newType, 
+			boolean isChoiceRandomized) {
+
+		ITypeAdapterProvider typeAdapterProvider = new TypeAdapterProviderForJava();
+
+		ITypeAdapter<?> typeAdapter = typeAdapterProvider.getAdapter(newType);
+
+		boolean canConvert = typeAdapter.isValueCompatibleWithType(value, isChoiceRandomized);
+
+		return canConvert;
 	}
 
 }

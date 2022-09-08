@@ -179,8 +179,8 @@ public class ModelComparator {
 			ExpectedValueStatement statement1,
 			ExpectedValueStatement statement2) {
 
-		compareParameters(statement1.getParameter(), statement2.getParameter());
-		assertStringsEqual(statement1.getCondition().getValueString(), statement2.getCondition().getValueString(), "Conditions differ.");
+		compareParameters(statement1.getLeftMethodParameterNode(), statement2.getLeftMethodParameterNode());
+		assertStringsEqual(statement1.getChoice().getValueString(), statement2.getChoice().getValueString(), "Conditions differ.");
 	}
 
 	private static void compareAssignmentStatements(

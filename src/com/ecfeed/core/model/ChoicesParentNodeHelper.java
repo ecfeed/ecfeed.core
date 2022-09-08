@@ -74,7 +74,7 @@ public abstract class ChoicesParentNodeHelper {
 				ParameterConversionItemPartForChoice dstPart = new ParameterConversionItemPartForChoice(clonedChoiceNode);
 
 				ParameterConversionItem parameterConversionItemForChoice = 
-						new ParameterConversionItem(srcPart, dstPart, null);
+						new ParameterConversionItem(srcPart, dstPart, "");
 
 				inOutParameterConversionItems.add(parameterConversionItemForChoice);
 			}

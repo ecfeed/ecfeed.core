@@ -20,47 +20,30 @@ public class ParameterConversionItemPartForLabel extends ParameterConversionItem
 	public ItemPartType getType() {
 		return IParameterConversionItemPart.ItemPartType.LABEL;
 	}
-	
+
 	@Override
 	public Integer getTypeSortOrder() {
 		return 1;
 	}
 
 	@Override
-	public boolean isMatch(IParameterConversionItemPart otherPart) {
-		
-		if (!(otherPart instanceof ParameterConversionItemPartForLabel)) {
-			return false;
-		}
-		
-		String label = getLabel();
-		String otherLabel = ((ParameterConversionItemPartForLabel)otherPart).getLabel();
-		
-		if (StringHelper.isEqual(label, otherLabel)) {
-			return true;
-		}
-		
-		return false;
-	}
-
-	@Override
 	public String getDescription() {
 		return super.getDescription(ItemPartType.LABEL.getCode());
 	}
-	
+
 	public String getLabel() {
-		return super.getName();
+		return super.getStr();
 	}
 
 	@Override
 	public IParameterConversionItemPart makeClone() {
-		
+
 		ParameterConversionItemPartForLabel clone = 
 				new ParameterConversionItemPartForLabel(getLabel());
-		
+
 		return clone;
 	}
-	
-	
+
+
 }
 

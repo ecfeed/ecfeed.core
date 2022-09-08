@@ -10,42 +10,36 @@
 
 package com.ecfeed.core.utils;
 
-import com.ecfeed.core.model.ChoiceNode;
+public class ParameterConversionItemPartForValue extends ParameterConversionItemPart {
 
-public class ParameterConversionItemPartForChoice extends ParameterConversionItemPart {
-
-	private ChoiceNode fChoiceNode;
-
-	public ParameterConversionItemPartForChoice(ChoiceNode choiceNode) {
-		super(choiceNode.getName());
-
-		fChoiceNode = choiceNode;
-	}
-
-	@Override
-	public Integer getTypeSortOrder() {
-		return 0;
-	}
-
-	public ChoiceNode getChoiceNode() {
-		return fChoiceNode;
+	public ParameterConversionItemPartForValue(String value) {
+		super(value);
 	}
 
 	@Override
 	public ItemPartType getType() {
-		return IParameterConversionItemPart.ItemPartType.CHOICE;
+		return IParameterConversionItemPart.ItemPartType.VALUE;
+	}
+
+	@Override
+	public Integer getTypeSortOrder() {
+		return 1;
 	}
 
 	@Override
 	public String getDescription() {
-		return super.getDescription(ItemPartType.CHOICE.getCode());
+		return super.getDescription(ItemPartType.VALUE.getCode());
+	}
+
+	public String getValue() {
+		return super.getStr();
 	}
 
 	@Override
 	public IParameterConversionItemPart makeClone() {
 
-		ParameterConversionItemPartForChoice clone = 
-				new ParameterConversionItemPartForChoice(fChoiceNode);
+		ParameterConversionItemPartForValue clone = 
+				new ParameterConversionItemPartForValue(getValue());
 
 		return clone;
 	}

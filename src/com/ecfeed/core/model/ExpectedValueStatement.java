@@ -22,30 +22,30 @@ import com.ecfeed.core.utils.MessageStack;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
-	MethodParameterNode fLeftParameter;
+	MethodParameterNode fLeftMethodParameterNode;
 	ChoiceNode fChoiceNode;
 	private IPrimitiveTypePredicate fPredicate;
 
 	public ExpectedValueStatement(
-			MethodParameterNode parameter, 
+			MethodParameterNode methodParameterNode, 
 			ChoiceNode choiceNode, 
 			IPrimitiveTypePredicate predicate) {
 
-		super(parameter.getModelChangeRegistrator());
+		super(methodParameterNode.getModelChangeRegistrator());
 
-		fLeftParameter = parameter;
+		fLeftMethodParameterNode = methodParameterNode;
 		fChoiceNode = choiceNode.makeClone();
 		fPredicate = predicate;
 	}
 
 	@Override
 	public String getLeftParameterName() {
-		return fLeftParameter.getName();
+		return fLeftMethodParameterNode.getName();
 	}
 
 	@Override
 	public boolean mentions(AbstractParameterNode parameter) {
-		return parameter == fLeftParameter;
+		return parameter == fLeftMethodParameterNode;
 	}
 
 	@Override
@@ -61,9 +61,9 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 			return true;
 		}
 
-		if  (fLeftParameter.getMethod() != null) {
+		if  (fLeftMethodParameterNode.getMethod() != null) {
 
-			int index = fLeftParameter.getMethod().getParameters().indexOf(fLeftParameter);
+			int index = fLeftMethodParameterNode.getMethod().getParameters().indexOf(fLeftMethodParameterNode);
 			testCaseChoices.set(index, fChoiceNode.makeClone());
 		}
 
@@ -87,7 +87,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public boolean mentions(int methodParameterIndex) {
 
-		MethodNode methodNode = fLeftParameter.getMethod();
+		MethodNode methodNode = fLeftMethodParameterNode.getMethod();
 		MethodParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
@@ -105,28 +105,28 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		return result;
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
-		
+
 		AbstractParameterNode abstractParameterNode = fChoiceNode.getParameter();
-		
+
 		if (!(abstractParameterNode instanceof MethodParameterNode)) {
 			return null;
 		}
-		
+
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode) abstractParameterNode;
-		
+
 		if (!methodParameterNode2.equals(methodParameterNode)) {
 			return null;
 		}
-		
+
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 		result.add(fChoiceNode);
 
 		return result;
 	}
-	
+
 
 	@Override
 	public void derandomize() {
@@ -134,37 +134,37 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	}
 
-	public MethodParameterNode getParameter(){ // TODO RENAME TO getLeftParameter
-		return fLeftParameter;
+	public MethodParameterNode getLeftMethodParameterNode() {
+		return fLeftMethodParameterNode;
 	}
 
-	public ChoiceNode getCondition(){
+	public ChoiceNode getChoice() {
 		return fChoiceNode;
 	}
 
 	@Override
 	public String toString(){
-		return getParameter().getName() + getRelation().toString() + fChoiceNode.getValueString();
+		return getLeftMethodParameterNode().getName() + getRelation().toString() + fChoiceNode.getValueString();
 	}
 
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager){
 
-		final MethodParameterNode parameter = getParameter();
+		final MethodParameterNode parameter = getLeftMethodParameterNode();
 
 		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fChoiceNode.getValueString();
 	}
 
 	@Override
 	public ExpectedValueStatement makeClone(){
-		return new ExpectedValueStatement(fLeftParameter, fChoiceNode.makeClone(), fPredicate);
+		return new ExpectedValueStatement(fLeftMethodParameterNode, fChoiceNode.makeClone(), fPredicate);
 	}
 
 	@Override
 	public boolean updateReferences(MethodNode method){
-		MethodParameterNode parameter = (MethodParameterNode)method.findParameter(fLeftParameter.getName());
+		MethodParameterNode parameter = (MethodParameterNode)method.findParameter(fLeftMethodParameterNode.getName());
 		if(parameter != null && parameter.isExpected()){
-			fLeftParameter = parameter;
+			fLeftMethodParameterNode = parameter;
 			fChoiceNode.setParent(parameter);
 			String type = parameter.getType();
 
@@ -189,11 +189,11 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		}
 
 		ExpectedValueStatement compared = (ExpectedValueStatement)statement;
-		if(getParameter().getName().equals(compared.getParameter().getName()) == false){
+		if(getLeftMethodParameterNode().getName().equals(compared.getLeftMethodParameterNode().getName()) == false){
 			return false;
 		}
 
-		if(getCondition().getValueString().equals(compared.getCondition().getValueString()) == false){
+		if(getChoice().getValueString().equals(compared.getChoice().getValueString()) == false){
 			return false;
 		}
 
@@ -206,7 +206,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	public boolean isParameterPrimitive(){
-		return fPredicate.isPrimitive(fLeftParameter.getType());
+		return fPredicate.isPrimitive(fLeftMethodParameterNode.getType());
 	}
 
 	@Override
