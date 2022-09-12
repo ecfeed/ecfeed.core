@@ -24,7 +24,6 @@ public interface IExtLanguageManager {
 	public String verifyIsAllowedType(String typeName);
 	public String[] getSupportedTypes();
 	public boolean getPackageVisibility();
-	public String getExtendedTypeForValue(String value, String currentType, boolean isRandomizedValue);
 	public String createQualifiedName(String packageName, String name);
 	public boolean isSymbolicValueAllowed();
 	public String formatNumber(String number);

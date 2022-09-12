@@ -34,7 +34,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	private AbstractParameterNode fAbstractParameterNode;
 	private ParameterConversionDefinition fParameterConversionDefinition;
-	private String fNewTypeInExtLanguage;
+	private String fNewTypeInIntrLanguage;
 	private String fCurrentType;
 	private ITypeAdapterProvider fAdapterProvider;
 	private Map<ChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
@@ -42,7 +42,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	public AbstractParameterOperationSetType(
 			AbstractParameterNode abstractParameterNode, 
-			String newType, 
+			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ITypeAdapterProvider adapterProvider, 
 			IExtLanguageManager extLanguageManager) {
@@ -54,7 +54,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		}
 
 		fAbstractParameterNode = abstractParameterNode;
-		fNewTypeInExtLanguage = newType;
+		fNewTypeInIntrLanguage = newTypeInIntrLanguage;
 		fParameterConversionDefinition = parameterConversionDefinition;
 		fAdapterProvider = adapterProvider;
 		fOriginalChoices = new HashMap<>();
@@ -77,19 +77,12 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveChoices(fAbstractParameterNode);
 		saveValues(fAbstractParameterNode);
 
-		checkType(fNewTypeInExtLanguage);
-
 		// Check for duplicate signatures possibly caused by global parameter type change
 		if(fAbstractParameterNode instanceof GlobalParameterNode){
 			checkForSignatureDuplicates();
 		}
 
-		IExtLanguageManager extLanguageManager = getExtLanguageManager();
-
-		String newTypeInIntrLanguage = 
-				extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(fNewTypeInExtLanguage);
-
-		fAbstractParameterNode.setType(newTypeInIntrLanguage);
+		fAbstractParameterNode.setType(fNewTypeInIntrLanguage);
 
 		if (fParameterConversionDefinition == null) {
 			adaptChoices(fAbstractParameterNode);
@@ -163,7 +156,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 				for(AbstractParameterNode parameter: methodNode.getParameters()){
 					MethodParameterNode param = (MethodParameterNode)parameter;
 					if(param.isLinked() && param.getLink().equals(target)){
-						types.set(parameter.getMyIndex(), fNewTypeInExtLanguage);
+						types.set(parameter.getMyIndex(), fNewTypeInIntrLanguage);
 					}			
 				}
 				inOutMethods.put(methodNode, types);
@@ -174,16 +167,6 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			}		
 			// remove from linking parameter list, so no methods are matched twice
 			inOutLinkingMethods.remove(methodNode);	
-		}
-	}
-
-	public void checkType(String newTypeInExtLanguage) {
-
-		IExtLanguageManager extLanguageManager = getExtLanguageManager();
-		String message = extLanguageManager.verifyIsAllowedType(newTypeInExtLanguage);
-
-		if (message!= null) {
-			ExceptionHelper.reportRuntimeException(message);
 		}
 	}
 
@@ -208,7 +191,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	private void adaptChoices(ChoicesParentNode parent) {
 		Iterator<ChoiceNode> it = getChoices(parent).iterator();
-		ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(fNewTypeInExtLanguage);
+		ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(fNewTypeInIntrLanguage);
 		while(it.hasNext()){
 			adaptOneChoice(it, adapter);
 		}
@@ -282,8 +265,8 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		return fAdapterProvider;
 	}
 
-	protected String getNewType(){
-		return fNewTypeInExtLanguage;
+	protected String getNewType(){ // TODO DE-NO rename to getNewTypeInIntrLanguage
+		return fNewTypeInIntrLanguage;
 	}
 
 	protected class ReverseOperation extends AbstractReverseOperation {
@@ -307,7 +290,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		public IModelOperation getReverseOperation() {
 			return new AbstractParameterOperationSetType(
 					fAbstractParameterNode, 
-					fNewTypeInExtLanguage,
+					fNewTypeInIntrLanguage,
 					fParameterConversionDefinition,
 					fAdapterProvider, 
 					getExtLanguageManager());

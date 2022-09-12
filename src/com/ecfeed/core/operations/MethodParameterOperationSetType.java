@@ -111,13 +111,6 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 			convertDefaultValue(fMethodParameterNode, fNewType, fParameterConversionDefinition, getExtLanguageManager());
 
-			//			if (fMethodParameterNode.isExpected()) {
-			//
-			//				// TODO DE-NO - convert instead of adapting
-			//				adaptTestCases();
-			//				adaptConstraints();
-			//			}
-
 			ParameterTransformer.convertChoicesAndConstraintsToType(
 					fMethodParameterNode, getNewType(), fParameterConversionDefinition);		
 
@@ -192,7 +185,7 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 				MethodParameterNode methodParameterNode,
 				ParameterConversionDefinition parameterConversionDefinition, 
 				String currentDefaultValue) {
-			
+
 			int itemCount = parameterConversionDefinition.getItemCount();
 
 			for (int index = 0; index < itemCount; index++) {
