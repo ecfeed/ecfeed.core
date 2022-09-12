@@ -44,7 +44,7 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 	public MethodParameterOperationSetType(
 			MethodParameterNode targetMethodParameterNode, 
-			String newType, 
+			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager,
 			ITypeAdapterProvider adapterProvider) {
@@ -53,14 +53,14 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 		fExtLanguageManager = extLanguageManager;
 
-		if (newType == null) {
+		if (newTypeInIntrLanguage == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
 		}
 
 		SetTypeOperation setTypeOperation = 
 				new SetTypeOperation(
 						targetMethodParameterNode, 
-						newType, 
+						newTypeInIntrLanguage, 
 						parameterConversionDefinition, 
 						adapterProvider, 
 						getExtLanguageManager());
@@ -71,26 +71,25 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 	private class SetTypeOperation extends AbstractParameterOperationSetType{
 
 		private String fOriginalDefaultValue;
-		//		private Map<AbstractStatement, String> fOriginalStatementValues;
 		private Map<Integer, String> fOriginalConstraintValues;
 		private ArrayList<TestCaseNode> fOriginalTestCases;
 		private ArrayList<ConstraintNode> fOriginalConstraints;
 		private ParameterConversionDefinition fParameterConversionDefinition;
 
 		private MethodParameterNode fMethodParameterNode;
-		private String fNewType;
+		private String fNewTypeInIntrLanguage;
 
 		public SetTypeOperation(
 				MethodParameterNode target, 
-				String newType, 
+				String newTypeInIntrLanguage, 
 				ParameterConversionDefinition parameterConversionDefinition,
 				ITypeAdapterProvider adapterProvider, 
 				IExtLanguageManager extLanguageManager) {
 
-			super(target, newType, parameterConversionDefinition, adapterProvider, extLanguageManager);
+			super(target, newTypeInIntrLanguage, parameterConversionDefinition, adapterProvider, extLanguageManager);
 
 			fMethodParameterNode = target;
-			fNewType = newType;
+			fNewTypeInIntrLanguage = newTypeInIntrLanguage;
 			fParameterConversionDefinition = parameterConversionDefinition;
 
 			fOriginalDefaultValue = fMethodParameterNode.getDefaultValue();
@@ -109,7 +108,11 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 			fOriginalTestCases = new ArrayList<>(methodNode.getTestCases());
 			fOriginalConstraints = new ArrayList<>(methodNode.getConstraintNodes());
 
-			convertDefaultValue(fMethodParameterNode, fNewType, fParameterConversionDefinition, getExtLanguageManager());
+			convertDefaultValue(
+					fMethodParameterNode, 
+					fNewTypeInIntrLanguage, 
+					fParameterConversionDefinition, 
+					getExtLanguageManager());
 
 			ParameterTransformer.convertChoicesAndConstraintsToType(
 					fMethodParameterNode, getNewType(), fParameterConversionDefinition);		
@@ -166,14 +169,18 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 		private void convertDefaultValue(
 				MethodParameterNode methodParameterNode,
-				String newType,
+				String newTypeInIntrLanguage,
 				ParameterConversionDefinition parameterConversionDefinition,
 				IExtLanguageManager extLanguageManager) {
 
 			String currentDefaultValue = methodParameterNode.getDefaultValue();
 
 			if (parameterConversionDefinition == null) {
-				setAdaptedValueAsDefault(methodParameterNode, newType, extLanguageManager, currentDefaultValue);
+				setAdaptedValueAsDefault(
+						methodParameterNode, 
+						newTypeInIntrLanguage, 
+						extLanguageManager, 
+						currentDefaultValue);
 				return;
 			}
 
