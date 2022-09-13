@@ -64,6 +64,23 @@ public final class SimpleLanguageHelper {
 		return false;
 	}
 
+	public static boolean isSimpleTypeName(String typeName) {
+	
+		if (isTextTypeName(typeName)) {
+			return true;
+		}
+		
+		if (isNumberTypeName(typeName)) {
+			return true;
+		}
+		
+		if (isLogicalTypeName(typeName)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public static String verifySeparatorsInName(String name) {
 
 		if (name.contains("_")) {

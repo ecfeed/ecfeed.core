@@ -36,6 +36,7 @@ import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.LogHelperCore;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-NO remove bulk operation
@@ -55,6 +56,10 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 		if (newTypeInIntrLanguage == null) {
 			ExceptionHelper.reportRuntimeException("Cannot set new type to null.");
+		}
+
+		if (SimpleLanguageHelper.isSimpleType(newTypeInIntrLanguage)) {
+			ExceptionHelper.reportRuntimeException("Invalid name.");
 		}
 
 		SetTypeOperation setTypeOperation = 
@@ -101,7 +106,7 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 			MethodNode methodNode = fMethodParameterNode.getMethod();
 
-			checkForDuplicateSignature(methodNode);
+			checkForDuplicateSignatureInExtLanguage(methodNode);
 
 			super.execute();
 
@@ -120,14 +125,17 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 			markModelUpdated();
 		}
 
-		private void checkForDuplicateSignature(MethodNode oldMethodNode) {
+		private void checkForDuplicateSignatureInExtLanguage(MethodNode oldMethodNode) {
+
+			IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 			List<String> parameterTypesInExtLanguage = 
-					MethodNodeHelper.getParameterTypes(oldMethodNode, getExtLanguageManager());
+					MethodNodeHelper.getParameterTypes(oldMethodNode, extLanguageManager);
 
-			String newParameterType = getNewType();
+			String newParameterTypeInIntrLanguage = getNewType();
+			String newParameterTypeInExtLanguage = extLanguageManager.convertTypeFromIntrToExtLanguage(newParameterTypeInIntrLanguage);
 
-			parameterTypesInExtLanguage.set(fMethodParameterNode.getMyIndex(), newParameterType);
+			parameterTypesInExtLanguage.set(fMethodParameterNode.getMyIndex(), newParameterTypeInExtLanguage);
 
 			ClassNode classNode = oldMethodNode.getClassNode();
 
@@ -147,7 +155,7 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 
 			String message = 
 					ClassNodeHelper.createMethodSignatureDuplicateMessage(
-							classNode, foundMethodNode, false, getExtLanguageManager());
+							classNode, foundMethodNode, false, extLanguageManager);
 
 			ExceptionHelper.reportRuntimeException(message);
 		}

@@ -273,7 +273,6 @@ public class ExtLanguageManagerTest {
 		assertFalse(simpleExtLanguageManager.getPackageVisibility());
 	}
 
-	// TODO DE-NO TEST
 //	@Test
 //	public void getExtendedTypeForValueTest() {
 //
