@@ -52,6 +52,10 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		if (adapterProvider == null) {
 			ExceptionHelper.reportRuntimeException("Type adapter is empty.");
 		}
+		
+		if (newTypeInIntrLanguage == null) {
+			ExceptionHelper.reportRuntimeException("New type is empty.");
+		}
 
 		fAbstractParameterNode = abstractParameterNode;
 		fNewTypeInIntrLanguage = newTypeInIntrLanguage;

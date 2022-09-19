@@ -44,17 +44,17 @@ public class ChoiceNodeHelper {
 
 
 	public static void verifyConversionOfChoices(
-			MethodParameterNode methodParameterNode, 
+			AbstractParameterNode abstractParameterNode, 
 			String newType, 
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
+		Set<ChoiceNode> choiceNodes = abstractParameterNode.getAllChoices();
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
 			if (!canConvertChoiceValueFromToType(
 					choiceNode.getValueString(), 
-					methodParameterNode.getType(), 
+					abstractParameterNode.getType(), 
 					newType, 
 					choiceNode.isRandomizedValue())) {
 

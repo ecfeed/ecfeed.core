@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 
@@ -25,6 +26,10 @@ public class GlobalParameterOperationSetType extends BulkOperation {
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_TYPE, true, target, target, extLanguageManager);
+		
+		if (newType == null) {
+			ExceptionHelper.reportRuntimeException("New type should not be empty.");
+		}
 
 		AbstractParameterOperationSetType abstractParameterOperationSetType = 
 				new AbstractParameterOperationSetType(

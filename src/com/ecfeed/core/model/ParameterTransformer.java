@@ -144,17 +144,29 @@ public class ParameterTransformer {
 
 	public static void verifyConversionOfParameterToType(
 			String newType, 
-			MethodParameterNode methodParameterNode,
+			AbstractParameterNode abstractParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
+		
+		if (abstractParameterNode instanceof GlobalParameterNode) {
+			
+			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			
+			ChoiceNodeHelper.verifyConversionOfChoices(globalParameterNode, newType, inOutParameterConversionDefinition);
+			return;
+		}
 
+		MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+		
 		if (methodParameterNode.isExpected()) {
 			addDefaultValueToConversionDefinition(
 					methodParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
 		}
 
-		ChoiceNodeHelper.verifyConversionOfChoices(methodParameterNode, newType, inOutParameterConversionDefinition);
+		ChoiceNodeHelper.verifyConversionOfChoices(
+				methodParameterNode, newType, inOutParameterConversionDefinition);
 
-		ConstraintHelper.verifyConversionOfConstraints(methodParameterNode, newType, inOutParameterConversionDefinition);
+		ConstraintHelper.verifyConversionOfConstraints(
+				methodParameterNode, newType, inOutParameterConversionDefinition);
 	}
 
 	public static void convertChoicesAndConstraintsToType(
