@@ -1554,7 +1554,7 @@ public class ParameterTransformerTest {
 			fParameterConversionDefinition.setItem(0, newParameterConversionItem);
 
 			ParameterTransformer.convertChoicesAndConstraintsToType(
-					fMethodParameterNode, newType, fParameterConversionDefinition);
+					fMethodParameterNode, fParameterConversionDefinition);
 		}
 
 		public ParameterConversionDefinition getParameterConversionDefinition() {
