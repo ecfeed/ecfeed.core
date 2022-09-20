@@ -171,14 +171,20 @@ public class ParameterTransformer {
 
 	public static void convertChoicesAndConstraintsToType(
 			MethodParameterNode methodParameterNode,
-			String typeTo,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
-		ChoiceNodeHelper.convertValuesOfChoicesToType(methodParameterNode, parameterConversionDefinition);
+		convertChoicesToType(methodParameterNode, parameterConversionDefinition);
 
 		ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
 	}
 
+	public static void convertChoicesToType(
+			AbstractParameterNode abstractParameterNode,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
+	}
+	
 	public static boolean isValueCompatibleWithType(
 			String value, 
 			String newType, 

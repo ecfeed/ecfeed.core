@@ -120,7 +120,7 @@ public class MethodParameterOperationSetType extends BulkOperation { // TODO DE-
 					getExtLanguageManager());
 
 			ParameterTransformer.convertChoicesAndConstraintsToType(
-					fMethodParameterNode, getNewType(), fParameterConversionDefinition);		
+					fMethodParameterNode, fParameterConversionDefinition);		
 
 			markModelUpdated();
 		}

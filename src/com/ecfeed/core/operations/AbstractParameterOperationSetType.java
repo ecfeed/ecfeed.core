@@ -88,7 +88,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		fAbstractParameterNode.setType(fNewTypeInIntrLanguage);
 
-		if (fParameterConversionDefinition == null) {
+		if (fParameterConversionDefinition == null) { // TODO DE-NO remove ? (conversions are made in child classes)
 			adaptChoices(fAbstractParameterNode);
 		}
 	}

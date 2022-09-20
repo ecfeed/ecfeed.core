@@ -64,7 +64,7 @@ public class ChoiceNodeHelper {
 	}
 
 	public static void convertValuesOfChoicesToType(
-			MethodParameterNode methodParameterNode, 
+			AbstractParameterNode methodParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();

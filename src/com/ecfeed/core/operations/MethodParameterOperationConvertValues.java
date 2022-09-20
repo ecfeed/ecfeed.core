@@ -23,7 +23,6 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 
 	private MethodNode fMethodNode;
 	private MethodParameterNode fMethodParameterNode;
-	private String fNewType;
 	private ParameterConversionDefinition fParameterConversionDefinition;
 	private IExtLanguageManager fExtLanguageManager;
 
@@ -32,14 +31,12 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 
 	public MethodParameterOperationConvertValues(
 			MethodParameterNode methodParameterNode, 
-			String newType,
 			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.CONVERT_VALUES, extLanguageManager);
 
 		fMethodParameterNode = methodParameterNode;
-		fNewType = newType;
 		fParameterConversionDefinition = parameterConversionDefinition;
 		fExtLanguageManager = extLanguageManager;
 
@@ -54,7 +51,7 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 		setOneNodeToSelect(fMethodNode);
 
 		ParameterTransformer.convertChoicesAndConstraintsToType(
-				fMethodParameterNode, fNewType, fParameterConversionDefinition);		
+				fMethodParameterNode, fParameterConversionDefinition);		
 
 		markModelUpdated();
 	}
@@ -84,7 +81,6 @@ public class MethodParameterOperationConvertValues extends AbstractModelOperatio
 		public IModelOperation getReverseOperation() {
 			return new MethodParameterOperationConvertValues(
 					fMethodParameterNode, 
-					fNewType,
 					fParameterConversionDefinition,
 					fExtLanguageManager);
 		}

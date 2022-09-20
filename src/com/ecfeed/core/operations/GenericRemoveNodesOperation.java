@@ -140,7 +140,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		Iterator<GlobalParameterNode> globalItr = globals.iterator();
 		while (globalItr.hasNext()) {
 			GlobalParameterNode global = globalItr.next();
-			List<MethodParameterNode> linkers = global.getLinkers();
+			List<MethodParameterNode> linkers = global.getLinkedMethodParameters();
 			boolean isDependent = false;
 			for (MethodParameterNode param : linkers) {
 				MethodNode method = param.getMethod();

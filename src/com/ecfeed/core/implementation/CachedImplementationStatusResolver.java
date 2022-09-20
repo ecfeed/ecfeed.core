@@ -108,7 +108,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 		public Object visit(GlobalParameterNode node) throws Exception {
 			fCache.remove(node);
 
-			for (MethodParameterNode parameter : node.getLinkers()) {
+			for (MethodParameterNode parameter : node.getLinkedMethodParameters()) {
 				fCache.remove(parameter);
 			}
 

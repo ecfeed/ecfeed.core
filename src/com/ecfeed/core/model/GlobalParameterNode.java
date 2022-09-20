@@ -57,7 +57,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 		return globalParametersParentNode.getMethods(getParameter());
 	}
 
-	public List<MethodParameterNode> getLinkers(){
+	public List<MethodParameterNode> getLinkedMethodParameters(){
 
 		List<MethodParameterNode> result = new ArrayList<>();
 		List<MethodNode> methods = getMethods();
@@ -114,7 +114,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints() {
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
-		for(MethodParameterNode parameter : getLinkers()){
+		for(MethodParameterNode parameter : getLinkedMethodParameters()){
 			result.addAll(parameter.getMentioningConstraints());
 		}
 		return result;
@@ -123,7 +123,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(String label){
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
-		for(MethodParameterNode parameter : getLinkers()){
+		for(MethodParameterNode parameter : getLinkedMethodParameters()){
 			for(ConstraintNode constraint : parameter.getMentioningConstraints()){
 				if(constraint.mentions(parameter, label)){
 					result.add(constraint);
