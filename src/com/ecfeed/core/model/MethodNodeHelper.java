@@ -16,14 +16,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.operations.MethodOperationUpdateChoiceReferencesInTestCases;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -147,44 +144,44 @@ public class MethodNodeHelper {
 	//		}
 	//	}
 
-	public static void updateChoiceReferencesInTestCases(
-			ParameterConversionItem parameterConversionItem,
-			List<TestCaseNode> testCaseNodes,
-			ListOfModelOperations inOutReverseOperations,
-			IExtLanguageManager extLanguageManager) {
-
-		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
-
-		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
-			return;
-		}
-
-		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
-
-		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
-			return;
-		}
-
-		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
-		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
-
-		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
-		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
-
-		for (TestCaseNode testCaseNode : testCaseNodes)  {
-
-			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
-		}
-
-		if (inOutReverseOperations != null) {
-			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
-					new MethodOperationUpdateChoiceReferencesInTestCases(
-							parameterConversionItem, 
-							testCaseNodes, extLanguageManager);
-
-			inOutReverseOperations.add(reverseOperation);
-		}
-	}
+//	public static void updateChoiceReferencesInTestCases(
+//			ParameterConversionItem parameterConversionItem,
+//			List<TestCaseNode> testCaseNodes,
+//			ListOfModelOperations inOutReverseOperations,
+//			IExtLanguageManager extLanguageManager) {
+//
+//		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
+//
+//		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
+//			return;
+//		}
+//
+//		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
+//
+//		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
+//			return;
+//		}
+//
+//		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
+//		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
+//
+//		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
+//		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
+//
+//		for (TestCaseNode testCaseNode : testCaseNodes)  {
+//
+//			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
+//		}
+//
+//		if (inOutReverseOperations != null) {
+//			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
+//					new MethodOperationUpdateChoiceReferencesInTestCases(
+//							parameterConversionItem, 
+//							testCaseNodes, extLanguageManager);
+//
+//			inOutReverseOperations.add(reverseOperation);
+//		}
+//	}
 
 	public static void convertConstraints(
 			List<ConstraintNode> constraintNodes,

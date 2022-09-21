@@ -265,7 +265,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		return fAdapterProvider;
 	}
 
-	protected String getNewType(){ // TODO DE-NO rename to getNewTypeInIntrLanguage
+	protected String getNewType(){
 		return fNewTypeInIntrLanguage;
 	}
 
