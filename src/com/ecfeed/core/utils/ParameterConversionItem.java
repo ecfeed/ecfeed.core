@@ -18,20 +18,43 @@ public class ParameterConversionItem {
 
 	private IParameterConversionItemPart fSrcPart;
 	private IParameterConversionItemPart fDstPart;
+	private boolean fIsRandomized;
 	List<String> fDescription;
 
-	// TODO DE-NO remove ambiguity in constructros when last param is null - add static functions create...
+	// TODO DE-NO create static functions instead of constructors
+	// createConversionItemForChoice, ..forLabel, ..forValue etc
 	public ParameterConversionItem(
 			IParameterConversionItemPart srcPart, 
 			IParameterConversionItemPart dstPart,
+			boolean isRandomized,
 			String objectContainingSrcItem) {
 
-		this(srcPart, dstPart, createListFromString(objectContainingSrcItem));
+		this(srcPart, dstPart, isRandomized, createListFromString(objectContainingSrcItem));
 	}
 
 	public ParameterConversionItem(
 			IParameterConversionItemPart srcPart, 
 			IParameterConversionItemPart dstPart,
+			String objectContainingSrcItem) {
+
+		this(
+				srcPart, 
+				dstPart, 
+				false, // randomized has no effect when conversion item is used for linking parameters, only when changing parameter type
+				createListFromString(objectContainingSrcItem));
+	}
+
+	public ParameterConversionItem(
+			IParameterConversionItemPart srcPart, 
+			IParameterConversionItemPart dstPart,
+			boolean isRandomized) {
+		this(srcPart, dstPart, isRandomized, (String)null);
+	}
+
+	public ParameterConversionItem(
+			IParameterConversionItemPart srcPart, 
+			IParameterConversionItemPart dstPart,
+			boolean isRandomized,
 			List<String> objectsContainingSrcItem) {
 
 		if (srcPart == null) {
@@ -40,6 +63,7 @@ public class ParameterConversionItem {
 
 		fSrcPart = srcPart;
 		fDstPart = dstPart;
+		fIsRandomized = isRandomized;
 
 		fDescription = new ArrayList<>(objectsContainingSrcItem);
 	}
@@ -62,6 +86,10 @@ public class ParameterConversionItem {
 
 	public IParameterConversionItemPart getDstPart() {
 		return fDstPart;
+	}
+
+	public boolean isRandomized() {
+		return fIsRandomized;
 	}
 
 	public String getConstraintsContainingSrcItem() {
@@ -111,7 +139,7 @@ public class ParameterConversionItem {
 			dstPart = fDstPart.makeClone();
 		}
 
-		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fDescription);
+		ParameterConversionItem clone = new ParameterConversionItem(srcPart, dstPart, fIsRandomized, fDescription);
 
 		return clone;
 	}

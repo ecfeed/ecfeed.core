@@ -52,13 +52,15 @@ public class ChoiceNodeHelper {
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
+			boolean isRandomizedValue = choiceNode.isRandomizedValue();
+			
 			if (!canConvertChoiceValueFromToType(
 					choiceNode.getValueString(), 
 					abstractParameterNode.getType(), 
 					newType, 
-					choiceNode.isRandomizedValue())) {
+					isRandomizedValue)) {
 
-				addConversionDefinitionItem(choiceNode, inOutParameterConversionDefinition); 
+				addConversionDefinitionItem(choiceNode, isRandomizedValue, inOutParameterConversionDefinition); 
 			}
 		}
 	}
@@ -111,6 +113,7 @@ public class ChoiceNodeHelper {
 
 	private static void addConversionDefinitionItem(
 			ChoiceNode choiceNode,
+			boolean isRandomized,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		IParameterConversionItemPart srcPart = 
@@ -119,7 +122,7 @@ public class ChoiceNodeHelper {
 		String objectsContainingSrcItem = choiceNode.getName() + "(choice)";
 
 		ParameterConversionItem parameterConversionItem = 
-				new ParameterConversionItem(srcPart, null, objectsContainingSrcItem);
+				new ParameterConversionItem(srcPart, null, isRandomized, objectsContainingSrcItem);
 
 		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 	}

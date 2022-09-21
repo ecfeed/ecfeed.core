@@ -53,7 +53,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
-		verifyConversionOfValue(fOldType, valueString, statement.toString());
+		verifyConversionOfValue(fOldType, valueString, choiceNode.isRandomizedValue(), statement.toString());
 
 		return null;
 	}
@@ -79,7 +79,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		}
 		
 		String valueString = condition.getRightValue();
-		verifyConversionOfValue(fOldType, valueString, fConstraintName + "(constraint)");
+		verifyConversionOfValue(fOldType, valueString, false, fConstraintName + "(constraint)");
 
 		return null;
 	}
@@ -115,7 +115,8 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 		return null;
 	}
 
-	private void verifyConversionOfValue(String oldType, String valueString, String objectsContainingItem) {
+	private void verifyConversionOfValue(
+			String oldType, String valueString, boolean isRandomized, String objectsContainingItem) {
 
 		boolean canConvert = fNewTypeAdapter.canCovertWithoutLossOfData(oldType, valueString, false);
 
@@ -123,10 +124,10 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 
 			ParameterConversionItemPartForValue srcPart = 
 					new ParameterConversionItemPartForValue(valueString);
-
+			
 			ParameterConversionItem parameterConversionItem = 
 					new ParameterConversionItem(
-							srcPart, null, objectsContainingItem);
+							srcPart, null, isRandomized, objectsContainingItem);
 
 			fInOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 		}

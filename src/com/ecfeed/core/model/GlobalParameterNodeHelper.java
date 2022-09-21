@@ -23,14 +23,30 @@ public class GlobalParameterNodeHelper {
 			GlobalParameterNode globalParameterNode, 
 			String choiceNodeName, 
 			String valueString,
+			boolean isRandomizedValue,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
+		choiceNode.setRandomizedValue(isRandomizedValue);
+		
 		globalParameterNode.addChoice(choiceNode);
 
 		return choiceNode;
 	}
 
+	public static ChoiceNode addNewChoiceToGlobalParameter(
+			GlobalParameterNode globalParameterNode, 
+			String choiceNodeName, 
+			String valueString,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
+		choiceNode.setRandomizedValue(false);
+		
+		globalParameterNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
 
 	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 

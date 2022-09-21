@@ -72,7 +72,10 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 		IParameterConversionItemPart srcPart = new ParameterConversionItemPartForLabel(currentLabel);
 		IParameterConversionItemPart dstPart = new ParameterConversionItemPartForLabel(newLabel);
 
-		ParameterConversionItem parameterConversionItem = new ParameterConversionItem(srcPart, dstPart, (String)null);
+		boolean isRandomized = false;
+		
+		ParameterConversionItem parameterConversionItem = 
+				new ParameterConversionItem(srcPart, dstPart, isRandomized);
 
 		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 

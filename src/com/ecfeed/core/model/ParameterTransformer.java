@@ -364,8 +364,10 @@ public class ParameterTransformer {
 
 		ParameterConversionItemPart srcPart = new ParameterConversionItemPartForValue(defaultValue);
 
+		boolean isRandomized = false;
+		
 		ParameterConversionItem parameterConversionItem = 
-				new ParameterConversionItem(srcPart, null, "default value");
+				new ParameterConversionItem(srcPart, null, isRandomized, "default value");
 
 		inOutParameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
 	}
