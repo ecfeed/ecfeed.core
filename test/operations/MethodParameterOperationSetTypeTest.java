@@ -10,7 +10,6 @@
 
 package operations;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -25,10 +24,6 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import com.ecfeed.core.utils.IParameterConversionItemPart;
-import com.ecfeed.core.utils.ParameterConversionDefinition;
-import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.ParameterConversionItemPartForRaw;
 import com.ecfeed.core.utils.TestHelper;
 
 
@@ -80,8 +75,8 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode2, 
 							"byte",
 							null, 
-							extLanguageManagerForSimple, 
-							typeAdapterProvider);
+							typeAdapterProvider,
+							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
 			fail();
@@ -100,8 +95,8 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode1, 
 							"String", 
 							null, 
-							extLanguageManagerForSimple, 
-							typeAdapterProvider);
+							typeAdapterProvider,
+							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
 			fail();
@@ -120,8 +115,8 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode1, 
 							"boolean", 
 							null, 
-							extLanguageManagerForSimple, 
-							typeAdapterProvider);
+							typeAdapterProvider,
+							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
@@ -136,8 +131,8 @@ public class MethodParameterOperationSetTypeTest {
 							methodParameterNode2, 
 							"boolean", 
 							null, 
-							extLanguageManagerForSimple, 
-							typeAdapterProvider);
+							typeAdapterProvider,
+							extLanguageManagerForSimple);
 			
 			methodParameterOperationSetType.execute();
 			fail();
@@ -149,26 +144,26 @@ public class MethodParameterOperationSetTypeTest {
 		}
 	}
 
-	private ParameterConversionDefinition createParameterConversionDefinition(String srcValue, String dstValue) {
-		
-		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
-
-		IParameterConversionItemPart srcPart = 
-				new ParameterConversionItemPartForRaw(
-						IParameterConversionItemPart.ItemPartType.VALUE.getCode(), 
-						srcValue);
-		
-		IParameterConversionItemPart dstPart = 
-				new ParameterConversionItemPartForRaw(
-						IParameterConversionItemPart.ItemPartType.VALUE.getCode(), 
-						dstValue);
-
-		ParameterConversionItem parameterConversionItem = new ParameterConversionItem(srcPart, dstPart, "");
-		
-		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
-		
-		return parameterConversionDefinition;
-	}
+//	private ParameterConversionDefinition createParameterConversionDefinition(String srcValue, String dstValue) {
+//		
+//		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
+//
+//		IParameterConversionItemPart srcPart = 
+//				new ParameterConversionItemPartForRaw(
+//						IParameterConversionItemPart.ItemPartType.VALUE.getCode(), 
+//						srcValue);
+//		
+//		IParameterConversionItemPart dstPart = 
+//				new ParameterConversionItemPartForRaw(
+//						IParameterConversionItemPart.ItemPartType.VALUE.getCode(), 
+//						dstValue);
+//
+//		ParameterConversionItem parameterConversionItem = new ParameterConversionItem(srcPart, dstPart, "");
+//		
+//		parameterConversionDefinition.addItemWithMergingDescriptions(parameterConversionItem);
+//		
+//		return parameterConversionDefinition;
+//	}
 
 	// TODO DE-NO TEST
 //	@Test
@@ -327,7 +322,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "int", null, extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode2, "int", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -342,7 +337,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "String", null, extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode1, "String", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
@@ -357,7 +352,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode1, "boolean", null, extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode1, "boolean", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
 			fail();
@@ -368,7 +363,7 @@ public class MethodParameterOperationSetTypeTest {
 		try {
 			MethodParameterOperationSetType methodParameterOperationSetType =
 					new MethodParameterOperationSetType(
-							methodParameterNode2, "boolean", null, extLanguageManagerForJava, typeAdapterProvider);
+							methodParameterNode2, "boolean", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			fail();
 		} catch (Exception e) {
