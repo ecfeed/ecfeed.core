@@ -98,7 +98,7 @@ public class ValueCondition implements IStatementCondition {
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
 	}
-	
+
 	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
@@ -184,7 +184,7 @@ public class ValueCondition implements IStatementCondition {
 	public void setRightValue(String rightValue) {
 		fRightValue = rightValue;
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getChoices() {
 		return new ArrayList<ChoiceNode>();
@@ -200,8 +200,16 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public void convert(
-			ParameterConversionItem parameterConversionItem) {
+	public void convert(ParameterConversionItem parameterConversionItem) {
+
+		String srcString = parameterConversionItem.getSrcPart().getStr();
+		String valueString = getRightValue();
+
+		if (StringHelper.isEqual(srcString, valueString)) {
+			String dstString = parameterConversionItem.getDstPart().getStr();
+			setRightValue(dstString);
+		}
+
 	}
 
 	@Override

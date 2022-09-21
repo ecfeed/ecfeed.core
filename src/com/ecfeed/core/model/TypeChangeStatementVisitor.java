@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.StringHelper;
 
 public class TypeChangeStatementVisitor implements IStatementVisitor {
 
@@ -30,28 +29,17 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
 
-		// TODO DE-NO move code to ExpectedValueStatement.convert(parameterConversionItem);
-
 		MethodParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
 
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
 		}
 
-		ChoiceNode choiceNode = statement.getChoice();
-		String valueString = choiceNode.getValueString();
-
 		int itemCount = fParameterConversionDefinition.getItemCount();
 
 		for (int index = 0; index < itemCount; index++) {
 			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(index);
-
-			String srcString = parameterConversionItem.getSrcPart().getStr();
-
-			if (StringHelper.isEqual(srcString, valueString)) {
-				String dstString = parameterConversionItem.getDstPart().getStr();
-				choiceNode.setValueString(dstString);
-			}
+			statement.convert(parameterConversionItem);
 		}
 
 		return null;
@@ -69,8 +57,6 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 	@Override
 	public Object visit(ValueCondition condition) throws Exception {
 
-		// TODO DE-NO move code to ValueCondtion.convert(parameterConversionItem);
-
 		RelationStatement parentRelationStatement = condition.getParentRelationStatement();
 
 		MethodParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
@@ -79,19 +65,12 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 			return null;
 		}
 
-		String valueString = condition.getRightValue();
-
 		int itemCount = fParameterConversionDefinition.getItemCount();
 
 		for (int index = 0; index < itemCount; index++) {
 			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(index);
 
-			String srcString = parameterConversionItem.getSrcPart().getStr();
-
-			if (StringHelper.isEqual(srcString, valueString)) {
-				String dstString = parameterConversionItem.getDstPart().getStr();
-				condition.setRightValue(dstString);
-			}
+			condition.convert(parameterConversionItem);
 		}
 
 		return null;

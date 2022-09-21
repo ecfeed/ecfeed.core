@@ -18,6 +18,7 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.StringHelper;
 import com.ecfeed.core.utils.MessageStack;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
@@ -221,13 +222,18 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	protected void convert(ParameterConversionItem parameterConversionItem) {
-	}
 
-	//	@Override
-	//	protected void updateParameterReferences(
-	//			MethodParameterNode srcMethodParameterNode,
-	//			ChoicesParentNode dstParameterForChoices) {
-	//	}
+		ChoiceNode choiceNode = getChoice();
+		String valueString = choiceNode.getValueString();
+
+		String srcString = parameterConversionItem.getSrcPart().getStr();
+
+		if (StringHelper.isEqual(srcString, valueString)) {
+			String dstString = parameterConversionItem.getDstPart().getStr();
+			choiceNode.setValueString(dstString);
+		}
+
+	}
 
 	@Override
 	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
