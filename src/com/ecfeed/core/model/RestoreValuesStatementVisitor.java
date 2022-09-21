@@ -24,7 +24,15 @@ public class RestoreValuesStatementVisitor implements IStatementVisitor {
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
 
-		// TODO DE-NO
+		int hashCode = statement.hashCode();
+
+		String value = fOriginalValues.get(hashCode);
+
+		if (value == null) {
+			return null;
+		}
+
+		statement.getChoice().setValueString(value);
 		return null;
 	}
 
