@@ -28,7 +28,11 @@ public class SaveValuesStatementVisitor implements IStatementVisitor {
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
 
-		// TODO DE-NO
+		int hashCode = statement.hashCode();
+
+		String value = statement.getChoice().getValueString();
+
+		fInOutHashesAndValues.put(hashCode, value);
 		return null;
 	}
 
