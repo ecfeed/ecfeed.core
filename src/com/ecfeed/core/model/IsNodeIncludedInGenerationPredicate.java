@@ -51,7 +51,7 @@ public class IsNodeIncludedInGenerationPredicate {
 
 		for (IConstraint<ChoiceNode> iconstraint : allowedConstraints) {
 			Constraint constraint = (Constraint)iconstraint;
-			List<ChoiceNode> referencedConstraints = constraint.getListOfChoices();
+			List<ChoiceNode> referencedConstraints = constraint.getChoices();
 			listOfChoices.addAll(referencedConstraints);
 		}
 

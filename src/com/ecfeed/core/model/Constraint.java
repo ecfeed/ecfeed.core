@@ -523,7 +523,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return fPrecondition.mentions(choice) || fPostcondition.mentions(choice);
 	}
 
-	public List<ChoiceNode> getListOfChoices() { // TODO DE-NO rename to getChoices getContainingChoices
+	public List<ChoiceNode> getChoices() {
 
 		List<ChoiceNode> result = new ArrayList<>();
 
@@ -533,7 +533,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return result;
 	}
 
-	public List<ChoiceNode> getListOfChoices(MethodParameterNode methodParameterNode) { // TODO DE-NO rename to getChoices getContainingChoices
+	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 
 		List<ChoiceNode> result = new ArrayList<>();
 

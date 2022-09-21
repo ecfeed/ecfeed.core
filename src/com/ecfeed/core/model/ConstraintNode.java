@@ -82,7 +82,7 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	public List<ChoiceNode> getListOfChoices() {
-		return fConstraint.getListOfChoices(); 
+		return fConstraint.getChoices(); 
 	}
 
 	public MethodNode getMethodNode() {

@@ -35,7 +35,7 @@ public class UsageOfChoicesInConstraints {
 
 		for (Constraint constraint : constraints) {
 
-			List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getListOfChoices(methodParameterNode);
+			List<ChoiceNode> choiceNodesUsedInConstraint = constraint.getChoices(methodParameterNode);
 
 			updateMapOfUsages(constraint, choiceNodesUsedInConstraint);
 		}
