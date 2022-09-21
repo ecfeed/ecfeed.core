@@ -10,8 +10,6 @@
 
 package com.ecfeed.core.type.adapter;
 
-import java.util.Arrays;
-
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -73,11 +71,6 @@ public abstract class TypeAdapterForFloatingPoint<T extends Number> extends Type
 		} catch (NumberFormatException e) {
 			return valueString;
 		}
-	}
-
-	@Override
-	public boolean isCompatible(String type){
-		return Arrays.asList(TypeAdapterHelper.TYPES_CONVERTIBLE_TO_NUMBERS).contains(type);
 	}
 
 	@Override

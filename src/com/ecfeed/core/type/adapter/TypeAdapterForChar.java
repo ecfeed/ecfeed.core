@@ -10,33 +10,16 @@
 
 package com.ecfeed.core.type.adapter;
 
-import java.util.Arrays;
-
 import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterForChar implements ITypeAdapter<Character>{
-
-	private final String[] TYPES_CONVERTABLE_TO_CHAR = new String[]{
-			JavaLanguageHelper.TYPE_NAME_STRING,
-			JavaLanguageHelper.TYPE_NAME_SHORT,
-			JavaLanguageHelper.TYPE_NAME_BYTE,
-			JavaLanguageHelper.TYPE_NAME_INT,
-			SimpleLanguageHelper.TYPE_NAME_TEXT,
-			SimpleLanguageHelper.TYPE_NAME_NUMBER,
-	};
 
 	@Override
 	public String getMyTypeName() {
 		return JavaLanguageHelper.TYPE_NAME_CHAR;
-	}
-
-	@Override
-	public boolean isCompatible(String type){
-		return Arrays.asList(TYPES_CONVERTABLE_TO_CHAR).contains(type);
 	}
 
 	@Override

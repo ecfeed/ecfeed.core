@@ -10,32 +10,13 @@
 
 package com.ecfeed.core.type.adapter;
 
-import java.util.Arrays;
-
 import com.ecfeed.core.library.Xeger;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
 
 public class TypeAdapterForString implements ITypeAdapter<String>{
-
-	private final String[] TYPES_CONVERTIBLE_TO_STRING = new String[]{
-			JavaLanguageHelper.TYPE_NAME_INT,
-			JavaLanguageHelper.TYPE_NAME_FLOAT,
-			JavaLanguageHelper.TYPE_NAME_DOUBLE,
-			JavaLanguageHelper.TYPE_NAME_LONG,
-			JavaLanguageHelper.TYPE_NAME_SHORT,
-			JavaLanguageHelper.TYPE_NAME_STRING,
-			JavaLanguageHelper.TYPE_NAME_BYTE,
-			JavaLanguageHelper.TYPE_NAME_CHAR,
-			JavaLanguageHelper.TYPE_NAME_BOOLEAN,
-			SimpleLanguageHelper.TYPE_NAME_TEXT,
-			SimpleLanguageHelper.TYPE_NAME_NUMBER,
-			SimpleLanguageHelper.TYPE_NAME_LOGICAL,
-			TypeAdapterHelper.USER_TYPE
-	};
 
 	@Override
 	public String getMyTypeName() {
@@ -45,11 +26,6 @@ public class TypeAdapterForString implements ITypeAdapter<String>{
 	@Override
 	public boolean isRandomizable() {
 		return true;
-	}
-
-	@Override
-	public boolean isCompatible(String type){
-		return Arrays.asList(TYPES_CONVERTIBLE_TO_STRING).contains(type);
 	}
 
 	@Override

@@ -42,10 +42,6 @@ public class MethodOperationRemoveTestCase extends AbstractModelOperation {
 					return value;
 				}
 				@Override
-				public boolean isCompatible(String type) {
-					return true;
-				}
-				@Override
 				public Object generateValue(String range, String context) {
 					return null;
 				}

@@ -19,7 +19,6 @@ import com.ecfeed.core.utils.StringHelper;
 public interface ITypeAdapter<T> {
 
 	public boolean isRandomizable();
-	public boolean isCompatible(String type); // TODO DE-NO remove ?
 	public boolean isConvertibleTo(String otherType);
 	public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager);
 	public String getDefaultValue();

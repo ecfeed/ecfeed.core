@@ -144,44 +144,44 @@ public class MethodNodeHelper {
 	//		}
 	//	}
 
-//	public static void updateChoiceReferencesInTestCases(
-//			ParameterConversionItem parameterConversionItem,
-//			List<TestCaseNode> testCaseNodes,
-//			ListOfModelOperations inOutReverseOperations,
-//			IExtLanguageManager extLanguageManager) {
-//
-//		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
-//
-//		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
-//			return;
-//		}
-//
-//		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
-//
-//		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
-//			return;
-//		}
-//
-//		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
-//		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
-//
-//		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
-//		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
-//
-//		for (TestCaseNode testCaseNode : testCaseNodes)  {
-//
-//			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
-//		}
-//
-//		if (inOutReverseOperations != null) {
-//			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
-//					new MethodOperationUpdateChoiceReferencesInTestCases(
-//							parameterConversionItem, 
-//							testCaseNodes, extLanguageManager);
-//
-//			inOutReverseOperations.add(reverseOperation);
-//		}
-//	}
+	//	public static void updateChoiceReferencesInTestCases(
+	//			ParameterConversionItem parameterConversionItem,
+	//			List<TestCaseNode> testCaseNodes,
+	//			ListOfModelOperations inOutReverseOperations,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	//		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
+	//
+	//		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
+	//			return;
+	//		}
+	//
+	//		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
+	//
+	//		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
+	//			return;
+	//		}
+	//
+	//		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
+	//		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
+	//
+	//		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
+	//		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
+	//
+	//		for (TestCaseNode testCaseNode : testCaseNodes)  {
+	//
+	//			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
+	//		}
+	//
+	//		if (inOutReverseOperations != null) {
+	//			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
+	//					new MethodOperationUpdateChoiceReferencesInTestCases(
+	//							parameterConversionItem, 
+	//							testCaseNodes, extLanguageManager);
+	//
+	//			inOutReverseOperations.add(reverseOperation);
+	//		}
+	//	}
 
 	public static void convertConstraints(
 			List<ConstraintNode> constraintNodes,
@@ -313,7 +313,7 @@ public class MethodNodeHelper {
 
 		return methodParameterNode;
 	}
-	
+
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
 		return MethodNodeHelper.createSignature(

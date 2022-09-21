@@ -10,24 +10,15 @@
 
 package com.ecfeed.core.type.adapter;
 
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RangeHelper;
-import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
-
-	private final String[] TYPES_CONVERTABLE_TO_BOOLEAN = new String[]{
-			JavaLanguageHelper.TYPE_NAME_STRING,
-			JavaLanguageHelper.TYPE_NAME_BOOLEAN,
-			SimpleLanguageHelper.TYPE_NAME_TEXT,
-			SimpleLanguageHelper.TYPE_NAME_LOGICAL
-	};
 
 	@Override
 	public String getMyTypeName() {
@@ -37,11 +28,6 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 	@Override
 	public boolean isRandomizable() {
 		return false;
-	}
-
-	@Override
-	public boolean isCompatible(String type){
-		return Arrays.asList(TYPES_CONVERTABLE_TO_BOOLEAN).contains(type);
 	}
 
 	@Override
@@ -89,14 +75,14 @@ public class TypeAdapterForBoolean implements ITypeAdapter<Boolean>{
 		if (StringHelper.isEqual(value, "true")) {
 			return true;
 		}
-		
+
 		if (StringHelper.isEqual(value, "false")) {
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
 
