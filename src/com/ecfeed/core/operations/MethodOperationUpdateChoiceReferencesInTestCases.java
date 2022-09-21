@@ -17,7 +17,7 @@
 //import com.ecfeed.core.utils.IExtLanguageManager;
 //import com.ecfeed.core.utils.ParameterConversionItem;
 //
-//public class MethodOperationUpdateChoiceReferencesInTestCases extends AbstractModelOperation { // TODO DE-NO rename
+//public class MethodOperationUpdateChoiceReferencesInTestCases extends AbstractModelOperation {
 //
 //	private static final String UPDATE_CHOICE_REFERENCES_IN_TEST_CASES = "Update choice references in test cases.";
 //
@@ -64,7 +64,7 @@
 //
 //		@Override
 //		public IModelOperation getReverseOperation() {
-//			return null; // TODO DE-NO
+//			return null;
 //		}
 //
 //	}
