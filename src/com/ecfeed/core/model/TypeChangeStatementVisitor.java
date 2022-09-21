@@ -18,7 +18,7 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 
 	private MethodParameterNode fMethodParameterNode;
 	private ParameterConversionDefinition fParameterConversionDefinition;
-	
+
 	public TypeChangeStatementVisitor(
 			MethodParameterNode methodParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
@@ -29,13 +29,15 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
-		
+
+		// TODO DE-NO move code to ExpectedValueStatement.convert(parameterConversionItem);
+
 		MethodParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
 
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
 		}
-		
+
 		ChoiceNode choiceNode = statement.getChoice();
 		String valueString = choiceNode.getValueString();
 
@@ -66,15 +68,17 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 
 	@Override
 	public Object visit(ValueCondition condition) throws Exception {
-		
+
+		// TODO DE-NO move code to ValueCondtion.convert(parameterConversionItem);
+
 		RelationStatement parentRelationStatement = condition.getParentRelationStatement();
-		
+
 		MethodParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
-		
+
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
 		}
-		
+
 		String valueString = condition.getRightValue();
 
 		int itemCount = fParameterConversionDefinition.getItemCount();
@@ -110,6 +114,14 @@ public class TypeChangeStatementVisitor implements IStatementVisitor {
 
 	@Override
 	public Object visit(LabelCondition condition) throws Exception {
+
+
+		int itemCount = fParameterConversionDefinition.getItemCount();
+
+		for (int index = 0; index < itemCount; index++) {
+			ParameterConversionItem parameterConversionItem = fParameterConversionDefinition.getCopyOfItem(index);
+			condition.convert(parameterConversionItem);
+		}
 
 		return null;
 	}

@@ -20,6 +20,7 @@ public class ParameterConversionItem {
 	private IParameterConversionItemPart fDstPart;
 	List<String> fDescription;
 
+	// TODO DE-NO remove ambiguity in constructros when last param is null - add static functions create...
 	public ParameterConversionItem(
 			IParameterConversionItemPart srcPart, 
 			IParameterConversionItemPart dstPart,

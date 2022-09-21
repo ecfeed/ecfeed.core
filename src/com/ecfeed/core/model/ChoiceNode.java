@@ -232,6 +232,14 @@ public class ChoiceNode extends ChoicesParentNode {
 		return fLabels.remove(label);
 	}
 
+	public void renameLabel(String oldValue, String newValue) {
+		
+		if (fLabels.contains(oldValue)) {
+			fLabels.remove(oldValue);
+			fLabels.add(newValue);
+		}
+	}
+	
 	public Set<String> getLabels(){
 		return fLabels;
 	}
