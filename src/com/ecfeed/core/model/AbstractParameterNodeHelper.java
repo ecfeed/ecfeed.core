@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -175,6 +176,20 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		return result;
+	}
+	
+	public static boolean hasRandomizedChoices(AbstractParameterNode abstractParameterNode) {
+		
+		Set<ChoiceNode> choices = abstractParameterNode.getAllChoices();
+		
+		for (ChoiceNode choice : choices) {
+			
+			if (choice.isRandomizedValue()) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }
