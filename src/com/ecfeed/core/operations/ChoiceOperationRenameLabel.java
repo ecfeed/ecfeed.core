@@ -10,17 +10,19 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.List;
+
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintHelper;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
+import com.ecfeed.ui.dialogs.basic.ErrorDialog;
 
 public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 
@@ -47,23 +49,62 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 	}
 
 	private void renameLabel(ChoiceNode choiceNode, String currentLabel, String newLabel) {
-		MethodNode methodNode = choiceNode.getMethodNode();
-
-		if (methodNode == null) {
-			ExceptionHelper.reportRuntimeException("Renaming label of global node is not allowed.");
-		}
 
 		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
-		MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+
+		
+		if (abstractParameterNode instanceof MethodParameterNode) {
+
+			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+
+			choiceNode.renameLabel(currentLabel, newLabel);
+
+			ParameterConversionDefinition parameterConversionDefinition = 
+					createParameterConversionDefinition(currentLabel, newLabel);
+
+			ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
+			return;
+		} 
+
+		if (abstractParameterNode instanceof GlobalParameterNode) {
+
+			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			
+			String errorMessage = checkLinkedParameters(globalParameterNode);
+			
+			if (errorMessage != null) {
+				ErrorDialog.open(errorMessage);
+				return;
+			}
 
 		choiceNode.renameLabel(currentLabel, newLabel);
-
-		ParameterConversionDefinition parameterConversionDefinition = 
-				createParameterConversionDefinition(currentLabel, newLabel);
-
-
-		ConstraintHelper.convertValuesOfConstraintsToType(methodParameterNode, parameterConversionDefinition);
+			return;
+		}
 	}
+	
+	private String checkLinkedParameters(GlobalParameterNode globalParameterNode) {
+
+		List<MethodParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
+
+		if (linkedMethodMethodParameters == null) {
+			return null;
+		}
+
+		if (linkedMethodMethodParameters.size() <= 0) {
+			return null;
+		}
+
+		MethodParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
+
+		String errorMessage = 
+				"Parameter " + firstMethodParameterNode.getName() + 
+				" of method " + firstMethodParameterNode.getMethod() + 
+				" is linked to current global parameter " + globalParameterNode.getName() + ". " + 
+				"Change of label is not possible.";
+
+		return errorMessage;
+	}
+
 
 	private ParameterConversionDefinition createParameterConversionDefinition(String currentLabel, String newLabel) {
 
@@ -73,7 +114,7 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 		IParameterConversionItemPart dstPart = new ParameterConversionItemPartForLabel(newLabel);
 
 		boolean isRandomized = false;
-		
+
 		ParameterConversionItem parameterConversionItem = 
 				new ParameterConversionItem(srcPart, dstPart, isRandomized);
 
