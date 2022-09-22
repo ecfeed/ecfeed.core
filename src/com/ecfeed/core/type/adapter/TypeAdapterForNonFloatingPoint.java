@@ -42,10 +42,25 @@ public abstract class TypeAdapterForNonFloatingPoint<T extends Number> extends T
 		return false;
 	}
 
-	private boolean isEqualForRange(String value, String newValue) {
+	private boolean isEqualForRange(String value1, String value2) {
 
-		String[] range1 = RangeHelper.splitToRange(value);
-		String[] range2 = RangeHelper.splitToRange(newValue);
+		String[] range1 = null;
+		
+		try {
+			range1 = RangeHelper.splitToRange(value1);
+		
+		} catch (Exception e) {
+			return false;
+		}
+		
+		String[] range2 = null;
+		
+		try {
+			range2 = RangeHelper.splitToRange(value2);
+			
+		} catch (Exception e) {
+			return false;
+		}
 
 		if (!isEqualForSingleValue(range1[0], range2[0])) {
 			return false;

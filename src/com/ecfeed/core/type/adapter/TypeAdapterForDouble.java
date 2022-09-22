@@ -41,7 +41,12 @@ public class TypeAdapterForDouble extends TypeAdapterForFloatingPoint<Double>{
 			return isSingleValueCompatibleWithType(value);
 		}
 
-		String[] range = RangeHelper.splitToRange(value);
+		String[] range = null;
+		try {
+			range = RangeHelper.splitToRange(value);
+		} catch (Exception e) {
+			return false;
+		}
 
 		if (!isSingleValueCompatibleWithType(range[0])) {
 			return false;

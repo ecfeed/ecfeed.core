@@ -32,8 +32,19 @@ public abstract class TypeAdapterForFloatingPoint<T extends Number> extends Type
 			return isMatchForFloatingPointStrings(value, newValue);
 		}
 
-		String[] range1 = RangeHelper.splitToRange(value);
-		String[] range2 = RangeHelper.splitToRange(value);
+		String[] range1 = null;
+		try {
+			range1 = RangeHelper.splitToRange(value);
+		} catch (Exception e) {
+			return false;
+		}
+		
+		String[] range2 = null;
+		try {
+			range2 = RangeHelper.splitToRange(value);
+		} catch (Exception e) {
+			return false;
+		}
 
 		if (!isMatchForFloatingPointStrings(range1[0], range2[0])) {
 			return false;
