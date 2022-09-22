@@ -17,12 +17,12 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
-import com.ecfeed.ui.dialogs.basic.ErrorDialog;
 
 public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 
@@ -52,7 +52,7 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 
 		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
 
-		
+
 		if (abstractParameterNode instanceof MethodParameterNode) {
 
 			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
@@ -69,19 +69,19 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 		if (abstractParameterNode instanceof GlobalParameterNode) {
 
 			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
-			
+
 			String errorMessage = checkLinkedParameters(globalParameterNode);
-			
+
 			if (errorMessage != null) {
-				ErrorDialog.open(errorMessage);
+				ExceptionHelper.reportRuntimeException(errorMessage);
 				return;
 			}
 
-		choiceNode.renameLabel(currentLabel, newLabel);
+			choiceNode.renameLabel(currentLabel, newLabel);
 			return;
 		}
 	}
-	
+
 	private String checkLinkedParameters(GlobalParameterNode globalParameterNode) {
 
 		List<MethodParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
