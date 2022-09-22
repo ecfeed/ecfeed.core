@@ -179,4 +179,9 @@ public class ExtLanguageManagerForJava implements IExtLanguageManager {
 		return "";
 	}
 
+	@Override
+	public ExtLanguage getLanguage() {
+		return ExtLanguage.JAVA;
+	}
+
 }

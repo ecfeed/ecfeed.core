@@ -206,4 +206,9 @@ public class ExtLanguageManagerForSimple implements IExtLanguageManager {
 		return ":";
 	}
 
+	@Override
+	public ExtLanguage getLanguage() {
+		return ExtLanguage.SIMPLE;
+	}
+
 }

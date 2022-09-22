@@ -28,4 +28,5 @@ public interface IExtLanguageManager {
 	public boolean isSymbolicValueAllowed();
 	public String formatNumber(String number);
 	public String getTypeSeparator();
+	public ExtLanguage getLanguage();
 }
