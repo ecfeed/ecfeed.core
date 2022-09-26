@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.model;
 
+import java.util.List;
+
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GlobalParameterNodeHelper {
@@ -19,6 +21,29 @@ public class GlobalParameterNodeHelper {
 		WITHOUT_TYPE
 	}
 
+	public static String checkLinkedParameters(GlobalParameterNode globalParameterNode) {
+
+		List<MethodParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
+
+		if (linkedMethodMethodParameters == null) {
+			return null;
+		}
+
+		if (linkedMethodMethodParameters.size() <= 0) {
+			return null;
+		}
+
+		MethodParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
+
+		String errorMessage = 
+				"Parameter " + firstMethodParameterNode.getName() + 
+				" of method " + firstMethodParameterNode.getMethod() + 
+				" is linked to current global parameter " + globalParameterNode.getName() + ". " + 
+				"Change of parameter type is not possible.";
+
+		return errorMessage;
+	}
+	
 	public static ChoiceNode addNewChoiceToGlobalParameter(
 			GlobalParameterNode globalParameterNode, 
 			String choiceNodeName, 
