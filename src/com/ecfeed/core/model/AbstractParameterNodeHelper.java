@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExtLanguage;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionDefinition;
-import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
-import com.ecfeed.ui.editor.AbstractParameterConversionHelper;
-import com.ecfeed.ui.modelif.AbstractParameterInterface;
 
 public abstract class AbstractParameterNodeHelper {
 
@@ -195,61 +190,6 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		return false;
-	}
-
-	public static void setTypeOfAbstractParameter(
-			String newTypeInExtLanguage, 
-			TypeCathegory typeCathegory,
-			ParameterConversionDefinition parameterConversionDefinition, 
-			AbstractParameterInterface abstractParameterInterface,
-			IExtLanguageManager extLanguageManager) {
-
-		AbstractParameterNode abstractParameterNode = abstractParameterInterface.getOwnNode();
-
-		if (!AbstractParameterConversionHelper.fillParameterConversionDefinition(
-				newTypeInExtLanguage, abstractParameterNode, parameterConversionDefinition)) {
-			return;
-		}
-
-		String newTypeInIntrLanguage = 
-				calculateJavaType(
-						newTypeInExtLanguage, typeCathegory, parameterConversionDefinition, extLanguageManager);
-
-		abstractParameterInterface.setType(newTypeInIntrLanguage, parameterConversionDefinition);
-	}
-
-	private static String calculateJavaType(
-			String newTypeInExtLanguage,
-			TypeCathegory typeCathegory,
-			ParameterConversionDefinition parameterConversionDefinition,
-			IExtLanguageManager extLanguageManager) {
-
-		if (extLanguageManager.getLanguage() == ExtLanguage.JAVA) {
-			return extLanguageManager.convertTypeFromExtToIntrLanguage(newTypeInExtLanguage);
-		}
-
-		String newTypeInIntrLanguage = calculateTypeForSimpleType(newTypeInExtLanguage, typeCathegory,
-				parameterConversionDefinition, extLanguageManager);
-
-		return newTypeInIntrLanguage;
-	}
-
-	private static String calculateTypeForSimpleType(
-			String newTypeInExtLanguage, 
-			TypeCathegory typeCathegory,
-			ParameterConversionDefinition parameterConversionDefinition, 
-			IExtLanguageManager extLanguageManager) {
-
-		String newTypeInIntrLanguage = 
-				AbstractParameterConversionHelper.getMaxJavaTypeFromConversionDefinition(
-						typeCathegory,
-						parameterConversionDefinition);
-
-		if (newTypeInIntrLanguage == null) {
-			newTypeInIntrLanguage = extLanguageManager.convertTypeFromExtToIntrLanguage(newTypeInExtLanguage);
-		}
-
-		return newTypeInIntrLanguage;
 	}
 
 }
