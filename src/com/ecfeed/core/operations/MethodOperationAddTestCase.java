@@ -20,24 +20,25 @@ import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class MethodOperationAddTestCase extends AbstractModelOperation {
 
 	private MethodNode fMethodNode;
-	private TestCaseNode fTestCase;
+	private TestCaseNode fTestCaseNode;
 	private int fIndex;
 	private ITypeAdapterProvider fTypeAdapterProvider;
 
 	public MethodOperationAddTestCase(
-			MethodNode target, 
-			TestCaseNode testCase, 
+			MethodNode methodNode, 
+			TestCaseNode testCaseNode, 
 			ITypeAdapterProvider typeAdapterProvider, 
 			int index,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_TEST_CASE, extLanguageManager);
-		fMethodNode = target;
-		fTestCase = testCase;
+		fMethodNode = methodNode;
+		fTestCaseNode = testCaseNode;
 		fIndex = index;
 		fTypeAdapterProvider = typeAdapterProvider;
 	}
@@ -56,22 +57,24 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 
 		setOneNodeToSelect(fMethodNode);
 
-		if(fIndex == -1){
+		if (fIndex == -1) {
 			fIndex = fMethodNode.getTestCases().size();
 		}
-		if(fTestCase.getName().matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME) == false){
+		
+		if (!testCaseNameOk(fTestCaseNode)) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
-		if(fTestCase.updateReferences(fMethodNode) == false){
+		
+		if (fTestCaseNode.updateReferences(fMethodNode) == false) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
 		}
 
 		//following must be done AFTER references are updated
-		fTestCase.setParent(fMethodNode);
+		fTestCaseNode.setParent(fMethodNode);
 
-		for(ChoiceNode choice : fTestCase.getTestData()) {
+		for(ChoiceNode choice : fTestCaseNode.getTestData()) {
 
-			MethodParameterNode parameter = fTestCase.getMethodParameter(choice);
+			MethodParameterNode parameter = fTestCaseNode.getMethodParameter(choice);
 
 			if(parameter.isExpected()){
 				
@@ -93,14 +96,29 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			}
 		}
 
-		fMethodNode.addTestCase(fTestCase, fIndex);
+		fMethodNode.addTestCase(fTestCaseNode, fIndex);
 		
 		markModelUpdated();
 	}
 
+	private boolean testCaseNameOk(TestCaseNode testCaseNode) {
+		
+		String name = testCaseNode.getName();
+		
+		if (StringHelper.isNullOrEmpty(name)) {
+			return true;
+		}
+		
+		if (!name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME)) {
+			return false;
+		}
+		
+		return true;
+	}
+
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationRemoveTestCase(fMethodNode, fTestCase, getExtLanguageManager());
+		return new MethodOperationRemoveTestCase(fMethodNode, fTestCaseNode, getExtLanguageManager());
 	}
 
 }
