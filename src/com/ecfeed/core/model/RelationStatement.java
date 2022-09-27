@@ -193,10 +193,14 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fLeftParameter.getName());
 
-		if (tmpParameterNode != null && !tmpParameterNode.isExpected()) {
+		if (tmpParameterNode != null) {
 
-			if (fRightCondition.updateReferences(methodNode)) {
-				fLeftParameter = tmpParameterNode;
+			if (!tmpParameterNode.isExpected()) {
+				if (fRightCondition.updateReferences(methodNode)) {
+					fLeftParameter = tmpParameterNode;
+					return true;
+				}
+			} else {
 				return true;
 			}
 		}

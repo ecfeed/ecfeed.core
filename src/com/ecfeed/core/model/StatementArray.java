@@ -175,7 +175,9 @@ public class StatementArray extends AbstractStatement {
 	public boolean updateReferences(MethodNode method) {
 
 		for (AbstractStatement statement: fStatements) {
-			if (!statement.updateReferences(method)) return false;
+			if (!statement.updateReferences(method)) {
+				return false;
+			}
 		}
 		return true;
 	}
