@@ -147,7 +147,7 @@ public class ModelLogger {
 		printFieldLine(methodParameterNode.getType() + " [isLinked]=" + isLinked, indent + indentIncrement);
 
 		if (isLinked) {
-			GlobalParameterNode globalParameterNode = methodParameterNode.getLink();
+			GlobalParameterNode globalParameterNode = methodParameterNode.getParameterLink();
 			if (globalParameterNode == null) {
 				printIndentedLine("GlobalParameterNode is null", indent + indentIncrement);
 			} else {

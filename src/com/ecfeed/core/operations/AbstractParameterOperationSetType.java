@@ -155,7 +155,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 				List<String> types = methodNode.getParameterTypes();
 				for(AbstractParameterNode parameter: methodNode.getParameters()){
 					MethodParameterNode param = (MethodParameterNode)parameter;
-					if(param.isLinked() && param.getLink().equals(target)){
+					if(param.isLinked() && param.getParameterLink().equals(target)){
 						types.set(parameter.getMyIndex(), fNewTypeInIntrLanguage);
 					}			
 				}

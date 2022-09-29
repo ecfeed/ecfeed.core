@@ -76,10 +76,10 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 			MethodNode method = fTarget.getMethod();
 			String newType;
 			if(fLinked){
-				if(fTarget.getLink() == null){
+				if(fTarget.getParameterLink() == null){
 					ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
 				}
-				newType = fTarget.getLink().getType();
+				newType = fTarget.getParameterLink().getType();
 			}
 			else{
 				newType = fTarget.getRealType();

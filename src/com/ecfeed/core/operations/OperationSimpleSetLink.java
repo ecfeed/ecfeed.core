@@ -29,7 +29,7 @@ public class OperationSimpleSetLink extends AbstractModelOperation {
 
 		fMethodParameterNode = methodParameterNode;
 		fNewlink = link;
-		fOldLink = methodParameterNode.getLink();
+		fOldLink = methodParameterNode.getParameterLink();
 	}
 
 	@Override

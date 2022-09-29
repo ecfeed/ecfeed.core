@@ -10,11 +10,13 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodParameterNode extends AbstractParameterNode {
@@ -22,7 +24,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private boolean fExpected;
 	private String fDefaultValue;
 	private boolean fLinked;
-	private GlobalParameterNode fLink;
+	private AbstractNode fLink;
 	private List<ChoiceNode> fChoicesCopy;
 
 	public MethodParameterNode(
@@ -110,16 +112,32 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 	@Override
 	public String getType() {
-		if (isLinked() && fLink != null) {
-			return fLink.getType();
+		
+		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
+			return null;
+		}
+		
+		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
+		
+		
+		if (isLinked() && globalParameterNode != null) {
+			return globalParameterNode.getType();
 		}
 		return super.getType();
 	}
 
 	@Override
 	public String getTypeComments() {
-		if (isLinked() && fLink != null) {
-			return fLink.getTypeComments();
+		
+		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
+			return null;
+		}
+		
+		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
+		
+		
+		if (isLinked() && globalParameterNode != null) {
+			return globalParameterNode.getTypeComments();
 		}
 		return super.getTypeComments();
 	}
@@ -130,20 +148,34 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 	@Override
 	public List<ChoiceNode> getChoices(){
-		if(isLinked() && fLink != null){
-			return fLink.getChoices();
+		
+		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
+			return new ArrayList<>();
+		}
+		
+		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
+		
+		if(isLinked() && globalParameterNode != null){
+			return globalParameterNode.getChoices();
 		}
 		return super.getChoices();
 	}
 
 	@Override
 	public List<ChoiceNode> getChoicesWithCopies() {
-		if (isLinked() && fLink != null) {
+		
+		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
+			return new ArrayList<>();
+		}
+		
+		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
+		
+		if (isLinked() && globalParameterNode != null) {
 			if (fChoicesCopy == null) {
-				fChoicesCopy = fLink.getChoicesCopy();
+				fChoicesCopy = globalParameterNode.getChoicesCopy();
 				return fChoicesCopy;
 			}
-			List<ChoiceNode> temp = fLink.getChoicesCopy();
+			List<ChoiceNode> temp = globalParameterNode.getChoicesCopy();
 			if(!choiceListsMatch(fChoicesCopy, temp))
 				fChoicesCopy = temp;
 			return fChoicesCopy;
@@ -194,14 +226,6 @@ public class MethodParameterNode extends AbstractParameterNode {
 				return false;
 		return true;
 	}
-
-	//	@Override
-	//	public ChoiceNode getChoice(String qualifiedName) {
-	//		if (isLinked()) {
-	//			return getLink().getChoice(qualifiedName);
-	//		}
-	//		return super.getChoice(qualifiedName);
-	//	}
 
 	@Override
 	public List<? extends AbstractNode> getChildren() {
@@ -262,11 +286,34 @@ public class MethodParameterNode extends AbstractParameterNode {
 		registerChange();
 	}
 
-	public GlobalParameterNode getLink() {
-		return fLink;
+	public GlobalParameterNode getParameterLink() {
+		
+		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
+			return null;
+		}
+		
+		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
+		
+		return globalParameterNode;
 	}
 
-	public void setLink(GlobalParameterNode link) {
+	public MethodNode getMethodLink() {
+		
+		if (fLink!=null && !(fLink instanceof MethodNode)) {
+			return null;
+		}
+		
+		MethodNode methodNode = (MethodNode)fLink;
+		
+		return methodNode;
+	}
+	
+	public void setLink(AbstractNode link) {
+		
+		if (!((link instanceof GlobalParameterNode) || (link instanceof MethodNode))) {
+			ExceptionHelper.reportRuntimeException("Attempt to set link of invalid type.");
+		}
+		
 		this.fLink = link;
 		registerChange();
 	}

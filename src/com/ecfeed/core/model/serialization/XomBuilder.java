@@ -313,10 +313,10 @@ public abstract class XomBuilder implements IModelVisitor {
 				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
 				fWhiteCharConverter);
 
-		if (node.getLink() != null) {
+		if (node.getParameterLink() != null) {
 			encodeAndAddAttribute(
 					targetParameterElement, 
-					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLink().getQualifiedName()), 
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getParameterLink().getQualifiedName()), 
 					fWhiteCharConverter);
 		}
 

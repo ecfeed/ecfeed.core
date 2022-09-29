@@ -67,7 +67,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
-			fCurrentLink = fTarget.getLink();
+			fCurrentLink = fTarget.getParameterLink();
 			fTarget.setLink(fNewLink);
 		}
 

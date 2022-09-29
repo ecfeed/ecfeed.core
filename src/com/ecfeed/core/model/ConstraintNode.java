@@ -241,7 +241,7 @@ public class ConstraintNode extends AbstractNode{
 		for (AbstractParameterNode param : methodParameters) {
 			MethodParameterNode methodParam = (MethodParameterNode) param;
 
-			if (methodParam.isLinked() && methodParam.getLink().equals(argParameter)) {
+			if (methodParam.isLinked() && methodParam.getParameterLink().equals(argParameter)) {
 				return true;
 			}
 		}

@@ -640,7 +640,7 @@ public class MethodNode extends ParametersParentNode {
 	public List<MethodParameterNode> getLinkers(GlobalParameterNode globalParameter){
 		List<MethodParameterNode> result = new ArrayList<MethodParameterNode>();
 		for(MethodParameterNode localParameter : getMethodParameters()){
-			if(localParameter.isLinked() && localParameter.getLink() == globalParameter){
+			if(localParameter.isLinked() && localParameter.getParameterLink() == globalParameter){
 				result.add(localParameter);
 			}
 		}
@@ -668,7 +668,7 @@ public class MethodNode extends ParametersParentNode {
 	public MethodParameterNode getMethodParameter(ChoiceNode choice){
 		AbstractParameterNode parameter = choice.getParameter();
 		for(MethodParameterNode methodParameter : getMethodParameters()){
-			if(methodParameter == parameter || methodParameter.getLink() == parameter){
+			if(methodParameter == parameter || methodParameter.getParameterLink() == parameter){
 				return methodParameter;
 			}
 		}

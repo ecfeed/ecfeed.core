@@ -88,7 +88,7 @@ public class ParameterTransformer {
 
 		checkParametersForNotNull(methodParameterNode, globalParameterNode);
 
-		String linkedParameterType = methodParameterNode.getLink().getType();
+		String linkedParameterType = methodParameterNode.getParameterLink().getType();
 		String oldMethodParameterType = methodParameterNode.getType();
 
 		MethodNode methodNode = methodParameterNode.getMethod();
@@ -308,7 +308,7 @@ public class ParameterTransformer {
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		GlobalParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLink();
+		GlobalParameterNode oldGlobalParameterNode = srcMethodParameterNode.getParameterLink();
 
 		srcMethodParameterNode.setLink(null);
 		srcMethodParameterNode.setLinked(false);
