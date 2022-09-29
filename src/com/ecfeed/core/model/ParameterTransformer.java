@@ -17,6 +17,7 @@ import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
+import com.ecfeed.core.operations.SimpleOperationSetMethodParameterType;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
@@ -40,6 +41,9 @@ public class ParameterTransformer {
 
 		checkParametersForNotNull(srcMethodParameterNode, dstGlobalParameterNode);
 
+		String oldMethodParameterType = srcMethodParameterNode.getType();
+		String globalParameterType = dstGlobalParameterNode.getType();
+		
 		MethodOperationSetConstraints reverseOperation = 
 				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
 
@@ -58,18 +62,21 @@ public class ParameterTransformer {
 
 		MethodNode methodNode = srcMethodParameterNode.getMethod();
 
-		//		MethodNodeHelper.updateParameterReferencesInConstraints(
-		//				srcMethodParameterNode, 
-		//				dstGlobalParameterNode,
-		//				methodNode.getConstraintNodes(),
-		//				outReverseOperations,
-		//				extLanguageManager);
-
-
 		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
 
 		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
 
+		SimpleOperationSetMethodParameterType reverseSetTypeOperation = 
+			new SimpleOperationSetMethodParameterType(
+					srcMethodParameterNode, 
+					oldMethodParameterType, 
+					extLanguageManager);
+
+		outReverseOperations.add(reverseSetTypeOperation);
+
+		
+		srcMethodParameterNode.setType(globalParameterType);
+		
 		return methodNode;
 	}
 
@@ -80,6 +87,9 @@ public class ParameterTransformer {
 			IExtLanguageManager extLanguageManager) {
 
 		checkParametersForNotNull(methodParameterNode, globalParameterNode);
+
+		String linkedParameterType = methodParameterNode.getLink().getType();
+		String oldMethodParameterType = methodParameterNode.getType();
 
 		MethodNode methodNode = methodParameterNode.getMethod();
 
@@ -104,6 +114,16 @@ public class ParameterTransformer {
 		outReverseOperations.addAll(reverseOperationsForChoicesCopy);
 
 		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
+
+		SimpleOperationSetMethodParameterType reverseSetTypeOperation = 
+				new SimpleOperationSetMethodParameterType(
+						methodParameterNode, 
+						oldMethodParameterType, 
+						extLanguageManager);
+		
+		outReverseOperations.add(reverseSetTypeOperation);
+		
+		methodParameterNode.setType(linkedParameterType);
 	}
 
 	private static void setLink(
@@ -146,17 +166,17 @@ public class ParameterTransformer {
 			String newType, 
 			AbstractParameterNode abstractParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
-		
+
 		if (abstractParameterNode instanceof GlobalParameterNode) {
-			
+
 			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
-			
+
 			ChoiceNodeHelper.verifyConversionOfChoices(globalParameterNode, newType, inOutParameterConversionDefinition);
 			return;
 		}
 
 		MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
-		
+
 		if (methodParameterNode.isExpected()) {
 			addDefaultValueToConversionDefinition(
 					methodParameterNode.getDefaultValue(), inOutParameterConversionDefinition);
@@ -184,7 +204,7 @@ public class ParameterTransformer {
 
 		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
 	}
-	
+
 	public static boolean isValueCompatibleWithType(
 			String value, 
 			String newType, 
@@ -365,7 +385,7 @@ public class ParameterTransformer {
 		ParameterConversionItemPart srcPart = new ParameterConversionItemPartForValue(defaultValue);
 
 		boolean isRandomized = false;
-		
+
 		ParameterConversionItem parameterConversionItem = 
 				new ParameterConversionItem(srcPart, null, isRandomized, "default value");
 
