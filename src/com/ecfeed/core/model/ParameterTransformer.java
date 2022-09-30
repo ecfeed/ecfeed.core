@@ -88,7 +88,7 @@ public class ParameterTransformer {
 
 		checkParametersForNotNull(methodParameterNode, globalParameterNode);
 
-		String linkedParameterType = methodParameterNode.getParameterLink().getType();
+		String linkedParameterType = methodParameterNode.getLinkToGlobalParameter().getType();
 		String oldMethodParameterType = methodParameterNode.getType();
 
 		MethodNode methodNode = methodParameterNode.getMethod();
@@ -133,7 +133,7 @@ public class ParameterTransformer {
 			IExtLanguageManager extLanguageManager) {
 
 
-		srcMethodParameterNode.setLink(dstParameterForChoices);
+		srcMethodParameterNode.setLinkToGlobalParameter(dstParameterForChoices);
 		srcMethodParameterNode.setLinked(true);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 
@@ -308,9 +308,9 @@ public class ParameterTransformer {
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		GlobalParameterNode oldGlobalParameterNode = srcMethodParameterNode.getParameterLink();
+		GlobalParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLinkToGlobalParameter();
 
-		srcMethodParameterNode.setLink(null);
+		srcMethodParameterNode.setLinkToGlobalParameter(null);
 		srcMethodParameterNode.setLinked(false);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 

@@ -210,7 +210,7 @@ public class ConstraintHelper {
 	private static AbstractParameterNode getParameterNodeForComparison(MethodParameterNode methodParameterNode) {
 
 		if (methodParameterNode.isLinked()) {
-			return methodParameterNode.getParameterLink();
+			return methodParameterNode.getLinkToGlobalParameter();
 		} else {
 			return methodParameterNode;
 		}

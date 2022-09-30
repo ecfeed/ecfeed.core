@@ -340,10 +340,14 @@ public class MethodNodeHelper {
 			parametersNames = null;
 		}
 
+		List<String> parameterTypes = methodNode.getParameterTypes();
+		
+		String methodName = methodNode.getName();
+		
 		String signature =
 				createSignatureByIntrLanguage(
-						methodNode.getName(),
-						methodNode.getParameterTypes(),
+						methodName,
+						parameterTypes,
 						parametersNames,
 						expectedParametersFlags,
 						extLanguageOfTheResult);

@@ -227,7 +227,7 @@ public class ClassNode extends GlobalParametersParentNode {
 		List<MethodNode> result = new ArrayList<MethodNode>();
 		for(MethodNode method : getMethods()){
 			for(MethodParameterNode methodParameter : method.getMethodParameters()){
-				if(methodParameter.isLinked() && methodParameter.getParameterLink() == parameter){
+				if(methodParameter.isLinked() && methodParameter.getLinkToGlobalParameter() == parameter){
 					result.add(method);
 					break;
 				}

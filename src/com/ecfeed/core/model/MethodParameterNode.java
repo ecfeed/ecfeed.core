@@ -10,13 +10,11 @@
 
 package com.ecfeed.core.model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class MethodParameterNode extends AbstractParameterNode {
@@ -24,7 +22,8 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private boolean fExpected;
 	private String fDefaultValue;
 	private boolean fLinked;
-	private AbstractNode fLink;
+	private GlobalParameterNode fLinkToGlobalParameter;
+	private MethodNode fLinkToMethod;
 	private List<ChoiceNode> fChoicesCopy;
 
 	public MethodParameterNode(
@@ -43,7 +42,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		fExpected = expected;
 		fDefaultValue = defaultValue;
 		fLinked = linked;
-		fLink = link;
+		fLinkToGlobalParameter = link;
 	}
 
 	public MethodParameterNode(
@@ -94,7 +93,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 						);
 
 		copy.fLinked = fLinked;
-		copy.fLink = fLink;
+		copy.fLinkToGlobalParameter = fLinkToGlobalParameter;
 
 		copy.setProperties(getProperties());
 		copy.setParent(this.getParent());
@@ -113,31 +112,21 @@ public class MethodParameterNode extends AbstractParameterNode {
 	@Override
 	public String getType() {
 		
-		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
+		if (fLinkToMethod != null) {
 			return null;
 		}
-		
-		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
-		
-		
-		if (isLinked() && globalParameterNode != null) {
-			return globalParameterNode.getType();
+
+		if (isLinked() && fLinkToGlobalParameter != null) {
+			return fLinkToGlobalParameter.getType();
 		}
 		return super.getType();
 	}
 
 	@Override
 	public String getTypeComments() {
-		
-		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
-			return null;
-		}
-		
-		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
-		
-		
-		if (isLinked() && globalParameterNode != null) {
-			return globalParameterNode.getTypeComments();
+
+		if (isLinked() && fLinkToGlobalParameter != null) {
+			return fLinkToGlobalParameter.getTypeComments();
 		}
 		return super.getTypeComments();
 	}
@@ -148,34 +137,22 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 	@Override
 	public List<ChoiceNode> getChoices(){
-		
-		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
-			return new ArrayList<>();
-		}
-		
-		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
-		
-		if(isLinked() && globalParameterNode != null){
-			return globalParameterNode.getChoices();
+
+		if(isLinked() && fLinkToGlobalParameter != null){
+			return fLinkToGlobalParameter.getChoices();
 		}
 		return super.getChoices();
 	}
 
 	@Override
 	public List<ChoiceNode> getChoicesWithCopies() {
-		
-		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
-			return new ArrayList<>();
-		}
-		
-		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
-		
-		if (isLinked() && globalParameterNode != null) {
+
+		if (isLinked() && fLinkToGlobalParameter != null) {
 			if (fChoicesCopy == null) {
-				fChoicesCopy = globalParameterNode.getChoicesCopy();
+				fChoicesCopy = fLinkToGlobalParameter.getChoicesCopy();
 				return fChoicesCopy;
 			}
-			List<ChoiceNode> temp = globalParameterNode.getChoicesCopy();
+			List<ChoiceNode> temp = fLinkToGlobalParameter.getChoicesCopy();
 			if(!choiceListsMatch(fChoicesCopy, temp))
 				fChoicesCopy = temp;
 			return fChoicesCopy;
@@ -286,36 +263,26 @@ public class MethodParameterNode extends AbstractParameterNode {
 		registerChange();
 	}
 
-	public GlobalParameterNode getParameterLink() {
-		
-		if (fLink!=null && !(fLink instanceof GlobalParameterNode)) {
-			return null;
-		}
-		
-		GlobalParameterNode globalParameterNode = (GlobalParameterNode)fLink;
-		
-		return globalParameterNode;
+	public GlobalParameterNode getLinkToGlobalParameter() {
+
+		return fLinkToGlobalParameter;
 	}
 
-	public MethodNode getMethodLink() {
-		
-		if (fLink!=null && !(fLink instanceof MethodNode)) {
-			return null;
-		}
-		
-		MethodNode methodNode = (MethodNode)fLink;
-		
-		return methodNode;
+	public MethodNode getLinkToMethod() {
+
+		return fLinkToMethod;
 	}
-	
-	public void setLink(AbstractNode link) {
-		
-		if (!((link instanceof GlobalParameterNode) || (link instanceof MethodNode))) {
-			ExceptionHelper.reportRuntimeException("Attempt to set link of invalid type.");
-		}
-		
-		this.fLink = link;
-		registerChange();
+
+	public void setLinkToGlobalParameter(GlobalParameterNode link) {
+
+		fLinkToGlobalParameter = link;
+		fLinkToMethod = null;
+	}
+
+	public void setLinkToMethod(MethodNode link) {
+
+		fLinkToMethod = link;
+		fLinkToGlobalParameter = null;
 	}
 
 	@Override

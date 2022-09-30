@@ -33,6 +33,16 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
+		if (abstractParameterNode instanceof MethodParameterNode) {
+			
+			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+			MethodNode linkToMethodNode = methodParameterNode.getLinkToMethod();
+			
+			if (linkToMethodNode != null) {
+				return "";
+			}
+		}
+		
 		String type = abstractParameterNode.getType();
 		
 		if (type == null) {
@@ -65,7 +75,10 @@ public abstract class AbstractParameterNodeHelper {
 
 			signature += extLanguageManager.getTypeSeparator();
 
-			signature += " ";
+			if (parameterTypeInIntrLanguage != null) {
+				signature += " ";
+			}
+			
 			parameterNameInIntrLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(parameterNameInIntrLanguage);
 
 			signature += parameterNameInIntrLanguage;

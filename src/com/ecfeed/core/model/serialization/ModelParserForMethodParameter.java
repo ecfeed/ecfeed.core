@@ -90,7 +90,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			GlobalParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
 
 			if (link != null) {
-				targetMethodParameterNode.setLink(link);
+				targetMethodParameterNode.setLinkToGlobalParameter(link);
 			} else {
 				targetMethodParameterNode.setLinked(false);
 			}

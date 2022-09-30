@@ -44,7 +44,7 @@ public abstract class ParametersParentNode extends AbstractNode {
 		parameter.setParent(this);
 	}
 
-	public List<AbstractParameterNode> getParameters(){
+	public List<AbstractParameterNode> getParameters() {
 		return fParameters;
 	}
 

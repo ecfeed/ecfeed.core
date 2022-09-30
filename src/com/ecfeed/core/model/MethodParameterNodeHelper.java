@@ -47,7 +47,7 @@ public class MethodParameterNodeHelper {
 						methodParameterNode.isExpected(),
 						extLanguageManager);
 
-		final GlobalParameterNode link = methodParameterNode.getParameterLink();
+		final GlobalParameterNode link = methodParameterNode.getLinkToGlobalParameter();
 
 		if (methodParameterNode.isLinked() && link != null) {
 			signature += "[LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(link, extLanguageManager);
@@ -71,16 +71,16 @@ public class MethodParameterNodeHelper {
 
 		if (methodParameterNode.isLinked()) {
 		
-			GlobalParameterNode globalParameterNode = methodParameterNode.getParameterLink();
+			GlobalParameterNode globalParameterNode = methodParameterNode.getLinkToGlobalParameter();
 	
 			if (globalParameterNode != null) {
 				signature += " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, extLanguageManager);
 			}
 			
-			MethodNode methodNode = methodParameterNode.getMethodLink();
+			MethodNode methodNode = methodParameterNode.getLinkToMethod();
 			
 			if (methodNode != null) {
-				signature += " [LINKED]->" + methodNode.getName();
+				signature += "[LINKED]->" + methodNode.getName();
 			}
 		}
 
@@ -101,7 +101,7 @@ public class MethodParameterNodeHelper {
 			return findChoiceIntr(methodParameterNode, choiceQualifiedName);
 		}
 
-		GlobalParameterNode link = methodParameterNode.getParameterLink();
+		GlobalParameterNode link = methodParameterNode.getLinkToGlobalParameter();
 
 		if (link == null)  {
 			ExceptionHelper.reportRuntimeException("Missing link for linked parameter.");

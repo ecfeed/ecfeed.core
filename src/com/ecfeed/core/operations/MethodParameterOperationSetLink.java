@@ -35,7 +35,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 			@Override
 			public void execute() {
 				setOneNodeToSelect(fTarget);
-				fTarget.setLink(fCurrentLink);
+				fTarget.setLinkToGlobalParameter(fCurrentLink);
 			}
 
 			@Override
@@ -67,8 +67,8 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
-			fCurrentLink = fTarget.getParameterLink();
-			fTarget.setLink(fNewLink);
+			fCurrentLink = fTarget.getLinkToGlobalParameter();
+			fTarget.setLinkToGlobalParameter(fNewLink);
 		}
 
 		@Override
