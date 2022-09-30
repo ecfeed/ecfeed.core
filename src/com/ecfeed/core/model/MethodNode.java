@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
@@ -107,7 +106,7 @@ public class MethodNode extends ParametersParentNode {
 		for (AbstractParameterNode abstractParameterNode : parameters) {
 
 			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
-			
+
 			String parameterType = methodParameterNode.getType();
 			parameterTypes.add(parameterType);
 		}
@@ -269,13 +268,13 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	public List<Constraint> getConstraints(){
-		
+
 		List<Constraint> result = new ArrayList<Constraint>();
-		
+
 		for(ConstraintNode node : fConstraintNodes){
 			result.add(node.getConstraint());
 		}
-		
+
 		return result;
 	}
 
@@ -326,72 +325,6 @@ public class MethodNode extends ParametersParentNode {
 		return testDomain;
 	}
 
-	public List<MethodParameterNode> getDevelopedParameters(){
-		
-		List<MethodParameterNode> developedParameters = new ArrayList<>();
-		
-		List<AbstractParameterNode> parameters = getParameters();
-		
-		for (AbstractParameterNode abstractParameterNode : parameters) {
-			
-			developOneParameter(abstractParameterNode, developedParameters);
-		}
-		
-		return developedParameters;
-	}
-	
-	private void developOneParameter(
-			AbstractParameterNode abstractParameterNode,
-			List<MethodParameterNode> inOutDevelopedParameters) {
-
-		if (!(abstractParameterNode instanceof MethodParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
-			return;
-		}
-		
-		MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
-		
-		MethodNode linkedMethodNode = methodParameterNode.getLinkToMethod();
-		
-		if (linkedMethodNode == null) {
-			MethodParameterNode clonedMethodParameterNode = methodParameterNode.makeClone();
-			inOutDevelopedParameters.add(clonedMethodParameterNode);
-			return;
-		}
-		
-		developChildParameters(abstractParameterNode, linkedMethodNode, inOutDevelopedParameters);
-		
-	}
-
-	private void developChildParameters(
-			AbstractParameterNode abstractParameterNode, 
-			MethodNode linkedMethodNode,
-			List<MethodParameterNode> inOutDevelopedParameters) {
-		
-		List<MethodParameterNode> linkedParameters = linkedMethodNode.getDevelopedParameters();
-		
-		for (MethodParameterNode linkedMethodParameterNode : linkedParameters) {
-			
-			String parameterName = abstractParameterNode.getName() + "_" + linkedMethodParameterNode.getName();
-			String parameterType = linkedMethodParameterNode.getType();
-			String defaultValue = linkedMethodParameterNode.getDefaultValue();
-			boolean isExpected = linkedMethodParameterNode.isExpected();
-			
-			
-			MethodParameterNode clonedMethodParameterNode = 
-				new MethodParameterNode(
-						parameterName,
-						parameterType,
-						defaultValue,
-						isExpected,
-						false,
-						null,
-						null);
-			
-			inOutDevelopedParameters.add(clonedMethodParameterNode);
-		}
-	}
-	
 	private List<ChoiceNode> getTestDomainProcessAbstractParameterNode(int parameterIndex) {
 
 		AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);

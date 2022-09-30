@@ -26,6 +26,69 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
+	public static List<MethodParameterNode> getDevelopedParametersWithChoices(MethodNode methodNode) {
+
+		List<MethodParameterNode> developedParameters = new ArrayList<>();
+
+		List<MethodParameterNode> parameters = methodNode.getMethodParameters();
+
+		for (MethodParameterNode methodParameterNode : parameters) {
+
+			developOneParameter(methodParameterNode, developedParameters);
+		}
+
+		return developedParameters;
+	}
+
+	private static void developOneParameter(
+			MethodParameterNode methodParameterNode,
+			List<MethodParameterNode> inOutDevelopedParameters) {
+
+		MethodNode linkedMethodNode = methodParameterNode.getLinkToMethod();
+
+		if (linkedMethodNode == null) {
+			MethodParameterNode clonedMethodParameterNode = methodParameterNode.makeClone();
+			clonedMethodParameterNode.clearChoices();
+
+			ChoiceNodeHelper.cloneChoiceNodesRecursively(methodParameterNode, clonedMethodParameterNode);
+
+			inOutDevelopedParameters.add(clonedMethodParameterNode);
+			return;
+		}
+
+		developChildParameters(methodParameterNode, linkedMethodNode, inOutDevelopedParameters);
+
+	}
+
+	private static void developChildParameters(
+			AbstractParameterNode abstractParameterNode, 
+			MethodNode linkedMethodNode,
+			List<MethodParameterNode> inOutDevelopedParameters) {
+
+		List<MethodParameterNode> linkedParameters = getDevelopedParametersWithChoices(linkedMethodNode);
+
+		for (MethodParameterNode linkedMethodParameterNode : linkedParameters) {
+
+			String parameterName = abstractParameterNode.getName() + "_" + linkedMethodParameterNode.getName();
+			String parameterType = linkedMethodParameterNode.getType();
+			String defaultValue = linkedMethodParameterNode.getDefaultValue();
+			boolean isExpected = linkedMethodParameterNode.isExpected();
+
+
+			MethodParameterNode clonedMethodParameterNode = 
+					new MethodParameterNode(
+							parameterName,
+							parameterType,
+							defaultValue,
+							isExpected,
+							false,
+							null,
+							null);
+
+			inOutDevelopedParameters.add(clonedMethodParameterNode);
+		}
+	}
+
 	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
 
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
@@ -341,9 +404,9 @@ public class MethodNodeHelper {
 		}
 
 		List<String> parameterTypes = methodNode.getParameterTypes();
-		
+
 		String methodName = methodNode.getName();
-		
+
 		String signature =
 				createSignatureByIntrLanguage(
 						methodName,
