@@ -42,6 +42,26 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+	public static void cloneChoiceNodesRecursively(
+			ChoicesParentNode srcParentNode, 
+			ChoicesParentNode dstParentNode) {
+
+		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
+
+		if (childChoiceNodes.size() == 0) {
+			return;
+		}
+
+		for (ChoiceNode choiceNode : childChoiceNodes) {
+
+			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+			clonedChoiceNode.clearChoices();
+
+			dstParentNode.addChoice(clonedChoiceNode);
+
+			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode);
+		}
+	}
 
 	public static void verifyConversionOfChoices(
 			AbstractParameterNode abstractParameterNode, 
@@ -53,7 +73,7 @@ public class ChoiceNodeHelper {
 		for (ChoiceNode choiceNode : choiceNodes) {
 
 			boolean isRandomizedValue = choiceNode.isRandomizedValue();
-			
+
 			if (!canConvertChoiceValueFromToType(
 					choiceNode.getValueString(), 
 					abstractParameterNode.getType(), 
