@@ -65,15 +65,14 @@ public class MethodNodeHelper {
 			MethodNode linkedMethodNode,
 			List<MethodParameterNode> inOutDevelopedParameters) {
 
-		List<MethodParameterNode> linkedParameters = getDevelopedParametersWithChoices(linkedMethodNode);
+		List<MethodParameterNode> linkedParametersWithChoices = getDevelopedParametersWithChoices(linkedMethodNode);
 
-		for (MethodParameterNode linkedMethodParameterNode : linkedParameters) {
+		for (MethodParameterNode linkedParameterWithChoices : linkedParametersWithChoices) {
 
-			String parameterName = abstractParameterNode.getName() + "_" + linkedMethodParameterNode.getName();
-			String parameterType = linkedMethodParameterNode.getType();
-			String defaultValue = linkedMethodParameterNode.getDefaultValue();
-			boolean isExpected = linkedMethodParameterNode.isExpected();
-
+			String parameterName = abstractParameterNode.getName() + "_" + linkedParameterWithChoices.getName();
+			String parameterType = linkedParameterWithChoices.getType();
+			String defaultValue = linkedParameterWithChoices.getDefaultValue();
+			boolean isExpected = linkedParameterWithChoices.isExpected();
 
 			MethodParameterNode clonedMethodParameterNode = 
 					new MethodParameterNode(
@@ -85,6 +84,8 @@ public class MethodNodeHelper {
 							null,
 							null);
 
+			ChoiceNodeHelper.cloneChoiceNodesRecursively(linkedParameterWithChoices, clonedMethodParameterNode);
+			
 			inOutDevelopedParameters.add(clonedMethodParameterNode);
 		}
 	}
