@@ -32,6 +32,13 @@ public abstract class ParametersParentNode extends AbstractNode {
 
 		addParameter(parameter, fParameters.size());
 	}
+	
+	public void addParameters(List<MethodParameterNode> parameters) {
+		
+		for (MethodParameterNode methodParameterNode : parameters) {
+			addParameter(methodParameterNode);
+		}
+	}
 
 	public void addParameter(AbstractParameterNode parameter, int index) {
 
