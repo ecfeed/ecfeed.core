@@ -66,10 +66,14 @@ public class ClassNode extends GlobalParametersParentNode {
 		return super.getMaxChildIndex(potentialChild);
 	}
 
+	public ClassNode(String qualifiedName) {
+		this(qualifiedName, null);
+	}
+
 	public ClassNode(String qualifiedName, IModelChangeRegistrator modelChangeRegistrator) {
 		this(qualifiedName, modelChangeRegistrator, false, null);
 	}
-
+	
 	public ClassNode(
 			String qualifiedName, IModelChangeRegistrator modelChangeRegistrator, 
 			boolean runOnAndroid, String androidBaseRunner) {

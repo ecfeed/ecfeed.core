@@ -55,8 +55,20 @@ public class MethodParameterNode extends AbstractParameterNode {
 		this(name, type, defaultValue, expected, false, null, modelChangeRegistrator);
 	}
 
-	public MethodParameterNode(AbstractParameterNode source,
-			String defaultValue, boolean expected, boolean linked,
+	public MethodParameterNode(
+			String name,
+			String type,
+			String defaultValue,
+			boolean expected) {
+		
+		this(name, type, defaultValue, expected, null);
+	}
+	
+	public MethodParameterNode(
+			AbstractParameterNode source,
+			String defaultValue, 
+			boolean expected, 
+			boolean linked,
 			GlobalParameterNode link) {
 
 		this(

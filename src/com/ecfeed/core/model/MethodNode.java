@@ -45,6 +45,10 @@ public class MethodNode extends ParametersParentNode {
 
 		setDefaultPropertyValues();
 	}
+	
+	public MethodNode(String name){
+		this(name, null);
+	}
 
 	public void setName(String name) {
 
