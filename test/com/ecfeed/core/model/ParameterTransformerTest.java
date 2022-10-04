@@ -145,7 +145,7 @@ public class ParameterTransformerTest {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
 		// check choices from constraints
 
@@ -173,7 +173,7 @@ public class ParameterTransformerTest {
 
 		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
-		assertNull(methodParameterNode2.getLink());
+		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
 		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
 		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
@@ -282,7 +282,7 @@ public class ParameterTransformerTest {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
 		// check choices from constraints
 
@@ -310,7 +310,7 @@ public class ParameterTransformerTest {
 
 		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
-		assertNull(methodParameterNode2.getLink());
+		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
 		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
 		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
@@ -416,7 +416,7 @@ public class ParameterTransformerTest {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
 		// check choices from constraints
 
@@ -444,7 +444,7 @@ public class ParameterTransformerTest {
 
 		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
-		assertNull(methodParameterNode2.getLink());
+		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
 		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
 		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
@@ -552,7 +552,7 @@ public class ParameterTransformerTest {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
 		// check choices from constraints
 
@@ -580,7 +580,7 @@ public class ParameterTransformerTest {
 
 		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
-		assertNull(methodParameterNode2.getLink());
+		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
 		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
 		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
@@ -683,7 +683,7 @@ public class ParameterTransformerTest {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNodeOfRoot, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfRoot, methodParameterNode2.getLinkToGlobalParameter());
 
 		// check choices from constraints
 
@@ -711,7 +711,7 @@ public class ParameterTransformerTest {
 
 		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
-		assertNull(methodParameterNode2.getLink());
+		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
 		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
 		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
@@ -827,7 +827,7 @@ public class ParameterTransformerTest {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
 		// check choices from constraints
 
@@ -855,7 +855,7 @@ public class ParameterTransformerTest {
 
 		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
-		assertNull(methodParameterNode2.getLink());
+		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
 		ChoiceNode choiceNodeFromMethodParam = methodParameterNode.getChoice(methodChoiceName1);
 		assertEquals(methodChoiceNode1, choiceNodeFromMethodParam);
@@ -1066,7 +1066,7 @@ public class ParameterTransformerTest {
 
 		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
-		assertEquals(globalParameterNodeOfClass1, methodParameterNode2.getLink());
+		assertEquals(globalParameterNodeOfClass1, methodParameterNode2.getLinkToGlobalParameter());
 
 		// check choices from constraints
 
@@ -1098,7 +1098,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, resultMethodParameterNode.getChoiceCount());
 
 		assertEquals(false, resultMethodParameterNode.isLinked());
-		assertNull(resultMethodParameterNode.getLink());
+		assertNull(resultMethodParameterNode.getLinkToGlobalParameter());
 
 		// check local choices
 
@@ -1240,7 +1240,7 @@ public class ParameterTransformerTest {
 		MethodParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
 
-		methodParameterNode.setLink(globalParameterNodeOfRoot1);
+		methodParameterNode.setLinkToGlobalParameter(globalParameterNodeOfRoot1);
 		methodParameterNode.setLinked(true);
 
 		// constraint
@@ -1259,7 +1259,7 @@ public class ParameterTransformerTest {
 		// check if linked
 
 		assertFalse(methodParameterNode.isLinked());
-		assertNull(methodParameterNode.getLink());
+		assertNull(methodParameterNode.getLinkToGlobalParameter());
 
 		// change names of global choices to avoid confusion during check
 
@@ -1289,7 +1289,7 @@ public class ParameterTransformerTest {
 		// check if returned to original state
 
 		assertTrue(methodParameterNode.isLinked());
-		assertEquals(globalParameterNodeOfRoot1, methodParameterNode.getLink());
+		assertEquals(globalParameterNodeOfRoot1, methodParameterNode.getLinkToGlobalParameter());
 
 		// change Linked property for checking child choices only
 
