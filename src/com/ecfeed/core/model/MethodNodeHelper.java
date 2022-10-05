@@ -57,7 +57,6 @@ public class MethodNodeHelper {
 		}
 
 		developChildParameters(methodParameterNode, linkedMethodNode, inOutDevelopedParameters);
-
 	}
 
 	private static void developChildParameters(
