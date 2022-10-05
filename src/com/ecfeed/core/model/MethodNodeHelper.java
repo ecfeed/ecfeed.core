@@ -26,69 +26,6 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
-	public static List<MethodParameterNode> getDevelopedParametersWithChoices(MethodNode methodNode) {
-
-		List<MethodParameterNode> developedParameters = new ArrayList<>();
-
-		List<MethodParameterNode> parameters = methodNode.getMethodParameters();
-
-		for (MethodParameterNode methodParameterNode : parameters) {
-
-			developOneParameter(methodParameterNode, developedParameters);
-		}
-
-		return developedParameters;
-	}
-
-	private static void developOneParameter(
-			MethodParameterNode methodParameterNode,
-			List<MethodParameterNode> inOutDevelopedParameters) {
-
-		MethodNode linkedMethodNode = methodParameterNode.getLinkToMethod();
-
-		if (linkedMethodNode == null) {
-			MethodParameterNode clonedMethodParameterNode = methodParameterNode.makeClone();
-			clonedMethodParameterNode.clearChoices();
-
-			ChoiceNodeHelper.cloneChoiceNodesRecursively(methodParameterNode, clonedMethodParameterNode);
-
-			inOutDevelopedParameters.add(clonedMethodParameterNode);
-			return;
-		}
-
-		developChildParameters(methodParameterNode, linkedMethodNode, inOutDevelopedParameters);
-	}
-
-	private static void developChildParameters(
-			AbstractParameterNode abstractParameterNode, 
-			MethodNode linkedMethodNode,
-			List<MethodParameterNode> inOutDevelopedParameters) {
-
-		List<MethodParameterNode> linkedParametersWithChoices = getDevelopedParametersWithChoices(linkedMethodNode);
-
-		for (MethodParameterNode linkedParameterWithChoices : linkedParametersWithChoices) {
-
-			String parameterName = abstractParameterNode.getName() + "_" + linkedParameterWithChoices.getName();
-			String parameterType = linkedParameterWithChoices.getType();
-			String defaultValue = linkedParameterWithChoices.getDefaultValue();
-			boolean isExpected = linkedParameterWithChoices.isExpected();
-
-			MethodParameterNode clonedMethodParameterNode = 
-					new MethodParameterNode(
-							parameterName,
-							parameterType,
-							defaultValue,
-							isExpected,
-							false,
-							null,
-							null);
-
-			ChoiceNodeHelper.cloneChoiceNodesRecursively(linkedParameterWithChoices, clonedMethodParameterNode);
-			
-			inOutDevelopedParameters.add(clonedMethodParameterNode);
-		}
-	}
-
 	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
 
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
