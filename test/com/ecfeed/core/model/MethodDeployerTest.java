@@ -64,4 +64,30 @@ public class MethodDeployerTest {
 		assertEquals(sourceParameter.isExpected(), deployedParameter.isExpected());
 	}
 
+	@Test
+	public void deployMethodWithOneParameterAndChoice() {
+
+		MethodNode sourceMethod = new MethodNode("method");
+		MethodParameterNode methodParameterNode = new MethodParameterNode("parameter", "String", "A", true);
+		sourceMethod.addParameter(methodParameterNode);
+		
+		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
+		methodParameterNode.addChoice(sourceChoiceNode);
+
+		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
+
+		assertEquals(1, deployedMethod.getParameters().size());
+		
+		MethodParameterNode deployedParameter = (MethodParameterNode)deployedMethod.getParameters().get(0);
+		
+		ChoiceNode deployedChoiceNode = deployedParameter.getChoices().get(0);
+		
+		assertTrue(sourceChoiceNode.hashCode() != deployedChoiceNode.hashCode());
+		assertEquals(sourceChoiceNode.getName(), deployedChoiceNode.getName());
+		assertEquals(sourceChoiceNode.getValueString(), deployedChoiceNode.getValueString());
+		
+		ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
+		assertEquals(sourceChoiceNode.hashCode(), originalChoiceNode.hashCode());
+	}
+	
 }

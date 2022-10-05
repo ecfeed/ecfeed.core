@@ -31,13 +31,18 @@ public class ChoiceNode extends ChoicesParentNode {
 	private Set<String> fLabels;
 	private boolean fIsRandomizedValue;
 
-	private ChoiceNode fOrigChoiceNode = null;
+	private ChoiceNode fOrigChoiceNode = null; // used in Sat Solver
+	private ChoiceNode fOtherChoiceNode = null; // a reference to other choice which can be used in algorithms
 
 	public ChoiceNode(String name, String value, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 		fValueString = value;
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
+	}
+	
+	public ChoiceNode(String name, String value) {
+		this(name, value, null);
 	}
 
 	public ChoiceNode(String name, String value, boolean isRandomized, IModelChangeRegistrator modelChangeRegistrator) {
@@ -170,6 +175,14 @@ public class ChoiceNode extends ChoicesParentNode {
 
 		copy.setRandomizedValue(fIsRandomizedValue);
 		return copy;
+	}
+
+	public ChoiceNode getOtherChoice() {
+		return fOtherChoiceNode;
+	}
+	
+	public void setOtherChoice(ChoiceNode choiceNode) {
+		fOtherChoiceNode = choiceNode;
 	}
 
 	public ChoiceNode getQualifiedCopy(MethodParameterNode parameter) {
