@@ -55,6 +55,9 @@ public abstract class MethodDeployer {
 
 		deployedMethodParameterNode.setParent(sourceMethodParameterNode.getParent());
 
+		// MethodParameterNode linkedMethod = deployedMethodParameterNode.getLinkToMethod();
+		// MethodAndStructureParent linkedMethod = deployedMethodParameterNode.getLinkToMethodAndStructureParent();
+		
 		deployedMethodParameterNode.setLinked(sourceMethodParameterNode.isLinked());
 		deployedMethodParameterNode.setLinkToGlobalParameter(sourceMethodParameterNode.getLinkToGlobalParameter());
 		deployedMethodParameterNode.setProperties(sourceMethodParameterNode.getProperties());
@@ -154,6 +157,36 @@ public abstract class MethodDeployer {
 			
 			inOutDevelopedParameters.add(clonedMethodParameterNode);
 		}
+	}
+
+	public static List<TestCase> revertToOriginalChoices(List<TestCase> deployedTestCases) {
+		
+		List<TestCase> result = new ArrayList<>();
+		
+		for (TestCase deployedTestCase : deployedTestCases) {
+		
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase);
+			
+			result.add(revertedTestCaseNode);
+		}
+		
+		return result;
+	}
+
+	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase) {
+		
+		List<ChoiceNode> revertedChoices = new ArrayList<>();
+		
+		List<ChoiceNode> deployedChoices = deployedTestCase.getListOfChoiceNodes();
+		
+		for (ChoiceNode deployedChoiceNode : deployedChoices) {
+			
+			ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
+			
+			revertedChoices.add(originalChoiceNode);
+		}
+		
+		return new TestCase(revertedChoices);
 	}
 	
 }
