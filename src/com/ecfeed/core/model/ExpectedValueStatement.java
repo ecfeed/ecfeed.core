@@ -23,9 +23,9 @@ import com.ecfeed.core.utils.MessageStack;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
-	MethodParameterNode fLeftMethodParameterNode;
-	ChoiceNode fChoiceNode;
-	private IPrimitiveTypePredicate fPredicate;
+	private MethodParameterNode fLeftMethodParameterNode;
+	private ChoiceNode fChoiceNode;
+	private IPrimitiveTypePredicate fPredicate; // TODO NE-TE remove ?
 
 	public ExpectedValueStatement(
 			MethodParameterNode methodParameterNode, 
@@ -128,7 +128,6 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return result;
 	}
 
-
 	@Override
 	public void derandomize() {
 		fChoiceNode.derandomize();
@@ -141,6 +140,10 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	public ChoiceNode getChoice() {
 		return fChoiceNode;
+	}
+
+	public IPrimitiveTypePredicate getPredicate() {
+		return fPredicate;
 	}
 
 	@Override
@@ -243,6 +246,26 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
 		return new ArrayList<>();
+	}
+
+	@Override
+	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+		
+		MethodParameterNode sourceParameter = getLeftMethodParameterNode();
+		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+
+		ChoiceNode sourceChoiceNode = getChoice();
+		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+
+		IPrimitiveTypePredicate deployedPredicate = getPredicate();
+
+		ExpectedValueStatement expectedValueStatement = 
+				new ExpectedValueStatement(
+						deployedParameter, 
+						deployedChoiceNode, 
+						deployedPredicate);
+
+		return expectedValueStatement;
 	}
 
 }

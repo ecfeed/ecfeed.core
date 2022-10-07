@@ -347,7 +347,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public List<ChoiceNode> getChoices() {
 		return fRightCondition.getChoices();
 	}
-	
+
 	@Override
 	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
 		return fRightCondition.getChoices(methodParameterNode);
@@ -452,29 +452,29 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		fRightCondition = choiceCondition;
 	}
-	
+
 	private void convertChoicePartToLabelPart(
 			IParameterConversionItemPart srcPart,
 			IParameterConversionItemPart dstPart) {
-		
+
 		ChoiceCondition choiceCondition = (ChoiceCondition) fRightCondition;
-		
+
 		ParameterConversionItemPartForChoice parameterConversionItemPartForChoice = 
 				(ParameterConversionItemPartForChoice) srcPart;
-		
+
 		ChoiceNode choiceOfCondition = choiceCondition.getRightChoice();
 		ChoiceNode choiceOfItemPart = parameterConversionItemPartForChoice.getChoiceNode();
-		
-		
+
+
 		if (!choiceOfCondition.equals(choiceOfItemPart)) {
 			return;
 		}
-		
+
 		ParameterConversionItemPartForLabel parameterConversionItemPartForLabel = 
 				(ParameterConversionItemPartForLabel) dstPart;
-		
+
 		String label = parameterConversionItemPartForLabel.getLabel();
-		
+
 		LabelCondition labelCondition = new LabelCondition(label, this);
 
 		fRightCondition = labelCondition;
@@ -497,6 +497,27 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		}
 
 		return result;
+	}
+
+	@Override
+	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+
+		MethodParameterNode sourceParameter = getLeftParameter();
+		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+
+		IStatementCondition deployedStatementCondition = null;
+
+		EMathRelation sourceRelation = getRelation();
+
+		RelationStatement deployedRelationStatement = 
+				new RelationStatement(
+						deployedParameter, 
+						sourceRelation, 
+						deployedStatementCondition);
+
+		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
+
+		return deployedRelationStatement;
 	}
 
 }

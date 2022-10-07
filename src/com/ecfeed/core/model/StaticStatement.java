@@ -33,6 +33,11 @@ public class StaticStatement extends AbstractStatement {
 		fValue = value;
 	}
 
+	public StaticStatement(EvaluationResult value) {
+		
+		this(value, null);
+	}
+	
 	public StaticStatement(boolean value, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(modelChangeRegistrator);
@@ -160,6 +165,12 @@ public class StaticStatement extends AbstractStatement {
 	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
 		return new ArrayList<>();
+	}
+
+	@Override
+	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+		
+		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
 }

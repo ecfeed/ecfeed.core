@@ -56,6 +56,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
+	
+	public Constraint(
+			String name,
+			ConstraintType constraintType,
+			AbstractStatement precondition,
+			AbstractStatement postcondition) {
+		this(name, constraintType, precondition, postcondition, null);
+	}
 
 	public String getName() {
 		return fName;

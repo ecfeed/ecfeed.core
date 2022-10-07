@@ -28,4 +28,7 @@ public interface IStatement{
 	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode);
 	public List<String> getLabels(MethodParameterNode methodParameterNode);
 	public void derandomize();
+	public AbstractStatement makeClone();
+	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper);
+	
 }

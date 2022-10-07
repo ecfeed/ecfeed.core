@@ -32,6 +32,10 @@ public class StatementArray extends AbstractStatement {
 		fOperator = operator;
 	}
 
+	public StatementArray(StatementArrayOperator operator) {
+		this(operator, null);
+	}
+
 	@Override
 	public List<AbstractStatement> getChildren() {
 		return fStatements;
@@ -272,7 +276,7 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
-		
+
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 
 		for (AbstractStatement abstractStatement : fStatements) {
@@ -286,7 +290,7 @@ public class StatementArray extends AbstractStatement {
 
 		return result;
 	}
-	
+
 	@Override
 	public List<String> getLabels(MethodParameterNode methodParameterNode) {
 
@@ -418,15 +422,18 @@ public class StatementArray extends AbstractStatement {
 		}
 	}
 
-	//	@Override
-	//	protected void updateParameterReferences(
-	//			MethodParameterNode srcMethodParameterNode,
-	//			ChoicesParentNode dstParameterForChoices) {
-	//
-	//		for (AbstractStatement child : fStatements) {
-	//			child.updateParameterReferences(
-	//					srcMethodParameterNode, dstParameterForChoices);
-	//		}
-	//	}
+	@Override
+	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+
+		StatementArray deployedStatementArray = new StatementArray(getOperator());
+
+		for (AbstractStatement sourceAbstractStatement : fStatements) {
+
+			AbstractStatement deployedStatement = sourceAbstractStatement.createDeepCopy(deploymentMapper);
+			deployedStatementArray.addStatement(deployedStatement);
+		}
+
+		return deployedStatementArray;
+	}
 
 }

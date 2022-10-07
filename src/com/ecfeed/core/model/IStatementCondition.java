@@ -22,7 +22,6 @@ public interface IStatementCondition {
 	public Object getCondition();
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
-	public IStatementCondition makeClone();
 	public boolean updateReferences(MethodNode methodNode);
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
@@ -34,5 +33,7 @@ public interface IStatementCondition {
 	public void derandomize();
 	public void convert(ParameterConversionItem parameterConversionItem);
 	public String getLabel(MethodParameterNode methodParameterNode);
+	public IStatementCondition makeClone();
+	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
 }
 

@@ -76,6 +76,11 @@ public class ConstraintNode extends AbstractNode{
 		fConstraint = constraint;
 	}
 
+	public ConstraintNode(String name, Constraint constraint) {
+
+		this(name, constraint, null);
+	}
+
 	public Constraint getConstraint() {
 
 		return fConstraint;
@@ -382,7 +387,7 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
-		
+
 		return fConstraint.mentionsChoiceOfParameter(methodParameter);
 	}
 

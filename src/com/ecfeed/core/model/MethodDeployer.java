@@ -28,22 +28,85 @@ public abstract class MethodDeployer {
 
 		deployedMethodNode.setProperties(sourceMethodNode.getProperties());
 
-		for (MethodParameterNode methodParameterNode : sourceMethodNode.getMethodParameters()) {
+		DeploymentMapper deploymentMapper = new DeploymentMapper();
 
-			MethodParameterNode developedMethodParameter = deployParameter(methodParameterNode);
+		for (MethodParameterNode sourceMethodParameterNode : sourceMethodNode.getMethodParameters()) {
+
+			MethodParameterNode developedMethodParameter = 
+					deployParameter(sourceMethodParameterNode, deploymentMapper);
+
 			deployedMethodNode.addParameter(developedMethodParameter);
 		}
 
 		for (ConstraintNode constraint : sourceMethodNode.getConstraintNodes()) {
 
-			constraint = constraint.getCopy(deployedMethodNode); // TODO DE-NE
-			deployedMethodNode.addConstraint(constraint);
+			ConstraintNode deployedConstraintNode = 
+					deployConstraintNode(constraint, deployedMethodNode, deploymentMapper);
+
+			deployedMethodNode.addConstraint(deployedConstraintNode);
 		}
 
 		return deployedMethodNode;
 	}
 
-	public static MethodParameterNode deployParameter(MethodParameterNode sourceMethodParameterNode) {
+	private static ConstraintNode deployConstraintNode(
+			ConstraintNode sourceConstraintNode, 
+			MethodNode deployedMethodNode,
+			DeploymentMapper deploymentMapper) {
+
+		Constraint sourceConstraint = sourceConstraintNode.getConstraint();
+		Constraint deployedConstraint = deployConstraint(sourceConstraint, deploymentMapper);
+
+		ConstraintNode deployedConstraintNode = new ConstraintNode("name", deployedConstraint); 
+		deployedConstraintNode.setProperties(sourceConstraintNode.getProperties());
+
+		return deployedConstraintNode;
+	}
+
+	private static Constraint deployConstraint(
+			Constraint sourceConstraint,
+			DeploymentMapper deploymentMapper) {
+
+		AbstractStatement sourcePrecondition = sourceConstraint.getPrecondition();
+		AbstractStatement deployedPrecondition = deployStatement(sourcePrecondition, deploymentMapper);
+
+		AbstractStatement sourcePostcondition = sourceConstraint.getPostcondition();
+		AbstractStatement deployedPostcondition = deployStatement(sourcePostcondition, deploymentMapper);
+
+		Constraint deployedConstraint = 
+				new Constraint(
+						sourceConstraint.getName(), 
+						sourceConstraint.getType(), 
+						deployedPrecondition, 
+						deployedPostcondition);
+
+		return deployedConstraint;
+	}
+
+	private static AbstractStatement deployStatement(
+			AbstractStatement abstractStatement,
+			DeploymentMapper deploymentMapper) {
+
+//		DeploymentStatementVisitor deploymentStatementVisitor =	
+//				new DeploymentStatementVisitor(deploymentMapper);
+//
+//		AbstractStatement deployedStatement = null;
+//
+//		try {
+//			deployedStatement = (AbstractStatement) abstractStatement.accept(deploymentStatementVisitor);
+//		} catch (Exception e) {
+//			ExceptionHelper.reportRuntimeException(e);
+//		}
+		
+		AbstractStatement deployedStatement = abstractStatement.createDeepCopy(deploymentMapper);
+
+		return deployedStatement;
+	}
+
+
+	public static MethodParameterNode deployParameter(
+			MethodParameterNode sourceMethodParameterNode,
+			DeploymentMapper deploymentMapper) {
 
 		MethodParameterNode deployedMethodParameterNode = 
 				new MethodParameterNode(
@@ -56,23 +119,27 @@ public abstract class MethodDeployer {
 		deployedMethodParameterNode.setParent(sourceMethodParameterNode.getParent());
 
 		// MethodParameterNode linkedMethod = deployedMethodParameterNode.getLinkToMethod();
-		// MethodAndStructureParent linkedMethod = deployedMethodParameterNode.getLinkToMethodAndStructureParent();
-		
+		// MethodAndStructureParent linked = deployedMethodParameterNode.getLinkToMethodAndStructureParent();
+
 		deployedMethodParameterNode.setLinked(sourceMethodParameterNode.isLinked());
 		deployedMethodParameterNode.setLinkToGlobalParameter(sourceMethodParameterNode.getLinkToGlobalParameter());
 		deployedMethodParameterNode.setProperties(sourceMethodParameterNode.getProperties());
 		deployedMethodParameterNode.setDefaultValueString(sourceMethodParameterNode.getDefaultValue());
+		
+		deploymentMapper.addParameterMappings(sourceMethodParameterNode, deployedMethodParameterNode);
 
 		for (ChoiceNode sourceChoiceNode : sourceMethodParameterNode.getChoices()) {
 
-			ChoiceNode deployedChoiceNode = deployChoiceNode(sourceChoiceNode);
+			ChoiceNode deployedChoiceNode = deployChoiceNode(sourceChoiceNode, deploymentMapper);
 			deployedMethodParameterNode.addChoice(deployedChoiceNode);
 		}
 
 		return deployedMethodParameterNode;
 	}
 
-	public static ChoiceNode deployChoiceNode(ChoiceNode sourceChoiceNode) {
+	public static ChoiceNode deployChoiceNode(
+			ChoiceNode sourceChoiceNode,
+			DeploymentMapper deploymentMapper) {
 
 		ChoiceNode deployedChoiceNode = new ChoiceNode(sourceChoiceNode.getName(), sourceChoiceNode.getValueString());
 
@@ -81,6 +148,8 @@ public abstract class MethodDeployer {
 		deployedChoiceNode.setParent(sourceChoiceNode.getParent());
 		deployedChoiceNode.setOtherChoice(sourceChoiceNode);
 
+		deploymentMapper.addChoiceMappings(sourceChoiceNode, deployedChoiceNode);
+
 		for (String label : sourceChoiceNode.getLabels()) {
 
 			deployedChoiceNode.addLabel(label);
@@ -88,14 +157,14 @@ public abstract class MethodDeployer {
 
 		for (ChoiceNode childChoiceNode : sourceChoiceNode.getChoices()) {
 
-			ChoiceNode deployChoiceNode = deployChoiceNode(childChoiceNode);
+			ChoiceNode deployChoiceNode = deployChoiceNode(childChoiceNode, deploymentMapper);
 			deployedChoiceNode.addChoice(deployChoiceNode);
 		}
 
 		return deployedChoiceNode;
 	}
 
-	// XYX use !
+	// TODO NE-TE use!
 	public static List<MethodParameterNode> getDevelopedParametersWithChoices(MethodNode methodNode) {
 
 		List<MethodParameterNode> developedParameters = new ArrayList<>();
@@ -154,39 +223,39 @@ public abstract class MethodDeployer {
 							null);
 
 			ChoiceNodeHelper.cloneChoiceNodesRecursively(linkedParameterWithChoices, clonedMethodParameterNode);
-			
+
 			inOutDevelopedParameters.add(clonedMethodParameterNode);
 		}
 	}
 
 	public static List<TestCase> revertToOriginalChoices(List<TestCase> deployedTestCases) {
-		
+
 		List<TestCase> result = new ArrayList<>();
-		
+
 		for (TestCase deployedTestCase : deployedTestCases) {
-		
+
 			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase);
-			
+
 			result.add(revertedTestCaseNode);
 		}
-		
+
 		return result;
 	}
 
 	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase) {
-		
+
 		List<ChoiceNode> revertedChoices = new ArrayList<>();
-		
+
 		List<ChoiceNode> deployedChoices = deployedTestCase.getListOfChoiceNodes();
-		
+
 		for (ChoiceNode deployedChoiceNode : deployedChoices) {
-			
+
 			ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
-			
+
 			revertedChoices.add(originalChoiceNode);
 		}
-		
+
 		return new TestCase(revertedChoices);
 	}
-	
+
 }

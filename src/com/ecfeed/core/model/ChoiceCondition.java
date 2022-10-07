@@ -350,5 +350,27 @@ public class ChoiceCondition implements IStatementCondition {
 		}
 	}
 
+	@Override
+	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+		
+		ChoiceNode sourceChoiceNode = getRightChoice();
+		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+		
+		RelationStatement sourceParentRelationStatement = fParentRelationStatement;
+		RelationStatement deployedParentRelationStatement = 
+				deploymentMapper.getDeployedRelationStatement(sourceParentRelationStatement);
+		
+		if (deployedParentRelationStatement == null) {
+			ExceptionHelper.reportRuntimeException("Empyt parent relation statement.");
+		}
+
+		IStatementCondition deployeChoiceCondition = 
+				new ChoiceCondition(
+						deployedChoiceNode, 
+						deployedParentRelationStatement);
+
+		return deployeChoiceCondition;
+	}
+
 }
 

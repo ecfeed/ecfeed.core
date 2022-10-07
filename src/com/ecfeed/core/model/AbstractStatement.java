@@ -20,6 +20,9 @@ public abstract class AbstractStatement implements IStatement {
 	AbstractStatement fParent = null;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
 	public abstract boolean mentionsChoiceOfParameter(AbstractParameterNode parameter);
+	public abstract boolean updateReferences(MethodNode method);
+
+	protected abstract void convert(ParameterConversionItem parameterConversionItem);
 
 	public AbstractStatement(IModelChangeRegistrator modelChangeRegistrator) {
 
@@ -90,13 +93,4 @@ public abstract class AbstractStatement implements IStatement {
 		return false;
 	}
 
-	public abstract AbstractStatement makeClone();
-
-	public abstract boolean updateReferences(MethodNode method);
-
-	protected abstract void convert(ParameterConversionItem parameterConversionItem);
-
-//	protected abstract void updateParameterReferences(
-//			MethodParameterNode srcMethodParameterNode,
-//			ChoicesParentNode dstParameterForChoices);
 }
