@@ -27,7 +27,7 @@ public class MethodDeployerTest {
 		} catch (Exception e) {
 		}
 	}
-	
+
 	@Test
 	public void deployMethodWithoutParameters() {
 
@@ -52,10 +52,10 @@ public class MethodDeployerTest {
 		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
 
 		assertEquals(1, deployedMethod.getParameters().size());
-		
+
 		MethodParameterNode sourceParameter = (MethodParameterNode)sourceMethod.getParameters().get(0);
 		MethodParameterNode deployedParameter = (MethodParameterNode)deployedMethod.getParameters().get(0);
-		
+
 		assertTrue(sourceParameter.hashCode() != deployedParameter.hashCode());
 
 		assertEquals(sourceParameter.getName(), deployedParameter.getName());
@@ -70,24 +70,57 @@ public class MethodDeployerTest {
 		MethodNode sourceMethod = new MethodNode("method");
 		MethodParameterNode methodParameterNode = new MethodParameterNode("parameter", "String", "A", true);
 		sourceMethod.addParameter(methodParameterNode);
-		
+
 		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
 		methodParameterNode.addChoice(sourceChoiceNode);
 
 		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
 
 		assertEquals(1, deployedMethod.getParameters().size());
-		
+
 		MethodParameterNode deployedParameter = (MethodParameterNode)deployedMethod.getParameters().get(0);
-		
+
 		ChoiceNode deployedChoiceNode = deployedParameter.getChoices().get(0);
-		
+
 		assertTrue(sourceChoiceNode.hashCode() != deployedChoiceNode.hashCode());
 		assertEquals(sourceChoiceNode.getName(), deployedChoiceNode.getName());
 		assertEquals(sourceChoiceNode.getValueString(), deployedChoiceNode.getValueString());
-		
+
 		ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
 		assertEquals(sourceChoiceNode.hashCode(), originalChoiceNode.hashCode());
 	}
-	
+
+	//	@Test
+	//	public void deployMethodWithSimpleConstraint() {
+	//
+	//		MethodNode sourceMethod = new MethodNode("method");
+	//		MethodParameterNode methodParameterNode = new MethodParameterNode("parameter", "String", "A", true);
+	//		sourceMethod.addParameter(methodParameterNode);
+	//		
+	//		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
+	//		methodParameterNode.addChoice(sourceChoiceNode);
+	//
+	//		TestHelper.addSimpleChoiceConstraintToMethod(
+	//				sourceMethod, "c", methodParameterNode, sourceChoiceNode, sourceChoiceNode);
+	//		
+	//		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
+	//		
+	//		MethodParameterNode deployedParameter = (MethodParameterNode)deployedMethod.getParameters().get(0);
+	//		
+	//		ChoiceNode deployedChoiceNode = deployedParameter.getChoices().get(0);
+	//		
+	//		ChoiceNode choiceNodeFromConstraint = 
+	//				TestHelper.getChoiceNodeFromConstraintPrecondition(deployedMethod);
+	//		
+	//		assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint.hashCode());
+	//		
+	//
+	//		choiceNodeFromConstraint = 
+	//				TestHelper.getChoiceNodeFromConstraintPostcondition(deployedMethod);
+	//		
+	//		assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint.hashCode());
+	//
+	//		// TODO check parameter
+	//	}
+
 }
