@@ -87,17 +87,6 @@ public abstract class MethodDeployer {
 			AbstractStatement abstractStatement,
 			DeploymentMapper deploymentMapper) {
 
-//		DeploymentStatementVisitor deploymentStatementVisitor =	
-//				new DeploymentStatementVisitor(deploymentMapper);
-//
-//		AbstractStatement deployedStatement = null;
-//
-//		try {
-//			deployedStatement = (AbstractStatement) abstractStatement.accept(deploymentStatementVisitor);
-//		} catch (Exception e) {
-//			ExceptionHelper.reportRuntimeException(e);
-//		}
-		
 		AbstractStatement deployedStatement = abstractStatement.createDeepCopy(deploymentMapper);
 
 		return deployedStatement;
