@@ -78,12 +78,6 @@ public class AbstractStatementTest {
 		protected void convert(ParameterConversionItem parameterConversionItem) {
 		}
 
-		//		@Override
-		//		protected void updateParameterReferences(
-		//				MethodParameterNode srcMethodParameterNode,
-		//				ChoicesParentNode dstParameterForChoices) {
-		//		}
-
 		@Override
 		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
 			return false;
@@ -101,6 +95,11 @@ public class AbstractStatementTest {
 
 		@Override
 		public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+			return null;
+		}
+
+		@Override
+		public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
 			return null;
 		}
 	}

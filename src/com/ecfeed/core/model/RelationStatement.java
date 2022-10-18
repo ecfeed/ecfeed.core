@@ -504,8 +504,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		MethodParameterNode sourceParameter = getLeftParameter();
 		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
-
-		IStatementCondition deployedStatementCondition = null;
+		
+		IStatementCondition sourceCondition = getCondition();
+		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
 
 		EMathRelation sourceRelation = getRelation();
 
