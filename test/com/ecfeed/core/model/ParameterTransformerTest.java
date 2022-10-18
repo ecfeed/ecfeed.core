@@ -30,6 +30,7 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
  import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
+import com.ecfeed.core.utils.TestHelper;
 
 public class ParameterTransformerTest {
 
@@ -105,7 +106,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+		TestHelper.addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
 
@@ -149,10 +150,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(globalChoiceNodeForClass, choiceNodeFromPrecondition);
 
-		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(globalChoiceNodeForClass, choiceNodeFromPostcondition);
 
 		// reverse operation
@@ -180,10 +181,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
 
-		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
 	}
 
@@ -420,10 +421,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(globalChoiceNodeForClass, choiceNodeFromPrecondition);
 
-		ChoiceNode choiceFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		ChoiceNode choiceFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(globalChoiceNodeForClass, choiceFromPostcondition);
 
 		// reverse operation
@@ -511,7 +512,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addSimpleChoiceConstraintToMethod(
+		TestHelper.addSimpleChoiceConstraintToMethod(
 				methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
@@ -587,10 +588,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
 
-		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
 	}
 
@@ -643,7 +644,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
+		TestHelper.addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode1);
 
 		// creating choice conversion list
 
@@ -687,10 +688,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(globalChoiceNodeOfRoot, choiceNodeFromPrecondition);
 
-		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(globalChoiceNodeOfRoot, choiceNodeFromPostcondition);
 
 		// reverse operation
@@ -718,10 +719,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
 
-		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(methodChoiceNode1, choiceNodeFromPostcondition);
 	}
 
@@ -778,7 +779,7 @@ public class ParameterTransformerTest {
 
 		// add constraint
 
-		addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
+		TestHelper.addSimpleChoiceConstraintToMethod(methodNode, "c1", methodParameterNode, methodChoiceNode1, methodChoiceNode2);
 
 		// creating choice conversion list - to method choices to one global choice
 
@@ -831,10 +832,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(globalChoiceNodeForClass, choiceNodeFromPrecondition);
 
-		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(globalChoiceNodeForClass, choiceNodeFromPostcondition);
 
 		// reverse operation
@@ -862,10 +863,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(methodChoiceNode1, choiceNodeFromPrecondition);
 
-		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(methodChoiceNode2, choiceNodeFromPostcondition);
 	}
 
@@ -915,7 +916,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod1221 =
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod122, "MC1221", choiceValueString);
 
-		addSimpleChoiceConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
+		TestHelper.addSimpleChoiceConstraintToMethod(methodNode, "C1" , methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 
 		// creating choice conversion list
@@ -1022,7 +1023,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod11 = 
 				ChoiceNodeHelper.addChoiceToChoice(choiceNodeOfMethod1, "MC11", choiceValueString);
 
-		addSimpleChoiceConstraintToMethod(
+		TestHelper.addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
@@ -1070,10 +1071,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(globalChoiceNode1, choiceNodeFromPrecondition);
 
-		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(globalChoiceNode1, choiceNodeFromPostcondition);
 
 		// reverse operation
@@ -1111,10 +1112,10 @@ public class ParameterTransformerTest {
 
 		// check choices from constraints
 
-		choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(choiceNodeOfMethod11, choiceNodeFromPrecondition);
 
-		choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(choiceNodeOfMethod11, choiceNodeFromPostcondition);
 	}
 
@@ -1152,7 +1153,7 @@ public class ParameterTransformerTest {
 		ChoiceNode choiceNodeOfMethod11 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode1, "MC11", choiceValueString);
 
-		addSimpleChoiceConstraintToMethod(
+		TestHelper.addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode1, choiceNodeOfMethod11, choiceNodeOfMethod11);
 
 		// add test case
@@ -1245,7 +1246,7 @@ public class ParameterTransformerTest {
 
 		// constraint
 
-		addSimpleChoiceConstraintToMethod(
+		TestHelper.addSimpleChoiceConstraintToMethod(
 				methodNode, "constraint1", methodParameterNode, globalChoiceNodeOfRoot1, globalChoiceNodeOfRoot1);
 
 		// unlink
@@ -1276,10 +1277,10 @@ public class ParameterTransformerTest {
 
 		// check choices in constraints
 
-		ChoiceNode choiceNodeFromPrecondition = getChoiceNodeFromConstraintPrecondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPrecondition = TestHelper.getChoiceNodeFromConstraintPrecondition(methodNode, 0);
 		assertEquals(resultChoices.get(0), choiceNodeFromPrecondition);
 
-		ChoiceNode choiceNodeFromPostcondition = getChoiceNodeFromConstraintPostcondition(methodNode, 0);
+		ChoiceNode choiceNodeFromPostcondition = TestHelper.getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 		assertEquals(resultChoices.get(0), choiceNodeFromPostcondition);
 
 		// reverse operation
@@ -1562,33 +1563,6 @@ public class ParameterTransformerTest {
 		}
 	}
 
-	private void addSimpleChoiceConstraintToMethod(
-			MethodNode methodNode,
-			String constraintName,
-			MethodParameterNode methodParameterNode,
-			ChoiceNode choiceNode1,
-			ChoiceNode choiceNode2) {
-
-		RelationStatement relationStatement1 = 
-				RelationStatement.createRelationStatementWithChoiceCondition(
-						methodParameterNode, EMathRelation.EQUAL, choiceNode1);
-
-		RelationStatement relationStatement2 = 
-				RelationStatement.createRelationStatementWithChoiceCondition(
-						methodParameterNode, EMathRelation.LESS_THAN, choiceNode2);
-
-		Constraint constraint = new Constraint(
-				constraintName, 
-				ConstraintType.EXTENDED_FILTER, 
-				relationStatement1, 
-				relationStatement2, 
-				null);
-
-		ConstraintNode constraintNode = new ConstraintNode(constraintName, constraint, null);
-
-		methodNode.addConstraint(constraintNode);
-	}
-
 	private void addSimpleLabelConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
@@ -1643,31 +1617,6 @@ public class ParameterTransformerTest {
 		methodNode.addConstraint(constraintNode);
 	}
 
-	private ChoiceNode getChoiceNodeFromConstraintPostcondition(
-			MethodNode methodNode, int constraintIndex) {
-
-		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
-
-		AbstractStatement postcondition = constraintNode.getConstraint().getPostcondition();
-
-		ChoiceNode choiceNode = getChoiceNodeFromChoiceCondition(postcondition);
-
-		return choiceNode;
-	}
-
-	private ChoiceNode getChoiceNodeFromConstraintPrecondition(
-			MethodNode methodNode, 
-			int constraintIndex) {
-
-		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
-
-		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
-
-		ChoiceNode choiceNode = getChoiceNodeFromChoiceCondition(precondition);
-
-		return choiceNode;
-	}
-
 	private String getLabelFromConstraintPrecondition(MethodNode methodNode, int constraintIndex) {
 
 		ConstraintNode constraintNode = methodNode.getConstraintNodes().get(constraintIndex);
@@ -1688,19 +1637,6 @@ public class ParameterTransformerTest {
 		String label = getLabelFromChoiceCondition(postcondition);
 
 		return label;
-	}
-
-	private ChoiceNode getChoiceNodeFromChoiceCondition(AbstractStatement abstractStatement) {
-
-		RelationStatement relationStatement = (RelationStatement)abstractStatement; 
-
-		IStatementCondition statementCondition = relationStatement.getCondition();
-
-		ChoiceCondition choiceCondition = (ChoiceCondition)statementCondition;
-
-		ChoiceNode choiceNode = choiceCondition.getRightChoice();
-
-		return choiceNode;
 	}
 
 	private String getLabelFromChoiceCondition(AbstractStatement abstractStatement) {
