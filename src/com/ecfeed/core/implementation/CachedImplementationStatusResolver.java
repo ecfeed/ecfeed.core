@@ -18,6 +18,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -50,7 +51,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 		return status;
 	}
 
-	public static void clearCache(AbstractNode node) {
+	public static void clearCache(IAbstractNode node) {
 
 		if (node == null) {
 			return;

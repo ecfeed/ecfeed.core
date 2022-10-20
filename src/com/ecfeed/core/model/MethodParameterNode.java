@@ -298,7 +298,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node) {
+	public boolean isMatch(IAbstractNode node) {
 		if (node instanceof MethodParameterNode == false) {
 			return false;
 		}

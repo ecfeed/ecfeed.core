@@ -77,7 +77,7 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode compared){
+	public boolean isMatch(IAbstractNode compared){
 		if(compared instanceof AbstractParameterNode == false){
 			return false;
 		}

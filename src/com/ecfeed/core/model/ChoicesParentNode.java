@@ -45,7 +45,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode choicesParentNode) {
+	public boolean isMatch(IAbstractNode choicesParentNode) {
 
 		if (choicesParentNode instanceof ChoicesParentNode == false) {
 			return false;

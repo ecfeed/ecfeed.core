@@ -47,7 +47,7 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode {
 		return null;
 	}
 
-	private List<GlobalParameterNode> getAvailableGlobalParameters(AbstractNode parent) {
+	private List<GlobalParameterNode> getAvailableGlobalParameters(IAbstractNode parent) {
 		if(parent == null){
 			return new ArrayList<GlobalParameterNode>();
 		}

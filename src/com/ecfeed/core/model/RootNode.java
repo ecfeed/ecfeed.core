@@ -25,7 +25,7 @@ public class RootNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(AbstractNode potentialChild){
+	public int getMaxChildIndex(IAbstractNode potentialChild){
 		if(potentialChild instanceof AbstractParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodParameterNode) return getParameters().size();
 		if(potentialChild instanceof ClassNode) return getClasses().size();
@@ -115,7 +115,7 @@ public class RootNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
+	public boolean isMatch(IAbstractNode node){
 		if(node instanceof RootNode == false){
 			return false;
 		}

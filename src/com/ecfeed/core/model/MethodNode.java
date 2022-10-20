@@ -175,7 +175,7 @@ public class MethodNode extends ParametersParentNode {
 
 		int index = -1;
 
-		for (AbstractNode abstractNode : getParent().getChildren()) {
+		for (IAbstractNode abstractNode : getParent().getChildren()) {
 
 			if (abstractNode instanceof MethodNode) {
 				index++;
@@ -570,7 +570,7 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(AbstractNode potentialChild) {
+	public int getMaxChildIndex(IAbstractNode potentialChild) {
 
 		if (potentialChild instanceof AbstractParameterNode) { 
 			return getParameters().size();
@@ -593,7 +593,7 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
+	public boolean isMatch(IAbstractNode node){
 
 		if(node instanceof MethodNode == false){
 			return false;

@@ -27,7 +27,7 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	@Override
-	protected void verifyName(String nameInIntrLanguage) {
+	public void verifyName(String nameInIntrLanguage) {
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class ConstraintNode extends AbstractNode{
 
 	public MethodNode getMethodNode() {
 
-		AbstractNode parent = getParent();
+		IAbstractNode parent = getParent();
 		if (parent == null) {
 			return null;
 		}
@@ -183,7 +183,7 @@ public class ConstraintNode extends AbstractNode{
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node) {
+	public boolean isMatch(IAbstractNode node) {
 
 		if (node instanceof ConstraintNode == false) {
 			return false;

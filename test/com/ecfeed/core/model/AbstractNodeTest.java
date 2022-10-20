@@ -22,7 +22,7 @@ import org.junit.Test;
 
 public class AbstractNodeTest{
 
-	private class AbstractNodeImpl extends AbstractNode{
+	private class AbstractNodeImpl extends AbstractNode {
 
 		public AbstractNodeImpl(String name) {
 			super(name, null);
@@ -46,6 +46,26 @@ public class AbstractNodeTest{
 		@Override
 		public Object accept(IModelVisitor visitor) {
 			return null;
+		}
+
+		@Override
+		public void setParent(IAbstractNode newParent) {
+			
+		}
+
+		@Override
+		public boolean isMyAncestor(IAbstractNode candidateForAncestor) {
+			return false;
+		}
+
+		@Override
+		public boolean isMatch(IAbstractNode nodeToCompare) {
+			return false;
+		}
+
+		@Override
+		public int getMaxChildIndex(IAbstractNode potentialChild) {
+			return 0;
 		}
 
 	}

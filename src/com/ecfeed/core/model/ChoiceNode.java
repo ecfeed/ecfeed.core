@@ -345,7 +345,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode choiceNode){
+	public boolean isMatch(IAbstractNode choiceNode){
 
 		if(choiceNode instanceof ChoiceNode == false){
 			return false;

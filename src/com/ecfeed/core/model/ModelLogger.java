@@ -117,7 +117,7 @@ public class ModelLogger {
 		}		
 		printObjectLine(constraintNode, fieldName, indent);
 
-		AbstractNode parent = constraintNode.getParent();
+		IAbstractNode parent = constraintNode.getParent();
 		printMethodNode((MethodNode)parent, "parentMethod", indent + indentIncrement);
 
 		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();

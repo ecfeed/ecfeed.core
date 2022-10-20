@@ -59,7 +59,7 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(AbstractNode potentialChild){
+	public int getMaxChildIndex(IAbstractNode potentialChild){
 		if(potentialChild instanceof GlobalParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodNode) return getMethods().size();
@@ -100,7 +100,7 @@ public class ClassNode extends GlobalParametersParentNode {
 
 		int index = -1;
 
-		for (AbstractNode abstractNode : getParent().getChildren()) {
+		for (IAbstractNode abstractNode : getParent().getChildren()) {
 
 			if (abstractNode instanceof ClassNode) {
 				index++;
@@ -200,7 +200,7 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
+	public boolean isMatch(IAbstractNode node){
 		if(node instanceof ClassNode == false){
 			return false;
 		}

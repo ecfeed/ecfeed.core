@@ -23,7 +23,7 @@ public class ModelHelper {
 
 		List<String> nodeNames = new ArrayList<String>();
 
-		AbstractNode currentNode = abstractNode;
+		IAbstractNode currentNode = abstractNode;
 
 		for(;;) {
 
@@ -100,7 +100,7 @@ public class ModelHelper {
 
 	public static RootNode findRoot(AbstractNode startNode) { 
 
-		AbstractNode node = startNode;
+		IAbstractNode node = startNode;
 
 		for (int cnt = 0;  ; cnt++) {
 
@@ -108,7 +108,7 @@ public class ModelHelper {
 				ExceptionHelper.reportRuntimeException("Model too deep or recursive. Cannot find root.");
 			}
 
-			AbstractNode parent = node.getParent();
+			IAbstractNode parent = node.getParent();
 
 			if (parent == null) {
 

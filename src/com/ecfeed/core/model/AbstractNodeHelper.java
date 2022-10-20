@@ -16,7 +16,7 @@ public abstract class AbstractNodeHelper  {
 
 	public static String convertTextFromIntrToExtLanguage(
 			String textInIntrLanguage,
-			AbstractNode abstractNode, 
+			IAbstractNode abstractNode, 
 			IExtLanguageManager extLanguageManager) {
 
 		String textInExtLanguage;
@@ -46,7 +46,7 @@ public abstract class AbstractNodeHelper  {
 		return textInIntrLanguage;
 	}
 
-	public static String getName(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 
 		String nameInIntrLanguage = abstractNode.getName();
 
@@ -65,7 +65,7 @@ public abstract class AbstractNodeHelper  {
 		abstractNode.setName(nameInIntrLanguage);
 	}
 
-	public static boolean isTheSameExtAndIntrLanguage(AbstractNode abstractNode) {
+	public static boolean isTheSameExtAndIntrLanguage(IAbstractNode abstractNode) {
 
 		boolean isTheSameExtAndIntrLanguage;
 
