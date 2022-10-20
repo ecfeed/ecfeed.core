@@ -17,6 +17,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -233,7 +234,7 @@ public class FactoryShiftOperation {
 			boolean up,
 			IExtLanguageManager extLanguageManager) {
 		
-		AbstractNode parent = getParent(shifted);
+		IAbstractNode parent = getParent(shifted);
 		
 		return getShiftOperation(
 				parent, shifted, new MoveUpDownOperationProvider(shifted, up, extLanguageManager));
@@ -241,7 +242,7 @@ public class FactoryShiftOperation {
 
 	public static GenericShiftOperation getShiftOperation(
 			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) {
-		AbstractNode parent = getParent(shifted);
+		IAbstractNode parent = getParent(shifted);
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguageManager));
 	}
 
@@ -287,11 +288,12 @@ public class FactoryShiftOperation {
 		return true;
 	}
 
-	private static AbstractNode getParent(List<? extends AbstractNode> nodes) {
+	private static IAbstractNode getParent(List<? extends AbstractNode> nodes) {
+		
 		if(nodes.size() == 0){
 			return null;
 		}
-		AbstractNode parent = nodes.get(0).getParent();
+		IAbstractNode parent = nodes.get(0).getParent();
 		if(parent == null){
 			return null;
 		}

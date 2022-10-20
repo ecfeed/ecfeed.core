@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericShiftOperation extends AbstractModelOperation {
@@ -81,8 +82,8 @@ public class GenericShiftOperation extends AbstractModelOperation {
 
 	protected boolean haveSameParent(List<? extends AbstractNode> shifted) {
 		if(shifted.size() == 0)return true;
-		AbstractNode parent = shifted.get(0).getParent();
-		for(AbstractNode node : shifted){
+		IAbstractNode parent = shifted.get(0).getParent();
+		for(IAbstractNode node : shifted){
 			if(node.getParent() != parent){
 				return false;
 			}

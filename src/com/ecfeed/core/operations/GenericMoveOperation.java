@@ -19,6 +19,7 @@ import java.util.Set;
 import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -154,7 +155,7 @@ public class GenericMoveOperation extends BulkOperation {
 		return true;
 	}
 
-	private static AbstractNode getParent(List<? extends AbstractNode> children) {
+	private static IAbstractNode getParent(List<? extends AbstractNode> children) {
 		return children.get(0).getParent();
 	}
 }

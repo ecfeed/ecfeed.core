@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.Collection;
 
 import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -36,7 +37,7 @@ public class MethodOperationRenameTestCases extends BulkOperation {
 		}
 	}
 
-	private static AbstractNode getFirstParent(Collection<TestCaseNode> testCases) {
+	private static IAbstractNode getFirstParent(Collection<TestCaseNode> testCases) {
 
 		if (testCases.isEmpty()) {
 			return null;
