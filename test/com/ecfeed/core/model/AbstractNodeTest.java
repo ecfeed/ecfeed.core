@@ -29,7 +29,7 @@ public class AbstractNodeTest{
 		}
 
 		@Override
-		protected String getNonQualifiedName() {
+		public String getNonQualifiedName() {
 			return getName();
 		}
 

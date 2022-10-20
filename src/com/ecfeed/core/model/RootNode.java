@@ -59,7 +59,7 @@ public class RootNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 

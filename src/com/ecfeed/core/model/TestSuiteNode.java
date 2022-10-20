@@ -61,7 +61,7 @@ public class TestSuiteNode extends AbstractNode {
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 

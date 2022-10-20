@@ -85,7 +85,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 

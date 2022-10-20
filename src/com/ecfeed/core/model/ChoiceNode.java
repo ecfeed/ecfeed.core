@@ -71,7 +71,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 

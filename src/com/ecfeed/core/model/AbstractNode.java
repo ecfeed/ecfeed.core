@@ -30,11 +30,6 @@ public abstract class AbstractNode implements IAbstractNode {
 	private NodeProperties fProperties = new NodeProperties();
 	protected final List<AbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<AbstractNode>();
 
-	protected abstract String getNonQualifiedName();
-	public abstract int getChildrenCount();
-	public abstract AbstractNode makeClone();
-	public abstract Object accept(IModelVisitor visitor) throws Exception;
-
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
         verifyName(name);

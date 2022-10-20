@@ -51,5 +51,6 @@ public interface IAbstractNode {
 	public int getPropertyCount();
 	public void removeProperty(NodePropertyDefs.PropertyId propertyId);
 	void registerChange();
-
+	public abstract String getNonQualifiedName();
+	
 }

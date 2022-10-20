@@ -22,7 +22,7 @@ public class ConstraintNode extends AbstractNode{
 	private Constraint fConstraint;
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 

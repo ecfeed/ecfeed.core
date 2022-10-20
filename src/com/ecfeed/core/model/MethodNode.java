@@ -30,7 +30,7 @@ public class MethodNode extends ParametersParentNode {
 	private List<ConstraintNode> fConstraintNodes;
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
