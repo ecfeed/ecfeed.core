@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.Arrays;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -30,16 +30,16 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	public MethodParameterShiftOperation(
 			List<AbstractParameterNode> parameters, 
-			AbstractNode shifted, 
+			IAbstractNode shifted, 
 			boolean up,
 			IExtLanguageManager extLanguageManager) {
 
-		this(parameters, Arrays.asList(new AbstractNode[]{shifted}), up, extLanguageManager);
+		this(parameters, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
 	}
 
 	public MethodParameterShiftOperation(
 			List<AbstractParameterNode> parameters, 
-			List<? extends AbstractNode> shifted, 
+			List<? extends IAbstractNode> shifted, 
 			boolean up, 
 			IExtLanguageManager extLanguageManager) {
 		this(parameters, shifted, 0, extLanguageManager);
@@ -48,7 +48,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	public MethodParameterShiftOperation(
 			List<AbstractParameterNode> parameters, 
-			List<? extends AbstractNode> shifted, 
+			List<? extends IAbstractNode> shifted, 
 			int shift,
 			IExtLanguageManager extLanguageManager) {
 		super(parameters, shifted, shift, extLanguageManager);
@@ -78,7 +78,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	}
 
 	@Override
-	protected boolean shiftAllowed(List<? extends AbstractNode> shifted, int shift){
+	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
 		if(super.shiftAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof MethodParameterNode == false) return false;
 		MethodNode method = ((MethodParameterNode)shifted.get(0)).getMethod();
@@ -104,7 +104,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	}
 
 	@Override
-	protected int minAllowedShift(List<? extends AbstractNode> shifted, boolean up){
+	protected int minAllowedShift(List<? extends IAbstractNode> shifted, boolean up){
 		int shift = up ? -1 : 1;
 		while(shiftAllowed(shifted, shift) == false){
 			shift += up ? -1 : 1;

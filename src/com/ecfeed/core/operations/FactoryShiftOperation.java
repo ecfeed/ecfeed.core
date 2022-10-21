@@ -12,7 +12,6 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
@@ -31,12 +30,12 @@ public class FactoryShiftOperation {
 	
 	private static class MoveUpDownOperationProvider implements IModelVisitor{
 
-		private List<? extends AbstractNode> fShifted;
+		private List<? extends IAbstractNode> fShifted;
 		private boolean fUp;
 		private IExtLanguageManager fExtLanguageManager;
 
 		public MoveUpDownOperationProvider(
-				List<? extends AbstractNode> shifted, 
+				List<? extends IAbstractNode> shifted, 
 				boolean up,
 				IExtLanguageManager extLanguageManager) {
 			fShifted = shifted;
@@ -134,11 +133,11 @@ public class FactoryShiftOperation {
 
 	private static class ShiftToIndexOperationProvider implements IModelVisitor{
 
-		private List<? extends AbstractNode> fShifted;
+		private List<? extends IAbstractNode> fShifted;
 		private int fShift;
 		private IExtLanguageManager fExtLanguageManager;
 
-		public ShiftToIndexOperationProvider(List<? extends AbstractNode> shifted, int index, IExtLanguageManager extLanguageManager){
+		public ShiftToIndexOperationProvider(List<? extends IAbstractNode> shifted, int index, IExtLanguageManager extLanguageManager){
 			fShifted = shifted;
 			fShift = calculateShift(shifted, index);
 			fExtLanguageManager = extLanguageManager;
@@ -230,7 +229,7 @@ public class FactoryShiftOperation {
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, 
+			List<? extends IAbstractNode> shifted, 
 			boolean up,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -241,12 +240,12 @@ public class FactoryShiftOperation {
 	}
 
 	public static GenericShiftOperation getShiftOperation(
-			List<? extends AbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) {
+			List<? extends IAbstractNode> shifted, int newIndex, IExtLanguageManager extLanguageManager) {
 		IAbstractNode parent = getParent(shifted);
 		return getShiftOperation(parent, shifted, new ShiftToIndexOperationProvider(shifted, newIndex, extLanguageManager));
 	}
 
-	private static GenericShiftOperation getShiftOperation(AbstractNode parent, List<? extends AbstractNode> shifted, IModelVisitor provider) {
+	private static GenericShiftOperation getShiftOperation(IAbstractNode parent, List<? extends IAbstractNode> shifted, IModelVisitor provider) {
 		if(parent == null || haveTheSameType(shifted) == false){
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 		}
@@ -259,7 +258,7 @@ public class FactoryShiftOperation {
 		}
 	}
 
-	private static int calculateShift(List<? extends AbstractNode> shifted, int newIndex) {
+	private static int calculateShift(List<? extends IAbstractNode> shifted, int newIndex) {
 		int shift = newIndex - minIndexNode(shifted).getMyIndex();
 		if(minIndexNode(shifted).getMyIndex() < newIndex){
 			shift -= 1;
@@ -267,20 +266,20 @@ public class FactoryShiftOperation {
 		return shift;
 	}
 
-	private static AbstractNode minIndexNode(List<? extends AbstractNode> nodes){
-		AbstractNode minIndexNode = nodes.get(0);
-		for(AbstractNode node : nodes){
+	private static IAbstractNode minIndexNode(List<? extends IAbstractNode> nodes){
+		IAbstractNode minIndexNode = nodes.get(0);
+		for(IAbstractNode node : nodes){
 			minIndexNode = node.getMyIndex() < minIndexNode.getMyIndex() ? node : minIndexNode;
 		}
 		return minIndexNode;
 	}
 
-	private static boolean haveTheSameType(List<? extends AbstractNode> shifted) {
+	private static boolean haveTheSameType(List<? extends IAbstractNode> shifted) {
 		if(shifted.size() == 0){
 			return false;
 		}
 		Class<?> _class = shifted.get(0).getClass();
-		for(AbstractNode node : shifted){
+		for(IAbstractNode node : shifted){
 			if(node.getClass().equals(_class) == false){
 				return false;
 			}
@@ -288,7 +287,7 @@ public class FactoryShiftOperation {
 		return true;
 	}
 
-	private static IAbstractNode getParent(List<? extends AbstractNode> nodes) {
+	private static IAbstractNode getParent(List<? extends IAbstractNode> nodes) {
 		
 		if(nodes.size() == 0){
 			return null;
@@ -298,7 +297,7 @@ public class FactoryShiftOperation {
 			return null;
 		}
 
-		for(AbstractNode node : nodes){
+		for(IAbstractNode node : nodes){
 			if(node.getParent() != parent){
 				return null;
 			}
