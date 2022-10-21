@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -33,18 +33,18 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericRemoveNodesOperation extends BulkOperation {
 
-	private final Set<AbstractNode> fSelectedNodes;
+	private final Set<IAbstractNode> fSelectedNodes;
 
-	private final Set<AbstractNode> fAffectedNodes = new HashSet<>();
+	private final Set<IAbstractNode> fAffectedNodes = new HashSet<>();
 	private final Set<TestCaseNode> fAffectedTestCases = new HashSet<>();
 	private final Set<ConstraintNode> fAffectedConstraints = new HashSet<>();
 
 	public GenericRemoveNodesOperation(
-			Collection<? extends AbstractNode> nodes, 
+			Collection<? extends IAbstractNode> nodes, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
-			AbstractNode nodeToSelect,
-			AbstractNode nodeToSelectAfterReverseOperation,
+			IAbstractNode nodeToSelect,
+			IAbstractNode nodeToSelectAfterReverseOperation,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_NODES, 
@@ -55,10 +55,10 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 
 		fSelectedNodes = new HashSet<>(nodes);
 
-		Iterator<AbstractNode> iterator = fSelectedNodes.iterator();
+		Iterator<IAbstractNode> iterator = fSelectedNodes.iterator();
 		while(iterator.hasNext()){
-			AbstractNode node = iterator.next();
-			for(AbstractNode ancestor : node.getAncestors()) {
+			IAbstractNode node = iterator.next();
+			for(IAbstractNode ancestor : node.getAncestors()) {
 				if(fSelectedNodes.contains(ancestor)) {
 					iterator.remove();
 					break;
@@ -86,11 +86,11 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		ArrayList<MethodParameterNode> params = new ArrayList<>();
 		ArrayList<GlobalParameterNode> globals = new ArrayList<>();
 		ArrayList<ChoiceNode> choices = new ArrayList<>();
-		ArrayList<AbstractNode> others = new ArrayList<>();
+		ArrayList<IAbstractNode> others = new ArrayList<>();
 		HashSet<ConstraintNode> constraints = new HashSet<>();
 		ArrayList<TestCaseNode> testcases = new ArrayList<>();
 
-		for(AbstractNode node : fSelectedNodes) {
+		for(IAbstractNode node : fSelectedNodes) {
 			if(node instanceof ClassNode){
 				classes.add((ClassNode)node);
 			} else if(node instanceof MethodNode){
@@ -128,7 +128,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			fAffectedNodes.add(tcase);
 		}
 		// leaving this in case of any further nodes being added
-		for (AbstractNode node : others) {
+		for (IAbstractNode node : others) {
 			fAffectedNodes.add(node);
 		}
 		/*
@@ -342,7 +342,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return hasDuplicate;
 	}
 
-	private void createAffectedConstraints(AbstractNode node, Set<ConstraintNode> allConstraintNodes) {
+	private void createAffectedConstraints(IAbstractNode node, Set<ConstraintNode> allConstraintNodes) {
 
 		if (node instanceof ChoiceNode) {
 			Iterator<ConstraintNode> itr = allConstraintNodes.iterator();
@@ -381,7 +381,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return false;
 	}
 
-	private void createAffectedTestCases(AbstractNode node, Set<TestCaseNode> allTestCaseNodes) {
+	private void createAffectedTestCases(IAbstractNode node, Set<TestCaseNode> allTestCaseNodes) {
 
 		Iterator<TestCaseNode> itr = allTestCaseNodes.iterator();
 		while (itr.hasNext()) {
