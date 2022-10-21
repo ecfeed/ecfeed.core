@@ -18,6 +18,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.GlobalParametersParentNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -52,12 +53,12 @@ public class FactoryRemoveOperation {
 		}
 
 		@Override
-		public List<AbstractNode> getNodesToSelect() {
+		public List<IAbstractNode> getNodesToSelect() {
 			return null;
 		}
 
 		@Override
-		public void setNodesToSelect(List<AbstractNode> nodes) {
+		public void setNodesToSelect(List<IAbstractNode> nodes) {
 		}
 
 

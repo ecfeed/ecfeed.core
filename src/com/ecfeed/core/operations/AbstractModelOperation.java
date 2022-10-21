@@ -13,7 +13,6 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -59,7 +58,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		return fExtLanguageManager;
 	}
 
-	public void setOneNodeToSelect(AbstractNode nodeToSelect) {
+	public void setOneNodeToSelect(IAbstractNode nodeToSelect) {
 		
 		List<IAbstractNode> nodes = new ArrayList<>();
 		nodes.add(nodeToSelect);
