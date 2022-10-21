@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.testutils;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.RelationStatement;
@@ -27,7 +27,8 @@ import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.LabelCondition;
 
 public class ModelStringifier {
-	public String stringify(AbstractNode node, int indent){
+	
+	public String stringify(IAbstractNode node, int indent){
 		if(node instanceof ChoiceNode){
 			return stringify((ChoiceNode)node, indent);
 		}
