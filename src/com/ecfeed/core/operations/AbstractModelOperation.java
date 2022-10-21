@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractModelOperation implements IModelOperation {
@@ -22,12 +23,12 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	private String fName;
 	private IExtLanguageManager fExtLanguageManager;
 
-	private List<AbstractNode> fNodesToSelect;
+	private List<IAbstractNode> fNodesToSelect;
 
 	public AbstractModelOperation(String name, IExtLanguageManager extLanguageManager){
 		fName = name;
 		fExtLanguageManager = extLanguageManager;
-		fNodesToSelect = new ArrayList<AbstractNode>();
+		fNodesToSelect = new ArrayList<>();
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	}
 
 	@Override
-	public void setNodesToSelect(List<AbstractNode> nodesToSelect) {
+	public void setNodesToSelect(List<IAbstractNode> nodesToSelect) {
 		fNodesToSelect = nodesToSelect;
 	}
 
@@ -59,13 +60,14 @@ public abstract class AbstractModelOperation implements IModelOperation {
 	}
 
 	public void setOneNodeToSelect(AbstractNode nodeToSelect) {
-		List<AbstractNode> nodes = new ArrayList<AbstractNode>();
+		
+		List<IAbstractNode> nodes = new ArrayList<>();
 		nodes.add(nodeToSelect);
 
 		setNodesToSelect(nodes);
 	}
 
-	public List<AbstractNode> getNodesToSelect() {
+	public List<IAbstractNode> getNodesToSelect() {
 		return fNodesToSelect;
 	}
 
