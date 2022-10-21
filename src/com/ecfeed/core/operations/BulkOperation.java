@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -29,7 +28,7 @@ public class BulkOperation extends AbstractModelOperation {
 	// otherwise after first error the reverse operation is called
 	private final boolean fAtomic;
 	private final List<ICheckOperation> fCheckOperations;
-	private AbstractNode fNodeToSelectAfterReverseOperation;
+	private IAbstractNode fNodeToSelectAfterReverseOperation;
 
 	protected interface ICheckOperation {
 		public void check();
