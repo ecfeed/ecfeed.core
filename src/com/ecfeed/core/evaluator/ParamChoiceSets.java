@@ -14,14 +14,13 @@ public class ParamChoiceSets {
     public ParamsWithChoices fSanitizedChoices;
     public ParamsWithChoices fAtomicChoices;
 
-    public ParamChoiceSets(MethodNode methodNode) {
+    public ParamChoiceSets(List<MethodParameterNode> methodParameters) {
 
         fAtomicChoices = new ParamsWithChoices("ATM");
         fSanitizedChoices = new ParamsWithChoices("SAN");
         fInputChoices = new ParamsWithChoices("ALL");
 
-        if(methodNode != null)
-            fInputChoices = createInputChoices(methodNode);
+        fInputChoices = createInputChoices(methodParameters);
     }
 
     public void atomicPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {
@@ -65,13 +64,11 @@ public class ParamChoiceSets {
     }
 
     private static ParamsWithChoices createInputChoices(
-            MethodNode methodNode) {
+            List<MethodParameterNode> methodParameters) {
 
         ParamsWithChoices inputValues = new ParamsWithChoices("TMP");
 
-        List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
-
-        for (MethodParameterNode methodParameterNode : methodParameterNodes) {
+        for (MethodParameterNode methodParameterNode : methodParameters) {
 
             Set<ChoiceNode> choiceNodeSet = new HashSet<>();
             for (ChoiceNode choiceNode : methodParameterNode.getLeafChoicesWithCopies())

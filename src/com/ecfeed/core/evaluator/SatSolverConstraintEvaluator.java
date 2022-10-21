@@ -11,6 +11,7 @@ import com.ecfeed.core.model.MethodParameterNode;
 
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SatSolverConstraintEvaluator implements IConstraintEvaluator<ChoiceNode> {
 
@@ -24,10 +25,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	private OldExpectedValueConstraintsData fOldExpectedValueConstraintsData;
 	private ExpectedValueAssignmentsData fExpectedValueAssignmentsData;
 
-	private MethodNode fMethodNode;
-	private EcSatSolver fSat4Solver;
+	private List<MethodParameterNode> fMethodParameters;
+	private Collection<Constraint> fInitConstraints;
 
-	static final int fLogLevel = 0;
+	private EcSatSolver fSat4Solver;
 
 	private enum TypeOfEndpoint {
 		LEFT_ENDPOINT,
@@ -36,10 +37,20 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	public SatSolverConstraintEvaluator(Collection<Constraint> initConstraints, MethodNode method) {
 
-		fMethodNode = method;
+		if ( (method == null) && (initConstraints.size() > 0) ) {
+			ExceptionHelper.reportRuntimeException("Constraints without method.");
+		}
+
+//		List<Set<AbstractParameterNode>> test = initConstraints.stream().map(Constraint::getReferencedParameters).collect(Collectors.toList());
+//		Optional<AbstractParameterNode> metoda = test.get(0).stream().findAny();
+//		List<MethodNode> data = metoda.orElseGet(null).getMethods();
+
+
+		fMethodParameters = method == null ? new ArrayList<>() : method.getMethodParameters();
+		fInitConstraints = initConstraints == null ? new ArrayList<>() : initConstraints;
 
 		fChoiceToSolverIdMappings = new ChoiceToSolverIdMappings();
-		fParamChoiceSets = new ParamChoiceSets(method);
+		fParamChoiceSets = new ParamChoiceSets(fMethodParameters);
 
 		fOldExpectedValueConstraintsData = new OldExpectedValueConstraintsData();
 		fExpectedValueAssignmentsData = new ExpectedValueAssignmentsData();
@@ -47,44 +58,34 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		fAllRelationStatements = new ArrayList<>();
 		fChoiceMappingsBucket = new ChoicesMappingsBucket();
 
-
-		prepareSat4Solver(initConstraints, method);
+		prepareSat4Solver();
 	}
 
-	private void prepareSat4Solver(Collection<Constraint> initConstraints, MethodNode method) {
-
-		if (fMethodNode == null && !initConstraints.isEmpty()) {
-			ExceptionHelper.reportRuntimeException("Constraints without method.");
-		}
-
+	private void prepareSat4Solver() {
 		fSat4Solver = new EcSatSolver();
 
-		if(initConstraints == null)
-			initConstraints = new ArrayList<>();
+		prepareSolversClauses(fSat4Solver);
 
-		prepareSolversClauses(initConstraints, fSat4Solver, method);
-
-		if(method != null)
-			for(MethodParameterNode parameterNode : method.getMethodParameters())
-				if(! parameterNode.isExpected())
-					EvaluatorHelper.prepareVariablesForParameter(parameterNode,
-							fParamChoiceSets,
-							fSat4Solver,
-							fChoiceMappingsBucket,
-							fChoiceToSolverIdMappings);
-
+		for (MethodParameterNode parameterNode : fMethodParameters) {
+			if (!parameterNode.isExpected()) {
+				EvaluatorHelper.prepareVariablesForParameter(parameterNode,
+						fParamChoiceSets,
+						fSat4Solver,
+						fChoiceMappingsBucket,
+						fChoiceToSolverIdMappings);
+			}
+		}
 
 		fSat4Solver.packClauses();
 	}
 
-	private void prepareSolversClauses(Collection<Constraint> initConstraints, EcSatSolver sat4Solver, MethodNode method) {
+	private void prepareSolversClauses(EcSatSolver sat4Solver) {
 
 		sat4Solver.setHasConstraints();
 
-
 		collectSanitizedValues(fParamChoiceSets,fChoiceMappingsBucket);
 
-		fAllRelationStatements = collectRelationStatements(initConstraints);
+		fAllRelationStatements = collectRelationStatements(fInitConstraints);
 		LogHelperCore.log("fAllRelationStatements", fAllRelationStatements);
 
 		sanitizeRelationStatementsWithRelation(
@@ -97,7 +98,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		createSanitizedAndAtomicMappings(fParamChoiceSets, fChoiceMappingsBucket);
 
 		parseConstraintsToSat(
-				initConstraints,
+				fInitConstraints,
 				fOldExpectedValueConstraintsData,
 				fExpectedValueAssignmentsData);
 
@@ -111,10 +112,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		if (!fSat4Solver.hasConstraints())
 			return;
 
-		if(fMethodNode == null)
-			return;
-
-		List<MethodParameterNode> methodParameters = fMethodNode.getMethodParameters();
+		List<MethodParameterNode> methodParameters = fMethodParameters;
 		assertEqualSizes(input, methodParameters);
 
 		for (int parameterIndex = 0; parameterIndex < methodParameters.size(); parameterIndex++) {
@@ -162,7 +160,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		if (fSat4Solver.isContradicting())
 			return;
 
-		List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
+		List<MethodParameterNode> methodParameterNodes = fMethodParameters;
 
 		// TODO - what does it do ?
 		for (MethodParameterNode methodParameterNode : methodParameterNodes)
@@ -180,7 +178,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 				createSolverAssumptions(
 						choicesToExclude,
 						fSat4Solver,
-						fMethodNode,
+						fMethodParameters,
 						fChoiceToSolverIdMappings)
 				.stream()
 				.map(x -> -x)
@@ -204,7 +202,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 				createSolverAssumptions(
 						valueAssignment,
 						fSat4Solver,
-						fMethodNode,
+						fMethodParameters,
 						fChoiceToSolverIdMappings);
 
 		if (fSat4Solver.isProblemSatisfiable(assumptionsFromValues)) {
@@ -224,7 +222,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 				createSolverAssumptions(
 						testCaseChoices,
 						fSat4Solver,
-						fMethodNode,
+						fMethodParameters,
 						fChoiceToSolverIdMappings);
 
 		boolean isSatisfiable = fSat4Solver.isProblemSatisfiable(assumptionsFromValues);
@@ -250,7 +248,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		for (int i = 0; i < testCaseChoices.size(); i++) {
 			ChoiceNode p = testCaseChoices.get(i);
-			MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
+			MethodParameterNode parameter = fMethodParameters.get(i);
 			if (parameter.isExpected()) {
 				testCaseChoices.set(i, p.makeClone());
 			}
@@ -650,7 +648,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			Integer preconditionId =
 					(Integer) precondition.accept(
 							new ParseConstraintToSATVisitor(
-									fMethodNode,
+									fMethodParameters,
 									fSat4Solver,
 									fParamChoiceSets,
 									fChoiceMappingsBucket,
@@ -672,7 +670,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			Integer preconditionId =
 					(Integer) precondition.accept(
 							new ParseConstraintToSATVisitor(
-									fMethodNode,
+									fMethodParameters,
 									fSat4Solver,
 									fParamChoiceSets,
 									fChoiceMappingsBucket,
@@ -693,7 +691,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		try {
 			preconditionId = (Integer) precondition.accept(
 					new ParseConstraintToSATVisitor(
-							fMethodNode,
+							fMethodParameters,
 							fSat4Solver,
 							fParamChoiceSets,
 							fChoiceMappingsBucket,
@@ -702,7 +700,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			postconditionId =
 					(Integer) postcondition.accept(
 							new ParseConstraintToSATVisitor(
-									fMethodNode,
+									fMethodParameters,
 									fSat4Solver,
 									fParamChoiceSets,
 									fChoiceMappingsBucket,
@@ -717,13 +715,13 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	private static List<Integer> createSolverAssumptions(
 			List<ChoiceNode> currentArgumentAssignments, // main input parameter
 			EcSatSolver satSolver,
-			MethodNode methodNode,
+			List<MethodParameterNode> methodParameters,
 			ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
 		if (!satSolver.hasConstraints())
 			return new ArrayList<>();
 
-		List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
+		List<MethodParameterNode> methodParameterNodes = methodParameters;
 
 		List<Integer> assumptions = new ArrayList<>();
 
