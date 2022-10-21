@@ -98,7 +98,7 @@ public class ModelHelper {
 		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
-	public static RootNode findRoot(AbstractNode startNode) { 
+	public static RootNode findRoot(IAbstractNode startNode) { 
 
 		IAbstractNode node = startNode;
 

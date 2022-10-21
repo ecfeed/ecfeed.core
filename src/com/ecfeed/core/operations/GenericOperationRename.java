@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -30,7 +30,7 @@ import com.ecfeed.core.utils.*;
 
 public class GenericOperationRename extends AbstractModelOperation {
 
-	private AbstractNode fTargetAbstractNode;
+	private IAbstractNode fTargetAbstractNode;
 
 	private String fNewPackageName;
 	private String fNewNonQualifiedNameInExtLanguage;
@@ -42,7 +42,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private IExtLanguageManager fExtLanguageManager;
 
 	public GenericOperationRename(
-			AbstractNode target,
+			IAbstractNode target,
 			String newPackageName,
 			String newNonQualifiedNameInExtLanguage, 
 			IExtLanguageManager extLanguageManager) {
@@ -140,7 +140,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 				fExtLanguageManager);
 	}
 
-	protected AbstractNode getOwnNode(){
+	protected IAbstractNode getOwnNode(){
 		return fTargetAbstractNode;
 	}
 
@@ -162,7 +162,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 	private static void verifyNameWithJavaRegex(
 			String name, 
 			String regex, 
-			AbstractNode targetNode,
+			IAbstractNode targetNode,
 			IExtLanguageManager extLanguageManager) {
 
 		if (name.matches(regex) == false) {
@@ -173,7 +173,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 	}
 
-	private String getJavaNameRegex(AbstractNode target) {
+	private String getJavaNameRegex(IAbstractNode target) {
 		try{
 			return (String)fTargetAbstractNode.accept(new JavaNameRegexProvider());
 		}catch(Exception e){
@@ -181,7 +181,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		return "*";
 	}
 
-	private static String getRegexProblemMessage(AbstractNode abstractNode, IExtLanguageManager extLanguageManager){
+	private static String getRegexProblemMessage(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager){
 		try{
 			return (String)abstractNode.accept(new RegexProblemMessageProvider(extLanguageManager));
 		}catch(Exception e){LogHelperCore.logCatch(e);}

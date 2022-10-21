@@ -31,7 +31,7 @@ public abstract class AbstractNodeHelper  {
 	}
 
 	public static String convertTextFromExtToIntrLanguage(
-			AbstractNode abstractNode, 
+			IAbstractNode abstractNode, 
 			String textInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
@@ -56,7 +56,7 @@ public abstract class AbstractNodeHelper  {
 	}
 
 
-	public static void setName(AbstractNode abstractNode, String nameInExtLanguage, IExtLanguageManager extLanguageManager) {
+	public static void setName(IAbstractNode abstractNode, String nameInExtLanguage, IExtLanguageManager extLanguageManager) {
 
 		String nameInIntrLanguage;
 

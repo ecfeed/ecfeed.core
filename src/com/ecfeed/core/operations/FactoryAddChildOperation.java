@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -30,14 +30,14 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class FactoryAddChildOperation implements IModelVisitor{
 
-	private AbstractNode fChild;
+	private IAbstractNode fChild;
 	private int fIndex;
 	private boolean fValidate;
 	IExtLanguageManager fExtLanguageManager;
 	private ITypeAdapterProvider fAdapterProvider;
 
 	public FactoryAddChildOperation(
-			AbstractNode child, 
+			IAbstractNode child, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
@@ -51,7 +51,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	}
 
 	public FactoryAddChildOperation(
-			AbstractNode child, 
+			IAbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
