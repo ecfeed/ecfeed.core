@@ -18,8 +18,8 @@ public class RootNode extends GlobalParametersParentNode {
 	private int fModelVersion;
 
 	@Override
-	public List<? extends AbstractNode> getChildren(){
-		List<AbstractNode> children = new ArrayList<AbstractNode>(super.getChildren());
+	public List<IAbstractNode> getChildren(){
+		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
 		children.addAll(fClasses);
 		return children;
 	}

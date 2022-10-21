@@ -33,9 +33,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren() {
+	public List<IAbstractNode> getChildren() {
 
-		return fChoices;
+		return new ArrayList<IAbstractNode>(fChoices);
 	}
 
 	@Override

@@ -24,10 +24,10 @@ public interface IAbstractNode {
 	public void setParent(IAbstractNode newParent);
 	public void setDescription(String desc);
 	public String getDescription();
-	public List<? extends IAbstractNode> getChildren();
+	public List<IAbstractNode> getChildren();
 	public abstract int getChildrenCount();
 	public boolean hasChildren();
-	public List<? extends IAbstractNode> getAncestors();
+	public List<IAbstractNode> getAncestors();
 	public IAbstractNode getParent();
 	public IAbstractNode getRoot();
 	public IAbstractNode getChild(String qualifiedName);
@@ -52,5 +52,5 @@ public interface IAbstractNode {
 	public void removeProperty(NodePropertyDefs.PropertyId propertyId);
 	void registerChange();
 	public abstract String getNonQualifiedName();
-	
+
 }

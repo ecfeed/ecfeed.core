@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
 
-	public static String getFullPath(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
+	public static String getFullPath(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 
 		List<String> nodeNames = new ArrayList<String>();
 
@@ -124,7 +124,7 @@ public class ModelHelper {
 
 	}
 
-	public static String getNodeTypeName(AbstractNode abstractNode) { // TODO SIMPLE-VIEW visitor, test
+	public static String getNodeTypeName(IAbstractNode abstractNode) { // TODO SIMPLE-VIEW visitor, test
 
 		if (abstractNode instanceof GlobalParameterNode) {
 			return "GlobalParameter";

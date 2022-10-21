@@ -28,7 +28,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	private String fDescription;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
 	private NodeProperties fProperties = new NodeProperties();
-	protected final List<AbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<AbstractNode>();
+	protected final List<IAbstractNode> EMPTY_CHILDREN_ARRAY = new ArrayList<>();
 
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
@@ -126,7 +126,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren() {
+	public List<IAbstractNode> getChildren() {
 
 		return EMPTY_CHILDREN_ARRAY;
 	}
@@ -142,7 +142,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
-	public List<? extends IAbstractNode> getAncestors() {
+	public List<IAbstractNode> getAncestors() {
 
 		IAbstractNode parent = getParent();
 
@@ -179,7 +179,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
-	public AbstractNode getChild(String qualifiedName) {
+	public IAbstractNode getChild(String qualifiedName) {
 
 		String[] tokens = qualifiedName.split(":");
 		if(tokens.length == 0){
@@ -187,13 +187,13 @@ public abstract class AbstractNode implements IAbstractNode {
 		}
 
 		if(tokens.length == 1){
-			for(AbstractNode child : getChildren()){
+			for(IAbstractNode child : getChildren()){
 				if(child.getName().equals(tokens[0])){
 					return child;
 				}
 			}
 		} else {
-			AbstractNode nextChild = getChild(tokens[0]);
+			IAbstractNode nextChild = getChild(tokens[0]);
 			if(nextChild == null) return null;
 			tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
 			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
@@ -233,7 +233,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	public int getSubtreeSize() {
 
 		int size = 1;
-		for(AbstractNode child : getChildren()){
+		for(IAbstractNode child : getChildren()){
 			size += child.getSubtreeSize();
 		}
 

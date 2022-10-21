@@ -33,7 +33,7 @@ public class ClassNodeTest extends ClassNode {
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 
-		List<? extends AbstractNode> children = classNode.getChildren();
+		List<IAbstractNode> children = classNode.getChildren();
 		assertEquals(2, children.size());
 		assertTrue(children.contains(method1));
 		assertTrue(children.contains(method2));

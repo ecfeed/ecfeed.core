@@ -149,9 +149,12 @@ public abstract class ParametersParentNode extends AbstractNode {
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren() {
+	public List<IAbstractNode> getChildren() {
 
-		return fParameters;
+		List<IAbstractNode> result = new ArrayList<>();
+		result.addAll(fParameters);
+		
+		return result;
 	}
 
 	@Override

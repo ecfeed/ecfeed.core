@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -217,9 +218,16 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren() {
-		if(isLinked())
-			return getChoices();
+	public List<IAbstractNode> getChildren() {
+		
+		if (isLinked()) {
+			
+			List<IAbstractNode> result = new ArrayList<>();
+			result.addAll(getChoices());
+			
+			return result;
+		}
+		
 		return super.getChildren();
 	}
 

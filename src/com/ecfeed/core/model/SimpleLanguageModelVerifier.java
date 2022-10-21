@@ -57,9 +57,9 @@ public class SimpleLanguageModelVerifier {
 		return message;
 	}
 
-	private static String checkParameterTypesForSimpleView(AbstractNode abstractNode) {
+	private static String checkParameterTypesForSimpleView(IAbstractNode abstractNode) {
 
-		List<? extends AbstractNode> childNodes = abstractNode.getChildren();
+		List<IAbstractNode> childNodes = abstractNode.getChildren();
 
 		if (childNodes == null) {
 			return null;
@@ -72,7 +72,7 @@ public class SimpleLanguageModelVerifier {
 
 		String message = "";
 
-		for (AbstractNode childNode : childNodes) {
+		for (IAbstractNode childNode : childNodes) {
 
 			message = checkParameterTypesForSimpleView(childNode);
 
@@ -338,7 +338,7 @@ public class SimpleLanguageModelVerifier {
 		}
 	}
 
-	private static String checkNodeNames(AbstractNode abstractNode) {
+	private static String checkNodeNames(IAbstractNode abstractNode) {
 
 		String name = abstractNode.getNonQualifiedName();
 		String errorMessage = JavaLanguageHelper.checkCompatibilityWithSimpleMode(name);
@@ -350,10 +350,9 @@ public class SimpleLanguageModelVerifier {
 			return decoratedMessage;
 		}
 
-		@SuppressWarnings("unchecked")
-		List<AbstractNode> children = (List<AbstractNode>) abstractNode.getChildren();
+		List<IAbstractNode> children = abstractNode.getChildren();
 
-		for (AbstractNode child : children) {
+		for (IAbstractNode child : children) {
 
 			errorMessage = checkNodeNames(child);
 
@@ -365,7 +364,7 @@ public class SimpleLanguageModelVerifier {
 		return null;
 	}
 
-	public static String createMessageWithNodeName(AbstractNode abstractNode, String errorMessage) {
+	public static String createMessageWithNodeName(IAbstractNode abstractNode, String errorMessage) {
 
 		String fullPath = ModelHelper.getFullPath(abstractNode, new ExtLanguageManagerForJava());
 

@@ -36,17 +36,17 @@ public class ModelLogger {
 		System.out.println("Model ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	}
 
-	private static void printChildren(AbstractNode abstractNode, int indent) {
+	private static void printChildren(IAbstractNode abstractNode, int indent) {
 
 		printAbstractNode(abstractNode, indent);
 
-		List<? extends AbstractNode> children = abstractNode.getChildren();
+		List<IAbstractNode> children = abstractNode.getChildren();
 
 		if (children.size() == 0) {
 			return;
 		}
 
-		for (AbstractNode child : children) {
+		for (IAbstractNode child : children) {
 			printChildren(child, indent + indentIncrement);
 		}
 	}
@@ -61,7 +61,7 @@ public class ModelLogger {
 		printIndentedLine("F:" + line, indent);
 	}	
 
-	private static void printObjectLine(AbstractNode abstractNode, String fieldName, int indent) {
+	private static void printObjectLine(IAbstractNode abstractNode, String fieldName, int indent) {
 		printIndentedLine(
 				getIsFieldStr(fieldName) + 
 				abstractNode.getClass().getSimpleName() +
@@ -70,7 +70,7 @@ public class ModelLogger {
 				", #" + abstractNode.hashCode(), indent);
 	}
 
-	private static void printAbstractNode(AbstractNode abstractNode, int indent) {
+	private static void printAbstractNode(IAbstractNode abstractNode, int indent) {
 
 		if (abstractNode == null) {
 			printIndentedLine("Abstract node is null", indent);
