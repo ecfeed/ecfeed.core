@@ -49,17 +49,7 @@ public class AbstractNodeTest{
 		}
 
 		@Override
-		public void setParent(IAbstractNode newParent) {
-			
-		}
-
-		@Override
 		public boolean isMyAncestor(IAbstractNode candidateForAncestor) {
-			return false;
-		}
-
-		@Override
-		public boolean isMatch(IAbstractNode nodeToCompare) {
 			return false;
 		}
 
@@ -87,13 +77,16 @@ public class AbstractNodeTest{
 	}
 
 	@Test
-	public void testParent(){
-		AbstractNode parent = new AbstractNodeImpl("parent");
-		AbstractNode child = new AbstractNodeImpl("child");
+	public void testParent() {
+		
+		IAbstractNode parent = new AbstractNodeImpl("parent");
+		IAbstractNode child = new AbstractNodeImpl("child");
 
 		assertEquals(null, child.getParent());
 		child.setParent(parent);
-		assertEquals(parent, child.getParent());
+		
+		IAbstractNode actualParent = child.getParent();
+		assertEquals(parent, actualParent);
 	}
 
 	@Test
@@ -219,6 +212,7 @@ public class AbstractNodeTest{
 
 	@Test
 	public void getChildTest(){
+		
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
@@ -258,7 +252,10 @@ public class AbstractNodeTest{
 		assertEquals(p, classNode.getChild("method:parameter:p"));
 		assertEquals(p, method.getChild("parameter:p"));
 		assertEquals(p, parameter.getChild("p"));
-		assertEquals(p1, root.getChild("class:method:parameter:p:p1"));
+		
+		IAbstractNode childChoice = root.getChild("class:method:parameter:p:p1");
+		assertEquals(p1, childChoice);
+		
 		assertEquals(p1, classNode.getChild("method:parameter:p:p1"));
 		assertEquals(p1, method.getChild("parameter:p:p1"));
 		assertEquals(p1, parameter.getChild("p:p1"));
@@ -285,6 +282,7 @@ public class AbstractNodeTest{
 
 	@Test
 	public void compareTest(){
+		
 		AbstractNode n1 = new AbstractNodeImpl("n");
 		AbstractNode n2 = new AbstractNodeImpl("n");
 

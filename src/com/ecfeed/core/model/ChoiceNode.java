@@ -67,12 +67,7 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public List<IAbstractNode> getChildren(){
-		
-		List<IAbstractNode> result = new ArrayList<>();
-		
-		result.addAll(getChildren());
-		
-		return result;
+		return new ArrayList<>(getChoices());
 	}
 
 	@Override

@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -186,16 +185,24 @@ public abstract class AbstractNode implements IAbstractNode {
 			return null;
 		}
 
-		if(tokens.length == 1){
-			for(IAbstractNode child : getChildren()){
-				if(child.getName().equals(tokens[0])){
+		if (tokens.length == 1) {
+			
+			List<IAbstractNode> children = getChildren();
+			
+			for (IAbstractNode child : children) {
+				if (child.getName().equals(tokens[0])) {
 					return child;
 				}
 			}
 		} else {
+			
 			IAbstractNode nextChild = getChild(tokens[0]);
-			if(nextChild == null) return null;
-			tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
+			
+			if(nextChild == null) { 
+				return null;
+			}
+			
+			//tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
 			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
 			return nextChild.getChild(newName);
 		}
