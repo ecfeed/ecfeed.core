@@ -17,7 +17,7 @@ import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class ConstraintNode extends AbstractNode{
+public class ConstraintNode extends AbstractNode {
 
 	private Constraint fConstraint;
 

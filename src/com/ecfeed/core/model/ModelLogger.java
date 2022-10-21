@@ -24,8 +24,9 @@ public class ModelLogger {
 	//	}
 
 
-	public static void printModel(String message, AbstractNode someNodeOfModel) {
-		AbstractNode root = ModelHelper.findRoot(someNodeOfModel);
+	public static void printModel(String message, IAbstractNode someNodeOfModel) {
+		
+		IAbstractNode root = ModelHelper.findRoot(someNodeOfModel);
 
 		if (root == null) {
 			System.out.println("Root not found.");

@@ -19,7 +19,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.StringHelper;
 
-public abstract class ChoicesParentNode extends AbstractNode{
+public abstract class ChoicesParentNode extends AbstractNode {
 
 	private List<ChoiceNode> fChoices;
 

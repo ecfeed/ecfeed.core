@@ -300,13 +300,13 @@ public class CopyNodeTest{
 	//		fChoice2.addLabel(fLabel2);
 	//	}
 	//
-	//	public void testNode(AbstractNode node, AbstractNode copy){
+	//	public void testNode(Abstract Node node, Abstract Node copy){
 	//		assertTrue(node.getClass().isInstance(copy));
 	//		assertNotEquals(node, copy);
 	//		assertEquals(node.getName(), copy.getName());
 	//	}
 	//
-	//	public void testParent(AbstractNode node, AbstractNode parent, boolean isParent){
+	//	public void testParent(Abstract Node node, Abstract Node parent, boolean isParent){
 	//		if(isParent)
 	//			assertEquals(node.getParent(), parent);
 	//		else

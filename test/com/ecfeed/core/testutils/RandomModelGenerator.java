@@ -42,7 +42,7 @@ public class RandomModelGenerator {
 	public int MAX_STATEMENTS = 5;
 	public int MAX_STATEMENTS_DEPTH = 3;
 
-	public AbstractNode generateNode(ENodeType type){
+	public IAbstractNode generateNode(ENodeType type){
 		switch(type){
 		case CHOICE:
 			return generateChoice(MAX_PARTITION_LEVELS, MAX_PARTITIONS, MAX_PARTITION_LABELS, randomType(true));

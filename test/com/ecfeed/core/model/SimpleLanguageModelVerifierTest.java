@@ -212,7 +212,7 @@ public class SimpleLanguageModelVerifierTest {
 		assertNull(errorMessage);
 	}
 
-	public void checkInvalidNameMessage(String errorMessage, AbstractNode nodeErr) {
+	public void checkInvalidNameMessage(String errorMessage, IAbstractNode nodeErr) {
 
 		TestHelper.checkMessage(
 				errorMessage,
