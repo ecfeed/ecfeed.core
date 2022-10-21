@@ -12,7 +12,7 @@ package com.ecfeed.core.implementation;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -28,8 +28,7 @@ import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EcException;
 import com.ecfeed.core.utils.LogHelperCore;
 
-public abstract class AbstractImplementationStatusResolver implements
-IImplementationStatusResolver {
+public abstract class AbstractImplementationStatusResolver implements IImplementationStatusResolver {
 
 	private StatusResolver fStatusResolver;
 	private IPrimitiveTypePredicate fPrimitiveTypeTester;
@@ -88,7 +87,7 @@ IImplementationStatusResolver {
 	}
 
 	@Override
-	public EImplementationStatus getImplementationStatus(AbstractNode node) {
+	public EImplementationStatus getImplementationStatus(IAbstractNode node) {
 
 		if (fStatusResolver == null) {
 			return EImplementationStatus.NOT_IMPLEMENTED;
@@ -221,12 +220,12 @@ IImplementationStatusResolver {
 		return EImplementationStatus.NOT_IMPLEMENTED;
 	}
 
-	protected EImplementationStatus childrenStatus(List<? extends AbstractNode> children){
+	protected EImplementationStatus childrenStatus(List<? extends IAbstractNode> children){
 		int size = children.size();
 		int implementedChildren = 0;
 		int notImplementedChildren = 0;
 
-		for(AbstractNode child : children){
+		for(IAbstractNode child : children){
 
 			EImplementationStatus status = getImplementationStatus(child);
 

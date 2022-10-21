@@ -10,8 +10,8 @@
 
 package com.ecfeed.core.implementation;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 
 public interface IImplementationStatusResolver {
-	public EImplementationStatus getImplementationStatus(AbstractNode node);
+	public EImplementationStatus getImplementationStatus(IAbstractNode node);
 }

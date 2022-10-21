@@ -13,12 +13,11 @@ package com.ecfeed.core.implementation;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
@@ -31,7 +30,7 @@ import com.ecfeed.core.utils.LogHelperCore;
 
 public abstract class CachedImplementationStatusResolver extends AbstractImplementationStatusResolver {
 
-	private static Map<AbstractNode, EImplementationStatus> fCache = new HashMap<>();
+	private static Map<IAbstractNode, EImplementationStatus> fCache = new HashMap<>();
 
 
 	public CachedImplementationStatusResolver(IPrimitiveTypePredicate primitiveTypePredicate) {
@@ -39,7 +38,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 	}
 
 	@Override
-	public EImplementationStatus getImplementationStatus(AbstractNode node) {
+	public EImplementationStatus getImplementationStatus(IAbstractNode node) {
 
 		EImplementationStatus status = fCache.get(node);
 
@@ -66,7 +65,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 		clearCache(node.getParent());
 	}
 
-	public void updateCache(AbstractNode node, EImplementationStatus status) {
+	public void updateCache(IAbstractNode node, EImplementationStatus status) {
 
 		fCache.put(node, status);
 
