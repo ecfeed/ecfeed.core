@@ -17,8 +17,7 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 
 	ParametersHolder fParametersHolder;
 
-	// TODO MO-RE - MOVE FROM HERE
-	public abstract List<MethodNode> getMethods(AbstractParameterNode parameter);
+	public abstract List<MethodNode> getMethods(AbstractParameterNode parameter); 	// TODO MO-RE - MOVE FROM HERE
 
 	public ParametersParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
