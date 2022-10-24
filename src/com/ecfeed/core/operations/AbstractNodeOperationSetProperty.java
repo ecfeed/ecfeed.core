@@ -9,7 +9,7 @@
  *******************************************************************************/
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -17,14 +17,14 @@ public class AbstractNodeOperationSetProperty extends AbstractModelOperation {
 
 	private NodePropertyDefs.PropertyId fPropertyId;
 	private String fNewValue;
-	private AbstractNode fAbstractNode;	
+	private IAbstractNode fAbstractNode;	
 
 	private String fOriginalValue;	
 
 	public AbstractNodeOperationSetProperty(
 			NodePropertyDefs.PropertyId propertyId, 
 			String value,
-			AbstractNode abstractNode,
+			IAbstractNode abstractNode,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_PROPERTY, extLanguageManager);

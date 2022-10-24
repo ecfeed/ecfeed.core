@@ -19,7 +19,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.StringHelper;
 
-public abstract class ChoicesParentNode extends AbstractNode{
+public abstract class ChoicesParentNode extends AbstractNode {
 
 	private List<ChoiceNode> fChoices;
 
@@ -33,9 +33,9 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren() {
+	public List<IAbstractNode> getChildren() {
 
-		return fChoices;
+		return new ArrayList<IAbstractNode>(fChoices);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public abstract class ChoicesParentNode extends AbstractNode{
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode choicesParentNode) {
+	public boolean isMatch(IAbstractNode choicesParentNode) {
 
 		if (choicesParentNode instanceof ChoicesParentNode == false) {
 			return false;

@@ -74,7 +74,7 @@ public class ParameterNodeTest{
 		parameter.addChoice(choice1);
 		parameter.addChoice(choice2);
 
-		List<? extends AbstractNode> children = parameter.getChildren();
+		List<IAbstractNode> children = parameter.getChildren();
 		assertEquals(2, children.size());
 		assertTrue(children.contains(choice1));
 		assertTrue(children.contains(choice2));

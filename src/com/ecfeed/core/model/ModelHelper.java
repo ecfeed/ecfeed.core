@@ -19,11 +19,11 @@ import com.ecfeed.core.utils.RegexHelper;
 
 public class ModelHelper {
 
-	public static String getFullPath(AbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
+	public static String getFullPath(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 
 		List<String> nodeNames = new ArrayList<String>();
 
-		AbstractNode currentNode = abstractNode;
+		IAbstractNode currentNode = abstractNode;
 
 		for(;;) {
 
@@ -98,9 +98,9 @@ public class ModelHelper {
 		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
-	public static RootNode findRoot(AbstractNode startNode) { 
+	public static RootNode findRoot(IAbstractNode startNode) { 
 
-		AbstractNode node = startNode;
+		IAbstractNode node = startNode;
 
 		for (int cnt = 0;  ; cnt++) {
 
@@ -108,7 +108,7 @@ public class ModelHelper {
 				ExceptionHelper.reportRuntimeException("Model too deep or recursive. Cannot find root.");
 			}
 
-			AbstractNode parent = node.getParent();
+			IAbstractNode parent = node.getParent();
 
 			if (parent == null) {
 
@@ -124,7 +124,7 @@ public class ModelHelper {
 
 	}
 
-	public static String getNodeTypeName(AbstractNode abstractNode) { // TODO SIMPLE-VIEW visitor, test
+	public static String getNodeTypeName(IAbstractNode abstractNode) { // TODO SIMPLE-VIEW visitor, test
 
 		if (abstractNode instanceof GlobalParameterNode) {
 			return "GlobalParameter";

@@ -30,7 +30,7 @@ public class MethodNode extends ParametersParentNode {
 	private List<ConstraintNode> fConstraintNodes;
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
@@ -125,8 +125,9 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren(){
-		List<AbstractNode> children = new ArrayList<AbstractNode>(super.getChildren());
+	public List<IAbstractNode> getChildren(){
+		
+		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
 		children.addAll(fConstraintNodes);
 		children.addAll(fTestCaseNodes);
 		children.addAll(fTestSuiteNodes);
@@ -175,7 +176,7 @@ public class MethodNode extends ParametersParentNode {
 
 		int index = -1;
 
-		for (AbstractNode abstractNode : getParent().getChildren()) {
+		for (IAbstractNode abstractNode : getParent().getChildren()) {
 
 			if (abstractNode instanceof MethodNode) {
 				index++;
@@ -570,7 +571,7 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public int getMaxChildIndex(AbstractNode potentialChild) {
+	public int getMaxChildIndex(IAbstractNode potentialChild) {
 
 		if (potentialChild instanceof AbstractParameterNode) { 
 			return getParameters().size();
@@ -593,7 +594,7 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
+	public boolean isMatch(IAbstractNode node){
 
 		if(node instanceof MethodNode == false){
 			return false;

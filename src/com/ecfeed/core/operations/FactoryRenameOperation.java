@@ -24,7 +24,7 @@ public class FactoryRenameOperation {
 	private static class ClassOperationRename extends GenericOperationRename {
 
 		public ClassOperationRename(
-				AbstractNode target, 
+				IAbstractNode target, 
 				String newPackageName, 
 				String newNonQualifiedNameInExtLanguage, 
 				IExtLanguageManager extLanguageManager) {
@@ -98,7 +98,7 @@ public class FactoryRenameOperation {
 
 		IExtLanguageManager fExtLanguageManager;
 
-		public GlobalParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
+		public GlobalParameterOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
 
 			super(target, null, newName, extLanguageManager);
 
@@ -133,7 +133,7 @@ public class FactoryRenameOperation {
 
 		IExtLanguageManager fExtLanguageManager;
 
-		public MethodParameterOperationRename(AbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
+		public MethodParameterOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
 			super(target, null, newName, extLanguageManager);
 			fExtLanguageManager = extLanguageManager;
 		}
@@ -184,7 +184,7 @@ public class FactoryRenameOperation {
 
 			String newNameInIntrLanguage = newNameInExtLanguage;
 
-			final AbstractNode ownNode = getOwnNode();
+			final IAbstractNode ownNode = getOwnNode();
 
 			if(ownNode.getSibling(newNameInIntrLanguage) != null){
 				ExceptionHelper.reportRuntimeException(PARTITION_NAME_NOT_UNIQUE_PROBLEM);
@@ -252,7 +252,7 @@ public class FactoryRenameOperation {
 		}
 	}
 
-	public static IModelOperation getRenameOperation(AbstractNode target, String newPackageName, String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager){
+	public static IModelOperation getRenameOperation(IAbstractNode target, String newPackageName, String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager){
 
 		try{
 			return (IModelOperation)target.accept(new RenameOperationProvider(

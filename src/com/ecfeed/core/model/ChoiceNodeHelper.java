@@ -298,7 +298,7 @@ public class ChoiceNodeHelper {
 			ChoiceNode copy = orgChoice.makeClone();
 			copies.add(copy);
 
-			AbstractNode orgParent = orgChoice.getParent();
+			IAbstractNode orgParent = orgChoice.getParent();
 			if (!(orgParent instanceof ChoiceNode)) {
 				break;
 			}

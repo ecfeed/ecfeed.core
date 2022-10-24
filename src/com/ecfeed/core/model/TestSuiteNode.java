@@ -61,14 +61,17 @@ public class TestSuiteNode extends AbstractNode {
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
 	@Override
-	public List<TestCaseNode> getChildren() {
+	public List<IAbstractNode> getChildren() {
+		
+		List<IAbstractNode> result = new ArrayList<>();
+		result.addAll(fTestCaseNodes);
 
-		return fTestCaseNodes;
+		return result;
 	}
 	
 	@Override

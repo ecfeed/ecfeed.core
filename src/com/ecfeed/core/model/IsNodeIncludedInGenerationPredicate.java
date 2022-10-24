@@ -13,7 +13,6 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class IsNodeIncludedInGenerationPredicate {
 
 	private final MethodNode fGeneratorMethodNode;
@@ -58,7 +57,7 @@ public class IsNodeIncludedInGenerationPredicate {
 		return listOfChoices;
 	}
 
-	public boolean test(AbstractNode abstractNode) {
+	public boolean test(IAbstractNode abstractNode) {
 
 		if (abstractNode instanceof RootNode) {
 
@@ -98,7 +97,7 @@ public class IsNodeIncludedInGenerationPredicate {
 		return false;
 	}
 
-	private static boolean shouldSerializeClassNode(AbstractNode abstractNode, MethodNode generatorMethodNode) {
+	private static boolean shouldSerializeClassNode(IAbstractNode abstractNode, MethodNode generatorMethodNode) {
 
 		ClassNode classNode = (ClassNode)abstractNode; 
 
@@ -111,7 +110,7 @@ public class IsNodeIncludedInGenerationPredicate {
 		return false;
 	}
 
-	private static boolean shouldSerializeMethodNode(AbstractNode abstractNode, MethodNode generatorMethodNode) {
+	private static boolean shouldSerializeMethodNode(IAbstractNode abstractNode, MethodNode generatorMethodNode) {
 
 		MethodNode methodNode = (MethodNode)abstractNode;
 
@@ -123,7 +122,7 @@ public class IsNodeIncludedInGenerationPredicate {
 	}
 
 	private static boolean shouldSerializeMethodParameterNode(
-			AbstractNode abstractNode, MethodNode generatorMethodNode) {
+			IAbstractNode abstractNode, MethodNode generatorMethodNode) {
 
 		if (abstractNode.getParent().equals(generatorMethodNode)) {
 			return true;
@@ -133,14 +132,14 @@ public class IsNodeIncludedInGenerationPredicate {
 	}
 
 	private static boolean shouldSerializeGlobalParameterNode(
-			AbstractNode abstractNode, 
+			IAbstractNode abstractNode, 
 			List<List<ChoiceNode>> allowedChoiceInput) {
 
 		return isAncestorOfAllowedChoices(abstractNode, allowedChoiceInput);
 	}
 
 	private static boolean shouldSerializeChoiceNode(
-			AbstractNode abstractNode, 
+			IAbstractNode abstractNode, 
 			List<List<ChoiceNode>> allowedChoiceInput,
 			List<IConstraint<ChoiceNode>> allowedConstraints) {
 
@@ -154,7 +153,7 @@ public class IsNodeIncludedInGenerationPredicate {
 	}
 
 	private static boolean shouldSerializeConstraintNode(
-			AbstractNode abstractNode,
+			IAbstractNode abstractNode,
 			List<IConstraint<ChoiceNode>> allowedConstraints) {
 
 		ConstraintNode constraintNode = (ConstraintNode)abstractNode;
@@ -183,7 +182,7 @@ public class IsNodeIncludedInGenerationPredicate {
 	}
 
 	private static boolean isAncestorOfAllowedChoices(
-			AbstractNode abstractNode,
+			IAbstractNode abstractNode,
 			List<List<ChoiceNode>> allowedChoiceInput) {
 
 		for (List<ChoiceNode> choiceList : allowedChoiceInput) {

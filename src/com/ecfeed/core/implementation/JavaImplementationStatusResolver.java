@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -96,17 +96,17 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 	}
 
 	@Override
-	public EImplementationStatus getImplementationStatus(AbstractNode node){
+	public EImplementationStatus getImplementationStatus(IAbstractNode node){
 		fLoadedClasses.clear();
 		return super.getImplementationStatus(node);
 	}
 
 	@Override
-	protected EImplementationStatus childrenStatus(List<? extends AbstractNode> children){
+	protected EImplementationStatus childrenStatus(List<? extends IAbstractNode> children){
 		int size = children.size();
 		int implementedChildren = 0;
 		int notImplementedChildren = 0;
-		for(AbstractNode child : children){
+		for(IAbstractNode child : children){
 			// do not use the public getImplementationStatus() function to avoid flushing cache
 			EImplementationStatus status = implementationStatus(child);
 			if(status == EImplementationStatus.IMPLEMENTED) ++implementedChildren;
@@ -180,7 +180,7 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 		return false;
 	}
 
-	private EImplementationStatus implementationStatus(AbstractNode node) {
+	private EImplementationStatus implementationStatus(IAbstractNode node) {
 		try {
 			return (EImplementationStatus)node.accept(fStatusVisitor);
 		} catch (Exception e) {

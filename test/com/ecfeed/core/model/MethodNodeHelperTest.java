@@ -688,7 +688,7 @@ public class MethodNodeHelperTest {
 		assertEquals(1, testSuiteNodes.size());
 
 		TestSuiteNode testSuiteNode = testSuiteNodes.get(0);
-		List<TestCaseNode> testCaseNodes = testSuiteNode.getChildren();
+		List<IAbstractNode> testCaseNodes = testSuiteNode.getChildren();
 
 		assertEquals(testCase1, testCaseNodes.get(0));
 		assertEquals(testCase2, testCaseNodes.get(1));
@@ -706,7 +706,7 @@ public class MethodNodeHelperTest {
 		assertEquals(2, testSuiteNodes.size());
 
 		TestSuiteNode testSuiteNode1 = testSuiteNodes.get(0);
-		List<TestCaseNode> testCaseNodes1 = testSuiteNode1.getChildren();
+		List<IAbstractNode> testCaseNodes1 = testSuiteNode1.getChildren();
 
 		assertEquals(2, testCaseNodes1.size());
 
@@ -714,7 +714,7 @@ public class MethodNodeHelperTest {
 		assertEquals(testCase2, testCaseNodes1.get(1));
 
 		TestSuiteNode testSuiteNode2 = testSuiteNodes.get(1);
-		List<TestCaseNode> testCaseNodes2 = testSuiteNode2.getChildren();
+		List<IAbstractNode> testCaseNodes2 = testSuiteNode2.getChildren();
 
 		assertEquals(1, testCaseNodes2.size());
 		assertEquals(testCase3, testCaseNodes2.get(0));

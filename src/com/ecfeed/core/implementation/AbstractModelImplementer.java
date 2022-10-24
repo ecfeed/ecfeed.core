@@ -12,7 +12,7 @@ package com.ecfeed.core.implementation;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -137,7 +137,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	@Override
-	public boolean isImplementable(Class<? extends AbstractNode> type){
+	public boolean isImplementable(Class<? extends IAbstractNode> type){
 		if(type.equals(RootNode.class) ||
 				(type.equals(ClassNode.class))||
 				(type.equals(MethodNode.class))||
@@ -152,7 +152,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	@Override
-	public boolean isImplementable(AbstractNode node) {
+	public boolean isImplementable(IAbstractNode node) {
 		try {
 			return (boolean)node.accept(fImplementableVisitor);
 		} catch(Exception e) {
@@ -163,7 +163,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	@Override
-	public boolean implement(AbstractNode node) throws Exception {
+	public boolean implement(IAbstractNode node) throws Exception {
 		if (isImplementable(node)){
 			return (boolean)node.accept(fNodeImplementerVisitor);
 		}
@@ -171,7 +171,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	@Override
-	public EImplementationStatus getImplementationStatus(AbstractNode node) {
+	public EImplementationStatus getImplementationStatus(IAbstractNode node) {
 		return fStatusResolver.getImplementationStatus(node);
 	}
 
@@ -335,8 +335,8 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		return hasImplementableNode(node.getTestData());
 	}
 
-	protected boolean hasImplementableNode(List<? extends AbstractNode> nodes){
-		for(AbstractNode node : nodes){
+	protected boolean hasImplementableNode(List<? extends IAbstractNode> nodes){
+		for(IAbstractNode node : nodes){
 			if(isImplementable(node)){
 				return true;
 			}

@@ -16,9 +16,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.AbstractNode;
 import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -30,8 +30,8 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class GenericMoveOperation extends BulkOperation {
 
 	public GenericMoveOperation(
-			List<? extends AbstractNode> moved, 
-			AbstractNode newParent, 
+			List<? extends IAbstractNode> moved, 
+			IAbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -39,8 +39,8 @@ public class GenericMoveOperation extends BulkOperation {
 	}
 
 	public GenericMoveOperation(
-			List<? extends AbstractNode> moved, 
-			AbstractNode newParent, 
+			List<? extends IAbstractNode> moved, 
+			IAbstractNode newParent, 
 			ITypeAdapterProvider adapterProvider, 
 			int newIndex,
 			IExtLanguageManager extLanguageManager) {
@@ -51,7 +51,7 @@ public class GenericMoveOperation extends BulkOperation {
 		try {
 			//all nodes have parents other than newParent
 			if(externalNodes(moved, newParent)){
-				for(AbstractNode node : moved){
+				for(IAbstractNode node : moved){
 					
 					if (node instanceof TestCaseNode && newParent instanceof TestSuiteNode) {
 						
@@ -136,8 +136,8 @@ public class GenericMoveOperation extends BulkOperation {
 			}
 	}
 
-	protected boolean externalNodes(List<? extends AbstractNode> moved, AbstractNode newParent){
-		for(AbstractNode node : moved){
+	protected boolean externalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
+		for(IAbstractNode node : moved){
 			if(node.getParent() == newParent){
 				return false;
 			}
@@ -145,8 +145,8 @@ public class GenericMoveOperation extends BulkOperation {
 		return true;
 	}
 
-	protected boolean internalNodes(List<? extends AbstractNode> moved, AbstractNode newParent){
-		for(AbstractNode node : moved){
+	protected boolean internalNodes(List<? extends IAbstractNode> moved, IAbstractNode newParent){
+		for(IAbstractNode node : moved){
 			if(node.getParent() != newParent){
 				return false;
 			}
@@ -154,7 +154,7 @@ public class GenericMoveOperation extends BulkOperation {
 		return true;
 	}
 
-	private static AbstractNode getParent(List<? extends AbstractNode> children) {
+	private static IAbstractNode getParent(List<? extends IAbstractNode> children) {
 		return children.get(0).getParent();
 	}
 }

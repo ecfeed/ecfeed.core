@@ -41,7 +41,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_A
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
@@ -367,7 +367,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetMethodElement;
 	}
 
-	private boolean shouldSerializeNode(AbstractNode abstractNode) {
+	private boolean shouldSerializeNode(IAbstractNode abstractNode) {
 
 		ISerializerPredicate serializerPredicate = fSerializatorParams.getSerializerPredicate();
 
@@ -456,7 +456,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 
-	private Element createAbstractElement(String nodeTag, AbstractNode node) {
+	private Element createAbstractElement(String nodeTag, IAbstractNode node) {
 
 		Element targetAbstractElement = new Element(nodeTag);
 		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, node.getName());
@@ -466,7 +466,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetAbstractElement;
 	}
 
-	private Element appendComments(Element element, AbstractNode node) {
+	private Element appendComments(Element element, IAbstractNode node) {
 
 		if (node.getDescription() != null) {
 			Element commentsBlock = new Element(COMMENTS_BLOCK_TAG_NAME);

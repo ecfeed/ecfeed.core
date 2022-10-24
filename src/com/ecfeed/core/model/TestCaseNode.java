@@ -22,12 +22,12 @@ public class TestCaseNode extends AbstractNode {
 	List<ChoiceNode> fTestData;
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
 	@Override
-	protected void verifyName(String nameInIntrLanguage) {
+	public void verifyName(String nameInIntrLanguage) {
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode testCaseNode){
+	public boolean isMatch(IAbstractNode testCaseNode){
 
 		if(testCaseNode instanceof TestCaseNode == false){
 			return false;

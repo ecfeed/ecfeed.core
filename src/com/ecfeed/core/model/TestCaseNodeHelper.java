@@ -68,7 +68,7 @@ public class TestCaseNodeHelper {
 
 	private static String getMethodName(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
 
-		AbstractNode parent = testCaseNode.getParent();
+		IAbstractNode parent = testCaseNode.getParent();
 
 		if (parent == null) {
 			return null;

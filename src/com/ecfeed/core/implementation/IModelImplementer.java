@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.implementation;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 
 public interface IModelImplementer {
-	public boolean isImplementable(Class<? extends AbstractNode> type);
-	public boolean isImplementable(AbstractNode node);
-	public boolean implement(AbstractNode node) throws Exception;
-	public EImplementationStatus getImplementationStatus(AbstractNode node);
+	public boolean isImplementable(Class<? extends IAbstractNode> type);
+	public boolean isImplementable(IAbstractNode node);
+	public boolean implement(IAbstractNode node) throws Exception;
+	public EImplementationStatus getImplementationStatus(IAbstractNode node);
 }

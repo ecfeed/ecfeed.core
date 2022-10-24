@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
@@ -52,12 +52,12 @@ public class FactoryRemoveOperation {
 		}
 
 		@Override
-		public List<AbstractNode> getNodesToSelect() {
+		public List<IAbstractNode> getNodesToSelect() {
 			return null;
 		}
 
 		@Override
-		public void setNodesToSelect(List<AbstractNode> nodes) {
+		public void setNodesToSelect(List<IAbstractNode> nodes) {
 		}
 
 
@@ -125,7 +125,10 @@ public class FactoryRemoveOperation {
 	}
 
 	public static IModelOperation getRemoveOperation(
-			AbstractNode node, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager){
+			IAbstractNode node, 
+			ITypeAdapterProvider adapterProvider, 
+			boolean validate, 
+			IExtLanguageManager extLanguageManager){
 		try {
 			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, extLanguageManager));
 		} catch (Exception e) {

@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -27,13 +27,13 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryRemoveChildOperation implements IModelVisitor{
 
-	private AbstractNode fChild;
+	private IAbstractNode fChild;
 	private boolean fValidate;
 	private ITypeAdapterProvider fAdapterProvider;
 	private IExtLanguageManager fExtLanguageManager;
 
 	public FactoryRemoveChildOperation(
-			AbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager) {
+			IAbstractNode child, ITypeAdapterProvider adapterProvider, boolean validate, IExtLanguageManager extLanguageManager) {
 		fChild = child;
 		fValidate = validate;
 		fExtLanguageManager = extLanguageManager;

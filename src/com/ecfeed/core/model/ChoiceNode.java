@@ -66,12 +66,12 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	@Override
-	public List<? extends AbstractNode> getChildren(){
-		return getChoices();
+	public List<IAbstractNode> getChildren(){
+		return new ArrayList<>(getChoices());
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
@@ -345,7 +345,7 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode choiceNode){
+	public boolean isMatch(IAbstractNode choiceNode){
 
 		if(choiceNode instanceof ChoiceNode == false){
 			return false;

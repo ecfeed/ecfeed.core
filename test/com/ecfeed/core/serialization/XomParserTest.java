@@ -22,7 +22,7 @@ import java.util.Random;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -455,7 +455,7 @@ public class XomParserTest {
 
 	}
 
-	private void assertElementsEqual(AbstractNode n, AbstractNode n1) {
+	private void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
 		
 		if (n.isMatch(n1)) {
 			return;

@@ -97,7 +97,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 

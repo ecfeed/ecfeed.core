@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 
 
 public interface IModelOperation {
@@ -20,7 +20,7 @@ public interface IModelOperation {
 	public boolean modelUpdated();
 	public IModelOperation getReverseOperation();
 	public String getName();
-	public void setNodesToSelect(List<AbstractNode> nodes);
-	public List<AbstractNode> getNodesToSelect();
+	public void setNodesToSelect(List<IAbstractNode> nodes);
+	public List<IAbstractNode> getNodesToSelect();
 
 }

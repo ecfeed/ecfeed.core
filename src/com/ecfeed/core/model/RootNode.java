@@ -18,14 +18,14 @@ public class RootNode extends GlobalParametersParentNode {
 	private int fModelVersion;
 
 	@Override
-	public List<? extends AbstractNode> getChildren(){
-		List<AbstractNode> children = new ArrayList<AbstractNode>(super.getChildren());
+	public List<IAbstractNode> getChildren(){
+		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
 		children.addAll(fClasses);
 		return children;
 	}
 
 	@Override
-	public int getMaxChildIndex(AbstractNode potentialChild){
+	public int getMaxChildIndex(IAbstractNode potentialChild){
 		if(potentialChild instanceof AbstractParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodParameterNode) return getParameters().size();
 		if(potentialChild instanceof ClassNode) return getClasses().size();
@@ -59,7 +59,7 @@ public class RootNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	protected String getNonQualifiedName() {
+	public String getNonQualifiedName() {
 		return getName();
 	}
 
@@ -115,7 +115,7 @@ public class RootNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(AbstractNode node){
+	public boolean isMatch(IAbstractNode node){
 		if(node instanceof RootNode == false){
 			return false;
 		}

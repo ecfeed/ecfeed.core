@@ -13,14 +13,13 @@ package com.ecfeed.core.model.serialization;
 import java.io.OutputStream;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.model.IsNodeIncludedInGenerationPredicate;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
-
 
 public class ModelPartialSerializer {
 
@@ -86,7 +85,7 @@ public class ModelPartialSerializer {
 		}
 
 		@Override
-		public boolean shouldSerializeNode(AbstractNode abstractNode) {
+		public boolean shouldSerializeNode(IAbstractNode abstractNode) {
 			
 			IsNodeIncludedInGenerationPredicate predicate = 
 					new IsNodeIncludedInGenerationPredicate(
