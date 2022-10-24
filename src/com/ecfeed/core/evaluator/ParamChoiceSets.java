@@ -1,26 +1,19 @@
 package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ParamChoiceSets {
 
-    public ParamsWithChoices fInputChoices;
-    public ParamsWithChoices fSanitizedChoices;
-    public ParamsWithChoices fAtomicChoices;
+    private final Map<MethodParameterNode, Set<ChoiceNode>> fSanitizedChoices = new HashMap<>();
+    private final Map<MethodParameterNode, Set<ChoiceNode>> fAtomicChoices = new HashMap<>();
+    private final Map<MethodParameterNode, Set<ChoiceNode>> fInputChoices = new HashMap<>();
 
-    public ParamChoiceSets(List<MethodParameterNode> methodParameters) {
+    public ParamChoiceSets(List<MethodParameterNode> parameters) {
 
-        fAtomicChoices = new ParamsWithChoices("ATM");
-        fSanitizedChoices = new ParamsWithChoices("SAN");
-        fInputChoices = new ParamsWithChoices("ALL");
-
-        fInputChoices = createInputChoices(methodParameters);
+        createInputChoices(parameters);
     }
 
     public void atomicPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {
@@ -33,24 +26,24 @@ public class ParamChoiceSets {
         return fAtomicChoices.get(methodParameterNode);
     }
 
-    public void sainitizedPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {
+    public void sanitizedPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {
 
         fSanitizedChoices.put(methodParameterNode, setOfChoices);
     }
 
-    public Set<ChoiceNode> sainitizedGet(MethodParameterNode methodParameterNode) {
+    public Set<ChoiceNode> sanitizedGet(MethodParameterNode methodParameterNode) {
 
         return fSanitizedChoices.get(methodParameterNode);
     }
 
     public Set<MethodParameterNode> sanitizedGetKeySet() {
 
-        return fSanitizedChoices.getKeySet();
+        return fSanitizedChoices.keySet();
     }
 
     public int sanitizedGetSize() {
 
-        return fSanitizedChoices.getSize();
+        return fSanitizedChoices.size();
     }
 
     public Set<ChoiceNode> inputGet(MethodParameterNode methodParameterNode) {
@@ -60,26 +53,22 @@ public class ParamChoiceSets {
 
     public Set<MethodParameterNode> inputGetKeySet() {
 
-        return fInputChoices.getKeySet();
+        return fInputChoices.keySet();
     }
 
-    private static ParamsWithChoices createInputChoices(
-            List<MethodParameterNode> methodParameters) {
+    private void createInputChoices(List<MethodParameterNode> parameters) {
 
-        ParamsWithChoices inputValues = new ParamsWithChoices("TMP");
+        for (MethodParameterNode parameter : parameters) {
+            Set<ChoiceNode> choiceSet = new HashSet<>();
 
-        for (MethodParameterNode methodParameterNode : methodParameters) {
+            for (ChoiceNode choice : parameter.getLeafChoicesWithCopies()) {
 
-            Set<ChoiceNode> choiceNodeSet = new HashSet<>();
-            for (ChoiceNode choiceNode : methodParameterNode.getLeafChoicesWithCopies())
-                choiceNodeSet.add(choiceNode.getOrigChoiceNode());
+                choiceSet.add(choice.getOrigChoiceNode());
+            }
 
-            inputValues.put(methodParameterNode, choiceNodeSet);
+            fInputChoices.put(parameter, choiceSet);
         }
-
-        return inputValues;
     }
-
 }
 
 

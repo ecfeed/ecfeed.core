@@ -61,7 +61,7 @@ public class EvaluatorHelper {
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
-        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sainitizedGet(methodParameterNode))
+        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sanitizedGet(methodParameterNode))
             if (!choiceID.containsKey(sanitizedChoiceNode)) {
                 Integer sanitizedID = satSolver.newId();
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
