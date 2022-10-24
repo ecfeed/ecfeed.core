@@ -4,7 +4,6 @@ import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.*;
-import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
 import com.ecfeed.core.model.MethodParameterNode;
 
@@ -13,60 +12,63 @@ import java.util.*;
 import java.util.List;
 
 public class SatSolverConstraintEvaluator implements IConstraintEvaluator<ChoiceNode> {
-
+	private boolean enabled = false;
 
 	private ParamChoiceSets fParamChoiceSets;
 
-	private ChoicesMappingsBucket fChoiceMappingsBucket;
+	private ChoicesMappingsBucket fChoiceMappingsBucket = new ChoicesMappingsBucket();
 
-	private ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
+	private ChoiceToSolverIdMappings fChoiceToSolverIdMappings = new ChoiceToSolverIdMappings();
 
-	private List<RelationStatement> fAllRelationStatements;
-	private OldExpectedValueConstraintsData fOldExpectedValueConstraintsData;
-	private ExpectedValueAssignmentsData fExpectedValueAssignmentsData;
+	private List<RelationStatement> fAllRelationStatements = new ArrayList<>();
+	private OldExpectedValueConstraintsData fOldExpectedValueConstraintsData = new OldExpectedValueConstraintsData();;
+	private ExpectedValueAssignmentsData fExpectedValueAssignmentsData = new ExpectedValueAssignmentsData();;
 
 	private List<MethodParameterNode> fMethodParameters;
 	private Collection<Constraint> fInitConstraints;
 
-	private EcSatSolver fSat4Solver;
+	private EcSatSolver fSat4Solver = new EcSatSolver();
 
 	private enum TypeOfEndpoint {
 		LEFT_ENDPOINT,
 		RIGHT_ENDPOINT
 	}
 
-	public SatSolverConstraintEvaluator(Collection<Constraint> initConstraints, MethodNode methodX) {
-		MethodNode method = methodX;
+	public SatSolverConstraintEvaluator(Collection<Constraint> constraints,	MethodNode method) {
 
-//		if (initConstraints.size() > 0) {
-//			Set<AbstractParameterNode> tmpAbstractParameterNodes = initConstraints.iterator().next().getReferencedParameters();
-//
-//			if (tmpAbstractParameterNodes.size() > 0) {
-//				List<MethodNode> tmpMethodNodes = tmpAbstractParameterNodes.iterator().next().getMethods();
-//
-//				if (tmpMethodNodes.size() > 0) {
-//					method = tmpMethodNodes.get(0);
-//				}
-//			}
-//		}
+		if (constraints == null || constraints.size() == 0) {
+			return;
+		}
 
-		fMethodParameters = method == null ? new ArrayList<>() : method.getMethodParameters();
-		fInitConstraints = initConstraints == null ? new ArrayList<>() : initConstraints;
+		init(constraints, method);
 
-		fChoiceToSolverIdMappings = new ChoiceToSolverIdMappings();
-		fParamChoiceSets = new ParamChoiceSets(fMethodParameters);
-
-		fOldExpectedValueConstraintsData = new OldExpectedValueConstraintsData();
-		fExpectedValueAssignmentsData = new ExpectedValueAssignmentsData();
-
-		fAllRelationStatements = new ArrayList<>();
-		fChoiceMappingsBucket = new ChoicesMappingsBucket();
-
-		prepareSat4Solver();
+		enabled = true;
 	}
 
-	private void prepareSat4Solver() {
-		fSat4Solver = new EcSatSolver();
+	private void init(Collection<Constraint> constraints, MethodNode methodX) {
+		MethodNode method = null;
+
+		if (constraints.size() > 0) {
+			Set<AbstractParameterNode> tmpAbstractParameterNodes = constraints.iterator().next().getReferencedParameters();
+
+			if (tmpAbstractParameterNodes.size() > 0) {
+				List<MethodNode> tmpMethodNodes = tmpAbstractParameterNodes.iterator().next().getMethods();
+
+				if (tmpMethodNodes.size() > 0) {
+					method = tmpMethodNodes.get(0);
+				}
+			}
+		}
+
+		fMethodParameters = method == null ? new ArrayList<>() : method.getMethodParameters();
+		fInitConstraints = constraints;
+
+		fParamChoiceSets = new ParamChoiceSets(fMethodParameters);
+
+		initSat4Solver();
+	}
+
+	private void initSat4Solver() {
 
 		prepareSolversClauses(fSat4Solver);
 
@@ -148,8 +150,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		}
 	}
 
-	private void assertEqualSizes(
-			List<List<ChoiceNode>> input, List<MethodParameterNode> parameterNodes) {
+	private void assertEqualSizes(List<List<ChoiceNode>> input, List<MethodParameterNode> parameterNodes) {
 
 		if (input.size() != parameterNodes.size()) {
 			ExceptionHelper.reportRuntimeException("Input data and parameters should have the same length.");
@@ -217,8 +218,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	}
 
 	@Override
-	public List<ChoiceNode> setExpectedValues(
-			List<ChoiceNode> testCaseChoices) {
+	public List<ChoiceNode> setExpectedValues(List<ChoiceNode> testCaseChoices) {
 
 		if (!fSat4Solver.hasConstraints())
 			return testCaseChoices;
