@@ -14,9 +14,11 @@ import java.util.List;
 
 public interface IParametersParentNode  {
 
+	public List<MethodNode> getMethods(AbstractParameterNode parameter); 	// TODO MO-RE - MOVE FROM HERE
+	
 	public void addParameter(AbstractParameterNode parameter);	
-	public void addParameters(List<MethodParameterNode> parameters);
 	public void addParameter(AbstractParameterNode parameter, int index);
+	public void addParameters(List<MethodParameterNode> parameters);
 	
 	public boolean removeParameter(AbstractParameterNode parameter);
 	public void replaceParameters(List<AbstractParameterNode> parameters);

@@ -13,7 +13,9 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RootNode extends GlobalParametersParentNode {
+public class RootNode extends AbstractNode implements IParametersParentNode {
+
+	ParametersHolder fParametersHolder;
 	private List<ClassNode> fClasses;
 	private int fModelVersion;
 
@@ -38,8 +40,10 @@ public class RootNode extends GlobalParametersParentNode {
 
 		copy.setProperties(getProperties());
 
-		for (GlobalParameterNode parameter : getGlobalParameters()) {
-			copy.addParameter(parameter.makeClone());
+		for (AbstractParameterNode abstractParameterNode : getParameters()) {
+			
+			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			copy.addParameter(globalParameterNode.makeClone());
 		}
 
 		for (ClassNode classnode : fClasses){
@@ -146,6 +150,103 @@ public class RootNode extends GlobalParametersParentNode {
 			result.addAll(classNode.getMethods(parameter));
 		}
 		return result;
+	} 
+	
+	@Override
+	public int getChildrenCount() {
+		
+		return fParametersHolder.getParametersCount();
 	}
 
+	@Override
+	public void addParameter(AbstractParameterNode parameter) {
+		
+		fParametersHolder.addParameter(parameter, this);
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter, int index) {
+		
+		fParametersHolder.addParameter(parameter, index, this);
+	}
+	
+	@Override
+	public void addParameters(List<MethodParameterNode> parameters) {
+		
+		fParametersHolder.addParameters(parameters, this);
+	}
+
+	@Override
+	public boolean removeParameter(AbstractParameterNode parameter) {
+		
+		return fParametersHolder.removeParameter(parameter);
+	}
+
+	@Override
+	public void replaceParameters(List<AbstractParameterNode> parameters) {
+		
+		fParametersHolder.replaceParameters(parameters);
+		
+	}
+
+	@Override
+	public int getParametersCount() {
+		
+		return fParametersHolder.getParametersCount();
+	}
+
+	@Override
+	public List<AbstractParameterNode> getParameters() {
+		
+		return fParametersHolder.getParameters();
+	}
+
+	@Override
+	public AbstractParameterNode getParameter(int parameterIndex) {
+		
+		return fParametersHolder.getParameter(parameterIndex);
+	}
+
+	@Override
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
+		
+		return fParametersHolder.findParameter(parameterNameToFind);
+	}
+
+	@Override
+	public int getParameterIndex(String parameterName) {
+		
+		return fParametersHolder.getParameterIndex(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(String parameterName) {
+		
+		return fParametersHolder.parameterExists(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(AbstractParameterNode abstractParameterNode) {
+		
+		return fParametersHolder.parameterExists(abstractParameterNode);
+	}
+
+	@Override
+	public List<String> getParameterTypes() {
+		
+		return fParametersHolder.getParameterTypes();
+	}
+
+	@Override
+	public List<String> getParametersNames() {
+		
+		return fParametersHolder.getParametersNames();
+	}
+
+	@Override
+	public String generateNewParameterName(String startParameterName) {
+		
+		return fParametersHolder.generateNewParameterName(startParameterName);
+	}
+	
 }

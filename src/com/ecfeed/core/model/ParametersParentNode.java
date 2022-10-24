@@ -13,11 +13,9 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ParametersParentNode extends AbstractNode implements IParametersParentNode {
+public abstract class ParametersParentNode extends AbstractNode implements IParametersParentNode { // TODO MO-RE remove class
 
 	ParametersHolder fParametersHolder;
-
-	public abstract List<MethodNode> getMethods(AbstractParameterNode parameter); 	// TODO MO-RE - MOVE FROM HERE
 
 	public ParametersParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
@@ -71,15 +69,21 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	}
 
 	@Override
+	public void addParameter(AbstractParameterNode parameter, int index) {
+
+		fParametersHolder.addParameter(parameter, index, this);
+	}
+
+	@Override
 	public void addParameters(List<MethodParameterNode> parameters) {
 
 		fParametersHolder.addParameters(parameters, this);
 	}
-
+	
 	@Override
-	public void addParameter(AbstractParameterNode parameter, int index) {
+	public boolean removeParameter(AbstractParameterNode parameter) {
 
-		fParametersHolder.addParameter(parameter, index, this);
+		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
@@ -133,12 +137,6 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	public List<String> getParametersNames() {
 
 		return fParametersHolder.getParametersNames();
-	}
-
-	@Override
-	public boolean removeParameter(AbstractParameterNode parameter) {
-
-		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
