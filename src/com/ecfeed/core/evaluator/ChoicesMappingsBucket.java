@@ -2,39 +2,48 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.google.common.collect.Multimap;
 
-import java.util.Collection;
+import java.util.*;
 
 public class ChoicesMappingsBucket { // TODO - rename
 
-    private SimpleChoiceMapping fSanitizedToInputMappings;
-    private ChoiceMultiMapping fSanitizedValToAtomicVal;
-    private ParamChoiceMappings fArgInputValToSanitizedVal;
+    private Map<ChoiceNode, ChoiceNode> fSanitizedToInputMappings = new HashMap<>();
+    private Map<ChoiceNode, Set<ChoiceNode>> fSanitizedValToAtomicVal = new HashMap<>();
+    private Map<MethodParameterNode, Map<ChoiceNode, Set<ChoiceNode>>> fArgInputValToSanitizedVal = new HashMap<>();
 
-    public ChoicesMappingsBucket() {
+    public ChoicesMappingsBucket() {}
 
-        fSanitizedToInputMappings = new SimpleChoiceMapping("STI");
-        fSanitizedValToAtomicVal = new ChoiceMultiMapping("STA");
-        fArgInputValToSanitizedVal = new ParamChoiceMappings();
+    public void inputToSanPut(MethodParameterNode keyMethod) {
+
+        fArgInputValToSanitizedVal.put(keyMethod, new HashMap<>());
     }
 
-    public void inputToSanPut(
-            MethodParameterNode methodParameterNode,
-            final Multimap<ChoiceNode, ChoiceNode> value) {
+    public void inputToSanPut(MethodParameterNode keyMethod, ChoiceNode keyChoice, ChoiceNode valChoice) {
+        Map<ChoiceNode, Set<ChoiceNode>> valMethod = fArgInputValToSanitizedVal.get(keyMethod);
 
-        fArgInputValToSanitizedVal.put(methodParameterNode, value);
+        if (!valMethod.containsKey(keyChoice)) {
+            valMethod.put(keyChoice, new HashSet<>());
+        }
+
+        valMethod.get(keyChoice).add(valChoice);
     }
 
-    public Multimap<ChoiceNode, ChoiceNode> inputToSanGet(
-            MethodParameterNode methodParameterNode) {
+    public Map<ChoiceNode, Set<ChoiceNode>> inputToSanGet(MethodParameterNode methodParameterNode) {
 
         return fArgInputValToSanitizedVal.get(methodParameterNode);
     }
 
     public void sanToAtmPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
+        Set<ChoiceNode> value;
 
-        fSanitizedValToAtomicVal.put(keyChoiceNode, valueChoiceNode);
+        if (fSanitizedValToAtomicVal.containsKey(keyChoiceNode)) {
+            value = fSanitizedValToAtomicVal.get(keyChoiceNode);
+        } else {
+            value = new HashSet<>();
+        }
+
+        value.add(valueChoiceNode);
+        fSanitizedValToAtomicVal.put(keyChoiceNode, value);
     }
 
     public Collection<ChoiceNode> sanToAtmGet(ChoiceNode keyChoiceNode) {
