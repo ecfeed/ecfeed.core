@@ -15,9 +15,9 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ParametersParentNode;
 import com.ecfeed.core.model.RootNode;
 
 abstract class ModelDataAbstract implements ModelData {
@@ -151,7 +151,7 @@ abstract class ModelDataAbstract implements ModelData {
     }
     
     @Override
-    public List<AbstractParameterNode> parse(ParametersParentNode node) {
+    public List<AbstractParameterNode> parse(IParametersParentNode node) {
     	List<AbstractParameterNode> list = new ArrayList<>();
     	
         for (int i = 0 ; i < this.header.size() ; i++) {

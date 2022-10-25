@@ -5,11 +5,11 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ParametersParentNode;
+import com.ecfeed.core.model.IParametersParentNode;
 
 public interface ModelData {
 
-    List<AbstractParameterNode> parse(ParametersParentNode node);
+    List<AbstractParameterNode> parse(IParametersParentNode node);
 
     List<String> getRaw();
 

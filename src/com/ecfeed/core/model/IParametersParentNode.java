@@ -12,7 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-public interface IParametersParentNode  {
+public interface IParametersParentNode extends IAbstractNode {
 
 	public List<MethodNode> getMethods(AbstractParameterNode parameter); 	// TODO MO-RE - MOVE FROM HERE
 	

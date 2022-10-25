@@ -19,9 +19,27 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	private List<ClassNode> fClasses;
 	private int fModelVersion;
 
+	public RootNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
+
+		this(name, modelChangeRegistrator, ModelVersionDistributor.getCurrentSoftwareVersion());
+
+		registerChange();
+	}
+
+	public RootNode(String name, IModelChangeRegistrator modelChangeRegistrator, int modelVersion) {
+
+		super(name, modelChangeRegistrator);
+		
+		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+
+		fClasses = new ArrayList<ClassNode>();
+		fModelVersion = modelVersion;
+	}
+
 	@Override
 	public List<IAbstractNode> getChildren(){
 		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
+		children.addAll(fParametersHolder.getParameters());
 		children.addAll(fClasses);
 		return children;
 	}
@@ -54,24 +72,9 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		return copy;
 	}
 
-	public RootNode(String name, IModelChangeRegistrator modelChangeRegistrator, int modelVersion) {
-
-		super(name, modelChangeRegistrator);
-
-		fClasses = new ArrayList<ClassNode>();
-		fModelVersion = modelVersion;
-	}
-
 	@Override
 	public String getNonQualifiedName() {
 		return getName();
-	}
-
-	public RootNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
-
-		this(name, modelChangeRegistrator, ModelVersionDistributor.getCurrentSoftwareVersion());
-
-		registerChange();
 	}
 
 	public boolean addClass(ClassNode node){
@@ -119,23 +122,29 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(IAbstractNode node){
-		if(node instanceof RootNode == false){
+	public boolean isMatch(IAbstractNode other){
+		
+		if(other instanceof RootNode == false){
 			return false;
 		}
 
-		RootNode root = (RootNode)node;
-		if(getClasses().size() != root.getClasses().size()){
+		RootNode otherRootNode = (RootNode)other;
+		
+		if (!fParametersHolder.isMatch(otherRootNode.fParametersHolder)) {
+			return false;
+		}
+		
+		if(getClasses().size() != otherRootNode.getClasses().size()){
 			return false;
 		}
 
 		for(int i = 0; i < getClasses().size(); i++){
-			if(getClasses().get(i).isMatch(root.getClasses().get(i)) == false){
+			if(getClasses().get(i).isMatch(otherRootNode.getClasses().get(i)) == false){
 				return false;
 			}
 		}
 
-		return super.isMatch(root);
+		return super.isMatch(otherRootNode);
 	}
 
 	@Override
@@ -249,4 +258,19 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 	
+	public List<GlobalParameterNode> getGlobalParameters() {
+		
+		List<GlobalParameterNode> globalParameterNodes = new ArrayList<>();
+		
+		List<AbstractParameterNode> abstractParameters = getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
+			
+			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			
+			globalParameterNodes.add(globalParameterNode);
+		}
+		
+		return globalParameterNodes;
+	}
 }

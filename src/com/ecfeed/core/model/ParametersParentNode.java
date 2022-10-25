@@ -48,15 +48,8 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 
 		ParametersParentNode comparedParent = (ParametersParentNode)node;
 
-		if(getParameters().size() != comparedParent.getParameters().size()) {
+		if (!fParametersHolder.isMatch(comparedParent.fParametersHolder)) {
 			return false;
-		}
-
-		for (int i = 0; i < getParameters().size(); ++i) {
-
-			if (getParameters().get(i).isMatch(comparedParent.getParameters().get(i)) == false) {
-				return false;
-			}
 		}
 
 		return super.isMatch(node);

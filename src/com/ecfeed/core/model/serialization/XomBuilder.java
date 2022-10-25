@@ -95,10 +95,12 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		for (GlobalParameterNode parameterNode : rootNode.getGlobalParameters()) {
+		for (AbstractParameterNode parameterNode : rootNode.getParameters()) {
 
-			if (shouldSerializeNode(parameterNode)) {
-				targetRootElement.appendChild((Element)visit(parameterNode));
+			GlobalParameterNode globalParameterNode = (GlobalParameterNode)parameterNode;
+			
+			if (shouldSerializeNode(globalParameterNode)) {
+				targetRootElement.appendChild((Element)visit(globalParameterNode));
 			}
 		}
 

@@ -182,11 +182,15 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	private void implementRootGlobalParameters(RootNode rootNode) throws Exception {
-		for(GlobalParameterNode parameter : rootNode.getGlobalParameters()){
-			if(isImplementableNode(parameter) && getImplementationStatus(parameter) != EImplementationStatus.IMPLEMENTED){
-				implement(parameter);
-			}
-		}
+		
+		// TODO MO-RE remove with other implementers
+//		for(AbstractParameterNode abstractParameterNode : rootNode.getParameters()){
+//			
+//			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;  
+//			if(isImplementableNode(abstractParameterNode) && getImplementationStatus(abstractParameterNode) != EImplementationStatus.IMPLEMENTED){
+//				implement(abstractParameterNode);
+//			}
+//		}
 	}
 
 	private void implementClasses(RootNode rootNode) throws EcException, Exception {

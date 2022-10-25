@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GlobalParametersParentNode extends ParametersParentNode {
+public abstract class GlobalParametersParentNode extends ParametersParentNode { // TODO MO-RE remove class
 
 	public GlobalParametersParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
@@ -48,16 +48,25 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode {
 	}
 
 	private List<GlobalParameterNode> getAvailableGlobalParameters(IAbstractNode parent) {
+		
 		if(parent == null){
 			return new ArrayList<GlobalParameterNode>();
 		}
-		else if(parent instanceof GlobalParametersParentNode){
-			return ((GlobalParametersParentNode)parent).getAvailableGlobalParameters();
-		}else if(parent.getParent() != null){
-			return getAvailableGlobalParameters(parent.getParent());
-		}else{
-			return new ArrayList<GlobalParameterNode>();
+		
+		if (parent instanceof RootNode) {
+			RootNode rootNode = (RootNode)parent;
+			return rootNode.getGlobalParameters();
 		}
+		
+		if(parent instanceof GlobalParametersParentNode){
+			return ((GlobalParametersParentNode)parent).getAvailableGlobalParameters();
+		}
+		
+		if(parent.getParent() != null){
+			return getAvailableGlobalParameters(parent.getParent());
+		}
+		
+		return new ArrayList<GlobalParameterNode>();
 	}
 
 	public GlobalParameterNode getGlobalParameter(String parameterName) {

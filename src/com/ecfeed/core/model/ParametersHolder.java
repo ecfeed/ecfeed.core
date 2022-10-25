@@ -177,4 +177,20 @@ public class ParametersHolder {
 		}
 	}
 
+	public boolean isMatch(ParametersHolder otherParametersHolder) {
+		
+		if (getParameters().size() != otherParametersHolder.getParameters().size()) {
+			return false;
+		}
+
+		for (int i = 0; i < getParameters().size(); ++i) {
+
+			if (getParameters().get(i).isMatch(otherParametersHolder.getParameters().get(i)) == false) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 }
