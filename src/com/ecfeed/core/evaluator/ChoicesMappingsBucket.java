@@ -7,19 +7,19 @@ import java.util.*;
 
 public class ChoicesMappingsBucket { // TODO - rename
 
-    private Map<ChoiceNode, ChoiceNode> fSanitizedToInputMappings = new HashMap<>();
+    private Map<ChoiceNode, ChoiceNode> fSanitizedValToInputVal = new HashMap<>();
     private Map<ChoiceNode, Set<ChoiceNode>> fSanitizedValToAtomicVal = new HashMap<>();
-    private Map<MethodParameterNode, Map<ChoiceNode, Set<ChoiceNode>>> fArgInputValToSanitizedVal = new HashMap<>();
+    private Map<MethodParameterNode, Map<ChoiceNode, Set<ChoiceNode>>> fInputValToSanitizedVal = new HashMap<>();
 
     public ChoicesMappingsBucket() {}
 
     public void inputToSanPut(MethodParameterNode keyMethod) {
 
-        fArgInputValToSanitizedVal.put(keyMethod, new HashMap<>());
+        fInputValToSanitizedVal.put(keyMethod, new HashMap<>());
     }
 
     public void inputToSanPut(MethodParameterNode keyMethod, ChoiceNode keyChoice, ChoiceNode valChoice) {
-        Map<ChoiceNode, Set<ChoiceNode>> valMethod = fArgInputValToSanitizedVal.get(keyMethod);
+        Map<ChoiceNode, Set<ChoiceNode>> valMethod = fInputValToSanitizedVal.get(keyMethod);
 
         if (!valMethod.containsKey(keyChoice)) {
             valMethod.put(keyChoice, new HashSet<>());
@@ -30,7 +30,7 @@ public class ChoicesMappingsBucket { // TODO - rename
 
     public Map<ChoiceNode, Set<ChoiceNode>> inputToSanGet(MethodParameterNode methodParameterNode) {
 
-        return fArgInputValToSanitizedVal.get(methodParameterNode);
+        return fInputValToSanitizedVal.get(methodParameterNode);
     }
 
     public void sanToAtmPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
@@ -53,12 +53,12 @@ public class ChoicesMappingsBucket { // TODO - rename
 
     public void sanToInpPut(ChoiceNode keyChoiceNode, ChoiceNode valueChoiceNode) {
 
-        fSanitizedToInputMappings.put(keyChoiceNode, valueChoiceNode);
+        fSanitizedValToInputVal.put(keyChoiceNode, valueChoiceNode);
     }
 
     public ChoiceNode sanToInpGet(ChoiceNode keyChoiceNode) {
 
-        return fSanitizedToInputMappings.get(keyChoiceNode);
+        return fSanitizedValToInputVal.get(keyChoiceNode);
     }
 
 }

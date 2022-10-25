@@ -16,6 +16,19 @@ public class ParamChoiceSets {
         createInputChoices(parameters);
     }
 
+    private void createInputChoices(List<MethodParameterNode> parameters) {
+
+        for (MethodParameterNode parameter : parameters) {
+            Set<ChoiceNode> choiceSet = new HashSet<>();
+
+            for (ChoiceNode choice : parameter.getLeafChoicesWithCopies()) {
+                choiceSet.add(choice.getOrigChoiceNode());
+            }
+
+            fInputChoices.put(parameter, choiceSet);
+        }
+    }
+
     public void atomicPut(MethodParameterNode methodParameterNode, Set<ChoiceNode> setOfChoices) {
 
         fAtomicChoices.put(methodParameterNode, setOfChoices);
@@ -54,20 +67,6 @@ public class ParamChoiceSets {
     public Set<MethodParameterNode> inputGetKeySet() {
 
         return fInputChoices.keySet();
-    }
-
-    private void createInputChoices(List<MethodParameterNode> parameters) {
-
-        for (MethodParameterNode parameter : parameters) {
-            Set<ChoiceNode> choiceSet = new HashSet<>();
-
-            for (ChoiceNode choice : parameter.getLeafChoicesWithCopies()) {
-
-                choiceSet.add(choice.getOrigChoiceNode());
-            }
-
-            fInputChoices.put(parameter, choiceSet);
-        }
     }
 }
 
