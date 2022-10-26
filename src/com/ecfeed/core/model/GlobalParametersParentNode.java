@@ -27,15 +27,15 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode { 
 		return result;
 	}
 
-	public List<GlobalParameterNode> getAvailableGlobalParameters() {
-		List<GlobalParameterNode> result = getAvailableGlobalParameters(getParent());
+	public List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking() {
+		List<GlobalParameterNode> result = getAllGlobalParametersAvailableForLinking(getParent());
 		result.addAll(getGlobalParameters());
 		return result;
 	}
 
 	public GlobalParameterNode findGlobalParameter(String qualifiedName){
 		
-		for (GlobalParameterNode parameter : getAvailableGlobalParameters()) {
+		for (GlobalParameterNode parameter : getAllGlobalParametersAvailableForLinking()) {
 			
 			String currentQualifiedName = parameter.getQualifiedName();
 			
@@ -47,7 +47,7 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode { 
 		return null;
 	}
 
-	private List<GlobalParameterNode> getAvailableGlobalParameters(IAbstractNode parent) {
+	private List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking(IAbstractNode parent) {
 		
 		if(parent == null){
 			return new ArrayList<GlobalParameterNode>();
@@ -58,12 +58,17 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode { 
 			return rootNode.getGlobalParameters();
 		}
 		
+		if (parent instanceof ClassNode) {
+			ClassNode classNode = (ClassNode)parent;
+			return classNode.getAllGlobalParametersAvailableForLinking();
+		}
+		
 		if(parent instanceof GlobalParametersParentNode){
-			return ((GlobalParametersParentNode)parent).getAvailableGlobalParameters();
+			return ((GlobalParametersParentNode)parent).getAllGlobalParametersAvailableForLinking();
 		}
 		
 		if(parent.getParent() != null){
-			return getAvailableGlobalParameters(parent.getParent());
+			return getAllGlobalParametersAvailableForLinking(parent.getParent());
 		}
 		
 		return new ArrayList<GlobalParameterNode>();

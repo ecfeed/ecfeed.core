@@ -151,9 +151,12 @@ public class MethodParameterNode extends AbstractParameterNode {
 	@Override
 	public List<ChoiceNode> getChoices(){
 
-		if(isLinked() && fLinkToGlobalParameter != null){
+		boolean linked = isLinked();
+		
+		if (linked && fLinkToGlobalParameter != null) {
 			return fLinkToGlobalParameter.getChoices();
 		}
+		
 		return super.getChoices();
 	}
 

@@ -682,9 +682,10 @@ public class MethodNode extends ParametersParentNode {
 		return null;
 	}
 
-	public List<GlobalParameterNode> getAvailableGlobalParameters() {
+	public List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking() {
+		
 		if(getClassNode() != null){
-			return getClassNode().getAvailableGlobalParameters();
+			return getClassNode().getAllGlobalParametersAvailableForLinking();
 		}
 		return new ArrayList<>();
 	}

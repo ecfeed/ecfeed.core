@@ -138,8 +138,9 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 			return false;
 		}
 
-		for(int i = 0; i < getClasses().size(); i++){
-			if(getClasses().get(i).isMatch(otherRootNode.getClasses().get(i)) == false){
+		for (int classIndex = 0; classIndex < getClasses().size(); classIndex++) {
+			
+			if (getClasses().get(classIndex).isMatch(otherRootNode.getClasses().get(classIndex)) == false) {
 				return false;
 			}
 		}
@@ -164,7 +165,10 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public int getChildrenCount() {
 		
-		return fParametersHolder.getParametersCount();
+		int countOfParameters = fParametersHolder.getParametersCount();
+		int countOfClasses = getClasses().size();
+		
+		return countOfParameters + countOfClasses;
 	}
 
 	@Override
@@ -195,7 +199,6 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 		
 		fParametersHolder.replaceParameters(parameters);
-		
 	}
 
 	@Override

@@ -18,16 +18,37 @@ import java.util.Set;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class ClassNode extends GlobalParametersParentNode {
+public class ClassNode extends AbstractNode implements IParametersParentNode {
 	
+	ParametersHolder fParametersHolder;
 	private List<MethodNode> fMethods;
+	
+	public ClassNode(String qualifiedName) {
+		this(qualifiedName, null);
+	}
+
+	public ClassNode(String qualifiedName, IModelChangeRegistrator modelChangeRegistrator) {
+		this(qualifiedName, modelChangeRegistrator, false, null);
+	}
+	
+	public ClassNode(
+			String qualifiedName, IModelChangeRegistrator modelChangeRegistrator, 
+			boolean runOnAndroid, String androidBaseRunner) {
+
+		super(qualifiedName, modelChangeRegistrator);
+
+		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
+
+		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fMethods = new ArrayList<MethodNode>();
+	}
 
 	@Override
 	public List<IAbstractNode> getChildren(){
 		
 		List<IAbstractNode> children = new ArrayList<>();
 		
-		children.addAll(super.getChildren());
+		children.addAll(fParametersHolder.getParameters());
 		children.addAll(fMethods);
 		
 		return children;
@@ -36,7 +57,10 @@ public class ClassNode extends GlobalParametersParentNode {
 	@Override
 	public int getChildrenCount() {
 		
-		return super.getChildrenCount() + fMethods.size();
+		int parametetersSize = fParametersHolder.getParametersCount(); 
+		int methodsSize = fMethods.size();
+		
+		return parametetersSize + methodsSize;
 	}
 
 	@Override
@@ -68,25 +92,6 @@ public class ClassNode extends GlobalParametersParentNode {
 		if(potentialChild instanceof MethodParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodNode) return getMethods().size();
 		return super.getMaxChildIndex(potentialChild);
-	}
-
-	public ClassNode(String qualifiedName) {
-		this(qualifiedName, null);
-	}
-
-	public ClassNode(String qualifiedName, IModelChangeRegistrator modelChangeRegistrator) {
-		this(qualifiedName, modelChangeRegistrator, false, null);
-	}
-	
-	public ClassNode(
-			String qualifiedName, IModelChangeRegistrator modelChangeRegistrator, 
-			boolean runOnAndroid, String androidBaseRunner) {
-
-		super(qualifiedName, modelChangeRegistrator);
-
-		JavaLanguageHelper.verifyIsMatchWithJavaComplexIdentifier(qualifiedName);
-
-		fMethods = new ArrayList<MethodNode>();
 	}
 
 	public void setName(String qualifiedName) {
@@ -204,12 +209,19 @@ public class ClassNode extends GlobalParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(IAbstractNode node){
-		if(node instanceof ClassNode == false){
+	public boolean isMatch(IAbstractNode other) {
+		
+		if (other instanceof ClassNode == false) {
 			return false;
 		}
-		ClassNode compared = (ClassNode) node;
-		List<MethodNode> methodsToCompare = compared.getMethods();
+		
+		ClassNode otherClassNode = (ClassNode)other;
+		
+		if (!fParametersHolder.isMatch(otherClassNode.fParametersHolder)) {
+			return false;
+		}
+		
+		List<MethodNode> methodsToCompare = otherClassNode.getMethods();
 
 		List<MethodNode> methods = getMethods();
 		
@@ -217,17 +229,17 @@ public class ClassNode extends GlobalParametersParentNode {
 			return false;
 		}
 
-		for (int i = 0; i < methodsToCompare.size(); i++) {
+		for (int methodIndex = 0; methodIndex < methodsToCompare.size(); methodIndex++) {
 			
-			MethodNode methodNode = methods.get(i);
-			MethodNode methodNodeToCompare = methodsToCompare.get(i);
+			MethodNode methodNode = methods.get(methodIndex);
+			MethodNode methodNodeToCompare = methodsToCompare.get(methodIndex);
 			
 			if (!methodNode.isMatch(methodNodeToCompare)) {
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		return super.isMatch(other);
 	}
 
 	@Override
@@ -250,4 +262,147 @@ public class ClassNode extends GlobalParametersParentNode {
 		return nameNodeSplit[nameNodeSplit.length - 1];
 	}
 
+	@Override
+	public void addParameter(AbstractParameterNode parameter) {
+
+		fParametersHolder.addParameter(parameter, this);
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter, int index) {
+		
+		fParametersHolder.addParameter(parameter, index, this);
+	}
+
+	@Override
+	public void addParameters(List<MethodParameterNode> parameters) {
+		
+		fParametersHolder.addParameters(parameters, this);
+	}
+
+	@Override
+	public boolean removeParameter(AbstractParameterNode parameter) {
+		
+		return fParametersHolder.removeParameter(parameter);
+	}
+
+	@Override
+	public void replaceParameters(List<AbstractParameterNode> parameters) {
+		
+		fParametersHolder.replaceParameters(parameters);
+	}
+
+	@Override
+	public int getParametersCount() {
+		
+		return fParametersHolder.getParametersCount();
+	}
+
+	@Override
+	public List<AbstractParameterNode> getParameters() {
+		
+		return fParametersHolder.getParameters();
+	}
+
+	@Override
+	public AbstractParameterNode getParameter(int parameterIndex) {
+		
+		return fParametersHolder.getParameter(parameterIndex);
+	}
+
+	@Override
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
+		
+		return fParametersHolder.findParameter(parameterNameToFind);
+	}
+
+	@Override
+	public int getParameterIndex(String parameterName) {
+		
+		return fParametersHolder.getParameterIndex(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(String parameterName) {
+		
+		return fParametersHolder.parameterExists(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(AbstractParameterNode abstractParameterNode) {
+		
+		return fParametersHolder.parameterExists(abstractParameterNode);
+	}
+
+	@Override
+	public List<String> getParameterTypes() {
+		
+		return fParametersHolder.getParameterTypes();
+	}
+
+	@Override
+	public List<String> getParametersNames() {
+		
+		return fParametersHolder.getParametersNames();
+	}
+
+	@Override
+	public String generateNewParameterName(String startParameterName) {
+		
+		return fParametersHolder.generateNewParameterName(startParameterName);
+	}
+
+	public List<GlobalParameterNode> getGlobalParameters() {
+
+		List<GlobalParameterNode> result = new ArrayList<>();
+		result.addAll(getParametersFromClass());
+		
+		return result;
+	}
+
+	private List<GlobalParameterNode> getParametersFromClass() {
+		
+		List<GlobalParameterNode> globalParameterNodes = new ArrayList<>();
+		
+		List<AbstractParameterNode> abstractParameters = getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
+			
+			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			
+			globalParameterNodes.add(globalParameterNode);
+		}
+		
+		return globalParameterNodes;
+	}
+
+	public List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking() {
+
+		List<GlobalParameterNode> result = new ArrayList<>();
+		
+		RootNode rootNode = (RootNode)getParent();
+		result.addAll(rootNode.getGlobalParameters());
+		
+		result.addAll(getParametersFromClass());
+		
+		return result;
+	}
+	
+	public GlobalParameterNode findGlobalParameter(String qualifiedName){
+		
+		List<GlobalParameterNode> globalParameters = getAllGlobalParametersAvailableForLinking();
+		
+		for (GlobalParameterNode parameter : globalParameters) {
+			
+			String currentQualifiedName = parameter.getQualifiedName();
+			
+			if(currentQualifiedName.equals(qualifiedName)){
+				return parameter;
+			}
+		}
+		
+		return null;
+	}
+
+	
 }
