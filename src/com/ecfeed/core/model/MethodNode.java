@@ -23,8 +23,9 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
-public class MethodNode extends ParametersParentNode {
+public class MethodNode  extends AbstractNode implements IParametersParentNode {
 
+	ParametersHolder fParametersHolder;
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private List<ConstraintNode> fConstraintNodes;
@@ -39,6 +40,7 @@ public class MethodNode extends ParametersParentNode {
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
+		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
 		fTestCaseNodes = new ArrayList<>();
 		fTestSuiteNodes = new ArrayList<>();
 		fConstraintNodes = new ArrayList<>();
@@ -128,6 +130,7 @@ public class MethodNode extends ParametersParentNode {
 	public List<IAbstractNode> getChildren(){
 		
 		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
+		children.addAll(fParametersHolder.getParameters());
 		children.addAll(fConstraintNodes);
 		children.addAll(fTestCaseNodes);
 		children.addAll(fTestSuiteNodes);
@@ -594,23 +597,27 @@ public class MethodNode extends ParametersParentNode {
 	}
 
 	@Override
-	public boolean isMatch(IAbstractNode node){
+	public boolean isMatch(IAbstractNode other){
 
-		if(node instanceof MethodNode == false){
+		if(other instanceof MethodNode == false){
 			return false;
 		}
 
-		MethodNode methodToCompare = (MethodNode)node;
+		MethodNode otherMethodNode = (MethodNode)other;
 
+		if (!fParametersHolder.isMatch(otherMethodNode.fParametersHolder)) {
+			return false;
+		}
+		
 		List<TestCaseNode> testCases = getTestCases();
 
 		int testCasesCount = testCases.size();
 		int constraintsCount = getConstraintNodes().size();
 
-		List<TestCaseNode> testCasesToCompare = methodToCompare.getTestCases();
+		List<TestCaseNode> testCasesToCompare = otherMethodNode.getTestCases();
 
 		if(testCasesCount != testCasesToCompare.size() ||
-				constraintsCount != methodToCompare.getConstraintNodes().size()){
+				constraintsCount != otherMethodNode.getConstraintNodes().size()){
 			return false;
 		}
 
@@ -625,12 +632,12 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		for(int i = 0; i < constraintsCount; i++){
-			if(getConstraintNodes().get(i).isMatch(methodToCompare.getConstraintNodes().get(i)) == false){
+			if(getConstraintNodes().get(i).isMatch(otherMethodNode.getConstraintNodes().get(i)) == false){
 				return false;
 			}
 		}
 
-		boolean isMatch = super.isMatch(node);
+		boolean isMatch = super.isMatch(other);
 
 		if (!isMatch) {
 			return false;
@@ -705,6 +712,100 @@ public class MethodNode extends ParametersParentNode {
 		}
 
 		registerChange();
+	}
+
+	@Override
+	public int getChildrenCount() {
+		
+		int parametetersSize = fParametersHolder.getParametersCount(); 
+		int testCasesSize = fTestCaseNodes.size();
+		int constraintsSize = fConstraintNodes.size();
+		
+		return parametetersSize + testCasesSize + constraintsSize;
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter) {
+		
+		fParametersHolder.addParameter(parameter, this);
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter, int index) {
+		
+		fParametersHolder.addParameter(parameter, index, this);
+	}
+
+	@Override
+	public void addParameters(List<MethodParameterNode> parameters) {
+		
+		fParametersHolder.addParameters(parameters, this);
+	}
+
+	@Override
+	public boolean removeParameter(AbstractParameterNode parameter) {
+		
+		return fParametersHolder.removeParameter(parameter);
+	}
+
+	@Override
+	public void replaceParameters(List<AbstractParameterNode> parameters) {
+		
+		fParametersHolder.replaceParameters(parameters);
+	}
+
+	@Override
+	public int getParametersCount() {
+		
+		return fParametersHolder.getParametersCount();
+	}
+
+	@Override
+	public List<AbstractParameterNode> getParameters() {
+		
+		return fParametersHolder.getParameters();
+	}
+
+	@Override
+	public AbstractParameterNode getParameter(int parameterIndex) {
+		
+		return fParametersHolder.getParameter(parameterIndex);
+	}
+
+	@Override
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
+		
+		return fParametersHolder.findParameter(parameterNameToFind);
+	}
+
+	@Override
+	public int getParameterIndex(String parameterName) {
+		
+		return fParametersHolder.getParameterIndex(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(String parameterName) {
+		
+		return fParametersHolder.parameterExists(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(AbstractParameterNode abstractParameterNode) {
+		
+		return fParametersHolder.parameterExists(abstractParameterNode);
+	}
+
+	@Override
+	public List<String> getParametersNames() {
+		
+		return fParametersHolder.getParametersNames();
+	}
+
+	@Override
+	public String generateNewParameterName(String startParameterName) {
+		
+		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 
 }

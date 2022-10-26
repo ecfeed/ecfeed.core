@@ -13,16 +13,16 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ParametersParentNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationImportParameters extends AbstractModelOperation {
 
-	private ParametersParentNode fParametersParentNode;
+	private IParametersParentNode fParametersParentNode;
 	private List<AbstractParameterNode> fAbstractParameterNodes;
 
 	public GenericOperationImportParameters(
-			ParametersParentNode parametersParentNode, 
+			IParametersParentNode parametersParentNode, 
 			List<AbstractParameterNode> abstractParameterNodes,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -52,10 +52,10 @@ public class GenericOperationImportParameters extends AbstractModelOperation {
 
 	protected class ReverseOperation extends AbstractModelOperation{
 
-		private ParametersParentNode fParametersParentNode;
+		private IParametersParentNode fParametersParentNode;
 		private List<AbstractParameterNode> fAbstractParameterNodes;
 		
-		public ReverseOperation(ParametersParentNode parametersParentNode, List<AbstractParameterNode> abstractParameterNodes, IExtLanguageManager extLanguageManager) {
+		public ReverseOperation(IParametersParentNode parametersParentNode, List<AbstractParameterNode> abstractParameterNodes, IExtLanguageManager extLanguageManager) {
 			super("reverse " + OperationNames.IMPORT_PARAMETERS, extLanguageManager);
 			
 			fParametersParentNode = parametersParentNode;

@@ -342,7 +342,7 @@ public class ValueConditionTest {
 	}
 	
 	@Test
-	public void evaluateForAmbiguousInteger() {
+	public void uAAAevaluateForAmbiguousInteger() {
 		evaluateForAmbiguousIntegerTypes(JavaLanguageHelper.TYPE_NAME_INT);
 	}
 

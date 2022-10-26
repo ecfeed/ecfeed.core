@@ -568,7 +568,7 @@ public class MethodNodeHelper {
 		return parameter;
 	}
 
-	public static String generateNewParameterName(ParametersParentNode parametersParentNode) {
+	public static String generateNewParameterName(IParametersParentNode parametersParentNode) {
 
 		int i = 0;
 

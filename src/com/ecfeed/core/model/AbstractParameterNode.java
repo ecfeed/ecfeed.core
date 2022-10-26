@@ -56,16 +56,23 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 		return this;
 	}
 
-	public ParametersParentNode getParametersParent(){
-		return (ParametersParentNode)getParent();
+	public IParametersParentNode getParametersParent() {
+		
+		return (IParametersParentNode)getParent();
 	}
 
 	@Override
-	public int getMyIndex(){
-		if(getParametersParent() == null){
+	public int getMyIndex() {
+		
+		IParametersParentNode parametersParent = getParametersParent();
+		
+		if (parametersParent == null) {
 			return -1;
 		}
-		return getParametersParent().getParameters().indexOf(this);
+		
+		List<AbstractParameterNode> parameters = parametersParent.getParameters();
+		
+		return parameters.indexOf(this);
 	}
 
 	@Override

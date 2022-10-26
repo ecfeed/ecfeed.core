@@ -72,7 +72,9 @@ public class ValueCondition implements IStatementCondition {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);		
 
-		int leftParameterIndex = fParentRelationStatement.getLeftParameter().getMyIndex();
+		MethodParameterNode leftParameter = fParentRelationStatement.getLeftParameter();
+		int leftParameterIndex = leftParameter.getMyIndex();
+		
 		List<ChoiceNode> choicesForParameter = domain.get(leftParameterIndex);
 
 		EMathRelation relation = fParentRelationStatement.getRelation();
