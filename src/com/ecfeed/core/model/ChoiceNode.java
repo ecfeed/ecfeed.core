@@ -191,8 +191,8 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	public String getQualifiedName(String separatorForChoiceNames) {
 
-		if (parentChoice() != null) {
-			return parentChoice().getQualifiedName(separatorForChoiceNames) + separatorForChoiceNames + getName();
+		if (getParentChoice() != null) {
+			return getParentChoice().getQualifiedName(separatorForChoiceNames) + separatorForChoiceNames + getName();
 		}
 
 		return getName();
@@ -267,8 +267,8 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public Set<String> getInheritedLabels() {
-		if(parentChoice() != null){
-			return parentChoice().getAllLabels();
+		if(getParentChoice() != null){
+			return getParentChoice().getAllLabels();
 		}
 		return new LinkedHashSet<String>();
 	}
@@ -306,8 +306,8 @@ public class ChoiceNode extends ChoicesParentNode {
 			return true;
 		}
 
-		if (parentChoice() != null) {
-			return parentChoice().isMatchIncludingParents(choice); 
+		if (getParentChoice() != null) {
+			return getParentChoice().isMatchIncludingParents(choice); 
 		}
 
 		return false;
@@ -333,10 +333,10 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public int level(){
-		if(parentChoice() == null){
+		if(getParentChoice() == null){
 			return 0;
 		}
-		return parentChoice().level() + 1;
+		return getParentChoice().level() + 1;
 	}
 
 	@Override
@@ -385,12 +385,27 @@ public class ChoiceNode extends ChoicesParentNode {
 		return visitor.visit(this);
 	}
 
-	private ChoiceNode parentChoice(){
-		AbstractParameterNode parameter = getParameter();
-		if(fParent != null && fParent != parameter){
+	public ChoiceNode getParentChoice() {
+		
+//		Object obj = (Object)fParent;
+//		
+//		String msg = fParent.toString(); 
+//		
+		if (fParent == null) {
+			return null;
+		}
+		
+		if (fParent instanceof ChoiceNode) {
 			return (ChoiceNode)fParent;
 		}
+		
 		return null;
+		
+//		AbstractParameterNode parameter = getParameter();
+//		if(fParent != null && fParent != parameter){
+//			return (ChoiceNode)fParent;
+//		}
+//		return null;
 	}
 
 	public MethodNode getMethodNode() {

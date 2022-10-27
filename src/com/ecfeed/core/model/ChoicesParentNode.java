@@ -16,24 +16,24 @@ import java.util.Set;
 
 public abstract class ChoicesParentNode extends AbstractNode implements IChoicesParentNode { // TODO MO-RE remove class
 
-	private ChoicesHolder fChoicesHolder;
-
+	private List<ChoiceNode> fChoices;
+	
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 
-		fChoicesHolder = new ChoicesHolder(modelChangeRegistrator);
+		fChoices = new ArrayList<ChoiceNode>();
 	}
 
 	@Override
 	public List<IAbstractNode> getChildren() {
 
-		return new ArrayList<IAbstractNode>(fChoicesHolder.getChoices());
+		return new ArrayList<IAbstractNode>(getChoices());
 	}
 
 	@Override
 	public int getChildrenCount() {
 
-		return fChoicesHolder.getChoiceCount();
+		return getChoiceCount();
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 
 		ChoicesParentNode otherChoicesParentNode = (ChoicesParentNode)other;
 
-		if (!fChoicesHolder.isMatch(otherChoicesParentNode.fChoicesHolder)) {
+		if (!ChoicesListHelper.isMatchForListsOfChoices(fChoices, otherChoicesParentNode.fChoices)) {
 			return false;
 		}
 
@@ -58,38 +58,40 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	}
 
 	@Override
-	public void addChoice(ChoiceNode choice) {
+	public void addChoice(ChoiceNode choiceToAdd) {
 
-		fChoicesHolder.addChoice(choice, this);
+		ChoicesListHelper.addChoice(choiceToAdd, fChoices, this);
 	}
 
 	@Override
-	public void addChoice(ChoiceNode choice, int index) {
+	public void addChoice(ChoiceNode choiceToAdd, int index) {
 
-		fChoicesHolder.addChoice(choice, index, this);
+		ChoicesListHelper.addChoice(choiceToAdd, fChoices, index, this);
+		registerChange();
 	}
 
 	@Override
-	public void addChoices(List<ChoiceNode> choices) {
+	public void addChoices(List<ChoiceNode> choicesToAdd) {
 
-		fChoicesHolder.addChoices(choices, this);
+		ChoicesListHelper.addChoices(choicesToAdd, fChoices, this);
+		registerChange();
 	}
 
 	@Override
 	public List<ChoiceNode> getChoices() {
 
-		return fChoicesHolder.getChoices();
+		return fChoices;
 	}
 
 	@Override
 	public int getChoiceCount() {
 
-		return fChoicesHolder.getChoiceCount();
+		return fChoices.size();
 	}
 
 	public List<ChoiceNode> getChoicesWithCopies() { // TODO MO-RE do we need this ?
 
-		return fChoicesHolder.getChoices();
+		return getChoices();
 	}
 
 	@Override
@@ -101,13 +103,13 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	@Override
 	public int getChoiceIndex(String choiceNameToFind) {
 
-		return fChoicesHolder.getChoiceIndex(choiceNameToFind);
+		return ChoicesListHelper.getChoiceIndex(choiceNameToFind, fChoices);
 	}
 
 	@Override
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
 
-		return fChoicesHolder.choiceExists(choiceNameToFind);
+		return ChoicesListHelper.choiceExists(choiceNameToFind, fChoices);
 	}
 
 	@Override
@@ -173,19 +175,23 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	@Override
 	public boolean removeChoice(ChoiceNode choice) {
 
-		return fChoicesHolder.removeChoice(choice);
+		boolean result = ChoicesListHelper.removeChoice(choice, fChoices);
+		registerChange();
+		return result;
 	}
 
 	@Override
 	public void replaceChoices(List<ChoiceNode> newChoices) {
 		
-		fChoicesHolder.replaceChoices(newChoices, this);
+		ChoicesListHelper.replaceChoices(newChoices, fChoices, this);
+		registerChange();
 	}
 
 	@Override
 	public void clearChoices() {
 
-		fChoicesHolder.clearChoices();
+		fChoices.clear();
+		registerChange();
 	}
 
 }
