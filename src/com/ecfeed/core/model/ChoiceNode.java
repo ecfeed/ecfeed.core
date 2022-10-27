@@ -23,10 +23,10 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class ChoiceNode extends ChoicesParentNode {
 
+	private static final String NO_PARENT = "No parent.";
 	public static final String ABSTRACT_CHOICE_MARKER = "[ABSTRACT]";
 	public static final String ASSIGNMENT_NAME = "@assignment";
 
-	private ChoicesParentNode fParent;
 	private String fValueString;
 	private Set<String> fLabels;
 	private boolean fIsRandomizedValue;
@@ -54,10 +54,20 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public AbstractParameterNode getParameter() {
-		if(fParent != null){
-			return fParent.getParameter();
+		
+		IAbstractNode parent = getParent();
+		
+		if (parent == null) {
+			return null;
 		}
-		return null;
+		
+		if (!(parent instanceof IChoicesParentNode)) {
+			return null;
+		}
+		
+		IChoicesParentNode choicesParentNode = (IChoicesParentNode)parent;
+		
+		return choicesParentNode.getParameter();
 	}
 
 	@Override
@@ -159,7 +169,7 @@ public class ChoiceNode extends ChoicesParentNode {
 		ChoiceNode copy = new ChoiceNode(getName(), fValueString, getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
-		copy.setParent(fParent);
+		copy.setParent(getParent());
 
 		for(ChoiceNode choice : getChoices()){
 			copy.addChoice(choice.makeClone());
@@ -199,7 +209,22 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public boolean isCorrectableToBeRandomizedType() {
-		return fParent.getParameter().isCorrectableToBeRandomizedType() && !isAbstract();
+		
+		IAbstractNode parent = getParent();
+		
+		if (parent == null) {
+			ExceptionHelper.reportRuntimeException(NO_PARENT);
+			return false;
+		}
+		
+		if (!(parent instanceof IChoicesParentNode)) {
+			ExceptionHelper.reportRuntimeException(NO_PARENT);
+			return false;
+		}
+		
+		IChoicesParentNode choicesParentNode = (IChoicesParentNode)parent;
+		
+		return choicesParentNode.getParameter().isCorrectableToBeRandomizedType() && !isAbstract();
 	}
 
 	public void setRandomizedValue(boolean choice) {
@@ -221,7 +246,6 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	public void setParent(ChoicesParentNode parent){
 		super.setParent(parent);
-		fParent = parent;
 	}
 
 	public String getValueString() {
@@ -386,26 +410,18 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	public ChoiceNode getParentChoice() {
+
+		IAbstractNode parent = getParent();
 		
-//		Object obj = (Object)fParent;
-//		
-//		String msg = fParent.toString(); 
-//		
-		if (fParent == null) {
+		if (parent == null) {
 			return null;
 		}
 		
-		if (fParent instanceof ChoiceNode) {
-			return (ChoiceNode)fParent;
+		if (parent instanceof ChoiceNode) {
+			return (ChoiceNode)parent;
 		}
 		
 		return null;
-		
-//		AbstractParameterNode parameter = getParameter();
-//		if(fParent != null && fParent != parameter){
-//			return (ChoiceNode)fParent;
-//		}
-//		return null;
 	}
 
 	public MethodNode getMethodNode() {
