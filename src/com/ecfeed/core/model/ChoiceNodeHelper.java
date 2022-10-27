@@ -21,7 +21,9 @@ import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_POSITIVE_
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -705,4 +707,118 @@ public class ChoiceNodeHelper {
 		return result;
 	}
 
+	public static List<ChoiceNode> getLeafChoices(Collection<ChoiceNode> choices) {
+
+		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
+
+		for (ChoiceNode p : choices) {
+			if (p.isAbstract() == false) {
+				result.add(p);
+			}
+
+			result.addAll(p.getLeafChoices());
+		}
+
+		return result;
+	}
+	
+	public static Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
+
+		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
+
+		for (ChoiceNode p : choices) {
+			result.add(p);
+			result.addAll(p.getAllChoices());
+		}
+
+		return result;
+	}
+	
+	public static Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
+
+		Set<String> result = new LinkedHashSet<String>();
+
+		for (ChoiceNode choiceNode : choiceNodes) {
+			result.add(choiceNode.getQualifiedName());
+		}
+
+		return result;
+	}
+	
+	public static Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
+
+		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
+
+		for(ChoiceNode p : choices) {
+
+			if(p.getLabels().contains(label)){
+				result.add(p);
+			}
+
+			result.addAll(p.getLabeledChoices(label));
+		}
+
+		return result;
+	}
+	
+	public static Set<String> getAllLabels(Set<ChoiceNode> choices) {
+
+		Set<String> result = new HashSet<>();
+		
+		for (ChoiceNode choiceNode : choices) {
+			addLabelsForChoiceNode(choiceNode, result);
+		}
+		
+		return result;
+	}
+	
+	private static void addLabelsForChoiceNode(ChoiceNode choiceNode, Set<String> inOutResult) {
+		
+		Set<String> labelsOfChoice = choiceNode.getLabels();
+		
+		for (String label : labelsOfChoice) {
+			inOutResult.add(label);
+		}
+	}
+
+	public static Set<String> getLeafLabels(List<ChoiceNode> leafChoices) { 
+
+		Set<String> result = new LinkedHashSet<String>();
+
+		for (ChoiceNode choiceNode : leafChoices) {
+			result.addAll(choiceNode.getAllLabels());
+		}
+
+		return result;
+	}
+	
+	public static Set<String> getLeafChoiceValues(List<ChoiceNode> leafChoices) {
+
+		Set<String> result = new LinkedHashSet<String>();
+
+		for (ChoiceNode p : leafChoices) {
+			result.add(p.getValueString());
+		}
+
+		return result;
+	}
+	
+	
+	public static String generateNewChoiceName(ChoicesParentNode fChoicesParentNode, String startChoiceName) {
+
+		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
+			return startChoiceName;
+		}
+
+		String oldNameCore = StringHelper.removeFromNumericPostfix(startChoiceName);
+
+		for (int i = 1;   ; i++) {
+			String newParameterName = oldNameCore + String.valueOf(i);
+
+			if (!fChoicesParentNode.choiceExistsAsDirectChild(newParameterName)) {
+				return newParameterName;
+			}
+		}
+	}
+	
 }

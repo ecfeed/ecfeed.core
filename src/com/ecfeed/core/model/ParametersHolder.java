@@ -150,15 +150,6 @@ public class ParametersHolder {
 		registerChange();
 	}
 
-	private void registerChange() {
-
-		if (fModelChangeRegistrator == null) {
-			return;
-		}
-
-		fModelChangeRegistrator.registerChange();
-	}
-
 	public String generateNewParameterName(String startParameterName) {
 
 		if (!parameterExists(startParameterName)) {
@@ -191,6 +182,15 @@ public class ParametersHolder {
 		}
 		
 		return true;
+	}
+
+	private void registerChange() {
+
+		if (fModelChangeRegistrator == null) {
+			return;
+		}
+
+		fModelChangeRegistrator.registerChange();
 	}
 
 }

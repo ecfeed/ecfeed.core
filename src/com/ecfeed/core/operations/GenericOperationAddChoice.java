@@ -11,6 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -96,7 +97,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 
 		private void generateUniqueChoiceName(ChoiceNode choiceNode) {
 
-			String newName = ChoicesParentNode.generateNewChoiceName(fChoicesParentNode, choiceNode.getName());
+			String newName = ChoiceNodeHelper.generateNewChoiceName(fChoicesParentNode, choiceNode.getName());
 			choiceNode.setName(newName);
 		}
 
