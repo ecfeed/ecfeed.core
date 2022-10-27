@@ -931,4 +931,83 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	}
 
+	public static class CollectingMethodVisitor  implements IStatementVisitor {
+
+		private MethodNode fMethodNode;
+
+		public CollectingMethodVisitor() {
+		}
+
+		public MethodNode getMethodNode() {
+			return fMethodNode;
+		}
+
+		@Override
+		public Object visit(StaticStatement statement) {
+			return null;
+		}
+
+		@Override
+		public Object visit(StatementArray statement) {
+
+			for (AbstractStatement child : statement.getChildren()) {
+				try {
+					CollectingMethodVisitor visitor = new CollectingMethodVisitor();
+					child.accept(visitor);
+
+					if (visitor.getMethodNode() == null) {
+						continue;
+					}
+
+					if (fMethodNode != null) {
+						if (fMethodNode != visitor.getMethodNode()) {
+							ExceptionHelper.reportRuntimeException("Something is wrong");
+						}
+					}
+
+					fMethodNode = visitor.getMethodNode();
+				} catch (Exception e) {
+					ExceptionHelper.reportRuntimeException("Something is wrong");
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ExpectedValueStatement statement) {
+
+			fMethodNode = statement.getLeftMethodParameterNode().getMethod();
+
+			return null;
+		}
+
+		@Override
+		public Object visit(RelationStatement statement) {
+
+			fMethodNode = statement.getLeftParameter().getMethod();
+
+			return null;
+		}
+
+		@Override
+		public Object visit(LabelCondition condition) {
+			return null;
+		}
+
+		@Override
+		public Object visit(ChoiceCondition condition) {
+			return null;
+		}
+
+		@Override
+		public Object visit(ParameterCondition condition) {
+			return null;
+		}
+
+		@Override
+		public Object visit(ValueCondition condition) {
+			return null;
+		}
+	}
 }

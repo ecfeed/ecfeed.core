@@ -17,7 +17,6 @@ import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ParameterCondition;
 import com.ecfeed.core.model.RelationStatement;
@@ -34,17 +33,17 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     private List<MethodParameterNode> fMethodParameterNode;
 
     private EcSatSolver fSat4Solver;
-    private ParamChoiceSets fParamChoiceSets;
+    private ParameterChoices fParamChoiceSets;
 //    private ChoiceMultiMapping fSanitizedValToAtomicVal;
-    private ChoicesMappingsBucket fChoicesMappingBucket;
+    private ChoiceMappings fChoicesMappingBucket;
     private ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
 
     public ParseConstraintToSATVisitor(
             List<MethodParameterNode> methodParameterNode,
             EcSatSolver sat4Solver,
-            ParamChoiceSets paramChoiceSets,
-            ChoicesMappingsBucket choicesMappingsBucket,
+            ParameterChoices paramChoiceSets,
+            ChoiceMappings choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         fMethodParameterNode = methodParameterNode;
@@ -191,7 +190,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         if (lParamIndex == -1) {
             reportParamWithoutMethodException();
         }
-        for (ChoiceNode lChoice : fParamChoiceSets.atomicGet(leftMethodParameterNode)) {
+        for (ChoiceNode lChoice : fParamChoiceSets.getAtomic(leftMethodParameterNode)) {
             List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethodParameterNode.size(), null));
             dummyValues.set(lParamIndex, lChoice);
             EvaluationResult result = statement.evaluate(dummyValues);
@@ -238,10 +237,10 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
             reportParamWithoutMethodException();
         }
 
-        List<ChoiceNode> sortedLChoices = new ArrayList<>(fParamChoiceSets.atomicGet(lParam));
+        List<ChoiceNode> sortedLChoices = new ArrayList<>(fParamChoiceSets.getAtomic(lParam));
         Collections.sort(sortedLChoices, new ChoiceNodeComparator());
         int m = sortedLChoices.size();
-        List<ChoiceNode> sortedRChoices = new ArrayList<>(fParamChoiceSets.atomicGet(rParam));
+        List<ChoiceNode> sortedRChoices = new ArrayList<>(fParamChoiceSets.getAtomic(rParam));
         Collections.sort(sortedRChoices, new ChoiceNodeComparator());
         int n = sortedRChoices.size();
 

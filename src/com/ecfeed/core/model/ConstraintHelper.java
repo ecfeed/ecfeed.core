@@ -10,10 +10,7 @@
 
 package com.ecfeed.core.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.MessageStack;
@@ -216,4 +213,16 @@ public class ConstraintHelper {
 		}
 	}
 
+	public static Optional<MethodNode> getMethodNode(Constraint constraint) {
+		Constraint.CollectingMethodVisitor visitor = new Constraint.CollectingMethodVisitor();
+
+		try {
+			constraint.getPrecondition().accept(visitor);
+			constraint.getPostcondition().accept(visitor);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
+
+		return Optional.of(visitor.getMethodNode());
+	}
 }
