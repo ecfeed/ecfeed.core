@@ -194,7 +194,7 @@ public class ChoiceNodeHelper {
 
 	public static ChoiceNode getParentChoice(ChoiceNode choiceNode){
 
-		ChoicesParentNode choicesParentNode = choiceNode.getParent();
+		IChoicesParentNode choicesParentNode = (IChoicesParentNode)choiceNode.getParent();
 
 		if (choicesParentNode == null) {
 			return null;

@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
@@ -119,8 +120,17 @@ public class FactoryRemoveOperation {
 		}
 
 		@Override
-		public Object visit(ChoiceNode node) throws Exception {
-			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fExtLanguageManager);
+		public Object visit(ChoiceNode choiceNode) throws Exception {
+			
+			IAbstractNode abstractParent = choiceNode.getParent();
+			
+			if (!(abstractParent instanceof IChoicesParentNode)) {
+				ExceptionHelper.reportRuntimeException("Invalid type of parent.");
+			}
+
+			IChoicesParentNode choicesParentNode = (IChoicesParentNode)abstractParent; 
+			
+			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 	}
 

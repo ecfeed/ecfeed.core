@@ -252,7 +252,7 @@ public class ParameterTransformer {
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		ChoicesParentNode choicesParentNode = choiceNode.getParent();
+		IChoicesParentNode choicesParentNode = (IChoicesParentNode)choiceNode.getParent();
 		int indexOfTopChoice = choiceNode.getMyIndex();
 
 		OperationSimpleAddChoice operationSimpleAddChoice = 

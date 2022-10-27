@@ -16,7 +16,6 @@ import java.util.Set;
 
 public abstract class ChoicesParentNode extends AbstractNode implements IChoicesParentNode { // TODO MO-RE remove class
 
-//	private List<ChoiceNode> fChoices;
 	private ChoicesHolder fChoicesHolder;
 
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {

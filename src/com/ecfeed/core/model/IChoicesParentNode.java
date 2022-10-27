@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import java.util.List;
 import java.util.Set;
 
-public interface IChoicesParentNode {
+public interface IChoicesParentNode extends IAbstractNode {
 
 	public void addChoice(ChoiceNode choice);
 	public void addChoice(ChoiceNode choice, int index);

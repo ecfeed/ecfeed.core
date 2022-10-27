@@ -61,11 +61,6 @@ public class ChoiceNode extends ChoicesParentNode {
 	}
 
 	@Override
-	public ChoicesParentNode getParent(){
-		return fParent;
-	}
-
-	@Override
 	public List<IAbstractNode> getChildren(){
 		return new ArrayList<>(getChoices());
 	}

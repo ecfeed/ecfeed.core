@@ -13,20 +13,24 @@ package com.ecfeed.core.operations;
 import java.util.Set;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParameterVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.LogHelperCore;
 
 public class GenericOperationRemoveChoice extends BulkOperation {
 
 	private class RemoveChoiceOperation extends AbstractModelOperation {
 
-		private ChoicesParentNode fTarget;
+		private IChoicesParentNode fTarget;
 		private ChoiceNode fChoice;
 		private String fOriginalDefaultValue;
 		private int fOriginalIndex;
@@ -123,7 +127,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 		}
 
 		public RemoveChoiceOperation(
-				ChoicesParentNode target, 
+				IChoicesParentNode target, 
 				ChoiceNode choice, 
 				ITypeAdapterProvider adapterProvider, 
 				IExtLanguageManager extLanguageManager){
@@ -189,7 +193,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 	}
 
 	public GenericOperationRemoveChoice(
-			ChoicesParentNode target, 
+			IChoicesParentNode target, 
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
