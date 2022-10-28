@@ -92,7 +92,7 @@ public class ModelParserTest {
         List<AbstractParameterNode> parentMethodData = model.parse(parentMethod);
 
         Assert.assertEquals(11, parentMethodData.size());
-        Assert.assertTrue(parentMethodData.get(0) instanceof MethodParameterNode);
+        Assert.assertTrue(parentMethodData.get(0) instanceof BasicParameterNode);
     }
 
     @Test

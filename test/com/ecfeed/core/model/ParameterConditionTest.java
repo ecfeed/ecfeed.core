@@ -30,8 +30,8 @@ public class ParameterConditionTest {
 	}
 
 	private void evaluateOne(
-			MethodParameterNode leftMethodParameterNode,
-			MethodParameterNode rightMethodParameterNode,
+			BasicParameterNode leftMethodParameterNode,
+			BasicParameterNode rightMethodParameterNode,
 			String leftChoiceValue,
 			EMathRelation statementRelation,
 			String rightChoiceValue,
@@ -60,8 +60,8 @@ public class ParameterConditionTest {
 	}
 	
 	private void evaluateRandomizedOne(
-			MethodParameterNode leftMethodParameterNode,
-			MethodParameterNode rightMethodParameterNode,
+			BasicParameterNode leftMethodParameterNode,
+			BasicParameterNode rightMethodParameterNode,
 			String leftChoiceValue,
 			EMathRelation statementRelation,
 			String rightChoiceValue,
@@ -119,11 +119,11 @@ public class ParameterConditionTest {
 	@Test
 	public void evaluateForStrings() {
 
-		MethodParameterNode leftParam = 
-				new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode leftParam = 
+				new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
-		MethodParameterNode rightParam = 
-				new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode rightParam = 
+				new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.EQUAL, "a", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.EQUAL, "A", AssertType.FALSE);
@@ -143,8 +143,8 @@ public class ParameterConditionTest {
 
 	public void evaluateForIntegerTypes(String parameterType) {
 
-		MethodParameterNode leftParam = new MethodParameterNode("par1", parameterType, "", false, null);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", parameterType, "", false, null);
+		BasicParameterNode leftParam = new BasicParameterNode("par1", parameterType, "", false, null);
+		BasicParameterNode rightParam = new BasicParameterNode("par2", parameterType, "", false, null);
 
 		evaluateOne(leftParam, rightParam, "1", EMathRelation.EQUAL,     "1", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "1", EMathRelation.NOT_EQUAL, "1", AssertType.FALSE);
@@ -196,8 +196,8 @@ public class ParameterConditionTest {
 
 	public void evaluateForFloatTypes(String parameterType) {
 
-		MethodParameterNode leftParam = new MethodParameterNode("par1", parameterType, "", false, null);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", parameterType, "", false, null);
+		BasicParameterNode leftParam = new BasicParameterNode("par1", parameterType, "", false, null);
+		BasicParameterNode rightParam = new BasicParameterNode("par2", parameterType, "", false, null);
 
 		evaluateOne(leftParam, rightParam, "1", EMathRelation.EQUAL,     "1", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "1.0", EMathRelation.EQUAL,   "1.0", AssertType.TRUE);
@@ -246,8 +246,8 @@ public class ParameterConditionTest {
 	@Test
 	public void evaluateForBoolean() {
 
-		MethodParameterNode leftParam = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false, null);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false, null);
+		BasicParameterNode leftParam = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false, null);
+		BasicParameterNode rightParam = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_BOOLEAN, "", false, null);
 
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.EQUAL, "true", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "true", EMathRelation.EQUAL, "false", AssertType.FALSE);
@@ -271,8 +271,8 @@ public class ParameterConditionTest {
 	@Test
 	public void evaluateChar() {
 
-		MethodParameterNode leftParam = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_CHAR, "", false, null);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_CHAR, "", false, null);
+		BasicParameterNode leftParam = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_CHAR, "", false, null);
+		BasicParameterNode rightParam = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_CHAR, "", false, null);
 
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.EQUAL, "a", AssertType.TRUE);
 		evaluateOne(leftParam, rightParam, "a", EMathRelation.NOT_EQUAL, "a", AssertType.FALSE);
@@ -301,8 +301,8 @@ public class ParameterConditionTest {
 	}	
 	
 	public void evaluateForRangeIntegerTypes(String parameterType) {
-		MethodParameterNode leftParam = new MethodParameterNode("par1", parameterType, "", false, null);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", parameterType, "", false, null);
+		BasicParameterNode leftParam = new BasicParameterNode("par1", parameterType, "", false, null);
+		BasicParameterNode rightParam = new BasicParameterNode("par2", parameterType, "", false, null);
 
 		evaluateRandomizedOne(leftParam, rightParam, "1", EMathRelation.EQUAL,     "1", AssertType.TRUE);
 		evaluateRandomizedOne(leftParam, rightParam, "1", EMathRelation.NOT_EQUAL, "1", AssertType.FALSE);
@@ -427,8 +427,8 @@ public class ParameterConditionTest {
 	
 	@Test
 	public void copyAndEqualityTest() {
-		MethodParameterNode leftParam = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-		MethodParameterNode rightParam = new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode leftParam = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode rightParam = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
@@ -444,9 +444,9 @@ public class ParameterConditionTest {
 	@Test
 	public void updateReferencesTest() {
 		MethodNode method1 = new MethodNode("method1", null);
-		MethodParameterNode method1LeftParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode method1LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method1.addParameter(method1LeftParameterNode);
-		MethodParameterNode method1RightParameterNode = new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode method1RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method1.addParameter(method1RightParameterNode);
 
 		RelationStatement statement = 
@@ -454,9 +454,9 @@ public class ParameterConditionTest {
 						method1LeftParameterNode, EMathRelation.EQUAL, method1RightParameterNode);
 
 		MethodNode method2 = new MethodNode("method2", null);
-		MethodParameterNode method2LeftParameterNode = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode method2LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method2.addParameter(method2LeftParameterNode);
-		MethodParameterNode method2RightParameterNode = new MethodParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+		BasicParameterNode method2RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
 		method2.addParameter(method2RightParameterNode);
 
 

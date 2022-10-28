@@ -46,15 +46,15 @@ public class MethodDeployerTest {
 	public void deployMethodWithOneParameter() {
 
 		MethodNode sourceMethod = new MethodNode("method");
-		MethodParameterNode methodParameterNode = new MethodParameterNode("parameter", "String", "A", true);
+		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true);
 		sourceMethod.addParameter(methodParameterNode);
 
 		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
 
 		assertEquals(1, deployedMethod.getParameters().size());
 
-		MethodParameterNode sourceParameter = (MethodParameterNode)sourceMethod.getParameters().get(0);
-		MethodParameterNode deployedParameter = (MethodParameterNode)deployedMethod.getParameters().get(0);
+		BasicParameterNode sourceParameter = (BasicParameterNode)sourceMethod.getParameters().get(0);
+		BasicParameterNode deployedParameter = (BasicParameterNode)deployedMethod.getParameters().get(0);
 
 		assertTrue(sourceParameter.hashCode() != deployedParameter.hashCode());
 
@@ -68,7 +68,7 @@ public class MethodDeployerTest {
 	public void deployMethodWithOneParameterAndChoice() {
 
 		MethodNode sourceMethod = new MethodNode("method");
-		MethodParameterNode methodParameterNode = new MethodParameterNode("parameter", "String", "A", true);
+		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true);
 		sourceMethod.addParameter(methodParameterNode);
 
 		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
@@ -78,7 +78,7 @@ public class MethodDeployerTest {
 
 		assertEquals(1, deployedMethod.getParameters().size());
 
-		MethodParameterNode deployedParameter = (MethodParameterNode)deployedMethod.getParameters().get(0);
+		BasicParameterNode deployedParameter = (BasicParameterNode)deployedMethod.getParameters().get(0);
 
 		ChoiceNode deployedChoiceNode = deployedParameter.getChoices().get(0);
 

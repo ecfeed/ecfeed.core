@@ -121,8 +121,8 @@ public class AbstractNodeTest{
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("name1", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode(
 				"name",
@@ -185,8 +185,8 @@ public class AbstractNodeTest{
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("name1", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("name", new Constraint("name", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null );
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
@@ -216,8 +216,8 @@ public class AbstractNodeTest{
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("expCat", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("expCat", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null);
 		TestCaseNode testCase = new TestCaseNode("testCase", null, new ArrayList<ChoiceNode>());
@@ -264,7 +264,7 @@ public class AbstractNodeTest{
 
 	@Test
 	public void getSiblingTest(){
-		MethodParameterNode cat = new MethodParameterNode("cat", "type", "0", false, null);
+		BasicParameterNode cat = new BasicParameterNode("cat", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 

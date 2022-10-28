@@ -124,7 +124,7 @@ public class SatSolverConstraintEvaluatorTest {
         MethodNode methodNode = classNode.getMethods().get(0);
 
         List<List<ChoiceNode>> input = new ArrayList<>();
-        for (MethodParameterNode arg : methodNode.getMethodParameters())
+        for (BasicParameterNode arg : methodNode.getMethodParameters())
             if (arg.isExpected()) {
                 input.add(Collections.singletonList(null));
             } else

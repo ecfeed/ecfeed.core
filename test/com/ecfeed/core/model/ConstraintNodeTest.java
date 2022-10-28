@@ -63,8 +63,8 @@ public class ConstraintNodeTest {
 	@Test
 	public void derandomizeTest(){
 
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode("par1",	"int", "0",	false, null);
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode("par1",	"int", "0",	false, null);
 
 		for (int counter = 0; counter < 5; counter++) {
 			ChoiceNode choiceNode = new ChoiceNode("choice1", "1:5", true, null);

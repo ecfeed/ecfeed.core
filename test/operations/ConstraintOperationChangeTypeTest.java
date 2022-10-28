@@ -58,15 +58,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -119,15 +119,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -178,15 +178,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -239,15 +239,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", true, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", true, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -303,15 +303,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", true, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", true, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -366,15 +366,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -427,15 +427,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);
@@ -490,15 +490,15 @@ public class ConstraintOperationChangeTypeTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
 		methodParameterNode1.addChoice(choiceNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("choice2", "2", null);

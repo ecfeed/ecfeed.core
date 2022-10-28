@@ -17,7 +17,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.operations.FactoryRenameOperation;
 import com.ecfeed.core.operations.IModelOperation;
@@ -179,8 +179,8 @@ public class FactoryRenameOperationTest {
 		MethodNode methodNode1 = new MethodNode("method1", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode1.addParameter(methodParameterNode1);
 
 		// add method2 with long parameter
@@ -188,8 +188,8 @@ public class FactoryRenameOperationTest {
 		MethodNode methodNode2 = new MethodNode("method2", null);
 		classNode.addMethod(methodNode2);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par1", "long", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par1", "long", "0", false, null);
 		methodNode2.addParameter(methodParameterNode2);
 
 		// rename in simple mode - the same method name - should fail
@@ -269,12 +269,12 @@ public class FactoryRenameOperationTest {
 		MethodNode methodNode1 = new MethodNode("method1", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode1.addParameter(methodParameterNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "String", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "String", "0", false, null);
 		methodNode1.addParameter(methodParameterNode2);
 
 		// rename in simple mode - the same parameter name - should fail
@@ -418,8 +418,8 @@ public class FactoryRenameOperationTest {
 		MethodNode  methodNode = new MethodNode("method",  null);
 		classNode.addMethod(methodNode);
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode("par_1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode("par_1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "1", null);

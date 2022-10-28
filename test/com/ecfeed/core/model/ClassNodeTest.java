@@ -55,11 +55,11 @@ public class ClassNodeTest extends ClassNode {
 
 		int inx = 0;
 		for(String type : method1Types){
-			method1.addParameter(new MethodParameterNode("parameter" +  inx++, type, "0", false, null));
+			method1.addParameter(new BasicParameterNode("parameter" +  inx++, type, "0", false, null));
 		}
 
 		for(String type : method2Types){
-			method2.addParameter(new MethodParameterNode("parameter" + inx++, type, "0", false, null));
+			method2.addParameter(new BasicParameterNode("parameter" + inx++, type, "0", false, null));
 		}
 
 		classNode.addMethod(method1);

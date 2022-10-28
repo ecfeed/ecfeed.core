@@ -98,7 +98,7 @@ public class ParameterTransformerTest {
 		final String methodParameterName = "P1";
 		final String methodChoiceName1 = "C1";
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
@@ -144,7 +144,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
 		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
@@ -172,7 +172,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount());
 
-		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
 		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
@@ -233,7 +233,7 @@ public class ParameterTransformerTest {
 		final String methodChoiceName1 = "C1";
 		String methodLabel1 = "L1";
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
@@ -281,7 +281,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
 		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
@@ -309,7 +309,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount());
 
-		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
 		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
@@ -367,7 +367,7 @@ public class ParameterTransformerTest {
 		final String methodChoiceName1 = "C1";
 		String methodLabel1 = "L1";
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
@@ -415,7 +415,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
 		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
@@ -443,7 +443,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount());
 
-		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
 		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
@@ -504,7 +504,7 @@ public class ParameterTransformerTest {
 		final String methodParameterName = "P1";
 		final String methodChoiceName1 = "C1";
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
@@ -551,7 +551,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
 		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
@@ -579,7 +579,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount());
 
-		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
 		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
@@ -636,7 +636,7 @@ public class ParameterTransformerTest {
 		final String methodParameterName = "P1";
 		final String methodChoiceName1 = "C1";
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
@@ -682,7 +682,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
 		assertEquals(globalParameterNodeOfRoot, methodParameterNode2.getLinkToGlobalParameter());
 
@@ -710,7 +710,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount());
 
-		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
 		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
@@ -768,7 +768,7 @@ public class ParameterTransformerTest {
 		final String methodChoiceName1 = "C1";
 		final String methodChoiceName2 = "C2";
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, methodParameterName, "String");
 
 		ChoiceNode methodChoiceNode1 = 
@@ -826,7 +826,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode.getChoiceCount()); // sees choices from global parameter because linked
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
 		assertEquals(globalParameterNodeOfClass, methodParameterNode2.getLinkToGlobalParameter());
 
@@ -854,7 +854,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(2, methodParameterNode.getChoiceCount());
 
-		methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(false, methodParameterNode2.isLinked());
 		assertNull(methodParameterNode2.getLinkToGlobalParameter());
 
@@ -898,7 +898,7 @@ public class ParameterTransformerTest {
 
 		// add parameter and choice to method
 
-		MethodParameterNode methodParameterNode1 = 
+		BasicParameterNode methodParameterNode1 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
 
 		ChoiceNode choiceNodeOfMethod11 = 
@@ -1014,7 +1014,7 @@ public class ParameterTransformerTest {
 
 		// add parameter and choice to method
 
-		MethodParameterNode methodParameterNode1 = 
+		BasicParameterNode methodParameterNode1 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
 
 		ChoiceNode choiceNodeOfMethod1 = 
@@ -1065,7 +1065,7 @@ public class ParameterTransformerTest {
 		assertEquals(1, methodNode.getParametersCount());
 		assertEquals(1, methodParameterNode1.getChoiceCount()); // sees choices from global parameter because linked
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode)methodNode.getParameter(0);
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode)methodNode.getParameter(0);
 		assertEquals(true, methodParameterNode2.isLinked());
 		assertEquals(globalParameterNodeOfClass1, methodParameterNode2.getLinkToGlobalParameter());
 
@@ -1095,7 +1095,7 @@ public class ParameterTransformerTest {
 		// check local parameter 
 
 		assertEquals(1, methodNode.getParametersCount());
-		MethodParameterNode resultMethodParameterNode = (MethodParameterNode) methodNode.getParameter(0);
+		BasicParameterNode resultMethodParameterNode = (BasicParameterNode) methodNode.getParameter(0);
 		assertEquals(1, resultMethodParameterNode.getChoiceCount());
 
 		assertEquals(false, resultMethodParameterNode.isLinked());
@@ -1147,7 +1147,7 @@ public class ParameterTransformerTest {
 
 		// add parameter and choice to method
 
-		MethodParameterNode methodParameterNode1 = 
+		BasicParameterNode methodParameterNode1 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
 
 		ChoiceNode choiceNodeOfMethod11 = 
@@ -1238,7 +1238,7 @@ public class ParameterTransformerTest {
 
 		// add parameter and choice to method
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
 
 		methodParameterNode.setLinkToGlobalParameter(globalParameterNodeOfRoot1);
@@ -1376,7 +1376,7 @@ public class ParameterTransformerTest {
 
 		// add parameter and choice to method
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
 
 		ChoiceNode choiceNodeOfMethod = 
@@ -1413,7 +1413,7 @@ public class ParameterTransformerTest {
 
 		// add parameter
 
-		MethodParameterNode methodParameterNode = 
+		BasicParameterNode methodParameterNode = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", stringParameterType);
 
 		ParameterConversionDefinition parameterConversionDefinition = new ParameterConversionDefinition();
@@ -1444,12 +1444,12 @@ public class ParameterTransformerTest {
 
 	private static class ValueConversionOperator {
 
-		private MethodParameterNode fMethodParameterNode;
+		private BasicParameterNode fMethodParameterNode;
 		private ChoiceNode fChoiceNodeOfMethod;
 		private ParameterConversionDefinition fParameterConversionDefinition;
 
 		public ValueConversionOperator(
-				MethodParameterNode methodParameterNode, 
+				BasicParameterNode methodParameterNode, 
 				ChoiceNode choiceNodeOfMethod,
 				ParameterConversionDefinition parameterConversionDefinition) {
 
@@ -1566,7 +1566,7 @@ public class ParameterTransformerTest {
 	private void addSimpleLabelConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			String label1,
 			String label2) {
 
@@ -1593,7 +1593,7 @@ public class ParameterTransformerTest {
 	private static void addSimpleValueConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			String value1,
 			String value2) {
 

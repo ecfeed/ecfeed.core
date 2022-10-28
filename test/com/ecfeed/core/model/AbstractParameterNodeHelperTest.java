@@ -76,8 +76,8 @@ public class AbstractParameterNodeHelperTest {
 	@Test
 	public void createParameterLabelsTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"name", "int", "0", true, null);
 
 		String label = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
@@ -90,8 +90,8 @@ public class AbstractParameterNodeHelperTest {
 	@Test
 	public void createTypeLabelsTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"name", "int", "0", true, null);
 
 		String label = AbstractParameterNodeHelper.getType(methodParameterNode, new ExtLanguageManagerForJava());

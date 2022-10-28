@@ -28,7 +28,7 @@ public class AssignmentStatementTest {
 
 		// method parameter 1 node with choice
 
-		MethodParameterNode methodParameterNode1 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode1 = new BasicParameterNode(
 				"par1",
 				"int",
 				"1",
@@ -41,7 +41,7 @@ public class AssignmentStatementTest {
 
 		// method parameter 2 node with choice
 
-		MethodParameterNode methodParameterNode2 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode2 = new BasicParameterNode(
 				"par2",
 				"int",
 				"2",
@@ -130,7 +130,7 @@ public class AssignmentStatementTest {
 
 		// method parameter 1 node with choice
 
-		MethodParameterNode methodParameterNode1 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode1 = new BasicParameterNode(
 				"par1",
 				"int",
 				"1",
@@ -143,7 +143,7 @@ public class AssignmentStatementTest {
 
 		// method parameter 2 node with choice
 
-		MethodParameterNode methodParameterNode2 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode2 = new BasicParameterNode(
 				"par2",
 				"int",
 				"2",
@@ -156,7 +156,7 @@ public class AssignmentStatementTest {
 
 		// method parameter 3 node with choice
 
-        MethodParameterNode methodParameterNode3 = new MethodParameterNode(
+        BasicParameterNode methodParameterNode3 = new BasicParameterNode(
                 "par3",
                 "int",
                 "3",

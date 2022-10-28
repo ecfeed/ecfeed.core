@@ -17,7 +17,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.operations.MethodOperationAddParameter;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
@@ -38,8 +38,8 @@ public class MethodOperationAddParameterTest {
 		MethodNode methodNode1 = new MethodNode("method", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("arg0", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("arg0", "int", "0", false, null);
 
 		MethodOperationAddParameter methodOperationAddParameter1 =
 				new MethodOperationAddParameter(
@@ -58,8 +58,8 @@ public class MethodOperationAddParameterTest {
 		MethodNode methodNode2 = new MethodNode("method", null);
 		classNode.addMethod(methodNode2);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("arg0", "long", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("arg0", "long", "0", false, null);
 
 		MethodOperationAddParameter methodOperationAddParameter2 =
 				new MethodOperationAddParameter(
@@ -90,8 +90,8 @@ public class MethodOperationAddParameterTest {
 		MethodNode methodNode1 = new MethodNode("method", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("arg0", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("arg0", "int", "0", false, null);
 
 		MethodOperationAddParameter methodOperationAddParameter1 =
 				new MethodOperationAddParameter(
@@ -110,8 +110,8 @@ public class MethodOperationAddParameterTest {
 		MethodNode methodNode2 = new MethodNode("method", null);
 		classNode.addMethod(methodNode2);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("arg0", "long", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("arg0", "long", "0", false, null);
 
 		MethodOperationAddParameter methodOperationAddParameter2 =
 				new MethodOperationAddParameter(
@@ -130,8 +130,8 @@ public class MethodOperationAddParameterTest {
 		MethodNode methodNode3 = new MethodNode("method", null);
 		classNode.addMethod(methodNode3);
 
-		MethodParameterNode methodParameterNode3 =
-				new MethodParameterNode("arg0", "long", "0", false, null);
+		BasicParameterNode methodParameterNode3 =
+				new BasicParameterNode("arg0", "long", "0", false, null);
 
 		MethodOperationAddParameter methodOperationAddParameter3 =
 				new MethodOperationAddParameter(

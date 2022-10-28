@@ -89,12 +89,12 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public List<String> getLabels(MethodParameterNode methodParameterNode) {
+		public List<String> getLabels(BasicParameterNode methodParameterNode) {
 			return null;
 		}
 
 		@Override
-		public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 			return null;
 		}
 

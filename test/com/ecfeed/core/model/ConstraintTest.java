@@ -29,15 +29,15 @@ public class ConstraintTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "1", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "1", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode11 = new ChoiceNode("choice1", "7", null);
 		methodParameterNode1.addChoice(choiceNode11);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "1", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "1", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		// static statements
@@ -110,11 +110,11 @@ public class ConstraintTest {
 	@Test
 	public void createSignatureWithAssignmetStatementTest() {
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "1", true, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "1", true, null);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "2", true, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "2", true, null);
 
 		ChoiceNode choiceNode21 = new ChoiceNode("choice1", "5", null);
 		methodParameterNode2.addChoice(choiceNode21);
@@ -176,8 +176,8 @@ public class ConstraintTest {
 
 		MethodNode  methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
@@ -261,12 +261,12 @@ public class ConstraintTest {
 
 		MethodNode  methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", true, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", true, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice1", "1", null);
@@ -465,8 +465,8 @@ public class ConstraintTest {
 	@Test
 	public void evaluateAssignmentConstraint() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode("par",  "int", "0", true, null);
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode("par",  "int", "0", true, null);
 
 		StaticStatement precondition =
 				new StaticStatement(false, null);
@@ -514,7 +514,7 @@ public class ConstraintTest {
 	@Test
 	public void testMentions() {
 		ChoiceNode choice = new ChoiceNode("choice", null, null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		parameter.addChoice(choice);
 
 		AbstractStatement mentioningStatement = 
@@ -566,8 +566,8 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullsForParameterCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "type", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "type", "0", false, null);
 
 		AbstractStatement precondition = createStatementWithParameterCondition(parameter1, parameter2);
 		AbstractStatement postcondition = createStatementWithParameterCondition(parameter1, parameter2);
@@ -583,7 +583,7 @@ public class ConstraintTest {
 	@Test
 	public void testTupleWithNullPostconditionForChoiceCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "type", "0", false, null);
 		ChoiceNode choice11 = new ChoiceNode("choice11", "value11", null);
 		ChoiceNode choice12 = new ChoiceNode("choice12", "value12", null);
 		choice11.setParent(parameter1);
@@ -594,7 +594,7 @@ public class ConstraintTest {
 						parameter1, EMathRelation.EQUAL, choice11);
 
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "type", "0", false, null);
 		ChoiceNode choice2 = new ChoiceNode("choice2", "value2", null);
 		choice2.setParent(parameter2);
 
@@ -637,7 +637,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPreconditionWithValueCondition() {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", "0", false, null);
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithValueCondition(
@@ -648,7 +648,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPostconditionWithValueCondition() {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "int", "0", false, null);
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithValueCondition(
@@ -659,7 +659,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPreconditionWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter1 = new MethodParameterNode("parameter1", "int", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", "0", false, null);
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
@@ -670,7 +670,7 @@ public class ConstraintTest {
 
 	private AbstractStatement createPostconditionWithChoiceCondition(ChoiceNode choiceNode) {
 
-		MethodParameterNode parameter2 = new MethodParameterNode("parameter2", "int", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter2", "int", "0", false, null);
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
@@ -680,7 +680,7 @@ public class ConstraintTest {
 	}
 
 	private AbstractStatement createStatementWithParameterCondition(
-			MethodParameterNode parameter1, MethodParameterNode parameter2) {
+			BasicParameterNode parameter1, BasicParameterNode parameter2) {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithParameterCondition(
@@ -692,7 +692,7 @@ public class ConstraintTest {
 	@Test
 	public void derandomizeNumbersTest() {
 
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
 
 		ChoiceNode c1 = new ChoiceNode("c1", "5:5", null);
 		c1.setRandomizedValue(true);
@@ -732,7 +732,7 @@ public class ConstraintTest {
 	@Test
 	public void derandomizeTextTest() {
 
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "String", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "String", "0", false, null);
 
 		ChoiceNode c1 = new ChoiceNode("c1", "[5-5]", null);
 		c1.setRandomizedValue(true);

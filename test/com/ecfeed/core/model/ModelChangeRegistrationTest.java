@@ -99,8 +99,8 @@ public class ModelChangeRegistrationTest {
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						"par1", "int", "0", false, methodNode.getModelChangeRegistrator());
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 

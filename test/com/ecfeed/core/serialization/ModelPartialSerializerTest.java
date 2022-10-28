@@ -25,7 +25,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IConstraint;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelTestHelper;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RootNode;
@@ -43,7 +43,7 @@ public class ModelPartialSerializerTest {
 		RootNode rootNode = ModelTestHelper.createModel(xml);
 		ClassNode classNode = rootNode.getClasses().get(0);
 		MethodNode methodNode = classNode.getMethods().get(0);
-		MethodParameterNode methodParameterNode = methodNode.getMethodParameter(0);
+		BasicParameterNode methodParameterNode = methodNode.getMethodParameter(0);
 		ChoiceNode choiceNode = methodParameterNode.getChoices().get(0);
 
 		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
@@ -124,9 +124,9 @@ public class ModelPartialSerializerTest {
 		RootNode rootNode = ModelTestHelper.createModel(xml);
 		ClassNode classNode = rootNode.getClasses().get(1);
 		MethodNode methodNode = classNode.getMethods().get(1);
-		MethodParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
+		BasicParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
 		ChoiceNode choiceNode1 = methodParameterNode1.getChoices().get(1);
-		MethodParameterNode methodParameterNode2 = methodNode.getMethodParameter(1);
+		BasicParameterNode methodParameterNode2 = methodNode.getMethodParameter(1);
 		ChoiceNode choiceNode2 = methodParameterNode2.getChoices().get(1);
 
 		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();
@@ -218,7 +218,7 @@ public class ModelPartialSerializerTest {
 
 		ClassNode classNode = rootNode.getClasses().get(0);
 		MethodNode methodNode = classNode.getMethods().get(0);
-		MethodParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
+		BasicParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
 
 		List<ChoiceNode> choicesFromSource = methodParameterNode1.getChoices();
 		ChoiceNode choiceNode2 = choicesFromSource.get(1); 
@@ -303,10 +303,10 @@ public class ModelPartialSerializerTest {
 		ClassNode classNode = rootNode.getClasses().get(0);
 		MethodNode methodNode = classNode.getMethods().get(0);
 
-		MethodParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
+		BasicParameterNode methodParameterNode1 = methodNode.getMethodParameter(0);
 		ChoiceNode choiceNode1 = methodParameterNode1.getChoices().get(0);
 
-		MethodParameterNode methodParameterNode2 = methodNode.getMethodParameter(1);
+		BasicParameterNode methodParameterNode2 = methodNode.getMethodParameter(1);
 		ChoiceNode choiceNode2 = methodParameterNode2.getChoices().get(0);
 
 		List<ChoiceNode> allowedChoices = new ArrayList<ChoiceNode>();

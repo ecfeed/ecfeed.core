@@ -48,7 +48,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testGetParameter(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
@@ -72,7 +72,7 @@ public class ChoiceNodeTest{
 	@Test
 	public void testLevel(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("name", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p11 = new ChoiceNode("p11", "0", null);
 		ChoiceNode p111 = new ChoiceNode("p111", "0", null);
@@ -397,8 +397,8 @@ public class ChoiceNodeTest{
 	@Test
 	public void derandomizeNumberTest(){
 
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						"par1", 
 						"int",
 						"0",
@@ -427,8 +427,8 @@ public class ChoiceNodeTest{
 	@Test
 	public void derandomizeTextTest(){
 
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						"par1", 
 						"String",
 						"0",

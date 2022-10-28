@@ -86,8 +86,8 @@ public class ChoiceNodeHelperTest {
 	@Test
 	public void createSignatureTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"par1", "int", "0", true, null);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("choice_1", "MAX_VALUE", null);
@@ -115,8 +115,8 @@ public class ChoiceNodeHelperTest {
 	@Test
 	public void createTestDataLabelTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"par1", "int", "0", true, null);
 
 		ChoiceNode choice = new ChoiceNode("choice_1", "MAX_VALUE", null);
@@ -137,8 +137,8 @@ public class ChoiceNodeHelperTest {
 	@Test
 	public void getChoiceNamesTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"par1", "int", "0", true, null);
 
 		ChoiceNode choice1 = new ChoiceNode("choice_1", "0", null);

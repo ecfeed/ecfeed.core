@@ -159,7 +159,7 @@ public class ModelSerializerTest {
 
 		ChoiceNode choice = new ChoiceNode("choice", "0", null);
 
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
 		parameter.addChoice(choice);
 
 		MethodNode methodNode = new MethodNode("testMethod1", null);

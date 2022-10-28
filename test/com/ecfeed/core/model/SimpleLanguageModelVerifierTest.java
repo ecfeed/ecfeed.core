@@ -54,16 +54,16 @@ public class SimpleLanguageModelVerifierTest {
 		classNode.addMethod(methodNode1);
 		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 
-		MethodParameterNode methodParameterNode11 =
-				new MethodParameterNode("Param1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode11 =
+				new BasicParameterNode("Param1", "int", "0", false, null);
 		methodNode1.addParameter(methodParameterNode11);
 
 		MethodNode methodNode2 = new MethodNode("Method_1", null);
 		classNode.addMethod(methodNode2);
 		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 
-		MethodParameterNode methodParameterNode21 =
-				new MethodParameterNode("Param1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode21 =
+				new BasicParameterNode("Param1", "int", "0", false, null);
 		methodNode2.addParameter(methodParameterNode21);
 		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
 
@@ -151,8 +151,8 @@ public class SimpleLanguageModelVerifierTest {
 
         // invalid method parameter name
 
-        MethodParameterNode methodParameterNodeErr =
-                new MethodParameterNode("___","int", "0", false, null);
+        BasicParameterNode methodParameterNodeErr =
+                new BasicParameterNode("___","int", "0", false, null);
         methodNodeOk.addParameter(methodParameterNodeErr);
 
 		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
@@ -164,8 +164,8 @@ public class SimpleLanguageModelVerifierTest {
 
         methodNodeOk.removeParameter(methodParameterNodeErr);
 
-        MethodParameterNode methodParameterNodeOk =
-                new MethodParameterNode("par","int", "0", false, null);
+        BasicParameterNode methodParameterNodeOk =
+                new BasicParameterNode("par","int", "0", false, null);
         methodNodeOk.addParameter(methodParameterNodeOk);
 
         assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
