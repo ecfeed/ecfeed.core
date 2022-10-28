@@ -11,14 +11,14 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.GlobalParametersParentNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 
 	public GenericOperationRemoveGlobalParameter(
-			GlobalParametersParentNode target, 
+			IParametersParentNode target, 
 			GlobalParameterNode parameter,
 			IExtLanguageManager extLanguageManager) {
 		
@@ -32,7 +32,7 @@ public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 	}
 
 	public GenericOperationRemoveGlobalParameter(
-			GlobalParametersParentNode target, 
+			IParametersParentNode target, 
 			GlobalParameterNode parameter, 
 			boolean ignoreDuplicates,
 			IExtLanguageManager extLanguageManager) {

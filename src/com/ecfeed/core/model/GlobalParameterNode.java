@@ -48,7 +48,7 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	@Override
 	public List<MethodNode> getMethods() {
 
-		GlobalParametersParentNode globalParametersParentNode = getParametersParent();
+		IParametersParentNode globalParametersParentNode = getParametersParent();
 
 		if (globalParametersParentNode == null) {
 			return null;
@@ -107,8 +107,8 @@ public class GlobalParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
-	public GlobalParametersParentNode getParametersParent(){
-		return (GlobalParametersParentNode)getParent();
+	public IParametersParentNode getParametersParent(){
+		return (IParametersParentNode)getParent();
 	}
 
 	@Override
