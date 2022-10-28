@@ -86,7 +86,7 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	@Override
 	public int getChoiceCount() {
 
-		return fChoices.size();
+		return getChoices().size();
 	}
 
 	public List<ChoiceNode> getChoicesWithCopies() { // TODO MO-RE do we need this ?
