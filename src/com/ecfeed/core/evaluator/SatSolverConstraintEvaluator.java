@@ -105,8 +105,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		sanitizeRelationStatementsWithRelation();
 
 		createInputToSanitizedMapping();
-
-		createSanitizedAndAtomicMappings();
+		createSanitizedToAtomicMapping();
 
 		parseConstraintsToSat();
 
@@ -158,45 +157,48 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 // ------------------------------------------------------------------------------------
 
+	/**
+	 * Adjust relation choices. it is only needed for numerical comparison.
+	 */
 	private void sanitizeRelationStatementsWithRelation() {
-		boolean change = true;
+		boolean change = true;		// A choice value has been adjusted.
 
 		while (change) {
 			change = false;
 
 			for (RelationStatement relationStatement : fRelationStatements) {
-				if (sanitizeValuesWithRelation(relationStatement)) {
+				if (sanitizeValues(relationStatement)) {
 					change = true;
 				}
 			}
 		}
 	}
 
-	private boolean sanitizeValuesWithRelation(RelationStatement relation) {
+	private boolean sanitizeValues(RelationStatement relation) {
 		IStatementCondition condition = relation.getCondition();
 
+// Labels are not numerical. This is the simplest case, we can return from the function.
 		if (condition instanceof LabelCondition) {
-			return sanitizeValueWithRelationLabel();
+			return false;
 		}
 
 		MethodParameterNode leftParameter = relation.getLeftParameter();
 
+// The parameter is not numerical, no adjustment is needed. We can return from the function.
 		if (!isNumericalType(leftParameter)) {
 			return false;
 		}
 
-		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
-
 		if (condition instanceof ParameterCondition) {
-			return sanitizeValueWithRelationParameter(condition, leftParameter, leftParameterChoices);
+			return sanitizeWithParameterCondition(condition, leftParameter);
 		}
 
 		if (condition instanceof ValueCondition) {
-			return sanitizeValueWithRelationValueChoice(condition, leftParameter, leftParameterChoices);
+			return sanitizeWithValueCondition(condition, leftParameter);
 		}
 
 		if (condition instanceof ChoiceCondition) {
-			return sanitizeValueWithRelationValueChoice(condition, leftParameter, leftParameterChoices);
+			return sanitizeWithChoiceCondition(condition, leftParameter);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid condition type.");
@@ -204,13 +206,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		return true;
 	}
 
-	private boolean sanitizeValueWithRelationLabel() {
-
-		return false;
-	}
-
-	private boolean sanitizeValueWithRelationParameter(IStatementCondition condition, MethodParameterNode leftParameter, List<ChoiceNode> leftParameterChoices) {
+	private boolean sanitizeWithParameterCondition(IStatementCondition condition, MethodParameterNode leftParameter) {
 		MethodParameterNode rightParameter = ((ParameterCondition) condition).getRightParameterNode();
+
+		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
 		List<ChoiceNode> rightParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(rightParameter));
 
 		boolean change = false;
@@ -239,18 +238,26 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		return change;
 	}
 
-	private boolean sanitizeValueWithRelationValueChoice(IStatementCondition condition, MethodParameterNode leftParameter, List<ChoiceNode> leftParameterChoices) {
-		ChoiceNode choice;
+	private boolean sanitizeWithValueCondition(IStatementCondition condition, MethodParameterNode leftParameter) {
+		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
 
-		if (condition instanceof ValueCondition) {
-			String value = ((ValueCondition) condition).getRightValue();
+		String value = ((ValueCondition) condition).getRightValue();
 
-			choice = leftParameterChoices.get(0).makeCloneUnlink();
-			choice.setRandomizedValue(false);
-			choice.setValueString(value);
-		} else {
-			choice = ((ChoiceCondition) condition).getRightChoice();
-		}
+		ChoiceNode choice = leftParameterChoices.get(0).makeCloneUnlink();
+		choice.setRandomizedValue(false);
+		choice.setValueString(value);
+
+		Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(leftParameterChoices, choice);
+
+		fParameterChoices.putSanitized(leftParameter, new HashSet<>(changeResult.getSecond()));
+
+		return changeResult.getFirst();
+	}
+
+	private boolean sanitizeWithChoiceCondition(IStatementCondition condition, MethodParameterNode leftParameter) {
+		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
+
+		ChoiceNode choice = ((ChoiceCondition) condition).getRightChoice();
 
 		Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(leftParameterChoices, choice);
 
@@ -272,48 +279,52 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			choiceEnd = choice;
 		}
 
+// Validate choices against the lower boundary of the referenced choice.
 		Pair<Boolean, List<ChoiceNode>> changeResultLeft = splitListByValue(parameterChoices, choiceStart, TypeOfEndpoint.LEFT_ENDPOINT);
+// Validate choices against the upper boundary of the referenced choice.
 		Pair<Boolean, List<ChoiceNode>> changeResultRight =	splitListByValue(changeResultLeft.getSecond(), choiceEnd, TypeOfEndpoint.RIGHT_ENDPOINT);
 
 		return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
 	}
 
 	private Pair<Boolean, List<ChoiceNode>> splitListByValue(List<ChoiceNode> parameterChoices, ChoiceNode choiceRef, TypeOfEndpoint type) {
+// A list of corrected choices.
 		List<ChoiceNode> updatedChoices = new ArrayList<>();
 		boolean change = false;
 
 		for (ChoiceNode choice : parameterChoices) {
-
+// The choice is not randomized, no adjustment is necessary.
 			if (!choice.isRandomizedValue()) {
 				updatedChoices.add(choice);
 			} else {
+// Divide the choice into two boundaries (lower, upper).
 				Pair<ChoiceNode, ChoiceNode> choicePair = ChoiceNodeHelper.rangeSplit(choice);
 				ChoiceNode choiceStart = choicePair.getFirst();
 				ChoiceNode choiceEnd = choicePair.getSecond();
 
-				ChoiceNode val1 = choiceStart.makeCloneUnlink();
-				ChoiceNode val2 = choiceEnd.makeCloneUnlink();
+				ChoiceNode choiceStartMutable = choiceStart.makeCloneUnlink();
+				ChoiceNode choiceEndMutable = choiceEnd.makeCloneUnlink();
 
-				choiceUpdateValueString(choiceRef, val1, val2);
+				choiceUpdateValueString(choiceRef, choiceStartMutable, choiceEndMutable);
 
-				choiceRound(choiceStart, choiceRef, val1, val2);
-				choiceShiftEpsilon(val1, val2, type);
+				choiceRound(choiceStart, choiceRef, choiceStartMutable, choiceEndMutable);
+				choiceShiftEpsilon(choiceStartMutable, choiceEndMutable, type);
 
-				if (fChoiceComparator.compare(val1, val2) == 0) {
+				if (fChoiceComparator.compare(choiceStartMutable, choiceEndMutable) == 0) {
 					updatedChoices.add(choice);
 					continue;
 				}
 
-				int cmp1 = fChoiceComparator.compare(choiceStart, val1);
-				int cmp2 = fChoiceComparator.compare(val2, choiceEnd);
+				int cmp1 = fChoiceComparator.compare(choiceStart, choiceStartMutable);
+				int cmp2 = fChoiceComparator.compare(choiceEndMutable, choiceEnd);
 
 				if (cmp1 > 0 || cmp2 > 0) {
 					updatedChoices.add(choice);
 					continue;
 				}
 
-				ChoiceNode it1 = cmp1 < 0 ? ChoiceNodeHelper.toRangeFromFirst(choiceStart, val1) : choiceStart;
-				ChoiceNode it2 = cmp2 < 0 ? ChoiceNodeHelper.toRangeFromSecond(val2, choiceEnd) : choiceEnd;
+				ChoiceNode it1 = cmp1 < 0 ? ChoiceNodeHelper.toRangeFromFirst(choiceStart, choiceStartMutable) : choiceStart;
+				ChoiceNode it2 = cmp2 < 0 ? ChoiceNodeHelper.toRangeFromSecond(choiceEndMutable, choiceEnd) : choiceEnd;
 
 				change = true;
 
@@ -351,11 +362,12 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		return false;
 	}
 
-	private void choiceRound(ChoiceNode choiceStart, ChoiceNode choiceRef, ChoiceNode choice1, ChoiceNode choice2) {
+	private void choiceRound(ChoiceNode choiceStart, ChoiceNode choiceRef, ChoiceNode choiceStartMutable, ChoiceNode choiceEndMutable) {
 
+// We cannot compare integer to float directly. Here, we change float to integer and diminish the gap between both values.
 		if (isIntegerType(choiceStart.getParameter()) && isFloatType(choiceRef.getParameter())) {
-			ChoiceNodeHelper.roundValueDown(choice1);
-			ChoiceNodeHelper.roundValueUp(choice2);
+			ChoiceNodeHelper.roundValueDown(choiceStartMutable);
+			ChoiceNodeHelper.roundValueUp(choiceEndMutable);
 		}
 	}
 
@@ -385,54 +397,172 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 			fChoiceMappings.putInputToSanitized(method);
 
-			for (ChoiceNode sanitizedChoice : fParameterChoices.getSanitized(method)) {
+			for (ChoiceNode choiceSanitized : fParameterChoices.getSanitized(method)) {
 
-				ChoiceNode inputChoice = fChoiceMappings.getSanitizedToInput(sanitizedChoice);
+				ChoiceNode choiceInput = fChoiceMappings.getSanitizedToInput(choiceSanitized);
 
-				fChoiceMappings.putInputToSanitized(method, inputChoice, sanitizedChoice);
+				fChoiceMappings.putInputToSanitized(method, choiceInput, choiceSanitized);
 			}
 		}
 	}
 
-// ------------------------------------------------------------------------------------
+	private void createSanitizedToAtomicMapping() {
 
-	private void createSanitizedAndAtomicMappings() {
+		for (MethodParameterNode parameter : fParameterChoices.getKeySetSanitized()) {
 
-		for (MethodParameterNode methodParameterNode : fParameterChoices.getKeySetSanitized()) {
+			fParameterChoices.putAtomic(parameter);
 
-			// TODO - why do we need an empty set ?
-			fParameterChoices.putAtomic(methodParameterNode, new HashSet<>());
-
-			createSanitizedAndAtomicMappingsForParam(methodParameterNode);
+			createSanitizedToAtomicMappings(parameter);
 		}
 	}
 
-	private void createSanitizedAndAtomicMappingsForParam(MethodParameterNode methodParameterNode) {
+	private void createSanitizedToAtomicMappings(MethodParameterNode parameter) {
 
 		//build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
-		for (ChoiceNode sanitizedChoiceNode : fParameterChoices.getSanitized(methodParameterNode)) {
+		for (ChoiceNode choiceSanitized : fParameterChoices.getSanitized(parameter)) {
 
-			if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), sanitizedChoiceNode)) {
+			if (isRandomizedNumericalType(parameter, choiceSanitized)) {
 
-				List<ChoiceNode> interleavedChoices =
-						ChoiceNodeHelper.getInterleavedValues(
-								sanitizedChoiceNode, fParameterChoices.getSizeSanitized());
+				List<ChoiceNode> interleavedChoices = ChoiceNodeHelper.getInterleavedValues(choiceSanitized, fParameterChoices.getSizeSanitized());
 
-				fParameterChoices.getAtomic(methodParameterNode).addAll(interleavedChoices);
+				fParameterChoices.putAtomic(parameter, interleavedChoices);
 
-				for (ChoiceNode interleavedChoiceNode : interleavedChoices) {
-					fChoiceMappings.putSanitizedToAtomic(sanitizedChoiceNode, interleavedChoiceNode);
+				for (ChoiceNode interleavedChoice : interleavedChoices) {
+					fChoiceMappings.putSanitizedToAtomic(choiceSanitized, interleavedChoice);
 				}
 
 			} else {
 
-				fParameterChoices.getAtomic(methodParameterNode).add(sanitizedChoiceNode);
-				fChoiceMappings.putSanitizedToAtomic(sanitizedChoiceNode, sanitizedChoiceNode);
+				fParameterChoices.putAtomic(parameter, choiceSanitized);
+				fChoiceMappings.putSanitizedToAtomic(choiceSanitized, choiceSanitized);
 			}
 		}
 	}
 
+	private boolean isRandomizedNumericalType(AbstractParameterNode parameter, ChoiceNode choice) {
 
+		return choice.isRandomizedValue() && isNumericalType(parameter);
+	}
+
+// ------------------------------------------------------------------------------------
+
+	private void parseConstraintsToSat() {
+
+		for (Constraint constraint : fConstraints) {
+			parseConstraintToSat(constraint);
+		}
+	}
+
+	private void parseConstraintToSat(Constraint constraint) {
+		AbstractStatement precondition = constraint.getPrecondition();
+		AbstractStatement postcondition = constraint.getPostcondition();
+
+		if (constraint.getType() == ConstraintType.ASSIGNMENT) {
+
+			addAssignmentStatementsToAssignmentsTable(precondition, postcondition);
+
+			return;
+		}
+
+		if (postcondition instanceof ExpectedValueStatement) {
+
+			addExpectedValueStatementToAssignmentsTable(precondition, (ExpectedValueStatement) postcondition);
+
+			return;
+		}
+
+		addFilteringConstraintToSatSolver(precondition, postcondition);
+	}
+
+	private void addAssignmentStatementsToAssignmentsTable(AbstractStatement precondition, AbstractStatement postcondition) {
+
+		if (!(postcondition instanceof StatementArray)) {
+			return;
+		}
+
+		StatementArray statementArray = (StatementArray)postcondition;
+		List<AbstractStatement> abstractStatements = statementArray.getChildren();
+
+		for (AbstractStatement abstractStatement : abstractStatements) {
+
+			if (!(abstractStatement instanceof AssignmentStatement)) {
+				continue;
+			}
+
+			AssignmentStatement assignmentStatement = (AssignmentStatement) abstractStatement;
+
+			addOneStatementToAssignmentsTable(precondition, assignmentStatement);
+		}
+	}
+
+	private void addOneStatementToAssignmentsTable(AbstractStatement precondition, AssignmentStatement assignmentStatement) {
+
+		try {
+			Integer preconditionId =
+					(Integer) precondition.accept(
+							new ParseConstraintToSATVisitor(
+									fParameters,
+									fSat4Solver,
+									fParameterChoices,
+									fChoiceMappings,
+									fChoiceToSolverIdMappings));
+
+			fExpectedValueAssignmentsData.add(new Pair<>(preconditionId, assignmentStatement));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void addExpectedValueStatementToAssignmentsTable(AbstractStatement precondition, ExpectedValueStatement expectedValueStatement) {
+
+		try {
+			Integer preconditionId =
+					(Integer) precondition.accept(
+							new ParseConstraintToSATVisitor(
+									fParameters,
+									fSat4Solver,
+									fParameterChoices,
+									fChoiceMappings,
+									fChoiceToSolverIdMappings));
+
+			fOldExpectedValueConstraintsData.add(new Pair<>(preconditionId, expectedValueStatement));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void addFilteringConstraintToSatSolver(AbstractStatement precondition, AbstractStatement postcondition) {
+
+		Integer preconditionId = null;
+		Integer postconditionId = null;
+
+		try {
+			preconditionId = (Integer) precondition.accept(
+					new ParseConstraintToSATVisitor(
+							fParameters,
+							fSat4Solver,
+							fParameterChoices,
+							fChoiceMappings,
+							fChoiceToSolverIdMappings));
+
+			postconditionId =
+					(Integer) postcondition.accept(
+							new ParseConstraintToSATVisitor(
+									fParameters,
+									fSat4Solver,
+									fParameterChoices,
+									fChoiceMappings,
+									fChoiceToSolverIdMappings));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		fSat4Solver.addSat4Clause(new int[]{-preconditionId, postconditionId});
+	}
+
+// ------------------------------------------------------------------------------------
 
 	@Override
 	public void initialize(List<List<ChoiceNode>> input) {
@@ -569,136 +699,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		return testCaseChoices;
 	}
-
-
-	private boolean isRandomizedExtIntOrFloat(String methodParameterType, ChoiceNode choiceNode) {
-
-		return choiceNode.isRandomizedValue() &&
-				(JavaLanguageHelper.isExtendedIntTypeName(methodParameterType)
-						|| JavaLanguageHelper.isFloatingPointTypeName(methodParameterType));
-	}
-
-	private void parseConstraintsToSat() {
-
-		for (Constraint constraint : fConstraints) {
-			parseConstraintToSat(constraint);
-		}
-	}
-
-	private void parseConstraintToSat(Constraint constraint) {
-
-		if (constraint == null) {
-			return;
-		}
-
-		AbstractStatement precondition = constraint.getPrecondition();
-		AbstractStatement postcondition = constraint.getPostcondition();
-
-		if (constraint.getType() == ConstraintType.ASSIGNMENT) {
-
-			addAssignmentStatementsToAssignmentsTable(precondition, postcondition);
-
-			return;
-		}
-
-		if (postcondition instanceof ExpectedValueStatement) {
-
-			addExpectedValueStatementToAssignmentsTable(precondition, (ExpectedValueStatement) postcondition);
-
-			return;
-		}
-
-		addFilteringConstraintToSatSolver(precondition, postcondition);
-	}
-
-	private void addAssignmentStatementsToAssignmentsTable(AbstractStatement precondition, AbstractStatement postcondition) {
-
-		if (!(postcondition instanceof StatementArray)) {
-			return;
-		}
-
-		StatementArray statementArray = (StatementArray)postcondition;
-		List<AbstractStatement> abstractStatements = statementArray.getChildren();
-
-		for (AbstractStatement abstractStatement : abstractStatements) {
-
-			if (!(abstractStatement instanceof AssignmentStatement)) {
-				continue;
-			}
-
-			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
-
-			addOneStatementToAssignmentsTable(precondition, assignmentStatement);
-		}
-	}
-
-	private void addOneStatementToAssignmentsTable(AbstractStatement precondition, AssignmentStatement assignmentStatement) {
-
-		try {
-			Integer preconditionId =
-					(Integer) precondition.accept(
-							new ParseConstraintToSATVisitor(
-									fParameters,
-									fSat4Solver,
-									fParameterChoices,
-									fChoiceMappings,
-									fChoiceToSolverIdMappings));
-
-			fExpectedValueAssignmentsData.add(new Pair<>(preconditionId, assignmentStatement));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void addExpectedValueStatementToAssignmentsTable(AbstractStatement precondition, ExpectedValueStatement expectedValueStatement) {
-
-		try {
-			Integer preconditionId =
-					(Integer) precondition.accept(
-							new ParseConstraintToSATVisitor(
-									fParameters,
-									fSat4Solver,
-									fParameterChoices,
-									fChoiceMappings,
-									fChoiceToSolverIdMappings));
-
-			fOldExpectedValueConstraintsData.add(new Pair<>(preconditionId, expectedValueStatement));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void addFilteringConstraintToSatSolver(AbstractStatement precondition, AbstractStatement postcondition) {
-
-		Integer preconditionId = null;
-		Integer postconditionId = null;
-
-		try {
-			preconditionId = (Integer) precondition.accept(
-					new ParseConstraintToSATVisitor(
-							fParameters,
-							fSat4Solver,
-							fParameterChoices,
-							fChoiceMappings,
-							fChoiceToSolverIdMappings));
-
-			postconditionId =
-					(Integer) postcondition.accept(
-							new ParseConstraintToSATVisitor(
-									fParameters,
-									fSat4Solver,
-									fParameterChoices,
-									fChoiceMappings,
-									fChoiceToSolverIdMappings));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		fSat4Solver.addSat4Clause(new int[]{-preconditionId, postconditionId});
-	}
-
+	
 	private List<Integer> createSolverAssumptions(List<ChoiceNode> currentArgumentAssignments) {
 
 		if (!fSat4Solver.hasConstraints()) {

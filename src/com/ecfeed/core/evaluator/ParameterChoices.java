@@ -42,9 +42,19 @@ public class ParameterChoices {
         fSanitized.put(parameter, choices);
     }
 
-    public void putAtomic(MethodParameterNode parameter, Set<ChoiceNode> choices) {
+    public void putAtomic(MethodParameterNode parameter) {
 
-        fAtomic.put(parameter, choices);
+        fAtomic.put(parameter, new HashSet<>());
+    }
+
+    public void putAtomic(MethodParameterNode parameter, ChoiceNode choice) {
+
+        fAtomic.get(parameter).add(choice);
+    }
+
+    public void putAtomic(MethodParameterNode parameter, Collection<ChoiceNode> choices) {
+
+        fAtomic.get(parameter).addAll(choices);
     }
 
 // ------------------------------------------------------------------------------------
