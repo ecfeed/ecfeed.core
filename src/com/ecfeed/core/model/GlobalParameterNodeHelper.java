@@ -23,7 +23,7 @@ public class GlobalParameterNodeHelper {
 
 	public static String checkLinkedParameters(GlobalParameterNode globalParameterNode) {
 
-		List<MethodParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
+		List<BasicParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
 
 		if (linkedMethodMethodParameters == null) {
 			return null;
@@ -33,7 +33,7 @@ public class GlobalParameterNodeHelper {
 			return null;
 		}
 
-		MethodParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
+		BasicParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
 
 		String errorMessage = 
 				"Parameter " + firstMethodParameterNode.getName() + 
@@ -73,7 +73,7 @@ public class GlobalParameterNodeHelper {
 		return choiceNode;
 	}
 
-	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}

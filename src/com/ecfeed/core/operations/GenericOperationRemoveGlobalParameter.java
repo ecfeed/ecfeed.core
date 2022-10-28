@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationRemoveGlobalParameter extends BulkOperation {
@@ -24,7 +24,7 @@ public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 		
 		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguageManager);
 		
-		for(MethodParameterNode linker : parameter.getLinkedMethodParameters()){
+		for(BasicParameterNode linker : parameter.getLinkedMethodParameters()){
 			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, extLanguageManager));
 		}
 		
@@ -39,7 +39,7 @@ public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 		
 		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguageManager);
 		
-		for(MethodParameterNode linker : parameter.getLinkedMethodParameters()){
+		for(BasicParameterNode linker : parameter.getLinkedMethodParameters()){
 			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates, extLanguageManager));
 		}
 		

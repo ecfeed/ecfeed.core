@@ -132,21 +132,21 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public boolean mentions(MethodParameterNode parameter) {
+	public boolean mentions(BasicParameterNode parameter) {
 
 		return fConstraint.mentions(parameter);
 	}
 
 	public boolean mentions(AbstractParameterNode parameter) {
 
-		if (parameter instanceof MethodParameterNode) {
-			MethodParameterNode param = (MethodParameterNode)parameter;
+		if (parameter instanceof BasicParameterNode) {
+			BasicParameterNode param = (BasicParameterNode)parameter;
 			return fConstraint.mentions(param);
 		}
 
 		if (parameter instanceof GlobalParameterNode) {
 			GlobalParameterNode global = (GlobalParameterNode)parameter;
-			for (MethodParameterNode methodParam: global.getLinkedMethodParameters()) {
+			for (BasicParameterNode methodParam: global.getLinkedMethodParameters()) {
 				return fConstraint.mentions(methodParam);
 			}
 		}
@@ -154,7 +154,7 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public boolean mentions(MethodParameterNode parameter, String label) {
+	public boolean mentions(BasicParameterNode parameter, String label) {
 
 		return fConstraint.mentions(parameter, label);
 	}
@@ -244,7 +244,7 @@ public class ConstraintNode extends AbstractNode {
 			List<AbstractParameterNode> methodParameters) {
 
 		for (AbstractParameterNode param : methodParameters) {
-			MethodParameterNode methodParam = (MethodParameterNode) param;
+			BasicParameterNode methodParam = (BasicParameterNode) param;
 
 			if (methodParam.isLinked() && methodParam.getLinkToGlobalParameter().equals(argParameter)) {
 				return true;
@@ -311,11 +311,11 @@ public class ConstraintNode extends AbstractNode {
 
 	private static boolean isMethodParameterNodeExpected(AbstractParameterNode parameter) {
 
-		if (!(parameter instanceof MethodParameterNode)) {
+		if (!(parameter instanceof BasicParameterNode)) {
 			return false;
 		}
 
-		if (((MethodParameterNode)parameter).isExpected()) {
+		if (((BasicParameterNode)parameter).isExpected()) {
 			return true;
 		}
 
@@ -324,7 +324,7 @@ public class ConstraintNode extends AbstractNode {
 
 	private boolean constraintsConsistent() {
 
-		for (MethodParameterNode parameter : getMethodNode().getMethodParameters()) {
+		for (BasicParameterNode parameter : getMethodNode().getMethodParameters()) {
 			if (!isConsistentForParameter(parameter)) {
 				return false;
 			}
@@ -332,7 +332,7 @@ public class ConstraintNode extends AbstractNode {
 		return true;
 	}
 
-	private boolean isConsistentForParameter(MethodParameterNode parameter) {
+	private boolean isConsistentForParameter(BasicParameterNode parameter) {
 
 		String typeName = parameter.getType();
 
@@ -367,7 +367,7 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	private boolean checkLabels(MethodParameterNode parameter) {
+	private boolean checkLabels(BasicParameterNode parameter) {
 
 		for (String label : getConstraint().getReferencedLabels(parameter)) {
 			if (!parameter.getLeafLabels().contains(label)) {
@@ -386,7 +386,7 @@ public class ConstraintNode extends AbstractNode {
 		return -1;
 	}
 
-	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
+	boolean mentionsChoiceOfParameter(BasicParameterNode methodParameter) {
 
 		return fConstraint.mentionsChoiceOfParameter(methodParameter);
 	}

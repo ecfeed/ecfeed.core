@@ -26,7 +26,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -58,7 +58,7 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return implementationStatus(node);
 		}
 
@@ -145,12 +145,12 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 				continue;
 			}
 			List<String> typeNames = getArgTypes(m);
-			List<MethodParameterNode> modelParameters = methodModel.getMethodParameters();
+			List<BasicParameterNode> modelParameters = methodModel.getMethodParameters();
 			if(typeNames.size() != methodModel.getParameters().size()){
 				continue;
 			}
 			List<String> modelTypeNames = new ArrayList<>();
-			for(MethodParameterNode parameter : modelParameters){
+			for(BasicParameterNode parameter : modelParameters){
 				modelTypeNames.add(parameter.getType());
 			}
 			if(modelTypeNames.equals(typeNames) == false){

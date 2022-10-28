@@ -135,7 +135,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -171,7 +171,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 
 		if (fParentRelationStatement.getLeftParameter() == methodParameterNode) {
 			return fRightLabel;

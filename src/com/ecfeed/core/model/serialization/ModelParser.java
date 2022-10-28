@@ -23,7 +23,7 @@ import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
@@ -161,7 +161,7 @@ public class ModelParser {
 		}
 	}
 
-	public MethodParameterNode parseMethodParameter(
+	public BasicParameterNode parseMethodParameter(
 			InputStream istream, MethodNode method, ListOfStrings outErrorList) throws ParserException {
 		
 		try {

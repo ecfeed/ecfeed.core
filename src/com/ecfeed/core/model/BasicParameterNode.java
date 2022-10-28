@@ -18,7 +18,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class MethodParameterNode extends AbstractParameterNode {
+public class BasicParameterNode extends AbstractParameterNode {
 
 	private boolean fExpected;
 	private String fDefaultValue;
@@ -27,7 +27,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 	private MethodNode fLinkToMethod;
 	private List<ChoiceNode> fChoicesCopy;
 
-	public MethodParameterNode(
+	public BasicParameterNode(
 			String name,
 			String type,
 			String defaultValue,
@@ -46,7 +46,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		fLinkToGlobalParameter = link;
 	}
 
-	public MethodParameterNode(
+	public BasicParameterNode(
 			String name,
 			String type,
 			String defaultValue,
@@ -56,7 +56,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		this(name, type, defaultValue, expected, false, null, modelChangeRegistrator);
 	}
 
-	public MethodParameterNode(
+	public BasicParameterNode(
 			String name,
 			String type,
 			String defaultValue,
@@ -65,7 +65,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		this(name, type, defaultValue, expected, null);
 	}
 	
-	public MethodParameterNode(
+	public BasicParameterNode(
 			AbstractParameterNode source,
 			String defaultValue, 
 			boolean expected, 
@@ -80,7 +80,7 @@ public class MethodParameterNode extends AbstractParameterNode {
 		addChoices(source.getChoices());
 	}
 
-	public MethodParameterNode(AbstractParameterNode source,
+	public BasicParameterNode(AbstractParameterNode source,
 			String defaultValue, boolean expected) {
 		this(source, defaultValue, expected, false, null);
 	}
@@ -100,9 +100,9 @@ public class MethodParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
-	public MethodParameterNode makeClone() {
-		MethodParameterNode copy = 
-				new MethodParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
+	public BasicParameterNode makeClone() {
+		BasicParameterNode copy = 
+				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
 						);
 
 		copy.fLinked = fLinked;
@@ -310,10 +310,10 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 	@Override
 	public boolean isMatch(IAbstractNode node) {
-		if (node instanceof MethodParameterNode == false) {
+		if (node instanceof BasicParameterNode == false) {
 			return false;
 		}
-		MethodParameterNode comparedParameter = (MethodParameterNode) node;
+		BasicParameterNode comparedParameter = (BasicParameterNode) node;
 
 		if (getType().equals(comparedParameter.getType()) == false) {
 			return false;

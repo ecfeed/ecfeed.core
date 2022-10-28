@@ -16,7 +16,7 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.IParameterConversionItemPart;
@@ -53,9 +53,9 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
 
 
-		if (abstractParameterNode instanceof MethodParameterNode) {
+		if (abstractParameterNode instanceof BasicParameterNode) {
 
-			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
 
 			choiceNode.renameLabel(currentLabel, newLabel);
 
@@ -84,7 +84,7 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 
 	private String checkLinkedParameters(GlobalParameterNode globalParameterNode) {
 
-		List<MethodParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
+		List<BasicParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
 
 		if (linkedMethodMethodParameters == null) {
 			return null;
@@ -94,7 +94,7 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 			return null;
 		}
 
-		MethodParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
+		BasicParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
 
 		String errorMessage = 
 				"Parameter " + firstMethodParameterNode.getName() + 

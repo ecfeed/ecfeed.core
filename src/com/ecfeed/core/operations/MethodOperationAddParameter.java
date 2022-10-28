@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -27,12 +27,12 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	List<TestCaseNode> fRemovedTestCases;
 	MethodNode fMethodNode;
-	MethodParameterNode fMethodParameterNode;
+	BasicParameterNode fMethodParameterNode;
 	private int fNewIndex;
 
 	public MethodOperationAddParameter(
 			MethodNode methodNode, 
-			MethodParameterNode methodParameterNode, 
+			BasicParameterNode methodParameterNode, 
 			int index,
 			IExtLanguageManager extLanguageManager) {
 
@@ -44,7 +44,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, MethodParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	public MethodOperationAddParameter(MethodNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		this(target, parameter, -1, extLanguageManager);
 	}
 

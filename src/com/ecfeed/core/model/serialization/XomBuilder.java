@@ -51,7 +51,7 @@ import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -134,7 +134,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		Element targetMethodElement = createTargetMethodElement(methodNode);
 
-		for (MethodParameterNode parameter : methodNode.getMethodParameters()) {
+		for (BasicParameterNode parameter : methodNode.getMethodParameters()) {
 
 			if (shouldSerializeNode(parameter)) {
 				targetMethodElement.appendChild((Element)parameter.accept(this));
@@ -159,7 +159,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	@Override
-	public Object visit(MethodParameterNode node)  throws Exception {
+	public Object visit(BasicParameterNode node)  throws Exception {
 
 		Element targetParameterElement = createTargetMethodParameterElement(node); 
 
@@ -284,7 +284,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetClassElement;
 	}
 
-	private Element createTargetMethodParameterElement(MethodParameterNode node) {
+	private Element createTargetMethodParameterElement(BasicParameterNode node) {
 
 		Element targetParameterElement = createAbstractElement(getParameterNodeName(), node);
 
@@ -483,7 +483,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		return null;
 	}
 
-	private void appendTypeComments(Element element, MethodParameterNode node) {
+	private void appendTypeComments(Element element, BasicParameterNode node) {
 
 		if (node.isLinked() == false) {
 			appendTypeComments(element, (AbstractParameterNode)node);

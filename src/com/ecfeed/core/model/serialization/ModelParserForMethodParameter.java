@@ -22,14 +22,14 @@ import java.util.Optional;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
 public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
 
-	public Optional<MethodParameterNode> parseMethodParameter(
+	public Optional<BasicParameterNode> parseMethodParameter(
 			Element parameterElement, MethodNode method, ListOfStrings errorList) {
 
 		String name, type;
@@ -54,8 +54,8 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			return Optional.empty();
 		}
 
-		MethodParameterNode targetMethodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode targetMethodParameterNode = 
+				new BasicParameterNode(
 						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
 						);
 

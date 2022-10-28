@@ -64,12 +64,12 @@ public class ModelComparator {
 		}
 	}
 
-	public static void compareParameters(MethodParameterNode parameter1, MethodParameterNode parameter2) {
+	public static void compareParameters(BasicParameterNode parameter1, BasicParameterNode parameter2) {
 		compareNames(parameter1.getName(), parameter2.getName());
 		compareNames(parameter1.getType(), parameter2.getType());
 		compareSizes(parameter1.getChoices(), parameter2.getChoices());
-		if(parameter1 instanceof MethodParameterNode || parameter2 instanceof MethodParameterNode){
-			if((parameter1 instanceof MethodParameterNode && parameter2 instanceof MethodParameterNode) == false){
+		if(parameter1 instanceof BasicParameterNode || parameter2 instanceof BasicParameterNode){
+			if((parameter1 instanceof BasicParameterNode && parameter2 instanceof BasicParameterNode) == false){
 				ExceptionHelper.reportRuntimeException("Either both parameters must be expected value or none");
 			}
 		}
@@ -89,7 +89,7 @@ public class ModelComparator {
 		}
 	}
 
-	public static void compareMethodParameters(MethodParameterNode methodParameterNode1, MethodParameterNode methodParameterNode2) {
+	public static void compareMethodParameters(BasicParameterNode methodParameterNode1, BasicParameterNode methodParameterNode2) {
 
 		compareNames(methodParameterNode1.getName(), methodParameterNode2.getName());
 
@@ -214,8 +214,8 @@ public class ModelComparator {
 			return;
 		}
 
-		if (condition1 instanceof MethodParameterNode && condition2 instanceof MethodParameterNode) {
-			compareMethodParameters((MethodParameterNode)condition1, (MethodParameterNode)condition2);
+		if (condition1 instanceof BasicParameterNode && condition2 instanceof BasicParameterNode) {
+			compareMethodParameters((BasicParameterNode)condition1, (BasicParameterNode)condition2);
 			return;
 
 		}
@@ -254,7 +254,7 @@ public class ModelComparator {
 			ChoiceNode testValue1 = testCase1.getTestData().get(i);
 			ChoiceNode testValue2 = testCase2.getTestData().get(i);
 
-			if(testValue1.getParameter() instanceof MethodParameterNode){
+			if(testValue1.getParameter() instanceof BasicParameterNode){
 				compareValues(testValue1.getValueString(), testValue2.getValueString());
 			}
 			else{

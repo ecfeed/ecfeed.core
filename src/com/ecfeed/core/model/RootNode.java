@@ -47,7 +47,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public int getMaxChildIndex(IAbstractNode potentialChild){
 		if(potentialChild instanceof AbstractParameterNode) return getParameters().size();
-		if(potentialChild instanceof MethodParameterNode) return getParameters().size();
+		if(potentialChild instanceof BasicParameterNode) return getParameters().size();
 		if(potentialChild instanceof ClassNode) return getClasses().size();
 		return super.getMaxChildIndex(potentialChild);
 	}
@@ -184,7 +184,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	}
 	
 	@Override
-	public void addParameters(List<MethodParameterNode> parameters) {
+	public void addParameters(List<BasicParameterNode> parameters) {
 		
 		fParametersHolder.addParameters(parameters, this);
 	}

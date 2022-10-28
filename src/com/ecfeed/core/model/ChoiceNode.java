@@ -195,7 +195,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		fOtherChoiceNode = choiceNode;
 	}
 
-	public ChoiceNode getQualifiedCopy(MethodParameterNode parameter) {
+	public ChoiceNode getQualifiedCopy(BasicParameterNode parameter) {
 		return ChoiceNodeHelper.createSubstitutePath(this, parameter);
 	}
 
@@ -433,7 +433,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 	public MethodNode getMethodNode() {
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)getParameter();
+		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
 
 		if (methodParameterNode == null) {
 			return null;

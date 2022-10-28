@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -63,8 +63,8 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 
 	@Override
 	public Object visit(MethodNode node) throws Exception {
-		if(fChild instanceof MethodParameterNode){
-			return new MethodOperationRemoveParameter(node, (MethodParameterNode)fChild, fExtLanguageManager);
+		if(fChild instanceof BasicParameterNode){
+			return new MethodOperationRemoveParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
 			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild, fExtLanguageManager);
@@ -79,7 +79,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	}
 
 	@Override
-	public Object visit(MethodParameterNode node) throws Exception {
+	public Object visit(BasicParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
 		}

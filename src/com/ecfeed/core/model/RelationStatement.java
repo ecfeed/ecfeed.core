@@ -28,12 +28,12 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
-	private MethodParameterNode fLeftParameter;
+	private BasicParameterNode fLeftParameter;
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
 
 	public static RelationStatement createRelationStatementWithLabelCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			EMathRelation relation,
 			String label) {
 
@@ -46,7 +46,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithChoiceCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			EMathRelation relation,
 			ChoiceNode choiceNode) {
 
@@ -60,9 +60,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithParameterCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			EMathRelation relation,
-			MethodParameterNode rightParameter) {
+			BasicParameterNode rightParameter) {
 
 		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
 
@@ -74,7 +74,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithValueCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			EMathRelation relation,
 			String textValue) {
 
@@ -87,7 +87,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	protected RelationStatement(
-			MethodParameterNode parameter, 
+			BasicParameterNode parameter, 
 			EMathRelation relation, 
 			IStatementCondition condition) {
 
@@ -170,7 +170,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		String conditionSignature = fRightCondition.createSignature(extLanguageManager);
 
-		MethodParameterNode methodParameterNode = getLeftParameter();
+		BasicParameterNode methodParameterNode = getLeftParameter();
 		String parameterName = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
 
 		return parameterName + getRelation() + conditionSignature;
@@ -191,7 +191,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fLeftParameter.getName());
+		BasicParameterNode tmpParameterNode = methodNode.findMethodParameter(fLeftParameter.getName());
 
 		if (tmpParameterNode != null) {
 
@@ -251,13 +251,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean mentions(MethodParameterNode parameter, String label) {
+	public boolean mentions(BasicParameterNode parameter, String label) {
 
 		return getLeftParameter() == parameter && getConditionValue().equals(label);
 	}
 
 	@Override
-	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
+	public boolean mentionsParameterAndOrderRelation(BasicParameterNode parameter) {
 
 		if (!(parameter.isMatch(fLeftParameter))) {
 			return false;
@@ -280,7 +280,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public boolean mentions(int methodParameterIndex) {
 
 		MethodNode methodNode = fLeftParameter.getMethod();
-		MethodParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
+		BasicParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
 			return true;
@@ -295,7 +295,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 
-	public MethodParameterNode getLeftParameter(){
+	public BasicParameterNode getLeftParameter(){
 		return fLeftParameter;
 	}
 
@@ -305,7 +305,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 			ParameterCondition parameterCondition = (ParameterCondition)condition;
 
-			MethodParameterNode rightParameter = parameterCondition.getRightParameterNode();
+			BasicParameterNode rightParameter = parameterCondition.getRightParameterNode();
 
 			if (!isRightParameterTypeAllowed(rightParameter.getType())) {
 				ExceptionHelper.reportRuntimeException("Invalid type of right parameter in relation statement.");
@@ -323,7 +323,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		fRightCondition = new ChoiceCondition(choice, this);
 	}
 
-	public void setCondition(MethodParameterNode parameter, ChoiceNode choice) {
+	public void setCondition(BasicParameterNode parameter, ChoiceNode choice) {
 		fRightCondition = new ChoiceCondition(choice, this);
 	}
 
@@ -349,13 +349,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return fRightCondition.getChoices(methodParameterNode);
 	}
 
 	public boolean isRightParameterTypeAllowed(String rightParameterType) {
 
-		MethodParameterNode leftParameter = getLeftParameter();
+		BasicParameterNode leftParameter = getLeftParameter();
 		String leftParameterType =  leftParameter.getType();
 
 		if (JavaLanguageHelper.isBooleanTypeName(leftParameterType) 
@@ -486,7 +486,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();
 
@@ -502,8 +502,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
 
-		MethodParameterNode sourceParameter = getLeftParameter();
-		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+		BasicParameterNode sourceParameter = getLeftParameter();
+		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
 		
 		IStatementCondition sourceCondition = getCondition();
 		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);

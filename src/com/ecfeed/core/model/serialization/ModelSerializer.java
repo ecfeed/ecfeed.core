@@ -22,7 +22,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 
@@ -58,7 +58,7 @@ public class ModelSerializer {
 		return null;
 	}
 
-	public Object serialize(MethodParameterNode node) throws Exception {
+	public Object serialize(BasicParameterNode node) throws Exception {
 		Element element = (Element)node.accept(fXomBuilder);
 		writeDocument(element);
 		return null;

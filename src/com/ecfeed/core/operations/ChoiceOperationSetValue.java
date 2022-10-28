@@ -14,7 +14,7 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IParameterVisitor;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.*;
@@ -95,7 +95,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 	private class ParameterAdapter implements IParameterVisitor{
 
 		@Override
-		public Object visit(MethodParameterNode parameter) throws Exception {
+		public Object visit(BasicParameterNode parameter) throws Exception {
 			fOriginalDefaultValue = parameter.getDefaultValue();
 			if(parameter != null && JavaLanguageHelper.isUserType(parameter.getType())){
 				if(parameter.getLeafChoiceValues().contains(parameter.getDefaultValue()) == false){
@@ -117,7 +117,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		private class ReverseParameterAdapter implements IParameterVisitor{
 
 			@Override
-			public Object visit(MethodParameterNode parameter) throws Exception {
+			public Object visit(BasicParameterNode parameter) throws Exception {
 				parameter.setDefaultValueString(fOriginalDefaultValue);
 				return null;
 			}

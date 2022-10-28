@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class MethodParameterNodeHelper {
 
 	public static ChoiceNode addChoiceToMethodParameter(
-			MethodParameterNode methodParameterNode, 
+			BasicParameterNode methodParameterNode, 
 			String choiceNodeName, 
 			String valueString) {
 
@@ -28,13 +28,13 @@ public class MethodParameterNodeHelper {
 		return choiceNode;
 	}
 
-	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
 	public static String createSignature(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
 		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
@@ -57,7 +57,7 @@ public class MethodParameterNodeHelper {
 	}
 
 	public static String createReverseSignature(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
 		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
@@ -87,7 +87,7 @@ public class MethodParameterNodeHelper {
 		return signature;
 	}
 
-	public static String getType(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getType(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = methodParameterNode.getType();
 		type =  extLanguageManager.convertTypeFromIntrToExtLanguage(type);
@@ -95,7 +95,7 @@ public class MethodParameterNodeHelper {
 		return type;
 	}
 
-	public static ChoiceNode findChoice(MethodParameterNode methodParameterNode, String choiceQualifiedName) {
+	public static ChoiceNode findChoice(BasicParameterNode methodParameterNode, String choiceQualifiedName) {
 
 		if (!methodParameterNode.isLinked()) {
 			return findChoiceIntr(methodParameterNode, choiceQualifiedName);

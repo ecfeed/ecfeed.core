@@ -28,7 +28,7 @@ import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StatementArrayOperator;
@@ -246,7 +246,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
 						errorList);
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)method.findParameter(parameterName);
+		BasicParameterNode methodParameterNode = (BasicParameterNode)method.findParameter(parameterName);
 
 		if (methodParameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
@@ -292,7 +292,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
 						errorList);
 
-		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
+		BasicParameterNode leftParameterNode = (BasicParameterNode)method.findParameter(parameterName);
 
 		if (leftParameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
@@ -315,7 +315,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, 
 						errorList);
 
-		MethodParameterNode rightParameterNode = (MethodParameterNode)method.findParameter(rightParameterName);
+		BasicParameterNode rightParameterNode = (BasicParameterNode)method.findParameter(rightParameterName);
 		if (rightParameterNode == null) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, method.getName()));
 			return null;
@@ -338,7 +338,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
 						errorList);
 
-		MethodParameterNode leftParameterNode = (MethodParameterNode)method.findParameter(parameterName);
+		BasicParameterNode leftParameterNode = (BasicParameterNode)method.findParameter(parameterName);
 
 		if (leftParameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
@@ -369,7 +369,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	}
 
 	private boolean isOkExpectedPropertyOfParameter(
-			MethodParameterNode leftParameterNode,
+			BasicParameterNode leftParameterNode,
 			EMathRelation relation,
 			ListOfStrings errorList) {
 
@@ -411,7 +411,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, 
 						errorList);
 
-		MethodParameterNode parameter = method.findMethodParameter(parameterName);
+		BasicParameterNode parameter = method.findMethodParameter(parameterName);
 
 		if (parameter == null || parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
@@ -436,7 +436,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, 
 						errorList);
 
-		MethodParameterNode parameter = method.findMethodParameter(parameterName);
+		BasicParameterNode parameter = method.findMethodParameter(parameterName);
 
 		if (parameter == null || !parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));

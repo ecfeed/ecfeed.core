@@ -16,7 +16,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -25,13 +25,13 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 
 	public ReplaceMethodParametersWithGlobalOperation(
 			IParametersParentNode parent, 
-			List<MethodParameterNode> originals, 
+			List<BasicParameterNode> originals, 
 			ITypeAdapterProvider adapterProvider,
 			IExtLanguageManager extLanguageManager) {
 		
 		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguageManager);
 		
-		for(MethodParameterNode parameter : originals){
+		for(BasicParameterNode parameter : originals){
 			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, extLanguageManager));
 		}
 	}
@@ -39,7 +39,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 	private class ReplaceParameterWithLink extends BulkOperation{
 
 		public ReplaceParameterWithLink(
-				MethodParameterNode target, 
+				BasicParameterNode target, 
 				IParametersParentNode parent, 
 				ITypeAdapterProvider adapterProvider,
 				IExtLanguageManager extLanguageManager) {

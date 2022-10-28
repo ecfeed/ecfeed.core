@@ -250,9 +250,9 @@ public class ChoiceNodeHelper {
 			return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
 		}
 
-		if (abstractParameterNode instanceof MethodParameterNode) {
+		if (abstractParameterNode instanceof BasicParameterNode) {
 
-			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
 
 			if (methodParameterNode.isExpected()) {
 				return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
@@ -285,7 +285,7 @@ public class ChoiceNodeHelper {
 		return value;
 	}
 
-	public static ChoiceNode createSubstitutePath(ChoiceNode choice, MethodParameterNode parameter) {
+	public static ChoiceNode createSubstitutePath(ChoiceNode choice, BasicParameterNode parameter) {
 		List<ChoiceNode> copies = createListOfCopies(choice);
 		setParentsOfChoices(copies, parameter);
 		return copies.get(0);
@@ -311,7 +311,7 @@ public class ChoiceNodeHelper {
 		return copies;
 	}
 
-	private static void setParentsOfChoices(List<ChoiceNode> copies, MethodParameterNode parameter) {
+	private static void setParentsOfChoices(List<ChoiceNode> copies, BasicParameterNode parameter) {
 
 		int copiesSize = copies.size();
 		int lastIndex = copiesSize - 1;

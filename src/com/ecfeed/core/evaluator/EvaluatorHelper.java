@@ -7,14 +7,14 @@ import java.util.List;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeComparator;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class EvaluatorHelper {
 
     // TODO - where is the output ?
     public static void prepareVariablesForParameter(
-            MethodParameterNode methodParameterNode,
+            BasicParameterNode methodParameterNode,
             ParamChoiceSets paramChoiceSets,
             EcSatSolver satSolver,
             ChoicesMappingsBucket choicesMappingsBucket,

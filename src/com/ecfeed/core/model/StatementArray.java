@@ -70,7 +70,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
+	public boolean mentionsParameterAndOrderRelation(BasicParameterNode parameter) {
 
 		for (AbstractStatement child : fStatements) {
 			if (child.mentionsParameterAndOrderRelation(parameter)) {
@@ -275,7 +275,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 
 		List<ChoiceNode> result = new ArrayList<ChoiceNode>();
 
@@ -292,7 +292,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();
 

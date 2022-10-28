@@ -72,7 +72,7 @@ public class ValueCondition implements IStatementCondition {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);		
 
-		MethodParameterNode leftParameter = fParentRelationStatement.getLeftParameter();
+		BasicParameterNode leftParameter = fParentRelationStatement.getLeftParameter();
 		int leftParameterIndex = leftParameter.getMyIndex();
 		
 		List<ChoiceNode> choicesForParameter = domain.get(leftParameterIndex);
@@ -101,7 +101,7 @@ public class ValueCondition implements IStatementCondition {
 		return fParentRelationStatement;
 	}
 
-	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
 
@@ -193,7 +193,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -220,7 +220,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
 	}
 

@@ -16,7 +16,7 @@ import java.util.List;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -25,7 +25,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 	private class SetLinkedOperation extends AbstractModelOperation {
 
-		private MethodParameterNode fTarget;
+		private BasicParameterNode fTarget;
 		private boolean fLinked;
 		private List<TestCaseNode> fOriginalTestCases;
 		private List<ConstraintNode> fOriginalConstraints;
@@ -62,7 +62,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 		}
 
-		public SetLinkedOperation(MethodParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+		public SetLinkedOperation(BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
 			super(OperationNames.SET_LINKED, extLanguageManager);
 			fTarget = target;
 			fLinked = linked;
@@ -107,7 +107,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 	}
 
-	public MethodParameterOperationSetLinked(MethodParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+	public MethodParameterOperationSetLinked(BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
 		addOperation(new SetLinkedOperation(target, linked, extLanguageManager));
 		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguageManager)); 

@@ -74,7 +74,7 @@ public class IsNodeIncludedInGenerationPredicate {
 			return shouldSerializeMethodNode(abstractNode, fGeneratorMethodNode);
 		}
 
-		if (abstractNode instanceof MethodParameterNode) {
+		if (abstractNode instanceof BasicParameterNode) {
 
 			return shouldSerializeMethodParameterNode(abstractNode, fGeneratorMethodNode);
 		}

@@ -19,7 +19,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -57,7 +57,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public void execute() {
-		MethodNode method = ((MethodParameterNode)fParameters.get(0)).getMethod();
+		MethodNode method = ((BasicParameterNode)fParameters.get(0)).getMethod();
 
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
 
@@ -80,8 +80,8 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	@Override
 	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
 		if(super.shiftAllowed(shifted, shift) == false) return false;
-		if(shifted.get(0) instanceof MethodParameterNode == false) return false;
-		MethodNode method = ((MethodParameterNode)shifted.get(0)).getMethod();
+		if(shifted.get(0) instanceof BasicParameterNode == false) return false;
+		MethodNode method = ((BasicParameterNode)shifted.get(0)).getMethod();
 		List<String> parameterTypes = MethodNodeHelper.getParameterTypes(method, getExtLanguageManager());
 		List<Integer> indices = indices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);

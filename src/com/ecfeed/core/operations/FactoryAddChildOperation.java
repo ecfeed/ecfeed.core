@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
@@ -137,18 +137,18 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		if(fChild instanceof GlobalParameterNode){
 			GlobalParameterNode globalParameter = (GlobalParameterNode)fChild;
 			String defaultValue = fAdapterProvider.getAdapter(globalParameter.getType()).getDefaultValue();
-			MethodParameterNode parameter = new MethodParameterNode(globalParameter, defaultValue, false);
+			BasicParameterNode parameter = new BasicParameterNode(globalParameter, defaultValue, false);
 
 			if(fIndex == -1){
 				return new MethodOperationAddParameter(node,parameter, fExtLanguageManager);
 			}
 			return new MethodOperationAddParameter(node, parameter, fIndex, fExtLanguageManager);
 		}
-		if(fChild instanceof MethodParameterNode){
+		if(fChild instanceof BasicParameterNode){
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fExtLanguageManager);
+				return new MethodOperationAddParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
 			}
-			return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fIndex, fExtLanguageManager);
+			return new MethodOperationAddParameter(node, (BasicParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
 			if(fIndex == -1){
@@ -171,7 +171,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	}
 
 	@Override
-	public Object visit(MethodParameterNode node) throws Exception {
+	public Object visit(BasicParameterNode node) throws Exception {
 		if(fChild instanceof ChoiceNode){
 			if(fIndex == -1){
 				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);

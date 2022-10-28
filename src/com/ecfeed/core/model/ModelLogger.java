@@ -89,8 +89,8 @@ public class ModelLogger {
 			printMethodNode((MethodNode)abstractNode, null, indent);
 			return;
 		}
-		if (abstractNode instanceof MethodParameterNode) {
-			printMethodParameterNode((MethodParameterNode)abstractNode, null, indent);
+		if (abstractNode instanceof BasicParameterNode) {
+			printMethodParameterNode((BasicParameterNode)abstractNode, null, indent);
 			return;
 		}		
 		if (abstractNode instanceof ChoiceNode) {
@@ -137,7 +137,7 @@ public class ModelLogger {
 		printObjectLine(methodNode, fieldName, indent);
 	}
 
-	private static void printMethodParameterNode(MethodParameterNode methodParameterNode, String fieldName, int indent) {
+	private static void printMethodParameterNode(BasicParameterNode methodParameterNode, String fieldName, int indent) {
 		if (methodParameterNode == null) {
 			printIndentedLine("MethodNode is null", indent);
 			return;

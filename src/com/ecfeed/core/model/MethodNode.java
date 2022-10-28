@@ -111,7 +111,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 
 		for (AbstractParameterNode abstractParameterNode : parameters) {
 
-			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
 
 			String parameterType = methodParameterNode.getType();
 			parameterTypes.add(parameterType);
@@ -149,7 +149,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 
 		copy.setProperties(getProperties());
 
-		for(MethodParameterNode parameter : getMethodParameters()){
+		for(BasicParameterNode parameter : getMethodParameters()){
 			copy.addParameter(parameter.makeClone());
 		}
 
@@ -248,13 +248,13 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return (ClassNode)getParent();
 	}
 
-	public MethodParameterNode findMethodParameter(String name){
-		return (MethodParameterNode)findParameter(name);
+	public BasicParameterNode findMethodParameter(String name){
+		return (BasicParameterNode)findParameter(name);
 	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {
 		ArrayList<String> names = new ArrayList<String>();
-		for(MethodParameterNode parameter : getMethodParameters()){
+		for(BasicParameterNode parameter : getMethodParameters()){
 			if(parameter.isExpected() == expected){
 				names.add(parameter.getName());
 			}
@@ -262,8 +262,8 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return names;
 	}
 
-	public MethodParameterNode getMethodParameter(int index) {
-		return (MethodParameterNode)(getParameters().get(index));
+	public BasicParameterNode getMethodParameter(int index) {
+		return (BasicParameterNode)(getParameters().get(index));
 	}
 
 	public int getMethodParameterCount()
@@ -337,7 +337,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 
 		AbstractParameterNode abstractParameterNode = getParameter(parameterIndex);
 
-		if (abstractParameterNode instanceof MethodParameterNode) {
+		if (abstractParameterNode instanceof BasicParameterNode) {
 			return getTestDomainProcessMethodParameterNode(abstractParameterNode);
 		} else {
 			return abstractParameterNode.getLeafChoicesWithCopies();
@@ -346,7 +346,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 	}
 
 	private List<ChoiceNode> getTestDomainProcessMethodParameterNode(AbstractParameterNode abstractParameterNode) {
-		MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
+		BasicParameterNode methodParameterNode = (BasicParameterNode) abstractParameterNode;
 		List<ChoiceNode> choicesForParameter;
 
 		if (methodParameterNode.isExpected()) {
@@ -361,7 +361,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return choicesForParameter;
 	}
 
-	private ChoiceNode getTestDomainCreateExpectedChoiceNode(MethodParameterNode methodParameterNode) {
+	private ChoiceNode getTestDomainCreateExpectedChoiceNode(BasicParameterNode methodParameterNode) {
 		String defaultValue = methodParameterNode.getDefaultValue();
 
 		ChoiceNode choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, defaultValue, methodParameterNode.getModelChangeRegistrator());
@@ -477,18 +477,18 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return false;
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(Collection<MethodParameterNode> parameters) {
+	public Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
-		for(MethodParameterNode parameter : parameters){
+		for(BasicParameterNode parameter : parameters){
 			result.addAll(getMentioningConstraints(parameter));
 		}
 
 		return result;
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(MethodParameterNode parameter) {
+	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
@@ -501,7 +501,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return result;
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(MethodParameterNode parameter, String label) {
+	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter, String label) {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
 
@@ -537,7 +537,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return result;
 	}
 
-	public boolean isParameterMentioned(MethodParameterNode parameter){
+	public boolean isParameterMentioned(BasicParameterNode parameter){
 		for(ConstraintNode constraint : fConstraintNodes){
 			if(constraint.mentions(parameter)){
 				return true;
@@ -651,9 +651,9 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return Arrays.asList(new MethodNode[]{this});
 	}
 
-	public List<MethodParameterNode> getLinkers(GlobalParameterNode globalParameter){
-		List<MethodParameterNode> result = new ArrayList<MethodParameterNode>();
-		for(MethodParameterNode localParameter : getMethodParameters()){
+	public List<BasicParameterNode> getLinkers(GlobalParameterNode globalParameter){
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+		for(BasicParameterNode localParameter : getMethodParameters()){
 			if(localParameter.isLinked() && localParameter.getLinkToGlobalParameter() == globalParameter){
 				result.add(localParameter);
 			}
@@ -661,17 +661,17 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return result;
 	}
 
-	public final List<MethodParameterNode> getMethodParameters() {
-		List<MethodParameterNode> result = new ArrayList<>();
+	public final List<BasicParameterNode> getMethodParameters() {
+		List<BasicParameterNode> result = new ArrayList<>();
 		for(AbstractParameterNode parameter : getParameters()){
-			result.add((MethodParameterNode)parameter);
+			result.add((BasicParameterNode)parameter);
 		}
 		return result;
 	}
 
-	public List<MethodParameterNode> getMethodParameters(boolean expected) {
-		List<MethodParameterNode> result = new ArrayList<>();
-		for(MethodParameterNode parameter : getMethodParameters()){
+	public List<BasicParameterNode> getMethodParameters(boolean expected) {
+		List<BasicParameterNode> result = new ArrayList<>();
+		for(BasicParameterNode parameter : getMethodParameters()){
 			if(parameter.isExpected()){
 				result.add(parameter);
 			}
@@ -679,9 +679,9 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return result;
 	}
 
-	public MethodParameterNode getMethodParameter(ChoiceNode choice){
+	public BasicParameterNode getMethodParameter(ChoiceNode choice){
 		AbstractParameterNode parameter = choice.getParameter();
-		for(MethodParameterNode methodParameter : getMethodParameters()){
+		for(BasicParameterNode methodParameter : getMethodParameters()){
 			if(methodParameter == parameter || methodParameter.getLinkToGlobalParameter() == parameter){
 				return methodParameter;
 			}
@@ -697,7 +697,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return new ArrayList<>();
 	}
 
-	public void removeConstraintsWithParameterChoices(MethodParameterNode methodParameter) {
+	public void removeConstraintsWithParameterChoices(BasicParameterNode methodParameter) {
 
 		ArrayList<ConstraintNode> constraintsToDelete = new ArrayList<ConstraintNode>();  
 
@@ -737,7 +737,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
-	public void addParameters(List<MethodParameterNode> parameters) {
+	public void addParameters(List<BasicParameterNode> parameters) {
 		
 		fParametersHolder.addParameters(parameters, this);
 	}

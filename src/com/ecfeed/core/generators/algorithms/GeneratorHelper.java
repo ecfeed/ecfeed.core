@@ -62,13 +62,13 @@ public abstract class GeneratorHelper {
 
     private static List<List<ChoiceNode>> getPossibleChoicesForMethodParameters(MethodNode methodNode) {
 
-        List<MethodParameterNode> parameters = methodNode.getMethodParameters();
+        List<BasicParameterNode> parameters = methodNode.getMethodParameters();
         List<List<ChoiceNode>> algorithmInput = new ArrayList<List<ChoiceNode>>();
 
         for (int index = 0; index < parameters.size(); index++) {
 
-            MethodParameterNode methodParameterNode =
-                    (MethodParameterNode)methodNode.getParameter(index);
+            BasicParameterNode methodParameterNode =
+                    (BasicParameterNode)methodNode.getParameter(index);
 
             List<ChoiceNode> choices = getChoicesForParameter(methodParameterNode);
 
@@ -78,7 +78,7 @@ public abstract class GeneratorHelper {
         return algorithmInput;
     }
 
-    private static List<ChoiceNode> getChoicesForParameter( MethodParameterNode methodParameterNode) {
+    private static List<ChoiceNode> getChoicesForParameter( BasicParameterNode methodParameterNode) {
 
         List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
 
@@ -118,7 +118,7 @@ public abstract class GeneratorHelper {
         return null;
     }
 
-    private static ChoiceNode expectedValueChoice(MethodParameterNode methodParameterNode) {
+    private static ChoiceNode expectedValueChoice(BasicParameterNode methodParameterNode) {
 
         ChoiceNode choiceNode =
                 new ChoiceNode(

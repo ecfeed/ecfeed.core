@@ -68,7 +68,7 @@ public class ChoiceCondition implements IStatementCondition {
 	public boolean updateReferences(MethodNode methodNode) {
 
 		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		MethodParameterNode methodParameterNode = methodNode.findMethodParameter(parameterName);
+		BasicParameterNode methodParameterNode = methodNode.findMethodParameter(parameterName);
 
 		String choiceName = fRightChoice.getQualifiedName();
 		ChoiceNode choiceNode = methodParameterNode.getChoice(choiceName);
@@ -134,9 +134,9 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 
-		MethodParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
+		BasicParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
 
 		if (!(methodParameterNode.equals(methodParameterNode2))) {
 			return new ArrayList<ChoiceNode>();
@@ -339,7 +339,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
 	}
 

@@ -20,7 +20,7 @@ import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -74,7 +74,7 @@ public class GenericMoveOperation extends BulkOperation {
 
 					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
 						GlobalParameterNode parameter = (GlobalParameterNode)node;
-						node = new MethodParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
+						node = new BasicParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
 					}
 					
 					if(newIndex != -1){

@@ -33,9 +33,9 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
-		if (abstractParameterNode instanceof MethodParameterNode) {
+		if (abstractParameterNode instanceof BasicParameterNode) {
 			
-			MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
 			MethodNode linkToMethodNode = methodParameterNode.getLinkToMethod();
 			
 			if (linkToMethodNode != null) {

@@ -18,7 +18,7 @@ public interface IParametersParentNode extends IAbstractNode {
 	
 	public void addParameter(AbstractParameterNode parameter);	
 	public void addParameter(AbstractParameterNode parameter, int index);
-	public void addParameters(List<MethodParameterNode> parameters);
+	public void addParameters(List<BasicParameterNode> parameters);
 	
 	public boolean removeParameter(AbstractParameterNode parameter);
 	public void replaceParameters(List<AbstractParameterNode> parameters);

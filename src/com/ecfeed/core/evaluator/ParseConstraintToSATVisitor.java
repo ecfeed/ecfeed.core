@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterCondition;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
@@ -175,7 +175,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     }
 
     private Integer singleChoiceParamConstraints(RelationStatement statement) {
-        MethodParameterNode leftMethodParameterNode = statement.getLeftParameter();
+        BasicParameterNode leftMethodParameterNode = statement.getLeftParameter();
 
         EvaluatorHelper.prepareVariablesForParameter(
                 leftMethodParameterNode,
@@ -209,7 +209,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     }
 
     private Integer doubleChoiceParamConstraints(RelationStatement statement) {
-        MethodParameterNode lParam = statement.getLeftParameter();
+        BasicParameterNode lParam = statement.getLeftParameter();
         EvaluatorHelper.prepareVariablesForParameter(
                 lParam,
                 fParamChoiceSets,
@@ -223,7 +223,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         if (lParamIndex == -1) {
             reportParamWithoutMethodException();
         }
-        MethodParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
+        BasicParameterNode rParam = ((ParameterCondition) statement.getCondition()).getRightParameterNode();
 
         EvaluatorHelper.prepareVariablesForParameter(
                 rParam,

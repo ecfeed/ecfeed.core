@@ -20,7 +20,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -51,7 +51,7 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return implementationStatus(node);
 		}
 
@@ -147,7 +147,7 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 		return EImplementationStatus.IMPLEMENTED;
 	}
 
-	protected EImplementationStatus implementationStatus(MethodParameterNode parameter){
+	protected EImplementationStatus implementationStatus(BasicParameterNode parameter){
 		EImplementationStatus status = implementationStatus((AbstractParameterNode)parameter);
 		if(fPrimitiveTypeTester.isPrimitive(parameter.getType()) && parameter.isExpected()){
 			status = EImplementationStatus.IMPLEMENTED;

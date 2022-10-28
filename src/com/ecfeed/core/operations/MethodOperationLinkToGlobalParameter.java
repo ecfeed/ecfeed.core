@@ -12,14 +12,14 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation {
 
-	MethodParameterNode fSrcMethodParameterNode;
+	BasicParameterNode fSrcMethodParameterNode;
 	GlobalParameterNode fDstParameterForChoices;
 	ParameterConversionDefinition fParameterConversionDefinition;
 
@@ -28,7 +28,7 @@ public class MethodOperationLinkToGlobalParameter extends AbstractModelOperation
 	IExtLanguageManager fExtLanguageManager;
 
 	public MethodOperationLinkToGlobalParameter(
-			MethodParameterNode srcMethodParameterNode,
+			BasicParameterNode srcMethodParameterNode,
 			GlobalParameterNode dstParameterForChoices, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager) {

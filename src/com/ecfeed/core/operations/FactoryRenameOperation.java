@@ -146,7 +146,7 @@ public class FactoryRenameOperation {
 		@Override
 		protected void verifyNewName(String newNameInExtLanguage) {
 
-			MethodParameterNode target = (MethodParameterNode)getOwnNode();
+			BasicParameterNode target = (BasicParameterNode)getOwnNode();
 
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
 				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
@@ -227,7 +227,7 @@ public class FactoryRenameOperation {
 		}
 		
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return new MethodParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 

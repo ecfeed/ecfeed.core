@@ -89,7 +89,7 @@ public class TestCaseNode extends AbstractNode {
 		return null;
 	}
 
-	public MethodParameterNode getMethodParameter(ChoiceNode choice){
+	public BasicParameterNode getMethodParameter(ChoiceNode choice){
 		if(getTestData().contains(choice)){
 			int index = getTestData().indexOf(choice);
 			return getMethod().getMethodParameters().get(index);
@@ -138,12 +138,12 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public boolean updateReferences(MethodNode method){
-		List<MethodParameterNode> parameters = method.getMethodParameters();
+		List<BasicParameterNode> parameters = method.getMethodParameters();
 		if(parameters.size() != getTestData().size())
 			return false;
 
 		for(int i = 0; i < parameters.size(); i++){
-			MethodParameterNode parameter = parameters.get(i);
+			BasicParameterNode parameter = parameters.get(i);
 			if(parameter.isExpected()){
 				String name = getTestData().get(i).getName();
 				String value = getTestData().get(i).getValueString();
@@ -204,7 +204,7 @@ public class TestCaseNode extends AbstractNode {
 
 	public boolean isConsistent() {
 		for(ChoiceNode choice : getTestData()){
-			MethodParameterNode parameter = getMethodParameter(choice);
+			BasicParameterNode parameter = getMethodParameter(choice);
 			if(parameter == null || (parameter.isExpected() == false && parameter.getChoice(choice.getQualifiedName()) == null)){
 				return false;
 			}

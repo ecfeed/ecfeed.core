@@ -20,7 +20,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -99,7 +99,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			fCache.remove(node);
 			return null;
 		}
@@ -108,7 +108,7 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 		public Object visit(GlobalParameterNode node) throws Exception {
 			fCache.remove(node);
 
-			for (MethodParameterNode parameter : node.getLinkedMethodParameters()) {
+			for (BasicParameterNode parameter : node.getLinkedMethodParameters()) {
 				fCache.remove(parameter);
 			}
 

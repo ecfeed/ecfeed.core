@@ -20,7 +20,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -51,7 +51,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return isImplementableNode(node);
 		}
 
@@ -99,7 +99,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return implement(node);
 		}
 
@@ -141,7 +141,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		if(type.equals(RootNode.class) ||
 				(type.equals(ClassNode.class))||
 				(type.equals(MethodNode.class))||
-				(type.equals(MethodParameterNode.class))||
+				(type.equals(BasicParameterNode.class))||
 				(type.equals(GlobalParameterNode.class))||
 				(type.equals(TestCaseNode.class))||
 				(type.equals(ChoiceNode.class))
@@ -246,7 +246,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	protected boolean implement(MethodNode methodNode) throws Exception{
-		for(MethodParameterNode parameter : methodNode.getMethodParameters()){
+		for(BasicParameterNode parameter : methodNode.getMethodParameters()){
 			if(isImplementableNode(parameter) && getImplementationStatus(parameter) != EImplementationStatus.IMPLEMENTED){
 				implement(parameter);
 			}
@@ -319,7 +319,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		return hasImplementableNode(node.getParameters()) || hasImplementableNode(node.getTestCases());
 	}
 
-	protected boolean isImplementableNode(MethodParameterNode node){
+	protected boolean isImplementableNode(BasicParameterNode node){
 		return hasImplementableNode(node.getChoices());
 	}
 

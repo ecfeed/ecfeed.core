@@ -138,7 +138,7 @@ public class ModelHelper {
 			return "Method";
 		}
 
-		if (abstractNode instanceof MethodParameterNode) {
+		if (abstractNode instanceof BasicParameterNode) {
 			return "MethodParameter";
 		}
 

@@ -138,7 +138,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -163,7 +163,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 		return new ArrayList<>();
 	}
 

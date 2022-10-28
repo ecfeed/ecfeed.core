@@ -22,7 +22,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -154,7 +154,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			if(target.getMethods().contains(methodNode)){
 				List<String> types = methodNode.getParameterTypes();
 				for(AbstractParameterNode parameter: methodNode.getParameters()){
-					MethodParameterNode param = (MethodParameterNode)parameter;
+					BasicParameterNode param = (BasicParameterNode)parameter;
 					if(param.isLinked() && param.getLinkToGlobalParameter().equals(target)){
 						types.set(parameter.getMyIndex(), fNewTypeInIntrLanguage);
 					}			

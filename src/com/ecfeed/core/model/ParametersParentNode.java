@@ -68,7 +68,7 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	}
 
 	@Override
-	public void addParameters(List<MethodParameterNode> parameters) {
+	public void addParameters(List<BasicParameterNode> parameters) {
 
 		fParametersHolder.addParameters(parameters, this);
 	}

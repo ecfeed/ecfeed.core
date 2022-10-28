@@ -89,7 +89,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	@Override
 	public int getMaxChildIndex(IAbstractNode potentialChild){
 		if(potentialChild instanceof GlobalParameterNode) return getParameters().size();
-		if(potentialChild instanceof MethodParameterNode) return getParameters().size();
+		if(potentialChild instanceof BasicParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodNode) return getMethods().size();
 		return super.getMaxChildIndex(potentialChild);
 	}
@@ -246,7 +246,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	public List<MethodNode> getMethods(AbstractParameterNode parameter) {
 		List<MethodNode> result = new ArrayList<MethodNode>();
 		for(MethodNode method : getMethods()){
-			for(MethodParameterNode methodParameter : method.getMethodParameters()){
+			for(BasicParameterNode methodParameter : method.getMethodParameters()){
 				if(methodParameter.isLinked() && methodParameter.getLinkToGlobalParameter() == parameter){
 					result.add(method);
 					break;
@@ -275,7 +275,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
-	public void addParameters(List<MethodParameterNode> parameters) {
+	public void addParameters(List<BasicParameterNode> parameters) {
 		
 		fParametersHolder.addParameters(parameters, this);
 	}

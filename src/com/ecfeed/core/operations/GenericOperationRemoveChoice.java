@@ -17,7 +17,7 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParameterVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -41,7 +41,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 			private class ReverseParameterAdapter implements IParameterVisitor{
 
 				@Override
-				public Object visit(MethodParameterNode node) throws Exception {
+				public Object visit(BasicParameterNode node) throws Exception {
 					node.setDefaultValueString(fOriginalDefaultValue);
 					return null;
 				}
@@ -83,7 +83,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 		private class OperationValidator implements IParameterVisitor{
 
 			@Override
-			public Object visit(MethodParameterNode parameter) throws Exception {
+			public Object visit(BasicParameterNode parameter) throws Exception {
 				if(parameter.isExpected() && JavaLanguageHelper.isJavaType(parameter.getType()) == false && parameter.getChoices().size() == 1 && parameter.getChoices().get(0) == fChoice){
 					// We are removing the only choice of expected parameter.
 					// The last parameter must represent the default expected value
@@ -101,7 +101,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 		private class ParameterAdapter implements IParameterVisitor{
 
 			@Override
-			public Object visit(MethodParameterNode parameter) throws Exception {
+			public Object visit(BasicParameterNode parameter) throws Exception {
 				fOriginalDefaultValue = parameter.getDefaultValue();
 				if(parameter.isExpected() && fChoice.getValueString().equals(parameter.getDefaultValue())){
 					// the value of removed choice is the same as default expected value

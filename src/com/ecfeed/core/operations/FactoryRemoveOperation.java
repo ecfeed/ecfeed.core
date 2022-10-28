@@ -21,7 +21,7 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.GlobalParametersParentNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -92,7 +92,7 @@ public class FactoryRemoveOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguageManager);
 		}
 

@@ -11,7 +11,7 @@ public class ConditionHelper {
 
 	public static String getSubstituteType(RelationStatement parentRelationStatement) {
 
-		final MethodParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+		final BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
 
 		final String type = leftParameter.getType();
 

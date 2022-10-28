@@ -25,8 +25,8 @@ public interface IStatement{
 	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack outWhyAmbiguous, IExtLanguageManager extLanguageManager);
 	public boolean isAmbiguous(List<List<ChoiceNode>> values);
 	public List<ChoiceNode> getChoices();
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode);
-	public List<String> getLabels(MethodParameterNode methodParameterNode);
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
+	public List<String> getLabels(BasicParameterNode methodParameterNode);
 	public void derandomize();
 	public AbstractStatement makeClone();
 	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper);

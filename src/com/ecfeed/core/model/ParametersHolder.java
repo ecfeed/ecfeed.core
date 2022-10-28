@@ -32,9 +32,9 @@ public class ParametersHolder {
 		addParameter(parameter, fParameters.size(), parent);
 	}
 
-	public void addParameters(List<MethodParameterNode> parameters, IAbstractNode parent) {
+	public void addParameters(List<BasicParameterNode> parameters, IAbstractNode parent) {
 
-		for (MethodParameterNode methodParameterNode : parameters) {
+		for (BasicParameterNode methodParameterNode : parameters) {
 			addParameter(methodParameterNode, parent);
 		}
 	}

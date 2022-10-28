@@ -24,7 +24,7 @@ import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IChoicesParentVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -47,12 +47,12 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 	private ArrayList<ConstraintNode> fOriginalConstraints;
 	private ParameterConversionDefinition fParameterConversionDefinition;
 
-	private MethodParameterNode fMethodParameterNode;
+	private BasicParameterNode fMethodParameterNode;
 	private String fNewTypeInIntrLanguage;
 	private IExtLanguageManager fExtLanguageManager;
 
 	public MethodParameterOperationSetType(
-			MethodParameterNode target, 
+			BasicParameterNode target, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ITypeAdapterProvider adapterProvider, 
@@ -152,7 +152,7 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 	}
 
 	private void convertDefaultValue(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			String newTypeInIntrLanguage,
 			ParameterConversionDefinition parameterConversionDefinition,
 			IExtLanguageManager extLanguageManager) {
@@ -173,7 +173,7 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 	}
 
 	private void convertDefaultValueUsingConversionDefinition(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition, 
 			String currentDefaultValue) {
 
@@ -197,7 +197,7 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 		}
 	}
 
-	private void setAdaptedValueAsDefault(MethodParameterNode methodParameterNode, String newType,
+	private void setAdaptedValueAsDefault(BasicParameterNode methodParameterNode, String newType,
 			IExtLanguageManager extLanguageManager, String currentDefaultValue) {
 		ITypeAdapter<?> adapter = getTypeAdapterProvider().getAdapter(newType);
 
@@ -210,7 +210,7 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 	private class RealChoicesProvider implements IChoicesParentVisitor{
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return node.getRealChoices();
 		}
 

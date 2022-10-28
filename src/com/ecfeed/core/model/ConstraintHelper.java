@@ -23,7 +23,7 @@ import com.ecfeed.core.utils.StringHelper;
 public class ConstraintHelper {
 
 	public static void verifyConversionOfConstraints(
-			MethodParameterNode methodParameterNode, 
+			BasicParameterNode methodParameterNode, 
 			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
@@ -40,7 +40,7 @@ public class ConstraintHelper {
 	}
 
 	public static void convertValuesOfConstraintsToType(
-			MethodParameterNode methodParameterNode, 
+			BasicParameterNode methodParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		MethodNode methodNode = methodParameterNode.getMethod();
@@ -137,7 +137,7 @@ public class ConstraintHelper {
 
 	public static List<ChoiceNode> getChoicesUsedInConstraints(
 			Constraint constraint, 
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<ChoiceNode> result = new ArrayList<>();
 
@@ -163,7 +163,7 @@ public class ConstraintHelper {
 	}
 
 	public static List<String> getLabelsUsedInConstraints(Constraint constraint,
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();
 
@@ -188,7 +188,7 @@ public class ConstraintHelper {
 
 	private static List<ChoiceNode> filterChoicesByParameter(
 			List<ChoiceNode> choicesFromPrecondition,
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<ChoiceNode> result = new ArrayList<>();
 
@@ -207,7 +207,7 @@ public class ConstraintHelper {
 		return result;
 	}
 
-	private static AbstractParameterNode getParameterNodeForComparison(MethodParameterNode methodParameterNode) {
+	private static AbstractParameterNode getParameterNodeForComparison(BasicParameterNode methodParameterNode) {
 
 		if (methodParameterNode.isLinked()) {
 			return methodParameterNode.getLinkToGlobalParameter();
