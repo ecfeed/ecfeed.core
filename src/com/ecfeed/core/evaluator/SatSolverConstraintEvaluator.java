@@ -29,6 +29,8 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	private List<MethodParameterNode> fParameters;
 	private Collection<Constraint> fConstraints;
 
+	private ChoiceNodeComparator fChoiceComparator = new ChoiceNodeComparator();
+
 	private enum TypeOfEndpoint {
 		LEFT_ENDPOINT,
 		RIGHT_ENDPOINT
@@ -157,87 +159,280 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 // ------------------------------------------------------------------------------------
 
 	private void sanitizeRelationStatementsWithRelation() {
+		boolean change = true;
 
-		while (true) {
-			Boolean anyChange = false;
+		while (change) {
+			change = false;
+
 			for (RelationStatement relationStatement : fRelationStatements) {
-				if (sanitizeValsWithRelation(relationStatement)) {
-					anyChange = true;
+				if (sanitizeValuesWithRelation(relationStatement)) {
+					change = true;
 				}
-			}
-
-			if (!anyChange) {
-				break;
 			}
 		}
 	}
 
-	private Boolean sanitizeValsWithRelation(RelationStatement relationStatement) {
+	private boolean sanitizeValuesWithRelation(RelationStatement relation) {
+		IStatementCondition condition = relation.getCondition();
 
-		IStatementCondition condition = relationStatement.getCondition();
-		if (condition instanceof LabelCondition)
+		if (condition instanceof LabelCondition) {
+			return sanitizeValueWithRelationLabel();
+		}
+
+		MethodParameterNode leftParameter = relation.getLeftParameter();
+
+		if (!isNumericalType(leftParameter)) {
 			return false;
+		}
 
-		MethodParameterNode lParam = relationStatement.getLeftParameter();
-
-		if (!JavaLanguageHelper.isExtendedIntTypeName(lParam.getType())
-				&& !JavaLanguageHelper.isFloatingPointTypeName(lParam.getType()))
-			return false;
-
-		List<ChoiceNode> allLVals = new ArrayList<>(fParameterChoices.getSanitized(lParam));
+		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
 
 		if (condition instanceof ParameterCondition) {
-			MethodParameterNode rParam = ((ParameterCondition) condition).getRightParameterNode();
-			List<ChoiceNode> allRVals = new ArrayList<>(fParameterChoices.getSanitized(rParam));
-
-			boolean anyChange = false;
-			List<ChoiceNode> allLValsCopy = new ArrayList<>(allLVals);
-			for (ChoiceNode it : allRVals) {
-				Pair<Boolean, List<ChoiceNode>> changeResult =
-						splitListWithChoiceNode(allLValsCopy, it);
-
-				anyChange = anyChange || changeResult.getFirst();
-				allLValsCopy = changeResult.getSecond();
-			}
-
-			List<ChoiceNode> allRValsCopy = new ArrayList<>(allRVals);
-			for (ChoiceNode it : allLVals) {
-				Pair<Boolean, List<ChoiceNode>> changeResult =
-						splitListWithChoiceNode(allRValsCopy, it);
-				anyChange = anyChange || changeResult.getFirst();
-				allRValsCopy = changeResult.getSecond();
-			}
-
-			fParameterChoices.putSanitized(lParam, new HashSet<>(allLValsCopy));
-
-			fParameterChoices.putSanitized(rParam, new HashSet<>(allRValsCopy));
-
-			return anyChange;
+			return sanitizeValueWithRelationParameter(condition, leftParameter, leftParameterChoices);
 		}
-		if ((condition instanceof ValueCondition) || (condition instanceof ChoiceCondition)) {
-			ChoiceNode it;
 
-			if (condition instanceof ValueCondition) {
-				String val = ((ValueCondition) condition).getRightValue();
+		if (condition instanceof ValueCondition) {
+			return sanitizeValueWithRelationValueChoice(condition, leftParameter, leftParameterChoices);
+		}
 
-				it = allLVals.get(0).makeCloneUnlink();
-				it.setRandomizedValue(false);
-				it.setValueString(val);
-			} else {
-				it = ((ChoiceCondition) condition).getRightChoice();
-			}
-
-			Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(allLVals, it);
-
-			fParameterChoices.putSanitized(lParam, new HashSet<>(changeResult.getSecond()));
-			return changeResult.getFirst();
+		if (condition instanceof ChoiceCondition) {
+			return sanitizeValueWithRelationValueChoice(condition, leftParameter, leftParameterChoices);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid condition type.");
+
 		return true;
 	}
 
+	private boolean sanitizeValueWithRelationLabel() {
+
+		return false;
+	}
+
+	private boolean sanitizeValueWithRelationParameter(IStatementCondition condition, MethodParameterNode leftParameter, List<ChoiceNode> leftParameterChoices) {
+		MethodParameterNode rightParameter = ((ParameterCondition) condition).getRightParameterNode();
+		List<ChoiceNode> rightParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(rightParameter));
+
+		boolean change = false;
+
+		List<ChoiceNode> leftParameterChoicesCopy = new ArrayList<>(leftParameterChoices);
+
+		for (ChoiceNode choice : rightParameterChoices) {
+			Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(leftParameterChoicesCopy, choice);
+
+			change = change || changeResult.getFirst();
+			leftParameterChoicesCopy = changeResult.getSecond();
+		}
+
+		List<ChoiceNode> rightParameterChoicesCopy = new ArrayList<>(rightParameterChoices);
+
+		for (ChoiceNode choice : leftParameterChoices) {
+			Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(rightParameterChoicesCopy, choice);
+
+			change = change || changeResult.getFirst();
+			rightParameterChoicesCopy = changeResult.getSecond();
+		}
+
+		fParameterChoices.putSanitized(leftParameter, new HashSet<>(leftParameterChoicesCopy));
+		fParameterChoices.putSanitized(rightParameter, new HashSet<>(rightParameterChoicesCopy));
+
+		return change;
+	}
+
+	private boolean sanitizeValueWithRelationValueChoice(IStatementCondition condition, MethodParameterNode leftParameter, List<ChoiceNode> leftParameterChoices) {
+		ChoiceNode choice;
+
+		if (condition instanceof ValueCondition) {
+			String value = ((ValueCondition) condition).getRightValue();
+
+			choice = leftParameterChoices.get(0).makeCloneUnlink();
+			choice.setRandomizedValue(false);
+			choice.setValueString(value);
+		} else {
+			choice = ((ChoiceCondition) condition).getRightChoice();
+		}
+
+		Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(leftParameterChoices, choice);
+
+		fParameterChoices.putSanitized(leftParameter, new HashSet<>(changeResult.getSecond()));
+
+		return changeResult.getFirst();
+	}
+
+	private Pair<Boolean, List<ChoiceNode>> splitListWithChoiceNode(List<ChoiceNode> parameterChoices, ChoiceNode choice) {
+		ChoiceNode choiceStart;
+		ChoiceNode choiceEnd;
+
+		if (choice.isRandomizedValue()) {
+			Pair<ChoiceNode, ChoiceNode> choicePair = ChoiceNodeHelper.rangeSplit(choice);
+			choiceStart = choicePair.getFirst();
+			choiceEnd = choicePair.getSecond();
+		} else {
+			choiceStart = choice;
+			choiceEnd = choice;
+		}
+
+		Pair<Boolean, List<ChoiceNode>> changeResultLeft = splitListByValue(parameterChoices, choiceStart, TypeOfEndpoint.LEFT_ENDPOINT);
+		Pair<Boolean, List<ChoiceNode>> changeResultRight =	splitListByValue(changeResultLeft.getSecond(), choiceEnd, TypeOfEndpoint.RIGHT_ENDPOINT);
+
+		return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
+	}
+
+	private Pair<Boolean, List<ChoiceNode>> splitListByValue(List<ChoiceNode> parameterChoices, ChoiceNode choiceRef, TypeOfEndpoint type) {
+		List<ChoiceNode> updatedChoices = new ArrayList<>();
+		boolean change = false;
+
+		for (ChoiceNode choice : parameterChoices) {
+
+			if (!choice.isRandomizedValue()) {
+				updatedChoices.add(choice);
+			} else {
+				Pair<ChoiceNode, ChoiceNode> choicePair = ChoiceNodeHelper.rangeSplit(choice);
+				ChoiceNode choiceStart = choicePair.getFirst();
+				ChoiceNode choiceEnd = choicePair.getSecond();
+
+				ChoiceNode val1 = choiceStart.makeCloneUnlink();
+				ChoiceNode val2 = choiceEnd.makeCloneUnlink();
+
+				choiceUpdateValueString(choiceRef, val1, val2);
+
+				choiceRound(choiceStart, choiceRef, val1, val2);
+				choiceShiftEpsilon(val1, val2, type);
+
+				if (fChoiceComparator.compare(val1, val2) == 0) {
+					updatedChoices.add(choice);
+					continue;
+				}
+
+				int cmp1 = fChoiceComparator.compare(choiceStart, val1);
+				int cmp2 = fChoiceComparator.compare(val2, choiceEnd);
+
+				if (cmp1 > 0 || cmp2 > 0) {
+					updatedChoices.add(choice);
+					continue;
+				}
+
+				ChoiceNode it1 = cmp1 < 0 ? ChoiceNodeHelper.toRangeFromFirst(choiceStart, val1) : choiceStart;
+				ChoiceNode it2 = cmp2 < 0 ? ChoiceNodeHelper.toRangeFromSecond(val2, choiceEnd) : choiceEnd;
+
+				change = true;
+
+				fChoiceMappings.putSanitizedToInput(it1, fChoiceMappings.getSanitizedToInput(choice));
+				fChoiceMappings.putSanitizedToInput(it2, fChoiceMappings.getSanitizedToInput(choice));
+
+				updatedChoices.add(it1);
+				updatedChoices.add(it2);
+			}
+		}
+
+		return new Pair<>(change, updatedChoices);
+	}
+
+	private boolean isFloatType(AbstractParameterNode parameter) {
+
+		return JavaLanguageHelper.isFloatingPointTypeName(parameter.getType());
+	}
+
+	private boolean isIntegerType(AbstractParameterNode parameter) {
+
+		return JavaLanguageHelper.isExtendedIntTypeName(parameter.getType());
+	}
+
+	private boolean isNumericalType(AbstractParameterNode parameter) {
+
+		if (isIntegerType(parameter)) {
+			return true;
+		}
+
+		if (isFloatType(parameter)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private void choiceRound(ChoiceNode choiceStart, ChoiceNode choiceRef, ChoiceNode choice1, ChoiceNode choice2) {
+
+		if (isIntegerType(choiceStart.getParameter()) && isFloatType(choiceRef.getParameter())) {
+			ChoiceNodeHelper.roundValueDown(choice1);
+			ChoiceNodeHelper.roundValueUp(choice2);
+		}
+	}
+
+	private void choiceShiftEpsilon(ChoiceNode choice1, ChoiceNode choice2, TypeOfEndpoint type) {
+
+		if (fChoiceComparator.compare(choice1, choice2) == 0) {
+			if (type == TypeOfEndpoint.LEFT_ENDPOINT) {
+				ChoiceNodeHelper.getPrecedingValue(choice1);
+			} else {
+				ChoiceNodeHelper.getFollowingVal(choice2);
+			}
+		}
+	}
+
+	private void choiceUpdateValueString(ChoiceNode choiceRef, ChoiceNode choice1, ChoiceNode choice2) {
+		String valueString = ChoiceNodeHelper.convertValueToNumeric(choiceRef).getValueString();
+
+		choice1.setValueString(valueString);
+		choice2.setValueString(valueString);
+	}
+
 // ------------------------------------------------------------------------------------
+
+	private void createInputToSanitizedMapping() {
+
+		for (MethodParameterNode method : fParameterChoices.getKeySetSanitized()) {
+
+			fChoiceMappings.putInputToSanitized(method);
+
+			for (ChoiceNode sanitizedChoice : fParameterChoices.getSanitized(method)) {
+
+				ChoiceNode inputChoice = fChoiceMappings.getSanitizedToInput(sanitizedChoice);
+
+				fChoiceMappings.putInputToSanitized(method, inputChoice, sanitizedChoice);
+			}
+		}
+	}
+
+// ------------------------------------------------------------------------------------
+
+	private void createSanitizedAndAtomicMappings() {
+
+		for (MethodParameterNode methodParameterNode : fParameterChoices.getKeySetSanitized()) {
+
+			// TODO - why do we need an empty set ?
+			fParameterChoices.putAtomic(methodParameterNode, new HashSet<>());
+
+			createSanitizedAndAtomicMappingsForParam(methodParameterNode);
+		}
+	}
+
+	private void createSanitizedAndAtomicMappingsForParam(MethodParameterNode methodParameterNode) {
+
+		//build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
+		for (ChoiceNode sanitizedChoiceNode : fParameterChoices.getSanitized(methodParameterNode)) {
+
+			if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), sanitizedChoiceNode)) {
+
+				List<ChoiceNode> interleavedChoices =
+						ChoiceNodeHelper.getInterleavedValues(
+								sanitizedChoiceNode, fParameterChoices.getSizeSanitized());
+
+				fParameterChoices.getAtomic(methodParameterNode).addAll(interleavedChoices);
+
+				for (ChoiceNode interleavedChoiceNode : interleavedChoices) {
+					fChoiceMappings.putSanitizedToAtomic(sanitizedChoiceNode, interleavedChoiceNode);
+				}
+
+			} else {
+
+				fParameterChoices.getAtomic(methodParameterNode).add(sanitizedChoiceNode);
+				fChoiceMappings.putSanitizedToAtomic(sanitizedChoiceNode, sanitizedChoiceNode);
+			}
+		}
+	}
+
+
 
 	@Override
 	public void initialize(List<List<ChoiceNode>> input) {
@@ -375,56 +570,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		return testCaseChoices;
 	}
 
-	private void createInputToSanitizedMapping() {
-
-		for (MethodParameterNode method : fParameterChoices.getKeySetSanitized()) {
-
-			fChoiceMappings.putInputToSanitized(method);
-
-			for (ChoiceNode sanitizedChoice : fParameterChoices.getSanitized(method)) {
-
-				ChoiceNode inputChoice = fChoiceMappings.getSanitizedToInput(sanitizedChoice);
-
-				fChoiceMappings.putInputToSanitized(method, inputChoice, sanitizedChoice);
-			}
-		}
-	}
-
-	private void createSanitizedAndAtomicMappings() {
-
-		for (MethodParameterNode methodParameterNode : fParameterChoices.getKeySetSanitized()) {
-
-			// TODO - why do we need an empty set ?
-			fParameterChoices.putAtomic(methodParameterNode, new HashSet<>());
-
-			createSanitizedAndAtomicMappingsForParam(methodParameterNode);
-		}
-	}
-
-	private void createSanitizedAndAtomicMappingsForParam(MethodParameterNode methodParameterNode) {
-
-		//build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
-		for (ChoiceNode sanitizedChoiceNode : fParameterChoices.getSanitized(methodParameterNode)) {
-
-			if (isRandomizedExtIntOrFloat(methodParameterNode.getType(), sanitizedChoiceNode)) {
-
-				List<ChoiceNode> interleavedChoices =
-						ChoiceNodeHelper.getInterleavedValues(
-								sanitizedChoiceNode, fParameterChoices.getSizeSanitized());
-
-				fParameterChoices.getAtomic(methodParameterNode).addAll(interleavedChoices);
-
-				for (ChoiceNode interleavedChoiceNode : interleavedChoices) {
-					fChoiceMappings.putSanitizedToAtomic(sanitizedChoiceNode, interleavedChoiceNode);
-				}
-
-			} else {
-
-				fParameterChoices.getAtomic(methodParameterNode).add(sanitizedChoiceNode);
-				fChoiceMappings.putSanitizedToAtomic(sanitizedChoiceNode, sanitizedChoiceNode);
-			}
-		}
-	}
 
 	private boolean isRandomizedExtIntOrFloat(String methodParameterType, ChoiceNode choiceNode) {
 
@@ -432,98 +577,6 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 				(JavaLanguageHelper.isExtendedIntTypeName(methodParameterType)
 						|| JavaLanguageHelper.isFloatingPointTypeName(methodParameterType));
 	}
-
-	private Pair<Boolean, List<ChoiceNode>> splitListWithChoiceNode(List<ChoiceNode> toSplit, ChoiceNode val) {
-
-		ChoiceNode start, end;
-		if (val.isRandomizedValue()) {
-			Pair<ChoiceNode, ChoiceNode> startEnd = ChoiceNodeHelper.rangeSplit(val);
-			start = startEnd.getFirst();
-			end = startEnd.getSecond();
-		} else {
-			start = val;
-			end = val;
-		}
-		Pair<Boolean, List<ChoiceNode>> changeResultLeft =
-				splitListByValue(
-						toSplit,
-						start,
-						TypeOfEndpoint.LEFT_ENDPOINT);
-
-		Pair<Boolean, List<ChoiceNode>> changeResultRight =
-				splitListByValue(
-						changeResultLeft.getSecond(),
-						end,
-						TypeOfEndpoint.RIGHT_ENDPOINT);
-
-		return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
-	}
-
-	private Pair<Boolean, List<ChoiceNode>> splitListByValue(List<ChoiceNode> toSplit, ChoiceNode val, TypeOfEndpoint type) {
-
-		Boolean anyChange = false;
-		List<ChoiceNode> newList = new ArrayList<>();
-		for (ChoiceNode it : toSplit)
-			if (!it.isRandomizedValue())
-				newList.add(it);
-			else {
-				Pair<ChoiceNode, ChoiceNode> startEnd = ChoiceNodeHelper.rangeSplit(it);
-				ChoiceNode start = startEnd.getFirst();
-				ChoiceNode end = startEnd.getSecond();
-
-				ChoiceNode val1, val2;
-				val1 = start.makeCloneUnlink();
-				val2 = end.makeCloneUnlink();
-				val1.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
-				val2.setValueString(ChoiceNodeHelper.convertValueToNumeric(val).getValueString());
-				if (JavaLanguageHelper.isExtendedIntTypeName(start.getParameter().getType())
-						&& JavaLanguageHelper.isFloatingPointTypeName(val.getParameter().getType())) {
-					val1 = ChoiceNodeHelper.roundValueDown(val1);
-					val2 = ChoiceNodeHelper.roundValueUp(val2);
-				}
-				if (new ChoiceNodeComparator().compare(val1, val2) == 0) {
-					if (type == TypeOfEndpoint.LEFT_ENDPOINT)
-						val1 = ChoiceNodeHelper.getPrecedingValue(val1);
-					else //RIGHT_ENDPOINT
-						val2 = ChoiceNodeHelper.followingVal(val2);
-				}
-
-				if (new ChoiceNodeComparator().compare(val1, val2) == 0) { //only happens if one was too extreme to be further moved, as in Long.MAX_VALUE or so
-					newList.add(it);
-					continue;
-				}
-				int cmp1 = new ChoiceNodeComparator().compare(start, val1);
-				int cmp2 = new ChoiceNodeComparator().compare(val2, end);
-				if (cmp1 > 0 || cmp2 > 0) {
-					newList.add(it);
-					continue;
-				}
-
-				ChoiceNode it1, it2;
-				if (cmp1 < 0)
-					it1 = ChoiceNodeHelper.toRangeFromFirst(start, val1);
-				else
-					it1 = start;
-				if (cmp2 < 0)
-					it2 = ChoiceNodeHelper.toRangeFromSecond(val2, end);
-				else
-					it2 = end;
-
-				anyChange = true;
-
-				// TODO - side effect - extract
-				fChoiceMappings.putSanitizedToInput(it1, fChoiceMappings.getSanitizedToInput(it));
-				fChoiceMappings.putSanitizedToInput(it2, fChoiceMappings.getSanitizedToInput(it));
-				newList.add(it1);
-				newList.add(it2);
-			}
-
-		return new Pair<>(anyChange, newList);
-	}
-
-
-
-
 
 	private void parseConstraintsToSat() {
 

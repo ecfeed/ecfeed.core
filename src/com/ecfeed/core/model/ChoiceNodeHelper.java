@@ -392,110 +392,96 @@ public class ChoiceNodeHelper {
 		}
 	}
 
-	public static ChoiceNode getPrecedingValue(ChoiceNode choice) {
-
+	public static void getPrecedingValue(ChoiceNode choice) {
 		assertChoiceNotRandomized(choice);
 
 		String type = choice.getParameter().getType();
-		ChoiceNode clone = choice.makeClone();
 
-		choice = convertValueToNumeric(choice);
+		ChoiceNode choiceX = convertValueToNumeric(choice);
 
 		switch(type) {
 		case TYPE_NAME_DOUBLE:
 		case TYPE_NAME_FLOAT: {
-			double val = Double.parseDouble(choice.getValueString());
+			double val = Double.parseDouble(choiceX.getValueString());
 			if(val==0.0)
 				val = -eps;
 			else if(val<0.0)
 				val *= 1+eps;
 			else
 				val /= 1+eps;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 
 		case TYPE_NAME_BYTE:
 		case TYPE_NAME_INT:
 		case TYPE_NAME_SHORT:
 		case TYPE_NAME_LONG: {
-			long val = Long.parseLong(choice.getValueString());
+			long val = Long.parseLong(choiceX.getValueString());
 			if(val!=Long.MIN_VALUE)
 				val--;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 
 		default: {
 			reportExceptionUnhandledType();
-			return null;
 		}
 		}
 	}
 
-	public static ChoiceNode followingVal(ChoiceNode choice) {
+	public static void getFollowingVal(ChoiceNode choice) {
 
 		assertChoiceNotRandomized(choice);
 
 		String type = choice.getParameter().getType();
-		ChoiceNode clone = choice.makeClone();
 
-		choice = convertValueToNumeric(choice);
+		ChoiceNode choiceX = convertValueToNumeric(choice);
 
 		switch(type) {
 		case TYPE_NAME_DOUBLE:
 		case TYPE_NAME_FLOAT: {
-			double val = Double.parseDouble(choice.getValueString());
+			double val = Double.parseDouble(choiceX.getValueString());
 			if(val==0.0)
 				val = eps;
 			else if(val<0.0)
 				val /= 1+eps;
 			else
 				val *= 1+eps;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 		case TYPE_NAME_BYTE:
 		case TYPE_NAME_INT:
 		case TYPE_NAME_SHORT:
 		case TYPE_NAME_LONG: {
-			long val = Long.parseLong(choice.getValueString());
+			long val = Long.parseLong(choiceX.getValueString());
 			if(val != Long.MAX_VALUE)
 				val++;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 		default:
 		{
 			reportExceptionUnhandledType();
-			return null;
 		}
 		}
 	}
 
-	public static ChoiceNode roundValueDown(ChoiceNode choiceInput)	{
-
-		ChoiceNode choice = choiceInput.makeClone();
-
+	public static void roundValueDown(ChoiceNode choice)	{
 		assertChoiceNotRandomized(choice);
 
-		double v = Double.parseDouble(choice.getValueString());
-		long w = (long) Math.floor(v);
-		choice.setValueString(String.valueOf(w));
-		return choice;
+		long val = (long) Math.floor(Double.parseDouble(choice.getValueString()));
+
+		choice.setValueString(String.valueOf(val));
 	}
 
-	public static ChoiceNode roundValueUp(ChoiceNode choiceInput) {
-
-		ChoiceNode choice = choiceInput.makeClone();
-
+	public static void roundValueUp(ChoiceNode choice) {
 		assertChoiceNotRandomized(choice);
 
-		double v = Double.parseDouble(choice.getValueString());
-		long w = (long) Math.ceil(v);
-		choice.setValueString(String.valueOf(w));
+		long val = (long) Math.ceil(Double.parseDouble(choice.getValueString()));
 
-		return choice;
+		choice.setValueString(String.valueOf(val));
 	}
 
 	public static ChoiceNode convertValueToNumeric(ChoiceNode choiceInput) {
