@@ -425,10 +425,6 @@ public class ParameterConditionTest {
 		evaluateForRangeIntegerTypes(JavaLanguageHelper.TYPE_NAME_BYTE);
 	}	
 	
-	
-	
-	
-
 	@Test
 	public void copyAndEqualityTest() {
 		MethodParameterNode leftParam = new MethodParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);

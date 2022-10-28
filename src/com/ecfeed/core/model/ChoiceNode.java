@@ -53,6 +53,8 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		fValueString = value;
 		fLabels = new LinkedHashSet<>();
 		fIsRandomizedValue = isRandomized;
+		
+		fChoices = new ArrayList<ChoiceNode>();
 	}
 
 	@Override
