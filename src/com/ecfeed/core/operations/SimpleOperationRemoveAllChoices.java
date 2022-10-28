@@ -14,18 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class SimpleOperationRemoveAllChoices extends AbstractModelOperation {
 
 	private static final String REMOVE_ALL_CHOICES_OF_PARAMETER = "Remove all choices of parameter";
 
-	ChoicesParentNode fChoicesParentNode;
+	IChoicesParentNode fChoicesParentNode;
 	List<ChoiceNode> fOldChoiceNodes;
 
 	public SimpleOperationRemoveAllChoices(
-			ChoicesParentNode choicesParentNode, IExtLanguageManager extLanguageManager) {
+			IChoicesParentNode choicesParentNode, IExtLanguageManager extLanguageManager) {
 
 		super(REMOVE_ALL_CHOICES_OF_PARAMETER, extLanguageManager);
 

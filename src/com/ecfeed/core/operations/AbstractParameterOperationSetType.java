@@ -18,9 +18,9 @@ import java.util.Map;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -37,7 +37,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	private String fNewTypeInIntrLanguage;
 	private String fCurrentType;
 	private ITypeAdapterProvider fAdapterProvider;
-	private Map<ChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
+	private Map<IChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
 	private Map<ChoiceNode, String> fOriginalValues;
 
 	public AbstractParameterOperationSetType(
@@ -175,21 +175,21 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		return new ReverseOperation(getExtLanguageManager());
 	}
 
-	protected void saveChoices(ChoicesParentNode parent){
+	protected void saveChoices(IChoicesParentNode parent){
 		getOriginalChoices().put(parent, new ArrayList<ChoiceNode>(getChoices(parent)));
 		for(ChoiceNode child : getChoices(parent)){
 			saveChoices(child);
 		}
 	}
 
-	protected void saveValues(ChoicesParentNode parent) {
+	protected void saveValues(IChoicesParentNode parent) {
 		for(ChoiceNode choice : getChoices(parent)){
 			getOriginalValues().put(choice, choice.getValueString());
 			saveValues(choice);
 		}
 	}
 
-	private void adaptChoices(ChoicesParentNode parent) {
+	private void adaptChoices(IChoicesParentNode parent) {
 		Iterator<ChoiceNode> it = getChoices(parent).iterator();
 		ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(fNewTypeInIntrLanguage);
 		while(it.hasNext()){
@@ -249,7 +249,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		}
 	}
 
-	protected Map<ChoicesParentNode, List<ChoiceNode>> getOriginalChoices(){
+	protected Map<IChoicesParentNode, List<ChoiceNode>> getOriginalChoices(){
 		return fOriginalChoices;
 	}
 
@@ -257,7 +257,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		return fOriginalValues;
 	}
 
-	protected List<ChoiceNode> getChoices(ChoicesParentNode parent){
+	protected List<ChoiceNode> getChoices(IChoicesParentNode parent){
 		return parent.getChoices();
 	}
 
@@ -296,14 +296,14 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 					getExtLanguageManager());
 		}
 
-		protected void restoreOriginalChoices(ChoicesParentNode parent) {
+		protected void restoreOriginalChoices(IChoicesParentNode parent) {
 			parent.replaceChoices(getOriginalChoices().get(parent));
 			for(ChoiceNode child : getChoices(parent)){
 				restoreOriginalChoices(child);
 			}
 		}
 
-		protected void restoreOriginalValues(ChoicesParentNode parent) {
+		protected void restoreOriginalValues(IChoicesParentNode parent) {
 			for(ChoiceNode choice : getChoices(parent)){
 				if(getOriginalValues().containsKey(choice)){
 					choice.setValueString(getOriginalValues().get(choice));

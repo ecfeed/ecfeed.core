@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
-import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -23,7 +23,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class GenericOperationAddChoice extends BulkOperation {
 	
 	public GenericOperationAddChoice(
-			ChoicesParentNode target, 
+			IChoicesParentNode target, 
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
 			int index, 
@@ -41,7 +41,7 @@ public class GenericOperationAddChoice extends BulkOperation {
 	}
 
 	public GenericOperationAddChoice(
-			ChoicesParentNode target, 
+			IChoicesParentNode target, 
 			ChoiceNode choice, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
@@ -51,13 +51,13 @@ public class GenericOperationAddChoice extends BulkOperation {
 	}
 
 	private class AddChoiceOperation extends AbstractModelOperation {
-		private ChoicesParentNode fChoicesParentNode;
+		private IChoicesParentNode fChoicesParentNode;
 		private ChoiceNode fChoice;
 		private int fIndex;
 		private ITypeAdapterProvider fAdapterProvider;
 
 		public AddChoiceOperation(
-				ChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, IExtLanguageManager extLanguageManager) {
+				IChoicesParentNode target, ChoiceNode choice, ITypeAdapterProvider adapterProvider, int index, IExtLanguageManager extLanguageManager) {
 
 			super(OperationNames.ADD_PARTITION, extLanguageManager);
 			fChoicesParentNode = target;

@@ -45,8 +45,8 @@ public class ChoiceNodeHelper {
 	private static final double eps = 0.000001;
 
 	public static void cloneChoiceNodesRecursively(
-			ChoicesParentNode srcParentNode, 
-			ChoicesParentNode dstParentNode) {
+			IChoicesParentNode srcParentNode, 
+			IChoicesParentNode dstParentNode) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -804,7 +804,7 @@ public class ChoiceNodeHelper {
 	}
 	
 	
-	public static String generateNewChoiceName(ChoicesParentNode fChoicesParentNode, String startChoiceName) {
+	public static String generateNewChoiceName(IChoicesParentNode fChoicesParentNode, String startChoiceName) {
 
 		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
 			return startChoiceName;

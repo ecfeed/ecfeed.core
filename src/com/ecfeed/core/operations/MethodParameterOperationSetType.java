@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintHelper;
@@ -143,7 +143,7 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected List<ChoiceNode> getChoices(ChoicesParentNode parent) {
+	protected List<ChoiceNode> getChoices(IChoicesParentNode parent) {
 		try {
 			return (List<ChoiceNode>)parent.accept(new RealChoicesProvider());
 		} catch(Exception e) {
