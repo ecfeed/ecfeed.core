@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class BasicParameterNode extends AbstractParameterNode {
 
@@ -344,38 +345,43 @@ public class BasicParameterNode extends AbstractParameterNode {
 	}
 
 	@Override
-	public boolean isMatch(IAbstractNode node) {
-		if (node instanceof BasicParameterNode == false) {
+	public boolean isMatch(IAbstractNode other) {
+		
+		if (other instanceof BasicParameterNode == false) {
 			return false;
 		}
-		BasicParameterNode comparedParameter = (BasicParameterNode) node;
+		
+		BasicParameterNode otherBasicParameter = (BasicParameterNode) other;
 
-		if (getType().equals(comparedParameter.getType()) == false) {
-			return false;
-		}
-
-		if (isExpected() != comparedParameter.isExpected()) {
+		if (getType().equals(otherBasicParameter.getType()) == false) {
 			return false;
 		}
 
-		if (fDefaultValue
-				.equals(comparedParameter.getDefaultValue()) == false) {
+		if (isExpected() != otherBasicParameter.isExpected()) {
+			return false;
+		}
+
+		String defaultValue = getDefaultValue();
+		String otherDefaultValue = otherBasicParameter.getDefaultValue();
+		
+		if (!StringHelper.isEqual(defaultValue, otherDefaultValue)) {
 			return false;
 		}
 
 		int choicesCount = getChoiceCount();
-		if (choicesCount != comparedParameter.getChoiceCount()) {
+		int otherChoicesCount = otherBasicParameter.getChoiceCount();
+		
+		if (choicesCount != otherChoicesCount) {
 			return false;
 		}
 
 		for (int i = 0; i < choicesCount; i++) {
-			if (getChoices().get(i)
-					.isMatch(comparedParameter.getChoices().get(i)) == false) {
+			if (getChoices().get(i).isMatch(otherBasicParameter.getChoices().get(i)) == false) {
 				return false;
 			}
 		}
 
-		return super.isMatch(node);
+		return super.isMatch(other);
 	}
 
 	@Override

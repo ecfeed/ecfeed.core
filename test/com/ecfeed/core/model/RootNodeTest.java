@@ -83,7 +83,8 @@ public class RootNodeTest{
 	}
 
 	@Test
-	public void compareTest(){
+	public void compareTest() {
+		
 		RootNode r1 = new RootNode("r1", null);
 		RootNode r2 = new RootNode("r2", null);
 

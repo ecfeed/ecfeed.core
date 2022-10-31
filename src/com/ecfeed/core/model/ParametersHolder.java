@@ -170,13 +170,21 @@ public class ParametersHolder {
 
 	public boolean isMatch(ParametersHolder otherParametersHolder) {
 		
-		if (getParameters().size() != otherParametersHolder.getParameters().size()) {
+		List<AbstractParameterNode> parameters = getParameters();
+		List<AbstractParameterNode> otherParameters = otherParametersHolder.getParameters();
+		
+		int parametersSize = parameters.size();
+		
+		if (parametersSize != otherParameters.size()) {
 			return false;
 		}
 
-		for (int i = 0; i < getParameters().size(); ++i) {
+		for (int i = 0; i < parametersSize; ++i) {
 
-			if (getParameters().get(i).isMatch(otherParametersHolder.getParameters().get(i)) == false) {
+			AbstractParameterNode abstractParameterNode = parameters.get(i);
+			AbstractParameterNode otherParameter = otherParameters.get(i);
+			
+			if (!abstractParameterNode.isMatch(otherParameter)) {
 				return false;
 			}
 		}
