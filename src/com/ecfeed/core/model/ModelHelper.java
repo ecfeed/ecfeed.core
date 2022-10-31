@@ -126,10 +126,6 @@ public class ModelHelper {
 
 	public static String getNodeTypeName(IAbstractNode abstractNode) { // TODO SIMPLE-VIEW visitor, test
 
-		if (abstractNode instanceof GlobalParameterNode) {
-			return "GlobalParameter";
-		}
-
 		if (abstractNode instanceof ClassNode) {
 			return "Class";
 		}

@@ -75,13 +75,15 @@ public class IsNodeIncludedInGenerationPredicate {
 		}
 
 		if (abstractNode instanceof BasicParameterNode) {
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode)abstractNode;
+			
+			if (basicParameterNode.isGlobalParameter()) {
+				
+				return shouldSerializeGlobalParameterNode(abstractNode, fAllowedChoiceInput);		
+			} else 
 
 			return shouldSerializeMethodParameterNode(abstractNode, fGeneratorMethodNode);
-		}
-
-		if (abstractNode instanceof GlobalParameterNode) {
-
-			return shouldSerializeGlobalParameterNode(abstractNode, fAllowedChoiceInput); 
 		}
 
 		if (abstractNode instanceof ChoiceNode) {

@@ -26,7 +26,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
-	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
+	public static BasicParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
 
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
 			return null;
@@ -40,7 +40,7 @@ public class MethodNodeHelper {
 
 		if (StringHelper.isEqual(className, parentName)) {
 			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
-			return (GlobalParameterNode)abstractParameterNode;
+			return (BasicParameterNode)abstractParameterNode;
 		}
 
 		RootNode rootNode = classNode.getRoot();
@@ -48,7 +48,7 @@ public class MethodNodeHelper {
 
 		if (parentName == null || rootName.equals(parentName)) {
 			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
-			return (GlobalParameterNode)abstractParameterNode;
+			return (BasicParameterNode)abstractParameterNode;
 		}			
 
 		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");

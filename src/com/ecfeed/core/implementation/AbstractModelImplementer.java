@@ -12,15 +12,14 @@ package com.ecfeed.core.implementation;
 
 import java.util.List;
 
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -52,11 +51,6 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
-			return isImplementableNode(node);
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
 			return isImplementableNode(node);
 		}
 
@@ -104,11 +98,6 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		}
 
 		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return implement(node);
-		}
-
-		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			return implement(node);
 		}
@@ -142,7 +131,6 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 				(type.equals(ClassNode.class))||
 				(type.equals(MethodNode.class))||
 				(type.equals(BasicParameterNode.class))||
-				(type.equals(GlobalParameterNode.class))||
 				(type.equals(TestCaseNode.class))||
 				(type.equals(ChoiceNode.class))
 				){
@@ -186,7 +174,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		// TODO MO-RE remove with other implementers
 //		for(AbstractParameterNode abstractParameterNode : rootNode.getParameters()){
 //			
-//			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;  
+//			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;  
 //			if(isImplementableNode(abstractParameterNode) && getImplementationStatus(abstractParameterNode) != EImplementationStatus.IMPLEMENTED){
 //				implement(abstractParameterNode);
 //			}
@@ -213,7 +201,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	protected boolean implement(ClassNode classNode) throws Exception{
-		for(GlobalParameterNode parameter : classNode.getGlobalParameters()){
+		for(BasicParameterNode parameter : classNode.getGlobalParameters()){
 			if(isImplementableNode(parameter) && getImplementationStatus(parameter) != EImplementationStatus.IMPLEMENTED){
 				implement(parameter);
 			}
@@ -320,10 +308,6 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	}
 
 	protected boolean isImplementableNode(BasicParameterNode node){
-		return hasImplementableNode(node.getChoices());
-	}
-
-	protected boolean isImplementableNode(GlobalParameterNode node){
 		return hasImplementableNode(node.getChoices());
 	}
 

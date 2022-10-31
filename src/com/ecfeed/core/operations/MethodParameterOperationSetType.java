@@ -14,17 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IChoicesParentVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
@@ -212,11 +211,6 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
 			return node.getRealChoices();
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return node.getChoices();
 		}
 
 		@Override

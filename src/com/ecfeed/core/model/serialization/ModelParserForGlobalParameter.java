@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -30,7 +30,7 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 		fModelParserForChoice = modelParserForChoice;
 	}
 	
-	public Optional<GlobalParameterNode> parseGlobalParameter(
+	public Optional<BasicParameterNode> parseGlobalParameter(
 			Element element, 
 			IModelChangeRegistrator modelChangeRegistrator, 
 			
@@ -46,7 +46,7 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 			return Optional.empty();
 		}
 
-		GlobalParameterNode targetGlobalParameterNode = new GlobalParameterNode(name, type, modelChangeRegistrator);
+		BasicParameterNode targetGlobalParameterNode = new BasicParameterNode(name, type, modelChangeRegistrator);
 
 		ModelParserHelper.parseParameterProperties(element, targetGlobalParameterNode);
 

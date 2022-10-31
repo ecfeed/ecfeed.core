@@ -24,7 +24,6 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -84,7 +83,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		ArrayList<ClassNode> classes = new ArrayList<>();
 		ArrayList<MethodNode> methods = new ArrayList<>();
 		ArrayList<BasicParameterNode> params = new ArrayList<>();
-		ArrayList<GlobalParameterNode> globals = new ArrayList<>();
+		ArrayList<BasicParameterNode> globals = new ArrayList<>();
 		ArrayList<ChoiceNode> choices = new ArrayList<>();
 		ArrayList<IAbstractNode> others = new ArrayList<>();
 		HashSet<ConstraintNode> constraints = new HashSet<>();
@@ -96,9 +95,13 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			} else if(node instanceof MethodNode){
 				methods.add((MethodNode)node);
 			} else if(node instanceof BasicParameterNode){
-				params.add((BasicParameterNode)node);
-			} else if(node instanceof GlobalParameterNode){
-				globals.add((GlobalParameterNode)node);
+				
+				if (((BasicParameterNode) node).isGlobalParameter()) {
+					globals.add((BasicParameterNode)node);
+				} else {
+					params.add((BasicParameterNode)node);
+				}
+			
 			} else if(node instanceof ConstraintNode){
 				constraints.add((ConstraintNode)node);
 			} else if(node instanceof TestCaseNode){
@@ -137,9 +140,9 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		 * duplicate method - just proceed to remove global and all linkers and
 		 * remove it from the lists.
 		 */
-		Iterator<GlobalParameterNode> globalItr = globals.iterator();
+		Iterator<BasicParameterNode> globalItr = globals.iterator();
 		while (globalItr.hasNext()) {
-			GlobalParameterNode global = globalItr.next();
+			BasicParameterNode global = globalItr.next();
 			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
 			boolean isDependent = false;
 			for (BasicParameterNode param : linkers) {
@@ -242,20 +245,22 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 							for (AbstractParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes);
-								if (node instanceof BasicParameterNode) {
+								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
+
+									addOperation(
+											new GenericOperationRemoveGlobalParameter(
+													((BasicParameterNode)node).getParametersParent(), 
+													(BasicParameterNode)node, 
+													true,
+													getExtLanguageManager()));	
+									
+
+								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
 
 									addOperation(
 											new MethodOperationRemoveParameter(
 													method, (BasicParameterNode)node, validate, false, getExtLanguageManager()));
-
-								} else if (node instanceof GlobalParameterNode) {
-
-									addOperation(
-											new GenericOperationRemoveGlobalParameter(
-													((GlobalParameterNode)node).getParametersParent(), 
-													(GlobalParameterNode)node, 
-													true,
-													getExtLanguageManager()));	
+									
 								}
 							}
 						}

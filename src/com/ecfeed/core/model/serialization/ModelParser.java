@@ -16,14 +16,13 @@ import java.io.InputStream;
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
@@ -135,7 +134,7 @@ public class ModelParser {
 		}
 	}
 
-	public GlobalParameterNode parseGlobalParameter(
+	public BasicParameterNode parseGlobalParameter(
 			InputStream istream, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings outErrorList) throws ParserException {
 		
 		try {

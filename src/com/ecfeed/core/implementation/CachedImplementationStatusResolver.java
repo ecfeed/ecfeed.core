@@ -13,14 +13,13 @@ package com.ecfeed.core.implementation;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -100,19 +99,22 @@ public abstract class CachedImplementationStatusResolver extends AbstractImpleme
 
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
+			
+			if (node.isGlobalParameter()) {
+
+				fCache.remove(node);
+
+				for (BasicParameterNode parameter : node.getLinkedMethodParameters()) {
+					fCache.remove(parameter);
+				}
+
+				return null;
+				
+			} else {
+			
 			fCache.remove(node);
 			return null;
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			fCache.remove(node);
-
-			for (BasicParameterNode parameter : node.getLinkedMethodParameters()) {
-				fCache.remove(parameter);
 			}
-
-			return null;
 		}
 
 		@Override

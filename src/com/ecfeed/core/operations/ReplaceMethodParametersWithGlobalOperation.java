@@ -12,11 +12,10 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -45,7 +44,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 				IExtLanguageManager extLanguageManager) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
 			MethodNode method = target.getMethod();
-			GlobalParameterNode global = new GlobalParameterNode(target);
+			BasicParameterNode global = new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLinked(target, true, extLanguageManager));

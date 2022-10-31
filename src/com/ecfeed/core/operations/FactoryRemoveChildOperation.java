@@ -12,13 +12,12 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -44,7 +43,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 		if(fChild instanceof ClassNode){
 			return new RootOperationRemoveClass(node, (ClassNode)fChild, fExtLanguageManager);
 		}
-		if(fChild instanceof GlobalParameterNode){
+		if(fChild instanceof BasicParameterNode && ((BasicParameterNode)(fChild)).isGlobalParameter()){
 			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguageManager);
 		}
 		return null;
@@ -55,7 +54,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 		if(fChild instanceof MethodNode){
 			return new ClassOperationRemoveMethod(node, (MethodNode)fChild, fExtLanguageManager);
 		}
-		if(fChild instanceof GlobalParameterNode){
+		if(fChild instanceof BasicParameterNode && ((BasicParameterNode)(fChild)).isGlobalParameter()){
 			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguageManager);
 		}
 		return null;
@@ -80,18 +79,20 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 
 	@Override
 	public Object visit(BasicParameterNode node) throws Exception {
-		if(fChild instanceof ChoiceNode){
-			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
-		}
-		return null;
-	}
 
-	@Override
-	public Object visit(GlobalParameterNode node) throws Exception {
-		if(fChild instanceof ChoiceNode){
-			return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+		if (node.isGlobalParameter()) {
+			if(fChild instanceof ChoiceNode){
+				return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+			}
+			return null;
+
+		} else {
+
+			if(fChild instanceof ChoiceNode){
+				return new GenericOperationRemoveChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+			}
+			return null;
 		}
-		return null;
 	}
 
 	@Override

@@ -139,13 +139,13 @@ public class ConstraintNode extends AbstractNode {
 
 	public boolean mentions(AbstractParameterNode parameter) {
 
-		if (parameter instanceof BasicParameterNode) {
+		if (parameter instanceof BasicParameterNode && (!parameter.isGlobalParameter())) {
 			BasicParameterNode param = (BasicParameterNode)parameter;
 			return fConstraint.mentions(param);
 		}
 
-		if (parameter instanceof GlobalParameterNode) {
-			GlobalParameterNode global = (GlobalParameterNode)parameter;
+		if (parameter instanceof BasicParameterNode && parameter.isGlobalParameter()) {
+			BasicParameterNode global = (BasicParameterNode)parameter;
 			for (BasicParameterNode methodParam: global.getLinkedMethodParameters()) {
 				return fConstraint.mentions(methodParam);
 			}

@@ -15,7 +15,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NO
 import java.util.Optional;
 
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -52,7 +52,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
 		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			Optional<BasicParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
 			if (node.isPresent()) {
 				targetRootNode.addParameter(node.get());
 			}

@@ -12,15 +12,14 @@ package com.ecfeed.core.implementation;
 
 import java.util.List;
 
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -56,11 +55,6 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 		}
 
 		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return implementationStatus(node);
-		}
-
-		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			return implementationStatus(node);
 		}
@@ -79,6 +73,7 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 		public Object visit(ChoiceNode node) throws Exception {
 			return implementationStatus(node);
 		}
+
 	}
 
 	public AbstractImplementationStatusResolver(IPrimitiveTypePredicate primitiveTypeTester){
@@ -148,15 +143,18 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 	}
 
 	protected EImplementationStatus implementationStatus(BasicParameterNode parameter){
-		EImplementationStatus status = implementationStatus((AbstractParameterNode)parameter);
-		if(fPrimitiveTypeTester.isPrimitive(parameter.getType()) && parameter.isExpected()){
-			status = EImplementationStatus.IMPLEMENTED;
-		}
-		return status;
-	}
 
-	protected EImplementationStatus implementationStatus(GlobalParameterNode parameter){
-		return implementationStatus((AbstractParameterNode)parameter);
+		if (parameter.isGlobalParameter()) {
+			
+			return implementationStatus((AbstractParameterNode)parameter);
+		} else {
+
+			EImplementationStatus status = implementationStatus((AbstractParameterNode)parameter);
+			if(fPrimitiveTypeTester.isPrimitive(parameter.getType()) && parameter.isExpected()){
+				status = EImplementationStatus.IMPLEMENTED;
+			}
+			return status;
+		}
 	}
 
 	protected EImplementationStatus implementationStatus(AbstractParameterNode parameter){

@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.ChoicesParentNode;
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -72,8 +71,8 @@ public class GenericMoveOperation extends BulkOperation {
 					addOperation((IModelOperation)node.getParent().accept(
 							new FactoryRemoveChildOperation(node, adapterProvider, false, extLanguageManager)));
 
-					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
-						GlobalParameterNode parameter = (GlobalParameterNode)node;
+					if((node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) && newParent instanceof MethodNode){
+						BasicParameterNode parameter = (BasicParameterNode)node;
 						node = new BasicParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
 					}
 					

@@ -19,23 +19,23 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode { 
 		super(name, modelChangeRegistrator);
 	}
 
-	public List<GlobalParameterNode> getGlobalParameters() {
-		List<GlobalParameterNode> result = new ArrayList<>();
+	public List<BasicParameterNode> getGlobalParameters() {
+		List<BasicParameterNode> result = new ArrayList<>();
 		for(AbstractParameterNode parameter : getParameters()){
-			result.add((GlobalParameterNode)parameter);
+			result.add((BasicParameterNode)parameter);
 		}
 		return result;
 	}
 
-	public List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking() {
-		List<GlobalParameterNode> result = getAllGlobalParametersAvailableForLinking(getParent());
+	public List<BasicParameterNode> getAllGlobalParametersAvailableForLinking() {
+		List<BasicParameterNode> result = getAllGlobalParametersAvailableForLinking(getParent());
 		result.addAll(getGlobalParameters());
 		return result;
 	}
 
-	public GlobalParameterNode findGlobalParameter(String qualifiedName){
+	public BasicParameterNode findGlobalParameter(String qualifiedName){
 		
-		for (GlobalParameterNode parameter : getAllGlobalParametersAvailableForLinking()) {
+		for (BasicParameterNode parameter : getAllGlobalParametersAvailableForLinking()) {
 			
 			String currentQualifiedName = parameter.getQualifiedName();
 			
@@ -47,10 +47,10 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode { 
 		return null;
 	}
 
-	private List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking(IAbstractNode parent) {
+	private List<BasicParameterNode> getAllGlobalParametersAvailableForLinking(IAbstractNode parent) {
 		
 		if(parent == null){
-			return new ArrayList<GlobalParameterNode>();
+			return new ArrayList<BasicParameterNode>();
 		}
 		
 		if (parent instanceof RootNode) {
@@ -71,12 +71,12 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode { 
 			return getAllGlobalParametersAvailableForLinking(parent.getParent());
 		}
 		
-		return new ArrayList<GlobalParameterNode>();
+		return new ArrayList<BasicParameterNode>();
 	}
 
-	public GlobalParameterNode getGlobalParameter(String parameterName) {
+	public BasicParameterNode getGlobalParameter(String parameterName) {
 		if(findParameter(parameterName) != null){
-			return (GlobalParameterNode)findParameter(parameterName);
+			return (BasicParameterNode)findParameter(parameterName);
 		}
 		return null;
 	}

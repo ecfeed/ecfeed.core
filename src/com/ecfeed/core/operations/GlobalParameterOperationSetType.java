@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -20,11 +20,11 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class GlobalParameterOperationSetType extends BulkOperation {
 
-	GlobalParameterNode fGlobalParameterNode;
+	BasicParameterNode fGlobalParameterNode;
 	ParameterConversionDefinition fParameterConversionDefinition;
 	
 	public GlobalParameterOperationSetType(
-			GlobalParameterNode globalParameterNode, 
+			BasicParameterNode globalParameterNode, 
 			String newType, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ITypeAdapterProvider adapterProvider,

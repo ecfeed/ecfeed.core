@@ -10,19 +10,18 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OperationSimpleSetLink extends AbstractModelOperation {
 
 	BasicParameterNode fMethodParameterNode;
-	GlobalParameterNode fNewlink;
-	GlobalParameterNode fOldLink;
+	BasicParameterNode fNewlink;
+	BasicParameterNode fOldLink;
 
 	public OperationSimpleSetLink(
 			BasicParameterNode methodParameterNode,
-			GlobalParameterNode link,
+			BasicParameterNode link,
 			IExtLanguageManager extLanguageManager){
 
 		super("Set link", extLanguageManager);
@@ -39,7 +38,7 @@ public class OperationSimpleSetLink extends AbstractModelOperation {
 		markModelUpdated();
 	}
 
-	private void setLink(GlobalParameterNode link) {
+	private void setLink(BasicParameterNode link) {
 
 		if (link == null) {
 			fMethodParameterNode.setLinkToGlobalParameter(null);

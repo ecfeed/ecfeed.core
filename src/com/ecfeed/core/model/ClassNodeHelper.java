@@ -25,10 +25,10 @@ public class ClassNodeHelper {
 	public static final String CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE = "contains method with identical signature";
 
 
-	public static GlobalParameterNode addGlobalParameterToClass(
+	public static BasicParameterNode addGlobalParameterToClass(
 			ClassNode classNode, String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode (name, type, modelChangeRegistrator);
+		BasicParameterNode globalParameterNode = new BasicParameterNode (name, type, modelChangeRegistrator);
 		classNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;

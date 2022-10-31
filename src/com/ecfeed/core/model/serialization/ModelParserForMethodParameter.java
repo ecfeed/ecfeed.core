@@ -20,9 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -87,7 +86,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 				return Optional.empty();
 			}
 
-			GlobalParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			BasicParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
 
 			if (link != null) {
 				targetMethodParameterNode.setLinkToGlobalParameter(link);

@@ -69,7 +69,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		copy.setProperties(getProperties());
 
-		for(GlobalParameterNode parameter : getGlobalParameters()){
+		for(BasicParameterNode parameter : getGlobalParameters()){
 			copy.addParameter(parameter.makeClone());
 		}
 
@@ -88,7 +88,6 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 	@Override
 	public int getMaxChildIndex(IAbstractNode potentialChild){
-		if(potentialChild instanceof GlobalParameterNode) return getParameters().size();
 		if(potentialChild instanceof BasicParameterNode) return getParameters().size();
 		if(potentialChild instanceof MethodNode) return getMethods().size();
 		return super.getMaxChildIndex(potentialChild);
@@ -352,23 +351,23 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 
-	public List<GlobalParameterNode> getGlobalParameters() {
+	public List<BasicParameterNode> getGlobalParameters() {
 
-		List<GlobalParameterNode> result = new ArrayList<>();
+		List<BasicParameterNode> result = new ArrayList<>();
 		result.addAll(getParametersFromClass());
 		
 		return result;
 	}
 
-	private List<GlobalParameterNode> getParametersFromClass() {
+	private List<BasicParameterNode> getParametersFromClass() {
 		
-		List<GlobalParameterNode> globalParameterNodes = new ArrayList<>();
+		List<BasicParameterNode> globalParameterNodes = new ArrayList<>();
 		
 		List<AbstractParameterNode> abstractParameters = getParameters();
 		
 		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
 			
-			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 			
 			globalParameterNodes.add(globalParameterNode);
 		}
@@ -376,9 +375,9 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return globalParameterNodes;
 	}
 
-	public List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking() {
+	public List<BasicParameterNode> getAllGlobalParametersAvailableForLinking() {
 
-		List<GlobalParameterNode> result = new ArrayList<>();
+		List<BasicParameterNode> result = new ArrayList<>();
 		
 		RootNode rootNode = (RootNode)getParent();
 		result.addAll(rootNode.getGlobalParameters());
@@ -388,11 +387,11 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return result;
 	}
 	
-	public GlobalParameterNode findGlobalParameter(String qualifiedName){
+	public BasicParameterNode findGlobalParameter(String qualifiedName){
 		
-		List<GlobalParameterNode> globalParameters = getAllGlobalParametersAvailableForLinking();
+		List<BasicParameterNode> globalParameters = getAllGlobalParametersAvailableForLinking();
 		
-		for (GlobalParameterNode parameter : globalParameters) {
+		for (BasicParameterNode parameter : globalParameters) {
 			
 			String currentQualifiedName = parameter.getQualifiedName();
 			

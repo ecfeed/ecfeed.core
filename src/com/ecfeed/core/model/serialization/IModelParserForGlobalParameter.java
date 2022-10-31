@@ -12,7 +12,7 @@ package com.ecfeed.core.model.serialization;
 
 import java.util.Optional;
 
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -20,7 +20,7 @@ import nu.xom.Element;
 
 public interface IModelParserForGlobalParameter {
 
-	public Optional<GlobalParameterNode> parseGlobalParameter(
+	public Optional<BasicParameterNode> parseGlobalParameter(
 			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList);
 
 }

@@ -41,17 +41,16 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_A
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
 
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -97,7 +96,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		for (AbstractParameterNode parameterNode : rootNode.getParameters()) {
 
-			GlobalParameterNode globalParameterNode = (GlobalParameterNode)parameterNode;
+			BasicParameterNode globalParameterNode = (BasicParameterNode)parameterNode;
 			
 			if (shouldSerializeNode(globalParameterNode)) {
 				targetRootElement.appendChild((Element)visit(globalParameterNode));
@@ -119,7 +118,7 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		for (GlobalParameterNode parameterNode : classNode.getGlobalParameters()) {
+		for (BasicParameterNode parameterNode : classNode.getGlobalParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
 				targetClassElement.appendChild((Element)visit(parameterNode));
@@ -161,31 +160,32 @@ public abstract class XomBuilder implements IModelVisitor {
 	@Override
 	public Object visit(BasicParameterNode node)  throws Exception {
 
-		Element targetParameterElement = createTargetMethodParameterElement(node); 
+		if (node.isGlobalParameter()) {
 
-		for (ChoiceNode choiceNode : node.getRealChoices()) {
+			Element targetGlobalParamElement = createTargetGlobalParameterElement(node);
 
-			if (shouldSerializeNode(choiceNode)) {
-				targetParameterElement.appendChild((Element)choiceNode.accept(this));
+			for (ChoiceNode choiceNode : node.getChoices()) {
+
+				if (shouldSerializeNode(choiceNode)) {
+					targetGlobalParamElement.appendChild((Element)choiceNode.accept(this));
+				}
 			}
-		}
 
-		return targetParameterElement;
-	}
+			return targetGlobalParamElement;
 
-	@Override
-	public Object visit(GlobalParameterNode node) throws Exception {
+		} else {
 
-		Element targetGlobalParamElement = createTargetGlobalParameterElement(node);
+			Element targetParameterElement = createTargetMethodParameterElement(node); 
 
-		for (ChoiceNode choiceNode : node.getChoices()) {
+			for (ChoiceNode choiceNode : node.getRealChoices()) {
 
-			if (shouldSerializeNode(choiceNode)) {
-				targetGlobalParamElement.appendChild((Element)choiceNode.accept(this));
+				if (shouldSerializeNode(choiceNode)) {
+					targetParameterElement.appendChild((Element)choiceNode.accept(this));
+				}
 			}
-		}
 
-		return targetGlobalParamElement;
+			return targetParameterElement;
+		}
 	}
 
 	@Override
@@ -325,7 +325,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetParameterElement;
 	}
 
-	private Element createTargetGlobalParameterElement(GlobalParameterNode node) {
+	private Element createTargetGlobalParameterElement(BasicParameterNode node) {
 		Element targetGlobalParamElement = createAbstractElement(getParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {

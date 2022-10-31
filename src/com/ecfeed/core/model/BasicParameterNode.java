@@ -23,7 +23,7 @@ public class BasicParameterNode extends AbstractParameterNode {
 	private boolean fExpected;
 	private String fDefaultValue;
 	private boolean fLinked;
-	private GlobalParameterNode fLinkToGlobalParameter;
+	private BasicParameterNode fLinkToGlobalParameter;
 	private MethodNode fLinkToMethod;
 	private List<ChoiceNode> fChoicesCopy;
 
@@ -33,7 +33,7 @@ public class BasicParameterNode extends AbstractParameterNode {
 			String defaultValue,
 			boolean expected,
 			boolean linked,
-			GlobalParameterNode link,
+			BasicParameterNode link,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, type, modelChangeRegistrator);
@@ -59,6 +59,14 @@ public class BasicParameterNode extends AbstractParameterNode {
 	public BasicParameterNode(
 			String name,
 			String type,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		this(name, type, null, false, false, null, modelChangeRegistrator);
+	}
+	
+	public BasicParameterNode(
+			String name,
+			String type,
 			String defaultValue,
 			boolean expected) {
 		
@@ -70,7 +78,7 @@ public class BasicParameterNode extends AbstractParameterNode {
 			String defaultValue, 
 			boolean expected, 
 			boolean linked,
-			GlobalParameterNode link) {
+			BasicParameterNode link) {
 
 		this(
 				source.getName(),
@@ -85,6 +93,33 @@ public class BasicParameterNode extends AbstractParameterNode {
 		this(source, defaultValue, expected, false, null);
 	}
 
+	public BasicParameterNode(BasicParameterNode source) {
+
+		this(
+				source.getName(),
+				source.getType(),
+				source.getDefaultValue(),
+				source.fExpected,
+				source.fLinked,
+				source.fLinkToGlobalParameter,
+				source.getModelChangeRegistrator());
+		
+		for(ChoiceNode choice : source.getChoices()){
+			addChoice(choice.makeClone());
+		}
+	}
+	
+	@Override
+	public boolean isGlobalParameter() {
+		IAbstractNode parent = getParent();
+		
+		if (parent instanceof MethodNode) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	@Override
 	public String getNonQualifiedName() {
 		return getName();
@@ -286,7 +321,7 @@ public class BasicParameterNode extends AbstractParameterNode {
 		registerChange();
 	}
 
-	public GlobalParameterNode getLinkToGlobalParameter() {
+	public BasicParameterNode getLinkToGlobalParameter() {
 
 		return fLinkToGlobalParameter;
 	}
@@ -296,7 +331,7 @@ public class BasicParameterNode extends AbstractParameterNode {
 		return fLinkToMethod;
 	}
 
-	public void setLinkToGlobalParameter(GlobalParameterNode link) {
+	public void setLinkToGlobalParameter(BasicParameterNode link) {
 
 		fLinkToGlobalParameter = link;
 		fLinkToMethod = null;
@@ -368,4 +403,41 @@ public class BasicParameterNode extends AbstractParameterNode {
 		return getMethod().getMentioningConstraints(this, label);
 	}
 
+	public List<ChoiceNode> getChoicesCopy() {
+		List<ChoiceNode> copy = new ArrayList<>();
+		for(ChoiceNode choice : getChoices()){
+			copy.add(choice.makeClone());
+		}
+		return copy;
+	}
+
+	public List<BasicParameterNode> getLinkedMethodParameters(){
+
+		List<BasicParameterNode> result = new ArrayList<>();
+		List<MethodNode> methods = getMethods();
+
+		if (methods == null) {
+			return new ArrayList<>();
+
+		}
+
+		for(MethodNode method : methods) {
+			result.addAll(method.getLinkers(this));
+		}
+
+		return result;
+	}
+
+	public String getQualifiedName() {
+
+		if (isGlobalParameter()) {
+			if(getParent() == getRoot() || getParent() == null){
+				return getName();
+			}
+			return getParent().getName() + ":" + getName();
+		} else {
+			return getNonQualifiedName();
+		}
+	}
+	
 }

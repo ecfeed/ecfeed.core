@@ -25,6 +25,8 @@ public abstract class AbstractParameterNode extends ChoicesParentNode {
 
 	private Optional<String> fSuggestedType;
 
+	public abstract boolean isGlobalParameter();
+	
 	public abstract List<MethodNode> getMethods();
 	public abstract Object accept(IParameterVisitor visitor) throws Exception;
 

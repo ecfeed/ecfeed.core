@@ -17,12 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -82,7 +81,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveValues(fAbstractParameterNode);
 
 		// Check for duplicate signatures possibly caused by global parameter type change
-		if(fAbstractParameterNode instanceof GlobalParameterNode){
+		if (fAbstractParameterNode instanceof BasicParameterNode && fAbstractParameterNode.isGlobalParameter()) {
 			checkForSignatureDuplicates();
 		}
 
@@ -91,7 +90,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	private void checkForSignatureDuplicates() {
 
-		GlobalParameterNode target = (GlobalParameterNode)fAbstractParameterNode;
+		BasicParameterNode target = (BasicParameterNode)fAbstractParameterNode;
 		List<MethodNode> linkingMethods = new ArrayList<MethodNode>(target.getMethods());
 		MethodNode testedMethod;
 
@@ -103,7 +102,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	}
 
 	private void checkOneMethodForSignatureDuplicates(
-			GlobalParameterNode target, 
+			BasicParameterNode target, 
 			MethodNode testedMethod,
 			List<MethodNode> inOutLinkingMethods) {
 
@@ -142,7 +141,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	}
 
 	private void prepareCollectionsOfMethods(
-			GlobalParameterNode target, 
+			BasicParameterNode target, 
 			MethodNode methodNode, 
 			MethodNode testedMethod,
 			List<MethodNode> inOutLinkingMethods, 

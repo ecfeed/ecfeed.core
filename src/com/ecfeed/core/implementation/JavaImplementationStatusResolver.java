@@ -18,15 +18,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -62,11 +61,6 @@ public class JavaImplementationStatusResolver extends AbstractImplementationStat
 			return implementationStatus(node);
 		}
 
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return implementationStatus(node);
-		}
-		
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			return implementationStatus(node);

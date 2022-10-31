@@ -11,13 +11,16 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.IParameterVisitor;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.IParameterVisitor;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.LogHelperCore;
 
 public class ChoiceOperationSetValue extends AbstractModelOperation {
 
@@ -105,11 +108,6 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 			return null;
 		}
 
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return null;
-		}
-
 	}
 
 	private class ReverseOperation extends AbstractModelOperation{
@@ -119,11 +117,6 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 			@Override
 			public Object visit(BasicParameterNode parameter) throws Exception {
 				parameter.setDefaultValueString(fOriginalDefaultValue);
-				return null;
-			}
-
-			@Override
-			public Object visit(GlobalParameterNode parameter) throws Exception {
 				return null;
 			}
 

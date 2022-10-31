@@ -119,7 +119,7 @@ public class FactoryRenameOperation {
 				ExceptionHelper.reportRuntimeException(errorMessage);
 			}
 
-			GlobalParameterNode target = (GlobalParameterNode) getOwnNode();
+			BasicParameterNode target = (BasicParameterNode) getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
 				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
@@ -228,12 +228,14 @@ public class FactoryRenameOperation {
 		
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
-			return new MethodParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
-		}
 
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GlobalParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			if (node.isGlobalParameter()) {
+
+				return new GlobalParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			} else {
+
+				return new MethodParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			}
 		}
 
 		@Override

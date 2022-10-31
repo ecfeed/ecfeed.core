@@ -43,11 +43,6 @@ public enum ENodeType {
 		}
 
 		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return null;
-		}
-
-		@Override
 		public Object visit(TestCaseNode node) throws Exception {
 			return null;
 		}

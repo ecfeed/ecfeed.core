@@ -651,7 +651,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return Arrays.asList(new MethodNode[]{this});
 	}
 
-	public List<BasicParameterNode> getLinkers(GlobalParameterNode globalParameter){
+	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter){
 		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
 		for(BasicParameterNode localParameter : getMethodParameters()){
 			if(localParameter.isLinked() && localParameter.getLinkToGlobalParameter() == globalParameter){
@@ -689,7 +689,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		return null;
 	}
 
-	public List<GlobalParameterNode> getAllGlobalParametersAvailableForLinking() {
+	public List<BasicParameterNode> getAllGlobalParametersAvailableForLinking() {
 		
 		if(getClassNode() != null){
 			return getClassNode().getAllGlobalParametersAvailableForLinking();
