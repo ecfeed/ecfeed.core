@@ -418,6 +418,10 @@ public class BasicParameterNode extends AbstractParameterNode {
 	}
 
 	public List<BasicParameterNode> getLinkedMethodParameters(){
+		
+		if (isGlobalParameter()) {
+			return new ArrayList<>();
+		}
 
 		List<BasicParameterNode> result = new ArrayList<>();
 		List<MethodNode> methods = getMethods();
