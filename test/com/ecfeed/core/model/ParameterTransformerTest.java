@@ -1394,7 +1394,7 @@ public class ParameterTransformerTest {
 	}
 
 	@Test
-	public void covertConstraintsWithCheckIfPossible() {
+	public void convertConstraintsWithCheckIfPossible() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -1459,7 +1459,7 @@ public class ParameterTransformerTest {
 		}
 
 		public void operate(
-				WhatToTest testChoices, 
+				WhatToTest whatToTest, 
 				IsChoiceRandomized isRandomized, 
 				String oldType, 
 				String newType, 
@@ -1467,7 +1467,7 @@ public class ParameterTransformerTest {
 				SuccessExpected successExpected,
 				String newValue) {
 
-			if (isRandomized == IsChoiceRandomized.TRUE && testChoices == WhatToTest.CONSTRAINTS) {
+			if (isRandomized == IsChoiceRandomized.TRUE && whatToTest == WhatToTest.CONSTRAINTS) {
 				return; // randomized for choices only
 			}
 
@@ -1475,7 +1475,7 @@ public class ParameterTransformerTest {
 
 			fMethodParameterNode.setType(oldType);
 
-			if (testChoices == WhatToTest.CHOICES) {
+			if (whatToTest == WhatToTest.CHOICES) {
 				fChoiceNodeOfMethod.setValueString(value);
 
 				if (isRandomized == IsChoiceRandomized.TRUE) {
@@ -1508,7 +1508,7 @@ public class ParameterTransformerTest {
 
 			convertParameter(newType, newValue);
 
-			if (testChoices == WhatToTest.CHOICES) {
+			if (whatToTest == WhatToTest.CHOICES) {
 				checkValueOfChoice(fChoiceNodeOfMethod, newValue);
 			} else {
 				checkValueFromConstraint(fMethodParameterNode.getMethod(), newValue);

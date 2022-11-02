@@ -167,7 +167,7 @@ public class ParameterTransformer {
 			AbstractParameterNode abstractParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		if (abstractParameterNode instanceof BasicParameterNode) {
+		if (abstractParameterNode instanceof BasicParameterNode && abstractParameterNode.isGlobalParameter()) {
 
 			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 
