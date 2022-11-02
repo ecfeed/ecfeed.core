@@ -12,10 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.*;
 
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.ParameterConversionDefinition;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.*;
 
 public class ConstraintHelper {
 
@@ -213,16 +210,16 @@ public class ConstraintHelper {
 		}
 	}
 
-	public static Optional<MethodNode> getMethodNode(Constraint constraint) {
+	public static Set<MethodNode> getMethods(Constraint constraint) {
 		Constraint.CollectingMethodVisitor visitor = new Constraint.CollectingMethodVisitor();
 
 		try {
 			constraint.getPrecondition().accept(visitor);
 			constraint.getPostcondition().accept(visitor);
 		} catch (Exception e) {
-			return Optional.empty();
+			ExceptionHelper.reportRuntimeException("Something is wrong");
 		}
 
-		return Optional.of(visitor.getMethodNode());
+		return visitor.getMethods();
 	}
 }

@@ -26,7 +26,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	private List<Pair<Integer, ExpectedValueStatement>> fOldExpectedValueConstraintsData = new ArrayList<>();
 	private List<Pair<Integer, AssignmentStatement>> fExpectedValueAssignmentsData = new ArrayList<>();
 
-	private List<MethodParameterNode> fParameters;
+	private List<MethodParameterNode> fParameters = new ArrayList<>();
 	private Collection<Constraint> fConstraints;
 
 	private ChoiceNodeComparator fChoiceComparator = new ChoiceNodeComparator();
@@ -47,14 +47,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	private void init(Collection<Constraint> constraints) {
 
-		Optional<MethodNode> method = initGetMethodNode(constraints);
+		Set<MethodNode> methods = initGetMethodNode(constraints);
 
-		if (!method.isPresent()) {
+		if (methods.size() == 0) {
 			return;
 		}
 
 		fConstraints = constraints;
-		fParameters = method.get().getMethodParameters();
+
+		for (MethodNode method : methods) {
+			fParameters.addAll(method.getMethodParameters());
+		}
 
 		fParameterChoices.update(fParameters);
 		fChoiceMappings.updateSanitizedToInput(fParameterChoices.getInputChoices());
@@ -64,17 +67,14 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		enabled = true;
 	}
 
-	private Optional<MethodNode> initGetMethodNode(Collection<Constraint> constraints) {
+	private Set<MethodNode> initGetMethodNode(Collection<Constraint> constraints) {
+		Set<MethodNode> methods = new HashSet<>();
 
 		for (Constraint constraint : constraints) {
-			Optional<MethodNode> method = ConstraintHelper.getMethodNode(constraint);
-
-			if (method.isPresent()) {
-				return method;
-			}
+			methods.addAll(ConstraintHelper.getMethods(constraint));
 		}
 
-		return Optional.empty();
+		return methods;
 	}
 
 	private void initSat4Solver() {
@@ -297,19 +297,19 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			if (!choice.isRandomizedValue()) {
 				updatedChoices.add(choice);
 			} else {
-// Divide the choice into two boundaries (lower, upper).
+// Divide the provided choice into two boundary choices (lower, upper).
 				Pair<ChoiceNode, ChoiceNode> choicePair = ChoiceNodeHelper.rangeSplit(choice);
 				ChoiceNode choiceStart = choicePair.getFirst();
 				ChoiceNode choiceEnd = choicePair.getSecond();
 
 				ChoiceNode choiceStartMutable = choiceStart.makeCloneUnlink();
 				ChoiceNode choiceEndMutable = choiceEnd.makeCloneUnlink();
-
+// Change value of the two choices to the value of the reference choice.
 				choiceUpdateValueString(choiceRef, choiceStartMutable, choiceEndMutable);
-
+// Alter values of the two choices (the reference value should be between them).
 				choiceRound(choiceStart, choiceRef, choiceStartMutable, choiceEndMutable);
 				choiceShiftEpsilon(choiceStartMutable, choiceEndMutable, type);
-
+// This should not happen (there should be always a small gap between values). However, this might happen if values are very large.
 				if (fChoiceComparator.compare(choiceStartMutable, choiceEndMutable) == 0) {
 					updatedChoices.add(choice);
 					continue;
@@ -363,21 +363,22 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	}
 
 	private void choiceRound(ChoiceNode choiceStart, ChoiceNode choiceRef, ChoiceNode choiceStartMutable, ChoiceNode choiceEndMutable) {
-
-// We cannot compare integer to float directly. Here, we change float to integer and diminish the gap between both values.
+// If the reference choice type is float and provided choice type is integer, the float value will be positioned between two integer values.
 		if (isIntegerType(choiceStart.getParameter()) && isFloatType(choiceRef.getParameter())) {
+// Modify the lower boundary.
 			ChoiceNodeHelper.roundValueDown(choiceStartMutable);
+// Modify the upper boundary.
 			ChoiceNodeHelper.roundValueUp(choiceEndMutable);
 		}
 	}
 
-	private void choiceShiftEpsilon(ChoiceNode choice1, ChoiceNode choice2, TypeOfEndpoint type) {
-
-		if (fChoiceComparator.compare(choice1, choice2) == 0) {
+	private void choiceShiftEpsilon(ChoiceNode choiceStartMutable, ChoiceNode choiceEndMutable, TypeOfEndpoint type) {
+// If the provided choice values are identical, make a small gap between them.
+		if (fChoiceComparator.compare(choiceStartMutable, choiceEndMutable) == 0) {
 			if (type == TypeOfEndpoint.LEFT_ENDPOINT) {
-				ChoiceNodeHelper.getPrecedingValue(choice1);
+				ChoiceNodeHelper.getPrecedingValue(choiceStartMutable);
 			} else {
-				ChoiceNodeHelper.getFollowingVal(choice2);
+				ChoiceNodeHelper.getFollowingVal(choiceEndMutable);
 			}
 		}
 	}

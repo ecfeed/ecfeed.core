@@ -933,17 +933,19 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public static class CollectingMethodVisitor  implements IStatementVisitor {
 
-		private MethodNode fMethodNode;
+		private Set<MethodNode> fMethods = new HashSet<>();
 
 		public CollectingMethodVisitor() {
 		}
 
-		public MethodNode getMethodNode() {
-			return fMethodNode;
+		public Set<MethodNode> getMethods() {
+
+			return fMethods;
 		}
 
 		@Override
 		public Object visit(StaticStatement statement) {
+
 			return null;
 		}
 
@@ -955,17 +957,11 @@ public class Constraint implements IConstraint<ChoiceNode> {
 					CollectingMethodVisitor visitor = new CollectingMethodVisitor();
 					child.accept(visitor);
 
-					if (visitor.getMethodNode() == null) {
+					if (visitor.getMethods().size() == 0) {
 						continue;
 					}
 
-					if (fMethodNode != null) {
-						if (fMethodNode != visitor.getMethodNode()) {
-							ExceptionHelper.reportRuntimeException("Something is wrong");
-						}
-					}
-
-					fMethodNode = visitor.getMethodNode();
+					fMethods.addAll(visitor.getMethods());
 				} catch (Exception e) {
 					ExceptionHelper.reportRuntimeException("Something is wrong");
 				}
@@ -977,7 +973,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ExpectedValueStatement statement) {
 
-			fMethodNode = statement.getLeftMethodParameterNode().getMethod();
+			fMethods.add(statement.getLeftMethodParameterNode().getMethod());
 
 			return null;
 		}
@@ -985,28 +981,32 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(RelationStatement statement) {
 
-			fMethodNode = statement.getLeftParameter().getMethod();
+			fMethods.add(statement.getLeftParameter().getMethod());
 
 			return null;
 		}
 
 		@Override
 		public Object visit(LabelCondition condition) {
+
 			return null;
 		}
 
 		@Override
 		public Object visit(ChoiceCondition condition) {
+
 			return null;
 		}
 
 		@Override
 		public Object visit(ParameterCondition condition) {
+
 			return null;
 		}
 
 		@Override
 		public Object visit(ValueCondition condition) {
+
 			return null;
 		}
 	}
