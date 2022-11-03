@@ -30,7 +30,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 class ParseConstraintToSATVisitor implements IStatementVisitor {
 
 //    private MethodNode fMethodNode;
-    private List<MethodParameterNode> fMethodParameterNode;
+    private List<MethodParameterNode> fParameters;
 
     private EcSatSolver fSat4Solver;
     private ParameterChoices fParamChoiceSets;
@@ -40,13 +40,13 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
 
     public ParseConstraintToSATVisitor(
-            List<MethodParameterNode> methodParameterNode,
+            List<MethodParameterNode> parameters,
             EcSatSolver sat4Solver,
             ParameterChoices paramChoiceSets,
             ChoiceMappings choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
-        fMethodParameterNode = methodParameterNode;
+        fParameters = parameters;
         fSat4Solver = sat4Solver;
         fParamChoiceSets = paramChoiceSets;
         fChoicesMappingBucket = choicesMappingsBucket;
@@ -66,7 +66,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                     try {
                         childID = (Integer) child.accept(
                                 new ParseConstraintToSATVisitor(
-                                        fMethodParameterNode,
+                                        fParameters,
                                         fSat4Solver,
                                         fParamChoiceSets,
                                         fChoicesMappingBucket,
@@ -90,7 +90,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                     try {
                         childID = (Integer) child.accept(
                                 new ParseConstraintToSATVisitor(
-                                        fMethodParameterNode,
+                                        fParameters,
                                         fSat4Solver,
                                         fParamChoiceSets,
                                         fChoicesMappingBucket,
@@ -186,12 +186,12 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         Integer myID = fSat4Solver.newId();
 
-        int lParamIndex = fMethodParameterNode.indexOf(leftMethodParameterNode);
+        int lParamIndex = fParameters.indexOf(leftMethodParameterNode);
         if (lParamIndex == -1) {
             reportParamWithoutMethodException();
         }
         for (ChoiceNode lChoice : fParamChoiceSets.getAtomic(leftMethodParameterNode)) {
-            List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethodParameterNode.size(), null));
+            List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fParameters.size(), null));
             dummyValues.set(lParamIndex, lChoice);
             EvaluationResult result = statement.evaluate(dummyValues);
             Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.eqGet(leftMethodParameterNode).get(lChoice);
@@ -219,7 +219,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         Integer myID = fSat4Solver.newId();
 
-        int lParamIndex = fMethodParameterNode.indexOf(lParam);
+        int lParamIndex = fParameters.indexOf(lParam);
         if (lParamIndex == -1) {
             reportParamWithoutMethodException();
         }
@@ -232,7 +232,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fChoicesMappingBucket,
                 fChoiceToSolverIdMappings);
 
-        int rParamIndex = fMethodParameterNode.indexOf(rParam);
+        int rParamIndex = fParameters.indexOf(rParam);
         if (rParamIndex == -1) {
             reportParamWithoutMethodException();
         }

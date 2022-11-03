@@ -42,10 +42,29 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			return;
 		}
 
-		init(constraints);
+		initMethod(constraints);
 	}
 
-	private void init(Collection<Constraint> constraints) {
+	public SatSolverConstraintEvaluator(Collection<Constraint> constraints,	List<MethodParameterNode> parameters) {
+
+		if (constraints == null || constraints.size() == 0) {
+			return;
+		}
+
+		MethodNode method = new MethodNode("dupa");
+		parameters.forEach(method::addParameter);
+
+		fParameters = method.getMethodParameters();
+		fConstraints = constraints;
+		fParameterChoices.update(fParameters);
+		fChoiceMappings.updateSanitizedToInput(fParameterChoices.getInputChoices());
+
+		initSat4Solver();
+
+		enabled = true;
+	}
+
+	private void initMethod(Collection<Constraint> constraints) {
 
 		Set<MethodNode> methods = initGetMethodNode(constraints);
 

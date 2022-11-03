@@ -15,36 +15,36 @@ public class SatSolverConstraintCreatorTest {
     static ClassNode classNode = new ClassNode("Class", null);
 
     static MethodNode m1 = ClassNodeHelper.addMethodToClass(classNode, "Method1", null);
-    static MethodParameterNode m1p1 = MethodNodeHelper.addParameterToMethod(m1, "M1P1", "String");
+    static MethodParameterNode m1p1 = MethodNodeHelper.addParameterToMethod(m1, "M1P1", "int");
     static ChoiceNode m1p1c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C1", "1");
     static ChoiceNode m1p1c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C2", "2");
     static ChoiceNode m1p1c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C3", "3");
-    static MethodParameterNode m1p2 = MethodNodeHelper.addParameterToMethod(m1, "M1P2", "String");
+    static MethodParameterNode m1p2 = MethodNodeHelper.addParameterToMethod(m1, "M1P2", "int");
     static ChoiceNode m1p2c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p2, "M1P2C1", "1");
     static ChoiceNode m1p2c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p2, "M1P2C2", "2");
     static ChoiceNode m1p2c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p2, "M1P2C3", "3");
-    static MethodParameterNode m1p3 = MethodNodeHelper.addParameterToMethod(m1, "M1P3", "String");
+    static MethodParameterNode m1p3 = MethodNodeHelper.addParameterToMethod(m1, "M1P3", "int");
     static ChoiceNode m1p3c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p3, "M1P3C1", "1");
     static ChoiceNode m1p3c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p3, "M1P3C2", "2");
     static ChoiceNode m1p3c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p3, "M1P3C3", "3");
 
     static MethodNode m2 = ClassNodeHelper.addMethodToClass(classNode, "Method2", null);
-    static MethodParameterNode m2p1 = MethodNodeHelper.addParameterToMethod(m2, "M2P1", "String");
+    static MethodParameterNode m2p1 = MethodNodeHelper.addParameterToMethod(m2, "M2P1", "int");
     static ChoiceNode m2p1c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p1, "M2P1C1", "1");
     static ChoiceNode m2p1c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p1, "M2P1C2", "2");
     static ChoiceNode m2p1c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p1, "M2P1C3", "3");
-    static MethodParameterNode m2p2 = MethodNodeHelper.addParameterToMethod(m2, "M2P2", "String");
+    static MethodParameterNode m2p2 = MethodNodeHelper.addParameterToMethod(m2, "M2P2", "int");
     static ChoiceNode m2p2c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p2, "M2P2C1", "1");
     static ChoiceNode m2p2c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p2, "M2P2C2", "2");
     static ChoiceNode m2p2c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p2, "M2P2C3", "3");
-    static MethodParameterNode m2p3 = MethodNodeHelper.addParameterToMethod(m2, "M2P3", "String");
+    static MethodParameterNode m2p3 = MethodNodeHelper.addParameterToMethod(m2, "M2P3", "int");
     static ChoiceNode m2p3c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p3, "M2P3C1", "1");
     static ChoiceNode m2p3c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p3, "M2P3C2", "2");
     static ChoiceNode m2p3c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p3, "M2P3C3", "3");
 
     @Test
     public void test1() {
-        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraints1(), null);
+        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraints1(), m1.getMethodParameters());
 
         evaluator.initialize(getDomain1());
 
@@ -55,7 +55,7 @@ public class SatSolverConstraintCreatorTest {
 
     @Test
     public void test2() {
-        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraints2(), null);
+        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraints2(), m2.getMethodParameters());
 
         evaluator.initialize(getDomain2());
 
@@ -64,9 +64,14 @@ public class SatSolverConstraintCreatorTest {
         System.out.println(results);
     }
 
-//    @Test
+    @Test
     public void testAll() {
-        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraintsAll(), null);
+        List<MethodParameterNode> parameters = new ArrayList<>();
+
+        parameters.addAll(m1.getMethodParameters());
+        parameters.addAll(m2.getMethodParameters());
+
+        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraintsAll(), parameters);
 
         evaluator.initialize(getDomainAll());
 
