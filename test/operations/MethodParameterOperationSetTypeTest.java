@@ -29,9 +29,6 @@ import com.ecfeed.core.utils.TestHelper;
 
 public class MethodParameterOperationSetTypeTest {
 
-	// TODO DE-NO add tests for MethodParameterOperationSetType with parameterConversionDefinition not empty
-	// TODO DE-NO add tests for ParameterConversionDefinition
-
 	@Test
 	public void setTypeInSimpleModeForOneParam() {
 
@@ -165,7 +162,6 @@ public class MethodParameterOperationSetTypeTest {
 //		return parameterConversionDefinition;
 //	}
 
-	// TODO DE-NO TEST
 //	@Test
 //	public void setTextToNumberInSimpleMode() {
 //
@@ -199,7 +195,6 @@ public class MethodParameterOperationSetTypeTest {
 //		assertEquals("byte", methodParameterNode1.getType());
 //	}
 
-	// TODO DE-NO TEST
 //	@Test
 //	public void setTypeInSimpleModeForTwoParams() {
 //
