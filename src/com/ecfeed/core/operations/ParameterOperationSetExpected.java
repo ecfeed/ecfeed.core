@@ -17,6 +17,7 @@ import java.util.ListIterator;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintNodeListHolder;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -127,7 +128,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 				}
 			}
 
-			MethodNode.ConstraintsItr constraintItr = methodNode.getIterator();
+			ConstraintNodeListHolder.ConstraintsItr constraintItr = methodNode.getIterator();
 			while(methodNode.hasNextConstraint(constraintItr)){
 				if(methodNode.getNextConstraint(constraintItr).mentions(fTarget)){
 					methodNode.removeConstraint(constraintItr);

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintNodeListHolder;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -71,7 +72,7 @@ public class MethodOperationMakeConsistent extends AbstractModelOperation {
 			}
 		}
 
-		MethodNode.ConstraintsItr constraintItr = fMethodNode.getIterator();
+		ConstraintNodeListHolder.ConstraintsItr constraintItr = fMethodNode.getIterator();
 		while (fMethodNode.hasNextConstraint(constraintItr)) {
 			if (!fMethodNode.getNextConstraint(constraintItr).isConsistent()) {
 				fMethodNode.removeConstraint(constraintItr);

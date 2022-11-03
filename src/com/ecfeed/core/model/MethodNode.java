@@ -69,11 +69,7 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 		registerChange();
 	}
 
-	public static interface ConstraintsItr {
-
-	}
-
-	private static class ConstraintsItrImpl implements ConstraintsItr {
+	private static class ConstraintsItrImpl implements ConstraintNodeListHolder.ConstraintsItr {
 
 		Iterator<ConstraintNode> fIterator;
 
@@ -83,21 +79,21 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode {
 
 	}
 
-	public ConstraintsItr getIterator() {
+	public ConstraintNodeListHolder.ConstraintsItr getIterator() {
 		return new ConstraintsItrImpl(fConstraintNodes.iterator());
 	}
 
-	public boolean hasNextConstraint(ConstraintsItr contIterator) {
+	public boolean hasNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator) {
 
 		return ((ConstraintsItrImpl)contIterator).fIterator.hasNext();
 	}
 
-	public ConstraintNode getNextConstraint(ConstraintsItr contIterator) {
+	public ConstraintNode getNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator) {
 
 		return ((ConstraintsItrImpl)contIterator).fIterator.next();
 	}
 
-	public void removeConstraint(ConstraintsItr contIterator) {
+	public void removeConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator) {
 
 		((ConstraintsItrImpl)contIterator).fIterator.remove();
 		registerChange();
