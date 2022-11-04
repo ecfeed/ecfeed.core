@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import java.util.List;
 import java.util.Set;
 
-public interface IConstraintsParent extends IAbstractNode {
+public interface IConstraintsParentNode extends IAbstractNode {
 	
 	public ConstraintNodeListHolder.ConstraintsItr getIterator();
 	public boolean hasNextConstraint(ConstraintNodeListHolder.ConstraintsItr contIterator);

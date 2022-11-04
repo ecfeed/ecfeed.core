@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
-public class MethodNode  extends AbstractNode implements IParametersParentNode, IConstraintsParent {
+public class MethodNode  extends AbstractNode implements IParametersParentNode, IConstraintsParentNode {
 
 	ParametersHolder fParametersHolder;
 	private List<TestCaseNode> fTestCaseNodes;
