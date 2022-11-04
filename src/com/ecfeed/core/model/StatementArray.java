@@ -176,7 +176,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean updateReferences(IParametersParentNode method) {
+	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
 
 		for (AbstractStatement statement: fStatements) {
 			if (!statement.updateReferences(method)) {

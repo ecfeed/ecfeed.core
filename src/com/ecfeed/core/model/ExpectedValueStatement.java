@@ -165,7 +165,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean updateReferences(IParametersParentNode method){
+	public boolean updateReferences(IParametersAndConstraintsParentNode method){
 		BasicParameterNode parameter = (BasicParameterNode)method.findParameter(fLeftMethodParameterNode.getName());
 		if(parameter != null && parameter.isExpected()){
 			fLeftMethodParameterNode = parameter;

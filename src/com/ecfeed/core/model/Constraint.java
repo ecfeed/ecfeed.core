@@ -574,7 +574,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
-	public boolean updateReferences(MethodNode method) {
+	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
 
 		if (fPrecondition.updateReferences(method) && fPostcondition.updateReferences(method)) {
 			return true;

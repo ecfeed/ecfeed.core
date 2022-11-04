@@ -39,7 +39,7 @@ public class AbstractStatementTest {
 			return null;
 		}
 		@Override
-		public boolean updateReferences(IParametersParentNode method){
+		public boolean updateReferences(IParametersAndConstraintsParentNode method){
 			return true;
 		}
 
