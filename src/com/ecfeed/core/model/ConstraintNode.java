@@ -170,11 +170,11 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public ConstraintNode getCopy(MethodNode method) {
+	public ConstraintNode getCopy(MethodNode parent) {
 
 		ConstraintNode copy = makeClone();
 
-		if (copy.updateReferences(method))
+		if (copy.updateReferences(parent))
 			return copy;
 		else {
 

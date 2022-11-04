@@ -44,6 +44,16 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {
+		
+		String defaultValue = parentMethodParameterNode.getDefaultValue();
+
+		ChoiceNode choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, defaultValue, parentMethodParameterNode.getModelChangeRegistrator());
+		choiceNode.setParent(parentMethodParameterNode);
+
+		return choiceNode;
+	}
+	
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode) {

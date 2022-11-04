@@ -97,7 +97,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 			fOriginalConstraints = new ArrayList<>(method.getConstraintNodes());
 
 			method.removeTestCases();
-			method.removeConstraintsWithParameterChoices(fTarget);
+			method.removeMentioningConstraints(fTarget);
 		}
 
 		@Override
