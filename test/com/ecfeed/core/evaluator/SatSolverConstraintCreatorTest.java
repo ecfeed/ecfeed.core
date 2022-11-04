@@ -3,12 +3,10 @@ package com.ecfeed.core.evaluator;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SatSolverConstraintCreatorTest {
 
@@ -42,125 +40,128 @@ public class SatSolverConstraintCreatorTest {
     static ChoiceNode m2p3c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p3, "M2P3C2", "2");
     static ChoiceNode m2p3c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m2p3, "M2P3C3", "3");
 
-    @Test
-    public void test1() {
-        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraints1(), m1.getMethodParameters());
+    static RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
+    static RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p2, EMathRelation.LESS_THAN, m1p3c3);
 
-        evaluator.initialize(getDomain1());
+    static Constraint m1c1 = new Constraint("M1C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
 
-        EvaluationResult results = evaluator.evaluate(getSet1());
+    static RelationStatement m2r1 = RelationStatement.createRelationStatementWithChoiceCondition(m2p1, EMathRelation.EQUAL, m2p1c1);
+    static RelationStatement m2r2 = RelationStatement.createRelationStatementWithChoiceCondition(m2p2, EMathRelation.LESS_THAN, m2p3c3);
 
-        System.out.println(results);
+    static Constraint m2c1 = new Constraint("M2C1", ConstraintType.EXTENDED_FILTER, m2r1, m2r2,null);
+
+    static {
+        m1.addConstraint( new ConstraintNode("M1C1", m1c1, null));
+        m2.addConstraint(new ConstraintNode("M2C1", m2c1, null));
+    }
+
+    public static MethodNode getMethod() {
+        MethodNode method = new MethodNode("test");
+
+        MethodNode method1 = m1;
+        MethodNode method2 = m2;
+
+        method1.getMethodParameters().forEach(method::addParameter);
+        method2.getMethodParameters().forEach(method::addParameter);
+
+        method1.getConstraintNodes().forEach(method::addConstraint);
+        method2.getConstraintNodes().forEach(method::addConstraint);
+
+        return method;
+    }
+
+    public static MethodNode getMethodMix() {
+        MethodNode method = new MethodNode("test");
+
+        MethodNode method1 = m1;
+        MethodNode method2 = m2;
+
+        method.addParameter(method1.getParameter(0));
+        method.addParameter(method2.getParameter(0));
+        method.addParameter(method1.getParameter(1));
+        method.addParameter(method2.getParameter(1));
+        method.addParameter(method1.getParameter(2));
+        method.addParameter(method2.getParameter(2));
+
+        method1.getConstraintNodes().forEach(method::addConstraint);
+        method2.getConstraintNodes().forEach(method::addConstraint);
+
+        return method;
     }
 
     @Test
-    public void test2() {
-        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraints2(), m2.getMethodParameters());
+    public void test() {
+        MethodNode method = getMethod();
 
-        evaluator.initialize(getDomain2());
+        Collection<Constraint> constraints = method.getConstraints();
+        List<List<ChoiceNode>> testDomain = method.getTestDomain();
 
-        EvaluationResult results = evaluator.evaluate(getSet2());
+        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(constraints, null);
+        evaluator.initialize(testDomain);
 
-        System.out.println(results);
+        List<ChoiceNode> testSetTrue = Arrays.asList(
+                testDomain.get(0).get(0),
+                testDomain.get(1).get(1),
+                testDomain.get(2).get(2),
+                testDomain.get(3).get(0),
+                testDomain.get(4).get(1),
+                testDomain.get(5).get(2)
+        );
+
+        EvaluationResult resultsTrue = evaluator.evaluate(testSetTrue);
+        System.out.println(resultsTrue);
+
+        List<ChoiceNode> testSetFalse = Arrays.asList(
+                testDomain.get(0).get(0),
+                testDomain.get(1).get(2),
+                testDomain.get(2).get(2),
+                testDomain.get(3).get(0),
+                testDomain.get(4).get(1),
+                testDomain.get(5).get(2)
+        );
+
+        EvaluationResult resultsFalse = evaluator.evaluate(testSetFalse);
+        System.out.println(resultsFalse);
+
+        Assertions.assertEquals(resultsFalse.toString(), "FALSE");
+        Assertions.assertEquals(resultsTrue.toString(), "TRUE");
     }
 
     @Test
-    public void testAll() {
-        List<MethodParameterNode> parameters = new ArrayList<>();
+    public void testMix() {
+        MethodNode method = getMethodMix();
 
-        parameters.addAll(m1.getMethodParameters());
-        parameters.addAll(m2.getMethodParameters());
+        Collection<Constraint> constraints = method.getConstraints();
+        List<List<ChoiceNode>> testDomain = method.getTestDomain();
 
-        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(getConstraintsAll(), parameters);
+        SatSolverConstraintEvaluator evaluator = new SatSolverConstraintEvaluator(constraints, null);
+        evaluator.initialize(testDomain);
 
-        evaluator.initialize(getDomainAll());
+        List<ChoiceNode> testSetTrue = Arrays.asList(
+                testDomain.get(0).get(0),
+                testDomain.get(1).get(0),
+                testDomain.get(2).get(1),
+                testDomain.get(3).get(1),
+                testDomain.get(4).get(2),
+                testDomain.get(5).get(2)
+        );
 
-        EvaluationResult results = evaluator.evaluate(getSetAll());
+        EvaluationResult resultsTrue = evaluator.evaluate(testSetTrue);
+        System.out.println(resultsTrue);
 
-        System.out.println(results);
+        List<ChoiceNode> testSetFalse = Arrays.asList(
+                testDomain.get(0).get(0),
+                testDomain.get(1).get(0),
+                testDomain.get(2).get(1),
+                testDomain.get(3).get(2),
+                testDomain.get(4).get(2),
+                testDomain.get(5).get(2)
+        );
+
+        EvaluationResult resultsFalse = evaluator.evaluate(testSetFalse);
+        System.out.println(resultsFalse);
+
+        Assertions.assertEquals(resultsFalse.toString(), "FALSE");
+        Assertions.assertEquals(resultsTrue.toString(), "TRUE");
     }
-
-    public static Set<Constraint> getConstraints1() {
-        RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
-        RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p2, EMathRelation.LESS_THAN, m1p3c3);
-
-        Constraint c1 = new Constraint("M1C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
-
-        Set<Constraint> constraints = new HashSet<>();
-
-        constraints.add(c1);
-
-        return constraints;
-    }
-
-    public static Set<Constraint> getConstraints2() {
-        RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m2p1, EMathRelation.EQUAL, m2p1c1);
-        RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m2p2, EMathRelation.LESS_THAN, m2p3c3);
-
-        Constraint c1 = new Constraint("M2C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
-
-        Set<Constraint> constraints = new HashSet<>();
-
-        constraints.add(c1);
-
-        return constraints;
-    }
-
-    public static Set<Constraint> getConstraintsAll() {
-        Set<Constraint> constraints = new HashSet<>();
-
-        constraints.addAll(getConstraints1());
-        constraints.addAll(getConstraints2());
-
-        return constraints;
-    }
-
-    public static List<List<ChoiceNode>> getDomain1() {
-
-        return m1.getTestDomain();
-    }
-
-    public static List<List<ChoiceNode>> getDomain2() {
-
-        return m2.getTestDomain();
-    }
-
-    public static List<List<ChoiceNode>> getDomainAll() {
-        List<List<ChoiceNode>> domain = new ArrayList<>();
-
-        domain.addAll(getDomain1());
-        domain.addAll(getDomain2());
-
-        return domain;
-    }
-
-    public static List<ChoiceNode> getSet1() {
-        List<ChoiceNode> set = new ArrayList<>();
-
-        set.add(m1p1c1);
-        set.add(m1p2c2);
-        set.add(m1p3c3);
-
-        return set;
-    }
-
-    public static List<ChoiceNode> getSet2() {
-        List<ChoiceNode> set = new ArrayList<>();
-
-        set.add(m2p1c1);
-        set.add(m2p2c2);
-        set.add(m2p3c3);
-
-        return set;
-    }
-
-    public static List<ChoiceNode> getSetAll() {
-        List<ChoiceNode> set = new ArrayList<>();
-
-        set.addAll(getSet1());
-        set.addAll(getSet2());
-
-        return set;
-    }
-
 }

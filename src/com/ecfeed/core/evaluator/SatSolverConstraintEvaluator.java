@@ -36,7 +36,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		RIGHT_ENDPOINT
 	}
 
-	public SatSolverConstraintEvaluator(Collection<Constraint> constraints,	MethodNode methodX) {
+	public SatSolverConstraintEvaluator(Collection<Constraint> constraints,	MethodNode method) {
 
 		if (constraints == null || constraints.size() == 0) {
 			return;
@@ -45,27 +45,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		initMethod(constraints);
 	}
 
-	public SatSolverConstraintEvaluator(Collection<Constraint> constraints,	List<MethodParameterNode> parameters) {
-
-		if (constraints == null || constraints.size() == 0) {
-			return;
-		}
-
-		MethodNode method = new MethodNode("dupa");
-		parameters.forEach(method::addParameter);
-
-		fParameters = method.getMethodParameters();
-		fConstraints = constraints;
-		fParameterChoices.update(fParameters);
-		fChoiceMappings.updateSanitizedToInput(fParameterChoices.getInputChoices());
-
-		initSat4Solver();
-
-		enabled = true;
-	}
-
 	private void initMethod(Collection<Constraint> constraints) {
-
 		Set<MethodNode> methods = initGetMethodNode(constraints);
 
 		if (methods.size() == 0) {
@@ -121,7 +101,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		LogHelperCore.log("fAllRelationStatements", fRelationStatements);
 
-		sanitizeRelationStatementsWithRelation();
+		sanitizeRelationStatements();
 
 		createInputToSanitizedMapping();
 		createSanitizedToAtomicMapping();
@@ -176,24 +156,22 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 // ------------------------------------------------------------------------------------
 
-	/**
-	 * Adjust relation choices. it is only needed for numerical comparison.
-	 */
-	private void sanitizeRelationStatementsWithRelation() {
-		boolean change = true;		// A choice value has been adjusted.
+//	Adjust relation choices. it is only needed for numerical comparison.
+	private void sanitizeRelationStatements() {
+		boolean change = true;
 
 		while (change) {
 			change = false;
 
 			for (RelationStatement relationStatement : fRelationStatements) {
-				if (sanitizeValues(relationStatement)) {
+				if (sanitizeRelationStatement(relationStatement)) {
 					change = true;
 				}
 			}
 		}
 	}
 
-	private boolean sanitizeValues(RelationStatement relation) {
+	private boolean sanitizeRelationStatement(RelationStatement relation) {
 		IStatementCondition condition = relation.getCondition();
 
 // Labels are not numerical. This is the simplest case, we can return from the function.
@@ -209,15 +187,15 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		}
 
 		if (condition instanceof ParameterCondition) {
-			return sanitizeWithParameterCondition(condition, leftParameter);
+			return sanitizeRelationStatementConditionParameter(condition, leftParameter);
 		}
 
 		if (condition instanceof ValueCondition) {
-			return sanitizeWithValueCondition(condition, leftParameter);
+			return sanitizeRelationStatementConditionValue(condition, leftParameter);
 		}
 
 		if (condition instanceof ChoiceCondition) {
-			return sanitizeWithChoiceCondition(condition, leftParameter);
+			return sanitizeRelationStatementConditionChoice(condition, leftParameter);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid condition type.");
@@ -225,7 +203,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		return true;
 	}
 
-	private boolean sanitizeWithParameterCondition(IStatementCondition condition, MethodParameterNode leftParameter) {
+	private boolean sanitizeRelationStatementConditionParameter(IStatementCondition condition, MethodParameterNode leftParameter) {
 		MethodParameterNode rightParameter = ((ParameterCondition) condition).getRightParameterNode();
 
 		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
@@ -236,7 +214,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		List<ChoiceNode> leftParameterChoicesCopy = new ArrayList<>(leftParameterChoices);
 
 		for (ChoiceNode choice : rightParameterChoices) {
-			Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(leftParameterChoicesCopy, choice);
+			Pair<Boolean, List<ChoiceNode>> changeResult = splitChoiceRangeByChoiceRef(leftParameterChoicesCopy, choice);
 
 			change = change || changeResult.getFirst();
 			leftParameterChoicesCopy = changeResult.getSecond();
@@ -245,7 +223,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		List<ChoiceNode> rightParameterChoicesCopy = new ArrayList<>(rightParameterChoices);
 
 		for (ChoiceNode choice : leftParameterChoices) {
-			Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(rightParameterChoicesCopy, choice);
+			Pair<Boolean, List<ChoiceNode>> changeResult = splitChoiceRangeByChoiceRef(rightParameterChoicesCopy, choice);
 
 			change = change || changeResult.getFirst();
 			rightParameterChoicesCopy = changeResult.getSecond();
@@ -257,7 +235,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		return change;
 	}
 
-	private boolean sanitizeWithValueCondition(IStatementCondition condition, MethodParameterNode leftParameter) {
+	private boolean sanitizeRelationStatementConditionValue(IStatementCondition condition, MethodParameterNode leftParameter) {
 		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
 
 		String value = ((ValueCondition) condition).getRightValue();
@@ -266,47 +244,49 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		choice.setRandomizedValue(false);
 		choice.setValueString(value);
 
-		Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(leftParameterChoices, choice);
+		Pair<Boolean, List<ChoiceNode>> changeResult = splitChoiceRangeByChoiceRef(leftParameterChoices, choice);
 
 		fParameterChoices.putSanitized(leftParameter, new HashSet<>(changeResult.getSecond()));
 
 		return changeResult.getFirst();
 	}
 
-	private boolean sanitizeWithChoiceCondition(IStatementCondition condition, MethodParameterNode leftParameter) {
+	private boolean sanitizeRelationStatementConditionChoice(IStatementCondition condition, MethodParameterNode leftParameter) {
 		List<ChoiceNode> leftParameterChoices = new ArrayList<>(fParameterChoices.getSanitized(leftParameter));
 
 		ChoiceNode choice = ((ChoiceCondition) condition).getRightChoice();
 
-		Pair<Boolean, List<ChoiceNode>> changeResult = splitListWithChoiceNode(leftParameterChoices, choice);
+		Pair<Boolean, List<ChoiceNode>> changeResult = splitChoiceRangeByChoiceRef(leftParameterChoices, choice);
 
 		fParameterChoices.putSanitized(leftParameter, new HashSet<>(changeResult.getSecond()));
 
 		return changeResult.getFirst();
 	}
 
-	private Pair<Boolean, List<ChoiceNode>> splitListWithChoiceNode(List<ChoiceNode> parameterChoices, ChoiceNode choice) {
+// Split single range choices into two range choices using the value of the reference choice (in case of an intersection).
+// If the reference choice is also a range choice, then the two boundary values are used separately.
+	private Pair<Boolean, List<ChoiceNode>> splitChoiceRangeByChoiceRef(List<ChoiceNode> parameterChoices, ChoiceNode choiceRef) {
 		ChoiceNode choiceStart;
 		ChoiceNode choiceEnd;
 
-		if (choice.isRandomizedValue()) {
-			Pair<ChoiceNode, ChoiceNode> choicePair = ChoiceNodeHelper.rangeSplit(choice);
+		if (choiceRef.isRandomizedValue()) {
+			Pair<ChoiceNode, ChoiceNode> choicePair = ChoiceNodeHelper.rangeSplit(choiceRef);
 			choiceStart = choicePair.getFirst();
 			choiceEnd = choicePair.getSecond();
 		} else {
-			choiceStart = choice;
-			choiceEnd = choice;
+			choiceStart = choiceRef;
+			choiceEnd = choiceRef;
 		}
 
 // Validate choices against the lower boundary of the referenced choice.
-		Pair<Boolean, List<ChoiceNode>> changeResultLeft = splitListByValue(parameterChoices, choiceStart, TypeOfEndpoint.LEFT_ENDPOINT);
+		Pair<Boolean, List<ChoiceNode>> changeResultLeft = splitChoiceRangeByChoiceRefBorderType(parameterChoices, choiceStart, TypeOfEndpoint.LEFT_ENDPOINT);
 // Validate choices against the upper boundary of the referenced choice.
-		Pair<Boolean, List<ChoiceNode>> changeResultRight =	splitListByValue(changeResultLeft.getSecond(), choiceEnd, TypeOfEndpoint.RIGHT_ENDPOINT);
+		Pair<Boolean, List<ChoiceNode>> changeResultRight =	splitChoiceRangeByChoiceRefBorderType(changeResultLeft.getSecond(), choiceEnd, TypeOfEndpoint.RIGHT_ENDPOINT);
 
 		return new Pair<>(changeResultLeft.getFirst() || changeResultRight.getFirst(), changeResultRight.getSecond());
 	}
 
-	private Pair<Boolean, List<ChoiceNode>> splitListByValue(List<ChoiceNode> parameterChoices, ChoiceNode choiceRef, TypeOfEndpoint type) {
+	private Pair<Boolean, List<ChoiceNode>> splitChoiceRangeByChoiceRefBorderType(List<ChoiceNode> parameterChoices, ChoiceNode choiceRef, TypeOfEndpoint type) {
 // A list of corrected choices.
 		List<ChoiceNode> updatedChoices = new ArrayList<>();
 		boolean change = false;
@@ -318,40 +298,50 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			} else {
 // Divide the provided choice into two boundary choices (lower, upper).
 				Pair<ChoiceNode, ChoiceNode> choicePair = ChoiceNodeHelper.rangeSplit(choice);
-				ChoiceNode choiceStart = choicePair.getFirst();
-				ChoiceNode choiceEnd = choicePair.getSecond();
+				ChoiceNode choiceBorderLeft = choicePair.getFirst();
+				ChoiceNode choiceBorderRight = choicePair.getSecond();
 
-				ChoiceNode choiceStartMutable = choiceStart.makeCloneUnlink();
-				ChoiceNode choiceEndMutable = choiceEnd.makeCloneUnlink();
+				ChoiceNode choiceRefBorderLeft = choiceBorderLeft.makeCloneUnlink();
+				ChoiceNode choiceRefBorderRight = choiceBorderRight.makeCloneUnlink();
 // Change value of the two choices to the value of the reference choice.
-				choiceUpdateValueString(choiceRef, choiceStartMutable, choiceEndMutable);
+				choiceUpdateValueString(choiceRef, choiceRefBorderLeft, choiceRefBorderRight);
 // Alter values of the two choices (the reference value should be between them).
-				choiceRound(choiceStart, choiceRef, choiceStartMutable, choiceEndMutable);
-				choiceShiftEpsilon(choiceStartMutable, choiceEndMutable, type);
-// This should not happen (there should be always a small gap between values). However, this might happen if values are very large.
-				if (fChoiceComparator.compare(choiceStartMutable, choiceEndMutable) == 0) {
+				choiceRound(choiceBorderLeft, choiceRef, choiceRefBorderLeft, choiceRefBorderRight);
+				choiceShiftEpsilon(choiceRefBorderLeft, choiceRefBorderRight, type);
+// This should not happen (there should be always a small gap between values). However, this can happen if values are extreme.
+// In this cese, the error is definitely lower than epsilon.
+				if (fChoiceComparator.compare(choiceRefBorderLeft, choiceRefBorderRight) == 0) {
 					updatedChoices.add(choice);
 					continue;
 				}
-
-				int cmp1 = fChoiceComparator.compare(choiceStart, choiceStartMutable);
-				int cmp2 = fChoiceComparator.compare(choiceEndMutable, choiceEnd);
-
-				if (cmp1 > 0 || cmp2 > 0) {
+// Comparison of the reference choice (denoted by mutable choices) with the provided range.
+// The left value (range) compared to the reference choice (left border).
+				int cmpBorderLeft = fChoiceComparator.compare(choiceBorderLeft, choiceRefBorderLeft);
+// The right value (range) compared to the reference choice (right border).
+				int cmpBorderRight = fChoiceComparator.compare(choiceBorderRight, choiceRefBorderRight);
+// The reference choice might exist withing the epsilon range. However, it is very unlikely (we shouldn't care about that).
+				if (cmpBorderRight < 0 || cmpBorderLeft > 0) {
 					updatedChoices.add(choice);
 					continue;
 				}
+// Condition: left value (range) is lower than the reference choice (left border). If true - make range from the left value (range) to the reference (left border).
+// Otherwise, the reference is exactly on the border or outside the range.
+				ChoiceNode sanitizedBorderLeft = cmpBorderLeft < 0 ? ChoiceNodeHelper.toRangeFromFirst(choiceBorderLeft, choiceRefBorderLeft) : choiceBorderLeft;
+// Condition: right value (range) is greater than the reference choice (right border). If true - make range from the reference (right border) to the right value.
+// Otherwise, the reference is exactly on the border or outside the range.
+				ChoiceNode sanitizedBorderRight = cmpBorderRight > 0 ? ChoiceNodeHelper.toRangeFromSecond(choiceRefBorderRight, choiceBorderRight) : choiceBorderRight;
+// Map sanitized values.
+// For example: ref = 5, choice = 1:9. The choice is split into two values, e.g. 1:5 and 6:9.
+// For example: ref = 9.0, choice = 9.0:10.0. The choice is split into two values, i.e. 9.0 and 9.00001:10.0.
+// If the type is 'LEFT_ENDPOINT', then the reference value is included in the right range.
+// If the type is 'RIGHT_VALUE', then the reference value is included in the left range.
+				fChoiceMappings.putSanitizedToInput(sanitizedBorderLeft, fChoiceMappings.getSanitizedToInput(choice));
+				fChoiceMappings.putSanitizedToInput(sanitizedBorderRight, fChoiceMappings.getSanitizedToInput(choice));
 
-				ChoiceNode it1 = cmp1 < 0 ? ChoiceNodeHelper.toRangeFromFirst(choiceStart, choiceStartMutable) : choiceStart;
-				ChoiceNode it2 = cmp2 < 0 ? ChoiceNodeHelper.toRangeFromSecond(choiceEndMutable, choiceEnd) : choiceEnd;
+				updatedChoices.add(sanitizedBorderLeft);
+				updatedChoices.add(sanitizedBorderRight);
 
 				change = true;
-
-				fChoiceMappings.putSanitizedToInput(it1, fChoiceMappings.getSanitizedToInput(choice));
-				fChoiceMappings.putSanitizedToInput(it2, fChoiceMappings.getSanitizedToInput(choice));
-
-				updatedChoices.add(it1);
-				updatedChoices.add(it2);
 			}
 		}
 
@@ -381,23 +371,28 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		return false;
 	}
 
-	private void choiceRound(ChoiceNode choiceStart, ChoiceNode choiceRef, ChoiceNode choiceStartMutable, ChoiceNode choiceEndMutable) {
+	private void choiceRound(ChoiceNode choiceBorderLeft, ChoiceNode choiceRef, ChoiceNode choiceRefBorderLeft, ChoiceNode choiceRefBorderRight) {
 // If the reference choice type is float and provided choice type is integer, the float value will be positioned between two integer values.
-		if (isIntegerType(choiceStart.getParameter()) && isFloatType(choiceRef.getParameter())) {
+// If the reference choice type is integer, no adjustment is needed (all values are the same and provided choices do not have to be converted from float to integer).
+		if (isIntegerType(choiceBorderLeft.getParameter()) && isFloatType(choiceRef.getParameter())) {
 // Modify the lower boundary.
-			ChoiceNodeHelper.roundValueDown(choiceStartMutable);
+			ChoiceNodeHelper.roundValueDown(choiceRefBorderLeft);
 // Modify the upper boundary.
-			ChoiceNodeHelper.roundValueUp(choiceEndMutable);
+			ChoiceNodeHelper.roundValueUp(choiceRefBorderRight);
 		}
 	}
 
-	private void choiceShiftEpsilon(ChoiceNode choiceStartMutable, ChoiceNode choiceEndMutable, TypeOfEndpoint type) {
-// If the provided choice values are identical, make a small gap between them.
-		if (fChoiceComparator.compare(choiceStartMutable, choiceEndMutable) == 0) {
+	private void choiceShiftEpsilon(ChoiceNode choiceRefBorderLeft, ChoiceNode choiceRefBorderRight, TypeOfEndpoint type) {
+// If the values are identical, make a small gap between them.
+// The reference choice is always in the (closed) range defined by these two values.
+// This procedure is mostly invoked when all choices are of integer type (rounding was not needed, are values are equal).
+		if (fChoiceComparator.compare(choiceRefBorderLeft, choiceRefBorderRight) == 0) {
 			if (type == TypeOfEndpoint.LEFT_ENDPOINT) {
-				ChoiceNodeHelper.getPrecedingValue(choiceStartMutable);
+// Shift left the left choice. The reference choice is at the end of the range.
+				ChoiceNodeHelper.getPrecedingValue(choiceRefBorderLeft);
 			} else {
-				ChoiceNodeHelper.getFollowingVal(choiceEndMutable);
+// Shift right the right choice. The reference choice is at the beginning of the range.
+				ChoiceNodeHelper.getFollowingVal(choiceRefBorderRight);
 			}
 		}
 	}
@@ -413,15 +408,15 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	private void createInputToSanitizedMapping() {
 
-		for (MethodParameterNode method : fParameterChoices.getKeySetSanitized()) {
+		for (MethodParameterNode parameter : fParameterChoices.getKeySetSanitized()) {
 
-			fChoiceMappings.putInputToSanitized(method);
+			fChoiceMappings.putInputToSanitized(parameter);
 
-			for (ChoiceNode choiceSanitized : fParameterChoices.getSanitized(method)) {
+			for (ChoiceNode choiceSanitized : fParameterChoices.getSanitized(parameter)) {
 
 				ChoiceNode choiceInput = fChoiceMappings.getSanitizedToInput(choiceSanitized);
 
-				fChoiceMappings.putInputToSanitized(method, choiceInput, choiceSanitized);
+				fChoiceMappings.putInputToSanitized(parameter, choiceInput, choiceSanitized);
 			}
 		}
 	}
@@ -438,21 +433,17 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 	private void createSanitizedToAtomicMappings(MethodParameterNode parameter) {
 
-		//build AtomicVal <-> Sanitized Val mappings, build Param -> Atomic Val mapping
+// Build AtomicVal <-> SanitizedVal mappings ;  Build Param -> AtomicVal mappings.
 		for (ChoiceNode choiceSanitized : fParameterChoices.getSanitized(parameter)) {
-
 			if (isRandomizedNumericalType(parameter, choiceSanitized)) {
+				List<ChoiceNode> choicesInterleaved = ChoiceNodeHelper.getInterleavedValues(choiceSanitized, fParameterChoices.getSizeSanitized());
 
-				List<ChoiceNode> interleavedChoices = ChoiceNodeHelper.getInterleavedValues(choiceSanitized, fParameterChoices.getSizeSanitized());
+				fParameterChoices.putAtomic(parameter, choicesInterleaved);
 
-				fParameterChoices.putAtomic(parameter, interleavedChoices);
-
-				for (ChoiceNode interleavedChoice : interleavedChoices) {
+				for (ChoiceNode interleavedChoice : choicesInterleaved) {
 					fChoiceMappings.putSanitizedToAtomic(choiceSanitized, interleavedChoice);
 				}
-
 			} else {
-
 				fParameterChoices.putAtomic(parameter, choiceSanitized);
 				fChoiceMappings.putSanitizedToAtomic(choiceSanitized, choiceSanitized);
 			}
@@ -478,16 +469,12 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		AbstractStatement postcondition = constraint.getPostcondition();
 
 		if (constraint.getType() == ConstraintType.ASSIGNMENT) {
-
 			addAssignmentStatementsToAssignmentsTable(precondition, postcondition);
-
 			return;
 		}
 
 		if (postcondition instanceof ExpectedValueStatement) {
-
 			addExpectedValueStatementToAssignmentsTable(precondition, (ExpectedValueStatement) postcondition);
-
 			return;
 		}
 

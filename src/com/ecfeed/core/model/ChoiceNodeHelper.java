@@ -362,7 +362,6 @@ public class ChoiceNodeHelper {
 	}
 
 	public static ChoiceNode toRangeFromFirst(ChoiceNode first, ChoiceNode second) {
-
 		assertChoicesNotRandomized(first, second);
 
 		ChoiceNode ret = first.makeClone();
@@ -374,7 +373,6 @@ public class ChoiceNodeHelper {
 	}
 
 	public static ChoiceNode toRangeFromSecond(ChoiceNode first, ChoiceNode second)	{
-
 		assertChoicesNotRandomized(first, second);
 
 		ChoiceNode ret = second.makeClone();
