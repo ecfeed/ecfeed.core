@@ -241,9 +241,10 @@ public class MethodNode  extends AbstractNode implements IParametersParentNode, 
 		return (ClassNode)getParent();
 	}
 
-	public BasicParameterNode findMethodParameter(String name){
-		return (BasicParameterNode)findParameter(name);
-	}
+//	@Override
+//	public BasicParameterNode findMethodParameter(String name){
+//		return (BasicParameterNode)findParameter(name);
+//	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {
 		ArrayList<String> names = new ArrayList<String>();

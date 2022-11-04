@@ -162,13 +162,15 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public boolean updateReferences(IParametersParentNode methodNode) {
 
-		BasicParameterNode tmpParameterNode = methodNode.findMethodParameter(fRightParameterNode.getName());
+		AbstractParameterNode tmpParameterNode = methodNode.findParameter(fRightParameterNode.getName());
+		
 		if (tmpParameterNode == null) {
 			return false;
 		}
-		fRightParameterNode = tmpParameterNode;
+		
+		fRightParameterNode = (BasicParameterNode) tmpParameterNode;
 
 		return true;
 	}

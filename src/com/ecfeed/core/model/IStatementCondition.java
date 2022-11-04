@@ -22,7 +22,7 @@ public interface IStatementCondition {
 	public Object getCondition();
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
-	public boolean updateReferences(MethodNode methodNode);
+	public boolean updateReferences(IParametersParentNode methodNode);
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean mentions(AbstractParameterNode abstractParameterNode);

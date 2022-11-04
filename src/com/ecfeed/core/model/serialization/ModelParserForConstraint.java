@@ -411,15 +411,15 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, 
 						errorList);
 
-		BasicParameterNode parameter = method.findMethodParameter(parameterName);
+		BasicParameterNode basicParameterNode = (BasicParameterNode) method.findParameter(parameterName);
 
-		if (parameter == null || parameter.isExpected()) {
+		if (basicParameterNode == null || basicParameterNode.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));
 			return null;
 		}
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
-		return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
+		return RelationStatement.createRelationStatementWithLabelCondition(basicParameterNode, relation, label);
 	}
 
 	public ExpectedValueStatement parseExpectedValueStatement(
@@ -436,7 +436,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, 
 						errorList);
 
-		BasicParameterNode parameter = method.findMethodParameter(parameterName);
+		BasicParameterNode parameter = (BasicParameterNode) method.findParameter(parameterName);
 
 		if (parameter == null || !parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, method.getName()));

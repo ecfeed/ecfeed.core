@@ -87,7 +87,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode method){
+	public boolean updateReferences(IParametersParentNode method){
 		return true;
 	}
 

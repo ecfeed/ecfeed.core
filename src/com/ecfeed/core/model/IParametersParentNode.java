@@ -28,6 +28,7 @@ public interface IParametersParentNode extends IAbstractNode {
 	public AbstractParameterNode getParameter(int parameterIndex);
 
 	public AbstractParameterNode findParameter(String parameterNameToFind);
+//	public BasicParameterNode findMethodParameter(String name); // TODO MO-RE do we need 2 similar functions ?
 	public int getParameterIndex(String parameterName);
 
 	public boolean parameterExists(String parameterName);
