@@ -16,12 +16,12 @@ import java.util.Set;
 
 public abstract class ChoicesParentNode extends AbstractNode implements IChoicesParentNode { // TODO MO-RE remove class
 
-	private List<ChoiceNode> fChoices;
+	ChoicesListHolder fChoicesListHolder;
 	
 	public ChoicesParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 
-		fChoices = new ArrayList<ChoiceNode>();
+		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 
 		ChoicesParentNode otherChoicesParentNode = (ChoicesParentNode)other;
 
-		if (!ChoicesListHelper.isMatchForListsOfChoices(fChoices, otherChoicesParentNode.fChoices)) {
+		if (!fChoicesListHolder.isMatch(otherChoicesParentNode.fChoicesListHolder)) {
 			return false;
 		}
 
@@ -60,27 +60,27 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	@Override
 	public void addChoice(ChoiceNode choiceToAdd) {
 
-		ChoicesListHelper.addChoice(choiceToAdd, fChoices, this);
+		fChoicesListHolder.addChoice(choiceToAdd, this);
 	}
 
 	@Override
 	public void addChoice(ChoiceNode choiceToAdd, int index) {
 
-		ChoicesListHelper.addChoice(choiceToAdd, fChoices, index, this);
+		fChoicesListHolder.addChoice(choiceToAdd, index, this);
 		registerChange();
 	}
 
 	@Override
 	public void addChoices(List<ChoiceNode> choicesToAdd) {
 
-		ChoicesListHelper.addChoices(choicesToAdd, fChoices, this);
+		fChoicesListHolder.addChoices(choicesToAdd, this);
 		registerChange();
 	}
 
 	@Override
 	public List<ChoiceNode> getChoices() {
 
-		return fChoices;
+		return fChoicesListHolder.getChoices();
 	}
 
 	@Override
@@ -103,13 +103,13 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	@Override
 	public int getChoiceIndex(String choiceNameToFind) {
 
-		return ChoicesListHelper.getChoiceIndex(choiceNameToFind, fChoices);
+		return fChoicesListHolder.getChoiceIndex(choiceNameToFind);
 	}
 
 	@Override
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
 
-		return ChoicesListHelper.choiceExists(choiceNameToFind, fChoices);
+		return fChoicesListHolder.choiceExists(choiceNameToFind);
 	}
 
 	@Override
@@ -175,7 +175,7 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	@Override
 	public boolean removeChoice(ChoiceNode choice) {
 
-		boolean result = ChoicesListHelper.removeChoice(choice, fChoices);
+		boolean result = fChoicesListHolder.removeChoice(choice);
 		registerChange();
 		return result;
 	}
@@ -183,15 +183,14 @@ public abstract class ChoicesParentNode extends AbstractNode implements IChoices
 	@Override
 	public void replaceChoices(List<ChoiceNode> newChoices) {
 		
-		ChoicesListHelper.replaceChoices(newChoices, fChoices, this);
+		fChoicesListHolder.replaceChoices(newChoices, this);
 		registerChange();
 	}
 
 	@Override
 	public void clearChoices() {
 
-		fChoices.clear();
-		registerChange();
+		fChoicesListHolder.clearChoices();
 	}
 
 }

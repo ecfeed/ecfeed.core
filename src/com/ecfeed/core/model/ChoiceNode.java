@@ -30,7 +30,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	private String fValueString;
 	private Set<String> fLabels;
 	private boolean fIsRandomizedValue;
-	private List<ChoiceNode> fChoices;
+	private ChoicesListHolder fChoicesListHolder;
 
 	private ChoiceNode fOrigChoiceNode = null; // used in Sat Solver
 	private ChoiceNode fOtherChoiceNode = null; // a reference to other choice which can be used in algorithms
@@ -41,7 +41,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		fLabels = new LinkedHashSet<String>();
 		fIsRandomizedValue = false;
 		
-		fChoices = new ArrayList<ChoiceNode>();
+		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
 	}
 	
 	public ChoiceNode(String name, String value) {
@@ -54,7 +54,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		fLabels = new LinkedHashSet<>();
 		fIsRandomizedValue = isRandomized;
 		
-		fChoices = new ArrayList<ChoiceNode>();
+		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
 	}
 
 	@Override
@@ -458,20 +458,20 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public void addChoice(ChoiceNode choiceToAdd) {
 		
-		ChoicesListHelper.addChoice(choiceToAdd, fChoices, this);
+		fChoicesListHolder.addChoice(choiceToAdd, this);
 	}
 
 	@Override
 	public void addChoice(ChoiceNode choiceToAdd, int index) {
 		
-		ChoicesListHelper.addChoice(choiceToAdd, fChoices, index, this);
+		fChoicesListHolder.addChoice(choiceToAdd, index, this);
 		registerChange();
 	}
 
 	@Override
 	public void addChoices(List<ChoiceNode> choicesToAdd) {
 
-		ChoicesListHelper.addChoices(choicesToAdd, fChoices, this);
+		fChoicesListHolder.addChoices(choicesToAdd, this);
 		registerChange();
 	}
 
@@ -484,7 +484,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public List<ChoiceNode> getChoices() {
 
-		return fChoices;
+		return fChoicesListHolder.getChoices();
 	}
 
 	@Override
@@ -496,13 +496,13 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public int getChoiceIndex(String choiceNameToFind) {
 
-		return ChoicesListHelper.getChoiceIndex(choiceNameToFind, fChoices);
+		return fChoicesListHolder.getChoiceIndex(choiceNameToFind);
 	}
 
 	@Override
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
 
-		return ChoicesListHelper.choiceExists(choiceNameToFind, fChoices);
+		return fChoicesListHolder.choiceExists(choiceNameToFind);
 	}
 
 	@Override
@@ -556,7 +556,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public boolean removeChoice(ChoiceNode choice) {
 
-		boolean result = ChoicesListHelper.removeChoice(choice, fChoices);
+		boolean result = fChoicesListHolder.removeChoice(choice);
 		registerChange();
 		return result;
 	}
@@ -564,15 +564,14 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public void replaceChoices(List<ChoiceNode> newChoices) {
 		
-		ChoicesListHelper.replaceChoices(newChoices, fChoices, this);
+		fChoicesListHolder.replaceChoices(newChoices, this);
 		registerChange();
 	}
 
 	@Override
 	public void clearChoices() {
 
-		fChoices.clear();
-		registerChange();
+		fChoicesListHolder.clearChoices();
 	}
 
 }
