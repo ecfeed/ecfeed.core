@@ -58,26 +58,26 @@ public class ConstraintNodeListHolder {
 		return fConstraintNodes.size();
 	}
 
-	public void addConstraint(ConstraintNode constraint, MethodNode parentMethodNode) {
-		addConstraint(constraint, fConstraintNodes.size(), parentMethodNode);
+	public void addConstraint(ConstraintNode constraint, IParametersAndConstraintsParentNode parentNode) {
+		addConstraint(constraint, fConstraintNodes.size(), parentNode);
 	}
 	
-	public void addConstraint(ConstraintNode constraint, int index, MethodNode parentMethodNode) {
-		constraint.setParent(parentMethodNode);
+	public void addConstraint(ConstraintNode constraint, int index, IParametersAndConstraintsParentNode parentNode) {
+		constraint.setParent(parentNode);
 		fConstraintNodes.add(index, constraint);
 		registerChange();
 	}
 	
-	public ConstraintNodeListHolder makeClone(MethodNode parentMethodNode) {
+	public ConstraintNodeListHolder makeClone(IParametersAndConstraintsParentNode parent) {
 		
 		ConstraintNodeListHolder cloneOfConstraintNodeListHolder = 
 				new ConstraintNodeListHolder(fModelChangeRegistrator);
 		
 		for(ConstraintNode constraint : fConstraintNodes){
-			ConstraintNode clonedConstraint = constraint.getCopy(parentMethodNode);
+			ConstraintNode clonedConstraint = constraint.getCopy(parent);
 			
 			if (clonedConstraint != null) {
-				cloneOfConstraintNodeListHolder.addConstraint(constraint, parentMethodNode);
+				cloneOfConstraintNodeListHolder.addConstraint(constraint, parent);
 			}
 		}
 

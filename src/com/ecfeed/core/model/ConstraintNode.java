@@ -159,10 +159,10 @@ public class ConstraintNode extends AbstractNode {
 		return fConstraint.mentions(parameter, label);
 	}
 
-	public boolean updateReferences(MethodNode method) {
+	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
 
-		if (fConstraint.updateReferences(method)) {
-			setParent(method);
+		if (fConstraint.updateReferences(parent)) {
+			setParent(parent);
 			registerChange();
 			return true;
 		}
@@ -170,7 +170,7 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public ConstraintNode getCopy(MethodNode parent) {
+	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
 
 		ConstraintNode copy = makeClone();
 
