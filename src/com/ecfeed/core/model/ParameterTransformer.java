@@ -220,7 +220,7 @@ public class ParameterTransformer {
 	}
 
 	private static void deleteRemainingChoices(
-			ChoicesParentNode srcMethodParameterNode,
+			IChoicesParentNode srcMethodParameterNode,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 

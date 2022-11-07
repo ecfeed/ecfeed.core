@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.IChoicesParentNode;

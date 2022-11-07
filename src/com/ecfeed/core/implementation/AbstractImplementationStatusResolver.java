@@ -141,20 +141,20 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 		return EImplementationStatus.IMPLEMENTED;
 	}
 
-	protected EImplementationStatus implementationStatus(BasicParameterNode parameter){
-
-		if (parameter.isGlobalParameter()) {
-			
-			return implementationStatus((BasicParameterNode)parameter);
-		} else {
-
-			EImplementationStatus status = implementationStatus((BasicParameterNode)parameter);
-			if(fPrimitiveTypeTester.isPrimitive(parameter.getType()) && parameter.isExpected()){
-				status = EImplementationStatus.IMPLEMENTED;
-			}
-			return status;
-		}
-	}
+//	protected EImplementationStatus implementationStatus(BasicParameterNode parameter){
+//
+//		if (parameter.isGlobalParameter()) {
+//			
+//			return implementationStatus((BasicParameterNode)parameter);
+//		} else {
+//
+//			EImplementationStatus status = implementationStatus((BasicParameterNode)parameter);
+//			if(fPrimitiveTypeTester.isPrimitive(parameter.getType()) && parameter.isExpected()){
+//				status = EImplementationStatus.IMPLEMENTED;
+//			}
+//			return status;
+//		}
+//	}
 
 	protected EImplementationStatus implementationStatus(BasicParameterNode parameter){
 		EImplementationStatus status = EImplementationStatus.IMPLEMENTED;

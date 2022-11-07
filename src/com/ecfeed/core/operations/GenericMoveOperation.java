@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -65,8 +65,8 @@ public class GenericMoveOperation extends BulkOperation {
 						continue;
 					}
 					
-					if(node instanceof ChoicesParentNode){
-						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
+					if(node instanceof IChoicesParentNode){
+						methodsInvolved.addAll(((IChoicesParentNode)node).getParameter().getMethods());
 					}
 					addOperation((IModelOperation)node.getParent().accept(
 							new FactoryRemoveChildOperation(node, adapterProvider, false, extLanguageManager)));

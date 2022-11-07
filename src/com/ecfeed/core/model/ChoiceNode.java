@@ -249,7 +249,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return isRandomizedValue() ? "YES" : "NO";
 	}
 
-	public void setParent(ChoicesParentNode parent){
+	public void setParent(IChoicesParentNode parent){
 		super.setParent(parent);
 	}
 

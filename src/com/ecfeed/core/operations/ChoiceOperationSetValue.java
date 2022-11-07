@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IParameterVisitor;
 import com.ecfeed.core.type.adapter.ITypeAdapter;

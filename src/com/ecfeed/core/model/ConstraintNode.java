@@ -132,10 +132,10 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public boolean mentions(BasicParameterNode parameter) {
-
-		return fConstraint.mentions(parameter);
-	}
+//	public boolean mentions(BasicParameterNode parameter) {
+//
+//		return fConstraint.mentions(parameter);
+//	}
 
 	public boolean mentions(BasicParameterNode parameter) {
 

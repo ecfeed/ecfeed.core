@@ -16,17 +16,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class BasicParameterNode extends AbstractParameterNode implements IChoicesParentNode {
 
+	private String fType;
+	private String fTypeComments;
 	private boolean fExpected;
 	private String fDefaultValue;
 	private boolean fLinked;
 	private BasicParameterNode fLinkToGlobalParameter;
 	private MethodNode fLinkToMethod;
 	private List<ChoiceNode> fChoicesCopy;
+	
+	private ChoicesListHolder fChoicesListHolder;
 
 	public BasicParameterNode(
 			String name,
@@ -37,14 +43,17 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			BasicParameterNode link,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		super(name, type, modelChangeRegistrator);
+		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
+		fType = type;
 		fExpected = expected;
 		fDefaultValue = defaultValue;
 		fLinked = linked;
 		fLinkToGlobalParameter = link;
+		
+		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
 	}
 
 	public BasicParameterNode(
@@ -75,21 +84,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 	
 	public BasicParameterNode(
-			AbstractParameterNode source,
+			BasicParameterNode source,
 			String defaultValue, 
 			boolean expected, 
 			boolean linked,
 			BasicParameterNode link) {
 
-		this(
-				source.getName(),
-				source.getType(), defaultValue, expected, linked, link, source.getModelChangeRegistrator()
-				);
+		this(source.getName(), source.getType(), defaultValue, expected, linked, link, source.getModelChangeRegistrator());
 
 		addChoices(source.getChoices());
 	}
 
-	public BasicParameterNode(AbstractParameterNode source,
+	public BasicParameterNode(BasicParameterNode source,
 			String defaultValue, boolean expected) {
 		this(source, defaultValue, expected, false, null);
 	}
@@ -110,7 +116,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 	}
 	
-	@Override
 	public boolean isGlobalParameter() {
 		IAbstractNode parent = getParent();
 		
@@ -121,6 +126,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return true;
 	}
 	
+	@Override
+	public void setName(String name) {
+
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		super.setName(name);
+	}
+
 	@Override
 	public String getNonQualifiedName() {
 		return getName();
@@ -158,7 +171,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return copy;
 	}
 
-	@Override
 	public String getType() {
 		
 		if (fLinkToMethod != null) {
@@ -168,20 +180,35 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		if (isLinked() && fLinkToGlobalParameter != null) {
 			return fLinkToGlobalParameter.getType();
 		}
-		return super.getType();
+		
+		return fType;
 	}
 
-	@Override
+	public void setType(String type) {
+
+		if (SimpleLanguageHelper.isSimpleType(type)) {
+			ExceptionHelper.reportRuntimeException("Attempt to set invalid parameter type: " + type);
+		}
+
+		fType = type;
+		registerChange();
+	}
+	
 	public String getTypeComments() {
 
 		if (isLinked() && fLinkToGlobalParameter != null) {
 			return fLinkToGlobalParameter.getTypeComments();
 		}
-		return super.getTypeComments();
+		return fTypeComments;
 	}
 
-	public String getRealType() {
-		return super.getType();
+	public void setTypeComments(String comments){
+		fTypeComments = comments;
+		registerChange();
+	}
+	
+	public String getRealType() { 
+		return fType;
 	}
 
 	@Override
@@ -193,10 +220,9 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			return fLinkToGlobalParameter.getChoices();
 		}
 		
-		return super.getChoices();
+		return fChoicesListHolder.getChoices();
 	}
 
-	@Override
 	public List<ChoiceNode> getChoicesWithCopies() {
 
 		if (isLinked() && fLinkToGlobalParameter != null) {
@@ -209,7 +235,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 				fChoicesCopy = temp;
 			return fChoicesCopy;
 		}
-		return super.getChoices();
+		return getChoices();
 	}
 
 	public ChoiceNode findChoice(String choiceQualifiedName) {
@@ -266,21 +292,23 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			
 			return result;
 		}
+
+		List<IAbstractNode> result = new ArrayList<>();
+		result.addAll(fChoicesListHolder.getChoices());
 		
-		return super.getChildren();
+		return result;
 	}
 
 	public List<ChoiceNode> getRealChoices() {
-		return super.getChoices();
+		return fChoicesListHolder.getChoices();
 	}
 
-	@Override
 	public List<MethodNode> getMethods() {
 		return Arrays.asList(new MethodNode[] { getMethod() });
 	}
 
 	public List<ChoiceNode> getOwnChoices() {
-		return super.getChoices();
+		return getChoices();
 	}
 
 	public MethodNode getMethod() {
@@ -394,17 +422,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return visitor.visit(this);
 	}
 
-	@Override
 	public Object accept(IParameterVisitor visitor) throws Exception {
 		return visitor.visit(this);
 	}
 
-	@Override
 	public Set<ConstraintNode> getMentioningConstraints() {
 		return getMethod().getMentioningConstraints(this);
 	}
 
-	@Override
 	public Set<ConstraintNode> getMentioningConstraints(String label) {
 		return getMethod().getMentioningConstraints(this, label);
 	}
@@ -448,6 +473,146 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		} else {
 			return getNonQualifiedName();
 		}
+	}
+
+	@Override
+	public int getChildrenCount() {
+
+		return getChoiceCount();
+	}
+
+	@Override
+	public void addChoice(ChoiceNode choiceToAdd) {
+
+		fChoicesListHolder.addChoice(choiceToAdd, this);
+	}
+
+	@Override
+	public void addChoice(ChoiceNode choiceToAdd, int index) {
+
+		fChoicesListHolder.addChoice(choiceToAdd, index, this);
+	}
+
+	@Override
+	public void addChoices(List<ChoiceNode> choicesToAdd) {
+
+		fChoicesListHolder.addChoices(choicesToAdd, this);
+	}
+
+	@Override
+	public int getChoiceCount() {
+
+		return getChoices().size();
+	}
+
+	@Override
+	public ChoiceNode getChoice(String qualifiedName) {
+
+		return (ChoiceNode)getChild(qualifiedName);
+	}
+
+	@Override
+	public int getChoiceIndex(String choiceNameToFind) {
+
+		return fChoicesListHolder.getChoiceIndex(choiceNameToFind);
+	}
+
+	@Override
+	public boolean choiceExistsAsDirectChild(String choiceNameToFind) {
+
+		return fChoicesListHolder.choiceExists(choiceNameToFind);
+	}
+
+	@Override
+	public List<ChoiceNode> getLeafChoices() {
+		
+		return ChoiceNodeHelper.getLeafChoices(getChoices());	}
+
+	@Override
+	public List<ChoiceNode> getLeafChoicesWithCopies() {
+
+		return ChoiceNodeHelper.getLeafChoices(getChoicesWithCopies());
+	}
+
+	@Override
+	public Set<String> getAllChoiceNames() {
+
+		return ChoiceNodeHelper.getChoiceNames(getAllChoices());
+	}
+
+	@Override
+	public Set<String> getAllLabels() {
+
+		return ChoiceNodeHelper.getAllLabels(getAllChoices());
+	}
+
+	@Override
+	public Set<String> getLeafChoiceNames() {
+
+		return ChoiceNodeHelper.getChoiceNames(getLeafChoices());
+	}
+
+	@Override
+	public Set<ChoiceNode> getAllChoices() {
+
+		return ChoiceNodeHelper.getAllChoices(getChoices());
+	}
+
+	@Override
+	public Set<String> getChoiceNames() {
+
+		return ChoiceNodeHelper.getChoiceNames(getChoices());
+	}
+
+	@Override
+	public Set<ChoiceNode> getLabeledChoices(String label) {
+
+		return ChoiceNodeHelper.getLabeledChoices(label, getChoices());
+	}
+
+	@Override
+	public Set<String> getLeafLabels() {
+
+		return ChoiceNodeHelper.getLeafLabels(getLeafChoices());
+	}
+
+	@Override
+	public Set<String> getLeafChoiceValues() {
+
+		return ChoiceNodeHelper.getLeafChoiceValues(getLeafChoices());
+	}
+
+	@Override
+	public boolean removeChoice(ChoiceNode choice) {
+		
+		return fChoicesListHolder.removeChoice(choice);	
+	}
+
+	@Override
+	public void replaceChoices(List<ChoiceNode> newChoices) {
+		
+		fChoicesListHolder.replaceChoices(newChoices, this);
+	}
+
+	@Override
+	public void clearChoices() {
+		fChoicesListHolder.clearChoices();
+		
+	}
+
+	@Override
+	public BasicParameterNode getParameter() { // TODO MO-RE remove ?
+		
+		return this;
+	}
+	
+	public IParametersParentNode getParametersParent() {
+
+		return (IParametersParentNode)getParent();
+	}
+	
+	public boolean isCorrectableToBeRandomizedType() {
+		return JavaLanguageHelper.isNumericTypeName(fType) || JavaLanguageHelper.isStringTypeName(fType);
 	}
 	
 }

@@ -13,7 +13,6 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
