@@ -110,7 +110,7 @@ public class MethodParameterNodeHelper {
 		return findChoiceIntr(link, choiceQualifiedName);
 	}
 
-	private static ChoiceNode findChoiceIntr(AbstractParameterNode link, String choiceQualifiedName) {
+	private static ChoiceNode findChoiceIntr(BasicParameterNode link, String choiceQualifiedName) {
 
 		Set<ChoiceNode> choiceNodes = link.getAllChoices();
 

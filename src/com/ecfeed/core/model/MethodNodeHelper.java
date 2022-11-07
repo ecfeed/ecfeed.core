@@ -39,7 +39,7 @@ public class MethodNodeHelper {
 		String className = classNode.getName();
 
 		if (StringHelper.isEqual(className, parentName)) {
-			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			BasicParameterNode abstractParameterNode = classNode.findParameter(parameterName);
 			return (BasicParameterNode)abstractParameterNode;
 		}
 
@@ -47,7 +47,7 @@ public class MethodNodeHelper {
 		String rootName = rootNode.getName();
 
 		if (parentName == null || rootName.equals(parentName)) {
-			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			BasicParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
 			return (BasicParameterNode)abstractParameterNode;
 		}			
 
@@ -218,9 +218,9 @@ public class MethodNodeHelper {
 			MethodNode methodNode, 
 			IExtLanguageManager extLanguageManager) {
 
-		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
+		List<BasicParameterNode> methodParameters = methodNode.getParameters();
 
-		for (AbstractParameterNode parameter : methodParameters) {
+		for (BasicParameterNode parameter : methodParameters) {
 
 			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
 
@@ -238,7 +238,7 @@ public class MethodNodeHelper {
 
 		List<String> result = new ArrayList<String>();
 
-		for(AbstractParameterNode parameter : method.getParameters()){
+		for(BasicParameterNode parameter : method.getParameters()){
 
 			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
 
@@ -254,7 +254,7 @@ public class MethodNodeHelper {
 
 		List<String> result = new ArrayList<String>();
 
-		for (AbstractParameterNode parameter : method.getParameters()) {
+		for (BasicParameterNode parameter : method.getParameters()) {
 
 			String type = parameter.getType();
 

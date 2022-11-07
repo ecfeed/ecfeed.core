@@ -14,25 +14,25 @@ import java.util.List;
 
 public interface IParametersParentNode extends IAbstractNode {
 
-	public List<MethodNode> getMethods(AbstractParameterNode parameter); 	// TODO MO-RE - MOVE FROM HERE
+	public List<MethodNode> getMethods(BasicParameterNode parameter); 	// TODO MO-RE - MOVE FROM HERE
 	
-	public void addParameter(AbstractParameterNode parameter);	
-	public void addParameter(AbstractParameterNode parameter, int index);
+	public void addParameter(BasicParameterNode parameter);	
+	public void addParameter(BasicParameterNode parameter, int index);
 	public void addParameters(List<BasicParameterNode> parameters);
 	
-	public boolean removeParameter(AbstractParameterNode parameter);
-	public void replaceParameters(List<AbstractParameterNode> parameters);
+	public boolean removeParameter(BasicParameterNode parameter);
+	public void replaceParameters(List<BasicParameterNode> parameters);
 
 	public int getParametersCount();
-	public List<AbstractParameterNode> getParameters();
-	public AbstractParameterNode getParameter(int parameterIndex);
+	public List<BasicParameterNode> getParameters();
+	public BasicParameterNode getParameter(int parameterIndex);
 
-	public AbstractParameterNode findParameter(String parameterNameToFind);
+	public BasicParameterNode findParameter(String parameterNameToFind);
 //	public BasicParameterNode findMethodParameter(String name); // TODO MO-RE do we need 2 similar functions ?
 	public int getParameterIndex(String parameterName);
 
 	public boolean parameterExists(String parameterName);
-	public boolean parameterExists(AbstractParameterNode abstractParameterNode);
+	public boolean parameterExists(BasicParameterNode abstractParameterNode);
 
 	public List<String> getParameterTypes();
 	public List<String> getParametersNames();

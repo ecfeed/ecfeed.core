@@ -58,7 +58,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode parameter) {
+	public boolean mentions(BasicParameterNode parameter) {
 
 		for (AbstractStatement child : fStatements) {
 			if (child.mentions(parameter)) {
@@ -82,7 +82,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 
 		for (AbstractStatement abstractStatement : fStatements) {
 			if (abstractStatement.mentionsChoiceOfParameter(parameter)) {
@@ -92,7 +92,6 @@ public class StatementArray extends AbstractStatement {
 
 		return false;
 	}
-
 
 	@Override
 	public EvaluationResult evaluate(List<ChoiceNode> values) {
@@ -151,7 +150,7 @@ public class StatementArray extends AbstractStatement {
 
 	public String createSignatureOfOperator(StatementArrayOperator operator) {
 
-		switch(fOperator) {
+		switch (fOperator) {
 		case AND:
 			return " \u2227 ";
 		case OR:
@@ -168,7 +167,7 @@ public class StatementArray extends AbstractStatement {
 
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
-		for (AbstractStatement statement: fStatements) {
+		for (AbstractStatement statement : fStatements) {
 			copy.addStatement(statement.makeClone());
 		}
 
@@ -178,7 +177,7 @@ public class StatementArray extends AbstractStatement {
 	@Override
 	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
 
-		for (AbstractStatement statement: fStatements) {
+		for (AbstractStatement statement : fStatements) {
 			if (!statement.updateReferences(method)) {
 				return false;
 			}
@@ -190,13 +189,13 @@ public class StatementArray extends AbstractStatement {
 		return fStatements;
 	}
 
-	@Override 
+	@Override
 	public boolean isEqualTo(IStatement statement) {
 
 		if (statement instanceof StatementArray == false) {
 			return false;
 		}
-		StatementArray compared = (StatementArray)statement;
+		StatementArray compared = (StatementArray) statement;
 
 		if (getOperator() != compared.getOperator()) {
 			return false;
@@ -223,7 +222,7 @@ public class StatementArray extends AbstractStatement {
 	@Override
 	public boolean mentions(int methodParameterIndex) {
 
-		for ( AbstractStatement abstractStatement : fStatements) {
+		for (AbstractStatement abstractStatement : fStatements) {
 			if (abstractStatement.mentions(methodParameterIndex)) {
 				return true;
 			}
@@ -233,8 +232,8 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean isAmbiguous(
-			List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
+	public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack,
+			IExtLanguageManager extLanguageManager) {
 
 		for (AbstractStatement statement : fStatements) {
 			if (statement.isAmbiguous(values, messageStack, extLanguageManager)) {
@@ -310,7 +309,6 @@ public class StatementArray extends AbstractStatement {
 		return result;
 	}
 
-
 	@Override
 	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
 
@@ -328,7 +326,7 @@ public class StatementArray extends AbstractStatement {
 				continue;
 			}
 
-			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
+			AssignmentStatement assignmentStatement = (AssignmentStatement) abstractStatement;
 
 			assignmentStatement.setExpectedValues(testCaseChoices);
 		}
@@ -409,7 +407,7 @@ public class StatementArray extends AbstractStatement {
 	@Override
 	public void derandomize() {
 
-		for(IStatement statement : fStatements) {
+		for (IStatement statement : fStatements) {
 			statement.derandomize();
 		}
 	}

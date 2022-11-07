@@ -126,7 +126,7 @@ public class SimpleLanguageModelVerifier {
 	//
 	//		List<Pair<String, String>> parameters = new ArrayList<>();
 	//
-	//		for (AbstractParameterNode element : rootNode.getParameters()) {
+	//		for (BasicParameterNode element : rootNode.getParameters()) {
 	//
 	//			String simpleName = AbstractNodeHelper.getName(element, new ExtLanguageManagerForSimple());
 	//			String javaName = element.getType() + " " + element.getName();
@@ -229,7 +229,7 @@ public class SimpleLanguageModelVerifier {
 	//
 	//		List<Pair<String, String>> parameters = new ArrayList<>();
 	//
-	//		for (AbstractParameterNode element : classNode.getParameters()) {
+	//		for (BasicParameterNode element : classNode.getParameters()) {
 	//
 	//
 	//			Pair<String, String> pair = new Pair<String, String>(element.getName(), element.getType() + " " + element.getName());

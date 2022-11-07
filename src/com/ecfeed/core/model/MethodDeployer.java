@@ -188,7 +188,7 @@ public abstract class MethodDeployer {
 	}
 
 	private static void developChildParameters(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			MethodNode linkedMethodNode,
 			List<BasicParameterNode> inOutDevelopedParameters) {
 

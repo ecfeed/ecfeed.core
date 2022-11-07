@@ -56,13 +56,13 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	}
 
 	@Override
-	public void addParameter(AbstractParameterNode parameter) {
+	public void addParameter(BasicParameterNode parameter) {
 
 		fParametersHolder.addParameter(parameter, this);
 	}
 
 	@Override
-	public void addParameter(AbstractParameterNode parameter, int index) {
+	public void addParameter(BasicParameterNode parameter, int index) {
 
 		fParametersHolder.addParameter(parameter, index, this);
 	}
@@ -74,13 +74,13 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	}
 	
 	@Override
-	public boolean removeParameter(AbstractParameterNode parameter) {
+	public boolean removeParameter(BasicParameterNode parameter) {
 
 		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
-	public List<AbstractParameterNode> getParameters() {
+	public List<BasicParameterNode> getParameters() {
 
 		return fParametersHolder.getParameters();
 	}
@@ -92,13 +92,13 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	}	
 
 	@Override
-	public AbstractParameterNode findParameter(String parameterNameToFind) {
+	public BasicParameterNode findParameter(String parameterNameToFind) {
 
 		return fParametersHolder.findParameter(parameterNameToFind);
 	}
 
 	@Override
-	public AbstractParameterNode getParameter(int parameterIndex) {
+	public BasicParameterNode getParameter(int parameterIndex) {
 
 		return fParametersHolder.getParameter(parameterIndex);
 	}	
@@ -115,7 +115,7 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	}
 
 	@Override
-	public boolean parameterExists(AbstractParameterNode abstractParameterNode) {
+	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
 
 		return fParametersHolder.parameterExists(abstractParameterNode);
 	}
@@ -133,7 +133,7 @@ public abstract class ParametersParentNode extends AbstractNode implements IPara
 	}
 
 	@Override
-	public void replaceParameters(List<AbstractParameterNode> parameters) {
+	public void replaceParameters(List<BasicParameterNode> parameters) {
 
 		fParametersHolder.replaceParameters(parameters);
 	}

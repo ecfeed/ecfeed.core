@@ -79,7 +79,7 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+		public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 			return false;
 		}
 

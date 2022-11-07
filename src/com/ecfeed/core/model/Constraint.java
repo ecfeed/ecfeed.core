@@ -675,18 +675,18 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<AbstractParameterNode> getReferencedParameters() {
+	public Set<BasicParameterNode> getReferencedParameters() {
 
 		try{
-			Set<AbstractParameterNode> referenced = 
-					(Set<AbstractParameterNode>)fPrecondition.accept(new ReferencedParametersProvider());
+			Set<BasicParameterNode> referenced = 
+					(Set<BasicParameterNode>)fPrecondition.accept(new ReferencedParametersProvider());
 
 			referenced.addAll(
-					(Set<AbstractParameterNode>)fPostcondition.accept(new ReferencedParametersProvider()));
+					(Set<BasicParameterNode>)fPostcondition.accept(new ReferencedParametersProvider()));
 
 			return referenced;
 		} catch(Exception e) {
-			return new HashSet<AbstractParameterNode>();
+			return new HashSet<BasicParameterNode>();
 		}
 	}
 
@@ -811,7 +811,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ExpectedValueStatement statement) throws Exception {
 
-			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
+			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
 			set.add(statement.getLeftMethodParameterNode());
 
 			return set;
@@ -832,8 +832,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ChoiceCondition condition) throws Exception {
 
-			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
-			AbstractParameterNode parameter = condition.getRightChoice().getParameter();
+			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
+			BasicParameterNode parameter = condition.getRightChoice().getParameter();
 
 			if (parameter != null) {
 				set.add(parameter);
@@ -845,7 +845,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ParameterCondition condition) throws Exception {
 
-			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
+			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
 
 			set.add(condition.getRightParameterNode());
 

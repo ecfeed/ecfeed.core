@@ -76,7 +76,7 @@ public class ChoiceNodeHelper {
 	}
 
 	public static void verifyConversionOfChoices(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			String newType, 
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
@@ -98,7 +98,7 @@ public class ChoiceNodeHelper {
 	}
 
 	public static void convertValuesOfChoicesToType(
-			AbstractParameterNode methodParameterNode, 
+			BasicParameterNode methodParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		Set<ChoiceNode> choiceNodes = methodParameterNode.getAllChoices();
@@ -210,7 +210,7 @@ public class ChoiceNodeHelper {
 			return null;
 		}
 
-		AbstractParameterNode abstractParameterNode = choicesParentNode.getParameter();
+		BasicParameterNode abstractParameterNode = choicesParentNode.getParameter();
 
 		if(choicesParentNode != null && choicesParentNode != abstractParameterNode){
 			return (ChoiceNode)choicesParentNode;
@@ -253,7 +253,7 @@ public class ChoiceNodeHelper {
 
 	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
-		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();	
+		BasicParameterNode abstractParameterNode = choiceNode.getParameter();	
 
 		if (abstractParameterNode == null) {
 
@@ -278,7 +278,7 @@ public class ChoiceNodeHelper {
 			ExceptionHelper.reportRuntimeException("Cannot get value from empty string.");
 		}
 
-		AbstractParameterNode parameter = choiceNode.getParameter();
+		BasicParameterNode parameter = choiceNode.getParameter();
 
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Cannot get value. Empty parameter.");

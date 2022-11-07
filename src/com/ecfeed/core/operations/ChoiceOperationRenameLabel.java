@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintHelper;
@@ -49,7 +49,7 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 
 	private void renameLabel(ChoiceNode choiceNode, String currentLabel, String newLabel) {
 
-		AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
+		BasicParameterNode abstractParameterNode = choiceNode.getParameter();
 
 
 		if (abstractParameterNode instanceof BasicParameterNode) {

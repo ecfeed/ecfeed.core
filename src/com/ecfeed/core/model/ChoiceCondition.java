@@ -68,7 +68,7 @@ public class ChoiceCondition implements IStatementCondition {
 	public boolean updateReferences(IParametersParentNode methodNode) {
 
 		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		AbstractParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
+		BasicParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
 
 		String choiceName = fRightChoice.getQualifiedName();
 		ChoiceNode choiceNode = abstractParameterNode.getChoice(choiceName);
@@ -119,7 +119,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode methodParameterNode) {
+	public boolean mentions(BasicParameterNode methodParameterNode) {
 
 		return false;
 	}	
@@ -329,7 +329,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 
 		if (fRightChoice.getParameter().equals(abstractParameterNode)) {
 			return true;

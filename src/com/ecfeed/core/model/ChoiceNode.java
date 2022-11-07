@@ -58,7 +58,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	}
 
 	@Override
-	public AbstractParameterNode getParameter() {
+	public BasicParameterNode getParameter() {
 		
 		IAbstractNode parent = getParent();
 		
@@ -110,7 +110,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 			return getValueString();
 		}
 
-		AbstractParameterNode parameter = getParameter();
+		BasicParameterNode parameter = getParameter();
 
 		if (parameter == null) {
 			ExceptionHelper.reportRuntimeException("Method parameter unknown.");
@@ -346,8 +346,8 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 	private boolean isParameterAndNameMatch(ChoiceNode choice) {
 
-		AbstractParameterNode param = getParameter();
-		AbstractParameterNode otherParam = choice.getParameter();
+		BasicParameterNode param = getParameter();
+		BasicParameterNode otherParam = choice.getParameter();
 
 		if (param != otherParam) {
 			return false;

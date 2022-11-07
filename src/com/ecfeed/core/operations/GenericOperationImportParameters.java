@@ -12,18 +12,18 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationImportParameters extends AbstractModelOperation {
 
 	private IParametersParentNode fParametersParentNode;
-	private List<AbstractParameterNode> fAbstractParameterNodes;
+	private List<BasicParameterNode> fAbstractParameterNodes;
 
 	public GenericOperationImportParameters(
 			IParametersParentNode parametersParentNode, 
-			List<AbstractParameterNode> abstractParameterNodes,
+			List<BasicParameterNode> abstractParameterNodes,
 			IExtLanguageManager extLanguageManager) {
 		
 		super(OperationNames.IMPORT_PARAMETERS, extLanguageManager);
@@ -38,7 +38,7 @@ public class GenericOperationImportParameters extends AbstractModelOperation {
 		setOneNodeToSelect(fParametersParentNode);
 		
 		int index = 0;
-		for (AbstractParameterNode node : fAbstractParameterNodes) {
+		for (BasicParameterNode node : fAbstractParameterNodes) {
 			fParametersParentNode.addParameter(node, index++);
 		}
 		
@@ -53,9 +53,9 @@ public class GenericOperationImportParameters extends AbstractModelOperation {
 	protected class ReverseOperation extends AbstractModelOperation{
 
 		private IParametersParentNode fParametersParentNode;
-		private List<AbstractParameterNode> fAbstractParameterNodes;
+		private List<BasicParameterNode> fAbstractParameterNodes;
 		
-		public ReverseOperation(IParametersParentNode parametersParentNode, List<AbstractParameterNode> abstractParameterNodes, IExtLanguageManager extLanguageManager) {
+		public ReverseOperation(IParametersParentNode parametersParentNode, List<BasicParameterNode> abstractParameterNodes, IExtLanguageManager extLanguageManager) {
 			super("reverse " + OperationNames.IMPORT_PARAMETERS, extLanguageManager);
 			
 			fParametersParentNode = parametersParentNode;
@@ -66,7 +66,7 @@ public class GenericOperationImportParameters extends AbstractModelOperation {
 		public void execute() {
 			setOneNodeToSelect(fParametersParentNode);
 			
-			for (AbstractParameterNode node : fAbstractParameterNodes) {
+			for (BasicParameterNode node : fAbstractParameterNodes) {
 				fParametersParentNode.removeParameter(node);
 			}
 			

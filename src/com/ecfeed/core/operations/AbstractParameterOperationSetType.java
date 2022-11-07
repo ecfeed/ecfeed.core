@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -31,7 +31,7 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
-	private AbstractParameterNode fAbstractParameterNode;
+	private BasicParameterNode fAbstractParameterNode;
 	private ParameterConversionDefinition fParameterConversionDefinition;
 	private String fNewTypeInIntrLanguage;
 	private String fCurrentType;
@@ -40,7 +40,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	private Map<ChoiceNode, String> fOriginalValues;
 
 	public AbstractParameterOperationSetType(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ITypeAdapterProvider adapterProvider, 
@@ -152,7 +152,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			// if method links edited global parameter - replace types before matching
 			if(target.getMethods().contains(methodNode)){
 				List<String> types = methodNode.getParameterTypes();
-				for(AbstractParameterNode parameter: methodNode.getParameters()){
+				for(BasicParameterNode parameter: methodNode.getParameters()){
 					BasicParameterNode param = (BasicParameterNode)parameter;
 					if(param.isLinked() && param.getLinkToGlobalParameter().equals(target)){
 						types.set(parameter.getMyIndex(), fNewTypeInIntrLanguage);

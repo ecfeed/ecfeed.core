@@ -101,7 +101,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode abstractParameterNode) {
+	public boolean mentions(BasicParameterNode abstractParameterNode) {
 
 		return false;
 	}
@@ -166,7 +166,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 		return false;
 	}
 

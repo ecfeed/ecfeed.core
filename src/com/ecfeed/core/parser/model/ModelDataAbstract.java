@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -150,8 +150,8 @@ abstract class ModelDataAbstract implements ModelData {
     }
     
     @Override
-    public List<AbstractParameterNode> parse(IParametersParentNode node) {
-    	List<AbstractParameterNode> list = new ArrayList<>();
+    public List<BasicParameterNode> parse(IParametersParentNode node) {
+    	List<BasicParameterNode> list = new ArrayList<>();
     	
         for (int i = 0 ; i < this.header.size() ; i++) {
         	List<ChoiceNode> choices = new ArrayList<>();
@@ -168,7 +168,7 @@ abstract class ModelDataAbstract implements ModelData {
                 choices.add(new ChoiceNode("choice" + (j++), choice, null));
             }
             
-            AbstractParameterNode parameter;
+            BasicParameterNode parameter;
             
             if (node instanceof MethodNode) {
             	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());

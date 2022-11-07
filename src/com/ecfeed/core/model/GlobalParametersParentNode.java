@@ -21,7 +21,7 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode { 
 
 	public List<BasicParameterNode> getGlobalParameters() {
 		List<BasicParameterNode> result = new ArrayList<>();
-		for(AbstractParameterNode parameter : getParameters()){
+		for(BasicParameterNode parameter : getParameters()){
 			result.add((BasicParameterNode)parameter);
 		}
 		return result;

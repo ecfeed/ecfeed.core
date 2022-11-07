@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
@@ -79,7 +79,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 
 	private void prepareOperations(ITypeAdapterProvider adapterProvider, boolean validate){
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
-		HashMap<MethodNode, List<AbstractParameterNode>> parameterMap = new HashMap<>();
+		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
 		ArrayList<ClassNode> classes = new ArrayList<>();
 		ArrayList<MethodNode> methods = new ArrayList<>();
 		ArrayList<BasicParameterNode> params = new ArrayList<>();
@@ -151,7 +151,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					isDependent = true;
 					if (!parameterMap.containsKey(method)) {
-						parameterMap.put(method, new ArrayList<AbstractParameterNode>());
+						parameterMap.put(method, new ArrayList<BasicParameterNode>());
 					}
 					parameterMap.get(method).add(global);
 				}
@@ -185,7 +185,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			if (addMethodToMap(method, duplicatesMap, methods)) {
 				duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 				if (!parameterMap.containsKey(method)) {
-					parameterMap.put(method, new ArrayList<AbstractParameterNode>());
+					parameterMap.put(method, new ArrayList<BasicParameterNode>());
 				}
 				parameterMap.get(method).add(param);
 			} else {
@@ -230,7 +230,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				if (paramSet.size() < methodSet.size()) {
 					for (MethodNode method : methodSet) {
 						if (parameterMap.containsKey(method)) {
-							for (AbstractParameterNode node : parameterMap.get(method)) {
+							for (BasicParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes);
 								fAffectedNodes.add(node);
@@ -242,7 +242,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				else {
 					for (MethodNode method : methodSet) {
 						if (parameterMap.containsKey(method)) {
-							for (AbstractParameterNode node : parameterMap.get(method)) {
+							for (BasicParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes);
 								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
@@ -357,11 +357,11 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 					fAffectedConstraints.add(constraintNode);
 				}
 			}
-		} else if (node instanceof AbstractParameterNode) {
+		} else if (node instanceof BasicParameterNode) {
 			Iterator<ConstraintNode> itr = allConstraintNodes.iterator();
 			while (itr.hasNext()) {
 				ConstraintNode constraint = itr.next();
-				if (constraint.mentions((AbstractParameterNode)node)) {
+				if (constraint.mentions((BasicParameterNode)node)) {
 					fAffectedConstraints.add(constraint);
 				}
 			}

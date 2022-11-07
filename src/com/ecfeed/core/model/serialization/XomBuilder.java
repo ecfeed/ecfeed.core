@@ -41,7 +41,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_A
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
@@ -94,7 +94,7 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		for (AbstractParameterNode parameterNode : rootNode.getParameters()) {
+		for (BasicParameterNode parameterNode : rootNode.getParameters()) {
 
 			BasicParameterNode globalParameterNode = (BasicParameterNode)parameterNode;
 			
@@ -436,7 +436,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
 	}
 
-	private void addParameterProperties(AbstractParameterNode abstractParameterNode, Element targetElement) {
+	private void addParameterProperties(BasicParameterNode abstractParameterNode, Element targetElement) {
 
 		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, abstractParameterNode, targetElement);
 		addParameterProperty(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL, abstractParameterNode, targetElement);
@@ -447,7 +447,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	private void addParameterProperty(
 			NodePropertyDefs.PropertyId propertyId, 
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			Element targetElement) {
 
 		String value = abstractParameterNode.getPropertyValue(propertyId);
@@ -486,11 +486,11 @@ public abstract class XomBuilder implements IModelVisitor {
 	private void appendTypeComments(Element element, BasicParameterNode node) {
 
 		if (node.isLinked() == false) {
-			appendTypeComments(element, (AbstractParameterNode)node);
+			appendTypeComments(element, (BasicParameterNode)node);
 		}
 	}
 
-	private void appendTypeComments(Element element, AbstractParameterNode node) {
+	private void appendTypeComments(Element element, BasicParameterNode node) {
 
 		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
 		Element commentElement;

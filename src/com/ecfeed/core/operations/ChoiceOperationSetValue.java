@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IParameterVisitor;
@@ -55,7 +55,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		markModelUpdated();
 	}
 
-	private void adaptParameter(AbstractParameterNode parameter) {
+	private void adaptParameter(BasicParameterNode parameter) {
 		try{
 			parameter.accept(new ParameterAdapter());
 		}catch(Exception e){
@@ -133,7 +133,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 			markModelUpdated();
 		}
 
-		private void adaptParameter(AbstractParameterNode parameter) {
+		private void adaptParameter(BasicParameterNode parameter) {
 			try{
 				parameter.accept(new ReverseParameterAdapter());
 			}catch(Exception e){LogHelperCore.logCatch(e);}

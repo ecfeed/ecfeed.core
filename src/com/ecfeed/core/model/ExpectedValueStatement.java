@@ -45,7 +45,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode parameter) {
+	public boolean mentions(BasicParameterNode parameter) {
 		return parameter == fLeftMethodParameterNode;
 	}
 
@@ -110,7 +110,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 
-		AbstractParameterNode abstractParameterNode = fChoiceNode.getParameter();
+		BasicParameterNode abstractParameterNode = fChoiceNode.getParameter();
 
 		if (!(abstractParameterNode instanceof BasicParameterNode)) {
 			return null;
@@ -239,7 +239,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 		return false;
 	}
 

@@ -12,7 +12,6 @@ package com.ecfeed.core.implementation;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -146,10 +145,10 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 
 		if (parameter.isGlobalParameter()) {
 			
-			return implementationStatus((AbstractParameterNode)parameter);
+			return implementationStatus((BasicParameterNode)parameter);
 		} else {
 
-			EImplementationStatus status = implementationStatus((AbstractParameterNode)parameter);
+			EImplementationStatus status = implementationStatus((BasicParameterNode)parameter);
 			if(fPrimitiveTypeTester.isPrimitive(parameter.getType()) && parameter.isExpected()){
 				status = EImplementationStatus.IMPLEMENTED;
 			}
@@ -157,7 +156,7 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 		}
 	}
 
-	protected EImplementationStatus implementationStatus(AbstractParameterNode parameter){
+	protected EImplementationStatus implementationStatus(BasicParameterNode parameter){
 		EImplementationStatus status = EImplementationStatus.IMPLEMENTED;
 		if(fPrimitiveTypeTester.isPrimitive(parameter.getType()) == true){
 			if(parameter.getChoices().size() == 0){
@@ -201,7 +200,7 @@ public abstract class AbstractImplementationStatusResolver implements IImplement
 			return childrenStatus(choice.getChoices());
 		}
 
-		AbstractParameterNode parameter = choice.getParameter();
+		BasicParameterNode parameter = choice.getParameter();
 		if (parameter == null) {
 			return EImplementationStatus.NOT_IMPLEMENTED;
 		}

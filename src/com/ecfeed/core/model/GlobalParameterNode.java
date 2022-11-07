@@ -17,14 +17,14 @@
 //import java.util.Set;
 //
 //
-//public class GlobalParameterNode extends AbstractParameterNode {
+//public class GlobalParameterNode extends BasicParameterNode {
 //
 //	public GlobalParameterNode(String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
 //		super(name, type, modelChangeRegistrator);
 //	}
 //
 //	//copy constructor creating a global parameter instance from other types, eg. MethodParameterNode
-//	public GlobalParameterNode(AbstractParameterNode source) {
+//	public GlobalParameterNode(BasicParameterNode source) {
 //
 //		this(source.getName(), source.getType(), source.getModelChangeRegistrator());
 //		for(ChoiceNode choice : source.getChoices()){

@@ -164,7 +164,7 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public boolean updateReferences(IParametersParentNode methodNode) {
 
-		AbstractParameterNode tmpParameterNode = methodNode.findParameter(fRightParameterNode.getName());
+		BasicParameterNode tmpParameterNode = methodNode.findParameter(fRightParameterNode.getName());
 		
 		if (tmpParameterNode == null) {
 			return false;
@@ -222,7 +222,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode abstractParameterNode) {
+	public boolean mentions(BasicParameterNode abstractParameterNode) {
 
 		if (fRightParameterNode == abstractParameterNode) {
 			return true;
@@ -339,7 +339,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 		return false;
 	}
 

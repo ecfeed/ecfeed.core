@@ -137,7 +137,7 @@ public class ConstraintNode extends AbstractNode {
 		return fConstraint.mentions(parameter);
 	}
 
-	public boolean mentions(AbstractParameterNode parameter) {
+	public boolean mentions(BasicParameterNode parameter) {
 
 		if (parameter instanceof BasicParameterNode && (!parameter.isGlobalParameter())) {
 			BasicParameterNode param = (BasicParameterNode)parameter;
@@ -226,10 +226,10 @@ public class ConstraintNode extends AbstractNode {
 
 	private boolean areParametersConsistent() {
 
-		final Set<AbstractParameterNode> referencedParameters = getConstraint().getReferencedParameters();
-		final List<AbstractParameterNode> methodParameters = getMethodNode().getParameters();
+		final Set<BasicParameterNode> referencedParameters = getConstraint().getReferencedParameters();
+		final List<BasicParameterNode> methodParameters = getMethodNode().getParameters();
 
-		for (AbstractParameterNode referencedParameter : referencedParameters) {
+		for (BasicParameterNode referencedParameter : referencedParameters) {
 			if (!isParameterConsistent(referencedParameter, methodParameters)) {
 				return false;
 			}
@@ -240,10 +240,10 @@ public class ConstraintNode extends AbstractNode {
 
 	private boolean isParameterConsistent(
 
-			AbstractParameterNode argParameter,
-			List<AbstractParameterNode> methodParameters) {
+			BasicParameterNode argParameter,
+			List<BasicParameterNode> methodParameters) {
 
-		for (AbstractParameterNode param : methodParameters) {
+		for (BasicParameterNode param : methodParameters) {
 			BasicParameterNode methodParam = (BasicParameterNode) param;
 
 			if (methodParam.isLinked() && methodParam.getLinkToGlobalParameter().equals(argParameter)) {
@@ -282,7 +282,7 @@ public class ConstraintNode extends AbstractNode {
 			return false;
 		}
 
-		AbstractParameterNode parameter = choiceNode.getParameter();
+		BasicParameterNode parameter = choiceNode.getParameter();
 		List<MethodNode> parameterMethods = parameter.getMethods();
 
 		if (parameterMethods == null) {
@@ -300,7 +300,7 @@ public class ConstraintNode extends AbstractNode {
 
 	private static boolean isOkForExpectedParameter(ChoiceNode choiceNode) {
 
-		AbstractParameterNode parameter = choiceNode.getParameter();
+		BasicParameterNode parameter = choiceNode.getParameter();
 
 		if (parameter == null && !isMethodParameterNodeExpected(parameter)) {
 			return false;
@@ -309,7 +309,7 @@ public class ConstraintNode extends AbstractNode {
 		return true;
 	}
 
-	private static boolean isMethodParameterNodeExpected(AbstractParameterNode parameter) {
+	private static boolean isMethodParameterNodeExpected(BasicParameterNode parameter) {
 
 		if (!(parameter instanceof BasicParameterNode)) {
 			return false;

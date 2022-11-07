@@ -11,7 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -44,7 +44,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 			return new RootOperationRemoveClass(node, (ClassNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof BasicParameterNode && ((BasicParameterNode)(fChild)).isGlobalParameter()){
-			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguageManager);
+			return new GenericOperationRemoveParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 		return null;
 	}
@@ -55,7 +55,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 			return new ClassOperationRemoveMethod(node, (MethodNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof BasicParameterNode && ((BasicParameterNode)(fChild)).isGlobalParameter()){
-			return new GenericOperationRemoveParameter(node, (AbstractParameterNode)fChild, fExtLanguageManager);
+			return new GenericOperationRemoveParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 		return null;
 	}

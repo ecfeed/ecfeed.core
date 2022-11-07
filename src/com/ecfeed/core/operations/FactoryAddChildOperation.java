@@ -11,7 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -65,7 +65,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 			return createOperationAddClass(rootNode);
 
-		} else if (fChild instanceof AbstractParameterNode) {
+		} else if (fChild instanceof BasicParameterNode) {
 
 			return createOperationAddParameter(rootNode);
 		}
@@ -117,7 +117,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 				return new ClassOperationAddMethod(node, (MethodNode)fChild, fExtLanguageManager);
 			}
 			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
-		}else if(fChild instanceof AbstractParameterNode){
+		}else if(fChild instanceof BasicParameterNode){
 			BasicParameterNode globalParameter = new BasicParameterNode((BasicParameterNode)fChild);
 			if(fIndex == -1){
 				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);

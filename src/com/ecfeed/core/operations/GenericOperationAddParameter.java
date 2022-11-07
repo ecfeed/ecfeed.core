@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -18,13 +18,13 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	private IParametersParentNode fParametersParentNode;
-	private AbstractParameterNode fAbstractParameterNode;
+	private BasicParameterNode fAbstractParameterNode;
 	private int fNewIndex;
 	private boolean fGenerateUniqueName;
 
 	public GenericOperationAddParameter(
 			IParametersParentNode target, 
-			AbstractParameterNode parameter, 
+			BasicParameterNode parameter, 
 			int index, 
 			boolean generateUniqueName,
 			IExtLanguageManager extLanguageManager) {
@@ -38,7 +38,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	public GenericOperationAddParameter(
 			IParametersParentNode target, 
-			AbstractParameterNode parameter, 
+			BasicParameterNode parameter, 
 			boolean generateUniqueName,
 			IExtLanguageManager extLanguageManager) {
 		this(target, parameter, -1, generateUniqueName, extLanguageManager);
@@ -69,7 +69,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		markModelUpdated();
 	}
 
-	private void generateUniqueParameterName(AbstractParameterNode abstractParameterNode) {
+	private void generateUniqueParameterName(BasicParameterNode abstractParameterNode) {
 
 		String newName = fParametersParentNode.generateNewParameterName(abstractParameterNode.getName());
 		abstractParameterNode.setName(newName);
@@ -83,10 +83,10 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	protected class ReverseOperation extends AbstractModelOperation{
 
 		private int fOriginalIndex;
-		private AbstractParameterNode fReversedParameter;
+		private BasicParameterNode fReversedParameter;
 		private IParametersParentNode fReversedTarget;
 
-		public ReverseOperation(IParametersParentNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		public ReverseOperation(IParametersParentNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
 			super("reverse " + OperationNames.ADD_PARAMETER, extLanguageManager);
 			fReversedTarget = target;
 			fReversedParameter = parameter;

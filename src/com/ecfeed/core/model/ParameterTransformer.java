@@ -164,7 +164,7 @@ public class ParameterTransformer {
 
 	public static void verifyConversionOfParameterToType(
 			String newType, 
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode abstractParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
 		if (abstractParameterNode instanceof BasicParameterNode && abstractParameterNode.isGlobalParameter()) {
@@ -199,7 +199,7 @@ public class ParameterTransformer {
 	}
 
 	public static void convertChoicesToType(
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode abstractParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
@@ -265,8 +265,8 @@ public class ParameterTransformer {
 
 	private static void convertConstraints(
 			MethodNode methodNode, 
-			AbstractParameterNode srcParameterNode,
-			AbstractParameterNode dstParameterNode, 
+			BasicParameterNode srcParameterNode,
+			BasicParameterNode dstParameterNode, 
 			List<ParameterConversionItem> parameterConversionItems,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {

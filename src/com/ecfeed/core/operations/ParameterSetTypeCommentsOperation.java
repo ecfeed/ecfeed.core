@@ -10,16 +10,16 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
 	private String fComments;
-	private AbstractParameterNode fTarget;
+	private BasicParameterNode fTarget;
 	private String fCurrentComments;
 
-	public ParameterSetTypeCommentsOperation(AbstractParameterNode target, String comments, IExtLanguageManager extLanguageManager) {
+	public ParameterSetTypeCommentsOperation(BasicParameterNode target, String comments, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_COMMENTS, extLanguageManager);
 		fTarget = target;
 		fComments = comments;

@@ -18,16 +18,16 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersHolder {
 
-	private List<AbstractParameterNode> fParameters;
+	private List<BasicParameterNode> fParameters;
 	private IModelChangeRegistrator fModelChangeRegistrator;
 
 	public ParametersHolder(IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelChangeRegistrator = modelChangeRegistrator;
-		fParameters = new ArrayList<AbstractParameterNode>();
+		fParameters = new ArrayList<BasicParameterNode>();
 	}
 
-	public void addParameter(AbstractParameterNode parameter, IAbstractNode parent) {
+	public void addParameter(BasicParameterNode parameter, IAbstractNode parent) {
 
 		addParameter(parameter, fParameters.size(), parent);
 	}
@@ -39,7 +39,7 @@ public class ParametersHolder {
 		}
 	}
 
-	public void addParameter(AbstractParameterNode parameter, int index, IAbstractNode parent) {
+	public void addParameter(BasicParameterNode parameter, int index, IAbstractNode parent) {
 
 		if (parameterExists(parameter)) {
 			ExceptionHelper.reportRuntimeException("Parameter: " + parameter.getName() + " already exists.");
@@ -51,7 +51,7 @@ public class ParametersHolder {
 		registerChange();
 	}
 
-	public List<AbstractParameterNode> getParameters() {
+	public List<BasicParameterNode> getParameters() {
 
 		return fParameters;
 	}
@@ -61,9 +61,9 @@ public class ParametersHolder {
 		return fParameters.size();
 	}	
 
-	public AbstractParameterNode findParameter(String parameterNameToFind) {
+	public BasicParameterNode findParameter(String parameterNameToFind) {
 
-		for (AbstractParameterNode parameter : fParameters) {
+		for (BasicParameterNode parameter : fParameters) {
 
 			final String parameterName = parameter.getName();
 
@@ -74,7 +74,7 @@ public class ParametersHolder {
 		return null;
 	}
 
-	public AbstractParameterNode getParameter(int parameterIndex) {
+	public BasicParameterNode getParameter(int parameterIndex) {
 
 		return fParameters.get(parameterIndex);
 	}	
@@ -83,7 +83,7 @@ public class ParametersHolder {
 
 		int index = 0;
 
-		for (AbstractParameterNode parameter : fParameters) {
+		for (BasicParameterNode parameter : fParameters) {
 			if (parameter.getName().equals(parameterName)) {
 				return index;
 			}
@@ -101,7 +101,7 @@ public class ParametersHolder {
 		return true;
 	}
 
-	public boolean parameterExists(AbstractParameterNode abstractParameterNode) {
+	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
 
 		if (parameterExists(abstractParameterNode.getName())) {
 			return true;
@@ -114,7 +114,7 @@ public class ParametersHolder {
 
 		List<String> types = new ArrayList<String>();
 
-		for (AbstractParameterNode parameter : fParameters) {
+		for (BasicParameterNode parameter : fParameters) {
 			types.add(parameter.getType());
 		}
 
@@ -125,14 +125,14 @@ public class ParametersHolder {
 
 		List<String> names = new ArrayList<String>();
 
-		for(AbstractParameterNode parameter : fParameters){
+		for(BasicParameterNode parameter : fParameters){
 			names.add(parameter.getName());
 		}
 
 		return names;
 	}
 
-	public boolean removeParameter(AbstractParameterNode parameter) {
+	public boolean removeParameter(BasicParameterNode parameter) {
 
 		parameter.setParent(null);
 
@@ -142,7 +142,7 @@ public class ParametersHolder {
 		return result;
 	}
 
-	public void replaceParameters(List<AbstractParameterNode> parameters) {
+	public void replaceParameters(List<BasicParameterNode> parameters) {
 
 		fParameters.clear();
 		fParameters.addAll(parameters);
@@ -170,8 +170,8 @@ public class ParametersHolder {
 
 	public boolean isMatch(ParametersHolder otherParametersHolder) {
 		
-		List<AbstractParameterNode> parameters = getParameters();
-		List<AbstractParameterNode> otherParameters = otherParametersHolder.getParameters();
+		List<BasicParameterNode> parameters = getParameters();
+		List<BasicParameterNode> otherParameters = otherParametersHolder.getParameters();
 		
 		int parametersSize = parameters.size();
 		
@@ -181,8 +181,8 @@ public class ParametersHolder {
 
 		for (int i = 0; i < parametersSize; ++i) {
 
-			AbstractParameterNode abstractParameterNode = parameters.get(i);
-			AbstractParameterNode otherParameter = otherParameters.get(i);
+			BasicParameterNode abstractParameterNode = parameters.get(i);
+			BasicParameterNode otherParameter = otherParameters.get(i);
 			
 			if (!abstractParameterNode.isMatch(otherParameter)) {
 				return false;

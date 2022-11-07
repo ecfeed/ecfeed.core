@@ -38,7 +38,7 @@ public interface IChoicesParentNode extends IAbstractNode {
 	public void replaceChoices(List<ChoiceNode> newChoices);
 	public void clearChoices();
 	
-	public AbstractParameterNode getParameter();
+	public BasicParameterNode getParameter();
 	public Object accept(IChoicesParentVisitor visitor) throws Exception;
 
 }

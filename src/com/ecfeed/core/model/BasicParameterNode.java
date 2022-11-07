@@ -19,7 +19,7 @@ import java.util.Set;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class BasicParameterNode extends AbstractParameterNode {
+public class BasicParameterNode extends AbstractParameterNode implements IChoicesParentNode {
 
 	private boolean fExpected;
 	private String fDefaultValue;

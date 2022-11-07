@@ -191,7 +191,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean updateReferences(IParametersAndConstraintsParentNode methodNode) {
 
-		AbstractParameterNode tmpParameterNode = methodNode.findParameter(fLeftParameter.getName());
+		BasicParameterNode tmpParameterNode = methodNode.findParameter(fLeftParameter.getName());
 		BasicParameterNode basicParameterNode = (BasicParameterNode) tmpParameterNode;
 
 		if (tmpParameterNode != null) {
@@ -238,7 +238,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode abstractParameterNode) {
+	public boolean mentions(BasicParameterNode abstractParameterNode) {
 
 		if (getLeftParameter() == abstractParameterNode) {
 			return true;
@@ -482,7 +482,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 		return fRightCondition.mentionsChoiceOfParameter(parameter);
 	}
 

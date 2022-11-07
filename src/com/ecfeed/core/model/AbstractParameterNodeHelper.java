@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
 		return name;
@@ -31,7 +31,7 @@ public abstract class AbstractParameterNodeHelper {
 		return errorMessage;
 	}
 
-	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getType(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		if (abstractParameterNode instanceof BasicParameterNode) {
 			
@@ -88,7 +88,7 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String createSignature(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			boolean isExpected,
 			IExtLanguageManager extLanguageManager) {
 
@@ -164,7 +164,7 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createParameterSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String createParameterSignature(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = abstractParameterNode.getName();
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
@@ -176,7 +176,7 @@ public abstract class AbstractParameterNodeHelper {
 		return label;
 	}
 
-	public static String createNameSignature(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String createNameSignature(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = abstractParameterNode.getName();
 		name = extLanguageManager.convertTextFromIntrToExtLanguage(name);
@@ -198,7 +198,7 @@ public abstract class AbstractParameterNodeHelper {
 		return result;
 	}
 
-	public static boolean hasRandomizedChoices(AbstractParameterNode abstractParameterNode) {
+	public static boolean hasRandomizedChoices(BasicParameterNode abstractParameterNode) {
 
 		Set<ChoiceNode> choices = abstractParameterNode.getAllChoices();
 

@@ -192,12 +192,12 @@ public class ConstraintHelper {
 
 		List<ChoiceNode> result = new ArrayList<>();
 
-		AbstractParameterNode abstractParameterNodeForComparison = 
+		BasicParameterNode abstractParameterNodeForComparison = 
 				getParameterNodeForComparison(methodParameterNode);
 
 		for (ChoiceNode choiceNode : choicesFromPrecondition) {
 
-			AbstractParameterNode abstractParameterNode = choiceNode.getParameter();
+			BasicParameterNode abstractParameterNode = choiceNode.getParameter();
 
 			if (abstractParameterNodeForComparison.equals(abstractParameterNode)) {
 				result.add(choiceNode);
@@ -207,7 +207,7 @@ public class ConstraintHelper {
 		return result;
 	}
 
-	private static AbstractParameterNode getParameterNodeForComparison(BasicParameterNode methodParameterNode) {
+	private static BasicParameterNode getParameterNodeForComparison(BasicParameterNode methodParameterNode) {
 
 		if (methodParameterNode.isLinked()) {
 			return methodParameterNode.getLinkToGlobalParameter();

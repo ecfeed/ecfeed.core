@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -388,7 +388,7 @@ public class TestCasesExportHelper {
 
 	private static String convertValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
-		AbstractParameterNode parameter = choice.getParameter();
+		BasicParameterNode parameter = choice.getParameter();
 		if (parameter == null) {
 			return null;
 		}

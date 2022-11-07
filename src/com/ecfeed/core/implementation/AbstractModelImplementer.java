@@ -12,7 +12,7 @@ package com.ecfeed.core.implementation;
 
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -172,7 +172,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 	private void implementRootGlobalParameters(RootNode rootNode) throws Exception {
 		
 		// TODO MO-RE remove with other implementers
-//		for(AbstractParameterNode abstractParameterNode : rootNode.getParameters()){
+//		for(BasicParameterNode abstractParameterNode : rootNode.getParameters()){
 //			
 //			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;  
 //			if(isImplementableNode(abstractParameterNode) && getImplementationStatus(abstractParameterNode) != EImplementationStatus.IMPLEMENTED){
@@ -250,7 +250,7 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 		return true;
 	}
 
-	protected boolean implement(AbstractParameterNode parameterNode) throws Exception{
+	protected boolean implement(BasicParameterNode parameterNode) throws Exception{
 		if(parameterDefinitionImplemented(parameterNode) == false){
 			implementParameterDefinition(parameterNode);
 		}
@@ -334,10 +334,10 @@ public abstract class AbstractModelImplementer implements IModelImplementer {
 
 	protected abstract boolean classDefinitionImplemented(ClassNode node);
 	protected abstract boolean methodDefinitionImplemented(MethodNode node);
-	protected abstract boolean parameterDefinitionImplemented(AbstractParameterNode node);
+	protected abstract boolean parameterDefinitionImplemented(BasicParameterNode node);
 
 	protected abstract void implementClassDefinition(ClassNode node) throws Exception;
 	protected abstract void implementMethodDefinition(MethodNode node) throws Exception;
-	protected abstract void implementParameterDefinition(AbstractParameterNode node) throws Exception;
+	protected abstract void implementParameterDefinition(BasicParameterNode node) throws Exception;
 	protected abstract void implementChoiceDefinition(ChoiceNode node) throws Exception;
 }
