@@ -485,7 +485,7 @@ public abstract class XomBuilder implements IModelVisitor {
 	private void appendTypeComments(Element element, BasicParameterNode node) {
 
 		if (node.isLinked() == false) {
-			appendTypeComments(element, (BasicParameterNode)node);
+			appendComments(element, node);
 			return;
 		}
 		
