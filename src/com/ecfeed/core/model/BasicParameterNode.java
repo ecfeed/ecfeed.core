@@ -306,7 +306,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public List<MethodNode> getMethods() {
-		return Arrays.asList(new MethodNode[] { getMethod() });
+		
+		MethodNode method = getMethod();
+		
+		if (method == null) {
+			return new ArrayList<>();
+		}
+		
+		return Arrays.asList(new MethodNode[] { method });
 	}
 
 	public List<ChoiceNode> getOwnChoices() {
@@ -314,7 +321,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public MethodNode getMethod() {
-		return (MethodNode) getParent();
+		
+		IAbstractNode parent = getParent();
+		
+		if (parent instanceof RootNode) {
+			return null;
+		}
+
+		if (parent instanceof ClassNode) {
+			return null;
+		}
+		
+		return (MethodNode) parent;
 	}
 
 	public String getDefaultValue() {
