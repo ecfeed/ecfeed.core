@@ -292,7 +292,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		if (fSerializatorParams.getSerializeComments()) {
-			appendTypeComments(targetParameterElement, node);
+			appendTypeCommentsForMethodParameterNode(targetParameterElement, node);
 		}
 
 		encodeAndAddAttribute(
@@ -482,13 +482,15 @@ public abstract class XomBuilder implements IModelVisitor {
 		return null;
 	}
 
-	private void appendTypeComments(Element element, BasicParameterNode node) {
+	private void appendTypeCommentsForMethodParameterNode(Element element, BasicParameterNode node) {
 
 		if (node.isLinked() == false) {
-			appendComments(element, node);
-			return;
+			appendTypeComments(element, node);
 		}
-		
+	}
+
+	private void appendTypeComments(Element element, BasicParameterNode node) {
+
 		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
 		Element commentElement;
 
@@ -503,7 +505,30 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
 		commentElement.appendChild(typeComments);
-	}
+	}	
+	
+//	private void appendTypeComments(Element element, BasicParameterNode node) {
+//
+//		if (node.isLinked() == false) {
+//			appendComments(element, node);
+//			return;
+//		}
+//		
+//		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
+//		Element commentElement;
+//
+//		if (commentElements.size() > 0) {
+//			commentElement = commentElements.get(0);
+//		} else {
+//			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
+//			element.appendChild(commentElement);
+//		}
+//
+//		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+//
+//		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
+//		commentElement.appendChild(typeComments);
+//	}
 
 	public static void encodeAndAddAttribute(
 			Element element, Attribute attribute, WhiteCharConverter whiteCharConverter) {
