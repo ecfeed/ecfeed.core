@@ -94,7 +94,7 @@ public class XmlUpgradeTest {
 		}
 	}
 
-	private void assertEqualsByLines(String expectedResult, String result) {
+	private void assertEqualsByLines(String expectedResult, String result) { // TODO MO-RE move to test helper
 
 		final String lineSeparator = System.getProperty("line.separator");
 
