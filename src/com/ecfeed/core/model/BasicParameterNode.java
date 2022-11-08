@@ -54,6 +54,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fLinkToGlobalParameter = link;
 		
 		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
+		
+		createDefaultProperties();
 	}
 
 	public BasicParameterNode(
@@ -613,6 +615,12 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	
 	public boolean isCorrectableToBeRandomizedType() {
 		return JavaLanguageHelper.isNumericTypeName(fType) || JavaLanguageHelper.isStringTypeName(fType);
+	}
+
+	private void createDefaultProperties() {
+
+		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
+		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 	}
 	
 }
