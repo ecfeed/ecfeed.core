@@ -101,12 +101,9 @@ public class XmlUpgradeTest {
 		String[] expectedResultLines = expectedResult.split(lineSeparator);
 		String[] resultLines = result.split(lineSeparator);
 
-		if (expectedResultLines.length != resultLines.length) {
-			fail("Content does not match");
-			return;
-		}
+		int minLines = Math.min(expectedResultLines.length, resultLines.length);
 
-		for (int lineIndex = 0; lineIndex < resultLines.length; lineIndex++) {
+		for (int lineIndex = 0; lineIndex < minLines; lineIndex++) {
 
 			String expectedLine = expectedResultLines[lineIndex];
 			expectedLine = expectedLine.replace("\r", "");
@@ -117,6 +114,11 @@ public class XmlUpgradeTest {
 			if (!StringHelper.isEqual(expectedLine, resultLine)) {
 				fail("Line: " + (lineIndex + 1) + " differs.");
 			}
+		}
+		
+		if (expectedResultLines.length != resultLines.length) {
+			fail("Content does not match");
+			return;
 		}
 	}
 
