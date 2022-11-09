@@ -170,7 +170,6 @@
 //
 //	private void implementRootGlobalParameters(RootNode rootNode) throws Exception {
 //		
-//		// TODO MO-RE remove with other implementers
 ////		for(BasicParameterNode abstractParameterNode : rootNode.getParameters()){
 ////			
 ////			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;  
