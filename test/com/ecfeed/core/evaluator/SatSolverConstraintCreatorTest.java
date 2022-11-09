@@ -58,16 +58,26 @@ public class SatSolverConstraintCreatorTest {
     public static MethodNode getMethod() {
         MethodNode method = new MethodNode("test");
 
-        MethodNode method1 = m1;
-        MethodNode method2 = m2;
+//        MethodNode method1 = m1;
+//        MethodNode method2 = m2;
 
-        method1.getMethodParameters().forEach(method::addParameter);
-        method2.getMethodParameters().forEach(method::addParameter);
+        List<MethodParameterNode> parameters = new ArrayList<>();
+        parameters.addAll(m1.getMethodParameters());
+        parameters.addAll(m2.getMethodParameters());
 
-        method1.getConstraintNodes().forEach(method::addConstraint);
-        method2.getConstraintNodes().forEach(method::addConstraint);
+        List<ConstraintNode> constraints = new ArrayList<>();
+        constraints.addAll(m1.getConstraintNodes());
+        constraints.addAll(m2.getConstraintNodes());
 
-        return method;
+//        MethodDeployer.constructMethod(method1.getMethodParameters(), method1.getConstraintNodes());
+//
+//        method1.getMethodParameters().forEach(method::addParameter);
+//        method2.getMethodParameters().forEach(method::addParameter);
+//
+//        method1.getConstraintNodes().forEach(method::addConstraint);
+//        method2.getConstraintNodes().forEach(method::addConstraint);
+
+        return MethodDeployer.constructMethod(parameters, constraints);
     }
 
     public static MethodNode getMethodMix() {

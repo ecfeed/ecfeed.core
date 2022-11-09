@@ -28,16 +28,11 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 class ParseConstraintToSATVisitor implements IStatementVisitor {
-
-//    private MethodNode fMethodNode;
     private List<MethodParameterNode> fParameters;
-
     private EcSatSolver fSat4Solver;
     private ParameterChoices fParamChoiceSets;
-//    private ChoiceMultiMapping fSanitizedValToAtomicVal;
     private ChoiceMappings fChoicesMappingBucket;
     private ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
-
 
     public ParseConstraintToSATVisitor(
             List<MethodParameterNode> parameters,
@@ -50,66 +45,64 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
         fSat4Solver = sat4Solver;
         fParamChoiceSets = paramChoiceSets;
         fChoicesMappingBucket = choicesMappingsBucket;
-
         fChoiceToSolverIdMappings = choiceToSolverIdMappings;
     }
 
     @Override
     public Object visit(StatementArray statement) {
-        Integer myID = fSat4Solver.newId();
+        Integer id = fSat4Solver.newId();
         switch (statement.getOperator()) {
-            case OR: // y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
+// y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
+            case OR:
             {
                 List<Integer> bigClause = new ArrayList<>();
+
                 for (AbstractStatement child : statement.getChildren()) {
                     Integer childID = null;
-                    try {
-                        childID = (Integer) child.accept(
-                                new ParseConstraintToSATVisitor(
-                                        fParameters,
-                                        fSat4Solver,
-                                        fParamChoiceSets,
-                                        fChoicesMappingBucket,
-                                        fChoiceToSolverIdMappings));
 
+                    try {
+                        childID = (Integer) child.accept(new ParseConstraintToSATVisitor(fParameters, fSat4Solver, fParamChoiceSets, fChoicesMappingBucket,  fChoiceToSolverIdMappings));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     bigClause.add(childID);
-                    fSat4Solver.addSat4Clause(new int[]{-childID, myID}); //small fClauses
+                    fSat4Solver.addSat4Clause(new int[]{-childID, id}); //small fClauses
                 }
-                bigClause.add(-myID);
+
+                bigClause.add(-id);
                 fSat4Solver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray());
+
                 break;
             }
-            case AND: // y = (x1 AND x2 AND .. AND xn) compiles to: (x1 OR NOT y) AND ... AND (xn OR NOT y) AND (NOT x1 OR ... OR NOT xn OR y)
+// y = (x1 AND x2 AND .. AND xn) compiles to: (x1 OR NOT y) AND ... AND (xn OR NOT y) AND (NOT x1 OR ... OR NOT xn OR y)
+            case AND:
             {
                 List<Integer> bigClause = new ArrayList<>();
+
                 for (AbstractStatement child : statement.getChildren()) {
                     Integer childID = null;
+
                     try {
-                        childID = (Integer) child.accept(
-                                new ParseConstraintToSATVisitor(
-                                        fParameters,
-                                        fSat4Solver,
-                                        fParamChoiceSets,
-                                        fChoicesMappingBucket,
-                                        fChoiceToSolverIdMappings));
+                        childID = (Integer) child.accept(new ParseConstraintToSATVisitor(fParameters, fSat4Solver, fParamChoiceSets, fChoicesMappingBucket, fChoiceToSolverIdMappings));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     bigClause.add(-childID);
-                    fSat4Solver.addSat4Clause(new int[]{childID, -myID}); //small fClauses
+                    fSat4Solver.addSat4Clause(new int[]{childID, -id}); //small fClauses
                 }
-                bigClause.add(myID);
+
+                bigClause.add(id);
                 fSat4Solver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray());
+
                 break;
             }
             case ASSIGN:
             	break;
         }
 //            statementToID.put(statement,myID); not really necessary, as we are never reusing the same statements
-        return myID;
+        return id;
     }
 
     @Override
