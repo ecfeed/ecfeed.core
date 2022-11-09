@@ -444,10 +444,10 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return methodNode;
 	}
 	
-	public List<ChoiceNode> getChoicesWithCopies() { // TODO MO-RE do we need this ?
-
-		return getChoices();
-	}
+//	public List<ChoiceNode> getChoicesWithCopies() { // TODO MO-RE do we need this ?
+//
+//		return getChoices();
+//	}
 
 	@Override
 	public int getChildrenCount() {
@@ -514,7 +514,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public List<ChoiceNode> getLeafChoicesWithCopies() {
 
-		return ChoiceNodeHelper.getLeafChoices(getChoicesWithCopies());
+		return ChoiceNodeHelper.getLeafChoices(getChoices());
 	}
 
 	@Override

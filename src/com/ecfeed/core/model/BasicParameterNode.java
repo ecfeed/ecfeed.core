@@ -621,7 +621,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	@Override
-	public BasicParameterNode getParameter() { // TODO MO-RE remove ?
+	public BasicParameterNode getParameter() {
 		
 		return this;
 	}
