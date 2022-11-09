@@ -10,19 +10,19 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class SimpleOperationSetMethodParameterType extends AbstractModelOperation {
 
 	private static final String SET_PARAMETER_TYPE = "Set parameter type";
 
-	private MethodParameterNode fMethodParameterNode;
+	private BasicParameterNode fMethodParameterNode;
 	private String fOldType;
 	private String fNewType;
 
 	public SimpleOperationSetMethodParameterType(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			String newType,
 			IExtLanguageManager extLanguageManager) {
 

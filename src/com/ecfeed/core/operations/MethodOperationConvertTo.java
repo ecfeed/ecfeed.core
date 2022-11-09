@@ -16,7 +16,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -61,8 +61,8 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 		fTargetMethodNode.setName(methodName);
 
 		for(int i = 0; i < fTargetMethodNode.getParameters().size(); i++){
-			MethodParameterNode targetParameter = fTargetMethodNode.getMethodParameters().get(i);
-			MethodParameterNode sourceParameter = fSourceMethodNode.getMethodParameters().get(i);
+			BasicParameterNode targetParameter = fTargetMethodNode.getMethodParameters().get(i);
+			BasicParameterNode sourceParameter = fSourceMethodNode.getMethodParameters().get(i);
 
 			targetParameter.setName(sourceParameter.getName());
 		}

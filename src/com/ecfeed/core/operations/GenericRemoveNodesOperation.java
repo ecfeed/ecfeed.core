@@ -19,14 +19,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -80,11 +78,11 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 
 	private void prepareOperations(ITypeAdapterProvider adapterProvider, boolean validate){
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
-		HashMap<MethodNode, List<AbstractParameterNode>> parameterMap = new HashMap<>();
+		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
 		ArrayList<ClassNode> classes = new ArrayList<>();
 		ArrayList<MethodNode> methods = new ArrayList<>();
-		ArrayList<MethodParameterNode> params = new ArrayList<>();
-		ArrayList<GlobalParameterNode> globals = new ArrayList<>();
+		ArrayList<BasicParameterNode> params = new ArrayList<>();
+		ArrayList<BasicParameterNode> globals = new ArrayList<>();
 		ArrayList<ChoiceNode> choices = new ArrayList<>();
 		ArrayList<IAbstractNode> others = new ArrayList<>();
 		HashSet<ConstraintNode> constraints = new HashSet<>();
@@ -95,10 +93,14 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				classes.add((ClassNode)node);
 			} else if(node instanceof MethodNode){
 				methods.add((MethodNode)node);
-			} else if(node instanceof MethodParameterNode){
-				params.add((MethodParameterNode)node);
-			} else if(node instanceof GlobalParameterNode){
-				globals.add((GlobalParameterNode)node);
+			} else if(node instanceof BasicParameterNode){
+				
+				if (((BasicParameterNode) node).isGlobalParameter()) {
+					globals.add((BasicParameterNode)node);
+				} else {
+					params.add((BasicParameterNode)node);
+				}
+			
 			} else if(node instanceof ConstraintNode){
 				constraints.add((ConstraintNode)node);
 			} else if(node instanceof TestCaseNode){
@@ -137,18 +139,18 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		 * duplicate method - just proceed to remove global and all linkers and
 		 * remove it from the lists.
 		 */
-		Iterator<GlobalParameterNode> globalItr = globals.iterator();
+		Iterator<BasicParameterNode> globalItr = globals.iterator();
 		while (globalItr.hasNext()) {
-			GlobalParameterNode global = globalItr.next();
-			List<MethodParameterNode> linkers = global.getLinkedMethodParameters();
+			BasicParameterNode global = globalItr.next();
+			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
 			boolean isDependent = false;
-			for (MethodParameterNode param : linkers) {
+			for (BasicParameterNode param : linkers) {
 				MethodNode method = param.getMethod();
 				if (addMethodToMap(method, duplicatesMap, methods)) {
 					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					isDependent = true;
 					if (!parameterMap.containsKey(method)) {
-						parameterMap.put(method, new ArrayList<AbstractParameterNode>());
+						parameterMap.put(method, new ArrayList<BasicParameterNode>());
 					}
 					parameterMap.get(method).add(global);
 				}
@@ -162,7 +164,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				 * in case linkers contain parameters assigned to removal -
 				 * remove them from list; Global param removal will handle them.
 				 */
-				for (MethodParameterNode param : linkers) {
+				for (BasicParameterNode param : linkers) {
 					params.remove(param);
 				}
 			}
@@ -174,15 +176,15 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		 * order. If parameters method is not potential duplicate - simply
 		 * forward it for removal and remove it from to-remove list.
 		 */
-		Iterator<MethodParameterNode> paramItr = params.iterator();
+		Iterator<BasicParameterNode> paramItr = params.iterator();
 		while (paramItr.hasNext()) {
-			MethodParameterNode param = paramItr.next();
+			BasicParameterNode param = paramItr.next();
 			MethodNode method = param.getMethod();
 
 			if (addMethodToMap(method, duplicatesMap, methods)) {
 				duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 				if (!parameterMap.containsKey(method)) {
-					parameterMap.put(method, new ArrayList<AbstractParameterNode>());
+					parameterMap.put(method, new ArrayList<BasicParameterNode>());
 				}
 				parameterMap.get(method).add(param);
 			} else {
@@ -227,7 +229,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				if (paramSet.size() < methodSet.size()) {
 					for (MethodNode method : methodSet) {
 						if (parameterMap.containsKey(method)) {
-							for (AbstractParameterNode node : parameterMap.get(method)) {
+							for (BasicParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes);
 								fAffectedNodes.add(node);
@@ -239,23 +241,25 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				else {
 					for (MethodNode method : methodSet) {
 						if (parameterMap.containsKey(method)) {
-							for (AbstractParameterNode node : parameterMap.get(method)) {
+							for (BasicParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes);
-								if (node instanceof MethodParameterNode) {
-
-									addOperation(
-											new MethodOperationRemoveParameter(
-													method, (MethodParameterNode)node, validate, false, getExtLanguageManager()));
-
-								} else if (node instanceof GlobalParameterNode) {
+								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
 
 									addOperation(
 											new GenericOperationRemoveGlobalParameter(
-													((GlobalParameterNode)node).getParametersParent(), 
-													(GlobalParameterNode)node, 
+													((BasicParameterNode)node).getParametersParent(), 
+													(BasicParameterNode)node, 
 													true,
 													getExtLanguageManager()));	
+									
+
+								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
+
+									addOperation(
+											new MethodOperationRemoveParameter(
+													method, (BasicParameterNode)node, validate, false, getExtLanguageManager()));
+									
 								}
 							}
 						}
@@ -352,11 +356,11 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 					fAffectedConstraints.add(constraintNode);
 				}
 			}
-		} else if (node instanceof AbstractParameterNode) {
+		} else if (node instanceof BasicParameterNode) {
 			Iterator<ConstraintNode> itr = allConstraintNodes.iterator();
 			while (itr.hasNext()) {
 				ConstraintNode constraint = itr.next();
-				if (constraint.mentions((AbstractParameterNode)node)) {
+				if (constraint.mentions((BasicParameterNode)node)) {
 					fAffectedConstraints.add(constraint);
 				}
 			}

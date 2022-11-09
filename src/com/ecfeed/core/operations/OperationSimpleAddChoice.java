@@ -11,7 +11,7 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OperationSimpleAddChoice extends AbstractOneWayModelOperation {
@@ -20,12 +20,12 @@ public class OperationSimpleAddChoice extends AbstractOneWayModelOperation {
 
 	private ChoiceNode fChoiceNode;
 	private int fIndexOfChoice;
-	private ChoicesParentNode fChoicesParentNode;
+	private IChoicesParentNode fChoicesParentNode;
 
 	public OperationSimpleAddChoice(
 			ChoiceNode choiceNode, 
 			int indexOfChoice,
-			ChoicesParentNode choicesParentNode, 
+			IChoicesParentNode choicesParentNode, 
 			IExtLanguageManager extLanguageManager){
 
 		super(ADD_CHOICE, extLanguageManager);

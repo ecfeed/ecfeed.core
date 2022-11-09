@@ -12,15 +12,15 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
-import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.GlobalParametersParentNode;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IModelVisitor;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -91,18 +91,21 @@ public class FactoryRemoveOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
+			
+			if (node.isGlobalParameter()) {
+				
+				return new GenericOperationRemoveGlobalParameter(
+						(IParametersParentNode)node.getParametersParent(), 
+						node,
+						fExtLanguageManager);
+				
+			} else {
+			
 			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguageManager);
+			}
 		}
 
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			return new GenericOperationRemoveGlobalParameter(
-					(GlobalParametersParentNode)node.getParametersParent(), 
-					node,
-					fExtLanguageManager);
-		}
-		
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			return new MethodOperationRemoveTestSuite(node.getMethod(), node, fExtLanguageManager);
@@ -119,8 +122,17 @@ public class FactoryRemoveOperation {
 		}
 
 		@Override
-		public Object visit(ChoiceNode node) throws Exception {
-			return new GenericOperationRemoveChoice(node.getParent(), node, fAdapterProvider, fValidate, fExtLanguageManager);
+		public Object visit(ChoiceNode choiceNode) throws Exception {
+			
+			IAbstractNode abstractParent = choiceNode.getParent();
+			
+			if (!(abstractParent instanceof IChoicesParentNode)) {
+				ExceptionHelper.reportRuntimeException("Invalid type of parent.");
+			}
+
+			IChoicesParentNode choicesParentNode = (IChoicesParentNode)abstractParent; 
+			
+			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 	}
 

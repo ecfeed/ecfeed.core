@@ -14,14 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
 import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.TestCaseNode;
@@ -126,13 +125,13 @@ public class TestCasesExportHelper {
 			return null;
 		}
 
-		MethodParameterNode parameter = methodNode.getMethodParameters().get(parameterNumber);
+		BasicParameterNode parameter = methodNode.getMethodParameters().get(parameterNumber);
 		String substitute = resolveParameterCommand(command, parameter, extLanguageManager);
 
 		return substitute;
 	}
 
-	private static String resolveParameterCommand(String command, MethodParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	private static String resolveParameterCommand(String command, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		String result = command;
 		switch(command){
 		case PARAMETER_COMMAND_NAME:
@@ -388,7 +387,7 @@ public class TestCasesExportHelper {
 
 	private static String convertValue(ChoiceNode choice, IExtLanguageManager extLanguageManager) {
 
-		AbstractParameterNode parameter = choice.getParameter();
+		BasicParameterNode parameter = choice.getParameter();
 		if (parameter == null) {
 			return null;
 		}

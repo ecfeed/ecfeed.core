@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -25,12 +25,12 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class MethodOperationImportParameters extends GenericOperationImportParameters {
 
 	List<TestCaseNode> fRemovedTestCases;
-	List<AbstractParameterNode> fAbstractParameterNodes;
+	List<BasicParameterNode> fAbstractParameterNodes;
 	MethodNode fMethodNode;
 
 	public MethodOperationImportParameters(
 			MethodNode methodNode, 
-			List<AbstractParameterNode> abstractParameterNodes,
+			List<BasicParameterNode> abstractParameterNodes,
 			IExtLanguageManager extLanguageManager) {
 
 		super(methodNode, abstractParameterNodes, extLanguageManager);
@@ -47,7 +47,7 @@ public class MethodOperationImportParameters extends GenericOperationImportParam
 		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
 
 		int index = 0;
-		for (AbstractParameterNode node : fAbstractParameterNodes) {
+		for (BasicParameterNode node : fAbstractParameterNodes) {
 			String newParameterType = AbstractParameterNodeHelper.getType(node, extLanguageManager);
 			paremeterTypesInExtLanguage.add(index++, newParameterType);
 		}

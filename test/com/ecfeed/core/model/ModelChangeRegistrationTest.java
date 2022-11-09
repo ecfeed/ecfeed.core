@@ -67,7 +67,7 @@ public class ModelChangeRegistrationTest {
 		ModelChangeRegistrator changeCounter = new ModelChangeRegistrator();
 
 		RootNode rootNode = new RootNode("Root", changeCounter);
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("g1", "t", changeCounter);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("g1", "t", changeCounter);
 
 		changeCounter.registerModelSaved();
 		rootNode.addParameter(globalParameterNode);
@@ -99,8 +99,8 @@ public class ModelChangeRegistrationTest {
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 
 		changeCounter.registerModelSaved();
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						"par1", "int", "0", false, methodNode.getModelChangeRegistrator());
 		assertTrue(changeCounter.isModelChangedSinceLastSave());
 

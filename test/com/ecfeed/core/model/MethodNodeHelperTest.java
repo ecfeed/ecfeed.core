@@ -41,19 +41,19 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method", null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("arg_1", "String", "", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("arg_1", "String", "", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("arg_2", "String", "", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("arg_2", "String", "", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		// checks for simple language
 
 		ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
-		MethodParameterNode foundMethodParameterNode =
+		BasicParameterNode foundMethodParameterNode =
 				MethodNodeHelper.findMethodParameterByName("arg 1", methodNode, extLanguageManagerForSimple);
 		assertEquals(foundMethodParameterNode, methodParameterNode1);
 
@@ -87,10 +87,10 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", "int", "0", false, null);
+		BasicParameterNode param2 = new BasicParameterNode("param2", "int", "0", false, null);
 		methodNode.addParameter(param2);
 
 		List<String> methodParameterNames = MethodNodeHelper.getParameterNames(methodNode, new ExtLanguageManagerForJava());
@@ -105,10 +105,10 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("method_1", null);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0", false, null);
+		BasicParameterNode param2 = new BasicParameterNode("param2", "double", "0", false, null);
 		methodNode.addParameter(param2);
 
 		// java types
@@ -144,7 +144,7 @@ public class MethodNodeHelperTest {
 		assertEquals("method 1()", signature);
 
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
 		signature = MethodNodeHelper.createSignature(methodNode, true, new ExtLanguageManagerForJava());
@@ -159,7 +159,7 @@ public class MethodNodeHelperTest {
 		signature = MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForSimple());
 		assertEquals("method 1(Number)", signature);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0.0", true, null);
+		BasicParameterNode param2 = new BasicParameterNode("param2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
 		signature = MethodNodeHelper.createSignature(methodNode, true, new ExtLanguageManagerForJava());
@@ -327,10 +327,10 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0.0", true, null);
+		BasicParameterNode param2 = new BasicParameterNode("param2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
 		List<String> paramNames = MethodNodeHelper.getParameterNames(methodNode, new ExtLanguageManagerForJava());
@@ -357,10 +357,10 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode);
 
-		MethodParameterNode param1 = new MethodParameterNode("param_1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param_1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param_2", "double", "0.0", true, null);
+		BasicParameterNode param2 = new BasicParameterNode("param_2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
 		String signature =  MethodNodeHelper.createSignaturesOfParameters(methodNode, new ExtLanguageManagerForJava());
@@ -382,7 +382,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode1a = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1a);
 
-		MethodParameterNode methodParameterNode1a =
+		BasicParameterNode methodParameterNode1a =
 				MethodNodeHelper.createNewParameter(methodNode1a, extLanguageManagerForSimple);
 
 		assertEquals("char",  methodParameterNode1a.getType());
@@ -394,7 +394,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode1b = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1b);
 
-		MethodParameterNode methodParameterNode1b =
+		BasicParameterNode methodParameterNode1b =
 				MethodNodeHelper.createNewParameter(methodNode1b, extLanguageManagerForSimple);
 
 		assertEquals("byte",  methodParameterNode1b.getType());
@@ -406,7 +406,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode1c = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1c);
 
-		MethodParameterNode methodParameterNode1c =
+		BasicParameterNode methodParameterNode1c =
 				MethodNodeHelper.createNewParameter(methodNode1c, extLanguageManagerForSimple);
 
 		assertEquals("boolean",  methodParameterNode1c.getType());
@@ -418,7 +418,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode1d = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1d);
 
-		MethodParameterNode methodParameterNode1d =
+		BasicParameterNode methodParameterNode1d =
 				MethodNodeHelper.createNewParameter(methodNode1d, extLanguageManagerForSimple);
 
 		assertEquals("UserType",  methodParameterNode1d.getType());
@@ -430,7 +430,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode1e = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1e);
 
-		MethodParameterNode methodParameterNode1e =
+		BasicParameterNode methodParameterNode1e =
 				MethodNodeHelper.createNewParameter(methodNode1e, extLanguageManagerForSimple);
 
 		assertEquals("UserType0",  methodParameterNode1e.getType());
@@ -450,7 +450,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode1 = new MethodNode("method", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode1 =
+		BasicParameterNode methodParameterNode1 =
 				MethodNodeHelper.createNewParameter(methodNode1, extLanguageManagerForJava);
 
 		assertEquals("int",  methodParameterNode1.getType());
@@ -462,7 +462,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode2 = new MethodNode("method", null);
 		classNode.addMethod(methodNode2);
 
-		MethodParameterNode methodParameterNode2 =
+		BasicParameterNode methodParameterNode2 =
 				MethodNodeHelper.createNewParameter(methodNode2, extLanguageManagerForJava);
 
 		assertEquals("byte",  methodParameterNode2.getType());
@@ -474,7 +474,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode3 = new MethodNode("method", null);
 		classNode.addMethod(methodNode3);
 
-		MethodParameterNode methodParameterNode3 =
+		BasicParameterNode methodParameterNode3 =
 				MethodNodeHelper.createNewParameter(methodNode3, extLanguageManagerForJava);
 
 		assertEquals("short",  methodParameterNode3.getType());
@@ -486,7 +486,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode4 = new MethodNode("method", null);
 		classNode.addMethod(methodNode4);
 
-		MethodParameterNode methodParameterNode4 =
+		BasicParameterNode methodParameterNode4 =
 				MethodNodeHelper.createNewParameter(methodNode4, extLanguageManagerForJava);
 
 		assertEquals("long",  methodParameterNode4.getType());
@@ -498,7 +498,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode5 = new MethodNode("method", null);
 		classNode.addMethod(methodNode5);
 
-		MethodParameterNode methodParameterNode5 =
+		BasicParameterNode methodParameterNode5 =
 				MethodNodeHelper.createNewParameter(methodNode5, extLanguageManagerForJava);
 
 		assertEquals("float",  methodParameterNode5.getType());
@@ -510,7 +510,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode6 = new MethodNode("method", null);
 		classNode.addMethod(methodNode6);
 
-		MethodParameterNode methodParameterNode6 =
+		BasicParameterNode methodParameterNode6 =
 				MethodNodeHelper.createNewParameter(methodNode6, extLanguageManagerForJava);
 
 		assertEquals("double",  methodParameterNode6.getType());
@@ -522,7 +522,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode7 = new MethodNode("method", null);
 		classNode.addMethod(methodNode7);
 
-		MethodParameterNode methodParameterNode7 =
+		BasicParameterNode methodParameterNode7 =
 				MethodNodeHelper.createNewParameter(methodNode7, extLanguageManagerForJava);
 
 		assertEquals("String",  methodParameterNode7.getType());
@@ -535,7 +535,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode8 = new MethodNode("method", null);
 		classNode.addMethod(methodNode8);
 
-		MethodParameterNode methodParameterNode8 =
+		BasicParameterNode methodParameterNode8 =
 				MethodNodeHelper.createNewParameter(methodNode8, extLanguageManagerForJava);
 
 		assertEquals("char",  methodParameterNode8.getType());
@@ -547,7 +547,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode9 = new MethodNode("method", null);
 		classNode.addMethod(methodNode9);
 
-		MethodParameterNode methodParameterNode9 =
+		BasicParameterNode methodParameterNode9 =
 				MethodNodeHelper.createNewParameter(methodNode9, extLanguageManagerForJava);
 
 		assertEquals("boolean",  methodParameterNode9.getType());
@@ -559,7 +559,7 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode10 = new MethodNode("method", null);
 		classNode.addMethod(methodNode10);
 
-		MethodParameterNode methodParameterNode10 =
+		BasicParameterNode methodParameterNode10 =
 				MethodNodeHelper.createNewParameter(methodNode10, extLanguageManagerForJava);
 
 		assertEquals("default.UserType",  methodParameterNode10.getType());
@@ -579,13 +579,13 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode1 = new MethodNode("method", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode11 =
+		BasicParameterNode methodParameterNode11 =
 				MethodNodeHelper.createNewParameter(methodNode1, extLanguageManagerForJava);
 
 		assertEquals("int",  methodParameterNode11.getType());
 		methodNode1.addParameter(methodParameterNode11);
 
-		MethodParameterNode methodParameterNode12 =
+		BasicParameterNode methodParameterNode12 =
 				MethodNodeHelper.createNewParameter(methodNode1, extLanguageManagerForJava);
 
 		assertEquals("int",  methodParameterNode12.getType());
@@ -596,13 +596,13 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode2 = new MethodNode("method", null);
 		classNode.addMethod(methodNode2);
 
-		MethodParameterNode methodParameterNode21 =
+		BasicParameterNode methodParameterNode21 =
 				MethodNodeHelper.createNewParameter(methodNode2, extLanguageManagerForJava);
 
 		assertEquals("int",  methodParameterNode21.getType());
 		methodNode2.addParameter(methodParameterNode21);
 
-		MethodParameterNode methodParameterNode22 =
+		BasicParameterNode methodParameterNode22 =
 				MethodNodeHelper.createNewParameter(methodNode2, extLanguageManagerForJava);
 
 		assertEquals("byte",  methodParameterNode22.getType());
@@ -639,8 +639,8 @@ public class MethodNodeHelperTest {
 		MethodNode methodNode = new MethodNode("method", null);
 		classNode.addMethod(methodNode);
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode(
 						"par","int", "0",false,null);
 
 		methodNode.addParameter(methodParameterNode);
@@ -727,8 +727,8 @@ public class MethodNodeHelperTest {
 
 		MethodNode methodNode = new MethodNode("fun",  null);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode1);
 
 		// prepare constraint with empty list of assignments
@@ -751,7 +751,7 @@ public class MethodNodeHelperTest {
 
 		// check with not expected parameter
 
-		MethodParameterNode resultMethodParameterNode =
+		BasicParameterNode resultMethodParameterNode =
 				MethodNodeHelper.findExpectedParameterNotUsedInAssignment(methodNode, constraint);
 
 		assertNull(resultMethodParameterNode);
@@ -777,8 +777,8 @@ public class MethodNodeHelperTest {
 
 		// add the second parameter - not expected
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par2", "int", "0", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par2", "int", "0", false, null);
 		methodNode.addParameter(methodParameterNode2);
 
 		resultMethodParameterNode =

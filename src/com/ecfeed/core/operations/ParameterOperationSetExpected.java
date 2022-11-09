@@ -17,15 +17,16 @@ import java.util.ListIterator;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintNodeListHolder;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class ParameterOperationSetExpected extends AbstractModelOperation {
 
-	private MethodParameterNode fTarget;
+	private BasicParameterNode fTarget;
 	private boolean fExpected;
 	private List<TestCaseNode> fOriginalTestCases;
 	private List<ConstraintNode> fOriginalConstraints;
@@ -60,7 +61,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 	}
 
-	public ParameterOperationSetExpected(MethodParameterNode target, boolean expected, IExtLanguageManager extLanguageManager){
+	public ParameterOperationSetExpected(BasicParameterNode target, boolean expected, IExtLanguageManager extLanguageManager){
 		super(OperationNames.SET_EXPECTED_STATUS, extLanguageManager);
 		fTarget = target;
 		fExpected = expected;
@@ -127,7 +128,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 				}
 			}
 
-			MethodNode.ConstraintsItr constraintItr = methodNode.getIterator();
+			ConstraintNodeListHolder.ConstraintsItr constraintItr = methodNode.getIterator();
 			while(methodNode.hasNextConstraint(constraintItr)){
 				if(methodNode.getNextConstraint(constraintItr).mentions(fTarget)){
 					methodNode.removeConstraint(constraintItr);
@@ -142,7 +143,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 		return new ReverseOperation(getExtLanguageManager());
 	}
 
-	protected MethodParameterNode getOwnNode(){
+	protected BasicParameterNode getOwnNode(){
 		return fTarget;
 	}
 

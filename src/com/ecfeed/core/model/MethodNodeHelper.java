@@ -26,7 +26,7 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
-	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
+	public static BasicParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
 
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
 			return null;
@@ -39,16 +39,16 @@ public class MethodNodeHelper {
 		String className = classNode.getName();
 
 		if (StringHelper.isEqual(className, parentName)) {
-			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
-			return (GlobalParameterNode)abstractParameterNode;
+			BasicParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			return (BasicParameterNode)abstractParameterNode;
 		}
 
 		RootNode rootNode = classNode.getRoot();
 		String rootName = rootNode.getName();
 
 		if (parentName == null || rootName.equals(parentName)) {
-			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
-			return (GlobalParameterNode)abstractParameterNode;
+			BasicParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			return (BasicParameterNode)abstractParameterNode;
 		}			
 
 		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
@@ -77,7 +77,7 @@ public class MethodNodeHelper {
 		return dstParamNameParts[0];
 	}
 
-	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodParameterNode methodParameterNode) {
+	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) {
 
 		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
 
@@ -99,7 +99,7 @@ public class MethodNodeHelper {
 		return resultChoiceNodes;
 	}
 
-	public static List<String> getLabelsUsedInConstraints(MethodParameterNode methodParameterNode) {
+	public static List<String> getLabelsUsedInConstraints(BasicParameterNode methodParameterNode) {
 
 		List<String> resultLabels = new ArrayList<>();
 
@@ -213,16 +213,16 @@ public class MethodNodeHelper {
 		AbstractNodeHelper.setName(methodNode, name, extLanguageManager);
 	}
 
-	public static MethodParameterNode findMethodParameterByName(
+	public static BasicParameterNode findMethodParameterByName(
 			String parameterNameToFindInExtLanguage, 
 			MethodNode methodNode, 
 			IExtLanguageManager extLanguageManager) {
 
-		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
+		List<BasicParameterNode> methodParameters = methodNode.getParameters();
 
-		for (AbstractParameterNode parameter : methodParameters) {
+		for (BasicParameterNode parameter : methodParameters) {
 
-			MethodParameterNode methodParameterNode = (MethodParameterNode)parameter;
+			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
 
 			String parameterNameInExtLanguage = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
 
@@ -238,9 +238,9 @@ public class MethodNodeHelper {
 
 		List<String> result = new ArrayList<String>();
 
-		for(AbstractParameterNode parameter : method.getParameters()){
+		for(BasicParameterNode parameter : method.getParameters()){
 
-			MethodParameterNode methodParameterNode = (MethodParameterNode)parameter;
+			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
 
 			String name = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
 
@@ -254,7 +254,7 @@ public class MethodNodeHelper {
 
 		List<String> result = new ArrayList<String>();
 
-		for (AbstractParameterNode parameter : method.getParameters()) {
+		for (BasicParameterNode parameter : method.getParameters()) {
 
 			String type = parameter.getType();
 
@@ -297,18 +297,18 @@ public class MethodNodeHelper {
 		return null;
 	}
 
-	public static MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
+	public static BasicParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
+		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
 		methodNode.addParameter(methodParameterNode);
 
 		return methodParameterNode;
 	}
 
-	public static MethodParameterNode addExpectedParameterToMethod(
+	public static BasicParameterNode addExpectedParameterToMethod(
 			MethodNode methodNode, String name, String type, String defaultValue) {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, defaultValue, true, null);
+		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, defaultValue, true, null);
 		methodNode.addParameter(methodParameterNode);
 
 		return methodParameterNode;
@@ -450,7 +450,7 @@ public class MethodNodeHelper {
 
 		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
 
-			MethodParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
+			BasicParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
 
 
 
@@ -503,11 +503,11 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static List<Boolean> getExpectedParametersFlags(List<MethodParameterNode> methodParameters) {
+	private static List<Boolean> getExpectedParametersFlags(List<BasicParameterNode> methodParameters) {
 
 		List<Boolean> expectedFlags = new ArrayList<Boolean>();
 
-		for(MethodParameterNode methodParameter : methodParameters) {
+		for(BasicParameterNode methodParameter : methodParameters) {
 
 			if (methodParameter.isExpected()) {
 				expectedFlags.add(true);
@@ -553,7 +553,7 @@ public class MethodNodeHelper {
 	//	}
 
 
-	public static MethodParameterNode createNewParameter(
+	public static BasicParameterNode createNewParameter(
 			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		String name = MethodNodeHelper.generateNewParameterName(methodNode);
@@ -562,13 +562,13 @@ public class MethodNodeHelper {
 
 		String defaultValue = JavaLanguageHelper.getDefaultValue(type);
 
-		MethodParameterNode parameter = 
-				new MethodParameterNode(name, type, defaultValue, false, methodNode.getModelChangeRegistrator());
+		BasicParameterNode parameter = 
+				new BasicParameterNode(name, type, defaultValue, false, methodNode.getModelChangeRegistrator());
 
 		return parameter;
 	}
 
-	public static String generateNewParameterName(ParametersParentNode parametersParentNode) {
+	public static String generateNewParameterName(IParametersParentNode parametersParentNode) {
 
 		int i = 0;
 
@@ -687,7 +687,7 @@ public class MethodNodeHelper {
 		return testSuites;
 	}
 
-	public static MethodParameterNode findExpectedParameterNotUsedInAssignment(MethodNode methodNode, Constraint constraint) {
+	public static BasicParameterNode findExpectedParameterNotUsedInAssignment(MethodNode methodNode, Constraint constraint) {
 
 		if (constraint.getType() != ConstraintType.ASSIGNMENT) {
 			return null;
@@ -701,15 +701,15 @@ public class MethodNodeHelper {
 
 		StatementArray statementArray = (StatementArray)postcondition;
 
-		MethodParameterNode parameterNode = findNotUsedExpectedParameter(methodNode, statementArray);
+		BasicParameterNode parameterNode = findNotUsedExpectedParameter(methodNode, statementArray);
 		return parameterNode;
 	}
 
-	public static MethodParameterNode findNotUsedExpectedParameter(MethodNode methodNode, StatementArray statementArray) {
+	public static BasicParameterNode findNotUsedExpectedParameter(MethodNode methodNode, StatementArray statementArray) {
 
-		List<MethodParameterNode> parameters = methodNode.getMethodParameters();
+		List<BasicParameterNode> parameters = methodNode.getMethodParameters();
 
-		for (MethodParameterNode parameterNode : parameters) {
+		for (BasicParameterNode parameterNode : parameters) {
 
 			if (!parameterNode.isExpected()) {
 				continue;
@@ -722,7 +722,7 @@ public class MethodNodeHelper {
 		return null;
 	}
 
-	public static boolean isParameterUsedInAssignment(MethodParameterNode parameterNode, StatementArray statementArray) {
+	public static boolean isParameterUsedInAssignment(BasicParameterNode parameterNode, StatementArray statementArray) {
 
 		List<AbstractStatement> statements = statementArray.getStatements();
 
@@ -734,7 +734,7 @@ public class MethodNodeHelper {
 
 			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
 
-			MethodParameterNode leftParameter = assignmentStatement.getLeftParameter();
+			BasicParameterNode leftParameter = assignmentStatement.getLeftParameter();
 
 			if (leftParameter == parameterNode) {
 				return true;
@@ -747,7 +747,7 @@ public class MethodNodeHelper {
 
 	public static List<String> getStatementValuesForParameter(
 			MethodNode methodNode,
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<Constraint> constraints = methodNode.getConstraints();
 

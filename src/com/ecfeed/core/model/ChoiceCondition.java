@@ -65,13 +65,13 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public boolean updateReferences(IParametersParentNode methodNode) {
 
 		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		MethodParameterNode methodParameterNode = methodNode.findMethodParameter(parameterName);
+		BasicParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
 
 		String choiceName = fRightChoice.getQualifiedName();
-		ChoiceNode choiceNode = methodParameterNode.getChoice(choiceName);
+		ChoiceNode choiceNode = abstractParameterNode.getChoice(choiceName);
 
 		if (choiceNode == null) {
 			return false;
@@ -119,7 +119,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode methodParameterNode) {
+	public boolean mentions(BasicParameterNode methodParameterNode) {
 
 		return false;
 	}	
@@ -134,9 +134,9 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 
-		MethodParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
+		BasicParameterNode methodParameterNode2 = fParentRelationStatement.getLeftParameter();
 
 		if (!(methodParameterNode.equals(methodParameterNode2))) {
 			return new ArrayList<ChoiceNode>();
@@ -329,7 +329,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 
 		if (fRightChoice.getParameter().equals(abstractParameterNode)) {
 			return true;
@@ -339,7 +339,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
 	}
 

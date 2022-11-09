@@ -24,7 +24,7 @@ public class GlobalParameterNodeHelperTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", "String", null);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
 		globalParameterNode.setParent(rootNode);
 
 		String qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
@@ -46,7 +46,7 @@ public class GlobalParameterNodeHelperTest {
 
 		RootNode rootNode = new RootNode("root", null);
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", "String", null);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
 		globalParameterNode.setParent(rootNode);
 
 		String signature = 

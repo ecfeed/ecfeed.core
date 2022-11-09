@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 
 public class ParamsWithChInts {
 
 	//    private String fDebugCode;
-    private Map<MethodParameterNode, Map<ChoiceNode, Integer>> fMap;
+    private Map<BasicParameterNode, Map<ChoiceNode, Integer>> fMap;
 
     public ParamsWithChInts(String debugCode) {
 
@@ -18,23 +18,23 @@ public class ParamsWithChInts {
     }
 
     public void put(
-            MethodParameterNode methodParameterNode,
+            BasicParameterNode methodParameterNode,
             HashMap<ChoiceNode, Integer> choiceIntMap) {
 
         fMap.put(methodParameterNode, choiceIntMap);
     }
 
-    public Map<ChoiceNode, Integer> get(MethodParameterNode methodParameterNode) {
+    public Map<ChoiceNode, Integer> get(BasicParameterNode methodParameterNode) {
 
         return fMap.get(methodParameterNode);
     }
 
-    public boolean containsKey(MethodParameterNode methodParameterNode) {
+    public boolean containsKey(BasicParameterNode methodParameterNode) {
 
         return fMap.containsKey(methodParameterNode);
     }
 
-    Map<MethodParameterNode, Map<ChoiceNode, Integer>> getInternalMap() {
+    Map<BasicParameterNode, Map<ChoiceNode, Integer>> getInternalMap() {
 
         return fMap;
     }

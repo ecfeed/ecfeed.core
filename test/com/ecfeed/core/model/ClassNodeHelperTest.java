@@ -226,10 +226,10 @@ public class ClassNodeHelperTest {
 
 		// class with conflicting method
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
 		methodNode.addParameter(param1);
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0.0", true, null);
+		BasicParameterNode param2 = new BasicParameterNode("param2", "double", "0.0", true, null);
 		methodNode.addParameter(param2);
 
 
@@ -293,7 +293,7 @@ public class ClassNodeHelperTest {
 		MethodNode methodNode1 = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
 		methodNode1.addParameter(param1);
 
 		// check in java language
@@ -312,7 +312,7 @@ public class ClassNodeHelperTest {
 
 		// adding the second parameter
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", "String", "0", false, null);
+		BasicParameterNode param2 = new BasicParameterNode("param2", "String", "0", false, null);
 		methodNode1.addParameter(param2);
 
 		// check in Java and Simple language

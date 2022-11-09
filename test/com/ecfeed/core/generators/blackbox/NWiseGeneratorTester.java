@@ -112,7 +112,7 @@ public class NWiseGeneratorTester { // TODO - extract common parts to AbstractGe
 
         List<List<ChoiceNode>> input = new ArrayList<>();
 
-        for (MethodParameterNode arg : methodNode.getMethodParameters())
+        for (BasicParameterNode arg : methodNode.getMethodParameters())
             if (arg.isExpected()) {
                 input.add(Collections.singletonList(null));
             } else {

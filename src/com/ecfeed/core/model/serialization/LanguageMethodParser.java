@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.CSharpLanguageHelper;
 import com.ecfeed.core.utils.CppLanguageHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -125,13 +125,13 @@ public class LanguageMethodParser {
 
 		for (String parameterText : parameters) {
 
-			MethodParameterNode methodParameterNode = createMethodParameter(parameterText, language);
+			BasicParameterNode methodParameterNode = createMethodParameter(parameterText, language);
 
 			inOutMethodNode.addParameter(methodParameterNode);
 		}
 	}
 
-	private static MethodParameterNode createMethodParameter(String parameterText, Language language) {
+	private static BasicParameterNode createMethodParameter(String parameterText, Language language) {
 
 		String paramTextTrimmed = parameterText.trim();
 
@@ -151,8 +151,8 @@ public class LanguageMethodParser {
 
 		name = name.trim();
 
-		MethodParameterNode methodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode methodParameterNode = 
+				new BasicParameterNode(
 						name, type, JavaLanguageHelper.getDefaultValue(type), false, false, null, null);
 
 		return methodParameterNode;

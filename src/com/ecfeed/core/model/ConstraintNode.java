@@ -132,21 +132,21 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public boolean mentions(MethodParameterNode parameter) {
+//	public boolean mentions(BasicParameterNode parameter) {
+//
+//		return fConstraint.mentions(parameter);
+//	}
 
-		return fConstraint.mentions(parameter);
-	}
+	public boolean mentions(BasicParameterNode parameter) {
 
-	public boolean mentions(AbstractParameterNode parameter) {
-
-		if (parameter instanceof MethodParameterNode) {
-			MethodParameterNode param = (MethodParameterNode)parameter;
+		if (parameter instanceof BasicParameterNode && (!parameter.isGlobalParameter())) {
+			BasicParameterNode param = (BasicParameterNode)parameter;
 			return fConstraint.mentions(param);
 		}
 
-		if (parameter instanceof GlobalParameterNode) {
-			GlobalParameterNode global = (GlobalParameterNode)parameter;
-			for (MethodParameterNode methodParam: global.getLinkedMethodParameters()) {
+		if (parameter instanceof BasicParameterNode && parameter.isGlobalParameter()) {
+			BasicParameterNode global = (BasicParameterNode)parameter;
+			for (BasicParameterNode methodParam: global.getLinkedMethodParameters()) {
 				return fConstraint.mentions(methodParam);
 			}
 		}
@@ -154,15 +154,15 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public boolean mentions(MethodParameterNode parameter, String label) {
+	public boolean mentions(BasicParameterNode parameter, String label) {
 
 		return fConstraint.mentions(parameter, label);
 	}
 
-	public boolean updateReferences(MethodNode method) {
+	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
 
-		if (fConstraint.updateReferences(method)) {
-			setParent(method);
+		if (fConstraint.updateReferences(parent)) {
+			setParent(parent);
 			registerChange();
 			return true;
 		}
@@ -170,11 +170,11 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	public ConstraintNode getCopy(MethodNode method) {
+	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
 
 		ConstraintNode copy = makeClone();
 
-		if (copy.updateReferences(method))
+		if (copy.updateReferences(parent))
 			return copy;
 		else {
 
@@ -226,10 +226,10 @@ public class ConstraintNode extends AbstractNode {
 
 	private boolean areParametersConsistent() {
 
-		final Set<AbstractParameterNode> referencedParameters = getConstraint().getReferencedParameters();
-		final List<AbstractParameterNode> methodParameters = getMethodNode().getParameters();
+		final Set<BasicParameterNode> referencedParameters = getConstraint().getReferencedParameters();
+		final List<BasicParameterNode> methodParameters = getMethodNode().getParameters();
 
-		for (AbstractParameterNode referencedParameter : referencedParameters) {
+		for (BasicParameterNode referencedParameter : referencedParameters) {
 			if (!isParameterConsistent(referencedParameter, methodParameters)) {
 				return false;
 			}
@@ -240,11 +240,11 @@ public class ConstraintNode extends AbstractNode {
 
 	private boolean isParameterConsistent(
 
-			AbstractParameterNode argParameter,
-			List<AbstractParameterNode> methodParameters) {
+			BasicParameterNode argParameter,
+			List<BasicParameterNode> methodParameters) {
 
-		for (AbstractParameterNode param : methodParameters) {
-			MethodParameterNode methodParam = (MethodParameterNode) param;
+		for (BasicParameterNode param : methodParameters) {
+			BasicParameterNode methodParam = (BasicParameterNode) param;
 
 			if (methodParam.isLinked() && methodParam.getLinkToGlobalParameter().equals(argParameter)) {
 				return true;
@@ -282,7 +282,7 @@ public class ConstraintNode extends AbstractNode {
 			return false;
 		}
 
-		AbstractParameterNode parameter = choiceNode.getParameter();
+		BasicParameterNode parameter = choiceNode.getParameter();
 		List<MethodNode> parameterMethods = parameter.getMethods();
 
 		if (parameterMethods == null) {
@@ -300,7 +300,7 @@ public class ConstraintNode extends AbstractNode {
 
 	private static boolean isOkForExpectedParameter(ChoiceNode choiceNode) {
 
-		AbstractParameterNode parameter = choiceNode.getParameter();
+		BasicParameterNode parameter = choiceNode.getParameter();
 
 		if (parameter == null && !isMethodParameterNodeExpected(parameter)) {
 			return false;
@@ -309,13 +309,13 @@ public class ConstraintNode extends AbstractNode {
 		return true;
 	}
 
-	private static boolean isMethodParameterNodeExpected(AbstractParameterNode parameter) {
+	private static boolean isMethodParameterNodeExpected(BasicParameterNode parameter) {
 
-		if (!(parameter instanceof MethodParameterNode)) {
+		if (!(parameter instanceof BasicParameterNode)) {
 			return false;
 		}
 
-		if (((MethodParameterNode)parameter).isExpected()) {
+		if (((BasicParameterNode)parameter).isExpected()) {
 			return true;
 		}
 
@@ -324,7 +324,7 @@ public class ConstraintNode extends AbstractNode {
 
 	private boolean constraintsConsistent() {
 
-		for (MethodParameterNode parameter : getMethodNode().getMethodParameters()) {
+		for (BasicParameterNode parameter : getMethodNode().getMethodParameters()) {
 			if (!isConsistentForParameter(parameter)) {
 				return false;
 			}
@@ -332,7 +332,7 @@ public class ConstraintNode extends AbstractNode {
 		return true;
 	}
 
-	private boolean isConsistentForParameter(MethodParameterNode parameter) {
+	private boolean isConsistentForParameter(BasicParameterNode parameter) {
 
 		String typeName = parameter.getType();
 
@@ -367,7 +367,7 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	private boolean checkLabels(MethodParameterNode parameter) {
+	private boolean checkLabels(BasicParameterNode parameter) {
 
 		for (String label : getConstraint().getReferencedLabels(parameter)) {
 			if (!parameter.getLeafLabels().contains(label)) {
@@ -386,7 +386,7 @@ public class ConstraintNode extends AbstractNode {
 		return -1;
 	}
 
-	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
+	boolean mentionsChoiceOfParameter(BasicParameterNode methodParameter) {
 
 		return fConstraint.mentionsChoiceOfParameter(methodParameter);
 	}

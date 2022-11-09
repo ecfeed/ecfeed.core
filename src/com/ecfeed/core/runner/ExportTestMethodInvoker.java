@@ -16,7 +16,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 
@@ -25,7 +25,7 @@ import static com.ecfeed.core.utils.CommonConstants.DEFAULT_NEW_TEST_SUITE_NAME;
 public class ExportTestMethodInvoker implements ITestMethodInvoker {
 
 	MethodNode fMethodNode;
-	List<MethodParameterNode> fMethodParameters;
+	List<BasicParameterNode> fMethodParameters;
 	ArrayList<TestCaseNode> fTestCaseNodes;
 
 	@Override
@@ -55,7 +55,7 @@ public class ExportTestMethodInvoker implements ITestMethodInvoker {
 		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
 
 		for (int cnt = 0; cnt < fMethodNode.getParametersCount(); ++cnt) {
-			MethodParameterNode methodParameterNode = fMethodParameters.get(cnt);
+			BasicParameterNode methodParameterNode = fMethodParameters.get(cnt);
 
 			Object argument = arguments[cnt];
 

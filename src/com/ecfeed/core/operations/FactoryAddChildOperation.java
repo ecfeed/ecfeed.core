@@ -10,15 +10,13 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
@@ -66,7 +64,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 			return createOperationAddClass(rootNode);
 
-		} else if (fChild instanceof AbstractParameterNode) {
+		} else if (fChild instanceof BasicParameterNode) {
 
 			return createOperationAddParameter(rootNode);
 		}
@@ -77,11 +75,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 	private Object createOperationAddParameter(RootNode rootNode) {
 
-		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)fChild;
+		BasicParameterNode abstractParameterNode = (BasicParameterNode)fChild;
 
-		//It might be problematic that we actually add a copy of the requested node, so the option to add
-		//a MethodParameterNode to GlobalParameterParent (and vice versa) might be removed
-		GlobalParameterNode globalParameter = new GlobalParameterNode(abstractParameterNode);
+		BasicParameterNode globalParameter = new BasicParameterNode(abstractParameterNode);
 
 		if(fIndex == -1) {
 			return new GenericOperationAddParameter(rootNode, globalParameter, true, fExtLanguageManager);
@@ -120,8 +116,8 @@ public class FactoryAddChildOperation implements IModelVisitor{
 				return new ClassOperationAddMethod(node, (MethodNode)fChild, fExtLanguageManager);
 			}
 			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
-		}else if(fChild instanceof AbstractParameterNode){
-			GlobalParameterNode globalParameter = new GlobalParameterNode((AbstractParameterNode)fChild);
+		}else if(fChild instanceof BasicParameterNode){
+			BasicParameterNode globalParameter = new BasicParameterNode((BasicParameterNode)fChild);
 			if(fIndex == -1){
 				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
 			}
@@ -134,21 +130,21 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 	@Override
 	public Object visit(MethodNode node) throws Exception {
-		if(fChild instanceof GlobalParameterNode){
-			GlobalParameterNode globalParameter = (GlobalParameterNode)fChild;
+		if(fChild instanceof BasicParameterNode){
+			BasicParameterNode globalParameter = (BasicParameterNode)fChild;
 			String defaultValue = fAdapterProvider.getAdapter(globalParameter.getType()).getDefaultValue();
-			MethodParameterNode parameter = new MethodParameterNode(globalParameter, defaultValue, false);
+			BasicParameterNode parameter = new BasicParameterNode(globalParameter, defaultValue, false);
 
 			if(fIndex == -1){
 				return new MethodOperationAddParameter(node,parameter, fExtLanguageManager);
 			}
 			return new MethodOperationAddParameter(node, parameter, fIndex, fExtLanguageManager);
 		}
-		if(fChild instanceof MethodParameterNode){
+		if(fChild instanceof BasicParameterNode){
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fExtLanguageManager);
+				return new MethodOperationAddParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
 			}
-			return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fIndex, fExtLanguageManager);
+			return new MethodOperationAddParameter(node, (BasicParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
 			if(fIndex == -1){
@@ -171,29 +167,33 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	}
 
 	@Override
-	public Object visit(MethodParameterNode node) throws Exception {
-		if(fChild instanceof ChoiceNode){
-			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+	public Object visit(BasicParameterNode node) throws Exception {
+
+		if (node.isGlobalParameter()) {
+
+			if(fChild instanceof ChoiceNode){
+				if(fIndex == -1){
+					return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+				}
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
-		}
 
-		reportOperationNotSupportedException();
-		return null;
-	}
+			reportOperationNotSupportedException();
+			return null;
 
-	@Override
-	public Object visit(GlobalParameterNode node) throws Exception {
-		if(fChild instanceof ChoiceNode){
-			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+
+		} else {
+			
+			if(fChild instanceof ChoiceNode){
+				if(fIndex == -1){
+					return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+				}
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
 			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
-		}
 
-		reportOperationNotSupportedException();
-		return null;
+			reportOperationNotSupportedException();
+			return null;
+		}
 	}
 
 	@Override

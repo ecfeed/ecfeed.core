@@ -55,11 +55,11 @@ public class ClassNodeTest extends ClassNode {
 
 		int inx = 0;
 		for(String type : method1Types){
-			method1.addParameter(new MethodParameterNode("parameter" +  inx++, type, "0", false, null));
+			method1.addParameter(new BasicParameterNode("parameter" +  inx++, type, "0", false, null));
 		}
 
 		for(String type : method2Types){
-			method2.addParameter(new MethodParameterNode("parameter" + inx++, type, "0", false, null));
+			method2.addParameter(new BasicParameterNode("parameter" + inx++, type, "0", false, null));
 		}
 
 		classNode.addMethod(method1);
@@ -130,10 +130,10 @@ public class ClassNodeTest extends ClassNode {
 		m2.setName("m1");
 		assertTrue(c1.isMatch(c2));
 
-		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", "int", null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", null);
 		c1.addParameter(parameter1);
 		assertFalse(c1.isMatch(c2));
-		GlobalParameterNode parameter2 = new GlobalParameterNode("parameter1", "int", null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter1", "int", null);
 		c2.addParameter(parameter2);
 		assertTrue(c1.isMatch(c2));
 		parameter1.setName("newName");

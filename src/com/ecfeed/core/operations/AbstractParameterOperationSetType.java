@@ -16,13 +16,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoicesParentNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -32,16 +30,16 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
-	private AbstractParameterNode fAbstractParameterNode;
+	private BasicParameterNode fAbstractParameterNode;
 	private ParameterConversionDefinition fParameterConversionDefinition;
 	private String fNewTypeInIntrLanguage;
 	private String fCurrentType;
 	private ITypeAdapterProvider fAdapterProvider;
-	private Map<ChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
+	private Map<IChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
 	private Map<ChoiceNode, String> fOriginalValues;
 
 	public AbstractParameterOperationSetType(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ITypeAdapterProvider adapterProvider, 
@@ -82,7 +80,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		saveValues(fAbstractParameterNode);
 
 		// Check for duplicate signatures possibly caused by global parameter type change
-		if(fAbstractParameterNode instanceof GlobalParameterNode){
+		if (fAbstractParameterNode instanceof BasicParameterNode && fAbstractParameterNode.isGlobalParameter()) {
 			checkForSignatureDuplicates();
 		}
 
@@ -91,7 +89,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 	private void checkForSignatureDuplicates() {
 
-		GlobalParameterNode target = (GlobalParameterNode)fAbstractParameterNode;
+		BasicParameterNode target = (BasicParameterNode)fAbstractParameterNode;
 		List<MethodNode> linkingMethods = new ArrayList<MethodNode>(target.getMethods());
 		MethodNode testedMethod;
 
@@ -103,7 +101,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	}
 
 	private void checkOneMethodForSignatureDuplicates(
-			GlobalParameterNode target, 
+			BasicParameterNode target, 
 			MethodNode testedMethod,
 			List<MethodNode> inOutLinkingMethods) {
 
@@ -142,7 +140,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	}
 
 	private void prepareCollectionsOfMethods(
-			GlobalParameterNode target, 
+			BasicParameterNode target, 
 			MethodNode methodNode, 
 			MethodNode testedMethod,
 			List<MethodNode> inOutLinkingMethods, 
@@ -153,8 +151,8 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 			// if method links edited global parameter - replace types before matching
 			if(target.getMethods().contains(methodNode)){
 				List<String> types = methodNode.getParameterTypes();
-				for(AbstractParameterNode parameter: methodNode.getParameters()){
-					MethodParameterNode param = (MethodParameterNode)parameter;
+				for(BasicParameterNode parameter: methodNode.getParameters()){
+					BasicParameterNode param = (BasicParameterNode)parameter;
 					if(param.isLinked() && param.getLinkToGlobalParameter().equals(target)){
 						types.set(parameter.getMyIndex(), fNewTypeInIntrLanguage);
 					}			
@@ -175,21 +173,21 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		return new ReverseOperation(getExtLanguageManager());
 	}
 
-	protected void saveChoices(ChoicesParentNode parent){
+	protected void saveChoices(IChoicesParentNode parent){
 		getOriginalChoices().put(parent, new ArrayList<ChoiceNode>(getChoices(parent)));
 		for(ChoiceNode child : getChoices(parent)){
 			saveChoices(child);
 		}
 	}
 
-	protected void saveValues(ChoicesParentNode parent) {
+	protected void saveValues(IChoicesParentNode parent) {
 		for(ChoiceNode choice : getChoices(parent)){
 			getOriginalValues().put(choice, choice.getValueString());
 			saveValues(choice);
 		}
 	}
 
-	private void adaptChoices(ChoicesParentNode parent) {
+	private void adaptChoices(IChoicesParentNode parent) {
 		Iterator<ChoiceNode> it = getChoices(parent).iterator();
 		ITypeAdapter<?> adapter = fAdapterProvider.getAdapter(fNewTypeInIntrLanguage);
 		while(it.hasNext()){
@@ -249,7 +247,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		}
 	}
 
-	protected Map<ChoicesParentNode, List<ChoiceNode>> getOriginalChoices(){
+	protected Map<IChoicesParentNode, List<ChoiceNode>> getOriginalChoices(){
 		return fOriginalChoices;
 	}
 
@@ -257,7 +255,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		return fOriginalValues;
 	}
 
-	protected List<ChoiceNode> getChoices(ChoicesParentNode parent){
+	protected List<ChoiceNode> getChoices(IChoicesParentNode parent){
 		return parent.getChoices();
 	}
 
@@ -296,14 +294,14 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 					getExtLanguageManager());
 		}
 
-		protected void restoreOriginalChoices(ChoicesParentNode parent) {
+		protected void restoreOriginalChoices(IChoicesParentNode parent) {
 			parent.replaceChoices(getOriginalChoices().get(parent));
 			for(ChoiceNode child : getChoices(parent)){
 				restoreOriginalChoices(child);
 			}
 		}
 
-		protected void restoreOriginalValues(ChoicesParentNode parent) {
+		protected void restoreOriginalValues(IChoicesParentNode parent) {
 			for(ChoiceNode choice : getChoices(parent)){
 				if(getOriginalValues().containsKey(choice)){
 					choice.setValueString(getOriginalValues().get(choice));

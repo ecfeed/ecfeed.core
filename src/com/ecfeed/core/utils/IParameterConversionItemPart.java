@@ -17,7 +17,6 @@ public interface IParameterConversionItemPart  {
 		CHOICE("C", "choice"),
 		LABEL("L", "label"),
 		VALUE("V", "value"),
-		NAME("N", "name"), // TODO DE-NO remove ?
 		RAW("R", "raw");
 
 		private String fCode;
@@ -75,8 +74,8 @@ public interface IParameterConversionItemPart  {
 	public String getStr();
 	public String getDescription();
 	public void setName(String name);
-	public Integer getTypeSortOrder(); // TODO DE-NO remove ?
-	public Integer getSortOrder(); // TODO DE-NO remove ?
+	public Integer getTypeSortOrder();
+	public Integer getSortOrder();
 	public int compareTo(IParameterConversionItemPart other);
 	public IParameterConversionItemPart makeClone();
 }

@@ -22,17 +22,17 @@ public interface IStatementCondition {
 	public Object getCondition();
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
-	public boolean updateReferences(MethodNode methodNode);
+	public boolean updateReferences(IParametersParentNode methodNode);
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
-	public boolean mentions(AbstractParameterNode abstractParameterNode);
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode);
+	public boolean mentions(BasicParameterNode abstractParameterNode);
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode);
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager);
 	public List<ChoiceNode> getChoices();
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode);
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode);
 	public void derandomize();
 	public void convert(ParameterConversionItem parameterConversionItem);
-	public String getLabel(MethodParameterNode methodParameterNode);
+	public String getLabel(BasicParameterNode methodParameterNode);
 	public IStatementCondition makeClone();
 	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
 }

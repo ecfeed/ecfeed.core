@@ -33,8 +33,8 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 public class ParameterTransformer {
 
 	public static MethodNode linkMethodParameteToGlobalParameter(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstGlobalParameterNode, 
+			BasicParameterNode srcMethodParameterNode,
+			BasicParameterNode dstGlobalParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
@@ -81,8 +81,8 @@ public class ParameterTransformer {
 	}
 
 	public static void unlinkMethodParameteFromGlobalParameter(
-			MethodParameterNode methodParameterNode,
-			GlobalParameterNode globalParameterNode, 
+			BasicParameterNode methodParameterNode,
+			BasicParameterNode globalParameterNode, 
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -127,8 +127,8 @@ public class ParameterTransformer {
 	}
 
 	private static void setLink(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstParameterForChoices,
+			BasicParameterNode srcMethodParameterNode,
+			BasicParameterNode dstParameterForChoices,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -145,8 +145,8 @@ public class ParameterTransformer {
 
 	public static void convertByConversionListForLinking(
 			ParameterConversionDefinition parameterConversionItems,
-			MethodParameterNode srcParameterNode, 
-			GlobalParameterNode dstParameterNode,
+			BasicParameterNode srcParameterNode, 
+			BasicParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -164,18 +164,18 @@ public class ParameterTransformer {
 
 	public static void verifyConversionOfParameterToType(
 			String newType, 
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode abstractParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		if (abstractParameterNode instanceof GlobalParameterNode) {
+		if (abstractParameterNode instanceof BasicParameterNode && abstractParameterNode.isGlobalParameter()) {
 
-			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 
 			ChoiceNodeHelper.verifyConversionOfChoices(globalParameterNode, newType, inOutParameterConversionDefinition);
 			return;
 		}
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+		BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
 
 		if (methodParameterNode.isExpected()) {
 			addDefaultValueToConversionDefinition(
@@ -190,7 +190,7 @@ public class ParameterTransformer {
 	}
 
 	public static void convertChoicesAndConstraintsToType(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		convertChoicesToType(methodParameterNode, parameterConversionDefinition);
@@ -199,7 +199,7 @@ public class ParameterTransformer {
 	}
 
 	public static void convertChoicesToType(
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode abstractParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
@@ -220,7 +220,7 @@ public class ParameterTransformer {
 	}
 
 	private static void deleteRemainingChoices(
-			ChoicesParentNode srcMethodParameterNode,
+			IChoicesParentNode srcMethodParameterNode,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
@@ -252,7 +252,7 @@ public class ParameterTransformer {
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		ChoicesParentNode choicesParentNode = choiceNode.getParent();
+		IChoicesParentNode choicesParentNode = (IChoicesParentNode)choiceNode.getParent();
 		int indexOfTopChoice = choiceNode.getMyIndex();
 
 		OperationSimpleAddChoice operationSimpleAddChoice = 
@@ -265,8 +265,8 @@ public class ParameterTransformer {
 
 	private static void convertConstraints(
 			MethodNode methodNode, 
-			AbstractParameterNode srcParameterNode,
-			AbstractParameterNode dstParameterNode, 
+			BasicParameterNode srcParameterNode,
+			BasicParameterNode dstParameterNode, 
 			List<ParameterConversionItem> parameterConversionItems,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
@@ -280,8 +280,8 @@ public class ParameterTransformer {
 	}
 
 	private static void checkParametersForNotNull(
-			MethodParameterNode methodParameterNode,
-			GlobalParameterNode dstGlobalParameterNode) {
+			BasicParameterNode methodParameterNode,
+			BasicParameterNode dstGlobalParameterNode) {
 
 		if (methodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty method parameter.");
@@ -304,11 +304,11 @@ public class ParameterTransformer {
 	}
 
 	private static void removeLinkOnMethodParameter(
-			MethodParameterNode srcMethodParameterNode,
+			BasicParameterNode srcMethodParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		GlobalParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLinkToGlobalParameter();
+		BasicParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLinkToGlobalParameter();
 
 		srcMethodParameterNode.setLinkToGlobalParameter(null);
 		srcMethodParameterNode.setLinked(false);
@@ -322,7 +322,7 @@ public class ParameterTransformer {
 
 
 	private static MethodOperationSetConstraints createReverseOperationSetConstraints(
-			MethodParameterNode srcParameterNode,
+			BasicParameterNode srcParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
 		MethodNode methodNode = srcParameterNode.getMethod();
@@ -345,8 +345,8 @@ public class ParameterTransformer {
 
 	private static void convertByConversionItemForLinking(
 			ParameterConversionItem parameterConversionItem, 
-			MethodParameterNode srcParameterNode, 
-			GlobalParameterNode dstParameterNode,
+			BasicParameterNode srcParameterNode, 
+			BasicParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 

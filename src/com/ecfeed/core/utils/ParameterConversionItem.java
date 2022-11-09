@@ -21,8 +21,6 @@ public class ParameterConversionItem {
 	private boolean fIsRandomized;
 	List<String> fDescription;
 
-	// TODO DE-NO create static functions instead of constructors
-	// createConversionItemForChoice, ..forLabel, ..forValue etc
 	public ParameterConversionItem(
 			IParameterConversionItemPart srcPart, 
 			IParameterConversionItemPart dstPart,

@@ -8,7 +8,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.IStatementCondition;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RelationStatement;
 
 public class TestHelper {
@@ -49,7 +49,7 @@ public class TestHelper {
 	public static void addSimpleChoiceConstraintToMethod(
 			MethodNode methodNode,
 			String constraintName,
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			ChoiceNode choiceNode1,
 			ChoiceNode choiceNode2) {
 

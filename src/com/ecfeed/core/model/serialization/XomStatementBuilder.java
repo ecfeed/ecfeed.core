@@ -37,7 +37,7 @@ import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IStatementCondition;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterCondition;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
@@ -171,7 +171,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(ParameterCondition condition) throws Exception {
 
-		MethodParameterNode rightMethodParameterNode = condition.getRightParameterNode();
+		BasicParameterNode rightMethodParameterNode = condition.getRightParameterNode();
 		Element targetParameterElement = new Element(CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME);
 
 		XomBuilder.encodeAndAddAttribute(

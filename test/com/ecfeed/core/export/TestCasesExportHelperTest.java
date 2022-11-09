@@ -23,7 +23,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 
 public class TestCasesExportHelperTest {
@@ -227,12 +227,12 @@ public class TestCasesExportHelperTest {
         MethodNode method = new MethodNode("testMethod_1", null);
         theClass.addMethod(method);
 
-        MethodParameterNode parameter0 = new MethodParameterNode("par_0", "int", "MAX_VALUE", false, null);
+        BasicParameterNode parameter0 = new BasicParameterNode("par_0", "int", "MAX_VALUE", false, null);
         ChoiceNode choiceNode00 = new ChoiceNode("c_0", par0Value, null);
         parameter0.addChoice(choiceNode00);
         method.addParameter(parameter0);
 
-        MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "MIN_VALUE", false, null);
+        BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "MIN_VALUE", false, null);
         ChoiceNode choiceNode11 = new ChoiceNode("c_1", par1Value, null);
         parameter1.addChoice(choiceNode11);
         method.addParameter(parameter1);

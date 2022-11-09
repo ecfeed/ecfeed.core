@@ -30,7 +30,7 @@ public class ChoicesParentNodeHelperTest {
 
 		// source parameter with two choices
 
-		MethodParameterNode methodParameterNode1 = 
+		BasicParameterNode methodParameterNode1 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
@@ -88,7 +88,7 @@ public class ChoicesParentNodeHelperTest {
 
 		// source parameter with two choices
 
-		MethodParameterNode methodParameterNode1 = 
+		BasicParameterNode methodParameterNode1 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
@@ -106,7 +106,7 @@ public class ChoicesParentNodeHelperTest {
 
 		// destination parameter 
 
-		MethodParameterNode methodParameterNode2 = 
+		BasicParameterNode methodParameterNode2 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "P2", "String");
 
 
@@ -146,7 +146,7 @@ public class ChoicesParentNodeHelperTest {
 
 		// source parameter with two choices
 
-		MethodParameterNode methodParameterNode1 = 
+		BasicParameterNode methodParameterNode1 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
@@ -161,7 +161,7 @@ public class ChoicesParentNodeHelperTest {
 
 		// destination parameter 
 
-		MethodParameterNode methodParameterNode2 = 
+		BasicParameterNode methodParameterNode2 = 
 				MethodNodeHelper.addParameterToMethod(methodNode, "P2", "String");
 
 		// creating copy

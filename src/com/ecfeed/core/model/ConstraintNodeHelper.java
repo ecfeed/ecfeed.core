@@ -48,7 +48,7 @@ public class ConstraintNodeHelper {
 
 	public static List<ChoiceNode> getChoicesUsedInConstraint(
 			ConstraintNode constraintNode,
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<ChoiceNode> result = 
 				ConstraintHelper.getChoicesUsedInConstraints(
@@ -60,7 +60,7 @@ public class ConstraintNodeHelper {
 
 	public static List<String> getLabelsUsedInConstraint(
 			ConstraintNode constraintNode,
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<String> result = 
 				ConstraintHelper.getLabelsUsedInConstraints(

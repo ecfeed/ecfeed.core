@@ -11,13 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.ParametersParentNode;
 import com.ecfeed.core.model.RootNode;
 
 abstract class ModelDataAbstract implements ModelData {
@@ -151,8 +149,8 @@ abstract class ModelDataAbstract implements ModelData {
     }
     
     @Override
-    public List<AbstractParameterNode> parse(ParametersParentNode node) {
-    	List<AbstractParameterNode> list = new ArrayList<>();
+    public List<BasicParameterNode> parse(IParametersParentNode node) {
+    	List<BasicParameterNode> list = new ArrayList<>();
     	
         for (int i = 0 ; i < this.header.size() ; i++) {
         	List<ChoiceNode> choices = new ArrayList<>();
@@ -169,14 +167,14 @@ abstract class ModelDataAbstract implements ModelData {
                 choices.add(new ChoiceNode("choice" + (j++), choice, null));
             }
             
-            AbstractParameterNode parameter;
+            BasicParameterNode parameter;
             
             if (node instanceof MethodNode) {
-            	parameter = new MethodParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), "", false, node.getModelChangeRegistrator());
             } else if (node instanceof ClassNode) {
-            	parameter = new GlobalParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
             } else if (node instanceof RootNode) {
-            	parameter = new GlobalParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
+            	parameter = new BasicParameterNode(this.header.get(i), type.determine(), node.getModelChangeRegistrator());
             } else {
             	throw new IllegalArgumentException("The node type is not supported.");
             }

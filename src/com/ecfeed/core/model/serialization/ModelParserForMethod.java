@@ -17,7 +17,7 @@ import java.util.Optional;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ListOfStrings;
@@ -60,7 +60,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeName())) {
 
-			Optional<MethodParameterNode> node = 
+			Optional<BasicParameterNode> node = 
 					fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
 			if (node.isPresent()) {
 				targetMethodNode.addParameter(node.get());

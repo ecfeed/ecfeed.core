@@ -6,7 +6,7 @@ import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.*;
 import com.google.common.collect.*;
 import com.google.common.primitives.Ints;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 
 
 import java.util.*;
@@ -65,7 +65,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		prepareSolversClauses(initConstraints, fSat4Solver, method);
 
 		if(method != null)
-			for(MethodParameterNode parameterNode : method.getMethodParameters())
+			for(BasicParameterNode parameterNode : method.getMethodParameters())
 				if(! parameterNode.isExpected())
 					EvaluatorHelper.prepareVariablesForParameter(parameterNode,
 							fParamChoiceSets,
@@ -114,13 +114,13 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		if(fMethodNode == null)
 			return;
 
-		List<MethodParameterNode> methodParameters = fMethodNode.getMethodParameters();
+		List<BasicParameterNode> methodParameters = fMethodNode.getMethodParameters();
 		assertEqualSizes(input, methodParameters);
 
 		for (int parameterIndex = 0; parameterIndex < methodParameters.size(); parameterIndex++) {
 
 			List<Integer> sat4Indexes = new ArrayList<>();
-			MethodParameterNode methodParameterNode = methodParameters.get(parameterIndex);
+			BasicParameterNode methodParameterNode = methodParameters.get(parameterIndex);
 
 			if (methodParameterNode.isExpected())
 				continue;
@@ -147,7 +147,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	}
 
 	private void assertEqualSizes(
-			List<List<ChoiceNode>> input, List<MethodParameterNode> parameterNodes) {
+			List<List<ChoiceNode>> input, List<BasicParameterNode> parameterNodes) {
 
 		if (input.size() != parameterNodes.size()) {
 			ExceptionHelper.reportRuntimeException("Input data and parameters should have the same length.");
@@ -162,10 +162,10 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		if (fSat4Solver.isContradicting())
 			return;
 
-		List<MethodParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
+		List<BasicParameterNode> methodParameterNodes = fMethodNode.getMethodParameters();
 
 		// TODO - what does it do ?
-		for (MethodParameterNode methodParameterNode : methodParameterNodes)
+		for (BasicParameterNode methodParameterNode : methodParameterNodes)
 			EvaluatorHelper.prepareVariablesForParameter(
 					methodParameterNode,
 					fParamChoiceSets,
@@ -250,7 +250,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		for (int i = 0; i < testCaseChoices.size(); i++) {
 			ChoiceNode p = testCaseChoices.get(i);
-			MethodParameterNode parameter = fMethodNode.getMethodParameters().get(i);
+			BasicParameterNode parameter = fMethodNode.getMethodParameters().get(i);
 			if (parameter.isExpected()) {
 				testCaseChoices.set(i, p.makeClone());
 			}
@@ -263,7 +263,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			ParamChoiceSets paramChoiceSets,
 			ChoicesMappingsBucket choicesMappingsBucket) {
 
-		for (MethodParameterNode methodParameterNode : paramChoiceSets.sanitizedGetKeySet()) {
+		for (BasicParameterNode methodParameterNode : paramChoiceSets.sanitizedGetKeySet()) {
 
 			choicesMappingsBucket.inputToSanPut(methodParameterNode, HashMultimap.create());
 
@@ -281,7 +281,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			ParamChoiceSets fParamChoiceSets,
 			ChoicesMappingsBucket choicesMappingsBucket) {
 
-		for (MethodParameterNode methodParameterNode : fParamChoiceSets.sanitizedGetKeySet()) {
+		for (BasicParameterNode methodParameterNode : fParamChoiceSets.sanitizedGetKeySet()) {
 
 			// TODO - why do we need an empty set ?
 			fParamChoiceSets.atomicPut(methodParameterNode, new HashSet<>());
@@ -295,7 +295,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 	}
 
 	private static void createSanitizedAndAtomicMappingsForParam(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			ParamChoiceSets paramChoiceSets,
 			ChoicesMappingsBucket choicesMappingsBucket) {
 
@@ -335,7 +335,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 			ParamChoiceSets paramChoiceSets,
 			ChoicesMappingsBucket choicesMappingsBucket) {
 
-		for (MethodParameterNode methodParameterNode : paramChoiceSets.inputGetKeySet()) {
+		for (BasicParameterNode methodParameterNode : paramChoiceSets.inputGetKeySet()) {
 
 			Set<ChoiceNode> copy = new HashSet<>(paramChoiceSets.inputGet(methodParameterNode));
 			paramChoiceSets.sainitizedPut(methodParameterNode, copy);
@@ -374,7 +374,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		if (condition instanceof LabelCondition)
 			return false;
 
-		MethodParameterNode lParam = relationStatement.getLeftParameter();
+		BasicParameterNode lParam = relationStatement.getLeftParameter();
 
 		if (!JavaLanguageHelper.isExtendedIntTypeName(lParam.getType())
 				&& !JavaLanguageHelper.isFloatingPointTypeName(lParam.getType()))
@@ -383,7 +383,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		List<ChoiceNode> allLVals = new ArrayList<>(paramChoiceSets.sainitizedGet(lParam));
 
 		if (condition instanceof ParameterCondition) {
-			MethodParameterNode rParam = ((ParameterCondition) condition).getRightParameterNode();
+			BasicParameterNode rParam = ((ParameterCondition) condition).getRightParameterNode();
 			List<ChoiceNode> allRVals = new ArrayList<>(paramChoiceSets.sainitizedGet(rParam));
 
 			boolean anyChange = false;
@@ -723,7 +723,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		if (!satSolver.hasConstraints())
 			return new ArrayList<>();
 
-		List<MethodParameterNode> methodParameterNodes = methodNode.getMethodParameters();
+		List<BasicParameterNode> methodParameterNodes = methodNode.getMethodParameters();
 
 		List<Integer> assumptions = new ArrayList<>();
 
@@ -734,7 +734,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		for (int i = 0; i < methodParameterNodes.size(); i++) {
 
-			MethodParameterNode methodParameterNode = methodParameterNodes.get(i);
+			BasicParameterNode methodParameterNode = methodParameterNodes.get(i);
 			ChoiceNode choiceAssignedToParameter = currentArgumentAssignments.get(i);
 
 			if (choiceAssignedToParameter != null) {

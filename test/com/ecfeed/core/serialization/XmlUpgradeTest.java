@@ -94,19 +94,16 @@ public class XmlUpgradeTest {
 		}
 	}
 
-	private void assertEqualsByLines(String expectedResult, String result) {
+	private void assertEqualsByLines(String expectedResult, String result) { // TODO MO-RE move to test helper
 
 		final String lineSeparator = System.getProperty("line.separator");
 
 		String[] expectedResultLines = expectedResult.split(lineSeparator);
 		String[] resultLines = result.split(lineSeparator);
 
-		if (expectedResultLines.length != resultLines.length) {
-			fail("Content does not match");
-			return;
-		}
+		int minLines = Math.min(expectedResultLines.length, resultLines.length);
 
-		for (int lineIndex = 0; lineIndex < resultLines.length; lineIndex++) {
+		for (int lineIndex = 0; lineIndex < minLines; lineIndex++) {
 
 			String expectedLine = expectedResultLines[lineIndex];
 			expectedLine = expectedLine.replace("\r", "");
@@ -117,6 +114,11 @@ public class XmlUpgradeTest {
 			if (!StringHelper.isEqual(expectedLine, resultLine)) {
 				fail("Line: " + (lineIndex + 1) + " differs.");
 			}
+		}
+		
+		if (expectedResultLines.length != resultLines.length) {
+			fail("Content does not match");
+			return;
 		}
 	}
 
@@ -314,7 +316,7 @@ public class XmlUpgradeTest {
 
 		// method parameter 1 node with choice
 
-		MethodParameterNode methodParameterNode1 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode1 = new BasicParameterNode(
 				"par1",
 				"int",
 				"1",
@@ -328,7 +330,7 @@ public class XmlUpgradeTest {
 
 		// method parameter 2 node with choice
 
-		MethodParameterNode methodParameterNode2 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode2 = new BasicParameterNode(
 				"par2",
 				"int",
 				"2",

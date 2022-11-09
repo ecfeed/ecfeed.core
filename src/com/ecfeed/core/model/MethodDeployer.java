@@ -30,9 +30,9 @@ public abstract class MethodDeployer {
 
 		DeploymentMapper deploymentMapper = new DeploymentMapper();
 
-		for (MethodParameterNode sourceMethodParameterNode : sourceMethodNode.getMethodParameters()) {
+		for (BasicParameterNode sourceMethodParameterNode : sourceMethodNode.getMethodParameters()) {
 
-			MethodParameterNode developedMethodParameter = 
+			BasicParameterNode developedMethodParameter = 
 					deployParameter(sourceMethodParameterNode, deploymentMapper);
 
 			deployedMethodNode.addParameter(developedMethodParameter);
@@ -93,12 +93,12 @@ public abstract class MethodDeployer {
 	}
 
 
-	public static MethodParameterNode deployParameter(
-			MethodParameterNode sourceMethodParameterNode,
+	public static BasicParameterNode deployParameter(
+			BasicParameterNode sourceMethodParameterNode,
 			DeploymentMapper deploymentMapper) {
 
-		MethodParameterNode deployedMethodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode deployedMethodParameterNode = 
+				new BasicParameterNode(
 						sourceMethodParameterNode.getName(), 
 						sourceMethodParameterNode.getType(), 
 						sourceMethodParameterNode.getDefaultValue(), 
@@ -154,13 +154,13 @@ public abstract class MethodDeployer {
 	}
 
 	// TODO NE-TE use!
-	public static List<MethodParameterNode> getDevelopedParametersWithChoices(MethodNode methodNode) {
+	public static List<BasicParameterNode> getDevelopedParametersWithChoices(MethodNode methodNode) {
 
-		List<MethodParameterNode> developedParameters = new ArrayList<>();
+		List<BasicParameterNode> developedParameters = new ArrayList<>();
 
-		List<MethodParameterNode> parameters = methodNode.getMethodParameters();
+		List<BasicParameterNode> parameters = methodNode.getMethodParameters();
 
-		for (MethodParameterNode methodParameterNode : parameters) {
+		for (BasicParameterNode methodParameterNode : parameters) {
 
 			developOneParameter(methodParameterNode, developedParameters);
 		}
@@ -169,13 +169,13 @@ public abstract class MethodDeployer {
 	}
 
 	private static void developOneParameter(
-			MethodParameterNode methodParameterNode,
-			List<MethodParameterNode> inOutDevelopedParameters) {
+			BasicParameterNode methodParameterNode,
+			List<BasicParameterNode> inOutDevelopedParameters) {
 
 		MethodNode linkedMethodNode = methodParameterNode.getLinkToMethod();
 
 		if (linkedMethodNode == null) {
-			MethodParameterNode clonedMethodParameterNode = methodParameterNode.makeClone();
+			BasicParameterNode clonedMethodParameterNode = methodParameterNode.makeClone();
 			clonedMethodParameterNode.clearChoices();
 
 			ChoiceNodeHelper.cloneChoiceNodesRecursively(methodParameterNode, clonedMethodParameterNode);
@@ -188,21 +188,21 @@ public abstract class MethodDeployer {
 	}
 
 	private static void developChildParameters(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			MethodNode linkedMethodNode,
-			List<MethodParameterNode> inOutDevelopedParameters) {
+			List<BasicParameterNode> inOutDevelopedParameters) {
 
-		List<MethodParameterNode> linkedParametersWithChoices = getDevelopedParametersWithChoices(linkedMethodNode);
+		List<BasicParameterNode> linkedParametersWithChoices = getDevelopedParametersWithChoices(linkedMethodNode);
 
-		for (MethodParameterNode linkedParameterWithChoices : linkedParametersWithChoices) {
+		for (BasicParameterNode linkedParameterWithChoices : linkedParametersWithChoices) {
 
 			String parameterName = abstractParameterNode.getName() + "_" + linkedParameterWithChoices.getName();
 			String parameterType = linkedParameterWithChoices.getType();
 			String defaultValue = linkedParameterWithChoices.getDefaultValue();
 			boolean isExpected = linkedParameterWithChoices.isExpected();
 
-			MethodParameterNode clonedMethodParameterNode = 
-					new MethodParameterNode(
+			BasicParameterNode clonedMethodParameterNode = 
+					new BasicParameterNode(
 							parameterName,
 							parameterType,
 							defaultValue,

@@ -26,11 +26,11 @@ import com.ecfeed.core.utils.RelationMatcher;
 
 public class ParameterCondition implements IStatementCondition {
 
-	private MethodParameterNode fRightParameterNode;
+	private BasicParameterNode fRightParameterNode;
 	private RelationStatement fParentRelationStatement;
 
 	public ParameterCondition(
-			MethodParameterNode rightParameter, 
+			BasicParameterNode rightParameter, 
 			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
@@ -66,7 +66,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	private boolean isChoiceRandomizedString(
-			List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+			List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode leftChoiceNode = getChoiceNode(choices, methodParameterNode);
 
@@ -132,7 +132,7 @@ public class ParameterCondition implements IStatementCondition {
 		return EvaluationResult.FALSE;
 	}
 
-	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = getChoiceNode(choices, methodParameterNode);
 
@@ -143,7 +143,7 @@ public class ParameterCondition implements IStatementCondition {
 		return choiceNode.getValueString();
 	}
 
-	private static ChoiceNode getChoiceNode(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	private static ChoiceNode getChoiceNode(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		return StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
 	}
@@ -162,13 +162,15 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public boolean updateReferences(IParametersParentNode methodNode) {
 
-		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fRightParameterNode.getName());
+		BasicParameterNode tmpParameterNode = methodNode.findParameter(fRightParameterNode.getName());
+		
 		if (tmpParameterNode == null) {
 			return false;
 		}
-		fRightParameterNode = tmpParameterNode;
+		
+		fRightParameterNode = (BasicParameterNode) tmpParameterNode;
 
 		return true;
 	}
@@ -220,7 +222,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode abstractParameterNode) {
+	public boolean mentions(BasicParameterNode abstractParameterNode) {
 
 		if (fRightParameterNode == abstractParameterNode) {
 			return true;
@@ -229,7 +231,7 @@ public class ParameterCondition implements IStatementCondition {
 		return false;
 	}	
 
-	public MethodParameterNode getRightParameterNode() {
+	public BasicParameterNode getRightParameterNode() {
 
 		return fRightParameterNode;
 	}
@@ -323,7 +325,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -337,20 +339,20 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 		return false;
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
 	}
 
 	@Override
 	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
 		
-		MethodParameterNode sourcMethodParameterNode = getRightParameterNode();
-		MethodParameterNode deployedMethodParameterNode = 
+		BasicParameterNode sourcMethodParameterNode = getRightParameterNode();
+		BasicParameterNode deployedMethodParameterNode = 
 				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
 		
 		RelationStatement deployedParentRelationStatement = 

@@ -39,7 +39,7 @@ public class AbstractStatementTest {
 			return null;
 		}
 		@Override
-		public boolean updateReferences(MethodNode method){
+		public boolean updateReferences(IParametersAndConstraintsParentNode method){
 			return true;
 		}
 
@@ -79,7 +79,7 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+		public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 			return false;
 		}
 
@@ -89,12 +89,12 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public List<String> getLabels(MethodParameterNode methodParameterNode) {
+		public List<String> getLabels(BasicParameterNode methodParameterNode) {
 			return null;
 		}
 
 		@Override
-		public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 			return null;
 		}
 

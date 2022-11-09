@@ -12,27 +12,39 @@ package com.ecfeed.core.operations;
 
 import java.util.List;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.GlobalParametersParentNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 
+	public ReplaceMethodParametersWithGlobalOperation(
+			IParametersParentNode parent, 
+			List<BasicParameterNode> originals, 
+			ITypeAdapterProvider adapterProvider,
+			IExtLanguageManager extLanguageManager) {
+		
+		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguageManager);
+		
+		for(BasicParameterNode parameter : originals){
+			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, extLanguageManager));
+		}
+	}
+	
 	private class ReplaceParameterWithLink extends BulkOperation{
 
 		public ReplaceParameterWithLink(
-				MethodParameterNode target, 
-				GlobalParametersParentNode parent, 
+				BasicParameterNode target, 
+				IParametersParentNode parent, 
 				ITypeAdapterProvider adapterProvider,
 				IExtLanguageManager extLanguageManager) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
 			MethodNode method = target.getMethod();
-			GlobalParameterNode global = new GlobalParameterNode(target);
+			BasicParameterNode global = new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLinked(target, true, extLanguageManager));
@@ -57,19 +69,6 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 			}
 		}
 
-	}
-
-	public ReplaceMethodParametersWithGlobalOperation(
-			GlobalParametersParentNode parent, 
-			List<MethodParameterNode> originals, 
-			ITypeAdapterProvider adapterProvider,
-			IExtLanguageManager extLanguageManager) {
-		
-		super(OperationNames.REPLACE_PARAMETERS, false, parent, parent, extLanguageManager);
-		
-		for(MethodParameterNode parameter : originals){
-			addOperation(new ReplaceParameterWithLink(parameter, parent, adapterProvider, extLanguageManager));
-		}
 	}
 
 }

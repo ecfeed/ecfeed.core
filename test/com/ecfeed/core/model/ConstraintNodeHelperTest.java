@@ -45,7 +45,7 @@ public class ConstraintNodeHelperTest {
 		final ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
-		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "0", false, null);
 
 		AbstractStatement precondition1 =
 				RelationStatement.createRelationStatementWithValueCondition(
@@ -53,7 +53,7 @@ public class ConstraintNodeHelperTest {
 
 		AbstractStatement precondition = precondition1;
 
-		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("par_2", "int", "0", false, null);
 
 		AbstractStatement postcondition1 =
 				RelationStatement.createRelationStatementWithValueCondition(
@@ -81,13 +81,13 @@ public class ConstraintNodeHelperTest {
 		ChoiceNode choice1 = new ChoiceNode("choice_1", "value1", null);
 		ChoiceNode choice2 = new ChoiceNode("choice 2", "value2", null);
 
-		MethodParameterNode parameter1 = new MethodParameterNode("par_1", "int", "0", false, null);
+		BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "0", false, null);
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
 						parameter1, EMathRelation.EQUAL, choice1);
 
-		MethodParameterNode parameter2 = new MethodParameterNode("par_2", "int", "0", false, null);
+		BasicParameterNode parameter2 = new BasicParameterNode("par_2", "int", "0", false, null);
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(

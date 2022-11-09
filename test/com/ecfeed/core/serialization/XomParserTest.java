@@ -29,7 +29,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
@@ -162,14 +162,14 @@ public class XomParserTest {
 			try{
 				for(boolean expected : new Boolean[]{true, false}){
 					MethodNode methodNode = new MethodNode("method", null);
-					MethodParameterNode methodParameterNode = fModelGenerator.generateParameter(type, expected, 3, 3, 3);
+					BasicParameterNode methodParameterNode = fModelGenerator.generateParameter(type, expected, 3, 3, 3);
 					methodNode.addParameter(methodParameterNode);
 
 					XomBuilder builder = XomBuilderFactory.createXomBuilder(version, null);
 					Element element = (Element)methodParameterNode.accept(builder);
 					TRACE(element);
 
-					Optional<MethodParameterNode> parsedMethodParameterNode = 
+					Optional<BasicParameterNode> parsedMethodParameterNode = 
 							new ModelParserForMethodParameter().parseMethodParameter(element, methodNode, new ListOfStrings());
 					assertElementsEqual(methodParameterNode, parsedMethodParameterNode.get());
 				}

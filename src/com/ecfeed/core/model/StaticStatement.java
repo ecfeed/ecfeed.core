@@ -87,7 +87,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode method){
+	public boolean updateReferences(IParametersAndConstraintsParentNode parent){
 		return true;
 	}
 
@@ -138,7 +138,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -158,12 +158,12 @@ public class StaticStatement extends AbstractStatement {
 	//	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 		return false;
 	}
 
 	@Override
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 		return new ArrayList<>();
 	}
 

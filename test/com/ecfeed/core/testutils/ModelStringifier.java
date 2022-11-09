@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StaticStatement;
@@ -32,8 +32,8 @@ public class ModelStringifier {
 		if(node instanceof ChoiceNode){
 			return stringify((ChoiceNode)node, indent);
 		}
-		if(node instanceof MethodParameterNode){
-			return stringify((MethodParameterNode)node, indent);
+		if(node instanceof BasicParameterNode){
+			return stringify((BasicParameterNode)node, indent);
 		}
 		if(node instanceof MethodNode){
 			return stringify((MethodNode)node, indent);
@@ -95,7 +95,7 @@ public class ModelStringifier {
 	public String stringify(MethodNode m, int indent){
 		String result = intendentString(indent);
 		result += "Method " + m.toString();
-		for(MethodParameterNode child : m.getMethodParameters()){
+		for(BasicParameterNode child : m.getMethodParameters()){
 			result += "\n";
 			result += stringify(child, indent + 2);
 		}
@@ -111,7 +111,7 @@ public class ModelStringifier {
 		return result;
 	}
 
-	public String stringify(MethodParameterNode c, int indent){
+	public String stringify(BasicParameterNode c, int indent){
 		String result = intendentString(indent);
 		result += "Parameter " + c.getName() + "[" + c.getType() + "], " + (c.isExpected() ? "expected" : "patitioned");
 		result += " default value: " + c.getDefaultValue();
@@ -126,7 +126,7 @@ public class ModelStringifier {
 		String result = intendentString(indent);
 		result += "Test case " + tc.toString() + "[";
 		for(ChoiceNode choice : tc.getTestData()){
-			MethodParameterNode parameter = tc.getMethodParameter(choice);
+			BasicParameterNode parameter = tc.getMethodParameter(choice);
 			if(parameter.isExpected()){
 				result += "[e]" + choice.getValueString();
 			}

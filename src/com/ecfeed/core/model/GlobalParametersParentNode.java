@@ -13,29 +13,29 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GlobalParametersParentNode extends ParametersParentNode {
+public abstract class GlobalParametersParentNode extends ParametersParentNode { // TODO MO-RE remove class
 
 	public GlobalParametersParentNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 	}
 
-	public List<GlobalParameterNode> getGlobalParameters() {
-		List<GlobalParameterNode> result = new ArrayList<>();
-		for(AbstractParameterNode parameter : getParameters()){
-			result.add((GlobalParameterNode)parameter);
+	public List<BasicParameterNode> getGlobalParameters() {
+		List<BasicParameterNode> result = new ArrayList<>();
+		for(BasicParameterNode parameter : getParameters()){
+			result.add((BasicParameterNode)parameter);
 		}
 		return result;
 	}
 
-	public List<GlobalParameterNode> getAvailableGlobalParameters() {
-		List<GlobalParameterNode> result = getAvailableGlobalParameters(getParent());
+	public List<BasicParameterNode> getAllGlobalParametersAvailableForLinking() {
+		List<BasicParameterNode> result = getAllGlobalParametersAvailableForLinking(getParent());
 		result.addAll(getGlobalParameters());
 		return result;
 	}
 
-	public GlobalParameterNode findGlobalParameter(String qualifiedName){
+	public BasicParameterNode findGlobalParameter(String qualifiedName){
 		
-		for (GlobalParameterNode parameter : getAvailableGlobalParameters()) {
+		for (BasicParameterNode parameter : getAllGlobalParametersAvailableForLinking()) {
 			
 			String currentQualifiedName = parameter.getQualifiedName();
 			
@@ -47,22 +47,36 @@ public abstract class GlobalParametersParentNode extends ParametersParentNode {
 		return null;
 	}
 
-	private List<GlobalParameterNode> getAvailableGlobalParameters(IAbstractNode parent) {
+	private List<BasicParameterNode> getAllGlobalParametersAvailableForLinking(IAbstractNode parent) {
+		
 		if(parent == null){
-			return new ArrayList<GlobalParameterNode>();
+			return new ArrayList<BasicParameterNode>();
 		}
-		else if(parent instanceof GlobalParametersParentNode){
-			return ((GlobalParametersParentNode)parent).getAvailableGlobalParameters();
-		}else if(parent.getParent() != null){
-			return getAvailableGlobalParameters(parent.getParent());
-		}else{
-			return new ArrayList<GlobalParameterNode>();
+		
+		if (parent instanceof RootNode) {
+			RootNode rootNode = (RootNode)parent;
+			return rootNode.getGlobalParameters();
 		}
+		
+		if (parent instanceof ClassNode) {
+			ClassNode classNode = (ClassNode)parent;
+			return classNode.getAllGlobalParametersAvailableForLinking();
+		}
+		
+		if(parent instanceof GlobalParametersParentNode){
+			return ((GlobalParametersParentNode)parent).getAllGlobalParametersAvailableForLinking();
+		}
+		
+		if(parent.getParent() != null){
+			return getAllGlobalParametersAvailableForLinking(parent.getParent());
+		}
+		
+		return new ArrayList<BasicParameterNode>();
 	}
 
-	public GlobalParameterNode getGlobalParameter(String parameterName) {
+	public BasicParameterNode getGlobalParameter(String parameterName) {
 		if(findParameter(parameterName) != null){
-			return (GlobalParameterNode)findParameter(parameterName);
+			return (BasicParameterNode)findParameter(parameterName);
 		}
 		return null;
 	}

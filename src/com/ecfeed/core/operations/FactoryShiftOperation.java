@@ -15,11 +15,10 @@ import java.util.List;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
@@ -48,16 +47,23 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ClassNode){
 				return new GenericShiftOperation(node.getClasses(), fShifted, fUp, fExtLanguageManager);
 			}
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode) abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof MethodNode){
@@ -69,7 +75,7 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			if(fShifted.get(0) instanceof MethodParameterNode){
+			if(fShifted.get(0) instanceof BasicParameterNode){
 				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
@@ -86,23 +92,18 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
+		public Object visit(BasicParameterNode node) throws Exception {
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if(abstractNode instanceof ChoiceNode){
 				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
 			}
+			
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 			return null;
 		}
 
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
-				return new GenericShiftOperation(node.getChoices(), fShifted, fUp, fExtLanguageManager);
-			}
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
-			return null;
-		}
-		
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -148,7 +149,10 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof ClassNode){
 				return new GenericShiftOperation(node.getClasses(), fShifted, fShift, fExtLanguageManager);
 			}
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if (abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()) {
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -160,7 +164,10 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof MethodNode){
 				return new GenericShiftOperation(node.getMethods(), fShifted, fShift, fExtLanguageManager);
 			}
-			if(fShifted.get(0) instanceof GlobalParameterNode){
+			
+			IAbstractNode abstractNode = fShifted.get(0);
+			
+			if(abstractNode instanceof BasicParameterNode && ((BasicParameterNode)abstractNode).isGlobalParameter()){
 				return new GenericShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -169,7 +176,7 @@ public class FactoryShiftOperation {
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			if(fShifted.get(0) instanceof MethodParameterNode){
+			if(fShifted.get(0) instanceof BasicParameterNode){
 				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
@@ -183,21 +190,22 @@ public class FactoryShiftOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
-				return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
-			}
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
-			return null;
-		}
+		public Object visit(BasicParameterNode node) throws Exception {
 
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
-			if(fShifted.get(0) instanceof ChoiceNode){
-				return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
+			if (node.isGlobalParameter()) {
+				if(fShifted.get(0) instanceof ChoiceNode){
+					return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
+				}
+				ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+				return null;
+
+			} else {
+				if(fShifted.get(0) instanceof ChoiceNode){
+					return new GenericShiftOperation(node.getChoices(), fShifted, fShift, fExtLanguageManager);
+				}
+				ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
+				return null;
 			}
-			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
-			return null;
 		}
 
 		@Override

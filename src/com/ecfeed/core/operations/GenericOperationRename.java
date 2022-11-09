@@ -13,20 +13,25 @@ package com.ecfeed.core.operations;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.AbstractNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.ModelHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.LogHelperCore;
+import com.ecfeed.core.utils.QualifiedNameHelper;
+import com.ecfeed.core.utils.RegexHelper;
 
 public class GenericOperationRename extends AbstractModelOperation {
 
@@ -221,12 +226,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguageManager);
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguageManager);
 		}
 
@@ -265,12 +265,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
 		}
 

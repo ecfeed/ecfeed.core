@@ -83,7 +83,8 @@ public class RootNodeTest{
 	}
 
 	@Test
-	public void compareTest(){
+	public void compareTest() {
+		
 		RootNode r1 = new RootNode("r1", null);
 		RootNode r2 = new RootNode("r2", null);
 
@@ -107,8 +108,8 @@ public class RootNodeTest{
 		class2.setName("name");
 		assertTrue(r1.isMatch(r2));
 
-		GlobalParameterNode parameter1 = new GlobalParameterNode("parameter1", "int", null);
-		GlobalParameterNode parameter2 = new GlobalParameterNode("parameter1", "int", null);
+		BasicParameterNode parameter1 = new BasicParameterNode("parameter1", "int", null);
+		BasicParameterNode parameter2 = new BasicParameterNode("parameter1", "int", null);
 
 		r1.addParameter(parameter1);
 		assertFalse(r1.isMatch(r2));

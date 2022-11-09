@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.EMathRelation;
@@ -249,7 +249,7 @@ public class ModelParserHelper  {
 		return property.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_VALUE);
 	}	
 
-	static void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
+	static void parseParameterProperties(Element parameterElement, BasicParameterNode targetAbstractParameterNode) {
 
 		parseParameterProperty(
 				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
@@ -280,7 +280,7 @@ public class ModelParserHelper  {
 	static void parseParameterProperty(
 			NodePropertyDefs.PropertyId propertyId, 
 			Element methodElement, 
-			AbstractParameterNode targetAbstractParameterNode) {
+			BasicParameterNode targetAbstractParameterNode) {
 
 		String value = ModelParserHelper.getPropertyValue(propertyId, methodElement);
 		if (StringHelper.isNullOrEmpty(value)) {

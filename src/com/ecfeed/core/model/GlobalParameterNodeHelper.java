@@ -21,9 +21,9 @@ public class GlobalParameterNodeHelper {
 		WITHOUT_TYPE
 	}
 
-	public static String checkLinkedParameters(GlobalParameterNode globalParameterNode) {
+	public static String checkLinkedParameters(BasicParameterNode globalParameterNode) {
 
-		List<MethodParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
+		List<BasicParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
 
 		if (linkedMethodMethodParameters == null) {
 			return null;
@@ -33,7 +33,7 @@ public class GlobalParameterNodeHelper {
 			return null;
 		}
 
-		MethodParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
+		BasicParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
 
 		String errorMessage = 
 				"Parameter " + firstMethodParameterNode.getName() + 
@@ -45,7 +45,7 @@ public class GlobalParameterNodeHelper {
 	}
 	
 	public static ChoiceNode addNewChoiceToGlobalParameter(
-			GlobalParameterNode globalParameterNode, 
+			BasicParameterNode globalParameterNode, 
 			String choiceNodeName, 
 			String valueString,
 			boolean isRandomizedValue,
@@ -60,7 +60,7 @@ public class GlobalParameterNodeHelper {
 	}
 
 	public static ChoiceNode addNewChoiceToGlobalParameter(
-			GlobalParameterNode globalParameterNode, 
+			BasicParameterNode globalParameterNode, 
 			String choiceNodeName, 
 			String valueString,
 			IModelChangeRegistrator modelChangeRegistrator) {
@@ -73,13 +73,13 @@ public class GlobalParameterNodeHelper {
 		return choiceNode;
 	}
 
-	public static String getName(MethodParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(methodParameterNode, extLanguageManager);
 	}
 
 	public static String createSignature(
-			GlobalParameterNode globalParameterNode, 
+			BasicParameterNode globalParameterNode, 
 			SignatureType signatureType,
 			IExtLanguageManager extLanguageManager) {
 
@@ -95,7 +95,7 @@ public class GlobalParameterNodeHelper {
 	}
 
 	public static String getQualifiedName(
-			GlobalParameterNode globalParameterNode,
+			BasicParameterNode globalParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
 		String qualifiedName = globalParameterNode.getQualifiedName();
@@ -104,7 +104,7 @@ public class GlobalParameterNodeHelper {
 		return qualifiedName;
 	}
 
-	public static String getType(GlobalParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = globalParameterNode.getType();
 		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);

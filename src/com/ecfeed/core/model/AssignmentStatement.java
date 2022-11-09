@@ -21,14 +21,14 @@ public class AssignmentStatement extends RelationStatement {
 	public static final String ASSIGNMENT_CHOICE_NAME = "@assignment";
 
 	private AssignmentStatement(
-			MethodParameterNode parameter, 
+			BasicParameterNode parameter, 
 			IStatementCondition condition) {
 
 		super(parameter, EMathRelation.ASSIGN, condition);
 	}
 
 	public static AssignmentStatement createAssignmentWithChoiceCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			ChoiceNode choiceNode) {
 
 		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
@@ -41,8 +41,8 @@ public class AssignmentStatement extends RelationStatement {
 	}
 
 	public static AssignmentStatement createAssignmentWithParameterCondition(
-			MethodParameterNode parameter,
-			MethodParameterNode rightParameter) {
+			BasicParameterNode parameter,
+			BasicParameterNode rightParameter) {
 
 		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
 
@@ -54,7 +54,7 @@ public class AssignmentStatement extends RelationStatement {
 	}
 
 	public static AssignmentStatement createAssignmentWithValueCondition(
-			MethodParameterNode parameter,
+			BasicParameterNode parameter,
 			String textValue) {
 
 		AssignmentStatement AssignmentStatement = new AssignmentStatement(parameter, null);
@@ -78,7 +78,7 @@ public class AssignmentStatement extends RelationStatement {
 			return true;
 		}
 
-		MethodParameterNode methodParameterNode = getLeftParameter();
+		BasicParameterNode methodParameterNode = getLeftParameter();
 
 		if (methodParameterNode == null) {
 			return true;
@@ -96,7 +96,7 @@ public class AssignmentStatement extends RelationStatement {
 			ExceptionHelper.reportRuntimeException("Invalid size of test case values list.");
 		}
 
-		List<AbstractParameterNode> parameters = methodNode.getParameters();
+		List<BasicParameterNode> parameters = methodNode.getParameters();
 
 		int indexOfParameter = parameters.indexOf(methodParameterNode);
 
@@ -119,8 +119,8 @@ public class AssignmentStatement extends RelationStatement {
 
 	private ChoiceNode createChoiceNodeWithResultValue(
 			List<ChoiceNode> testCaseValues,
-			MethodParameterNode methodParameterNode,
-			List<AbstractParameterNode> parameters,
+			BasicParameterNode methodParameterNode,
+			List<BasicParameterNode> parameters,
 			IStatementCondition statementCondition) {
 
 		if (statementCondition instanceof ValueCondition) {
@@ -155,9 +155,9 @@ public class AssignmentStatement extends RelationStatement {
 		return newChoiceNode;
 	}
 
-	private ChoiceNode createChoiceNodeForParameterCondition(List<ChoiceNode> testCaseValues, List<AbstractParameterNode> parameters, ParameterCondition parameterCondition) {
+	private ChoiceNode createChoiceNodeForParameterCondition(List<ChoiceNode> testCaseValues, List<BasicParameterNode> parameters, ParameterCondition parameterCondition) {
 
-		MethodParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
+		BasicParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
 
 		int indexOfRightParameter = parameters.indexOf(rightParameterNode);
 
@@ -172,7 +172,7 @@ public class AssignmentStatement extends RelationStatement {
 		return newChoiceNode;
 	}
 
-	private ChoiceNode createChoiceNodeForValueCondition(MethodParameterNode methodParameterNode, ValueCondition valueCondition) {
+	private ChoiceNode createChoiceNodeForValueCondition(BasicParameterNode methodParameterNode, ValueCondition valueCondition) {
 
 		String value = valueCondition.getRightValue();
 

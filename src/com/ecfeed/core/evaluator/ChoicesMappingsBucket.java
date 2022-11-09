@@ -1,7 +1,7 @@
 package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.google.common.collect.Multimap;
 
 import java.util.Collection;
@@ -20,14 +20,14 @@ public class ChoicesMappingsBucket { // TODO - rename
     }
 
     public void inputToSanPut(
-            MethodParameterNode methodParameterNode,
+            BasicParameterNode methodParameterNode,
             final Multimap<ChoiceNode, ChoiceNode> value) {
 
         fArgInputValToSanitizedVal.put(methodParameterNode, value);
     }
 
     public Multimap<ChoiceNode, ChoiceNode> inputToSanGet(
-            MethodParameterNode methodParameterNode) {
+            BasicParameterNode methodParameterNode) {
 
         return fArgInputValToSanitizedVal.get(methodParameterNode);
     }

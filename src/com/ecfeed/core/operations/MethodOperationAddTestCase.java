@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -74,7 +74,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 
 		for(ChoiceNode choice : fTestCaseNode.getTestData()) {
 
-			MethodParameterNode parameter = fTestCaseNode.getMethodParameter(choice);
+			BasicParameterNode parameter = fTestCaseNode.getMethodParameter(choice);
 
 			if(parameter.isExpected()){
 				

@@ -17,7 +17,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.operations.MethodParameterOperationSetType;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -28,9 +28,6 @@ import com.ecfeed.core.utils.TestHelper;
 
 
 public class MethodParameterOperationSetTypeTest {
-
-	// TODO DE-NO add tests for MethodParameterOperationSetType with parameterConversionDefinition not empty
-	// TODO DE-NO add tests for ParameterConversionDefinition
 
 	@Test
 	public void setTypeInSimpleModeForOneParam() {
@@ -45,8 +42,8 @@ public class MethodParameterOperationSetTypeTest {
 		MethodNode methodNode1 = new MethodNode("method", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 
 		methodNode1.addParameter(methodParameterNode1);
 
@@ -55,8 +52,8 @@ public class MethodParameterOperationSetTypeTest {
 		MethodNode methodNode2 = new MethodNode("method", null);
 		classNode.addMethod(methodNode2);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par1", "String", "x", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par1", "String", "x", false, null);
 
 		methodNode2.addParameter(methodParameterNode2);
 
@@ -165,7 +162,6 @@ public class MethodParameterOperationSetTypeTest {
 //		return parameterConversionDefinition;
 //	}
 
-	// TODO DE-NO TEST
 //	@Test
 //	public void setTextToNumberInSimpleMode() {
 //
@@ -199,7 +195,6 @@ public class MethodParameterOperationSetTypeTest {
 //		assertEquals("byte", methodParameterNode1.getType());
 //	}
 
-	// TODO DE-NO TEST
 //	@Test
 //	public void setTypeInSimpleModeForTwoParams() {
 //
@@ -299,8 +294,8 @@ public class MethodParameterOperationSetTypeTest {
 		MethodNode methodNode1 = new MethodNode("method", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode methodParameterNode1 =
-				new MethodParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode methodParameterNode1 =
+				new BasicParameterNode("par1", "int", "0", false, null);
 
 		methodNode1.addParameter(methodParameterNode1);
 
@@ -309,8 +304,8 @@ public class MethodParameterOperationSetTypeTest {
 		MethodNode methodNode2 = new MethodNode("method", null);
 		classNode.addMethod(methodNode2);
 
-		MethodParameterNode methodParameterNode2 =
-				new MethodParameterNode("par1", "String", "x", false, null);
+		BasicParameterNode methodParameterNode2 =
+				new BasicParameterNode("par1", "String", "x", false, null);
 
 		methodNode2.addParameter(methodParameterNode2);
 

@@ -72,7 +72,9 @@ public class ValueCondition implements IStatementCondition {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);		
 
-		int leftParameterIndex = fParentRelationStatement.getLeftParameter().getMyIndex();
+		BasicParameterNode leftParameter = fParentRelationStatement.getLeftParameter();
+		int leftParameterIndex = leftParameter.getMyIndex();
+		
 		List<ChoiceNode> choicesForParameter = domain.get(leftParameterIndex);
 
 		EMathRelation relation = fParentRelationStatement.getRelation();
@@ -99,7 +101,7 @@ public class ValueCondition implements IStatementCondition {
 		return fParentRelationStatement;
 	}
 
-	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
 
@@ -122,7 +124,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public boolean updateReferences(IParametersParentNode methodNode) {
 
 		return true;
 	}
@@ -172,7 +174,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(AbstractParameterNode abstractParameterNode) {
+	public boolean mentions(BasicParameterNode abstractParameterNode) {
 
 		return false;
 	}	
@@ -191,7 +193,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -213,12 +215,12 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 		return false;
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
 	}
 

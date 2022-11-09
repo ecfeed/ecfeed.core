@@ -89,8 +89,8 @@ public class ModelLogger {
 			printMethodNode((MethodNode)abstractNode, null, indent);
 			return;
 		}
-		if (abstractNode instanceof MethodParameterNode) {
-			printMethodParameterNode((MethodParameterNode)abstractNode, null, indent);
+		if (abstractNode instanceof BasicParameterNode) {
+			printMethodParameterNode((BasicParameterNode)abstractNode, null, indent);
 			return;
 		}		
 		if (abstractNode instanceof ChoiceNode) {
@@ -137,7 +137,7 @@ public class ModelLogger {
 		printObjectLine(methodNode, fieldName, indent);
 	}
 
-	private static void printMethodParameterNode(MethodParameterNode methodParameterNode, String fieldName, int indent) {
+	private static void printMethodParameterNode(BasicParameterNode methodParameterNode, String fieldName, int indent) {
 		if (methodParameterNode == null) {
 			printIndentedLine("MethodNode is null", indent);
 			return;
@@ -148,7 +148,7 @@ public class ModelLogger {
 		printFieldLine(methodParameterNode.getType() + " [isLinked]=" + isLinked, indent + indentIncrement);
 
 		if (isLinked) {
-			GlobalParameterNode globalParameterNode = methodParameterNode.getLinkToGlobalParameter();
+			BasicParameterNode globalParameterNode = methodParameterNode.getLinkToGlobalParameter();
 			if (globalParameterNode == null) {
 				printIndentedLine("GlobalParameterNode is null", indent + indentIncrement);
 			} else {

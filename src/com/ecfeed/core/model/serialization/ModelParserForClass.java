@@ -15,7 +15,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_N
 import java.util.Optional;
 
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.BooleanHolder;
@@ -66,7 +66,7 @@ public class ModelParserForClass implements IModelParserForClass {
 
 		//parameters must be parsed before classes
 		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeName())) {
-			Optional<GlobalParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
+			Optional<BasicParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
 			if (node.isPresent()) {
 				targetClassNode.addParameter(node.get());
 			}

@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class ReplaceChoicesOperation extends BulkOperation {
 
 	public ReplaceChoicesOperation(
-			AbstractParameterNode abstractParameterNode, 
+			BasicParameterNode abstractParameterNode, 
 			List<ChoiceNode> choices, 
 			ITypeAdapterProvider adapterProvider,
 			IExtLanguageManager extLanguageManager) {

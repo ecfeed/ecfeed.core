@@ -14,10 +14,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -171,11 +170,11 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		Random randomGenerator = new Random();
 		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
-		List<AbstractParameterNode> parameters = methodNode.getParameters();
+		List<BasicParameterNode> parameters = methodNode.getParameters();
 
-		for (AbstractParameterNode abstractParameterNode : parameters) {
+		for (BasicParameterNode abstractParameterNode : parameters) {
 			
-			MethodParameterNode methodParameterNode = (MethodParameterNode) abstractParameterNode;
+			BasicParameterNode methodParameterNode = (BasicParameterNode) abstractParameterNode;
 			
 			ChoiceNode choiceNode;
 			
@@ -200,7 +199,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	ChoiceNode getRandomChoiceNode(MethodNode methodNode, String parameterName, Random randomGenerator) {
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)methodNode.findParameter(parameterName);
+		BasicParameterNode methodParameterNode = (BasicParameterNode)methodNode.findParameter(parameterName);
 		List<ChoiceNode> choices = methodParameterNode.getLeafChoicesWithCopies();
 
 		ChoiceNode choiceNode = choices.get(randomGenerator.nextInt(choices.size()));

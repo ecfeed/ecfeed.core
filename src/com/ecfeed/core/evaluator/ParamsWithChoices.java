@@ -1,7 +1,7 @@
 package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Set;
 public class ParamsWithChoices {
 
 	//    private String fDebugCode;
-    private Map<MethodParameterNode, Set<ChoiceNode>> fParamsWithChoices;
+    private Map<BasicParameterNode, Set<ChoiceNode>> fParamsWithChoices;
 
     public ParamsWithChoices(String debugCode) {
 
@@ -18,15 +18,15 @@ public class ParamsWithChoices {
         fParamsWithChoices = new HashMap<>();
     }
 
-    public void put(MethodParameterNode methodParameterNode, Set<ChoiceNode> choiceNodeSet) {
+    public void put(BasicParameterNode methodParameterNode, Set<ChoiceNode> choiceNodeSet) {
         fParamsWithChoices.put(methodParameterNode, choiceNodeSet);
     }
 
-    public Set<ChoiceNode> get(MethodParameterNode methodParameterNode) {
+    public Set<ChoiceNode> get(BasicParameterNode methodParameterNode) {
         return fParamsWithChoices.get(methodParameterNode);
     }
 
-    public Set<MethodParameterNode> getKeySet() {
+    public Set<BasicParameterNode> getKeySet() {
         return fParamsWithChoices.keySet();
     }
 

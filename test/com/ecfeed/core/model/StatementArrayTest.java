@@ -26,11 +26,11 @@ import com.ecfeed.core.utils.EvaluationResult;
 public class StatementArrayTest {
 
 	private static MethodNode fMethod;
-	private static MethodParameterNode fParameter1;
+	private static BasicParameterNode fParameter1;
 	private static ChoiceNode fChoice11;
 	private static ChoiceNode fChoice12;
 	private static ChoiceNode fChoice13;
-	private static MethodParameterNode fParameter2;
+	private static BasicParameterNode fParameter2;
 	private static ChoiceNode fChoice21;
 	private static ChoiceNode fChoice22;
 	private static ChoiceNode fChoice23;
@@ -38,14 +38,14 @@ public class StatementArrayTest {
 	@BeforeClass
 	public static void prepareModel(){
 		fMethod = new MethodNode("method", null);
-		fParameter1 = new MethodParameterNode("parameter1", "type", "0", false, null);
+		fParameter1 = new BasicParameterNode("parameter1", "type", "0", false, null);
 		fChoice11 = new ChoiceNode("choice11", null, null);
 		fChoice12 = new ChoiceNode("choice12", null, null);
 		fChoice13 = new ChoiceNode("choice13", null, null);
 		fParameter1.addChoice(fChoice11);
 		fParameter1.addChoice(fChoice12);
 		fParameter1.addChoice(fChoice13);
-		fParameter2 = new MethodParameterNode("parameter2", "type", "0", false, null);
+		fParameter2 = new BasicParameterNode("parameter2", "type", "0", false, null);
 		fChoice21 = new ChoiceNode("choice21", null, null);
 		fChoice22 = new ChoiceNode("choice22", null, null);
 		fChoice23 = new ChoiceNode("choice23", null, null);
@@ -221,8 +221,8 @@ public class StatementArrayTest {
 				RelationStatement.createRelationStatementWithChoiceCondition(fParameter1, EMathRelation.EQUAL, fChoice11);
 
 		array.addStatement(statement1);
-		assertTrue(array.mentions((MethodParameterNode)fChoice11.getParameter()));
-		assertFalse(array.mentions((MethodParameterNode)fChoice21.getParameter()));
+		assertTrue(array.mentions((BasicParameterNode)fChoice11.getParameter()));
+		assertFalse(array.mentions((BasicParameterNode)fChoice21.getParameter()));
 	}
 
 	@Test

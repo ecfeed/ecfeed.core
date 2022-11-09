@@ -16,11 +16,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.ChoicesParentNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -66,15 +65,15 @@ public class GenericMoveOperation extends BulkOperation {
 						continue;
 					}
 					
-					if(node instanceof ChoicesParentNode){
-						methodsInvolved.addAll(((ChoicesParentNode)node).getParameter().getMethods());
+					if(node instanceof IChoicesParentNode){
+						methodsInvolved.addAll(((IChoicesParentNode)node).getParameter().getMethods());
 					}
 					addOperation((IModelOperation)node.getParent().accept(
 							new FactoryRemoveChildOperation(node, adapterProvider, false, extLanguageManager)));
 
-					if(node instanceof GlobalParameterNode && newParent instanceof MethodNode){
-						GlobalParameterNode parameter = (GlobalParameterNode)node;
-						node = new MethodParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
+					if((node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) && newParent instanceof MethodNode){
+						BasicParameterNode parameter = (BasicParameterNode)node;
+						node = new BasicParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
 					}
 					
 					if(newIndex != -1){

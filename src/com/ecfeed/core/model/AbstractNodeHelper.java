@@ -106,12 +106,7 @@ public abstract class AbstractNodeHelper  {
 		}
 
 		@Override
-		public Object visit(MethodParameterNode node) throws Exception {
-			return false;
-		}
-
-		@Override
-		public Object visit(GlobalParameterNode node) throws Exception {
+		public Object visit(BasicParameterNode node) throws Exception {
 			return false;
 		}
 

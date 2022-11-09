@@ -16,7 +16,7 @@ import java.util.Map;
 public class DeploymentMapper {
 
 	private Map<ChoiceNode, ChoiceNode> fMappingsOfSourceToDevelopedChoice;
-	private Map<MethodParameterNode, MethodParameterNode> fMappingsOfSourceToDevelopedParameter;
+	private Map<BasicParameterNode, BasicParameterNode> fMappingsOfSourceToDevelopedParameter;
 	private Map<RelationStatement, RelationStatement> fMappingsOfSourceToDevelopedRelationStatement;
 
 	public DeploymentMapper() {
@@ -26,8 +26,8 @@ public class DeploymentMapper {
 	}
 
 	public void addParameterMappings(
-			MethodParameterNode sourceMethodParameterNode,
-			MethodParameterNode developedMethodParameterNode) {
+			BasicParameterNode sourceMethodParameterNode,
+			BasicParameterNode developedMethodParameterNode) {
 
 		fMappingsOfSourceToDevelopedParameter.put(sourceMethodParameterNode, developedMethodParameterNode);
 	}
@@ -44,7 +44,7 @@ public class DeploymentMapper {
 		fMappingsOfSourceToDevelopedChoice.put(sourceChoiceNode, developedChoiceNode);
 	}
 
-	public MethodParameterNode getDeployedParameterNode(MethodParameterNode sourceMethodParameterNode) {
+	public BasicParameterNode getDeployedParameterNode(BasicParameterNode sourceMethodParameterNode) {
 
 		return fMappingsOfSourceToDevelopedParameter.get(sourceMethodParameterNode);
 	}
