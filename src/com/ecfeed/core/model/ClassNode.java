@@ -241,8 +241,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return super.isMatch(other);
 	}
 
-	@Override
-	public List<MethodNode> getMethods(BasicParameterNode parameter) {
+	public List<MethodNode> getChildMethods(BasicParameterNode parameter) {
 		List<MethodNode> result = new ArrayList<MethodNode>();
 		for(MethodNode method : getMethods()){
 			for(BasicParameterNode methodParameter : method.getMethodParameters()){

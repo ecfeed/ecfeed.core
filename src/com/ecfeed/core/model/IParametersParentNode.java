@@ -14,8 +14,6 @@ import java.util.List;
 
 public interface IParametersParentNode extends IAbstractNode {
 
-	public List<MethodNode> getMethods(BasicParameterNode parameter); 	// TODO MO-RE - MOVE FROM HERE
-	
 	public void addParameter(BasicParameterNode parameter);	
 	public void addParameter(BasicParameterNode parameter, int index);
 	public void addParameters(List<BasicParameterNode> parameters);
@@ -28,7 +26,6 @@ public interface IParametersParentNode extends IAbstractNode {
 	public BasicParameterNode getParameter(int parameterIndex);
 
 	public BasicParameterNode findParameter(String parameterNameToFind);
-//	public BasicParameterNode findMethodParameter(String name); // TODO MO-RE do we need 2 similar functions ?
 	public int getParameterIndex(String parameterName);
 
 	public boolean parameterExists(String parameterName);

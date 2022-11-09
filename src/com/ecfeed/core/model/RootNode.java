@@ -153,11 +153,10 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		return visitor.visit(this);
 	}
 
-	@Override
-	public List<MethodNode> getMethods(BasicParameterNode parameter) {
+	public List<MethodNode> getChildMethods(BasicParameterNode parameter) {
 		List<MethodNode> result = new ArrayList<>();
 		for(ClassNode classNode : getClasses()){
-			result.addAll(classNode.getMethods(parameter));
+			result.addAll(classNode.getChildMethods(parameter));
 		}
 		return result;
 	} 

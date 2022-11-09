@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -567,7 +566,10 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		int testCasesCount = testCases.size();
 		int constraintsCount = getConstraintNodes().size();
 
-		List<TestCaseNode> testCasesToCompare = otherMethodNode.getTestCases();
+		List<TestCaseNode//	public List<MethodNode> getChildMethods(BasicParameterNode parameter) {
+//		return Arrays.asList(new MethodNode[]{this});
+//	}
+> testCasesToCompare = otherMethodNode.getTestCases();
 
 		if(testCasesCount != testCasesToCompare.size() ||
 				constraintsCount != otherMethodNode.getConstraintNodes().size()){
@@ -597,11 +599,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 
 		return true;
-	}
-
-	@Override
-	public List<MethodNode> getMethods(BasicParameterNode parameter) {
-		return Arrays.asList(new MethodNode[]{this});
 	}
 
 	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter){
