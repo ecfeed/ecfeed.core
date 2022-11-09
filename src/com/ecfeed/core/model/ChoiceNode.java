@@ -444,11 +444,6 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return methodNode;
 	}
 	
-//	public List<ChoiceNode> getChoicesWithCopies() { // TODO MO-RE do we need this ?
-//
-//		return getChoices();
-//	}
-
 	@Override
 	public int getChildrenCount() {
 		
