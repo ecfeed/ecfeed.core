@@ -1,7 +1,5 @@
 package com.ecfeed.core.utils;
 
-import static org.junit.Assert.fail;
-
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.ChoiceNode;
@@ -125,7 +123,7 @@ public class TestHelper {
 		return getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 	}
 	
-	public static void assertEqualsByLines(String expectedResult, String result) {
+	public static String isEqualsByLines(String expectedResult, String result) {
 
 		final String lineSeparator = System.getProperty("line.separator");
 
@@ -143,14 +141,15 @@ public class TestHelper {
 			resultLine = resultLine.replace("\r", "");
 
 			if (!StringHelper.isEqual(expectedLine, resultLine)) {
-				fail("Line: " + (lineIndex + 1) + " differs.");
+				return ("Line: " + (lineIndex + 1) + " differs.");
 			}
 		}
 		
 		if (expectedResultLines.length != resultLines.length) {
-			fail("Content does not match");
-			return;
+			return "Count of lines does not match";
 		}
+		
+		return null;
 	}	
 
 }
