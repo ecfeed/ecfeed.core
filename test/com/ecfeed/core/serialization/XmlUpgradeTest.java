@@ -85,40 +85,12 @@ public class XmlUpgradeTest {
 		// System.out.println(result);
 
 		// compare with model from text
-		assertEqualsByLines(expectedResultInVersion4FromText, result);
+		TestHelper.assertEqualsByLines(expectedResultInVersion4FromText, result);
 
 		// compare with model created in version4
 
 		if (expectedResultInVersion4FromModel != null) {
-			assertEqualsByLines(expectedResultInVersion4FromModel, result);
-		}
-	}
-
-	private void assertEqualsByLines(String expectedResult, String result) { // TODO MO-RE move to test helper
-
-		final String lineSeparator = System.getProperty("line.separator");
-
-		String[] expectedResultLines = expectedResult.split(lineSeparator);
-		String[] resultLines = result.split(lineSeparator);
-
-		int minLines = Math.min(expectedResultLines.length, resultLines.length);
-
-		for (int lineIndex = 0; lineIndex < minLines; lineIndex++) {
-
-			String expectedLine = expectedResultLines[lineIndex];
-			expectedLine = expectedLine.replace("\r", "");
-
-			String resultLine = resultLines[lineIndex];
-			resultLine = resultLine.replace("\r", "");
-
-			if (!StringHelper.isEqual(expectedLine, resultLine)) {
-				fail("Line: " + (lineIndex + 1) + " differs.");
-			}
-		}
-		
-		if (expectedResultLines.length != resultLines.length) {
-			fail("Content does not match");
-			return;
+			TestHelper.assertEqualsByLines(expectedResultInVersion4FromModel, result);
 		}
 	}
 

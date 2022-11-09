@@ -1,5 +1,7 @@
 package com.ecfeed.core.utils;
 
+import static org.junit.Assert.fail;
+
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceCondition;
 import com.ecfeed.core.model.ChoiceNode;
@@ -122,6 +124,34 @@ public class TestHelper {
 
 		return getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 	}
+	
+	public static void assertEqualsByLines(String expectedResult, String result) {
+
+		final String lineSeparator = System.getProperty("line.separator");
+
+		String[] expectedResultLines = expectedResult.split(lineSeparator);
+		String[] resultLines = result.split(lineSeparator);
+
+		int minLines = Math.min(expectedResultLines.length, resultLines.length);
+
+		for (int lineIndex = 0; lineIndex < minLines; lineIndex++) {
+
+			String expectedLine = expectedResultLines[lineIndex];
+			expectedLine = expectedLine.replace("\r", "");
+
+			String resultLine = resultLines[lineIndex];
+			resultLine = resultLine.replace("\r", "");
+
+			if (!StringHelper.isEqual(expectedLine, resultLine)) {
+				fail("Line: " + (lineIndex + 1) + " differs.");
+			}
+		}
+		
+		if (expectedResultLines.length != resultLines.length) {
+			fail("Content does not match");
+			return;
+		}
+	}	
 
 }
 
