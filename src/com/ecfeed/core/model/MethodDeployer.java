@@ -23,25 +23,12 @@ public abstract class MethodDeployer {
 	public static MethodNode constructMethod(List<MethodParameterNode> parameters, List<ConstraintNode> constraints) {
 		MethodNode method = new MethodNode("construct");
 
-
 		parameters.stream().map(MethodParameterNode::makeClone).forEach(method::addParameter);
 
-		ConstraintNode const1 = constraints.get(0);
-		ConstraintNode const2 = const1.getCopy(method);
-
-		constraints.stream().forEach(e -> {
-			e.updateReferences(method);
-			method.addConstraint(e);
-		});
+		constraints.stream().forEach(e -> method.addConstraint(e.getCopy(method)));
 
 		return method;
 	}
-
-
-
-
-
-
 
 	public static MethodNode deploy(MethodNode sourceMethodNode) {
 

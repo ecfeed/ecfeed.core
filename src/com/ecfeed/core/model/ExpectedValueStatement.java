@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.*;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
@@ -162,6 +157,25 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public ExpectedValueStatement makeClone(){
 		return new ExpectedValueStatement(fLeftMethodParameterNode, fChoiceNode.makeClone(), fPredicate);
+	}
+
+	@Override
+	public ExpectedValueStatement createCopy(MethodNode method) {
+
+		return new ExpectedValueStatement(makeCloneParameter(method), fChoiceNode.makeClone(), fPredicate);
+	}
+
+	public MethodParameterNode makeCloneParameter(MethodNode method) {
+
+		for (MethodParameterNode parameter : method.getMethodParameters()) {
+			if (parameter.getName().equals(fLeftMethodParameterNode.getName())) {
+				return parameter;
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
+
+		return null;
 	}
 
 	@Override

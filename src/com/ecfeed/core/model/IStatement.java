@@ -29,6 +29,7 @@ public interface IStatement{
 	public List<String> getLabels(MethodParameterNode methodParameterNode);
 	public void derandomize();
 	public AbstractStatement makeClone();
+	AbstractStatement createCopy(MethodNode method);
 	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper);
 	
 }

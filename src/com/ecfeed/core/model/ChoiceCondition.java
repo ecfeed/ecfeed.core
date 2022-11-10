@@ -65,6 +65,21 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
+	public ChoiceCondition createCopy(MethodNode method, RelationStatement statement) {
+
+		return new ChoiceCondition(updateChoiceReference(method), statement);
+	}
+
+	private ChoiceNode updateChoiceReference(MethodNode method) {
+		MethodParameterNode parameter = method.findMethodParameter(fRightChoice.getParameter().getName());
+
+		ChoiceNode choice = parameter.getChoice(fRightChoice.getQualifiedName());
+		choice.setOrigChoiceNode(null);
+
+		return choice;
+	}
+
+	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
 		String parameterName = fParentRelationStatement.getLeftParameter().getName();

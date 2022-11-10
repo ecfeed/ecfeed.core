@@ -176,6 +176,18 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
+	public StatementArray createCopy(MethodNode method) {
+
+		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
+
+		for (AbstractStatement statement: fStatements) {
+			copy.addStatement(statement.createCopy(method));
+		}
+
+		return copy;
+	}
+
+	@Override
 	public boolean updateReferences(MethodNode method) {
 
 		for (AbstractStatement statement: fStatements) {

@@ -189,6 +189,22 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
+	public RelationStatement createCopy(MethodNode method) {
+
+		RelationStatement statement = new RelationStatement(updateParameterReference(method), fRelation, null);
+
+		IStatementCondition condition = fRightCondition.createCopy(method, statement);
+		statement.setCondition(condition);
+
+		return statement;
+	}
+
+	private MethodParameterNode updateParameterReference(MethodNode method) {
+
+		return method.findMethodParameter(fLeftParameter.getName());
+	}
+
+	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
 		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fLeftParameter.getName());

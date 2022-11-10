@@ -56,11 +56,6 @@ public class SatSolverConstraintCreatorTest {
     }
 
     public static MethodNode getMethod() {
-        MethodNode method = new MethodNode("test");
-
-//        MethodNode method1 = m1;
-//        MethodNode method2 = m2;
-
         List<MethodParameterNode> parameters = new ArrayList<>();
         parameters.addAll(m1.getMethodParameters());
         parameters.addAll(m2.getMethodParameters());
@@ -69,34 +64,23 @@ public class SatSolverConstraintCreatorTest {
         constraints.addAll(m1.getConstraintNodes());
         constraints.addAll(m2.getConstraintNodes());
 
-//        MethodDeployer.constructMethod(method1.getMethodParameters(), method1.getConstraintNodes());
-//
-//        method1.getMethodParameters().forEach(method::addParameter);
-//        method2.getMethodParameters().forEach(method::addParameter);
-//
-//        method1.getConstraintNodes().forEach(method::addConstraint);
-//        method2.getConstraintNodes().forEach(method::addConstraint);
-
         return MethodDeployer.constructMethod(parameters, constraints);
     }
 
     public static MethodNode getMethodMix() {
-        MethodNode method = new MethodNode("test");
+        List<MethodParameterNode> parameters = new ArrayList<>();
+        parameters.add(m1.getMethodParameters().get(0));
+        parameters.add(m2.getMethodParameters().get(0));
+        parameters.add(m1.getMethodParameters().get(1));
+        parameters.add(m2.getMethodParameters().get(1));
+        parameters.add(m1.getMethodParameters().get(2));
+        parameters.add(m2.getMethodParameters().get(2));
 
-        MethodNode method1 = m1;
-        MethodNode method2 = m2;
+        List<ConstraintNode> constraints = new ArrayList<>();
+        constraints.addAll(m1.getConstraintNodes());
+        constraints.addAll(m2.getConstraintNodes());
 
-        method.addParameter(method1.getParameter(0));
-        method.addParameter(method2.getParameter(0));
-        method.addParameter(method1.getParameter(1));
-        method.addParameter(method2.getParameter(1));
-        method.addParameter(method1.getParameter(2));
-        method.addParameter(method2.getParameter(2));
-
-        method1.getConstraintNodes().forEach(method::addConstraint);
-        method2.getConstraintNodes().forEach(method::addConstraint);
-
-        return method;
+        return MethodDeployer.constructMethod(parameters, constraints);
     }
 
     @Test

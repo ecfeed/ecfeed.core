@@ -118,7 +118,13 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public ValueCondition makeClone() {
 
-		return new ValueCondition(new String(fRightValue), fParentRelationStatement);
+		return new ValueCondition(fRightValue, fParentRelationStatement);
+	}
+
+	@Override
+	public ValueCondition createCopy(MethodNode method, RelationStatement statement) {
+
+		return new ValueCondition(fRightValue, statement);
 	}
 
 	@Override

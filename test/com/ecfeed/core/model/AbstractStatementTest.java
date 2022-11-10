@@ -39,6 +39,10 @@ public class AbstractStatementTest {
 			return null;
 		}
 		@Override
+		public AbstractStatement createCopy(MethodNode method) {
+			return null;
+		}
+		@Override
 		public boolean updateReferences(MethodNode method){
 			return true;
 		}

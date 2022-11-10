@@ -96,6 +96,12 @@ public class LabelCondition implements IStatementCondition {
 		return new LabelCondition(fRightLabel, fParentRelationStatement);
 	}
 
+	@Override
+	public LabelCondition createCopy(MethodNode method, RelationStatement statement) {
+
+		return new LabelCondition(fRightLabel, statement);
+	}
+
 	public String getRightLabel() {
 		return fRightLabel;
 	}

@@ -162,6 +162,17 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
+	public ParameterCondition createCopy(MethodNode method, RelationStatement statement) {
+
+		return new ParameterCondition(updateParameterReference(method), statement);
+	}
+
+	private MethodParameterNode updateParameterReference(MethodNode method) {
+
+		return method.findMethodParameter(fRightParameterNode.getName());
+	}
+
+	@Override
 	public boolean updateReferences(MethodNode methodNode) {
 
 		MethodParameterNode tmpParameterNode = methodNode.findMethodParameter(fRightParameterNode.getName());
