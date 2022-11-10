@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model.serialization;
 
-public class XomAnalyserVersion4 extends XomAnalyserWithConstraintTypes {
+public class XomAnalyserVersion4 extends XomAnalyserWithNewNodeNames {
 
 	public XomAnalyserVersion4() {
 		super();
