@@ -17,6 +17,59 @@ import static org.junit.Assert.fail;
 
 public class SatSolverConstraintEvaluatorTest {
 
+    private int countGeneratedTestCases(String xmlModel) {
+        MethodNode method1 = getMethod(xmlModel);
+
+        MethodNode method2 = MethodDeployer.constructMethod(method1.getMethodParameters(), method1.getConstraintNodes());
+
+        List<List<ChoiceNode>> input = getInput(method2);
+
+        IConstraintEvaluator<ChoiceNode> evaluator = new SatSolverConstraintEvaluator(method2.getConstraints(), method2);
+
+        IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
+
+        return getCount(evaluator, algorithm, input);
+    }
+
+    private MethodNode getMethod(String xmlModel) {
+        RootNode model = ModelTestHelper.createModel(xmlModel);
+
+        assert model != null;
+
+        return model.getClasses().get(0).getMethods().get(0);
+    }
+
+    private List<List<ChoiceNode>> getInput(MethodNode method) {
+        List<List<ChoiceNode>> input = new ArrayList<>();
+
+        for (MethodParameterNode arg : method.getMethodParameters()) {
+            if (arg.isExpected()) {
+                input.add(Collections.singletonList(null));
+            } else {
+                input.add(arg.getLeafChoicesWithCopies());
+            }
+        }
+
+        return input;
+    }
+
+    private int getCount(IConstraintEvaluator<ChoiceNode> evaluator, IAlgorithm<ChoiceNode> algorithm, List<List<ChoiceNode>> input) {
+        int cnt = 0;
+
+        try {
+            algorithm.initialize(input, evaluator, new SimpleProgressMonitor());
+
+            while (algorithm.getNext() != null) {
+                cnt++;
+            }
+
+        } catch (Exception e) {
+            fail("Unexpected generator exception: " + e.getMessage());
+        }
+
+        return cnt;
+    }
+
     @Test
     public void TestOrderOfInts() {
         assertEquals(9 * 8 * 7 * 6 / 2 / 3 / 4, countGeneratedTestCases(xmlOrderOfInts));
@@ -115,40 +168,6 @@ public class SatSolverConstraintEvaluatorTest {
     @Test
     public void TestCmpFixedVsRange() {
         assertEquals(3, countGeneratedTestCases(xmlCmpFixedVsRange));
-    }
-
-    private int countGeneratedTestCases(String xmlModel) {
-        RootNode model = ModelTestHelper.createModel(xmlModel);
-
-        ClassNode classNode = model.getClasses().get(0);
-        MethodNode methodNode = classNode.getMethods().get(0);
-
-        List<List<ChoiceNode>> input = new ArrayList<>();
-        for (MethodParameterNode arg : methodNode.getMethodParameters())
-            if (arg.isExpected()) {
-                input.add(Collections.singletonList(null));
-            } else
-                input.add(arg.getLeafChoicesWithCopies());
-
-
-        IConstraintEvaluator<ChoiceNode> evaluator = new SatSolverConstraintEvaluator(methodNode.getConstraints(), methodNode);
-
-        IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
-//        IAlgorithm<ChoiceNode> algorithm = new AwesomeNWiseAlgorithm<>(2,100);
-
-
-        int cnt = 0;
-        try {
-            algorithm.initialize(input, evaluator, new SimpleProgressMonitor());
-
-            while (algorithm.getNext() != null)
-                cnt++;
-
-        } catch (Exception e) {
-            fail("Unexpected generator exception: " + e.getMessage());
-        }
-
-        return cnt;
     }
 
     private String xmlOrderOfInts = "<?xml version='1.0' encoding='UTF-8'?>\n" +
