@@ -124,7 +124,7 @@ public class ModelHelper {
 
 	}
 
-	public static String getNodeTypeName(IAbstractNode abstractNode) { // TODO SIMPLE-VIEW visitor, test
+	public static String getNodeTypeName(IAbstractNode abstractNode) {
 
 		if (abstractNode instanceof ClassNode) {
 			return "Class";
