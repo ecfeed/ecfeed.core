@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 
 public class DiskFileHelper {
 
-	// TODO - check if used
 	public static final String JAVA_EXTENSION = "java";
 	public static final String APK_EXTENSION = "apk";
 	public static final String BIN_SUBDIRECTORY = "bin";
