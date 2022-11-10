@@ -16,6 +16,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class TestCasesUserInput {
 
+	private static final String CONSTRAINTS_ALL = "ALL";
+	private static final String CONSTRAINTS_NONE = "NONE";
+	
 	private String fDataSource;
 	private String fMethod;
 	private String fSuiteSize;
@@ -102,12 +105,12 @@ public class TestCasesUserInput {
 
 	public void setAllConstraints() {
 
-		setConstraints("ALL"); // TODO - magic string
+		setConstraints(CONSTRAINTS_ALL);
 	}
 
 	public void setNoConstraints() {
 
-		setConstraints("NONE"); // TODO - magic string
+		setConstraints(CONSTRAINTS_NONE);
 	}
 
 	public void setConstraints(List<String> constraintNames) {
