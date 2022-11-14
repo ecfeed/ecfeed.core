@@ -10,7 +10,7 @@
 
 package com.ecfeed.core.model;
 
-public interface IModelVisitor extends IParameterVisitor {
+public interface IModelVisitor extends IBasicParameterVisitor {
 	public Object visit(RootNode node) throws Exception;
 	public Object visit(ClassNode node) throws Exception;
 	public Object visit(MethodNode node) throws Exception;

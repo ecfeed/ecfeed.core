@@ -15,7 +15,7 @@ import java.util.Set;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IChoicesParentNode;
-import com.ecfeed.core.model.IParameterVisitor;
+import com.ecfeed.core.model.IBasicParameterVisitor;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -37,7 +37,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		private class ReverseOperation extends AbstractModelOperation{
 
-			private class ReverseParameterAdapter implements IParameterVisitor{
+			private class ReverseParameterAdapter implements IBasicParameterVisitor{
 
 				@Override
 				public Object visit(BasicParameterNode node) throws Exception {
@@ -79,7 +79,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		}
 
-		private class OperationValidator implements IParameterVisitor{
+		private class OperationValidator implements IBasicParameterVisitor{
 
 			@Override
 			public Object visit(BasicParameterNode parameter) throws Exception {
@@ -99,7 +99,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 
 		}
 
-		private class ParameterAdapter implements IParameterVisitor{
+		private class ParameterAdapter implements IBasicParameterVisitor{
 
 			@Override
 			public Object visit(BasicParameterNode parameter) throws Exception {

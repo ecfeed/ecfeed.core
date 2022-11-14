@@ -442,7 +442,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return visitor.visit(this);
 	}
 
-	public Object accept(IParameterVisitor visitor) throws Exception {
+	public Object accept(IBasicParameterVisitor visitor) throws Exception {
 		return visitor.visit(this);
 	}
 
