@@ -305,6 +305,17 @@ public class MethodNodeHelper {
 		return methodParameterNode;
 	}
 
+	public static BasicParameterNode addLinkedParameterToMethod(
+			MethodNode methodNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
+
+		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
+		methodParameterNode.setLinked(true);
+		methodParameterNode.setLinkToGlobalParameter(linkToGlobalParameter);
+		methodNode.addParameter(methodParameterNode);
+
+		return methodParameterNode;
+	}
+	
 	public static BasicParameterNode addExpectedParameterToMethod(
 			MethodNode methodNode, String name, String type, String defaultValue) {
 
