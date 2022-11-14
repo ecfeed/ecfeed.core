@@ -569,4 +569,9 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		fChoicesListHolder.clearChoices();
 	}
 
+	@Override
+	public List<ChoiceNode> getChoicesWithCopies() {
+		return null;
+	}
+
 }
