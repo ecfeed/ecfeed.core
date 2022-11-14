@@ -571,7 +571,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 	@Override
 	public List<ChoiceNode> getChoicesWithCopies() {
-		return null;
+		return new ArrayList<>();
 	}
 
 }
