@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-public class SatSolverConstraintCreatorTest {
+public class SatSolverMethodDeployerTest {
 
     static ClassNode classNode = new ClassNode("Class", null);
 
@@ -55,7 +55,7 @@ public class SatSolverConstraintCreatorTest {
         m2.addConstraint(new ConstraintNode("M2C1", m2c1, null));
     }
 
-    public static MethodNode getMethod() {
+    public static MethodNode getMethodOrdered() {
         List<MethodParameterNode> parameters = new ArrayList<>();
         parameters.addAll(m1.getMethodParameters());
         parameters.addAll(m2.getMethodParameters());
@@ -67,7 +67,7 @@ public class SatSolverConstraintCreatorTest {
         return MethodDeployer.constructMethod(parameters, constraints);
     }
 
-    public static MethodNode getMethodMix() {
+    public static MethodNode getMethodAlternate() {
         List<MethodParameterNode> parameters = new ArrayList<>();
         parameters.add(m1.getMethodParameters().get(0));
         parameters.add(m2.getMethodParameters().get(0));
@@ -84,8 +84,8 @@ public class SatSolverConstraintCreatorTest {
     }
 
     @Test
-    public void test() {
-        MethodNode method = getMethod();
+    public void testOrdered() {
+        MethodNode method = getMethodOrdered();
 
         Collection<Constraint> constraints = method.getConstraints();
         List<List<ChoiceNode>> testDomain = method.getTestDomain();
@@ -122,8 +122,8 @@ public class SatSolverConstraintCreatorTest {
     }
 
     @Test
-    public void testMix() {
-        MethodNode method = getMethodMix();
+    public void testAlternate() {
+        MethodNode method = getMethodAlternate();
 
         Collection<Constraint> constraints = method.getConstraints();
         List<List<ChoiceNode>> testDomain = method.getTestDomain();

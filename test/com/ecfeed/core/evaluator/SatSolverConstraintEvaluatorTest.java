@@ -18,17 +18,24 @@ import static org.junit.Assert.fail;
 public class SatSolverConstraintEvaluatorTest {
 
     private int countGeneratedTestCases(String xmlModel) {
-        MethodNode method1 = getMethod(xmlModel);
-
-        MethodNode method2 = MethodDeployer.constructMethod(method1.getMethodParameters(), method1.getConstraintNodes());
-
-        List<List<ChoiceNode>> input = getInput(method2);
-
-        IConstraintEvaluator<ChoiceNode> evaluator = new SatSolverConstraintEvaluator(method2.getConstraints(), method2);
-
         IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
 
-        return getCount(evaluator, algorithm, input);
+        MethodNode method1 = getMethod(xmlModel);
+        MethodNode method2 = MethodDeployer.constructMethod(method1.getMethodParameters(), method1.getConstraintNodes());
+
+        int count2 = countGeneratedTestCases(method2, algorithm);
+        int count1 = countGeneratedTestCases(method1, algorithm);
+
+        assertEquals(count2, count1);
+
+        return count1;
+    }
+
+    private int countGeneratedTestCases(MethodNode method, IAlgorithm<ChoiceNode> algorithm) {
+        List<List<ChoiceNode>> input2 = getInput(method);
+        IConstraintEvaluator<ChoiceNode> evaluator2 = new SatSolverConstraintEvaluator(method.getConstraints(), method);
+
+        return getCount(evaluator2, algorithm, input2);
     }
 
     private MethodNode getMethod(String xmlModel) {
