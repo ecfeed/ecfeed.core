@@ -2,39 +2,24 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.utils.LogHelperCore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChoiceToSolverIdMappings {
 
-    private ParamsWithChInts fChoiceToSolverIdLessEqMappings;
-    private ParamsWithChInts fChoiceToSolverIdLessThMappings;
-    private ParamsWithChInts fChoiceToSolverIdEqualMappings;
-
-    final int fLogLevel = 0;
-
-    public ChoiceToSolverIdMappings() {
-
-        fChoiceToSolverIdLessEqMappings = new ParamsWithChInts("LEQ");
-        LogHelperCore.log("fChoiceToSolverIdLessEqMappings", fChoiceToSolverIdLessEqMappings);
-
-        fChoiceToSolverIdLessThMappings = new ParamsWithChInts("LES");
-        LogHelperCore.log("fChoiceToSolverIdLessThMappings", fChoiceToSolverIdLessThMappings);
-
-        fChoiceToSolverIdEqualMappings = new ParamsWithChInts("EQ");
-        LogHelperCore.log("fChoiceToSolverIdEqualMappings", fChoiceToSolverIdEqualMappings);
-    }
+    private Map<BasicParameterNode, Map<ChoiceNode, Integer>> fLessEqMappings = new HashMap<>();
+    private Map<BasicParameterNode, Map<ChoiceNode, Integer>> fLessThMappings = new HashMap<>();
+    private Map<BasicParameterNode, Map<ChoiceNode, Integer>> fEqualMappings = new HashMap<>();
 
     Map<ChoiceNode, Integer> getEqMapping(BasicParameterNode methodParameterNode) {
 
-        return fChoiceToSolverIdEqualMappings.get(methodParameterNode);
+        return fEqualMappings.get(methodParameterNode);
     }
 
     public boolean eQContainsKey(BasicParameterNode methodParameterNode) {
 
-        return fChoiceToSolverIdEqualMappings.containsKey(methodParameterNode);
+        return fEqualMappings.containsKey(methodParameterNode);
     }
 
     public void eqPut(
@@ -42,36 +27,36 @@ public class ChoiceToSolverIdMappings {
             HashMap<ChoiceNode, Integer> choiceID // TODO - name
     ) {
 
-        fChoiceToSolverIdEqualMappings.put(methodParameterNode, choiceID);
+        fEqualMappings.put(methodParameterNode, choiceID);
     }
 
     public Map<ChoiceNode, Integer> eqGet(BasicParameterNode methodParameterNode) {
 
-        return fChoiceToSolverIdEqualMappings.get(methodParameterNode);
+        return fEqualMappings.get(methodParameterNode);
     }
 
     public void ltPut(
             BasicParameterNode methodParameterNode,
             HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
 
-        fChoiceToSolverIdLessThMappings.put(methodParameterNode, choiceNodeIntegerMap);
+        fLessThMappings.put(methodParameterNode, choiceNodeIntegerMap);
     }
 
     public Map<ChoiceNode, Integer> ltGet(BasicParameterNode methodParameterNode) {
 
-        return fChoiceToSolverIdLessThMappings.get(methodParameterNode);
+        return fLessThMappings.get(methodParameterNode);
     }
 
     public void lePut(
             BasicParameterNode methodParameterNode,
             HashMap<ChoiceNode, Integer> choiceNodeIntegerMap) {
 
-        fChoiceToSolverIdLessEqMappings.put(methodParameterNode, choiceNodeIntegerMap);
+        fLessEqMappings.put(methodParameterNode, choiceNodeIntegerMap);
     }
 
     public Map<ChoiceNode, Integer> leGet(BasicParameterNode methodParameterNode) {
 
-        return fChoiceToSolverIdLessEqMappings.get(methodParameterNode);
+        return fLessEqMappings.get(methodParameterNode);
     }
 
 }

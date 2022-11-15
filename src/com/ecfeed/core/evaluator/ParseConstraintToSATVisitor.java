@@ -17,7 +17,6 @@ import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.IStatementVisitor;
 import com.ecfeed.core.model.LabelCondition;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ParameterCondition;
 import com.ecfeed.core.model.RelationStatement;
@@ -29,87 +28,81 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 class ParseConstraintToSATVisitor implements IStatementVisitor {
-
-    private MethodNode fMethodNode;
-
+    private List<BasicParameterNode> fParameters;
     private EcSatSolver fSat4Solver;
-    private ParamChoiceSets fParamChoiceSets;
-//    private ChoiceMultiMapping fSanitizedValToAtomicVal;
-    private ChoicesMappingsBucket fChoicesMappingBucket;
+    private ParameterChoices fParamChoiceSets;
+    private ChoiceMappings fChoicesMappingBucket;
     private ChoiceToSolverIdMappings fChoiceToSolverIdMappings;
 
-
     public ParseConstraintToSATVisitor(
-            MethodNode methodNode,
+            List<BasicParameterNode> parameters,
             EcSatSolver sat4Solver,
-            ParamChoiceSets paramChoiceSets,
-            ChoicesMappingsBucket choicesMappingsBucket,
+            ParameterChoices paramChoiceSets,
+            ChoiceMappings choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
-        fMethodNode = methodNode;
+        fParameters = parameters;
         fSat4Solver = sat4Solver;
         fParamChoiceSets = paramChoiceSets;
         fChoicesMappingBucket = choicesMappingsBucket;
-
         fChoiceToSolverIdMappings = choiceToSolverIdMappings;
     }
 
     @Override
     public Object visit(StatementArray statement) {
-        Integer myID = fSat4Solver.newId();
+        Integer id = fSat4Solver.newId();
         switch (statement.getOperator()) {
-            case OR: // y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
+// y = (x1 OR x2 OR .. OR xn) compiles to: (NOT x1 OR y) AND ... AND (NOT xn OR y) AND (x1 OR ... OR xn OR NOT y)
+            case OR:
             {
                 List<Integer> bigClause = new ArrayList<>();
+
                 for (AbstractStatement child : statement.getChildren()) {
                     Integer childID = null;
-                    try {
-                        childID = (Integer) child.accept(
-                                new ParseConstraintToSATVisitor(
-                                        fMethodNode,
-                                        fSat4Solver,
-                                        fParamChoiceSets,
-                                        fChoicesMappingBucket,
-                                        fChoiceToSolverIdMappings));
 
+                    try {
+                        childID = (Integer) child.accept(new ParseConstraintToSATVisitor(fParameters, fSat4Solver, fParamChoiceSets, fChoicesMappingBucket,  fChoiceToSolverIdMappings));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     bigClause.add(childID);
-                    fSat4Solver.addSat4Clause(new int[]{-childID, myID}); //small fClauses
+                    fSat4Solver.addSat4Clause(new int[]{-childID, id}); //small fClauses
                 }
-                bigClause.add(-myID);
+
+                bigClause.add(-id);
                 fSat4Solver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray());
+
                 break;
             }
-            case AND: // y = (x1 AND x2 AND .. AND xn) compiles to: (x1 OR NOT y) AND ... AND (xn OR NOT y) AND (NOT x1 OR ... OR NOT xn OR y)
+// y = (x1 AND x2 AND .. AND xn) compiles to: (x1 OR NOT y) AND ... AND (xn OR NOT y) AND (NOT x1 OR ... OR NOT xn OR y)
+            case AND:
             {
                 List<Integer> bigClause = new ArrayList<>();
+
                 for (AbstractStatement child : statement.getChildren()) {
                     Integer childID = null;
+
                     try {
-                        childID = (Integer) child.accept(
-                                new ParseConstraintToSATVisitor(
-                                        fMethodNode,
-                                        fSat4Solver,
-                                        fParamChoiceSets,
-                                        fChoicesMappingBucket,
-                                        fChoiceToSolverIdMappings));
+                        childID = (Integer) child.accept(new ParseConstraintToSATVisitor(fParameters, fSat4Solver, fParamChoiceSets, fChoicesMappingBucket, fChoiceToSolverIdMappings));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     bigClause.add(-childID);
-                    fSat4Solver.addSat4Clause(new int[]{childID, -myID}); //small fClauses
+                    fSat4Solver.addSat4Clause(new int[]{childID, -id}); //small fClauses
                 }
-                bigClause.add(myID);
+
+                bigClause.add(id);
                 fSat4Solver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray());
+
                 break;
             }
             case ASSIGN:
             	break;
         }
 //            statementToID.put(statement,myID); not really necessary, as we are never reusing the same statements
-        return myID;
+        return id;
     }
 
     @Override
@@ -186,12 +179,12 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         Integer myID = fSat4Solver.newId();
 
-        int lParamIndex = fMethodNode.getMethodParameters().indexOf(leftMethodParameterNode);
+        int lParamIndex = fParameters.indexOf(leftMethodParameterNode);
         if (lParamIndex == -1) {
             reportParamWithoutMethodException();
         }
-        for (ChoiceNode lChoice : fParamChoiceSets.atomicGet(leftMethodParameterNode)) {
-            List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fMethodNode.getParametersCount(), null));
+        for (ChoiceNode lChoice : fParamChoiceSets.getAtomic(leftMethodParameterNode)) {
+            List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fParameters.size(), null));
             dummyValues.set(lParamIndex, lChoice);
             EvaluationResult result = statement.evaluate(dummyValues);
             Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.eqGet(leftMethodParameterNode).get(lChoice);
@@ -219,7 +212,7 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         Integer myID = fSat4Solver.newId();
 
-        int lParamIndex = fMethodNode.getMethodParameters().indexOf(lParam);
+        int lParamIndex = fParameters.indexOf(lParam);
         if (lParamIndex == -1) {
             reportParamWithoutMethodException();
         }
@@ -232,15 +225,15 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
                 fChoicesMappingBucket,
                 fChoiceToSolverIdMappings);
 
-        int rParamIndex = fMethodNode.getMethodParameters().indexOf(rParam);
+        int rParamIndex = fParameters.indexOf(rParam);
         if (rParamIndex == -1) {
             reportParamWithoutMethodException();
         }
 
-        List<ChoiceNode> sortedLChoices = new ArrayList<>(fParamChoiceSets.atomicGet(lParam));
+        List<ChoiceNode> sortedLChoices = new ArrayList<>(fParamChoiceSets.getAtomic(lParam));
         Collections.sort(sortedLChoices, new ChoiceNodeComparator());
         int m = sortedLChoices.size();
-        List<ChoiceNode> sortedRChoices = new ArrayList<>(fParamChoiceSets.atomicGet(rParam));
+        List<ChoiceNode> sortedRChoices = new ArrayList<>(fParamChoiceSets.getAtomic(rParam));
         Collections.sort(sortedRChoices, new ChoiceNodeComparator());
         int n = sortedRChoices.size();
 

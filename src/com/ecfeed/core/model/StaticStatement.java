@@ -82,7 +82,13 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public StaticStatement makeClone(){
+	public StaticStatement makeClone() {
+		return new StaticStatement(fValue, getModelChangeRegistrator());
+	}
+
+	@Override
+	public StaticStatement createCopy(MethodNode method) {
+
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
@@ -167,10 +173,10 @@ public class StaticStatement extends AbstractStatement {
 		return new ArrayList<>();
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		return new StaticStatement(fValue, getModelChangeRegistrator());
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		return new StaticStatement(fValue, getModelChangeRegistrator());
+//	}
 
 }

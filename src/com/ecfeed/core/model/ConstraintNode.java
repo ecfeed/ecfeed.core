@@ -70,6 +70,14 @@ public class ConstraintNode extends AbstractNode {
 		return copy;
 	}
 
+	public ConstraintNode createCopy(MethodNode method) {
+
+		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.createCopy(method), getModelChangeRegistrator() );
+		copy.setProperties(getProperties());
+
+		return copy;
+	}
+
 	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, modelChangeRegistrator);
@@ -172,14 +180,16 @@ public class ConstraintNode extends AbstractNode {
 
 	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
 
-		ConstraintNode copy = makeClone();
+		ConstraintNode copy = createCopy(parent);
 
-		if (copy.updateReferences(parent))
-			return copy;
-		else {
+//		if (copy.updateReferences(parent))
+//			return copy;
+//		else {
+//
+//			return null;
+//		}
 
-			return null;
-		}
+		return copy;
 	}
 
 	@Override

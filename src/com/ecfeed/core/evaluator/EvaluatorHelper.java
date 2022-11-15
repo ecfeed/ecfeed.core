@@ -5,19 +5,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeComparator;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class EvaluatorHelper {
 
-    // TODO - where is the output ?
     public static void prepareVariablesForParameter(
             BasicParameterNode methodParameterNode,
-            ParamChoiceSets paramChoiceSets,
+            ParameterChoices paramChoiceSets,
             EcSatSolver satSolver,
-            ChoicesMappingsBucket choicesMappingsBucket,
+            ChoiceMappings choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
         if (choiceToSolverIdMappings.eQContainsKey(methodParameterNode))
@@ -36,7 +35,7 @@ public class EvaluatorHelper {
         HashMap<ChoiceNode, Integer> choiceID = new HashMap<>();
 
 
-        List<ChoiceNode> sortedChoices = new ArrayList<>(paramChoiceSets.atomicGet(methodParameterNode));
+        List<ChoiceNode> sortedChoices = new ArrayList<>(paramChoiceSets.getAtomic(methodParameterNode));
 
         int n = sortedChoices.size();
 
@@ -61,13 +60,13 @@ public class EvaluatorHelper {
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
-        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sainitizedGet(methodParameterNode))
+        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.getSanitized(methodParameterNode))
             if (!choiceID.containsKey(sanitizedChoiceNode)) {
                 Integer sanitizedID = satSolver.newId();
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode atomicValue : choicesMappingsBucket.sanToAtmGet(sanitizedChoiceNode)) {
+                for (ChoiceNode atomicValue : choicesMappingsBucket.getSanitizedToAtomic(sanitizedChoiceNode)) {
                     Integer atomicID = choiceID.get(atomicValue);
                     final int[] clause = {-atomicID, sanitizedID};
                     satSolver.addSat4Clause(clause); // atomicID => sanitizedID
@@ -77,13 +76,13 @@ public class EvaluatorHelper {
                 satSolver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray()); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
             }
 
-        for (ChoiceNode inputValue : paramChoiceSets.inputGet(methodParameterNode))
+        for (ChoiceNode inputValue : paramChoiceSets.getInput(methodParameterNode))
             if (!choiceID.containsKey(inputValue)) {
                 Integer inputID = satSolver.newId();
                 choiceID.put(inputValue, inputID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode sanitizedValue : choicesMappingsBucket.inputToSanGet(methodParameterNode).get(inputValue)) {
+                for (ChoiceNode sanitizedValue : choicesMappingsBucket.getInputToSanitized(methodParameterNode).get(inputValue)) {
                     Integer sanitizedID = choiceID.get(sanitizedValue);
                     satSolver.addSat4Clause(new int[]{-sanitizedID, inputID}); // sanitizedID => inputID
                     bigClause.add(sanitizedID);

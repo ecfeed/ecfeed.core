@@ -39,6 +39,10 @@ public class AbstractStatementTest {
 			return null;
 		}
 		@Override
+		public AbstractStatement createCopy(MethodNode method) {
+			return null;
+		}
+		@Override
 		public boolean updateReferences(IParametersAndConstraintsParentNode method){
 			return true;
 		}
@@ -98,10 +102,10 @@ public class AbstractStatementTest {
 			return null;
 		}
 
-		@Override
-		public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-			return null;
-		}
+//		@Override
+//		public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//			return null;
+//		}
 	}
 
 	@Test
