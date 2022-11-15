@@ -77,7 +77,10 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public List<IAbstractNode> getChildren() {
 		
-		return null;
+		List<IAbstractNode> children = new ArrayList<>();
+		children.addAll(fParametersHolder.getParameters());
+		
+		return children;
 	}
 
 	@Override
