@@ -191,7 +191,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean updateReferences(IParametersAndConstraintsParentNode methodNode) {
 
-		BasicParameterNode tmpParameterNode = methodNode.findParameter(fLeftParameter.getName());
+		AbstractParameterNode tmpParameterNode = methodNode.findParameter(fLeftParameter.getName());
 		BasicParameterNode basicParameterNode = (BasicParameterNode) tmpParameterNode;
 
 		if (tmpParameterNode != null) {

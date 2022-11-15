@@ -94,9 +94,9 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		List<String> parameterTypes = new ArrayList<String>();
 
-		List<BasicParameterNode> parameters = getParameters();
+		List<AbstractParameterNode> parameters = getParameters();
 
-		for (BasicParameterNode abstractParameterNode : parameters) {
+		for (AbstractParameterNode abstractParameterNode : parameters) {
 
 			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
 
@@ -308,7 +308,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	private List<ChoiceNode> getTestDomainForParameterIndex(int parameterIndex) {
 
-		BasicParameterNode abstractParameterNode = getParameter(parameterIndex);
+		BasicParameterNode abstractParameterNode = (BasicParameterNode) getParameter(parameterIndex);
 
 		if (abstractParameterNode instanceof BasicParameterNode) {
 			return getTestDomainForParameterNode(abstractParameterNode);
@@ -613,7 +613,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	public final List<BasicParameterNode> getMethodParameters() {
 		List<BasicParameterNode> result = new ArrayList<>();
-		for(BasicParameterNode parameter : getParameters()){
+		for(AbstractParameterNode parameter : getParameters()){
 			result.add((BasicParameterNode)parameter);
 		}
 		return result;
@@ -664,31 +664,31 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	@Override
-	public void addParameter(BasicParameterNode parameter) {
+	public void addParameter(AbstractParameterNode parameter) {
 		
 		fParametersHolder.addParameter(parameter, this);
 	}
 
 	@Override
-	public void addParameter(BasicParameterNode parameter, int index) {
+	public void addParameter(AbstractParameterNode parameter, int index) {
 		
 		fParametersHolder.addParameter(parameter, index, this);
 	}
 
 	@Override
-	public void addParameters(List<BasicParameterNode> parameters) {
+	public void addParameters(List<AbstractParameterNode> parameters) {
 		
 		fParametersHolder.addParameters(parameters, this);
 	}
 
 	@Override
-	public boolean removeParameter(BasicParameterNode parameter) {
+	public boolean removeParameter(AbstractParameterNode parameter) {
 		
 		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
-	public void replaceParameters(List<BasicParameterNode> parameters) {
+	public void replaceParameters(List<AbstractParameterNode> parameters) {
 		
 		fParametersHolder.replaceParameters(parameters);
 	}
@@ -700,19 +700,19 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	@Override
-	public List<BasicParameterNode> getParameters() {
+	public List<AbstractParameterNode> getParameters() {
 		
 		return fParametersHolder.getParameters();
 	}
 
 	@Override
-	public BasicParameterNode getParameter(int parameterIndex) {
+	public AbstractParameterNode getParameter(int parameterIndex) {
 		
 		return fParametersHolder.getParameter(parameterIndex);
 	}
 
 	@Override
-	public BasicParameterNode findParameter(String parameterNameToFind) {
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
 		
 		return fParametersHolder.findParameter(parameterNameToFind);
 	}

@@ -96,7 +96,7 @@ public class AssignmentStatement extends RelationStatement {
 			ExceptionHelper.reportRuntimeException("Invalid size of test case values list.");
 		}
 
-		List<BasicParameterNode> parameters = methodNode.getParameters();
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
 		int indexOfParameter = parameters.indexOf(methodParameterNode);
 
@@ -120,7 +120,7 @@ public class AssignmentStatement extends RelationStatement {
 	private ChoiceNode createChoiceNodeWithResultValue(
 			List<ChoiceNode> testCaseValues,
 			BasicParameterNode methodParameterNode,
-			List<BasicParameterNode> parameters,
+			List<AbstractParameterNode> parameters,
 			IStatementCondition statementCondition) {
 
 		if (statementCondition instanceof ValueCondition) {
@@ -155,7 +155,8 @@ public class AssignmentStatement extends RelationStatement {
 		return newChoiceNode;
 	}
 
-	private ChoiceNode createChoiceNodeForParameterCondition(List<ChoiceNode> testCaseValues, List<BasicParameterNode> parameters, ParameterCondition parameterCondition) {
+	private ChoiceNode createChoiceNodeForParameterCondition(
+			List<ChoiceNode> testCaseValues, List<AbstractParameterNode> parameters, ParameterCondition parameterCondition) {
 
 		BasicParameterNode rightParameterNode = parameterCondition.getRightParameterNode();
 

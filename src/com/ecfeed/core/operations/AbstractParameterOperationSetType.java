@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -149,9 +150,12 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 		if(methodNode.getName().equals(testedMethod.getName())
 				&& methodNode.getParameters().size() == testedMethod.getParameters().size()){
 			// if method links edited global parameter - replace types before matching
+			
 			if(target.getMethods().contains(methodNode)){
+				
 				List<String> types = methodNode.getParameterTypes();
-				for(BasicParameterNode parameter: methodNode.getParameters()){
+				
+				for(AbstractParameterNode parameter: methodNode.getParameters()){
 					BasicParameterNode param = (BasicParameterNode)parameter;
 					if(param.isLinked() && param.getLinkToGlobalParameter().equals(target)){
 						types.set(parameter.getMyIndex(), fNewTypeInIntrLanguage);

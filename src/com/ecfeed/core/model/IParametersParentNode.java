@@ -14,18 +14,18 @@ import java.util.List;
 
 public interface IParametersParentNode extends IAbstractNode {
 
-	public void addParameter(BasicParameterNode parameter);	
-	public void addParameter(BasicParameterNode parameter, int index);
-	public void addParameters(List<BasicParameterNode> parameters);
+	public void addParameter(AbstractParameterNode parameter);	
+	public void addParameter(AbstractParameterNode parameter, int index);
+	public void addParameters(List<AbstractParameterNode> parameters);
 	
-	public boolean removeParameter(BasicParameterNode parameter);
-	public void replaceParameters(List<BasicParameterNode> parameters);
+	public boolean removeParameter(AbstractParameterNode parameter);
+	public void replaceParameters(List<AbstractParameterNode> parameters);
 
 	public int getParametersCount();
-	public List<BasicParameterNode> getParameters();
-	public BasicParameterNode getParameter(int parameterIndex);
+	public List<AbstractParameterNode> getParameters();
+	public AbstractParameterNode getParameter(int parameterIndex);
 
-	public BasicParameterNode findParameter(String parameterNameToFind);
+	public AbstractParameterNode findParameter(String parameterNameToFind);
 	public int getParameterIndex(String parameterName);
 
 	public boolean parameterExists(String parameterName);

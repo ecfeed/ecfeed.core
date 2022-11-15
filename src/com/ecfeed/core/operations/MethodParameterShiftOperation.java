@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.Arrays;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -25,10 +26,10 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterShiftOperation extends GenericShiftOperation {
 
-	private List<BasicParameterNode> fParameters;
+	private List<AbstractParameterNode> fParameters;
 
 	public MethodParameterShiftOperation(
-			List<BasicParameterNode> parameters, 
+			List<AbstractParameterNode> parameters, 
 			IAbstractNode shifted, 
 			boolean up,
 			IExtLanguageManager extLanguageManager) {
@@ -37,7 +38,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	}
 
 	public MethodParameterShiftOperation(
-			List<BasicParameterNode> parameters, 
+			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			boolean up, 
 			IExtLanguageManager extLanguageManager) {
@@ -46,7 +47,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	}
 
 	public MethodParameterShiftOperation(
-			List<BasicParameterNode> parameters, 
+			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			int shift,
 			IExtLanguageManager extLanguageManager) {

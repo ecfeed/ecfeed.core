@@ -41,6 +41,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_A
 import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
@@ -93,7 +94,7 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		for (BasicParameterNode parameterNode : rootNode.getParameters()) {
+		for (AbstractParameterNode parameterNode : rootNode.getParameters()) {
 
 			BasicParameterNode globalParameterNode = (BasicParameterNode)parameterNode;
 			
