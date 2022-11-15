@@ -515,27 +515,27 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return result;
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-
-		MethodParameterNode sourceParameter = getLeftParameter();
-		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
-		
-		IStatementCondition sourceCondition = getCondition();
-		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
-
-		EMathRelation sourceRelation = getRelation();
-
-		RelationStatement deployedRelationStatement = 
-				new RelationStatement(
-						deployedParameter, 
-						sourceRelation, 
-						deployedStatementCondition);
-
-		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
-
-		return deployedRelationStatement;
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		MethodParameterNode sourceParameter = getLeftParameter();
+//		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+//
+//		IStatementCondition sourceCondition = getCondition();
+//		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
+//
+//		EMathRelation sourceRelation = getRelation();
+//
+//		RelationStatement deployedRelationStatement =
+//				new RelationStatement(
+//						deployedParameter,
+//						sourceRelation,
+//						deployedStatementCondition);
+//
+//		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
+//
+//		return deployedRelationStatement;
+//	}
 
 }
 

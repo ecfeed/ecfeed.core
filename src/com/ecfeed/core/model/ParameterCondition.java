@@ -357,22 +357,22 @@ public class ParameterCondition implements IStatementCondition {
 		return null;
 	}
 
-	@Override
-	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		MethodParameterNode sourcMethodParameterNode = getRightParameterNode();
-		MethodParameterNode deployedMethodParameterNode = 
-				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
-		
-		RelationStatement deployedParentRelationStatement = 
-				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
-
-		ParameterCondition deployedParameterCondition = 
-				new ParameterCondition(
-						deployedMethodParameterNode, 
-						deployedParentRelationStatement); 
-
-		return deployedParameterCondition;
-	}
+//	@Override
+//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		MethodParameterNode sourcMethodParameterNode = getRightParameterNode();
+//		MethodParameterNode deployedMethodParameterNode =
+//				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
+//
+//		RelationStatement deployedParentRelationStatement =
+//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+//
+//		ParameterCondition deployedParameterCondition =
+//				new ParameterCondition(
+//						deployedMethodParameterNode,
+//						deployedParentRelationStatement);
+//
+//		return deployedParameterCondition;
+//	}
 
 }	

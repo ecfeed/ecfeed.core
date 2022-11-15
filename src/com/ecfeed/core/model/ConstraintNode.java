@@ -70,7 +70,7 @@ public class ConstraintNode extends AbstractNode{
 		return copy;
 	}
 
-	public ConstraintNode makeClone(MethodNode method) {
+	public ConstraintNode createCopy(MethodNode method) {
 
 		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.createCopy(method), getModelChangeRegistrator() );
 		copy.setProperties(getProperties());
@@ -180,7 +180,7 @@ public class ConstraintNode extends AbstractNode{
 
 	public ConstraintNode getCopy(MethodNode method) {
 
-		ConstraintNode copy = makeClone(method);
+		ConstraintNode copy = createCopy(method);
 
 //		if (copy.updateReferences(method))
 //			return copy;

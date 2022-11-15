@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
@@ -100,9 +101,19 @@ public class MethodParameterNode extends AbstractParameterNode {
 
 	@Override
 	public MethodParameterNode makeClone() {
-		MethodParameterNode copy = 
+
+		return copy(ChoiceNode::makeClone);
+	}
+
+	public MethodParameterNode createCopy() {
+
+		return copy(ChoiceNode::createCopy);
+	}
+
+	private MethodParameterNode copy(UnaryOperator<ChoiceNode> operator) {
+		MethodParameterNode copy =
 				new MethodParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
-						);
+				);
 
 		copy.fLinked = fLinked;
 		copy.fLinkToGlobalParameter = fLinkToGlobalParameter;
@@ -114,10 +125,11 @@ public class MethodParameterNode extends AbstractParameterNode {
 			copy.setDefaultValueString(getDefaultValue());
 
 		for (ChoiceNode choice : getChoices()) {
-			copy.addChoice(choice.makeClone());
+			copy.addChoice(operator.apply(choice));
 		}
 
 		copy.setParent(getParent());
+
 		return copy;
 	}
 

@@ -434,18 +434,18 @@ public class StatementArray extends AbstractStatement {
 		}
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-
-		StatementArray deployedStatementArray = new StatementArray(getOperator());
-
-		for (AbstractStatement sourceAbstractStatement : fStatements) {
-
-			AbstractStatement deployedStatement = sourceAbstractStatement.createDeepCopy(deploymentMapper);
-			deployedStatementArray.addStatement(deployedStatement);
-		}
-
-		return deployedStatementArray;
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		StatementArray deployedStatementArray = new StatementArray(getOperator());
+//
+//		for (AbstractStatement sourceAbstractStatement : fStatements) {
+//
+//			AbstractStatement deployedStatement = sourceAbstractStatement.createDeepCopy(deploymentMapper);
+//			deployedStatementArray.addStatement(deployedStatement);
+//		}
+//
+//		return deployedStatementArray;
+//	}
 
 }

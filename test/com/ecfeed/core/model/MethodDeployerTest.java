@@ -37,7 +37,7 @@ public class MethodDeployerTest {
 
 		assertNotNull(deployedMethod);
 		assertFalse(sourceMethod.hashCode() == deployedMethod.hashCode());
-		assertEquals(sourceMethod.getName(), deployedMethod.getName());
+		assertEquals(sourceMethod.getName() + "_" + MethodDeployer.POSTFIX, deployedMethod.getName());
 
 		assertEquals(0, deployedMethod.getParameters().size());
 	}

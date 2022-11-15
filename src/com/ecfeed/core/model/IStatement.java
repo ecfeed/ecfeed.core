@@ -30,6 +30,6 @@ public interface IStatement{
 	public void derandomize();
 	public AbstractStatement makeClone();
 	AbstractStatement createCopy(MethodNode method);
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper);
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper);
 	
 }

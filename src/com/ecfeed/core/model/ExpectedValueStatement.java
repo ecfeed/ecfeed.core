@@ -262,24 +262,24 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return new ArrayList<>();
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		MethodParameterNode sourceParameter = getLeftMethodParameterNode();
-		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
-
-		ChoiceNode sourceChoiceNode = getChoice();
-		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
-
-		IPrimitiveTypePredicate deployedPredicate = getPredicate();
-
-		ExpectedValueStatement expectedValueStatement = 
-				new ExpectedValueStatement(
-						deployedParameter, 
-						deployedChoiceNode, 
-						deployedPredicate);
-
-		return expectedValueStatement;
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		MethodParameterNode sourceParameter = getLeftMethodParameterNode();
+//		MethodParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+//
+//		ChoiceNode sourceChoiceNode = getChoice();
+//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+//
+//		IPrimitiveTypePredicate deployedPredicate = getPredicate();
+//
+//		ExpectedValueStatement expectedValueStatement =
+//				new ExpectedValueStatement(
+//						deployedParameter,
+//						deployedChoiceNode,
+//						deployedPredicate);
+//
+//		return expectedValueStatement;
+//	}
 
 }

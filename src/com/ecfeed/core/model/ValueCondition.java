@@ -228,22 +228,22 @@ public class ValueCondition implements IStatementCondition {
 		return null;
 	}
 
-	@Override
-	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		String deployedRightValue = getRightValue();
-		
-		RelationStatement deployedParentRelationStatement = 
-				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
-
-		ValueCondition deployedValueCondition = 
-				new ValueCondition(
-						deployedRightValue, 
-						deployedParentRelationStatement);
-
-		return deployedValueCondition;
-		
-	}
+//	@Override
+//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		String deployedRightValue = getRightValue();
+//
+//		RelationStatement deployedParentRelationStatement =
+//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+//
+//		ValueCondition deployedValueCondition =
+//				new ValueCondition(
+//						deployedRightValue,
+//						deployedParentRelationStatement);
+//
+//		return deployedValueCondition;
+//
+//	}
 
 }	
 

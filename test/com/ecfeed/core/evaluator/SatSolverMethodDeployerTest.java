@@ -64,7 +64,7 @@ public class SatSolverMethodDeployerTest {
         constraints.addAll(m1.getConstraintNodes());
         constraints.addAll(m2.getConstraintNodes());
 
-        return MethodDeployer.constructMethod(parameters, constraints);
+        return MethodDeployer.construct(parameters, constraints);
     }
 
     public static MethodNode getMethodAlternate() {
@@ -80,7 +80,7 @@ public class SatSolverMethodDeployerTest {
         constraints.addAll(m1.getConstraintNodes());
         constraints.addAll(m2.getConstraintNodes());
 
-        return MethodDeployer.constructMethod(parameters, constraints);
+        return MethodDeployer.construct(parameters, constraints);
     }
 
     @Test

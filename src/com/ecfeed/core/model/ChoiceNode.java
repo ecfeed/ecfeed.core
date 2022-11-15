@@ -150,7 +150,6 @@ public class ChoiceNode extends ChoicesParentNode {
 
 	@Override
 	public ChoiceNode makeClone(){
-
 		ChoiceNode copy = makeCloneUnlink();
 
 		if(isClone())
@@ -174,6 +173,14 @@ public class ChoiceNode extends ChoicesParentNode {
 		}
 
 		copy.setRandomizedValue(fIsRandomizedValue);
+		return copy;
+	}
+
+	public ChoiceNode createCopy() {
+		ChoiceNode copy = makeClone();
+
+		copy.setOtherChoice(this);
+
 		return copy;
 	}
 

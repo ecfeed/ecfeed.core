@@ -173,10 +173,10 @@ public class StaticStatement extends AbstractStatement {
 		return new ArrayList<>();
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		return new StaticStatement(fValue, getModelChangeRegistrator());
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		return new StaticStatement(fValue, getModelChangeRegistrator());
+//	}
 
 }
