@@ -82,7 +82,7 @@ public class ParameterTransformer {
 
 	public static void unlinkMethodParameteFromGlobalParameter(
 			BasicParameterNode methodParameterNode,
-			BasicParameterNode globalParameterNode, 
+			AbstractParameterNode globalParameterNode, 
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -108,11 +108,16 @@ public class ParameterTransformer {
 
 		List<ParameterConversionItem> parameterConversionItems = new ArrayList<>();
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
-				globalParameterNode, methodParameterNode, 
-				reverseOperationsForChoicesCopy,
-				parameterConversionItems,
-				extLanguageManager);
+		if (globalParameterNode instanceof BasicParameterNode) {
+		
+			BasicParameterNode global2 = (BasicParameterNode) globalParameterNode; 
+					
+			ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
+					global2, methodParameterNode, 
+					reverseOperationsForChoicesCopy,
+					parameterConversionItems,
+					extLanguageManager);
+		}
 
 		convertConstraints(
 				methodNode, 
@@ -273,7 +278,7 @@ public class ParameterTransformer {
 
 	private static void convertConstraints(
 			MethodNode methodNode, 
-			BasicParameterNode srcParameterNode,
+			AbstractParameterNode srcParameterNode,
 			BasicParameterNode dstParameterNode, 
 			List<ParameterConversionItem> parameterConversionItems,
 			ListOfModelOperations outReverseOperations, 
@@ -289,7 +294,7 @@ public class ParameterTransformer {
 
 	private static void checkParametersForNotNull(
 			BasicParameterNode methodParameterNode,
-			BasicParameterNode dstGlobalParameterNode) {
+			AbstractParameterNode dstGlobalParameterNode) {
 
 		if (methodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty method parameter.");

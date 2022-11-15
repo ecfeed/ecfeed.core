@@ -79,7 +79,7 @@ public class GlobalParameterNodeHelper {
 	}
 
 	public static String createSignature(
-			BasicParameterNode globalParameterNode, 
+			AbstractParameterNode globalParameterNode, 
 			SignatureType signatureType,
 			IExtLanguageManager extLanguageManager) {
 
@@ -89,7 +89,13 @@ public class GlobalParameterNodeHelper {
 			return qualifiedName;
 		}
 
-		String type = getType(globalParameterNode, extLanguageManager);
+		String type = "";
+		
+		if (globalParameterNode instanceof BasicParameterNode) {
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode)globalParameterNode;
+			type = getType(basicParameterNode, extLanguageManager);
+		}
 
 		return type + " " + qualifiedName;
 	}
