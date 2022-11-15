@@ -49,7 +49,7 @@ public class SatSolverConstraintEvaluatorTest {
     private List<List<ChoiceNode>> getInput(MethodNode method) {
         List<List<ChoiceNode>> input = new ArrayList<>();
 
-        for (MethodParameterNode arg : method.getMethodParameters()) {
+        for (BasicParameterNode arg : method.getMethodParameters()) {
             if (arg.isExpected()) {
                 input.add(Collections.singletonList(null));
             } else {

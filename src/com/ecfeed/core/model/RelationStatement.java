@@ -189,7 +189,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement createCopy(MethodNode method) {
+	public RelationStatement createCopy(IParametersAndConstraintsParentNode method) {
 
 		RelationStatement statement = new RelationStatement(updateParameterReference(method), fRelation, null);
 
@@ -199,7 +199,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return statement;
 	}
 
-	private BasicParameterNode updateParameterReference(MethodNode method) {
+	private BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
 
 		return (BasicParameterNode) method.findParameter(fLeftParameter.getName());
 	}

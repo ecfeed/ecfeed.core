@@ -162,12 +162,12 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ParameterCondition createCopy(MethodNode method, RelationStatement statement) {
+	public ParameterCondition createCopy(IParametersAndConstraintsParentNode method, RelationStatement statement) {
 
 		return new ParameterCondition(updateParameterReference(method), statement);
 	}
 
-	private BasicParameterNode updateParameterReference(MethodNode method) {
+	private BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
 
 		return (BasicParameterNode) method.findParameter(fRightParameterNode.getName());
 	}

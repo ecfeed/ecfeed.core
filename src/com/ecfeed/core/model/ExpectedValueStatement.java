@@ -160,16 +160,16 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public ExpectedValueStatement createCopy(MethodNode method) {
+	public ExpectedValueStatement createCopy(IParametersAndConstraintsParentNode method) {
 
 		return new ExpectedValueStatement(makeCloneParameter(method), fChoiceNode.makeClone(), fPredicate);
 	}
 
-	public BasicParameterNode makeCloneParameter(MethodNode method) {
+	public BasicParameterNode makeCloneParameter(IParametersAndConstraintsParentNode method) {
 
-		for (BasicParameterNode parameter : method.getMethodParameters()) {
+		for (AbstractParameterNode parameter : method.getParameters()) {
 			if (parameter.getName().equals(fLeftMethodParameterNode.getName())) {
-				return parameter;
+				return (BasicParameterNode) parameter;
 			}
 		}
 

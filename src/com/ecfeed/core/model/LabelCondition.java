@@ -97,7 +97,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public LabelCondition createCopy(MethodNode method, RelationStatement statement) {
+	public LabelCondition createCopy(IParametersAndConstraintsParentNode method, RelationStatement statement) {
 
 		return new LabelCondition(fRightLabel, statement);
 	}

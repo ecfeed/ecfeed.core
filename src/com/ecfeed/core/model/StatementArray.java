@@ -175,7 +175,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public StatementArray createCopy(MethodNode method) {
+	public StatementArray createCopy(IParametersAndConstraintsParentNode method) {
 
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
