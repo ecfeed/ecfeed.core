@@ -10,11 +10,14 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class CompositeParameterNode extends AbstractParameterNode {
+public class CompositeParameterNode extends AbstractParameterNode implements IParametersParentNode {
+	
+	private ParametersHolder fParametersHolder; 
 
 	public CompositeParameterNode(
 			String name,
@@ -23,6 +26,8 @@ public class CompositeParameterNode extends AbstractParameterNode {
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+		
+		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
 
 		createDefaultProperties();
 	}
@@ -92,14 +97,103 @@ public class CompositeParameterNode extends AbstractParameterNode {
 	}
 
 	private void createDefaultProperties() {
-		// TODO
+		// TODO MO-RE
 	}
 
 	@Override
 	public Object accept(IModelVisitor visitor) throws Exception {
-		// TODO
+		// TODO NO-RE
 		return null;
 		//return visitor.visit(this);
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter) {
+		
+		fParametersHolder.addParameter(parameter, this);
+	}
+
+	@Override
+	public void addParameter(AbstractParameterNode parameter, int index) {
+		
+		fParametersHolder.addParameter(parameter, index, this);
+	}
+
+	@Override
+	public void addParameters(List<AbstractParameterNode> parameters) {
+		
+		fParametersHolder.addParameters(parameters, this);
+	}
+
+	@Override
+	public boolean removeParameter(AbstractParameterNode parameter) {
+		
+		return fParametersHolder.removeParameter(parameter);
+	}
+
+	@Override
+	public void replaceParameters(List<AbstractParameterNode> parameters) {
+		
+		fParametersHolder.replaceParameters(parameters);
+	}
+
+	@Override
+	public int getParametersCount() {
+		
+		return fParametersHolder.getParametersCount();
+	}
+
+	@Override
+	public List<AbstractParameterNode> getParameters() {
+		
+		return fParametersHolder.getParameters();
+	}
+
+	@Override
+	public AbstractParameterNode getParameter(int parameterIndex) {
+		
+		return fParametersHolder.getParameter(parameterIndex);
+	}
+
+	@Override
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
+		
+		return fParametersHolder.findParameter(parameterNameToFind);
+	}
+
+	@Override
+	public int getParameterIndex(String parameterName) {
+		
+		return fParametersHolder.getParameterIndex(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(String parameterName) {
+		
+		return fParametersHolder.parameterExists(parameterName);
+	}
+
+	@Override
+	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
+		
+		return fParametersHolder.parameterExists(abstractParameterNode);
+	}
+
+	@Override
+	public List<String> getParameterTypes() {
+		return new ArrayList<String>();
+	}
+
+	@Override
+	public List<String> getParametersNames() {
+		
+		return fParametersHolder.getParametersNames();
+	}
+
+	@Override
+	public String generateNewParameterName(String startParameterName) {
+		
+		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 	
 }
