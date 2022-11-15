@@ -45,7 +45,6 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 				methodNode.replaceTestCases(fOriginalTestCases);
 				methodNode.replaceConstraints(fOriginalConstraints);
 				reparentConstraints(methodNode);
-				fTarget.setLinked(!fLinked);
 			}
 
 			private void reparentConstraints(MethodNode methodNode) {
@@ -92,7 +91,6 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
-			fTarget.setLinked(fLinked);
 			fOriginalTestCases = new ArrayList<>(method.getTestCases());
 			fOriginalConstraints = new ArrayList<>(method.getConstraintNodes());
 

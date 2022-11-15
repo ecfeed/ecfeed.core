@@ -27,7 +27,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fTypeComments;
 	private boolean fExpected;
 	private String fDefaultValue;
-	private boolean fLinked;
+//	private boolean fLinked;
 	private BasicParameterNode fLinkToGlobalParameter;
 	private MethodNode fLinkToMethod;
 	private List<ChoiceNode> fChoicesCopy;
@@ -39,7 +39,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			String type,
 			String defaultValue,
 			boolean expected,
-			boolean linked,
+//			boolean linked,
 			BasicParameterNode link,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
@@ -50,7 +50,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fType = type;
 		fExpected = expected;
 		fDefaultValue = defaultValue;
-		fLinked = linked;
 		fLinkToGlobalParameter = link;
 		
 		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
@@ -65,7 +64,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			boolean expected,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		this(name, type, defaultValue, expected, false, null, modelChangeRegistrator);
+		this(name, type, defaultValue, expected, null, modelChangeRegistrator);
 	}
 
 	public BasicParameterNode(
@@ -73,7 +72,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			String type,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		this(name, type, null, false, false, null, modelChangeRegistrator);
+		this(name, type, null, false, null, modelChangeRegistrator);
 	}
 	
 	public BasicParameterNode(
@@ -89,17 +88,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			BasicParameterNode source,
 			String defaultValue, 
 			boolean expected, 
-			boolean linked,
 			BasicParameterNode link) {
 
-		this(source.getName(), source.getType(), defaultValue, expected, linked, link, source.getModelChangeRegistrator());
+		this(source.getName(), source.getType(), defaultValue, expected, link, source.getModelChangeRegistrator());
 
 		addChoices(source.getChoices());
 	}
 
 	public BasicParameterNode(BasicParameterNode source,
 			String defaultValue, boolean expected) {
-		this(source, defaultValue, expected, false, null);
+		this(source, defaultValue, expected, null);
 	}
 
 	public BasicParameterNode(BasicParameterNode source) {
@@ -109,7 +107,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 				source.getType(),
 				source.getDefaultValue(),
 				source.fExpected,
-				source.fLinked,
 				source.fLinkToGlobalParameter,
 				source.getModelChangeRegistrator());
 		
@@ -156,7 +153,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
 						);
 
-		copy.fLinked = fLinked;
 		copy.fLinkToGlobalParameter = fLinkToGlobalParameter;
 
 		copy.setProperties(getProperties());
@@ -361,13 +357,12 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public boolean isLinked() {
-		return fLinked;
-	}
-
-	public void setLinked(boolean linked) {
-
-		fLinked = linked;
-		registerChange();
+		
+		if (fLinkToGlobalParameter != null) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	public BasicParameterNode getLinkToGlobalParameter() {

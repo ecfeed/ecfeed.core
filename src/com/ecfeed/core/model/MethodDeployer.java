@@ -110,7 +110,6 @@ public abstract class MethodDeployer {
 		// MethodParameterNode linkedMethod = deployedMethodParameterNode.getLinkToMethod();
 		// MethodAndStructureParent linked = deployedMethodParameterNode.getLinkToMethodAndStructureParent();
 
-		deployedMethodParameterNode.setLinked(sourceMethodParameterNode.isLinked());
 		deployedMethodParameterNode.setLinkToGlobalParameter(sourceMethodParameterNode.getLinkToGlobalParameter());
 		deployedMethodParameterNode.setProperties(sourceMethodParameterNode.getProperties());
 		deployedMethodParameterNode.setDefaultValueString(sourceMethodParameterNode.getDefaultValue());
@@ -207,7 +206,6 @@ public abstract class MethodDeployer {
 							parameterType,
 							defaultValue,
 							isExpected,
-							false,
 							null,
 							null);
 

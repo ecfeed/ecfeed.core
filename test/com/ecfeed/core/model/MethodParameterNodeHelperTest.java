@@ -59,8 +59,6 @@ public class MethodParameterNodeHelperTest {
 		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
 		methodParameterNode.setLinkToGlobalParameter(globalParameterNode);
 
-		methodParameterNode.setLinked(true);
-
 		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]String par_1[LINKED]->global_1", signature);
 
@@ -94,8 +92,6 @@ public class MethodParameterNodeHelperTest {
 
 		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
 		methodParameterNode.setLinkToGlobalParameter(globalParameterNode);
-
-		methodParameterNode.setLinked(true);
 
 		signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]par_1 : String [LINKED]->global_1", signature);

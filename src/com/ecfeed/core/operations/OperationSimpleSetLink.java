@@ -42,10 +42,8 @@ public class OperationSimpleSetLink extends AbstractModelOperation {
 
 		if (link == null) {
 			fMethodParameterNode.setLinkToGlobalParameter(null);
-			fMethodParameterNode.setLinked(false);
 		} else {
 			fMethodParameterNode.setLinkToGlobalParameter(link);
-			fMethodParameterNode.setLinked(true);
 		}
 	}
 

@@ -153,7 +153,7 @@ public class LanguageMethodParser {
 
 		BasicParameterNode methodParameterNode = 
 				new BasicParameterNode(
-						name, type, JavaLanguageHelper.getDefaultValue(type), false, false, null, null);
+						name, type, JavaLanguageHelper.getDefaultValue(type), false, null, null);
 
 		return methodParameterNode;
 	}

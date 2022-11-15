@@ -134,7 +134,6 @@ public class ParameterTransformer {
 
 
 		srcMethodParameterNode.setLinkToGlobalParameter(dstParameterForChoices);
-		srcMethodParameterNode.setLinked(true);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 
 				new OperationSimpleSetLink(
@@ -311,7 +310,6 @@ public class ParameterTransformer {
 		BasicParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLinkToGlobalParameter();
 
 		srcMethodParameterNode.setLinkToGlobalParameter(null);
-		srcMethodParameterNode.setLinked(false);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 
 				new OperationSimpleSetLink(
