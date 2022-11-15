@@ -11,7 +11,6 @@
 package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class CompositeParameterNodeTest {
 	}
 
 	@Test
-	public void getChilderTest() {
+	public void getChildrenTest() {
 		
 		String parameterName1 = "name1";
 		String parameterName2 = "name2";
@@ -40,11 +39,32 @@ public class CompositeParameterNodeTest {
 		
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(parameterName1, null);
 		
+		List<IAbstractNode> children = compositeParameterNode.getChildren();
+		assertEquals(0, children.size());
+		
 		compositeParameterNode.addParameter(basicParameterNode1);
 		compositeParameterNode.addParameter(basicParameterNode2);
 
-		List<IAbstractNode>children = compositeParameterNode.getChildren();
+		children = compositeParameterNode.getChildren();
 		assertEquals(2, children.size());
+		
+		compositeParameterNode.removeParameter(basicParameterNode2);
+		children = compositeParameterNode.getChildren();
+		assertEquals(1, children.size());
+	}
+
+	@Test
+	public void isGlobalParameterTest() {
+		
+		String name = "parameterName";
+		
+		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(name, null);
+		assertEquals(false, compositeParameterNode.isGlobalParameter());
+		
+		RootNode rootNode = new RootNode("root", null);
+		rootNode.addParameter(compositeParameterNode);
+		
+		assertEquals(true, compositeParameterNode.isGlobalParameter());
 	}
 	
 }

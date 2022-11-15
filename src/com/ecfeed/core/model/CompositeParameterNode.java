@@ -36,6 +36,10 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		
 		IAbstractNode parent = getParent();
 		
+		if (parent == null) {
+			return false;
+		}
+		
 		if (parent instanceof MethodNode) {
 			return false;
 		}
@@ -87,6 +91,12 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	public boolean isMatch(IAbstractNode other) {
 		
 		if (other instanceof CompositeParameterNode == false) {
+			return false;
+		}
+		
+		CompositeParameterNode otherComposite = (CompositeParameterNode) other;
+		
+		if (!fParametersHolder.isMatch(otherComposite.fParametersHolder)) {
 			return false;
 		}
 		
