@@ -309,7 +309,6 @@ public class MethodNodeHelper {
 			MethodNode methodNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
-		methodParameterNode.setLinked(true);
 		methodParameterNode.setLinkToGlobalParameter(linkToGlobalParameter);
 		methodNode.addParameter(methodParameterNode);
 
