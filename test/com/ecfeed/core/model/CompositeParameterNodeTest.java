@@ -11,6 +11,8 @@
 package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -66,5 +68,32 @@ public class CompositeParameterNodeTest {
 		
 		assertEquals(true, compositeParameterNode.isGlobalParameter());
 	}
+	
+	@Test
+	public void isMatchTest() {
+		
+		String parameterName1 = "name";
+		
+		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode(parameterName1, null);
+		CompositeParameterNode compositeParameterNode2 = new CompositeParameterNode(parameterName1, null);
+		assertTrue(compositeParameterNode1.isMatch(compositeParameterNode2));
+		
+		BasicParameterNode basicParameterNode1 = new BasicParameterNode(parameterName1, "int", null);
+		compositeParameterNode1.addParameter(basicParameterNode1);
+		assertFalse(compositeParameterNode1.isMatch(compositeParameterNode2));
+		
+		BasicParameterNode basicParameterNode2 = new BasicParameterNode(parameterName1, "int", null);
+		compositeParameterNode2.addParameter(basicParameterNode2);
+		assertTrue(compositeParameterNode1.isMatch(compositeParameterNode2));
+		
+		ChoiceNode choiceNode1 = new ChoiceNode("choice", "1");
+		basicParameterNode1.addChoice(choiceNode1);
+		assertFalse(compositeParameterNode1.isMatch(compositeParameterNode2));
+		
+		ChoiceNode choiceNode2 = new ChoiceNode("choice", "1");
+		basicParameterNode2.addChoice(choiceNode2);
+		assertTrue(compositeParameterNode1.isMatch(compositeParameterNode2));
+	}
+	
 	
 }
