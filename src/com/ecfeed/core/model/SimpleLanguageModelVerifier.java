@@ -109,7 +109,7 @@ public class SimpleLanguageModelVerifier {
 	//			
 	//			if (currentSimpleName.equals(nextSimpleName)) {
 	//
-	//				// TODO - this function can be  called from simple (rename) and java view - adjust message acccordingly - node names are always in java convention
+	//				// this function can be  called from simple (rename) and java view - adjust message acccordingly - node names are always in java convention
 	//				String errorMessage = "Model is not compatible with simple view mode because global parameters: " + 
 	//				currentPair.getSecond() + " and " + nextPair.getSecond()
 	//				+ " would have the same name in the simple view mode.";

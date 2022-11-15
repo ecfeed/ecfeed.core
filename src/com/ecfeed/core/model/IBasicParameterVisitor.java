@@ -10,6 +10,6 @@
 
 package com.ecfeed.core.model;
 
-public interface IParameterVisitor {
+public interface IBasicParameterVisitor {
 	public Object visit(BasicParameterNode node) throws Exception;
 }

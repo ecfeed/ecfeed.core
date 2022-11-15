@@ -11,7 +11,7 @@ package com.ecfeed.core.export;
 
 import java.util.List;
 
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -56,7 +56,7 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 		return "\t]\n} ";
 	}
 
-	private static String createDefaultTestCaseTemplate(List<BasicParameterNode> parameters) {
+	private static String createDefaultTestCaseTemplate(List<AbstractParameterNode> parameters) {
 
 		StringBuilder template = new StringBuilder();
 
@@ -69,7 +69,7 @@ public class JsonExportTemplate extends AbstractExportTemplate {
 		return template.toString();
 	}
 
-	private static String createParametersTemplate(List<BasicParameterNode> parameters) {
+	private static String createParametersTemplate(List<AbstractParameterNode> parameters) {
 
 		StringBuilder template = new StringBuilder();
 

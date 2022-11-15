@@ -58,7 +58,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 
 		copy.setProperties(getProperties());
 
-		for (BasicParameterNode abstractParameterNode : getParameters()) {
+		for (AbstractParameterNode abstractParameterNode : getParameters()) {
 			
 			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 			copy.addParameter(globalParameterNode.makeClone());
@@ -153,11 +153,10 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		return visitor.visit(this);
 	}
 
-	@Override
-	public List<MethodNode> getMethods(BasicParameterNode parameter) {
+	public List<MethodNode> getChildMethods(BasicParameterNode parameter) {
 		List<MethodNode> result = new ArrayList<>();
 		for(ClassNode classNode : getClasses()){
-			result.addAll(classNode.getMethods(parameter));
+			result.addAll(classNode.getChildMethods(parameter));
 		}
 		return result;
 	} 
@@ -172,31 +171,31 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
-	public void addParameter(BasicParameterNode parameter) {
+	public void addParameter(AbstractParameterNode parameter) {
 		
 		fParametersHolder.addParameter(parameter, this);
 	}
 
 	@Override
-	public void addParameter(BasicParameterNode parameter, int index) {
+	public void addParameter(AbstractParameterNode parameter, int index) {
 		
 		fParametersHolder.addParameter(parameter, index, this);
 	}
 	
 	@Override
-	public void addParameters(List<BasicParameterNode> parameters) {
+	public void addParameters(List<AbstractParameterNode> parameters) {
 		
 		fParametersHolder.addParameters(parameters, this);
 	}
 
 	@Override
-	public boolean removeParameter(BasicParameterNode parameter) {
+	public boolean removeParameter(AbstractParameterNode parameter) {
 		
 		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
-	public void replaceParameters(List<BasicParameterNode> parameters) {
+	public void replaceParameters(List<AbstractParameterNode> parameters) {
 		
 		fParametersHolder.replaceParameters(parameters);
 	}
@@ -208,19 +207,19 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	@Override
-	public List<BasicParameterNode> getParameters() {
+	public List<AbstractParameterNode> getParameters() {
 		
 		return fParametersHolder.getParameters();
 	}
 
 	@Override
-	public BasicParameterNode getParameter(int parameterIndex) {
+	public AbstractParameterNode getParameter(int parameterIndex) {
 		
 		return fParametersHolder.getParameter(parameterIndex);
 	}
 
 	@Override
-	public BasicParameterNode findParameter(String parameterNameToFind) {
+	public AbstractParameterNode findParameter(String parameterNameToFind) {
 		
 		return fParametersHolder.findParameter(parameterNameToFind);
 	}
@@ -265,9 +264,9 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		
 		List<BasicParameterNode> globalParameterNodes = new ArrayList<>();
 		
-		List<BasicParameterNode> abstractParameters = getParameters();
+		List<AbstractParameterNode> abstractParameters = getParameters();
 		
-		for (BasicParameterNode abstractParameterNode : abstractParameters) {
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
 			
 			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 			

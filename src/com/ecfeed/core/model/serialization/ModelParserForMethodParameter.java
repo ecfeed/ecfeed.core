@@ -61,18 +61,18 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 		ModelParserHelper.parseParameterProperties(parameterElement, targetMethodParameterNode);
 
 		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
-			boolean linked ;
-
-			try {
-				linked = 
-						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
-
-			} catch (ParserException e) {
-				return Optional.empty();
-			}
-
-			targetMethodParameterNode.setLinked(linked);
+			//			boolean linked ;
+			//
+			//			try {
+			//				linked = 
+			//						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
+			//								parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
+			//
+			//			} catch (ParserException e) {
+			//				return Optional.empty();
+			//			}
+			//
+			//targetMethodParameterNode.setLinked(linked);
 		}
 
 		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method != null && method.getClassNode() != null) {
@@ -91,10 +91,10 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			if (link != null) {
 				targetMethodParameterNode.setLinkToGlobalParameter(link);
 			} else {
-				targetMethodParameterNode.setLinked(false);
+				// targetMethodParameterNode.setLinked(false);
 			}
 		} else {
-			targetMethodParameterNode.setLinked(false);
+			// targetMethodParameterNode.setLinked(false);
 		}
 
 		ModelParserForChoice modelParserForChoice = 

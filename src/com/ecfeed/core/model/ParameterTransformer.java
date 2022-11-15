@@ -82,13 +82,22 @@ public class ParameterTransformer {
 
 	public static void unlinkMethodParameteFromGlobalParameter(
 			BasicParameterNode methodParameterNode,
-			BasicParameterNode globalParameterNode, 
+			AbstractParameterNode globalParameterNode, 
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkParametersForNotNull(methodParameterNode, globalParameterNode);
 
-		String linkedParameterType = methodParameterNode.getLinkToGlobalParameter().getType();
+		AbstractParameterNode linkToGlobalParameter = methodParameterNode.getLinkToGlobalParameter();
+		
+		String linkedParameterType = null;
+		
+		if (linkToGlobalParameter instanceof BasicParameterNode) {
+			
+			BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
+			linkedParameterType = link.getType();
+		}
+		
 		String oldMethodParameterType = methodParameterNode.getType();
 
 		MethodNode methodNode = methodParameterNode.getMethod();
@@ -99,11 +108,16 @@ public class ParameterTransformer {
 
 		List<ParameterConversionItem> parameterConversionItems = new ArrayList<>();
 
-		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
-				globalParameterNode, methodParameterNode, 
-				reverseOperationsForChoicesCopy,
-				parameterConversionItems,
-				extLanguageManager);
+		if (globalParameterNode instanceof BasicParameterNode) {
+		
+			BasicParameterNode global2 = (BasicParameterNode) globalParameterNode; 
+					
+			ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
+					global2, methodParameterNode, 
+					reverseOperationsForChoicesCopy,
+					parameterConversionItems,
+					extLanguageManager);
+		}
 
 		convertConstraints(
 				methodNode, 
@@ -134,7 +148,6 @@ public class ParameterTransformer {
 
 
 		srcMethodParameterNode.setLinkToGlobalParameter(dstParameterForChoices);
-		srcMethodParameterNode.setLinked(true);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 
 				new OperationSimpleSetLink(
@@ -265,7 +278,7 @@ public class ParameterTransformer {
 
 	private static void convertConstraints(
 			MethodNode methodNode, 
-			BasicParameterNode srcParameterNode,
+			AbstractParameterNode srcParameterNode,
 			BasicParameterNode dstParameterNode, 
 			List<ParameterConversionItem> parameterConversionItems,
 			ListOfModelOperations outReverseOperations, 
@@ -281,7 +294,7 @@ public class ParameterTransformer {
 
 	private static void checkParametersForNotNull(
 			BasicParameterNode methodParameterNode,
-			BasicParameterNode dstGlobalParameterNode) {
+			AbstractParameterNode dstGlobalParameterNode) {
 
 		if (methodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty method parameter.");
@@ -308,10 +321,9 @@ public class ParameterTransformer {
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		BasicParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLinkToGlobalParameter();
+		BasicParameterNode oldGlobalParameterNode = (BasicParameterNode) srcMethodParameterNode.getLinkToGlobalParameter();
 
 		srcMethodParameterNode.setLinkToGlobalParameter(null);
-		srcMethodParameterNode.setLinked(false);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 
 				new OperationSimpleSetLink(

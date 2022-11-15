@@ -21,6 +21,7 @@ public interface IChoicesParentNode extends IAbstractNode {
 
 	public int getChoiceCount();	
 	public List<ChoiceNode> getChoices();
+	public List<ChoiceNode> getChoicesWithCopies();
 	public ChoiceNode getChoice(String qualifiedName);
 	public int getChoiceIndex(String choiceNameToFind);
 	public boolean choiceExistsAsDirectChild(String choiceNameToFind);

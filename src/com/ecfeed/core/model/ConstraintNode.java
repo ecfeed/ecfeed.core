@@ -227,7 +227,7 @@ public class ConstraintNode extends AbstractNode {
 	private boolean areParametersConsistent() {
 
 		final Set<BasicParameterNode> referencedParameters = getConstraint().getReferencedParameters();
-		final List<BasicParameterNode> methodParameters = getMethodNode().getParameters();
+		final List<AbstractParameterNode> methodParameters = getMethodNode().getParameters();
 
 		for (BasicParameterNode referencedParameter : referencedParameters) {
 			if (!isParameterConsistent(referencedParameter, methodParameters)) {
@@ -241,9 +241,9 @@ public class ConstraintNode extends AbstractNode {
 	private boolean isParameterConsistent(
 
 			BasicParameterNode argParameter,
-			List<BasicParameterNode> methodParameters) {
+			List<AbstractParameterNode> methodParameters) {
 
-		for (BasicParameterNode param : methodParameters) {
+		for (AbstractParameterNode param : methodParameters) {
 			BasicParameterNode methodParam = (BasicParameterNode) param;
 
 			if (methodParam.isLinked() && methodParam.getLinkToGlobalParameter().equals(argParameter)) {

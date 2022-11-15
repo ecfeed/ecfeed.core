@@ -68,18 +68,27 @@ public class ChoiceCondition implements IStatementCondition {
 	public boolean updateReferences(IParametersParentNode methodNode) {
 
 		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		BasicParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
+		AbstractParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
 
 		String choiceName = fRightChoice.getQualifiedName();
-		ChoiceNode choiceNode = abstractParameterNode.getChoice(choiceName);
-
-		if (choiceNode == null) {
+		
+		if (abstractParameterNode instanceof BasicParameterNode) {
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			ChoiceNode choiceNode = basicParameterNode.getChoice(choiceName);
+	
+			if (choiceNode == null) {
+				return false;
+			}
+	
+			fRightChoice = choiceNode;
+	
+			return true;
+		} else {
+			
 			return false;
 		}
-
-		fRightChoice = choiceNode;
-
-		return true;
 	}
 
 	@Override

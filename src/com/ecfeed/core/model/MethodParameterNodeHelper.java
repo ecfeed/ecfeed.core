@@ -47,7 +47,7 @@ public class MethodParameterNodeHelper {
 						methodParameterNode.isExpected(),
 						extLanguageManager);
 
-		final BasicParameterNode link = methodParameterNode.getLinkToGlobalParameter();
+		final AbstractParameterNode link = methodParameterNode.getLinkToGlobalParameter();
 
 		if (methodParameterNode.isLinked() && link != null) {
 			signature += "[LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(link, extLanguageManager);
@@ -71,17 +71,17 @@ public class MethodParameterNodeHelper {
 
 		if (methodParameterNode.isLinked()) {
 		
-			BasicParameterNode globalParameterNode = methodParameterNode.getLinkToGlobalParameter();
+			BasicParameterNode globalParameterNode = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
 	
 			if (globalParameterNode != null) {
 				signature += " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, extLanguageManager);
 			}
 			
-			MethodNode methodNode = methodParameterNode.getLinkToMethod();
-			
-			if (methodNode != null) {
-				signature += "[LINKED]->" + methodNode.getName();
-			}
+//			MethodNode methodNode = methodParameterNode.getLinkToMethod();
+//			
+//			if (methodNode != null) {
+//				signature += "[LINKED]->" + methodNode.getName();
+//			}
 		}
 
 		return signature;
@@ -101,13 +101,20 @@ public class MethodParameterNodeHelper {
 			return findChoiceIntr(methodParameterNode, choiceQualifiedName);
 		}
 
-		BasicParameterNode link = methodParameterNode.getLinkToGlobalParameter();
+		AbstractParameterNode abstractLink = methodParameterNode.getLinkToGlobalParameter();
 
-		if (link == null)  {
+		if (abstractLink == null)  {
 			ExceptionHelper.reportRuntimeException("Missing link for linked parameter.");
 		}
 
-		return findChoiceIntr(link, choiceQualifiedName);
+		if (abstractLink instanceof BasicParameterNode) {
+		
+			BasicParameterNode basicParameterLink = (BasicParameterNode) abstractLink;
+			return findChoiceIntr(basicParameterLink, choiceQualifiedName);
+		} else {
+			
+			return null;
+		}
 	}
 
 	private static ChoiceNode findChoiceIntr(BasicParameterNode link, String choiceQualifiedName) {

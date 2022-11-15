@@ -207,12 +207,12 @@ public class ConstraintHelper {
 		return result;
 	}
 
-	private static BasicParameterNode getParameterNodeForComparison(BasicParameterNode methodParameterNode) {
+	private static BasicParameterNode getParameterNodeForComparison(BasicParameterNode basicParameterNode) {
 
-		if (methodParameterNode.isLinked()) {
-			return methodParameterNode.getLinkToGlobalParameter();
+		if (basicParameterNode.isLinked()) {
+			return (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 		} else {
-			return methodParameterNode;
+			return basicParameterNode;
 		}
 	}
 

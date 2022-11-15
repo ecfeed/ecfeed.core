@@ -949,10 +949,16 @@ public class ParameterTransformerTest {
 		ChoiceNode resultChoiceNode = globalParameterNodeOfClass1.getChoices().get(0);
 		assertEquals(globalChoiceNode11.getName(), resultChoiceNode.getName());
 
-		methodParameterNode1.setLinked(false); // temporary change to check if all choices were deleted
+		// temporary change to check if all choices were deleted
+		BasicParameterNode tmp = (BasicParameterNode) methodParameterNode1.getLinkToGlobalParameter();
+		methodParameterNode1.setLinkToGlobalParameter(null);
+		// methodParameterNode1.setLinked(false); 
+		
 		List<ChoiceNode> methodParameterChoices = methodParameterNode1.getChoices();
 		assertEquals(0, methodParameterChoices.size());
-		methodParameterNode1.setLinked(true); 
+		
+		methodParameterNode1.setLinkToGlobalParameter(tmp);
+//		methodParameterNode1.setLinked(true); 
 
 		// reverting
 		reverseOperations.executeFromTail();
@@ -1242,7 +1248,6 @@ public class ParameterTransformerTest {
 				MethodNodeHelper.addParameterToMethod(methodNode, "MP1", parameterType);
 
 		methodParameterNode.setLinkToGlobalParameter(globalParameterNodeOfRoot1);
-		methodParameterNode.setLinked(true);
 
 		// constraint
 
@@ -1294,12 +1299,17 @@ public class ParameterTransformerTest {
 
 		// change Linked property for checking child choices only
 
-		methodParameterNode.setLinked(false);
+		
+		BasicParameterNode tmp = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
+		methodParameterNode.setLinkToGlobalParameter(null);
+
+		// methodParameterNode.setLinked(false);
 
 		List<ChoiceNode> resultChoiceNodes = methodParameterNode.getChoices();
 		assertEquals(0, resultChoiceNodes.size());
 
-		methodParameterNode.setLinked(true);
+		methodParameterNode.setLinkToGlobalParameter(tmp);
+		// methodParameterNode.setLinked(true);
 	}
 
 	@Test

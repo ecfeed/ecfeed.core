@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
@@ -170,9 +171,9 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		Random randomGenerator = new Random();
 		List<ChoiceNode> choiceNodes = new ArrayList<ChoiceNode>();
-		List<BasicParameterNode> parameters = methodNode.getParameters();
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
-		for (BasicParameterNode abstractParameterNode : parameters) {
+		for (AbstractParameterNode abstractParameterNode : parameters) {
 			
 			BasicParameterNode methodParameterNode = (BasicParameterNode) abstractParameterNode;
 			

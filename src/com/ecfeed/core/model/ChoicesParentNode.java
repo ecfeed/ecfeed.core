@@ -14,7 +14,7 @@
 //import java.util.List;
 //import java.util.Set;
 //
-//public abstract class ChoicesParentNode extends AbstractNode implements IChoicesParentNode { // TODO MO-RE remove class
+//public abstract class ChoicesParentNode extends AbstractNode implements IChoicesParentNode {
 //
 //	ChoicesListHolder fChoicesListHolder;
 //	
@@ -89,7 +89,7 @@
 //		return getChoices().size();
 //	}
 //
-//	public List<ChoiceNode> getChoicesWithCopies() { // TODO MO-RE do we need this ?
+//	public List<ChoiceNode> getChoicesWithCopies() {
 //
 //		return getChoices();
 //	}
@@ -119,7 +119,7 @@
 //	}	
 //
 //	@Override
-//	public List<ChoiceNode> getLeafChoicesWithCopies() { // TODO MO-RE do we need this ? rename ?
+//	public List<ChoiceNode> getLeafChoicesWithCopies() {
 //
 //		return ChoiceNodeHelper.getLeafChoices(getChoicesWithCopies());
 //	}	

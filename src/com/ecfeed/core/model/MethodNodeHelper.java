@@ -39,7 +39,7 @@ public class MethodNodeHelper {
 		String className = classNode.getName();
 
 		if (StringHelper.isEqual(className, parentName)) {
-			BasicParameterNode abstractParameterNode = classNode.findParameter(parameterName);
+			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
 			return (BasicParameterNode)abstractParameterNode;
 		}
 
@@ -47,7 +47,7 @@ public class MethodNodeHelper {
 		String rootName = rootNode.getName();
 
 		if (parentName == null || rootName.equals(parentName)) {
-			BasicParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
+			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
 			return (BasicParameterNode)abstractParameterNode;
 		}			
 
@@ -218,9 +218,9 @@ public class MethodNodeHelper {
 			MethodNode methodNode, 
 			IExtLanguageManager extLanguageManager) {
 
-		List<BasicParameterNode> methodParameters = methodNode.getParameters();
+		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
 
-		for (BasicParameterNode parameter : methodParameters) {
+		for (AbstractParameterNode parameter : methodParameters) {
 
 			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
 
@@ -230,6 +230,7 @@ public class MethodNodeHelper {
 				return methodParameterNode;
 			}
 		}
+		
 		return null;
 
 	}
@@ -238,7 +239,7 @@ public class MethodNodeHelper {
 
 		List<String> result = new ArrayList<String>();
 
-		for(BasicParameterNode parameter : method.getParameters()){
+		for (AbstractParameterNode parameter : method.getParameters()) {
 
 			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
 
@@ -254,13 +255,18 @@ public class MethodNodeHelper {
 
 		List<String> result = new ArrayList<String>();
 
-		for (BasicParameterNode parameter : method.getParameters()) {
+		for (AbstractParameterNode abstractParameterNode : method.getParameters()) {
 
-			String type = parameter.getType();
-
-			type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
-
-			result.add(type);
+			if (abstractParameterNode instanceof BasicParameterNode) {
+				
+				BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+				
+				String type = basicParameterNode.getType();
+	
+				type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
+	
+				result.add(type);
+			}
 		}
 
 		return result;
@@ -305,6 +311,16 @@ public class MethodNodeHelper {
 		return methodParameterNode;
 	}
 
+	public static BasicParameterNode addLinkedParameterToMethod(
+			MethodNode methodNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
+
+		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
+		methodParameterNode.setLinkToGlobalParameter(linkToGlobalParameter);
+		methodNode.addParameter(methodParameterNode);
+
+		return methodParameterNode;
+	}
+	
 	public static BasicParameterNode addExpectedParameterToMethod(
 			MethodNode methodNode, String name, String type, String defaultValue) {
 

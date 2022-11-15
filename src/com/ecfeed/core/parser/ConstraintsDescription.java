@@ -4,7 +4,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 import java.util.List;
 
-public class ConstraintsDescription { // TODO - REUSE IN JUNIT5
+public class ConstraintsDescription {
 
     private enum ConstraintsValueType {
 

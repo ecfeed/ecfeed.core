@@ -12,7 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.IParameterVisitor;
+import com.ecfeed.core.model.IBasicParameterVisitor;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -94,7 +94,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		return null;
 	}
 
-	private class ParameterAdapter implements IParameterVisitor{
+	private class ParameterAdapter implements IBasicParameterVisitor{
 
 		@Override
 		public Object visit(BasicParameterNode parameter) throws Exception {
@@ -111,7 +111,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation{
 
-		private class ReverseParameterAdapter implements IParameterVisitor{
+		private class ReverseParameterAdapter implements IBasicParameterVisitor{
 
 			@Override
 			public Object visit(BasicParameterNode parameter) throws Exception {
