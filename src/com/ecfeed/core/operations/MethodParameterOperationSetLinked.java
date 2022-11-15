@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -75,10 +76,20 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 			MethodNode method = fTarget.getMethod();
 			String newType;
 			if(fLinked){
-				if(fTarget.getLinkToGlobalParameter() == null){
+				AbstractParameterNode linkToGlobalParameter = fTarget.getLinkToGlobalParameter();
+				
+				if(linkToGlobalParameter == null){
 					ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
 				}
-				newType = fTarget.getLinkToGlobalParameter().getType();
+				
+				if (linkToGlobalParameter instanceof BasicParameterNode) {
+					
+					BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
+					newType = link.getType();
+				} else {
+					
+					newType = null;
+				}
 			}
 			else{
 				newType = fTarget.getRealType();

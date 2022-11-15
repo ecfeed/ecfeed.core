@@ -33,16 +33,6 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String getType(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
-		if (abstractParameterNode instanceof BasicParameterNode) {
-			
-			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-			MethodNode linkToMethodNode = methodParameterNode.getLinkToMethod();
-			
-			if (linkToMethodNode != null) {
-				return "";
-			}
-		}
-		
 		String type = abstractParameterNode.getType();
 		
 		if (type == null) {

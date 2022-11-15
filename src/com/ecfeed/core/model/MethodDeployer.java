@@ -110,7 +110,15 @@ public abstract class MethodDeployer {
 		// MethodParameterNode linkedMethod = deployedMethodParameterNode.getLinkToMethod();
 		// MethodAndStructureParent linked = deployedMethodParameterNode.getLinkToMethodAndStructureParent();
 
-		deployedMethodParameterNode.setLinkToGlobalParameter(sourceMethodParameterNode.getLinkToGlobalParameter());
+		AbstractParameterNode linkToGlobalParameter = sourceMethodParameterNode.getLinkToGlobalParameter();
+		
+		if (linkToGlobalParameter instanceof BasicParameterNode) {
+			
+			BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
+			
+			deployedMethodParameterNode.setLinkToGlobalParameter(link);
+		}
+		
 		deployedMethodParameterNode.setProperties(sourceMethodParameterNode.getProperties());
 		deployedMethodParameterNode.setDefaultValueString(sourceMethodParameterNode.getDefaultValue());
 		
@@ -152,12 +160,13 @@ public abstract class MethodDeployer {
 		return deployedChoiceNode;
 	}
 
-	// TODO NE-TE use!
-	public static List<BasicParameterNode> getDevelopedParametersWithChoices(MethodNode methodNode) {
+	public static List<BasicParameterNode> getDevelopedParametersWithChoices(AbstractParameterNode abstractParameterNode) {
 
 		List<BasicParameterNode> developedParameters = new ArrayList<>();
 
-		List<BasicParameterNode> parameters = methodNode.getMethodParameters();
+		// TODO MO-RE
+		//		List<BasicParameterNode> parameters = methodNode.getMethodParameters();
+		List<BasicParameterNode> parameters = new ArrayList<>();
 
 		for (BasicParameterNode methodParameterNode : parameters) {
 
@@ -171,7 +180,7 @@ public abstract class MethodDeployer {
 			BasicParameterNode methodParameterNode,
 			List<BasicParameterNode> inOutDevelopedParameters) {
 
-		MethodNode linkedMethodNode = methodParameterNode.getLinkToMethod();
+		AbstractParameterNode linkedMethodNode = methodParameterNode.getLinkToGlobalParameter();
 
 		if (linkedMethodNode == null) {
 			BasicParameterNode clonedMethodParameterNode = methodParameterNode.makeClone();
@@ -187,11 +196,11 @@ public abstract class MethodDeployer {
 	}
 
 	private static void developChildParameters(
-			BasicParameterNode abstractParameterNode, 
-			MethodNode linkedMethodNode,
+			AbstractParameterNode abstractParameterNode, 
+			AbstractParameterNode linkedParameterNode,
 			List<BasicParameterNode> inOutDevelopedParameters) {
 
-		List<BasicParameterNode> linkedParametersWithChoices = getDevelopedParametersWithChoices(linkedMethodNode);
+		List<BasicParameterNode> linkedParametersWithChoices = getDevelopedParametersWithChoices(linkedParameterNode);
 
 		for (BasicParameterNode linkedParameterWithChoices : linkedParametersWithChoices) {
 

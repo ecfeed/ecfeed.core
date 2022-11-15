@@ -138,4 +138,30 @@ public abstract class AbstractParameterNode extends AbstractNode {
 //		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 //	}
 
+	public boolean isGlobalParameter() {
+		
+		IAbstractNode parent = getParent();
+		
+		if (parent instanceof MethodNode) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	public String getQualifiedName() {
+
+		if (isGlobalParameter()) {
+			
+			if (getParent() == getRoot() || getParent() == null) {
+				return getName();
+			}
+			
+			return getParent().getName() + ":" + getName();
+		} else {
+			
+			return getNonQualifiedName();
+		}
+	}
+	
 }

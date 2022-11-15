@@ -27,9 +27,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fTypeComments;
 	private boolean fExpected;
 	private String fDefaultValue;
-//	private boolean fLinked;
-	private BasicParameterNode fLinkToGlobalParameter;
-	private MethodNode fLinkToMethod;
+	private AbstractParameterNode fLinkToGlobalParameter;
 	private List<ChoiceNode> fChoicesCopy;
 	
 	private ChoicesListHolder fChoicesListHolder;
@@ -39,8 +37,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			String type,
 			String defaultValue,
 			boolean expected,
-//			boolean linked,
-			BasicParameterNode link,
+			AbstractParameterNode link,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(name, modelChangeRegistrator);
@@ -88,7 +85,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			BasicParameterNode source,
 			String defaultValue, 
 			boolean expected, 
-			BasicParameterNode link) {
+			AbstractParameterNode link) {
 
 		this(source.getName(), source.getType(), defaultValue, expected, link, source.getModelChangeRegistrator());
 
@@ -113,16 +110,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		for(ChoiceNode choice : source.getChoices()){
 			addChoice(choice.makeClone());
 		}
-	}
-	
-	public boolean isGlobalParameter() {
-		IAbstractNode parent = getParent();
-		
-		if (parent instanceof MethodNode) {
-			return false;
-		}
-		
-		return true;
 	}
 	
 	@Override
@@ -171,12 +158,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	public String getType() {
 		
-		if (fLinkToMethod != null) {
-			return null;
-		}
-
 		if (isLinked() && fLinkToGlobalParameter != null) {
-			return fLinkToGlobalParameter.getType();
+			
+			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+				
+				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				
+				return link.getType();
+			}
+			
+			return null;
 		}
 		
 		return fType;
@@ -195,8 +186,17 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public String getTypeComments() {
 
 		if (isLinked() && fLinkToGlobalParameter != null) {
-			return fLinkToGlobalParameter.getTypeComments();
+
+			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+
+				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				return link.getTypeComments();
+			}
+
+			return null;
+
 		}
+
 		return fTypeComments;
 	}
 
@@ -215,7 +215,15 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		boolean linked = isLinked();
 		
 		if (linked && fLinkToGlobalParameter != null) {
-			return fLinkToGlobalParameter.getChoices();
+			
+			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+			
+				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				
+				return link.getChoices();
+			}
+			
+			return null;
 		}
 		
 		return fChoicesListHolder.getChoices();
@@ -224,15 +232,29 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public List<ChoiceNode> getChoicesWithCopies() {
 
 		if (isLinked() && fLinkToGlobalParameter != null) {
-			if (fChoicesCopy == null) {
-				fChoicesCopy = fLinkToGlobalParameter.getChoicesCopy();
+
+			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+				
+				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				
+				if (fChoicesCopy == null) {
+					fChoicesCopy = link.getChoicesCopy();
+					return fChoicesCopy;
+
+				}
+
+				List<ChoiceNode> temp = link.getChoicesCopy();
+
+				if (!choiceListsMatch(fChoicesCopy, temp)) {
+					fChoicesCopy = temp;
+				}
+
 				return fChoicesCopy;
 			}
-			List<ChoiceNode> temp = fLinkToGlobalParameter.getChoicesCopy();
-			if(!choiceListsMatch(fChoicesCopy, temp))
-				fChoicesCopy = temp;
-			return fChoicesCopy;
+
+			return null;
 		}
+
 		return getChoices();
 	}
 
@@ -365,25 +387,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return false;
 	}
 
-	public BasicParameterNode getLinkToGlobalParameter() {
+	public AbstractParameterNode getLinkToGlobalParameter() {
 
 		return fLinkToGlobalParameter;
 	}
 
-	public MethodNode getLinkToMethod() {
-
-		return fLinkToMethod;
-	}
-
-	public void setLinkToGlobalParameter(BasicParameterNode link) {
+	public void setLinkToGlobalParameter(AbstractParameterNode link) {
 
 		fLinkToGlobalParameter = link;
-		fLinkToMethod = null;
 	}
 
 	public void setLinkToMethod(MethodNode link) {
 
-		fLinkToMethod = link;
 		fLinkToGlobalParameter = null;
 	}
 
@@ -476,18 +491,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 
 		return result;
-	}
-
-	public String getQualifiedName() {
-
-		if (isGlobalParameter()) {
-			if(getParent() == getRoot() || getParent() == null){
-				return getName();
-			}
-			return getParent().getName() + ":" + getName();
-		} else {
-			return getNonQualifiedName();
-		}
 	}
 
 	@Override

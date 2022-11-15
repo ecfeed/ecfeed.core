@@ -95,7 +95,7 @@ public class GlobalParameterNodeHelper {
 	}
 
 	public static String getQualifiedName(
-			BasicParameterNode globalParameterNode,
+			AbstractParameterNode globalParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
 		String qualifiedName = globalParameterNode.getQualifiedName();

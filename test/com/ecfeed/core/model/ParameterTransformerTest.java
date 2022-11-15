@@ -950,7 +950,7 @@ public class ParameterTransformerTest {
 		assertEquals(globalChoiceNode11.getName(), resultChoiceNode.getName());
 
 		// temporary change to check if all choices were deleted
-		BasicParameterNode tmp = methodParameterNode1.getLinkToGlobalParameter();
+		BasicParameterNode tmp = (BasicParameterNode) methodParameterNode1.getLinkToGlobalParameter();
 		methodParameterNode1.setLinkToGlobalParameter(null);
 		// methodParameterNode1.setLinked(false); 
 		
@@ -1300,7 +1300,7 @@ public class ParameterTransformerTest {
 		// change Linked property for checking child choices only
 
 		
-		BasicParameterNode tmp = methodParameterNode.getLinkToGlobalParameter();
+		BasicParameterNode tmp = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
 		methodParameterNode.setLinkToGlobalParameter(null);
 
 		// methodParameterNode.setLinked(false);
