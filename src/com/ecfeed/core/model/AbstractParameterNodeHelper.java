@@ -141,7 +141,7 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		if (parameterType != null) {
-			signature += " : "; // XYX
+			signature += SignatureHelper.SIGNATURE_SEPARATOR;
 			signature += parameterType;
 		}
 

@@ -12,7 +12,7 @@ package com.ecfeed.core.utils;
 
 public class SignatureHelper {
 
-	private static final String SIGNATURE_SEPARATOR = " : ";
+	public static final String SIGNATURE_SEPARATOR = " : ";
 
 	public static String joinElementsWithSeparator(String str1, String str2) {
 		
