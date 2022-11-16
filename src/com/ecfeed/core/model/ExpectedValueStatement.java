@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.*;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
@@ -28,7 +23,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	private IPrimitiveTypePredicate fPredicate; // TODO NE-TE remove ?
 
 	public ExpectedValueStatement(
-			BasicParameterNode methodParameterNode, 
+			BasicParameterNode methodParameterNode,
 			ChoiceNode choiceNode, 
 			IPrimitiveTypePredicate predicate) {
 
@@ -165,6 +160,25 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
+	public ExpectedValueStatement createCopy(IParametersAndConstraintsParentNode method) {
+
+		return new ExpectedValueStatement(makeCloneParameter(method), fChoiceNode.makeClone(), fPredicate);
+	}
+
+	public BasicParameterNode makeCloneParameter(IParametersAndConstraintsParentNode method) {
+
+		for (AbstractParameterNode parameter : method.getParameters()) {
+			if (parameter.getName().equals(fLeftMethodParameterNode.getName())) {
+				return (BasicParameterNode) parameter;
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
+
+		return null;
+	}
+
+	@Override
 	public boolean updateReferences(IParametersAndConstraintsParentNode method){
 		BasicParameterNode parameter = (BasicParameterNode)method.findParameter(fLeftMethodParameterNode.getName());
 		if(parameter != null && parameter.isExpected()){
@@ -248,24 +262,24 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return new ArrayList<>();
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		BasicParameterNode sourceParameter = getLeftMethodParameterNode();
-		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
-
-		ChoiceNode sourceChoiceNode = getChoice();
-		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
-
-		IPrimitiveTypePredicate deployedPredicate = getPredicate();
-
-		ExpectedValueStatement expectedValueStatement = 
-				new ExpectedValueStatement(
-						deployedParameter, 
-						deployedChoiceNode, 
-						deployedPredicate);
-
-		return expectedValueStatement;
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		BasicParameterNode sourceParameter = getLeftMethodParameterNode();
+//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+//
+//		ChoiceNode sourceChoiceNode = getChoice();
+//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+//
+//		IPrimitiveTypePredicate deployedPredicate = getPredicate();
+//
+//		ExpectedValueStatement expectedValueStatement =
+//				new ExpectedValueStatement(
+//						deployedParameter,
+//						deployedChoiceNode,
+//						deployedPredicate);
+//
+//		return expectedValueStatement;
+//	}
 
 }

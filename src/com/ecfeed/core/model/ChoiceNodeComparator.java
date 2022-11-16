@@ -11,19 +11,20 @@ public class ChoiceNodeComparator implements Comparator<ChoiceNode> {
 
     public int compare(ChoiceNode leftArg, ChoiceNode rightArg) {
 
-        if(leftArg.isRandomizedValue() || rightArg.isRandomizedValue())
+        if (leftArg.isRandomizedValue() || rightArg.isRandomizedValue()) {
             ExceptionHelper.reportRuntimeException("Randomized values should not be compared!");
+        }
 
-        String substituteType = JavaLanguageHelper.getSubstituteType(leftArg.getParameter().getType(), rightArg.getParameter().getType());
-
-        if ( RelationMatcher.isRelationMatch(EMathRelation.LESS_THAN, substituteType, leftArg.getValueString(), rightArg.getValueString()) ) {
+        String commonType = JavaLanguageHelper.getSubstituteType(leftArg.getParameter().getType(), rightArg.getParameter().getType());
+// Left value is smaller (-1).
+        if (RelationMatcher.isRelationMatch(EMathRelation.LESS_THAN, commonType, leftArg.getValueString(), rightArg.getValueString())) {
             return -1;
         }
-
-        if ( RelationMatcher.isRelationMatch(EMathRelation.GREATER_THAN, substituteType, leftArg.getValueString(), rightArg.getValueString()) ) {
+// Left value is greater (+1).
+        if (RelationMatcher.isRelationMatch(EMathRelation.GREATER_THAN, commonType, leftArg.getValueString(), rightArg.getValueString())) {
             return 1;
         }
-
+// Values are equal.
         return 0;
     }
 }

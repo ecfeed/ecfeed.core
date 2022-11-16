@@ -87,7 +87,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	protected RelationStatement(
-			BasicParameterNode parameter, 
+			BasicParameterNode parameter,
 			EMathRelation relation, 
 			IStatementCondition condition) {
 
@@ -186,6 +186,22 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public RelationStatement makeClone() {
 
 		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.makeClone());
+	}
+
+	@Override
+	public RelationStatement createCopy(IParametersAndConstraintsParentNode method) {
+
+		RelationStatement statement = new RelationStatement(updateParameterReference(method), fRelation, null);
+
+		IStatementCondition condition = fRightCondition.createCopy(method, statement);
+		statement.setCondition(condition);
+
+		return statement;
+	}
+
+	private BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
+
+		return (BasicParameterNode) method.findParameter(fLeftParameter.getName());
 	}
 
 	@Override
@@ -500,27 +516,26 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return result;
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-
-		BasicParameterNode sourceParameter = getLeftParameter();
-		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
-		
-		IStatementCondition sourceCondition = getCondition();
-		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
-
-		EMathRelation sourceRelation = getRelation();
-
-		RelationStatement deployedRelationStatement = 
-				new RelationStatement(
-						deployedParameter, 
-						sourceRelation, 
-						deployedStatementCondition);
-
-		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
-
-		return deployedRelationStatement;
-	}
-
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		BasicParameterNode sourceParameter = getLeftParameter();
+//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+//
+//		IStatementCondition sourceCondition = getCondition();
+//		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
+//
+//		EMathRelation sourceRelation = getRelation();
+//
+//		RelationStatement deployedRelationStatement =
+//				new RelationStatement(
+//						deployedParameter,
+//						sourceRelation,
+//						deployedStatementCondition);
+//
+//		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
+//
+//		return deployedRelationStatement;
+//	}
 }
 
