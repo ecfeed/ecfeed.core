@@ -13,6 +13,7 @@ package com.ecfeed.core.operations;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
@@ -21,6 +22,7 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class FactoryRemoveChildOperation implements IModelVisitor{
@@ -94,6 +96,12 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 		}
 	}
 
+	@Override
+	public Object visit(CompositeParameterNode node) throws Exception {
+		ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+		return null;
+	}
+	
 	@Override
 	public Object visit(TestSuiteNode node) throws Exception {
 		return null;

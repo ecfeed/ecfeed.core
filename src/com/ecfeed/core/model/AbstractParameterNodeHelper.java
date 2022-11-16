@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class AbstractParameterNodeHelper {
 
@@ -93,6 +94,12 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String createSignature(
+			CompositeParameterNode compositeParameterNode) {
+
+		return SignatureHelper.joinElementsWithSeparator(compositeParameterNode.getName(), CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+	}
+	
+	public static String createSignature(
 			String parameterType,
 			String parameterName,
 			Boolean expectedFlag,
@@ -134,7 +141,7 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		if (parameterType != null) {
-			signature += " : ";
+			signature += " : "; // XYX
 			signature += parameterType;
 		}
 

@@ -12,10 +12,14 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class CompositeParameterNode extends AbstractParameterNode implements IParametersParentNode {
+public class CompositeParameterNode extends AbstractParameterNode implements IParametersAndConstraintsParentNode {
+	
+	public static final String COMPOSITE_PARAMETER_TYPE = "Structure";
 	
 	private ParametersHolder fParametersHolder; 
 
@@ -115,9 +119,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public Object accept(IModelVisitor visitor) throws Exception {
-		// TODO NO-RE
-		return null;
-		//return visitor.visit(this);
+		return visitor.visit(this);
 	}
 
 	@Override
@@ -207,6 +209,126 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	public String generateNewParameterName(String startParameterName) {
 		
 		return fParametersHolder.generateNewParameterName(startParameterName);
+	}
+
+	@Override
+	public ConstraintsItr getIterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasNextConstraint(ConstraintsItr contIterator) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ConstraintNode getNextConstraint(ConstraintsItr contIterator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removeConstraint(ConstraintsItr contIterator) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addConstraint(ConstraintNode constraint) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addConstraint(ConstraintNode constraint, int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<ConstraintNode> getConstraintNodes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ConstraintNode> getConstraintNodes(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Constraint> getConstraints() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Constraint> getConstraints(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<String> getConstraintsNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean removeConstraint(ConstraintNode constraint) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isChoiceMentionedInConstraints(ChoiceNode choice) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter, String label) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<ConstraintNode> getMentioningConstraints(ChoiceNode choice) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isParameterMentionedInConstraints(BasicParameterNode parameter) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void replaceConstraints(List<ConstraintNode> constraints) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeAllConstraints() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeMentioningConstraints(BasicParameterNode methodParameter) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

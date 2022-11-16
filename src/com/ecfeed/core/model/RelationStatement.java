@@ -238,7 +238,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean mentions(BasicParameterNode abstractParameterNode) {
+	public boolean mentions(AbstractParameterNode abstractParameterNode) {
 
 		if (getLeftParameter() == abstractParameterNode) {
 			return true;
@@ -252,13 +252,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean mentions(BasicParameterNode parameter, String label) {
+	public boolean mentions(AbstractParameterNode parameter, String label) {
 
 		return getLeftParameter() == parameter && getConditionValue().equals(label);
 	}
 
 	@Override
-	public boolean mentionsParameterAndOrderRelation(BasicParameterNode parameter) {
+	public boolean mentionsParameterAndOrderRelation(AbstractParameterNode parameter) {
 
 		if (!(parameter.isMatch(fLeftParameter))) {
 			return false;
@@ -281,7 +281,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public boolean mentions(int methodParameterIndex) {
 
 		MethodNode methodNode = fLeftParameter.getMethod();
-		BasicParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
+		AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
 			return true;

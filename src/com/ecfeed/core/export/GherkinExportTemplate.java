@@ -12,7 +12,9 @@ package com.ecfeed.core.export;
 import java.util.Set;
 
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.JustifyType;
 import com.ecfeed.core.utils.StringHelper;
@@ -72,13 +74,20 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 		int methodParametersCount = methodNode.getParametersCount();
 
 		int counter = 0;
+		
 		for (int parameterIndex = 0; 
 				parameterIndex < methodParametersCount; 
 				++parameterIndex) {
 
-			BasicParameterNode methodParameterNode = methodNode.getMethodParameter(parameterIndex);
+			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(parameterIndex);
+			
+			if (methodParameterNode instanceof CompositeParameterNode) {
+				continue;
+			}
 
-			if (methodParameterNode.isExpected()) {
+			BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
+			
+			if (basicParameterNode.isExpected()) {
 				continue;
 			}
 
@@ -196,12 +205,19 @@ public class GherkinExportTemplate extends AbstractExportTemplate {
 
 		for (int index = 0; index < methodParametersCount; ++index) {
 
-			BasicParameterNode methodParameterNode = methodNode.getMethodParameter(index);  
-			String parameterName = methodParameterNode.getName(); 
+			AbstractParameterNode abstractParameterNode = methodNode.getMethodParameter(index); 
+			
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			String parameterName = basicParameterNode.getName(); 
 
-			int maxParamValueLength = getMaxParamValueLength(methodParameterNode, parameterName);
+			int maxParamValueLength = getMaxParamValueLength(basicParameterNode, parameterName);
 
-			JustifyType justifyType = JavaLanguageHelper.getTypeJustification(methodParameterNode.getType());
+			JustifyType justifyType = JavaLanguageHelper.getTypeJustification(basicParameterNode.getType());
 
 			String paramDescription = embedInMinWidthOperator("$" + parameterName + "." + "value", maxParamValueLength, justifyType);
 			stringBuilder.append(paramDescription);

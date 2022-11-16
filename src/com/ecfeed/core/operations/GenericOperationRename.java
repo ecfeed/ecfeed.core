@@ -17,6 +17,7 @@ import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
@@ -231,6 +232,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 
 		@Override
+		public Object visit(CompositeParameterNode node) throws Exception {
+			return RegexHelper.createMessageAllowedCharsForParameter(fExtLanguageManager);
+		}
+		
+		@Override
 		public Object visit(ChoiceNode node) throws Exception {
 			return RegexHelper.createMessageAllowedCharsForChoice();
 		}
@@ -270,6 +276,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 		}
 
 		@Override
+		public Object visit(CompositeParameterNode node) throws Exception {
+			return RegexHelper.REGEX_CATEGORY_NODE_NAME;
+		}
+		
+		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
 			return RegexHelper.REGEX_TEST_CASE_NODE_NAME;
 		}
@@ -288,6 +299,7 @@ public class GenericOperationRename extends AbstractModelOperation {
 		public Object visit(ChoiceNode node) throws Exception {
 			return RegexHelper.REGEX_PARTITION_NODE_NAME;
 		}
+
 	}
 
 }

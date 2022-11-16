@@ -303,7 +303,8 @@ public class MethodNodeHelper {
 		return null;
 	}
 
-	public static BasicParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
+	public static BasicParameterNode addParameterToMethod(
+			IParametersAndConstraintsParentNode methodNode, String name, String type) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
 		methodNode.addParameter(methodParameterNode);
@@ -466,16 +467,27 @@ public class MethodNodeHelper {
 
 		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
 
-			BasicParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
+			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
+			
+			String signatureOfOneParameter = "";
+			
+			if (methodParameterNode instanceof BasicParameterNode) {
 
-
-
-			String signatureOfOneParameter = 
-					AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-							methodParameterNode.getType(),
-							methodParameterNode.getName(),
-							methodParameterNode.isExpected(), 
-							extLanguageManager);
+				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
+				
+				signatureOfOneParameter = 
+						AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
+								basicParameterNode.getType(),
+								basicParameterNode.getName(),
+								basicParameterNode.isExpected(), 
+								extLanguageManager);
+			} else {
+			
+				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
+				
+				signatureOfOneParameter = 
+						AbstractParameterNodeHelper.createSignature(compositeParameterNode);
+			}
 
 			signature += signatureOfOneParameter;
 

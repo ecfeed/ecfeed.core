@@ -222,7 +222,7 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(BasicParameterNode abstractParameterNode) {
+	public boolean mentions(AbstractParameterNode abstractParameterNode) {
 
 		if (fRightParameterNode == abstractParameterNode) {
 			return true;

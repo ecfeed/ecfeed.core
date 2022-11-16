@@ -15,6 +15,7 @@ import java.util.List;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IChoicesParentNode;
@@ -105,6 +106,12 @@ public class FactoryRemoveOperation {
 			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguageManager);
 			}
 		}
+		
+		@Override
+		public Object visit(CompositeParameterNode node) throws Exception {
+			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+			return null;
+		}
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
@@ -134,6 +141,7 @@ public class FactoryRemoveOperation {
 			
 			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
+
 	}
 
 	public static IModelOperation getRemoveOperation(

@@ -120,7 +120,11 @@ public abstract class AbstractNodeHelper  {
 			return false;
 		}
 
-	}
+		@Override
+		public Object visit(CompositeParameterNode node) throws Exception {
+			return true;
+		}
 
+	}
 
 }

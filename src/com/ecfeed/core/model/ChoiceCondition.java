@@ -128,7 +128,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(BasicParameterNode methodParameterNode) {
+	public boolean mentions(AbstractParameterNode methodParameterNode) {
 
 		return false;
 	}	

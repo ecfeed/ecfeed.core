@@ -25,7 +25,7 @@ public interface IStatementCondition {
 	public boolean updateReferences(IParametersParentNode methodNode);
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
-	public boolean mentions(BasicParameterNode abstractParameterNode);
+	public boolean mentions(AbstractParameterNode abstractParameterNode);
 	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode);
 	public boolean isAmbiguous(List<List<ChoiceNode>> domain, MessageStack messageStack, IExtLanguageManager extLanguageManager);
 	public List<ChoiceNode> getChoices();
