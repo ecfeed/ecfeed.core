@@ -583,15 +583,15 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		for (int parameterIndex = 0; parameterIndex < fParameters.size(); parameterIndex++) {
 
 			List<Integer> sat4Indexes = new ArrayList<>();
-			BasicParameterNode methodParameterNode = fParameters.get(parameterIndex);
+			BasicParameterNode basicParameterNode = fParameters.get(parameterIndex);
 
-			if (methodParameterNode.isExpected()) {
+			if (basicParameterNode.isExpected()) {
 				continue;
 			}
 
 			for (ChoiceNode choiceNode : input.get(parameterIndex)) {
 
-				final Map<ChoiceNode, Integer> choiceNodeIntegerMap = fChoiceToSolverIdMappings.getEqMapping(methodParameterNode);
+				final Map<ChoiceNode, Integer> choiceNodeIntegerMap = fChoiceToSolverIdMappings.getEqMapping(basicParameterNode);
 
 				Integer idOfParamChoiceVar = choiceNodeIntegerMap.get(choiceNode.getOrigChoiceNode());
 
@@ -626,9 +626,9 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		}
 
 		// TODO - what does it do ?
-		for (BasicParameterNode methodParameterNode : fParameters)
+		for (BasicParameterNode basicParameterNode : fParameters)
 			EvaluatorHelper.prepareVariablesForParameter(
-					methodParameterNode,
+					basicParameterNode,
 					fParameterChoices,
 					fSat4Solver,
 					fChoiceMappings,
@@ -722,12 +722,12 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 
 		for (int i = 0; i < fParameters.size(); i++) {
 
-			BasicParameterNode methodParameterNode = fParameters.get(i);
+			BasicParameterNode basicParameterNode = fParameters.get(i);
 			ChoiceNode choiceAssignedToParameter = currentArgumentAssignments.get(i);
 
 			if (choiceAssignedToParameter != null) {
 
-				final Map<ChoiceNode, Integer> choiceNodeIntegerMap = fChoiceToSolverIdMappings.eqGet(methodParameterNode);
+				final Map<ChoiceNode, Integer> choiceNodeIntegerMap = fChoiceToSolverIdMappings.eqGet(basicParameterNode);
 
 				if (choiceNodeIntegerMap == null) {
 					continue; //no constraint on this method parameter

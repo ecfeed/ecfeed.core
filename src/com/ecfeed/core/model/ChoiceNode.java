@@ -166,6 +166,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 			copy.setOrigChoiceNode(getOrigChoiceNode());
 		else
 			copy.setOrigChoiceNode(this);
+
 		return copy;
 	}
 

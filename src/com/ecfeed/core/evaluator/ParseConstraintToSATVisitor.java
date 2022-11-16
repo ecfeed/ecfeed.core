@@ -168,10 +168,10 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
     }
 
     private Integer singleChoiceParamConstraints(RelationStatement statement) {
-        BasicParameterNode leftMethodParameterNode = statement.getLeftParameter();
+        BasicParameterNode leftParameterNode = statement.getLeftParameter();
 
         EvaluatorHelper.prepareVariablesForParameter(
-                leftMethodParameterNode,
+                leftParameterNode,
                 fParamChoiceSets,
                 fSat4Solver,
                 fChoicesMappingBucket,
@@ -179,15 +179,15 @@ class ParseConstraintToSATVisitor implements IStatementVisitor {
 
         Integer myID = fSat4Solver.newId();
 
-        int lParamIndex = fParameters.indexOf(leftMethodParameterNode);
+        int lParamIndex = fParameters.indexOf(leftParameterNode);
         if (lParamIndex == -1) {
             reportParamWithoutMethodException();
         }
-        for (ChoiceNode lChoice : fParamChoiceSets.getAtomic(leftMethodParameterNode)) {
+        for (ChoiceNode lChoice : fParamChoiceSets.getAtomic(leftParameterNode)) {
             List<ChoiceNode> dummyValues = new ArrayList<>(Collections.nCopies(fParameters.size(), null));
             dummyValues.set(lParamIndex, lChoice);
             EvaluationResult result = statement.evaluate(dummyValues);
-            Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.eqGet(leftMethodParameterNode).get(lChoice);
+            Integer idOfLeftArgChoice = fChoiceToSolverIdMappings.eqGet(leftParameterNode).get(lChoice);
             if (result == EvaluationResult.TRUE) {
                 fSat4Solver.addSat4Clause(new int[]{-idOfLeftArgChoice, myID}); // thisChoice => me
             } else if (result == EvaluationResult.FALSE) {
