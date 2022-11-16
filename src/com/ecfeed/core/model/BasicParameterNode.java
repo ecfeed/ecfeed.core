@@ -349,6 +349,10 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		if (parent instanceof ClassNode) {
 			return null;
 		}
+
+		if (parent instanceof CompositeParameterNode) {
+			return null;
+		}
 		
 		return (MethodNode) parent;
 	}

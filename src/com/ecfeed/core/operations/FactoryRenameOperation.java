@@ -237,6 +237,12 @@ public class FactoryRenameOperation {
 				return new MethodParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 			}
 		}
+		
+		@Override
+		public Object visit(CompositeParameterNode node) throws Exception {
+			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+			return null;
+		}
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
@@ -252,6 +258,7 @@ public class FactoryRenameOperation {
 		public Object visit(ChoiceNode node) throws Exception {
 			return new ChoiceOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
+
 	}
 
 	public static IModelOperation getRenameOperation(IAbstractNode target, String newPackageName, String newNonQualifiedNameInExtLanguage, IExtLanguageManager extLanguageManager){

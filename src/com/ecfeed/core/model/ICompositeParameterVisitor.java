@@ -10,12 +10,6 @@
 
 package com.ecfeed.core.model;
 
-public interface IModelVisitor extends IBasicParameterVisitor, ICompositeParameterVisitor {
-	public Object visit(RootNode node) throws Exception;
-	public Object visit(ClassNode node) throws Exception;
-	public Object visit(MethodNode node) throws Exception;
-	public Object visit(TestSuiteNode node) throws Exception;
-	public Object visit(TestCaseNode node) throws Exception;
-	public Object visit(ConstraintNode node) throws Exception;
-	public Object visit(ChoiceNode node) throws Exception;
+public interface ICompositeParameterVisitor {
+	public Object visit(CompositeParameterNode node) throws Exception;
 }

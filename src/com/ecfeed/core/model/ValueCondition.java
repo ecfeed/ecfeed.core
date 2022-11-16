@@ -174,7 +174,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentions(BasicParameterNode abstractParameterNode) {
+	public boolean mentions(AbstractParameterNode abstractParameterNode) {
 
 		return false;
 	}	

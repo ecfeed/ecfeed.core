@@ -305,17 +305,24 @@ public class RemoteTCProviderStandard implements ITCProvider {
         List<ChoiceNode> choiceNodes = new ArrayList<>();
 
         for (int paramIndex = 0; paramIndex < parametersCount; paramIndex++) {
-            BasicParameterNode methodParameterNode = getMethodNode().getMethodParameter(paramIndex);
+        	
+            AbstractParameterNode abstractParameterNode = getMethodNode().getMethodParameter(paramIndex);
+            
+            if (abstractParameterNode instanceof CompositeParameterNode) {
+            	continue;
+            }
 
+            BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+            
             String choiceName = choiceSchemas[paramIndex].getName();
             String choiceValue = choiceSchemas[paramIndex].getValue();
             ChoiceNode choiceNode;
 
-            if (methodParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
-                choiceNode = new ChoiceNode(choiceName, choiceValue, methodParameterNode.getModelChangeRegistrator());
-                choiceNode.setParent(methodParameterNode);
+            if (basicParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
+                choiceNode = new ChoiceNode(choiceName, choiceValue, abstractParameterNode.getModelChangeRegistrator());
+                choiceNode.setParent(abstractParameterNode);
             } else {
-                choiceNode = methodParameterNode.findChoice(choiceName);
+                choiceNode = basicParameterNode.findChoice(choiceName);
             }
 
             if (choiceNode == null) {

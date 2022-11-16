@@ -58,7 +58,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean mentions(BasicParameterNode parameter) {
+	public boolean mentions(AbstractParameterNode parameter) {
 
 		for (AbstractStatement child : fStatements) {
 			if (child.mentions(parameter)) {
@@ -70,7 +70,7 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public boolean mentionsParameterAndOrderRelation(BasicParameterNode parameter) {
+	public boolean mentionsParameterAndOrderRelation(AbstractParameterNode parameter) {
 
 		for (AbstractStatement child : fStatements) {
 			if (child.mentionsParameterAndOrderRelation(parameter)) {

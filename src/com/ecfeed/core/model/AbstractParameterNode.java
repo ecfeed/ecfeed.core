@@ -146,6 +146,10 @@ public abstract class AbstractParameterNode extends AbstractNode {
 			return false;
 		}
 		
+		if (parent instanceof CompositeParameterNode) {
+			return false;
+		}
+
 		return true;
 	}
 

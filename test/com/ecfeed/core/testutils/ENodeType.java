@@ -56,5 +56,10 @@ public enum ENodeType {
 		public Object visit(ChoiceNode node) throws Exception {
 			return null;
 		}
+
+		@Override
+		public Object visit(CompositeParameterNode node) throws Exception {
+			return null;
+		}
 	}
 }
