@@ -106,7 +106,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public int getChildrenCount() {
 
-		return 0;
+		return fParametersHolder.getParametersCount();
 	}
 
 	private void createDefaultProperties() {

@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -31,30 +32,87 @@ public class CompositeParameterNodeTest {
 	}
 
 	@Test
-	public void getChildrenTest() {
+	public void childParametersTest() {
 		
 		String parameterName1 = "name1";
 		String parameterName2 = "name2";
 		
-		BasicParameterNode basicParameterNode1 = new BasicParameterNode(parameterName1, "int", null);
-		BasicParameterNode basicParameterNode2 = new BasicParameterNode(parameterName2, "int", null);
+		// create composite parameter
 		
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(parameterName1, null);
 		
+		assertEquals(0, compositeParameterNode.getChildrenCount());
 		List<IAbstractNode> children = compositeParameterNode.getChildren();
 		assertEquals(0, children.size());
 		
-		compositeParameterNode.addParameter(basicParameterNode1);
-		compositeParameterNode.addParameter(basicParameterNode2);
+		List<AbstractParameterNode> parameters = compositeParameterNode.getParameters();
+		assertEquals(0, parameters.size());
+		
+		assertFalse(compositeParameterNode.parameterExists(parameterName2));
+		
+		// add two parameters
 
+		BasicParameterNode basicParameterNode1 = new BasicParameterNode(parameterName1, "int", null);
+		BasicParameterNode basicParameterNode2 = new BasicParameterNode(parameterName2, "int", null);
+		
+		compositeParameterNode.addParameter(basicParameterNode2);
+		compositeParameterNode.addParameter(basicParameterNode1, 0);
+		
+		assertEquals(2, compositeParameterNode.getChildrenCount());
 		children = compositeParameterNode.getChildren();
 		assertEquals(2, children.size());
 		
+		parameters = compositeParameterNode.getParameters();
+		assertEquals(2, parameters.size());
+		
+		assertTrue(compositeParameterNode.parameterExists(parameterName1));
+		assertTrue(compositeParameterNode.parameterExists(parameterName2));
+		
+		BasicParameterNode resultNode1 = (BasicParameterNode) parameters.get(0);
+		assertEquals(basicParameterNode1, resultNode1);
+		
+		BasicParameterNode resultNode2 = (BasicParameterNode) compositeParameterNode.getParameter(1);
+		assertEquals(basicParameterNode2, resultNode2);
+		
+		BasicParameterNode resultNode2b = (BasicParameterNode) compositeParameterNode.findParameter(parameterName2);
+		assertEquals(basicParameterNode2, resultNode2b);
+		
+		// remove parameter
+		
 		compositeParameterNode.removeParameter(basicParameterNode2);
+		
+		assertEquals(1, compositeParameterNode.getChildrenCount());
 		children = compositeParameterNode.getChildren();
 		assertEquals(1, children.size());
-	}
+		
+		parameters = compositeParameterNode.getParameters();
 
+		BasicParameterNode resultNode1b = (BasicParameterNode) parameters.get(0);
+		assertEquals(basicParameterNode1, resultNode1b);
+		
+		assertTrue(compositeParameterNode.parameterExists(parameterName1));
+		assertFalse(compositeParameterNode.parameterExists(parameterName2));
+		
+		// replace parameters
+		
+		List<AbstractParameterNode> parametersToReplace = new ArrayList<>();
+		parametersToReplace.add(basicParameterNode2);
+		
+		compositeParameterNode.replaceParameters(parametersToReplace);
+		
+		assertEquals(1, compositeParameterNode.getChildrenCount());
+		children = compositeParameterNode.getChildren();
+		assertEquals(1, children.size());
+		
+		parameters = compositeParameterNode.getParameters();
+
+		BasicParameterNode resultNode2c = (BasicParameterNode) parameters.get(0);
+		assertEquals(basicParameterNode2, resultNode2c);
+		
+		assertFalse(compositeParameterNode.parameterExists(parameterName1));
+		assertTrue(compositeParameterNode.parameterExists(parameterName2));
+	}
+	
 	@Test
 	public void isGlobalParameterTest() {
 		
@@ -94,6 +152,5 @@ public class CompositeParameterNodeTest {
 		basicParameterNode2.addChoice(choiceNode2);
 		assertTrue(compositeParameterNode1.isMatch(compositeParameterNode2));
 	}
-	
 	
 }
