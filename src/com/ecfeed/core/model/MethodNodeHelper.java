@@ -376,7 +376,14 @@ public class MethodNodeHelper {
 
 		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
 
-		return methodNode.getParent().getName() + "." + shortSignature;
+		IAbstractNode parent = methodNode.getParent();
+		
+		if (parent == null) {
+			
+			return shortSignature;
+		}
+		
+		return parent.getName() + "." + shortSignature;
 	}
 
 	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {

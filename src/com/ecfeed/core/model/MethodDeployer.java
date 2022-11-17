@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -256,34 +257,34 @@ public abstract class MethodDeployer {
 //		}
 //	}
 //
-//	public static List<TestCase> revertToOriginalChoices(List<TestCase> deployedTestCases) {
-//
-//		List<TestCase> result = new ArrayList<>();
-//
-//		for (TestCase deployedTestCase : deployedTestCases) {
-//
-//			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase);
-//
-//			result.add(revertedTestCaseNode);
-//		}
-//
-//		return result;
-//	}
-//
-//	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase) {
-//
-//		List<ChoiceNode> revertedChoices = new ArrayList<>();
-//
-//		List<ChoiceNode> deployedChoices = deployedTestCase.getListOfChoiceNodes();
-//
-//		for (ChoiceNode deployedChoiceNode : deployedChoices) {
-//
-//			ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
-//
-//			revertedChoices.add(originalChoiceNode);
-//		}
-//
-//		return new TestCase(revertedChoices);
-//	}
+	public static List<TestCase> revertToOriginalChoices(List<TestCase> deployedTestCases) {
+
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCase deployedTestCase : deployedTestCases) {
+
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase);
+
+			result.add(revertedTestCaseNode);
+		}
+
+		return result;
+	}
+
+	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase) {
+
+		List<ChoiceNode> revertedChoices = new ArrayList<>();
+
+		List<ChoiceNode> deployedChoices = deployedTestCase.getListOfChoiceNodes();
+
+		for (ChoiceNode deployedChoiceNode : deployedChoices) {
+
+			ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
+
+			revertedChoices.add(originalChoiceNode);
+		}
+
+		return new TestCase(revertedChoices);
+	}
 
 }
