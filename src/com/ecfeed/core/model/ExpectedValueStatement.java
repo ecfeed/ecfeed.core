@@ -168,8 +168,16 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	public BasicParameterNode makeCloneParameter(IParametersAndConstraintsParentNode method) {
 
 		for (AbstractParameterNode parameter : method.getParameters()) {
-			if (parameter.getName().equals(fLeftMethodParameterNode.getName())) {
-				return (BasicParameterNode) parameter;
+			if (parameter instanceof BasicParameterNode) {
+				BasicParameterNode parameterParsed = (BasicParameterNode) parameter;
+				if (parameterParsed.getOther() == fLeftMethodParameterNode) {
+					return parameterParsed;
+				}
+				if (parameterParsed.getOther() == null) {
+					if (parameterParsed.getName().equals(fLeftMethodParameterNode.getName())) {
+						return parameterParsed;
+					}
+				}
 			}
 		}
 

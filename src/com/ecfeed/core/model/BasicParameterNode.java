@@ -30,6 +30,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fDefaultValue;
 	private AbstractParameterNode fLinkToGlobalParameter;
 	private List<ChoiceNode> fChoicesCopy;
+	private BasicParameterNode fOtherBasicParameterNode;
 	
 	private ChoicesListHolder fChoicesListHolder;
 
@@ -142,8 +143,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public BasicParameterNode createCopy() {
+		BasicParameterNode parameter =  copy(ChoiceNode::createCopy);
 
-		return copy(ChoiceNode::createCopy);
+		parameter.fOtherBasicParameterNode = this;
+
+		return parameter;
+	}
+
+	public BasicParameterNode getOther() {
+
+		return fOtherBasicParameterNode;
 	}
 
 	private BasicParameterNode copy(UnaryOperator<ChoiceNode> operator) {
