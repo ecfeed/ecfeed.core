@@ -17,7 +17,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 public abstract class MethodDeployer {
 
-	public static String POSTFIX = "dep";
+	public static String POSTFIX = "deploy";
 
 	public static MethodNode deploy(MethodNode methodSource) {
 
