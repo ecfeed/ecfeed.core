@@ -11,9 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
@@ -59,7 +57,7 @@ public abstract class MethodDeployer {
 	}
 
 	private static void extractParametersBasic(String prefix, List<BasicParameterNode> parametersAll, AbstractParameterNode parameterSource) {
-		BasicParameterNode parsedParameter = (BasicParameterNode) parameterSource;
+		BasicParameterNode parsedParameter = ((BasicParameterNode) parameterSource).createCopy();
 		parsedParameter.setName(prefix + parsedParameter.getName());
 		parametersAll.add(parsedParameter);
 	}
@@ -68,10 +66,6 @@ public abstract class MethodDeployer {
 		CompositeParameterNode parsedParameter = (CompositeParameterNode) parameterSource;
 		extractParameters(prefix, parametersAll, parsedParameter.getParameters());
 	}
-
-
-
-
 
 	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints) {
 
@@ -85,8 +79,7 @@ public abstract class MethodDeployer {
 
 		MethodNode method = new MethodNode("construct");
 
-		parameters.stream().map(BasicParameterNode::createCopy).forEach(method::addParameter);
-
+		parameters.forEach(method::addParameter);
 		constraints.forEach(e -> method.addConstraint(e.createCopy(method)));
 
 		return method;
