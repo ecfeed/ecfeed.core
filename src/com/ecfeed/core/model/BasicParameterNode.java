@@ -145,14 +145,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public BasicParameterNode createCopy() {
 		BasicParameterNode parameter =  copy(ChoiceNode::createCopy);
 
-		parameter.fOtherBasicParameterNode = this;
+		parameter.setOtherBasicParameter(this);
 
 		return parameter;
 	}
 
-	public BasicParameterNode getOther() {
+	public BasicParameterNode getOtherBasicParameter() {
 
 		return fOtherBasicParameterNode;
+	}
+
+	public void setOtherBasicParameter(BasicParameterNode parameterNode) {
+		fOtherBasicParameterNode = parameterNode;
 	}
 
 	private BasicParameterNode copy(UnaryOperator<ChoiceNode> operator) {

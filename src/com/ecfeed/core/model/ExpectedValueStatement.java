@@ -170,10 +170,10 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		for (AbstractParameterNode parameter : method.getParameters()) {
 			if (parameter instanceof BasicParameterNode) {
 				BasicParameterNode parameterParsed = (BasicParameterNode) parameter;
-				if (parameterParsed.getOther() == fLeftMethodParameterNode) {
+				if (parameterParsed.getOtherBasicParameter() == fLeftMethodParameterNode) {
 					return parameterParsed;
 				}
-				if (parameterParsed.getOther() == null) {
+				if (parameterParsed.getOtherBasicParameter() == null) {
 					if (parameterParsed.getName().equals(fLeftMethodParameterNode.getName())) {
 						return parameterParsed;
 					}
