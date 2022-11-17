@@ -10,7 +10,10 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 
@@ -24,12 +27,46 @@ public abstract class MethodDeployer {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
 		}
 
-		MethodNode methodDeployed = construct(methodSource.getMethodParameters(), methodSource.getConstraintNodes());
+		Map<String, String> parameterNames = new HashMap<>();
+		List<BasicParameterNode> parameters = new ArrayList<>();
+
+		extractParameters(parameters, methodSource.getParameters(), parameterNames);
+
+		MethodNode methodDeployed = construct(parameters, methodSource.getConstraintNodes());
 
 		methodDeployed.setName(methodSource.getName() + "_" +  POSTFIX);
 
 		return methodDeployed;
 	}
+
+	private static void extractParameters(List<BasicParameterNode> parameters, List<AbstractParameterNode> source, Map<String, String> parameterNameMap) {
+
+		for (AbstractParameterNode sourceParameter : source) {
+
+			if (sourceParameter instanceof BasicParameterNode) {
+				extractParametersBasic(parameters, sourceParameter, parameterNameMap);
+			}
+
+			if (sourceParameter instanceof CompositeParameterNode) {
+				extractParametersComposite(parameters, sourceParameter, parameterNameMap);
+			}
+		}
+	}
+
+	private static void extractParametersBasic(List<BasicParameterNode> parameters, AbstractParameterNode sourceParameter, Map<String, String> parameterNameMap) {
+		BasicParameterNode parsedParameter = (BasicParameterNode) sourceParameter;
+		parameterNameMap.put(parsedParameter.getName(), parsedParameter.getName());
+		parameters.add(parsedParameter);
+	}
+
+	private static void extractParametersComposite(List<BasicParameterNode> parameters, AbstractParameterNode sourceParameter, Map<String, String> parameterNameMap) {
+		CompositeParameterNode parsedParameter = (CompositeParameterNode) sourceParameter;
+		extractParameters(parameters, parsedParameter.getParameters(), parameterNameMap);
+	}
+
+
+
+
 
 	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints) {
 
