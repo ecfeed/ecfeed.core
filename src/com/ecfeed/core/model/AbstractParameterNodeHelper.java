@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String getName(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
 		return name;
