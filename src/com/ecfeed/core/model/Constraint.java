@@ -588,7 +588,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		AbstractStatement precondition = fPrecondition.makeClone();
 		AbstractStatement postcondition = fPostcondition.makeClone();
 
-		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+
+	public Constraint createCopy(IParametersAndConstraintsParentNode method) {
+
+		AbstractStatement precondition = fPrecondition.createCopy(method);
+		AbstractStatement postcondition = fPostcondition.createCopy(method);
+
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
 	public void verifyConversionOfParameterFromToType(
@@ -931,4 +939,83 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	}
 
+	public static class CollectingMethodVisitor  implements IStatementVisitor {
+
+		private Set<MethodNode> fMethods = new HashSet<>();
+
+		public CollectingMethodVisitor() {
+		}
+
+		public Set<MethodNode> getMethods() {
+
+			return fMethods;
+		}
+
+		@Override
+		public Object visit(StaticStatement statement) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(StatementArray statement) {
+
+			for (AbstractStatement child : statement.getChildren()) {
+				try {
+					CollectingMethodVisitor visitor = new CollectingMethodVisitor();
+					child.accept(visitor);
+
+					if (visitor.getMethods().size() == 0) {
+						continue;
+					}
+
+					fMethods.addAll(visitor.getMethods());
+				} catch (Exception e) {
+					ExceptionHelper.reportRuntimeException("Something is wrong");
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ExpectedValueStatement statement) {
+
+			fMethods.add(statement.getLeftMethodParameterNode().getMethod());
+
+			return null;
+		}
+
+		@Override
+		public Object visit(RelationStatement statement) {
+
+			fMethods.add(statement.getLeftParameter().getMethod());
+
+			return null;
+		}
+
+		@Override
+		public Object visit(LabelCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ChoiceCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ParameterCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ValueCondition condition) {
+
+			return null;
+		}
+	}
 }

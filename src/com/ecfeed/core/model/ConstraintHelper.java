@@ -10,15 +10,9 @@
 
 package com.ecfeed.core.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.ParameterConversionDefinition;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.*;
 
 public class ConstraintHelper {
 
@@ -216,4 +210,16 @@ public class ConstraintHelper {
 		}
 	}
 
+	public static Set<MethodNode> getMethods(Constraint constraint) {
+		Constraint.CollectingMethodVisitor visitor = new Constraint.CollectingMethodVisitor();
+
+		try {
+			constraint.getPrecondition().accept(visitor);
+			constraint.getPostcondition().accept(visitor);
+		} catch (Exception e) {
+			ExceptionHelper.reportRuntimeException("Something is wrong");
+		}
+
+		return visitor.getMethods();
+	}
 }

@@ -9,12 +9,13 @@ import org.sat4j.specs.IProblem;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EcSatSolver {
 
     private ISolver fSolver;
-    private Sat4jClauses fSat4JClauses;
+    private List<VecInt> fSat4JClauses;
     private IntegerHolder fFirstFreeIDHolder;
 
     private Boolean fIsContradicting;
@@ -24,7 +25,7 @@ public class EcSatSolver {
     public EcSatSolver() {
 
         fSolver = SolverFactory.newDefault();
-        fSat4JClauses = new Sat4jClauses();
+        fSat4JClauses = new ArrayList<>();
         fFirstFreeIDHolder = new IntegerHolder(1);
 
         fIsContradicting = false;
@@ -37,10 +38,10 @@ public class EcSatSolver {
 
         try {
             fSolver.newVar(maxVar);
-            fSolver.setExpectedNumberOfClauses(fSat4JClauses.getSize());
+            fSolver.setExpectedNumberOfClauses(fSat4JClauses.size());
 
-            for (int index = 0; index < fSat4JClauses.getSize(); index++) {
-                VecInt clause = fSat4JClauses.getClause(index);
+            for (int index = 0; index < fSat4JClauses.size(); index++) {
+                VecInt clause = fSat4JClauses.get(index);
                 fSolver.addClause(clause);
             }
 

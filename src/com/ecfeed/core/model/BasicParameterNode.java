@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -29,6 +30,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fDefaultValue;
 	private AbstractParameterNode fLinkToGlobalParameter;
 	private List<ChoiceNode> fChoicesCopy;
+	private BasicParameterNode fOtherBasicParameterNode;
 	
 	private ChoicesListHolder fChoicesListHolder;
 
@@ -136,7 +138,29 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public BasicParameterNode makeClone() {
-		BasicParameterNode copy = 
+
+		return copy(ChoiceNode::makeClone);
+	}
+
+	public BasicParameterNode createCopy() {
+		BasicParameterNode parameter =  copy(ChoiceNode::createCopy);
+
+		parameter.setOtherBasicParameter(this);
+
+		return parameter;
+	}
+
+	public BasicParameterNode getOtherBasicParameter() {
+
+		return fOtherBasicParameterNode;
+	}
+
+	public void setOtherBasicParameter(BasicParameterNode parameterNode) {
+		fOtherBasicParameterNode = parameterNode;
+	}
+
+	private BasicParameterNode copy(UnaryOperator<ChoiceNode> operator) {
+		BasicParameterNode copy =
 				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
 						);
 
@@ -149,12 +173,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			copy.setDefaultValueString(getDefaultValue());
 
 		for (ChoiceNode choice : getChoices()) {
-			copy.addChoice(choice.makeClone());
+			copy.addChoice(operator.apply(choice));
 		}
 
 		copy.setParent(getParent());
+
 		return copy;
 	}
+
 
 	public String getType() {
 		

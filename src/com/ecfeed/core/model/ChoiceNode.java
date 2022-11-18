@@ -160,13 +160,13 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 	@Override
 	public ChoiceNode makeClone(){
-
 		ChoiceNode copy = makeCloneUnlink();
 
 		if(isClone())
 			copy.setOrigChoiceNode(getOrigChoiceNode());
 		else
 			copy.setOrigChoiceNode(this);
+
 		return copy;
 	}
 
@@ -184,6 +184,14 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		}
 
 		copy.setRandomizedValue(fIsRandomizedValue);
+		return copy;
+	}
+
+	public ChoiceNode createCopy() {
+		ChoiceNode copy = makeClone();
+
+		copy.setOtherChoice(this);
+
 		return copy;
 	}
 
