@@ -137,32 +137,49 @@ public class TestCaseNode extends AbstractNode {
 			return null;
 	}
 
-	public boolean correctTestCase(MethodNode method) {
+	public boolean correctTestCase(MethodNode parentMethodNode) {
 		
-		List<BasicParameterNode> parameters = method.getMethodParameters();
+		List<BasicParameterNode> parameters = parentMethodNode.getMethodParameters();
 		
-		if(parameters.size() != getTestData().size())
+		if (parameters.size() != getTestData().size()) {
 			return false;
+		}
 
-		for (int i = 0; i < parameters.size(); i++){
+		for (int i = 0; i < parameters.size(); i++) { // TODO MO-RE use for loop because get calculates always from begining
+			
 			BasicParameterNode parameter = parameters.get(i);
-			if(parameter.isExpected()){
-				String name = getTestData().get(i).getName();
-				String value = getTestData().get(i).getValueString();
-				ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
-				newChoice.setParent(parameter);
-				getTestData().set(i, newChoice);
-			} else{
-				ChoiceNode original = getTestData().get(i);
-				ChoiceNode newReference = parameter.getChoice(original.getQualifiedName());
-				if(newReference == null){
-					return false;
-				}
-				getTestData().set(i, newReference);
+			
+			if (parameter.isExpected()) {
+				updateTestCaseWithCreatedChoice(i, parameter);
+			} else {
+				updateTestCaseWithReferencedChoice(i, parameter);
 			}
 		}
 		
 		return true;
+	}
+
+	private void updateTestCaseWithReferencedChoice(int i, BasicParameterNode parameter) {
+		
+		ChoiceNode original = getTestData().get(i);
+		ChoiceNode newReference = parameter.getChoice(original.getQualifiedName());
+		
+		if (newReference == null) {
+			return ;
+		}
+		
+		getTestData().set(i, newReference);
+	}
+
+	private void updateTestCaseWithCreatedChoice(int i, BasicParameterNode parameter) {
+		
+		String name = getTestData().get(i).getName();
+		String value = getTestData().get(i).getValueString();
+		
+		ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
+		
+		newChoice.setParent(parameter);
+		getTestData().set(i, newChoice);
 	}
 
 	@Override
