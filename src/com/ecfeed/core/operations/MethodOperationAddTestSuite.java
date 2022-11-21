@@ -29,9 +29,9 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 
 		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode, extLanguageManager);
 		createTestSuites(testCases, testSuiteName, methodNode, typeAdapterProvider);
-
 	}
 
+	// TODO MO-RE do we need this method (does it make sense to add test cases without test suite name apart from testing) ?
 	public MethodOperationAddTestSuite(
 			MethodNode methodNode, 
 			List<TestCaseNode> testCases, 
@@ -39,11 +39,14 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_TEST_SUITES, false, methodNode, methodNode, extLanguageManager);
-		createTestSuites(testCases, methodNode, typeAdapterProvider);
-
+		createAndAddTestCaseOperations(testCases, methodNode, typeAdapterProvider);
 	}
 
-	private void createTestSuites(List<TestCase> testCases, String testSuiteName, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
+	private void createTestSuites(
+			List<TestCase> testCases, 
+			String testSuiteName, 
+			MethodNode methodNode, 
+			ITypeAdapterProvider typeAdapterProvider) {
 
 		for (TestCase testCase : testCases) {
 
@@ -62,7 +65,7 @@ public class MethodOperationAddTestSuite extends BulkOperation {
 		}
 	}
 
-	private void createTestSuites(List<TestCaseNode> testCases, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
+	private void createAndAddTestCaseOperations(List<TestCaseNode> testCases, MethodNode methodNode, ITypeAdapterProvider typeAdapterProvider) {
 
 		for (TestCaseNode testCase : testCases) {
 

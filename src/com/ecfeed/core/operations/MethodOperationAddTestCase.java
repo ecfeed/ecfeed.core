@@ -65,7 +65,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
 		
-		if (fTestCaseNode.updateReferences(fMethodNode) == false) {
+		if (fTestCaseNode.correctTestCase(fMethodNode) == false) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
 		}
 

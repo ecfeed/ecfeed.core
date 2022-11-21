@@ -129,7 +129,7 @@ public class TestCaseNode extends AbstractNode {
 
 	public TestCaseNode getCopy(MethodNode method){
 		TestCaseNode tcase = makeClone();
-		if(tcase.updateReferences(method)){
+		if(tcase.correctTestCase(method)){
 			tcase.setParent(method);
 			return tcase;
 		}
@@ -137,12 +137,14 @@ public class TestCaseNode extends AbstractNode {
 			return null;
 	}
 
-	public boolean updateReferences(MethodNode method){
+	public boolean correctTestCase(MethodNode method) {
+		
 		List<BasicParameterNode> parameters = method.getMethodParameters();
+		
 		if(parameters.size() != getTestData().size())
 			return false;
 
-		for(int i = 0; i < parameters.size(); i++){
+		for (int i = 0; i < parameters.size(); i++){
 			BasicParameterNode parameter = parameters.get(i);
 			if(parameter.isExpected()){
 				String name = getTestData().get(i).getName();
@@ -159,6 +161,7 @@ public class TestCaseNode extends AbstractNode {
 				getTestData().set(i, newReference);
 			}
 		}
+		
 		return true;
 	}
 
