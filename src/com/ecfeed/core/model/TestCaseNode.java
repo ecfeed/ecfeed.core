@@ -89,11 +89,19 @@ public class TestCaseNode extends AbstractNode {
 		return null;
 	}
 
-	public BasicParameterNode getMethodParameter(ChoiceNode choice){
-		if(getTestData().contains(choice)){
+	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
+		
+		ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+		
+		if (getTestData().contains(choice)) {
+			
 			int index = getTestData().indexOf(choice);
-			return getMethod().getMethodParameters().get(index);
+			List<AbstractParameterNode> methodParameters = getMethod().getMethodParameters();
+			
+			AbstractParameterNode abstractParameterNode = methodParameters.get(index);
+			return (BasicParameterNode) abstractParameterNode;
 		}
+		
 		return null;
 	}
 
@@ -139,48 +147,71 @@ public class TestCaseNode extends AbstractNode {
 
 	public boolean correctTestCase(MethodNode parentMethodNode) {
 		
-		List<BasicParameterNode> parameters = parentMethodNode.getMethodParameters();
+		ExceptionHelper.reportClientException("TODO XYX");
+//		List<AbstractParameterNode> parameters = parentMethodNode.getMethodParameters();
 		
-		if (parameters.size() != getTestData().size()) {
-			return false;
-		}
-
-		for (int i = 0; i < parameters.size(); i++) { // TODO MO-RE use for loop because get calculates always from begining
-			
-			BasicParameterNode parameter = parameters.get(i);
-			
-			if (parameter.isExpected()) {
-				updateTestCaseWithCreatedChoice(i, parameter);
-			} else {
-				updateTestCaseWithReferencedChoice(i, parameter);
-			}
-		}
-		
+//		if (parameters.size() != getTestData().size()) {
+//			return false;
+//		}
+//
+//		for (int i = 0; i < parameters.size(); i++) { // TODO MO-RE use for loop because get calculates always from begining
+//			
+//			BasicParameterNode parameter = parameters.get(i);
+//			
+//			if (parameter.isExpected()) {
+//				updateTestCaseWithCreatedChoice(i, parameter);
+//			} else {
+//				updateTestCaseWithReferencedChoice(i, parameter);
+//			}
+//		}
+//		
 		return true;
 	}
+	
+//	public boolean correctTestCase(MethodNode parentMethodNode) {
+//		
+//		List<BasicParameterNode> parameters = parentMethodNode.getMethodParameters();
+//		
+//		if (parameters.size() != getTestData().size()) {
+//			return false;
+//		}
+//
+//		for (int i = 0; i < parameters.size(); i++) { // TODO MO-RE use for loop because get calculates always from begining
+//			
+//			BasicParameterNode parameter = parameters.get(i);
+//			
+//			if (parameter.isExpected()) {
+//				updateTestCaseWithCreatedChoice(i, parameter);
+//			} else {
+//				updateTestCaseWithReferencedChoice(i, parameter);
+//			}
+//		}
+//		
+//		return true;
+//	}
 
-	private void updateTestCaseWithReferencedChoice(int i, BasicParameterNode parameter) {
-		
-		ChoiceNode original = getTestData().get(i);
-		ChoiceNode newReference = parameter.getChoice(original.getQualifiedName());
-		
-		if (newReference == null) {
-			return ;
-		}
-		
-		getTestData().set(i, newReference);
-	}
+//	private void updateTestCaseWithReferencedChoice(int i, BasicParameterNode parameter) {
+//		
+//		ChoiceNode original = getTestData().get(i);
+//		ChoiceNode newReference = parameter.getChoice(original.getQualifiedName());
+//		
+//		if (newReference == null) {
+//			return ;
+//		}
+//		
+//		getTestData().set(i, newReference);
+//	}
 
-	private void updateTestCaseWithCreatedChoice(int i, BasicParameterNode parameter) {
-		
-		String name = getTestData().get(i).getName();
-		String value = getTestData().get(i).getValueString();
-		
-		ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
-		
-		newChoice.setParent(parameter);
-		getTestData().set(i, newChoice);
-	}
+//	private void updateTestCaseWithCreatedChoice(int i, BasicParameterNode parameter) {
+//		
+//		String name = getTestData().get(i).getName();
+//		String value = getTestData().get(i).getValueString();
+//		
+//		ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
+//		
+//		newChoice.setParent(parameter);
+//		getTestData().set(i, newChoice);
+//	}
 
 	@Override
 	public boolean isMatch(IAbstractNode testCaseNode){

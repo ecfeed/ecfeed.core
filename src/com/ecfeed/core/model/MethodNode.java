@@ -144,14 +144,24 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		clonedMethodNode.setProperties(getProperties());
 
-		for(BasicParameterNode parameter : getMethodParameters()){
-			clonedMethodNode.addParameter(parameter.makeClone());
+		for (AbstractParameterNode parameter : getMethodParameters()) {
+			
+			if (!(parameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+			
+			clonedMethodNode.addParameter(basicParameterNode.makeClone());
 		}
 
-		for(TestCaseNode testcase : fTestCaseNodes){
+		for (TestCaseNode testcase : fTestCaseNodes) {
+			
 			TestCaseNode tcase = testcase.getCopy(clonedMethodNode);
-			if(tcase != null)
+			
+			if (tcase != null) {
 				clonedMethodNode.addTestCase(tcase);
+			}
 		}
 
 		clonedMethodNode.fConstraintNodeListHolder = fConstraintNodeListHolder.makeClone(clonedMethodNode);
@@ -253,9 +263,18 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 //	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {
+		
 		ArrayList<String> names = new ArrayList<String>();
-		for(BasicParameterNode parameter : getMethodParameters()){
-			if(parameter.isExpected() == expected){
+		
+		for (AbstractParameterNode parameter : getMethodParameters()) {
+			
+			if (!(parameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+			
+			if (basicParameterNode.isExpected() == expected) {
 				names.add(parameter.getName());
 			}
 		}
@@ -611,41 +630,68 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return true;
 	}
 
-	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter){
+	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter) {
+		
 		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
-		for(BasicParameterNode localParameter : getMethodParameters()){
-			if(localParameter.isLinked() && localParameter.getLinkToGlobalParameter() == globalParameter){
-				result.add(localParameter);
+		
+		for (AbstractParameterNode localParameter : getMethodParameters()) {
+			
+			if (!(localParameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) localParameter;
+			
+			if (basicParameterNode.isLinked() && basicParameterNode.getLinkToGlobalParameter() == globalParameter) {
+				result.add(basicParameterNode);
 			}
 		}
 		return result;
 	}
 
-	public final List<BasicParameterNode> getMethodParameters() {
-		List<BasicParameterNode> result = new ArrayList<>();
-		for(AbstractParameterNode parameter : getParameters()){
-			result.add((BasicParameterNode)parameter);
+	public final List<AbstractParameterNode> getMethodParameters() {
+		
+		List<AbstractParameterNode> result = new ArrayList<>();
+		
+		for (AbstractParameterNode parameter : getParameters()) {
+			result.add(parameter);
 		}
+		
 		return result;
 	}
 
-	public List<BasicParameterNode> getMethodParameters(boolean expected) {
-		List<BasicParameterNode> result = new ArrayList<>();
-		for(BasicParameterNode parameter : getMethodParameters()){
-			if(parameter.isExpected()){
-				result.add(parameter);
-			}
-		}
-		return result;
-	}
+//	public List<AbstractParameterNode> getMethodParameters(boolean expected) {
+//		
+//		List<AbstractParameterNode> result = new ArrayList<>();
+//		
+//		for (AbstractParameterNode parameter : getMethodParameters()) {
+//			
+//			if(parameter.isExpected()){
+//				result.add(parameter);
+//			}
+//		}
+//		return result;
+//	}
 
-	public BasicParameterNode getMethodParameter(ChoiceNode choice){
+	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
+		
 		BasicParameterNode parameter = choice.getParameter();
-		for(BasicParameterNode methodParameter : getMethodParameters()){
-			if(methodParameter == parameter || methodParameter.getLinkToGlobalParameter() == parameter){
-				return methodParameter;
+		
+		for (AbstractParameterNode methodParameter : getMethodParameters()) {
+		
+			if (!(methodParameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode methodBasicParameterNode = (BasicParameterNode) methodParameter;
+			
+			if (methodBasicParameterNode == parameter 
+					|| methodBasicParameterNode.getLinkToGlobalParameter() == parameter) {
+				
+				return methodBasicParameterNode;
 			}
 		}
+		
 		return null;
 	}
 

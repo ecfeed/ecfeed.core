@@ -251,10 +251,19 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	}
 
 	public List<MethodNode> getChildMethods(BasicParameterNode parameter) {
+		
 		List<MethodNode> result = new ArrayList<MethodNode>();
-		for(MethodNode method : getMethods()){
-			for(BasicParameterNode methodParameter : method.getMethodParameters()){
-				if(methodParameter.isLinked() && methodParameter.getLinkToGlobalParameter() == parameter){
+		
+		for (MethodNode method : getMethods()) {
+			for(AbstractParameterNode methodParameter : method.getMethodParameters()) {
+				
+				if (!(methodParameter instanceof BasicParameterNode)) {
+					continue;
+				}
+				
+				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameter;
+				
+				if (basicParameterNode.isLinked() && basicParameterNode.getLinkToGlobalParameter() == parameter) {
 					result.add(method);
 					break;
 				}

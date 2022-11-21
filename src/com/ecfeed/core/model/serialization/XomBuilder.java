@@ -135,7 +135,7 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		Element targetMethodElement = createTargetMethodElement(methodNode);
 
-		for (BasicParameterNode parameter : methodNode.getMethodParameters()) {
+		for (AbstractParameterNode parameter : methodNode.getMethodParameters()) {
 
 			if (shouldSerializeNode(parameter)) {
 				targetMethodElement.appendChild((Element)parameter.accept(this));

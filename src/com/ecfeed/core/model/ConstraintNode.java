@@ -334,8 +334,15 @@ public class ConstraintNode extends AbstractNode {
 
 	private boolean constraintsConsistent() {
 
-		for (BasicParameterNode parameter : getMethodNode().getMethodParameters()) {
-			if (!isConsistentForParameter(parameter)) {
+		for (AbstractParameterNode abstractParameterNode : getMethodNode().getMethodParameters()) {
+			
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			if (!isConsistentForParameter(basicParameterNode)) {
 				return false;
 			}
 		}
