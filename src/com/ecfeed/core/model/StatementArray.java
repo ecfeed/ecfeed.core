@@ -28,7 +28,7 @@ public class StatementArray extends AbstractStatement {
 
 		super(modelChangeRegistrator);
 
-		fStatements = new ArrayList<AbstractStatement>();
+		fStatements = new ArrayList<>();
 		fOperator = operator;
 	}
 
@@ -164,7 +164,6 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public StatementArray makeClone() {
-
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement : fStatements) {
@@ -176,7 +175,6 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public StatementArray createCopy(IParametersAndConstraintsParentNode method) {
-
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement: fStatements) {

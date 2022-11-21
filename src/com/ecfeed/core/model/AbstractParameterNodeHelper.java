@@ -12,8 +12,10 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -193,6 +195,34 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		return result;
+	}
+
+	public static Optional<BasicParameterNode> getReferencedParameter(IParametersAndConstraintsParentNode method, BasicParameterNode reference) {
+
+		for (AbstractParameterNode parameter : method.getParameters()) {
+
+			if (parameter instanceof BasicParameterNode) {
+				BasicParameterNode parameterParsed = (BasicParameterNode) parameter;
+
+				if (parameterParsed.getOtherBasicParameter().isLinked()) {
+					if (parameterParsed.getOtherBasicParameter().getLinkToGlobalParameter() == reference) {
+						return Optional.of(parameterParsed);
+					}
+				}
+
+				if (parameterParsed.getOtherBasicParameter() == reference) {
+					return Optional.of(parameterParsed);
+				}
+
+				if (parameterParsed.getOtherBasicParameter() == null) {
+					if (parameterParsed.getName().equals(reference.getName())) {
+						return Optional.of(parameterParsed);
+					}
+				}
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	public static boolean hasRandomizedChoices(BasicParameterNode abstractParameterNode) {

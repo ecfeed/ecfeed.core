@@ -21,7 +21,7 @@ public class SatSolverConstraintEvaluatorTest {
         IAlgorithm<ChoiceNode> algorithm = new CartesianProductAlgorithm<>();
 
         MethodNode method1 = getMethod(xmlModel);
-        MethodNode method2 = MethodDeployer.construct(method1.getMethodParameters(), method1.getConstraintNodes());
+        MethodNode method2 = MethodDeployer.deploy(method1);
 
         int count2 = countGeneratedTestCases(method2, algorithm);
         int count1 = countGeneratedTestCases(method1, algorithm);

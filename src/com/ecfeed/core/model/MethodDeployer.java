@@ -25,46 +25,49 @@ public abstract class MethodDeployer {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
 		}
 
-		MethodNode methodDeployed = construct(extractParameters(methodSource), methodSource.getConstraintNodes());
+		MethodNode methodTarget = new MethodNode(methodSource.getName() + "_" +  POSTFIX);
 
-		methodDeployed.setName(methodSource.getName() + "_" +  POSTFIX);
+		extractParameters(methodSource, methodTarget);
+		extractConstraints(methodSource, methodTarget);
 
-		return methodDeployed;
+		return methodTarget;
 	}
 
-	private static List<BasicParameterNode> extractParameters(MethodNode methodSource) {
-		List<BasicParameterNode> parameters = new ArrayList<>();
+	private static void extractParameters(MethodNode methodSource, MethodNode methodTarget) {
 		String prefix = "";
 
-		extractParameters(prefix, parameters, methodSource.getParameters());
-
-		return parameters;
+		extractParameters(prefix, methodTarget, methodSource.getParameters());
 	}
 
-	private static void extractParameters(String prefix, List<BasicParameterNode> parametersAll, List<AbstractParameterNode> parametersSource) {
+	private static void extractParameters(String prefix, MethodNode methodTarget, List<AbstractParameterNode> parametersSource) {
 
 		for (AbstractParameterNode sourceParameter : parametersSource) {
 
 			if (sourceParameter instanceof BasicParameterNode) {
-				extractParametersBasic(prefix, parametersAll, sourceParameter);
+				extractParametersBasic(prefix, methodTarget, sourceParameter);
 			}
 
 			if (sourceParameter instanceof CompositeParameterNode) {
 				String prefixParsed = prefix + sourceParameter.getName() + "_";
-				extractParametersComposite(prefixParsed, parametersAll, sourceParameter);
+				extractParametersComposite(prefixParsed, methodTarget, sourceParameter);
 			}
 		}
 	}
 
-	private static void extractParametersBasic(String prefix, List<BasicParameterNode> parametersAll, AbstractParameterNode parameterSource) {
-		BasicParameterNode parsedParameter = ((BasicParameterNode) parameterSource).createCopy();
-		parsedParameter.setName(prefix + parsedParameter.getName());
-		parametersAll.add(parsedParameter);
+	private static void extractParametersBasic(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource) {
+		BasicParameterNode parameterParsed = ((BasicParameterNode) parameterSource).createCopy();
+		parameterParsed.setName(prefix + parameterParsed.getName());
+		methodTarget.addParameter(parameterParsed);
 	}
 
-	private static void extractParametersComposite(String prefix, List<BasicParameterNode> parametersAll, AbstractParameterNode parameterSource) {
-		CompositeParameterNode parsedParameter = (CompositeParameterNode) parameterSource;
-		extractParameters(prefix, parametersAll, parsedParameter.getParameters());
+	private static void extractParametersComposite(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource) {
+		CompositeParameterNode parameterParsed = (CompositeParameterNode) parameterSource;
+		extractParameters(prefix, methodTarget, parameterParsed.getParameters());
+	}
+
+	private static void extractConstraints(MethodNode methodSource, MethodNode methodTarget) {
+
+		methodSource.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(methodTarget)));
 	}
 
 	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints) {
@@ -79,7 +82,7 @@ public abstract class MethodDeployer {
 
 		MethodNode method = new MethodNode("construct");
 
-		parameters.forEach(method::addParameter);
+		parameters.stream().map(BasicParameterNode::createCopy).forEach(method::addParameter);
 		constraints.forEach(e -> method.addConstraint(e.createCopy(method)));
 
 		return method;

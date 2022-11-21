@@ -20,12 +20,7 @@ import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_NEGATIVE_
 import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -796,7 +791,6 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
 	
 	public static String generateNewChoiceName(IChoicesParentNode fChoicesParentNode, String startChoiceName) {
 

@@ -138,14 +138,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public BasicParameterNode makeClone() {
+		BasicParameterNode parameter = copy(ChoiceNode::makeClone);
 
-		return copy(ChoiceNode::makeClone);
+		parameter.setParent(getParent());
+
+		return parameter;
 	}
 
 	public BasicParameterNode createCopy() {
-		BasicParameterNode parameter =  copy(ChoiceNode::createCopy);
+		BasicParameterNode parameter = copy(ChoiceNode::createCopy);
 
 		parameter.setOtherBasicParameter(this);
+		parameter.setParent(null);
 
 		return parameter;
 	}
@@ -161,13 +165,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	private BasicParameterNode copy(UnaryOperator<ChoiceNode> operator) {
 		BasicParameterNode copy =
-				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
-						);
+				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator());
 
 		copy.fLinkToGlobalParameter = fLinkToGlobalParameter;
 
 		copy.setProperties(getProperties());
-		copy.setParent(this.getParent());
 
 		if (getDefaultValue() != null)
 			copy.setDefaultValueString(getDefaultValue());
@@ -176,11 +178,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			copy.addChoice(operator.apply(choice));
 		}
 
-		copy.setParent(getParent());
-
 		return copy;
 	}
-
 
 	public String getType() {
 		

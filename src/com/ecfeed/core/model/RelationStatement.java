@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -190,7 +191,6 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public RelationStatement createCopy(IParametersAndConstraintsParentNode method) {
-
 		RelationStatement statement = new RelationStatement(updateParameterReference(method), fRelation, null);
 
 		IStatementCondition condition = fRightCondition.createCopy(method, statement);
@@ -200,8 +200,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	private BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
+		Optional<BasicParameterNode> parameterReference = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftParameter);
 
-		return (BasicParameterNode) method.findParameter(fLeftParameter.getName());
+		if (!parameterReference.isPresent()) {
+			ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
+		}
+
+		return parameterReference.get();
 	}
 
 	@Override
