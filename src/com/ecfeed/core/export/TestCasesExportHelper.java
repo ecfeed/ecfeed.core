@@ -119,13 +119,13 @@ public class TestCasesExportHelper {
 	private static String getParameterSubstitute(String parameterCommandSequence, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		String command = getParameterCommand(parameterCommandSequence);
-		int parameterNumber = getParameterNumber(parameterCommandSequence, methodNode, extLanguageManager) - 1;
+		int parameterIndex = getParameterIndex(parameterCommandSequence, methodNode, extLanguageManager) - 1;
 
-		if (parameterNumber == -1) {
+		if (parameterIndex == -1) {
 			return null;
 		}
 
-		BasicParameterNode parameter = methodNode.getMethodParameters().get(parameterNumber);
+		BasicParameterNode parameter = (BasicParameterNode) methodNode.getMethodParameters().get(parameterIndex);
 		String substitute = resolveParameterCommand(command, parameter, extLanguageManager);
 
 		return substitute;
@@ -149,7 +149,7 @@ public class TestCasesExportHelper {
 		return parameterCommandSequence.substring(parameterCommandSequence.indexOf(".") + 1, parameterCommandSequence.length());
 	}
 
-	private static int getParameterNumber(String parameterSequence, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	private static int getParameterIndex(String parameterSequence, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		String parameterDescriptionString = parameterSequence.substring(1, parameterSequence.indexOf("."));
 
@@ -339,7 +339,7 @@ public class TestCasesExportHelper {
 
 	private static String createValueSubstitute(String parameterCommandSequence, TestCaseNode testCase, IExtLanguageManager extLanguageManager) {
 
-		int parameterNumber = getParameterNumber(parameterCommandSequence, testCase.getMethod(), extLanguageManager) - 1;
+		int parameterNumber = getParameterIndex(parameterCommandSequence, testCase.getMethod(), extLanguageManager) - 1;
 
 		if (parameterNumber == -1) {
 			return null;

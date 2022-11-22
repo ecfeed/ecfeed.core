@@ -2,14 +2,10 @@ package com.ecfeed.core.evaluator;
 
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
-import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.utils.*;
 import com.google.common.primitives.Ints;
-import com.ecfeed.core.model.BasicParameterNode;
-
 
 import java.util.*;
-import java.util.List;
 
 public class SatSolverConstraintEvaluator implements IConstraintEvaluator<ChoiceNode> {
 	private boolean enabled = false;
@@ -55,7 +51,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		fConstraints = constraints;
 
 		for (MethodNode method : methods) {
-			fParameters.addAll(method.getMethodParameters());
+			fParameters.addAll(convertToBasicParameters(method));
 		}
 
 		fParameterChoices.update(fParameters);
@@ -64,6 +60,21 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		initSat4Solver();
 
 		enabled = true;
+	}
+
+	private List<BasicParameterNode> convertToBasicParameters(MethodNode method) {
+		
+		List<BasicParameterNode> result = new ArrayList<>();
+		
+		List<AbstractParameterNode> methodParameters = method.getMethodParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			result.add(basicParameterNode);
+		}
+		
+		return result;
 	}
 
 	private Set<MethodNode> initGetMethodNode(Collection<Constraint> constraints) {

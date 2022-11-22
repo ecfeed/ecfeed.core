@@ -19,7 +19,7 @@ import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String getName(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
 		return name;
@@ -94,6 +94,12 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String createSignature(
+			CompositeParameterNode compositeParameterNode) {
+
+		return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE + " " + compositeParameterNode.getName();
+	}
+
+	public static String createReverseSignature(
 			CompositeParameterNode compositeParameterNode) {
 
 		return SignatureHelper.joinElementsWithSeparator(compositeParameterNode.getName(), CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
