@@ -26,6 +26,7 @@ import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.GeneratorValue;
 import com.ecfeed.core.generators.RandomGenerator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
@@ -396,7 +397,7 @@ public class XmlParserSerializerTest {
 		}
 
 		List<ConstraintNode> constraints = createConstraints(choicesParentParameters, expectedParameters, numOfConstraints);
-		List<TestCaseNode> testCases = createTestCases(method.getMethodParameters(), numOfTestCases);
+		List<TestCaseNode> testCases = createTestCases(getMethodParameters(method), numOfTestCases);
 
 		for(ConstraintNode constraint : constraints){
 			method.addConstraint(constraint);
@@ -406,6 +407,19 @@ public class XmlParserSerializerTest {
 		}
 
 		return method;
+	}
+
+	private List<BasicParameterNode> getMethodParameters(MethodNode method) {
+		
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+		
+		List<AbstractParameterNode> methodParameters = method.getMethodParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+			result.add((BasicParameterNode) abstractParameterNode);
+		}
+		
+		return result;
 	}
 
 	private List<BasicParameterNode> createChoicesParentParameters(int numOfParameters) {
@@ -618,6 +632,7 @@ public class XmlParserSerializerTest {
 
 	private List<TestCaseNode> createTestCases(
 			List<BasicParameterNode> parameters, int numOfTestCases) {
+		
 		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
 		try {
 			RandomGenerator<ChoiceNode> generator = new RandomGenerator<ChoiceNode>();

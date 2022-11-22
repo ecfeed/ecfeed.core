@@ -56,6 +56,22 @@ public class ParametersHolder {
 		return fParameters;
 	}
 
+	public List<BasicParameterNode> getMethodParametersAsBasic() {
+		
+		List<BasicParameterNode> result = new ArrayList<>();
+		
+		for (AbstractParameterNode abstractParameterNode : fParameters) {
+		
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				ExceptionHelper.reportRuntimeException("Attempt to get not basic parameter.");
+			}
+			
+			result.add((BasicParameterNode) abstractParameterNode);
+		}
+		
+		return result;
+	}
+
 	public int getParametersCount(){
 
 		return fParameters.size();

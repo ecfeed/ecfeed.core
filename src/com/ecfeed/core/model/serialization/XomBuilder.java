@@ -402,10 +402,16 @@ public abstract class XomBuilder implements IModelVisitor {
 		return value.replaceAll(xml10pattern, "");
 	}
 
-	private void appendChoiceOfTestCase(Element targetTestCaseElement,
-			TestCaseNode node, ChoiceNode choiceNode) {
+	private void appendChoiceOfTestCase(
+			Element targetTestCaseElement,
+			TestCaseNode node, 
+			ChoiceNode choiceNode) {
 
-		if (choiceNode.getParameter() != null && node.getMethodParameter(choiceNode).isExpected()) {
+		if (choiceNode == null) {
+			ExceptionHelper.reportRuntimeException("Attempt to append empty choice.");
+		}
+		
+		if (choiceNode.getParameter() != null && node.getBasicMethodParameter(choiceNode).isExpected()) {
 
 			Element expectedParameterElement = new Element(EXPECTED_PARAMETER_NODE_NAME);
 			Attribute expectedValueAttribute = new Attribute(VALUE_ATTRIBUTE_NAME, choiceNode.getValueString());

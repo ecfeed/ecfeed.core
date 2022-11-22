@@ -74,7 +74,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 
 		for(ChoiceNode choice : fTestCaseNode.getTestData()) {
 
-			BasicParameterNode parameter = fTestCaseNode.getMethodParameter(choice);
+			BasicParameterNode parameter = fTestCaseNode.getBasicMethodParameter(choice);
 
 			if(parameter.isExpected()){
 				

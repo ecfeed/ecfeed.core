@@ -11,6 +11,7 @@
 package com.ecfeed.core.testutils;
 
 import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.RelationStatement;
@@ -95,7 +96,7 @@ public class ModelStringifier {
 	public String stringify(MethodNode m, int indent){
 		String result = intendentString(indent);
 		result += "Method " + m.toString();
-		for(BasicParameterNode child : m.getMethodParameters()){
+		for(AbstractParameterNode child : m.getMethodParameters()){
 			result += "\n";
 			result += stringify(child, indent + 2);
 		}
@@ -126,7 +127,7 @@ public class ModelStringifier {
 		String result = intendentString(indent);
 		result += "Test case " + tc.toString() + "[";
 		for(ChoiceNode choice : tc.getTestData()){
-			BasicParameterNode parameter = tc.getMethodParameter(choice);
+			BasicParameterNode parameter = tc.getBasicMethodParameter(choice);
 			if(parameter.isExpected()){
 				result += "[e]" + choice.getValueString();
 			}

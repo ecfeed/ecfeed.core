@@ -24,6 +24,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 public class MethodNode  extends AbstractNode implements IParametersAndConstraintsParentNode {
 
 	ParametersHolder fParametersHolder;
+	ParametersHolder fDeployedParametersHolder;
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
@@ -39,6 +40,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fDeployedParametersHolder = null;
 		fTestCaseNodes = new ArrayList<>();
 		fTestSuiteNodes = new ArrayList<>();
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
@@ -659,19 +661,20 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		
 		return result;
 	}
+	
+	public final List<BasicParameterNode> getDeployedMethodParameters() {
+		
+		if (fDeployedParametersHolder != null) {
+			return fDeployedParametersHolder.getMethodParametersAsBasic();
+		}
+		
+		return getStandardParametersWhenThereWasNoDeployment();
+	}
 
-//	public List<AbstractParameterNode> getMethodParameters(boolean expected) {
-//		
-//		List<AbstractParameterNode> result = new ArrayList<>();
-//		
-//		for (AbstractParameterNode parameter : getMethodParameters()) {
-//			
-//			if(parameter.isExpected()){
-//				result.add(parameter);
-//			}
-//		}
-//		return result;
-//	}
+	private List<BasicParameterNode> getStandardParametersWhenThereWasNoDeployment() {
+		
+		return fParametersHolder.getMethodParametersAsBasic();
+	}
 
 	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
 		
@@ -724,7 +727,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		
 		fParametersHolder.addParameter(parameter, this);
 	}
-
+	
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 		
