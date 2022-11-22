@@ -156,18 +156,9 @@ public class ParameterCondition implements IStatementCondition {
 
 	@Override
 	public ParameterCondition createCopy(IParametersAndConstraintsParentNode method, RelationStatement statement) {
+		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fRightParameterNode);
 
-		return new ParameterCondition(updateParameterReference(method), statement);
-	}
-
-	private BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
-		Optional<BasicParameterNode> parameterReference = AbstractParameterNodeHelper.getReferencedParameter(method, fRightParameterNode);
-
-		if (!parameterReference.isPresent()) {
-			ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
-		}
-
-		return parameterReference.get();
+		return new ParameterCondition(parameter, statement);
 	}
 
 	@Override

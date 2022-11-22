@@ -162,18 +162,9 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public ExpectedValueStatement createCopy(IParametersAndConstraintsParentNode method) {
+		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftMethodParameterNode);
 
-		return new ExpectedValueStatement(updateParameterReference(method), fChoiceNode.createCopy(), fPredicate);
-	}
-
-	public BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
-		Optional<BasicParameterNode> parameterReference = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftMethodParameterNode);
-
-		if (!parameterReference.isPresent()) {
-			ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
-		}
-
-		return parameterReference.get();
+		return new ExpectedValueStatement(parameter, fChoiceNode.createCopy(), fPredicate);
 	}
 
 	@Override

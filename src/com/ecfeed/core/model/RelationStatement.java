@@ -26,6 +26,7 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
 import com.ecfeed.core.utils.StringHelper;
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -191,22 +192,14 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public RelationStatement createCopy(IParametersAndConstraintsParentNode method) {
-		RelationStatement statement = new RelationStatement(updateParameterReference(method), fRelation, null);
+		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftParameter);
+
+		RelationStatement statement = new RelationStatement(parameter, fRelation, null);
 
 		IStatementCondition condition = fRightCondition.createCopy(method, statement);
 		statement.setCondition(condition);
 
 		return statement;
-	}
-
-	private BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
-		Optional<BasicParameterNode> parameterReference = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftParameter);
-
-		if (!parameterReference.isPresent()) {
-			ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
-		}
-
-		return parameterReference.get();
 	}
 
 	@Override

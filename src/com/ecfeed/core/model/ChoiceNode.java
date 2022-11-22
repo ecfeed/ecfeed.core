@@ -33,7 +33,7 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	private ChoicesListHolder fChoicesListHolder;
 
 	private ChoiceNode fOrigChoiceNode = null; // used in Sat Solver
-	private ChoiceNode fOtherChoiceNode = null; // a reference to other choice which can be used in algorithms
+	private ChoiceNode fDeploymentChoiceNode = null; // a reference to other choice which can be used in algorithms
 
 	public ChoiceNode(String name, String value, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
@@ -190,17 +190,17 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	public ChoiceNode createCopy() {
 		ChoiceNode copy = makeClone();
 
-		copy.setOtherChoice(this);
+		copy.setDeploymentChoiceNode(this);
 
 		return copy;
 	}
 
-	public ChoiceNode getOtherChoice() {
-		return fOtherChoiceNode;
+	public ChoiceNode getDeploymentChoiceNode() {
+		return fDeploymentChoiceNode;
 	}
 	
-	public void setOtherChoice(ChoiceNode choiceNode) {
-		fOtherChoiceNode = choiceNode;
+	public void setDeploymentChoiceNode(ChoiceNode choiceNode) {
+		fDeploymentChoiceNode = choiceNode;
 	}
 
 	public ChoiceNode getQualifiedCopy(BasicParameterNode parameter) {

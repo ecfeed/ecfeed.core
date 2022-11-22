@@ -197,28 +197,39 @@ public abstract class AbstractParameterNodeHelper {
 		return result;
 	}
 
-	public static Optional<BasicParameterNode> getReferencedParameter(IParametersAndConstraintsParentNode method, BasicParameterNode reference) {
+	public static BasicParameterNode getReferencedParameter(IParametersAndConstraintsParentNode method, BasicParameterNode reference) {
 
 		for (AbstractParameterNode parameter : method.getParameters()) {
 
 			if (parameter instanceof BasicParameterNode) {
-				BasicParameterNode parameterParsed = (BasicParameterNode) parameter;
+				Optional<BasicParameterNode> parameterParsed = getReferenceParameterBasic((BasicParameterNode) parameter, reference);
 
-				if (parameterParsed.getOtherBasicParameter().isLinked()) {
-					if (parameterParsed.getOtherBasicParameter().getLinkToGlobalParameter() == reference) {
-						return Optional.of(parameterParsed);
-					}
+				if (parameterParsed.isPresent()) {
+					return parameterParsed.get();
 				}
+			}
+		}
 
-				if (parameterParsed.getOtherBasicParameter() == reference) {
-					return Optional.of(parameterParsed);
-				}
+		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
 
-				if (parameterParsed.getOtherBasicParameter() == null) {
-					if (parameterParsed.getName().equals(reference.getName())) {
-						return Optional.of(parameterParsed);
-					}
-				}
+		return null;
+	}
+
+	private static Optional<BasicParameterNode> getReferenceParameterBasic(BasicParameterNode parameter, BasicParameterNode reference) {
+
+		if (parameter.getDeploymentParameter().isLinked()) {
+			if (parameter.getDeploymentParameter().getLinkToGlobalParameter() == reference) {
+				return Optional.of(parameter);
+			}
+		}
+
+		if (parameter.getDeploymentParameter() == reference) {
+			return Optional.of(parameter);
+		}
+
+		if (parameter.getDeploymentParameter() == null) {
+			if (parameter.getName().equals(reference.getName())) {
+				return Optional.of(parameter);
 			}
 		}
 

@@ -72,9 +72,9 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	private ChoiceNode updateChoiceReference(IParametersAndConstraintsParentNode method) {
-		Optional<BasicParameterNode> parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fRightChoice.getParameter());
+		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fRightChoice.getParameter());
 
-		ChoiceNode choice = parameter.get().getChoice(fRightChoice.getQualifiedName());
+		ChoiceNode choice = parameter.getChoice(fRightChoice.getQualifiedName());
 		choice.setOrigChoiceNode(null);
 
 		return choice;

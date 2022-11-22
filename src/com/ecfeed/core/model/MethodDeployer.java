@@ -316,7 +316,7 @@ public abstract class MethodDeployer {
 
 		for (ChoiceNode deployedChoiceNode : deployedChoices) {
 
-			ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
+			ChoiceNode originalChoiceNode = deployedChoiceNode.getDeploymentChoiceNode();
 
 			revertedChoices.add(originalChoiceNode);
 		}
