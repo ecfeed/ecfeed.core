@@ -12,8 +12,10 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -199,6 +201,45 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		return result;
+	}
+
+	public static BasicParameterNode getReferencedParameter(IParametersAndConstraintsParentNode method, BasicParameterNode reference) {
+
+		for (AbstractParameterNode parameter : method.getParameters()) {
+
+			if (parameter instanceof BasicParameterNode) {
+				Optional<BasicParameterNode> parameterParsed = getReferenceParameterBasic((BasicParameterNode) parameter, reference);
+
+				if (parameterParsed.isPresent()) {
+					return parameterParsed.get();
+				}
+			}
+		}
+
+		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
+
+		return null;
+	}
+
+	private static Optional<BasicParameterNode> getReferenceParameterBasic(BasicParameterNode parameter, BasicParameterNode reference) {
+
+		if (parameter.getDeploymentParameter().isLinked()) {
+			if (parameter.getDeploymentParameter().getLinkToGlobalParameter() == reference) {
+				return Optional.of(parameter);
+			}
+		}
+
+		if (parameter.getDeploymentParameter() == reference) {
+			return Optional.of(parameter);
+		}
+
+		if (parameter.getDeploymentParameter() == null) {
+			if (parameter.getName().equals(reference.getName())) {
+				return Optional.of(parameter);
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	public static boolean hasRandomizedChoices(BasicParameterNode abstractParameterNode) {

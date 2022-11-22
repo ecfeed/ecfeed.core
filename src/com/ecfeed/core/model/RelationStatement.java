@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -25,6 +26,7 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
 import com.ecfeed.core.utils.StringHelper;
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -190,18 +192,14 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 	@Override
 	public RelationStatement createCopy(IParametersAndConstraintsParentNode method) {
+		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftParameter);
 
-		RelationStatement statement = new RelationStatement(updateParameterReference(method), fRelation, null);
+		RelationStatement statement = new RelationStatement(parameter, fRelation, null);
 
 		IStatementCondition condition = fRightCondition.createCopy(method, statement);
 		statement.setCondition(condition);
 
 		return statement;
-	}
-
-	private BasicParameterNode updateParameterReference(IParametersAndConstraintsParentNode method) {
-
-		return (BasicParameterNode) method.findParameter(fLeftParameter.getName());
 	}
 
 	@Override

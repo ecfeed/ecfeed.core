@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.*;
@@ -161,29 +162,9 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public ExpectedValueStatement createCopy(IParametersAndConstraintsParentNode method) {
+		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftMethodParameterNode);
 
-		return new ExpectedValueStatement(makeCloneParameter(method), fChoiceNode.makeClone(), fPredicate);
-	}
-
-	public BasicParameterNode makeCloneParameter(IParametersAndConstraintsParentNode method) {
-
-		for (AbstractParameterNode parameter : method.getParameters()) {
-			if (parameter instanceof BasicParameterNode) {
-				BasicParameterNode parameterParsed = (BasicParameterNode) parameter;
-				if (parameterParsed.getOtherBasicParameter() == fLeftMethodParameterNode) {
-					return parameterParsed;
-				}
-				if (parameterParsed.getOtherBasicParameter() == null) {
-					if (parameterParsed.getName().equals(fLeftMethodParameterNode.getName())) {
-						return parameterParsed;
-					}
-				}
-			}
-		}
-
-		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
-
-		return null;
+		return new ExpectedValueStatement(parameter, fChoiceNode.createCopy(), fPredicate);
 	}
 
 	@Override

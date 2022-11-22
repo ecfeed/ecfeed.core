@@ -30,7 +30,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fDefaultValue;
 	private AbstractParameterNode fLinkToGlobalParameter;
 	private List<ChoiceNode> fChoicesCopy;
-	private BasicParameterNode fOtherBasicParameterNode;
+	private BasicParameterNode fDeploymenParameterNode;
 	
 	private ChoicesListHolder fChoicesListHolder;
 
@@ -138,36 +138,38 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public BasicParameterNode makeClone() {
+		BasicParameterNode parameter = copy(ChoiceNode::makeClone);
 
-		return copy(ChoiceNode::makeClone);
-	}
-
-	public BasicParameterNode createCopy() {
-		BasicParameterNode parameter =  copy(ChoiceNode::createCopy);
-
-		parameter.setOtherBasicParameter(this);
+		parameter.setParent(getParent());
 
 		return parameter;
 	}
 
-	public BasicParameterNode getOtherBasicParameter() {
+	public BasicParameterNode createCopy() {
+		BasicParameterNode parameter = copy(ChoiceNode::createCopy);
 
-		return fOtherBasicParameterNode;
+		parameter.setDeploymentParameter(this);
+		parameter.setParent(null);
+
+		return parameter;
 	}
 
-	public void setOtherBasicParameter(BasicParameterNode parameterNode) {
-		fOtherBasicParameterNode = parameterNode;
+	public BasicParameterNode getDeploymentParameter() {
+
+		return fDeploymenParameterNode;
+	}
+
+	public void setDeploymentParameter(BasicParameterNode parameterNode) {
+		fDeploymenParameterNode = parameterNode;
 	}
 
 	private BasicParameterNode copy(UnaryOperator<ChoiceNode> operator) {
 		BasicParameterNode copy =
-				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
-						);
+				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator());
 
 		copy.fLinkToGlobalParameter = fLinkToGlobalParameter;
 
 		copy.setProperties(getProperties());
-		copy.setParent(this.getParent());
 
 		if (getDefaultValue() != null)
 			copy.setDefaultValueString(getDefaultValue());
@@ -176,11 +178,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			copy.addChoice(operator.apply(choice));
 		}
 
-		copy.setParent(getParent());
-
 		return copy;
 	}
-
 
 	public String getType() {
 		

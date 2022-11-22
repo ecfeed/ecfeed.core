@@ -180,16 +180,13 @@ public class ConstraintNode extends AbstractNode {
 
 	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
 
-		ConstraintNode copy = createCopy(parent);
+		ConstraintNode copy = makeClone();
 
-//		if (copy.updateReferences(parent))
-//			return copy;
-//		else {
-//
-//			return null;
-//		}
-
-		return copy;
+		if (copy.updateReferences(parent))
+			return copy;
+		else {
+			return null;
+		}
 	}
 
 	@Override

@@ -86,7 +86,7 @@ public class MethodDeployerTest {
 		assertEquals(sourceChoiceNode.getName(), deployedChoiceNode.getName());
 		assertEquals(sourceChoiceNode.getValueString(), deployedChoiceNode.getValueString());
 
-		ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
+		ChoiceNode originalChoiceNode = deployedChoiceNode.getDeploymentChoiceNode();
 		assertEquals(sourceChoiceNode.hashCode(), originalChoiceNode.hashCode());
 	}
 

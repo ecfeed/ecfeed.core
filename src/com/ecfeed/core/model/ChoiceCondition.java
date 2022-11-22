@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -71,7 +72,7 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	private ChoiceNode updateChoiceReference(IParametersAndConstraintsParentNode method) {
-		BasicParameterNode parameter = (BasicParameterNode) method.findParameter(fRightChoice.getParameter().getName());
+		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fRightChoice.getParameter());
 
 		ChoiceNode choice = parameter.getChoice(fRightChoice.getQualifiedName());
 		choice.setOrigChoiceNode(null);
