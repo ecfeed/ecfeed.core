@@ -39,6 +39,12 @@ public class ParametersHolder {
 		}
 	}
 
+	public void setBasicParameters(List<BasicParameterNode> parameters, IAbstractNode parent) {
+
+		fParameters.clear();
+		fParameters.addAll(parameters);
+	}
+
 	public void addParameter(AbstractParameterNode parameter, int index, IAbstractNode parent) {
 
 		if (parameterExists(parameter)) {
@@ -56,7 +62,7 @@ public class ParametersHolder {
 		return fParameters;
 	}
 
-	public List<BasicParameterNode> getMethodParametersAsBasic() {
+	public List<BasicParameterNode> getParametersAsBasic() {
 		
 		List<BasicParameterNode> result = new ArrayList<>();
 		

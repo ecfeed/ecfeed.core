@@ -665,7 +665,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public final List<BasicParameterNode> getDeployedMethodParameters() {
 		
 		if (fDeployedParametersHolder != null) {
-			return fDeployedParametersHolder.getMethodParametersAsBasic();
+			return fDeployedParametersHolder.getParametersAsBasic();
 		}
 		
 		return getStandardParametersWhenThereWasNoDeployment();
@@ -673,7 +673,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	private List<BasicParameterNode> getStandardParametersWhenThereWasNoDeployment() {
 		
-		return fParametersHolder.getMethodParametersAsBasic();
+		return fParametersHolder.getParametersAsBasic();
 	}
 
 	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
@@ -740,6 +740,15 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		fParametersHolder.addParameters(parameters, this);
 	}
 
+	public void setDeployedParameters(List<BasicParameterNode> parameters) {
+		
+		if (fDeployedParametersHolder == null) {
+			fDeployedParametersHolder = new ParametersHolder(getModelChangeRegistrator());
+		} 
+		
+		fDeployedParametersHolder.setBasicParameters(parameters, this);
+	}
+	
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
 		
@@ -763,7 +772,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		
 		return fParametersHolder.getParameters();
 	}
-
+	
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
 		
@@ -804,6 +813,11 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public String generateNewParameterName(String startParameterName) {
 		
 		return fParametersHolder.generateNewParameterName(startParameterName);
+	}
+	
+	public List<BasicParameterNode> getParametersAsBasic() {
+		
+		return fParametersHolder.getParametersAsBasic();
 	}
 
 }

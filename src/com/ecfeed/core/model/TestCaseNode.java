@@ -101,8 +101,9 @@ public class TestCaseNode extends AbstractNode {
 		AbstractParameterNode abstractParameterNode = methodParameters.get(index);
 		
 		if (!(abstractParameterNode instanceof BasicParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Attempt to a parameter which is not basic.");
+			ExceptionHelper.reportRuntimeException("Attempt to get a parameter which is not basic.");
 		}
+		
 		return (BasicParameterNode) abstractParameterNode;
 	}
 
@@ -147,8 +148,6 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	public boolean correctTestCase(MethodNode parentMethodNode) {
-
-		//		ExceptionHelper.reportClientException("TODO"); // TODO MO-RE
 
 		List<BasicParameterNode> parameters = parentMethodNode.getDeployedMethodParameters();
 
