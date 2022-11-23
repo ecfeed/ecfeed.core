@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class MethodDeployer {
 
@@ -33,6 +34,7 @@ public abstract class MethodDeployer {
 	}
 
 	private static List<BasicParameterNode> extractParameters(MethodNode methodSource) {
+		
 		List<BasicParameterNode> parameters = new ArrayList<>();
 		String prefix = "";
 
@@ -41,7 +43,10 @@ public abstract class MethodDeployer {
 		return parameters;
 	}
 
-	private static void extractParameters(String prefix, List<BasicParameterNode> parametersAll, List<AbstractParameterNode> parametersSource) {
+	private static void extractParameters(
+			String prefix, 
+			List<BasicParameterNode> parametersAll, 
+			List<AbstractParameterNode> parametersSource) {
 
 		for (AbstractParameterNode sourceParameter : parametersSource) {
 
@@ -50,19 +55,30 @@ public abstract class MethodDeployer {
 			}
 
 			if (sourceParameter instanceof CompositeParameterNode) {
-				String prefixParsed = prefix + sourceParameter.getName() + "_";
+				
+				String prefixParsed = 
+						prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+				
 				extractParametersComposite(prefixParsed, parametersAll, sourceParameter);
 			}
 		}
 	}
 
-	private static void extractParametersBasic(String prefix, List<BasicParameterNode> parametersAll, AbstractParameterNode parameterSource) {
+	private static void extractParametersBasic(
+			String prefix, 
+			List<BasicParameterNode> parametersAll, 
+			AbstractParameterNode parameterSource) {
+		
 		BasicParameterNode parsedParameter = ((BasicParameterNode) parameterSource).createCopy();
-		parsedParameter.setName(prefix + parsedParameter.getName());
+		parsedParameter.setCompositeName(prefix + parsedParameter.getName());
 		parametersAll.add(parsedParameter);
 	}
 
-	private static void extractParametersComposite(String prefix, List<BasicParameterNode> parametersAll, AbstractParameterNode parameterSource) {
+	private static void extractParametersComposite(
+			String prefix, 
+			List<BasicParameterNode> parametersAll, 
+			AbstractParameterNode parameterSource) {
+		
 		CompositeParameterNode parsedParameter = (CompositeParameterNode) parameterSource;
 		extractParameters(prefix, parametersAll, parsedParameter.getParameters());
 	}

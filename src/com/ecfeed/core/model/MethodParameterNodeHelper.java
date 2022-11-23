@@ -14,6 +14,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class MethodParameterNodeHelper {
 
@@ -36,6 +37,17 @@ public class MethodParameterNodeHelper {
 	public static String createSignature(
 			BasicParameterNode methodParameterNode,
 			IExtLanguageManager extLanguageManager) {
+		
+		IAbstractNode parent = methodParameterNode.getParent();
+		
+		String parentCompositeParameterSignature = "";
+		
+		if (parent instanceof CompositeParameterNode) {
+			
+			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
+			
+			parentCompositeParameterSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		}
 
 		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
 		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguageManager);
@@ -43,7 +55,7 @@ public class MethodParameterNodeHelper {
 		String signature = 
 				AbstractParameterNodeHelper.createSignature(
 						type,
-						name,
+						parentCompositeParameterSignature + name,
 						methodParameterNode.isExpected(),
 						extLanguageManager);
 
@@ -57,24 +69,36 @@ public class MethodParameterNodeHelper {
 	}
 
 	public static String createReverseSignature(
-			BasicParameterNode methodParameterNode,
+			BasicParameterNode basicParameterNode,
 			IExtLanguageManager extLanguageManager) {
+		
+		IAbstractNode parent = basicParameterNode.getParent();
+		
+		String parentCompositeParameterSignature = "";
+		
+		if (parent instanceof CompositeParameterNode) {
+			
+			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
+			
+			parentCompositeParameterSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		}
+		
+		String type = AbstractParameterNodeHelper.getType(basicParameterNode, extLanguageManager);
+		String name = AbstractParameterNodeHelper.createNameSignature(basicParameterNode, extLanguageManager);
 
-		String type = AbstractParameterNodeHelper.getType(methodParameterNode, extLanguageManager);
-		String name = AbstractParameterNodeHelper.createNameSignature(methodParameterNode, extLanguageManager);
-
-		String signature = 
+		String currentParameterSignature = 
+				parentCompositeParameterSignature + 
 				AbstractParameterNodeHelper.createReverseSignature(
 						type,
 						name,
-						methodParameterNode.isExpected());
+						basicParameterNode.isExpected());
 
-		if (methodParameterNode.isLinked()) {
+		if (basicParameterNode.isLinked()) {
 		
-			BasicParameterNode globalParameterNode = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
+			BasicParameterNode globalParameterNode = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 	
 			if (globalParameterNode != null) {
-				signature += " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, extLanguageManager);
+				currentParameterSignature += " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, extLanguageManager);
 			}
 			
 //			MethodNode methodNode = methodParameterNode.getLinkToMethod();
@@ -84,7 +108,7 @@ public class MethodParameterNodeHelper {
 //			}
 		}
 
-		return signature;
+		return currentParameterSignature;
 	}
 
 	public static String getType(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {

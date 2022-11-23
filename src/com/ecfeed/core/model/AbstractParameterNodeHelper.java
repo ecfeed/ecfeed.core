@@ -102,7 +102,9 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createReverseSignature(
 			CompositeParameterNode compositeParameterNode) {
 
-		return SignatureHelper.joinElementsWithSeparator(compositeParameterNode.getName(), CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+		return compositeParameterNode.getName() 
+				+ SignatureHelper.SIGNATURE_TYPE_SEPARATOR 
+				+ CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
 	}
 	
 	public static String createSignature(
@@ -147,7 +149,7 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		if (parameterType != null) {
-			signature += SignatureHelper.SIGNATURE_SEPARATOR;
+			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
 			signature += parameterType;
 		}
 

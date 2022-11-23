@@ -87,6 +87,13 @@ public abstract class AbstractNode implements IAbstractNode {
 
 		setName(name, true);
 	}
+	
+	@Override
+	public void setCompositeName(String name) {
+
+		setName(name, true);
+	}
+	
 
 	@Override
 	public void setName(String name, boolean checkName) {
