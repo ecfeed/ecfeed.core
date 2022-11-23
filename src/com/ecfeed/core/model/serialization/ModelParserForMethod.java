@@ -12,14 +12,10 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -28,15 +24,18 @@ import nu.xom.Element;
 public class ModelParserForMethod implements IModelParserForMethod {
 
 	IModelParserForMethodParameter fModelParserForMethodParameter;
+	IModelParserForMethodCompositeParameter fModelParserForMethodCompositeParameter;
 	IModelParserForTestCase fModelParserForTestCase;
 	IModelParserForConstraint fModelParserForConstraint;
 	
 	public  ModelParserForMethod(
 			IModelParserForMethodParameter modelParserForMethodParameter,
+			IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter,
 			IModelParserForTestCase modelParserForTestCase,
 			IModelParserForConstraint modelParserForConstraint) {
 		
 		fModelParserForMethodParameter = modelParserForMethodParameter;
+		fModelParserForMethodCompositeParameter = modelParserForMethodCompositeParameter;
 		fModelParserForTestCase = modelParserForTestCase;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
@@ -58,12 +57,19 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		parseMethodProperties(methodElement, targetMethodNode);
 
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getBasicParameterNodeName())) {
+		for (Element child : ModelParserHelper.getIterableChildren(methodElement, new String[]
+				{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
+		)) {
 
-			Optional<BasicParameterNode> node = 
-					fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
-			if (node.isPresent()) {
-				targetMethodNode.addParameter(node.get());
+			Optional<BasicParameterNode> nodeParameter = fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
+			if (nodeParameter.isPresent()) {
+				targetMethodNode.addParameter(nodeParameter.get());
+				continue;
+			}
+
+			Optional<CompositeParameterNode> nodeComposite = fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, errorList);
+			if (nodeComposite.isPresent()) {
+				targetMethodNode.addParameter(nodeComposite.get());
 			}
 		}
 

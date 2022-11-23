@@ -14,10 +14,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NO
 
 import java.util.Optional;
 
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.IModelChangeRegistrator;
-import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -27,16 +24,19 @@ public class ModelParserForRoot implements IModelParserForRoot {
 	IModelChangeRegistrator fModelChangeRegistrator;
 	private int fModelVersion;
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
+	private IModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
 	private IModelParserForClass fModelParserForClass;
 
 	public ModelParserForRoot(
 			int modelVersion, 
 			IModelParserForGlobalParameter modelParserForGlobalParameter,
+			IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
 			IModelParserForClass modelParserForClass,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelVersion = modelVersion;
 		fModelParserForGlobalParameter = modelParserForGlobalParameter;
+		fModelParserForGlobalCompositeParameter = modelParserForGlobalCompositeParameter;
 		fModelParserForClass = modelParserForClass;
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
@@ -51,10 +51,19 @@ public class ModelParserForRoot implements IModelParserForRoot {
 
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
-		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getBasicParameterNodeName())) {
-			Optional<BasicParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
-			if (node.isPresent()) {
-				targetRootNode.addParameter(node.get());
+		for (Element child : ModelParserHelper.getIterableChildren(element, new String[]
+				{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
+		)) {
+
+			Optional<BasicParameterNode> parameterBasic = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			if (parameterBasic.isPresent()) {
+				targetRootNode.addParameter(parameterBasic.get());
+				continue;
+			}
+
+			Optional<CompositeParameterNode> parameterComposite = fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			if (parameterComposite.isPresent()) {
+				targetRootNode.addParameter(parameterComposite.get());
 			}
 		}
 

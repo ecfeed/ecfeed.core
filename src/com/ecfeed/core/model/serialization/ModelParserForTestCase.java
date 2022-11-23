@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
@@ -44,7 +45,8 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 
 		String[] elementTypes = new String[] { TEST_PARAMETER_NODE_NAME, EXPECTED_PARAMETER_NODE_NAME };
 		List<Element> parameterElements = ModelParserHelper.getIterableChildren(element, elementTypes);
-		List<BasicParameterNode> parameters = method.getMethodParameters();
+		
+		List<AbstractParameterNode> parameters = method.getMethodParameters();
 
 		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 
@@ -55,7 +57,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 
 		for (int i = 0; i < parameterElements.size(); i++) {
 			Element testParameterElement = parameterElements.get(i);
-			BasicParameterNode parameter = parameters.get(i);
+			BasicParameterNode parameter = (BasicParameterNode) parameters.get(i);
 			ChoiceNode testValue = null;
 
 			if (testParameterElement.getLocalName().equals(SerializationConstants.TEST_PARAMETER_NODE_NAME)) {

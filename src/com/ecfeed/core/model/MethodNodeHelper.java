@@ -538,18 +538,23 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static List<Boolean> getExpectedParametersFlags(List<BasicParameterNode> methodParameters) {
+	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
 
 		List<Boolean> expectedFlags = new ArrayList<Boolean>();
 
-		for(BasicParameterNode methodParameter : methodParameters) {
+		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+			
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
 
-			if (methodParameter.isExpected()) {
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			if (basicParameterNode.isExpected()) {
 				expectedFlags.add(true);
 			} else {
 				expectedFlags.add(false);
 			}
-
 		}
 
 		return expectedFlags;
@@ -742,16 +747,22 @@ public class MethodNodeHelper {
 
 	public static BasicParameterNode findNotUsedExpectedParameter(MethodNode methodNode, StatementArray statementArray) {
 
-		List<BasicParameterNode> parameters = methodNode.getMethodParameters();
+		List<AbstractParameterNode> parameters = methodNode.getMethodParameters();
 
-		for (BasicParameterNode parameterNode : parameters) {
-
-			if (!parameterNode.isExpected()) {
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+			
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
 				continue;
 			}
 
-			if (!isParameterUsedInAssignment(parameterNode, statementArray)) {
-				return parameterNode;
+			BasicParameterNode basicParameterNode = (BasicParameterNode)abstractParameterNode;
+			
+			if (!basicParameterNode.isExpected()) {
+				continue;
+			}
+
+			if (!isParameterUsedInAssignment(basicParameterNode, statementArray)) {
+				return basicParameterNode;
 			}
 		}
 		return null;

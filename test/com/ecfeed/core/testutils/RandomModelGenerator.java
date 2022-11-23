@@ -153,18 +153,25 @@ public class RandomModelGenerator {
 		String name = generateString(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
 		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 
-		for(BasicParameterNode c : method.getMethodParameters()){
-			if(c.isExpected()){
-				ChoiceNode expectedValue = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, randomChoiceValue(c.getType()), null);
-				expectedValue.setParent(c);
+		for(AbstractParameterNode abstractParameterNode : method.getMethodParameters()){
+			
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			if(basicParameterNode.isExpected()){
+				ChoiceNode expectedValue = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, randomChoiceValue(basicParameterNode.getType()), null);
+				expectedValue.setParent(abstractParameterNode);
 				testData.add(expectedValue);
 			}
 			else{
-				List<ChoiceNode> choices = c.getChoices();
+				List<ChoiceNode> choices = basicParameterNode.getChoices();
 				if(choices.size() == 0){
 					System.out.println("Empty parameter!");
 				}
-				ChoiceNode p = c.getChoices().get(rand.nextInt(choices.size()));
+				ChoiceNode p = basicParameterNode.getChoices().get(rand.nextInt(choices.size()));
 				while(p.getChoices().size() > 0){
 					List<ChoiceNode> pchoices = p.getChoices();
 					p = pchoices.get(rand.nextInt(pchoices.size()));
@@ -219,9 +226,16 @@ public class RandomModelGenerator {
 	public RelationStatement generateChoicesParentStatement(MethodNode method) {
 		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 
-		for(BasicParameterNode parameter : method.getMethodParameters()){
-			if(parameter.isExpected() == false && parameter.getChoices().size() > 0){
-				parameters.add(parameter);
+		for(AbstractParameterNode abstractParameterNode : method.getMethodParameters()){
+			
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			if(basicParameterNode.isExpected() == false && basicParameterNode.getChoices().size() > 0){
+				parameters.add(basicParameterNode);
 			}
 		}
 
@@ -259,9 +273,16 @@ public class RandomModelGenerator {
 	public ExpectedValueStatement generateExpectedValueStatement(MethodNode method) {
 		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 
-		for(BasicParameterNode parameter : method.getMethodParameters()){
-			if(parameter.isExpected() == true){
-				parameters.add(parameter);
+		for(AbstractParameterNode abstractParameterNode : method.getMethodParameters()){
+			
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+			
+			if(basicParameterNode.isExpected() == true){
+				parameters.add(basicParameterNode);
 			}
 		}
 
@@ -299,9 +320,17 @@ public class RandomModelGenerator {
 			method.addParameter(generateParameter(JavaLanguageHelper.TYPE_NAME_INT, false, 0, 1, 1));
 		}
 
-		List<BasicParameterNode> parameters = method.getMethodParameters();
-		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		if(parameter.isExpected()){
+		List<AbstractParameterNode> parameters = method.getMethodParameters();
+		
+		AbstractParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+		
+		if (!(parameter instanceof BasicParameterNode)) {
+			return null;
+		}
+		
+		BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+		
+		if(basicParameterNode.isExpected()){
 			return generateExpectedValueStatement(method);
 		}
 		return generateStatement(method, MAX_STATEMENTS_DEPTH);

@@ -24,6 +24,7 @@ import com.ecfeed.core.utils.JavaLanguageHelper;
 public class MethodNode  extends AbstractNode implements IParametersAndConstraintsParentNode {
 
 	ParametersHolder fParametersHolder;
+	ParametersHolder fDeployedParametersHolder;
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
@@ -39,6 +40,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fDeployedParametersHolder = null;
 		fTestCaseNodes = new ArrayList<>();
 		fTestSuiteNodes = new ArrayList<>();
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
@@ -144,14 +146,24 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		clonedMethodNode.setProperties(getProperties());
 
-		for(BasicParameterNode parameter : getMethodParameters()){
-			clonedMethodNode.addParameter(parameter.makeClone());
+		for (AbstractParameterNode parameter : getMethodParameters()) {
+			
+			if (!(parameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+			
+			clonedMethodNode.addParameter(basicParameterNode.makeClone());
 		}
 
-		for(TestCaseNode testcase : fTestCaseNodes){
+		for (TestCaseNode testcase : fTestCaseNodes) {
+			
 			TestCaseNode tcase = testcase.getCopy(clonedMethodNode);
-			if(tcase != null)
+			
+			if (tcase != null) {
 				clonedMethodNode.addTestCase(tcase);
+			}
 		}
 
 		clonedMethodNode.fConstraintNodeListHolder = fConstraintNodeListHolder.makeClone(clonedMethodNode);
@@ -253,9 +265,18 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 //	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {
+		
 		ArrayList<String> names = new ArrayList<String>();
-		for(BasicParameterNode parameter : getMethodParameters()){
-			if(parameter.isExpected() == expected){
+		
+		for (AbstractParameterNode parameter : getMethodParameters()) {
+			
+			if (!(parameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
+			
+			if (basicParameterNode.isExpected() == expected) {
 				names.add(parameter.getName());
 			}
 		}
@@ -611,41 +632,74 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return true;
 	}
 
-	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter){
+	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter) {
+		
 		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
-		for(BasicParameterNode localParameter : getMethodParameters()){
-			if(localParameter.isLinked() && localParameter.getLinkToGlobalParameter() == globalParameter){
-				result.add(localParameter);
+		
+		for (AbstractParameterNode localParameter : getMethodParameters()) {
+			
+			if (!(localParameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode basicParameterNode = (BasicParameterNode) localParameter;
+			
+			if (basicParameterNode.isLinked() && basicParameterNode.getLinkToGlobalParameter() == globalParameter) {
+				result.add(basicParameterNode);
 			}
 		}
 		return result;
 	}
 
-	public final List<BasicParameterNode> getMethodParameters() {
-		List<BasicParameterNode> result = new ArrayList<>();
-		for(AbstractParameterNode parameter : getParameters()){
-			result.add((BasicParameterNode)parameter);
+	public final List<AbstractParameterNode> getMethodParameters() {
+		
+		List<AbstractParameterNode> result = new ArrayList<>();
+		
+		for (AbstractParameterNode parameter : getParameters()) {
+			result.add(parameter);
 		}
+		
 		return result;
 	}
 
-	public List<BasicParameterNode> getMethodParameters(boolean expected) {
-		List<BasicParameterNode> result = new ArrayList<>();
-		for(BasicParameterNode parameter : getMethodParameters()){
-			if(parameter.isExpected()){
-				result.add(parameter);
-			}
-		}
-		return result;
+	public final boolean isDeployed() {
+
+		return fDeployedParametersHolder != null;
 	}
 
-	public BasicParameterNode getMethodParameter(ChoiceNode choice){
+	public final List<BasicParameterNode> getDeployedMethodParameters() {
+		
+		if (fDeployedParametersHolder != null) {
+			return fDeployedParametersHolder.getParametersAsBasic();
+		}
+
+		return getStandardParametersWhenThereWasNoDeployment();
+	}
+
+	private List<BasicParameterNode> getStandardParametersWhenThereWasNoDeployment() {
+		
+		return fParametersHolder.getParametersAsBasic();
+	}
+
+	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
+		
 		BasicParameterNode parameter = choice.getParameter();
-		for(BasicParameterNode methodParameter : getMethodParameters()){
-			if(methodParameter == parameter || methodParameter.getLinkToGlobalParameter() == parameter){
-				return methodParameter;
+		
+		for (AbstractParameterNode methodParameter : getMethodParameters()) {
+		
+			if (!(methodParameter instanceof BasicParameterNode)) {
+				continue;
+			}
+			
+			BasicParameterNode methodBasicParameterNode = (BasicParameterNode) methodParameter;
+			
+			if (methodBasicParameterNode == parameter 
+					|| methodBasicParameterNode.getLinkToGlobalParameter() == parameter) {
+				
+				return methodBasicParameterNode;
 			}
 		}
+		
 		return null;
 	}
 
@@ -678,7 +732,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		
 		fParametersHolder.addParameter(parameter, this);
 	}
-
+	
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
 		
@@ -691,6 +745,15 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		fParametersHolder.addParameters(parameters, this);
 	}
 
+	public void setDeployedParameters(List<BasicParameterNode> parameters) {
+		
+		if (fDeployedParametersHolder == null) {
+			fDeployedParametersHolder = new ParametersHolder(getModelChangeRegistrator());
+		} 
+		
+		fDeployedParametersHolder.setBasicParameters(parameters, this);
+	}
+	
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
 		
@@ -714,7 +777,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		
 		return fParametersHolder.getParameters();
 	}
-
+	
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
 		
@@ -755,6 +818,11 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public String generateNewParameterName(String startParameterName) {
 		
 		return fParametersHolder.generateNewParameterName(startParameterName);
+	}
+	
+	public List<BasicParameterNode> getParametersAsBasic() {
+		
+		return fParametersHolder.getParametersAsBasic();
 	}
 
 }

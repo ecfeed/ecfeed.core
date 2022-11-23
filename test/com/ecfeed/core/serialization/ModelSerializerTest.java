@@ -259,7 +259,8 @@ public class ModelSerializerTest {
 		ChoiceNode m1p621c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C3", "3");
 
 		RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
-		RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p611, EMathRelation.LESS_THAN, m1p611c3);
+		// TODO Must the choice be from the same method?
+		RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p3, EMathRelation.LESS_THAN, m1p3c3);
 
 		Constraint m1c1 = new Constraint("M1C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
 

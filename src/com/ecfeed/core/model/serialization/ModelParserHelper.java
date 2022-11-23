@@ -31,13 +31,15 @@ public class ModelParserHelper  {
 	public static IModelParserForMethod createStandardModelParserForMethod() {
 		
 		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+
+		IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter = new ModelParserForMethodCompositeParameter(modelParserForMethodParameter);
 		
 		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 		
 		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
 		
 		IModelParserForMethod modelParserForMethod = 
-				new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
+				new ModelParserForMethod(modelParserForMethodParameter, modelParserForMethodCompositeParameter, modelParserForTestCase, modelParserForConstraint);
 		return modelParserForMethod;
 	}
 	
@@ -49,10 +51,13 @@ public class ModelParserHelper  {
 		
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
+
+		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
+				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter);
 		
 		ModelParserForClass modelParserForClass = 
 				new ModelParserForClass(
-						modelParserForGlobalParameter, modelParserForMethod);
+						modelParserForGlobalParameter, modelParserForGlobalCompositeParameter, modelParserForMethod);
 		return modelParserForClass;
 	}
 	
@@ -64,12 +69,16 @@ public class ModelParserHelper  {
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
 
+		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
+				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter);
+
 		IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 		
 		IModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(
 						modelVersion, 
 						modelParserForGlobalParameter,
+						modelParserForGlobalCompositeParameter,
 						modelParserForClass,
 						modelChangeRegistrator);
 		

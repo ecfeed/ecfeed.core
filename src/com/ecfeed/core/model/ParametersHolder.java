@@ -39,6 +39,12 @@ public class ParametersHolder {
 		}
 	}
 
+	public void setBasicParameters(List<BasicParameterNode> parameters, IAbstractNode parent) {
+
+		fParameters.clear();
+		fParameters.addAll(parameters);
+	}
+
 	public void addParameter(AbstractParameterNode parameter, int index, IAbstractNode parent) {
 
 		if (parameterExists(parameter)) {
@@ -54,6 +60,22 @@ public class ParametersHolder {
 	public List<AbstractParameterNode> getParameters() {
 
 		return fParameters;
+	}
+
+	public List<BasicParameterNode> getParametersAsBasic() {
+		
+		List<BasicParameterNode> result = new ArrayList<>();
+		
+		for (AbstractParameterNode abstractParameterNode : fParameters) {
+		
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				ExceptionHelper.reportRuntimeException("Attempt to get not basic parameter.");
+			}
+			
+			result.add((BasicParameterNode) abstractParameterNode);
+		}
+		
+		return result;
 	}
 
 	public int getParametersCount(){
