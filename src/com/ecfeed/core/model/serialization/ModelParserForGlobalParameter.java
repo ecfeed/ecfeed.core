@@ -39,7 +39,7 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 		String name, type;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getParameterNodeName(), errorList);
+			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errorList);
 		} catch (ParserException e) {

@@ -30,7 +30,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fDefaultValue;
 	private AbstractParameterNode fLinkToGlobalParameter;
 	private List<ChoiceNode> fChoicesCopy;
-	private BasicParameterNode fDeploymenParameterNode;
+	private BasicParameterNode fDeploymentParameterNode;
 	
 	private ChoicesListHolder fChoicesListHolder;
 
@@ -156,11 +156,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	public BasicParameterNode getDeploymentParameter() {
 
-		return fDeploymenParameterNode;
+		return fDeploymentParameterNode;
 	}
 
 	public void setDeploymentParameter(BasicParameterNode parameterNode) {
-		fDeploymenParameterNode = parameterNode;
+		fDeploymentParameterNode = parameterNode;
 	}
 
 	private BasicParameterNode copy(UnaryOperator<ChoiceNode> operator) {

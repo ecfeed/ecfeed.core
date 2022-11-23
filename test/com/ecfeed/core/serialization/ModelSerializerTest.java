@@ -21,6 +21,7 @@ import java.io.OutputStream;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.ModelNodeType;
 import org.junit.Test;
 
 import com.ecfeed.core.model.serialization.ModelParser;
@@ -47,12 +48,12 @@ public class ModelSerializerTest {
 		model.addParameter(new BasicParameterNode("globalParameter1", "int", null));
 		model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null));
 
-		OutputStream ostream = new ByteArrayOutputStream();
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		ModelSerializer serializer = new ModelSerializer(ostream, version);
 		try {
 			serializer.serialize(model);
 
-			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
 			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
@@ -61,7 +62,6 @@ public class ModelSerializerTest {
 			fail("Unexpected exception: " + e.getMessage());
 		}
 	}
-
 
 	@Test
 	public void classSerializerTestWithoutAndroidBaseRunner(){
@@ -100,6 +100,26 @@ public class ModelSerializerTest {
 		}
 	}
 
+	@Test
+	public void classSerializerTestVersion5() {
+		int version = 5;
+
+		RootNode model = createModelComposite(version);
+
+		OutputStream ostream = new ByteArrayOutputStream();
+		ModelSerializer serializer = new ModelSerializer(ostream, version);
+
+		try {
+			serializer.serialize(model);
+			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
+			ModelParser parser = new ModelParser();
+			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
+
+			assertElementsEqual(model, parsedModel);
+		} catch (Exception e) {
+			fail("Unexpected exception: " + e.getMessage());
+		}
+	}
 	@Test
 	public void wrongTypeStreamTest(){
 		int version = ModelVersionDistributor.getCurrentSoftwareVersion();
@@ -180,6 +200,83 @@ public class ModelSerializerTest {
 		RootNode model = new RootNode("model", null, version);
 		model.addClass(classNode);
 		model.setVersion(version);
+
+		return model;
+	}
+
+	private RootNode createModelComposite(int version) {
+		RootNode model = new RootNode("model", null, version);
+
+		ClassNode classNode = new ClassNode("Class", null);
+
+		MethodNode m1 = ClassNodeHelper.addMethodToClass(classNode, "Method1", null);
+
+		BasicParameterNode m1p1 = new BasicParameterNode("M1P1", "int", "0", false);
+		ChoiceNode m1p1c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C1", "1");
+		ChoiceNode m1p1c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C2", "2");
+		ChoiceNode m1p1c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C3", "3");
+
+		CompositeParameterNode m1p2 = new CompositeParameterNode("M1P2", null);
+		BasicParameterNode m1p21 = MethodNodeHelper.addParameterToMethod(m1p2, "M1P21", "int");
+		ChoiceNode m1p21c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p21, "M1P21C1", "1");
+		ChoiceNode m1p21c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p21, "M1P21C2", "2");
+		ChoiceNode m1p21c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p21, "M1P21C3", "3");
+		BasicParameterNode m1p22 = MethodNodeHelper.addParameterToMethod(m1p2, "M1P22", "int");
+		ChoiceNode m1p22c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p22, "M1P22C1", "1");
+		ChoiceNode m1p22c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p22, "M1P22C2", "2");
+		ChoiceNode m1p22c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p22, "M1P22C3", "3");
+
+		BasicParameterNode m1p3 = new BasicParameterNode("M1P3", "int", "0", false);
+		ChoiceNode m1p3c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p3, "M1P3C1", "1");
+		ChoiceNode m1p3c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p3, "M1P3C2", "2");
+		ChoiceNode m1p3c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p3, "M1P3C3", "3");
+
+		CompositeParameterNode m1p4 = new CompositeParameterNode("M1P4", null);
+		BasicParameterNode m1p41 = MethodNodeHelper.addParameterToMethod(m1p4, "M1P41", "int");
+		ChoiceNode m1p41c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p41, "M1P41C1", "1");
+		ChoiceNode m1p41c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p41, "M1P41C2", "2");
+		ChoiceNode m1p41c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p41, "M1P41C3", "3");
+		BasicParameterNode m1p42 = MethodNodeHelper.addParameterToMethod(m1p4, "M1P42", "int");
+		ChoiceNode m1p42c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p42, "M1P42C1", "1");
+		ChoiceNode m1p42c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p42, "M1P42C2", "2");
+		ChoiceNode m1p42c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p42, "M1P42C3", "3");
+
+		BasicParameterNode m1p5 = new BasicParameterNode("M1P5", "int", "0", false);
+		ChoiceNode m1p5c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p5, "M1P5C1", "1");
+		ChoiceNode m1p5c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p5, "M1P5C2", "2");
+		ChoiceNode m1p5c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p5, "M1P5C3", "3");
+
+		CompositeParameterNode m1p6 = new CompositeParameterNode("M1P6", null);
+		CompositeParameterNode m1p61 = new CompositeParameterNode("M1P61", null);
+		BasicParameterNode m1p611 = MethodNodeHelper.addParameterToMethod(m1p61, "M1P611", "int");
+		ChoiceNode m1p611c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p611, "M1P611C1", "1");
+		ChoiceNode m1p611c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p611, "M1P611C2", "2");
+		ChoiceNode m1p611c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p611, "M1P611C3", "3");
+		CompositeParameterNode m1p62 = new CompositeParameterNode("M1P62", null);
+		BasicParameterNode m1p621 = MethodNodeHelper.addParameterToMethod(m1p62, "M1P621", "int");
+		ChoiceNode m1p621c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C1", "1");
+		ChoiceNode m1p621c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C2", "2");
+		ChoiceNode m1p621c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C3", "3");
+
+		RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
+		RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p611, EMathRelation.LESS_THAN, m1p611c3);
+
+		Constraint m1c1 = new Constraint("M1C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
+
+		m1.addParameter(m1p1);
+		m1.addParameter(m1p2);
+		m1.addParameter(m1p3);
+		m1.addParameter(m1p4);
+		m1.addParameter(m1p5);
+
+		m1p6.addParameter(m1p61);
+		m1p6.addParameter(m1p62);
+
+		m1.addParameter(m1p6);
+
+		m1.addConstraint(new ConstraintNode("M1C1", m1c1, null));
+
+		model.addClass(classNode);
 
 		return model;
 	}

@@ -51,7 +51,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
-		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeName())) {
+		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getBasicParameterNodeName())) {
 			Optional<BasicParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
 			if (node.isPresent()) {
 				targetRootNode.addParameter(node.get());

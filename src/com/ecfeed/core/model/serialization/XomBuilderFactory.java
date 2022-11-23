@@ -25,13 +25,14 @@ public class XomBuilderFactory {
 		if (modelVersion == 2) {
 			return new XomBuilderVersion2(serializatorParams);
 		}
-
 		if (modelVersion == 3) {
 			return new XomBuilderVersion3(serializatorParams);
 		}
-
 		if (modelVersion == 4) {
 			return new XomBuilderVersion4(serializatorParams);
+		}
+		if (modelVersion == 5) {
+			return new XomBuilderVersion5(serializatorParams);
 		}
 
 		ExceptionHelper.reportRuntimeException("Invalid xom builder version.");

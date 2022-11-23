@@ -65,7 +65,7 @@ public class ModelParserForClass implements IModelParserForClass {
 		targetClassNode.setParent(parent);
 
 		//parameters must be parsed before classes
-		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeName())) {
+		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getBasicParameterNodeName())) {
 			Optional<BasicParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
 			if (node.isPresent()) {
 				targetClassNode.addParameter(node.get());

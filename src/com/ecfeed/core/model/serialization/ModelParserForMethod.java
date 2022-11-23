@@ -58,7 +58,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		parseMethodProperties(methodElement, targetMethodNode);
 
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeName())) {
+		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getBasicParameterNodeName())) {
 
 			Optional<BasicParameterNode> node = 
 					fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
