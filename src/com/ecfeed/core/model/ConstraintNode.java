@@ -72,10 +72,14 @@ public class ConstraintNode extends AbstractNode {
 
 	public ConstraintNode createCopy(IParametersAndConstraintsParentNode method) {
 
-		ConstraintNode copy = new ConstraintNode(getName(), fConstraint.createCopy(method), getModelChangeRegistrator() );
-		copy.setProperties(getProperties());
+		Constraint copyOfConstraint = fConstraint.createCopy(method);
+		
+		ConstraintNode copyOfConstraintNode = 
+				new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
+		
+		copyOfConstraintNode.setProperties(getProperties());
 
-		return copy;
+		return copyOfConstraintNode;
 	}
 
 	public ConstraintNode(String name, Constraint constraint, IModelChangeRegistrator modelChangeRegistrator) {

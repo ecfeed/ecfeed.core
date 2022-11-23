@@ -26,11 +26,14 @@ public abstract class MethodDeployer {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
 		}
 
-		MethodNode methodDeployed = construct(extractParameters(methodSource), methodSource.getConstraintNodes());
+		List<BasicParameterNode> parameters = extractParameters(methodSource);
+		List<ConstraintNode> constraintNodes = methodSource.getConstraintNodes();
+		
+		MethodNode deployedMethod = createDeployedMethod(parameters, constraintNodes);
 
-		methodDeployed.setName(methodSource.getName() + "_" +  POSTFIX);
+		deployedMethod.setName(methodSource.getName() + "_" +  POSTFIX);
 
-		return methodDeployed;
+		return deployedMethod;
 	}
 
 	private static List<BasicParameterNode> extractParameters(MethodNode methodSource) {
@@ -83,7 +86,7 @@ public abstract class MethodDeployer {
 		extractParameters(prefix, parametersAll, parsedParameter.getParameters());
 	}
 
-	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints) {
+	public static MethodNode createDeployedMethod(List<BasicParameterNode> parameters, List<ConstraintNode> constraints) {
 
 		if (parameters == null) {
 			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
