@@ -266,6 +266,13 @@ public class MethodNodeHelper {
 				type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
 	
 				result.add(type);
+				continue;
+			}
+			
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				
+				result.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+				continue;
 			}
 		}
 
