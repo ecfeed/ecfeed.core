@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class MethodDeployer {
 
@@ -48,7 +49,7 @@ public abstract class MethodDeployer {
 			}
 
 			if (sourceParameter instanceof CompositeParameterNode) {
-				String prefixParsed = prefix + sourceParameter.getName() + "_";
+				String prefixParsed = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
 				extractParametersComposite(prefixParsed, methodTarget, sourceParameter);
 			}
 		}
@@ -56,7 +57,7 @@ public abstract class MethodDeployer {
 
 	private static void extractParametersBasic(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource) {
 		BasicParameterNode parameterParsed = ((BasicParameterNode) parameterSource).createCopy();
-		parameterParsed.setName(prefix + parameterParsed.getName());
+		parameterParsed.setCompositeName(prefix + parameterParsed.getName());
 		methodTarget.addParameter(parameterParsed);
 	}
 

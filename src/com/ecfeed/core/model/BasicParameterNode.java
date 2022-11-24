@@ -19,6 +19,7 @@ import java.util.function.UnaryOperator;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -121,7 +122,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		super.setName(name);
 	}
+	
+	@Override
+	public void setCompositeName(String name) {
+		
+		String simplifiedName = name.replace(SignatureHelper.SIGNATURE_NAME_SEPARATOR, "_"); 
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(simplifiedName);
 
+		super.setName(name);
+	}
+	
 	@Override
 	public String getNonQualifiedName() {
 		return getName();
