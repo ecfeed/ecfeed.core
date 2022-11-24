@@ -1,15 +1,20 @@
 package com.ecfeed.core.evaluator;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.utils.EMathRelation;
-import com.ecfeed.core.utils.EvaluationResult;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.MethodParameterNodeHelper;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.utils.EMathRelation;
 
 public class SatSolverMethodDeployerNestingTest {
 
@@ -86,7 +91,7 @@ public class SatSolverMethodDeployerNestingTest {
 
     @Test
     public void testOrdered() {
-        MethodNode m2 = MethodDeployer.deploy(m1);
+//        MethodNode m2 = MethodDeployer.deploy(m1);
 
         System.out.println();
     }
