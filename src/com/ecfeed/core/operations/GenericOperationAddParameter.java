@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.operations;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -18,13 +19,13 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class GenericOperationAddParameter extends AbstractModelOperation {
 
 	private IParametersParentNode fParametersParentNode;
-	private BasicParameterNode fAbstractParameterNode;
+	private AbstractParameterNode fAbstractParameterNode;
 	private int fNewIndex;
 	private boolean fGenerateUniqueName;
 
 	public GenericOperationAddParameter(
 			IParametersParentNode target, 
-			BasicParameterNode parameter, 
+			AbstractParameterNode parameter, 
 			int index, 
 			boolean generateUniqueName,
 			IExtLanguageManager extLanguageManager) {
@@ -69,7 +70,7 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 		markModelUpdated();
 	}
 
-	private void generateUniqueParameterName(BasicParameterNode abstractParameterNode) {
+	private void generateUniqueParameterName(AbstractParameterNode abstractParameterNode) {
 
 		String newName = fParametersParentNode.generateNewParameterName(abstractParameterNode.getName());
 		abstractParameterNode.setName(newName);
@@ -83,10 +84,14 @@ public class GenericOperationAddParameter extends AbstractModelOperation {
 	protected class ReverseOperation extends AbstractModelOperation{
 
 		private int fOriginalIndex;
-		private BasicParameterNode fReversedParameter;
+		private AbstractParameterNode fReversedParameter;
 		private IParametersParentNode fReversedTarget;
 
-		public ReverseOperation(IParametersParentNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		public ReverseOperation(
+				IParametersParentNode target, 
+				AbstractParameterNode parameter, 
+				IExtLanguageManager extLanguageManager) {
+			
 			super("reverse " + OperationNames.ADD_PARAMETER, extLanguageManager);
 			fReversedTarget = target;
 			fReversedParameter = parameter;

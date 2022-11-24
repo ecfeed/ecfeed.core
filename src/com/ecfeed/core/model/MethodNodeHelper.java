@@ -600,21 +600,45 @@ public class MethodNodeHelper {
 	//	}
 
 
-	public static BasicParameterNode createNewParameter(
+	public static AbstractParameterNode createNewParameter( // TODO MO-RE rename
+			MethodNode methodNode,
+			AbstractParameterNode.ParameterType parameterType,
+			IExtLanguageManager extLanguageManager) {
+
+		String name = MethodNodeHelper.generateNewParameterName(methodNode);
+
+		IModelChangeRegistrator modelChangeRegistrator = methodNode.getModelChangeRegistrator();
+		
+		if (parameterType == AbstractParameterNode.ParameterType.BASIC) {
+			
+			String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(methodNode, extLanguageManager);
+
+			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
+			
+			BasicParameterNode parameter = 
+					new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
+
+			return parameter;
+			
+		} 
+		
+		CompositeParameterNode compositeParameterNode = 
+				new CompositeParameterNode(name, modelChangeRegistrator);
+		
+		return compositeParameterNode;
+	}
+
+	public static CompositeParameterNode createNewCompositeParameter(
 			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		String name = MethodNodeHelper.generateNewParameterName(methodNode);
 
-		String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(methodNode, extLanguageManager);
-
-		String defaultValue = JavaLanguageHelper.getDefaultValue(type);
-
-		BasicParameterNode parameter = 
-				new BasicParameterNode(name, type, defaultValue, false, methodNode.getModelChangeRegistrator());
+		CompositeParameterNode parameter = 
+				new CompositeParameterNode(name, methodNode.getModelChangeRegistrator());
 
 		return parameter;
 	}
-
+	
 	public static String generateNewParameterName(IParametersParentNode parametersParentNode) {
 
 		int i = 0;

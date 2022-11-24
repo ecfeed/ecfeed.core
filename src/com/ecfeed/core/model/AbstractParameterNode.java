@@ -20,7 +20,7 @@ package com.ecfeed.core.model;
 
 public abstract class AbstractParameterNode extends AbstractNode {
 
-//	private String fType;
+//	private String fType; TODO MO-RE remove unused code
 //	private String fTypeComments;
 //
 //	private Optional<String> fSuggestedType;
@@ -33,6 +33,11 @@ public abstract class AbstractParameterNode extends AbstractNode {
 //	public abstract Set<ConstraintNode> getMentioningConstraints();
 //	public abstract Set<ConstraintNode> getMentioningConstraints(String label);
 
+	public enum ParameterType {
+		BASIC,
+		COMPOSITE
+	}
+	
 
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
