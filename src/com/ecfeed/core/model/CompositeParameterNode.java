@@ -210,6 +210,11 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
+	
+	public IParametersParentNode getParametersParent() {
+
+		return (IParametersParentNode)getParent();
+	}
 
 	@Override
 	public ConstraintsItr getIterator() {
