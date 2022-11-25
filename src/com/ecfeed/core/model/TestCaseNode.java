@@ -149,6 +149,10 @@ public class TestCaseNode extends AbstractNode {
 
 	public boolean correctTestCase(MethodNode parentMethodNode) {
 
+		if (!parentMethodNode.isDeployed()) {
+			return true;
+		}
+
 		List<BasicParameterNode> parameters = parentMethodNode.getDeployedMethodParameters();
 
 		if (parameters.size() != getTestData().size()) {

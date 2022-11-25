@@ -274,9 +274,7 @@ public class ModelSerializerTest {
 
 		model.addClass(c1);
 
-		MethodNode methodDeployed = MethodDeployer.deploy(m1);
-		c1.addMethod(methodDeployed);
-		m1.setDeployedParameters(methodDeployed.getDeployedMethodParameters());
+		c1.addMethod(MethodDeployer.deploy(m1));
 
 		return model;
 	}
