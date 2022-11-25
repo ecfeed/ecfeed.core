@@ -664,7 +664,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	public final boolean isDeployed() {
 
-		return fDeployedParametersHolder != null;
+		return fDeployedParametersHolder != null && fDeployedParametersHolder.getParametersCount() > 0;
 	}
 
 	public final List<BasicParameterNode> getDeployedMethodParameters() {

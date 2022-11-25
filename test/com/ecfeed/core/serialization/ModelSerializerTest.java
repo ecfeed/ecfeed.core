@@ -138,43 +138,6 @@ public class ModelSerializerTest {
 		}
 	}
 
-	//	@Test
-	//	public void modelSerializerCrossTest1(){
-	//		RootNode model = fGenerator.generateModel(3);
-	//		OutputStream ostream = new ByteArrayOutputStream();
-	//		ObsoleteXmlModelSerializer oldSerializer = new ObsoleteXmlModelSerializer(ostream);
-	//		try {
-	//			oldSerializer.writeXmlDocument(model);
-	//			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
-	//			IModelParser parser = new EctParser();
-	//			RootNode parsedModel = parser.parseModel(istream);
-	//			assertElementsEqual(model, parsedModel);
-	//
-	//		} catch (Exception e) {
-	//			fail("Unexpected exception: " + e.getMessage());
-	//		}
-	//	}
-
-
-	//	@Test
-	//	public void modelSerializerCrossTest2(){
-	//		for(int i = 0; i < 10; i++){
-	//			RootNode model = fGenerator.generateModel(5);
-	//			OutputStream ostream = new ByteArrayOutputStream();
-	//			IModelSerializer serializer = new EctSerializer(ostream);
-	//			try {
-	//				serializer.serialize(model);
-	//				InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
-	//				IModelParser parser = new ObsoleteXmlModelParser();
-	//				RootNode parsedModel = parser.parseModel(istream);
-	//				assertElementsEqual(model, parsedModel);
-	//
-	//			} catch (Exception e) {
-	//				fail("Unexpected exception: " + e.getMessage());
-	//			}
-	//		}
-	//	}
-
 	private RootNode createModel(int version) {
 
 		ChoiceNode choice = new ChoiceNode("choice", "0", null);
@@ -206,10 +169,39 @@ public class ModelSerializerTest {
 
 	private RootNode createModelComposite(int version) {
 		RootNode model = new RootNode("model", null, version);
+		BasicParameterNode p1 = RootNodeHelper.addGlobalParameterToRoot(model, "P1", "int", null);
+		p1.addChoice(new ChoiceNode("P1C1", "1"));
+		p1.addChoice(new ChoiceNode("P1C2", "2"));
+		p1.addChoice(new ChoiceNode("P1C3", "3"));
 
-		ClassNode classNode = new ClassNode("Class", null);
+		CompositeParameterNode p2 = new CompositeParameterNode("P2", null);
+		BasicParameterNode p21 = MethodNodeHelper.addParameterToMethod(p2, "P21", "int");
+		p21.addChoice(new ChoiceNode("P21C1", "1"));
+		p21.addChoice(new ChoiceNode("P21C2", "2"));
+		p21.addChoice(new ChoiceNode("P21C3", "3"));
+		BasicParameterNode p22 = MethodNodeHelper.addParameterToMethod(p2, "P22", "int");
+		p22.addChoice(new ChoiceNode("P22C1", "1"));
+		p22.addChoice(new ChoiceNode("P22C2", "2"));
+		p22.addChoice(new ChoiceNode("P22C3", "3"));
 
-		MethodNode m1 = ClassNodeHelper.addMethodToClass(classNode, "Method1", null);
+		ClassNode c1 = new ClassNode("Class", null);
+
+		BasicParameterNode c1p1 = ClassNodeHelper.addGlobalParameterToClass(c1, "C1P1", "int", null);
+		c1p1.addChoice(new ChoiceNode("C1P1C1", "1"));
+		c1p1.addChoice(new ChoiceNode("C1P1C2", "2"));
+		c1p1.addChoice(new ChoiceNode("C1P1C3", "3"));
+
+		CompositeParameterNode c1p2 = new CompositeParameterNode("C1P2", null);
+		BasicParameterNode c1p21 = MethodNodeHelper.addParameterToMethod(c1p2, "C1P21", "int");
+		c1p21.addChoice(new ChoiceNode("C1P21C1", "1"));
+		c1p21.addChoice(new ChoiceNode("C1P21C2", "2"));
+		c1p21.addChoice(new ChoiceNode("C1P21C3", "3"));
+		BasicParameterNode c1p22 = MethodNodeHelper.addParameterToMethod(c1p2, "C1P22", "int");
+		c1p22.addChoice(new ChoiceNode("C1P22C1", "1"));
+		c1p22.addChoice(new ChoiceNode("C1P22C2", "2"));
+		c1p22.addChoice(new ChoiceNode("C1P22C3", "3"));
+
+		MethodNode m1 = ClassNodeHelper.addMethodToClass(c1, "Method1", null);
 
 		BasicParameterNode m1p1 = new BasicParameterNode("M1P1", "int", "0", false);
 		ChoiceNode m1p1c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p1, "M1P1C1", "1");
@@ -259,10 +251,13 @@ public class ModelSerializerTest {
 		ChoiceNode m1p621c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C3", "3");
 
 		RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
-		// TODO Must the choice be from the same method?
 		RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p3, EMathRelation.LESS_THAN, m1p3c3);
 
 		Constraint m1c1 = new Constraint("M1C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
+
+		model.addParameter(p2);
+
+		c1.addParameter(c1p2);
 
 		m1.addParameter(m1p1);
 		m1.addParameter(m1p2);
@@ -277,7 +272,11 @@ public class ModelSerializerTest {
 
 		m1.addConstraint(new ConstraintNode("M1C1", m1c1, null));
 
-		model.addClass(classNode);
+		model.addClass(c1);
+
+		MethodNode methodDeployed = MethodDeployer.deploy(m1);
+		c1.addMethod(methodDeployed);
+		m1.setDeployedParameters(methodDeployed.getDeployedMethodParameters());
 
 		return model;
 	}

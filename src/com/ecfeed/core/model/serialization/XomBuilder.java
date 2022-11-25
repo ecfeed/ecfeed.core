@@ -10,28 +10,11 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.CompositeParameterNode;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ConstraintType;
-import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.IModelVisitor;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
-
-import java.util.List;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
@@ -90,7 +73,7 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		for (AbstractParameterNode parameterNode : classNode.getGlobalParameters()) {
+		for (AbstractParameterNode parameterNode : classNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
 				targetClassElement.appendChild(createTargetParameterElement(parameterNode));
@@ -125,7 +108,9 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		targetMethodElement.appendChild(createTargetMethodDeployedEParametersElement(methodNode));
+		if (methodNode.isDeployed()) {
+			targetMethodElement.appendChild(createTargetMethodDeployedEParametersElement(methodNode));
+		}
 
 		return targetMethodElement;
 	}
@@ -325,8 +310,15 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetCompositeMethodParameterElement(CompositeParameterNode node) {
-
 		Element targetCompositeParameterElement = createAbstractElement(getCompositeParameterNodeName(), node);
+
+		if (fSerializatorParams.getSerializeProperties()) {
+			addParameterProperties(node, targetCompositeParameterElement);
+		}
+
+		if (fSerializatorParams.getSerializeComments()) {
+			appendTypeComments(targetCompositeParameterElement, node);
+		}
 
 		return targetCompositeParameterElement;
 	}
@@ -346,6 +338,7 @@ public abstract class XomBuilder implements IModelVisitor {
 				targetGlobalBasicParamElement,
 				new Attribute(TYPE_NAME_ATTRIBUTE, node.getType()), 
 				fWhiteCharConverter);
+
 		return targetGlobalBasicParamElement;
 	}
 
@@ -392,10 +385,8 @@ public abstract class XomBuilder implements IModelVisitor {
 	private Element createTargetMethodDeployedEParametersElement(MethodNode methodNode) throws Exception {
 		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_NAME);
 
-		if (methodNode.isDeployed()) {
-			for (BasicParameterNode parameter : methodNode.getDeployedMethodParameters()) {
-				targetMethodDeployedParameters.appendChild((Element) visit(parameter));
-			}
+		for (BasicParameterNode parameter : methodNode.getDeployedMethodParameters()) {
+			targetMethodDeployedParameters.appendChild((Element) visit(parameter));
 		}
 
 		return targetMethodDeployedParameters;

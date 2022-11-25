@@ -63,6 +63,10 @@ public class ModelStringifier {
 		String result = intendentString(indent);
 		result += "Model " + r.getName();
 
+		for(AbstractParameterNode c : r.getParameters()){
+			result += "\n" + stringify(c, indent + 2);
+		}
+
 		for(ClassNode c : r.getClasses()){
 			result += "\n" + stringify(c, indent + 2);
 		}
@@ -93,6 +97,10 @@ public class ModelStringifier {
 			result += stringify(child, indent + 2);
 		}
 		for(TestCaseNode child : m.getTestCases()){
+			result += "\n";
+			result += stringify(child, indent + 2);
+		}
+		for(AbstractParameterNode child : m.getDeployedMethodParameters()) {
 			result += "\n";
 			result += stringify(child, indent + 2);
 		}

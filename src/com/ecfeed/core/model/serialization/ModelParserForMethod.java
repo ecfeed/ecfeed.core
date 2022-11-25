@@ -10,32 +10,38 @@
 
 package com.ecfeed.core.model.serialization;
 
+import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_DEPLOYED_PARAMETERS_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.StringHelper;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 import nu.xom.Element;
 
 public class ModelParserForMethod implements IModelParserForMethod {
 
 	IModelParserForMethodParameter fModelParserForMethodParameter;
 	IModelParserForMethodCompositeParameter fModelParserForMethodCompositeParameter;
+	IModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
 	IModelParserForTestCase fModelParserForTestCase;
 	IModelParserForConstraint fModelParserForConstraint;
 	
 	public  ModelParserForMethod(
 			IModelParserForMethodParameter modelParserForMethodParameter,
 			IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter,
+			IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
 			IModelParserForTestCase modelParserForTestCase,
 			IModelParserForConstraint modelParserForConstraint) {
 		
 		fModelParserForMethodParameter = modelParserForMethodParameter;
 		fModelParserForMethodCompositeParameter = modelParserForMethodCompositeParameter;
+		fModelParserForMethodDeployedParameter = modelParserForMethodDeployedParameter;
 		fModelParserForTestCase = modelParserForTestCase;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
@@ -86,6 +92,18 @@ public class ModelParserForMethod implements IModelParserForMethod {
 				targetMethodNode.addConstraint(node.get());
 			}
 		}
+
+		List<BasicParameterNode> parametersDeployed = new ArrayList<>();
+		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.METHOD_DEPLOYED_PARAMETERS_NAME)) {
+			for (Element childNested : ModelParserHelper.getIterableChildren(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+				Optional<BasicParameterNode> parameter = fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(childNested, targetMethodNode, errorList);
+
+				if (parameter.isPresent()) {
+					parametersDeployed.add(parameter.get());
+				}
+			}
+		}
+		targetMethodNode.setDeployedParameters(parametersDeployed);
 
 		targetMethodNode.setDescription(ModelParserHelper.parseComments(methodElement));
 

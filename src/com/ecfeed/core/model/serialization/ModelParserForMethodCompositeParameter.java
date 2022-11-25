@@ -27,27 +27,27 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 
 	private IModelParserForMethodParameter fModelParserForMethodParameter;
 
-	public ModelParserForMethodCompositeParameter(
-			IModelParserForMethodParameter modelParserForMethodParameter
-	) {
+	public ModelParserForMethodCompositeParameter(IModelParserForMethodParameter modelParserForMethodParameter) {
 		fModelParserForMethodParameter = modelParserForMethodParameter;
 	}
 
 	public Optional<CompositeParameterNode> parseMethodCompositeParameter(
-			Element parameterElement, MethodNode method, ListOfStrings errorList) {
+			Element element,
+			MethodNode method,
+			ListOfStrings errorList) {
 
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(parameterElement.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
-			name = ModelParserHelper.getElementName(parameterElement, errorList);
+			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
+			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
 
 		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, method.getModelChangeRegistrator());
 
-		List<Element> children = ModelParserHelper.getIterableChildren(parameterElement, new String[]
+		List<Element> children = ModelParserHelper.getIterableChildren(element, new String[]
 				{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
 		);
 
@@ -66,9 +66,5 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		}
 
 		return Optional.ofNullable(targetCompositeParameterNode);
-	}
-
-	private String getParameterNodeName() {
-		return SerializationHelperVersion1.getBasicParameterNodeName();
 	}
 }

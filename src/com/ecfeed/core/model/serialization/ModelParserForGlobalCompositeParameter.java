@@ -44,25 +44,27 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 			return Optional.empty();
 		}
 
-		CompositeParameterNode targetGlobalCompositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrar);
+		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrar);
 
-		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getChoiceNodeName());
+		List<Element> children = ModelParserHelper.getIterableChildren(element, new String[]
+				{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
+		);
 
 		for (Element child : children) {
 
-			Optional<BasicParameterNode> parameterBasic = fModelParserForGlobalParameter.parseGlobalParameter(child, targetGlobalCompositeParameterNode.getModelChangeRegistrator(), errorList);
+			Optional<BasicParameterNode> parameterBasic = fModelParserForGlobalParameter.parseGlobalParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
 			if (parameterBasic.isPresent()) {
-				targetGlobalCompositeParameterNode.addParameter(parameterBasic.get());
+				targetCompositeParameterNode.addParameter(parameterBasic.get());
 				continue;
 			}
 
-			Optional<CompositeParameterNode> parameterComposite = parseGlobalCompositeParameter(child, targetGlobalCompositeParameterNode.getModelChangeRegistrator(), errorList);
+			Optional<CompositeParameterNode> parameterComposite = parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
 			if (parameterComposite.isPresent()) {
-				targetGlobalCompositeParameterNode.addParameter(parameterComposite.get());
+				targetCompositeParameterNode.addParameter(parameterComposite.get());
 			}
 		}
 
-		return Optional.ofNullable(targetGlobalCompositeParameterNode);
+		return Optional.ofNullable(targetCompositeParameterNode);
 	}
 
 }
