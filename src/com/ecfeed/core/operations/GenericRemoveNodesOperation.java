@@ -27,6 +27,7 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericRemoveNodesOperation extends BulkOperation {
@@ -54,7 +55,9 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		fSelectedNodes = new HashSet<>(nodes);
 		removeNodesWithAncestorsOnList();
 
-		prepareOperations(
+		List<IModelOperation> operations = new ArrayList<>(); 
+
+		createModelOperationsDeletingNodes(
 				fSelectedNodes,
 				getAllConstraintNodes(),
 				getAllTestCaseNodes(),
@@ -62,8 +65,15 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				fAffectedNodes,
 				fAffectedConstraints,
 				fAffectedTestCases,
-				
-				typeAdapterProvider, validate);
+				operations,
+
+				getExtLanguageManager(),
+				typeAdapterProvider, 
+				validate);
+
+		for (IModelOperation modelOperation : operations) {
+			addOperation(modelOperation);
+		}
 	}
 
 	private void removeNodesWithAncestorsOnList() {
@@ -96,7 +106,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return fAffectedTestCases;
 	}
 
-	private void prepareOperations(
+	private static void createModelOperationsDeletingNodes(
 			Set<IAbstractNode> selectedNodes,
 			Set<ConstraintNode> allConstraintNodes,
 			Set<TestCaseNode> allTestCaseNodes,
@@ -105,7 +115,11 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<TestCaseNode> outAffectedTestCases,
 
-			ITypeAdapterProvider typeAdapterProvider, boolean validate){
+			List<IModelOperation> outOperations,
+
+			IExtLanguageManager extLanguageManager,
+			ITypeAdapterProvider typeAdapterProvider, 
+			boolean validate){
 
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
@@ -233,6 +247,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		}
 		// Detect duplicates
 		Iterator<ClassNode> classItr = duplicatesMap.keySet().iterator();
+
 		while (classItr.hasNext()) {
 			ClassNode classNext = classItr.next();
 			Iterator<String> nameItr = duplicatesMap.get(classNext).keySet().iterator();
@@ -275,20 +290,22 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
 								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
+								
+									GenericOperationRemoveGlobalParameter operation = new GenericOperationRemoveGlobalParameter(
+											((BasicParameterNode)node).getParametersParent(), 
+											(BasicParameterNode)node, 
+											true,
+											extLanguageManager);
 
-									addOperation(
-											new GenericOperationRemoveGlobalParameter(
-													((BasicParameterNode)node).getParametersParent(), 
-													(BasicParameterNode)node, 
-													true,
-													getExtLanguageManager()));	
+									addOper(operation, outOperations);	
 
 
 								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
 
-									addOperation(
-											new MethodOperationRemoveParameter(
-													method, (BasicParameterNode)node, validate, false, getExtLanguageManager()));
+									MethodOperationRemoveParameter operation = new MethodOperationRemoveParameter(
+											method, (BasicParameterNode)node, validate, false, extLanguageManager);
+
+									addOper(operation, outOperations);
 
 								}
 							}
@@ -303,13 +320,27 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		}
 
 		outAffectedConstraints.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
+				e-> addOper(
+						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
+						outOperations));
 
 		outAffectedTestCases.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
+				e-> addOper(
+						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
+						outOperations));
 
 		outAffectedNodes.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
+				e-> addOper(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
+						outOperations));
+	}
+
+	private static void addOper(IModelOperation operation, List<IModelOperation> fOperations) {
+
+		if (operation == null) {
+			ExceptionHelper.reportRuntimeException("Attempt to add empty operation.");
+		}
+
+		fOperations.add(operation);
 	}
 
 	private Set<ConstraintNode> getAllConstraintNodes() {
