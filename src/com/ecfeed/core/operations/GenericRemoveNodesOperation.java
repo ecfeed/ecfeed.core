@@ -54,24 +54,32 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		fSelectedNodes = new HashSet<>(nodes);
 		removeNodesWithAncestorsOnList();
 
-		prepareOperations(typeAdapterProvider, validate);
-		return;
+		prepareOperations(
+				fSelectedNodes,
+				getAllConstraintNodes(),
+				getAllTestCaseNodes(),
+
+				fAffectedNodes,
+				fAffectedConstraints,
+				fAffectedTestCases,
+				
+				typeAdapterProvider, validate);
 	}
 
 	private void removeNodesWithAncestorsOnList() {
-		
+
 		Iterator<IAbstractNode> iterator = fSelectedNodes.iterator();
-		
+
 		while (iterator.hasNext()) {
-			
+
 			IAbstractNode currentNode = iterator.next();
-			
+
 			List<IAbstractNode> ancestors = currentNode.getAncestors();
-			
+
 			for (IAbstractNode ancestor : ancestors) {
-				
+
 				if (fSelectedNodes.contains(ancestor)) {
-					
+
 					// node is deleted because ancestor will be remove with the whole sub-tree which includes current node 
 					iterator.remove(); 
 					break;
@@ -88,8 +96,17 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return fAffectedTestCases;
 	}
 
-	private void prepareOperations(ITypeAdapterProvider typeAdapterProvider, boolean validate){
-		
+	private void prepareOperations(
+			Set<IAbstractNode> selectedNodes,
+			Set<ConstraintNode> allConstraintNodes,
+			Set<TestCaseNode> allTestCaseNodes,
+
+			Set<IAbstractNode> outAffectedNodes,
+			Set<ConstraintNode> outAffectedConstraints,
+			Set<TestCaseNode> outAffectedTestCases,
+
+			ITypeAdapterProvider typeAdapterProvider, boolean validate){
+
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
 		ArrayList<ClassNode> classes = new ArrayList<>();
@@ -101,19 +118,19 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		HashSet<ConstraintNode> constraints = new HashSet<>();
 		ArrayList<TestCaseNode> testcases = new ArrayList<>();
 
-		for(IAbstractNode node : fSelectedNodes) {
+		for(IAbstractNode node : selectedNodes) {
 			if(node instanceof ClassNode){
 				classes.add((ClassNode)node);
 			} else if(node instanceof MethodNode){
 				methods.add((MethodNode)node);
 			} else if(node instanceof BasicParameterNode){
-				
+
 				if (((BasicParameterNode) node).isGlobalParameter()) {
 					globals.add((BasicParameterNode)node);
 				} else {
 					params.add((BasicParameterNode)node);
 				}
-			
+
 			} else if(node instanceof ConstraintNode){
 				constraints.add((ConstraintNode)node);
 			} else if(node instanceof TestCaseNode){
@@ -125,26 +142,26 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			}		
 		}	
 
-		Set<ConstraintNode> allConstraintNodes = getAllConstraintNodes();
-		Set<TestCaseNode> allTestCaseNodes = getAllTestCaseNodes();
+		//		Set<ConstraintNode> allConstraintNodes = getAllConstraintNodes();
+		//		Set<TestCaseNode> allTestCaseNodes = getAllTestCaseNodes();
 
 		// removing classes, they are independent from anything
 		for (ClassNode clazz : classes) {
-			fAffectedNodes.add(clazz);
+			outAffectedNodes.add(clazz);
 		}
 		// removing choices and deleting connected constraints/test cases from their respective to-remove lists beforehand
 		for (ChoiceNode choice : choices) {
-			createAffectedConstraints(choice, allConstraintNodes);
-			createAffectedTestCases(choice, allTestCaseNodes);
-			fAffectedNodes.add(choice);
+			createAffectedConstraints(choice, allConstraintNodes, outAffectedConstraints);
+			createAffectedTestCases(choice, allTestCaseNodes, outAffectedTestCases);
+			outAffectedNodes.add(choice);
 		}
 		// removing test cases
 		for (TestCaseNode tcase : testcases) {
-			fAffectedNodes.add(tcase);
+			outAffectedNodes.add(tcase);
 		}
 		// leaving this in case of any further nodes being added
 		for (IAbstractNode node : others) {
-			fAffectedNodes.add(node);
+			outAffectedNodes.add(node);
 		}
 		/*
 		 * Iterate through global params. Do the same checks as for method
@@ -170,8 +187,8 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			}
 			if (!isDependent) {
 				//remove mentioning constraints from the list to avoid duplicates
-				createAffectedConstraints(global, allConstraintNodes);
-				fAffectedNodes.add(global);
+				createAffectedConstraints(global, allConstraintNodes, outAffectedConstraints);
+				outAffectedNodes.add(global);
 				globalItr.remove();
 				/*
 				 * in case linkers contain parameters assigned to removal -
@@ -202,8 +219,8 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				parameterMap.get(method).add(param);
 			} else {
 				//remove mentioning constraints from the list to avoid duplicates
-				createAffectedConstraints(param, allConstraintNodes);
-				fAffectedNodes.add(param);
+				createAffectedConstraints(param, allConstraintNodes, outAffectedConstraints);
+				outAffectedNodes.add(param);
 				paramItr.remove();
 			}
 		}
@@ -211,7 +228,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		Iterator<MethodNode> methodItr = methods.iterator();
 		while (methodItr.hasNext()) {
 			MethodNode method = methodItr.next();
-			fAffectedNodes.add(method);
+			outAffectedNodes.add(method);
 			methodItr.remove();
 		}
 		// Detect duplicates
@@ -244,8 +261,8 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 						if (parameterMap.containsKey(method)) {
 							for (BasicParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
-								createAffectedConstraints(node, allConstraintNodes);
-								fAffectedNodes.add(node);
+								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
+								outAffectedNodes.add(node);
 							}
 						}
 					}
@@ -256,7 +273,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 						if (parameterMap.containsKey(method)) {
 							for (BasicParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
-								createAffectedConstraints(node, allConstraintNodes);
+								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
 								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
 
 									addOperation(
@@ -265,14 +282,14 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 													(BasicParameterNode)node, 
 													true,
 													getExtLanguageManager()));	
-									
+
 
 								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
 
 									addOperation(
 											new MethodOperationRemoveParameter(
 													method, (BasicParameterNode)node, validate, false, getExtLanguageManager()));
-									
+
 								}
 							}
 						}
@@ -282,16 +299,16 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		}
 
 		for (ConstraintNode constraint : constraints) {
-			fAffectedNodes.add(constraint);
+			outAffectedNodes.add(constraint);
 		}
 
-		fAffectedConstraints.stream().forEach(
+		outAffectedConstraints.stream().forEach(
 				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
 
-		fAffectedTestCases.stream().forEach(
+		outAffectedTestCases.stream().forEach(
 				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
 
-		fAffectedNodes.stream().forEach(
+		outAffectedNodes.stream().forEach(
 				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
 	}
 
@@ -335,7 +352,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				.collect(Collectors.toSet());
 	}
 
-	private boolean addMethodToMap(MethodNode method, HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, List<MethodNode> removedMethods){
+	private static boolean addMethodToMap(MethodNode method, HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, List<MethodNode> removedMethods){
 		ClassNode clazz = method.getClassNode();
 		boolean hasDuplicate = false;
 		for(MethodNode classMethod : clazz.getMethods()){
@@ -359,14 +376,17 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return hasDuplicate;
 	}
 
-	private void createAffectedConstraints(IAbstractNode node, Set<ConstraintNode> allConstraintNodes) {
+	private static void createAffectedConstraints(
+			IAbstractNode node, 
+			Set<ConstraintNode> allConstraintNodes,
+			Set<ConstraintNode> outAffectedConstraints) {
 
 		if (node instanceof ChoiceNode) {
 			Iterator<ConstraintNode> itr = allConstraintNodes.iterator();
 			while (itr.hasNext()) {
 				ConstraintNode constraintNode = itr.next();
 				if (constraintMentionsChoiceNodeOrAnyChild((ChoiceNode)node, constraintNode)) {
-					fAffectedConstraints.add(constraintNode);
+					outAffectedConstraints.add(constraintNode);
 				}
 			}
 		} else if (node instanceof BasicParameterNode) {
@@ -374,13 +394,13 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 			while (itr.hasNext()) {
 				ConstraintNode constraint = itr.next();
 				if (constraint.mentions((BasicParameterNode)node)) {
-					fAffectedConstraints.add(constraint);
+					outAffectedConstraints.add(constraint);
 				}
 			}
 		}
 	}
 
-	private boolean constraintMentionsChoiceNodeOrAnyChild(ChoiceNode choiceNode, ConstraintNode constraintNode) {
+	private static boolean constraintMentionsChoiceNodeOrAnyChild(ChoiceNode choiceNode, ConstraintNode constraintNode) {
 
 		if (constraintNode.mentions(choiceNode)) {
 			return true;
@@ -398,13 +418,16 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return false;
 	}
 
-	private void createAffectedTestCases(IAbstractNode node, Set<TestCaseNode> allTestCaseNodes) {
+	private static void createAffectedTestCases(
+			IAbstractNode node, 
+			Set<TestCaseNode> allTestCaseNodes,
+			Set<TestCaseNode> outAffectedTestCases) {
 
 		Iterator<TestCaseNode> itr = allTestCaseNodes.iterator();
 		while (itr.hasNext()) {
 			TestCaseNode testCase = itr.next();
 			if (testCase.mentions((ChoiceNode)node)) {
-				fAffectedTestCases.add(testCase);
+				outAffectedTestCases.add(testCase);
 			}
 		}
 
