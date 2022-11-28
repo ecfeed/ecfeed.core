@@ -39,7 +39,7 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 
 	public GenericRemoveNodesOperation(
 			Collection<? extends IAbstractNode> nodes, 
-			ITypeAdapterProvider adapterProvider, 
+			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IAbstractNode nodeToSelect,
 			IAbstractNode nodeToSelectAfterReverseOperation,
@@ -52,20 +52,32 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 				extLanguageManager);
 
 		fSelectedNodes = new HashSet<>(nodes);
+		removeNodesWithAncestorsOnList();
 
+		prepareOperations(typeAdapterProvider, validate);
+		return;
+	}
+
+	private void removeNodesWithAncestorsOnList() {
+		
 		Iterator<IAbstractNode> iterator = fSelectedNodes.iterator();
-		while(iterator.hasNext()){
-			IAbstractNode node = iterator.next();
-			for(IAbstractNode ancestor : node.getAncestors()) {
-				if(fSelectedNodes.contains(ancestor)) {
-					iterator.remove();
+		
+		while (iterator.hasNext()) {
+			
+			IAbstractNode currentNode = iterator.next();
+			
+			List<IAbstractNode> ancestors = currentNode.getAncestors();
+			
+			for (IAbstractNode ancestor : ancestors) {
+				
+				if (fSelectedNodes.contains(ancestor)) {
+					
+					// node is deleted because ancestor will be remove with the whole sub-tree which includes current node 
+					iterator.remove(); 
 					break;
 				}
 			}
 		}
-
-		prepareOperations(adapterProvider, validate);
-		return;
 	}
 
 	public Set<ConstraintNode> getAffectedConstraints() {
@@ -76,7 +88,8 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		return fAffectedTestCases;
 	}
 
-	private void prepareOperations(ITypeAdapterProvider adapterProvider, boolean validate){
+	private void prepareOperations(ITypeAdapterProvider typeAdapterProvider, boolean validate){
+		
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
 		ArrayList<ClassNode> classes = new ArrayList<>();
@@ -273,13 +286,13 @@ public class GenericRemoveNodesOperation extends BulkOperation {
 		}
 
 		fAffectedConstraints.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguageManager())));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
 
 		fAffectedTestCases.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguageManager())));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
 
 		fAffectedNodes.stream().forEach(
-				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, adapterProvider, validate, getExtLanguageManager())));
+				e-> addOperation(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, getExtLanguageManager())));
 	}
 
 	private Set<ConstraintNode> getAllConstraintNodes() {
