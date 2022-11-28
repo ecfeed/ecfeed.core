@@ -173,4 +173,26 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		}
 	}
 	
+	public MethodNode getMethod() {
+		
+		IAbstractNode parent = getParent();
+		
+		if (parent instanceof MethodNode) {
+			return (MethodNode) parent;
+		}
+
+		return null;
+	}
+	
+	public IParametersParentNode getParametersParent() {
+		
+		IAbstractNode parent = getParent();
+		
+		if (parent instanceof IParametersParentNode) {
+			return (IParametersParentNode) parent;
+		}
+
+		return null;
+	}	
+	
 }

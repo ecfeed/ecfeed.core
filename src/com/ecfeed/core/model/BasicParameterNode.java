@@ -373,25 +373,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return getChoices();
 	}
 
-	public MethodNode getMethod() {
-		
-		IAbstractNode parent = getParent();
-		
-		if (parent instanceof RootNode) {
-			return null;
-		}
-
-		if (parent instanceof ClassNode) {
-			return null;
-		}
-
-		if (parent instanceof CompositeParameterNode) {
-			return null;
-		}
-		
-		return (MethodNode) parent;
-	}
-
 	public String getDefaultValue() {
 		return fDefaultValue;
 	}
