@@ -628,6 +628,17 @@ public class MethodNodeHelper {
 		return compositeParameterNode;
 	}
 
+	public static BasicParameterNode createBasicParameter(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+		
+		BasicParameterNode basicParameterNode = 
+				(BasicParameterNode) createNewParameter(
+				methodNode, 
+				AbstractParameterNode.ParameterType.BASIC, 
+				extLanguageManager);
+
+		return basicParameterNode;
+	}
+	
 	public static CompositeParameterNode createNewCompositeParameter(
 			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
