@@ -204,16 +204,6 @@ public class MethodNodeHelper {
 		methodNode.addTestCase(testCaseNode);
 	}
 
-	public static String getName(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		return AbstractNodeHelper.getName(methodNode, extLanguageManager);
-	}
-
-	public static void setName(MethodNode methodNode, String name, IExtLanguageManager extLanguageManager) {
-
-		AbstractNodeHelper.setName(methodNode, name, extLanguageManager);
-	}
-
 	public static BasicParameterNode findMethodParameterByName(
 			String parameterNameToFindInExtLanguage, 
 			MethodNode methodNode, 
@@ -247,34 +237,6 @@ public class MethodNodeHelper {
 			String name = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
 
 			result.add(name);
-		}
-
-		return result;
-	}
-
-	public static List<String> getParameterTypes(MethodNode method, IExtLanguageManager extLanguageManager) {
-
-		List<String> result = new ArrayList<String>();
-
-		for (AbstractParameterNode abstractParameterNode : method.getParameters()) {
-
-			if (abstractParameterNode instanceof BasicParameterNode) {
-				
-				BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-				
-				String type = basicParameterNode.getType();
-	
-				type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
-	
-				result.add(type);
-				continue;
-			}
-			
-			if (abstractParameterNode instanceof CompositeParameterNode) {
-				
-				result.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
-				continue;
-			}
 		}
 
 		return result;
@@ -718,10 +680,10 @@ public class MethodNodeHelper {
 	private static boolean isNewTypeUsed(
 			String typeForLastParameter, ClassNode classNode, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		List<String> parameterTypesInExternalLanguage = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 		parameterTypesInExternalLanguage.add(typeForLastParameter);
 
-		String methodNameInExternalLanguage = MethodNodeHelper.getName(methodNode, extLanguageManager);
+		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
 
 		MethodNode foundMethodNode = 
 				ClassNodeHelper.findMethodByExtLanguage(

@@ -84,7 +84,7 @@ public class FactoryRenameOperation {
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
 							targetMethodNode.getClassNode(),
 							newNameInExtLanguage,
-							MethodNodeHelper.getParameterTypes(targetMethodNode, extLanguageManager),
+							ParametersParentNodeHelper.getParameterTypes(targetMethodNode, extLanguageManager),
 							extLanguageManager);
 
 			if (errorMessage != null) {
