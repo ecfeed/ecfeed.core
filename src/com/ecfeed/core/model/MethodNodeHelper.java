@@ -18,6 +18,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionItem;
@@ -601,31 +602,63 @@ public class MethodNodeHelper {
 
 
 	public static AbstractParameterNode createNewParameter( // TODO MO-RE rename
-			MethodNode methodNode,
+			IParametersParentNode parametersParentNode,
 			AbstractParameterNode.ParameterType parameterType,
 			IExtLanguageManager extLanguageManager) {
 
-		String name = MethodNodeHelper.generateNewParameterName(methodNode);
+		// TODO MO-RE divide into composite parameter helper and method node helper ? or rename method node helper
+		String name = MethodNodeHelper.generateNewParameterName(parametersParentNode);
 
-		IModelChangeRegistrator modelChangeRegistrator = methodNode.getModelChangeRegistrator();
+		IModelChangeRegistrator modelChangeRegistrator = parametersParentNode.getModelChangeRegistrator();
 		
-		if (parameterType == AbstractParameterNode.ParameterType.BASIC) {
+		if (parameterType == AbstractParameterNode.ParameterType.COMPOSITE) {
 			
-			String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(methodNode, extLanguageManager);
+			CompositeParameterNode compositeParameterNode = 
+					new CompositeParameterNode(name, modelChangeRegistrator);
+			
+			return compositeParameterNode;
+		}
+		
+		if (parametersParentNode instanceof MethodNode) {
+
+			MethodNode methodNode = (MethodNode) parametersParentNode;
+
+			String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(
+					methodNode, extLanguageManager);
 
 			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
-			
+
 			BasicParameterNode parameter = 
 					new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
 
 			return parameter;
+		}
+
+		if (parametersParentNode instanceof CompositeParameterNode) {
+
+			//			MethodNode methodNode = (MethodNode) parametersParentNode;
+
+			//	String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(methodNode, extLanguageManager);
 			
-		} 
+			String type = null;
+			
+			if (extLanguageManager instanceof ExtLanguageManagerForJava) {  // TODO MO-RE move to extManagers
+				type = "int"; 
+			} else {
+				type = "Number";
+			}
+
+			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
+
+			BasicParameterNode parameter = 
+					new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
+
+			return parameter;
+		}
 		
-		CompositeParameterNode compositeParameterNode = 
-				new CompositeParameterNode(name, modelChangeRegistrator);
 		
-		return compositeParameterNode;
+		ExceptionHelper.reportRuntimeException("Not supported parameter type.");
+		return null;
 	}
 
 	public static BasicParameterNode createBasicParameter(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
@@ -663,7 +696,8 @@ public class MethodNodeHelper {
 		return name;
 	}
 
-	public static String findNotUsedJavaTypeForParameter(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	public static String findNotUsedJavaTypeForParameter(
+			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
 		ClassNode classNode = methodNode.getClassNode();
 
