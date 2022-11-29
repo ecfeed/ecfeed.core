@@ -162,7 +162,41 @@ public class FactoryRenameOperation {
 				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
-	}
+	} 
+
+	private static class BasicParameterOfStructureOperationRename extends GenericOperationRename {
+
+		IExtLanguageManager fExtLanguageManager;
+
+		public BasicParameterOfStructureOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
+			super(target, null, newName, extLanguageManager);
+			fExtLanguageManager = extLanguageManager;
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new MethodParameterOperationRename(getOwnNode(), getOriginalNonQualifiedName(), fExtLanguageManager);
+		}
+
+		@Override
+		protected void verifyNewName(String newNameInExtLanguage) {
+
+			BasicParameterNode target = (BasicParameterNode)getOwnNode();
+
+			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
+				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
+			}
+
+			CompositeParameterNode method = (CompositeParameterNode) target.getParent();
+
+			IExtLanguageManager extLanguageManager = getExtLanguageManager();
+			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
+
+			if(method.findParameter(newNameInIntrLanguage) != null){
+				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+			}
+		}
+	} 
 	
 	private static class CompositeParameterOperationRename extends GenericOperationRename {
 
@@ -267,6 +301,14 @@ public class FactoryRenameOperation {
 		
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
+			
+			IAbstractNode parent = node.getParent();
+			
+			if (parent instanceof CompositeParameterNode) {
+				
+				return new BasicParameterOfStructureOperationRename(
+						node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			}
 
 			if (node.isGlobalParameter()) {
 
