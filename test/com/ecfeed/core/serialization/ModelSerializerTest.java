@@ -274,7 +274,7 @@ public class ModelSerializerTest {
 
 		model.addClass(c1);
 
-		c1.addMethod(MethodDeployer.deploy(m1));
+		MethodDeployer.deploy(m1);
 
 		return model;
 	}

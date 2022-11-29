@@ -675,13 +675,13 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 
 		ExceptionHelper.reportRuntimeException("The method has not been deployed.");
-		return null;//getStandardParametersWhenThereWasNoDeployment();
+		return null;
 	}
 
-	private List<BasicParameterNode> getStandardParametersWhenThereWasNoDeployment() {
-		
-		return fParametersHolder.getParametersAsBasic();
-	}
+//	private List<BasicParameterNode> getStandardParametersWhenThereWasNoDeployment() {
+//
+//		return fParametersHolder.getParametersAsBasic();
+//	}
 
 	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
 		

@@ -13,12 +13,10 @@ package com.ecfeed.core.model.serialization;
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SignatureHelper;
 import nu.xom.Element;
 
-import java.util.List;
 import java.util.Optional;
-
-import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
 public class ModelParserForMethodDeployedParameter implements IModelParserForMethodDeployedParameter {
 
@@ -36,7 +34,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		}
 
 		AbstractParameterNode parameterCandidate;
-		String[] parameterCandidateSegments = parameter.get().getName().split("_");
+		String[] parameterCandidateSegments = parameter.get().getName().split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 
 		parameterCandidate = method.getParameter(method.getParameterIndex(parameterCandidateSegments[0]));
 		parameterCandidate = getNestedParameter(parameterCandidate, parameterCandidateSegments, 1);
