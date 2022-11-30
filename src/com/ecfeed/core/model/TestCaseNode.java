@@ -96,15 +96,15 @@ public class TestCaseNode extends AbstractNode {
 		}
 
 		int index = getTestData().indexOf(choice);
-		List<AbstractParameterNode> methodParameters = getMethod().getMethodParameters();
+		List<BasicParameterNode> methodParameters = getMethod().getDeployedMethodParameters();
 
-		AbstractParameterNode abstractParameterNode = methodParameters.get(index);
+		BasicParameterNode abstractParameterNode = methodParameters.get(index);
 		
 		if (!(abstractParameterNode instanceof BasicParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Attempt to get a parameter which is not basic.");
 		}
 		
-		return (BasicParameterNode) abstractParameterNode;
+		return abstractParameterNode;
 	}
 
 	public List<ChoiceNode> getTestData(){
