@@ -439,18 +439,18 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return null;
 	}
 
-	public MethodNode getMethodNode() {
-
-		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
-
-		if (methodParameterNode == null) {
-			return null;
-		}
-
-		MethodNode methodNode = methodParameterNode.getMethod();
-
-		return methodNode;
-	}
+//	public MethodNode getMethodNode() {
+//
+//		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
+//
+//		if (methodParameterNode == null) {
+//			return null;
+//		}
+//
+//		MethodNode methodNode = methodParameterNode.getMethod();
+//
+//		return methodNode;
+//	}
 	
 	@Override
 	public int getChildrenCount() {

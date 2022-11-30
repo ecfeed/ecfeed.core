@@ -539,6 +539,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		registerChange();
 	}
 
+	@Override
 	public void replaceTestCases(List<TestCaseNode> testCases){
 		fTestCaseNodes.clear();
 		fTestCaseNodes.addAll(testCases);

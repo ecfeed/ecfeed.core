@@ -153,7 +153,7 @@ public class FactoryRenameOperation {
 				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
 
-			MethodNode method = target.getMethod();
+			IParametersParentNode method = (IParametersParentNode) target.getParent();
 
 			IExtLanguageManager extLanguageManager = getExtLanguageManager();
 			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);

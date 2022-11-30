@@ -58,7 +58,8 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public void execute() {
-		MethodNode method = ((BasicParameterNode)fParameters.get(0)).getMethod();
+		BasicParameterNode basicParameterNode = (BasicParameterNode)fParameters.get(0);
+		MethodNode method = (MethodNode) basicParameterNode.getParent();
 
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
 
@@ -82,7 +83,8 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
 		if(super.shiftAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof BasicParameterNode == false) return false;
-		MethodNode method = ((BasicParameterNode)shifted.get(0)).getMethod();
+		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
+		MethodNode method = (MethodNode) basicParameterNode.getParent();
 		List<String> parameterTypes = ParametersParentNodeHelper.getParameterTypes(method, getExtLanguageManager());
 		List<Integer> indices = indices(method.getParameters(), shifted);
 		shiftElements(parameterTypes, indices, shift);

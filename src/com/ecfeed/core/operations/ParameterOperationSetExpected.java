@@ -18,6 +18,9 @@ import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintNodeListHolder;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IConstraintsParentNode;
+import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -45,10 +48,20 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 			setOneNodeToSelect(fTarget);
 
 			fTarget.setExpected(!fExpected);
-			if (fTarget.getMethod() != null) { 
-				fTarget.getMethod().replaceConstraints(fOriginalConstraints);
-				fTarget.getMethod().replaceTestCases(fOriginalTestCases);
+			
+			IAbstractNode parent = fTarget.getParent();
+			
+			if (parent != null) { 
+				
+				if (parent instanceof IConstraintsParentNode) {
+					((IConstraintsParentNode)parent).replaceConstraints(fOriginalConstraints);
+				}
+				
+				if (parent instanceof ITestCasesParentNode) {
+					((ITestCasesParentNode)parent).replaceTestCases(fOriginalTestCases);
+				}
 			}
+			
 			fTarget.replaceChoices(fOriginalChoices);
 			fTarget.setDefaultValueString(fOriginalDefaultValue);
 			markModelUpdated();
@@ -66,12 +79,19 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 		fTarget = target;
 		fExpected = expected;
 
-		MethodNode method = target.getMethod(); 
+		IAbstractNode method = target.getParent(); 
+		
 		if(method != null){
 			fOriginalTestCases = new ArrayList<TestCaseNode>();
-			fOriginalTestCases.addAll(method.getTestCases());
-			fOriginalConstraints = new ArrayList<ConstraintNode>();
-			fOriginalConstraints.addAll(method.getConstraintNodes());
+			
+			if (method instanceof ITestCasesParentNode) {
+				fOriginalTestCases.addAll(((ITestCasesParentNode)method).getTestCases());
+			}
+			
+			if (method instanceof IConstraintsParentNode) {
+				fOriginalConstraints = new ArrayList<ConstraintNode>();
+				fOriginalConstraints.addAll(((IConstraintsParentNode)method).getConstraintNodes());
+			}
 		}
 		fOriginalChoices = new ArrayList<ChoiceNode>();
 		fOriginalChoices.addAll(fTarget.getChoices());
@@ -104,7 +124,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 			}
 		}
 
-		MethodNode methodNode = fTarget.getMethod(); 
+		MethodNode methodNode = (MethodNode) fTarget.getParent(); 
 		if(methodNode != null){
 			int index = fTarget.getMyIndex();
 			ListIterator<TestCaseNode> tcIt = methodNode.getTestCases().listIterator();

@@ -44,5 +44,21 @@ public class ParametersParentNodeHelper {
 
 		return result;
 	}
+	
+	public static List<String> getParameterNames(IParametersParentNode method, IExtLanguageManager extLanguageManager) {
+
+		List<String> result = new ArrayList<String>();
+
+		for (AbstractParameterNode parameter : method.getParameters()) {
+
+			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
+
+			String name = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
+
+			result.add(name);
+		}
+
+		return result;
+	}
 
 }

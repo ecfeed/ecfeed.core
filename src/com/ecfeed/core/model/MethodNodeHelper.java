@@ -82,7 +82,7 @@ public class MethodNodeHelper {
 
 		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		MethodNode methodNode = (MethodNode) methodParameterNode.getParent();
 
 		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
 
@@ -104,7 +104,7 @@ public class MethodNodeHelper {
 
 		List<String> resultLabels = new ArrayList<>();
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		MethodNode methodNode = (MethodNode) methodParameterNode.getParent();
 
 		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
 
@@ -224,22 +224,6 @@ public class MethodNodeHelper {
 		
 		return null;
 
-	}
-
-	public static List<String> getParameterNames(MethodNode method, IExtLanguageManager extLanguageManager) {
-
-		List<String> result = new ArrayList<String>();
-
-		for (AbstractParameterNode parameter : method.getParameters()) {
-
-			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
-
-			String name = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
-
-			result.add(name);
-		}
-
-		return result;
 	}
 
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {

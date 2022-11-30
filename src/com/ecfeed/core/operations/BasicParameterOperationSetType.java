@@ -260,13 +260,23 @@ public class BasicParameterOperationSetType extends AbstractParameterOperationSe
 		public void execute() {
 
 			super.execute();
-			MethodNode method = fMethodParameterNode.getMethod();
-			method.replaceTestCases(fOriginalTestCases);
-			method.replaceConstraints(fOriginalConstraints);
+			
+			IAbstractNode parent = fMethodParameterNode.getParent();
+			
+			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode 
+				= (IParametersAndConstraintsParentNode) parent;
+			
+			if (parent instanceof ITestCasesParentNode) {
+				
+				ITestCasesParentNode testCasesParentNode = (ITestCasesParentNode) parent;
+				testCasesParentNode.replaceTestCases(fOriginalTestCases);
+			}
+			parametersAndConstraintsParentNode.replaceConstraints(fOriginalConstraints);
+			
 			fMethodParameterNode.setDefaultValueString(fOriginalDefaultValue);
 
 			ConstraintHelper.restoreOriginalConstraintValues(
-					method, fOriginalConstraintValues);
+					parametersAndConstraintsParentNode, fOriginalConstraintValues);
 
 			markModelUpdated();
 		}

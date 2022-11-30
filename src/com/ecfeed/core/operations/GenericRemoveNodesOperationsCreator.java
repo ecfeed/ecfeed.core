@@ -182,7 +182,7 @@ public class GenericRemoveNodesOperationsCreator {
 			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
 			boolean isDependent = false;
 			for (BasicParameterNode param : linkers) {
-				MethodNode method = param.getMethod();
+				MethodNode method = (MethodNode) param.getParent();
 				if (addMethodToMap(method, duplicatesMap, methods)) {
 					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					isDependent = true;
@@ -216,7 +216,7 @@ public class GenericRemoveNodesOperationsCreator {
 		Iterator<BasicParameterNode> paramItr = params.iterator();
 		while (paramItr.hasNext()) {
 			BasicParameterNode param = paramItr.next();
-			MethodNode method = param.getMethod();
+			MethodNode method = (MethodNode) param.getParent();
 
 			if (addMethodToMap(method, duplicatesMap, methods)) {
 				duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);

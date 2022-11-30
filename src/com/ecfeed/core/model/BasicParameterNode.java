@@ -359,14 +359,19 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public List<MethodNode> getMethods() {
-		
-		MethodNode method = getMethod();
-		
-		if (method == null) {
-			return new ArrayList<>();
-		}
-		
-		return Arrays.asList(new MethodNode[] { method });
+
+		IAbstractNode parent = getParent();
+
+		if (parent instanceof MethodNode) {
+
+			MethodNode method = (MethodNode) parent;
+
+			return Arrays.asList(new MethodNode[] { method });
+		} 
+
+		// TODO MO-RE get all child methods of global parameter ? 
+		ExceptionHelper.reportRuntimeException("Not implemented.");
+		return null;
 	}
 
 	public List<ChoiceNode> getOwnChoices() {
@@ -477,11 +482,15 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public Set<ConstraintNode> getMentioningConstraints() {
-		return getMethod().getMentioningConstraints(this);
+		
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) getParent();
+		return constraintsParentNode.getMentioningConstraints(this);
 	}
 
 	public Set<ConstraintNode> getMentioningConstraints(String label) {
-		return getMethod().getMentioningConstraints(this, label);
+		
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) getParent();
+		return constraintsParentNode.getMentioningConstraints(this, label);
 	}
 
 	public List<ChoiceNode> getChoicesCopy() {
@@ -499,6 +508,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 
 		List<BasicParameterNode> result = new ArrayList<>();
+		
+		
 		List<MethodNode> methods = getMethods();
 
 		if (methods == null) {

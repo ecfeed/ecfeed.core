@@ -55,7 +55,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 			setOneNodeToSelect(fTarget);
 			
-			MethodNode method = fTarget.getMethod();
+			MethodNode method = (MethodNode) fTarget.getParent();
 			List<String> types = method.getParameterTypes();
 			types.set(fTarget.getMyIndex(), fNewLink.getType());
 
@@ -80,6 +80,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 	public MethodParameterOperationSetLink(BasicParameterNode target, BasicParameterNode link, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_LINK, true, target, target, extLanguageManager);
 		addOperation(new SetLinkOperation(target, link, extLanguageManager));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguageManager));
+		MethodNode methodNode = (MethodNode) target.getParent();
+		addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager));
 	}
 }

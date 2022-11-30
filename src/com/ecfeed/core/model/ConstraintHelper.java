@@ -63,10 +63,10 @@ public class ConstraintHelper {
 	}
 
 	public static void restoreOriginalConstraintValues(
-			MethodNode methodNode,
+			IConstraintsParentNode constraintsParentNode,
 			Map<Integer, String> originalValues) {
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = constraintsParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 

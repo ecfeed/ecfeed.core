@@ -981,7 +981,9 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ExpectedValueStatement statement) {
 
-			fMethods.add(statement.getLeftMethodParameterNode().getMethod());
+			BasicParameterNode leftMethodParameterNode = statement.getLeftMethodParameterNode();
+			
+			fMethods.add((MethodNode) leftMethodParameterNode.getParent());
 
 			return null;
 		}
@@ -989,7 +991,8 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(RelationStatement statement) {
 
-			fMethods.add(statement.getLeftParameter().getMethod());
+			BasicParameterNode leftParameter = statement.getLeftParameter();
+			fMethods.add((MethodNode) leftParameter.getParent());
 
 			return null;
 		}

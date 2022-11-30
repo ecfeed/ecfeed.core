@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ecfeed.core.model.Constraint;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.IConstraintsParentNode;
 
 public class UsageOfLabelsInConstraints {
 
@@ -26,7 +26,7 @@ public class UsageOfLabelsInConstraints {
 
 	public UsageOfLabelsInConstraints(BasicParameterNode methodParameterNode) {
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IConstraintsParentNode methodNode = (IConstraintsParentNode) methodParameterNode.getParent();
 
 		fMapOfUsages = new HashMap<>();
 

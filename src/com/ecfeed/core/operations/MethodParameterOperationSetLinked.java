@@ -41,7 +41,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 			public void execute() {
 
 				setOneNodeToSelect(fTarget);
-				MethodNode methodNode = fTarget.getMethod();
+				MethodNode methodNode = (MethodNode) fTarget.getParent();
 
 				methodNode.replaceTestCases(fOriginalTestCases);
 				methodNode.replaceConstraints(fOriginalConstraints);
@@ -73,7 +73,7 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 			setOneNodeToSelect(fTarget);
 
-			MethodNode method = fTarget.getMethod();
+			MethodNode method = (MethodNode) fTarget.getParent();
 			String newType;
 			if(fLinked){
 				AbstractParameterNode linkToGlobalParameter = fTarget.getLinkToGlobalParameter();
@@ -119,7 +119,8 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 	public MethodParameterOperationSetLinked(BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
 		addOperation(new SetLinkedOperation(target, linked, extLanguageManager));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguageManager)); 
+		MethodNode methodNode = (MethodNode) target.getParent();
+		addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager)); 
 	}
 
 	public void addOperation(int index, IModelOperation operation){
