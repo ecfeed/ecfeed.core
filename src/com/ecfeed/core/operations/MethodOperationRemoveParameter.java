@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractNodeHelper;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
@@ -27,7 +28,7 @@ import com.ecfeed.core.utils.StringHelper;
 public class MethodOperationRemoveParameter extends BulkOperation{
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, BasicParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
+			MethodNode target, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguageManager);
 
@@ -38,13 +39,13 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		}
 	}
 
-	public MethodOperationRemoveParameter(MethodNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	public MethodOperationRemoveParameter(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		this(target, parameter, true, extLanguageManager);
 	}
 
 	public MethodOperationRemoveParameter(
 			MethodNode target, 
-			BasicParameterNode parameter, 
+			AbstractParameterNode parameter, 
 			boolean validate, 
 			boolean ignoreDuplicates, 
 			IExtLanguageManager extLanguageManager){
@@ -62,14 +63,14 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
 
-		public RemoveMethodParameterOperation(MethodNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		public RemoveMethodParameterOperation(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 			super(target, parameter, extLanguageManager);
 			fOriginalTestCases = new ArrayList<>();
 		}
 
 		public RemoveMethodParameterOperation(
 				MethodNode target, 
-				BasicParameterNode parameter, 
+				AbstractParameterNode parameter, 
 				boolean ignoreDuplicates,
 				IExtLanguageManager extLanguageManager) {
 

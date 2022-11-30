@@ -10,19 +10,21 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class GenericOperationRemoveParameter extends AbstractModelOperation{
 
 	private IParametersParentNode fParametersParentNode;
-	private BasicParameterNode fAbstractParameterNode;
+	private AbstractParameterNode fAbstractParameterNode;
 	private int fOriginalIndex;
 	private IExtLanguageManager fExtLanguageManager;
 
 	public GenericOperationRemoveParameter(
-			IParametersParentNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
+			IParametersParentNode target, 
+			AbstractParameterNode parameter, 
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguageManager);
 
@@ -55,7 +57,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 		return fParametersParentNode;
 	}
 
-	protected BasicParameterNode getParameter(){
+	protected AbstractParameterNode getParameter(){
 		return fAbstractParameterNode;
 	}
 

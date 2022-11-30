@@ -32,6 +32,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class FactoryRemoveOperation {
 
 	private static class UnsupportedModelOperation implements IModelOperation{
+		
 		@Override
 		public void execute() {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -110,6 +111,16 @@ public class FactoryRemoveOperation {
 		
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
+			
+			IAbstractNode parent = node.getParent();
+			
+			if (parent instanceof MethodNode) {
+
+				return new MethodOperationRemoveParameter(
+						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+				
+			}
+			
 			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
 			return null;
 		}
