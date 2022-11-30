@@ -99,7 +99,9 @@ public abstract class MethodDeployer {
 
 		for (ClassNode classNode : root.getClasses()) {
 			for (MethodNode methodNode : classNode.getMethods()) {
-				updateDeploymentNameConsistency(methodNode);
+				if (validateDeploymentSizeConsistency(methodNode)) {
+					updateDeploymentNameConsistency(methodNode);
+				}
 			}
 		}
 	}
