@@ -369,8 +369,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			return Arrays.asList(new MethodNode[] { method });
 		} 
 
-		// TODO MO-RE get all child methods of global parameter ? 
-		ExceptionHelper.reportRuntimeException("Not implemented.");
+		if (parent instanceof CompositeParameterNode) {
+			return new ArrayList<>();
+		}
+		
+		ExceptionHelper.reportRuntimeException("Unexpected parent node type.");
 		return null;
 	}
 
