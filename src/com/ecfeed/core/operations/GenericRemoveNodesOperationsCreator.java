@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
@@ -216,20 +217,29 @@ public class GenericRemoveNodesOperationsCreator {
 		Iterator<BasicParameterNode> paramItr = params.iterator();
 		while (paramItr.hasNext()) {
 			BasicParameterNode param = paramItr.next();
-			MethodNode method = (MethodNode) param.getParent();
+			IAbstractNode parent = param.getParent();
 
-			if (addMethodToMap(method, duplicatesMap, methods)) {
-				duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
-				if (!parameterMap.containsKey(method)) {
-					parameterMap.put(method, new ArrayList<BasicParameterNode>());
+			if (parent instanceof MethodNode) {
+
+				MethodNode method = (MethodNode) parent;
+				if (addMethodToMap(method, duplicatesMap, methods)) {
+					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
+					if (!parameterMap.containsKey(method)) {
+						parameterMap.put(method, new ArrayList<BasicParameterNode>());
+					}
+					parameterMap.get(method).add(param);
+				} else {
+					//remove mentioning constraints from the list to avoid duplicates
+					createAffectedConstraints(param, allConstraintNodes, outAffectedConstraints);
+					outAffectedNodes.add(param);
+					paramItr.remove();
 				}
-				parameterMap.get(method).add(param);
-			} else {
-				//remove mentioning constraints from the list to avoid duplicates
-				createAffectedConstraints(param, allConstraintNodes, outAffectedConstraints);
-				outAffectedNodes.add(param);
-				paramItr.remove();
 			}
+
+			if (parent instanceof CompositeParameterNode) {
+				outAffectedNodes.add(param);
+			}
+
 		}
 		//Removing methods - information for model map has been already taken
 		Iterator<MethodNode> methodItr = methods.iterator();

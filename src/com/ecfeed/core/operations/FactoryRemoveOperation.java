@@ -32,6 +32,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class FactoryRemoveOperation {
 
 	private static class UnsupportedModelOperation implements IModelOperation{
+		
 		@Override
 		public void execute() {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -93,24 +94,53 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
-			
-			if (node.isGlobalParameter()) {
+
+			IAbstractNode parent = node.getParent();
+
+			if (parent instanceof MethodNode) {
 				
-				return new GenericOperationRemoveGlobalParameter(
-						(IParametersParentNode)node.getParametersParent(), 
-						node,
-						fExtLanguageManager);
-				
-			} else {
-			
-			return new MethodOperationRemoveParameter(
-					(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+				if (node.isGlobalParameter()) {
+
+					return new GenericOperationRemoveGlobalParameter(
+							(IParametersParentNode)node.getParametersParent(), 
+							node,
+							fExtLanguageManager);
+
+				} else {
+
+					return new MethodOperationRemoveParameter(
+							(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+				}
 			}
+			
+			if (parent instanceof CompositeParameterNode) {
+
+				return new CompositeParameterOperationRemoveParameter(
+						(CompositeParameterNode)node.getParent(), node, fValidate, fExtLanguageManager);
+			}
+			
+			ExceptionHelper.reportRuntimeException("Unexpected parent for basic parameter.");
+			return null;
 		}
 		
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+			
+			IAbstractNode parent = node.getParent();
+			
+			if (parent instanceof MethodNode) {
+
+				return new MethodOperationRemoveParameter(
+						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+			} 
+			
+			if (parent instanceof CompositeParameterNode) {
+
+				return new CompositeParameterOperationRemoveParameter(
+						(CompositeParameterNode)node.getParent(), node, fValidate, fExtLanguageManager);
+			}
+			
+			ExceptionHelper.reportRuntimeException("Unexpected parent for composite parameter.");
 			return null;
 		}
 
