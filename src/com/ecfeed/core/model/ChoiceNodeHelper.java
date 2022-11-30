@@ -51,7 +51,9 @@ public class ChoiceNodeHelper {
 	
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
-			IChoicesParentNode dstParentNode) {
+			IChoicesParentNode dstParentNode
+			// TODO MO-RE pass NodeMapper here
+			) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -62,6 +64,9 @@ public class ChoiceNodeHelper {
 		for (ChoiceNode choiceNode : childChoiceNodes) {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+			
+			// TODO MO-RE if nodeMapper != null save choice and cloned choice in the map
+			
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
