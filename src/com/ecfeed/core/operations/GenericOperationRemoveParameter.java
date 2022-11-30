@@ -26,7 +26,7 @@ public class GenericOperationRemoveParameter extends AbstractModelOperation{
 			AbstractParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.REMOVE_METHOD_PARAMETER, extLanguageManager);
+		super(OperationNames.REMOVE_PARAMETER, extLanguageManager);
 
 		fParametersParentNode = target;
 		fAbstractParameterNode = parameter;

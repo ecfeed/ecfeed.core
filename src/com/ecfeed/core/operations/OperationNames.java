@@ -38,7 +38,7 @@ public interface OperationNames {
 	public static final String MAKE_CONSISTENT = "Make method consistent";
 	public static final String CONVERT_VALUES = "Convert values";
 	public static final String REMOVE_CONSTRAINT = "Remove constraint";
-	public static final String REMOVE_METHOD_PARAMETER = "Remove method parameter";
+	public static final String REMOVE_PARAMETER = "Remove parameter";
 	public static final String REMOVE_GLOBAL_PARAMETER = "Remove global parameter";
 	public static final String REMOVE_TEST_SUITE = "Remove test suite";
 	public static final String REMOVE_TEST_CASE = "Remove test case";

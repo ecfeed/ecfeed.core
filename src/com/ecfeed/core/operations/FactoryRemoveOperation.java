@@ -94,19 +94,33 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
-			
-			if (node.isGlobalParameter()) {
+
+			IAbstractNode parent = node.getParent();
+
+			if (parent instanceof MethodNode) {
 				
-				return new GenericOperationRemoveGlobalParameter(
-						(IParametersParentNode)node.getParametersParent(), 
-						node,
-						fExtLanguageManager);
-				
-			} else {
-			
-			return new MethodOperationRemoveParameter(
-					(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+				if (node.isGlobalParameter()) {
+
+					return new GenericOperationRemoveGlobalParameter(
+							(IParametersParentNode)node.getParametersParent(), 
+							node,
+							fExtLanguageManager);
+
+				} else {
+
+					return new MethodOperationRemoveParameter(
+							(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+				}
 			}
+			
+			if (parent instanceof CompositeParameterNode) {
+
+				return new CompositeParameterOperationRemoveParameter(
+						(CompositeParameterNode)node.getParent(), node, fValidate, fExtLanguageManager);
+			}
+			
+			ExceptionHelper.reportRuntimeException("Unexpected parent for basic parameter.");
+			return null;
 		}
 		
 		@Override
@@ -118,10 +132,15 @@ public class FactoryRemoveOperation {
 
 				return new MethodOperationRemoveParameter(
 						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
-				
+			} 
+			
+			if (parent instanceof CompositeParameterNode) {
+
+				return new CompositeParameterOperationRemoveParameter(
+						(CompositeParameterNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			}
 			
-			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
+			ExceptionHelper.reportRuntimeException("Unexpected parent for composite parameter.");
 			return null;
 		}
 
