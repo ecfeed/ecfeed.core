@@ -14,12 +14,12 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.operations.MethodParameterOperationSetType;
+import com.ecfeed.core.operations.BasicParameterOperationSetType;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -67,8 +67,8 @@ public class MethodParameterOperationSetTypeTest {
 //				createParameterConversionDefinition("x", "1");
 		
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode2, 
 							"byte",
 							null, 
@@ -87,8 +87,8 @@ public class MethodParameterOperationSetTypeTest {
 		// set param of method1 to Text
 
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode1, 
 							"String", 
 							null, 
@@ -107,8 +107,8 @@ public class MethodParameterOperationSetTypeTest {
 		// set param of method1 to Logical
 
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode1, 
 							"boolean", 
 							null, 
@@ -123,8 +123,8 @@ public class MethodParameterOperationSetTypeTest {
 		// set param of method2 to logical
 
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode2, 
 							"boolean", 
 							null, 
@@ -315,8 +315,8 @@ public class MethodParameterOperationSetTypeTest {
 		// set param of method2 to int
 
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode2, "int", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			fail();
@@ -330,8 +330,8 @@ public class MethodParameterOperationSetTypeTest {
 		// set param of method1 to String
 
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode1, "String", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			fail();
@@ -345,8 +345,8 @@ public class MethodParameterOperationSetTypeTest {
 		// set param of method1 to boolean
 
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode1, "boolean", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 		} catch (Exception e) {
@@ -356,8 +356,8 @@ public class MethodParameterOperationSetTypeTest {
 		// set param of method2 to boolean
 
 		try {
-			MethodParameterOperationSetType methodParameterOperationSetType =
-					new MethodParameterOperationSetType(
+			BasicParameterOperationSetType methodParameterOperationSetType =
+					new BasicParameterOperationSetType(
 							methodParameterNode2, "boolean", null, typeAdapterProvider, extLanguageManagerForJava);
 			methodParameterOperationSetType.execute();
 			fail();
