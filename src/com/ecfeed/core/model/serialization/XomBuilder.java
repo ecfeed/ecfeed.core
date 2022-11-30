@@ -12,9 +12,12 @@ package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.LogHelperCore;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
+
+import java.util.Objects;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
@@ -109,7 +112,13 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		if (methodNode.isDeployed()) {
-			targetMethodElement.appendChild(createTargetMethodDeployedEParametersElement(methodNode));
+			if (MethodDeployer.validateDeploymentSizeConsistency(methodNode)) {
+				MethodDeployer.updateDeploymentNameConsistency(methodNode);
+
+				targetMethodElement.appendChild(createTargetMethodDeployedParametersElement(methodNode));
+			} else {
+				LogHelperCore.logError("The number of deployed parameters is inconsistent.");
+			}
 		}
 
 		return targetMethodElement;
@@ -269,6 +278,50 @@ public abstract class XomBuilder implements IModelVisitor {
 		return null;
 	}
 
+	public Element createDeployedParameter(BasicParameterNode parameterNode) {
+		Element targetParamElement;
+
+		if (parameterNode.isGlobalParameter()) {
+			targetParamElement = createTargetGlobalDeployedParameterElement(parameterNode);
+		} else {
+			targetParamElement = createTargetDeployedParameterElement(parameterNode);
+		}
+
+		return targetParamElement;
+	}
+
+	private Element createTargetDeployedParameterElement(BasicParameterNode node) {
+		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement, new Attribute(TYPE_NAME_ATTRIBUTE, node.getRealType()),
+				fWhiteCharConverter);
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement,
+				new Attribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, Boolean.toString(node.isExpected())),
+				fWhiteCharConverter);
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement,
+				new Attribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, node.getDefaultValueForSerialization()),
+				fWhiteCharConverter);
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement,
+				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
+				fWhiteCharConverter);
+
+		if (node.getLinkToGlobalParameter() != null) {
+			encodeAndAddAttribute(
+					targetBasicParameterElement,
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()),
+					fWhiteCharConverter);
+		}
+
+		return targetBasicParameterElement;
+	}
+
 	private Element createTargetBasicMethodParameterElement(BasicParameterNode node) {
 		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
 
@@ -342,6 +395,17 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetGlobalBasicParamElement;
 	}
 
+	private Element createTargetGlobalDeployedParameterElement(BasicParameterNode node) {
+		Element targetGlobalBasicParamElement = createAbstractElement(getBasicParameterNodeName(), node);
+
+		encodeAndAddAttribute(
+				targetGlobalBasicParamElement,
+				new Attribute(TYPE_NAME_ATTRIBUTE, node.getType()),
+				fWhiteCharConverter);
+
+		return targetGlobalBasicParamElement;
+	}
+
 	private Element createTargetGlobalCompositeParameterElement(CompositeParameterNode node) {
 		Element targetGlobalParamElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
@@ -382,11 +446,11 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetMethodElement;
 	}
 
-	private Element createTargetMethodDeployedEParametersElement(MethodNode methodNode) throws Exception {
+	private Element createTargetMethodDeployedParametersElement(MethodNode methodNode) {
 		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_NAME);
 
-		for (BasicParameterNode parameter : methodNode.getDeployedMethodParameters()) {
-			targetMethodDeployedParameters.appendChild((Element) visit(parameter));
+		for (BasicParameterNode parameter : Objects.requireNonNull(methodNode.getDeployedMethodParameters())) {
+			targetMethodDeployedParameters.appendChild(createDeployedParameter(parameter));
 		}
 
 		return targetMethodDeployedParameters;

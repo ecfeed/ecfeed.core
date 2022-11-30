@@ -122,6 +122,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		super.setName(name);
 	}
+
+	public void setNameUnsafe(String name) {
+
+		super.setName(name);
+	}
 	
 	@Override
 	public void setCompositeName(String name) {

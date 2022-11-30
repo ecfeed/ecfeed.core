@@ -18,16 +18,13 @@ import nu.xom.Element;
 
 import java.util.Optional;
 
+import static com.ecfeed.core.model.serialization.SerializationConstants.*;
+import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
+
 public class ModelParserForMethodDeployedParameter implements IModelParserForMethodDeployedParameter {
 
-	private IModelParserForMethodParameter fModelParserForMethodParameter;
-
-	public ModelParserForMethodDeployedParameter(IModelParserForMethodParameter modelParserForMethodParameter) {
-		fModelParserForMethodParameter = modelParserForMethodParameter;
-	}
-
-	public Optional<BasicParameterNode> parseMethodDeployedParameter(Element parameterElement, MethodNode method, ListOfStrings errorList) {
-		Optional<BasicParameterNode> parameter = fModelParserForMethodParameter.parseMethodParameter(parameterElement, method, errorList);
+	public Optional<BasicParameterNode> parseMethodDeployedParameter(Element element, MethodNode method, ListOfStrings errors) {
+		Optional<BasicParameterNode> parameter = parseMethodBasicParameter(element, method, errors);
 
 		if (!parameter.isPresent()) {
 			ExceptionHelper.reportRuntimeException("The deployed parameter is non-existent.");
@@ -37,54 +34,89 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		String[] parameterCandidateSegments = parameter.get().getName().split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 
 		parameterCandidate = method.getParameter(method.getParameterIndex(parameterCandidateSegments[0]));
-		parameterCandidate = getNestedParameter(parameterCandidate, parameterCandidateSegments, 1);
+		parameterCandidate = MethodDeployer.getNestedBasicParameter(parameterCandidate, parameterCandidateSegments, 1);
 
 		parameter.get().setDeploymentParameter((BasicParameterNode) parameterCandidate);
 
-		getChoices(parameter.get(), (BasicParameterNode) parameterCandidate);
+//		getChoices(parameter.get(), (BasicParameterNode) parameterCandidate);
 
-		return Optional.of(parameter.get());
+		return parameter;
 	}
 
-	private BasicParameterNode getNestedParameter(AbstractParameterNode parameter, String[] path, int index) {
+	public Optional<BasicParameterNode> parseMethodBasicParameter(Element element, MethodNode method, ListOfStrings errors) {
+		String defaultValue = null;
+		String name, type;
+		boolean expected = false;
 
-		if (parameter instanceof BasicParameterNode) {
-			return (BasicParameterNode) parameter;
-		}
+		try {
+			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errors);
+			name = ModelParserHelper.getElementName(element, errors);
+			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errors);
 
-		CompositeParameterNode element = (CompositeParameterNode) parameter;
-		AbstractParameterNode elementNested = element.getParameter(element.getParameterIndex(path[index]));
-
-		return getNestedParameter(elementNested, path, index + 1);
-	}
-
-	private void getChoices(BasicParameterNode parameterReference, BasicParameterNode parameterTarget) {
-
-		for (ChoiceNode choiceReference : parameterReference.getChoices()) {
-			ChoiceNode choiceTarget = parameterTarget.getChoice(choiceReference.getQualifiedName());
-
-			if (choiceTarget == null) {
-				continue;
+			if (element.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
+				expected = Boolean.parseBoolean(ModelParserHelper.getAttributeValue(element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errors));
+				defaultValue = ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errors);
 			}
 
-			getAbstractChoices(choiceReference, choiceTarget);
+		} catch (ParserException e) {
+			return Optional.empty();
 		}
-	}
 
-	private void getAbstractChoices(ChoiceNode choiceReference, ChoiceNode choiceTarget) {
+		BasicParameterNode parameter = new BasicParameterNode("tmp", type, defaultValue, expected, method.getModelChangeRegistrator());
+		parameter.setNameUnsafe(name);
 
-		if (choiceReference.isAbstract()) {
-			for (ChoiceNode choiceAbstractReference : choiceReference.getChoices()) {
-				ChoiceNode choiceAbstractTarget = choiceTarget.getChoice(choiceAbstractReference.getQualifiedName());
+		ModelParserHelper.parseParameterProperties(element, parameter);
 
-				if (choiceAbstractTarget == null) {
-					continue;
-				}
+		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method.getClassNode() != null) {
+			String linkPath;
 
-				getAbstractChoices(choiceAbstractReference, choiceAbstractTarget);
+			try {
+				linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
+			} catch (ParserException e) {
+				return Optional.empty();
 			}
-		} else {
-			choiceReference.setDeploymentChoiceNode(choiceTarget);
+
+			BasicParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+
+			if (link != null) {
+				parameter.setLinkToGlobalParameter(link);
+			}
 		}
+
+		if (!parameter.isLinked()) {
+			parameter.setTypeComments(ModelParserHelper.parseTypeComments(element));
+		}
+
+		return Optional.of(parameter);
 	}
+
+//	private void getChoices(BasicParameterNode parameterReference, BasicParameterNode parameterTarget) {
+//
+//		for (ChoiceNode choiceReference : parameterReference.getChoices()) {
+//			ChoiceNode choiceTarget = parameterTarget.getChoice(choiceReference.getQualifiedName());
+//
+//			if (choiceTarget == null) {
+//				continue;
+//			}
+//
+//			getAbstractChoices(choiceReference, choiceTarget);
+//		}
+//	}
+//
+//	private void getAbstractChoices(ChoiceNode choiceReference, ChoiceNode choiceTarget) {
+//
+//		if (choiceReference.isAbstract()) {
+//			for (ChoiceNode choiceAbstractReference : choiceReference.getChoices()) {
+//				ChoiceNode choiceAbstractTarget = choiceTarget.getChoice(choiceAbstractReference.getQualifiedName());
+//
+//				if (choiceAbstractTarget == null) {
+//					continue;
+//				}
+//
+//				getAbstractChoices(choiceAbstractReference, choiceAbstractTarget);
+//			}
+//		} else {
+//			choiceReference.setDeploymentChoiceNode(choiceTarget);
+//		}
+//	}
 }

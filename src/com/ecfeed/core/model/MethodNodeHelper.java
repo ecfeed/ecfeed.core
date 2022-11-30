@@ -16,13 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.utils.CommonConstants;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.*;
 
 public class MethodNodeHelper {
 
@@ -215,7 +209,7 @@ public class MethodNodeHelper {
 
 	public static BasicParameterNode findMethodParameterByName(
 			String parameterNameToFindInExtLanguage, 
-			MethodNode methodNode, 
+			MethodNode methodNode,
 			IExtLanguageManager extLanguageManager) {
 
 		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
@@ -654,7 +648,7 @@ public class MethodNodeHelper {
 
 		String methodNameInExternalLanguage = MethodNodeHelper.getName(methodNode, extLanguageManager);
 
-		MethodNode foundMethodNode = 
+		MethodNode foundMethodNode =
 				ClassNodeHelper.findMethodByExtLanguage(
 						classNode,
 						methodNameInExternalLanguage,

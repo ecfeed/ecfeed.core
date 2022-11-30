@@ -276,6 +276,9 @@ public class ModelSerializerTest {
 
 		MethodDeployer.deploy(m1);
 
+//		m1.removeParameter(m1p1);
+		m1p1.setName("blablabla");
+
 		return model;
 	}
 
