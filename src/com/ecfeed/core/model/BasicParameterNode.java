@@ -148,7 +148,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			return super.toString() + "(" + getDefaultValue() + "): "
 					+ getType();
 		}
-		return new String(getName() + ": " + getType());
+		return getName() + ": " + getType();
 	}
 
 	@Override
@@ -189,7 +189,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		copyProperties(copyOfBasicParameterNode);
 
 		ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
-//		copyChoices(copyOfBasicParameterNode, mapper);
 
 		return copyOfBasicParameterNode;
 	}
@@ -204,21 +203,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			copyOfBasicParameterNode.setDefaultValueString(getDefaultValue());
 		}
 	}
-
-//	private void copyChoices(BasicParameterNode copyOfBasicParameterNode, NodeMapper mapper) {
-//
-//		// TODO MO-RE use modified function cloneChoiceNodesRecursively
-//
-//		ChoiceNodeHelper.cloneChoiceNodesRecursively(copyOfBasicParameterNode, mapper);
-////		List<ChoiceNode> currentChoiceNodes = getChoices();
-////
-////		for (ChoiceNode currentChoiceNode : currentChoiceNodes) {
-////
-////			ChoiceNode copyOfChoiceNode = copyOperator.apply(currentChoiceNode);
-////
-////			copyOfBasicParameterNode.addChoice(copyOfChoiceNode);
-////		}
-//	}
 
 	public String getType() {
 

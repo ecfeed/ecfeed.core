@@ -96,7 +96,14 @@ public class TestCaseNode extends AbstractNode {
 		}
 
 		int index = getTestData().indexOf(choice);
-		List<BasicParameterNode> methodParameters = getMethod().getDeployedMethodParameters();
+
+		List<BasicParameterNode> methodParameters;
+
+		if (getMethod().isDeployed()) {
+			methodParameters = getMethod().getDeployedMethodParameters();
+		} else {
+			methodParameters = getMethod().getParametersAsBasic();
+		}
 
 		BasicParameterNode abstractParameterNode = methodParameters.get(index);
 		

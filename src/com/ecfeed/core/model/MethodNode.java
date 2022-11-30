@@ -21,6 +21,8 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
+import javax.xml.soap.Node;
+
 
 public class MethodNode  extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
@@ -29,6 +31,15 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
+	private NodeMapper fNodeMapper;
+
+	public NodeMapper getNodeMapper() {
+		return fNodeMapper;
+	}
+
+	public void setNodeMapper(NodeMapper mapper) {
+		this.fNodeMapper = mapper;
+	}
 
 	@Override
 	public String getNonQualifiedName() {
@@ -677,13 +688,9 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 
 		ExceptionHelper.reportRuntimeException("The method has not been deployed.");
+
 		return null;
 	}
-
-//	private List<BasicParameterNode> getStandardParametersWhenThereWasNoDeployment() {
-//
-//		return fParametersHolder.getParametersAsBasic();
-//	}
 
 	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
 		
