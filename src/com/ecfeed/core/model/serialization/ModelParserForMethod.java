@@ -68,15 +68,11 @@ public class ModelParserForMethod implements IModelParserForMethod {
 		)) {
 
 			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				Optional<BasicParameterNode> nodeParameter = fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
-				if (nodeParameter.isPresent()) {
-					targetMethodNode.addParameter(nodeParameter.get());
-				}
+				fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList)
+						.ifPresent(targetMethodNode::addParameter);
 			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				Optional<CompositeParameterNode> nodeComposite = fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, errorList);
-				if (nodeComposite.isPresent()) {
-					targetMethodNode.addParameter(nodeComposite.get());
-				}
+				fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, errorList)
+						.ifPresent(targetMethodNode::addParameter);
 			}
 		}
 

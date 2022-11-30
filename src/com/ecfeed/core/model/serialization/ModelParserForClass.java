@@ -65,18 +65,14 @@ public class ModelParserForClass implements IModelParserForClass {
 
 		//parameters must be parsed before classes
 		for (Element child : ModelParserHelper.getIterableChildren(classElement, new String[]
-		{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
+			{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
 		)) {
 			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				Optional<BasicParameterNode> nodeParameter = fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
-				if (nodeParameter.isPresent()) {
-					targetClassNode.addParameter(nodeParameter.get());
-				}
+				fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList)
+						.ifPresent(targetClassNode::addParameter);
 			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				Optional<CompositeParameterNode> nodeComposite = fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
-				if (nodeComposite.isPresent()) {
-					targetClassNode.addParameter(nodeComposite.get());
-				}
+				fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetClassNode.getModelChangeRegistrator(), errorList)
+						.ifPresent(targetClassNode::addParameter);
 			}
 		}
 

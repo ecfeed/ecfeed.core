@@ -53,17 +53,12 @@ public class ModelParserForRoot implements IModelParserForRoot {
 		for (Element child : ModelParserHelper.getIterableChildren(element, new String[]
 				{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
 		)) {
-
 			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				Optional<BasicParameterNode> parameterBasic = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
-				if (parameterBasic.isPresent()) {
-					targetRootNode.addParameter(parameterBasic.get());
-				}
+				fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList)
+						.ifPresent(targetRootNode::addParameter);
 			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				Optional<CompositeParameterNode> parameterComposite = fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
-				if (parameterComposite.isPresent()) {
-					targetRootNode.addParameter(parameterComposite.get());
-				}
+				fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList)
+						.ifPresent(targetRootNode::addParameter);
 			}
 		}
 

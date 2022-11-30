@@ -107,6 +107,7 @@ public class ModelSerializerTest {
 		RootNode model = createModelComposite(version);
 
 		OutputStream ostream = new ByteArrayOutputStream();
+		MethodDeployer.updateDeploymentNameConsistency(model);
 		ModelSerializer serializer = new ModelSerializer(ostream, version);
 
 		try {

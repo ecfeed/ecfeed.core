@@ -53,19 +53,15 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				Optional<BasicParameterNode> parameterBasic = fModelParserForGlobalParameter.parseGlobalParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
-				if (parameterBasic.isPresent()) {
-					targetCompositeParameterNode.addParameter(parameterBasic.get());
-				}
+				fModelParserForGlobalParameter.parseGlobalParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
+						.ifPresent(targetCompositeParameterNode::addParameter);
 			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				Optional<CompositeParameterNode> parameterComposite = parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList);
-				if (parameterComposite.isPresent()) {
-					targetCompositeParameterNode.addParameter(parameterComposite.get());
-				}
+				parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
+						.ifPresent(targetCompositeParameterNode::addParameter);
 			}
 		}
 
-		return Optional.ofNullable(targetCompositeParameterNode);
+		return Optional.of(targetCompositeParameterNode);
 	}
 
 }

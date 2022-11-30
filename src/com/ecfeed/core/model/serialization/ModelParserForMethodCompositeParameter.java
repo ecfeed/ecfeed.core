@@ -54,16 +54,11 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				Optional<BasicParameterNode> parameterBasic = fModelParserForMethodParameter.parseMethodParameter(child, method, errorList);
-				if (parameterBasic.isPresent()) {
-					targetCompositeParameterNode.addParameter(parameterBasic.get());
-					continue;
-				}
+				fModelParserForMethodParameter.parseMethodParameter(child, method, errorList)
+						.ifPresent(targetCompositeParameterNode::addParameter);
 			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				Optional<CompositeParameterNode> parameterComposite = parseMethodCompositeParameter(child, method, errorList);
-				if (parameterComposite.isPresent()) {
-					targetCompositeParameterNode.addParameter(parameterComposite.get());
-				}
+				parseMethodCompositeParameter(child, method, errorList)
+						.ifPresent(targetCompositeParameterNode::addParameter);
 			}
 		}
 
