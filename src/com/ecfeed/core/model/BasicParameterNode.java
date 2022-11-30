@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.UnaryOperator;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
@@ -153,7 +152,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public BasicParameterNode makeClone() {
-		BasicParameterNode parameter = createCopyX(null);
+		BasicParameterNode parameter = makeClone(null);
 
 		parameter.setParent(getParent());
 
@@ -161,7 +160,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public BasicParameterNode createCopy(NodeMapper mapper) {
-		BasicParameterNode parameter = createCopyX(mapper);
+		BasicParameterNode parameter = makeClone(mapper);
 
 		parameter.setDeploymentParameter(this);
 		parameter.setParent(null);
@@ -180,7 +179,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fDeploymentParameterNode = parameterNode;
 	}
 
-	private BasicParameterNode createCopyX(NodeMapper mapper) {
+	private BasicParameterNode makeClone(NodeMapper mapper) {
 
 		BasicParameterNode copyOfBasicParameterNode =
 				new BasicParameterNode(

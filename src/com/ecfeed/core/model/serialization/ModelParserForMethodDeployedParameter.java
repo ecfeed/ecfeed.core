@@ -38,8 +38,6 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 
 		parameter.get().setDeploymentParameter((BasicParameterNode) parameterCandidate);
 
-//		getChoices(parameter.get(), (BasicParameterNode) parameterCandidate);
-
 		return parameter;
 	}
 
@@ -89,34 +87,4 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 
 		return Optional.of(parameter);
 	}
-
-//	private void getChoices(BasicParameterNode parameterReference, BasicParameterNode parameterTarget) {
-//
-//		for (ChoiceNode choiceReference : parameterReference.getChoices()) {
-//			ChoiceNode choiceTarget = parameterTarget.getChoice(choiceReference.getQualifiedName());
-//
-//			if (choiceTarget == null) {
-//				continue;
-//			}
-//
-//			getAbstractChoices(choiceReference, choiceTarget);
-//		}
-//	}
-//
-//	private void getAbstractChoices(ChoiceNode choiceReference, ChoiceNode choiceTarget) {
-//
-//		if (choiceReference.isAbstract()) {
-//			for (ChoiceNode choiceAbstractReference : choiceReference.getChoices()) {
-//				ChoiceNode choiceAbstractTarget = choiceTarget.getChoice(choiceAbstractReference.getQualifiedName());
-//
-//				if (choiceAbstractTarget == null) {
-//					continue;
-//				}
-//
-//				getAbstractChoices(choiceAbstractReference, choiceAbstractTarget);
-//			}
-//		} else {
-//			choiceReference.setDeploymentChoiceNode(choiceTarget);
-//		}
-//	}
 }

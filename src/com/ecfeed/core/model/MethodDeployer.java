@@ -95,6 +95,14 @@ public abstract class MethodDeployer {
 		return method;
 	}
 
+	public static void updateDeploymentNameConsistency(RootNode root) {
+
+		for (ClassNode classNode : root.getClasses()) {
+			for (MethodNode methodNode : classNode.getMethods()) {
+				updateDeploymentNameConsistency(methodNode);
+			}
+		}
+	}
 	public static void updateDeploymentNameConsistency(MethodNode method) {
 
 		if (!method.isDeployed()) {
