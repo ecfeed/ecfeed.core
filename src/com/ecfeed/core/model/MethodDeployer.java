@@ -216,34 +216,34 @@ public abstract class MethodDeployer {
 		return null;
 	}
 
-//	public static List<TestCase> revertToOriginalChoices(List<TestCase> deployedTestCases) {
-//
-//		List<TestCase> result = new ArrayList<>();
-//
-//		for (TestCase deployedTestCase : deployedTestCases) {
-//
-//			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase);
-//
-//			result.add(revertedTestCaseNode);
-//		}
-//
-//		return result;
-//	}
+	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) {
 
-//	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase) {
-//
-//		List<ChoiceNode> revertedChoices = new ArrayList<>();
-//
-//		List<ChoiceNode> deployedChoices = deployedTestCase.getListOfChoiceNodes();
-//
-//		for (ChoiceNode deployedChoiceNode : deployedChoices) {
-//
-//			ChoiceNode originalChoiceNode = deployedChoiceNode.getDeploymentChoiceNode();
-//
-//			revertedChoices.add(originalChoiceNode);
-//		}
-//
-//		return new TestCase(revertedChoices);
-//	}
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCase deployedTestCase : deployedTestCases) {
+
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(mapper, deployedTestCase);
+
+			result.add(revertedTestCaseNode);
+		}
+
+		return result;
+	}
+
+	private static TestCase revertToOriginalTestCase(NodeMapper mapper, TestCase deployedTestCase) {
+
+		List<ChoiceNode> revertedChoices = new ArrayList<>();
+
+		List<ChoiceNode> deployedChoices = deployedTestCase.getListOfChoiceNodes();
+
+		for (ChoiceNode deployedChoiceNode : deployedChoices) {
+
+			ChoiceNode originalChoiceNode = (ChoiceNode) mapper.getMappedNode(deployedChoiceNode);
+
+			revertedChoices.add(originalChoiceNode);
+		}
+
+		return new TestCase(revertedChoices);
+	}
 
 }
