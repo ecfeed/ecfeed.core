@@ -249,6 +249,8 @@ public class ModelSerializerTest {
 		ChoiceNode m1p621c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C1", "1");
 		ChoiceNode m1p621c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C2", "2");
 		ChoiceNode m1p621c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C3", "3");
+		ChoiceNode m1p621c3a = ChoiceNodeHelper.addChoiceToChoice(m1p621c3, "M1P621C3A", "4");
+		ChoiceNode m1p621c3b = ChoiceNodeHelper.addChoiceToChoice(m1p621c3, "M1P621C3B", "5");
 
 		RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
 		RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p3, EMathRelation.LESS_THAN, m1p3c3);
