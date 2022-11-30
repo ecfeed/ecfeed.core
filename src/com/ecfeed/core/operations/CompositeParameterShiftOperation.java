@@ -25,11 +25,11 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterShiftOperation extends GenericShiftOperation {
+public class CompositeParameterShiftOperation extends GenericShiftOperation { // TODO MO-RE implement
 
 	private List<AbstractParameterNode> fParameters;
 
-	public MethodParameterShiftOperation(
+	public CompositeParameterShiftOperation(
 			List<AbstractParameterNode> parameters, 
 			IAbstractNode shifted, 
 			boolean up,
@@ -38,7 +38,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		this(parameters, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
 	}
 
-	public MethodParameterShiftOperation(
+	public CompositeParameterShiftOperation(
 			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			boolean up, 
@@ -47,7 +47,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		setShift(minAllowedShift(shifted, up));
 	}
 
-	public MethodParameterShiftOperation(
+	public CompositeParameterShiftOperation(
 			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			int shift,
@@ -59,6 +59,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 	@Override
 	public void execute() {
 		BasicParameterNode basicParameterNode = (BasicParameterNode)fParameters.get(0);
+		
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
@@ -76,13 +77,14 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
+		return new CompositeParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
 	}
 
 	@Override
 	protected boolean shiftAllowed(List<? extends IAbstractNode> shifted, int shift){
 		if(super.shiftAllowed(shifted, shift) == false) return false;
 		if(shifted.get(0) instanceof BasicParameterNode == false) return false;
+		
 		BasicParameterNode basicParameterNode = (BasicParameterNode)shifted.get(0);
 		MethodNode method = (MethodNode) basicParameterNode.getParent();
 		List<String> parameterTypes = ParametersParentNodeHelper.getParameterTypes(method, getExtLanguageManager());

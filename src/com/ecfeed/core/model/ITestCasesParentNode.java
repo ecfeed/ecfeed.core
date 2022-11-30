@@ -10,6 +10,11 @@
 
 package com.ecfeed.core.model;
 
-public interface IParametersAndConstraintsParentNode extends IParametersParentNode, IConstraintsParentNode {
+import java.util.List;
+
+public interface ITestCasesParentNode extends IAbstractNode {
 	
+	public List<TestCaseNode> getTestCases();
+	public void replaceTestCases(List<TestCaseNode> testCases);
+	public void removeTestCases();
 }

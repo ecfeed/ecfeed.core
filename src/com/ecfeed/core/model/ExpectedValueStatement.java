@@ -57,14 +57,14 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
 
-
 		if (testCaseChoices == null) {
 			return true;
 		}
 
-		if  (fLeftMethodParameterNode.getMethod() != null) {
+		IParametersParentNode parametersParent = (IParametersParentNode) fLeftMethodParameterNode.getParent();
+		if  (parametersParent != null) {
 
-			int index = fLeftMethodParameterNode.getMethod().getParameters().indexOf(fLeftMethodParameterNode);
+			int index = parametersParent.getParameters().indexOf(fLeftMethodParameterNode);
 			testCaseChoices.set(index, fChoiceNode.makeClone());
 		}
 
@@ -88,8 +88,10 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public boolean mentions(int methodParameterIndex) {
 
-		MethodNode methodNode = fLeftMethodParameterNode.getMethod();
-		AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
+		IParametersAndConstraintsParentNode methodNode = 
+				(IParametersAndConstraintsParentNode) fLeftMethodParameterNode.getParent();
+		
+		AbstractParameterNode methodParameterNode = methodNode.getParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
 			return true;

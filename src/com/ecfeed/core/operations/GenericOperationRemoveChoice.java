@@ -206,6 +206,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider, extLanguageManager));
 
 		if (validate) {
+			
 			for (MethodNode method : target.getParameter().getMethods()) {
 				addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
 			}

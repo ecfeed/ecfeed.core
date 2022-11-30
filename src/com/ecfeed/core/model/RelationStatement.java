@@ -292,8 +292,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public boolean mentions(int methodParameterIndex) {
 
-		MethodNode methodNode = fLeftParameter.getMethod();
-		AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
+		IParametersParentNode methodNode = (IParametersParentNode) fLeftParameter.getParent();
+		AbstractParameterNode methodParameterNode = methodNode.getParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
 			return true;

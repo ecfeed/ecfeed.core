@@ -103,7 +103,8 @@ public class FactoryRemoveOperation {
 				
 			} else {
 			
-			return new MethodOperationRemoveParameter(node.getMethod(), node, fValidate, fExtLanguageManager);
+			return new MethodOperationRemoveParameter(
+					(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			}
 		}
 		

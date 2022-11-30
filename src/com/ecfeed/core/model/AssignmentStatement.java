@@ -84,13 +84,13 @@ public class AssignmentStatement extends RelationStatement {
 			return true;
 		}
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IParametersParentNode methodNode = (IParametersParentNode) methodParameterNode.getParent();
 
 		if (methodNode == null) {
 			return true;
 		}
 
-		int countOfParameters = methodNode.getMethodParameterCount();
+		int countOfParameters = methodNode.getParametersCount();
 
 		if (testCaseValues.size() != countOfParameters) {
 			ExceptionHelper.reportRuntimeException("Invalid size of test case values list.");

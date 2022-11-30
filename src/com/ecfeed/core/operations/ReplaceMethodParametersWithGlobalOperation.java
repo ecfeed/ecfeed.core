@@ -43,7 +43,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 				ITypeAdapterProvider adapterProvider,
 				IExtLanguageManager extLanguageManager) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
-			MethodNode method = target.getMethod();
+			MethodNode method = (MethodNode) target.getParent();
 			BasicParameterNode global = new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));

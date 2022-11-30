@@ -17,41 +17,42 @@ import com.ecfeed.core.utils.*;
 public class ConstraintHelper {
 
 	public static void verifyConversionOfConstraints(
-			BasicParameterNode methodParameterNode, 
+			BasicParameterNode basicParameterNode, 
 			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		MethodNode methodNode = methodParameterNode.getMethod();
-		String oldType = methodParameterNode.getType();
+		IConstraintsParentNode constraintParentNode = (IConstraintsParentNode) basicParameterNode.getParent();
+		
+		String oldType = basicParameterNode.getType();
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = constraintParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
 			constraint.verifyConversionOfParameterFromToType(
-					methodParameterNode, oldType, newType, inOutParameterConversionDefinition);
+					basicParameterNode, oldType, newType, inOutParameterConversionDefinition);
 		}
 	}
 
 	public static void convertValuesOfConstraintsToType(
-			BasicParameterNode methodParameterNode, 
+			BasicParameterNode basicParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition) {
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) basicParameterNode.getParent();
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = constraintsParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
-			constraint.convertValues(methodParameterNode, parameterConversionDefinition);
+			constraint.convertValues(basicParameterNode, parameterConversionDefinition);
 		}
 	}
 	
-	public static Map<Integer, String> getOriginalConstraintValues(MethodNode methodNode) {
+	public static Map<Integer, String> getOriginalConstraintValues(IConstraintsParentNode parametersParentNode) {
 
 		Map<Integer, String> resultValues = new HashMap<>();
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = parametersParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
@@ -62,10 +63,10 @@ public class ConstraintHelper {
 	}
 
 	public static void restoreOriginalConstraintValues(
-			MethodNode methodNode,
+			IConstraintsParentNode constraintsParentNode,
 			Map<Integer, String> originalValues) {
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = constraintsParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 

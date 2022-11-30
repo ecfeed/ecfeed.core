@@ -192,9 +192,9 @@ public class ClassNodeHelper {
 
 		for (MethodNode methodNode : methods) {
 
-			String currentMethodName = MethodNodeHelper.getName(methodNode, extLanguageManager);
+			String currentMethodName = AbstractNodeHelper.getName(methodNode, extLanguageManager);
 
-			List<String> currentParameterTypes = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+			List<String> currentParameterTypes = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 
 			if (currentMethodName.equals(methodNameInExternalLanguage) && currentParameterTypes.equals(parameterTypesInExternalLanguage)){
 				return methodNode;

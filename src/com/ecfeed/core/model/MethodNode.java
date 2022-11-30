@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 
-public class MethodNode  extends AbstractNode implements IParametersAndConstraintsParentNode {
+public class MethodNode  extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
 	ParametersHolder fParametersHolder;
 	ParametersHolder fDeployedParametersHolder;
@@ -365,6 +365,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return abstractParameterNode.getLeafChoicesWithCopies();
 	}
 
+	@Override
 	public List<TestCaseNode> getTestCases() {
 
 		return fTestCaseNodes;
@@ -538,6 +539,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		registerChange();
 	}
 
+	@Override
 	public void replaceTestCases(List<TestCaseNode> testCases){
 		fTestCaseNodes.clear();
 		fTestCaseNodes.addAll(testCases);

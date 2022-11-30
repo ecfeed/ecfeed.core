@@ -1495,7 +1495,7 @@ public class ParameterTransformerTest {
 				}
 
 			} else {
-				MethodNode methodNode = fMethodParameterNode.getMethod();
+				MethodNode methodNode = (MethodNode) fMethodParameterNode.getParent();
 
 				methodNode.removeAllConstraints();
 
@@ -1521,7 +1521,7 @@ public class ParameterTransformerTest {
 			if (whatToTest == WhatToTest.CHOICES) {
 				checkValueOfChoice(fChoiceNodeOfMethod, newValue);
 			} else {
-				checkValueFromConstraint(fMethodParameterNode.getMethod(), newValue);
+				checkValueFromConstraint((MethodNode) fMethodParameterNode.getParent(), newValue);
 			}
 		}
 
