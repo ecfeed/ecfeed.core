@@ -92,6 +92,11 @@ public class ModelParserHelper  {
 		return modelParserForRoot;
 	}
 	
+	public static boolean verifyNodeTag(Element element, String expectedName) {
+		String test = element.getQualifiedName();
+		return element.getQualifiedName().equals(expectedName);
+	}
+	
 	public static void assertNodeTag(
 			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {
 

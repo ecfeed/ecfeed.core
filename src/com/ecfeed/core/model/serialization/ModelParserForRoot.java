@@ -41,8 +41,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public RootNode parseRoot(
-			Element element, ListOfStrings outErrorList) throws ParserException {
+	public RootNode parseRoot(Element element, ListOfStrings outErrorList) throws ParserException {
 
 		ModelParserHelper.assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
 		String name = ModelParserHelper.getElementName(element, outErrorList);
@@ -55,15 +54,16 @@ public class ModelParserForRoot implements IModelParserForRoot {
 				{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
 		)) {
 
-			Optional<BasicParameterNode> parameterBasic = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
-			if (parameterBasic.isPresent()) {
-				targetRootNode.addParameter(parameterBasic.get());
-				continue;
-			}
-
-			Optional<CompositeParameterNode> parameterComposite = fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
-			if (parameterComposite.isPresent()) {
-				targetRootNode.addParameter(parameterComposite.get());
+			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+				Optional<BasicParameterNode> parameterBasic = fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+				if (parameterBasic.isPresent()) {
+					targetRootNode.addParameter(parameterBasic.get());
+				}
+			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+				Optional<CompositeParameterNode> parameterComposite = fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList);
+				if (parameterComposite.isPresent()) {
+					targetRootNode.addParameter(parameterComposite.get());
+				}
 			}
 		}
 
