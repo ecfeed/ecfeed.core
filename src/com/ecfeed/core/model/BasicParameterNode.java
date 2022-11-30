@@ -153,18 +153,20 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public BasicParameterNode makeClone() {
-		BasicParameterNode parameter = createCopy(ChoiceNode::makeClone);
+		BasicParameterNode parameter = createCopyX(null);
 
 		parameter.setParent(getParent());
 
 		return parameter;
 	}
 
-	public BasicParameterNode createCopy() {
-		BasicParameterNode parameter = createCopy(ChoiceNode::createCopy);
+	public BasicParameterNode createCopy(NodeMapper mapper) {
+		BasicParameterNode parameter = createCopyX(mapper);
 
 		parameter.setDeploymentParameter(this);
 		parameter.setParent(null);
+
+		mapper.addMappings(this, parameter);
 
 		return parameter;
 	}
@@ -178,14 +180,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fDeploymentParameterNode = parameterNode;
 	}
 
-	private BasicParameterNode createCopy(UnaryOperator<ChoiceNode> copyOperator) {
+	private BasicParameterNode createCopyX(NodeMapper mapper) {
 
 		BasicParameterNode copyOfBasicParameterNode =
 				new BasicParameterNode(
 						getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator());
 
 		copyProperties(copyOfBasicParameterNode);
-		copyChoices(copyOperator, copyOfBasicParameterNode);
+
+		ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
+//		copyChoices(copyOfBasicParameterNode, mapper);
 
 		return copyOfBasicParameterNode;
 	}
@@ -201,19 +205,20 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 	}
 
-	private void copyChoices(UnaryOperator<ChoiceNode> copyOperator, BasicParameterNode copyOfBasicParameterNode) {
-
-		// TODO MO-RE use modified function cloneChoiceNodesRecursively
-
-		List<ChoiceNode> currentChoiceNodes = getChoices();
-
-		for (ChoiceNode currentChoiceNode : currentChoiceNodes) {
-
-			ChoiceNode copyOfChoiceNode = copyOperator.apply(currentChoiceNode);
-
-			copyOfBasicParameterNode.addChoice(copyOfChoiceNode);
-		}
-	}
+//	private void copyChoices(BasicParameterNode copyOfBasicParameterNode, NodeMapper mapper) {
+//
+//		// TODO MO-RE use modified function cloneChoiceNodesRecursively
+//
+//		ChoiceNodeHelper.cloneChoiceNodesRecursively(copyOfBasicParameterNode, mapper);
+////		List<ChoiceNode> currentChoiceNodes = getChoices();
+////
+////		for (ChoiceNode currentChoiceNode : currentChoiceNodes) {
+////
+////			ChoiceNode copyOfChoiceNode = copyOperator.apply(currentChoiceNode);
+////
+////			copyOfBasicParameterNode.addChoice(copyOfChoiceNode);
+////		}
+//	}
 
 	public String getType() {
 

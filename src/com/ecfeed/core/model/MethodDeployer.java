@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 
 public abstract class MethodDeployer {
 
@@ -26,9 +27,11 @@ public abstract class MethodDeployer {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
 		}
 
+		NodeMapper mapper = new NodeMapper();
+
 		MethodNode methodTarget = new MethodNode(methodSource.getName() + "_" +  POSTFIX);
 
-		extractParameters(methodSource, methodTarget);
+		extractParameters(methodSource, methodTarget, mapper);
 		extractConstraints(methodSource, methodTarget);
 
 		methodSource.setDeployedParameters(methodTarget.getParametersAsBasic());
@@ -36,36 +39,36 @@ public abstract class MethodDeployer {
 		return methodTarget;
 	}
 
-	private static void extractParameters(MethodNode methodSource, MethodNode methodTarget) {
+	private static void extractParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
 		String prefix = "";
 
-		extractParameters(prefix, methodTarget, methodSource.getParameters());
+		extractParameters(prefix, methodTarget, methodSource.getParameters(), mapper);
 	}
 
-	private static void extractParameters(String prefix, MethodNode methodTarget, List<AbstractParameterNode> parametersSource) {
+	private static void extractParameters(String prefix, MethodNode methodTarget, List<AbstractParameterNode> parametersSource, NodeMapper mapper) {
 
 		for (AbstractParameterNode sourceParameter : parametersSource) {
 
 			if (sourceParameter instanceof BasicParameterNode) {
-				extractParametersBasic(prefix, methodTarget, sourceParameter);
+				extractParametersBasic(prefix, methodTarget, sourceParameter, mapper);
 			}
 
 			if (sourceParameter instanceof CompositeParameterNode) {
 				String prefixParsed = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-				extractParametersComposite(prefixParsed, methodTarget, sourceParameter);
+				extractParametersComposite(prefixParsed, methodTarget, sourceParameter, mapper);
 			}
 		}
 	}
 
-	private static void extractParametersBasic(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource) {
-		BasicParameterNode parameterParsed = ((BasicParameterNode) parameterSource).createCopy();
+	private static void extractParametersBasic(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource, NodeMapper mapper) {
+		BasicParameterNode parameterParsed = ((BasicParameterNode) parameterSource).createCopy(mapper);
 		parameterParsed.setCompositeName(prefix + parameterParsed.getName());
 		methodTarget.addParameter(parameterParsed);
 	}
 
-	private static void extractParametersComposite(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource) {
+	private static void extractParametersComposite(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource, NodeMapper mapper) {
 		CompositeParameterNode parameterParsed = (CompositeParameterNode) parameterSource;
-		extractParameters(prefix, methodTarget, parameterParsed.getParameters());
+		extractParameters(prefix, methodTarget, parameterParsed.getParameters(), mapper);
 	}
 
 	private static void extractConstraints(MethodNode methodSource, MethodNode methodTarget) {
@@ -73,7 +76,7 @@ public abstract class MethodDeployer {
 		methodSource.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(methodTarget)));
 	}
 
-	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints) {
+	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
 
 		if (parameters == null) {
 			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
@@ -85,7 +88,7 @@ public abstract class MethodDeployer {
 
 		MethodNode method = new MethodNode("construct");
 
-		parameters.stream().map(BasicParameterNode::createCopy).forEach(method::addParameter);
+		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
 		constraints.forEach(e -> method.addConstraint(e.createCopy(method)));
 
 		return method;

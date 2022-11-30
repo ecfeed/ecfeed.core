@@ -187,13 +187,13 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return copy;
 	}
 
-	public ChoiceNode createCopy() {
-		ChoiceNode copy = makeClone();
-
-		copy.setDeploymentChoiceNode(this);
-
-		return copy;
-	}
+//	public ChoiceNode createCopy() {
+//		ChoiceNode copy = makeClone();
+//
+//		copy.setDeploymentChoiceNode(this);
+//
+//		return copy;
+//	}
 
 	public ChoiceNode getDeploymentChoiceNode() {
 		return fDeploymentChoiceNode;
