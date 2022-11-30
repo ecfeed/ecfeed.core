@@ -13,10 +13,11 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
@@ -55,8 +56,8 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		String errorMessage = 
 				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
 						fClassNode, 
-						MethodNodeHelper.getName(fMethod, getExtLanguageManager()), 
-						MethodNodeHelper.getParameterTypes(fMethod, getExtLanguageManager()), 
+						AbstractNodeHelper.getName(fMethod, getExtLanguageManager()), 
+						ParametersParentNodeHelper.getParameterTypes(fMethod, getExtLanguageManager()), 
 						getExtLanguageManager());
 
 		if (errorMessage != null){
@@ -75,14 +76,14 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		String methodNameInExtLanguage = MethodNodeHelper.getName(methodNode, extLanguageManager);
-		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+		String methodNameInExtLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
+		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 
 		String newNameInExtLanguage = 
 				ClassNodeHelper.generateNewMethodName(
 						fClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
 
-		MethodNodeHelper.setName(methodNode, newNameInExtLanguage, extLanguageManager);
+		AbstractNodeHelper.setName(methodNode, newNameInExtLanguage, extLanguageManager);
 	}
 
 	@Override

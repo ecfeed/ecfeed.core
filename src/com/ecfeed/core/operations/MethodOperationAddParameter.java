@@ -13,12 +13,13 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractNodeHelper;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -27,12 +28,12 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 	List<TestCaseNode> fRemovedTestCases;
 	MethodNode fMethodNode;
-	BasicParameterNode fMethodParameterNode;
+	AbstractParameterNode fMethodParameterNode;
 	private int fNewIndex;
 
 	public MethodOperationAddParameter(
 			MethodNode methodNode, 
-			BasicParameterNode methodParameterNode, 
+			AbstractParameterNode methodParameterNode, 
 			int index,
 			IExtLanguageManager extLanguageManager) {
 
@@ -44,7 +45,11 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(MethodNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	public MethodOperationAddParameter(
+			MethodNode target, 
+			AbstractParameterNode parameter, 
+			IExtLanguageManager extLanguageManager) {
+		
 		this(target, parameter, -1, extLanguageManager);
 	}
 
@@ -53,7 +58,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		List<String> parameterTypesInExtLanguage = MethodNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
+		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
 
 		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguageManager);
 
@@ -63,7 +68,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		if (parentClassNode != null) { 
 
-			String methodNameInExtLanguage = MethodNodeHelper.getName(fMethodNode, extLanguageManager);
+			String methodNameInExtLanguage = AbstractNodeHelper.getName(fMethodNode, extLanguageManager);
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(

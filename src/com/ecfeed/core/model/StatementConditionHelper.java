@@ -27,7 +27,8 @@ public class StatementConditionHelper {
 			return null;
 		}
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IParametersParentNode methodNode = (IParametersParentNode) methodParameterNode.getParent();
+		
 		if (methodNode == null) {
 			return null;
 		}

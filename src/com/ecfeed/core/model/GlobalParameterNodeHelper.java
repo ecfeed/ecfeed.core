@@ -37,7 +37,7 @@ public class GlobalParameterNodeHelper {
 
 		String errorMessage = 
 				"Parameter " + firstMethodParameterNode.getName() + 
-				" of method " + firstMethodParameterNode.getMethod() + 
+				" of method " + firstMethodParameterNode.getParent().toString() + 
 				" is linked to current global parameter " + globalParameterNode.getName() + ". " + 
 				"Change of parameter type is not possible.";
 

@@ -12,12 +12,14 @@ package com.ecfeed.core.operations;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.ecfeed.core.model.BasicParameterNode;
+
+import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -44,7 +46,7 @@ public class MethodOperationImportParameters extends GenericOperationImportParam
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		List<String> paremeterTypesInExtLanguage = MethodNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
+		List<String> paremeterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
 
 		int index = 0;
 		for (BasicParameterNode node : fAbstractParameterNodes) {
@@ -56,7 +58,7 @@ public class MethodOperationImportParameters extends GenericOperationImportParam
 
 		if (parentClassNode != null) { 
 
-			String methodNameInExtLanguage = MethodNodeHelper.getName(fMethodNode, extLanguageManager);
+			String methodNameInExtLanguage = AbstractNodeHelper.getName(fMethodNode, extLanguageManager);
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(

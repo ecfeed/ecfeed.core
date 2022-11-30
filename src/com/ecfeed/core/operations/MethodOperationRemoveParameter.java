@@ -13,11 +13,12 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -80,7 +81,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		@Override
 		public void execute() {
 
-			List<String> paramTypesInExtLanguage = MethodNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
+			List<String> paramTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
 			int index = getParameter().getMyIndex();
 			paramTypesInExtLanguage.remove(index);
 
@@ -143,7 +144,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			ClassNode classNode = getMethodTarget().getClassNode();
 
-			String methodNameInExtLanguage = MethodNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
+			String methodNameInExtLanguage = AbstractNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(

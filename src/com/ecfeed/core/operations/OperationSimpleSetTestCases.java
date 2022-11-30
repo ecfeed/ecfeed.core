@@ -13,7 +13,7 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -21,11 +21,11 @@ public class OperationSimpleSetTestCases extends AbstractModelOperation {
 
 	private static final String ADD_TEST_CASES = "Add test cases";
 
-	MethodNode fMethodNode;
+	ITestCasesParentNode fMethodNode;
 	List<TestCaseNode> fTestCases;
 
 	public OperationSimpleSetTestCases(
-			MethodNode methodNode,
+			ITestCasesParentNode methodNode,
 			List<TestCaseNode> testCases,
 			IExtLanguageManager extLanguageManager) {
 

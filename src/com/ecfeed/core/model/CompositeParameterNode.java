@@ -22,6 +22,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	public static final String COMPOSITE_PARAMETER_TYPE = "Structure";
 	
 	private ParametersHolder fParametersHolder; 
+	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
 	public CompositeParameterNode(
 			String name,
@@ -32,6 +33,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
 		
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
+		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 
 		createDefaultProperties();
 	}
@@ -210,125 +212,130 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
+	
+	public IParametersParentNode getParametersParent() {
+
+		return (IParametersParentNode)getParent();
+	}
 
 	@Override
 	public ConstraintsItr getIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getIterator();
 	}
 
 	@Override
 	public boolean hasNextConstraint(ConstraintsItr contIterator) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return fConstraintNodeListHolder.hasNextConstraint(contIterator);
 	}
 
 	@Override
 	public ConstraintNode getNextConstraint(ConstraintsItr contIterator) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getNextConstraint(contIterator);
 	}
 
 	@Override
 	public void removeConstraint(ConstraintsItr contIterator) {
-		// TODO Auto-generated method stub
-		
+
+		fConstraintNodeListHolder.removeConstraint(contIterator);
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint) {
-		// TODO Auto-generated method stub
 		
+		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
-		// TODO Auto-generated method stub
 		
+		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
 
 	@Override
 	public List<ConstraintNode> getConstraintNodes() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getConstraintNodes();
 	}
 
 	@Override
 	public List<ConstraintNode> getConstraintNodes(String name) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return fConstraintNodeListHolder.getConstraintNodes();
 	}
 
 	@Override
 	public List<Constraint> getConstraints() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getConstraints();
 	}
 
 	@Override
 	public List<Constraint> getConstraints(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getConstraints(name);
 	}
 
 	@Override
 	public Set<String> getConstraintsNames() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getConstraintsNames();
 	}
 
 	@Override
 	public boolean removeConstraint(ConstraintNode constraint) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
 	@Override
 	public boolean isChoiceMentionedInConstraints(ChoiceNode choice) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return fConstraintNodeListHolder.isChoiceMentioned(choice);
 	}
 
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getMentioningConstraints(parameter);
 	}
 
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter, String label) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getMentioningConstraints(parameter, label);
 	}
 
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(ChoiceNode choice) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return fConstraintNodeListHolder.getMentioningConstraints(choice);
 	}
 
 	@Override
 	public boolean isParameterMentionedInConstraints(BasicParameterNode parameter) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return fConstraintNodeListHolder.isParameterMentioned(parameter);
 	}
 
 	@Override
 	public void replaceConstraints(List<ConstraintNode> constraints) {
-		// TODO Auto-generated method stub
 		
+		fConstraintNodeListHolder.replaceConstraints(constraints);
 	}
 
 	@Override
 	public void removeAllConstraints() {
-		// TODO Auto-generated method stub
 		
+		fConstraintNodeListHolder.removeAllConstraints();
 	}
 
 	@Override
 	public void removeMentioningConstraints(BasicParameterNode methodParameter) {
-		// TODO Auto-generated method stub
 		
+		fConstraintNodeListHolder.removeMentioningConstraints(methodParameter);
 	}
 	
 }

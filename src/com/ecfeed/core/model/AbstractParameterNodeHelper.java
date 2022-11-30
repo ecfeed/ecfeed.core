@@ -34,9 +34,15 @@ public abstract class AbstractParameterNodeHelper {
 		return errorMessage;
 	}
 
-	public static String getType(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+		
+		if (abstractParameterNode instanceof CompositeParameterNode) {
+			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
+		}
+		
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
 
-		String type = abstractParameterNode.getType();
+		String type = basicParameterNode.getType();
 		
 		if (type == null) {
 			return null;
