@@ -96,21 +96,19 @@ public class FactoryRemoveOperation {
 		public Object visit(BasicParameterNode node) throws Exception {
 
 			IAbstractNode parent = node.getParent();
+			
+			if ((parent instanceof RootNode) || (parent instanceof ClassNode)) {
+
+				return new GenericOperationRemoveGlobalParameter(
+						(IParametersParentNode)node.getParametersParent(), 
+						node,
+						fExtLanguageManager);
+			}
 
 			if (parent instanceof MethodNode) {
 				
-				if (node.isGlobalParameter()) {
-
-					return new GenericOperationRemoveGlobalParameter(
-							(IParametersParentNode)node.getParametersParent(), 
-							node,
-							fExtLanguageManager);
-
-				} else {
-
 					return new MethodOperationRemoveParameter(
 							(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
-				}
 			}
 			
 			if (parent instanceof CompositeParameterNode) {
@@ -180,9 +178,14 @@ public class FactoryRemoveOperation {
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate, 
 			IExtLanguageManager extLanguageManager){
+		
 		try {
-			return (IModelOperation)node.accept(new RemoveOperationVisitor(adapterProvider, validate, extLanguageManager));
+			RemoveOperationVisitor removeOperationVisitor = 
+					new RemoveOperationVisitor(adapterProvider, validate, extLanguageManager);
+			
+			return (IModelOperation)node.accept(removeOperationVisitor);
 		} catch (Exception e) {
+			
 			return new UnsupportedModelOperation();
 		}
 	}
