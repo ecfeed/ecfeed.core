@@ -584,6 +584,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	@Override
+	public boolean hasChoices() {
+		
+		if (getChoiceCount() == 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
 	public int getChoiceCount() {
 
 		return getChoices().size();
