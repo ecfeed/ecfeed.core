@@ -18,6 +18,7 @@ public class SerializationHelperVersion1 {
 	private static final String CHOICE_NODE_NAME_VERSION_1 = "Choice";
 	private static final String CHOICE_ATTRIBUTE_NAME_VERSION_1 = "choice";
 	private static final String STATEMENT_CHOICE_ATTRIBUTE_NAME_VERSION_1 = "choice";
+	private static final String[] PARAMETER_NODE_NAMES_VERSION_5 = new String[]{ PARAMETER_BASIC_NODE_NAME_VERSION_1, PARAMETER_COMPOSITE_NODE_NAME_VERSION_5};
 
 	public static String getChoiceNodeName() {
 		return CHOICE_NODE_NAME_VERSION_1;
@@ -41,5 +42,9 @@ public class SerializationHelperVersion1 {
 
 	public static String getStatementParameterAttributeName() {
 		return STATEMENT_PARAMETER_ATTRIBUTE_NAME_VERSION_1;
+	}
+
+	public static String[] getChoiceNodeNames() {
+		return PARAMETER_NODE_NAMES_VERSION_5;
 	}
 }
