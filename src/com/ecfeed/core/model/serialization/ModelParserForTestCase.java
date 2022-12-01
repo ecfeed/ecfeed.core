@@ -46,7 +46,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		String[] elementTypes = new String[] { TEST_PARAMETER_NODE_NAME, EXPECTED_PARAMETER_NODE_NAME };
 		List<Element> parameterElements = ModelParserHelper.getIterableChildren(element, elementTypes);
 		
-		List<AbstractParameterNode> parameters = method.getMethodParameters();
+		List<BasicParameterNode> parameters = method.isDeployed() ? method.getDeployedMethodParameters() : method.getParametersAsBasic();
 
 		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 
