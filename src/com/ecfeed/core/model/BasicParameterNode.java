@@ -385,6 +385,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			return new ArrayList<>();
 		}
 
+		if (parent instanceof RootNode) {
+			return new ArrayList<>();
+		}
+
+		if (parent instanceof ClassNode) {
+			return new ArrayList<>();
+		}
+		
 		ExceptionHelper.reportRuntimeException("Unexpected parent node type.");
 		return null;
 	}
