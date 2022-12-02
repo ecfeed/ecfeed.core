@@ -114,8 +114,8 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		Map<String, List<String>> paramAndChoiceNames = new HashMap<String, List<String>>();
 		
+// TODO mo-re All methods at this point should be deployed.		
 		List<BasicParameterNode> parameters;
-//		return paramAndChoiceNames;
 		
 		if (methodNode.isDeployed()) {
 			parameters = methodNode.getDeployedMethodParameters();
