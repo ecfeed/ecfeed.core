@@ -31,7 +31,8 @@ public abstract class MethodDeployer {
 		extractParameters(methodSource, methodTarget);
 		extractConstraints(methodSource, methodTarget);
 
-		methodSource.setDeployedParameters(methodTarget.getParametersAsBasic());
+		// TODO MO-RE remove 
+		// methodSource.setDeployedParameters(methodTarget.getParametersAsBasic());
 
 		return methodTarget;
 	}
