@@ -299,28 +299,42 @@ public class RemoteTCProviderStandard implements ITCProvider {
 
     private TestCaseNode createTestCase(ResultTestCaseSchema testCaseSchema) {
 
-        int parametersCount = fMethodNode.getParametersCount();
+// TODO mo-re All methods must be deployed before generating the test case.
+        int parametersCount = 0;
+        
+        if (getMethodNode().isDeployed()) {
+        	parametersCount = getMethodNode().getDeployedMethodParameters().size();
+        } else {
+        	parametersCount = getMethodNode().getChildrenCount();
+        }
 
         ChoiceSchema[] choiceSchemas = testCaseSchema.getTestCase();
         List<ChoiceNode> choiceNodes = new ArrayList<>();
 
         for (int paramIndex = 0; paramIndex < parametersCount; paramIndex++) {
         	
-            AbstractParameterNode abstractParameterNode = getMethodNode().getMethodParameter(paramIndex);
+// TODO mo-re All methods must be deployed before generating the test case.
+        	BasicParameterNode basicParameterNode;
             
-            if (abstractParameterNode instanceof CompositeParameterNode) {
-            	continue;
+            if (getMethodNode().isDeployed()) {
+            	basicParameterNode = getMethodNode().getDeployedMethodParameters().get(paramIndex);
+            } else {
+            	AbstractParameterNode abstractParameterNode = getMethodNode().getMethodParameter(paramIndex);
+            	
+            	if (abstractParameterNode instanceof CompositeParameterNode) {
+                	continue;
+                }
+            	
+            	basicParameterNode = (BasicParameterNode) abstractParameterNode;
             }
 
-            BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-            
             String choiceName = choiceSchemas[paramIndex].getName();
             String choiceValue = choiceSchemas[paramIndex].getValue();
             ChoiceNode choiceNode;
 
             if (basicParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
-                choiceNode = new ChoiceNode(choiceName, choiceValue, abstractParameterNode.getModelChangeRegistrator());
-                choiceNode.setParent(abstractParameterNode);
+                choiceNode = new ChoiceNode(choiceName, choiceValue, basicParameterNode.getModelChangeRegistrator());
+                choiceNode.setParent(basicParameterNode);
             } else {
                 choiceNode = basicParameterNode.findChoice(choiceName);
             }
