@@ -471,18 +471,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		BasicParameterNode otherBasicParameter = (BasicParameterNode) other;
 
-		if (getType().equals(otherBasicParameter.getType()) == false) {
-			return false;
-		}
-
-		if (isExpected() != otherBasicParameter.isExpected()) {
-			return false;
-		}
-
-		String defaultValue = getDefaultValue();
-		String otherDefaultValue = otherBasicParameter.getDefaultValue();
-
-		if (!StringHelper.isEqual(defaultValue, otherDefaultValue)) {
+		if (!propertiesMatch(otherBasicParameter)) {
 			return false;
 		}
 
@@ -500,6 +489,30 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 
 		return super.isMatch(other);
+	}
+
+	public boolean propertiesMatch(BasicParameterNode otherBasicParameter) {
+		
+		if (!StringHelper.isEqual(getName(), otherBasicParameter.getName())) {
+			return false;
+		}
+		
+		if (!StringHelper.isEqual(getType(), otherBasicParameter.getType())) {
+			return false;
+		}
+
+		if (isExpected() != otherBasicParameter.isExpected()) {
+			return false;
+		}
+
+		String defaultValue = getDefaultValue();
+		String otherDefaultValue = otherBasicParameter.getDefaultValue();
+
+		if (!StringHelper.isEqual(defaultValue, otherDefaultValue)) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	@Override

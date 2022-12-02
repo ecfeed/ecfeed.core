@@ -12,6 +12,7 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 
@@ -262,6 +263,38 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		return false;
+	}
+	
+	public static boolean propertiesOfParametrsMatch(
+			List<BasicParameterNode> parameters1, List<BasicParameterNode> parameters2) {
+		
+		if (parameters1.size() != parameters2.size()) {
+			return false;
+		}
+		
+		ListIterator<BasicParameterNode> iterator1 = parameters1.listIterator();
+		ListIterator<BasicParameterNode> iterator2 = parameters1.listIterator();
+
+		for(;;) {
+			
+			boolean hasNext1 = iterator1.hasNext();
+			boolean hasNext2 = iterator2.hasNext();
+
+			if (!hasNext1) {
+				return true;
+			}
+			
+			if (hasNext1 != hasNext2) {
+				return false;
+			}
+				
+			BasicParameterNode basicParameterNode1 = iterator1.next();
+			BasicParameterNode basicParameterNode2 = iterator2.next();
+			
+			if (!basicParameterNode1.propertiesMatch(basicParameterNode2)) {
+				return false;
+			}
+		}
 	}
 
 }
