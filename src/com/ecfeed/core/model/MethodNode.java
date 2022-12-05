@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
@@ -684,9 +683,8 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 			return fDeployedParametersHolder.getParametersAsBasic();
 		}
 
-		ExceptionHelper.reportRuntimeException("The method has not been deployed.");
-
-		return null;
+		
+		return new ArrayList<>();
 	}
 
 	public BasicParameterNode getMethodParameter(ChoiceNode choice) {

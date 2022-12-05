@@ -15,7 +15,6 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 
 public abstract class MethodDeployer {
 
@@ -34,7 +33,6 @@ public abstract class MethodDeployer {
 		extractParameters(methodSource, methodTarget, mapper);
 		extractConstraints(methodSource, methodTarget);
 
-		methodSource.setDeployedParameters(methodTarget.getParametersAsBasic());
 		methodSource.setNodeMapper(mapper);
 
 		return methodTarget;

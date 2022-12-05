@@ -442,6 +442,16 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	}
 
 	@Override
+	public boolean hasChoices() {
+		
+		if (getChoiceCount() == 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	@Override
 	public void addChoice(ChoiceNode choiceToAdd) {
 		
 		fChoicesListHolder.addChoice(choiceToAdd, this);
