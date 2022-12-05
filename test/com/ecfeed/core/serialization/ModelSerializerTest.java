@@ -277,7 +277,8 @@ public class ModelSerializerTest {
 
 		model.addClass(c1);
 
-		MethodDeployer.deploy(m1);
+		NodeMapper mapper = new NodeMapper();
+		MethodDeployer.deploy(mapper, m1);
 
 //		m1.removeParameter(m1p1);
 		m1p1.setName("blablabla");
