@@ -21,9 +21,6 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-import javax.xml.soap.Node;
-
-
 public class MethodNode  extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
 	ParametersHolder fParametersHolder;
