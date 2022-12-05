@@ -268,9 +268,11 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		
 		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
 			
-			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
-			
-			globalParameterNodes.add(globalParameterNode);
+			if (abstractParameterNode instanceof BasicParameterNode) {
+				BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
+				
+				globalParameterNodes.add(globalParameterNode);
+			}
 		}
 		
 		return globalParameterNodes;
