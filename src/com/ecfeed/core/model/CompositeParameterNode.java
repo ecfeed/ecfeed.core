@@ -88,7 +88,12 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	public List<IAbstractNode> getChildren() {
 		
 		List<IAbstractNode> children = new ArrayList<>();
-		children.addAll(fParametersHolder.getParameters());
+		
+		List<AbstractParameterNode> parameters = fParametersHolder.getParameters();
+		children.addAll(parameters);
+		
+		List<ConstraintNode> constraintNodes = fConstraintNodeListHolder.getConstraintNodes();
+		children.addAll(constraintNodes);
 		
 		return children;
 	}
