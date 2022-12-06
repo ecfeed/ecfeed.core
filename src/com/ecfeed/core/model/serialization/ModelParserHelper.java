@@ -93,7 +93,7 @@ public class ModelParserHelper  {
 	}
 	
 	public static boolean verifyNodeTag(Element element, String expectedName) {
-		String test = element.getQualifiedName();
+//		String test = element.getQualifiedName();
 		return element.getQualifiedName().equals(expectedName);
 	}
 	
