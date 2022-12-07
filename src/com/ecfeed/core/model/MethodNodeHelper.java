@@ -381,8 +381,11 @@ public class MethodNodeHelper {
 		return userType;
 	}
 	
-	private static boolean isNewTypeUsed( // TODO MO-RE move ?
-			String typeForLastParameter, ClassNode classNode, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	private static boolean isNewTypeUsed(
+			String typeForLastParameter, 
+			ClassNode classNode, 
+			MethodNode methodNode, 
+			IExtLanguageManager extLanguageManager) {
 
 		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 		parameterTypesInExternalLanguage.add(typeForLastParameter);
@@ -403,7 +406,9 @@ public class MethodNodeHelper {
 		return false;
 	}
 	
-	public static String findNewUserTypeForJavaLanguage(MethodNode methodNode, IExtLanguageManager extLanguageManager) { // TODO MO-RE move ?
+	public static String findNewUserTypeForJavaLanguage(
+			MethodNode methodNode, 
+			IExtLanguageManager extLanguageManager) {
 
 		ClassNode classNode = methodNode.getClassNode();
 

@@ -119,7 +119,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return methodParameterNode;
 	}
 
-	public static AbstractParameterNode createNewParameter( // TODO MO-RE rename
+	public static AbstractParameterNode createParameter(
 			IParametersParentNode parametersParentNode,
 			AbstractParameterNode.ParameterType parameterType,
 			IExtLanguageManager extLanguageManager) {
@@ -179,7 +179,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 			IParametersParentNode parametersParentNode, IExtLanguageManager extLanguageManager) {
 
 		BasicParameterNode basicParameterNode =
-				(BasicParameterNode) createNewParameter(
+				(BasicParameterNode) createParameter(
 						parametersParentNode,
 						AbstractParameterNode.ParameterType.BASIC,
 						extLanguageManager);
