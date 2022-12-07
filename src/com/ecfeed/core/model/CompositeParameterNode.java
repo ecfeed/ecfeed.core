@@ -34,8 +34,6 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
-
-		createDefaultProperties();
 	}
 
 	public boolean isGlobalParameter() {
@@ -118,10 +116,6 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	public int getChildrenCount() {
 
 		return fParametersHolder.getParametersCount();
-	}
-
-	private void createDefaultProperties() {
-		// TODO MO-RE
 	}
 
 	@Override

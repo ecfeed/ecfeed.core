@@ -62,7 +62,7 @@ public abstract class GeneratorHelper {
 
     private static List<List<ChoiceNode>> getPossibleChoicesForMethodParameters(MethodNode methodNode) {
 
-        List<AbstractParameterNode> parameters = methodNode.getMethodParameters();
+        List<AbstractParameterNode> parameters = methodNode.getParameters();
         
         List<List<ChoiceNode>> algorithmInput = new ArrayList<List<ChoiceNode>>();
 

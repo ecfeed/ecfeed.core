@@ -124,7 +124,7 @@ public class TestCasesExportHelper {
 			return null;
 		}
 
-		BasicParameterNode parameter = (BasicParameterNode) methodNode.getMethodParameters().get(parameterIndex);
+		BasicParameterNode parameter = (BasicParameterNode) methodNode.getParameters().get(parameterIndex);
 		String substitute = resolveParameterCommand(command, parameter, extLanguageManager);
 
 		return substitute;

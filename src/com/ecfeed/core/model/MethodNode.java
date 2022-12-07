@@ -55,7 +55,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		setDefaultPropertyValues();
 	}
-	
+
 	public MethodNode(String name){
 		this(name, null);
 	}
@@ -109,14 +109,14 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		for (AbstractParameterNode abstractParameterNode : parameters) {
 
 			if (abstractParameterNode instanceof BasicParameterNode) {
-				
+
 				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-	
+
 				String parameterType = methodParameterNode.getType();
 				parameterTypes.add(parameterType);
-				
+
 			} else {
-				
+
 				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
 			}
 		}
@@ -132,7 +132,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public List<IAbstractNode> getChildren(){
-		
+
 		List<IAbstractNode> children = new ArrayList<>(super.getChildren());
 		children.addAll(fParametersHolder.getParameters());
 		children.addAll(fConstraintNodeListHolder.getConstraintNodes());
@@ -149,38 +149,38 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public MethodNode makeClone() {
-		
+
 		MethodNode clonedMethodNode = new MethodNode(getName(), getModelChangeRegistrator());
 
 		clonedMethodNode.setProperties(getProperties());
 
-		for (AbstractParameterNode parameter : getMethodParameters()) {
-			
+		for (AbstractParameterNode parameter : getParameters()) {
+
 			if (!(parameter instanceof BasicParameterNode)) {
 				continue;
 			}
-			
+
 			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
-			
+
 			clonedMethodNode.addParameter(basicParameterNode.makeClone());
 		}
 
 		for (TestCaseNode testcase : fTestCaseNodes) {
-			
+
 			TestCaseNode tcase = testcase.getCopy(clonedMethodNode);
-			
+
 			if (tcase != null) {
 				clonedMethodNode.addTestCase(tcase);
 			}
 		}
 
 		clonedMethodNode.fConstraintNodeListHolder = fConstraintNodeListHolder.makeClone(clonedMethodNode);
-		
-//		for(ConstraintNode constraint : fConstraintNodes){
-//			constraint = constraint.getCopy(copy);
-//			if(constraint != null)
-//				copy.addConstraint(constraint);
-//		}
+
+		//		for(ConstraintNode constraint : fConstraintNodes){
+		//			constraint = constraint.getCopy(copy);
+		//			if(constraint != null)
+		//				copy.addConstraint(constraint);
+		//		}
 
 		clonedMethodNode.setParent(getParent());
 		//		if(!copy.isMatch(this))
@@ -234,13 +234,13 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public void addConstraint(ConstraintNode constraint) {
-		
+
 		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
-		
+
 		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
 
@@ -267,23 +267,23 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return (ClassNode)getParent();
 	}
 
-//	@Override
-//	public BasicParameterNode findMethodParameter(String name){
-//		return (BasicParameterNode)findParameter(name);
-//	}
+	//	@Override
+	//	public BasicParameterNode findMethodParameter(String name){
+	//		return (BasicParameterNode)findParameter(name);
+	//	}
 
 	public ArrayList<String> getParametersNames(boolean expected) {
-		
+
 		ArrayList<String> names = new ArrayList<String>();
-		
-		for (AbstractParameterNode parameter : getMethodParameters()) {
-			
+
+		for (AbstractParameterNode parameter : getParameters()) {
+
 			if (!(parameter instanceof BasicParameterNode)) {
 				continue;
 			}
-			
+
 			BasicParameterNode basicParameterNode = (BasicParameterNode) parameter;
-			
+
 			if (basicParameterNode.isExpected() == expected) {
 				names.add(parameter.getName());
 			}
@@ -292,9 +292,9 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	public AbstractParameterNode getMethodParameter(int index) {
-		
+
 		List<AbstractParameterNode> parameters = getParameters();
-		
+
 		return parameters.get(index);
 	}
 
@@ -328,7 +328,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public Set<String> getNamesOfConstraints() {
-		
+
 		return fConstraintNodeListHolder.getConstraintsNames();
 	}
 
@@ -358,7 +358,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	private static List<ChoiceNode> getTestDomainForParameterNode(BasicParameterNode abstractParameterNode) {
-		
+
 		BasicParameterNode methodParameterNode = (BasicParameterNode) abstractParameterNode;
 		List<ChoiceNode> choicesForParameter = new ArrayList<>();
 
@@ -366,7 +366,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 			ChoiceNode choiceNode = ChoiceNodeHelper.createChoiceNodeWithDefaultValue(methodParameterNode);
 
 			choicesForParameter.add(choiceNode);
-			
+
 			return choicesForParameter;
 		}
 
@@ -466,16 +466,16 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public boolean isChoiceMentionedInConstraints(ChoiceNode choice) {
-		
+
 		return fConstraintNodeListHolder.isChoiceMentioned(choice);
 	}
-	
+
 	public boolean isChoiceMentioned(ChoiceNode choice){
-		
+
 		if (isChoiceMentionedInConstraints(choice)) {
 			return true;
 		}
-		
+
 		for(TestCaseNode testCase: fTestCaseNodes){
 			if(testCase.mentions(choice)){
 				return true;
@@ -524,20 +524,20 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public boolean isParameterMentionedInConstraints(BasicParameterNode parameter) {
-		
+
 		return fConstraintNodeListHolder.isParameterMentioned(parameter);
 	}
-	
+
 	public boolean isParameterMentioned(BasicParameterNode parameter) {
-		
+
 		if (isParameterMentionedInConstraints(parameter)) {
 			return true;
 		}
-		
+
 		if (fTestCaseNodes.isEmpty()) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -556,7 +556,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public void replaceConstraints(List<ConstraintNode> constraints){
-		
+
 		fConstraintNodeListHolder.replaceConstraints(constraints);
 	}
 
@@ -601,16 +601,16 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		if (!fParametersHolder.isMatch(otherMethodNode.fParametersHolder)) {
 			return false;
 		}
-		
+
 		List<TestCaseNode> testCases = getTestCases();
 
 		int testCasesCount = testCases.size();
 		int constraintsCount = getConstraintNodes().size();
 
 		List<TestCaseNode//	public List<MethodNode> getChildMethods(BasicParameterNode parameter) {
-//		return Arrays.asList(new MethodNode[]{this});
-//	}
-> testCasesToCompare = otherMethodNode.getTestCases();
+		//		return Arrays.asList(new MethodNode[]{this});
+		//	}
+		> testCasesToCompare = otherMethodNode.getTestCases();
 
 		if(testCasesCount != testCasesToCompare.size() ||
 				constraintsCount != otherMethodNode.getConstraintNodes().size()){
@@ -643,32 +643,21 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	public List<BasicParameterNode> getLinkers(BasicParameterNode globalParameter) {
-		
+
 		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
-		
-		for (AbstractParameterNode localParameter : getMethodParameters()) {
-			
+
+		for (AbstractParameterNode localParameter : getParameters()) {
+
 			if (!(localParameter instanceof BasicParameterNode)) {
 				continue;
 			}
-			
+
 			BasicParameterNode basicParameterNode = (BasicParameterNode) localParameter;
-			
+
 			if (basicParameterNode.isLinked() && basicParameterNode.getLinkToGlobalParameter() == globalParameter) {
 				result.add(basicParameterNode);
 			}
 		}
-		return result;
-	}
-
-	public final List<AbstractParameterNode> getMethodParameters() { // TODO MO-RE remove
-		
-		List<AbstractParameterNode> result = new ArrayList<>();
-		
-		for (AbstractParameterNode parameter : getParameters()) {
-			result.add(parameter);
-		}
-		
 		return result;
 	}
 
@@ -678,39 +667,38 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	public final List<BasicParameterNode> getDeployedMethodParameters() {
-		
+
 		if (isDeployed()) {
 			return fDeployedParametersHolder.getParametersAsBasic();
 		}
 
-		
 		return new ArrayList<>();
 	}
 
 	public BasicParameterNode getMethodParameter(ChoiceNode choice) {
-		
+
 		BasicParameterNode parameter = choice.getParameter();
-		
-		for (AbstractParameterNode methodParameter : getMethodParameters()) {
-		
+
+		for (AbstractParameterNode methodParameter : getParameters()) {
+
 			if (!(methodParameter instanceof BasicParameterNode)) {
 				continue;
 			}
-			
+
 			BasicParameterNode methodBasicParameterNode = (BasicParameterNode) methodParameter;
-			
+
 			if (methodBasicParameterNode == parameter 
 					|| methodBasicParameterNode.getLinkToGlobalParameter() == parameter) {
-				
+
 				return methodBasicParameterNode;
 			}
 		}
-		
+
 		return null;
 	}
 
 	public List<BasicParameterNode> getAllGlobalParametersAvailableForLinking() {
-		
+
 		if(getClassNode() != null){
 			return getClassNode().getAllGlobalParametersAvailableForLinking();
 		}
@@ -725,109 +713,109 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	@Override
 	public int getChildrenCount() {
-		
+
 		int parametetersSize = fParametersHolder.getParametersCount(); 
 		int testCasesSize = fTestCaseNodes.size();
 		int constraintsSize = fConstraintNodeListHolder.getConstraintListSize();
-		
+
 		return parametetersSize + testCasesSize + constraintsSize;
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter) {
-		
+
 		fParametersHolder.addParameter(parameter, this);
 	}
-	
+
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
-		
+
 		fParametersHolder.addParameter(parameter, index, this);
 	}
 
 	@Override
 	public void addParameters(List<AbstractParameterNode> parameters) {
-		
+
 		fParametersHolder.addParameters(parameters, this);
 	}
 
 	public void setDeployedParameters(List<BasicParameterNode> parameters) {
-		
+
 		if (fDeployedParametersHolder == null) {
 			fDeployedParametersHolder = new ParametersHolder(getModelChangeRegistrator());
 		} 
-		
+
 		fDeployedParametersHolder.setBasicParameters(parameters, this);
 	}
-	
+
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
-		
+
 		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
-		
+
 		fParametersHolder.replaceParameters(parameters);
 	}
 
 	@Override
 	public int getParametersCount() {
-		
+
 		return fParametersHolder.getParametersCount();
 	}
 
 	@Override
 	public List<AbstractParameterNode> getParameters() {
-		
+
 		return fParametersHolder.getParameters();
 	}
-	
+
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
-		
+
 		return fParametersHolder.getParameter(parameterIndex);
 	}
 
 	@Override
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
-		
+
 		return fParametersHolder.findParameter(parameterNameToFind);
 	}
 
 	@Override
 	public int getParameterIndex(String parameterName) {
-		
+
 		return fParametersHolder.getParameterIndex(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(String parameterName) {
-		
+
 		return fParametersHolder.parameterExists(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
-		
+
 		return fParametersHolder.parameterExists(abstractParameterNode);
 	}
 
 	@Override
 	public List<String> getParametersNames() {
-		
+
 		return fParametersHolder.getParametersNames();
 	}
 
 	@Override
 	public String generateNewParameterName(String startParameterName) {
-		
+
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
-	
+
 	public List<BasicParameterNode> getParametersAsBasic() {
-		
+
 		return fParametersHolder.getParametersAsBasic();
 	}
 
