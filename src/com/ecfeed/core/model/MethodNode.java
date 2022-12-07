@@ -661,7 +661,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return result;
 	}
 
-	public final List<AbstractParameterNode> getMethodParameters() {
+	public final List<AbstractParameterNode> getMethodParameters() { // TODO MO-RE remove
 		
 		List<AbstractParameterNode> result = new ArrayList<>();
 		

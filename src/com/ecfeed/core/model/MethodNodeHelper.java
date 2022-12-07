@@ -14,9 +14,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import com.ecfeed.core.utils.*;
+import com.ecfeed.core.utils.CommonConstants;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.RegexHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
@@ -195,28 +201,6 @@ public class MethodNodeHelper {
 
 		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
 		methodNode.addTestCase(testCaseNode);
-	}
-
-	public static BasicParameterNode findMethodParameterByName(
-			String parameterNameToFindInExtLanguage, 
-			MethodNode methodNode,
-			IExtLanguageManager extLanguageManager) {
-
-		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
-
-		for (AbstractParameterNode parameter : methodParameters) {
-
-			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
-
-			String parameterNameInExtLanguage = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
-
-			if (StringHelper.isEqual(parameterNameToFindInExtLanguage, parameterNameInExtLanguage)) {
-				return methodParameterNode;
-			}
-		}
-		
-		return null;
-
 	}
 
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
@@ -516,16 +500,6 @@ public class MethodNodeHelper {
 		return true;
 	}
 
-	public static Set<String> getConstraintNames(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		Set<String> constraintNames = methodNode.getConstraintsNames();
-
-		//		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
-
-		return constraintNames;
-	}
-
-
 	//	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguageManager) {
 	//
 	//		Set<String> result = new HashSet<String>();
@@ -742,7 +716,9 @@ public class MethodNodeHelper {
 		return testSuites;
 	}
 
-	public static BasicParameterNode findExpectedParameterNotUsedInAssignment(MethodNode methodNode, Constraint constraint) {
+	public static BasicParameterNode findExpectedParameterNotUsedInAssignment(
+			IParametersAndConstraintsParentNode methodNode, 
+			Constraint constraint) {
 
 		if (constraint.getType() != ConstraintType.ASSIGNMENT) {
 			return null;
@@ -760,9 +736,10 @@ public class MethodNodeHelper {
 		return parameterNode;
 	}
 
-	public static BasicParameterNode findNotUsedExpectedParameter(MethodNode methodNode, StatementArray statementArray) {
+	public static BasicParameterNode findNotUsedExpectedParameter(
+			IParametersAndConstraintsParentNode methodNode, StatementArray statementArray) {
 
-		List<AbstractParameterNode> parameters = methodNode.getMethodParameters();
+		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
 		for (AbstractParameterNode abstractParameterNode : parameters) {
 			

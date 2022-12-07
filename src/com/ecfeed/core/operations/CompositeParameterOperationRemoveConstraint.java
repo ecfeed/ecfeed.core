@@ -16,13 +16,13 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class CompositeParameterOperationRemoveConstraint extends AbstractModelOperation {
 
-	private CompositeParameterNode fMethodNode;
+	private CompositeParameterNode fCompositeParameterNode;
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
 	public CompositeParameterOperationRemoveConstraint(CompositeParameterNode target, ConstraintNode constraint, IExtLanguageManager extLanguageManager){
 		super(OperationNames.REMOVE_CONSTRAINT, extLanguageManager);
-		fMethodNode = target;
+		fCompositeParameterNode = target;
 		fConstraint = constraint;
 		fIndex = fConstraint.getMyIndex();
 	}
@@ -30,15 +30,15 @@ public class CompositeParameterOperationRemoveConstraint extends AbstractModelOp
 	@Override
 	public void execute() {
 		
-		setOneNodeToSelect(fMethodNode);
+		setOneNodeToSelect(fCompositeParameterNode);
 		fIndex = fConstraint.getMyIndex();
-		fMethodNode.removeConstraint(fConstraint);
+		fCompositeParameterNode.removeConstraint(fConstraint);
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new CompositeParameterOperationAddConstraint(fMethodNode, fConstraint, fIndex, getExtLanguageManager());
+		return new CompositeParameterOperationAddConstraint(fCompositeParameterNode, fConstraint, fIndex, getExtLanguageManager());
 	}
 
 }
