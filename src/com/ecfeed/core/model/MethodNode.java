@@ -127,7 +127,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	@Override
 	public String toString() {
 
-		return MethodNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava()); 
+		return ParametersAndConstraintsParentNodeHelper.createSignature(this, true, new ExtLanguageManagerForJava()); 
 	}
 
 	@Override

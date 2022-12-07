@@ -92,7 +92,7 @@ public class ClassNodeHelper {
 			List<String> parameterTypesInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = MethodNodeHelper.verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
+		String errorMessage = ParametersAndConstraintsParentNodeHelper.verifyMethodSignatureIsValid(methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null)
 			return errorMessage;
@@ -100,7 +100,7 @@ public class ClassNodeHelper {
 		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager) != null) {
 
 			String newMethodSignature =
-					MethodNodeHelper.createSignature(
+					ParametersAndConstraintsParentNodeHelper.createSignature(
 							methodNameInExtLanguage,
 							parameterTypesInExtLanguage,
 							null,
@@ -130,7 +130,7 @@ public class ClassNodeHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		String errorMessage =
-				MethodNodeHelper.verifyMethodSignatureIsValid(
+				ParametersAndConstraintsParentNodeHelper.verifyMethodSignatureIsValid(
 						startMethodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null) {
@@ -170,7 +170,7 @@ public class ClassNodeHelper {
 
 		String classSignature = createSignature(classNode, extLanguageManager);
 
-		String methodSignature = MethodNodeHelper.createSignature(duplicateMethodNode, isParamNameAdded, extLanguageManager);
+		String methodSignature = ParametersAndConstraintsParentNodeHelper.createSignature(duplicateMethodNode, isParamNameAdded, extLanguageManager);
 
 		String message =
 				"Class: "

@@ -25,7 +25,7 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class MethodNodeHelper {
+public class ParametersAndConstraintsParentNodeHelper {
 
 	public static BasicParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
 
@@ -122,68 +122,6 @@ public class MethodNodeHelper {
 		return resultLabels;
 	}
 
-
-	//	public static void updateParameterReferencesInConstraints(
-	//			MethodParameterNode oldMethodParameterNode,
-	//			ChoicesParentNode dstParameterForChoices,
-	//			List<ConstraintNode> constraintNodes,
-	//			ListOfModelOperations reverseOperations,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		if (oldMethodParameterNode == null) {
-	//			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
-	//		}
-	//
-	//		if (dstParameterForChoices == null) {
-	//			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
-	//		}
-	//
-	//		for (ConstraintNode constraintNode : constraintNodes) {
-	//			ConstraintNodeHelper.updateParameterReferences(
-	//					constraintNode,
-	//					oldMethodParameterNode, dstParameterForChoices);
-	//		}
-	//	}
-
-	//	public static void updateChoiceReferencesInTestCases(
-	//			ParameterConversionItem parameterConversionItem,
-	//			List<TestCaseNode> testCaseNodes,
-	//			ListOfModelOperations inOutReverseOperations,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
-	//
-	//		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
-	//			return;
-	//		}
-	//
-	//		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
-	//
-	//		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
-	//			return;
-	//		}
-	//
-	//		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
-	//		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
-	//
-	//		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
-	//		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
-	//
-	//		for (TestCaseNode testCaseNode : testCaseNodes)  {
-	//
-	//			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
-	//		}
-	//
-	//		if (inOutReverseOperations != null) {
-	//			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
-	//					new MethodOperationUpdateChoiceReferencesInTestCases(
-	//							parameterConversionItem, 
-	//							testCaseNodes, extLanguageManager);
-	//
-	//			inOutReverseOperations.add(reverseOperation);
-	//		}
-	//	}
-
 	public static void convertConstraints(
 			List<ConstraintNode> constraintNodes,
 			ParameterConversionItem parameterConversionItem) {
@@ -226,7 +164,7 @@ public class MethodNodeHelper {
 			List<String> parameterTypesInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguageManager);
+		String errorMessage = ParametersAndConstraintsParentNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null) {
 			return errorMessage;
@@ -253,7 +191,7 @@ public class MethodNodeHelper {
 
 		return methodParameterNode;
 	}
-	
+
 	public static BasicParameterNode addExpectedParameterToMethod(
 			MethodNode methodNode, String name, String type, String defaultValue) {
 
@@ -265,7 +203,7 @@ public class MethodNodeHelper {
 
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
-		return MethodNodeHelper.createSignature(
+		return ParametersAndConstraintsParentNodeHelper.createSignature(
 				methodNode,
 				isParamNameAdded,
 				false, extLanguageManager);
@@ -309,12 +247,12 @@ public class MethodNodeHelper {
 		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
 
 		IAbstractNode parent = methodNode.getParent();
-		
+
 		if (parent == null) {
-			
+
 			return shortSignature;
 		}
-		
+
 		return parent.getName() + "." + shortSignature;
 	}
 
@@ -407,13 +345,13 @@ public class MethodNodeHelper {
 		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
 
 			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
-			
+
 			String signatureOfOneParameter = "";
-			
+
 			if (methodParameterNode instanceof BasicParameterNode) {
 
 				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
-				
+
 				signatureOfOneParameter = 
 						AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
 								basicParameterNode.getType(),
@@ -421,9 +359,9 @@ public class MethodNodeHelper {
 								basicParameterNode.isExpected(), 
 								extLanguageManager);
 			} else {
-			
+
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
-				
+
 				signatureOfOneParameter = 
 						AbstractParameterNodeHelper.createSignature(compositeParameterNode);
 			}
@@ -475,13 +413,13 @@ public class MethodNodeHelper {
 		List<Boolean> expectedFlags = new ArrayList<Boolean>();
 
 		for (AbstractParameterNode abstractParameterNode : methodParameters) {
-			
+
 			if (!(abstractParameterNode instanceof BasicParameterNode)) {
 				continue;
 			}
 
 			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-			
+
 			if (basicParameterNode.isExpected()) {
 				expectedFlags.add(true);
 			} else {
@@ -521,7 +459,7 @@ public class MethodNodeHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		// TODO MO-RE divide into composite parameter helper and method node helper ? or rename method node helper
-		String name = MethodNodeHelper.generateNewParameterName(parametersParentNode);
+		String name = ParametersAndConstraintsParentNodeHelper.generateNewParameterName(parametersParentNode);
 
 		IModelChangeRegistrator modelChangeRegistrator = parametersParentNode.getModelChangeRegistrator();
 
@@ -537,7 +475,7 @@ public class MethodNodeHelper {
 
 			MethodNode methodNode = (MethodNode) parametersParentNode;
 
-			String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(
+			String type = ParametersAndConstraintsParentNodeHelper.findNotUsedJavaTypeForParameter(
 					methodNode, extLanguageManager);
 
 			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
@@ -579,9 +517,9 @@ public class MethodNodeHelper {
 
 		BasicParameterNode basicParameterNode =
 				(BasicParameterNode) createNewParameter(
-				methodNode,
-				AbstractParameterNode.ParameterType.BASIC,
-				extLanguageManager);
+						methodNode,
+						AbstractParameterNode.ParameterType.BASIC,
+						extLanguageManager);
 
 		return basicParameterNode;
 	}
@@ -589,7 +527,7 @@ public class MethodNodeHelper {
 	public static CompositeParameterNode createNewCompositeParameter(
 			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
 
-		String name = MethodNodeHelper.generateNewParameterName(methodNode);
+		String name = ParametersAndConstraintsParentNodeHelper.generateNewParameterName(methodNode);
 
 		CompositeParameterNode parameter =
 				new CompositeParameterNode(name, methodNode.getModelChangeRegistrator());
@@ -743,13 +681,13 @@ public class MethodNodeHelper {
 		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
 		for (AbstractParameterNode abstractParameterNode : parameters) {
-			
+
 			if (!(abstractParameterNode instanceof BasicParameterNode)) {
 				continue;
 			}
 
 			BasicParameterNode basicParameterNode = (BasicParameterNode)abstractParameterNode;
-			
+
 			if (!basicParameterNode.isExpected()) {
 				continue;
 			}
@@ -814,7 +752,7 @@ public class MethodNodeHelper {
 
 		return constraintNames;
 	}
-	
+
 	public static BasicParameterNode findMethodParameterByName(
 			String parameterNameToFindInExtLanguage, 
 			IParametersParentNode methodNode,
@@ -832,9 +770,9 @@ public class MethodNodeHelper {
 				return methodParameterNode;
 			}
 		}
-		
+
 		return null;
 
 	}
-	
+
 }

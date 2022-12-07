@@ -295,7 +295,7 @@ public class ParameterTransformer {
 
 		for (ParameterConversionItem parameterConversionItem : parameterConversionItems) {
 
-			MethodNodeHelper.convertConstraints(
+			ParametersAndConstraintsParentNodeHelper.convertConstraints(
 					methodNode.getConstraintNodes(),
 					parameterConversionItem);
 		}
@@ -375,7 +375,7 @@ public class ParameterTransformer {
 
 		IConstraintsParentNode methodNode = (IConstraintsParentNode) srcParameterNode.getParent();
 
-		MethodNodeHelper.convertConstraints(
+		ParametersAndConstraintsParentNodeHelper.convertConstraints(
 				methodNode.getConstraintNodes(),
 				parameterConversionItem); 
 
