@@ -91,15 +91,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		}
 	}
 
-	public static void addTestCaseToMethod(ITestCasesParentNode testCasesParentNode, ChoiceNode choiceNode) { // TODO MO-RE move to test cases parent node
-
-		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
-		listOfChoicesForTestCase.add(choiceNode);
-
-		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
-		testCasesParentNode.addTestCase(testCaseNode);
-	}
-
 	public static BasicParameterNode addParameterToMethod(
 			IParametersParentNode parametersParentNode, String name, String type) {
 

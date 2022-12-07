@@ -166,55 +166,17 @@ public class TestCaseNode extends AbstractNode {
 			return false;
 		}
 
-		for (int i = 0; i < parameters.size(); i++) { // TODO MO-RE use for loop because get calculates always from begining
+		for (int i = 0; i < parameters.size(); i++) {
 
 			BasicParameterNode parameter = parameters.get(i);
 
 			if (parameter.isExpected()) {
 				updateTestCaseWithCreatedChoice(i, parameter);
 			} 
-
-			//			else {
-			//				updateTestCaseWithReferencedChoice(i, parameter);
-			//			}
 		}
 
 		return true;
 	}
-
-	//	public boolean correctTestCase(MethodNode parentMethodNode) {
-	//		
-	//		List<BasicParameterNode> parameters = parentMethodNode.getMethodParameters();
-	//		
-	//		if (parameters.size() != getTestData().size()) {
-	//			return false;
-	//		}
-	//
-	//		for (int i = 0; i < parameters.size(); i++) { // TODO MO-RE use for loop because get calculates always from begining
-	//			
-	//			BasicParameterNode parameter = parameters.get(i);
-	//			
-	//			if (parameter.isExpected()) {
-	//				updateTestCaseWithCreatedChoice(i, parameter);
-	//			} else {
-	//				updateTestCaseWithReferencedChoice(i, parameter);
-	//			}
-	//		}
-	//		
-	//		return true;
-	//	}
-
-	//	private void updateTestCaseWithReferencedChoice(int i, BasicParameterNode parameter) {
-	//		
-	//		ChoiceNode original = getTestData().get(i);
-	//		ChoiceNode newReference = parameter.getChoice(original.getQualifiedName());
-	//		
-	//		if (newReference == null) {
-	//			return ;
-	//		}
-	//		
-	//		getTestData().set(i, newReference);
-	//	}
 
 	private void updateTestCaseWithCreatedChoice(int i, BasicParameterNode parameter) {
 
