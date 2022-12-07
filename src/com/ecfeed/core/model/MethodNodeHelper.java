@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -805,4 +806,35 @@ public class MethodNodeHelper {
 		return values;
 	}
 
+	public static Set<String> getConstraintNames(IConstraintsParentNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		Set<String> constraintNames = methodNode.getConstraintsNames();
+
+		// constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
+
+		return constraintNames;
+	}
+	
+	public static BasicParameterNode findMethodParameterByName(
+			String parameterNameToFindInExtLanguage, 
+			IParametersParentNode methodNode,
+			IExtLanguageManager extLanguageManager) {
+
+		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
+
+		for (AbstractParameterNode parameter : methodParameters) {
+
+			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
+
+			String parameterNameInExtLanguage = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
+
+			if (StringHelper.isEqual(parameterNameToFindInExtLanguage, parameterNameInExtLanguage)) {
+				return methodParameterNode;
+			}
+		}
+		
+		return null;
+
+	}
+	
 }
