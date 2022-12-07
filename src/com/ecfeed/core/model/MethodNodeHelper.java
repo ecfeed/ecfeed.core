@@ -362,4 +362,71 @@ public class MethodNodeHelper {
 		return testSuites;
 	}
 	
+	public static String findNotUsedJavaTypeForParameter(
+			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		ClassNode classNode = methodNode.getClassNode();
+
+		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
+
+		for (String type : typeListInExtLanguage) {
+			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
+				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
+				return type;
+			}
+		}
+
+		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
+
+		return userType;
+	}
+	
+	private static boolean isNewTypeUsed( // TODO MO-RE move ?
+			String typeForLastParameter, ClassNode classNode, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+
+		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+		parameterTypesInExternalLanguage.add(typeForLastParameter);
+
+		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
+
+		MethodNode foundMethodNode =
+				ClassNodeHelper.findMethodByExtLanguage(
+						classNode,
+						methodNameInExternalLanguage,
+						parameterTypesInExternalLanguage,
+						extLanguageManager);
+
+		if (foundMethodNode != null) {
+			return true;
+		}
+
+		return false;
+	}
+	
+	public static String findNewUserTypeForJavaLanguage(MethodNode methodNode, IExtLanguageManager extLanguageManager) { // TODO MO-RE move ?
+
+		ClassNode classNode = methodNode.getClassNode();
+
+		String startUserType = extLanguageManager.chooseString(
+				CommonConstants.DEFAULT_USER_TYPE_FOR_JAVA, CommonConstants.DEFAULT_USER_TYPE_FOR_SIMPLE);
+
+		String type = startUserType; 
+		int i = 0;
+
+		while (true) {
+
+			List<String> newTypes = methodNode.getParameterTypes();
+			newTypes.add(type);
+
+			if (classNode.findMethodWithTheSameSignature(methodNode.getName(), newTypes) == null) {
+				break;
+
+			} else {
+				type = startUserType + i++;
+			}
+		}
+
+		return type;
+	}
+	
 }

@@ -111,20 +111,20 @@ public class ParametersAndConstraintsParentNodeHelper {
 	}
 
 	public static BasicParameterNode addLinkedParameterToMethod(
-			IParametersParentNode methodNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
+			IParametersParentNode parametersParentNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
 		methodParameterNode.setLinkToGlobalParameter(linkToGlobalParameter);
-		methodNode.addParameter(methodParameterNode);
+		parametersParentNode.addParameter(methodParameterNode);
 
 		return methodParameterNode;
 	}
 
 	public static BasicParameterNode addExpectedParameterToMethod(
-			IParametersParentNode methodNode, String name, String type, String defaultValue) {
+			IParametersParentNode parametersParentNode, String name, String type, String defaultValue) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, defaultValue, true, null);
-		methodNode.addParameter(methodParameterNode);
+		parametersParentNode.addParameter(methodParameterNode);
 
 		return methodParameterNode;
 	}
@@ -151,7 +151,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 			MethodNode methodNode = (MethodNode) parametersParentNode;
 
-			String type = ParametersAndConstraintsParentNodeHelper.findNotUsedJavaTypeForParameter(
+			String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(
 					methodNode, extLanguageManager);
 
 			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
@@ -163,10 +163,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		}
 
 		if (parametersParentNode instanceof CompositeParameterNode) {
-
-			//			MethodNode methodNode = (MethodNode) parametersParentNode;
-
-			//	String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(methodNode, extLanguageManager);
 
 			String type = null;
 
@@ -189,11 +185,12 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return null;
 	}
 
-	public static BasicParameterNode createBasicParameter(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	public static BasicParameterNode createBasicParameter(
+			IParametersParentNode parametersParentNode, IExtLanguageManager extLanguageManager) {
 
 		BasicParameterNode basicParameterNode =
 				(BasicParameterNode) createNewParameter(
-						methodNode,
+						parametersParentNode,
 						AbstractParameterNode.ParameterType.BASIC,
 						extLanguageManager);
 
@@ -201,12 +198,12 @@ public class ParametersAndConstraintsParentNodeHelper {
 	}
 
 	public static CompositeParameterNode createNewCompositeParameter(
-			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+			IParametersParentNode parametersParentNode, IExtLanguageManager extLanguageManager) {
 
-		String name = ParametersAndConstraintsParentNodeHelper.generateNewParameterName(methodNode);
+		String name = ParametersAndConstraintsParentNodeHelper.generateNewParameterName(parametersParentNode);
 
 		CompositeParameterNode parameter =
-				new CompositeParameterNode(name, methodNode.getModelChangeRegistrator());
+				new CompositeParameterNode(name, parametersParentNode.getModelChangeRegistrator());
 
 		return parameter;
 	}
@@ -224,76 +221,8 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return name;
 	}
 
-	public static String findNotUsedJavaTypeForParameter(
-			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		ClassNode classNode = methodNode.getClassNode();
-
-		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
-
-		for (String type : typeListInExtLanguage) {
-			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
-				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
-				return type;
-			}
-		}
-
-		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
-
-		return userType;
-	}
-
-	private static boolean isNewTypeUsed( // TODO MO-RE move ?
-			String typeForLastParameter, ClassNode classNode, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
-		parameterTypesInExternalLanguage.add(typeForLastParameter);
-
-		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
-
-		MethodNode foundMethodNode =
-				ClassNodeHelper.findMethodByExtLanguage(
-						classNode,
-						methodNameInExternalLanguage,
-						parameterTypesInExternalLanguage,
-						extLanguageManager);
-
-		if (foundMethodNode != null) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public static String findNewUserTypeForJavaLanguage(MethodNode methodNode, IExtLanguageManager extLanguageManager) { // TODO MO-RE move ?
-
-		ClassNode classNode = methodNode.getClassNode();
-
-		String startUserType = extLanguageManager.chooseString(
-				CommonConstants.DEFAULT_USER_TYPE_FOR_JAVA, CommonConstants.DEFAULT_USER_TYPE_FOR_SIMPLE);
-
-		String type = startUserType; 
-		int i = 0;
-
-		while (true) {
-
-			List<String> newTypes = methodNode.getParameterTypes();
-			newTypes.add(type);
-
-			if (classNode.findMethodWithTheSameSignature(methodNode.getName(), newTypes) == null) {
-				break;
-
-			} else {
-				type = startUserType + i++;
-			}
-		}
-
-		return type;
-	}
-
-
 	public static BasicParameterNode findExpectedParameterNotUsedInAssignment(
-			IParametersAndConstraintsParentNode methodNode, 
+			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode, 
 			Constraint constraint) {
 
 		if (constraint.getType() != ConstraintType.ASSIGNMENT) {
@@ -308,14 +237,14 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		StatementArray statementArray = (StatementArray)postcondition;
 
-		BasicParameterNode parameterNode = findNotUsedExpectedParameter(methodNode, statementArray);
+		BasicParameterNode parameterNode = findNotUsedExpectedParameter(parametersAndConstraintsParentNode, statementArray);
 		return parameterNode;
 	}
 
 	public static BasicParameterNode findNotUsedExpectedParameter(
-			IParametersAndConstraintsParentNode methodNode, StatementArray statementArray) {
+			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode, StatementArray statementArray) {
 
-		List<AbstractParameterNode> parameters = methodNode.getParameters();
+		List<AbstractParameterNode> parameters = parametersAndConstraintsParentNode.getParameters();
 
 		for (AbstractParameterNode abstractParameterNode : parameters) {
 
@@ -360,10 +289,10 @@ public class ParametersAndConstraintsParentNodeHelper {
 	}
 
 	public static List<String> getStatementValuesForParameter(
-			MethodNode methodNode,
+			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode,
 			BasicParameterNode methodParameterNode) {
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = parametersAndConstraintsParentNode.getConstraints();
 
 		List<String> values = new ArrayList<>();
 
@@ -381,9 +310,10 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return values;
 	}
 
-	public static Set<String> getConstraintNames(IConstraintsParentNode methodNode, IExtLanguageManager extLanguageManager) { // TODO MO-RE move
+	public static Set<String> getConstraintNames(
+			IConstraintsParentNode paraConstraintsParentNode, IExtLanguageManager extLanguageManager) { // TODO MO-RE move
 
-		Set<String> constraintNames = methodNode.getConstraintsNames();
+		Set<String> constraintNames = paraConstraintsParentNode.getConstraintsNames();
 
 		// constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
 
@@ -392,10 +322,10 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 	public static BasicParameterNode findMethodParameterByName(
 			String parameterNameToFindInExtLanguage, 
-			IParametersParentNode methodNode,
+			IParametersParentNode parametersParentNode,
 			IExtLanguageManager extLanguageManager) {
 
-		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
+		List<AbstractParameterNode> methodParameters = parametersParentNode.getParameters();
 
 		for (AbstractParameterNode parameter : methodParameters) {
 
