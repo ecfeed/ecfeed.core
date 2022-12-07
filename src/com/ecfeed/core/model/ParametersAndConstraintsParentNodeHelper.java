@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -308,16 +307,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		values = StringHelper.removeDuplicates(values);
 
 		return values;
-	}
-
-	public static Set<String> getConstraintNames(
-			IConstraintsParentNode paraConstraintsParentNode, IExtLanguageManager extLanguageManager) { // TODO MO-RE move
-
-		Set<String> constraintNames = paraConstraintsParentNode.getConstraintsNames();
-
-		// constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
-
-		return constraintNames;
 	}
 
 	public static BasicParameterNode findMethodParameterByName(
