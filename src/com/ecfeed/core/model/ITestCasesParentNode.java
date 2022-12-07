@@ -17,4 +17,5 @@ public interface ITestCasesParentNode extends IAbstractNode {
 	public List<TestCaseNode> getTestCases();
 	public void replaceTestCases(List<TestCaseNode> testCases);
 	public void removeTestCases();
+	public void addTestCase(TestCaseNode testCase);
 }

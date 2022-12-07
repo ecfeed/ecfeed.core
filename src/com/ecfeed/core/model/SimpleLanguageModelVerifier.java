@@ -319,8 +319,8 @@ public class SimpleLanguageModelVerifier {
 
 		Pair<String,String> pairOfSignatures = 
 				new Pair<String, String>(
-						ParametersAndConstraintsParentNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForSimple()),
-						ParametersAndConstraintsParentNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForJava()));
+						MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForSimple()),
+						MethodNodeHelper.createSignature(methodNode, false, new ExtLanguageManagerForJava()));
 
 
 		return pairOfSignatures;

@@ -22,7 +22,7 @@ import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ParametersAndConstraintsParentNodeHelper;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.utils.AmbiguousConstraintAction;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
@@ -53,7 +53,7 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		List<String> constraintNames = ConstraintHelper.createListOfConstraintNames(iConstraints);
 
-		String methodSignature = ParametersAndConstraintsParentNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForJava());
+		String methodSignature = MethodNodeHelper.createLongSignature(methodNode, true, new ExtLanguageManagerForJava());
 
 		String requestText = createRequestText(
 				sessionId, 
