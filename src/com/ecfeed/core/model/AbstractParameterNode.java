@@ -26,7 +26,7 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	@Override
 	public IParametersParentNode getParent() {
 
-		return (IParametersParentNode)getParent();
+		return (IParametersParentNode)(super.getParent());
 	}
 
 	@Override

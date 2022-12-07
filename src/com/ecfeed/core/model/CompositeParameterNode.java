@@ -284,7 +284,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	}
 
 	@Override
-	public Set<String> getConstraintsNames() {
+	public Set<String> getNamesOfConstraints() {
 		
 		return fConstraintNodeListHolder.getConstraintsNames();
 	}

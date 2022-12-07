@@ -25,7 +25,7 @@ public interface IConstraintsParentNode extends IAbstractNode {
 	public List<ConstraintNode> getConstraintNodes(String name);
 	public List<Constraint> getConstraints();
 	public List<Constraint> getConstraints(String name);
-	public Set<String> getConstraintsNames();
+	public Set<String> getNamesOfConstraints();
 	public boolean removeConstraint(ConstraintNode constraint);
 	public boolean isChoiceMentionedInConstraints(ChoiceNode choice);
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter);

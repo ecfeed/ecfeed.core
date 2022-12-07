@@ -327,7 +327,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	@Override
-	public Set<String> getConstraintsNames() {
+	public Set<String> getNamesOfConstraints() {
 		
 		return fConstraintNodeListHolder.getConstraintsNames();
 	}
