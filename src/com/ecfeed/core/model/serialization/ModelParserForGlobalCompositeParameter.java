@@ -22,9 +22,12 @@ import nu.xom.Element;
 public class ModelParserForGlobalCompositeParameter implements IModelParserForGlobalCompositeParameter {
 
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
+	private IModelParserForConstraint fModelParserForConstraint;
 
-	public ModelParserForGlobalCompositeParameter(IModelParserForGlobalParameter modelParserForGlobalParameter) {
+	public ModelParserForGlobalCompositeParameter(IModelParserForGlobalParameter modelParserForGlobalParameter,
+												  IModelParserForConstraint modelParserForConstraint) {
 		fModelParserForGlobalParameter = modelParserForGlobalParameter;
+		fModelParserForConstraint = modelParserForConstraint;
 	}
 	
 	public Optional<CompositeParameterNode> parseGlobalCompositeParameter(
@@ -43,15 +46,15 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 
 		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrar);
 
-		List<Element> children = ModelParserHelper.getIterableChildren(element, new String[]
-				{SerializationHelperVersion1.getBasicParameterNodeName(), SerializationHelperVersion1.getCompositeParameterNodeName()}
-		);
+		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames());
 
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForGlobalParameter.parseGlobalParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
+
+//				fModelParserForConstraint.parseConstraint(child)
 			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);

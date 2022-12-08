@@ -44,7 +44,7 @@ public class SerializationHelperVersion1 {
 		return STATEMENT_PARAMETER_ATTRIBUTE_NAME_VERSION_1;
 	}
 
-	public static String[] getChoiceNodeNames() {
+	public static String[] getParameterNodeNames() {
 		return PARAMETER_NODE_NAMES_VERSION_5;
 	}
 }

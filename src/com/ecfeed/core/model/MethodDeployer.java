@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import sun.security.util.ConstraintsParameters;
 
 public abstract class MethodDeployer {
 
@@ -69,6 +70,27 @@ public abstract class MethodDeployer {
 	private static void extractConstraints(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
 
 		methodSource.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(mapper)));
+
+		methodSource.getParameters().forEach(e -> extractConstraintsComposite(e, methodTarget, mapper));
+	}
+
+	private static void extractConstraintsComposite(AbstractParameterNode parameter, MethodNode methodTarget, NodeMapper mapper) {
+
+		if (parameter instanceof BasicParameterNode) {
+			return;
+		}
+
+		CompositeParameterNode parameterParsed = (CompositeParameterNode) parameter;
+
+		parameterParsed.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(mapper)));
+
+
+		for (AbstractParameterNode parameterComposite : parameterParsed.getParameters()) {
+
+			if (parameterComposite instanceof CompositeParameterNode) {
+				extractConstraintsComposite(parameterComposite, methodTarget, mapper);
+			}
+		}
 	}
 
 	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {

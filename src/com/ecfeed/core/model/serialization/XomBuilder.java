@@ -169,6 +169,12 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
+		for (ConstraintNode constraintNode : parameterNode.getConstraintNodes()) {
+			if (shouldSerializeNode(constraintNode)) {
+				targetParamElement.appendChild((Element) constraintNode.accept(this));
+			}
+		}
+
 		return targetParamElement;
 	}
 	
