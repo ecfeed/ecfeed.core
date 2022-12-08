@@ -39,7 +39,7 @@ public class AbstractStatementTest {
 			return null;
 		}
 		@Override
-		public AbstractStatement createCopy(IParametersAndConstraintsParentNode method) {
+		public AbstractStatement createCopy(NodeMapper mapper) {
 			return null;
 		}
 		@Override
