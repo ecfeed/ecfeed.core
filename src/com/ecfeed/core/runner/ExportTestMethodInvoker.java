@@ -36,7 +36,7 @@ public class ExportTestMethodInvoker implements ITestMethodInvoker {
 	public ExportTestMethodInvoker(MethodNode methodNode) {
 		fMethodNode = methodNode;
 		fTestCaseNodes = new ArrayList<TestCaseNode>();
-		fMethodParameters = fMethodNode.getMethodParameters();
+		fMethodParameters = fMethodNode.getParameters();
 	}
 
 	@Override

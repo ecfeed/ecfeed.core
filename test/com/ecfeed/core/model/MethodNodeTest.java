@@ -100,13 +100,13 @@ public class MethodNodeTest {
 		assertFalse(method.getConstraints("name2").contains(constraint1));
 		assertTrue(method.getConstraints("name2").contains(constraint2));
 
-		assertEquals(2, method.getConstraintsNames().size());
-		assertTrue(method.getConstraintsNames().contains("name1"));
-		assertTrue(method.getConstraintsNames().contains("name2"));
+		assertEquals(2, method.getNamesOfConstraints().size());
+		assertTrue(method.getNamesOfConstraints().contains("name1"));
+		assertTrue(method.getNamesOfConstraints().contains("name2"));
 
 		method.removeConstraint(constraintNode1);
-		assertFalse(method.getConstraintsNames().contains("name1"));
-		assertTrue(method.getConstraintsNames().contains("name2"));
+		assertFalse(method.getNamesOfConstraints().contains("name1"));
+		assertTrue(method.getNamesOfConstraints().contains("name2"));
 
 	}
 

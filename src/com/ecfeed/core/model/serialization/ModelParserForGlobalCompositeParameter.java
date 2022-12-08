@@ -10,17 +10,14 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.CompositeParameterNode;
-import com.ecfeed.core.model.IModelChangeRegistrator;
-import com.ecfeed.core.utils.ListOfStrings;
-import nu.xom.Element;
-
 import java.util.List;
 import java.util.Optional;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
+import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.utils.ListOfStrings;
+
+import nu.xom.Element;
 
 public class ModelParserForGlobalCompositeParameter implements IModelParserForGlobalCompositeParameter {
 

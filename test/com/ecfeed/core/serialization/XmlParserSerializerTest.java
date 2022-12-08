@@ -413,7 +413,7 @@ public class XmlParserSerializerTest {
 		
 		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
 		
-		List<AbstractParameterNode> methodParameters = method.getMethodParameters();
+		List<AbstractParameterNode> methodParameters = method.getParameters();
 		
 		for (AbstractParameterNode abstractParameterNode : methodParameters) {
 			result.add((BasicParameterNode) abstractParameterNode);

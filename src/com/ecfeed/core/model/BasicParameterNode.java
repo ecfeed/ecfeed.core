@@ -392,7 +392,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		if (parent instanceof ClassNode) {
 			return new ArrayList<>();
 		}
-		
+
 		ExceptionHelper.reportRuntimeException("Unexpected parent node type.");
 		return null;
 	}
@@ -480,11 +480,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public boolean propertiesMatch(BasicParameterNode otherBasicParameter) {
-		
+
 		if (!StringHelper.isEqual(getName(), otherBasicParameter.getName())) {
 			return false;
 		}
-		
+
 		if (!StringHelper.isEqual(getType(), otherBasicParameter.getType())) {
 			return false;
 		}
@@ -499,7 +499,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		if (!StringHelper.isEqual(defaultValue, otherDefaultValue)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -586,14 +586,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public boolean hasChoices() {
-		
+
 		if (getChoiceCount() == 0) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public int getChoiceCount() {
 

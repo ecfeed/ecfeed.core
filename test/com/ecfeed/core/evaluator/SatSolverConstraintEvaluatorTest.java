@@ -51,7 +51,7 @@ public class SatSolverConstraintEvaluatorTest {
     private List<List<ChoiceNode>> getInput(MethodNode method) {
         List<List<ChoiceNode>> input = new ArrayList<>();
 
-        for (AbstractParameterNode arg : method.getMethodParameters()) {
+        for (AbstractParameterNode arg : method.getParameters()) {
             if (arg instanceof BasicParameterNode) {
                 BasicParameterNode argParsed = (BasicParameterNode) arg;
 

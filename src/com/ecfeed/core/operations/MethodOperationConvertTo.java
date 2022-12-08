@@ -62,8 +62,8 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 		fTargetMethodNode.setName(methodName);
 
 		for(int i = 0; i < fTargetMethodNode.getParameters().size(); i++){
-			AbstractParameterNode targetParameter = fTargetMethodNode.getMethodParameters().get(i);
-			AbstractParameterNode sourceParameter = fSourceMethodNode.getMethodParameters().get(i);
+			AbstractParameterNode targetParameter = fTargetMethodNode.getParameters().get(i);
+			AbstractParameterNode sourceParameter = fSourceMethodNode.getParameters().get(i);
 
 			targetParameter.setName(sourceParameter.getName());
 		}
