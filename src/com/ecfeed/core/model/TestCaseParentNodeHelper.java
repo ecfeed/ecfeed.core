@@ -10,12 +10,18 @@
 
 package com.ecfeed.core.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface ITestCasesParentNode extends IAbstractNode {
-	
-	public List<TestCaseNode> getTestCases();
-	public void replaceTestCases(List<TestCaseNode> testCases);
-	public void removeTestCases();
-	public void addTestCase(TestCaseNode testCase);
+public class TestCaseParentNodeHelper {
+
+	public static void addTestCaseToMethod(ITestCasesParentNode testCasesParentNode, ChoiceNode choiceNode) { // TODO MO-RE move to test cases parent node
+
+		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
+		listOfChoicesForTestCase.add(choiceNode);
+
+		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
+		testCasesParentNode.addTestCase(testCaseNode);
+	}
+
 }

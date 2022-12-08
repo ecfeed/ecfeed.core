@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractNodeHelper  {
 
@@ -125,6 +126,17 @@ public abstract class AbstractNodeHelper  {
 			return true;
 		}
 
+	}
+
+	public static String getParentName(String parameterExtendedName) {
+
+		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
+
+		if (dstParamNameParts.length == 2) {
+			return dstParamNameParts[0]; 
+		}
+
+		return null;
 	}
 
 }

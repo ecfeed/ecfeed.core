@@ -66,7 +66,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		
 		List<BasicParameterNode> result = new ArrayList<>();
 		
-		List<AbstractParameterNode> methodParameters = method.getMethodParameters();
+		List<AbstractParameterNode> methodParameters = method.getParameters();
 		
 		for (AbstractParameterNode abstractParameterNode : methodParameters) {
 			

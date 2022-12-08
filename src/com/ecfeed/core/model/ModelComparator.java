@@ -51,7 +51,7 @@ public class ModelComparator {
 		ModelCompareHelper.compareSizes(method1.getTestCases(), method2.getTestCases());
 
 		for(int i =0; i < method1.getParameters().size(); ++i){
-			compareParameters(method1.getMethodParameters().get(i), method2.getMethodParameters().get(i));
+			compareParameters(method1.getParameters().get(i), method2.getParameters().get(i));
 		}
 		for(int i =0; i < method1.getConstraintNodes().size(); ++i){
 			compareConstraintNodes(method1.getConstraintNodes().get(i), method2.getConstraintNodes().get(i));

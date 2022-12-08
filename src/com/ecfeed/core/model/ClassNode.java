@@ -255,7 +255,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		List<MethodNode> result = new ArrayList<MethodNode>();
 		
 		for (MethodNode method : getMethods()) {
-			for(AbstractParameterNode methodParameter : method.getMethodParameters()) {
+			for(AbstractParameterNode methodParameter : method.getParameters()) {
 				
 				if (!(methodParameter instanceof BasicParameterNode)) {
 					continue;

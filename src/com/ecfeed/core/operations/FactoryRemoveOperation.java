@@ -154,7 +154,22 @@ public class FactoryRemoveOperation {
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			return new MethodOperationRemoveConstraint(node.getMethodNode(), node, fExtLanguageManager);
+			
+			IAbstractNode abstractParent = node.getParent();
+			
+			if (abstractParent instanceof MethodNode) {
+			
+				return new MethodOperationRemoveConstraint(
+						(MethodNode) abstractParent, node, fExtLanguageManager);
+			}
+			
+			if (abstractParent instanceof CompositeParameterNode) {
+				return new CompositeParameterOperationRemoveConstraint(
+						(CompositeParameterNode) abstractParent, node, fExtLanguageManager);
+			}
+			
+			ExceptionHelper.reportRuntimeException("Invalid parent of constraint.");
+			return null;
 		}
 
 		@Override
