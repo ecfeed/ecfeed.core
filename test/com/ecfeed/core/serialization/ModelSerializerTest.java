@@ -244,6 +244,10 @@ public class ModelSerializerTest {
 		ChoiceNode m1p611c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p611, "M1P611C1", "1");
 		ChoiceNode m1p611c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p611, "M1P611C2", "2");
 		ChoiceNode m1p611c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p611, "M1P611C3", "3");
+		BasicParameterNode m1p612 = ParametersAndConstraintsParentNodeHelper.addParameterToMethod(m1p61, "M1P612", "int");
+		ChoiceNode m1p612c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p612, "M1P612C1", "1");
+		ChoiceNode m1p612c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p612, "M1P612C2", "2");
+		ChoiceNode m1p612c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p612, "M1P612C3", "3");
 		CompositeParameterNode m1p62 = new CompositeParameterNode("M1P62", null);
 		BasicParameterNode m1p621 = ParametersAndConstraintsParentNodeHelper.addParameterToMethod(m1p62, "M1P621", "int");
 		ChoiceNode m1p621c1 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C1", "1");
@@ -253,12 +257,12 @@ public class ModelSerializerTest {
 		ChoiceNode m1p621c3b = ChoiceNodeHelper.addChoiceToChoice(m1p621c3, "M1P621C3B", "5");
 
 		RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
-		RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p3, EMathRelation.LESS_THAN, m1p3c3);
+		RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p3, EMathRelation.LESS_THAN, m1p612c3);
 
 		Constraint m1con1 = new Constraint("M1C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
 
 		RelationStatement m1p61r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p611, EMathRelation.EQUAL, m1p611c1);
-		RelationStatement m1p61r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p621, EMathRelation.LESS_THAN, m1p621c3a);
+		RelationStatement m1p61r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p612, EMathRelation.LESS_THAN, m1p621c2);
 
 		Constraint m1p61con1 = new Constraint("M1P61C1", ConstraintType.EXTENDED_FILTER, m1p61r1, m1p61r2,null);
 
@@ -280,6 +284,7 @@ public class ModelSerializerTest {
 		m1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
 
 		m1p61.addConstraint(new ConstraintNode("M1P61Con1", m1p61con1, null));
+
 		model.addClass(c1);
 
 		NodeMapper mapper = new NodeMapper();

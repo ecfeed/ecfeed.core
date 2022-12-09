@@ -17,6 +17,7 @@ import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
+import com.ecfeed.core.utils.LogHelperCore;
 import nu.xom.Element;
 
 public class ModelParserForGlobalCompositeParameter implements IModelParserForGlobalCompositeParameter {
@@ -53,11 +54,17 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForGlobalParameter.parseGlobalParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
-
-//				fModelParserForConstraint.parseConstraint(child)
 			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
+			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getConstraintName())) {
+
+				try {
+					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)
+							.ifPresent(targetCompositeParameterNode::addConstraint);
+				} catch (Exception e) {
+					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
+				}
 			}
 		}
 

@@ -32,13 +32,14 @@ public class ModelParserHelper  {
 		
 		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
 
-		IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter = new ModelParserForMethodCompositeParameter(modelParserForMethodParameter);
-
 		IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
 		
 		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 		
 		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+
+		IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
+				= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
 		
 		IModelParserForMethod modelParserForMethod = new ModelParserForMethod(
 				modelParserForMethodParameter,
