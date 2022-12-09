@@ -15,25 +15,22 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import sun.security.util.ConstraintsParameters;
 
 public abstract class MethodDeployer {
 
 	public static String POSTFIX = "deployed";
 
-	public static MethodNode deploy(MethodNode methodSource) {
+	public static MethodNode deploy(NodeMapper mapper, MethodNode methodSource) {
 
 		if (methodSource == null) {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
 		}
 
-		NodeMapper mapper = new NodeMapper();
-
 		MethodNode methodTarget = new MethodNode(methodSource.getName() + "_" +  POSTFIX);
 
 		extractParameters(methodSource, methodTarget, mapper);
-		extractConstraints(methodSource, methodTarget);
-
-		methodSource.setNodeMapper(mapper);
+		extractConstraints(methodSource, methodTarget, mapper);
 
 		return methodTarget;
 	}
@@ -60,9 +57,9 @@ public abstract class MethodDeployer {
 	}
 
 	private static void extractParametersBasic(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource, NodeMapper mapper) {
-		BasicParameterNode parameterParsed = ((BasicParameterNode) parameterSource).createCopy(mapper);
-		parameterParsed.setCompositeName(prefix + parameterParsed.getName());
-		methodTarget.addParameter(parameterParsed);
+		BasicParameterNode parameterDeployed = ((BasicParameterNode) parameterSource).createCopy(mapper);
+		parameterDeployed.setCompositeName(prefix + parameterDeployed.getName());
+		methodTarget.addParameter(parameterDeployed);
 	}
 
 	private static void extractParametersComposite(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource, NodeMapper mapper) {
@@ -70,9 +67,30 @@ public abstract class MethodDeployer {
 		extractParameters(prefix, methodTarget, parameterParsed.getParameters(), mapper);
 	}
 
-	private static void extractConstraints(MethodNode methodSource, MethodNode methodTarget) {
+	private static void extractConstraints(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
 
-		methodSource.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(methodTarget)));
+		methodSource.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(mapper)));
+
+		methodSource.getParameters().forEach(e -> extractConstraintsComposite(e, methodTarget, mapper));
+	}
+
+	private static void extractConstraintsComposite(AbstractParameterNode parameter, MethodNode methodTarget, NodeMapper mapper) {
+
+		if (parameter instanceof BasicParameterNode) {
+			return;
+		}
+
+		CompositeParameterNode parameterParsed = (CompositeParameterNode) parameter;
+
+		parameterParsed.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(mapper)));
+
+
+		for (AbstractParameterNode parameterComposite : parameterParsed.getParameters()) {
+
+			if (parameterComposite instanceof CompositeParameterNode) {
+				extractConstraintsComposite(parameterComposite, methodTarget, mapper);
+			}
+		}
 	}
 
 	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
@@ -88,7 +106,7 @@ public abstract class MethodDeployer {
 		MethodNode method = new MethodNode("construct");
 
 		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
-		constraints.forEach(e -> method.addConstraint(e.createCopy(method)));
+		constraints.forEach(e -> method.addConstraint(e.createCopy(mapper)));
 
 		return method;
 	}
@@ -103,6 +121,7 @@ public abstract class MethodDeployer {
 			}
 		}
 	}
+
 	public static void updateDeploymentNameConsistency(MethodNode method) {
 
 		if (!method.isDeployed()) {

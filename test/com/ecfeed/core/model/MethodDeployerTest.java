@@ -23,7 +23,8 @@ public class MethodDeployerTest {
 	public void deployNull() {
 
 		try {
-			MethodDeployer.deploy(null);
+			NodeMapper mapper = new NodeMapper();
+			MethodDeployer.deploy(mapper, null);
 		} catch (Exception e) {
 		}
 	}
@@ -33,7 +34,8 @@ public class MethodDeployerTest {
 
 		MethodNode sourceMethod = new MethodNode("method");
 
-		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(mapper, sourceMethod);
 
 		assertNotNull(deployedMethod);
 		assertFalse(sourceMethod.hashCode() == deployedMethod.hashCode());
@@ -49,7 +51,8 @@ public class MethodDeployerTest {
 		BasicParameterNode methodParameterNode = new BasicParameterNode("parameter", "String", "A", true);
 		sourceMethod.addParameter(methodParameterNode);
 
-		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(mapper, sourceMethod);
 
 		assertEquals(1, deployedMethod.getParameters().size());
 
@@ -74,7 +77,8 @@ public class MethodDeployerTest {
 		ChoiceNode sourceChoiceNode = new ChoiceNode("choice", "A");
 		methodParameterNode.addChoice(sourceChoiceNode);
 
-		MethodNode deployedMethod = MethodDeployer.deploy(sourceMethod);
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(mapper, sourceMethod);
 
 		assertEquals(1, deployedMethod.getParameters().size());
 
@@ -86,7 +90,7 @@ public class MethodDeployerTest {
 		assertEquals(sourceChoiceNode.getName(), deployedChoiceNode.getName());
 		assertEquals(sourceChoiceNode.getValueString(), deployedChoiceNode.getValueString());
 
-		ChoiceNode originalChoiceNode = (ChoiceNode) sourceMethod.getNodeMapper().getMappedNode(deployedChoiceNode);
+		ChoiceNode originalChoiceNode = (ChoiceNode) mapper.getMappedNode(deployedChoiceNode);
 		assertEquals(sourceChoiceNode.hashCode(), originalChoiceNode.hashCode());
 	}
 

@@ -162,8 +162,8 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ParameterCondition createCopy(IParametersAndConstraintsParentNode method, RelationStatement statement) {
-		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fRightParameterNode);
+	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+		BasicParameterNode parameter = (BasicParameterNode) mapper.getMappedNode(fRightParameterNode);
 
 		return new ParameterCondition(parameter, statement);
 	}

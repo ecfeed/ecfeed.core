@@ -15,23 +15,52 @@ import java.util.Map;
 
 public class NodeMapper {
 
-	private Map<AbstractNode, AbstractNode> fNodeMappings;
+	private Map<AbstractNode, AbstractNode> fNodeMappingsSource;
+	private Map<AbstractNode, AbstractNode> fNodeMappingsDeployment;
 
 	public NodeMapper() {
 
-		fNodeMappings = new HashMap<>();
+		fNodeMappingsSource = new HashMap<>();
+		fNodeMappingsDeployment = new HashMap<>();
 	}
 
-	public void addMappings(AbstractNode node1,AbstractNode node2) {
+	public void addMappings(AbstractNode source, AbstractNode deployment) {
 
-		fNodeMappings.put(node1, node2);
-		fNodeMappings.put(node2, node1);
+		fNodeMappingsSource.put(source, deployment);
+		fNodeMappingsDeployment.put(deployment, source);
+	}
+
+	public AbstractNode getMappedNodeSource(AbstractNode nodeDeployment) {
+		return fNodeMappingsDeployment.get(nodeDeployment);
+	}
+
+	public BasicParameterNode getMappedNodeSource(BasicParameterNode nodeDeployment) {
+		return (BasicParameterNode) fNodeMappingsDeployment.get(nodeDeployment);
+	}
+
+	public ChoiceNode getMappedNodeSource(ChoiceNode nodeDeployment) {
+		return (ChoiceNode) fNodeMappingsDeployment.get(nodeDeployment);
+	}
+
+	public AbstractNode getMappedNodeDeployment(AbstractNode nodeSource) {
+		return fNodeMappingsSource.get(nodeSource);
+	}
+
+	public BasicParameterNode getMappedNodeDeployment(BasicParameterNode nodeSource) {
+		return (BasicParameterNode) fNodeMappingsSource.get(nodeSource);
+	}
+
+	public ChoiceNode getMappedNodeDeployment(ChoiceNode nodeSource) {
+		return (ChoiceNode) fNodeMappingsSource.get(nodeSource);
 	}
 
 	public AbstractNode getMappedNode(AbstractNode sourceNode) {
-		
-		AbstractNode mappedNode = fNodeMappings.get(sourceNode);
-		return mappedNode;
-	}
+		AbstractNode mappedNode = fNodeMappingsSource.get(sourceNode);
 
+		if (mappedNode == null) {
+			return fNodeMappingsDeployment.get(sourceNode);
+		} else {
+			return mappedNode;
+		}
+	}
 }

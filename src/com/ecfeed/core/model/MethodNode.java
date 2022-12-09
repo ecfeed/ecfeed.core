@@ -27,15 +27,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	private List<TestCaseNode> fTestCaseNodes;
 	private List<TestSuiteNode> fTestSuiteNodes;
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
-	private NodeMapper fNodeMapper;
-
-	public NodeMapper getNodeMapper() {
-		return fNodeMapper;
-	}
-
-	public void setNodeMapper(NodeMapper mapper) {
-		this.fNodeMapper = mapper;
-	}
 
 	@Override
 	public String getNonQualifiedName() {

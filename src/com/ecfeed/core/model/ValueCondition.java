@@ -124,7 +124,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ValueCondition createCopy(IParametersAndConstraintsParentNode method, RelationStatement statement) {
+	public ValueCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
 		return new ValueCondition(fRightValue, statement);
 	}

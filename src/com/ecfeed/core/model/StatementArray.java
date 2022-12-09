@@ -174,11 +174,11 @@ public class StatementArray extends AbstractStatement {
 	}
 
 	@Override
-	public StatementArray createCopy(IParametersAndConstraintsParentNode method) {
+	public StatementArray createCopy(NodeMapper mapper) {
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement: fStatements) {
-			copy.addStatement(statement.createCopy(method));
+			copy.addStatement(statement.createCopy(mapper));
 		}
 
 		return copy;

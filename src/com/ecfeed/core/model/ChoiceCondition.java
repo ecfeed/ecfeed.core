@@ -65,18 +65,36 @@ public class ChoiceCondition implements IStatementCondition {
 	}
 
 	@Override
-	public ChoiceCondition createCopy(IParametersAndConstraintsParentNode method, RelationStatement statement) {
+	public ChoiceCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
-		return new ChoiceCondition(updateChoiceReference(method), statement);
+		return new ChoiceCondition(updateChoiceReference(mapper), statement);
 	}
 
-	private ChoiceNode updateChoiceReference(IParametersAndConstraintsParentNode method) {
-		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fRightChoice.getParameter());
+	private ChoiceNode updateChoiceReference(NodeMapper mapper) {
+		ChoiceNode node;
 
-		ChoiceNode choice = parameter.getChoice(fRightChoice.getQualifiedName());
-		choice.setOrigChoiceNode(null);
+		if (isSourceLinked()) {
+			node = fRightChoice;
+		} else {
+			node = mapper.getMappedNodeDeployment(fRightChoice);
+		}
 
-		return choice;
+		node.setOrigChoiceNode(null);
+
+		return node;
+	}
+
+	boolean isSourceLinked() {
+		// If the source node is linked, there is no complementary deployment node.
+		// The copy is not created, and it is safe to use the original node (linked) instead.
+		// Also, there is no way to check whether it is a linked node "from the inside".
+		IAbstractNode node = fRightChoice.getParameter();
+
+		while (node.getParent() instanceof CompositeParameterNode) {
+			node = node.getParent();
+		}
+
+		return !(node instanceof MethodNode);
 	}
 
 	@Override
