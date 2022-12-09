@@ -22,7 +22,7 @@ public class ModelTestUtils {
 
 	public static void assertElementsEqual(IAbstractNode n, IAbstractNode n1) {
 		ModelStringifier stringifier = new ModelStringifier();
-		if(n.isMatch(n1) == false){
+		if(!n.isMatch(n1)){
 			fail("Parsed element differs from original\n" + stringifier.stringify(n, 0) + "\n" + stringifier.stringify(n1, 0));
 		}
 	}
