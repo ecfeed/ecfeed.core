@@ -128,6 +128,10 @@ public class ModelStringifier {
 			result += "\n";
 			result += stringify(child, indent + 2);
 		}
+		for(ConstraintNode child : c.getConstraintNodes()){
+			result += "\n";
+			result += stringify(child, indent + 2);
+		}
 		return result;
 	}
 
