@@ -189,12 +189,12 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public RelationStatement createCopy(IParametersAndConstraintsParentNode method) {
-		BasicParameterNode parameter = AbstractParameterNodeHelper.getReferencedParameter(method, fLeftParameter);
+	public RelationStatement createCopy(NodeMapper mapper) {
+		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftParameter);
 
 		RelationStatement statement = new RelationStatement(parameter, fRelation, null);
 
-		IStatementCondition condition = fRightCondition.createCopy(method, statement);
+		IStatementCondition condition = fRightCondition.createCopy(statement, mapper);
 		statement.setCondition(condition);
 
 		return statement;

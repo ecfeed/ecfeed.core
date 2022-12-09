@@ -591,10 +591,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
-	public Constraint createCopy(IParametersAndConstraintsParentNode method) {
+	public Constraint createCopy(NodeMapper mapper) {
 
-		AbstractStatement precondition = fPrecondition.createCopy(method);
-		AbstractStatement postcondition = fPostcondition.createCopy(method);
+		AbstractStatement precondition = fPrecondition.createCopy(mapper);
+		AbstractStatement postcondition = fPostcondition.createCopy(mapper);
 
 		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}

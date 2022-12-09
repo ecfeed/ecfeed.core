@@ -88,7 +88,7 @@ public class ModelStringifier {
 	public String stringify(MethodNode m, int indent){
 		String result = intendentString(indent);
 		result += "Method " + m.toString();
-		for(AbstractParameterNode child : m.getMethodParameters()){
+		for(AbstractParameterNode child : m.getParameters()){
 			result += "\n";
 			result += stringify(child, indent + 2);
 		}

@@ -87,7 +87,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public StaticStatement createCopy(IParametersAndConstraintsParentNode method) {
+	public StaticStatement createCopy(NodeMapper mapper) {
 
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}

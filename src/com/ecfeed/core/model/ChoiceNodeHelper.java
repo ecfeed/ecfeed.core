@@ -66,7 +66,7 @@ public class ChoiceNodeHelper {
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
 
 			if (mapper != null) {
-				mapper.addMappings(clonedChoiceNode, choiceNode);
+				mapper.addMappings(choiceNode, clonedChoiceNode);
 			}
 			
 			clonedChoiceNode.clearChoices();
