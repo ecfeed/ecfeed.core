@@ -27,19 +27,22 @@ public abstract class AbstractParameterNodeHelper {
 		return name;
 	}
 	
-	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
+	public static String getCompositeName(
+			AbstractParameterNode abstractParameterNode, 
+			IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode currentParameterNode = abstractParameterNode;
 		String compositeName = "";
 		
 		for (;;) {
 
-			String currentParameterNodeName = currentParameterNode.getName();
+			String currentParameterNodeNameInExtLanguage = 
+					getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
 			
 			if (StringHelper.isNullOrEmpty(compositeName)) {
-				compositeName = currentParameterNodeName; 
+				compositeName = currentParameterNodeNameInExtLanguage; 
 			} else {
-				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
+				compositeName = currentParameterNodeNameInExtLanguage + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
 			}
 			
 			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
@@ -57,6 +60,17 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
+	private static String getParameterNameInExtLanguage(
+			AbstractParameterNode currentParameterNode,
+			IExtLanguageManager extLanguageManager) {
+		
+		String currentParameterNodeNameInIntrLanguage = currentParameterNode.getName();
+		
+		String currentParameterNodeNameInExtLanguage = 
+				extLanguageManager.convertTextFromIntrToExtLanguage(currentParameterNodeNameInIntrLanguage);
+		
+		return currentParameterNodeNameInExtLanguage;
+	}
 
 	public static String validateParameterName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
