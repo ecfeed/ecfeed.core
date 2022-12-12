@@ -40,7 +40,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public String getLeftParameterName() {
+	public String getLeftParameterCompositeName() {
 		return fLeftMethodParameterNode.getName();
 	}
 

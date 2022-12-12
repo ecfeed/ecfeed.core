@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractParameterNodeHelper {
 
@@ -24,6 +26,37 @@ public abstract class AbstractParameterNodeHelper {
 		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
 		return name;
 	}
+	
+	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
+
+		AbstractParameterNode currentParameterNode = abstractParameterNode;
+		String compositeName = "";
+		
+		for (;;) {
+
+			String currentParameterNodeName = currentParameterNode.getName();
+			
+			if (StringHelper.isNullOrEmpty(compositeName)) {
+				compositeName = currentParameterNodeName; 
+			} else {
+				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
+			}
+			
+			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
+			
+			if (parametersParentNode == null || parametersParentNode instanceof MethodNode) {
+				return compositeName;
+			}
+			
+			if (parametersParentNode instanceof CompositeParameterNode) {
+				currentParameterNode = (AbstractParameterNode) parametersParentNode;
+				continue;
+			}
+			
+			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
+		}
+	}
+
 
 	public static String validateParameterName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
