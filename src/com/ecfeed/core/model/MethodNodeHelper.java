@@ -433,5 +433,23 @@ public class MethodNodeHelper {
 
 		return type;
 	}
+
+	public static MethodNode findMethodNode(IAbstractNode anyNodeFromMethodTree) {
+		
+		IAbstractNode currentNode = anyNodeFromMethodTree;
+		
+		for(;;) {
+			
+			if (currentNode == null) {
+				return null;
+			}
+			
+			if (currentNode instanceof MethodNode) {
+				return (MethodNode) currentNode;
+			}
+			
+			currentNode = currentNode.getParent();
+		}
+	}
 	
 }

@@ -19,7 +19,6 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersAndConstraintsParentNodeHelper {
@@ -299,42 +298,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		values = StringHelper.removeDuplicates(values);
 
 		return values;
-	}
-
-	public static BasicParameterNode findBasicParameterByQualifiedName( // TODO MO-RE move to helper
-			String parameterNameToFindInExtLanguage, 
-			IParametersParentNode parametersParentNode,
-			IExtLanguageManager extLanguageManager) {
-		
-		String parameterNameToFindInIntrLanguage = 
-				extLanguageManager.convertTextFromExtToIntrLanguage(parameterNameToFindInExtLanguage);
-		
-		return findParameterByQualifiedNameRecursive(
-				parameterNameToFindInIntrLanguage, parametersParentNode,	extLanguageManager);
-	}
-
-	private static BasicParameterNode findParameterByQualifiedNameRecursive(
-			String parameterNameToFindInIntrLanguage,
-			IParametersParentNode parametersParentNode, 
-			IExtLanguageManager extLanguageManager) {
-		
-		String firstToken = 
-				StringHelper.getFirstToken(parameterNameToFindInIntrLanguage, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-		
-		if (firstToken == null) {
-			AbstractParameterNode abstractParameterNode = 
-					parametersParentNode.findParameter(parameterNameToFindInIntrLanguage);
-			
-			return (BasicParameterNode) abstractParameterNode;
-		}
-		
-		String remainingPart = 
-				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, parameterNameToFindInIntrLanguage);
-		
-		CompositeParameterNode compositeParameterNode = 
-				(CompositeParameterNode) parametersParentNode.findParameter(firstToken);
-		
-		return findParameterByQualifiedNameRecursive(remainingPart, compositeParameterNode, extLanguageManager);
 	}
 
 }

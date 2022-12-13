@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class BasicParameterNodeHelper {
 	
@@ -80,6 +83,74 @@ public class BasicParameterNodeHelper {
 		}
 		
 		return result;
+	}
+	
+	public static List<BasicParameterNode> getBasicParametersFromTheWholeMethodTree(
+			IAbstractNode anyNodeFromMethodTree) {
+		
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(anyNodeFromMethodTree);
+		
+		if (methodNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot find method node.");
+		}
+		
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+		
+		accumulateBasicParametersRecursively(methodNode, result);
+		
+		return result;
+	}
+	
+	private static void accumulateBasicParametersRecursively(
+			IParametersParentNode parametersParentNode,
+			List<BasicParameterNode> inOutResult) {
+		
+		List<AbstractParameterNode> abstractParameters = parametersParentNode.getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
+			
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				accumulateBasicParametersRecursively((IParametersParentNode)abstractParameterNode, inOutResult);
+			} else {
+				inOutResult.add((BasicParameterNode) abstractParameterNode);
+			}
+		}
+	}
+	
+	public static BasicParameterNode findBasicParameterByQualifiedName(
+			String parameterNameToFindInExtLanguage, 
+			IParametersParentNode parametersParentNode,
+			IExtLanguageManager extLanguageManager) {
+		
+		String parameterNameToFindInIntrLanguage = 
+				extLanguageManager.convertTextFromExtToIntrLanguage(parameterNameToFindInExtLanguage);
+		
+		return findParameterByQualifiedNameRecursive(
+				parameterNameToFindInIntrLanguage, parametersParentNode,	extLanguageManager);
+	}
+
+	private static BasicParameterNode findParameterByQualifiedNameRecursive(
+			String parameterNameToFindInIntrLanguage,
+			IParametersParentNode parametersParentNode, 
+			IExtLanguageManager extLanguageManager) {
+		
+		String firstToken = 
+				StringHelper.getFirstToken(parameterNameToFindInIntrLanguage, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+		
+		if (firstToken == null) {
+			AbstractParameterNode abstractParameterNode = 
+					parametersParentNode.findParameter(parameterNameToFindInIntrLanguage);
+			
+			return (BasicParameterNode) abstractParameterNode;
+		}
+		
+		String remainingPart = 
+				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, parameterNameToFindInIntrLanguage);
+		
+		CompositeParameterNode compositeParameterNode = 
+				(CompositeParameterNode) parametersParentNode.findParameter(firstToken);
+		
+		return findParameterByQualifiedNameRecursive(remainingPart, compositeParameterNode, extLanguageManager);
 	}
 	
 }

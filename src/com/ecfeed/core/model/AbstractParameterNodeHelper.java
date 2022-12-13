@@ -374,5 +374,5 @@ public abstract class AbstractParameterNodeHelper {
 
 		return resultTypeInIntrLanguage;
 	}
-	
+
 }
