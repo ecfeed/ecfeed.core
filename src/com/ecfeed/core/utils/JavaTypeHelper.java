@@ -10,8 +10,8 @@
 
 package com.ecfeed.core.utils;
 
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
-import com.ecfeed.ui.editor.AbstractParameterConversionHelper;
 
 public class JavaTypeHelper {
 
@@ -38,7 +38,7 @@ public class JavaTypeHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		String newTypeInIntrLanguage = 
-				AbstractParameterConversionHelper.getMaxJavaTypeFromConversionDefinition(
+				AbstractParameterNodeHelper.getMaxJavaTypeFromConversionDefinition(
 						typeCathegory,
 						parameterConversionDefinition);
 

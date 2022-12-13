@@ -16,8 +16,11 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public abstract class AbstractParameterNodeHelper {
 
@@ -307,6 +310,38 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		return false;
+	}
+	
+	public static String getMaxJavaTypeFromConversionDefinition( 
+			TypeHelper.TypeCathegory javaTypeCathegory,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		if (parameterConversionDefinition == null) {
+			return null;
+		}
+
+		int itemCount = parameterConversionDefinition.getItemCount();
+
+		if (itemCount <= 0) {
+			return null;
+		}
+
+		String resultTypeInIntrLanguage = 
+				JavaLanguageHelper.getSmallestTypeForCathegory(javaTypeCathegory);
+
+		for (int index = 0; index < itemCount; index++) {
+
+			String currentValue = parameterConversionDefinition.getCopyOfItem(index).getDstPart().getStr();
+
+			String typeForCurrentValue = 
+					JavaLanguageHelper.getMaxTypeForValue(
+							currentValue, resultTypeInIntrLanguage, false);
+
+			resultTypeInIntrLanguage = 
+					JavaLanguageHelper.getLargerType(resultTypeInIntrLanguage, typeForCurrentValue);
+		}
+
+		return resultTypeInIntrLanguage;
 	}
 	
 }
