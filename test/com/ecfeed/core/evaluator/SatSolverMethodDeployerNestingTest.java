@@ -81,7 +81,8 @@ public class SatSolverMethodDeployerNestingTest {
     @Test
     public void testOrdered() {
         NodeMapper mapper = new NodeMapper();
-        MethodNode m2 = MethodDeployer.deploy(mapper, m1);
+//        MethodNode m2 = 
+        		MethodDeployer.deploy(mapper, m1);
 
         System.out.println();
     }

@@ -54,15 +54,15 @@ public class MethodNodeHelperTest {
 		ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
 		BasicParameterNode foundMethodParameterNode =
-				ParametersAndConstraintsParentNodeHelper.findMethodParameterByName("arg 1", methodNode, extLanguageManagerForSimple);
+				ParametersAndConstraintsParentNodeHelper.findBasicParameterByQualifiedName("arg 1", methodNode, extLanguageManagerForSimple);
 		assertEquals(foundMethodParameterNode, methodParameterNode1);
 
 		foundMethodParameterNode =
-				ParametersAndConstraintsParentNodeHelper.findMethodParameterByName("arg 2", methodNode, extLanguageManagerForSimple);
+				ParametersAndConstraintsParentNodeHelper.findBasicParameterByQualifiedName("arg 2", methodNode, extLanguageManagerForSimple);
 		assertEquals(foundMethodParameterNode, methodParameterNode2);
 
 		foundMethodParameterNode =
-				ParametersAndConstraintsParentNodeHelper.findMethodParameterByName("arg 3", methodNode, extLanguageManagerForSimple);
+				ParametersAndConstraintsParentNodeHelper.findBasicParameterByQualifiedName("arg 3", methodNode, extLanguageManagerForSimple);
 		assertNull(foundMethodParameterNode);
 
 		// checks for Java language
@@ -70,15 +70,15 @@ public class MethodNodeHelperTest {
 		ExtLanguageManagerForJava extLanguageManagerForJava = new ExtLanguageManagerForJava();
 
 		foundMethodParameterNode =
-				ParametersAndConstraintsParentNodeHelper.findMethodParameterByName("arg_1", methodNode, extLanguageManagerForJava);
+				ParametersAndConstraintsParentNodeHelper.findBasicParameterByQualifiedName("arg_1", methodNode, extLanguageManagerForJava);
 		assertEquals(foundMethodParameterNode, methodParameterNode1);
 
 		foundMethodParameterNode =
-				ParametersAndConstraintsParentNodeHelper.findMethodParameterByName("arg_2", methodNode, extLanguageManagerForJava);
+				ParametersAndConstraintsParentNodeHelper.findBasicParameterByQualifiedName("arg_2", methodNode, extLanguageManagerForJava);
 		assertEquals(foundMethodParameterNode, methodParameterNode2);
 
 		foundMethodParameterNode =
-				ParametersAndConstraintsParentNodeHelper.findMethodParameterByName("arg_3", methodNode, extLanguageManagerForJava);
+				ParametersAndConstraintsParentNodeHelper.findBasicParameterByQualifiedName("arg_3", methodNode, extLanguageManagerForJava);
 		assertNull(foundMethodParameterNode);
 	}
 
