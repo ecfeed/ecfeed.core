@@ -25,7 +25,6 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.view.CurrentExtLanguageHelper;
 
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
@@ -159,9 +158,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		BasicParameterNode leftParameter = getLeftParameter();
 		
-		String nameInIntrLanguage = 
-				AbstractParameterNodeHelper.getCompositeName(
-						leftParameter, CurrentExtLanguageHelper.getCurrentExtLanguageManager());
+		String nameInIntrLanguage = AbstractParameterNodeHelper.getCompositeName(leftParameter);
 		
 		return nameInIntrLanguage;
 	}
