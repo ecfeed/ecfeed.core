@@ -171,13 +171,16 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public boolean updateReferences(IParametersParentNode methodNode) {
 
-		AbstractParameterNode tmpParameterNode = methodNode.findParameter(fRightParameterNode.getName());
+		String compositeName = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		
+		BasicParameterNode basicParameterNode = 
+				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(compositeName, methodNode);
 
-		if (tmpParameterNode == null) {
+		if (basicParameterNode == null) {
 			return false;
 		}
 
-		fRightParameterNode = (BasicParameterNode) tmpParameterNode;
+		fRightParameterNode = basicParameterNode;
 
 		return true;
 	}
