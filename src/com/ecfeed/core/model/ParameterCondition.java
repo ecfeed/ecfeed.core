@@ -217,14 +217,16 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getName());
+		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
+		return parameterDescription;
 	}
 
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		return StatementConditionHelper.createParameterDescription(
-				MethodParameterNodeHelper.getName(fRightParameterNode, extLanguageManager));
+		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		return StatementConditionHelper.createParameterDescription(name);
 
 	}
 
