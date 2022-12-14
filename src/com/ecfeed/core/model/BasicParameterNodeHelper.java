@@ -125,14 +125,20 @@ public class BasicParameterNodeHelper {
 		String parameterNameToFindInIntrLanguage = 
 				extLanguageManager.convertTextFromExtToIntrLanguage(parameterNameToFindInExtLanguage);
 		
-		return findParameterByQualifiedNameRecursive(
-				parameterNameToFindInIntrLanguage, parametersParentNode,	extLanguageManager);
+		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
 	}
 
+	public static BasicParameterNode findBasicParameterByQualifiedIntrName(
+			String parameterNameToFindInIntrLanguage, 
+			IParametersParentNode parametersParentNode) {
+		
+		return findParameterByQualifiedNameRecursive(
+				parameterNameToFindInIntrLanguage, parametersParentNode);
+	}
+	
 	private static BasicParameterNode findParameterByQualifiedNameRecursive(
 			String parameterNameToFindInIntrLanguage,
-			IParametersParentNode parametersParentNode, 
-			IExtLanguageManager extLanguageManager) {
+			IParametersParentNode parametersParentNode) {
 		
 		String firstToken = 
 				StringHelper.getFirstToken(parameterNameToFindInIntrLanguage, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
@@ -150,7 +156,7 @@ public class BasicParameterNodeHelper {
 		CompositeParameterNode compositeParameterNode = 
 				(CompositeParameterNode) parametersParentNode.findParameter(firstToken);
 		
-		return findParameterByQualifiedNameRecursive(remainingPart, compositeParameterNode, extLanguageManager);
+		return findParameterByQualifiedNameRecursive(remainingPart, compositeParameterNode);
 	}
 	
 }
