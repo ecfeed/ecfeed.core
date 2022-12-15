@@ -200,7 +200,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 	public static String generateNewParameterName(IParametersParentNode parametersParentNode) {
 
-		int i = 0;
+		int i = 1;
 
 		String name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
 
