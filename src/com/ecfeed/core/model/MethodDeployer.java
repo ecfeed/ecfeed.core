@@ -98,157 +98,8 @@ public abstract class MethodDeployer {
 		}
 	}
 
-	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
-
-		if (parameters == null) {
-			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
-		}
-
-		if (constraints == null) {
-			ExceptionHelper.reportRuntimeException("The list of constraints is not defined.");
-		}
-
-		MethodNode method = new MethodNode("construct");
-
-		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
-		constraints.forEach(e -> method.addConstraint(e.createCopy(mapper)));
-
-		return method;
-	}
-
-	public static void updateDeploymentNameConsistency(RootNode root) {
-
-		for (ClassNode classNode : root.getClasses()) {
-			for (MethodNode methodNode : classNode.getMethods()) {
-				if (validateDeploymentSizeConsistency(methodNode)) {
-					updateDeploymentNameConsistency(methodNode);
-				}
-			}
-		}
-	}
-
-	public static void updateDeploymentNameConsistency(MethodNode method) {
-
-		if (!method.isDeployed()) {
-			return;
-		}
-
-		List<BasicParameterNode> deployment = method.getDeployedMethodParameters();
-
-		if (deployment == null) {
-			return;
-		}
-
-		for (BasicParameterNode parameter : deployment) {
-			AbstractParameterNode parameterReference = parameter.getDeploymentParameter();
-			parameter.setNameUnsafe(getQualifiedDeploymentName(parameterReference));
-		}
-	}
-
-	private static String getQualifiedDeploymentName(AbstractParameterNode parameter) {
-
-		return getQualifiedDeploymentName(parameter, "");
-	}
-
-	private static String getQualifiedDeploymentName(AbstractParameterNode parameter, String prefix) {
-		String prefixParsed = parameter.getName() + prefix;
-
-		IAbstractNode parent = parameter.getParent();
-
-		if (parent instanceof AbstractParameterNode) {
-			return getQualifiedDeploymentName((AbstractParameterNode) parent, SignatureHelper.SIGNATURE_NAME_SEPARATOR + prefixParsed);
-		}
-
-		return prefixParsed;
-	}
-
-	public static boolean validateDeploymentSizeConsistency(MethodNode method) {
-
-		if (!method.isDeployed()) {
-			return false;
-		}
-
-		List<BasicParameterNode> deployment = method.getDeployedMethodParameters();
-
-		if (deployment == null) {
-			return false;
-		}
-
-		return getNestedSize(method) == deployment.size();
-	}
-
-	private static int getNestedSize(MethodNode method) {
-		int size = 0;
-
-		for (AbstractParameterNode parameter : method.getParameters()) {
-			size = getNestedSize(parameter, size);
-		}
-
-		return size;
-	}
-
-	private static int getNestedSize(AbstractParameterNode parameter, int size) {
-
-		if (parameter instanceof BasicParameterNode) {
-			size++;
-		}
-
-		if (parameter instanceof CompositeParameterNode) {
-			List<AbstractParameterNode> parameters = ((CompositeParameterNode) parameter).getParameters();
-
-			for (AbstractParameterNode parameterNested : parameters) {
-				size = getNestedSize(parameterNested, size);
-			}
-		}
-
-		return size;
-	}
-
-	public static void validateDeploymentNameConsistency(MethodNode method) {
-
-		if (!method.isDeployed()) {
-			return;
-		}
-
-		List<BasicParameterNode> deployment = method.getDeployedMethodParameters();
-
-		if (deployment == null) {
-			return;
-		}
-
-		for (AbstractParameterNode parameter : deployment) {
-			String[] parameterCandidateSegments = parameter.getName().split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-
-			try {
-				AbstractParameterNode parameterCandidate = method.getParameter(method.getParameterIndex(parameterCandidateSegments[0]));
-				getNestedBasicParameter(parameterCandidate, parameterCandidateSegments, 1);
-			}
-			catch (Exception e) {
-				ExceptionHelper.reportRuntimeException("The method could not be serialized. At least one parameter is missing.");
-			}
-		}
-	}
-
-	public static BasicParameterNode getNestedBasicParameter(AbstractParameterNode parameter, String[] path, int index) {
-
-		if (parameter instanceof BasicParameterNode) {
-			return (BasicParameterNode) parameter;
-		}
-
-		try {
-			CompositeParameterNode element = (CompositeParameterNode) parameter;
-			AbstractParameterNode elementNested = element.getParameter(element.getParameterIndex(path[index]));
-
-			return getNestedBasicParameter(elementNested, path, index + 1);
-		}
-		catch (Exception e) {
-			ExceptionHelper.reportRuntimeException("The parameter '" + parameter.getName() + "'could not be parsed.");
-		}
-
-		return null;
-	}
-
-	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) {
+	
+	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) { // TODO MO-RE mapper as last parameter
 
 		List<TestCase> result = new ArrayList<>();
 
@@ -261,7 +112,7 @@ public abstract class MethodDeployer {
 
 		return result;
 	}
-
+	
 	private static TestCase revertToOriginalTestCase(NodeMapper mapper, TestCase deployedTestCase) {
 
 		List<ChoiceNode> revertedChoices = new ArrayList<>();
@@ -278,4 +129,23 @@ public abstract class MethodDeployer {
 		return new TestCase(revertedChoices);
 	}
 
+	// TODO MO-RE - do we need this ?
+//	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
+//
+//		if (parameters == null) {
+//			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
+//		}
+//
+//		if (constraints == null) {
+//			ExceptionHelper.reportRuntimeException("The list of constraints is not defined.");
+//		}
+//
+//		MethodNode method = new MethodNode("construct");
+//
+//		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
+//		constraints.forEach(e -> method.addConstraint(e.createCopy(mapper)));
+//
+//		return method;
+//	}
+	
 }
