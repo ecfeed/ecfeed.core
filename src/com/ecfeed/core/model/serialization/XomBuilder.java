@@ -112,7 +112,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		}
 
 		if (methodNode.isDeployed()) {
-			if (ConsistencyUpdater.validateDeploymentSizeConsistency(methodNode)) {
+			if (MethodDeploymentConsistencyUpdater.validateDeploymentSizeConsistency(methodNode)) {
 
 				targetMethodElement.appendChild(createTargetMethodDeployedParametersElement(methodNode));
 			} else {

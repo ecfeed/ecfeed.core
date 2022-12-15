@@ -15,9 +15,9 @@ import java.util.List;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
 
-public class ConsistencyUpdater {
+public class MethodDeploymentConsistencyUpdater {
 
-	public static void updateDeploymentNameConsistency(RootNode root) {
+	public static void makeModelConsistent(RootNode root) {
 
 		for (ClassNode classNode : root.getClasses()) {
 			for (MethodNode methodNode : classNode.getMethods()) {
