@@ -85,20 +85,14 @@ public class BasicParameterNodeHelper {
 		return result;
 	}
 	
-	public static List<BasicParameterNode> getBasicParametersFromTheWholeMethodTree(
-			IAbstractNode anyNodeFromMethodTree) {
+	public static List<BasicParameterNode> getBasicParametersForParentNodeSubtree(
+			IParametersParentNode parametersParentNode) {
 		
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(anyNodeFromMethodTree);
+		List<BasicParameterNode> resultParameterNodes = new ArrayList<BasicParameterNode>();
 		
-		if (methodNode == null) {
-			ExceptionHelper.reportRuntimeException("Cannot find method node.");
-		}
+		accumulateBasicParametersRecursively(parametersParentNode, resultParameterNodes);
 		
-		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
-		
-		accumulateBasicParametersRecursively(methodNode, result);
-		
-		return result;
+		return resultParameterNodes;
 	}
 	
 	private static void accumulateBasicParametersRecursively(
