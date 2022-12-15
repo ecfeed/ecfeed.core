@@ -20,74 +20,80 @@ public abstract class MethodDeployer {
 
 	public static String POSTFIX = "deployed";
 
-	public static MethodNode deploy(NodeMapper mapper, MethodNode methodSource) {
+	public static MethodNode deploy(NodeMapper mapper, MethodNode sourceMethodNode) { // TODO MO-RE refactor - mapper as second parameter (additional)
 
-		if (methodSource == null) {
+		if (sourceMethodNode == null) {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
 		}
 
-		MethodNode methodTarget = new MethodNode(methodSource.getName() + "_" +  POSTFIX);
+		MethodNode targetMethodNode = new MethodNode(sourceMethodNode.getName() + "_" +  POSTFIX);
 
-		extractParameters(methodSource, methodTarget, mapper);
-		extractConstraints(methodSource, methodTarget, mapper);
+		deployParameters(sourceMethodNode, targetMethodNode, mapper);
+		deployConstraints(sourceMethodNode, targetMethodNode, mapper);
 
-		return methodTarget;
+		return targetMethodNode;
 	}
 
-	private static void extractParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
+	private static void deployParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
+		
 		String prefix = "";
-
-		extractParameters(prefix, methodTarget, methodSource.getParameters(), mapper);
+		
+		deployParametersRecursively(methodSource.getParameters(), methodTarget, prefix, mapper);
 	}
 
-	private static void extractParameters(String prefix, MethodNode methodTarget, List<AbstractParameterNode> parametersSource, NodeMapper mapper) {
+	private static void deployParametersRecursively(
+			List<AbstractParameterNode> sourceParameters, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
 
-		for (AbstractParameterNode sourceParameter : parametersSource) {
+		for (AbstractParameterNode sourceParameter : sourceParameters) {
 
 			if (sourceParameter instanceof BasicParameterNode) {
-				extractParametersBasic(prefix, methodTarget, sourceParameter, mapper);
+				
+				deployBasicParameter(((BasicParameterNode) sourceParameter), targetMethodNode, prefix, mapper);
 			}
 
 			if (sourceParameter instanceof CompositeParameterNode) {
+				
 				String prefixParsed = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-				extractParametersComposite(prefixParsed, methodTarget, sourceParameter, mapper);
+				
+				List<AbstractParameterNode> childSourceParameters = ((CompositeParameterNode) sourceParameter).getParameters();
+				
+				deployParametersRecursively(childSourceParameters, targetMethodNode, prefixParsed, mapper);
 			}
 		}
 	}
 
-	private static void extractParametersBasic(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource, NodeMapper mapper) {
-		BasicParameterNode parameterDeployed = ((BasicParameterNode) parameterSource).createCopy(mapper);
-		parameterDeployed.setCompositeName(prefix + parameterDeployed.getName());
-		methodTarget.addParameter(parameterDeployed);
+	private static void deployBasicParameter(
+			BasicParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
+		
+		BasicParameterNode copy = sourceParameter.createCopy(mapper);
+		copy.setCompositeName(prefix + copy.getName());
+		
+		targetMethodNode.addParameter(copy);
 	}
 
-	private static void extractParametersComposite(String prefix, MethodNode methodTarget, AbstractParameterNode parameterSource, NodeMapper mapper) {
-		CompositeParameterNode parameterParsed = (CompositeParameterNode) parameterSource;
-		extractParameters(prefix, methodTarget, parameterParsed.getParameters(), mapper);
+	private static void deployConstraints(MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
+
+		sourceMethod.getConstraintNodes().forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
+
+		sourceMethod.getParameters().forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, mapper));
 	}
 
-	private static void extractConstraints(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
-
-		methodSource.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(mapper)));
-
-		methodSource.getParameters().forEach(e -> extractConstraintsComposite(e, methodTarget, mapper));
-	}
-
-	private static void extractConstraintsComposite(AbstractParameterNode parameter, MethodNode methodTarget, NodeMapper mapper) {
+	private static void deployConstraintsForCompositeParameterRecursively(
+			AbstractParameterNode parameter, MethodNode targetMethod, NodeMapper mapper) {
 
 		if (parameter instanceof BasicParameterNode) {
 			return;
 		}
 
-		CompositeParameterNode parameterParsed = (CompositeParameterNode) parameter;
+		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parameter;
 
-		parameterParsed.getConstraintNodes().forEach(e -> methodTarget.addConstraint(e.createCopy(mapper)));
+		compositeParameterNode.getConstraintNodes().forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
 
 
-		for (AbstractParameterNode parameterComposite : parameterParsed.getParameters()) {
+		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
 
-			if (parameterComposite instanceof CompositeParameterNode) {
-				extractConstraintsComposite(parameterComposite, methodTarget, mapper);
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, mapper);
 			}
 		}
 	}
