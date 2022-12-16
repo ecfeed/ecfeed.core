@@ -73,9 +73,11 @@ public abstract class MethodDeployer {
 
 	private static void deployConstraints(MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
 
-		sourceMethod.getConstraintNodes().forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
+		List<ConstraintNode> constraintNodes = sourceMethod.getConstraintNodes();
+		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
 
-		sourceMethod.getParameters().forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, mapper));
+		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
+		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, mapper));
 	}
 
 	private static void deployConstraintsForCompositeParameterRecursively(
@@ -97,7 +99,6 @@ public abstract class MethodDeployer {
 			}
 		}
 	}
-
 	
 	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) { // TODO MO-RE mapper as last parameter
 
