@@ -60,6 +60,8 @@ public class MethodDeployerTest {
 		BasicParameterNode deployedParameter = (BasicParameterNode)deployedMethod.getParameters().get(0);
 
 		assertTrue(sourceParameter.hashCode() != deployedParameter.hashCode());
+		
+		assertEquals(deployedParameter.getParent(), deployedMethod);
 
 		assertEquals(sourceParameter.getName(), deployedParameter.getName());
 		assertEquals(sourceParameter.getType(), deployedParameter.getType());
@@ -85,6 +87,9 @@ public class MethodDeployerTest {
 		BasicParameterNode deployedParameter = (BasicParameterNode)deployedMethod.getParameters().get(0);
 
 		ChoiceNode deployedChoiceNode = deployedParameter.getChoices().get(0);
+		
+		IAbstractNode parent = deployedChoiceNode.getParent();
+		assertEquals(parent, deployedParameter);
 
 		assertTrue(sourceChoiceNode.hashCode() != deployedChoiceNode.hashCode());
 		assertEquals(sourceChoiceNode.getName(), deployedChoiceNode.getName());
