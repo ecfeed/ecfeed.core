@@ -39,6 +39,43 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+	public static BasicParameterNode getBasicParameter(IChoicesParentNode fChoicesParentNode) {
+		
+		IAbstractNode parent = fChoicesParentNode.getParent();
+		
+		if (parent == null) {
+			ExceptionHelper.reportRuntimeException("No parent.");
+		}
+		
+		if (parent instanceof BasicParameterNode) {
+			return (BasicParameterNode) parent;
+		}
+		
+		if (!(parent instanceof TestCaseNode)) {
+			ExceptionHelper.reportRuntimeException("Invalid parent of choice node.");
+		}
+		
+		TestCaseNode testCaseNode = (TestCaseNode) parent;
+		
+		MethodNode methodNode = testCaseNode.getMethod();
+		
+		if (methodNode == null) {
+			ExceptionHelper.reportRuntimeException("Test case has no method.");
+		}
+		
+		int indexOfChoiceNodeInTestCase = fChoicesParentNode.getMyIndex();
+		
+		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
+		
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
+		}
+		
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+		
+		return basicParameterNode;
+	}
+	
 	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {
 		
 		String defaultValue = parentMethodParameterNode.getDefaultValue();
