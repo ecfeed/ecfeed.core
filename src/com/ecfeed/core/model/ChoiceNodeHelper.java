@@ -40,44 +40,62 @@ public class ChoiceNodeHelper {
 	private static final double eps = 0.000001;
 
 	public static BasicParameterNode getBasicParameter(IChoicesParentNode fChoicesParentNode) {
-		
-		IAbstractNode parent = fChoicesParentNode.getParent();
-		
+
+		return getParameterRecursive(fChoicesParentNode);
+	}
+
+	private static BasicParameterNode getParameterRecursive(ChoiceNode choiceNode) {
+
+		IAbstractNode parent = choiceNode.getParent();
+
 		if (parent == null) {
-			ExceptionHelper.reportRuntimeException("No parent.");
+			return null;
 		}
-		
+
 		if (parent instanceof BasicParameterNode) {
 			return (BasicParameterNode) parent;
 		}
-		
-		if (!(parent instanceof TestCaseNode)) {
-			ExceptionHelper.reportRuntimeException("Invalid parent of choice node.");
+
+		if (parent instanceof ChoiceNode) {
+
+			BasicParameterNode basicParameterNode = getParameterRecursive((ChoiceNode)parent);
+			return basicParameterNode;
 		}
-		
+
+		if (parent instanceof TestCaseNode) {
+
+			BasicParameterNode basicParameterNode = getParameterForChoiceFromTestCase(choiceNode, parent);
+			return basicParameterNode;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid type of choices parent.");
+		return null;
+	}
+
+	private static BasicParameterNode getParameterForChoiceFromTestCase(ChoiceNode choiceNode, IAbstractNode parent) {
+
 		TestCaseNode testCaseNode = (TestCaseNode) parent;
-		
+
 		MethodNode methodNode = testCaseNode.getMethod();
-		
+
 		if (methodNode == null) {
-			ExceptionHelper.reportRuntimeException("Test case has no method.");
+			return null;
 		}
-		
-		int indexOfChoiceNodeInTestCase = fChoicesParentNode.getMyIndex();
-		
+
+		int indexOfChoiceNodeInTestCase = choiceNode.getMyIndex();
+
 		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
-		
+
 		if (!(abstractParameterNode instanceof BasicParameterNode)) {
 			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
 		}
-		
+
 		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-		
 		return basicParameterNode;
 	}
-	
+
 	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {
-		
+
 		String defaultValue = parentMethodParameterNode.getDefaultValue();
 
 		ChoiceNode choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, defaultValue, parentMethodParameterNode.getModelChangeRegistrator());
@@ -85,7 +103,7 @@ public class ChoiceNodeHelper {
 
 		return choiceNode;
 	}
-	
+
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
@@ -105,7 +123,7 @@ public class ChoiceNodeHelper {
 			if (mapper != null) {
 				mapper.addMappings(choiceNode, clonedChoiceNode);
 			}
-			
+
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
@@ -754,7 +772,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
 
 		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
@@ -766,7 +784,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
 
 		Set<String> result = new LinkedHashSet<String>();
@@ -777,7 +795,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
 
 		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
@@ -793,22 +811,22 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getAllLabels(Set<ChoiceNode> choices) {
 
 		Set<String> result = new HashSet<>();
-		
+
 		for (ChoiceNode choiceNode : choices) {
 			addLabelsForChoiceNode(choiceNode, result);
 		}
-		
+
 		return result;
 	}
-	
+
 	private static void addLabelsForChoiceNode(ChoiceNode choiceNode, Set<String> inOutResult) {
-		
+
 		Set<String> labelsOfChoice = choiceNode.getLabels();
-		
+
 		for (String label : labelsOfChoice) {
 			inOutResult.add(label);
 		}
@@ -824,7 +842,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getLeafChoiceValues(List<ChoiceNode> leafChoices) {
 
 		Set<String> result = new LinkedHashSet<String>();
@@ -835,7 +853,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static String generateNewChoiceName(IChoicesParentNode fChoicesParentNode, String startChoiceName) {
 
 		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
@@ -852,5 +870,5 @@ public class ChoiceNodeHelper {
 			}
 		}
 	}
-	
+
 }
