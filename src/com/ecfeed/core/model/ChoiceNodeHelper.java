@@ -39,9 +39,9 @@ public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
-	public static BasicParameterNode getBasicParameter(IChoicesParentNode fChoicesParentNode) {
+	public static BasicParameterNode getBasicParameter(ChoiceNode choiceNode) {
 
-		return getParameterRecursive(fChoicesParentNode);
+		return getParameterRecursive(choiceNode);
 	}
 
 	private static BasicParameterNode getParameterRecursive(ChoiceNode choiceNode) {

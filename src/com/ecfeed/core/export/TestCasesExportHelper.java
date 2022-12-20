@@ -362,9 +362,13 @@ public class TestCasesExportHelper {
 		int parameterIndex = 
 				getParameterIndexFromSequence(
 						parameterCommandSequence, testCase.getMethod(), extLanguageManager);
+		
+		if (parameterIndex == -1) {
+			return null;
+		}
 
 		if (parameterIndex >= testCase.getTestData().size()) {
-			ExceptionHelper.reportRuntimeException("Invalid index too big.");
+			return null;
 		}
 
 		MethodNode methodNode = testCase.getMethod();
