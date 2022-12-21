@@ -20,7 +20,12 @@ import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_NEGATIVE_
 import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -33,6 +38,7 @@ import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ChoiceNodeHelper {
@@ -308,25 +314,24 @@ public class ChoiceNodeHelper {
 		return choiceNode.getName();
 	}
 
-	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureOfChoiceWithParameter(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
-		BasicParameterNode abstractParameterNode = choiceNode.getParameter();	
+		BasicParameterNode basicParameterNode = choiceNode.getParameter();	
+		
+		String choiceQualifiedName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		
+		if (basicParameterNode == null) {
 
-		if (abstractParameterNode == null) {
-
-			return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+			return choiceQualifiedName;
 		}
 
-		if (abstractParameterNode instanceof BasicParameterNode) {
-
-			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-
-			if (methodParameterNode.isExpected()) {
-				return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
-			}
+		String parameterCompositeName = AbstractParameterNodeHelper.getCompositeName(basicParameterNode, extLanguageManager);
+		
+		if (basicParameterNode.isExpected()) {
+			return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
 		}
-
-		return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		
+		return parameterCompositeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + choiceQualifiedName;
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
