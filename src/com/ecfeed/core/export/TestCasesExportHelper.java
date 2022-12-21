@@ -71,21 +71,24 @@ public class TestCasesExportHelper {
 		return result;
 	}
 
-	public static String generateTestCaseString(int sequenceIndex, TestCaseNode testCaseNode, String template, IExtLanguageManager extLanguageManager) {
-
-		MethodNode method = testCaseNode.getMethod();
+	public static String generateTestCaseString(
+			int sequenceIndex, 
+			TestCaseNode testCaseNode,
+			MethodNode methodNode,
+			String template, 
+			IExtLanguageManager extLanguageManager) {
 
 		if (template == null) {
 			return new String();
 		}
 
-		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(method.getClassNode(), extLanguageManager));
-		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(method.getClassNode(), extLanguageManager));
-		result = result.replace(METHOD_NAME_SEQUENCE, AbstractNodeHelper.getName(method, extLanguageManager));
+		String result = template.replace(CLASS_NAME_SEQUENCE, ClassNodeHelper.getNonQualifiedName(methodNode.getClassNode(), extLanguageManager));
+		result = result.replace(PACKAGE_NAME_SEQUENCE, ClassNodeHelper.getPackageName(methodNode.getClassNode(), extLanguageManager));
+		result = result.replace(METHOD_NAME_SEQUENCE, AbstractNodeHelper.getName(methodNode, extLanguageManager));
 		result = result.replace(TEST_CASE_INDEX_NAME_SEQUENCE, String.valueOf(sequenceIndex));
 		result = result.replace(TEST_SUITE_NAME_SEQUENCE, AbstractNodeHelper.getName(testCaseNode, extLanguageManager));
 
-		result = replaceParameterSequences(testCaseNode, result, extLanguageManager);
+		result = replaceParameterSequences(testCaseNode, methodNode, result, extLanguageManager);
 		result = evaluateExpressions(result);
 		result = evaluateMinWidthOperators(result);
 
@@ -328,9 +331,13 @@ public class TestCasesExportHelper {
 		return null;
 	}
 
-	private static String replaceParameterSequences(TestCaseNode testCase, String template, IExtLanguageManager extLanguageManager) {
+	private static String replaceParameterSequences(
+			TestCaseNode testCase,
+			MethodNode methodNode,
+			String template, 
+			IExtLanguageManager extLanguageManager) {
 
-		String result = replaceParameterNameSequences(testCase.getMethod(), template, extLanguageManager);
+		String result = replaceParameterNameSequences(methodNode, template, extLanguageManager);
 
 		String pattern = getParameterSequencePattern(extLanguageManager);
 
@@ -340,7 +347,9 @@ public class TestCasesExportHelper {
 
 			String parameterCommandSequence = matcher.group();
 
-			String valueSubstitute = createValueSubstitute(parameterCommandSequence, testCase, extLanguageManager);
+			String valueSubstitute = 
+					createValueSubstitute(parameterCommandSequence, testCase, methodNode, extLanguageManager);
+			
 			if (valueSubstitute != null) {
 				result = result.replace(parameterCommandSequence, valueSubstitute);
 			}
@@ -357,11 +366,15 @@ public class TestCasesExportHelper {
 
 	}
 
-	private static String createValueSubstitute(String parameterCommandSequence, TestCaseNode testCase, IExtLanguageManager extLanguageManager) {
+	private static String createValueSubstitute(
+			String parameterCommandSequence, 
+			TestCaseNode testCase, 
+			MethodNode methodNode,
+			IExtLanguageManager extLanguageManager) {
 
 		int parameterIndex = 
 				getParameterIndexFromSequence(
-						parameterCommandSequence, testCase.getMethod(), extLanguageManager);
+						parameterCommandSequence, methodNode, extLanguageManager);
 		
 		if (parameterIndex == -1) {
 			return null;
@@ -370,8 +383,6 @@ public class TestCasesExportHelper {
 		if (parameterIndex >= testCase.getTestData().size()) {
 			return null;
 		}
-
-		MethodNode methodNode = testCase.getMethod();
 
 		BasicParameterNode basicParameterNode = getBasicParameter(parameterIndex, methodNode);
 		String parameterType = basicParameterNode.getType();

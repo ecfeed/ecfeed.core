@@ -83,7 +83,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 	}
 
 	@Override
-	public String createPreview(Collection<TestCaseNode> selectedTestCases) {
+	public String createPreview(Collection<TestCaseNode> selectedTestCases, MethodNode methodNode) {
 
 		StringBuilder stringBuilder = new StringBuilder();
 
@@ -93,7 +93,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 		stringBuilder.append("\n");
 
-		appendPreviewOfTestCases(selectedTestCases, stringBuilder);
+		appendPreviewOfTestCases(selectedTestCases, methodNode, stringBuilder);
 
 		stringBuilder.append(
 				TestCasesExportHelper.generateSection(
@@ -109,6 +109,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 
 	private void appendPreviewOfTestCases(
 			Collection<TestCaseNode> selectedTestCases,
+			MethodNode methodNode,
 			StringBuilder inOutStringBuilder) {
 
 		List<TestCaseNode> testCases = createPreviewTestCasesSample(selectedTestCases);
@@ -120,6 +121,7 @@ public abstract class AbstractExportTemplate implements IExportTemplate {
 					TestCasesExportHelper.generateTestCaseString(
 							sequenceIndex++,
 							testCase,
+							methodNode,
 							fTemplateText.getTestCaseTemplateText(), 
 							fExtLanguageManager));
 
