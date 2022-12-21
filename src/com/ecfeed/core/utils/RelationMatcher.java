@@ -73,8 +73,17 @@ public class RelationMatcher {
 		}
 
 		Long leftLong = JavaLanguageHelper.parseLongValue(leftValue, ERunMode.QUIET);
+		
+		if (leftLong == null) {
+			ExceptionHelper.reportRuntimeException("Invalid left long value.");
+		}
+		
 		Long rightLong = JavaLanguageHelper.parseLongValue(rightValue, ERunMode.QUIET);
 
+		if (leftLong == null) {
+			ExceptionHelper.reportRuntimeException("Invalid right long value.");
+		}
+		
 		if (EMathRelation.isMatch(relation, leftLong, rightLong)) {
 			return true;
 		}
