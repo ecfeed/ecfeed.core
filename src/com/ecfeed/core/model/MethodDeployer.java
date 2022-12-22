@@ -91,11 +91,12 @@ public abstract class MethodDeployer {
 
 			if (sourceParameter instanceof CompositeParameterNode) {
 
-				String prefixParsed = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+				String childPrefix = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
 
-				List<AbstractParameterNode> childSourceParameters = ((CompositeParameterNode) sourceParameter).getParameters();
+				List<AbstractParameterNode> childSourceParameters = 
+						((CompositeParameterNode) sourceParameter).getParameters();
 
-				deployParametersRecursively(childSourceParameters, targetMethodNode, prefixParsed, mapper);
+				deployParametersRecursively(childSourceParameters, targetMethodNode, childPrefix, mapper);
 			}
 		}
 	}
@@ -109,33 +110,44 @@ public abstract class MethodDeployer {
 		targetMethodNode.addParameter(copy);
 	}
 
-	private static void deployConstraints(MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
+	private static void deployConstraints(
+			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
 
 		List<ConstraintNode> constraintNodes = sourceMethod.getConstraintNodes();
 		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
 
+		String prefix = ""; 
 		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
-		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, mapper));
+		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, mapper));
 	}
 
 	private static void deployConstraintsForCompositeParameterRecursively(
-			AbstractParameterNode parameter, MethodNode targetMethod, NodeMapper mapper) {
+			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper mapper) {
 
 		if (parameter instanceof BasicParameterNode) {
 			return;
 		}
 
+		String childPrefix = prefix + parameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		
 		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parameter;
 
-		compositeParameterNode.getConstraintNodes().forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
-
+		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, mapper);
 
 		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
 
 			if (abstractParameterNode instanceof CompositeParameterNode) {
-				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, mapper);
+				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, childPrefix, mapper);
 			}
 		}
+	}
+
+	private static void deployCurrentConstraintsOfCompositeParameter(
+			CompositeParameterNode compositeParameterNode, MethodNode targetMethod, NodeMapper mapper) {
+		
+		List<ConstraintNode> constraintNodes = compositeParameterNode.getConstraintNodes();
+		
+		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper))); // TODO MO-RE use prefix
 	}
 
 	private static TestCase revertToOriginalTestCase(NodeMapper mapper, TestCase deployedTestCase) {
