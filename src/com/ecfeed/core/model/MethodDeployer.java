@@ -34,10 +34,48 @@ public abstract class MethodDeployer {
 		return targetMethodNode;
 	}
 
+	public static boolean deployedParametersDiffer(
+			MethodNode methodNode,
+			MethodNode deployedMethodNode) {
+
+		List<BasicParameterNode> oldDeployedParameters = methodNode.getDeployedMethodParameters();
+
+		List<AbstractParameterNode> newDeployedParameters = deployedMethodNode.getParameters();
+
+		List<BasicParameterNode> convertedNewParameters = 
+				BasicParameterNodeHelper.convertAbstractListToBasicList(newDeployedParameters);
+
+		if (BasicParameterNodeHelper.propertiesOfBasicParametrsMatch(oldDeployedParameters, convertedNewParameters)) {
+			return false;
+		}
+
+		return true;
+	}
+	
+	public static void copyDeployedParameters(MethodNode deployedMethodNode, MethodNode methodNode) {
+
+		List<BasicParameterNode> deployedParameters = deployedMethodNode.getParametersAsBasic();
+		methodNode.setDeployedParameters(deployedParameters); // TODO MO-RE add by operation
+	}
+
+	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) { // TODO MO-RE mapper as last parameter
+
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCase deployedTestCase : deployedTestCases) {
+
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(mapper, deployedTestCase);
+
+			result.add(revertedTestCaseNode);
+		}
+
+		return result;
+	}
+
 	private static void deployParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
-		
+
 		String prefix = "";
-		
+
 		deployParametersRecursively(methodSource.getParameters(), methodTarget, prefix, mapper);
 	}
 
@@ -47,16 +85,16 @@ public abstract class MethodDeployer {
 		for (AbstractParameterNode sourceParameter : sourceParameters) {
 
 			if (sourceParameter instanceof BasicParameterNode) {
-				
+
 				deployBasicParameter(((BasicParameterNode) sourceParameter), targetMethodNode, prefix, mapper);
 			}
 
 			if (sourceParameter instanceof CompositeParameterNode) {
-				
+
 				String prefixParsed = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-				
+
 				List<AbstractParameterNode> childSourceParameters = ((CompositeParameterNode) sourceParameter).getParameters();
-				
+
 				deployParametersRecursively(childSourceParameters, targetMethodNode, prefixParsed, mapper);
 			}
 		}
@@ -64,10 +102,10 @@ public abstract class MethodDeployer {
 
 	private static void deployBasicParameter(
 			BasicParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
-		
+
 		BasicParameterNode copy = sourceParameter.createCopy(mapper);
 		copy.setCompositeName(prefix + copy.getName());
-		
+
 		targetMethodNode.addParameter(copy);
 	}
 
@@ -99,21 +137,7 @@ public abstract class MethodDeployer {
 			}
 		}
 	}
-	
-	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) { // TODO MO-RE mapper as last parameter
 
-		List<TestCase> result = new ArrayList<>();
-
-		for (TestCase deployedTestCase : deployedTestCases) {
-
-			TestCase revertedTestCaseNode = revertToOriginalTestCase(mapper, deployedTestCase);
-
-			result.add(revertedTestCaseNode);
-		}
-
-		return result;
-	}
-	
 	private static TestCase revertToOriginalTestCase(NodeMapper mapper, TestCase deployedTestCase) {
 
 		List<ChoiceNode> revertedChoices = new ArrayList<>();
@@ -130,23 +154,24 @@ public abstract class MethodDeployer {
 		return new TestCase(revertedChoices);
 	}
 
+
 	// TODO MO-RE - do we need this ?
-//	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
-//
-//		if (parameters == null) {
-//			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
-//		}
-//
-//		if (constraints == null) {
-//			ExceptionHelper.reportRuntimeException("The list of constraints is not defined.");
-//		}
-//
-//		MethodNode method = new MethodNode("construct");
-//
-//		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
-//		constraints.forEach(e -> method.addConstraint(e.createCopy(mapper)));
-//
-//		return method;
-//	}
-	
+	//	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
+	//
+	//		if (parameters == null) {
+	//			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
+	//		}
+	//
+	//		if (constraints == null) {
+	//			ExceptionHelper.reportRuntimeException("The list of constraints is not defined.");
+	//		}
+	//
+	//		MethodNode method = new MethodNode("construct");
+	//
+	//		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
+	//		constraints.forEach(e -> method.addConstraint(e.createCopy(mapper)));
+	//
+	//		return method;
+	//	}
+
 }
