@@ -118,6 +118,7 @@ public abstract class MethodDeployer {
 
 		String prefix = ""; 
 		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
+		
 		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, mapper));
 	}
 
@@ -132,7 +133,7 @@ public abstract class MethodDeployer {
 		
 		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parameter;
 
-		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, mapper);
+		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, childPrefix, mapper);
 
 		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
 
@@ -143,11 +144,19 @@ public abstract class MethodDeployer {
 	}
 
 	private static void deployCurrentConstraintsOfCompositeParameter(
-			CompositeParameterNode compositeParameterNode, MethodNode targetMethod, NodeMapper mapper) {
+			CompositeParameterNode compositeParameterNode, MethodNode targetMethod, String prefix, NodeMapper nodeMapper) {
 		
 		List<ConstraintNode> constraintNodes = compositeParameterNode.getConstraintNodes();
 		
-		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper))); // TODO MO-RE use prefix
+		//constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper))); // TODO MO-RE use prefix
+		
+		for (ConstraintNode constraintNode : constraintNodes) {
+			
+			ConstraintNode copyOfConstraintNode = constraintNode.createCopy(nodeMapper);
+			copyOfConstraintNode.setName(prefix + constraintNode);
+			
+			targetMethod.addConstraint(copyOfConstraintNode);
+		}
 	}
 
 	private static TestCase revertToOriginalTestCase(NodeMapper mapper, TestCase deployedTestCase) {
