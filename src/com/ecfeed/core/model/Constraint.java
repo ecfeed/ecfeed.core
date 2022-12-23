@@ -434,7 +434,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public String toString() {
 
-		return createSignature(new ExtLanguageManagerForJava());
+		return ConstraintHelper.createSignatureOfConditions(this, new ExtLanguageManagerForJava());
 	}
 
 	public void convert(ParameterConversionItem parameterConversionItem) {
@@ -450,19 +450,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	//	}
-
-	public String createSignature(IExtLanguageManager extLanguageManager) {
-
-		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
-
-		if (fConstraintType == ConstraintType.BASIC_FILTER) {
-			return postconditionSignature;
-		}
-
-		String preconditionSignature = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
-
-		return preconditionSignature + " => " + postconditionSignature;
-	}
 
 	@Override
 	public boolean mentions(int dimension) {

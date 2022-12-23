@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class ConstraintNodeHelper {
 
@@ -72,12 +73,53 @@ public class ConstraintNodeHelper {
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		return ConstraintHelper.createSignature(constraintNode.getConstraint(), extLanguageManager);
+		String qualifiedName = getQualifiedName(constraintNode);
+
+		String signatureOfConditions = 
+				ConstraintHelper.createSignatureOfConditions(constraintNode.getConstraint(), extLanguageManager);
+
+		return qualifiedName + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditions; 
 	}
 
 	public static String getName(ConstraintNode ownNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
+	}
+
+	public static String getQualifiedName(ConstraintNode constraintNode) {
+
+		String prefix = getQualifiedPrefix(constraintNode);
+		String name = constraintNode.getName();
+
+		return prefix + name; 
+	}
+
+	private static String getQualifiedPrefix(ConstraintNode constraintNode) {
+
+		String prefix = "";
+		IAbstractNode currentNode = constraintNode;
+
+		for (;;) {
+
+			IAbstractNode parent = currentNode.getParent();
+
+			if (parent == null) {
+				return null;
+			}
+
+			if (parent instanceof MethodNode) {
+				return prefix;
+			}
+
+			if (!(parent instanceof CompositeParameterNode)) {
+				ExceptionHelper.reportRuntimeException("Composite parameter expected.");
+			}
+
+			prefix = parent.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR + prefix;
+
+			currentNode = parent;
+		}
+
 	}
 
 	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(List<ConstraintNode> constraints) {

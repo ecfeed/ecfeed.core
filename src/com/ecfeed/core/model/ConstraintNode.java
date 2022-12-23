@@ -51,7 +51,7 @@ public class ConstraintNode extends AbstractNode {
 			return "EMPTY";
 		}
 
-		return ConstraintHelper.createSignature(fConstraint, new ExtLanguageManagerForJava());
+		return ConstraintHelper.createSignatureOfConditions(fConstraint, new ExtLanguageManagerForJava());
 	}
 
 	@Override
