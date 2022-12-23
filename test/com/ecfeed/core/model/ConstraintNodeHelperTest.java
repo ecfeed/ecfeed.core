@@ -104,4 +104,37 @@ public class ConstraintNodeHelperTest {
 		assertEquals("co : par 1=choice_1[choice] => par 2=choice 2[choice]", signature);
 	}
 
+	@Test
+	public void createSignatureForCompositeParameterTest(){
+		
+		// add method and composite parameter
+		
+		MethodNode methodNode = new MethodNode("method");
+		CompositeParameterNode compositeParameterNode = new CompositeParameterNode("Composite", null);
+		methodNode.addParameter(compositeParameterNode);
+		
+		// create and add constraint
+		
+		Constraint constraint = new Constraint(
+				"c", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null);
+		
+		ConstraintNode c1 =	new ConstraintNode("c", constraint, null);
+
+		c1.setName("c_1");
+
+		c1.getConstraint().setPrecondition(new StaticStatement(false, null));
+
+		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
+		
+		compositeParameterNode.addConstraint(c1);
+		
+		// check signatures
+		
+		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
+		assertEquals("Composite:c_1 : false => false", signature);
+
+		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
+		assertEquals("Composite:c_1 : false => false", signature);
+	}
+
 }
