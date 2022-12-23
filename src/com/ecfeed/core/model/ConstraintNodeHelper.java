@@ -82,18 +82,18 @@ public class ConstraintNodeHelper {
 		return qualifiedName + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditions; 
 	}
 
-	private static String createQualifiedName(ConstraintNode constraintNode) {
-		
-		String prefix = getQualifiedPrefix(constraintNode);
-		
+	private static String createQualifiedName(ConstraintNode constraintNode) { // TODO MO-RE tests
+
+		String prefix = createQualifiedPrefix(constraintNode);
+
 		String name = constraintNode.getConstraint().getName();
-		
+
 		if (StringHelper.isNullOrEmpty(prefix)) {
 			return name;
 		}
-		
-		String qualifiedName = prefix + SignatureHelper.SIGNATURE_TYPE_SEPARATOR + name;
-		
+
+		String qualifiedName = prefix + SignatureHelper.SIGNATURE_NAME_SEPARATOR + name;
+
 		return qualifiedName;
 	}
 
@@ -102,20 +102,20 @@ public class ConstraintNodeHelper {
 		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
 	}
 
-//	public static String getQualifiedName(ConstraintNode constraintNode) {
-//
-//		String prefix = getQualifiedPrefix(constraintNode);
-//		
-//		if (prefix == null) {
-//			prefix = "";
-//		}
-//		
-//		String name = constraintNode.getName();
-//
-//		return prefix + name; 
-//	}
+	private static String createQualifiedPrefix(ConstraintNode constraintNode) {
 
-	private static String getQualifiedPrefix(ConstraintNode constraintNode) {
+		String prefix = createQualifiedPrefixIntr(constraintNode);
+		
+		prefix = prefix.trim();
+		
+		prefix = StringHelper.removeFromPostfix(":", prefix);
+		
+		prefix = prefix.trim();
+		
+		return prefix;
+	}
+
+	private static String createQualifiedPrefixIntr(ConstraintNode constraintNode) {
 
 		String prefix = "";
 		IAbstractNode currentNode = constraintNode;
