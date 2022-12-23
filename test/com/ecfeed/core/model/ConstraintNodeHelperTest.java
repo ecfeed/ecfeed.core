@@ -33,10 +33,10 @@ public class ConstraintNodeHelperTest {
 		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
 
 		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
-		assertEquals("c_1: false => false", signature);
+		assertEquals("c_1 : false => false", signature);
 
 		signature = createSignature(c1,  new ExtLanguageManagerForSimple());
-		assertEquals("c_1: false => false", signature);
+		assertEquals("c_1 : false => false", signature);
 	}
 
 	@Test
@@ -66,10 +66,10 @@ public class ConstraintNodeHelperTest {
 		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
 
 		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForJava);
-		assertEquals("co_1: par_1=A => par_2=C", signature);
+		assertEquals("co_1 : par_1=A => par_2=C", signature);
 
 		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
-		assertEquals("co_1: par 1=A => par 2=C", signature);
+		assertEquals("co_1 : par 1=A => par 2=C", signature);
 	}
 
 	@Test
@@ -98,10 +98,10 @@ public class ConstraintNodeHelperTest {
 		ConstraintNode constraintNode = new ConstraintNode("cn", constraint, null);
 
 		String signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForJava);
-		assertEquals("co: par_1=choice_1[choice] => par_2=choice 2[choice]", signature);
+		assertEquals("co : par_1=choice_1[choice] => par_2=choice 2[choice]", signature);
 
 		signature = ConstraintNodeHelper.createSignature(constraintNode, extLanguageManagerForSimple);
-		assertEquals("co: par 1=choice_1[choice] => par 2=choice 2[choice]", signature);
+		assertEquals("co : par 1=choice_1[choice] => par 2=choice 2[choice]", signature);
 	}
 
 }

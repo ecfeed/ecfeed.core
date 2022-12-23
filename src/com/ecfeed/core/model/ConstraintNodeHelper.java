@@ -17,6 +17,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ConstraintNodeHelper {
 
@@ -73,7 +74,7 @@ public class ConstraintNodeHelper {
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = getQualifiedName(constraintNode);
+		String qualifiedName = createQualifiedName(constraintNode);
 
 		String signatureOfConditions = 
 				ConstraintHelper.createSignatureOfConditions(constraintNode.getConstraint(), extLanguageManager);
@@ -81,18 +82,38 @@ public class ConstraintNodeHelper {
 		return qualifiedName + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditions; 
 	}
 
+	private static String createQualifiedName(ConstraintNode constraintNode) {
+		
+		String prefix = getQualifiedPrefix(constraintNode);
+		
+		String name = constraintNode.getConstraint().getName();
+		
+		if (StringHelper.isNullOrEmpty(prefix)) {
+			return name;
+		}
+		
+		String qualifiedName = prefix + SignatureHelper.SIGNATURE_TYPE_SEPARATOR + name;
+		
+		return qualifiedName;
+	}
+
 	public static String getName(ConstraintNode ownNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
 	}
 
-	public static String getQualifiedName(ConstraintNode constraintNode) {
-
-		String prefix = getQualifiedPrefix(constraintNode);
-		String name = constraintNode.getName();
-
-		return prefix + name; 
-	}
+//	public static String getQualifiedName(ConstraintNode constraintNode) {
+//
+//		String prefix = getQualifiedPrefix(constraintNode);
+//		
+//		if (prefix == null) {
+//			prefix = "";
+//		}
+//		
+//		String name = constraintNode.getName();
+//
+//		return prefix + name; 
+//	}
 
 	private static String getQualifiedPrefix(ConstraintNode constraintNode) {
 
@@ -104,7 +125,7 @@ public class ConstraintNodeHelper {
 			IAbstractNode parent = currentNode.getParent();
 
 			if (parent == null) {
-				return null;
+				return "";
 			}
 
 			if (parent instanceof MethodNode) {
