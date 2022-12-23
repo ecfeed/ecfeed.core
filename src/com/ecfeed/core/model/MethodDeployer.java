@@ -153,7 +153,7 @@ public abstract class MethodDeployer {
 		for (ConstraintNode constraintNode : constraintNodes) {
 			
 			ConstraintNode copyOfConstraintNode = constraintNode.createCopy(nodeMapper);
-			copyOfConstraintNode.setName(prefix + constraintNode);
+			copyOfConstraintNode.setName(prefix + constraintNode.getName());
 			
 			targetMethod.addConstraint(copyOfConstraintNode);
 		}
