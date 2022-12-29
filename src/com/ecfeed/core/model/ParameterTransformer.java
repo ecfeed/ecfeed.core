@@ -15,9 +15,9 @@ import java.util.List;
 
 import com.ecfeed.core.operations.MethodOperationSetConstraints;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
-import com.ecfeed.core.operations.OperationSimpleSetLink;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.operations.SimpleOperationSetMethodParameterType;
+import com.ecfeed.core.operations.link.OperationSimpleSetLink;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
