@@ -24,12 +24,79 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodParameterOperationSetLinked extends BulkOperation{
 
+	public MethodParameterOperationSetLinked(
+			BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
+
+		addOperation(new SetLinkedOperation(target, linked, extLanguageManager));
+
+		MethodNode methodNode = (MethodNode) target.getParent();
+		addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager)); 
+	}
+
+	public void addOperation(int index, IModelOperation operation){
+		operations().add(index, operation);
+	}
+
 	private class SetLinkedOperation extends AbstractModelOperation {
 
 		private BasicParameterNode fTarget;
 		private boolean fLinked;
 		private List<TestCaseNode> fOriginalTestCases;
 		private List<ConstraintNode> fOriginalConstraints;
+
+		public SetLinkedOperation(BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+			super(OperationNames.SET_LINKED, extLanguageManager);
+			fTarget = target;
+			fLinked = linked;
+		}
+
+		@Override
+		public void execute() {
+
+			setOneNodeToSelect(fTarget);
+
+			MethodNode method = (MethodNode) fTarget.getParent();
+			String newType;
+			if(fLinked){
+				AbstractParameterNode linkToGlobalParameter = fTarget.getLinkToGlobalParameter();
+
+				if(linkToGlobalParameter == null){
+					ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
+				}
+
+				if (linkToGlobalParameter instanceof BasicParameterNode) {
+
+					BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
+					newType = link.getType();
+				} else {
+
+					newType = null;
+				}
+			}
+			else{
+				newType = fTarget.getRealType();
+			}
+
+			if(method.checkDuplicate(fTarget.getMyIndex(), newType)){
+
+				ExceptionHelper.reportRuntimeException(
+						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+								method.getClassNode(), method, false, getExtLanguageManager()));
+			}
+
+			fOriginalTestCases = new ArrayList<>(method.getTestCases());
+			fOriginalConstraints = new ArrayList<>(method.getConstraintNodes());
+
+			method.removeTestCases();
+			method.removeMentioningConstraints(fTarget);
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new ReverseSetLinkedOperation(getExtLanguageManager());
+		}
 
 		private class ReverseSetLinkedOperation extends AbstractReverseOperation{
 
@@ -62,69 +129,6 @@ public class MethodParameterOperationSetLinked extends BulkOperation{
 
 		}
 
-		public SetLinkedOperation(BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
-			super(OperationNames.SET_LINKED, extLanguageManager);
-			fTarget = target;
-			fLinked = linked;
-		}
-
-		@Override
-		public void execute() {
-
-			setOneNodeToSelect(fTarget);
-
-			MethodNode method = (MethodNode) fTarget.getParent();
-			String newType;
-			if(fLinked){
-				AbstractParameterNode linkToGlobalParameter = fTarget.getLinkToGlobalParameter();
-				
-				if(linkToGlobalParameter == null){
-					ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
-				}
-				
-				if (linkToGlobalParameter instanceof BasicParameterNode) {
-					
-					BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
-					newType = link.getType();
-				} else {
-					
-					newType = null;
-				}
-			}
-			else{
-				newType = fTarget.getRealType();
-			}
-
-			if(method.checkDuplicate(fTarget.getMyIndex(), newType)){
-
-				ExceptionHelper.reportRuntimeException(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
-								method.getClassNode(), method, false, getExtLanguageManager()));
-			}
-
-			fOriginalTestCases = new ArrayList<>(method.getTestCases());
-			fOriginalConstraints = new ArrayList<>(method.getConstraintNodes());
-
-			method.removeTestCases();
-			method.removeMentioningConstraints(fTarget);
-		}
-
-		@Override
-		public IModelOperation getReverseOperation() {
-			return new ReverseSetLinkedOperation(getExtLanguageManager());
-		}
-
-	}
-
-	public MethodParameterOperationSetLinked(BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
-		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
-		addOperation(new SetLinkedOperation(target, linked, extLanguageManager));
-		MethodNode methodNode = (MethodNode) target.getParent();
-		addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager)); 
-	}
-
-	public void addOperation(int index, IModelOperation operation){
-		operations().add(index, operation);
 	}
 
 }
