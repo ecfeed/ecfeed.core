@@ -18,7 +18,7 @@ import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
-import com.ecfeed.core.operations.link.MethodParameterOperationSetLinked;
+import com.ecfeed.core.operations.link.MethodParameterOperationSetLinkedAndMakeMethodConsistent;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -49,7 +49,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 			BasicParameterNode global = new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
-			addOperation(new MethodParameterOperationSetLinked(target, true, extLanguageManager));
+			addOperation(new MethodParameterOperationSetLinkedAndMakeMethodConsistent(target, true, extLanguageManager));
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
 					ConstraintNode copy = constraint.makeClone();

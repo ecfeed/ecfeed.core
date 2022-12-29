@@ -28,9 +28,9 @@ import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterOperationSetLinked extends BulkOperation{
+public class MethodParameterOperationSetLinkedAndMakeMethodConsistent extends BulkOperation{
 
-	public MethodParameterOperationSetLinked(
+	public MethodParameterOperationSetLinkedAndMakeMethodConsistent(
 			BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
