@@ -13,11 +13,10 @@ package com.ecfeed.core.operations.link;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
@@ -28,14 +27,16 @@ import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterOperationSetLinkedAndMakeMethodConsistent extends BulkOperation{
+public class HostMethodOperationPrepareParameterChange extends BulkOperation{
 
-	public MethodParameterOperationSetLinkedAndMakeMethodConsistent(
-			BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+	public HostMethodOperationPrepareParameterChange(
+			BasicParameterNode target,
+			String newType,
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
 
-		addOperation(new SetLinkedOperation(target, linked, extLanguageManager));
+		addOperation(new OperationPrepareMethodForParameterTypeChange(target, newType, extLanguageManager));
 
 		MethodNode methodNode = (MethodNode) target.getParent();
 		addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager)); 
@@ -45,17 +46,21 @@ public class MethodParameterOperationSetLinkedAndMakeMethodConsistent extends Bu
 		operations().add(index, operation);
 	}
 
-	private class SetLinkedOperation extends AbstractModelOperation {
+	private class OperationPrepareMethodForParameterTypeChange extends AbstractModelOperation {
 
 		private BasicParameterNode fTarget;
-		private boolean fLinked;
+		private String fNewType;
 		private List<TestCaseNode> fOriginalTestCases;
 		private List<ConstraintNode> fOriginalConstraints;
 
-		public SetLinkedOperation(BasicParameterNode target, boolean linked, IExtLanguageManager extLanguageManager) {
+		public OperationPrepareMethodForParameterTypeChange(
+				BasicParameterNode target,
+				String newType,
+				IExtLanguageManager extLanguageManager) {
+			
 			super(OperationNames.SET_LINKED, extLanguageManager);
 			fTarget = target;
-			fLinked = linked;
+			fNewType = newType;
 		}
 
 		@Override
@@ -64,28 +69,8 @@ public class MethodParameterOperationSetLinkedAndMakeMethodConsistent extends Bu
 			setOneNodeToSelect(fTarget);
 
 			MethodNode method = (MethodNode) fTarget.getParent();
-			String newType;
-			if(fLinked){
-				AbstractParameterNode linkToGlobalParameter = fTarget.getLinkToGlobalParameter();
-
-				if(linkToGlobalParameter == null){
-					ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
-				}
-
-				if (linkToGlobalParameter instanceof BasicParameterNode) {
-
-					BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
-					newType = link.getType();
-				} else {
-
-					newType = null;
-				}
-			}
-			else{
-				newType = fTarget.getRealType();
-			}
-
-			if(method.checkDuplicate(fTarget.getMyIndex(), newType)){
+			
+			if(method.checkDuplicate(fTarget.getMyIndex(), fNewType)){
 
 				ExceptionHelper.reportRuntimeException(
 						ClassNodeHelper.createMethodSignatureDuplicateMessage(
@@ -107,7 +92,7 @@ public class MethodParameterOperationSetLinkedAndMakeMethodConsistent extends Bu
 		private class ReverseSetLinkedOperation extends AbstractReverseOperation{
 
 			public ReverseSetLinkedOperation(IExtLanguageManager extLanguageManager) {
-				super(SetLinkedOperation.this, extLanguageManager);
+				super(OperationPrepareMethodForParameterTypeChange.this, extLanguageManager);
 			}
 
 			@Override
@@ -130,7 +115,7 @@ public class MethodParameterOperationSetLinkedAndMakeMethodConsistent extends Bu
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new SetLinkedOperation(fTarget, fLinked, getExtLanguageManager());
+				return new OperationPrepareMethodForParameterTypeChange(fTarget, fNewType, getExtLanguageManager());
 			}
 
 		}

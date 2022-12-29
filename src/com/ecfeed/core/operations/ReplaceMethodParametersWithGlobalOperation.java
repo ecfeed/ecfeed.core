@@ -13,12 +13,13 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
-import com.ecfeed.core.operations.link.MethodParameterOperationSetLinkedAndMakeMethodConsistent;
+import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -49,7 +50,11 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 			BasicParameterNode global = new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
-			addOperation(new MethodParameterOperationSetLinkedAndMakeMethodConsistent(target, true, extLanguageManager));
+			
+			String anyNotNullLinkSignature = " ";
+			String newType = BasicParameterNodeHelper.calculateNewParameterType(target, anyNotNullLinkSignature);
+			addOperation(new HostMethodOperationPrepareParameterChange(target, newType, extLanguageManager));
+			
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
 					ConstraintNode copy = constraint.makeClone();

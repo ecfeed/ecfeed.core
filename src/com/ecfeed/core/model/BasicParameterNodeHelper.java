@@ -152,5 +152,26 @@ public class BasicParameterNodeHelper {
 		
 		return findParameterByQualifiedNameRecursive(remainingPart, compositeParameterNode);
 	}
+
+	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {
+
+		if (linkedParameterSignature == null) {
+			return fTarget.getRealType();
+		}
+
+		AbstractParameterNode linkToGlobalParameter = fTarget.getLinkToGlobalParameter();
+
+		if (linkToGlobalParameter == null) {
+			ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
+		}
+
+		if (linkToGlobalParameter instanceof BasicParameterNode) {
+
+			BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
+			return link.getType();
+		} 
+		
+		return null;
+	}
 	
 }
