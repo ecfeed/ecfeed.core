@@ -16,6 +16,7 @@ import java.util.List;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
@@ -36,10 +37,15 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 
 		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
 
-		addOperation(new OperationPrepareMethodForParameterTypeChange(target, newType, extLanguageManager));
+		IParametersParentNode parent = target.getParent();
+		
+		if (parent instanceof MethodNode) {
+			
+			addOperation(new OperationPrepareMethodForParameterTypeChange(target, newType, extLanguageManager));
 
-		MethodNode methodNode = (MethodNode) target.getParent();
-		addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager)); 
+			MethodNode methodNode = (MethodNode) parent;
+			addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager));
+		}
 	}
 
 	public void addOperation(int index, IModelOperation operation){

@@ -16,43 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.utils.CommonConstants;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
 
-	public static BasicParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
-
-		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
-			return null;
-		}
-
-		String parentName = AbstractNodeHelper.getParentName(globalParameterExtendedName);
-		String parameterName = ParametersAndConstraintsParentNodeHelper.getParameterName(globalParameterExtendedName);
-
-		ClassNode classNode = fMethodNode.getClassNode();
-		String className = classNode.getName();
-
-		if (StringHelper.isEqual(className, parentName)) {
-			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
-			return (BasicParameterNode)abstractParameterNode;
-		}
-
-		RootNode rootNode = classNode.getRoot();
-		String rootName = rootNode.getName();
-
-		if (parentName == null || rootName.equals(parentName)) {
-			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
-			return (BasicParameterNode)abstractParameterNode;
-		}			
-
-		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
-		return null;
-	}
-	
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
 		String errorMessage = extLanguageManager.verifySeparatorsInName(nameInExternalLanguage);
