@@ -26,7 +26,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class GenericMoveOperation extends BulkOperation {
+public class GenericMoveOperation extends CompositeOperation {
 
 	public GenericMoveOperation(
 			List<? extends IAbstractNode> moved, 

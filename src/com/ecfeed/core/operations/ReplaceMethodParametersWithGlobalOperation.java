@@ -23,7 +23,7 @@ import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
+public class ReplaceMethodParametersWithGlobalOperation extends CompositeOperation{
 
 	public ReplaceMethodParametersWithGlobalOperation(
 			IParametersParentNode parent, 
@@ -38,7 +38,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 		}
 	}
 	
-	private class ReplaceParameterWithLink extends BulkOperation{
+	private class ReplaceParameterWithLink extends CompositeOperation{
 
 		public ReplaceParameterWithLink(
 				BasicParameterNode target, 

@@ -17,7 +17,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.LogHelperCore;
 
-public class GenericAddChildrenOperation extends BulkOperation {
+public class GenericAddChildrenOperation extends CompositeOperation {
 
 	public GenericAddChildrenOperation(
 			IAbstractNode target, 

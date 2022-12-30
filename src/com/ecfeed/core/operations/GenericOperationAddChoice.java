@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class GenericOperationAddChoice extends BulkOperation {
+public class GenericOperationAddChoice extends CompositeOperation {
 	
 	public GenericOperationAddChoice(
 			IChoicesParentNode target, 

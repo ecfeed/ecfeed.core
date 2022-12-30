@@ -22,7 +22,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class CompositeParameterOperationRemoveParameter extends BulkOperation{
+public class CompositeParameterOperationRemoveParameter extends CompositeOperation{
 
 	public CompositeParameterOperationRemoveParameter(
 			CompositeParameterNode target, 

@@ -16,7 +16,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class GenericOperationRemoveGlobalParameter extends BulkOperation {
+public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 
 	public GenericOperationRemoveGlobalParameter(
 			IParametersParentNode target, 

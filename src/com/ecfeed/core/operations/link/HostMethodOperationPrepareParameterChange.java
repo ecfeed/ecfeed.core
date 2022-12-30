@@ -20,14 +20,14 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
-import com.ecfeed.core.operations.BulkOperation;
+import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.MethodOperationMakeConsistent;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class HostMethodOperationPrepareParameterChange extends BulkOperation{
+public class HostMethodOperationPrepareParameterChange extends CompositeOperation {
 
 	public HostMethodOperationPrepareParameterChange(
 			BasicParameterNode target,
@@ -43,6 +43,11 @@ public class HostMethodOperationPrepareParameterChange extends BulkOperation{
 	}
 
 	public void addOperation(int index, IModelOperation operation){
+		
+		if (operation == null) {
+			return;
+		}
+		
 		operations().add(index, operation);
 	}
 

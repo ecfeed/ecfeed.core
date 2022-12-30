@@ -16,7 +16,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class RootOperationAddClasses extends BulkOperation {
+public class RootOperationAddClasses extends CompositeOperation {
 	
 	public RootOperationAddClasses(
 			RootNode target, 

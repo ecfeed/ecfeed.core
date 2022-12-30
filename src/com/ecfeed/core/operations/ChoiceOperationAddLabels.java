@@ -16,7 +16,7 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ChoiceOperationAddLabels extends BulkOperation {
+public class ChoiceOperationAddLabels extends CompositeOperation {
 	public ChoiceOperationAddLabels(
 			ChoiceNode target, 
 			Collection<String> labels, 
