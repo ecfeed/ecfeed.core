@@ -22,7 +22,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class GenericRemoveNodesOperation extends BulkOperation {
+public class GenericRemoveNodesOperation extends CompositeOperation {
 
 	private final Set<IAbstractNode> fSelectedNodes;
 

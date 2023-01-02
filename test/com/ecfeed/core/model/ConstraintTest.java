@@ -58,7 +58,7 @@ public class ConstraintTest {
 
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		String signature = constraint.createSignature(extLanguageManager);
+		String signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 
 		assertEquals("false", signature);
 
@@ -66,7 +66,7 @@ public class ConstraintTest {
 
 		constraint.setType(ConstraintType.EXTENDED_FILTER);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => false", signature);
 
 		// value condition
@@ -76,7 +76,7 @@ public class ConstraintTest {
 
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=5", signature);
 
 		// label condition
@@ -85,7 +85,7 @@ public class ConstraintTest {
 				RelationStatement.createRelationStatementWithLabelCondition(methodParameterNode1, EMathRelation.EQUAL, "label1");
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=label1[label]", signature);
 
 		// choice condition
@@ -94,7 +94,7 @@ public class ConstraintTest {
 				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=choice1[choice]", signature);
 
 		// parameter condition
@@ -103,7 +103,7 @@ public class ConstraintTest {
 				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
 		constraint.setPostcondition(relationStatement);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => par1=par2[parameter]", signature);
 	}
 
@@ -146,7 +146,7 @@ public class ConstraintTest {
 
 		IExtLanguageManager extLanguageManager = new ExtLanguageManagerForJava();
 
-		String signature = constraint.createSignature(extLanguageManager);
+		String signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 
 		assertEquals("true => (par2:=3)", signature);
 
@@ -157,7 +157,7 @@ public class ConstraintTest {
 
 		postconditionStatementArray.addStatement(assignmentWithChoiceCondition);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => (par2:=3 , par2:=choice1[choice])", signature);
 
 		//  postcondition - assignment with parameter conditions
@@ -167,7 +167,7 @@ public class ConstraintTest {
 
 		postconditionStatementArray.addStatement(assignmentStatementWithParameterCondition);
 
-		signature = constraint.createSignature(extLanguageManager);
+		signature = ConstraintHelper.createSignatureOfConditions(constraint, extLanguageManager);
 		assertEquals("true => (par2:=3 , par2:=choice1[choice] , par2:=par1[parameter])", signature);
 	}
 

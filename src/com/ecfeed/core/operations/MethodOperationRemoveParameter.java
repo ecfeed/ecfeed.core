@@ -25,7 +25,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class MethodOperationRemoveParameter extends BulkOperation{
+public class MethodOperationRemoveParameter extends CompositeOperation{
 
 	public MethodOperationRemoveParameter(
 			MethodNode target, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {

@@ -8,17 +8,23 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.link;
 
 import java.util.List;
 
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.AbstractReverseOperation;
+import com.ecfeed.core.operations.CompositeOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.MethodOperationMakeConsistent;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterOperationSetLink extends BulkOperation {
+public class MethodParameterOperationSetLink extends CompositeOperation {
 
 	private class SetLinkOperation extends AbstractModelOperation{
 		private BasicParameterNode fTarget;

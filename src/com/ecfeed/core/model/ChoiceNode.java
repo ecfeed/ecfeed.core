@@ -59,19 +59,8 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public BasicParameterNode getParameter() {
 		
-		IAbstractNode parent = getParent();
-		
-		if (parent == null) {
-			return null;
-		}
-
-		if (!(parent instanceof IChoicesParentNode)) {
-			return null;
-		}
-		
-		IChoicesParentNode choicesParentNode = (IChoicesParentNode)parent;
-		
-		return choicesParentNode.getParameter();
+		BasicParameterNode basicParameterNode = ChoiceNodeHelper.getBasicParameter(this);
+		return basicParameterNode;
 	}
 
 	@Override

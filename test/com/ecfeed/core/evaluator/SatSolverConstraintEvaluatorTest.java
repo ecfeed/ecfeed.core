@@ -23,7 +23,7 @@ public class SatSolverConstraintEvaluatorTest {
         NodeMapper mapper = new NodeMapper();
 
         MethodNode method1 = getMethod(xmlModel);
-        MethodNode method2 = MethodDeployer.deploy(mapper, method1);
+        MethodNode method2 = MethodDeployer.deploy(method1, mapper);
 
         int count2 = countGeneratedTestCases(method2, algorithm);
         int count1 = countGeneratedTestCases(method1, algorithm);

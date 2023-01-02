@@ -34,7 +34,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		String[] parameterCandidateSegments = parameter.get().getName().split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 
 		parameterCandidate = method.getParameter(method.getParameterIndex(parameterCandidateSegments[0]));
-		parameterCandidate = MethodDeployer.getNestedBasicParameter(parameterCandidate, parameterCandidateSegments, 1);
+		parameterCandidate = MethodDeploymentConsistencyUpdater.getNestedBasicParameter(parameterCandidate, parameterCandidateSegments, 1);
 
 		parameter.get().setDeploymentParameter((BasicParameterNode) parameterCandidate);
 

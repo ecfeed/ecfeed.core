@@ -392,7 +392,7 @@ public class StatementArray extends AbstractStatement {
 		return EvaluationResult.TRUE;
 	}
 
-	public String getLeftParameterName() {
+	public String getLeftParameterCompositeName() {
 		return fOperator.toString();
 	}
 

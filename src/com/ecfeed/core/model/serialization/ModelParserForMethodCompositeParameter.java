@@ -14,11 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.CompositeParameterNode;
-import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
-
 import com.ecfeed.core.utils.LogHelperCore;
+
 import nu.xom.Element;
 
 public class ModelParserForMethodCompositeParameter implements IModelParserForMethodCompositeParameter {

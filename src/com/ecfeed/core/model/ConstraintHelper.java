@@ -74,16 +74,23 @@ public class ConstraintHelper {
 		}
 	}
 
-	public static String createSignature(Constraint constraint, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureOfConditions(Constraint constraint, IExtLanguageManager extLanguageManager) {
 
 		if (constraint == null) {
 			return "EMPTY";
 		}
 
-		String name = constraint.getName();
+		String postconditionSignature = 
+				AbstractStatementHelper.createSignature(constraint.getPostcondition(), extLanguageManager);
 
-		String signature2 = constraint.createSignature(extLanguageManager);
-		return name + ": " + signature2;
+		if (constraint.getType() == ConstraintType.BASIC_FILTER) {
+			return postconditionSignature;
+		}
+
+		String preconditionSignature = 
+				AbstractStatementHelper.createSignature(constraint.getPrecondition(), extLanguageManager);
+
+		return preconditionSignature + " => " + postconditionSignature;
 	}
 
 	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {

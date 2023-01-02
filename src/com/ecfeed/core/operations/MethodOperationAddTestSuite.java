@@ -18,7 +18,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationAddTestSuite extends BulkOperation {
+public class MethodOperationAddTestSuite extends CompositeOperation {
 
 	public MethodOperationAddTestSuite(
 			MethodNode methodNode, 

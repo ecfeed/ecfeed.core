@@ -12,7 +12,8 @@ package com.ecfeed.core.utils;
 
 public class SignatureHelper {
 
-	public static final String SIGNATURE_NAME_SEPARATOR = ":";
-	public static final String SIGNATURE_TYPE_SEPARATOR = " : ";
+	public static final String SIGNATURE_NAME_SEPARATOR = ":";  // separates sections of composite 
+	public static final String SIGNATURE_TYPE_SEPARATOR = " : ";  // name from type
+	public static final String SIGNATURE_CONTENT_SEPARATOR = " : "; // name from content
 
 }

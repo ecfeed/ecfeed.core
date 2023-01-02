@@ -25,7 +25,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
 
-public class GenericOperationRemoveChoice extends BulkOperation {
+public class GenericOperationRemoveChoice extends CompositeOperation {
 
 	private class RemoveChoiceOperation extends AbstractModelOperation {
 

@@ -19,7 +19,7 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class BulkOperation extends AbstractModelOperation {
+public class CompositeOperation extends AbstractModelOperation {
 
 	private static final String ATTEMPT_TO_ADD_EMPTY_OPERATION = "Attempt to add empty operation.";
 	List<IModelOperation> fOperations;
@@ -34,7 +34,7 @@ public class BulkOperation extends AbstractModelOperation {
 		public void check();
 	}
 
-	public BulkOperation(
+	public CompositeOperation(
 			String name, 
 			boolean atomic,
 			IAbstractNode nodeToSelect,
@@ -45,7 +45,7 @@ public class BulkOperation extends AbstractModelOperation {
 				nodeToSelect, nodeToSelectAfterReverseOperation, extLanguageManager);
 	}
 
-	public BulkOperation(
+	public CompositeOperation(
 			String name, 
 			List<IModelOperation> operations, 
 			boolean atomic, 
@@ -129,7 +129,7 @@ public class BulkOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new BulkOperation(
+		return new CompositeOperation(
 				"reverse " + getName(), 
 				reverseOperations(), 
 				fAtomic, 

@@ -29,7 +29,7 @@ public abstract class AbstractStatement implements IStatement {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public abstract String getLeftParameterName();
+	public abstract String getLeftParameterCompositeName();
 	public abstract boolean mentions(int methodParameterIndex);
 
 	public IModelChangeRegistrator getModelChangeRegistrator() {

@@ -116,7 +116,7 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftParameterName(){
+	public String getLeftParameterCompositeName(){
 		return toString();
 	}
 

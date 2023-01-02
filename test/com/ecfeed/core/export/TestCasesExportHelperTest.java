@@ -224,27 +224,27 @@ public class TestCasesExportHelperTest {
 
         ClassNode theClass = new ClassNode("package_1.Test_1", null);
 
-        MethodNode method = new MethodNode("testMethod_1", null);
-        theClass.addMethod(method);
+        MethodNode methodNode = new MethodNode("testMethod_1", null);
+        theClass.addMethod(methodNode);
 
         BasicParameterNode parameter0 = new BasicParameterNode("par_0", "int", "MAX_VALUE", false, null);
         ChoiceNode choiceNode00 = new ChoiceNode("c_0", par0Value, null);
         parameter0.addChoice(choiceNode00);
-        method.addParameter(parameter0);
+        methodNode.addParameter(parameter0);
 
         BasicParameterNode parameter1 = new BasicParameterNode("par_1", "int", "MIN_VALUE", false, null);
         ChoiceNode choiceNode11 = new ChoiceNode("c_1", par1Value, null);
         parameter1.addChoice(choiceNode11);
-        method.addParameter(parameter1);
+        methodNode.addParameter(parameter1);
 
         List<ChoiceNode> choices = new ArrayList<ChoiceNode>();
         choices.add(choiceNode00);
         choices.add(choiceNode11);
 
         TestCaseNode testCase = new TestCaseNode("default", null, choices);
-        testCase.setParent(method);
+        testCase.setParent(methodNode);
 
-        String result = TestCasesExportHelper.generateTestCaseString(sequenceIndex, testCase, template, extLanguageManager);
+        String result = TestCasesExportHelper.generateTestCaseString(sequenceIndex, testCase, methodNode, template, extLanguageManager);
         result = TestCasesExportHelper.evaluateMinWidthOperators(result);
         assertEquals(expectedResult, result);
     }

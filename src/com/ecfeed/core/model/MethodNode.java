@@ -91,7 +91,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		fConstraintNodeListHolder.removeConstraint(contIterator);
 	}	
 
-	public List<String> getParameterTypes() {
+	public List<String> getParameterTypes() { // TODO MO-RE move to IParametersParant
 
 		List<String> parameterTypes = new ArrayList<String>();
 
@@ -217,7 +217,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return sibling;
 	}
 
-	public boolean checkDuplicate(int index, String newType){
+	public boolean checkDuplicate(int index, String newType){ // TODO MO-RE remove ? no check of duplicates (when unique function name) ??
 		List<String> argTypes = getParameterTypes();
 		argTypes.set(index, newType);
 		return getSibling(argTypes) != null;

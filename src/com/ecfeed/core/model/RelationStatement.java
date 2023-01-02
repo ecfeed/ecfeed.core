@@ -154,15 +154,19 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public String getLeftParameterName() {
+	public String getLeftParameterCompositeName() {
 
-		return getLeftParameter().getName();
+		BasicParameterNode leftParameter = getLeftParameter();
+		
+		String nameInIntrLanguage = AbstractParameterNodeHelper.getCompositeName(leftParameter);
+		
+		return nameInIntrLanguage;
 	}
 
 	@Override
 	public String toString() {
 
-		return getLeftParameterName() + getRelation() + fRightCondition.toString();
+		return getLeftParameterCompositeName() + getRelation() + fRightCondition.toString();
 	}
 
 	@Override
@@ -171,7 +175,7 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		String conditionSignature = fRightCondition.createSignature(extLanguageManager);
 
 		BasicParameterNode methodParameterNode = getLeftParameter();
-		String parameterName = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
+		String parameterName = AbstractParameterNodeHelper.getCompositeName(methodParameterNode, extLanguageManager);
 
 		return parameterName + getRelation() + conditionSignature;
 	}

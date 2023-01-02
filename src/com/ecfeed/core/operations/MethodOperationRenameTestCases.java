@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
-public class MethodOperationRenameTestCases extends BulkOperation {
+public class MethodOperationRenameTestCases extends CompositeOperation {
 
 	public MethodOperationRenameTestCases(
 			Collection<TestCaseNode> testCases, 

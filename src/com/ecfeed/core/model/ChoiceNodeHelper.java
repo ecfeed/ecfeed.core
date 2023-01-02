@@ -20,7 +20,12 @@ import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_NEGATIVE_
 import static com.ecfeed.core.utils.SimpleLanguageHelper.SPECIAL_VALUE_POSITIVE_INF_SIMPLE;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -33,14 +38,70 @@ import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+	public static BasicParameterNode getBasicParameter(ChoiceNode choiceNode) {
+
+		return getParameterRecursive(choiceNode);
+	}
+
+	private static BasicParameterNode getParameterRecursive(ChoiceNode choiceNode) {
+
+		IAbstractNode parent = choiceNode.getParent();
+
+		if (parent == null) {
+			return null;
+		}
+
+		if (parent instanceof BasicParameterNode) {
+			return (BasicParameterNode) parent;
+		}
+
+		if (parent instanceof ChoiceNode) {
+
+			BasicParameterNode basicParameterNode = getParameterRecursive((ChoiceNode)parent);
+			return basicParameterNode;
+		}
+
+		if (parent instanceof TestCaseNode) {
+
+			BasicParameterNode basicParameterNode = getParameterForChoiceFromTestCase(choiceNode, parent);
+			return basicParameterNode;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid type of choices parent.");
+		return null;
+	}
+
+	private static BasicParameterNode getParameterForChoiceFromTestCase(ChoiceNode choiceNode, IAbstractNode parent) {
+
+		TestCaseNode testCaseNode = (TestCaseNode) parent;
+
+		MethodNode methodNode = testCaseNode.getMethod();
+
+		if (methodNode == null) {
+			return null;
+		}
+
+		int indexOfChoiceNodeInTestCase = choiceNode.getMyIndex();
+
+		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
+
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+		return basicParameterNode;
+	}
+
 	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {
-		
+
 		String defaultValue = parentMethodParameterNode.getDefaultValue();
 
 		ChoiceNode choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, defaultValue, parentMethodParameterNode.getModelChangeRegistrator());
@@ -48,7 +109,7 @@ public class ChoiceNodeHelper {
 
 		return choiceNode;
 	}
-	
+
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
 			IChoicesParentNode dstParentNode,
@@ -68,7 +129,7 @@ public class ChoiceNodeHelper {
 			if (mapper != null) {
 				mapper.addMappings(choiceNode, clonedChoiceNode);
 			}
-			
+
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
@@ -253,25 +314,24 @@ public class ChoiceNodeHelper {
 		return choiceNode.getName();
 	}
 
-	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureOfChoiceWithParameter(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
-		BasicParameterNode abstractParameterNode = choiceNode.getParameter();	
+		BasicParameterNode basicParameterNode = choiceNode.getParameter();	
+		
+		String choiceQualifiedName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		
+		if (basicParameterNode == null) {
 
-		if (abstractParameterNode == null) {
-
-			return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+			return choiceQualifiedName;
 		}
 
-		if (abstractParameterNode instanceof BasicParameterNode) {
-
-			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-
-			if (methodParameterNode.isExpected()) {
-				return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
-			}
+		String parameterCompositeName = AbstractParameterNodeHelper.getCompositeName(basicParameterNode, extLanguageManager);
+		
+		if (basicParameterNode.isExpected()) {
+			return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
 		}
-
-		return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		
+		return parameterCompositeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + choiceQualifiedName;
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
@@ -717,7 +777,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
 
 		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
@@ -729,7 +789,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
 
 		Set<String> result = new LinkedHashSet<String>();
@@ -740,7 +800,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
 
 		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
@@ -756,22 +816,22 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getAllLabels(Set<ChoiceNode> choices) {
 
 		Set<String> result = new HashSet<>();
-		
+
 		for (ChoiceNode choiceNode : choices) {
 			addLabelsForChoiceNode(choiceNode, result);
 		}
-		
+
 		return result;
 	}
-	
+
 	private static void addLabelsForChoiceNode(ChoiceNode choiceNode, Set<String> inOutResult) {
-		
+
 		Set<String> labelsOfChoice = choiceNode.getLabels();
-		
+
 		for (String label : labelsOfChoice) {
 			inOutResult.add(label);
 		}
@@ -787,7 +847,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getLeafChoiceValues(List<ChoiceNode> leafChoices) {
 
 		Set<String> result = new LinkedHashSet<String>();
@@ -798,7 +858,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static String generateNewChoiceName(IChoicesParentNode fChoicesParentNode, String startChoiceName) {
 
 		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
@@ -815,5 +875,5 @@ public class ChoiceNodeHelper {
 			}
 		}
 	}
-	
+
 }

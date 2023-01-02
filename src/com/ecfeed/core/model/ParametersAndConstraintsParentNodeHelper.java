@@ -91,15 +91,27 @@ public class ParametersAndConstraintsParentNodeHelper {
 		}
 	}
 
-	public static BasicParameterNode addParameterToMethod(
+	public static BasicParameterNode addBasicParameterToParent(
 			IParametersParentNode parametersParentNode, String name, String type) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
+		
 		parametersParentNode.addParameter(methodParameterNode);
 
 		return methodParameterNode;
 	}
 
+	public static CompositeParameterNode addCompositeParameterToMethod(
+			MethodNode methodNode, String compositeParameterName) {
+		
+		CompositeParameterNode compositeMethodParameterNode2 = 
+				new CompositeParameterNode(compositeParameterName, null);
+
+		methodNode.addParameter(compositeMethodParameterNode2);
+		
+		return compositeMethodParameterNode2;
+	}
+	
 	public static BasicParameterNode addLinkedParameterToMethod(
 			IParametersParentNode parametersParentNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
 
@@ -200,7 +212,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 	public static String generateNewParameterName(IParametersParentNode parametersParentNode) {
 
-		int i = 0;
+		int i = 1;
 
 		String name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
 
@@ -298,27 +310,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 		values = StringHelper.removeDuplicates(values);
 
 		return values;
-	}
-
-	public static BasicParameterNode findMethodParameterByName(
-			String parameterNameToFindInExtLanguage, 
-			IParametersParentNode parametersParentNode,
-			IExtLanguageManager extLanguageManager) {
-
-		List<AbstractParameterNode> methodParameters = parametersParentNode.getParameters();
-
-		for (AbstractParameterNode parameter : methodParameters) {
-
-			BasicParameterNode methodParameterNode = (BasicParameterNode)parameter;
-
-			String parameterNameInExtLanguage = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
-
-			if (StringHelper.isEqual(parameterNameToFindInExtLanguage, parameterNameInExtLanguage)) {
-				return methodParameterNode;
-			}
-		}
-
-		return null;
 	}
 
 }

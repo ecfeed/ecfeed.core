@@ -16,7 +16,7 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ClassOperationAddMethods extends BulkOperation{
+public class ClassOperationAddMethods extends CompositeOperation{
 
 	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, IExtLanguageManager extLanguageManager) {
 		

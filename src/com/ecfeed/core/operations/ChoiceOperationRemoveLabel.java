@@ -14,7 +14,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ChoiceOperationRemoveLabel extends BulkOperation{
+public class ChoiceOperationRemoveLabel extends CompositeOperation{
 
 	private class RemoveLabelOperation extends AbstractModelOperation{
 
