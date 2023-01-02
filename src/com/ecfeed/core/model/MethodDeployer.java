@@ -20,7 +20,7 @@ public abstract class MethodDeployer {
 
 	public static String POSTFIX = "deployed";
 
-	public static MethodNode deploy(NodeMapper mapper, MethodNode sourceMethodNode) { // TODO MO-RE refactor - mapper as second parameter (additional)
+	public static MethodNode deploy(MethodNode sourceMethodNode, NodeMapper mapper) {
 
 		if (sourceMethodNode == null) {
 			ExceptionHelper.reportRuntimeException("The source method is not defined.");
