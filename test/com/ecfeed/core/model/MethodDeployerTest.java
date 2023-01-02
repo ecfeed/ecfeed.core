@@ -122,18 +122,18 @@ public class MethodDeployerTest {
 
 		BasicParameterNode deployedParameter = (BasicParameterNode)deployedMethod.getParameters().get(0);
 
-		// ChoiceNode deployedChoiceNode = TODO MO-RE 
-		deployedParameter.getChoices().get(0);
+		ChoiceNode deployedChoiceNode =  
+				deployedParameter.getChoices().get(0);
 
-		// ChoiceNode choiceNodeFromConstraint1 = 
-		TestHelper.getChoiceNodeFromConstraintPrecondition(deployedMethod);
+		ChoiceNode choiceNodeFromConstraint1 = 
+				TestHelper.getChoiceNodeFromConstraintPrecondition(deployedMethod);
 
-		// assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint1.hashCode()); TODO MO-RE
+		assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint1.hashCode());
 
-		// ChoiceNode choiceNodeFromConstraint2 = 
-		TestHelper.getChoiceNodeFromConstraintPostcondition(deployedMethod);
+		ChoiceNode choiceNodeFromConstraint2 = 
+				TestHelper.getChoiceNodeFromConstraintPostcondition(deployedMethod);
 
-		// assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint2.hashCode()); TODO MO-RE
+		assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint2.hashCode());
 
 		// TODO check parameter
 	}
