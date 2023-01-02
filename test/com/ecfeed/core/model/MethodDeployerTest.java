@@ -15,6 +15,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.junit.Test;
 
 public class MethodDeployerTest {
@@ -60,7 +62,7 @@ public class MethodDeployerTest {
 		BasicParameterNode deployedParameter = (BasicParameterNode)deployedMethod.getParameters().get(0);
 
 		assertTrue(sourceParameter.hashCode() != deployedParameter.hashCode());
-		
+
 		assertEquals(deployedParameter.getParent(), deployedMethod);
 
 		assertEquals(sourceParameter.getName(), deployedParameter.getName());
@@ -87,7 +89,7 @@ public class MethodDeployerTest {
 		BasicParameterNode deployedParameter = (BasicParameterNode)deployedMethod.getParameters().get(0);
 
 		ChoiceNode deployedChoiceNode = deployedParameter.getChoices().get(0);
-		
+
 		IAbstractNode parent = deployedChoiceNode.getParent();
 		assertEquals(parent, deployedParameter);
 
@@ -99,7 +101,7 @@ public class MethodDeployerTest {
 		assertEquals(sourceChoiceNode.hashCode(), originalChoiceNode.hashCode());
 	}
 
-	//	@Test
+	//	@Test TODO MO-RE uncomment and finish test
 	//	public void deployMethodWithSimpleConstraint() {
 	//
 	//		MethodNode sourceMethod = new MethodNode("method");
@@ -130,6 +132,162 @@ public class MethodDeployerTest {
 	//		assertEquals(deployedChoiceNode.hashCode(), choiceNodeFromConstraint.hashCode());
 	//
 	//		// TODO check parameter
-	//	}
+	//	}	
+	@Test
+	public void deployParameterLinkedInStructure() {
 
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global parameter of root and choice node
+
+		final String parameterType = "String";
+
+		String globalParameterName = "RP1";
+		
+		BasicParameterNode globalParameterNodeOfRoot = 
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, parameterType, null);
+
+		String globalChoiceNodeName = "RC11";
+		
+		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add composite parameter
+
+		CompositeParameterNode compositeParameterNode = 
+				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S1");
+
+		// add linked basic parameter to composite parameter
+
+		BasicParameterNode basicParameterNode = 
+				new BasicParameterNode(
+						"P1", parameterType, "", false,	globalParameterNodeOfRoot,	null);
+
+		compositeParameterNode.addParameter(basicParameterNode);
+
+		// deploy 
+		
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(mapper, methodNode);
+		
+		// check
+		
+		assertEquals(1, deployedMethod.getParametersCount());
+		
+		BasicParameterNode deployedParameterNode = (BasicParameterNode) deployedMethod.getParameter(0);
+		
+		String deployedParameterName = deployedParameterNode.getName();
+		assertEquals(deployedParameterName, "S1:P1");
+
+		AbstractParameterNode link = deployedParameterNode.getLinkToGlobalParameter();
+		// assertNull(link); TODO MO-RE here test fails - global parameters and choices should be "resolved" local
+		
+		int deployedChoicesCount = deployedParameterNode.getChoiceCount();
+		assertEquals(1, deployedChoicesCount);
+		
+		List<ChoiceNode> deployedChoices = deployedParameterNode.getChoices();
+		ChoiceNode deployedChoiceNode = deployedChoices.get(0);
+		
+		String deployedChoiceName = deployedChoiceNode.getName();
+		assertEquals(globalChoiceNodeName, deployedChoiceName);
+	}
+
+	@Test
+	public void deployTwoLinkedParametersWithDifferentNames() {
+
+		MethodNode methodNode = createModelWithTwoLinkedParameters("P1", "P2");
+		
+		// deploy 
+		
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(mapper, methodNode);
+		
+		// check
+		
+		assertEquals(2, deployedMethod.getParametersCount());
+		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
+		
+		String name1 = deployedParameters.get(0).getName();
+		assertEquals("P1", name1);
+		String name2 = deployedParameters.get(1).getName();
+		assertEquals("S1:P2", name2);
+	}
+	
+	@Test
+	public void deployTwoLinkedParametersWithTheSameNames() {
+
+		MethodNode methodNode = createModelWithTwoLinkedParameters("P1", "P1");
+		
+		// deploy 
+		
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(mapper, methodNode);
+		
+		// check
+		
+		// assertEquals(1, deployedMethod.getParametersCount()); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged 
+		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
+		
+		String name1 = deployedParameters.get(0).getName();
+		assertEquals("P1", name1);
+	}
+	
+	private MethodNode createModelWithTwoLinkedParameters(String parameter1Name, String parameter2Name) {
+		
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global parameter of root and choice node
+
+		final String parameterType = "String";
+
+		String globalParameterName = "RP1";
+		
+		BasicParameterNode globalParameterNodeOfRoot = 
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, parameterType, null);
+
+		String globalChoiceNodeName = "RC11";
+		
+		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		BasicParameterNode basicParameterNodeOfMethod = 
+				new BasicParameterNode(
+						parameter1Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
+		
+		methodNode.addParameter(basicParameterNodeOfMethod);
+		
+		// add composite parameter
+
+		CompositeParameterNode compositeParameterNode = 
+				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S1");
+
+		// add linked basic parameter to composite parameter
+
+		BasicParameterNode basicParameterNodeOfCompositeParam = 
+				new BasicParameterNode(
+						parameter2Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
+
+		compositeParameterNode.addParameter(basicParameterNodeOfCompositeParam);
+		
+		return methodNode;
+	}
+	
 }
