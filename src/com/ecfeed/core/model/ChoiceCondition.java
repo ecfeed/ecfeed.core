@@ -90,7 +90,8 @@ public class ChoiceCondition implements IStatementCondition {
 		// Also, there is no way to check whether it is a linked node "from the inside".
 		IAbstractNode node = fRightChoice.getParameter();
 
-		while (node.getParent() instanceof CompositeParameterNode) {
+		node = node.getParent();
+		while (node instanceof CompositeParameterNode) {
 			node = node.getParent();
 		}
 
