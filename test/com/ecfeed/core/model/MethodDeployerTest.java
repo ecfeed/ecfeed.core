@@ -210,7 +210,7 @@ public class MethodDeployerTest {
 	@Test
 	public void deployTwoLinkedParametersWithDifferentNames() {
 
-		MethodNode methodNode = createModelWithTwoLinkedParameters("P1", "P2");
+		MethodNode methodNode = createModelWithTwoLinkedParametersOneAtMethodLevel("P1", "P2");
 
 		// deploy 
 
@@ -231,7 +231,7 @@ public class MethodDeployerTest {
 	@Test
 	public void deployTwoLinkedParametersWithTheSameNames() {
 
-		MethodNode methodNode = createModelWithTwoLinkedParameters("P1", "P1");
+		MethodNode methodNode = createModelWithTwoLinkedParametersOneAtMethodLevel("P1", "P1");
 
 		// deploy 
 
@@ -247,7 +247,29 @@ public class MethodDeployerTest {
 		assertEquals("P1", name1);
 	}
 
-	private MethodNode createModelWithTwoLinkedParameters(String parameter1Name, String parameter2Name) {
+	@Test
+	public void deployTwoLinkedParametersWithTheSameNamesInStructures() {
+
+		//MethodNode methodNode = createModelWithTwoLinkedParametersInCompositeParameters("P1", "P1");
+
+		// deploy 
+
+		//NodeMapper mapper = new NodeMapper();
+		//MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
+
+		// check
+
+		//int parametersCount = deployedMethod.getParametersCount();
+		//assertEquals(2, parametersCount); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged 
+		//List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
+
+		//String name1 = deployedParameters.get(0).getName();
+		// assertEquals("P1", name1); TODO MO-RE uncomment
+		
+		// TODO MO-RE check OTHER parameter
+	}
+	
+	private MethodNode createModelWithTwoLinkedParametersOneAtMethodLevel(String parameter1Name, String parameter2Name) {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -296,4 +318,70 @@ public class MethodDeployerTest {
 		return methodNode;
 	}
 
+	// TODO MO-RE private
+	public MethodNode createModelWithTwoLinkedParametersInCompositeParameters(String parameter1Name, String parameter2Name) {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// add global parameter of root and choice node
+
+		final String parameterType = "String";
+
+		String globalParameterName = "RP1";
+
+		BasicParameterNode globalParameterNodeOfRoot = 
+				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, parameterType, null);
+
+		String globalChoiceNodeName = "RC11";
+
+		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
+
+		// add class node
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// add method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// add composite parameter 1 and linked parameter 
+
+		CompositeParameterNode compositeParameterNode1 = 
+				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S1");
+
+		// add linked basic parameter to composite parameter
+
+		BasicParameterNode basicParameter1 = 
+				new BasicParameterNode(
+						parameter1Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
+
+		compositeParameterNode1.addParameter(basicParameter1);
+
+		
+		// add composite parameter 2 and linked parameter 
+
+		CompositeParameterNode compositeParameterNode2 = 
+				ParametersAndConstraintsParentNodeHelper.addCompositeParameterToMethod(methodNode, "S2");
+
+		// add linked basic parameter to composite parameter
+
+		BasicParameterNode basicParameter2 = 
+				new BasicParameterNode(
+						parameter2Name, parameterType, "", false,	globalParameterNodeOfRoot,	null);
+
+		compositeParameterNode2.addParameter(basicParameter2);
+		
+		// add not linked parameter
+		
+		BasicParameterNode basicParameter3 = 
+				new BasicParameterNode(
+						"OTHER", parameterType, "", false,	null,	null);
+		
+		compositeParameterNode2.addParameter(basicParameter3);
+		
+		return methodNode;
+	}
+	
 }
