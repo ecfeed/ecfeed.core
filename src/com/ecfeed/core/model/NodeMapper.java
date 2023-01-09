@@ -37,21 +37,4 @@ public class NodeMapper {
 
 		return deployment != null ? (T) deployment : source;
 	}
-
-//	@SuppressWarnings("unchecked")
-//	public <T extends AbstractNode> T getMappedNode(T node) {
-//		AbstractNode source = fNodeMappingsDeployment.get(node);
-//
-//		if (source != null) {
-//			return (T) source;
-//		}
-//
-//		AbstractNode deployment = fNodeMappingsSource.get(node);
-//
-//		if (deployment != null) {
-//			return (T) deployment;
-//		}
-//
-//		return node;
-//	}
 }
