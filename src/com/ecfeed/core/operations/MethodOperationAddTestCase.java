@@ -60,59 +60,60 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 		if (fIndex == -1) {
 			fIndex = fMethodNode.getTestCases().size();
 		}
-		
+
 		if (!testCaseNameOk(fTestCaseNode)) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_NOT_ALLOWED);
 		}
-		
-		if (fTestCaseNode.updateReferences(fMethodNode) == false) {
+
+		if (fTestCaseNode.correctTestCase(fMethodNode) == false) {
 			ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_INCOMPATIBLE_WITH_METHOD);
 		}
 
-		//following must be done AFTER references are updated
 		fTestCaseNode.setParent(fMethodNode);
 
 		for(ChoiceNode choice : fTestCaseNode.getTestData()) {
 
-			BasicParameterNode parameter = fTestCaseNode.getMethodParameter(choice);
+			//			BasicParameterNode parameter = fTestCaseNode.getBasicMethodParameter(choice);
+			BasicParameterNode parameter = choice.getParameter();
 
-			if(parameter.isExpected()){
-				
+			if (parameter.isExpected()) {
+
 				String type = parameter.getType();
-				
+
 				ITypeAdapter<?> adapter = fTypeAdapterProvider.getAdapter(type);
-				
+
 				String newValue = 
 						adapter.adapt(
 								choice.getValueString(), 
 								choice.isRandomizedValue(), 
 								ERunMode.QUIET, 
 								getExtLanguageManager());
-				
-				if(newValue == null){
+
+				if (newValue == null) {
 					ExceptionHelper.reportRuntimeException(OperationMessages.TEST_CASE_DATA_INCOMPATIBLE_WITH_METHOD);
 				}
+				
 				choice.setValueString(newValue);
 			}
 		}
 
 		fMethodNode.addTestCase(fTestCaseNode, fIndex);
-		
+
 		markModelUpdated();
 	}
 
 	private boolean testCaseNameOk(TestCaseNode testCaseNode) {
-		
+
 		String name = testCaseNode.getName();
-		
+
 		if (StringHelper.isNullOrEmpty(name)) {
 			return true;
 		}
-		
+
 		if (!name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

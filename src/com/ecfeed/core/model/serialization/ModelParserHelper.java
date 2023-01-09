@@ -31,13 +31,23 @@ public class ModelParserHelper  {
 	public static IModelParserForMethod createStandardModelParserForMethod() {
 		
 		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+
+		IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
 		
 		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 		
 		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+
+		IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
+				= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
 		
-		IModelParserForMethod modelParserForMethod = 
-				new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
+		IModelParserForMethod modelParserForMethod = new ModelParserForMethod(
+				modelParserForMethodParameter,
+				modelParserForMethodCompositeParameter,
+				modelParserForMethodDeployedParameter,
+				modelParserForTestCase,
+				modelParserForConstraint);
+
 		return modelParserForMethod;
 	}
 	
@@ -46,13 +56,18 @@ public class ModelParserHelper  {
 		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
 		
 		IModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
+
+		IModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
 		
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
+
+		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
+				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserFroConstraint);
 		
 		ModelParserForClass modelParserForClass = 
 				new ModelParserForClass(
-						modelParserForGlobalParameter, modelParserForMethod);
+						modelParserForGlobalParameter, modelParserForGlobalCompositeParameter, modelParserForMethod);
 		return modelParserForClass;
 	}
 	
@@ -64,16 +79,27 @@ public class ModelParserHelper  {
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
 
+		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+
+		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
+				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserForConstraint);
+
 		IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 		
 		IModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(
 						modelVersion, 
 						modelParserForGlobalParameter,
+						modelParserForGlobalCompositeParameter,
 						modelParserForClass,
 						modelChangeRegistrator);
 		
 		return modelParserForRoot;
+	}
+	
+	public static boolean verifyNodeTag(Element element, String expectedName) {
+//		String test = element.getQualifiedName();
+		return element.getQualifiedName().equals(expectedName);
 	}
 	
 	public static void assertNodeTag(

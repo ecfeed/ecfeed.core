@@ -120,7 +120,13 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public ValueCondition makeClone() {
 
-		return new ValueCondition(new String(fRightValue), fParentRelationStatement);
+		return new ValueCondition(fRightValue, fParentRelationStatement);
+	}
+
+	@Override
+	public ValueCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+
+		return new ValueCondition(fRightValue, statement);
 	}
 
 	@Override
@@ -224,22 +230,22 @@ public class ValueCondition implements IStatementCondition {
 		return null;
 	}
 
-	@Override
-	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		String deployedRightValue = getRightValue();
-		
-		RelationStatement deployedParentRelationStatement = 
-				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
-
-		ValueCondition deployedValueCondition = 
-				new ValueCondition(
-						deployedRightValue, 
-						deployedParentRelationStatement);
-
-		return deployedValueCondition;
-		
-	}
+//	@Override
+//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		String deployedRightValue = getRightValue();
+//
+//		RelationStatement deployedParentRelationStatement =
+//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+//
+//		ValueCondition deployedValueCondition =
+//				new ValueCondition(
+//						deployedRightValue,
+//						deployedParentRelationStatement);
+//
+//		return deployedValueCondition;
+//
+//	}
 
 }	
 

@@ -10,13 +10,11 @@
 
 package com.ecfeed.core.operations;
 
-import java.util.List;
-
+import com.ecfeed.core.model.AbstractNodeHelper;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -40,17 +38,16 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 		ClassNode classNode = fTargetMethodNode.getClassNode();
 
-		String methodName = MethodNodeHelper.getName(fSourceMethodNode, getExtLanguageManager());
-		List<String> methodParameters = MethodNodeHelper.getParameterTypes(fSourceMethodNode, getExtLanguageManager());
+		String methodName = AbstractNodeHelper.getName(fSourceMethodNode, getExtLanguageManager());
+		//List<String> methodParameters = ParametersParentNodeHelper.getParameterTypes(fSourceMethodNode, getExtLanguageManager());
 
 		if (ClassNodeHelper.findMethodByExtLanguage(
 				classNode, 
 				methodName, 
-				methodParameters, 
 				getExtLanguageManager()) != null) {
 
 			ExceptionHelper.reportRuntimeException(
-					ClassNodeHelper.createMethodSignatureDuplicateMessage(
+					ClassNodeHelper.createMethodNameDuplicateMessage(
 							classNode, fTargetMethodNode, false, getExtLanguageManager()));
 		}
 
@@ -61,8 +58,8 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 		fTargetMethodNode.setName(methodName);
 
 		for(int i = 0; i < fTargetMethodNode.getParameters().size(); i++){
-			BasicParameterNode targetParameter = fTargetMethodNode.getMethodParameters().get(i);
-			BasicParameterNode sourceParameter = fSourceMethodNode.getMethodParameters().get(i);
+			AbstractParameterNode targetParameter = fTargetMethodNode.getParameters().get(i);
+			AbstractParameterNode sourceParameter = fSourceMethodNode.getParameters().get(i);
 
 			targetParameter.setName(sourceParameter.getName());
 		}

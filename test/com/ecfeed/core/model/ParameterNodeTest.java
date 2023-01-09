@@ -139,7 +139,7 @@ public class ParameterNodeTest{
 		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		method.addParameter(parameter);
 
-		assertEquals(method, parameter.getMethod());
+		assertEquals(method, parameter.getParent());
 	}
 
 	@Test

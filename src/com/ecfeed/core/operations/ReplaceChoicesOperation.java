@@ -18,7 +18,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ReplaceChoicesOperation extends BulkOperation {
+public class ReplaceChoicesOperation extends CompositeOperation {
 
 	public ReplaceChoicesOperation(
 			BasicParameterNode abstractParameterNode, 

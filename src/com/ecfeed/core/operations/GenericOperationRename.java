@@ -27,7 +27,6 @@ import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
@@ -96,11 +95,11 @@ public class GenericOperationRename extends AbstractModelOperation {
 				JavaLanguageHelper.createQualifiedName(fNewPackageName, newNonQualifiedNameInIntrLanguage);
 
 		if (!(fTargetAbstractNode instanceof RootNode)) {
-			verifyNameWithJavaRegex(
+			verifyNameWithRegex(
 					newQualifiedNameInIntrLanguage, 
 					fJavaNameRegex, 
 					fTargetAbstractNode, 
-					new ExtLanguageManagerForJava());
+					fExtLanguageManager);
 		}
 
 		return newQualifiedNameInIntrLanguage;
@@ -110,6 +109,19 @@ public class GenericOperationRename extends AbstractModelOperation {
 			String newQualifiedNameInIntrLanguage, 
 			String oldQualifiedNameInIntrLanguage) {
 
+		if (fTargetAbstractNode instanceof MethodNode) {
+			
+			MethodNode methodNode = (MethodNode) fTargetAbstractNode;
+			ClassNode classNode = methodNode.getClassNode();
+			
+			MethodNode foundMethodNode = classNode.findMethodWithTheSameName(newQualifiedNameInIntrLanguage);
+			
+			if (foundMethodNode != null) {
+				String message = "Method with name " + newQualifiedNameInIntrLanguage + " already exists in class.";
+				ExceptionHelper.reportRuntimeException(message);
+			}
+		}
+		
 		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
 
 		if (fTargetAbstractNode instanceof TestSuiteNode) {
@@ -165,15 +177,15 @@ public class GenericOperationRename extends AbstractModelOperation {
 	protected void verifyNewName(String newNameInExtLanguage) {
 	}
 
-	private static void verifyNameWithJavaRegex(
+	private static void verifyNameWithRegex(
 			String name, 
 			String regex, 
 			IAbstractNode targetNode,
-			IExtLanguageManager extLanguageManager) {
+			IExtLanguageManager extLanguageManagerForDisplayingErrorMessage) {
 
 		if (name.matches(regex) == false) {
 
-			String regexProblemMessage = getRegexProblemMessage(targetNode, extLanguageManager);
+			String regexProblemMessage = getRegexProblemMessage(targetNode, extLanguageManagerForDisplayingErrorMessage);
 
 			ExceptionHelper.reportRuntimeException(regexProblemMessage);
 		}

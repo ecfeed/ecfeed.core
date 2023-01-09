@@ -434,7 +434,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public String toString() {
 
-		return createSignature(new ExtLanguageManagerForJava());
+		return ConstraintHelper.createSignatureOfConditions(this, new ExtLanguageManagerForJava());
 	}
 
 	public void convert(ParameterConversionItem parameterConversionItem) {
@@ -450,19 +450,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	//	}
-
-	public String createSignature(IExtLanguageManager extLanguageManager) {
-
-		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
-
-		if (fConstraintType == ConstraintType.BASIC_FILTER) {
-			return postconditionSignature;
-		}
-
-		String preconditionSignature = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
-
-		return preconditionSignature + " => " + postconditionSignature;
-	}
 
 	@Override
 	public boolean mentions(int dimension) {
@@ -588,7 +575,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		AbstractStatement precondition = fPrecondition.makeClone();
 		AbstractStatement postcondition = fPostcondition.makeClone();
 
-		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+
+	public Constraint createCopy(NodeMapper mapper) {
+
+		AbstractStatement precondition = fPrecondition.createCopy(mapper);
+		AbstractStatement postcondition = fPostcondition.createCopy(mapper);
+
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
 	public void verifyConversionOfParameterFromToType(
@@ -931,4 +926,86 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	}
 
+	public static class CollectingMethodVisitor  implements IStatementVisitor {
+
+		private Set<MethodNode> fMethods = new HashSet<>();
+
+		public CollectingMethodVisitor() {
+		}
+
+		public Set<MethodNode> getMethods() {
+
+			return fMethods;
+		}
+
+		@Override
+		public Object visit(StaticStatement statement) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(StatementArray statement) {
+
+			for (AbstractStatement child : statement.getChildren()) {
+				try {
+					CollectingMethodVisitor visitor = new CollectingMethodVisitor();
+					child.accept(visitor);
+
+					if (visitor.getMethods().size() == 0) {
+						continue;
+					}
+
+					fMethods.addAll(visitor.getMethods());
+				} catch (Exception e) {
+					ExceptionHelper.reportRuntimeException("Something is wrong");
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ExpectedValueStatement statement) {
+
+			BasicParameterNode leftMethodParameterNode = statement.getLeftMethodParameterNode();
+			
+			fMethods.add((MethodNode) leftMethodParameterNode.getParent());
+
+			return null;
+		}
+
+		@Override
+		public Object visit(RelationStatement statement) {
+
+			BasicParameterNode leftParameter = statement.getLeftParameter();
+			fMethods.add((MethodNode) leftParameter.getParent());
+
+			return null;
+		}
+
+		@Override
+		public Object visit(LabelCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ChoiceCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ParameterCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ValueCondition condition) {
+
+			return null;
+		}
+	}
 }

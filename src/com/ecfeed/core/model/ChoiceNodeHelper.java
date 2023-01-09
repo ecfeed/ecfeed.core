@@ -38,14 +38,70 @@ import com.ecfeed.core.utils.Pair;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ChoiceNodeHelper {
 
 	private static final double eps = 0.000001;
 
+	public static BasicParameterNode getBasicParameter(ChoiceNode choiceNode) {
+
+		return getParameterRecursive(choiceNode);
+	}
+
+	private static BasicParameterNode getParameterRecursive(ChoiceNode choiceNode) {
+
+		IAbstractNode parent = choiceNode.getParent();
+
+		if (parent == null) {
+			return null;
+		}
+
+		if (parent instanceof BasicParameterNode) {
+			return (BasicParameterNode) parent;
+		}
+
+		if (parent instanceof ChoiceNode) {
+
+			BasicParameterNode basicParameterNode = getParameterRecursive((ChoiceNode)parent);
+			return basicParameterNode;
+		}
+
+		if (parent instanceof TestCaseNode) {
+
+			BasicParameterNode basicParameterNode = getParameterForChoiceFromTestCase(choiceNode, parent);
+			return basicParameterNode;
+		}
+
+		ExceptionHelper.reportRuntimeException("Invalid type of choices parent.");
+		return null;
+	}
+
+	private static BasicParameterNode getParameterForChoiceFromTestCase(ChoiceNode choiceNode, IAbstractNode parent) {
+
+		TestCaseNode testCaseNode = (TestCaseNode) parent;
+
+		MethodNode methodNode = testCaseNode.getMethod();
+
+		if (methodNode == null) {
+			return null;
+		}
+
+		int indexOfChoiceNodeInTestCase = choiceNode.getMyIndex();
+
+		AbstractParameterNode abstractParameterNode = methodNode.getParameter(indexOfChoiceNodeInTestCase);
+
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+		return basicParameterNode;
+	}
+
 	public static ChoiceNode createChoiceNodeWithDefaultValue(BasicParameterNode parentMethodParameterNode) {
-		
+
 		String defaultValue = parentMethodParameterNode.getDefaultValue();
 
 		ChoiceNode choiceNode = new ChoiceNode(ChoiceNode.ASSIGNMENT_NAME, defaultValue, parentMethodParameterNode.getModelChangeRegistrator());
@@ -53,10 +109,12 @@ public class ChoiceNodeHelper {
 
 		return choiceNode;
 	}
-	
+
 	public static void cloneChoiceNodesRecursively(
 			IChoicesParentNode srcParentNode, 
-			IChoicesParentNode dstParentNode) {
+			IChoicesParentNode dstParentNode,
+			NodeMapper mapper
+			) {
 
 		List<ChoiceNode> childChoiceNodes = srcParentNode.getChoices();
 
@@ -67,11 +125,16 @@ public class ChoiceNodeHelper {
 		for (ChoiceNode choiceNode : childChoiceNodes) {
 
 			ChoiceNode clonedChoiceNode = choiceNode.makeClone();
+
+			if (mapper != null) {
+				mapper.addMappings(choiceNode, clonedChoiceNode);
+			}
+
 			clonedChoiceNode.clearChoices();
 
 			dstParentNode.addChoice(clonedChoiceNode);
 
-			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode);
+			cloneChoiceNodesRecursively(choiceNode, clonedChoiceNode, mapper);
 		}
 	}
 
@@ -251,25 +314,24 @@ public class ChoiceNodeHelper {
 		return choiceNode.getName();
 	}
 
-	public static String createTestDataLabel(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureOfChoiceWithParameter(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
-		BasicParameterNode abstractParameterNode = choiceNode.getParameter();	
+		BasicParameterNode basicParameterNode = choiceNode.getParameter();	
+		
+		String choiceQualifiedName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		
+		if (basicParameterNode == null) {
 
-		if (abstractParameterNode == null) {
-
-			return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+			return choiceQualifiedName;
 		}
 
-		if (abstractParameterNode instanceof BasicParameterNode) {
-
-			BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-
-			if (methodParameterNode.isExpected()) {
-				return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
-			}
+		String parameterCompositeName = AbstractParameterNodeHelper.getCompositeName(basicParameterNode, extLanguageManager);
+		
+		if (basicParameterNode.isExpected()) {
+			return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
 		}
-
-		return ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
+		
+		return parameterCompositeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + choiceQualifiedName;
 	}
 
 	public static String getValueString(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
@@ -374,7 +436,6 @@ public class ChoiceNodeHelper {
 	}
 
 	public static ChoiceNode toRangeFromFirst(ChoiceNode first, ChoiceNode second) {
-
 		assertChoicesNotRandomized(first, second);
 
 		ChoiceNode ret = first.makeClone();
@@ -386,7 +447,6 @@ public class ChoiceNodeHelper {
 	}
 
 	public static ChoiceNode toRangeFromSecond(ChoiceNode first, ChoiceNode second)	{
-
 		assertChoicesNotRandomized(first, second);
 
 		ChoiceNode ret = second.makeClone();
@@ -404,110 +464,96 @@ public class ChoiceNodeHelper {
 		}
 	}
 
-	public static ChoiceNode getPrecedingValue(ChoiceNode choice) {
-
+	public static void getPrecedingValue(ChoiceNode choice) {
 		assertChoiceNotRandomized(choice);
 
 		String type = choice.getParameter().getType();
-		ChoiceNode clone = choice.makeClone();
 
-		choice = convertValueToNumeric(choice);
+		ChoiceNode choiceX = convertValueToNumeric(choice);
 
 		switch(type) {
 		case TYPE_NAME_DOUBLE:
 		case TYPE_NAME_FLOAT: {
-			double val = Double.parseDouble(choice.getValueString());
+			double val = Double.parseDouble(choiceX.getValueString());
 			if(val==0.0)
 				val = -eps;
 			else if(val<0.0)
 				val *= 1+eps;
 			else
 				val /= 1+eps;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 
 		case TYPE_NAME_BYTE:
 		case TYPE_NAME_INT:
 		case TYPE_NAME_SHORT:
 		case TYPE_NAME_LONG: {
-			long val = Long.parseLong(choice.getValueString());
+			long val = Long.parseLong(choiceX.getValueString());
 			if(val!=Long.MIN_VALUE)
 				val--;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 
 		default: {
 			reportExceptionUnhandledType();
-			return null;
 		}
 		}
 	}
 
-	public static ChoiceNode followingVal(ChoiceNode choice) {
+	public static void getFollowingVal(ChoiceNode choice) {
 
 		assertChoiceNotRandomized(choice);
 
 		String type = choice.getParameter().getType();
-		ChoiceNode clone = choice.makeClone();
 
-		choice = convertValueToNumeric(choice);
+		ChoiceNode choiceX = convertValueToNumeric(choice);
 
 		switch(type) {
 		case TYPE_NAME_DOUBLE:
 		case TYPE_NAME_FLOAT: {
-			double val = Double.parseDouble(choice.getValueString());
+			double val = Double.parseDouble(choiceX.getValueString());
 			if(val==0.0)
 				val = eps;
 			else if(val<0.0)
 				val /= 1+eps;
 			else
 				val *= 1+eps;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 		case TYPE_NAME_BYTE:
 		case TYPE_NAME_INT:
 		case TYPE_NAME_SHORT:
 		case TYPE_NAME_LONG: {
-			long val = Long.parseLong(choice.getValueString());
+			long val = Long.parseLong(choiceX.getValueString());
 			if(val != Long.MAX_VALUE)
 				val++;
-			clone.setValueString(String.valueOf(val));
-			return clone;
+			choice.setValueString(String.valueOf(val));
+			return;
 		}
 		default:
 		{
 			reportExceptionUnhandledType();
-			return null;
 		}
 		}
 	}
 
-	public static ChoiceNode roundValueDown(ChoiceNode choiceInput)	{
-
-		ChoiceNode choice = choiceInput.makeClone();
-
+	public static void roundValueDown(ChoiceNode choice)	{
 		assertChoiceNotRandomized(choice);
 
-		double v = Double.parseDouble(choice.getValueString());
-		long w = (long) Math.floor(v);
-		choice.setValueString(String.valueOf(w));
-		return choice;
+		long val = (long) Math.floor(Double.parseDouble(choice.getValueString()));
+
+		choice.setValueString(String.valueOf(val));
 	}
 
-	public static ChoiceNode roundValueUp(ChoiceNode choiceInput) {
-
-		ChoiceNode choice = choiceInput.makeClone();
-
+	public static void roundValueUp(ChoiceNode choice) {
 		assertChoiceNotRandomized(choice);
 
-		double v = Double.parseDouble(choice.getValueString());
-		long w = (long) Math.ceil(v);
-		choice.setValueString(String.valueOf(w));
+		long val = (long) Math.ceil(Double.parseDouble(choice.getValueString()));
 
-		return choice;
+		choice.setValueString(String.valueOf(val));
 	}
 
 	public static ChoiceNode convertValueToNumeric(ChoiceNode choiceInput) {
@@ -731,7 +777,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<ChoiceNode> getAllChoices(Collection<ChoiceNode> choices) {
 
 		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
@@ -743,7 +789,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getChoiceNames(Collection<ChoiceNode> choiceNodes) {
 
 		Set<String> result = new LinkedHashSet<String>();
@@ -754,7 +800,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<ChoiceNode> getLabeledChoices(String label, List<ChoiceNode> choices) {
 
 		Set<ChoiceNode> result = new LinkedHashSet<ChoiceNode>();
@@ -770,22 +816,22 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getAllLabels(Set<ChoiceNode> choices) {
 
 		Set<String> result = new HashSet<>();
-		
+
 		for (ChoiceNode choiceNode : choices) {
 			addLabelsForChoiceNode(choiceNode, result);
 		}
-		
+
 		return result;
 	}
-	
+
 	private static void addLabelsForChoiceNode(ChoiceNode choiceNode, Set<String> inOutResult) {
-		
+
 		Set<String> labelsOfChoice = choiceNode.getLabels();
-		
+
 		for (String label : labelsOfChoice) {
 			inOutResult.add(label);
 		}
@@ -801,7 +847,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
+
 	public static Set<String> getLeafChoiceValues(List<ChoiceNode> leafChoices) {
 
 		Set<String> result = new LinkedHashSet<String>();
@@ -812,8 +858,7 @@ public class ChoiceNodeHelper {
 
 		return result;
 	}
-	
-	
+
 	public static String generateNewChoiceName(IChoicesParentNode fChoicesParentNode, String startChoiceName) {
 
 		if (!fChoicesParentNode.choiceExistsAsDirectChild(startChoiceName)) {
@@ -830,5 +875,5 @@ public class ChoiceNodeHelper {
 			}
 		}
 	}
-	
+
 }

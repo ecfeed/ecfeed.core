@@ -11,5 +11,5 @@
 package com.ecfeed.core.model;
 
 public interface IParametersAndConstraintsParentNode extends IParametersParentNode, IConstraintsParentNode {
-
+	
 }

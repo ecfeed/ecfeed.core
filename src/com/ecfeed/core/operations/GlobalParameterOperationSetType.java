@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 
-public class GlobalParameterOperationSetType extends BulkOperation {
+public class GlobalParameterOperationSetType extends CompositeOperation {
 
 	BasicParameterNode fGlobalParameterNode;
 	ParameterConversionDefinition fParameterConversionDefinition;

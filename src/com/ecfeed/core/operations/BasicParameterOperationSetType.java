@@ -14,17 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.ConstraintHelper;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IChoicesParentVisitor;
+import com.ecfeed.core.model.IConstraintsParentNode;
+import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
+import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ParameterTransformer;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -38,7 +44,7 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class MethodParameterOperationSetType extends AbstractParameterOperationSetType {
+public class BasicParameterOperationSetType extends AbstractParameterOperationSetType {
 
 	private String fOriginalDefaultValue;
 	private Map<Integer, String> fOriginalConstraintValues;
@@ -50,7 +56,7 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 	private String fNewTypeInIntrLanguage;
 	private IExtLanguageManager fExtLanguageManager;
 
-	public MethodParameterOperationSetType(
+	public BasicParameterOperationSetType(
 			BasicParameterNode target, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
@@ -73,20 +79,25 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 		fExtLanguageManager = extLanguageManager;
 
 		fOriginalDefaultValue = fMethodParameterNode.getDefaultValue();
-		fOriginalConstraintValues = ConstraintHelper.getOriginalConstraintValues(fMethodParameterNode.getMethod());
+		IConstraintsParentNode parent = (IConstraintsParentNode) fMethodParameterNode.getParent();
+		fOriginalConstraintValues = ConstraintHelper.getOriginalConstraintValues(parent);
 	}
 
 	@Override
 	public void execute() {
 
-		MethodNode methodNode = fMethodParameterNode.getMethod();
+		IAbstractNode parent = fMethodParameterNode.getParent();
+		
+		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
+				(IParametersAndConstraintsParentNode) parent;
 
-		checkForDuplicateSignatureInExtLanguage(methodNode);
+		checkForDuplicateSignatureInExtLanguage(parametersAndConstraintsParentNode);
 
 		super.execute();
 
-		fOriginalTestCases = new ArrayList<>(methodNode.getTestCases());
-		fOriginalConstraints = new ArrayList<>(methodNode.getConstraintNodes());
+		fOriginalTestCases = getTestCases(parent);
+		List<ConstraintNode> constraintNodes = parametersAndConstraintsParentNode.getConstraintNodes();
+		fOriginalConstraints = new ArrayList<>(constraintNodes);
 
 		convertDefaultValue(
 				fMethodParameterNode, 
@@ -100,39 +111,57 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 		markModelUpdated();
 	}
 
-	private void checkForDuplicateSignatureInExtLanguage(MethodNode oldMethodNode) {
+	private ArrayList<TestCaseNode> getTestCases(IAbstractNode parent) {
+		
+		if (parent instanceof ITestCasesParentNode) {
+		
+			ITestCasesParentNode testCasesParentNode = (ITestCasesParentNode) parent;
+			
+			return new ArrayList<>(testCasesParentNode.getTestCases());
+		}
+		
+		return new ArrayList<>();
+		
+	}
+
+	private void checkForDuplicateSignatureInExtLanguage(IParametersParentNode parametersParentNode) {
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 		List<String> parameterTypesInExtLanguage = 
-				MethodNodeHelper.getParameterTypes(oldMethodNode, extLanguageManager);
+				ParametersParentNodeHelper.getParameterTypes(parametersParentNode, extLanguageManager);
 
 		String newParameterTypeInIntrLanguage = getNewType();
 		String newParameterTypeInExtLanguage = extLanguageManager.convertTypeFromIntrToExtLanguage(newParameterTypeInIntrLanguage);
 
 		parameterTypesInExtLanguage.set(fMethodParameterNode.getMyIndex(), newParameterTypeInExtLanguage);
 
-		ClassNode classNode = oldMethodNode.getClassNode();
+		if (parametersParentNode instanceof MethodNode) {
 
-		String methodNameInExtLanguage = MethodNodeHelper.getName(oldMethodNode, fExtLanguageManager);
+			MethodNode methodNode = (MethodNode) parametersParentNode;
 
-		MethodNode foundMethodNode = 
-				ClassNodeHelper.findMethodByExtLanguage(
-						classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, fExtLanguageManager);
+			ClassNode classNode = methodNode.getClassNode();
 
-		if (foundMethodNode == null) {
-			return;
+			String methodNameInExtLanguage = AbstractNodeHelper.getName(methodNode, fExtLanguageManager);
+
+			MethodNode foundMethodNode = 
+					ClassNodeHelper.findMethodByExtLanguage(
+							classNode, methodNameInExtLanguage, fExtLanguageManager);
+
+			if (foundMethodNode == null) {
+				return;
+			}
+
+			if (foundMethodNode == parametersParentNode) {
+				return;
+			}
+
+			String message = 
+					ClassNodeHelper.createMethodNameDuplicateMessage(
+							classNode, foundMethodNode, false, extLanguageManager);
+
+			ExceptionHelper.reportRuntimeException(message);
 		}
-
-		if (foundMethodNode == oldMethodNode) {
-			return;
-		}
-
-		String message = 
-				ClassNodeHelper.createMethodSignatureDuplicateMessage(
-						classNode, foundMethodNode, false, extLanguageManager);
-
-		ExceptionHelper.reportRuntimeException(message);
 	}
 
 	@Override
@@ -231,12 +260,23 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 		public void execute() {
 
 			super.execute();
-			fMethodParameterNode.getMethod().replaceTestCases(fOriginalTestCases);
-			fMethodParameterNode.getMethod().replaceConstraints(fOriginalConstraints);
+			
+			IAbstractNode parent = fMethodParameterNode.getParent();
+			
+			IParametersAndConstraintsParentNode parametersAndConstraintsParentNode 
+				= (IParametersAndConstraintsParentNode) parent;
+			
+			if (parent instanceof ITestCasesParentNode) {
+				
+				ITestCasesParentNode testCasesParentNode = (ITestCasesParentNode) parent;
+				testCasesParentNode.replaceTestCases(fOriginalTestCases);
+			}
+			parametersAndConstraintsParentNode.replaceConstraints(fOriginalConstraints);
+			
 			fMethodParameterNode.setDefaultValueString(fOriginalDefaultValue);
 
 			ConstraintHelper.restoreOriginalConstraintValues(
-					fMethodParameterNode.getMethod(), fOriginalConstraintValues);
+					parametersAndConstraintsParentNode, fOriginalConstraintValues);
 
 			markModelUpdated();
 		}
@@ -244,7 +284,7 @@ public class MethodParameterOperationSetType extends AbstractParameterOperationS
 		@Override
 		public IModelOperation getReverseOperation() {
 
-			return new MethodParameterOperationSetType(
+			return new BasicParameterOperationSetType(
 					fMethodParameterNode, 
 					getNewType(), 
 					fParameterConversionDefinition, 

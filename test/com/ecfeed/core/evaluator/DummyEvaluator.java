@@ -7,8 +7,6 @@ import com.ecfeed.core.utils.EvaluationResult;
 
 public class DummyEvaluator<E> implements IConstraintEvaluator<E> {
 
-    //    public DummyEvaluator(Collection<IConstraint<E>> constraints) {}
-
     public DummyEvaluator() {
     }
 

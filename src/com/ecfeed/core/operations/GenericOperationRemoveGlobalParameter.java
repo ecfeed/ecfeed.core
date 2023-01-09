@@ -11,11 +11,12 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class GenericOperationRemoveGlobalParameter extends BulkOperation {
+public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 
 	public GenericOperationRemoveGlobalParameter(
 			IParametersParentNode target, 
@@ -28,8 +29,14 @@ public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
 		}
 		
-		for(BasicParameterNode linker : parameter.getLinkedMethodParameters()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, extLanguageManager));
+		for (BasicParameterNode linkedBasicParameterNode : parameter.getLinkedMethodParameters()) {
+			
+			MethodOperationRemoveParameter operation = 
+					new MethodOperationRemoveParameter(
+							(MethodNode) linkedBasicParameterNode.getParent(), 
+							linkedBasicParameterNode, 
+							extLanguageManager);
+			addOperation(operation);
 		}
 		
 		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguageManager));
@@ -48,7 +55,11 @@ public class GenericOperationRemoveGlobalParameter extends BulkOperation {
 		}
 		
 		for(BasicParameterNode linker : parameter.getLinkedMethodParameters()){
-			addOperation(new MethodOperationRemoveParameter(linker.getMethod(), linker, true, ignoreDuplicates, extLanguageManager));
+			MethodOperationRemoveParameter operation = 
+					new MethodOperationRemoveParameter(
+							(MethodNode)linker.getParent(), linker, true, ignoreDuplicates, extLanguageManager);
+			
+			addOperation(operation);
 		}
 		
 		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguageManager));

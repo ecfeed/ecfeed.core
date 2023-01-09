@@ -18,6 +18,7 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
@@ -29,7 +30,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fDefaultValue;
 	private AbstractParameterNode fLinkToGlobalParameter;
 	private List<ChoiceNode> fChoicesCopy;
-	
+	private BasicParameterNode fDeploymentParameterNode;
+
 	private ChoicesListHolder fChoicesListHolder;
 
 	public BasicParameterNode(
@@ -48,9 +50,9 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fExpected = expected;
 		fDefaultValue = defaultValue;
 		fLinkToGlobalParameter = link;
-		
+
 		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
-		
+
 		createDefaultProperties();
 	}
 
@@ -71,16 +73,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		this(name, type, null, false, null, modelChangeRegistrator);
 	}
-	
+
 	public BasicParameterNode(
 			String name,
 			String type,
 			String defaultValue,
 			boolean expected) {
-		
+
 		this(name, type, defaultValue, expected, null);
 	}
-	
+
 	public BasicParameterNode(
 			BasicParameterNode source,
 			String defaultValue, 
@@ -106,16 +108,30 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 				source.fExpected,
 				source.fLinkToGlobalParameter,
 				source.getModelChangeRegistrator());
-		
+
 		for(ChoiceNode choice : source.getChoices()){
 			addChoice(choice.makeClone());
 		}
 	}
-	
+
 	@Override
 	public void setName(String name) {
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		super.setName(name);
+	}
+
+	public void setNameUnsafe(String name) {
+
+		super.setName(name);
+	}
+
+	@Override
+	public void setCompositeName(String name) {
+
+		String simplifiedName = name.replace(SignatureHelper.SIGNATURE_NAME_SEPARATOR, "_"); 
+		JavaLanguageHelper.verifyIsValidJavaIdentifier(simplifiedName);
 
 		super.setName(name);
 	}
@@ -131,45 +147,76 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 			return super.toString() + "(" + getDefaultValue() + "): "
 					+ getType();
 		}
-		return new String(getName() + ": " + getType());
+		return getName() + ": " + getType();
 	}
 
 	@Override
 	public BasicParameterNode makeClone() {
-		BasicParameterNode copy = 
-				new BasicParameterNode(getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator()
-						);
+		BasicParameterNode parameter = makeClone(null);
 
-		copy.fLinkToGlobalParameter = fLinkToGlobalParameter;
+		parameter.setParent(getParent());
 
-		copy.setProperties(getProperties());
-		copy.setParent(this.getParent());
+		return parameter;
+	}
 
-		if (getDefaultValue() != null)
-			copy.setDefaultValueString(getDefaultValue());
+	public BasicParameterNode createCopy(NodeMapper mapper) {
+		BasicParameterNode parameter = makeClone(mapper);
 
-		for (ChoiceNode choice : getChoices()) {
-			copy.addChoice(choice.makeClone());
+		parameter.setDeploymentParameter(this);
+		parameter.setParent(null);
+
+		mapper.addMappings(this, parameter);
+
+		return parameter;
+	}
+
+	public BasicParameterNode getDeploymentParameter() {
+
+		return fDeploymentParameterNode;
+	}
+
+	public void setDeploymentParameter(BasicParameterNode parameterNode) {
+		fDeploymentParameterNode = parameterNode;
+	}
+
+	private BasicParameterNode makeClone(NodeMapper mapper) {
+
+		BasicParameterNode copyOfBasicParameterNode =
+				new BasicParameterNode(
+						getName(), getType(), getDefaultValue(), isExpected(), getModelChangeRegistrator());
+
+		copyProperties(copyOfBasicParameterNode);
+
+		ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
+
+		return copyOfBasicParameterNode;
+	}
+
+	private void copyProperties(BasicParameterNode copyOfBasicParameterNode) {
+
+		copyOfBasicParameterNode.fLinkToGlobalParameter = fLinkToGlobalParameter;
+
+		copyOfBasicParameterNode.setProperties(getProperties());
+
+		if (getDefaultValue() != null) {
+			copyOfBasicParameterNode.setDefaultValueString(getDefaultValue());
 		}
-
-		copy.setParent(getParent());
-		return copy;
 	}
 
 	public String getType() {
-		
+
 		if (isLinked() && fLinkToGlobalParameter != null) {
-			
+
 			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
-				
+
 				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
-				
+
 				return link.getType();
 			}
-			
+
 			return null;
 		}
-		
+
 		return fType;
 	}
 
@@ -182,7 +229,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fType = type;
 		registerChange();
 	}
-	
+
 	public String getTypeComments() {
 
 		if (isLinked() && fLinkToGlobalParameter != null) {
@@ -204,7 +251,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fTypeComments = comments;
 		registerChange();
 	}
-	
+
 	public String getRealType() { 
 		return fType;
 	}
@@ -213,19 +260,19 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public List<ChoiceNode> getChoices(){
 
 		boolean linked = isLinked();
-		
+
 		if (linked && fLinkToGlobalParameter != null) {
-			
+
 			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
-			
+
 				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
-				
+
 				return link.getChoices();
 			}
-			
+
 			return null;
 		}
-		
+
 		return fChoicesListHolder.getChoices();
 	}
 
@@ -234,9 +281,9 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		if (isLinked() && fLinkToGlobalParameter != null) {
 
 			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
-				
+
 				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
-				
+
 				if (fChoicesCopy == null) {
 					fChoicesCopy = link.getChoicesCopy();
 					return fChoicesCopy;
@@ -304,18 +351,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public List<IAbstractNode> getChildren() {
-		
+
 		if (isLinked()) {
-			
+
 			List<IAbstractNode> result = new ArrayList<>();
 			result.addAll(getChoices());
-			
+
 			return result;
 		}
 
 		List<IAbstractNode> result = new ArrayList<>();
 		result.addAll(fChoicesListHolder.getChoices());
-		
+
 		return result;
 	}
 
@@ -324,37 +371,34 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public List<MethodNode> getMethods() {
-		
-		MethodNode method = getMethod();
-		
-		if (method == null) {
+
+		IAbstractNode parent = getParent();
+
+		if (parent instanceof MethodNode) {
+
+			MethodNode method = (MethodNode) parent;
+
+			return Arrays.asList(new MethodNode[] { method });
+		}
+
+		if (parent instanceof CompositeParameterNode) {
 			return new ArrayList<>();
 		}
-		
-		return Arrays.asList(new MethodNode[] { method });
+
+		if (parent instanceof RootNode) {
+			return new ArrayList<>();
+		}
+
+		if (parent instanceof ClassNode) {
+			return new ArrayList<>();
+		}
+
+		ExceptionHelper.reportRuntimeException("Unexpected parent node type.");
+		return null;
 	}
 
 	public List<ChoiceNode> getOwnChoices() {
 		return getChoices();
-	}
-
-	public MethodNode getMethod() {
-		
-		IAbstractNode parent = getParent();
-		
-		if (parent instanceof RootNode) {
-			return null;
-		}
-
-		if (parent instanceof ClassNode) {
-			return null;
-		}
-
-		if (parent instanceof CompositeParameterNode) {
-			return null;
-		}
-		
-		return (MethodNode) parent;
 	}
 
 	public String getDefaultValue() {
@@ -383,11 +427,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public boolean isLinked() {
-		
+
 		if (fLinkToGlobalParameter != null) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -408,31 +452,20 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public boolean isMatch(IAbstractNode other) {
-		
+
 		if (other instanceof BasicParameterNode == false) {
 			return false;
 		}
-		
+
 		BasicParameterNode otherBasicParameter = (BasicParameterNode) other;
 
-		if (getType().equals(otherBasicParameter.getType()) == false) {
-			return false;
-		}
-
-		if (isExpected() != otherBasicParameter.isExpected()) {
-			return false;
-		}
-
-		String defaultValue = getDefaultValue();
-		String otherDefaultValue = otherBasicParameter.getDefaultValue();
-		
-		if (!StringHelper.isEqual(defaultValue, otherDefaultValue)) {
+		if (!propertiesMatch(otherBasicParameter)) {
 			return false;
 		}
 
 		int choicesCount = getChoiceCount();
 		int otherChoicesCount = otherBasicParameter.getChoiceCount();
-		
+
 		if (choicesCount != otherChoicesCount) {
 			return false;
 		}
@@ -444,6 +477,30 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		}
 
 		return super.isMatch(other);
+	}
+
+	public boolean propertiesMatch(BasicParameterNode otherBasicParameter) {
+
+		if (!StringHelper.isEqual(getName(), otherBasicParameter.getName())) {
+			return false;
+		}
+
+		if (!StringHelper.isEqual(getType(), otherBasicParameter.getType())) {
+			return false;
+		}
+
+		if (isExpected() != otherBasicParameter.isExpected()) {
+			return false;
+		}
+
+		String defaultValue = getDefaultValue();
+		String otherDefaultValue = otherBasicParameter.getDefaultValue();
+
+		if (!StringHelper.isEqual(defaultValue, otherDefaultValue)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override
@@ -461,11 +518,15 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public Set<ConstraintNode> getMentioningConstraints() {
-		return getMethod().getMentioningConstraints(this);
+
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) getParent();
+		return constraintsParentNode.getMentioningConstraints(this);
 	}
 
 	public Set<ConstraintNode> getMentioningConstraints(String label) {
-		return getMethod().getMentioningConstraints(this, label);
+
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) getParent();
+		return constraintsParentNode.getMentioningConstraints(this, label);
 	}
 
 	public List<ChoiceNode> getChoicesCopy() {
@@ -477,12 +538,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	public List<BasicParameterNode> getLinkedMethodParameters(){
-		
+
 		if (isGlobalParameter()) {
 			return new ArrayList<>();
 		}
 
 		List<BasicParameterNode> result = new ArrayList<>();
+
+
 		List<MethodNode> methods = getMethods();
 
 		if (methods == null) {
@@ -522,6 +585,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	}
 
 	@Override
+	public boolean hasChoices() {
+
+		if (getChoiceCount() == 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
 	public int getChoiceCount() {
 
 		return getChoices().size();
@@ -547,7 +620,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public List<ChoiceNode> getLeafChoices() {
-		
+
 		return ChoiceNodeHelper.getLeafChoices(getChoices());	}
 
 	@Override
@@ -606,33 +679,33 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	@Override
 	public boolean removeChoice(ChoiceNode choice) {
-		
+
 		return fChoicesListHolder.removeChoice(choice);	
 	}
 
 	@Override
 	public void replaceChoices(List<ChoiceNode> newChoices) {
-		
+
 		fChoicesListHolder.replaceChoices(newChoices, this);
 	}
 
 	@Override
 	public void clearChoices() {
 		fChoicesListHolder.clearChoices();
-		
+
 	}
 
 	@Override
 	public BasicParameterNode getParameter() {
-		
+
 		return this;
 	}
-	
+
 	public IParametersParentNode getParametersParent() {
 
 		return (IParametersParentNode)getParent();
 	}
-	
+
 	public boolean isCorrectableToBeRandomizedType() {
 		return JavaLanguageHelper.isNumericTypeName(fType) || JavaLanguageHelper.isStringTypeName(fType);
 	}
@@ -642,5 +715,5 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 	}
-	
+
 }

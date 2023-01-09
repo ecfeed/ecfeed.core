@@ -101,7 +101,7 @@ public class TestSuiteNode extends AbstractNode {
 	public boolean updateReferences(MethodNode method) {
 
 		for (TestCaseNode testCase : getTestCaseNodes()) {
-			testCase.updateReferences(method);
+			testCase.correctTestCase(method);
 		}
 
 		return true;

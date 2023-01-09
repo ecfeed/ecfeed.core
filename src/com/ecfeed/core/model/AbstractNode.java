@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public abstract class AbstractNode implements IAbstractNode {
-	
+
 	private String fName;
 	private IAbstractNode fParent;
 	private String fDescription;
@@ -31,33 +31,33 @@ public abstract class AbstractNode implements IAbstractNode {
 
 	public AbstractNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 
-        verifyName(name);
+		verifyName(name);
 
-        fName = name;
+		fName = name;
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
 	@Override
-    public void verifyName(String nameInIntrLanguage) {
-    	
-    	if (AbstractNodeHelper.isTheSameExtAndIntrLanguage(this)) {
+	public void verifyName(String nameInIntrLanguage) {
+
+		if (AbstractNodeHelper.isTheSameExtAndIntrLanguage(this)) {
 			return;
 		}
-    	
-        String errorMessage = JavaLanguageHelper.verifySeparatorsInName(nameInIntrLanguage);
 
-        if (errorMessage != null) {
-            ExceptionHelper.reportRuntimeException(errorMessage);
-        }
-    }
+		String errorMessage = JavaLanguageHelper.verifySeparatorsInName(nameInIntrLanguage);
 
-    @Override
+		if (errorMessage != null) {
+			ExceptionHelper.reportRuntimeException(errorMessage);
+		}
+	}
+
+	@Override
 	public String toString() {
 
 		return getName();
 	}
 
-    @Override
+	@Override
 	public int getMyIndex() {
 
 		if(getParent() == null){
@@ -89,12 +89,18 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
+	public void setCompositeName(String name) {
+
+		setName(name, true);
+	}
+
+	@Override
 	public void setName(String name, boolean checkName) {
-		
+
 		if (checkName ) {
-            verifyName(name);
-        }
-		
+			verifyName(name);
+		}
+
 		fName = name;
 		registerChange();
 	}
@@ -148,15 +154,15 @@ public abstract class AbstractNode implements IAbstractNode {
 		if (parent == null) {
 			return new ArrayList<>();
 		}
-		
+
 		List<IAbstractNode> result = new ArrayList<>();
-		
+
 		List<? extends IAbstractNode> ancestors = parent.getAncestors();
-		
+
 		for (IAbstractNode abstractNode : ancestors) {
 			result.add(abstractNode);
 		}
-		
+
 		result.add(parent);
 		return result;
 	}
@@ -171,7 +177,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	public IAbstractNode getRoot() {
 
 		IAbstractNode parent = getParent();
-		
+
 		if (parent == null) {
 			return this;
 		}
@@ -188,22 +194,22 @@ public abstract class AbstractNode implements IAbstractNode {
 		}
 
 		if (tokens.length == 1) {
-			
+
 			List<IAbstractNode> children = getChildren();
-			
+
 			for (IAbstractNode child : children) {
 				if (child.getName().equals(tokens[0])) {
 					return child;
 				}
 			}
 		} else {
-			
+
 			IAbstractNode nextChild = getChild(tokens[0]);
-			
+
 			if(nextChild == null) { 
 				return null;
 			}
-			
+
 			//tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
 			String newName = qualifiedName.substring(qualifiedName.indexOf(":") + 1);
 			return nextChild.getChild(newName);
@@ -328,7 +334,7 @@ public abstract class AbstractNode implements IAbstractNode {
 
 		String name = getName();
 		String nameToCompare = nodeToCompare.getName();
-		
+
 		if (!name.equals(nameToCompare)) {
 			return false;
 		}
@@ -439,5 +445,5 @@ public abstract class AbstractNode implements IAbstractNode {
 
 		fModelChangeRegistrator.registerChange();
 	}
-	
+
 }

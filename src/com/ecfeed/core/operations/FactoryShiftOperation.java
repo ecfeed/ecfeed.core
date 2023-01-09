@@ -79,6 +79,9 @@ public class FactoryShiftOperation {
 			if(fShifted.get(0) instanceof BasicParameterNode){
 				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
+			if(fShifted.get(0) instanceof CompositeParameterNode){
+				return new CompositeParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+			}
 			if(fShifted.get(0) instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
 			}

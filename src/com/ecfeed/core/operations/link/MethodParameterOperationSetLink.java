@@ -8,17 +8,23 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.link;
 
 import java.util.List;
 
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.AbstractReverseOperation;
+import com.ecfeed.core.operations.CompositeOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.MethodOperationMakeConsistent;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterOperationSetLink extends BulkOperation {
+public class MethodParameterOperationSetLink extends CompositeOperation {
 
 	private class SetLinkOperation extends AbstractModelOperation{
 		private BasicParameterNode fTarget;
@@ -55,14 +61,14 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 
 			setOneNodeToSelect(fTarget);
 			
-			MethodNode method = fTarget.getMethod();
+			MethodNode method = (MethodNode) fTarget.getParent();
 			List<String> types = method.getParameterTypes();
 			types.set(fTarget.getMyIndex(), fNewLink.getType());
 
-			if(method.checkDuplicate(fTarget.getMyIndex(), fNewLink.getType())){
+			if(method.checkDuplicate()){
 				
 				ExceptionHelper.reportRuntimeException(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+						ClassNodeHelper.createMethodNameDuplicateMessage(
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 
@@ -80,6 +86,7 @@ public class MethodParameterOperationSetLink extends BulkOperation {
 	public MethodParameterOperationSetLink(BasicParameterNode target, BasicParameterNode link, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_LINK, true, target, target, extLanguageManager);
 		addOperation(new SetLinkOperation(target, link, extLanguageManager));
-		addOperation(new MethodOperationMakeConsistent(target.getMethod(), extLanguageManager));
+		MethodNode methodNode = (MethodNode) target.getParent();
+		addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager));
 	}
 }

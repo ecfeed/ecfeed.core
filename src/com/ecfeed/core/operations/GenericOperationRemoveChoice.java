@@ -25,7 +25,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
 
-public class GenericOperationRemoveChoice extends BulkOperation {
+public class GenericOperationRemoveChoice extends CompositeOperation {
 
 	private class RemoveChoiceOperation extends AbstractModelOperation {
 
@@ -206,6 +206,7 @@ public class GenericOperationRemoveChoice extends BulkOperation {
 		addOperation(new RemoveChoiceOperation(target, choice, adapterProvider, extLanguageManager));
 
 		if (validate) {
+			
 			for (MethodNode method : target.getParameter().getMethods()) {
 				addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
 			}

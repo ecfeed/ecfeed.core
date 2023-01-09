@@ -14,223 +14,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public abstract class MethodDeployer {
 
-	public static MethodNode deploy(MethodNode sourceMethodNode) {
+	public static String POSTFIX = "deployed";
+
+	public static MethodNode deploy(MethodNode sourceMethodNode, NodeMapper mapper) {
 
 		if (sourceMethodNode == null) {
-			ExceptionHelper.reportRuntimeException("No method.");
+			ExceptionHelper.reportRuntimeException("The source method is not defined.");
 		}
 
-		MethodNode deployedMethodNode = new MethodNode(sourceMethodNode.getName());
-		deployedMethodNode.setParent(sourceMethodNode.getParent());
+		MethodNode targetMethodNode = new MethodNode(sourceMethodNode.getName() + "_" +  POSTFIX);
 
-		deployedMethodNode.setProperties(sourceMethodNode.getProperties());
+		deployParameters(sourceMethodNode, targetMethodNode, mapper);
+		deployConstraints(sourceMethodNode, targetMethodNode, mapper);
 
-		DeploymentMapper deploymentMapper = new DeploymentMapper();
-
-		for (BasicParameterNode sourceMethodParameterNode : sourceMethodNode.getMethodParameters()) {
-
-			BasicParameterNode developedMethodParameter = 
-					deployParameter(sourceMethodParameterNode, deploymentMapper);
-
-			deployedMethodNode.addParameter(developedMethodParameter);
-		}
-
-		for (ConstraintNode constraint : sourceMethodNode.getConstraintNodes()) {
-
-			ConstraintNode deployedConstraintNode = 
-					deployConstraintNode(constraint, deployedMethodNode, deploymentMapper);
-
-			deployedMethodNode.addConstraint(deployedConstraintNode);
-		}
-
-		return deployedMethodNode;
+		return targetMethodNode;
 	}
 
-	private static ConstraintNode deployConstraintNode(
-			ConstraintNode sourceConstraintNode, 
-			MethodNode deployedMethodNode,
-			DeploymentMapper deploymentMapper) {
+	public static boolean deployedParametersDiffer(
+			MethodNode methodNode,
+			MethodNode deployedMethodNode) {
 
-		Constraint sourceConstraint = sourceConstraintNode.getConstraint();
-		Constraint deployedConstraint = deployConstraint(sourceConstraint, deploymentMapper);
+		List<BasicParameterNode> oldDeployedParameters = methodNode.getDeployedMethodParameters();
 
-		ConstraintNode deployedConstraintNode = new ConstraintNode("name", deployedConstraint); 
-		deployedConstraintNode.setProperties(sourceConstraintNode.getProperties());
+		List<AbstractParameterNode> newDeployedParameters = deployedMethodNode.getParameters();
 
-		return deployedConstraintNode;
-	}
+		List<BasicParameterNode> convertedNewParameters = 
+				BasicParameterNodeHelper.convertAbstractListToBasicList(newDeployedParameters);
 
-	private static Constraint deployConstraint(
-			Constraint sourceConstraint,
-			DeploymentMapper deploymentMapper) {
-
-		AbstractStatement sourcePrecondition = sourceConstraint.getPrecondition();
-		AbstractStatement deployedPrecondition = deployStatement(sourcePrecondition, deploymentMapper);
-
-		AbstractStatement sourcePostcondition = sourceConstraint.getPostcondition();
-		AbstractStatement deployedPostcondition = deployStatement(sourcePostcondition, deploymentMapper);
-
-		Constraint deployedConstraint = 
-				new Constraint(
-						sourceConstraint.getName(), 
-						sourceConstraint.getType(), 
-						deployedPrecondition, 
-						deployedPostcondition);
-
-		return deployedConstraint;
-	}
-
-	private static AbstractStatement deployStatement(
-			AbstractStatement abstractStatement,
-			DeploymentMapper deploymentMapper) {
-
-		AbstractStatement deployedStatement = abstractStatement.createDeepCopy(deploymentMapper);
-
-		return deployedStatement;
-	}
-
-
-	public static BasicParameterNode deployParameter(
-			BasicParameterNode sourceMethodParameterNode,
-			DeploymentMapper deploymentMapper) {
-
-		BasicParameterNode deployedMethodParameterNode = 
-				new BasicParameterNode(
-						sourceMethodParameterNode.getName(), 
-						sourceMethodParameterNode.getType(), 
-						sourceMethodParameterNode.getDefaultValue(), 
-						sourceMethodParameterNode.isExpected(), 
-						null);
-
-		deployedMethodParameterNode.setParent(sourceMethodParameterNode.getParent());
-
-		// MethodParameterNode linkedMethod = deployedMethodParameterNode.getLinkToMethod();
-		// MethodAndStructureParent linked = deployedMethodParameterNode.getLinkToMethodAndStructureParent();
-
-		AbstractParameterNode linkToGlobalParameter = sourceMethodParameterNode.getLinkToGlobalParameter();
-		
-		if (linkToGlobalParameter instanceof BasicParameterNode) {
-			
-			BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
-			
-			deployedMethodParameterNode.setLinkToGlobalParameter(link);
-		}
-		
-		deployedMethodParameterNode.setProperties(sourceMethodParameterNode.getProperties());
-		deployedMethodParameterNode.setDefaultValueString(sourceMethodParameterNode.getDefaultValue());
-		
-		deploymentMapper.addParameterMappings(sourceMethodParameterNode, deployedMethodParameterNode);
-
-		for (ChoiceNode sourceChoiceNode : sourceMethodParameterNode.getChoices()) {
-
-			ChoiceNode deployedChoiceNode = deployChoiceNode(sourceChoiceNode, deploymentMapper);
-			deployedMethodParameterNode.addChoice(deployedChoiceNode);
+		if (BasicParameterNodeHelper.propertiesOfBasicParametrsMatch(oldDeployedParameters, convertedNewParameters)) {
+			return false;
 		}
 
-		return deployedMethodParameterNode;
+		return true;
+	}
+	
+	public static void copyDeployedParameters(MethodNode deployedMethodNode, MethodNode methodNode) {
+
+		List<BasicParameterNode> deployedParameters = deployedMethodNode.getParametersAsBasic();
+		methodNode.setDeployedParameters(deployedParameters); // TODO MO-RE add by operation
 	}
 
-	public static ChoiceNode deployChoiceNode(
-			ChoiceNode sourceChoiceNode,
-			DeploymentMapper deploymentMapper) {
-
-		ChoiceNode deployedChoiceNode = new ChoiceNode(sourceChoiceNode.getName(), sourceChoiceNode.getValueString());
-
-		deployedChoiceNode.setProperties(sourceChoiceNode.getProperties());
-		deployedChoiceNode.setRandomizedValue(sourceChoiceNode.isRandomizedValue());
-		deployedChoiceNode.setParent(sourceChoiceNode.getParent());
-		deployedChoiceNode.setOtherChoice(sourceChoiceNode);
-
-		deploymentMapper.addChoiceMappings(sourceChoiceNode, deployedChoiceNode);
-
-		for (String label : sourceChoiceNode.getLabels()) {
-
-			deployedChoiceNode.addLabel(label);
-		}
-
-		for (ChoiceNode childChoiceNode : sourceChoiceNode.getChoices()) {
-
-			ChoiceNode deployChoiceNode = deployChoiceNode(childChoiceNode, deploymentMapper);
-			deployedChoiceNode.addChoice(deployChoiceNode);
-		}
-
-		return deployedChoiceNode;
-	}
-
-	public static List<BasicParameterNode> getDevelopedParametersWithChoices(AbstractParameterNode abstractParameterNode) {
-
-		List<BasicParameterNode> developedParameters = new ArrayList<>();
-
-		// TODO MO-RE
-		//		List<BasicParameterNode> parameters = methodNode.getMethodParameters();
-		List<BasicParameterNode> parameters = new ArrayList<>();
-
-		for (BasicParameterNode methodParameterNode : parameters) {
-
-			developOneParameter(methodParameterNode, developedParameters);
-		}
-
-		return developedParameters;
-	}
-
-	private static void developOneParameter(
-			BasicParameterNode methodParameterNode,
-			List<BasicParameterNode> inOutDevelopedParameters) {
-
-		AbstractParameterNode linkedMethodNode = methodParameterNode.getLinkToGlobalParameter();
-
-		if (linkedMethodNode == null) {
-			BasicParameterNode clonedMethodParameterNode = methodParameterNode.makeClone();
-			clonedMethodParameterNode.clearChoices();
-
-			ChoiceNodeHelper.cloneChoiceNodesRecursively(methodParameterNode, clonedMethodParameterNode);
-
-			inOutDevelopedParameters.add(clonedMethodParameterNode);
-			return;
-		}
-
-		developChildParameters(methodParameterNode, linkedMethodNode, inOutDevelopedParameters);
-	}
-
-	private static void developChildParameters(
-			AbstractParameterNode abstractParameterNode, 
-			AbstractParameterNode linkedParameterNode,
-			List<BasicParameterNode> inOutDevelopedParameters) {
-
-		List<BasicParameterNode> linkedParametersWithChoices = getDevelopedParametersWithChoices(linkedParameterNode);
-
-		for (BasicParameterNode linkedParameterWithChoices : linkedParametersWithChoices) {
-
-			String parameterName = abstractParameterNode.getName() + "_" + linkedParameterWithChoices.getName();
-			String parameterType = linkedParameterWithChoices.getType();
-			String defaultValue = linkedParameterWithChoices.getDefaultValue();
-			boolean isExpected = linkedParameterWithChoices.isExpected();
-
-			BasicParameterNode clonedMethodParameterNode = 
-					new BasicParameterNode(
-							parameterName,
-							parameterType,
-							defaultValue,
-							isExpected,
-							null,
-							null);
-
-			ChoiceNodeHelper.cloneChoiceNodesRecursively(linkedParameterWithChoices, clonedMethodParameterNode);
-
-			inOutDevelopedParameters.add(clonedMethodParameterNode);
-		}
-	}
-
-	public static List<TestCase> revertToOriginalChoices(List<TestCase> deployedTestCases) {
+	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) { // TODO MO-RE mapper as last parameter
 
 		List<TestCase> result = new ArrayList<>();
 
 		for (TestCase deployedTestCase : deployedTestCases) {
 
-			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase);
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(mapper, deployedTestCase);
 
 			result.add(revertedTestCaseNode);
 		}
@@ -238,7 +72,94 @@ public abstract class MethodDeployer {
 		return result;
 	}
 
-	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase) {
+	private static void deployParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
+
+		String prefix = "";
+
+		deployParametersRecursively(methodSource.getParameters(), methodTarget, prefix, mapper);
+	}
+
+	private static void deployParametersRecursively(
+			List<AbstractParameterNode> sourceParameters, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
+
+		for (AbstractParameterNode sourceParameter : sourceParameters) {
+
+			if (sourceParameter instanceof BasicParameterNode) {
+
+				deployBasicParameter(((BasicParameterNode) sourceParameter), targetMethodNode, prefix, mapper);
+			}
+
+			if (sourceParameter instanceof CompositeParameterNode) {
+
+				String childPrefix = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+
+				List<AbstractParameterNode> childSourceParameters = 
+						((CompositeParameterNode) sourceParameter).getParameters();
+
+				deployParametersRecursively(childSourceParameters, targetMethodNode, childPrefix, mapper);
+			}
+		}
+	}
+
+	private static void deployBasicParameter(
+			BasicParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
+
+		BasicParameterNode copy = sourceParameter.createCopy(mapper);
+		copy.setCompositeName(prefix + copy.getName());
+
+		targetMethodNode.addParameter(copy);
+	}
+
+	private static void deployConstraints(
+			MethodNode sourceMethod, MethodNode targetMethod, NodeMapper mapper) {
+
+		List<ConstraintNode> constraintNodes = sourceMethod.getConstraintNodes();
+		constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper)));
+
+		String prefix = ""; 
+		List<AbstractParameterNode> parameters = sourceMethod.getParameters();
+		
+		parameters.forEach(e -> deployConstraintsForCompositeParameterRecursively(e, targetMethod, prefix, mapper));
+	}
+
+	private static void deployConstraintsForCompositeParameterRecursively(
+			AbstractParameterNode parameter, MethodNode targetMethod, String prefix, NodeMapper mapper) {
+
+		if (parameter instanceof BasicParameterNode) {
+			return;
+		}
+
+		String childPrefix = prefix + parameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		
+		CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parameter;
+
+		deployCurrentConstraintsOfCompositeParameter(compositeParameterNode, targetMethod, childPrefix, mapper);
+
+		for (AbstractParameterNode abstractParameterNode : compositeParameterNode.getParameters()) {
+
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				deployConstraintsForCompositeParameterRecursively(abstractParameterNode, targetMethod, childPrefix, mapper);
+			}
+		}
+	}
+
+	private static void deployCurrentConstraintsOfCompositeParameter(
+			CompositeParameterNode compositeParameterNode, MethodNode targetMethod, String prefix, NodeMapper nodeMapper) {
+		
+		List<ConstraintNode> constraintNodes = compositeParameterNode.getConstraintNodes();
+		
+		//constraintNodes.forEach(e -> targetMethod.addConstraint(e.createCopy(mapper))); // TODO MO-RE use prefix
+		
+		for (ConstraintNode constraintNode : constraintNodes) {
+			
+			ConstraintNode copyOfConstraintNode = constraintNode.createCopy(nodeMapper);
+			copyOfConstraintNode.setName(prefix + constraintNode.getName());
+			
+			targetMethod.addConstraint(copyOfConstraintNode);
+		}
+	}
+
+	private static TestCase revertToOriginalTestCase(NodeMapper mapper, TestCase deployedTestCase) {
 
 		List<ChoiceNode> revertedChoices = new ArrayList<>();
 
@@ -246,12 +167,32 @@ public abstract class MethodDeployer {
 
 		for (ChoiceNode deployedChoiceNode : deployedChoices) {
 
-			ChoiceNode originalChoiceNode = deployedChoiceNode.getOtherChoice();
+			ChoiceNode originalChoiceNode = (ChoiceNode) mapper.getMappedNode(deployedChoiceNode);
 
 			revertedChoices.add(originalChoiceNode);
 		}
 
 		return new TestCase(revertedChoices);
 	}
+
+
+	// TODO MO-RE - do we need this ?
+	//	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
+	//
+	//		if (parameters == null) {
+	//			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
+	//		}
+	//
+	//		if (constraints == null) {
+	//			ExceptionHelper.reportRuntimeException("The list of constraints is not defined.");
+	//		}
+	//
+	//		MethodNode method = new MethodNode("construct");
+	//
+	//		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
+	//		constraints.forEach(e -> method.addConstraint(e.createCopy(mapper)));
+	//
+	//		return method;
+	//	}
 
 }

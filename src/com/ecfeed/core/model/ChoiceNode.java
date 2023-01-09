@@ -33,7 +33,6 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	private ChoicesListHolder fChoicesListHolder;
 
 	private ChoiceNode fOrigChoiceNode = null; // used in Sat Solver
-	private ChoiceNode fOtherChoiceNode = null; // a reference to other choice which can be used in algorithms
 
 	public ChoiceNode(String name, String value, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
@@ -60,19 +59,8 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 	@Override
 	public BasicParameterNode getParameter() {
 		
-		IAbstractNode parent = getParent();
-		
-		if (parent == null) {
-			return null;
-		}
-		
-		if (!(parent instanceof IChoicesParentNode)) {
-			return null;
-		}
-		
-		IChoicesParentNode choicesParentNode = (IChoicesParentNode)parent;
-		
-		return choicesParentNode.getParameter();
+		BasicParameterNode basicParameterNode = ChoiceNodeHelper.getBasicParameter(this);
+		return basicParameterNode;
 	}
 
 	@Override
@@ -160,13 +148,13 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 	@Override
 	public ChoiceNode makeClone(){
-
 		ChoiceNode copy = makeCloneUnlink();
 
 		if(isClone())
 			copy.setOrigChoiceNode(getOrigChoiceNode());
 		else
 			copy.setOrigChoiceNode(this);
+
 		return copy;
 	}
 
@@ -185,14 +173,6 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 
 		copy.setRandomizedValue(fIsRandomizedValue);
 		return copy;
-	}
-
-	public ChoiceNode getOtherChoice() {
-		return fOtherChoiceNode;
-	}
-	
-	public void setOtherChoice(ChoiceNode choiceNode) {
-		fOtherChoiceNode = choiceNode;
 	}
 
 	public ChoiceNode getQualifiedCopy(BasicParameterNode parameter) {
@@ -431,18 +411,18 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return null;
 	}
 
-	public MethodNode getMethodNode() {
-
-		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
-
-		if (methodParameterNode == null) {
-			return null;
-		}
-
-		MethodNode methodNode = methodParameterNode.getMethod();
-
-		return methodNode;
-	}
+//	public MethodNode getMethodNode() {
+//
+//		BasicParameterNode methodParameterNode = (BasicParameterNode)getParameter();
+//
+//		if (methodParameterNode == null) {
+//			return null;
+//		}
+//
+//		MethodNode methodNode = methodParameterNode.getMethod();
+//
+//		return methodNode;
+//	}
 	
 	@Override
 	public int getChildrenCount() {
@@ -450,6 +430,16 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return getChoiceCount();
 	}
 
+	@Override
+	public boolean hasChoices() {
+		
+		if (getChoiceCount() == 0) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 	@Override
 	public void addChoice(ChoiceNode choiceToAdd) {
 		

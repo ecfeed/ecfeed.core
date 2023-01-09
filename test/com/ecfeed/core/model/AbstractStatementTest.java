@@ -31,13 +31,20 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public String getLeftParameterName() {
+		public String getLeftParameterCompositeName() {
 			return null;
 		}
+		
 		@Override
 		public AbstractStatement makeClone(){
 			return null;
 		}
+		
+		@Override
+		public AbstractStatement createCopy(NodeMapper mapper) {
+			return null;
+		}
+		
 		@Override
 		public boolean updateReferences(IParametersAndConstraintsParentNode method){
 			return true;
@@ -52,14 +59,17 @@ public class AbstractStatementTest {
 		public boolean isEqualTo(IStatement statement) {
 			return false;
 		}
+		
 		@Override
 		public Object accept(IStatementVisitor visitor) {
 			return null;
 		}
+		
 		@Override
 		public boolean mentions(int methodParameterIndex) {
 			return false;
 		}
+		
 		@Override
 		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 			return false;
@@ -98,10 +108,6 @@ public class AbstractStatementTest {
 			return null;
 		}
 
-		@Override
-		public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-			return null;
-		}
 	}
 
 	@Test

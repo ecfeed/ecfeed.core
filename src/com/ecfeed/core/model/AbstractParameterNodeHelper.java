@@ -14,15 +14,96 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.TypeHelper;
 
 public abstract class AbstractParameterNodeHelper {
 
-	public static String getName(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
 		return name;
+	}
+
+	public static String getCompositeName( // TODO MO-RE merge overloads into one function ? 
+			AbstractParameterNode abstractParameterNode) {
+
+		AbstractParameterNode currentParameterNode = abstractParameterNode;
+		String compositeName = "";
+		
+		for (;;) {
+
+			String currentParameterNodeName = currentParameterNode.getName();
+			
+			if (StringHelper.isNullOrEmpty(compositeName)) {
+				compositeName = currentParameterNodeName; 
+			} else {
+				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
+			}
+			
+			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
+			
+			if (parametersParentNode == null || parametersParentNode instanceof MethodNode) {
+				return compositeName;
+			}
+			
+			if (parametersParentNode instanceof CompositeParameterNode) {
+				currentParameterNode = (AbstractParameterNode) parametersParentNode;
+				continue;
+			}
+			
+			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
+		}
+	}
+	
+	public static String getCompositeName(
+			AbstractParameterNode abstractParameterNode, 
+			IExtLanguageManager extLanguageManager) {
+
+		AbstractParameterNode currentParameterNode = abstractParameterNode;
+		String compositeName = "";
+		
+		for (;;) {
+
+			String currentParameterNodeNameInExtLanguage = 
+					getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
+			
+			if (StringHelper.isNullOrEmpty(compositeName)) {
+				compositeName = currentParameterNodeNameInExtLanguage; 
+			} else {
+				compositeName = currentParameterNodeNameInExtLanguage + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
+			}
+			
+			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
+			
+			if (parametersParentNode == null || parametersParentNode instanceof MethodNode) {
+				return compositeName;
+			}
+			
+			if (parametersParentNode instanceof CompositeParameterNode) {
+				currentParameterNode = (AbstractParameterNode) parametersParentNode;
+				continue;
+			}
+			
+			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
+		}
+	}
+
+	private static String getParameterNameInExtLanguage(
+			AbstractParameterNode currentParameterNode,
+			IExtLanguageManager extLanguageManager) {
+		
+		String currentParameterNodeNameInIntrLanguage = currentParameterNode.getName();
+		
+		String currentParameterNodeNameInExtLanguage = 
+				extLanguageManager.convertTextFromIntrToExtLanguage(currentParameterNodeNameInIntrLanguage);
+		
+		return currentParameterNodeNameInExtLanguage;
 	}
 
 	public static String validateParameterName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
@@ -32,9 +113,15 @@ public abstract class AbstractParameterNodeHelper {
 		return errorMessage;
 	}
 
-	public static String getType(BasicParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
+		
+		if (abstractParameterNode instanceof CompositeParameterNode) {
+			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
+		}
+		
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
 
-		String type = abstractParameterNode.getType();
+		String type = basicParameterNode.getType();
 		
 		if (type == null) {
 			return null;
@@ -96,7 +183,15 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createSignature(
 			CompositeParameterNode compositeParameterNode) {
 
-		return SignatureHelper.joinElementsWithSeparator(compositeParameterNode.getName(), CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+		return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE + " " + compositeParameterNode.getName();
+	}
+
+	public static String createReverseSignature(
+			CompositeParameterNode compositeParameterNode) {
+
+		return compositeParameterNode.getName() 
+				+ SignatureHelper.SIGNATURE_TYPE_SEPARATOR 
+				+ CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
 	}
 	
 	public static String createSignature(
@@ -141,7 +236,7 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		if (parameterType != null) {
-			signature += SignatureHelper.SIGNATURE_SEPARATOR;
+			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
 			signature += parameterType;
 		}
 
@@ -195,6 +290,45 @@ public abstract class AbstractParameterNodeHelper {
 		return result;
 	}
 
+//	public static BasicParameterNode getReferencedParameter(IParametersAndConstraintsParentNode method, BasicParameterNode reference) {
+//
+//		for (AbstractParameterNode parameter : method.getParameters()) {
+//
+//			if (parameter instanceof BasicParameterNode) {
+//				Optional<BasicParameterNode> parameterParsed = getReferenceParameterBasic((BasicParameterNode) parameter, reference);
+//
+//				if (parameterParsed.isPresent()) {
+//					return parameterParsed.get();
+//				}
+//			}
+//		}
+//
+//		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
+//
+//		return null;
+//	}
+
+//	private static Optional<BasicParameterNode> getReferenceParameterBasic(BasicParameterNode parameter, BasicParameterNode reference) {
+//
+//		if (parameter.getDeploymentParameter().isLinked()) {
+//			if (parameter.getDeploymentParameter().getLinkToGlobalParameter() == reference) {
+//				return Optional.of(parameter);
+//			}
+//		}
+//
+//		if (parameter.getDeploymentParameter() == reference) {
+//			return Optional.of(parameter);
+//		}
+//
+//		if (parameter.getDeploymentParameter() == null) {
+//			if (parameter.getName().equals(reference.getName())) {
+//				return Optional.of(parameter);
+//			}
+//		}
+//
+//		return Optional.empty();
+//	}
+
 	public static boolean hasRandomizedChoices(BasicParameterNode abstractParameterNode) {
 
 		Set<ChoiceNode> choices = abstractParameterNode.getAllChoices();
@@ -207,6 +341,38 @@ public abstract class AbstractParameterNodeHelper {
 		}
 
 		return false;
+	}
+	
+	public static String getMaxJavaTypeFromConversionDefinition( 
+			TypeHelper.TypeCathegory javaTypeCathegory,
+			ParameterConversionDefinition parameterConversionDefinition) {
+
+		if (parameterConversionDefinition == null) {
+			return null;
+		}
+
+		int itemCount = parameterConversionDefinition.getItemCount();
+
+		if (itemCount <= 0) {
+			return null;
+		}
+
+		String resultTypeInIntrLanguage = 
+				JavaLanguageHelper.getSmallestTypeForCathegory(javaTypeCathegory);
+
+		for (int index = 0; index < itemCount; index++) {
+
+			String currentValue = parameterConversionDefinition.getCopyOfItem(index).getDstPart().getStr();
+
+			String typeForCurrentValue = 
+					JavaLanguageHelper.getMaxTypeForValue(
+							currentValue, resultTypeInIntrLanguage, false);
+
+			resultTypeInIntrLanguage = 
+					JavaLanguageHelper.getLargerType(resultTypeInIntrLanguage, typeForCurrentValue);
+		}
+
+		return resultTypeInIntrLanguage;
 	}
 
 }

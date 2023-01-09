@@ -28,7 +28,7 @@ public class StatementArray extends AbstractStatement {
 
 		super(modelChangeRegistrator);
 
-		fStatements = new ArrayList<AbstractStatement>();
+		fStatements = new ArrayList<>();
 		fOperator = operator;
 	}
 
@@ -164,11 +164,21 @@ public class StatementArray extends AbstractStatement {
 
 	@Override
 	public StatementArray makeClone() {
-
 		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
 
 		for (AbstractStatement statement : fStatements) {
 			copy.addStatement(statement.makeClone());
+		}
+
+		return copy;
+	}
+
+	@Override
+	public StatementArray createCopy(NodeMapper mapper) {
+		StatementArray copy = new StatementArray(fOperator, getModelChangeRegistrator());
+
+		for (AbstractStatement statement: fStatements) {
+			copy.addStatement(statement.createCopy(mapper));
 		}
 
 		return copy;
@@ -382,7 +392,7 @@ public class StatementArray extends AbstractStatement {
 		return EvaluationResult.TRUE;
 	}
 
-	public String getLeftParameterName() {
+	public String getLeftParameterCompositeName() {
 		return fOperator.toString();
 	}
 
@@ -420,18 +430,18 @@ public class StatementArray extends AbstractStatement {
 		}
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-
-		StatementArray deployedStatementArray = new StatementArray(getOperator());
-
-		for (AbstractStatement sourceAbstractStatement : fStatements) {
-
-			AbstractStatement deployedStatement = sourceAbstractStatement.createDeepCopy(deploymentMapper);
-			deployedStatementArray.addStatement(deployedStatement);
-		}
-
-		return deployedStatementArray;
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		StatementArray deployedStatementArray = new StatementArray(getOperator());
+//
+//		for (AbstractStatement sourceAbstractStatement : fStatements) {
+//
+//			AbstractStatement deployedStatement = sourceAbstractStatement.createDeepCopy(deploymentMapper);
+//			deployedStatementArray.addStatement(deployedStatement);
+//		}
+//
+//		return deployedStatementArray;
+//	}
 
 }

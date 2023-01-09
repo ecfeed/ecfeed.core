@@ -14,10 +14,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_N
 
 import java.util.Optional;
 
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.BooleanHolder;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.StringHolder;
@@ -27,14 +24,16 @@ import nu.xom.Element;
 public class ModelParserForClass implements IModelParserForClass {
 
 	private IModelParserForGlobalParameter fModelParserForGlobalParameter;
+	private IModelParserForGlobalCompositeParameter fModelParserForGlobalCompositeParameter;
 	private IModelParserForMethod fModelParserForMethod;
-
 
 	public ModelParserForClass(
 			IModelParserForGlobalParameter modelParserForGlobalParameter,
+			IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter,
 			IModelParserForMethod modelParserForMethod) {
 		
 		fModelParserForGlobalParameter = modelParserForGlobalParameter;
+		fModelParserForGlobalCompositeParameter = modelParserForGlobalCompositeParameter;
 		fModelParserForMethod = modelParserForMethod;
 	}
 	
@@ -65,10 +64,13 @@ public class ModelParserForClass implements IModelParserForClass {
 		targetClassNode.setParent(parent);
 
 		//parameters must be parsed before classes
-		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeName())) {
-			Optional<BasicParameterNode> node = fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList);
-			if (node.isPresent()) {
-				targetClassNode.addParameter(node.get());
+		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeNames())) {
+			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+				fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList)
+						.ifPresent(targetClassNode::addParameter);
+			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+				fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetClassNode.getModelChangeRegistrator(), errorList)
+						.ifPresent(targetClassNode::addParameter);
 			}
 		}
 

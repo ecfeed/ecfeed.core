@@ -84,7 +84,7 @@ public class FactoryRenameOperation {
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
 							targetMethodNode.getClassNode(),
 							newNameInExtLanguage,
-							MethodNodeHelper.getParameterTypes(targetMethodNode, extLanguageManager),
+							ParametersParentNodeHelper.getParameterTypes(targetMethodNode, extLanguageManager),
 							extLanguageManager);
 
 			if (errorMessage != null) {
@@ -119,11 +119,12 @@ public class FactoryRenameOperation {
 				ExceptionHelper.reportRuntimeException(errorMessage);
 			}
 
-			BasicParameterNode target = (BasicParameterNode) getOwnNode();
+			BasicParameterNode basicParameterNode = (BasicParameterNode) getOwnNode();
 			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
 				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
-			if(target.getParametersParent().findParameter(newNameInExtLanguage) != null){
+			
+			if(basicParameterNode.getParametersParent().findParameter(newNameInExtLanguage) != null){
 				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
@@ -152,7 +153,7 @@ public class FactoryRenameOperation {
 				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
 			}
 
-			MethodNode method = target.getMethod();
+			IParametersParentNode method = (IParametersParentNode) target.getParent();
 
 			IExtLanguageManager extLanguageManager = getExtLanguageManager();
 			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
@@ -161,7 +162,79 @@ public class FactoryRenameOperation {
 				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
 			}
 		}
+	} 
+
+	private static class BasicParameterOfStructureOperationRename extends GenericOperationRename {
+
+		IExtLanguageManager fExtLanguageManager;
+
+		public BasicParameterOfStructureOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
+			super(target, null, newName, extLanguageManager);
+			fExtLanguageManager = extLanguageManager;
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new MethodParameterOperationRename(getOwnNode(), getOriginalNonQualifiedName(), fExtLanguageManager);
+		}
+
+		@Override
+		protected void verifyNewName(String newNameInExtLanguage) {
+
+			BasicParameterNode target = (BasicParameterNode)getOwnNode();
+
+			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
+				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
+			}
+
+			CompositeParameterNode method = (CompositeParameterNode) target.getParent();
+
+			IExtLanguageManager extLanguageManager = getExtLanguageManager();
+			String newNameInIntrLanguage = extLanguageManager.convertTextFromExtToIntrLanguage(newNameInExtLanguage);
+
+			if(method.findParameter(newNameInIntrLanguage) != null){
+				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+			}
+		}
+	} 
+	
+	private static class CompositeParameterOperationRename extends GenericOperationRename {
+
+		IExtLanguageManager fExtLanguageManager;
+
+		public CompositeParameterOperationRename(IAbstractNode target, String newName, IExtLanguageManager extLanguageManager) {
+
+			super(target, null, newName, extLanguageManager);
+
+			fExtLanguageManager = extLanguageManager;
+		}
+
+		@Override
+		public IModelOperation getReverseOperation() {
+			return new CompositeParameterOperationRename(getOwnNode(), getOriginalNonQualifiedName(), fExtLanguageManager);
+		}
+
+		@Override
+		protected void verifyNewName(String newNameInExtLanguage) {
+			
+			String errorMessage = AbstractParameterNodeHelper.validateParameterName(newNameInExtLanguage, fExtLanguageManager);
+			
+			if (errorMessage != null) {
+				ExceptionHelper.reportRuntimeException(errorMessage);
+			}
+
+			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) getOwnNode();
+			
+			if(JavaLanguageHelper.isJavaKeyword(newNameInExtLanguage)){
+				ExceptionHelper.reportRuntimeException(RegexHelper.createMessageAllowedCharsForMethod(fExtLanguageManager));
+			}
+			
+			if(compositeParameterNode.getParametersParent().findParameter(newNameInExtLanguage) != null){
+				ExceptionHelper.reportRuntimeException(OperationMessages.PARAMETER_WITH_THIS_NAME_ALREADY_EXISTS);
+			}
+		}
 	}
+	
 
 	private static class ChoiceOperationRename extends GenericOperationRename {
 
@@ -228,6 +301,14 @@ public class FactoryRenameOperation {
 		
 		@Override
 		public Object visit(BasicParameterNode node) throws Exception {
+			
+			IAbstractNode parent = node.getParent();
+			
+			if (parent instanceof CompositeParameterNode) {
+				
+				return new BasicParameterOfStructureOperationRename(
+						node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			}
 
 			if (node.isGlobalParameter()) {
 
@@ -240,8 +321,8 @@ public class FactoryRenameOperation {
 		
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
-			return null;
+			
+			return new CompositeParameterOperationRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override

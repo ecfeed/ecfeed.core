@@ -13,14 +13,17 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
+import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
+public class ReplaceMethodParametersWithGlobalOperation extends CompositeOperation{
 
 	public ReplaceMethodParametersWithGlobalOperation(
 			IParametersParentNode parent, 
@@ -35,7 +38,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 		}
 	}
 	
-	private class ReplaceParameterWithLink extends BulkOperation{
+	private class ReplaceParameterWithLink extends CompositeOperation{
 
 		public ReplaceParameterWithLink(
 				BasicParameterNode target, 
@@ -43,11 +46,15 @@ public class ReplaceMethodParametersWithGlobalOperation extends BulkOperation{
 				ITypeAdapterProvider adapterProvider,
 				IExtLanguageManager extLanguageManager) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
-			MethodNode method = target.getMethod();
+			MethodNode method = (MethodNode) target.getParent();
 			BasicParameterNode global = new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
-			addOperation(new MethodParameterOperationSetLinked(target, true, extLanguageManager));
+			
+			String anyNotNullLinkSignature = " ";
+			String newType = BasicParameterNodeHelper.calculateNewParameterType(target, anyNotNullLinkSignature);
+			addOperation(new HostMethodOperationPrepareParameterChange(target, newType, extLanguageManager));
+			
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
 					ConstraintNode copy = constraint.makeClone();

@@ -34,6 +34,7 @@ public interface IStatementCondition {
 	public void convert(ParameterConversionItem parameterConversionItem);
 	public String getLabel(BasicParameterNode methodParameterNode);
 	public IStatementCondition makeClone();
-	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
+	IStatementCondition createCopy(RelationStatement statement, NodeMapper mapper);
+//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper);
 }
 

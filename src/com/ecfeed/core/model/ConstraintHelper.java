@@ -10,54 +10,49 @@
 
 package com.ecfeed.core.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.MessageStack;
-import com.ecfeed.core.utils.ParameterConversionDefinition;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.*;
 
 public class ConstraintHelper {
 
 	public static void verifyConversionOfConstraints(
-			BasicParameterNode methodParameterNode, 
+			BasicParameterNode basicParameterNode, 
 			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		MethodNode methodNode = methodParameterNode.getMethod();
-		String oldType = methodParameterNode.getType();
+		IConstraintsParentNode constraintParentNode = (IConstraintsParentNode) basicParameterNode.getParent();
+		
+		String oldType = basicParameterNode.getType();
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = constraintParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
 			constraint.verifyConversionOfParameterFromToType(
-					methodParameterNode, oldType, newType, inOutParameterConversionDefinition);
+					basicParameterNode, oldType, newType, inOutParameterConversionDefinition);
 		}
 	}
 
 	public static void convertValuesOfConstraintsToType(
-			BasicParameterNode methodParameterNode, 
+			BasicParameterNode basicParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition) {
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) basicParameterNode.getParent();
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = constraintsParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
-			constraint.convertValues(methodParameterNode, parameterConversionDefinition);
+			constraint.convertValues(basicParameterNode, parameterConversionDefinition);
 		}
 	}
 	
-	public static Map<Integer, String> getOriginalConstraintValues(MethodNode methodNode) {
+	public static Map<Integer, String> getOriginalConstraintValues(IConstraintsParentNode parametersParentNode) {
 
 		Map<Integer, String> resultValues = new HashMap<>();
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = parametersParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
@@ -68,10 +63,10 @@ public class ConstraintHelper {
 	}
 
 	public static void restoreOriginalConstraintValues(
-			MethodNode methodNode,
+			IConstraintsParentNode constraintsParentNode,
 			Map<Integer, String> originalValues) {
 
-		List<Constraint> constraints = methodNode.getConstraints();
+		List<Constraint> constraints = constraintsParentNode.getConstraints();
 
 		for (Constraint constraint : constraints) {
 
@@ -79,16 +74,23 @@ public class ConstraintHelper {
 		}
 	}
 
-	public static String createSignature(Constraint constraint, IExtLanguageManager extLanguageManager) {
+	public static String createSignatureOfConditions(Constraint constraint, IExtLanguageManager extLanguageManager) {
 
 		if (constraint == null) {
 			return "EMPTY";
 		}
 
-		String name = constraint.getName();
+		String postconditionSignature = 
+				AbstractStatementHelper.createSignature(constraint.getPostcondition(), extLanguageManager);
 
-		String signature2 = constraint.createSignature(extLanguageManager);
-		return name + ": " + signature2;
+		if (constraint.getType() == ConstraintType.BASIC_FILTER) {
+			return postconditionSignature;
+		}
+
+		String preconditionSignature = 
+				AbstractStatementHelper.createSignature(constraint.getPrecondition(), extLanguageManager);
+
+		return preconditionSignature + " => " + postconditionSignature;
 	}
 
 	public static List<String> createListOfConstraintNames(List<Constraint> constraints) {
@@ -216,4 +218,16 @@ public class ConstraintHelper {
 		}
 	}
 
+	public static Set<MethodNode> getMethods(Constraint constraint) {
+		Constraint.CollectingMethodVisitor visitor = new Constraint.CollectingMethodVisitor();
+
+		try {
+			constraint.getPrecondition().accept(visitor);
+			constraint.getPostcondition().accept(visitor);
+		} catch (Exception e) {
+			ExceptionHelper.reportRuntimeException("Something is wrong");
+		}
+
+		return visitor.getMethods();
+	}
 }

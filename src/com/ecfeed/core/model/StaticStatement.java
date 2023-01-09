@@ -82,7 +82,13 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public StaticStatement makeClone(){
+	public StaticStatement makeClone() {
+		return new StaticStatement(fValue, getModelChangeRegistrator());
+	}
+
+	@Override
+	public StaticStatement createCopy(NodeMapper mapper) {
+
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
@@ -110,7 +116,7 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftParameterName(){
+	public String getLeftParameterCompositeName(){
 		return toString();
 	}
 
@@ -167,10 +173,10 @@ public class StaticStatement extends AbstractStatement {
 		return new ArrayList<>();
 	}
 
-	@Override
-	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		return new StaticStatement(fValue, getModelChangeRegistrator());
-	}
+//	@Override
+//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		return new StaticStatement(fValue, getModelChangeRegistrator());
+//	}
 
 }

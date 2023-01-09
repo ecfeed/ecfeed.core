@@ -153,4 +153,21 @@ public class CompositeParameterNodeTest {
 		assertTrue(compositeParameterNode1.isMatch(compositeParameterNode2));
 	}
 	
+	@Test
+	public void addAndDeleteChildCompositeTest() {
+		
+		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode("name1", null);
+		CompositeParameterNode compositeParameterNode2 = new CompositeParameterNode("name2", null);
+		
+		assertEquals(0, compositeParameterNode1.getParametersCount());
+		compositeParameterNode1.addParameter(compositeParameterNode2);
+		assertEquals(1, compositeParameterNode1.getParametersCount());
+		
+		AbstractParameterNode resultParameter = compositeParameterNode1.getParameter(0);
+		assertEquals("name2", resultParameter.getName());
+		
+		compositeParameterNode1.removeParameter(compositeParameterNode2);
+		assertEquals(0, compositeParameterNode1.getParametersCount());
+	}
+	
 }

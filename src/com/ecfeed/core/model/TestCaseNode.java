@@ -89,12 +89,29 @@ public class TestCaseNode extends AbstractNode {
 		return null;
 	}
 
-	public BasicParameterNode getMethodParameter(ChoiceNode choice){
-		if(getTestData().contains(choice)){
-			int index = getTestData().indexOf(choice);
-			return getMethod().getMethodParameters().get(index);
+	public BasicParameterNode getBasicMethodParameter(ChoiceNode choice) {
+
+		if (!getTestData().contains(choice)) {
+			return null;
 		}
-		return null;
+
+		int index = getTestData().indexOf(choice);
+
+		List<BasicParameterNode> methodParameters;
+
+		if (getMethod().isDeployed()) {
+			methodParameters = getMethod().getDeployedMethodParameters();
+		} else {
+			methodParameters = getMethod().getParametersAsBasic();
+		}
+
+		BasicParameterNode abstractParameterNode = methodParameters.get(index);
+		
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Attempt to get a parameter which is not basic.");
+		}
+		
+		return abstractParameterNode;
 	}
 
 	public List<ChoiceNode> getTestData(){
@@ -129,7 +146,7 @@ public class TestCaseNode extends AbstractNode {
 
 	public TestCaseNode getCopy(MethodNode method){
 		TestCaseNode tcase = makeClone();
-		if(tcase.updateReferences(method)){
+		if(tcase.correctTestCase(method)){
 			tcase.setParent(method);
 			return tcase;
 		}
@@ -137,29 +154,39 @@ public class TestCaseNode extends AbstractNode {
 			return null;
 	}
 
-	public boolean updateReferences(MethodNode method){
-		List<BasicParameterNode> parameters = method.getMethodParameters();
-		if(parameters.size() != getTestData().size())
-			return false;
+	public boolean correctTestCase(MethodNode parentMethodNode) {
 
-		for(int i = 0; i < parameters.size(); i++){
-			BasicParameterNode parameter = parameters.get(i);
-			if(parameter.isExpected()){
-				String name = getTestData().get(i).getName();
-				String value = getTestData().get(i).getValueString();
-				ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
-				newChoice.setParent(parameter);
-				getTestData().set(i, newChoice);
-			} else{
-				ChoiceNode original = getTestData().get(i);
-				ChoiceNode newReference = parameter.getChoice(original.getQualifiedName());
-				if(newReference == null){
-					return false;
-				}
-				getTestData().set(i, newReference);
-			}
+		if (!parentMethodNode.isDeployed()) {
+			return true;
 		}
+
+		List<BasicParameterNode> parameters = parentMethodNode.getDeployedMethodParameters();
+
+		if (parameters.size() != getTestData().size()) {
+			return false;
+		}
+
+		for (int i = 0; i < parameters.size(); i++) {
+
+			BasicParameterNode parameter = parameters.get(i);
+
+			if (parameter.isExpected()) {
+				updateTestCaseWithCreatedChoice(i, parameter);
+			} 
+		}
+
 		return true;
+	}
+
+	private void updateTestCaseWithCreatedChoice(int i, BasicParameterNode parameter) {
+
+		String name = getTestData().get(i).getName();
+		String value = getTestData().get(i).getValueString();
+
+		ChoiceNode newChoice = new ChoiceNode(name, value, parameter.getModelChangeRegistrator());
+
+		newChoice.setParent(parameter);
+		getTestData().set(i, newChoice);
 	}
 
 	@Override
@@ -204,7 +231,7 @@ public class TestCaseNode extends AbstractNode {
 
 	public boolean isConsistent() {
 		for(ChoiceNode choice : getTestData()){
-			BasicParameterNode parameter = getMethodParameter(choice);
+			BasicParameterNode parameter = getBasicMethodParameter(choice);
 			if(parameter == null || (parameter.isExpected() == false && parameter.getChoice(choice.getQualifiedName()) == null)){
 				return false;
 			}

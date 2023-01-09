@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.Constraint;
@@ -93,9 +94,9 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 
 		testCasesUserInput.setDataSource(generatorType.toString());
 
-		if  (!allChoicesSelected) {
-			testCasesUserInput.setChoices(argsAndChoiceNames);
-		}
+//		if  (!allChoicesSelected) {
+//			testCasesUserInput.setChoices(argsAndChoiceNames);
+//		}
 
 		setConstraints(allConstraintsSelected, constraintNames, testCasesUserInput);
 
@@ -112,12 +113,22 @@ public class RequestCreatorForRemoteTCProvider { // TODO - unit tests
 			IExtLanguageManager extLanguageManager) {
 
 		Map<String, List<String>> paramAndChoiceNames = new HashMap<String, List<String>>();
+		
+// TODO mo-re All methods at this point should be deployed.		
+		List<BasicParameterNode> parameters;
+		
+		if (methodNode.isDeployed()) {
+			parameters = methodNode.getDeployedMethodParameters();
+		} else {
+			parameters = methodNode.getParametersAsBasic();
+		}
+		
 
-		int parametersCount = methodNode.getParametersCount();
+		int parametersCount = parameters.size();
 
 		for (int parameterIndex = 0;  parameterIndex < parametersCount;  parameterIndex++) {
 
-			String parameterName = methodNode.getParameter(parameterIndex).getName();
+			String parameterName = parameters.get(parameterIndex).getName();
 			List<ChoiceNode> choicesForParameter = algorithmInput.get(parameterIndex);
 
 			paramAndChoiceNames.put(parameterName, ChoiceNodeHelper.getChoiceNames(choicesForParameter, extLanguageManager));

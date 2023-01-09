@@ -15,7 +15,7 @@ import java.util.Collection;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ChoiceOperationRemoveLabels extends BulkOperation {
+public class ChoiceOperationRemoveLabels extends CompositeOperation {
 
 	public ChoiceOperationRemoveLabels(ChoiceNode target, Collection<String> labels, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.REMOVE_PARTITION_LABELS, false, target, target, extLanguageManager);

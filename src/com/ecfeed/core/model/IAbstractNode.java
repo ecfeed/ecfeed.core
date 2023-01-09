@@ -19,6 +19,7 @@ public interface IAbstractNode {
 	public int getMyIndex();
 	public String getName();
 	public void setName(String name);
+	public void setCompositeName(String name);
 	public void setName(String name, boolean checkName);
 	public IModelChangeRegistrator getModelChangeRegistrator();
 	public void setParent(IAbstractNode newParent);

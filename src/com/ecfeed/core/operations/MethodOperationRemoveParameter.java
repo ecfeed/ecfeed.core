@@ -13,22 +13,24 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.model.AbstractNodeHelper;
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
-import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class MethodOperationRemoveParameter extends BulkOperation{
+public class MethodOperationRemoveParameter extends CompositeOperation{
 
 	public MethodOperationRemoveParameter(
-			MethodNode target, BasicParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
+			MethodNode target, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguageManager);
+		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
 
 		addOperation(new RemoveMethodParameterOperation(target, parameter, extLanguageManager));
 
@@ -37,18 +39,18 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		}
 	}
 
-	public MethodOperationRemoveParameter(MethodNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	public MethodOperationRemoveParameter(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		this(target, parameter, true, extLanguageManager);
 	}
 
 	public MethodOperationRemoveParameter(
 			MethodNode target, 
-			BasicParameterNode parameter, 
+			AbstractParameterNode parameter, 
 			boolean validate, 
 			boolean ignoreDuplicates, 
 			IExtLanguageManager extLanguageManager){
 
-		super(OperationNames.REMOVE_METHOD_PARAMETER, true, target, target, extLanguageManager);
+		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
 
 		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, extLanguageManager));
 		if(validate){
@@ -61,14 +63,14 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
 
-		public RemoveMethodParameterOperation(MethodNode target, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		public RemoveMethodParameterOperation(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 			super(target, parameter, extLanguageManager);
 			fOriginalTestCases = new ArrayList<>();
 		}
 
 		public RemoveMethodParameterOperation(
 				MethodNode target, 
-				BasicParameterNode parameter, 
+				AbstractParameterNode parameter, 
 				boolean ignoreDuplicates,
 				IExtLanguageManager extLanguageManager) {
 
@@ -80,7 +82,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 		@Override
 		public void execute() {
 
-			List<String> paramTypesInExtLanguage = MethodNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
+			List<String> paramTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
 			int index = getParameter().getMyIndex();
 			paramTypesInExtLanguage.remove(index);
 
@@ -143,7 +145,7 @@ public class MethodOperationRemoveParameter extends BulkOperation{
 
 			ClassNode classNode = getMethodTarget().getClassNode();
 
-			String methodNameInExtLanguage = MethodNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
+			String methodNameInExtLanguage = AbstractNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(

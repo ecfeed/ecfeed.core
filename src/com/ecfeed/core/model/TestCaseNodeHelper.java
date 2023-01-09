@@ -56,7 +56,7 @@ public class TestCaseNodeHelper {
 		for (int index = 0; index < testData.size(); index++) {
 
 			ChoiceNode choice = testData.get(index);
-			result += ChoiceNodeHelper.createTestDataLabel(choice, extLanguageManager);
+			result += ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, extLanguageManager);
 
 			if (index < testData.size() - 1) {
 				result += ", ";

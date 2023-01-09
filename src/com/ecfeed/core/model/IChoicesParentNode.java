@@ -20,6 +20,7 @@ public interface IChoicesParentNode extends IAbstractNode {
 	public void addChoices(List<ChoiceNode> choices);
 
 	public int getChoiceCount();	
+	public boolean hasChoices();
 	public List<ChoiceNode> getChoices();
 	public List<ChoiceNode> getChoicesWithCopies();
 	public ChoiceNode getChoice(String qualifiedName);

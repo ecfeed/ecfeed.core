@@ -121,7 +121,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 	}
 
 	private String getParameterNodeName() {
-		return SerializationHelperVersion1.getParameterNodeName();
+		return SerializationHelperVersion1.getBasicParameterNodeName();
 	}
 
 

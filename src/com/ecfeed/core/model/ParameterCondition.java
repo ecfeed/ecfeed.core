@@ -17,9 +17,9 @@ import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.RangeHelper;
 import com.ecfeed.core.utils.RelationMatcher;
 
@@ -30,7 +30,7 @@ public class ParameterCondition implements IStatementCondition {
 	private RelationStatement fParentRelationStatement;
 
 	public ParameterCondition(
-			BasicParameterNode rightParameter, 
+			BasicParameterNode rightParameter,
 			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
@@ -162,15 +162,25 @@ public class ParameterCondition implements IStatementCondition {
 	}
 
 	@Override
+	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+		BasicParameterNode parameter = (BasicParameterNode) mapper.getMappedNode(fRightParameterNode);
+
+		return new ParameterCondition(parameter, statement);
+	}
+
+	@Override
 	public boolean updateReferences(IParametersParentNode methodNode) {
 
-		AbstractParameterNode tmpParameterNode = methodNode.findParameter(fRightParameterNode.getName());
+		String compositeName = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
 		
-		if (tmpParameterNode == null) {
+		BasicParameterNode basicParameterNode = 
+				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(compositeName, methodNode);
+
+		if (basicParameterNode == null) {
 			return false;
 		}
-		
-		fRightParameterNode = (BasicParameterNode) tmpParameterNode;
+
+		fRightParameterNode = basicParameterNode;
 
 		return true;
 	}
@@ -210,14 +220,16 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String toString() {
 
-		return StatementConditionHelper.createParameterDescription(fRightParameterNode.getName());
+		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		String parameterDescription = StatementConditionHelper.createParameterDescription(name);
+		return parameterDescription;
 	}
 
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		return StatementConditionHelper.createParameterDescription(
-				MethodParameterNodeHelper.getName(fRightParameterNode, extLanguageManager));
+		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		return StatementConditionHelper.createParameterDescription(name);
 
 	}
 
@@ -348,22 +360,22 @@ public class ParameterCondition implements IStatementCondition {
 		return null;
 	}
 
-	@Override
-	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-		
-		BasicParameterNode sourcMethodParameterNode = getRightParameterNode();
-		BasicParameterNode deployedMethodParameterNode = 
-				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
-		
-		RelationStatement deployedParentRelationStatement = 
-				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
-
-		ParameterCondition deployedParameterCondition = 
-				new ParameterCondition(
-						deployedMethodParameterNode, 
-						deployedParentRelationStatement); 
-
-		return deployedParameterCondition;
-	}
+//	@Override
+//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+//
+//		BasicParameterNode sourcMethodParameterNode = getRightParameterNode();
+//		BasicParameterNode deployedMethodParameterNode =
+//				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
+//
+//		RelationStatement deployedParentRelationStatement =
+//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+//
+//		ParameterCondition deployedParameterCondition =
+//				new ParameterCondition(
+//						deployedMethodParameterNode,
+//						deployedParentRelationStatement);
+//
+//		return deployedParameterCondition;
+//	}
 
 }	

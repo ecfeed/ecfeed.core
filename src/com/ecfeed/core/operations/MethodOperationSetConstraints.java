@@ -13,16 +13,16 @@ package com.ecfeed.core.operations;
 import java.util.List;
 
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationSetConstraints extends AbstractOneWayModelOperation {
 
-	private MethodNode fMethodNode;
+	private IConstraintsParentNode fMethodNode;
 	private List<ConstraintNode> fConstraintNodes;
 
 	public MethodOperationSetConstraints(
-			MethodNode methodNode, List<ConstraintNode> constraintNodes, IExtLanguageManager extLanguageManager){
+			IConstraintsParentNode methodNode, List<ConstraintNode> constraintNodes, IExtLanguageManager extLanguageManager){
 
 		super("Set constraints", extLanguageManager);
 
