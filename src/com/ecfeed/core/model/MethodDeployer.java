@@ -167,32 +167,12 @@ public abstract class MethodDeployer {
 
 		for (ChoiceNode deployedChoiceNode : deployedChoices) {
 
-			ChoiceNode originalChoiceNode = (ChoiceNode) mapper.getMappedNode(deployedChoiceNode);
+			ChoiceNode originalChoiceNode = mapper.getMappedNodeSource(deployedChoiceNode);
 
 			revertedChoices.add(originalChoiceNode);
 		}
 
 		return new TestCase(revertedChoices);
 	}
-
-
-	// TODO MO-RE - do we need this ?
-	//	public static MethodNode construct(List<BasicParameterNode> parameters, List<ConstraintNode> constraints, NodeMapper mapper) {
-	//
-	//		if (parameters == null) {
-	//			ExceptionHelper.reportRuntimeException("The list of parameters is not defined.");
-	//		}
-	//
-	//		if (constraints == null) {
-	//			ExceptionHelper.reportRuntimeException("The list of constraints is not defined.");
-	//		}
-	//
-	//		MethodNode method = new MethodNode("construct");
-	//
-	//		parameters.stream().map(e -> e.createCopy(mapper)).forEach(method::addParameter);
-	//		constraints.forEach(e -> method.addConstraint(e.createCopy(mapper)));
-	//
-	//		return method;
-	//	}
 
 }
