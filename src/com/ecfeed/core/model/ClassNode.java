@@ -384,9 +384,10 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		
 		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
 			
-			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
+			if (abstractParameterNode instanceof BasicParameterNode) {
+				globalParameterNodes.add((BasicParameterNode) abstractParameterNode);
+			}
 			
-			globalParameterNodes.add(globalParameterNode);
 		}
 		
 		return globalParameterNodes;

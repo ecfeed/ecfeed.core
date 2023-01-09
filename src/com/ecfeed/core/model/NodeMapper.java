@@ -58,9 +58,13 @@ public class NodeMapper {
 		AbstractNode mappedNode = fNodeMappingsSource.get(sourceNode);
 
 		if (mappedNode == null) {
-			return fNodeMappingsDeployment.get(sourceNode);
-		} else {
-			return mappedNode;
-		}
+			mappedNode = fNodeMappingsDeployment.get(sourceNode);
+			
+			if (mappedNode == null) {
+				return sourceNode;
+			}
+		} 
+		
+		return mappedNode;
 	}
 }

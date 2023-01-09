@@ -187,8 +187,10 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		copyProperties(copyOfBasicParameterNode);
 
-		ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
-
+		if (!this.isLinked()) {
+			ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
+		}
+			
 		return copyOfBasicParameterNode;
 	}
 
