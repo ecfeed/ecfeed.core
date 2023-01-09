@@ -85,12 +85,18 @@ public class XmlUpgradeTest {
 		// System.out.println(result);
 
 		// compare with model from text
-		assertNull(TestHelper.isEqualsByLines(expectedResultInVersion4FromText, result));
+		String[] expectedResultLines1 = expectedResultInVersion4FromText.split("\n");
+		String[] resultLines1 = result.split(System.getProperty("line.separator"));
+
+		assertNull(TestHelper.isEqualByLines(expectedResultLines1, resultLines1));
 
 		// compare with model created in version4
 
 		if (expectedResultInVersion4FromModel != null) {
-			assertNull(TestHelper.isEqualsByLines(expectedResultInVersion4FromModel, result));
+			String[] expectedResultLines2 = expectedResultInVersion4FromModel.split("\n");
+			String[] resultLines2 = result.split(System.getProperty("line.separator"));
+
+			assertNull(TestHelper.isEqualByLines(expectedResultLines2, resultLines2));
 		}
 	}
 

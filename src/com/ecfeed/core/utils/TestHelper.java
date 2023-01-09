@@ -123,12 +123,8 @@ public class TestHelper {
 		return getChoiceNodeFromConstraintPostcondition(methodNode, 0);
 	}
 	
-	public static String isEqualsByLines(String expectedResult, String result) {
+	public static String isEqualByLines(String[] expectedResultLines, String[] resultLines) {
 
-		final String lineSeparator = System.getProperty("line.separator");
-
-		String[] expectedResultLines = expectedResult.split(lineSeparator);
-		String[] resultLines = result.split(lineSeparator);
 
 		int minLines = Math.min(expectedResultLines.length, resultLines.length);
 
