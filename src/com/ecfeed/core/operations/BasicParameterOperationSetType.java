@@ -146,7 +146,7 @@ public class BasicParameterOperationSetType extends AbstractParameterOperationSe
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(
-							classNode, methodNameInExtLanguage, parameterTypesInExtLanguage, fExtLanguageManager);
+							classNode, methodNameInExtLanguage, fExtLanguageManager);
 
 			if (foundMethodNode == null) {
 				return;
@@ -157,7 +157,7 @@ public class BasicParameterOperationSetType extends AbstractParameterOperationSe
 			}
 
 			String message = 
-					ClassNodeHelper.createMethodSignatureDuplicateMessage(
+					ClassNodeHelper.createMethodNameDuplicateMessage(
 							classNode, foundMethodNode, false, extLanguageManager);
 
 			ExceptionHelper.reportRuntimeException(message);

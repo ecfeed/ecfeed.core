@@ -122,35 +122,13 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return -1;
 	}
 
-//	public String getAndroidRunner() {
-//		return getPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER);
-//	}
-//
-//	public void setAndroidRunner(String androidRunner) {
-//		setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_ANDROID_RUNNER, androidRunner);
-//	}	
-//
-//	public boolean getRunOnAndroid() {
-//		String value = getPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID);
-//
-//		if (value == null) {
-//			return false;
-//		}
-//
-//		return BooleanHelper.parseBoolean(value);
-//	}
-//
-//	public void setRunOnAndroid(boolean runOnAndroid) {
-//		setPropertyValue(NodePropertyDefs.PropertyId.PROPERTY_RUN_ON_ANDROID, BooleanHelper.toString(runOnAndroid));
-//	}	
-
 	public boolean addMethod(MethodNode method) {
 		return addMethod(method, fMethods.size());
 	}
 
 	public boolean addMethod(MethodNode method, int index) {
 
-		if (findMethodWithTheSameSignature(method.getName(), method.getParameterTypes()) != null) {
+		if (findMethodWithTheSameName(method.getName()) != null) {
 
 			ExceptionHelper.reportRuntimeException("Cannot add method. Method with identical signature already exists.");
 		}
@@ -166,26 +144,17 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return false;
 	}
 
-	public MethodNode findMethodWithTheSameSignature(String name, List<String> parameterTypes) {
+	public MethodNode findMethodWithTheSameName(String name) {
 
-		for (MethodNode methodNode : getMethods()) {
+		List<MethodNode> methods = getMethods();
+		
+		for (MethodNode methodNode : methods) {
 			
-			List<String> args = new ArrayList<String>();
-			
-			for (AbstractParameterNode abstractParameterNode : methodNode.getParameters()) {
-				
-				if (abstractParameterNode instanceof BasicParameterNode) {
-					
-					BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-					
-					args.add(basicParameterNode.getType());
-				}
-			}
-			
-			if (methodNode.getName().equals(name) && args.equals(parameterTypes)){
+			if (methodNode.getName().equals(name)) {
 				return methodNode;
 			}
 		}
+		
 		return null;
 	}
 

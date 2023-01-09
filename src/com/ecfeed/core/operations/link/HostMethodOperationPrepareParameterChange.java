@@ -81,10 +81,10 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 
 			MethodNode method = (MethodNode) fTarget.getParent();
 			
-			if(method.checkDuplicate(fTarget.getMyIndex(), fNewType)){
+			if(method.checkDuplicate()){
 
 				ExceptionHelper.reportRuntimeException(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+						ClassNodeHelper.createMethodNameDuplicateMessage(
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 

@@ -39,9 +39,8 @@ public class MethodNodeHelper {
 		return RegexHelper.createMessageAllowedCharsForMethod(extLanguageManager);
 	}
 	
-	public static String verifyMethodSignatureIsValid(
+	public static String verifyMethodNameIsValid(
 			String methodNameInExtLanguage,
-			List<String> parameterTypesInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
 		String errorMessage = validateMethodName(methodNameInExtLanguage, extLanguageManager);
@@ -356,8 +355,8 @@ public class MethodNodeHelper {
 			MethodNode methodNode, 
 			IExtLanguageManager extLanguageManager) {
 
-		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
-		parameterTypesInExternalLanguage.add(typeForLastParameter);
+//		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+//		parameterTypesInExternalLanguage.add(typeForLastParameter);
 
 		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
 
@@ -365,7 +364,6 @@ public class MethodNodeHelper {
 				ClassNodeHelper.findMethodByExtLanguage(
 						classNode,
 						methodNameInExternalLanguage,
-						parameterTypesInExternalLanguage,
 						extLanguageManager);
 
 		if (foundMethodNode != null) {
@@ -392,7 +390,7 @@ public class MethodNodeHelper {
 			List<String> newTypes = methodNode.getParameterTypes();
 			newTypes.add(type);
 
-			if (classNode.findMethodWithTheSameSignature(methodNode.getName(), newTypes) == null) {
+			if (classNode.findMethodWithTheSameName(methodNode.getName()) == null) {
 				break;
 
 			} else {

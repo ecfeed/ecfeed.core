@@ -10,14 +10,11 @@
 
 package com.ecfeed.core.operations;
 
-import java.util.List;
-
 import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -42,16 +39,15 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 		ClassNode classNode = fTargetMethodNode.getClassNode();
 
 		String methodName = AbstractNodeHelper.getName(fSourceMethodNode, getExtLanguageManager());
-		List<String> methodParameters = ParametersParentNodeHelper.getParameterTypes(fSourceMethodNode, getExtLanguageManager());
+		//List<String> methodParameters = ParametersParentNodeHelper.getParameterTypes(fSourceMethodNode, getExtLanguageManager());
 
 		if (ClassNodeHelper.findMethodByExtLanguage(
 				classNode, 
 				methodName, 
-				methodParameters, 
 				getExtLanguageManager()) != null) {
 
 			ExceptionHelper.reportRuntimeException(
-					ClassNodeHelper.createMethodSignatureDuplicateMessage(
+					ClassNodeHelper.createMethodNameDuplicateMessage(
 							classNode, fTargetMethodNode, false, getExtLanguageManager()));
 		}
 

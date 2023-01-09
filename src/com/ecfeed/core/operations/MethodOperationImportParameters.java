@@ -62,12 +62,12 @@ public class MethodOperationImportParameters extends GenericOperationImportParam
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(
-							parentClassNode, methodNameInExtLanguage, paremeterTypesInExtLanguage, extLanguageManager);
+							parentClassNode, methodNameInExtLanguage, extLanguageManager);
 
 			if (foundMethodNode != null) {
 
 				ExceptionHelper.reportRuntimeException(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+						ClassNodeHelper.createMethodNameDuplicateMessage(
 								parentClassNode, foundMethodNode, false, extLanguageManager));
 			}
 		}

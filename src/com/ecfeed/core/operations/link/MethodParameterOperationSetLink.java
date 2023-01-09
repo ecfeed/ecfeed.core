@@ -65,10 +65,10 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 			List<String> types = method.getParameterTypes();
 			types.set(fTarget.getMyIndex(), fNewLink.getType());
 
-			if(method.checkDuplicate(fTarget.getMyIndex(), fNewLink.getType())){
+			if(method.checkDuplicate()){
 				
 				ExceptionHelper.reportRuntimeException(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+						ClassNodeHelper.createMethodNameDuplicateMessage(
 								method.getClassNode(), method, false, getExtLanguageManager()));
 			}
 

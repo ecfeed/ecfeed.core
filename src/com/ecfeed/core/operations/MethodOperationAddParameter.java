@@ -72,12 +72,12 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 			MethodNode foundMethodNode = 
 					ClassNodeHelper.findMethodByExtLanguage(
-							parentClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
+							parentClassNode, methodNameInExtLanguage, extLanguageManager);
 
 			if (foundMethodNode != null) {
 
 				ExceptionHelper.reportRuntimeException(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
+						ClassNodeHelper.createMethodNameDuplicateMessage(
 								parentClassNode, foundMethodNode, false, extLanguageManager));
 			}
 		}

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
@@ -54,6 +55,17 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public void setName(String name) {
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		ClassNode classNode = getClassNode();
+
+		if (classNode != null) {
+			
+			MethodNode otherMethodNode = classNode.findMethodWithTheSameName(name);
+
+			if (otherMethodNode != null) {
+				ExceptionHelper.reportRuntimeException("Method with the same name already exists.");
+			}
+		}
 
 		super.setName(name);
 	}
@@ -201,14 +213,14 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return -1;
 	}
 
-	public MethodNode getSibling(List<String> argTypes){
+	public MethodNode getSibling(){
 
 		ClassNode classNode = getClassNode();
 
 		if (classNode == null) 
 			return null;
 
-		MethodNode sibling = classNode.findMethodWithTheSameSignature(getName(), argTypes);
+		MethodNode sibling = classNode.findMethodWithTheSameName(getName());
 
 		if (sibling == null || sibling == this) {
 			return null;
@@ -217,10 +229,8 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return sibling;
 	}
 
-	public boolean checkDuplicate(int index, String newType){ // TODO MO-RE remove ? no check of duplicates (when unique function name) ??
-		List<String> argTypes = getParameterTypes();
-		argTypes.set(index, newType);
-		return getSibling(argTypes) != null;
+	public boolean checkDuplicate() { // TODO MO-RE remove ? no check of duplicates (when unique function name) ??
+		return getSibling() != null;
 	}
 
 	@Override

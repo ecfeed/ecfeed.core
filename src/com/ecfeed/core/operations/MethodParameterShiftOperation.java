@@ -64,7 +64,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		if(shiftAllowed(getShiftedElements(), getShift()) == false){
 
 			ExceptionHelper.reportRuntimeException(
-					ClassNodeHelper.createMethodSignatureDuplicateMessage(
+					ClassNodeHelper.createMethodNameDuplicateMessage(
 							method.getClassNode(),  method, false, getExtLanguageManager()));
 		}
 		List<Integer> indices = indices(fParameters, getShiftedElements());
@@ -97,7 +97,6 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 				ClassNodeHelper.findMethodByExtLanguage(
 						classNode, 
 						methodName, 
-						parameterTypes, 
 						getExtLanguageManager());
 
 		if(sibling != null && sibling != method){

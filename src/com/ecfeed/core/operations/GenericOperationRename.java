@@ -109,6 +109,19 @@ public class GenericOperationRename extends AbstractModelOperation {
 			String newQualifiedNameInIntrLanguage, 
 			String oldQualifiedNameInIntrLanguage) {
 
+		if (fTargetAbstractNode instanceof MethodNode) {
+			
+			MethodNode methodNode = (MethodNode) fTargetAbstractNode;
+			ClassNode classNode = methodNode.getClassNode();
+			
+			MethodNode foundMethodNode = classNode.findMethodWithTheSameName(newQualifiedNameInIntrLanguage);
+			
+			if (foundMethodNode != null) {
+				String message = "Method with name " + newQualifiedNameInIntrLanguage + " already exists in class.";
+				ExceptionHelper.reportRuntimeException(message);
+			}
+		}
+		
 		fTargetAbstractNode.setName(newQualifiedNameInIntrLanguage);
 
 		if (fTargetAbstractNode instanceof TestSuiteNode) {

@@ -77,12 +77,13 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 		String methodNameInExtLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
-		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+		// List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
 
 		String newNameInExtLanguage = 
 				ClassNodeHelper.generateNewMethodName(
-						fClassNode, methodNameInExtLanguage, parameterTypesInExtLanguage, extLanguageManager);
+						fClassNode, methodNameInExtLanguage, extLanguageManager);
 
+		//methodNode.setParent(fClassNode);
 		AbstractNodeHelper.setName(methodNode, newNameInExtLanguage, extLanguageManager);
 	}
 
