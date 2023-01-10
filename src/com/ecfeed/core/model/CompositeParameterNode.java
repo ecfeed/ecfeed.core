@@ -27,10 +27,20 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	public CompositeParameterNode(
 			String name,
 			IModelChangeRegistrator modelChangeRegistrator) {
+
+		this(name, null, modelChangeRegistrator);
+	}
+
+	public CompositeParameterNode(
+			String name,
+			AbstractParameterNode link,
+			IModelChangeRegistrator modelChangeRegistrator) {
 		
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		setLinkToGlobalParameter(link);
 		
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
@@ -73,7 +83,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public CompositeParameterNode makeClone() {
 		CompositeParameterNode copy = 
-				new CompositeParameterNode(getName(), getModelChangeRegistrator());
+				new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
 
 		copy.setProperties(getProperties());
 		copy.setParent(this.getParent());
