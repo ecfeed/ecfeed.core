@@ -14,6 +14,8 @@ import java.util.List;
 
 public abstract class AbstractParameterNode extends AbstractNode {
 
+	private AbstractParameterNode fLinkToGlobalParameter;
+
 	public enum ParameterType {
 		BASIC,
 		COMPOSITE
@@ -21,6 +23,21 @@ public abstract class AbstractParameterNode extends AbstractNode {
 
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
+	}
+
+	public void setLinkToGlobalParameter(AbstractParameterNode node) {
+
+		this.fLinkToGlobalParameter = node;
+	}
+
+	public AbstractParameterNode getLinkToGlobalParameter() {
+
+		return fLinkToGlobalParameter;
+	}
+
+	public boolean isLinked() {
+
+		return getLinkToGlobalParameter() != null;
 	}
 
 	@Override
