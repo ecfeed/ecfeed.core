@@ -13,15 +13,11 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractNodeHelper;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationAddParameter extends GenericOperationAddParameter {
@@ -56,31 +52,31 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 	@Override
 	public void execute() {
 
-		//		IExtLanguageManager extLanguageManager = getExtLanguageManager();
+		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		//		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
-		//
-		//		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguageManager);
-		//
-		//		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
+		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
 
-		//		ClassNode parentClassNode = fMethodNode.getClassNode();
-		//
-		//		if (parentClassNode != null) {
-		//
-		//			String methodNameInExtLanguage = AbstractNodeHelper.getName(fMethodNode, extLanguageManager);
-		//
-		//			MethodNode foundMethodNode =
-		//					ClassNodeHelper.findMethodByExtLanguage(
-		//							parentClassNode, methodNameInExtLanguage, extLanguageManager);
-		//
-		//			if (foundMethodNode != null) {
-		//
-		//				ExceptionHelper.reportRuntimeException(
-		//						ClassNodeHelper.createMethodNameDuplicateMessage(
-		//								parentClassNode, foundMethodNode, false, extLanguageManager));
-		//			}
-		//		}
+		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguageManager);
+
+		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
+
+		//				ClassNode parentClassNode = fMethodNode.getClassNode();
+		//		
+		//				if (parentClassNode != null) {
+		//		
+		//					String methodNameInExtLanguage = AbstractNodeHelper.getName(fMethodNode, extLanguageManager);
+		//		
+		//					MethodNode foundMethodNode =
+		//							ClassNodeHelper.findMethodByExtLanguage(
+		//									parentClassNode, methodNameInExtLanguage, extLanguageManager);
+		//		
+		//					if (foundMethodNode != null) {
+		//		
+		//						ExceptionHelper.reportRuntimeException(
+		//								ClassNodeHelper.createMethodNameDuplicateMessage(
+		//										parentClassNode, foundMethodNode, false, extLanguageManager));
+		//					}
+		//				}
 
 		fMethodNode.removeTestCases();
 		super.execute();

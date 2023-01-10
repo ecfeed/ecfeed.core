@@ -145,7 +145,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		if (parametersParentNode instanceof MethodNode) {
 
-			MethodNode methodNode = (MethodNode) parametersParentNode;
+			//			MethodNode methodNode = (MethodNode) parametersParentNode;
 
 			String type = JavaLanguageHelper.TYPE_NAME_INT;
 

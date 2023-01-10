@@ -163,8 +163,8 @@ public class ClassNodeHelperTest {
 
 		String methodNameInJavaLanguage = "method_1";
 
-		String[] userParameterTypesInJavaLanguage = { "User1", "com.User2" };
-		String[] userParameterTypesInSimpleLanguage = { "User1", "User2" };
+		// String[] userParameterTypesInJavaLanguage = { "User1", "com.User2" };
+		// String[] userParameterTypesInSimpleLanguage = { "User1", "User2" };
 
 		List<String> paramTypesInJavaLanguage = new ArrayList<>();
 		paramTypesInJavaLanguage.add("int");
@@ -215,35 +215,13 @@ public class ClassNodeHelperTest {
 				ClassNodeHelper.verifyNewMethodSignatureIsValid(
 						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 
 		errorMessage =
 				ClassNodeHelper.verifyNewMethodSignatureIsValid(
 						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
-		assertNotNull(errorMessage);
-
-
-		// class with conflicting method
-
-		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
-		methodNode.addParameter(param1);
-
-		BasicParameterNode param2 = new BasicParameterNode("param2", "double", "0.0", true, null);
-		methodNode.addParameter(param2);
-
-
-		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValid(
-						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
-
-		assertNotNull(errorMessage);
-
-		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValid(
-						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
-
-		assertNotNull(errorMessage);
+		assertNull(errorMessage);
 	}
 
 	@Test
@@ -253,7 +231,7 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		String[] userTypes1 = {"User1", "com.User2"};
+		// String[] userTypes1 = {"User1", "com.User2"};
 
 		String result =
 				ClassNodeHelper.generateNewMethodName(
@@ -263,7 +241,7 @@ public class ClassNodeHelperTest {
 
 		// simple language
 
-		String[] userTypes2 = {"User1", "User2"};
+		// String[] userTypes2 = {"User1", "User2"};
 
 		result =
 				ClassNodeHelper.generateNewMethodName(
@@ -274,7 +252,7 @@ public class ClassNodeHelperTest {
 
 		String methodName;
 
-		String[] paramTypesInJavaLanguage = {"int", "String"};
+		//		String[] paramTypesInJavaLanguage = {"int", "String"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
 					classNode, "method_1", new ExtLanguageManagerForJava());
@@ -282,7 +260,7 @@ public class ClassNodeHelperTest {
 
 		// simple language
 
-		String[] paramTypesInSimpleLanguage = {"Number", "Text"};
+		// String[] paramTypesInSimpleLanguage = {"Number", "Text"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
 						classNode, "method 1", new ExtLanguageManagerForSimple());

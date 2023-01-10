@@ -20,7 +20,6 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.TestHelper;
-import org.junit.jupiter.api.Disabled;
 
 public class MethodDeployerTest {
 
