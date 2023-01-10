@@ -64,7 +64,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(MethodNode node) throws Exception {
 		if(fChild instanceof BasicParameterNode){
-			return new MethodOperationRemoveParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
+			return new RemoveBasicParameterOperation(node, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
 			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild, fExtLanguageManager);

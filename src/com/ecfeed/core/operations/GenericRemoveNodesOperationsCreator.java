@@ -305,7 +305,7 @@ public class GenericRemoveNodesOperationsCreator {
 
 								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
 
-									MethodOperationRemoveParameter operation = new MethodOperationRemoveParameter(
+									RemoveBasicParameterOperation operation = new RemoveBasicParameterOperation(
 											method, (BasicParameterNode)node, validate, false, extLanguageManager);
 
 									addOper(operation, outOperations);

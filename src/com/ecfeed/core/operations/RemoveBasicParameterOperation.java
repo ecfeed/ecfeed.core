@@ -25,25 +25,25 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class MethodOperationRemoveParameter extends CompositeOperation{
+public class RemoveBasicParameterOperation extends CompositeOperation{
 
-	public MethodOperationRemoveParameter(
+	public RemoveBasicParameterOperation(
 			MethodNode target, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
 
-		addOperation(new RemoveMethodParameterOperation(target, parameter, extLanguageManager));
+		addOperation(new RemoveBasicParameterOperationPrivate(target, parameter, extLanguageManager));
 
 		if (validate) {
 			addOperation(new MethodOperationMakeConsistent(target, extLanguageManager));
 		}
 	}
 
-	public MethodOperationRemoveParameter(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	public RemoveBasicParameterOperation(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		this(target, parameter, true, extLanguageManager);
 	}
 
-	public MethodOperationRemoveParameter(
+	public RemoveBasicParameterOperation(
 			MethodNode target, 
 			AbstractParameterNode parameter, 
 			boolean validate, 
@@ -52,17 +52,17 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 
 		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
 
-		addOperation(new RemoveMethodParameterOperation(target, parameter, ignoreDuplicates, extLanguageManager));
+		addOperation(new RemoveBasicParameterOperationPrivate(target, parameter, ignoreDuplicates, extLanguageManager));
 		if(validate){
 			addOperation(new MethodOperationMakeConsistent(target, extLanguageManager));
 		}
 	}
 
-	private class RemoveMethodParameterOperation extends GenericOperationRemoveParameter{
+	private class RemoveBasicParameterOperationPrivate extends GenericOperationRemoveParameter{
 
 		private List<TestCaseNode> fOriginalTestCases;
 
-		public RemoveMethodParameterOperation(
+		public RemoveBasicParameterOperationPrivate(
 				MethodNode target,
 				AbstractParameterNode parameter,
 				IExtLanguageManager extLanguageManager) {
@@ -71,7 +71,7 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 			fOriginalTestCases = new ArrayList<>();
 		}
 
-		public RemoveMethodParameterOperation(
+		public RemoveBasicParameterOperationPrivate( // XYX
 				MethodNode target, 
 				AbstractParameterNode parameter, 
 				boolean ignoreDuplicates, // TODO MO-RE remove
@@ -164,7 +164,7 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 		private class ReverseOperation extends AbstractReverseOperation {
 
 			public ReverseOperation(IExtLanguageManager extLanguageManager) {
-				super(RemoveMethodParameterOperation.this, extLanguageManager);
+				super(RemoveBasicParameterOperationPrivate.this, extLanguageManager);
 			}
 
 			@Override
@@ -172,12 +172,12 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 
 				setOneNodeToSelect(getMethodTarget());
 				getMethodTarget().replaceTestCases(fOriginalTestCases);
-				RemoveMethodParameterOperation.super.getReverseOperation().execute();
+				RemoveBasicParameterOperationPrivate.super.getReverseOperation().execute();
 			}
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new MethodOperationRemoveParameter(getMethodTarget(), (BasicParameterNode)getParameter(), getExtLanguageManager());
+				return new RemoveBasicParameterOperation(getMethodTarget(), (BasicParameterNode)getParameter(), getExtLanguageManager());
 			}
 
 		}

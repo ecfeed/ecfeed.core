@@ -107,7 +107,7 @@ public class FactoryRemoveOperation {
 
 			if (parent instanceof MethodNode) {
 				
-					return new MethodOperationRemoveParameter(
+					return new RemoveBasicParameterOperation(
 							(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			}
 			
@@ -128,7 +128,7 @@ public class FactoryRemoveOperation {
 			
 			if (parent instanceof MethodNode) {
 
-				return new MethodOperationRemoveParameter(
+				return new RemoveBasicParameterOperation(
 						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			} 
 			

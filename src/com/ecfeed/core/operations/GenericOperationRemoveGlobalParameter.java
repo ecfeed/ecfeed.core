@@ -31,8 +31,8 @@ public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 		
 		for (BasicParameterNode linkedBasicParameterNode : parameter.getLinkedMethodParameters()) {
 			
-			MethodOperationRemoveParameter operation = 
-					new MethodOperationRemoveParameter(
+			RemoveBasicParameterOperation operation = 
+					new RemoveBasicParameterOperation(
 							(MethodNode) linkedBasicParameterNode.getParent(), 
 							linkedBasicParameterNode, 
 							extLanguageManager);
@@ -55,8 +55,8 @@ public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 		}
 		
 		for(BasicParameterNode linker : parameter.getLinkedMethodParameters()){
-			MethodOperationRemoveParameter operation = 
-					new MethodOperationRemoveParameter(
+			RemoveBasicParameterOperation operation = 
+					new RemoveBasicParameterOperation(
 							(MethodNode)linker.getParent(), linker, true, ignoreDuplicates, extLanguageManager);
 			
 			addOperation(operation);

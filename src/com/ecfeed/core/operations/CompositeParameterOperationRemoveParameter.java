@@ -32,7 +32,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
 
-		addOperation(new RemoveStructureParameterOperation(target, parameter, extLanguageManager));
+		addOperation(new RemoveCompositeParameterOperation(target, parameter, extLanguageManager));
 
 		// TODO MO-RE
 		//		if (validate) {
@@ -53,7 +53,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
 
-		addOperation(new RemoveStructureParameterOperation(target, parameter, ignoreDuplicates, extLanguageManager));
+		addOperation(new RemoveCompositeParameterOperation(target, parameter, ignoreDuplicates, extLanguageManager));
 
 		// TODO MO-RE		
 		//		if(validate){
@@ -61,17 +61,17 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 		//		}
 	}
 
-	private class RemoveStructureParameterOperation extends GenericOperationRemoveParameter{
+	private class RemoveCompositeParameterOperation extends GenericOperationRemoveParameter{
 
 		private List<TestCaseNode> fOriginalTestCases;
 		private boolean fIgnoreDuplicates;
 
-		public RemoveStructureParameterOperation(CompositeParameterNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		public RemoveCompositeParameterOperation(CompositeParameterNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 			super(target, parameter, extLanguageManager);
 			fOriginalTestCases = new ArrayList<>();
 		}
 
-		public RemoveStructureParameterOperation(
+		public RemoveCompositeParameterOperation(
 				CompositeParameterNode target, 
 				AbstractParameterNode parameter, 
 				boolean ignoreDuplicates,
@@ -159,7 +159,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 		private class ReverseOperation extends AbstractReverseOperation {
 
 			public ReverseOperation(IExtLanguageManager extLanguageManager) {
-				super(RemoveStructureParameterOperation.this, extLanguageManager);
+				super(RemoveCompositeParameterOperation.this, extLanguageManager);
 			}
 
 			@Override
@@ -167,7 +167,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 				setOneNodeToSelect(getMethodTarget());
 				//				getMethodTarget().replaceTestCases(fOriginalTestCases);
-				RemoveStructureParameterOperation.super.getReverseOperation().execute();
+				RemoveCompositeParameterOperation.super.getReverseOperation().execute();
 			}
 
 			@Override
