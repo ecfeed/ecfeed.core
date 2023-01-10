@@ -10,21 +10,16 @@
 
 package operations;
 
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ClassNodeHelper;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.operations.BasicParameterOperationSetType;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 
 public class MethodParameterOperationSetTypeTest {
@@ -63,9 +58,6 @@ public class MethodParameterOperationSetTypeTest {
 
 		final ExtLanguageManagerForSimple extLanguageManagerForSimple = new ExtLanguageManagerForSimple();
 
-//		ParameterConversionDefinition parameterConversionDefinition = 
-//				createParameterConversionDefinition("x", "1");
-		
 		try {
 			BasicParameterOperationSetType methodParameterOperationSetType =
 					new BasicParameterOperationSetType(
@@ -81,7 +73,7 @@ public class MethodParameterOperationSetTypeTest {
 			TestHelper.checkExceptionMessage(
 					e,
 					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_NAME);
 		}
 
 		// set param of method1 to Text
@@ -101,7 +93,7 @@ public class MethodParameterOperationSetTypeTest {
 			TestHelper.checkExceptionMessage(
 					e,
 					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_NAME);
 		}
 
 		// set param of method1 to Logical
@@ -137,7 +129,7 @@ public class MethodParameterOperationSetTypeTest {
 			TestHelper.checkExceptionMessage(
 					e,
 					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_NAME);
 		}
 	}
 
@@ -324,7 +316,7 @@ public class MethodParameterOperationSetTypeTest {
 			TestHelper.checkExceptionMessage(
 					e,
 					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_NAME);
 		}
 
 		// set param of method1 to String
@@ -339,7 +331,7 @@ public class MethodParameterOperationSetTypeTest {
 			TestHelper.checkExceptionMessage(
 					e,
 					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_NAME);
 		}
 
 		// set param of method1 to boolean
@@ -365,7 +357,7 @@ public class MethodParameterOperationSetTypeTest {
 			TestHelper.checkExceptionMessage(
 					e,
 					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_NAME);
 		}
 	}
 

@@ -54,10 +54,9 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 		generateUniqeNameForMethod(fMethod);
 
 		String errorMessage = 
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
 						fClassNode, 
 						AbstractNodeHelper.getName(fMethod, getExtLanguageManager()), 
-						ParametersParentNodeHelper.getParameterTypes(fMethod, getExtLanguageManager()), 
 						getExtLanguageManager());
 
 		if (errorMessage != null){

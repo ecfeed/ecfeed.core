@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.TestHelper;
 import org.junit.Test;
 
 public class ClassNodeTest extends ClassNode {
@@ -63,10 +64,14 @@ public class ClassNodeTest extends ClassNode {
 		}
 
 		classNode.addMethod(method1);
-		classNode.addMethod(method2);
 
-		assertEquals(method1, classNode.findMethodWithTheSameSignature("method", method1Types));
-		assertEquals(method2, classNode.findMethodWithTheSameSignature("method", method2Types));
+		try {
+			classNode.addMethod(method2);
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, "Cannot add method.", "Method with the same name already exists.");
+		}
+
+		assertEquals(method1, classNode.findMethodWithTheSameName("method"));
 	}
 
 	@Test

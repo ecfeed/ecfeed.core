@@ -15,6 +15,9 @@ import com.ecfeed.core.utils.TypeHelper.TypeCathegory;
 
 public class JavaTypeHelper {
 
+	public static String getIntType() {
+		return "int";
+	}
 	public static String calculateJavaType(
 			String newTypeInExtLanguage,
 			TypeCathegory typeCathegory,

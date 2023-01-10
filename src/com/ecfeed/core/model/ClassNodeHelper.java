@@ -86,10 +86,9 @@ public class ClassNodeHelper {
 		return null;
 	}
 
-	public static String verifyNewMethodSignatureIsValidAndUnique(
+	public static String verifyNewMethodSignatureIsValid(
 			ClassNode classNode,
 			String methodNameInExtLanguage,
-			List<String> parameterTypesInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
 		String errorMessage = MethodNodeHelper.verifyMethodNameIsValid(methodNameInExtLanguage, extLanguageManager);
@@ -97,19 +96,19 @@ public class ClassNodeHelper {
 		if (errorMessage != null)
 			return errorMessage;
 
-		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, extLanguageManager) != null) {
-
-			String classSignature = createSignature(classNode, extLanguageManager);
-
-			errorMessage =
-					"Class: "
-							+ classSignature
-							+ " already " +
-							CONTAINS_METHOD_WITH_IDENTICAL_NAME +
-							": " + methodNameInExtLanguage + ".";
-
-			return errorMessage;
-		}
+		//		if (findMethodByExtLanguage(classNode, methodNameInExtLanguage, extLanguageManager) != null) {
+		//
+		//			String classSignature = createSignature(classNode, extLanguageManager);
+		//
+		//			errorMessage =
+		//					"Class: "
+		//							+ classSignature
+		//							+ " already " +
+		//							CONTAINS_METHOD_WITH_IDENTICAL_NAME +
+		//							": " + methodNameInExtLanguage + ".";
+		//
+		//			return errorMessage;
+		//		}
 
 		return null;
 	}

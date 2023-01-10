@@ -10,9 +10,7 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
-import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -385,228 +383,57 @@ public class MethodNodeHelperTest {
 		BasicParameterNode methodParameterNode1a =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1a, extLanguageManagerForSimple);
 
-		assertEquals("char",  methodParameterNode1a.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1a.getType());
 
 		methodNode1a.addParameter(methodParameterNode1a);
 
-		// add method 2 - byte
+		// add method 2
 
-		MethodNode methodNode1b = new MethodNode("method_1", null);
+		MethodNode methodNode1b = new MethodNode("method_2", null);
 		classNode.addMethod(methodNode1b);
 
 		BasicParameterNode methodParameterNode1b =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1b, extLanguageManagerForSimple);
 
-		assertEquals("byte",  methodParameterNode1b.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1b.getType());
 
 		methodNode1b.addParameter(methodParameterNode1b);
 
 		// add method 3 - boolean
 
-		MethodNode methodNode1c = new MethodNode("method_1", null);
+		MethodNode methodNode1c = new MethodNode("method_3", null);
 		classNode.addMethod(methodNode1c);
 
 		BasicParameterNode methodParameterNode1c =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1c, extLanguageManagerForSimple);
 
-		assertEquals("boolean",  methodParameterNode1c.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1c.getType());
 
 		methodNode1c.addParameter(methodParameterNode1c);
 
 		// add method 4 - user type
 
-		MethodNode methodNode1d = new MethodNode("method_1", null);
+		MethodNode methodNode1d = new MethodNode("method_4", null);
 		classNode.addMethod(methodNode1d);
 
 		BasicParameterNode methodParameterNode1d =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1d, extLanguageManagerForSimple);
 
-		assertEquals("UserType",  methodParameterNode1d.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1d.getType());
 
 		methodNode1d.addParameter(methodParameterNode1d);
 
 		// add method 4 - user type 2
 
-		MethodNode methodNode1e = new MethodNode("method_1", null);
+		MethodNode methodNode1e = new MethodNode("method_5", null);
 		classNode.addMethod(methodNode1e);
 
 		BasicParameterNode methodParameterNode1e =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1e, extLanguageManagerForSimple);
 
-		assertEquals("UserType0",  methodParameterNode1e.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1e.getType());
 
 		methodNode1e.addParameter(methodParameterNode1e);
-	}
-
-	@Test
-	public void createNewParameterForJavaTest() {
-
-		IExtLanguageManager  extLanguageManagerForJava = new ExtLanguageManagerForJava();
-
-		ClassNode classNode = new ClassNode("class1", null);
-
-		// add method 1 - int
-
-		MethodNode methodNode1 = new MethodNode("method", null);
-		classNode.addMethod(methodNode1);
-
-		BasicParameterNode methodParameterNode1 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1, extLanguageManagerForJava);
-
-		assertEquals("int",  methodParameterNode1.getType());
-
-		methodNode1.addParameter(methodParameterNode1);
-
-		// add method 2 - byte
-
-		MethodNode methodNode2 = new MethodNode("method", null);
-		classNode.addMethod(methodNode2);
-
-		BasicParameterNode methodParameterNode2 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode2, extLanguageManagerForJava);
-
-		assertEquals("byte",  methodParameterNode2.getType());
-
-		methodNode2.addParameter(methodParameterNode2);
-
-		// add method 3 - short
-
-		MethodNode methodNode3 = new MethodNode("method", null);
-		classNode.addMethod(methodNode3);
-
-		BasicParameterNode methodParameterNode3 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode3, extLanguageManagerForJava);
-
-		assertEquals("short",  methodParameterNode3.getType());
-
-		methodNode3.addParameter(methodParameterNode3);
-
-		// add method 4 - long
-
-		MethodNode methodNode4 = new MethodNode("method", null);
-		classNode.addMethod(methodNode4);
-
-		BasicParameterNode methodParameterNode4 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode4, extLanguageManagerForJava);
-
-		assertEquals("long",  methodParameterNode4.getType());
-
-		methodNode4.addParameter(methodParameterNode4);
-
-		// add method 5 - float
-
-		MethodNode methodNode5 = new MethodNode("method", null);
-		classNode.addMethod(methodNode5);
-
-		BasicParameterNode methodParameterNode5 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode5, extLanguageManagerForJava);
-
-		assertEquals("float",  methodParameterNode5.getType());
-
-		methodNode5.addParameter(methodParameterNode5);
-
-		// add method 6
-
-		MethodNode methodNode6 = new MethodNode("method", null);
-		classNode.addMethod(methodNode6);
-
-		BasicParameterNode methodParameterNode6 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode6, extLanguageManagerForJava);
-
-		assertEquals("double",  methodParameterNode6.getType());
-
-		methodNode6.addParameter(methodParameterNode6);
-
-		// add method 7
-
-		MethodNode methodNode7 = new MethodNode("method", null);
-		classNode.addMethod(methodNode7);
-
-		BasicParameterNode methodParameterNode7 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode7, extLanguageManagerForJava);
-
-		assertEquals("String",  methodParameterNode7.getType());
-
-		methodNode7.addParameter(methodParameterNode7);
-
-
-		// add method 8
-
-		MethodNode methodNode8 = new MethodNode("method", null);
-		classNode.addMethod(methodNode8);
-
-		BasicParameterNode methodParameterNode8 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode8, extLanguageManagerForJava);
-
-		assertEquals("char",  methodParameterNode8.getType());
-
-		methodNode8.addParameter(methodParameterNode8);
-
-		// add method 9
-
-		MethodNode methodNode9 = new MethodNode("method", null);
-		classNode.addMethod(methodNode9);
-
-		BasicParameterNode methodParameterNode9 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode9, extLanguageManagerForJava);
-
-		assertEquals("boolean",  methodParameterNode9.getType());
-
-		methodNode9.addParameter(methodParameterNode9);
-
-		// add method 10
-
-		MethodNode methodNode10 = new MethodNode("method", null);
-		classNode.addMethod(methodNode10);
-
-		BasicParameterNode methodParameterNode10 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode10, extLanguageManagerForJava);
-
-		assertEquals("default.UserType",  methodParameterNode10.getType());
-
-		methodNode10.addParameter(methodParameterNode10);
-	}
-
-	@Test
-	public void createTwoParametersForJavaTest() {
-
-		IExtLanguageManager  extLanguageManagerForJava = new ExtLanguageManagerForJava();
-
-		ClassNode classNode = new ClassNode("class1", null);
-
-		// add method 1 - parameters int, int
-
-		MethodNode methodNode1 = new MethodNode("method", null);
-		classNode.addMethod(methodNode1);
-
-		BasicParameterNode methodParameterNode11 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1, extLanguageManagerForJava);
-
-		assertEquals("int",  methodParameterNode11.getType());
-		methodNode1.addParameter(methodParameterNode11);
-
-		BasicParameterNode methodParameterNode12 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1, extLanguageManagerForJava);
-
-		assertEquals("int",  methodParameterNode12.getType());
-		methodNode1.addParameter(methodParameterNode12);
-
-		// add method 2 - parameters int, byte
-
-		MethodNode methodNode2 = new MethodNode("method", null);
-		classNode.addMethod(methodNode2);
-
-		BasicParameterNode methodParameterNode21 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode2, extLanguageManagerForJava);
-
-		assertEquals("int",  methodParameterNode21.getType());
-		methodNode2.addParameter(methodParameterNode21);
-
-		BasicParameterNode methodParameterNode22 =
-				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode2, extLanguageManagerForJava);
-
-		assertEquals("byte",  methodParameterNode22.getType());
-		methodNode2.addParameter(methodParameterNode22);
 	}
 
 	@Test

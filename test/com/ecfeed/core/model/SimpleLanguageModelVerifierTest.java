@@ -41,52 +41,6 @@ public class SimpleLanguageModelVerifierTest {
 	}
 
 	@Test
-	public void methodDuplicatedTest() {
-
-		RootNode rootNode = new RootNode("rootNode", null);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		ClassNode classNode = new ClassNode("com.Class_1", null);
-		rootNode.addClass(classNode);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		MethodNode methodNode1 = new MethodNode("Method_1", null);
-		classNode.addMethod(methodNode1);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		BasicParameterNode methodParameterNode11 =
-				new BasicParameterNode("Param1", "int", "0", false, null);
-		methodNode1.addParameter(methodParameterNode11);
-
-		MethodNode methodNode2 = new MethodNode("Method_1", null);
-		classNode.addMethod(methodNode2);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		BasicParameterNode methodParameterNode21 =
-				new BasicParameterNode("Param1", "int", "0", false, null);
-		methodNode2.addParameter(methodParameterNode21);
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("byte");
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("String");
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("char");
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("boolean");
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("long");
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("double");
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-	}
-
-	@Test
 	public void notAllowedNames() {
 
 		RootNode rootNode = new RootNode("rootNode", null);

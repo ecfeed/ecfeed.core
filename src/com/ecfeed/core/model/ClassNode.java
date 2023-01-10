@@ -130,7 +130,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		if (findMethodWithTheSameName(method.getName()) != null) {
 
-			ExceptionHelper.reportRuntimeException("Cannot add method. Method with identical signature already exists.");
+			ExceptionHelper.reportRuntimeException("Cannot add method. Method with the same name already exists.");
 		}
 
 		if (index >= 0 && index <= fMethods.size()) {

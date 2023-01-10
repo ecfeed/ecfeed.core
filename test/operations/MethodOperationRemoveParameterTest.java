@@ -30,31 +30,27 @@ public class MethodOperationRemoveParameterTest {
 
 		ClassNode classNode = new ClassNode("com.Class1", null);
 
-		MethodNode methodNode2 = new MethodNode("method", null);
+		MethodNode methodNode2 = new MethodNode("method2", null);
 		classNode.addMethod(methodNode2);
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode("arg0", "int", "0", false, null);
 		methodNode2.addParameter(methodParameterNode);
 
-		MethodNode methodNode1 = new MethodNode("method", null);
-		classNode.addMethod(methodNode1);
+		//		MethodNode methodNode1 = new MethodNode("method1", null);
+		//		classNode.addMethod(methodNode1);
 
 		MethodOperationRemoveParameter methodOperationRemoveParameter
 				= new MethodOperationRemoveParameter(methodNode2, methodParameterNode, new ExtLanguageManagerForSimple());
 
 		try  {
 			methodOperationRemoveParameter.execute();
-			fail();
 		}  catch (Exception e) {
-			TestHelper.checkExceptionMessage(
-					e,
-					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+			fail();
 		}
 	}
 
 	@Test
-	public void removeSecondOfTwoParametersInJavaMode() {
+	public void removeParameterInJavaMode() {
 
 		ClassNode classNode = new ClassNode("com.Class1", null);
 
@@ -67,25 +63,13 @@ public class MethodOperationRemoveParameterTest {
 		BasicParameterNode methodParameterNode2 = new BasicParameterNode("arg1", "long", "0", false, null);
 		methodNode1.addParameter(methodParameterNode2);
 
-
-		MethodNode methodNode2= new MethodNode("method", null);
-		classNode.addMethod(methodNode2);
-
-		BasicParameterNode methodParameterNode3 = new BasicParameterNode("arg0", "int", "0", false, null);
-		methodNode2.addParameter(methodParameterNode3);
-
-
 		MethodOperationRemoveParameter methodOperationRemoveParameter
 				= new MethodOperationRemoveParameter(methodNode1, methodParameterNode2, new ExtLanguageManagerForJava());
 
 		try  {
 			methodOperationRemoveParameter.execute();
-			fail();
 		}  catch (Exception e) {
-			TestHelper.checkExceptionMessage(
-					e,
-					"com.Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+			fail();
 		}
 	}
 
@@ -121,7 +105,7 @@ public class MethodOperationRemoveParameterTest {
 			TestHelper.checkExceptionMessage(
 					e,
 					"Class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE,
+					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_NAME,
 					"method(Number)");
 		}
 	}

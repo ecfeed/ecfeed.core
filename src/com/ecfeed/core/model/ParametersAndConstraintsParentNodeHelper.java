@@ -13,13 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.utils.CommonConstants;
-import com.ecfeed.core.utils.ExceptionHelper;
-import com.ecfeed.core.utils.ExtLanguageManagerForJava;
-import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.ParameterConversionItem;
-import com.ecfeed.core.utils.StringHelper;
+import com.ecfeed.core.utils.*;
 
 public class ParametersAndConstraintsParentNodeHelper {
 
@@ -153,8 +147,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 			MethodNode methodNode = (MethodNode) parametersParentNode;
 
-			String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(
-					methodNode, extLanguageManager);
+			String type = JavaLanguageHelper.TYPE_NAME_INT;
 
 			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
 

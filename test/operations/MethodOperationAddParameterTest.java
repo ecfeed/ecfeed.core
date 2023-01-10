@@ -53,9 +53,7 @@ public class MethodOperationAddParameterTest {
 			fail();
 		}
 
-		// again add method with long parameter - should fail in simple mode
-
-		MethodNode methodNode2 = new MethodNode("method", null);
+		MethodNode methodNode2 = new MethodNode("method2", null);
 		classNode.addMethod(methodNode2);
 
 		BasicParameterNode methodParameterNode2 =
@@ -69,12 +67,8 @@ public class MethodOperationAddParameterTest {
 
 		try {
 			methodOperationAddParameter2.execute();
-			fail();
 		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(
-					e,
-					"class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
+			fail();
 		}
 	}
 
@@ -105,9 +99,9 @@ public class MethodOperationAddParameterTest {
 			fail();
 		}
 
-		// again add method with long parameter
+		// add method with long parameter
 
-		MethodNode methodNode2 = new MethodNode("method", null);
+		MethodNode methodNode2 = new MethodNode("method2", null);
 		classNode.addMethod(methodNode2);
 
 		BasicParameterNode methodParameterNode2 =
@@ -123,30 +117,6 @@ public class MethodOperationAddParameterTest {
 			methodOperationAddParameter2.execute();
 		} catch (Exception e) {
 			fail();
-		}
-
-		// again add the second method with long parameter
-
-		MethodNode methodNode3 = new MethodNode("method", null);
-		classNode.addMethod(methodNode3);
-
-		BasicParameterNode methodParameterNode3 =
-				new BasicParameterNode("arg0", "long", "0", false, null);
-
-		MethodOperationAddParameter methodOperationAddParameter3 =
-				new MethodOperationAddParameter(
-						methodNode3,
-						methodParameterNode3,
-						extLanguageManagerForJava);
-
-		try {
-			methodOperationAddParameter3.execute();
-			fail();
-		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(
-					e,
-					"com.class1",
-					ClassNodeHelper.CONTAINS_METHOD_WITH_IDENTICAL_SIGNATURE);
 		}
 	}
 

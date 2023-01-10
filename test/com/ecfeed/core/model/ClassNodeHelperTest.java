@@ -180,28 +180,28 @@ public class ClassNodeHelperTest {
 		// invalid parameter types in java language
 
 		String errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, Arrays.asList(userParameterTypesInJavaLanguage), new ExtLanguageManagerForJava());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, Arrays.asList(userParameterTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
 		// empty class
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
@@ -212,16 +212,16 @@ public class ClassNodeHelperTest {
 		classNode.addMethod(methodNode);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
-		assertNull(errorMessage);
+		assertNotNull(errorMessage);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
-		assertNull(errorMessage);
+		assertNotNull(errorMessage);
 
 
 		// class with conflicting method
@@ -234,14 +234,14 @@ public class ClassNodeHelperTest {
 
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNotNull(errorMessage);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNotNull(errorMessage);
 	}
@@ -257,7 +257,7 @@ public class ClassNodeHelperTest {
 
 		String result =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method", Arrays.asList(userTypes1), new ExtLanguageManagerForJava());
+						classNode, "method", new ExtLanguageManagerForJava());
 
 		assertEquals("method1", result);
 
@@ -267,7 +267,7 @@ public class ClassNodeHelperTest {
 
 		result =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method", Arrays.asList(userTypes2), new ExtLanguageManagerForSimple());
+						classNode, "method", new ExtLanguageManagerForSimple());
 		assertEquals("method1", result);
 
 		// java language
@@ -277,7 +277,7 @@ public class ClassNodeHelperTest {
 		String[] paramTypesInJavaLanguage = {"int", "String"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-					classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
+					classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
 		// simple language
@@ -285,7 +285,7 @@ public class ClassNodeHelperTest {
 		String[] paramTypesInSimpleLanguage = {"Number", "Text"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
+						classNode, "method 1", new ExtLanguageManagerForSimple());
 		assertEquals("method 1", methodName);
 
 		// add method with the same name but only one parameter
@@ -300,15 +300,15 @@ public class ClassNodeHelperTest {
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
-		assertEquals("method_1", methodName);
+						classNode, "method_1", new ExtLanguageManagerForJava());
+		assertEquals("method_2", methodName);
 
 		// check in simple language
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
-		assertEquals("method 1", methodName);
+						classNode, "method 1", new ExtLanguageManagerForSimple());
+		assertEquals("method 2", methodName);
 
 		// adding the second parameter
 
@@ -319,12 +319,12 @@ public class ClassNodeHelperTest {
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
+						classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
+						classNode, "method 1", new ExtLanguageManagerForSimple());
 		assertEquals("method 2", methodName);
 	}
 

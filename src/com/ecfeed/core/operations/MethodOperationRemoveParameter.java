@@ -61,9 +61,12 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 	private class RemoveMethodParameterOperation extends GenericOperationRemoveParameter{
 
 		private List<TestCaseNode> fOriginalTestCases;
-		private boolean fIgnoreDuplicates;
 
-		public RemoveMethodParameterOperation(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
+		public RemoveMethodParameterOperation(
+				MethodNode target,
+				AbstractParameterNode parameter,
+				IExtLanguageManager extLanguageManager) {
+
 			super(target, parameter, extLanguageManager);
 			fOriginalTestCases = new ArrayList<>();
 		}
@@ -71,12 +74,10 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 		public RemoveMethodParameterOperation(
 				MethodNode target, 
 				AbstractParameterNode parameter, 
-				boolean ignoreDuplicates,
+				boolean ignoreDuplicates, // TODO MO-RE remove
 				IExtLanguageManager extLanguageManager) {
 
 			this(target, parameter, extLanguageManager);
-
-			fIgnoreDuplicates = ignoreDuplicates;
 		}
 
 		@Override
@@ -88,7 +89,7 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 
 			List<String> problems = new ArrayList<String>();
 
-			if (!fIgnoreDuplicates && validateNewSignature(paramTypesInExtLanguage, problems) == false) {
+			if (!validateNewSignature(problems)) {
 
 				String message = createErrorMessage(problems);
 
@@ -141,15 +142,15 @@ public class MethodOperationRemoveParameter extends CompositeOperation{
 			return (MethodNode) getOwnNode();
 		}
 
-		private boolean validateNewSignature(List<String> newTypesInExtLanguage, List<String> problems) {
+		private boolean validateNewSignature(List<String> problems) {
 
 			ClassNode classNode = getMethodTarget().getClassNode();
 
 			String methodNameInExtLanguage = AbstractNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
 
 			String errorMessage =
-					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInExtLanguage, newTypesInExtLanguage, getExtLanguageManager());
+					ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInExtLanguage, getExtLanguageManager());
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);

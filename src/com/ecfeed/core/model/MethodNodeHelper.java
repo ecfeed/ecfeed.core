@@ -330,48 +330,48 @@ public class MethodNodeHelper {
 		return testSuites;
 	}
 	
-	public static String findNotUsedJavaTypeForParameter(
-			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		ClassNode classNode = methodNode.getClassNode();
-
-		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
-
-		for (String type : typeListInExtLanguage) {
-			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
-				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
-				return type;
-			}
-		}
-
-		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
-
-		return userType;
-	}
+//	public static String findNotUsedJavaTypeForParameter(
+//			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+//
+//		ClassNode classNode = methodNode.getClassNode();
+//
+//		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
+//
+//		for (String type : typeListInExtLanguage) {
+//			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
+//				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
+//				return type;
+//			}
+//		}
+//
+//		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
+//
+//		return userType;
+//	}
 	
-	private static boolean isNewTypeUsed(
-			String typeForLastParameter, 
-			ClassNode classNode, 
-			MethodNode methodNode, 
-			IExtLanguageManager extLanguageManager) {
-
-//		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
-//		parameterTypesInExternalLanguage.add(typeForLastParameter);
-
-		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
-
-		MethodNode foundMethodNode =
-				ClassNodeHelper.findMethodByExtLanguage(
-						classNode,
-						methodNameInExternalLanguage,
-						extLanguageManager);
-
-		if (foundMethodNode != null) {
-			return true;
-		}
-
-		return false;
-	}
+//	private static boolean isNewTypeUsed(
+//			String typeForLastParameter,
+//			ClassNode classNode,
+//			MethodNode methodNode,
+//			IExtLanguageManager extLanguageManager) {
+//
+////		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+////		parameterTypesInExternalLanguage.add(typeForLastParameter);
+//
+//		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
+//
+//		MethodNode foundMethodNode =
+//				ClassNodeHelper.findMethodByExtLanguage(
+//						classNode,
+//						methodNameInExternalLanguage,
+//						extLanguageManager);
+//
+//		if (foundMethodNode != null) {
+//			return true;
+//		}
+//
+//		return false;
+//	}
 	
 	public static String findNewUserTypeForJavaLanguage(
 			MethodNode methodNode, 

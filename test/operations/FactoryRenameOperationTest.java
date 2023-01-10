@@ -205,9 +205,10 @@ public class FactoryRenameOperationTest {
 			operation.execute();
 			fail();
 		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, "already contains method with identical name");
 		}
 
-		// rename in java mode - the same method name - should succeed
+		// rename in java mode - the same method name
 
 		operation =
 				FactoryRenameOperation.getRenameOperation(
@@ -218,8 +219,9 @@ public class FactoryRenameOperationTest {
 
 		try {
 			operation.execute();
-		} catch (Exception e) {
 			fail();
+		} catch (Exception e) {
+			TestHelper.checkExceptionMessage(e, "already contains method with identical name");
 		}
 
 		// rename in simple mode - the other method name

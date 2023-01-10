@@ -81,10 +81,9 @@ public class FactoryRenameOperation {
 			IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
 			String errorMessage =
-					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
+					ClassNodeHelper.verifyNewMethodSignatureIsValid(
 							targetMethodNode.getClassNode(),
 							newNameInExtLanguage,
-							ParametersParentNodeHelper.getParameterTypes(targetMethodNode, extLanguageManager),
 							extLanguageManager);
 
 			if (errorMessage != null) {
