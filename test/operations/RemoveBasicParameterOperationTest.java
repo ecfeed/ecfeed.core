@@ -17,11 +17,11 @@ import org.junit.Test;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.operations.MethodOperationRemoveParameter;
+import com.ecfeed.core.operations.RemoveBasicParameterOperation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 
-public class MethodOperationRemoveParameterTest {
+public class RemoveBasicParameterOperationTest {
 
 	@Test
 	public void removeFirstParameter() {
@@ -34,11 +34,8 @@ public class MethodOperationRemoveParameterTest {
 		BasicParameterNode methodParameterNode = new BasicParameterNode("arg0", "int", "0", false, null);
 		methodNode2.addParameter(methodParameterNode);
 
-		//		MethodNode methodNode1 = new MethodNode("method1", null);
-		//		classNode.addMethod(methodNode1);
-
-		MethodOperationRemoveParameter methodOperationRemoveParameter
-				= new MethodOperationRemoveParameter(methodNode2, methodParameterNode, new ExtLanguageManagerForSimple());
+		RemoveBasicParameterOperation methodOperationRemoveParameter
+				= new RemoveBasicParameterOperation(methodNode2, methodParameterNode, new ExtLanguageManagerForSimple());
 
 		try  {
 			methodOperationRemoveParameter.execute();
@@ -61,8 +58,8 @@ public class MethodOperationRemoveParameterTest {
 		BasicParameterNode methodParameterNode2 = new BasicParameterNode("arg1", "long", "0", false, null);
 		methodNode1.addParameter(methodParameterNode2);
 
-		MethodOperationRemoveParameter methodOperationRemoveParameter
-				= new MethodOperationRemoveParameter(methodNode1, methodParameterNode2, new ExtLanguageManagerForJava());
+		RemoveBasicParameterOperation methodOperationRemoveParameter
+				= new RemoveBasicParameterOperation(methodNode1, methodParameterNode2, new ExtLanguageManagerForJava());
 
 		try  {
 			methodOperationRemoveParameter.execute();
