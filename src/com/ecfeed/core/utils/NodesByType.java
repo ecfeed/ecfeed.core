@@ -118,7 +118,7 @@ public class NodesByType {
 		return fConstraints;
 	}
 
-	public ArrayList<TestCaseNode> getTestCases() {
+	public ArrayList<TestCaseNode> getTestCaseNodes() {
 		return fTestCases;
 	}
 

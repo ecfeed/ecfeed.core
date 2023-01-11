@@ -145,17 +145,17 @@ public class GenericRemoveNodesOperationsCreator {
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
 
-		processClasses(selectedNodesByType, affectedNodes);
+		processClasses(selectedNodesByType.getClasses(), affectedNodes);
 
 		processChoicesFilteringConstraintsAndTestCases(
-				selectedNodesByType, 
+				selectedNodesByType.getChoices(), 
 				allConstraintNodes, allTestCaseNodes, 
 				outAffectedConstraints,	outAffectedTestCases, 
 				affectedNodes);
 
-		processTestCases(selectedNodesByType, affectedNodes);
+		processTestCases(selectedNodesByType.getTestCaseNodes(), affectedNodes);
 
-		processOtherNodes(selectedNodesByType, affectedNodes);
+		processOtherNodes(selectedNodesByType.getOtherNodes(), affectedNodes);
 
 		processGlobalParameters(
 				selectedNodesByType, 
@@ -178,7 +178,7 @@ public class GenericRemoveNodesOperationsCreator {
 				duplicatesMap, parameterMap, outOperations);
 
 
-		processConstraints(selectedNodesByType, affectedNodes);
+		processConstraints(selectedNodesByType.getConstraints(), affectedNodes);
 	}
 
 	private static void detectDuplicates(
@@ -261,13 +261,15 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processConstraints(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
-		for (ConstraintNode constraint : selectedNodesByType.getConstraints()) {
+	private static void processConstraints(ArrayList<ConstraintNode> constraintNodes, Set<IAbstractNode> affectedNodes) {
+
+		for (ConstraintNode constraint : constraintNodes) {
 			affectedNodes.add(constraint);
 		}
 	}
 
 	private static void processMethods(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
+
 		//Removing methods - information for model map has been already taken
 		Iterator<MethodNode> methodItr = selectedNodesByType.getMethods().iterator();
 
@@ -278,9 +280,12 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processLocalParameters(NodesByType selectedNodesByType, Set<ConstraintNode> allConstraintNodes,
+	private static void processLocalParameters(
+			NodesByType selectedNodesByType, 
+			Set<ConstraintNode> allConstraintNodes,
 			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
-			HashMap<MethodNode, List<BasicParameterNode>> parameterMap, Set<ConstraintNode> outAffectedConstraints,
+			HashMap<MethodNode, List<BasicParameterNode>> parameterMap, 
+			Set<ConstraintNode> outAffectedConstraints,
 			Set<IAbstractNode> affectedNodes) {
 		/*
 		 * Iterate through parameters. If parent method is potential duplicate -
@@ -318,17 +323,21 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processGlobalParameters(NodesByType selectedNodesByType, Set<ConstraintNode> allConstraintNodes,
-			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
+	private static void processGlobalParameters(NodesByType selectedNodesByType,
+			Set<ConstraintNode> allConstraintNodes,
+			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, 
+			HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<IAbstractNode> affectedNodes) {
+
 		/*
 		 * Iterate through global params. Do the same checks as for method
 		 * parameters with every linker. If no linker is in potentially
 		 * duplicate method - just proceed to remove global and all linkers and
 		 * remove it from the lists.
 		 */
-		Iterator<BasicParameterNode> globalItr = selectedNodesByType.getGlobalParameters().iterator();
+		ArrayList<BasicParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
+		Iterator<BasicParameterNode> globalItr = globalParameters.iterator();
 		while (globalItr.hasNext()) {
 			BasicParameterNode global = globalItr.next();
 			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
@@ -360,34 +369,36 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processOtherNodes(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
-		// leaving this in case of any further nodes being added
-		for (IAbstractNode abstractNode : selectedNodesByType.getOtherNodes()) {
+	private static void processOtherNodes(ArrayList<IAbstractNode> otherNodes, Set<IAbstractNode> affectedNodes) {
+
+		for (IAbstractNode abstractNode : otherNodes) {
 			affectedNodes.add(abstractNode);
 		}
 	}
 
-	private static void processTestCases(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
-		// removing test cases
-		for (TestCaseNode testCaseNode : selectedNodesByType.getTestCases()) {
+	private static void processTestCases(ArrayList<TestCaseNode> testCaseNodes, Set<IAbstractNode> affectedNodes) {
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
 			affectedNodes.add(testCaseNode);
 		}
 	}
 
-	private static void processChoicesFilteringConstraintsAndTestCases(NodesByType selectedNodesByType, Set<ConstraintNode> allConstraintNodes,
-			Set<TestCaseNode> allTestCaseNodes, Set<ConstraintNode> outAffectedConstraints,
-			Set<TestCaseNode> outAffectedTestCases, Set<IAbstractNode> affectedNodes) {
-		// removing choices and deleting connected constraints/test cases from their respective to-remove lists beforehand
-		for (ChoiceNode choiceNode : selectedNodesByType.getChoices()) {
+	private static void processChoicesFilteringConstraintsAndTestCases(
+			ArrayList<ChoiceNode> choiceNodes, 
+			Set<ConstraintNode> allConstraintNodes,	Set<TestCaseNode> allTestCaseNodes, 
+			Set<ConstraintNode> outAffectedConstraints, Set<TestCaseNode> outAffectedTestCases, 
+			Set<IAbstractNode> affectedNodes) {
+
+		for (ChoiceNode choiceNode : choiceNodes) {
 			createAffectedConstraints(choiceNode, allConstraintNodes, outAffectedConstraints);
 			createAffectedTestCases(choiceNode, allTestCaseNodes, outAffectedTestCases);
 			affectedNodes.add(choiceNode);
 		}
 	}
 
-	private static void processClasses(NodesByType selectedNodesByType, Set<IAbstractNode> inOutAffectedNodes) {
+	private static void processClasses(ArrayList<ClassNode> classsNodes, Set<IAbstractNode> inOutAffectedNodes) {
 
-		for (ClassNode classNode : selectedNodesByType.getClasses()) {
+		for (ClassNode classNode : classsNodes) {
 			inOutAffectedNodes.add(classNode);
 		}
 	}
