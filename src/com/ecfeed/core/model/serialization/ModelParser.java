@@ -146,7 +146,7 @@ public class ModelParser {
 			ModelParserForGlobalParameter modelParserForGlobalParameter
 				= new ModelParserForGlobalParameter(modelParserForChoice);
 			
-			return modelParserForGlobalParameter.parseGlobalParameter(
+			return modelParserForGlobalParameter.parseGlobalBasicParameter(
 					document.getRootElement(), 
 					modelChangeRegistrator, 
 					outErrorList).get();

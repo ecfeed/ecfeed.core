@@ -93,7 +93,7 @@ public class ModelParserForClass implements IModelParserForClass {
 		if (isBasicParameter) {
 			
 			Optional<BasicParameterNode> globalBasicParameter = 
-					fModelParserForGlobalParameter.parseGlobalParameter(
+					fModelParserForGlobalParameter.parseGlobalBasicParameter(
 							child, targetClassNode.getModelChangeRegistrator(), errorList);
 			
 			globalBasicParameter.ifPresent(targetClassNode::addParameter);

@@ -20,7 +20,7 @@ import nu.xom.Element;
 
 public interface IModelParserForGlobalParameter {
 
-	public Optional<BasicParameterNode> parseGlobalParameter(
+	public Optional<BasicParameterNode> parseGlobalBasicParameter(
 			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList);
 
 }

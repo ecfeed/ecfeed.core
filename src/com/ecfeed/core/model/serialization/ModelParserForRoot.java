@@ -12,6 +12,7 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.*;
@@ -50,24 +51,71 @@ public class ModelParserForRoot implements IModelParserForRoot {
 
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
-		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames())) {
-			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList)
-						.ifPresent(targetRootNode::addParameter);
-			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList)
-						.ifPresent(targetRootNode::addParameter);
-			}
-		}
+		parseGlobalParametersOfRoot(element, targetRootNode, outErrorList);
 
-		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME)) {
-			Optional<ClassNode> node = fModelParserForClass.parseClass(child, targetRootNode, outErrorList);
+		parseClasses(element, targetRootNode, outErrorList);
+
+		return targetRootNode;
+	}
+
+	private void parseGlobalParametersOfRoot(Element element, RootNode targetRootNode, ListOfStrings outErrorList) {
+		
+		List<Element> parameterElements = 
+				ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames());
+		
+		for (Element parameterElement : parameterElements) {
+			
+			parseOneGlobalParameter(parameterElement, targetRootNode, outErrorList);
+		}
+	}
+
+	private void parseOneGlobalParameter(
+			Element parameterElement, 
+			RootNode targetRootNode,
+			ListOfStrings outErrorList) {
+		
+		boolean isBasicParameterElement = 
+				ModelParserHelper.verifyElementName(
+						parameterElement, SerializationHelperVersion1.getBasicParameterNodeName());
+		
+		if (isBasicParameterElement) {
+			Optional<BasicParameterNode> globalBasicParameter = 
+					fModelParserForGlobalParameter.parseGlobalBasicParameter(
+							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			
+			globalBasicParameter.ifPresent(targetRootNode::addParameter);
+			return;
+		} 
+		
+		boolean isCompositeParameterElement = 
+				ModelParserHelper.verifyElementName(
+						parameterElement, SerializationHelperVersion1.getCompositeParameterNodeName());
+		
+		if (isCompositeParameterElement) {
+			Optional<CompositeParameterNode> globalCompositeParameter = 
+					fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
+							parameterElement, targetRootNode.getModelChangeRegistrator(), outErrorList);
+			
+			globalCompositeParameter.ifPresent(targetRootNode::addParameter);
+			return;
+		}
+	}
+
+	private void parseClasses(
+			Element element, RootNode targetRootNode, ListOfStrings outErrorList)
+			throws ParserException {
+		
+		List<Element> childClassElements = 
+				ModelParserHelper.getIterableChildren(element, SerializationConstants.CLASS_NODE_NAME);
+		
+		for (Element classElement : childClassElements) {
+			
+			Optional<ClassNode> node = fModelParserForClass.parseClass(classElement, targetRootNode, outErrorList);
+			
 			if (node.isPresent()) {
 				targetRootNode.addClass(node.get());
 			}
 		}
-
-		return targetRootNode;
 	}
 
 }

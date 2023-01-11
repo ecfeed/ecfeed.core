@@ -30,7 +30,7 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 		fModelParserForChoice = modelParserForChoice;
 	}
 	
-	public Optional<BasicParameterNode> parseGlobalParameter(
+	public Optional<BasicParameterNode> parseGlobalBasicParameter(
 			Element element, 
 			IModelChangeRegistrator modelChangeRegistrator, 
 			

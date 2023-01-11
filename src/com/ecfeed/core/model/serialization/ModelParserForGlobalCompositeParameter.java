@@ -52,7 +52,7 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForGlobalParameter.parseGlobalParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
+				fModelParserForGlobalParameter.parseGlobalBasicParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
