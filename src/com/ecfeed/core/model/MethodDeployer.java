@@ -91,10 +91,15 @@ public abstract class MethodDeployer {
 
 			if (sourceParameter instanceof CompositeParameterNode) {
 
-				String childPrefix = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+				CompositeParameterNode parameter = (CompositeParameterNode) sourceParameter;
 
-				List<AbstractParameterNode> childSourceParameters = 
-						((CompositeParameterNode) sourceParameter).getParameters();
+				if (parameter.isLinked()) {
+					parameter = (CompositeParameterNode) parameter.getLinkToGlobalParameter();
+				}
+
+				String childPrefix = prefix + parameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+
+				List<AbstractParameterNode> childSourceParameters = parameter.getParameters();
 
 				deployParametersRecursively(childSourceParameters, targetMethodNode, childPrefix, mapper);
 			}
