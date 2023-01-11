@@ -43,7 +43,7 @@ public class ModelParserForRoot implements IModelParserForRoot {
 
 	public RootNode parseRoot(Element element, ListOfStrings outErrorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), ROOT_NODE_NAME, outErrorList);
 		String name = ModelParserHelper.getElementName(element, outErrorList);
 
 		RootNode targetRootNode = new RootNode(name, fModelChangeRegistrator, fModelVersion);
@@ -51,10 +51,10 @@ public class ModelParserForRoot implements IModelParserForRoot {
 		targetRootNode.setDescription(ModelParserHelper.parseComments(element));
 
 		for (Element child : ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames())) {
-			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForGlobalParameter.parseGlobalParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList)
 						.ifPresent(targetRootNode::addParameter);
-			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetRootNode.getModelChangeRegistrator(), outErrorList)
 						.ifPresent(targetRootNode::addParameter);
 			}

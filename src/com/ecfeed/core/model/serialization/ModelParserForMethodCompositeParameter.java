@@ -39,7 +39,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
@@ -51,13 +51,13 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 
 		for (Element child : children) {
 
-			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForMethodParameter.parseMethodParameter(child, method, errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
-			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				parseMethodCompositeParameter(child, method, errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
-			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getConstraintName())) {
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
 
 				try {
 					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)

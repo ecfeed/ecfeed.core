@@ -41,7 +41,7 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 		String expected = String.valueOf(false);
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errorList);
 

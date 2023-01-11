@@ -36,7 +36,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 		String expected = String.valueOf(false);
 
 		try {
-			ModelParserHelper.assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(parameterElement, errorList);
 			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
 

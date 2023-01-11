@@ -37,7 +37,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), TEST_CASE_NODE_NAME, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), TEST_CASE_NODE_NAME, errorList);
 			name = ModelParserHelper.getAttributeValue(element, TEST_SUITE_NAME_ATTRIBUTE, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();

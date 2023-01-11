@@ -47,7 +47,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 		boolean expected = false;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errors);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errors);
 			name = ModelParserHelper.getElementName(element, errors);
 			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errors);
 

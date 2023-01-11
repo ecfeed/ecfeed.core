@@ -38,7 +38,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), CONSTRAINT_NODE_NAME, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
@@ -165,7 +165,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public StatementArray parseStatementArray(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATEMENT_ARRAY_NODE_NAME, errorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_STATEMENT_ARRAY_NODE_NAME, errorList);
 
 		StatementArray statementArray = null;
 		String operatorValue = 
@@ -205,7 +205,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public StaticStatement parseStaticStatement(
 			Element element, IModelChangeRegistrator modelChangeRegistrator, ListOfStrings errorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), CONSTRAINT_STATIC_STATEMENT_NODE_NAME, errorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_STATIC_STATEMENT_NODE_NAME, errorList);
 
 		String valueString = 
 				ModelParserHelper.getAttributeValue(
@@ -226,7 +226,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public AbstractStatement parseChoiceStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
@@ -272,7 +272,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public AbstractStatement parseParameterStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
 
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
@@ -318,7 +318,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public AbstractStatement parseValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
 
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
@@ -381,7 +381,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public RelationStatement parseLabelStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
 
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(
@@ -412,7 +412,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	public ExpectedValueStatement parseExpectedValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
-		ModelParserHelper.assertNodeTag(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
+		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
 
 		String parameterName = 
 				ModelParserHelper.getAttributeValue(

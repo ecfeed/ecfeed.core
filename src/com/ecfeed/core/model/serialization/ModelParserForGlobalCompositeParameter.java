@@ -39,7 +39,7 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getCompositeParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
@@ -51,13 +51,13 @@ public class ModelParserForGlobalCompositeParameter implements IModelParserForGl
 
 		for (Element child : children) {
 
-			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForGlobalParameter.parseGlobalParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
-			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				parseGlobalCompositeParameter(child, targetCompositeParameterNode.getModelChangeRegistrator(), errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
-			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getConstraintName())) {
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
 
 				try {
 					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)

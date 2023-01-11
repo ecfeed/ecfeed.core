@@ -33,7 +33,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 	
 	public ClassNode(
 			String qualifiedName, IModelChangeRegistrator modelChangeRegistrator, 
-			boolean runOnAndroid, String androidBaseRunner) {
+			boolean runOnAndroid, String androidBaseRunner) { // TODO MO-RE remove android
 
 		super(qualifiedName, modelChangeRegistrator);
 

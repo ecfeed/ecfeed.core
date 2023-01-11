@@ -71,7 +71,7 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 			fOriginalTestCases = new ArrayList<>();
 		}
 
-		public RemoveBasicParameterOperationPrivate( // XYX
+		public RemoveBasicParameterOperationPrivate(
 				MethodNode target, 
 				AbstractParameterNode parameter, 
 				boolean ignoreDuplicates, // TODO MO-RE remove

@@ -97,12 +97,12 @@ public class ModelParserHelper  {
 		return modelParserForRoot;
 	}
 	
-	public static boolean verifyNodeTag(Element element, String expectedName) {
-//		String test = element.getQualifiedName();
+	public static boolean verifyElementName(Element element, String expectedName) {
+
 		return element.getQualifiedName().equals(expectedName);
 	}
 	
-	public static void assertNodeTag(
+	public static void assertNameEqualsExpectedName(
 			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {
 
 		if (qualifiedName.equals(expectedName) == false) {

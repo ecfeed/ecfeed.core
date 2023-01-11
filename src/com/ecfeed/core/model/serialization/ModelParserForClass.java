@@ -12,6 +12,7 @@ package com.ecfeed.core.model.serialization;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.*;
@@ -43,7 +44,7 @@ public class ModelParserForClass implements IModelParserForClass {
 		String name;
 		
 		try {
-			ModelParserHelper.assertNodeTag(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(classElement.getQualifiedName(), CLASS_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(classElement, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
@@ -63,27 +64,53 @@ public class ModelParserForClass implements IModelParserForClass {
 		//we need to do it here, so the backward search for global parameters will work
 		targetClassNode.setParent(parent);
 
-		//parameters must be parsed before classes
-		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeNames())) {
-			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForGlobalParameter.parseGlobalParameter(child, targetClassNode.getModelChangeRegistrator(), errorList)
-						.ifPresent(targetClassNode::addParameter);
-			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(child, targetClassNode.getModelChangeRegistrator(), errorList)
-						.ifPresent(targetClassNode::addParameter);
+		parseClassParameters(classElement, targetClassNode, errorList);
+
+		parseMethods(classElement, targetClassNode, errorList);
+
+		return Optional.ofNullable(targetClassNode);
+	}
+
+	private void parseClassParameters(Element classElement, ClassNode targetClassNode, ListOfStrings errorList) {
+		
+		List<Element> iterableChildren = 
+				ModelParserHelper.getIterableChildren(classElement, SerializationHelperVersion1.getParameterNodeNames());
+		
+		for (Element child : iterableChildren) {
+			
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+				
+				Optional<BasicParameterNode> globalBasicParameter = 
+						fModelParserForGlobalParameter.parseGlobalParameter(
+								child, targetClassNode.getModelChangeRegistrator(), errorList);
+				
+				globalBasicParameter.ifPresent(targetClassNode::addParameter);
+				
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+				
+				Optional<CompositeParameterNode> globalCompositeParameter = 
+						fModelParserForGlobalCompositeParameter.parseGlobalCompositeParameter(
+								child, targetClassNode.getModelChangeRegistrator(), errorList);
+				
+				globalCompositeParameter.ifPresent(targetClassNode::addParameter);
 			}
 		}
+	}
 
-		for (Element child : ModelParserHelper.getIterableChildren(classElement, SerializationConstants.METHOD_NODE_NAME)) {
-			Optional<MethodNode> node = 
-					fModelParserForMethod.parseMethod(child, targetClassNode, errorList);
+	private void parseMethods(Element classElement, ClassNode targetClassNode, ListOfStrings errorList)
+			throws ParserException {
+		
+		List<Element> childrenMethodElements = 
+				ModelParserHelper.getIterableChildren(classElement, SerializationConstants.METHOD_NODE_NAME);
+		
+		for (Element methodElement : childrenMethodElements) {
+			
+			Optional<MethodNode> node = fModelParserForMethod.parseMethod(methodElement, targetClassNode, errorList);
 			
 			if (node.isPresent()) {
 				targetClassNode.addMethod(node.get());
 			}
 		}
-
-		return Optional.ofNullable(targetClassNode);
 	}
 
 }

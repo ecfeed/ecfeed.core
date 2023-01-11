@@ -52,7 +52,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(methodElement, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
@@ -64,10 +64,10 @@ public class ModelParserForMethod implements IModelParserForMethod {
 		parseMethodProperties(methodElement, targetMethodNode);
 
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeNames())) {
-			if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
 				fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList)
 						.ifPresent(targetMethodNode::addParameter);
-			} else if (ModelParserHelper.verifyNodeTag(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
 				fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, errorList)
 						.ifPresent(targetMethodNode::addParameter);
 			}
