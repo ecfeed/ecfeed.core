@@ -74,7 +74,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				return Optional.empty();
 			}
 
-			BasicParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
 
 			if (link != null) {
 				parameter.setLinkToGlobalParameter(link);

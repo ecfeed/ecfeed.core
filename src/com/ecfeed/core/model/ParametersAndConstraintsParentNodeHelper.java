@@ -113,7 +113,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 	}
 	
 	public static BasicParameterNode addLinkedParameterToMethod(
-			IParametersParentNode parametersParentNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
+			IParametersParentNode parametersParentNode, String name, String type, AbstractParameterNode linkToGlobalParameter) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
 		methodParameterNode.setLinkToGlobalParameter(linkToGlobalParameter);

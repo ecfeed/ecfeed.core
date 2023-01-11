@@ -18,12 +18,12 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OperationSimpleSetLink extends AbstractModelOperation {
 
-	BasicParameterNode fMethodParameterNode;
+	AbstractParameterNode fMethodParameterNode;
 	AbstractParameterNode fNewlink;
 	AbstractParameterNode fOldLink;
 
 	public OperationSimpleSetLink(
-			BasicParameterNode methodParameterNode,
+			AbstractParameterNode methodParameterNode,
 			AbstractParameterNode link,
 			IExtLanguageManager extLanguageManager){
 

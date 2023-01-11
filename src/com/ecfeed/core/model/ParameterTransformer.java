@@ -150,8 +150,8 @@ public class ParameterTransformer {
 	}
 
 	private static void setLink(
-			BasicParameterNode srcMethodParameterNode,
-			BasicParameterNode dstParameterForChoices,
+			AbstractParameterNode srcMethodParameterNode,
+			AbstractParameterNode dstParameterForChoices,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -328,11 +328,11 @@ public class ParameterTransformer {
 	}
 
 	private static void removeLinkOnMethodParameter(
-			BasicParameterNode srcMethodParameterNode,
+			AbstractParameterNode srcMethodParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		BasicParameterNode oldGlobalParameterNode = (BasicParameterNode) srcMethodParameterNode.getLinkToGlobalParameter();
+		AbstractParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLinkToGlobalParameter();
 
 		srcMethodParameterNode.setLinkToGlobalParameter(null);
 

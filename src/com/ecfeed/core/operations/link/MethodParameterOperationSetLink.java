@@ -12,9 +12,7 @@ package com.ecfeed.core.operations.link;
 
 import java.util.List;
 
-import com.ecfeed.core.model.ClassNodeHelper;
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
 import com.ecfeed.core.operations.CompositeOperation;
@@ -27,9 +25,9 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class MethodParameterOperationSetLink extends CompositeOperation {
 
 	private class SetLinkOperation extends AbstractModelOperation{
-		private BasicParameterNode fTarget;
-		private BasicParameterNode fNewLink;
-		private BasicParameterNode fCurrentLink;
+		private AbstractParameterNode fTarget;
+		private AbstractParameterNode fNewLink;
+		private AbstractParameterNode fCurrentLink;
 
 		private class ReverseOperation extends AbstractReverseOperation{
 
@@ -50,7 +48,7 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 
 		}
 
-		public SetLinkOperation(BasicParameterNode target, BasicParameterNode link, IExtLanguageManager extLanguageManager) {
+		public SetLinkOperation(AbstractParameterNode target, AbstractParameterNode link, IExtLanguageManager extLanguageManager) {
 			super(OperationNames.SET_LINK, extLanguageManager);
 			fTarget = target;
 			fNewLink = link;
@@ -60,19 +58,23 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 		public void execute() {
 
 			setOneNodeToSelect(fTarget);
-			
-			MethodNode method = (MethodNode) fTarget.getParent();
-			List<String> types = method.getParameterTypes();
-			types.set(fTarget.getMyIndex(), fNewLink.getType());
 
-			if(method.checkDuplicate(fTarget.getMyIndex(), fNewLink.getType())){
-				
-				ExceptionHelper.reportRuntimeException(
-						ClassNodeHelper.createMethodSignatureDuplicateMessage(
-								method.getClassNode(), method, false, getExtLanguageManager()));
+			if (fTarget instanceof BasicParameterNode) {
+				BasicParameterNode newLinkParsed = (BasicParameterNode) fTarget;
+
+				MethodNode method = (MethodNode) fTarget.getParent();
+				List<String> types = method.getParameterTypes();
+				types.set(fTarget.getMyIndex(), newLinkParsed.getType());
+
+				if(method.checkDuplicate(fTarget.getMyIndex(), newLinkParsed.getType())){
+
+					ExceptionHelper.reportRuntimeException(
+							ClassNodeHelper.createMethodSignatureDuplicateMessage(
+									method.getClassNode(), method, false, getExtLanguageManager()));
+				}
 			}
 
-			fCurrentLink = (BasicParameterNode) fTarget.getLinkToGlobalParameter();
+			fCurrentLink = fTarget.getLinkToGlobalParameter();
 			fTarget.setLinkToGlobalParameter(fNewLink);
 		}
 
