@@ -29,6 +29,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NodesByType;
 
 public class GenericRemoveNodesOperationsCreator {
 
@@ -105,7 +106,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<TestCaseNode> outAffectedTestCases,
-
 			List<IModelOperation> outOperations,
 
 			IExtLanguageManager extLanguageManager,
@@ -114,137 +114,82 @@ public class GenericRemoveNodesOperationsCreator {
 
 		Set<IAbstractNode> affectedNodes = new HashSet<>();
 
+		processNodes(selectedNodes, 
+				allConstraintNodes, allTestCaseNodes, 
+				outAffectedConstraints, outAffectedTestCases,
+				outOperations, 
+				extLanguageManager, validate, affectedNodes);
+
+		addRemoveOperationsForAffectedConstraints(
+				outAffectedConstraints, outOperations, 
+				extLanguageManager, typeAdapterProvider, validate);
+
+		addRemoveOperationsForAffectedTestCases(
+				outAffectedTestCases, outOperations, 
+				extLanguageManager, typeAdapterProvider, validate);
+
+		addRemoveOperationsForAffectedNodes(
+				affectedNodes, outOperations, 
+				extLanguageManager, typeAdapterProvider, validate);
+	}
+
+	private static void processNodes(
+			Set<IAbstractNode> selectedNodes, 
+			Set<ConstraintNode> allConstraintNodes, Set<TestCaseNode> allTestCaseNodes, 
+			Set<ConstraintNode> outAffectedConstraints, Set<TestCaseNode> outAffectedTestCases, 
+			List<IModelOperation> outOperations,
+			IExtLanguageManager extLanguageManager, boolean validate, Set<IAbstractNode> affectedNodes) {
+
+		NodesByType selectedNodesByType = new NodesByType(selectedNodes);
+
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
-		ArrayList<ClassNode> selectedClasses = new ArrayList<>();
-		ArrayList<MethodNode> selectedMethods = new ArrayList<>();
-		ArrayList<BasicParameterNode> selectedLocalParameters = new ArrayList<>();
-		ArrayList<BasicParameterNode> selectedGlobalParameters = new ArrayList<>();
-		ArrayList<ChoiceNode> selectedChoices = new ArrayList<>();
-		ArrayList<IAbstractNode> selectedOtherNodes = new ArrayList<>();
-		HashSet<ConstraintNode> selectedConstraints = new HashSet<>();
-		ArrayList<TestCaseNode> selectedTestCases = new ArrayList<>();
 
-		for(IAbstractNode selectedNode : selectedNodes) {
+		processClasses(selectedNodesByType, affectedNodes);
 
-			if(selectedNode instanceof ClassNode){
-				selectedClasses.add((ClassNode)selectedNode);
-			} else if(selectedNode instanceof MethodNode){
-				selectedMethods.add((MethodNode)selectedNode);
-			} else if(selectedNode instanceof BasicParameterNode){
+		processChoicesFilteringConstraintsAndTestCases(
+				selectedNodesByType, 
+				allConstraintNodes, allTestCaseNodes, 
+				outAffectedConstraints,	outAffectedTestCases, 
+				affectedNodes);
 
-				if (((BasicParameterNode) selectedNode).isGlobalParameter()) {
-					selectedGlobalParameters.add((BasicParameterNode)selectedNode);
-				} else {
-					selectedLocalParameters.add((BasicParameterNode)selectedNode);
-				}
+		processTestCases(selectedNodesByType, affectedNodes);
 
-			} else if(selectedNode instanceof ConstraintNode){
-				selectedConstraints.add((ConstraintNode)selectedNode);
-			} else if(selectedNode instanceof TestCaseNode){
-				selectedTestCases.add((TestCaseNode)selectedNode);
-			} else if(selectedNode instanceof ChoiceNode){
-				selectedChoices.add((ChoiceNode)selectedNode);
-			} else{
-				selectedOtherNodes.add(selectedNode);
-			}		
-		}	
+		processOtherNodes(selectedNodesByType, affectedNodes);
 
-		// removing classes, they are independent from anything
-		for (ClassNode classNode : selectedClasses) {
-			affectedNodes.add(classNode);
-		}
-		// removing choices and deleting connected constraints/test cases from their respective to-remove lists beforehand
-		for (ChoiceNode choice : selectedChoices) {
-			createAffectedConstraints(choice, allConstraintNodes, outAffectedConstraints);
-			createAffectedTestCases(choice, allTestCaseNodes, outAffectedTestCases);
-			affectedNodes.add(choice);
-		}
-		// removing test cases
-		for (TestCaseNode tcase : selectedTestCases) {
-			affectedNodes.add(tcase);
-		}
-		// leaving this in case of any further nodes being added
-		for (IAbstractNode node : selectedOtherNodes) {
-			affectedNodes.add(node);
-		}
-		/*
-		 * Iterate through global params. Do the same checks as for method
-		 * parameters with every linker. If no linker is in potentially
-		 * duplicate method - just proceed to remove global and all linkers and
-		 * remove it from the lists.
-		 */
-		Iterator<BasicParameterNode> globalItr = selectedGlobalParameters.iterator();
-		while (globalItr.hasNext()) {
-			BasicParameterNode global = globalItr.next();
-			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
-			boolean isDependent = false;
-			for (BasicParameterNode param : linkers) {
-				MethodNode method = (MethodNode) param.getParent();
-				if (addMethodToMap(method, duplicatesMap, selectedMethods)) {
-					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
-					isDependent = true;
-					if (!parameterMap.containsKey(method)) {
-						parameterMap.put(method, new ArrayList<BasicParameterNode>());
-					}
-					parameterMap.get(method).add(global);
-				}
-			}
-			if (!isDependent) {
-				//remove mentioning constraints from the list to avoid duplicates
-				createAffectedConstraints(global, allConstraintNodes, outAffectedConstraints);
-				affectedNodes.add(global);
-				globalItr.remove();
-				/*
-				 * in case linkers contain parameters assigned to removal -
-				 * remove them from list; Global param removal will handle them.
-				 */
-				for (BasicParameterNode param : linkers) {
-					selectedLocalParameters.remove(param);
-				}
-			}
-		}
-		/*
-		 * Iterate through parameters. If parent method is potential duplicate -
-		 * add it to map for further validation. Replace values of to-be-deleted
-		 * param with NULL to remove them later without disturbing parameters
-		 * order. If parameters method is not potential duplicate - simply
-		 * forward it for removal and remove it from to-remove list.
-		 */
-		Iterator<BasicParameterNode> paramItr = selectedLocalParameters.iterator();
-		while (paramItr.hasNext()) {
-			BasicParameterNode param = paramItr.next();
-			IAbstractNode parent = param.getParent();
+		processGlobalParameters(
+				selectedNodesByType, 
+				allConstraintNodes, 
+				duplicatesMap, parameterMap, // TODO MO-RE check function
+				outAffectedConstraints, affectedNodes); 
 
-			if (parent instanceof MethodNode) {
+		processLocalParameters(
+				selectedNodesByType, 
+				allConstraintNodes, 
+				duplicatesMap, parameterMap,  // TODO MO-RE check function
+				outAffectedConstraints, affectedNodes);
 
-				MethodNode method = (MethodNode) parent;
-				if (addMethodToMap(method, duplicatesMap, selectedMethods)) {
-					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
-					if (!parameterMap.containsKey(method)) {
-						parameterMap.put(method, new ArrayList<BasicParameterNode>());
-					}
-					parameterMap.get(method).add(param);
-				} else {
-					//remove mentioning constraints from the list to avoid duplicates
-					createAffectedConstraints(param, allConstraintNodes, outAffectedConstraints);
-					affectedNodes.add(param);
-					paramItr.remove();
-				}
-			}
 
-			if (parent instanceof CompositeParameterNode) {
-				affectedNodes.add(param);
-			}
+		processMethods(selectedNodesByType, affectedNodes);
 
-		}
-		//Removing methods - information for model map has been already taken
-		Iterator<MethodNode> methodItr = selectedMethods.iterator();
-		while (methodItr.hasNext()) {
-			MethodNode method = methodItr.next();
-			affectedNodes.add(method);
-			methodItr.remove();
-		}
+		detectDuplicates(
+				allConstraintNodes, outAffectedConstraints, 
+				extLanguageManager, validate, affectedNodes,
+				duplicatesMap, parameterMap, outOperations);
+
+
+		processConstraints(selectedNodesByType, affectedNodes);
+	}
+
+	private static void detectDuplicates(
+			Set<ConstraintNode> allConstraintNodes,
+			Set<ConstraintNode> outAffectedConstraints, // TODO MO-RE out ??
+			IExtLanguageManager extLanguageManager,	boolean validate, 
+			Set<IAbstractNode> affectedNodes, 
+			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
+			HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
+			List<IModelOperation> outOperations) {
+
 		// Detect duplicates
 		Iterator<ClassNode> classItr = duplicatesMap.keySet().iterator();
 
@@ -256,7 +201,7 @@ public class GenericRemoveNodesOperationsCreator {
 				// remember that we are validating both param and method removal at once. Need to store params somewhere else.
 				HashSet<List<String>> paramSet = new HashSet<>();
 				String strNext = nameItr.next();
-				methodItr = duplicatesMap.get(classNext).get(strNext).keySet().iterator();
+				Iterator<MethodNode> methodItr = duplicatesMap.get(classNext).get(strNext).keySet().iterator();
 				while (methodItr.hasNext()) {
 					MethodNode methodNext = methodItr.next();
 					List<String> paramList = duplicatesMap.get(classNext).get(strNext).get(methodNext);
@@ -314,22 +259,137 @@ public class GenericRemoveNodesOperationsCreator {
 				}
 			}
 		}
+	}
 
-		for (ConstraintNode constraint : selectedConstraints) {
+	private static void processConstraints(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
+		for (ConstraintNode constraint : selectedNodesByType.getConstraints()) {
 			affectedNodes.add(constraint);
 		}
+	}
 
-		addRemoveOperationsForAffectedConstraints(
-				outAffectedConstraints, outOperations, 
-				extLanguageManager, typeAdapterProvider, validate);
+	private static void processMethods(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
+		//Removing methods - information for model map has been already taken
+		Iterator<MethodNode> methodItr = selectedNodesByType.getMethods().iterator();
 
-		addRemoveOperationsForAffectedTestCases(
-				outAffectedTestCases, outOperations, 
-				extLanguageManager, typeAdapterProvider, validate);
+		while (methodItr.hasNext()) {
+			MethodNode method = methodItr.next();
+			affectedNodes.add(method);
+			methodItr.remove();
+		}
+	}
 
-		addRemoveOperationsForAffectedNodes(
-				affectedNodes, outOperations, 
-				extLanguageManager, typeAdapterProvider, validate);
+	private static void processLocalParameters(NodesByType selectedNodesByType, Set<ConstraintNode> allConstraintNodes,
+			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
+			HashMap<MethodNode, List<BasicParameterNode>> parameterMap, Set<ConstraintNode> outAffectedConstraints,
+			Set<IAbstractNode> affectedNodes) {
+		/*
+		 * Iterate through parameters. If parent method is potential duplicate -
+		 * add it to map for further validation. Replace values of to-be-deleted
+		 * param with NULL to remove them later without disturbing parameters
+		 * order. If parameters method is not potential duplicate - simply
+		 * forward it for removal and remove it from to-remove list.
+		 */
+		Iterator<BasicParameterNode> paramItr = selectedNodesByType.getLocalParameters().iterator();
+		while (paramItr.hasNext()) {
+			BasicParameterNode param = paramItr.next();
+			IAbstractNode parent = param.getParent();
+
+			if (parent instanceof MethodNode) {
+
+				MethodNode method = (MethodNode) parent;
+				if (addMethodToMap(method, duplicatesMap, selectedNodesByType.getMethods())) {
+					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
+					if (!parameterMap.containsKey(method)) {
+						parameterMap.put(method, new ArrayList<BasicParameterNode>());
+					}
+					parameterMap.get(method).add(param);
+				} else {
+					//remove mentioning constraints from the list to avoid duplicates
+					createAffectedConstraints(param, allConstraintNodes, outAffectedConstraints);
+					affectedNodes.add(param);
+					paramItr.remove();
+				}
+			}
+
+			if (parent instanceof CompositeParameterNode) {
+				affectedNodes.add(param);
+			}
+
+		}
+	}
+
+	private static void processGlobalParameters(NodesByType selectedNodesByType, Set<ConstraintNode> allConstraintNodes,
+			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
+			Set<ConstraintNode> outAffectedConstraints,
+			Set<IAbstractNode> affectedNodes) {
+		/*
+		 * Iterate through global params. Do the same checks as for method
+		 * parameters with every linker. If no linker is in potentially
+		 * duplicate method - just proceed to remove global and all linkers and
+		 * remove it from the lists.
+		 */
+		Iterator<BasicParameterNode> globalItr = selectedNodesByType.getGlobalParameters().iterator();
+		while (globalItr.hasNext()) {
+			BasicParameterNode global = globalItr.next();
+			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
+			boolean isDependent = false;
+			for (BasicParameterNode param : linkers) {
+				MethodNode method = (MethodNode) param.getParent();
+				if (addMethodToMap(method, duplicatesMap, selectedNodesByType.getMethods())) {
+					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
+					isDependent = true;
+					if (!parameterMap.containsKey(method)) {
+						parameterMap.put(method, new ArrayList<BasicParameterNode>());
+					}
+					parameterMap.get(method).add(global);
+				}
+			}
+			if (!isDependent) {
+				//remove mentioning constraints from the list to avoid duplicates
+				createAffectedConstraints(global, allConstraintNodes, outAffectedConstraints);
+				affectedNodes.add(global);
+				globalItr.remove();
+				/*
+				 * in case linkers contain parameters assigned to removal -
+				 * remove them from list; Global param removal will handle them.
+				 */
+				for (BasicParameterNode param : linkers) {
+					selectedNodesByType.getLocalParameters().remove(param);
+				}
+			}
+		}
+	}
+
+	private static void processOtherNodes(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
+		// leaving this in case of any further nodes being added
+		for (IAbstractNode abstractNode : selectedNodesByType.getOtherNodes()) {
+			affectedNodes.add(abstractNode);
+		}
+	}
+
+	private static void processTestCases(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
+		// removing test cases
+		for (TestCaseNode testCaseNode : selectedNodesByType.getTestCases()) {
+			affectedNodes.add(testCaseNode);
+		}
+	}
+
+	private static void processChoicesFilteringConstraintsAndTestCases(NodesByType selectedNodesByType, Set<ConstraintNode> allConstraintNodes,
+			Set<TestCaseNode> allTestCaseNodes, Set<ConstraintNode> outAffectedConstraints,
+			Set<TestCaseNode> outAffectedTestCases, Set<IAbstractNode> affectedNodes) {
+		// removing choices and deleting connected constraints/test cases from their respective to-remove lists beforehand
+		for (ChoiceNode choiceNode : selectedNodesByType.getChoices()) {
+			createAffectedConstraints(choiceNode, allConstraintNodes, outAffectedConstraints);
+			createAffectedTestCases(choiceNode, allTestCaseNodes, outAffectedTestCases);
+			affectedNodes.add(choiceNode);
+		}
+	}
+
+	private static void processClasses(NodesByType selectedNodesByType, Set<IAbstractNode> inOutAffectedNodes) {
+
+		for (ClassNode classNode : selectedNodesByType.getClasses()) {
+			inOutAffectedNodes.add(classNode);
+		}
 	}
 
 	private static void addRemoveOperationsForAffectedConstraints(
