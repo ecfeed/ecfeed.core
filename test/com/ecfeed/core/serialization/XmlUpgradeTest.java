@@ -51,7 +51,7 @@ public class XmlUpgradeTest {
 //
 //		upgradeFromVersion4To5(pairOfXmls.getFirst(), pairOfXmls.getSecond(), serializedModelInVersion5);
 //	}
-//	
+	
 	private void upgradeFromVersion3To4(
 			String sourceInVersion3,
 			String expectedResultInVersion4FromText,
