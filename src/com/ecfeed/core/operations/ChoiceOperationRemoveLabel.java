@@ -49,7 +49,7 @@ public class ChoiceOperationRemoveLabel extends CompositeOperation{
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if (method != null) {
-				addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
+				addOperation(new MethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 			}
 		}
 	}

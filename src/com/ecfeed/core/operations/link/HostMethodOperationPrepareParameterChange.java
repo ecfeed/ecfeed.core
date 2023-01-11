@@ -23,7 +23,7 @@ import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.MethodOperationMakeConsistent;
+import com.ecfeed.core.operations.MethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -44,7 +44,7 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 			addOperation(new OperationPrepareMethodForParameterTypeChange(target, newType, extLanguageManager));
 
 			MethodNode methodNode = (MethodNode) parent;
-			addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager));
+			addOperation(new MethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
 		}
 	}
 

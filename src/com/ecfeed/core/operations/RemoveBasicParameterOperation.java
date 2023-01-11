@@ -35,7 +35,7 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 		addOperation(new RemoveBasicParameterOperationPrivate(target, parameter, extLanguageManager));
 
 		if (validate) {
-			addOperation(new MethodOperationMakeConsistent(target, extLanguageManager));
+			addOperation(new MethodOperationRemoveInconsistentChildren(target, extLanguageManager));
 		}
 	}
 
@@ -54,7 +54,7 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 
 		addOperation(new RemoveBasicParameterOperationPrivate(target, parameter, ignoreDuplicates, extLanguageManager));
 		if(validate){
-			addOperation(new MethodOperationMakeConsistent(target, extLanguageManager));
+			addOperation(new MethodOperationRemoveInconsistentChildren(target, extLanguageManager));
 		}
 	}
 

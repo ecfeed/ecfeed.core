@@ -88,7 +88,7 @@ public class GenericMoveOperation extends CompositeOperation {
 					}
 					
 					for(MethodNode method : methodsInvolved){
-						addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
+						addOperation(new MethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 					}
 				}
 			}

@@ -208,7 +208,7 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 		if (validate) {
 			
 			for (MethodNode method : target.getParameter().getMethods()) {
-				addOperation(new MethodOperationMakeConsistent(method, extLanguageManager));
+				addOperation(new MethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 			}
 		}
 	}

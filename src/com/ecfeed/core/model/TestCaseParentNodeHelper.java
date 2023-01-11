@@ -11,7 +11,10 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import com.ecfeed.core.utils.BooleanHolder;
 
 public class TestCaseParentNodeHelper {
 
@@ -22,6 +25,17 @@ public class TestCaseParentNodeHelper {
 
 		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
 		testCasesParentNode.addTestCase(testCaseNode);
+	}
+
+	public static void removeInconsistentTestCases(MethodNode methodNode, BooleanHolder modelUpdated) {
+		Iterator<TestCaseNode> tcIt = methodNode.getTestCases().iterator();
+		while (tcIt.hasNext()) {
+			if (tcIt.next().isConsistent() == false) {
+				tcIt.remove();
+				Boolean trueBl = true;
+				modelUpdated.set(trueBl);
+			}
+		}
 	}
 
 }
