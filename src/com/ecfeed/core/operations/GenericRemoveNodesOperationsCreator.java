@@ -34,10 +34,9 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private final Set<IAbstractNode> fSelectedNodes;
 
-	private final Set<IAbstractNode> fAffectedNodes = new HashSet<>(); // TODO MO-RE initialize in constructor
 	private final Set<TestCaseNode> fAffectedTestCases = new HashSet<>();
 	private final Set<ConstraintNode> fAffectedConstraints = new HashSet<>();
-	
+
 	List<IModelOperation> fOperations;
 
 	public GenericRemoveNodesOperationsCreator(
@@ -53,10 +52,9 @@ public class GenericRemoveNodesOperationsCreator {
 
 		createModelOperationsDeletingNodes(
 				fSelectedNodes,
-				getAllConstraintNodes(),
-				getAllTestCaseNodes(),
+				getAllConstraintNodes(fSelectedNodes),
+				getAllTestCaseNodes(fSelectedNodes),
 
-				fAffectedNodes,
 				fAffectedConstraints,
 				fAffectedTestCases,
 				fOperations,
@@ -65,9 +63,17 @@ public class GenericRemoveNodesOperationsCreator {
 				typeAdapterProvider, 
 				validate);
 	}
-	
+
 	public List<IModelOperation> getOperations() {
 		return fOperations;
+	}
+
+	public Set<ConstraintNode> getAffectedConstraints() {
+		return fAffectedConstraints;
+	}
+
+	public Set<TestCaseNode> getAffectedTestCases() {
+		return fAffectedTestCases;
 	}
 
 	private void removeNodesWithAncestorsOnList() {
@@ -92,20 +98,11 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	public Set<ConstraintNode> getAffectedConstraints() {
-		return fAffectedConstraints;
-	}
-
-	public Set<TestCaseNode> getAffectedTestCases() {
-		return fAffectedTestCases;
-	}
-
 	private static void createModelOperationsDeletingNodes(
 			Set<IAbstractNode> selectedNodes,
 			Set<ConstraintNode> allConstraintNodes,
 			Set<TestCaseNode> allTestCaseNodes,
 
-			Set<IAbstractNode> outAffectedNodes,
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<TestCaseNode> outAffectedTestCases,
 
@@ -114,6 +111,8 @@ public class GenericRemoveNodesOperationsCreator {
 			IExtLanguageManager extLanguageManager,
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate){
+
+		Set<IAbstractNode> affectedNodes = new HashSet<>();
 
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
@@ -150,26 +149,23 @@ public class GenericRemoveNodesOperationsCreator {
 			}		
 		}	
 
-		//		Set<ConstraintNode> allConstraintNodes = getAllConstraintNodes();
-		//		Set<TestCaseNode> allTestCaseNodes = getAllTestCaseNodes();
-
 		// removing classes, they are independent from anything
-		for (ClassNode clazz : classes) {
-			outAffectedNodes.add(clazz);
+		for (ClassNode classNode : classes) {
+			affectedNodes.add(classNode);
 		}
 		// removing choices and deleting connected constraints/test cases from their respective to-remove lists beforehand
 		for (ChoiceNode choice : choices) {
 			createAffectedConstraints(choice, allConstraintNodes, outAffectedConstraints);
 			createAffectedTestCases(choice, allTestCaseNodes, outAffectedTestCases);
-			outAffectedNodes.add(choice);
+			affectedNodes.add(choice);
 		}
 		// removing test cases
 		for (TestCaseNode tcase : testcases) {
-			outAffectedNodes.add(tcase);
+			affectedNodes.add(tcase);
 		}
 		// leaving this in case of any further nodes being added
 		for (IAbstractNode node : others) {
-			outAffectedNodes.add(node);
+			affectedNodes.add(node);
 		}
 		/*
 		 * Iterate through global params. Do the same checks as for method
@@ -196,7 +192,7 @@ public class GenericRemoveNodesOperationsCreator {
 			if (!isDependent) {
 				//remove mentioning constraints from the list to avoid duplicates
 				createAffectedConstraints(global, allConstraintNodes, outAffectedConstraints);
-				outAffectedNodes.add(global);
+				affectedNodes.add(global);
 				globalItr.remove();
 				/*
 				 * in case linkers contain parameters assigned to removal -
@@ -231,13 +227,13 @@ public class GenericRemoveNodesOperationsCreator {
 				} else {
 					//remove mentioning constraints from the list to avoid duplicates
 					createAffectedConstraints(param, allConstraintNodes, outAffectedConstraints);
-					outAffectedNodes.add(param);
+					affectedNodes.add(param);
 					paramItr.remove();
 				}
 			}
 
 			if (parent instanceof CompositeParameterNode) {
-				outAffectedNodes.add(param);
+				affectedNodes.add(param);
 			}
 
 		}
@@ -245,7 +241,7 @@ public class GenericRemoveNodesOperationsCreator {
 		Iterator<MethodNode> methodItr = methods.iterator();
 		while (methodItr.hasNext()) {
 			MethodNode method = methodItr.next();
-			outAffectedNodes.add(method);
+			affectedNodes.add(method);
 			methodItr.remove();
 		}
 		// Detect duplicates
@@ -280,7 +276,7 @@ public class GenericRemoveNodesOperationsCreator {
 							for (BasicParameterNode node : parameterMap.get(method)) {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
-								outAffectedNodes.add(node);
+								affectedNodes.add(node);
 							}
 						}
 					}
@@ -293,7 +289,7 @@ public class GenericRemoveNodesOperationsCreator {
 								//remove mentioning constraints from the list to avoid duplicates
 								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
 								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
-								
+
 									GenericOperationRemoveGlobalParameter operation = new GenericOperationRemoveGlobalParameter(
 											((BasicParameterNode)node).getParametersParent(), 
 											(BasicParameterNode)node, 
@@ -319,7 +315,7 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 
 		for (ConstraintNode constraint : constraints) {
-			outAffectedNodes.add(constraint);
+			affectedNodes.add(constraint);
 		}
 
 		outAffectedConstraints.stream().forEach(
@@ -332,7 +328,7 @@ public class GenericRemoveNodesOperationsCreator {
 						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
 						outOperations));
 
-		outAffectedNodes.stream().forEach(
+		affectedNodes.stream().forEach(
 				e-> addOper(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
 						outOperations));
 	}
@@ -346,8 +342,13 @@ public class GenericRemoveNodesOperationsCreator {
 		fOperations.add(operation);
 	}
 
-	private Set<ConstraintNode> getAllConstraintNodes() {
-		return fSelectedNodes.iterator().next()
+	private static Set<ConstraintNode> getAllConstraintNodes(Set<IAbstractNode> selectedNodes) { 
+
+		// TODO MO-RE rewrite using services of nodes
+		// List<IAbstractNode> IAbstractNode.getAllFilteredChilden(NodeTypeFilter) TODO
+		// IConstraintsParentNode.getConstraintNodes()
+
+		return selectedNodes.iterator().next()
 				.getRoot()
 				.getChildren()
 				.stream()
@@ -366,8 +367,13 @@ public class GenericRemoveNodesOperationsCreator {
 				.collect(Collectors.toSet());
 	}
 
-	private Set<TestCaseNode> getAllTestCaseNodes() {
-		return fSelectedNodes.iterator().next()
+	private static Set<TestCaseNode> getAllTestCaseNodes(Set<IAbstractNode> selectedNodes) {
+
+		// TODO MO-RE rewrite using services of nodes
+		// List<IAbstractNode> IAbstractNode.getAllFilteredChilden(NodeTypeFilter) TODO
+		// ITestCasesParentNode.getTestCaseNodes()
+
+		return selectedNodes.iterator().next()
 				.getRoot()
 				.getChildren()
 				.stream()
