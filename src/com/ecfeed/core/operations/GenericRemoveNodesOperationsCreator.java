@@ -46,7 +46,7 @@ public class GenericRemoveNodesOperationsCreator {
 			IExtLanguageManager extLanguageManager) {
 
 		fSelectedNodes = selectedNodes;
-		removeNodesWithAncestorsOnList();
+		removeNodesWithAncestorsOnList(fSelectedNodes);
 
 		fOperations = new ArrayList<>(); 
 
@@ -76,9 +76,9 @@ public class GenericRemoveNodesOperationsCreator {
 		return fAffectedTestCases;
 	}
 
-	private void removeNodesWithAncestorsOnList() {
+	private void removeNodesWithAncestorsOnList(Set<IAbstractNode> selectedNodes) {
 
-		Iterator<IAbstractNode> iterator = fSelectedNodes.iterator();
+		Iterator<IAbstractNode> iterator = selectedNodes.iterator();
 
 		while (iterator.hasNext()) {
 
@@ -88,7 +88,7 @@ public class GenericRemoveNodesOperationsCreator {
 
 			for (IAbstractNode ancestor : ancestors) {
 
-				if (fSelectedNodes.contains(ancestor)) {
+				if (selectedNodes.contains(ancestor)) {
 
 					// node is deleted because ancestor will be remove with the whole sub-tree which includes current node 
 					iterator.remove(); 
@@ -116,55 +116,56 @@ public class GenericRemoveNodesOperationsCreator {
 
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
-		ArrayList<ClassNode> classes = new ArrayList<>();
-		ArrayList<MethodNode> methods = new ArrayList<>();
-		ArrayList<BasicParameterNode> params = new ArrayList<>();
-		ArrayList<BasicParameterNode> globals = new ArrayList<>();
-		ArrayList<ChoiceNode> choices = new ArrayList<>();
-		ArrayList<IAbstractNode> others = new ArrayList<>();
-		HashSet<ConstraintNode> constraints = new HashSet<>();
-		ArrayList<TestCaseNode> testcases = new ArrayList<>();
+		ArrayList<ClassNode> selectedClasses = new ArrayList<>();
+		ArrayList<MethodNode> selectedMethods = new ArrayList<>();
+		ArrayList<BasicParameterNode> selectedLocalParameters = new ArrayList<>();
+		ArrayList<BasicParameterNode> selectedGlobalParameters = new ArrayList<>();
+		ArrayList<ChoiceNode> selectedChoices = new ArrayList<>();
+		ArrayList<IAbstractNode> selectedOtherNodes = new ArrayList<>();
+		HashSet<ConstraintNode> selectedConstraints = new HashSet<>();
+		ArrayList<TestCaseNode> selectedTestCases = new ArrayList<>();
 
-		for(IAbstractNode node : selectedNodes) {
-			if(node instanceof ClassNode){
-				classes.add((ClassNode)node);
-			} else if(node instanceof MethodNode){
-				methods.add((MethodNode)node);
-			} else if(node instanceof BasicParameterNode){
+		for(IAbstractNode selectedNode : selectedNodes) {
 
-				if (((BasicParameterNode) node).isGlobalParameter()) {
-					globals.add((BasicParameterNode)node);
+			if(selectedNode instanceof ClassNode){
+				selectedClasses.add((ClassNode)selectedNode);
+			} else if(selectedNode instanceof MethodNode){
+				selectedMethods.add((MethodNode)selectedNode);
+			} else if(selectedNode instanceof BasicParameterNode){
+
+				if (((BasicParameterNode) selectedNode).isGlobalParameter()) {
+					selectedGlobalParameters.add((BasicParameterNode)selectedNode);
 				} else {
-					params.add((BasicParameterNode)node);
+					selectedLocalParameters.add((BasicParameterNode)selectedNode);
 				}
 
-			} else if(node instanceof ConstraintNode){
-				constraints.add((ConstraintNode)node);
-			} else if(node instanceof TestCaseNode){
-				testcases.add((TestCaseNode)node);
-			} else if(node instanceof ChoiceNode){
-				choices.add((ChoiceNode)node);
+			} else if(selectedNode instanceof ConstraintNode){
+				selectedConstraints.add((ConstraintNode)selectedNode);
+			} else if(selectedNode instanceof TestCaseNode){
+				selectedTestCases.add((TestCaseNode)selectedNode);
+			} else if(selectedNode instanceof ChoiceNode){
+				selectedChoices.add((ChoiceNode)selectedNode);
 			} else{
-				others.add(node);
+				selectedOtherNodes.add(selectedNode);
 			}		
 		}	
 
 		// removing classes, they are independent from anything
-		for (ClassNode classNode : classes) {
+		for (ClassNode classNode : selectedClasses) {
 			affectedNodes.add(classNode);
 		}
 		// removing choices and deleting connected constraints/test cases from their respective to-remove lists beforehand
-		for (ChoiceNode choice : choices) {
+		for (ChoiceNode choice : selectedChoices) {
 			createAffectedConstraints(choice, allConstraintNodes, outAffectedConstraints);
 			createAffectedTestCases(choice, allTestCaseNodes, outAffectedTestCases);
 			affectedNodes.add(choice);
 		}
 		// removing test cases
-		for (TestCaseNode tcase : testcases) {
+		for (TestCaseNode tcase : selectedTestCases) {
 			affectedNodes.add(tcase);
 		}
 		// leaving this in case of any further nodes being added
-		for (IAbstractNode node : others) {
+		for (IAbstractNode node : selectedOtherNodes) {
 			affectedNodes.add(node);
 		}
 		/*
@@ -173,14 +174,14 @@ public class GenericRemoveNodesOperationsCreator {
 		 * duplicate method - just proceed to remove global and all linkers and
 		 * remove it from the lists.
 		 */
-		Iterator<BasicParameterNode> globalItr = globals.iterator();
+		Iterator<BasicParameterNode> globalItr = selectedGlobalParameters.iterator();
 		while (globalItr.hasNext()) {
 			BasicParameterNode global = globalItr.next();
 			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
 			boolean isDependent = false;
 			for (BasicParameterNode param : linkers) {
 				MethodNode method = (MethodNode) param.getParent();
-				if (addMethodToMap(method, duplicatesMap, methods)) {
+				if (addMethodToMap(method, duplicatesMap, selectedMethods)) {
 					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					isDependent = true;
 					if (!parameterMap.containsKey(method)) {
@@ -199,7 +200,7 @@ public class GenericRemoveNodesOperationsCreator {
 				 * remove them from list; Global param removal will handle them.
 				 */
 				for (BasicParameterNode param : linkers) {
-					params.remove(param);
+					selectedLocalParameters.remove(param);
 				}
 			}
 		}
@@ -210,7 +211,7 @@ public class GenericRemoveNodesOperationsCreator {
 		 * order. If parameters method is not potential duplicate - simply
 		 * forward it for removal and remove it from to-remove list.
 		 */
-		Iterator<BasicParameterNode> paramItr = params.iterator();
+		Iterator<BasicParameterNode> paramItr = selectedLocalParameters.iterator();
 		while (paramItr.hasNext()) {
 			BasicParameterNode param = paramItr.next();
 			IAbstractNode parent = param.getParent();
@@ -218,7 +219,7 @@ public class GenericRemoveNodesOperationsCreator {
 			if (parent instanceof MethodNode) {
 
 				MethodNode method = (MethodNode) parent;
-				if (addMethodToMap(method, duplicatesMap, methods)) {
+				if (addMethodToMap(method, duplicatesMap, selectedMethods)) {
 					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					if (!parameterMap.containsKey(method)) {
 						parameterMap.put(method, new ArrayList<BasicParameterNode>());
@@ -238,7 +239,7 @@ public class GenericRemoveNodesOperationsCreator {
 
 		}
 		//Removing methods - information for model map has been already taken
-		Iterator<MethodNode> methodItr = methods.iterator();
+		Iterator<MethodNode> methodItr = selectedMethods.iterator();
 		while (methodItr.hasNext()) {
 			MethodNode method = methodItr.next();
 			affectedNodes.add(method);
@@ -296,7 +297,7 @@ public class GenericRemoveNodesOperationsCreator {
 											true,
 											extLanguageManager);
 
-									addOper(operation, outOperations);	
+									addOperation(operation, outOperations);	
 
 
 								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
@@ -304,7 +305,7 @@ public class GenericRemoveNodesOperationsCreator {
 									RemoveBasicParameterOperation operation = new RemoveBasicParameterOperation(
 											method, (BasicParameterNode)node, validate, false, extLanguageManager);
 
-									addOper(operation, outOperations);
+									addOperation(operation, outOperations);
 
 								}
 							}
@@ -314,26 +315,63 @@ public class GenericRemoveNodesOperationsCreator {
 			}
 		}
 
-		for (ConstraintNode constraint : constraints) {
+		for (ConstraintNode constraint : selectedConstraints) {
 			affectedNodes.add(constraint);
 		}
 
-		outAffectedConstraints.stream().forEach(
-				e-> addOper(
-						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
-						outOperations));
+		addRemoveOperationsForAffectedConstraints(
+				outAffectedConstraints, outOperations, 
+				extLanguageManager, typeAdapterProvider, validate);
 
-		outAffectedTestCases.stream().forEach(
-				e-> addOper(
-						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
-						outOperations));
+		addRemoveOperationsForAffectedTestCases(
+				outAffectedTestCases, outOperations, 
+				extLanguageManager, typeAdapterProvider, validate);
 
-		affectedNodes.stream().forEach(
-				e-> addOper(FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
+		addRemoveOperationsForAffectedNodes(
+				affectedNodes, outOperations, 
+				extLanguageManager, typeAdapterProvider, validate);
+	}
+
+	private static void addRemoveOperationsForAffectedConstraints(
+			Set<ConstraintNode> affectedConstraints, 
+			List<IModelOperation> outOperations,
+			IExtLanguageManager extLanguageManager, 
+			ITypeAdapterProvider typeAdapterProvider, 
+			boolean validate) {
+
+		affectedConstraints.stream().forEach(
+				e-> addOperation(
+						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
 						outOperations));
 	}
 
-	private static void addOper(IModelOperation operation, List<IModelOperation> fOperations) {
+	private static void addRemoveOperationsForAffectedTestCases(
+			Set<TestCaseNode> affectedTestCases,
+			List<IModelOperation> outOperations, 
+			IExtLanguageManager extLanguageManager,
+			ITypeAdapterProvider typeAdapterProvider, 
+			boolean validate) {
+
+		affectedTestCases.stream().forEach(
+				e-> addOperation(
+						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
+						outOperations));
+	}
+
+	private static void addRemoveOperationsForAffectedNodes(
+			Set<IAbstractNode> affectedNodes,
+			List<IModelOperation> outOperations, 
+			IExtLanguageManager extLanguageManager, 
+			ITypeAdapterProvider typeAdapterProvider,
+			boolean validate) {
+
+		affectedNodes.stream().forEach(
+				e-> addOperation(
+						FactoryRemoveOperation.getRemoveOperation(e, typeAdapterProvider, validate, extLanguageManager),
+						outOperations));
+	}
+
+	private static void addOperation(IModelOperation operation, List<IModelOperation> fOperations) {
 
 		if (operation == null) {
 			ExceptionHelper.reportRuntimeException("Attempt to add empty operation.");
