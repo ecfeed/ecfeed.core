@@ -8,7 +8,7 @@
  *  
  *******************************************************************************/
 
-package operations;
+package com.ecfeed.core.model.operations;
 
 import com.ecfeed.core.model.*;
 import com.ecfeed.core.operations.ConstraintOperationChangeType;
