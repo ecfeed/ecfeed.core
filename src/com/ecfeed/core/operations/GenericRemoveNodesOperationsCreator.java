@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -114,11 +113,11 @@ public class GenericRemoveNodesOperationsCreator {
 
 		Set<IAbstractNode> affectedNodes = new HashSet<>();
 
-		processNodes(selectedNodes, 
-				allConstraintNodes, allTestCaseNodes, 
-				outAffectedConstraints, outAffectedTestCases,
+		processNodes(
+				selectedNodes, allConstraintNodes, allTestCaseNodes, 
+				affectedNodes, outAffectedConstraints, outAffectedTestCases, 
 				outOperations, 
-				extLanguageManager, validate, affectedNodes);
+				extLanguageManager, validate);
 
 		if (!outAffectedConstraints.isEmpty()) {
 			addRemoveOperationsForAffectedConstraints(
@@ -142,14 +141,11 @@ public class GenericRemoveNodesOperationsCreator {
 	private static void processNodes(
 			Set<IAbstractNode> selectedNodes, 
 			Set<ConstraintNode> allConstraintNodes, Set<TestCaseNode> allTestCaseNodes, 
-			Set<ConstraintNode> outAffectedConstraints, Set<TestCaseNode> outAffectedTestCases, 
-			List<IModelOperation> outOperations,
-			IExtLanguageManager extLanguageManager, boolean validate, Set<IAbstractNode> affectedNodes) {
+			Set<IAbstractNode> affectedNodes, Set<ConstraintNode> outAffectedConstraints, 
+			Set<TestCaseNode> outAffectedTestCases,
+			List<IModelOperation> outOperations, IExtLanguageManager extLanguageManager, boolean validate) {
 
 		NodesByType selectedNodesByType = new NodesByType(selectedNodes);
-
-		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
-		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
 
 		ArrayList<ClassNode> classNodes = selectedNodesByType.getClasses();
 
@@ -185,7 +181,6 @@ public class GenericRemoveNodesOperationsCreator {
 			processGlobalParameters(
 					selectedNodesByType, 
 					allConstraintNodes, 
-					duplicatesMap, parameterMap, // TODO MO-RE check function
 					outAffectedConstraints, affectedNodes);
 		}
 
@@ -195,14 +190,8 @@ public class GenericRemoveNodesOperationsCreator {
 			processLocalParameters(
 					selectedNodesByType, 
 					allConstraintNodes, 
-					duplicatesMap, parameterMap,  // TODO MO-RE check function
 					outAffectedConstraints, affectedNodes);
 		}
-
-		//		detectDuplicates(
-		//				allConstraintNodes, outAffectedConstraints, 
-		//				extLanguageManager, validate, affectedNodes,
-		//				duplicatesMap, parameterMap, outOperations);		
 
 		ArrayList<MethodNode> methods = selectedNodesByType.getMethods();
 
@@ -216,86 +205,6 @@ public class GenericRemoveNodesOperationsCreator {
 			processConstraints(constraints, affectedNodes);
 		}
 	}
-
-	//	private static void detectDuplicates(
-	//			Set<ConstraintNode> allConstraintNodes,
-	//			Set<ConstraintNode> outAffectedConstraints, // TODO MO-RE out ??
-	//			IExtLanguageManager extLanguageManager,	boolean validate, 
-	//			Set<IAbstractNode> affectedNodes, 
-	//			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
-	//			HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
-	//			List<IModelOperation> outOperations) {
-	//
-	//		// Detect duplicates
-	//		Iterator<ClassNode> classItr = duplicatesMap.keySet().iterator();
-	//
-	//		while (classItr.hasNext()) {
-	//			ClassNode classNext = classItr.next();
-	//			Iterator<String> nameItr = duplicatesMap.get(classNext).keySet().iterator();
-	//			while (nameItr.hasNext()) {		
-	//				// delete removed parameters marked with null (set?)
-	//				// remember that we are validating both param and method removal at once. Need to store params somewhere else.
-	//				HashSet<List<String>> paramSet = new HashSet<>();
-	//				String strNext = nameItr.next();
-	//				Iterator<MethodNode> methodItr = duplicatesMap.get(classNext).get(strNext).keySet().iterator();
-	//				while (methodItr.hasNext()) {
-	//					MethodNode methodNext = methodItr.next();
-	//					List<String> paramList = duplicatesMap.get(classNext).get(strNext).get(methodNext);
-	//					Iterator<String> parameterItr = paramList.iterator();
-	//					//removing parameters from model image
-	//					while (parameterItr.hasNext()) {
-	//						if (parameterItr.next() == null) {
-	//							parameterItr.remove();
-	//						}
-	//					}
-	//					paramSet.add(paramList);
-	//				}
-	//				//	There is more methods than method signatures, ergo duplicates present. Proceeding to remove with duplicate check on.
-	//				Set<MethodNode> methodSet = duplicatesMap.get(classNext).get(strNext).keySet();
-	//				if (paramSet.size() < methodSet.size()) {
-	//					for (MethodNode method : methodSet) {
-	//						if (parameterMap.containsKey(method)) {
-	//							for (BasicParameterNode node : parameterMap.get(method)) {
-	//								//remove mentioning constraints from the list to avoid duplicates
-	//								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
-	//								affectedNodes.add(node);
-	//							}
-	//						}
-	//					}
-	//				}
-	//				// Else remove with duplicate check off;
-	//				else {
-	//					for (MethodNode method : methodSet) {
-	//						if (parameterMap.containsKey(method)) {
-	//							for (BasicParameterNode node : parameterMap.get(method)) {
-	//								//remove mentioning constraints from the list to avoid duplicates
-	//								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
-	//								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
-	//
-	//									GenericOperationRemoveGlobalParameter operation = new GenericOperationRemoveGlobalParameter(
-	//											((BasicParameterNode)node).getParametersParent(), 
-	//											(BasicParameterNode)node, 
-	//											true,
-	//											extLanguageManager);
-	//
-	//									addOperation(operation, outOperations);	
-	//
-	//
-	//								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
-	//
-	//									RemoveBasicParameterOperation operation = new RemoveBasicParameterOperation(
-	//											method, (BasicParameterNode)node, validate, false, extLanguageManager);
-	//
-	//									addOperation(operation, outOperations);
-	//
-	//								}
-	//							}
-	//						}
-	//					}
-	//				}
-	//			}
-	//		}
-	//	}
 
 	private static void processConstraints(ArrayList<ConstraintNode> constraintNodes, Set<IAbstractNode> affectedNodes) {
 
@@ -321,8 +230,8 @@ public class GenericRemoveNodesOperationsCreator {
 	private static void processLocalParameters(
 			NodesByType selectedNodesByType, 
 			Set<ConstraintNode> allConstraintNodes,
-			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
-			HashMap<MethodNode, List<BasicParameterNode>> parameterMap, 
+			//HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
+			//HashMap<MethodNode, List<BasicParameterNode>> parameterMap, 
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<IAbstractNode> affectedNodes) {
 		/*
@@ -353,8 +262,8 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processGlobalParameters(NodesByType selectedNodesByType,
 			Set<ConstraintNode> allConstraintNodes,
-			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, 
-			HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
+			//HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, 
+			//HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<IAbstractNode> affectedNodes) {
 
