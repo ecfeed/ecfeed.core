@@ -51,7 +51,11 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		if (method.isDeployed()) {
 			parameters = method.getDeployedMethodParameters().stream().map(BasicParameterNode::getDeploymentParameter).collect(Collectors.toList());
 		} else {
-			parameters = method.getParametersAsBasic();
+			try {
+				parameters = method.getParametersAsBasic();
+			} catch (Exception e ) {
+				return Optional.empty();
+			}
 		}
 
 		List<ChoiceNode> testData = new ArrayList<>();

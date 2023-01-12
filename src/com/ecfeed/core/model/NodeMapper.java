@@ -15,14 +15,8 @@ import java.util.Map;
 
 public class NodeMapper {
 
-	private Map<AbstractNode, AbstractNode> fNodeMappingsSource;
-	private Map<AbstractNode, AbstractNode> fNodeMappingsDeployment;
-
-	public NodeMapper() {
-
-		fNodeMappingsSource = new HashMap<>();
-		fNodeMappingsDeployment = new HashMap<>();
-	}
+	private final Map<AbstractNode, AbstractNode> fNodeMappingsSource = new HashMap<>();
+	private final Map<AbstractNode, AbstractNode> fNodeMappingsDeployment = new HashMap<>();
 
 	public void addMappings(AbstractNode source, AbstractNode deployment) {
 
@@ -30,37 +24,17 @@ public class NodeMapper {
 		fNodeMappingsDeployment.put(deployment, source);
 	}
 
-	public AbstractNode getMappedNodeSource(AbstractNode nodeDeployment) {
-		return fNodeMappingsDeployment.get(nodeDeployment);
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractNode> T getMappedNodeSource(T deployment) {
+		AbstractNode source = fNodeMappingsDeployment.get(deployment);
+
+		return source != null ? (T) source : deployment;
 	}
 
-	public BasicParameterNode getMappedNodeSource(BasicParameterNode nodeDeployment) {
-		return (BasicParameterNode) fNodeMappingsDeployment.get(nodeDeployment);
-	}
+	@SuppressWarnings("unchecked")
+	public <T extends AbstractNode> T getMappedNodeDeployment(T source) {
+		AbstractNode deployment = fNodeMappingsSource.get(source);
 
-	public ChoiceNode getMappedNodeSource(ChoiceNode nodeDeployment) {
-		return (ChoiceNode) fNodeMappingsDeployment.get(nodeDeployment);
-	}
-
-	public AbstractNode getMappedNodeDeployment(AbstractNode nodeSource) {
-		return fNodeMappingsSource.get(nodeSource);
-	}
-
-	public BasicParameterNode getMappedNodeDeployment(BasicParameterNode nodeSource) {
-		return (BasicParameterNode) fNodeMappingsSource.get(nodeSource);
-	}
-
-	public ChoiceNode getMappedNodeDeployment(ChoiceNode nodeSource) {
-		return (ChoiceNode) fNodeMappingsSource.get(nodeSource);
-	}
-
-	public AbstractNode getMappedNode(AbstractNode sourceNode) {
-		AbstractNode mappedNode = fNodeMappingsSource.get(sourceNode);
-
-		if (mappedNode == null) {
-			return fNodeMappingsDeployment.get(sourceNode);
-		} else {
-			return mappedNode;
-		}
+		return deployment != null ? (T) deployment : source;
 	}
 }
