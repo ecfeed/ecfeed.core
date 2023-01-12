@@ -302,7 +302,8 @@ public class GenericRemoveNodesOperationsCreator {
 			if (parent instanceof MethodNode) {
 
 				MethodNode method = (MethodNode) parent;
-				if (addMethodToMap(method, duplicatesMap, selectedNodesByType.getMethods())) {
+				if (hasDuplicate()) {
+
 					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					if (!parameterMap.containsKey(method)) {
 						parameterMap.put(method, new ArrayList<BasicParameterNode>());
@@ -344,7 +345,7 @@ public class GenericRemoveNodesOperationsCreator {
 			boolean isDependent = false;
 			for (BasicParameterNode param : linkers) {
 				MethodNode method = (MethodNode) param.getParent();
-				if (addMethodToMap(method, duplicatesMap, selectedNodesByType.getMethods())) {
+				if (hasDuplicate()) {
 					duplicatesMap.get(method.getClassNode()).get(method.getName()).get(method).set(param.getMyIndex(), null);
 					isDependent = true;
 					if (!parameterMap.containsKey(method)) {
@@ -501,28 +502,39 @@ public class GenericRemoveNodesOperationsCreator {
 				.collect(Collectors.toSet());
 	}
 
-	private static boolean addMethodToMap(MethodNode method, HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, List<MethodNode> removedMethods){
-		ClassNode clazz = method.getClassNode();
-		boolean hasDuplicate = false;
-		for(MethodNode classMethod : clazz.getMethods()){
-			if(classMethod != method && classMethod.getName().equals(method.getName()) && !removedMethods.contains(classMethod)){
-				if(duplicatesMap.get(clazz) == null){
-					duplicatesMap.put(clazz, new HashMap<String, HashMap<MethodNode, List<String>>>());
-				}
-				if(!(duplicatesMap.get(clazz).containsKey(classMethod.getName()))){
-					duplicatesMap.get(clazz).put(classMethod.getName(), new HashMap<MethodNode, List<String>>());
-				}
-				if(!duplicatesMap.get(clazz).get(classMethod.getName()).containsKey(classMethod)){
-					duplicatesMap.get(clazz).get(classMethod.getName())
-					.put(classMethod, new ArrayList<String>(classMethod.getParameterTypes()));
-				}
-				if(!duplicatesMap.get(clazz).get(classMethod.getName()).containsKey(method)){
-					duplicatesMap.get(clazz).get(classMethod.getName()).put(method, new ArrayList<String>(method.getParameterTypes()));
-				}
-				hasDuplicate = true;
-			}
-		}
-		return hasDuplicate;
+	private static boolean hasDuplicate(
+			// MethodNode method //, 
+			//			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, 
+			//List<MethodNode> removedMethods
+			){
+
+		//		ClassNode classNode = method.getClassNode();
+		//		
+		//		boolean hasDuplicate = false;
+		//		
+		//		for(MethodNode methodNode : classNode.getMethods()){
+		//			
+		//			if(methodNode != method && methodNode.getName().equals(method.getName()) && !removedMethods.contains(methodNode)){
+		//				
+		//				if(duplicatesMap.get(classNode) == null){
+		//					duplicatesMap.put(classNode, new HashMap<String, HashMap<MethodNode, List<String>>>());
+		//				}
+		//				if(!(duplicatesMap.get(classNode).containsKey(methodNode.getName()))){
+		//					duplicatesMap.get(classNode).put(methodNode.getName(), new HashMap<MethodNode, List<String>>());
+		//				}
+		//				if(!duplicatesMap.get(classNode).get(methodNode.getName()).containsKey(methodNode)){
+		//					duplicatesMap.get(classNode).get(methodNode.getName())
+		//					.put(methodNode, new ArrayList<String>(methodNode.getParameterTypes()));
+		//				}
+		//				if(!duplicatesMap.get(classNode).get(methodNode.getName()).containsKey(method)){
+		//					duplicatesMap.get(classNode).get(methodNode.getName()).put(method, new ArrayList<String>(method.getParameterTypes()));
+		//				}
+		//				hasDuplicate = true;
+		//			}
+		//		}
+		//		return hasDuplicate;
+
+		return false;
 	}
 
 	private static void createAffectedConstraints(
