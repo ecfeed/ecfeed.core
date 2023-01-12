@@ -120,17 +120,23 @@ public class GenericRemoveNodesOperationsCreator {
 				outOperations, 
 				extLanguageManager, validate, affectedNodes);
 
-		addRemoveOperationsForAffectedConstraints(
-				outAffectedConstraints, outOperations, 
-				extLanguageManager, typeAdapterProvider, validate);
+		if (!outAffectedConstraints.isEmpty()) {
+			addRemoveOperationsForAffectedConstraints(
+					outAffectedConstraints, outOperations, 
+					extLanguageManager, typeAdapterProvider, validate);
+		}
 
-		addRemoveOperationsForAffectedTestCases(
-				outAffectedTestCases, outOperations, 
-				extLanguageManager, typeAdapterProvider, validate);
+		if (!outAffectedTestCases.isEmpty()) {
+			addRemoveOperationsForAffectedTestCases(
+					outAffectedTestCases, outOperations, 
+					extLanguageManager, typeAdapterProvider, validate);
+		}
 
-		addRemoveOperationsForAffectedNodes(
-				affectedNodes, outOperations, 
-				extLanguageManager, typeAdapterProvider, validate);
+		if (!affectedNodes.isEmpty()) {
+			addRemoveOperationsForAffectedNodes(
+					affectedNodes, outOperations, 
+					extLanguageManager, typeAdapterProvider, validate);
+		}
 	}
 
 	private static void processNodes(
@@ -145,39 +151,70 @@ public class GenericRemoveNodesOperationsCreator {
 		HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap = new HashMap<>();
 		HashMap<MethodNode, List<BasicParameterNode>> parameterMap = new HashMap<>();
 
-		processClasses(selectedNodesByType.getClasses(), affectedNodes);
+		ArrayList<ClassNode> classNodes = selectedNodesByType.getClasses();
 
-		processChoicesFilteringConstraintsAndTestCases(
-				selectedNodesByType.getChoices(), 
-				allConstraintNodes, allTestCaseNodes, 
-				outAffectedConstraints,	outAffectedTestCases, 
-				affectedNodes);
+		if (!classNodes.isEmpty()) {
+			processClasses(classNodes, affectedNodes);
+		}
 
-		processTestCases(selectedNodesByType.getTestCaseNodes(), affectedNodes);
+		ArrayList<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
 
-		processOtherNodes(selectedNodesByType.getOtherNodes(), affectedNodes);
+		if (!choiceNodes.isEmpty()) {
+			processChoicesFilteringConstraintsAndTestCases(
+					choiceNodes, 
+					allConstraintNodes, allTestCaseNodes, 
+					outAffectedConstraints,	outAffectedTestCases, 
+					affectedNodes);
+		}
 
-		processGlobalParameters(
-				selectedNodesByType, 
-				allConstraintNodes, 
-				duplicatesMap, parameterMap, // TODO MO-RE check function
-				outAffectedConstraints, affectedNodes); 
+		ArrayList<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
 
-		processLocalParameters(
-				selectedNodesByType, 
-				allConstraintNodes, 
-				duplicatesMap, parameterMap,  // TODO MO-RE check function
-				outAffectedConstraints, affectedNodes);
+		if (!testCaseNodes.isEmpty()) {
+			processTestCases(testCaseNodes, affectedNodes);
+		}
 
+		ArrayList<IAbstractNode> otherNodes = selectedNodesByType.getOtherNodes();
+
+		if (!otherNodes.isEmpty()) {
+			processOtherNodes(otherNodes, affectedNodes);
+		}
+
+		ArrayList<BasicParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
+
+		if (!globalParameters.isEmpty()) {
+			processGlobalParameters(
+					selectedNodesByType, 
+					allConstraintNodes, 
+					duplicatesMap, parameterMap, // TODO MO-RE check function
+					outAffectedConstraints, affectedNodes);
+		}
+
+		ArrayList<BasicParameterNode> localParameters = selectedNodesByType.getLocalParameters();
+
+		if (!localParameters.isEmpty()) {
+			processLocalParameters(
+					selectedNodesByType, 
+					allConstraintNodes, 
+					duplicatesMap, parameterMap,  // TODO MO-RE check function
+					outAffectedConstraints, affectedNodes);
+		}
 
 		//		detectDuplicates(
 		//				allConstraintNodes, outAffectedConstraints, 
 		//				extLanguageManager, validate, affectedNodes,
 		//				duplicatesMap, parameterMap, outOperations);		
 
-		processMethods(selectedNodesByType, affectedNodes);
+		ArrayList<MethodNode> methods = selectedNodesByType.getMethods();
 
-		processConstraints(selectedNodesByType.getConstraints(), affectedNodes);
+		if (!methods.isEmpty()) {
+			processMethods(methods, affectedNodes);
+		}
+
+		ArrayList<ConstraintNode> constraints = selectedNodesByType.getConstraints();
+
+		if (!constraints.isEmpty()) {
+			processConstraints(constraints, affectedNodes);
+		}
 	}
 
 	//	private static void detectDuplicates(
@@ -267,10 +304,12 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processMethods(NodesByType selectedNodesByType, Set<IAbstractNode> affectedNodes) {
+	private static void processMethods(ArrayList<MethodNode> methods, Set<IAbstractNode> affectedNodes) {
 
 		//Removing methods - information for model map has been already taken
-		Iterator<MethodNode> methodItr = selectedNodesByType.getMethods().iterator();
+		//ArrayList<MethodNode> methods = selectedNodesByType.getMethods();
+
+		Iterator<MethodNode> methodItr = methods.iterator();
 
 		while (methodItr.hasNext()) {
 			MethodNode method = methodItr.next();
