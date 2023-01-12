@@ -8,7 +8,7 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model.operations;
+package com.ecfeed.core.operations;
 
 import static org.junit.Assert.fail;
 

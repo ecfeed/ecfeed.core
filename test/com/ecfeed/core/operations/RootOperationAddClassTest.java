@@ -8,7 +8,7 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.model.operations;
+package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
