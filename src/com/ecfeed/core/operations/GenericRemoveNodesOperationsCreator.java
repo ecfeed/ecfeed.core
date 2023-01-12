@@ -172,94 +172,88 @@ public class GenericRemoveNodesOperationsCreator {
 
 		processMethods(selectedNodesByType, affectedNodes);
 
-		detectDuplicates(
-				allConstraintNodes, outAffectedConstraints, 
-				extLanguageManager, validate, affectedNodes,
-				duplicatesMap, parameterMap, outOperations);
-
-
 		processConstraints(selectedNodesByType.getConstraints(), affectedNodes);
 	}
 
-	private static void detectDuplicates(
-			Set<ConstraintNode> allConstraintNodes,
-			Set<ConstraintNode> outAffectedConstraints, // TODO MO-RE out ??
-			IExtLanguageManager extLanguageManager,	boolean validate, 
-			Set<IAbstractNode> affectedNodes, 
-			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
-			HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
-			List<IModelOperation> outOperations) {
-
-		// Detect duplicates
-		Iterator<ClassNode> classItr = duplicatesMap.keySet().iterator();
-
-		while (classItr.hasNext()) {
-			ClassNode classNext = classItr.next();
-			Iterator<String> nameItr = duplicatesMap.get(classNext).keySet().iterator();
-			while (nameItr.hasNext()) {		
-				// delete removed parameters marked with null (set?)
-				// remember that we are validating both param and method removal at once. Need to store params somewhere else.
-				HashSet<List<String>> paramSet = new HashSet<>();
-				String strNext = nameItr.next();
-				Iterator<MethodNode> methodItr = duplicatesMap.get(classNext).get(strNext).keySet().iterator();
-				while (methodItr.hasNext()) {
-					MethodNode methodNext = methodItr.next();
-					List<String> paramList = duplicatesMap.get(classNext).get(strNext).get(methodNext);
-					Iterator<String> parameterItr = paramList.iterator();
-					//removing parameters from model image
-					while (parameterItr.hasNext()) {
-						if (parameterItr.next() == null) {
-							parameterItr.remove();
-						}
-					}
-					paramSet.add(paramList);
-				}
-				//	There is more methods than method signatures, ergo duplicates present. Proceeding to remove with duplicate check on.
-				Set<MethodNode> methodSet = duplicatesMap.get(classNext).get(strNext).keySet();
-				if (paramSet.size() < methodSet.size()) {
-					for (MethodNode method : methodSet) {
-						if (parameterMap.containsKey(method)) {
-							for (BasicParameterNode node : parameterMap.get(method)) {
-								//remove mentioning constraints from the list to avoid duplicates
-								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
-								affectedNodes.add(node);
-							}
-						}
-					}
-				}
-				// Else remove with duplicate check off;
-				else {
-					for (MethodNode method : methodSet) {
-						if (parameterMap.containsKey(method)) {
-							for (BasicParameterNode node : parameterMap.get(method)) {
-								//remove mentioning constraints from the list to avoid duplicates
-								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
-								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
-
-									GenericOperationRemoveGlobalParameter operation = new GenericOperationRemoveGlobalParameter(
-											((BasicParameterNode)node).getParametersParent(), 
-											(BasicParameterNode)node, 
-											true,
-											extLanguageManager);
-
-									addOperation(operation, outOperations);	
-
-
-								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
-
-									RemoveBasicParameterOperation operation = new RemoveBasicParameterOperation(
-											method, (BasicParameterNode)node, validate, false, extLanguageManager);
-
-									addOperation(operation, outOperations);
-
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+	//	private static void detectDuplicates(
+	//			Set<ConstraintNode> allConstraintNodes,
+	//			Set<ConstraintNode> outAffectedConstraints, // TODO MO-RE out ??
+	//			IExtLanguageManager extLanguageManager,	boolean validate, 
+	//			Set<IAbstractNode> affectedNodes, 
+	//			HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap,
+	//			HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
+	//			List<IModelOperation> outOperations) {
+	//
+	//		// Detect duplicates
+	//		Iterator<ClassNode> classItr = duplicatesMap.keySet().iterator();
+	//
+	//		while (classItr.hasNext()) {
+	//			ClassNode classNext = classItr.next();
+	//			Iterator<String> nameItr = duplicatesMap.get(classNext).keySet().iterator();
+	//			while (nameItr.hasNext()) {		
+	//				// delete removed parameters marked with null (set?)
+	//				// remember that we are validating both param and method removal at once. Need to store params somewhere else.
+	//				HashSet<List<String>> paramSet = new HashSet<>();
+	//				String strNext = nameItr.next();
+	//				Iterator<MethodNode> methodItr = duplicatesMap.get(classNext).get(strNext).keySet().iterator();
+	//				while (methodItr.hasNext()) {
+	//					MethodNode methodNext = methodItr.next();
+	//					List<String> paramList = duplicatesMap.get(classNext).get(strNext).get(methodNext);
+	//					Iterator<String> parameterItr = paramList.iterator();
+	//					//removing parameters from model image
+	//					while (parameterItr.hasNext()) {
+	//						if (parameterItr.next() == null) {
+	//							parameterItr.remove();
+	//						}
+	//					}
+	//					paramSet.add(paramList);
+	//				}
+	//				//	There is more methods than method signatures, ergo duplicates present. Proceeding to remove with duplicate check on.
+	//				Set<MethodNode> methodSet = duplicatesMap.get(classNext).get(strNext).keySet();
+	//				if (paramSet.size() < methodSet.size()) {
+	//					for (MethodNode method : methodSet) {
+	//						if (parameterMap.containsKey(method)) {
+	//							for (BasicParameterNode node : parameterMap.get(method)) {
+	//								//remove mentioning constraints from the list to avoid duplicates
+	//								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
+	//								affectedNodes.add(node);
+	//							}
+	//						}
+	//					}
+	//				}
+	//				// Else remove with duplicate check off;
+	//				else {
+	//					for (MethodNode method : methodSet) {
+	//						if (parameterMap.containsKey(method)) {
+	//							for (BasicParameterNode node : parameterMap.get(method)) {
+	//								//remove mentioning constraints from the list to avoid duplicates
+	//								createAffectedConstraints(node, allConstraintNodes, outAffectedConstraints);
+	//								if (node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) {
+	//
+	//									GenericOperationRemoveGlobalParameter operation = new GenericOperationRemoveGlobalParameter(
+	//											((BasicParameterNode)node).getParametersParent(), 
+	//											(BasicParameterNode)node, 
+	//											true,
+	//											extLanguageManager);
+	//
+	//									addOperation(operation, outOperations);	
+	//
+	//
+	//								} else if ((node instanceof BasicParameterNode) && !((BasicParameterNode)node).isGlobalParameter()) {
+	//
+	//									RemoveBasicParameterOperation operation = new RemoveBasicParameterOperation(
+	//											method, (BasicParameterNode)node, validate, false, extLanguageManager);
+	//
+	//									addOperation(operation, outOperations);
+	//
+	//								}
+	//							}
+	//						}
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 
 	private static void processConstraints(ArrayList<ConstraintNode> constraintNodes, Set<IAbstractNode> affectedNodes) {
 
