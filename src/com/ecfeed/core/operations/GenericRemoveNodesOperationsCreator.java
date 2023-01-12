@@ -170,6 +170,11 @@ public class GenericRemoveNodesOperationsCreator {
 				outAffectedConstraints, affectedNodes);
 
 
+		//		detectDuplicates(
+		//				allConstraintNodes, outAffectedConstraints, 
+		//				extLanguageManager, validate, affectedNodes,
+		//				duplicatesMap, parameterMap, outOperations);		
+
 		processMethods(selectedNodesByType, affectedNodes);
 
 		processConstraints(selectedNodesByType.getConstraints(), affectedNodes);
