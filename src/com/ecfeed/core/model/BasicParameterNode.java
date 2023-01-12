@@ -285,11 +285,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 				BasicParameterNode link = (BasicParameterNode) getLinkToGlobalParameter();
 
 				if (fChoicesCopy == null) {
-					fChoicesCopy = link.getChoicesCopy();
+					fChoicesCopy = link.getChoices();
 					return fChoicesCopy;
 				}
 
-				List<ChoiceNode> temp = link.getChoicesCopy();
+				List<ChoiceNode> temp = link.getChoices();
 
 				if (!choiceListsMatch(fChoicesCopy, temp)) {
 					fChoicesCopy = temp;
