@@ -32,8 +32,8 @@ public class MethodOperationRemoveInconsistentChildren extends AbstractModelOper
 		super(OperationNames.MAKE_CONSISTENT, extLanguageManager);
 		
 		fMethodNode = target;
-		fOriginalConstraints = new ArrayList<ConstraintNode>(target.getConstraintNodes());
-		fOriginalTestCases = new ArrayList<TestCaseNode>(target.getTestCases());
+		fOriginalConstraints = null;
+		fOriginalTestCases = null;
 	}
 
 	@Override
@@ -41,11 +41,14 @@ public class MethodOperationRemoveInconsistentChildren extends AbstractModelOper
 
 		setOneNodeToSelect(fMethodNode);
 
+		fOriginalConstraints = new ArrayList<ConstraintNode>(fMethodNode.getConstraintNodes());
+		fOriginalTestCases = new ArrayList<TestCaseNode>(fMethodNode.getTestCases());
+
 		BooleanHolder modelUpdated = new BooleanHolder(false);
 
 		TestCaseParentNodeHelper.removeInconsistentTestCases(fMethodNode, modelUpdated);
 
-		ConstraintsParentNodeHelper.removeInconsistentConstraints(fMethodNode, modelUpdated);		
+		ConstraintsParentNodeHelper.removeInconsistentConstraints(fMethodNode, modelUpdated);
 
 		if (modelUpdated.get()) {
 			markModelUpdated();
