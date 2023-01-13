@@ -14,14 +14,11 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.operations.FactoryRenameOperation;
-import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.OperationMessages;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.JavaLanguageHelper;

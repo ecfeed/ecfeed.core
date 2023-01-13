@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
@@ -117,19 +116,25 @@ public class GenericRemoveNodesOperationTest {
 		nodesToDelete.add(basicParameterNode);
 
 		// constraint
+		
 		ConstraintNode constraintNode = createConstraintNodeWithValuePostcondition(basicParameterNode,"ABC");
 		methodNode.addConstraint(constraintNode);
 		assertFalse(methodNode.getConstraintNodes().isEmpty());
 
+		// remove
+		
 		GenericRemoveNodesOperation genericRemoveNodesOperation = 
 				createRemovingNodesOperation(nodesToDelete, rootNode);
 		genericRemoveNodesOperation.execute();
 
-		List<AbstractParameterNode> parameterNodes = methodNode.getParameters();
-		assertTrue(parameterNodes.isEmpty());
-
-		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
-		assertTrue(constraintNodes.isEmpty());
+		assertTrue(methodNode.getParameters().isEmpty());
+		assertTrue(methodNode.getConstraintNodes().isEmpty());
+		
+		// reverse
+		genericRemoveNodesOperation.getReverseOperation().execute();
+		
+		assertFalse(methodNode.getParameters().isEmpty());
+		assertFalse(methodNode.getConstraintNodes().isEmpty());
 	}
 
 	private ConstraintNode createConstraintNodeWithValuePostcondition(

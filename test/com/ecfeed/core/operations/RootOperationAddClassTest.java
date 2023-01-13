@@ -10,16 +10,16 @@
 
 package com.ecfeed.core.operations;
 
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
-import com.ecfeed.core.operations.RootOperationAddClass;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
 
 public class RootOperationAddClassTest {
 

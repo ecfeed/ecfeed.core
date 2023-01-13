@@ -10,13 +10,27 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.operations.ConstraintOperationChangeType;
-import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.utils.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StatementArrayOperator;
+import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.TestHelper;
 
 public class ConstraintOperationChangeTypeTest {
 
