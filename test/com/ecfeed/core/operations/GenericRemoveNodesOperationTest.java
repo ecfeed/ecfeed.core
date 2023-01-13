@@ -12,6 +12,7 @@ package com.ecfeed.core.operations;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,22 +55,34 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeMethod() {
+	public void removeMethods() {
 
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode classNode = new ClassNode("Class", null);
 		rootNode.addClass(classNode);
-		MethodNode methodNode = new MethodNode("Method");
-		classNode.addMethod(methodNode);
+		
+		MethodNode methodNode1 = new MethodNode("Method1");
+		classNode.addMethod(methodNode1);
+		MethodNode methodNode2 = new MethodNode("Method2");
+		classNode.addMethod(methodNode2);
 
+		// removing the first method
+		
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-		nodesToDelete.add(methodNode);
+		nodesToDelete.add(methodNode1);
 
 		removeNodesByGenericOperation(nodesToDelete, rootNode);
 
 		List<MethodNode> methodNodes = classNode.getMethods();
 
-		assertTrue(methodNodes.isEmpty());
+		assertEquals(1, methodNodes.size());
+		
+		nodesToDelete.clear();
+		nodesToDelete.add(methodNode2);
+		
+		removeNodesByGenericOperation(nodesToDelete, rootNode);
+		
+		assertEquals(0, methodNodes.size());
 	}
 
 	@Test
