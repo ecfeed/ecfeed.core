@@ -53,10 +53,10 @@ public class GenericRemoveNodesOperationTest {
 		List<ClassNode> classNodes = rootNode.getClasses();
 
 		assertTrue(classNodes.isEmpty());
-		
+
 		genericRemoveNodesOperation.getReverseOperation().execute();
 		classNodes = rootNode.getClasses();
-		
+
 		assertEquals(1, classNodes.size());
 		assertEquals(classNode, classNodes.get(0));
 	}
@@ -67,14 +67,14 @@ public class GenericRemoveNodesOperationTest {
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode classNode = new ClassNode("Class", null);
 		rootNode.addClass(classNode);
-		
+
 		MethodNode methodNode1 = new MethodNode("Method1");
 		classNode.addMethod(methodNode1);
 		MethodNode methodNode2 = new MethodNode("Method2");
 		classNode.addMethod(methodNode2);
 
 		// removing the first method
-		
+
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
 		nodesToDelete.add(methodNode1);
 
@@ -82,18 +82,22 @@ public class GenericRemoveNodesOperationTest {
 				createRemovingNodesOperation(nodesToDelete, rootNode);
 		genericRemoveNodesOperation1.execute();
 
-		List<MethodNode> methodNodes = classNode.getMethods();
+		assertEquals(1, classNode.getMethods().size());
 
-		assertEquals(1, methodNodes.size());
-		
 		nodesToDelete.clear();
 		nodesToDelete.add(methodNode2);
-		
+
 		GenericRemoveNodesOperation genericRemoveNodesOperation2 = 
 				createRemovingNodesOperation(nodesToDelete, rootNode);
 		genericRemoveNodesOperation2.execute();
-		
-		assertEquals(0, methodNodes.size());
+
+		assertEquals(0, classNode.getMethods().size());
+
+		genericRemoveNodesOperation2.getReverseOperation().execute();
+		assertEquals(1, classNode.getMethods().size());
+
+		genericRemoveNodesOperation1.getReverseOperation().execute();
+		assertEquals(2, classNode.getMethods().size());
 	}
 
 	@Test
@@ -108,10 +112,10 @@ public class GenericRemoveNodesOperationTest {
 				new BasicParameterNode(
 						"BasicParam", "String", "", false, null);
 		methodNode.addParameter(basicParameterNode);
-		
+
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
 		nodesToDelete.add(basicParameterNode);
-		
+
 		// constraint
 		ConstraintNode constraintNode = createConstraintNodeWithValuePostcondition(basicParameterNode,"ABC");
 		methodNode.addConstraint(constraintNode);
@@ -123,14 +127,14 @@ public class GenericRemoveNodesOperationTest {
 
 		List<AbstractParameterNode> parameterNodes = methodNode.getParameters();
 		assertTrue(parameterNodes.isEmpty());
-		
+
 		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
 		assertTrue(constraintNodes.isEmpty());
 	}
-	
+
 	private ConstraintNode createConstraintNodeWithValuePostcondition(
 			BasicParameterNode basicParameterNode, String value) {
-		
+
 		StaticStatement staticStatement = new StaticStatement(EvaluationResult.TRUE);
 
 		RelationStatement relationStatement2 = 
