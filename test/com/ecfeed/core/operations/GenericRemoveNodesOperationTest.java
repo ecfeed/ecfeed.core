@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.operations;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -17,10 +18,20 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 
 public class GenericRemoveNodesOperationTest {
@@ -29,26 +40,104 @@ public class GenericRemoveNodesOperationTest {
 	public void removeClass() {
 
 		RootNode rootNode = new RootNode("Root", null);
-		ClassNode classNode = new ClassNode("Class1", null);
+		ClassNode classNode = new ClassNode("Class", null);
 		rootNode.addClass(classNode);
-		
-		List<IAbstractNode> classes = new ArrayList<>();
-		classes.add(classNode);
-		
-		GenericRemoveNodesOperation genericRemoveNodesOperation = 
-				new GenericRemoveNodesOperation(
-						classes, 
-						new TypeAdapterProviderForJava(), 
-						true, 
-						rootNode, 
-						rootNode, 
-						new ExtLanguageManagerForJava());
-		
-		genericRemoveNodesOperation.execute();
-		
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(classNode);
+
+		removeNodesByGenericOperation(nodesToDelete, rootNode);
+
 		List<ClassNode> classNodes = rootNode.getClasses();
-		
+
 		assertTrue(classNodes.isEmpty());
 	}
+
+	@Test
+	public void removeMethod() {
+
+		RootNode rootNode = new RootNode("Root", null);
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(methodNode);
+
+		removeNodesByGenericOperation(nodesToDelete, rootNode);
+
+		List<MethodNode> methodNodes = classNode.getMethods();
+
+		assertTrue(methodNodes.isEmpty());
+	}
+
+	@Test
+	public void removeMethodBasicParameter() {
+
+		RootNode rootNode = new RootNode("Root", null);
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+		BasicParameterNode basicParameterNode = 
+				new BasicParameterNode(
+						"BasicParam", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode);
+		
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(basicParameterNode);
+		
+		// constraint
+		ConstraintNode constraintNode = createConstraintNodeWithValuePostcondition(basicParameterNode,"ABC");
+		methodNode.addConstraint(constraintNode);
+		assertFalse(methodNode.getConstraintNodes().isEmpty());
+
+		removeNodesByGenericOperation(nodesToDelete, rootNode);
+
+		List<AbstractParameterNode> parameterNodes = methodNode.getParameters();
+		assertTrue(parameterNodes.isEmpty());
+		
+		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
+		assertTrue(constraintNodes.isEmpty());
+	}
+	
+	private ConstraintNode createConstraintNodeWithValuePostcondition(
+			BasicParameterNode basicParameterNode, String value) {
+		
+		StaticStatement staticStatement = new StaticStatement(EvaluationResult.TRUE);
+
+		RelationStatement relationStatement2 = 
+				RelationStatement.createRelationStatementWithValueCondition(
+						basicParameterNode, EMathRelation.EQUAL, value);
+
+		Constraint constraint = new Constraint(
+				"constraint", 
+				ConstraintType.EXTENDED_FILTER, 
+				staticStatement, 
+				relationStatement2, 
+				null);
+
+		ConstraintNode constraintNode = new ConstraintNode("constraintNode", constraint, null);
+		return constraintNode;
+	}
+
+	private void removeNodesByGenericOperation(
+			List<IAbstractNode> nodesToDelete, 
+			IAbstractNode nodeToBeSelectedAfterOperation) {
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				new GenericRemoveNodesOperation(
+						nodesToDelete, 
+						new TypeAdapterProviderForJava(), 
+						true, 
+						nodeToBeSelectedAfterOperation, 
+						nodeToBeSelectedAfterOperation, 
+						new ExtLanguageManagerForJava());
+
+		genericRemoveNodesOperation.execute();
+	}
+
+
 
 }
