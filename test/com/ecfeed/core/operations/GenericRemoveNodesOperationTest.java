@@ -47,11 +47,18 @@ public class GenericRemoveNodesOperationTest {
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
 		nodesToDelete.add(classNode);
 
-		removeNodesByGenericOperation(nodesToDelete, rootNode);
+		GenericRemoveNodesOperation genericRemoveNodesOperation = createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation.execute();
 
 		List<ClassNode> classNodes = rootNode.getClasses();
 
 		assertTrue(classNodes.isEmpty());
+		
+		genericRemoveNodesOperation.getReverseOperation().execute();
+		classNodes = rootNode.getClasses();
+		
+		assertEquals(1, classNodes.size());
+		assertEquals(classNode, classNodes.get(0));
 	}
 
 	@Test
@@ -71,7 +78,9 @@ public class GenericRemoveNodesOperationTest {
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
 		nodesToDelete.add(methodNode1);
 
-		removeNodesByGenericOperation(nodesToDelete, rootNode);
+		GenericRemoveNodesOperation genericRemoveNodesOperation1 = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation1.execute();
 
 		List<MethodNode> methodNodes = classNode.getMethods();
 
@@ -80,7 +89,9 @@ public class GenericRemoveNodesOperationTest {
 		nodesToDelete.clear();
 		nodesToDelete.add(methodNode2);
 		
-		removeNodesByGenericOperation(nodesToDelete, rootNode);
+		GenericRemoveNodesOperation genericRemoveNodesOperation2 = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation2.execute();
 		
 		assertEquals(0, methodNodes.size());
 	}
@@ -106,7 +117,9 @@ public class GenericRemoveNodesOperationTest {
 		methodNode.addConstraint(constraintNode);
 		assertFalse(methodNode.getConstraintNodes().isEmpty());
 
-		removeNodesByGenericOperation(nodesToDelete, rootNode);
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation.execute();
 
 		List<AbstractParameterNode> parameterNodes = methodNode.getParameters();
 		assertTrue(parameterNodes.isEmpty());
@@ -135,7 +148,7 @@ public class GenericRemoveNodesOperationTest {
 		return constraintNode;
 	}
 
-	private void removeNodesByGenericOperation(
+	private GenericRemoveNodesOperation createRemovingNodesOperation(
 			List<IAbstractNode> nodesToDelete, 
 			IAbstractNode nodeToBeSelectedAfterOperation) {
 
@@ -148,9 +161,7 @@ public class GenericRemoveNodesOperationTest {
 						nodeToBeSelectedAfterOperation, 
 						new ExtLanguageManagerForJava());
 
-		genericRemoveNodesOperation.execute();
+		return genericRemoveNodesOperation;
 	}
-
-
 
 }
