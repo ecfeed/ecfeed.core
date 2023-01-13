@@ -131,7 +131,7 @@ public class CompositeOperation extends AbstractModelOperation {
 	public IModelOperation getReverseOperation() {
 		return new CompositeOperation(
 				"reverse " + getName(), 
-				reverseOperations(), 
+				getReverseOperations(), 
 				fAtomic, 
 				fNodeToSelectAfterReverseOperation, 
 				null, 
@@ -147,7 +147,7 @@ public class CompositeOperation extends AbstractModelOperation {
 		return fExecutedOperations;
 	}
 
-	protected List<IModelOperation> reverseOperations() {
+	protected List<IModelOperation> getReverseOperations() {
 
 		List<IModelOperation> reverseOperations = new ArrayList<IModelOperation>();
 

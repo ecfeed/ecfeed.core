@@ -107,19 +107,28 @@ public class GenericRemoveNodesOperationTest {
 		rootNode.addClass(classNode);
 		MethodNode methodNode = new MethodNode("Method");
 		classNode.addMethod(methodNode);
-		BasicParameterNode basicParameterNode = 
+		BasicParameterNode basicParameterNode1 = 
 				new BasicParameterNode(
-						"BasicParam", "String", "", false, null);
-		methodNode.addParameter(basicParameterNode);
+						"BasicParam1", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode1);
 
-		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-		nodesToDelete.add(basicParameterNode);
-
-		// constraint
+		BasicParameterNode basicParameterNode2 = 
+				new BasicParameterNode(
+						"BasicParam2", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode2);
 		
-		ConstraintNode constraintNode = createConstraintNodeWithValuePostcondition(basicParameterNode,"ABC");
-		methodNode.addConstraint(constraintNode);
-		assertFalse(methodNode.getConstraintNodes().isEmpty());
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(basicParameterNode1);
+
+		// constraints
+		
+		ConstraintNode constraintNode1 = createConstraintNodeWithValuePostcondition(basicParameterNode1,"1");
+		methodNode.addConstraint(constraintNode1);
+
+		ConstraintNode constraintNode2 = createConstraintNodeWithValuePostcondition(basicParameterNode2,"2");
+		methodNode.addConstraint(constraintNode2);
+		
+		assertEquals(2, methodNode.getConstraintNodes().size());
 
 		// remove
 		
@@ -127,14 +136,17 @@ public class GenericRemoveNodesOperationTest {
 				createRemovingNodesOperation(nodesToDelete, rootNode);
 		genericRemoveNodesOperation.execute();
 
-		assertTrue(methodNode.getParameters().isEmpty());
-		assertTrue(methodNode.getConstraintNodes().isEmpty());
+		assertEquals(1, methodNode.getParameters().size());
+		assertEquals(1, methodNode.getConstraintNodes().size());
 		
 		// reverse
-		genericRemoveNodesOperation.getReverseOperation().execute();
+		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+		reverseOperation.execute();
 		
-		assertFalse(methodNode.getParameters().isEmpty());
-		assertFalse(methodNode.getConstraintNodes().isEmpty());
+		assertEquals(2, methodNode.getParameters().size());
+		
+		List<ConstraintNode> resultConstraintNodes = methodNode.getConstraintNodes();
+		assertEquals(2, resultConstraintNodes.size());
 	}
 
 	private ConstraintNode createConstraintNodeWithValuePostcondition(

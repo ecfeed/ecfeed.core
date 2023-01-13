@@ -236,14 +236,48 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	@Override
 	public void addConstraint(ConstraintNode constraint) {
 
+		int hashCode = this.hashCode();
+		System.out.println("TRACE add constraint " + hashCode);
+		
+		int listSize1 = fConstraintNodeListHolder.getConstraintListSize();
+		
 		fConstraintNodeListHolder.addConstraint(constraint, this);
+		
+		int listSize2 = fConstraintNodeListHolder.getConstraintListSize();
+		
+		System.out.println("TRACE");
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
 
+		int hashCode = this.hashCode();
+		System.out.println("TRACE add constraint " + hashCode);
+		
+		int listSize1 = fConstraintNodeListHolder.getConstraintListSize();
+		
 		fConstraintNodeListHolder.addConstraint(constraint, index, this);
+		
+		int listSize2 = fConstraintNodeListHolder.getConstraintListSize();
+		
+		System.out.println("TRACE");
 	}
+	
+	@Override
+	public boolean removeConstraint(ConstraintNode constraint) {
+
+		int hashCode = this.hashCode();
+		System.out.println("TRACE remove constraint " + hashCode);
+		
+		int listSize1 = fConstraintNodeListHolder.getConstraintListSize();
+		
+		boolean wasRemoved = fConstraintNodeListHolder.removeConstraint(constraint);
+		
+		int listSize2 = fConstraintNodeListHolder.getConstraintListSize();
+		
+		return wasRemoved;
+	}
+	
 
 	public void addTestSuite(TestSuiteNode testSuite) {
 		addTestSuite(testSuite, fTestSuiteNodes.size());
@@ -448,12 +482,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public void removeTestCases(){
 		fTestCaseNodes.clear();
 		registerChange();
-	}
-
-	@Override
-	public boolean removeConstraint(ConstraintNode constraint) {
-
-		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
 	public void removeTestSuite(TestSuiteNode testSuite) {
