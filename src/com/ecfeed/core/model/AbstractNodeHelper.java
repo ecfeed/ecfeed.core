@@ -139,4 +139,45 @@ public abstract class AbstractNodeHelper  {
 		return null;
 	}
 
+	public static IAbstractNode findRoot(AbstractNode abstractNode) {
+
+		IAbstractNode parent = abstractNode.getParent();
+
+		if (parent == null) {
+			return abstractNode;
+		}
+
+		return parent.getRoot();
+	}
+
+	public static RootNode findRootNode(IAbstractNode abstractNode) {
+
+		IAbstractNode parent = abstractNode.getParent();
+
+		if (parent == null) {
+			return null;
+		}
+
+		if (parent instanceof RootNode) {
+			return (RootNode) parent;
+		}
+
+		return findRootNode(parent);
+	}
+
+	public static ClassNode findClassNode(IAbstractNode abstractNode) {
+
+		IAbstractNode parent = abstractNode.getParent();
+
+		if (parent == null) {
+			return null;
+		}
+
+		if (parent instanceof ClassNode) {
+			return (ClassNode) parent;
+		}
+
+		return findClassNode(parent);
+	}
+
 }

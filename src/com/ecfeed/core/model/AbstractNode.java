@@ -176,13 +176,7 @@ public abstract class AbstractNode implements IAbstractNode {
 	@Override
 	public IAbstractNode getRoot() {
 
-		IAbstractNode parent = getParent();
-
-		if (parent == null) {
-			return this;
-		}
-
-		return parent.getRoot();
+		return AbstractNodeHelper.findRoot(this);
 	}
 
 	@Override

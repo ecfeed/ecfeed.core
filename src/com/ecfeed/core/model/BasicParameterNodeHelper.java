@@ -160,21 +160,9 @@ public class BasicParameterNodeHelper {
 		}
 
 		return extractTypeFromSignature(linkedParameterSignature);
-//		AbstractParameterNode linkToGlobalParameter = fTarget.getLinkToGlobalParameter();
-//
-//		if (linkToGlobalParameter == null) {
-//			ExceptionHelper.reportRuntimeException(ClassNodeHelper.LINK_NOT_SET_PROBLEM);
-//		}
-//
-//		if (linkToGlobalParameter instanceof BasicParameterNode) {
-//
-//			BasicParameterNode link = (BasicParameterNode)linkToGlobalParameter;
-//			return link.getType();
-//		} 
-//		
-//		return null;
 	}
 
+	
 	private static String extractTypeFromSignature(String linkedParameterSignature) {
 		
 		String type = StringHelper.getFirstToken(linkedParameterSignature, " ");
