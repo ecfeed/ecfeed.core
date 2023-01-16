@@ -383,7 +383,7 @@ public class MethodNodeHelperTest {
 		BasicParameterNode methodParameterNode1a =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1a, extLanguageManagerForSimple);
 
-		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1a.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_STRING,  methodParameterNode1a.getType());
 
 		methodNode1a.addParameter(methodParameterNode1a);
 
@@ -395,7 +395,7 @@ public class MethodNodeHelperTest {
 		BasicParameterNode methodParameterNode1b =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1b, extLanguageManagerForSimple);
 
-		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1b.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_STRING,  methodParameterNode1b.getType());
 
 		methodNode1b.addParameter(methodParameterNode1b);
 
@@ -407,7 +407,7 @@ public class MethodNodeHelperTest {
 		BasicParameterNode methodParameterNode1c =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1c, extLanguageManagerForSimple);
 
-		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1c.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_STRING,  methodParameterNode1c.getType());
 
 		methodNode1c.addParameter(methodParameterNode1c);
 
@@ -419,7 +419,7 @@ public class MethodNodeHelperTest {
 		BasicParameterNode methodParameterNode1d =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1d, extLanguageManagerForSimple);
 
-		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1d.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_STRING,  methodParameterNode1d.getType());
 
 		methodNode1d.addParameter(methodParameterNode1d);
 
@@ -431,7 +431,7 @@ public class MethodNodeHelperTest {
 		BasicParameterNode methodParameterNode1e =
 				ParametersAndConstraintsParentNodeHelper.createBasicParameter(methodNode1e, extLanguageManagerForSimple);
 
-		assertEquals(JavaLanguageHelper.TYPE_NAME_INT,  methodParameterNode1e.getType());
+		assertEquals(JavaLanguageHelper.TYPE_NAME_STRING,  methodParameterNode1e.getType());
 
 		methodNode1e.addParameter(methodParameterNode1e);
 	}
