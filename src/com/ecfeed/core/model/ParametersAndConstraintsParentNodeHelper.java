@@ -143,41 +143,15 @@ public class ParametersAndConstraintsParentNodeHelper {
 			return compositeParameterNode;
 		}
 
-		if (parametersParentNode instanceof MethodNode) {
 
-			//			MethodNode methodNode = (MethodNode) parametersParentNode;
+		String type = JavaLanguageHelper.TYPE_NAME_STRING;
 
-			String type = JavaLanguageHelper.TYPE_NAME_INT;
+		String defaultValue = JavaLanguageHelper.getDefaultValue(type);
 
-			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
+		BasicParameterNode parameter =
+				new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
 
-			BasicParameterNode parameter =
-					new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
-
-			return parameter;
-		}
-
-		if (parametersParentNode instanceof CompositeParameterNode) {
-
-			String type = null;
-
-			if (extLanguageManager instanceof ExtLanguageManagerForJava) {  // TODO MO-RE move to extManagers
-				type = "int";
-			} else {
-				type = "Number";
-			}
-
-			String defaultValue = JavaLanguageHelper.getDefaultValue(type);
-
-			BasicParameterNode parameter =
-					new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
-
-			return parameter;
-		}
-
-
-		ExceptionHelper.reportRuntimeException("Not supported parameter type.");
-		return null;
+		return parameter;
 	}
 
 	public static BasicParameterNode createBasicParameter(
