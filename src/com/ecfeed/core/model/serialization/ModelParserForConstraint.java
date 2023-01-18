@@ -24,6 +24,7 @@ import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
 
+import com.ecfeed.core.utils.SignatureHelper;
 import nu.xom.Element;
 
 public class ModelParserForConstraint implements IModelParserForConstraint {
@@ -233,7 +234,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
 						errorList);
 
-		BasicParameterNode methodParameterNode = (BasicParameterNode)parent.findParameter(parameterName);
+		BasicParameterNode methodParameterNode = getParameterFromPath(parent, parameterName);
 
 		if (methodParameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
@@ -279,7 +280,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
 						errorList);
 
-		BasicParameterNode leftParameterNode = (BasicParameterNode)parent.findParameter(parameterName);
+		BasicParameterNode leftParameterNode = getParameterFromPath(parent, parameterName);
 
 		if (leftParameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
@@ -302,7 +303,8 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, 
 						errorList);
 
-		BasicParameterNode rightParameterNode = (BasicParameterNode)parent.findParameter(rightParameterName);
+		BasicParameterNode rightParameterNode = getParameterFromPath(parent, rightParameterName);
+
 		if (rightParameterNode == null) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, parent.getName()));
 			return null;
@@ -325,7 +327,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationHelperVersion1.getStatementParameterAttributeName(), 
 						errorList);
 
-		BasicParameterNode leftParameterNode = (BasicParameterNode)parent.findParameter(parameterName);
+		BasicParameterNode leftParameterNode = getParameterFromPath(parent, parameterName);
 
 		if (leftParameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
@@ -398,7 +400,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME, 
 						errorList);
 
-		BasicParameterNode basicParameterNode = (BasicParameterNode) parent.findParameter(parameterName);
+		BasicParameterNode basicParameterNode = getParameterFromPath(parent, parameterName);
 
 		if (basicParameterNode == null || basicParameterNode.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
@@ -423,7 +425,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 						element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME, 
 						errorList);
 
-		BasicParameterNode parameter = (BasicParameterNode) parent.findParameter(parameterName);
+		BasicParameterNode parameter = getParameterFromPath(parent, parameterName);
 
 		if (parameter == null || !parameter.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
@@ -434,6 +436,16 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		condition.setParent(parameter);
 
 		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
+	}
+
+	private BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
+
+		IAbstractNode parameter = parameterParent;
+		for (String segment : parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
+			parameter = parameter.getChild(segment);
+		}
+
+		return (BasicParameterNode) parameter;
 	}
 
 }

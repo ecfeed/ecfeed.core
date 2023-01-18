@@ -27,33 +27,31 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.STATEME
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.STATEMENT_STATIC_VALUE_ATTRIBUTE_NAME;
+
+import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.SignatureHelper;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceCondition;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.IStatementCondition;
-import com.ecfeed.core.model.IStatementVisitor;
-import com.ecfeed.core.model.LabelCondition;
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.ParameterCondition;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.ValueCondition;
+import java.util.*;
 
 public class XomStatementBuilder implements IStatementVisitor {
 
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 	private String fStatementParameterAttributeName;
 	private String fStatementChoiceAttributeName;
+	private IAbstractNode fConstraintParent;
 
 	public XomStatementBuilder(String statementParameterAttributeName, String statementChoiceAttributeName) {
 
+		this(null, statementParameterAttributeName, statementChoiceAttributeName);
+	}
+
+	public XomStatementBuilder(IAbstractNode constraintParent, String statementParameterAttributeName, String statementChoiceAttributeName) {
+
 		fStatementParameterAttributeName = statementParameterAttributeName; 
 		fStatementChoiceAttributeName = statementChoiceAttributeName;
+		fConstraintParent = constraintParent;
 	}
 
 	@Override
@@ -124,7 +122,11 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {
 
-		String parameterName = statement.getLeftParameter().getName();
+		IAbstractNode parameter = statement.getLeftParameter();
+
+		String prefix = getCommonParent(parameter);
+
+		String parameterName = prefix + parameter.getName();
 
 		Attribute parameterAttribute =
 				new Attribute(fStatementParameterAttributeName, parameterName);
@@ -162,7 +164,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		XomBuilder.encodeAndAddAttribute(
 				targetChoiceElement, 
-				new Attribute(fStatementChoiceAttributeName, choice.getQualifiedName()), 
+				new Attribute(fStatementChoiceAttributeName, choice.getQualifiedName()),
 				fWhiteCharConverter);
 
 		return targetChoiceElement;
@@ -172,11 +174,14 @@ public class XomStatementBuilder implements IStatementVisitor {
 	public Object visit(ParameterCondition condition) throws Exception {
 
 		BasicParameterNode rightMethodParameterNode = condition.getRightParameterNode();
+
+		String prefix = getCommonParent(rightMethodParameterNode);
+
 		Element targetParameterElement = new Element(CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME);
 
 		XomBuilder.encodeAndAddAttribute(
 				targetParameterElement, 
-				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, rightMethodParameterNode.getName()), 
+				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, prefix + rightMethodParameterNode.getName()),
 				fWhiteCharConverter);
 
 		return targetParameterElement;
@@ -195,5 +200,20 @@ public class XomStatementBuilder implements IStatementVisitor {
 		return targetParameterElement;
 	}	
 
+	private String getCommonParent(IAbstractNode parameter) {
+
+		if (fConstraintParent == null || parameter == null) {
+			return "";
+		}
+
+		LinkedList<String> prefixes = new LinkedList<>();
+
+		while (parameter.getParent() != fConstraintParent) {
+			parameter = parameter.getParent();
+			prefixes.addFirst(parameter.getName());
+		}
+
+		return prefixes.size() > 0 ? String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, prefixes) + SignatureHelper.SIGNATURE_NAME_SEPARATOR : "";
+	}
 }
 
