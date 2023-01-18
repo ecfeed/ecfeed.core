@@ -211,12 +211,14 @@ public abstract class XomBuilder implements IModelVisitor {
 		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
 		preconditionElement.appendChild((Element)precondition.accept(
 				new XomStatementBuilder(
+						node.getParent(),
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
 		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);
 		postconditionElement.appendChild((Element)postcondition.accept(
 				new XomStatementBuilder(
+						node.getParent(),
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
