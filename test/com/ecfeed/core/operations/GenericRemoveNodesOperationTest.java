@@ -256,6 +256,55 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 
+	@Test
+	public void removeConstraint() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// class node 
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// method node
+
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		// basic parameters and choices 
+
+		BasicParameterNode basicParameterNode1 = 
+				new BasicParameterNode(
+						"BasicParam1", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
+		basicParameterNode1.addChoice(choiceNode1);
+
+		// constraints
+
+		ConstraintNode constraintNode = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		methodNode.addConstraint(constraintNode);
+
+		// list of nodes to delete
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(constraintNode);
+
+		// remove
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation.execute();
+
+		assertEquals(0, methodNode.getConstraintNodes().size());
+
+		// reverse
+		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+		reverseOperation.execute();
+
+		assertEquals(1, methodNode.getConstraintNodes().size());
+	}
+	
 	private ConstraintNode createConstraintNodeWithValueCondition(
 			BasicParameterNode basicParameterNode, String value) {
 
