@@ -255,7 +255,6 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, methodNode.getTestCases().size());
 	}
 
-
 	@Test
 	public void removeConstraint() {
 
@@ -304,6 +303,65 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getConstraintNodes().size());
 	}
+	
+	@Test
+	public void removeTestCases() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// class node 
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// method node
+
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		// basic parameters and choices 
+
+		BasicParameterNode basicParameterNode1 = 
+				new BasicParameterNode(
+						"BasicParam1", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
+		basicParameterNode1.addChoice(choiceNode1);
+
+		BasicParameterNode basicParameterNode2 = 
+				new BasicParameterNode(
+						"BasicParam2", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode2);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
+		basicParameterNode2.addChoice(choiceNode2);
+
+		// test case
+
+		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
+		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		methodNode.addTestCase(testCaseNode);
+
+		// list of nodes to delete
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(testCaseNode);
+
+		// remove
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation.execute();
+
+		assertEquals(0, methodNode.getTestCases().size());
+
+		// reverse
+		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+		reverseOperation.execute();
+
+		assertEquals(1, methodNode.getTestCases().size());
+	}
+	
 	
 	private ConstraintNode createConstraintNodeWithValueCondition(
 			BasicParameterNode basicParameterNode, String value) {
