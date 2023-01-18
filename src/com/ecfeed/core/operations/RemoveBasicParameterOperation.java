@@ -61,6 +61,7 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 	private class RemoveBasicParameterOperationPrivate extends GenericOperationRemoveParameter{
 
 		private List<TestCaseNode> fOriginalTestCases;
+		private List<BasicParameterNode> fOriginalDeployedParameters;
 
 		public RemoveBasicParameterOperationPrivate(
 				MethodNode target,
@@ -69,6 +70,7 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 
 			super(target, parameter, extLanguageManager);
 			fOriginalTestCases = new ArrayList<>();
+			fOriginalDeployedParameters = new ArrayList<>();
 		}
 
 		public RemoveBasicParameterOperationPrivate(
@@ -101,12 +103,11 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 			}
 
 			fOriginalTestCases.clear();
-
-			for(TestCaseNode tcase : targetMethodNode.getTestCases()){
-				fOriginalTestCases.add(tcase.getCopy(targetMethodNode));
-			}
-
+			fOriginalTestCases.addAll(targetMethodNode.getTestCases());
 			targetMethodNode.removeAllTestCases();
+			
+			fOriginalDeployedParameters.clear();
+			fOriginalDeployedParameters.addAll(targetMethodNode.getDeployedMethodParameters());
 			targetMethodNode.removeAllDeployedParameters();
 			
 			super.execute();
