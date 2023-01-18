@@ -140,18 +140,53 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processNodes(
 			Set<IAbstractNode> selectedNodes, 
-			Set<ConstraintNode> allConstraintNodes, Set<TestCaseNode> allTestCaseNodes, 
-			Set<IAbstractNode> affectedNodes, Set<ConstraintNode> outAffectedConstraints, 
+			Set<ConstraintNode> allConstraintNodes, 
+			Set<TestCaseNode> allTestCaseNodes, 
+			Set<IAbstractNode> outAffectedNodes, 
+			Set<ConstraintNode> outAffectedConstraints, 
 			Set<TestCaseNode> outAffectedTestCases,
 			List<IModelOperation> outOperations, IExtLanguageManager extLanguageManager, boolean validate) {
 
 		NodesByType selectedNodesByType = new NodesByType(selectedNodes);
 
+		processClassesAndMethods(selectedNodesByType, outAffectedNodes);
+
+		processParametersAndChoices(
+				selectedNodesByType, 
+				allConstraintNodes, allTestCaseNodes, 
+				outAffectedNodes, outAffectedConstraints, outAffectedTestCases);
+
+		processConstraintsAndTestCases(selectedNodesByType, outAffectedNodes);
+
+		processOtherNodes(selectedNodesByType, outAffectedNodes);
+	}
+
+	private static void processClassesAndMethods(
+			NodesByType selectedNodesByType, 
+			Set<IAbstractNode> outAffectedNodes) {
+
 		ArrayList<ClassNode> classNodes = selectedNodesByType.getClasses();
 
 		if (!classNodes.isEmpty()) {
-			processClasses(classNodes, affectedNodes);
+			processClasses(classNodes, outAffectedNodes);
 		}
+
+		ArrayList<MethodNode> methods = selectedNodesByType.getMethods();
+
+		if (!methods.isEmpty()) {
+			processMethods(methods, outAffectedNodes);
+		}
+	}
+
+	private static void processParametersAndChoices(
+			NodesByType selectedNodesByType,
+			Set<ConstraintNode> allConstraintNodes, 
+			Set<TestCaseNode> allTestCaseNodes,
+			Set<IAbstractNode> outAffectedNodes, 
+			Set<ConstraintNode> outAffectedConstraints,
+			Set<TestCaseNode> outAffectedTestCases) {
+
+		processParameters(selectedNodesByType, allConstraintNodes, outAffectedConstraints, outAffectedNodes);
 
 		ArrayList<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
 
@@ -160,20 +195,43 @@ public class GenericRemoveNodesOperationsCreator {
 					choiceNodes, 
 					allConstraintNodes, allTestCaseNodes, 
 					outAffectedConstraints,	outAffectedTestCases, 
-					affectedNodes);
+					outAffectedNodes);
 		}
+	}
+
+	private static void processConstraintsAndTestCases(
+			NodesByType selectedNodesByType,
+			Set<IAbstractNode> inOutAffectedNodes) {
 
 		ArrayList<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
 
 		if (!testCaseNodes.isEmpty()) {
-			processTestCases(testCaseNodes, affectedNodes);
+			processTestCases(testCaseNodes, inOutAffectedNodes);
 		}
+
+		ArrayList<ConstraintNode> constraints = selectedNodesByType.getConstraints();
+
+		if (!constraints.isEmpty()) {
+			processConstraints(constraints, inOutAffectedNodes);
+		}
+	}
+
+	private static void processOtherNodes(
+			NodesByType selectedNodesByType, 
+			Set<IAbstractNode> outAffectedNodes) {
 
 		ArrayList<IAbstractNode> otherNodes = selectedNodesByType.getOtherNodes();
 
 		if (!otherNodes.isEmpty()) {
-			processOtherNodes(otherNodes, affectedNodes);
+			processOtherNodes(otherNodes, outAffectedNodes);
 		}
+	}
+
+	private static void processParameters(
+			NodesByType selectedNodesByType, 
+			Set<ConstraintNode> allConstraintNodes,
+			Set<ConstraintNode> inOutAffectedConstraints,
+			Set<IAbstractNode> inOutAffectedNodes) {
 
 		ArrayList<BasicParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
 
@@ -181,7 +239,8 @@ public class GenericRemoveNodesOperationsCreator {
 			processGlobalParameters(
 					selectedNodesByType, 
 					allConstraintNodes, 
-					outAffectedConstraints, affectedNodes);
+					inOutAffectedConstraints, 
+					inOutAffectedNodes);
 		}
 
 		ArrayList<BasicParameterNode> localParameters = selectedNodesByType.getLocalParameters();
@@ -190,19 +249,7 @@ public class GenericRemoveNodesOperationsCreator {
 			processLocalParameters(
 					selectedNodesByType, 
 					allConstraintNodes, 
-					outAffectedConstraints, affectedNodes);
-		}
-
-		ArrayList<MethodNode> methods = selectedNodesByType.getMethods();
-
-		if (!methods.isEmpty()) {
-			processMethods(methods, affectedNodes);
-		}
-
-		ArrayList<ConstraintNode> constraints = selectedNodesByType.getConstraints();
-
-		if (!constraints.isEmpty()) {
-			processConstraints(constraints, affectedNodes);
+					inOutAffectedConstraints, inOutAffectedNodes);
 		}
 	}
 
@@ -265,7 +312,7 @@ public class GenericRemoveNodesOperationsCreator {
 			//HashMap<ClassNode, HashMap<String, HashMap<MethodNode, List<String>>>> duplicatesMap, 
 			//HashMap<MethodNode, List<BasicParameterNode>> parameterMap,
 			Set<ConstraintNode> outAffectedConstraints,
-			Set<IAbstractNode> affectedNodes) {
+			Set<IAbstractNode> inOutAffectedNodes) {
 
 		/*
 		 * Iterate through global params. Do the same checks as for method
@@ -282,7 +329,7 @@ public class GenericRemoveNodesOperationsCreator {
 			if (!isDependent) {
 				//remove mentioning constraints from the list to avoid duplicates
 				createAffectedConstraints(global, allConstraintNodes, outAffectedConstraints);
-				affectedNodes.add(global);
+				inOutAffectedNodes.add(global);
 				globalItr.remove();
 				/*
 				 * in case linkers contain parameters assigned to removal -
