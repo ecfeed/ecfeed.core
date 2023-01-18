@@ -10,16 +10,17 @@
 
 package com.ecfeed.core.operations;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
@@ -29,6 +30,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -103,50 +105,76 @@ public class GenericRemoveNodesOperationTest {
 	public void removeMethodBasicParameter() {
 
 		RootNode rootNode = new RootNode("Root", null);
+
+		// class node 
 		ClassNode classNode = new ClassNode("Class", null);
 		rootNode.addClass(classNode);
+
+		// method node
+
 		MethodNode methodNode = new MethodNode("Method");
 		classNode.addMethod(methodNode);
+
+		// basic parameters and choices 
+
 		BasicParameterNode basicParameterNode1 = 
 				new BasicParameterNode(
 						"BasicParam1", "String", "", false, null);
 		methodNode.addParameter(basicParameterNode1);
 
+		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
+		basicParameterNode1.addChoice(choiceNode1);
+
 		BasicParameterNode basicParameterNode2 = 
 				new BasicParameterNode(
 						"BasicParam2", "String", "", false, null);
 		methodNode.addParameter(basicParameterNode2);
-		
+
+		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
+		basicParameterNode1.addChoice(choiceNode2);
+
+		// list of nodes to delete
+
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
 		nodesToDelete.add(basicParameterNode1);
 
 		// constraints
-		
+
 		ConstraintNode constraintNode1 = createConstraintNodeWithValuePostcondition(basicParameterNode1,"1");
 		methodNode.addConstraint(constraintNode1);
 
 		ConstraintNode constraintNode2 = createConstraintNodeWithValuePostcondition(basicParameterNode2,"2");
 		methodNode.addConstraint(constraintNode2);
-		
+
 		assertEquals(2, methodNode.getConstraintNodes().size());
 
+		// test case
+
+		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
+		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		methodNode.addTestCase(testCaseNode);
+
 		// remove
-		
+
 		GenericRemoveNodesOperation genericRemoveNodesOperation = 
 				createRemovingNodesOperation(nodesToDelete, rootNode);
 		genericRemoveNodesOperation.execute();
 
 		assertEquals(1, methodNode.getParameters().size());
 		assertEquals(1, methodNode.getConstraintNodes().size());
-		
+
+		assertEquals(0, methodNode.getTestCases().size());
+
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
 		reverseOperation.execute();
-		
+
 		assertEquals(2, methodNode.getParameters().size());
-		
+
 		List<ConstraintNode> resultConstraintNodes = methodNode.getConstraintNodes();
 		assertEquals(2, resultConstraintNodes.size());
+
+		assertEquals(1, methodNode.getTestCases().size());
 	}
 
 	private ConstraintNode createConstraintNodeWithValuePostcondition(

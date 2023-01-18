@@ -102,6 +102,13 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		fConstraintNodeListHolder.removeConstraint(contIterator);
 	}	
+	
+	public void removeAllDeployedParameters() {
+		
+		if (fDeployedParametersHolder != null) {
+			fDeployedParametersHolder.removeAllParameters();
+		}
+	}
 
 	public List<String> getParameterTypes() { // TODO MO-RE move to IParametersParant
 

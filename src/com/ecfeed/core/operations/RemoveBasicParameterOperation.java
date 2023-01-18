@@ -83,7 +83,11 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 		@Override
 		public void execute() {
 
-			List<String> paramTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
+			MethodNode targetMethodNode = getTargetMethod();
+			
+			List<String> paramTypesInExtLanguage = 
+					ParametersParentNodeHelper.getParameterTypes(targetMethodNode, getExtLanguageManager());
+			
 			int index = getParameter().getMyIndex();
 			paramTypesInExtLanguage.remove(index);
 
@@ -98,14 +102,13 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 
 			fOriginalTestCases.clear();
 
-			for(TestCaseNode tcase : getMethodTarget().getTestCases()){
-				fOriginalTestCases.add(tcase.getCopy(getMethodTarget()));
+			for(TestCaseNode tcase : targetMethodNode.getTestCases()){
+				fOriginalTestCases.add(tcase.getCopy(targetMethodNode));
 			}
 
-			for(TestCaseNode tc : getMethodTarget().getTestCases()){
-				tc.getTestData().remove(getParameter().getMyIndex());
-			}
-
+			targetMethodNode.removeAllTestCases();
+			targetMethodNode.removeAllDeployedParameters();
+			
 			super.execute();
 		}
 
@@ -138,15 +141,15 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 			return new ReverseOperation(getExtLanguageManager());
 		}
 
-		private MethodNode getMethodTarget(){
+		private MethodNode getTargetMethod(){
 			return (MethodNode) getOwnNode();
 		}
 
 		private boolean validateNewSignature(List<String> problems) {
 
-			ClassNode classNode = getMethodTarget().getClassNode();
+			ClassNode classNode = getTargetMethod().getClassNode();
 
-			String methodNameInExtLanguage = AbstractNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
+			String methodNameInExtLanguage = AbstractNodeHelper.getName(getTargetMethod(), getExtLanguageManager());
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValid(
@@ -170,14 +173,14 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 			@Override
 			public void execute() {
 
-				setOneNodeToSelect(getMethodTarget());
-				getMethodTarget().replaceTestCases(fOriginalTestCases);
+				setOneNodeToSelect(getTargetMethod());
+				getTargetMethod().replaceTestCases(fOriginalTestCases);
 				RemoveBasicParameterOperationPrivate.super.getReverseOperation().execute();
 			}
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new RemoveBasicParameterOperation(getMethodTarget(), (BasicParameterNode)getParameter(), getExtLanguageManager());
+				return new RemoveBasicParameterOperation(getTargetMethod(), (BasicParameterNode)getParameter(), getExtLanguageManager());
 			}
 
 		}
