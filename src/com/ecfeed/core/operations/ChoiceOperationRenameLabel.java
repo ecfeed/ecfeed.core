@@ -15,6 +15,7 @@ import java.util.List;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintHelper;
+import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -83,7 +84,8 @@ public class ChoiceOperationRenameLabel extends AbstractModelOperation {
 
 	private String checkLinkedParameters(BasicParameterNode globalParameterNode) {
 
-		List<BasicParameterNode> linkedMethodMethodParameters = globalParameterNode.getLinkedMethodParameters();
+		List<BasicParameterNode> linkedMethodMethodParameters = 
+				GlobalParameterNodeHelper.getLinkedParameters(globalParameterNode);
 
 		if (linkedMethodMethodParameters == null) {
 			return null;

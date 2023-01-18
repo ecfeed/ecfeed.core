@@ -22,6 +22,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
@@ -320,22 +321,26 @@ public class GenericRemoveNodesOperationsCreator {
 		 * duplicate method - just proceed to remove global and all linkers and
 		 * remove it from the lists.
 		 */
+
 		ArrayList<BasicParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
+
 		Iterator<BasicParameterNode> globalItr = globalParameters.iterator();
+		
 		while (globalItr.hasNext()) {
 			BasicParameterNode global = globalItr.next();
-			List<BasicParameterNode> linkers = global.getLinkedMethodParameters();
+			List<BasicParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedParameters(global);
+			
 			boolean isDependent = false;
 			if (!isDependent) {
 				//remove mentioning constraints from the list to avoid duplicates
 				createAffectedConstraints(global, allConstraintNodes, outAffectedConstraints);
 				inOutAffectedNodes.add(global);
-				globalItr.remove();
+				//	globalItr.remove(); 
 				/*
 				 * in case linkers contain parameters assigned to removal -
 				 * remove them from list; Global param removal will handle them.
 				 */
-				for (BasicParameterNode param : linkers) {
+				for (BasicParameterNode param : linkedParameters) {
 					selectedNodesByType.getLocalParameters().remove(param);
 				}
 			}
