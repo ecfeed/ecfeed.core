@@ -72,7 +72,7 @@ public class MethodOperationImportParameters extends GenericOperationImportParam
 			}
 		}
 
-		fMethodNode.removeTestCases();
+		fMethodNode.removeAllTestCases();
 		
 		super.execute();
 	}

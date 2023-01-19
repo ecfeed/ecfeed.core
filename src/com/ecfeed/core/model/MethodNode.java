@@ -464,11 +464,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return result;
 	}
 
-	public void removeTestCases(){
-		fTestCaseNodes.clear();
-		registerChange();
-	}
-
 	public void removeTestSuite(TestSuiteNode testSuite) {
 
 		String testSuiteName = testSuite.getName();
@@ -555,7 +550,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return true;
 	}
 
-	public void removeAllTestCases() { // TODO MO-RE rename remove to clear.
+	public void removeAllTestCases() {
 
 		fTestCaseNodes.clear();
 		registerChange();

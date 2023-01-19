@@ -91,7 +91,7 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 			fOriginalTestCases = new ArrayList<>(method.getTestCases());
 			fOriginalConstraints = new ArrayList<>(method.getConstraintNodes());
 
-			method.removeTestCases();
+			method.removeAllTestCases();
 			method.removeMentioningConstraints(fTarget);
 		}
 

@@ -148,6 +148,13 @@ public class GenericRemoveNodesOperationTest {
 		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
+		// copy parameters to deployed parameters
+
+		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+		deployedParameters.add(basicParameterNode1);
+		deployedParameters.add(basicParameterNode2);
+		methodNode.setDeployedParameters(deployedParameters);
+
 		// list of nodes to delete
 
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
@@ -163,6 +170,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, methodNode.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
+		assertEquals(0, methodNode.getDeployedMethodParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -174,6 +182,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, resultConstraintNodes.size());
 
 		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 	}
 
 	@Test
@@ -189,15 +198,14 @@ public class GenericRemoveNodesOperationTest {
 
 		MethodNode methodNode = new MethodNode("Method");
 		classNode.addMethod(methodNode);
-		
+
 		// structures
-		
+
 		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode("S1", null);
 		methodNode.addParameter(compositeParameterNode1);
-		
+
 		CompositeParameterNode compositeParameterNode2 = new CompositeParameterNode("S2", null);
 		compositeParameterNode1.addParameter(compositeParameterNode2);
-		
 
 		// basic parameters and choices 
 
@@ -231,6 +239,13 @@ public class GenericRemoveNodesOperationTest {
 		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
+		// copy parameters to deployed parameters
+
+		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+		deployedParameters.add(basicParameterNode1);
+		deployedParameters.add(basicParameterNode2);
+		methodNode.setDeployedParameters(deployedParameters);
+		
 		// list of nodes to delete
 
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
@@ -246,8 +261,10 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, compositeParameterNode2.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
+		assertEquals(0, methodNode.getDeployedMethodParameters().size());
 
 		// reverse
+
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
 		reverseOperation.execute();
 
@@ -257,8 +274,9 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, resultConstraintNodes.size());
 
 		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 	}
-	
+
 	@Test
 	public void removeGlobalBasicParameter() {
 
@@ -319,6 +337,13 @@ public class GenericRemoveNodesOperationTest {
 		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
+		// copy parameters to deployed parameters
+
+		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+		deployedParameters.add(basicParameterNode1);
+		deployedParameters.add(basicParameterNode2);
+		methodNode.setDeployedParameters(deployedParameters);
+		
 		// list of nodes to delete
 
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
@@ -334,6 +359,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, methodNode.getConstraintNodes().size());
 
 		assertEquals(0, methodNode.getTestCases().size());
+		assertEquals(0, methodNode.getDeployedMethodParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
@@ -345,6 +371,7 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, resultConstraintNodes.size());
 
 		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 	}
 
 	@Test
@@ -396,6 +423,13 @@ public class GenericRemoveNodesOperationTest {
 		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
+		// copy parameters to deployed parameters
+
+		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+		deployedParameters.add(basicParameterNode1);
+		deployedParameters.add(basicParameterNode2);
+		methodNode.setDeployedParameters(deployedParameters);
+		
 		// list of nodes to delete
 
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
@@ -412,6 +446,7 @@ public class GenericRemoveNodesOperationTest {
 
 		assertEquals(1, methodNode.getConstraintNodes().size());
 		assertEquals(0, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 
 		// reverse operation
 
@@ -422,7 +457,9 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, basicParameterNode1.getChoiceCount());
 
 		assertEquals(2, methodNode.getConstraintNodes().size());
+
 		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 	}
 
 	@Test
@@ -512,6 +549,13 @@ public class GenericRemoveNodesOperationTest {
 		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
+		// copy parameters to deployed parameters
+
+		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+		deployedParameters.add(basicParameterNode1);
+		deployedParameters.add(basicParameterNode2);
+		methodNode.setDeployedParameters(deployedParameters);
+		
 		// list of nodes to delete
 
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
@@ -524,12 +568,14 @@ public class GenericRemoveNodesOperationTest {
 		genericRemoveNodesOperation.execute();
 
 		assertEquals(0, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 
 		// reverse
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
 		reverseOperation.execute();
 
 		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 	}
 
 

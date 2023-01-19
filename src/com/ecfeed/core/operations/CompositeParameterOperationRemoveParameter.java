@@ -40,6 +40,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 		private AbstractParameterNode fAbstractParameterNode;
 		private List<TestCaseNode> fOriginalTestCases;
+		private List<BasicParameterNode> fOriginalDeployedParameters;
 		private MethodNode fMethodNode;
 
 		public RemoveCompositeParameterOperationPrivate(
@@ -51,6 +52,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 			fAbstractParameterNode = abstractParameterNode;
 			fOriginalTestCases = new ArrayList<>();
+			fOriginalDeployedParameters = new ArrayList<>();
 		}
 
 		@Override
@@ -68,6 +70,10 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 				fOriginalTestCases.clear();
 				fOriginalTestCases.addAll(fMethodNode.getTestCases());
 				fMethodNode.removeAllTestCases();
+
+				fOriginalDeployedParameters.clear();
+				fOriginalDeployedParameters.addAll(fMethodNode.getDeployedMethodParameters());
+				fMethodNode.removeAllDeployedParameters();
 			}
 
 			super.execute();
@@ -95,6 +101,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 				if (fMethodNode != null) {
 					fMethodNode.setTestCases(fOriginalTestCases);
+					fMethodNode.setDeployedParameters(fOriginalDeployedParameters);
 				}
 
 				RemoveCompositeParameterOperationPrivate.super.getReverseOperation().execute();

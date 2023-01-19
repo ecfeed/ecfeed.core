@@ -78,7 +78,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		//					}
 		//				}
 
-		fMethodNode.removeTestCases();
+		fMethodNode.removeAllTestCases();
 		super.execute();
 	}
 

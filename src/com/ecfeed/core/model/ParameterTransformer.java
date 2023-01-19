@@ -324,7 +324,7 @@ public class ParameterTransformer {
 
 		reverseOperations.add(inOutReverseOperation);
 
-		methodNode.removeTestCases();
+		methodNode.removeAllTestCases();
 	}
 
 	private static void removeLinkOnMethodParameter(

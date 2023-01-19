@@ -174,8 +174,12 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 			@Override
 			public void execute() {
 
-				setOneNodeToSelect(getTargetMethod());
-				getTargetMethod().replaceTestCases(fOriginalTestCases);
+				MethodNode methodNode = getTargetMethod();
+				
+				setOneNodeToSelect(methodNode);
+				methodNode.replaceTestCases(fOriginalTestCases);
+				methodNode.setDeployedParameters(fOriginalDeployedParameters);
+				
 				RemoveBasicParameterOperationPrivate.super.getReverseOperation().execute();
 			}
 

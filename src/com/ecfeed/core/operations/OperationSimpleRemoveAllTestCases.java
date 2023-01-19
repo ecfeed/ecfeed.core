@@ -36,7 +36,7 @@ public class OperationSimpleRemoveAllTestCases extends AbstractModelOperation {
 	@Override
 	public void execute() {
 
-		fMethodNode.removeTestCases();
+		fMethodNode.removeAllTestCases();
 		markModelUpdated();
 	}
 
