@@ -821,7 +821,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(LabelCondition condition) throws Exception {
 
-			return new HashSet<BasicParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
+			
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
+			
+			return result;
 		}
 
 		@Override
@@ -840,17 +846,28 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ParameterCondition condition) throws Exception {
 
-			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
+			
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
+			
 
-			set.add(condition.getRightParameterNode());
+			result.add(condition.getRightParameterNode());
 
-			return set;
+			return result;
 		}
 
 		@Override
 		public Object visit(ValueCondition condition) throws Exception {
+			
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
 
-			return new HashSet<BasicParameterNode>();
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
+			
+			return result;
 		}
 	}
 

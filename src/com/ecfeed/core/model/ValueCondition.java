@@ -97,6 +97,7 @@ public class ValueCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
 	}

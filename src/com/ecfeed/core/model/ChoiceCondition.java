@@ -191,6 +191,10 @@ public class ChoiceCondition implements IStatementCondition {
 		return choices;
 	}
 
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
 
 	public ChoiceNode getRightChoice() {
 		return fRightChoice;

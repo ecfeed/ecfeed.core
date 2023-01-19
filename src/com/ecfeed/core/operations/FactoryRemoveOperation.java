@@ -114,7 +114,7 @@ public class FactoryRemoveOperation {
 			if (parent instanceof CompositeParameterNode) {
 
 				return new CompositeParameterOperationRemoveParameter(
-						(CompositeParameterNode)node.getParent(), node, fValidate, fExtLanguageManager);
+						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
 			
 			ExceptionHelper.reportRuntimeException("Unexpected parent for basic parameter.");
@@ -135,7 +135,7 @@ public class FactoryRemoveOperation {
 			if (parent instanceof CompositeParameterNode) {
 
 				return new CompositeParameterOperationRemoveParameter(
-						(CompositeParameterNode)node.getParent(), node, fValidate, fExtLanguageManager);
+						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
 			
 			ExceptionHelper.reportRuntimeException("Unexpected parent for composite parameter.");

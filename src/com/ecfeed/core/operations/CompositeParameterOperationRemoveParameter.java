@@ -16,115 +16,61 @@ import java.util.List;
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.StringHelper;
 
 public class CompositeParameterOperationRemoveParameter extends CompositeOperation{
 
 	public CompositeParameterOperationRemoveParameter(
-			CompositeParameterNode target, 
+			CompositeParameterNode compositeParameterNode, 
 			AbstractParameterNode parameter, 
-			boolean validate, 
 			IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
+		super(OperationNames.REMOVE_PARAMETER, true, compositeParameterNode, compositeParameterNode, extLanguageManager);
 
-		addOperation(new RemoveCompositeParameterOperation(target, parameter, extLanguageManager));
+		addOperation(new RemoveCompositeParameterOperationPrivate(compositeParameterNode, parameter, extLanguageManager));
 
-		// TODO MO-RE
-		//		if (validate) {
-		//			addOperation(new MethodOperationMakeConsistent(target, extLanguageManager));
-		//		}
+		addOperation(new CompositeParameterOperationRemoveInconsistentChildren(compositeParameterNode, extLanguageManager));
 	}
 
-	public CompositeParameterOperationRemoveParameter(CompositeParameterNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
-		this(target, parameter, true, extLanguageManager);
-	}
+	private class RemoveCompositeParameterOperationPrivate extends GenericOperationRemoveParameter {
 
-	public CompositeParameterOperationRemoveParameter(
-			CompositeParameterNode target, 
-			AbstractParameterNode parameter, 
-			boolean validate, 
-			boolean ignoreDuplicates, 
-			IExtLanguageManager extLanguageManager){
-
-		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
-
-		addOperation(new RemoveCompositeParameterOperation(target, parameter, ignoreDuplicates, extLanguageManager));
-
-		// TODO MO-RE		
-		//		if(validate){
-		//			addOperation(new MethodOperationMakeConsistent(target, extLanguageManager));
-		//		}
-	}
-
-	private class RemoveCompositeParameterOperation extends GenericOperationRemoveParameter{
-
+		private AbstractParameterNode fAbstractParameterNode;
 		private List<TestCaseNode> fOriginalTestCases;
-		private boolean fIgnoreDuplicates;
+		private MethodNode fMethodNode;
 
-		public RemoveCompositeParameterOperation(CompositeParameterNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
-			super(target, parameter, extLanguageManager);
-			fOriginalTestCases = new ArrayList<>();
-		}
-
-		public RemoveCompositeParameterOperation(
-				CompositeParameterNode target, 
-				AbstractParameterNode parameter, 
-				boolean ignoreDuplicates,
+		public RemoveCompositeParameterOperationPrivate(
+				CompositeParameterNode parentCompositeParameterNode, 
+				AbstractParameterNode abstractParameterNode, 
 				IExtLanguageManager extLanguageManager) {
 
-			this(target, parameter, extLanguageManager);
+			super(parentCompositeParameterNode, abstractParameterNode, extLanguageManager);
 
-			fIgnoreDuplicates = ignoreDuplicates;
+			fAbstractParameterNode = abstractParameterNode;
+			fOriginalTestCases = new ArrayList<>();
 		}
 
 		@Override
 		public void execute() {
 
-			List<String> paramTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(getMethodTarget(), getExtLanguageManager());
+			List<String> paramTypesInExtLanguage = 
+					ParametersParentNodeHelper.getParameterTypes(getCompositeParameter(), getExtLanguageManager());
+
 			int index = getParameter().getMyIndex();
 			paramTypesInExtLanguage.remove(index);
 
-			List<String> problems = new ArrayList<String>();
+			fMethodNode = MethodNodeHelper.findMethodNode(fAbstractParameterNode);
 
-			if (!fIgnoreDuplicates && validateNewSignature(paramTypesInExtLanguage, problems) == false) {
-
-				String message = createErrorMessage(problems);
-
-				ExceptionHelper.reportRuntimeException(message);
+			if (fMethodNode != null) {
+				fOriginalTestCases.clear();
+				fOriginalTestCases.addAll(fMethodNode.getTestCases());
+				fMethodNode.removeAllTestCases();
 			}
-
-			fOriginalTestCases.clear();
 
 			super.execute();
-		}
-
-		private String createErrorMessage(List<String> problems) {
-
-			String errorMessage = "";
-			boolean firstTime = true;
-
-
-			for (String problem : problems) {
-
-				if (!firstTime) {
-
-					errorMessage += " \n";
-					firstTime = false;
-				}
-
-				errorMessage += problem;
-			}
-
-			if (StringHelper.isNullOrEmpty(errorMessage)) {
-				errorMessage += "Unknown problem.";
-			}
-
-			return errorMessage;
 		}
 
 		@Override
@@ -132,47 +78,31 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 			return new ReverseOperation(getExtLanguageManager());
 		}
 
-		private CompositeParameterNode getMethodTarget(){
+		private CompositeParameterNode getCompositeParameter(){
 			return (CompositeParameterNode) getOwnNode();
 		}
-
-		private boolean validateNewSignature(List<String> newTypesInExtLanguage, List<String> problems) {
-
-			// TODO MO-RE
-			//			ClassNode classNode = getMethodTarget().getClassNode();
-			//
-			//			String methodNameInExtLanguage = AbstractNodeHelper.getName(getMethodTarget(), getExtLanguageManager());
-			//
-			//			String errorMessage =
-			//					ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-			//							classNode, methodNameInExtLanguage, newTypesInExtLanguage, getExtLanguageManager());
-			//
-			//			if (errorMessage != null) {
-			//				problems.add(errorMessage);
-			//				return false;
-			//			}
-
-			return true;
-		}
-
 
 		private class ReverseOperation extends AbstractReverseOperation {
 
 			public ReverseOperation(IExtLanguageManager extLanguageManager) {
-				super(RemoveCompositeParameterOperation.this, extLanguageManager);
+				super(RemoveCompositeParameterOperationPrivate.this, extLanguageManager);
 			}
 
 			@Override
 			public void execute() {
 
-				setOneNodeToSelect(getMethodTarget());
-				//				getMethodTarget().replaceTestCases(fOriginalTestCases);
-				RemoveCompositeParameterOperation.super.getReverseOperation().execute();
+				setOneNodeToSelect(getCompositeParameter());
+
+				if (fMethodNode != null) {
+					fMethodNode.setTestCases(fOriginalTestCases);
+				}
+
+				RemoveCompositeParameterOperationPrivate.super.getReverseOperation().execute();
 			}
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new CompositeParameterOperationRemoveParameter(getMethodTarget(), (BasicParameterNode)getParameter(), getExtLanguageManager());
+				return new CompositeParameterOperationRemoveParameter(getCompositeParameter(), (BasicParameterNode)getParameter(), getExtLanguageManager());
 			}
 
 		}

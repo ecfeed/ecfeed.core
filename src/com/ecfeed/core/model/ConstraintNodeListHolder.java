@@ -257,4 +257,10 @@ public class ConstraintNodeListHolder {
 
 	}
 
+	public void setConstraints(List<ConstraintNode> constraints) {
+		
+		fConstraintNodes.clear();
+		fConstraintNodes.addAll(constraints);
+	}
+
 }

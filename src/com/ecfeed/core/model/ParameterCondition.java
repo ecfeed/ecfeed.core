@@ -55,6 +55,11 @@ public class ParameterCondition implements IStatementCondition {
 		return evaluateForLeftAndRightString(choices, substituteType);
 	}
 
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
+	
 	private boolean isLeftChoiceRandomizedString(List<ChoiceNode> choices) {
 
 		return isChoiceRandomizedString(choices, fParentRelationStatement.getLeftParameter());

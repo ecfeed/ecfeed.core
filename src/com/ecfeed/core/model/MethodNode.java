@@ -257,7 +257,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
-
+	
 	public void addTestSuite(TestSuiteNode testSuite) {
 		addTestSuite(testSuite, fTestSuiteNodes.size());
 	}
@@ -326,6 +326,12 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public List<Constraint> getConstraints() {
 
 		return fConstraintNodeListHolder.getConstraints();
+	}
+	
+	@Override
+	public void setConstraints(List<ConstraintNode> constraints) {
+		
+		fConstraintNodeListHolder.setConstraints(constraints);
 	}
 
 	@Override
@@ -549,7 +555,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return true;
 	}
 
-	public void removeAllTestCases() {
+	public void removeAllTestCases() { // TODO MO-RE rename remove to clear.
 
 		fTestCaseNodes.clear();
 		registerChange();
@@ -825,6 +831,12 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public List<BasicParameterNode> getParametersAsBasic() {
 
 		return fParametersHolder.getParametersAsBasic();
+	}
+
+	public void setTestCases(List<TestCaseNode> testCases) {
+		
+		fTestCaseNodes.clear();
+		fTestCaseNodes.addAll(testCases);
 	}
 
 }

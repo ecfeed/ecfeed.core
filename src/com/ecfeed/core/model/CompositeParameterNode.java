@@ -270,6 +270,12 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		
 		return fConstraintNodeListHolder.getConstraints();
 	}
+	
+	@Override
+	public void setConstraints(List<ConstraintNode> constraints) {
+		
+		fConstraintNodeListHolder.setConstraints(constraints);
+	}
 
 	@Override
 	public List<Constraint> getConstraints(String name) {
@@ -336,5 +342,5 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		
 		fConstraintNodeListHolder.removeMentioningConstraints(methodParameter);
 	}
-	
+
 }
