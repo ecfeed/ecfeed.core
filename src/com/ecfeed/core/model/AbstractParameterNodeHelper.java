@@ -165,34 +165,35 @@ public abstract class AbstractParameterNodeHelper {
 		return signature;
 	}
 	
+//--------------------------------------------------------------------------------------------------		
+	
 	public static String createSignature(
-			AbstractParameterNode abstractParameterNode, 
-			boolean isExpected,
+			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
 
 		String signature = 
 				createSignature(
-						getType(abstractParameterNode, extLanguageManager),
-						createNameSignature(abstractParameterNode, extLanguageManager),
-						isExpected,
+						getType(parameter, extLanguageManager),
+						createNameSignature(parameter, extLanguageManager),
+						parameter.isExpected(),
 						extLanguageManager);
 
 		return signature;
 	}
-
+	
 	public static String createSignature(
-			CompositeParameterNode compositeParameterNode) {
+			CompositeParameterNode parameter, 
+			IExtLanguageManager extLanguageManager) {
 
-		return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE + " " + compositeParameterNode.getName();
-	}
+		String signature = 
+				createSignature(
+						getType(parameter, extLanguageManager),
+						createNameSignature(parameter, extLanguageManager),
+						false,
+						extLanguageManager);
 
-	public static String createReverseSignature(
-			CompositeParameterNode compositeParameterNode) {
-
-		return compositeParameterNode.getName() 
-				+ SignatureHelper.SIGNATURE_TYPE_SEPARATOR 
-				+ CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-	}
+		return signature;
+	}	
 	
 	public static String createSignature(
 			String parameterType,
@@ -222,83 +223,88 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String createReverseSignature(
-			String parameterType,
-			String parameterName,
-			Boolean expectedFlag) {
+			BasicParameterNode parameter, 
+			IExtLanguageManager extLanguageManager) {
+		
+//		IAbstractNode parent = parameter.getParent();
+		String parentCompositeSignature = "";
+		
+//		if (parent instanceof CompositeParameterNode) {
+//			
+//			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
+//			
+//			parentCompositeSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+//		}
+		
+		String name = createNameSignature(parameter, extLanguageManager);
+		String type = getType(parameter, extLanguageManager);
 
+		String signature = parentCompositeSignature + createReverseSignature(type, name, parameter.isExpected());
+		
+		if (parameter.isLinked()) {
+			
+			signature += addLinkedPrefix(parameter, extLanguageManager);
+		}
+
+		return signature;
+	}
+
+	public static String createReverseSignature(
+			CompositeParameterNode parameter, 
+			IExtLanguageManager extLanguageManager) {
+		
+		String name = createNameSignature(parameter, extLanguageManager);
+
+		String signature = name;
+		signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
+		signature += CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
+		
+		if (parameter.isLinked()) {
+			signature += addLinkedPrefix(parameter, extLanguageManager);
+		}
+
+		return signature;
+	}
+	
+	public static String createReverseSignature(
+			String type, 
+			String name, 
+			Boolean expected) {
+		
 		String signature = "";
 
-		if (expectedFlag != null) {
-			String expectedDecoration = createExpectedDecoration(expectedFlag);
+		if (expected != null) {
+			String expectedDecoration = createExpectedDecoration(expected);
 			signature += expectedDecoration;
 		}
 
-		if (parameterName != null) {
-			signature += parameterName;
+		if (name != null) {
+			signature += name;
 		}
 
-		if (parameterType != null) {
+		if (type != null) {
 			signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
-			signature += parameterType;
+			signature += type;
 		}
 
 		return signature;
 	}
 	
-	public static String createSignature(AbstractParameterNode parameter, IExtLanguageManager languageManager) {
+	private static String addLinkedPrefix(
+			AbstractParameterNode parameter, 
+			IExtLanguageManager languageManager) {
 		
-		if (parameter.isGlobalParameter() && (parameter instanceof BasicParameterNode)) {
-			return createSignature(parameter, false, languageManager);	
-		} else {
-			return createReverseSignature(parameter, languageManager);
-		}
-	}
-	
-	public static String createReverseSignature(AbstractParameterNode parameter, IExtLanguageManager languageManager) {
-		String signature = "";
+		AbstractParameterNode parameterLinked = parameter.getLinkToGlobalParameter();
 		
-		if (parameter instanceof BasicParameterNode) {
-			signature = createReverseSignatureBasic((BasicParameterNode) parameter, languageManager);
-		} else if (parameter instanceof CompositeParameterNode){
-			signature = createReverseSignatureComposite((CompositeParameterNode) parameter, languageManager);
-		}
-
-		if (parameter.isLinked()) {
-			AbstractParameterNode parameterLinked = parameter.getLinkToGlobalParameter();
-	
-			if (parameterLinked != null) {
-				signature += " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(parameterLinked, languageManager);
-			}
-		}
-
-		return signature;
-	}
-	
-	private static String createReverseSignatureBasic(BasicParameterNode parameter, IExtLanguageManager languageManager) {
-		IAbstractNode parent = parameter.getParent();
-		String parentCompositeSignature = "";
-		
-		if (parent instanceof CompositeParameterNode) {
-			
-			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
-			
-			parentCompositeSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		if (parameterLinked != null) {
+			return " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(parameterLinked, languageManager);
 		}
 		
-		String name = AbstractParameterNodeHelper.createNameSignature(parameter, languageManager);
-		String type = AbstractParameterNodeHelper.getType(parameter, languageManager);
-
-		return parentCompositeSignature + 
-				AbstractParameterNodeHelper.createReverseSignature(
-						type, name, parameter.isExpected());
+		return "";
 	}
 	
-	private static String createReverseSignatureComposite(CompositeParameterNode parameter, IExtLanguageManager languageManager) {
-		String name = AbstractParameterNodeHelper.createNameSignature(parameter, languageManager);
-
-		return AbstractParameterNodeHelper.createReverseSignature("Structure", name, false);
-	}
-
+//--------------------------------------------------------------------------------------------------	
+	
 	private static String createExpectedDecoration(Boolean expectedFlag) {
 
 		String signature = "";
