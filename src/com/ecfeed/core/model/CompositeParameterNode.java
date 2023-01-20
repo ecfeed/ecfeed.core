@@ -349,4 +349,37 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		fConstraintNodeListHolder.removeMentioningConstraints(methodParameter);
 	}
 	
+	public String getType() {
+
+		return COMPOSITE_PARAMETER_TYPE;
+	}
+	
+	public List<CompositeParameterNode> getNestedCompositeParameters() {
+		List<CompositeParameterNode> nodes = new ArrayList<>();
+		
+		for (AbstractParameterNode node : getParameters()) {
+			
+			if (node instanceof CompositeParameterNode) {
+				nodes.add((CompositeParameterNode) node);
+				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters());
+			}
+		}
+		
+		return nodes;
+	}
+	
+	public List<BasicParameterNode> getNestedBasicParameters() {
+		List<BasicParameterNode> nodes = new ArrayList<>();
+		
+		for (AbstractParameterNode node : getParameters()) {
+			
+			if (node instanceof BasicParameterNode) {
+				nodes.add((BasicParameterNode) node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedBasicParameters());
+			}
+		}
+		
+		return nodes;
+	}
 }

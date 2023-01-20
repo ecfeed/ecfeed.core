@@ -69,7 +69,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		copy.setProperties(getProperties());
 
-		for(BasicParameterNode parameter : getGlobalParameters()){
+		for(BasicParameterNode parameter : getGlobalBasicParameters()){
 			copy.addParameter(parameter.makeClone());
 		}
 
@@ -368,15 +368,15 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 
-	public List<BasicParameterNode> getGlobalParameters() {
+	public List<BasicParameterNode> getGlobalBasicParameters() {
 
 		List<BasicParameterNode> result = new ArrayList<>();
-		result.addAll(getParametersFromClass());
+		result.addAll(getBasicParametersFromClass());
 		
 		return result;
 	}
 
-	private List<BasicParameterNode> getParametersFromClass() {
+	private List<BasicParameterNode> getBasicParametersFromClass() {
 		
 		List<BasicParameterNode> globalParameterNodes = new ArrayList<>();
 		
@@ -386,6 +386,34 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 			
 			if (abstractParameterNode instanceof BasicParameterNode) {
 				globalParameterNodes.add((BasicParameterNode) abstractParameterNode);
+			} else if (abstractParameterNode instanceof CompositeParameterNode) {
+				globalParameterNodes.addAll(((CompositeParameterNode) abstractParameterNode).getNestedBasicParameters());
+			}
+			
+		}
+		
+		return globalParameterNodes;
+	}
+	
+	public List<CompositeParameterNode> getGlobalCompositeParameters() {
+
+		List<CompositeParameterNode> result = new ArrayList<>();
+		result.addAll(getCompositeParametersFromClass());
+		
+		return result;
+	}
+
+	private List<CompositeParameterNode> getCompositeParametersFromClass() {
+		
+		List<CompositeParameterNode> globalParameterNodes = new ArrayList<>();
+		
+		List<AbstractParameterNode> abstractParameters = getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
+			
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				globalParameterNodes.add((CompositeParameterNode) abstractParameterNode);
+				globalParameterNodes.addAll(((CompositeParameterNode) abstractParameterNode).getNestedCompositeParameters());
 			}
 			
 		}
@@ -398,9 +426,9 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 		List<BasicParameterNode> result = new ArrayList<>();
 		
 		RootNode rootNode = (RootNode)getParent();
-		result.addAll(rootNode.getGlobalParameters());
+		result.addAll(rootNode.getGlobalBasicParameters());
 		
-		result.addAll(getParametersFromClass());
+		result.addAll(getBasicParametersFromClass());
 		
 		return result;
 	}
