@@ -22,9 +22,9 @@ public class GlobalParameterNodeHelper {
 		WITHOUT_TYPE
 	}
 
-	public static List<BasicParameterNode> getLinkedParameters(BasicParameterNode globalParameterNode) {
+	public static List<AbstractParameterNode> getLinkedParameters(AbstractParameterNode globalParameterNode) {
 
-		List<BasicParameterNode> result = new ArrayList<>();
+		List<AbstractParameterNode> result = new ArrayList<>();
 
 		IParametersParentNode parametersParentNode = globalParameterNode.getParametersParent();
 
@@ -34,11 +34,11 @@ public class GlobalParameterNodeHelper {
 	}
 
 	private static void getParametersLinkedToGlobalParameterRecursive(
-			BasicParameterNode globBasicParameterNode,
+			AbstractParameterNode globBasicParameterNode,
 			IAbstractNode currentNode,
-			List<BasicParameterNode> inOutLinkedParameters) {
+			List<AbstractParameterNode> inOutLinkedParameters) {
 
-		if (isBasicParameterLinkedToGlobal(currentNode, globBasicParameterNode)) {
+		if (isParameterLinkedToGlobal(currentNode, globBasicParameterNode)) {
 			inOutLinkedParameters.add((BasicParameterNode) currentNode);
 			return;
 		}
@@ -54,9 +54,9 @@ public class GlobalParameterNodeHelper {
 		}
 	}
 
-	private static boolean isBasicParameterLinkedToGlobal(
+	private static boolean isParameterLinkedToGlobal(
 			IAbstractNode currentNode,
-			BasicParameterNode globalBasicParameterNode) {
+			AbstractParameterNode globalBasicParameterNode) {
 
 		if (!(currentNode instanceof BasicParameterNode)) {
 			return false;
@@ -73,7 +73,7 @@ public class GlobalParameterNodeHelper {
 
 	public static String checkLinkedParameters(BasicParameterNode globalParameterNode) {
 
-		List<BasicParameterNode> linkedMethodMethodParameters = getLinkedParameters(globalParameterNode);
+		List<AbstractParameterNode> linkedMethodMethodParameters = getLinkedParameters(globalParameterNode);
 
 		if (linkedMethodMethodParameters == null) {
 			return null;
@@ -83,7 +83,7 @@ public class GlobalParameterNodeHelper {
 			return null;
 		}
 
-		BasicParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
+		AbstractParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
 
 		String errorMessage = 
 				"Parameter " + firstMethodParameterNode.getName() + 
