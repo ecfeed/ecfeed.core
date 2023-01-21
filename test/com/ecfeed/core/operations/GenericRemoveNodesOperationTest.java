@@ -316,9 +316,9 @@ public class GenericRemoveNodesOperationTest {
 
 		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
 		basicParameterNode2.addChoice(choiceNode2);
-		
+
 		// additional structure on method level
-		
+
 		CompositeParameterNode compositeParameterNode3 = new CompositeParameterNode("S3", null);
 		methodNode.addParameter(compositeParameterNode3);
 

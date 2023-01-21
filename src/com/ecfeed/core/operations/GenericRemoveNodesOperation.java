@@ -50,7 +50,7 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 						fSelectedNodes, typeAdapterProvider, validate, extLanguageManager);
 
 		List<IModelOperation> operations = fGenericRemoveNodesOperationsCreator.getOperations();
-		
+
 		for (IModelOperation modelOperation : operations) {
 			addOperation(modelOperation);
 		}
