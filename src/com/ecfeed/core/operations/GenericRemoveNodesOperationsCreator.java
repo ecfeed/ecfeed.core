@@ -35,11 +35,8 @@ import com.ecfeed.core.utils.NodesByType;
 public class GenericRemoveNodesOperationsCreator {
 
 	private final Set<IAbstractNode> fSelectedNodes;
-
-	private final Set<TestCaseNode> fAffectedTestCases = new HashSet<>();
-	private final Set<ConstraintNode> fAffectedConstraints = new HashSet<>();
-
-	List<IModelOperation> fOperations;
+	private NodesByCathegory fAffectedNodesByCathegory;
+	private List<IModelOperation> fOperations;
 
 	public GenericRemoveNodesOperationsCreator(
 			Set<IAbstractNode> selectedNodes, 
@@ -48,15 +45,13 @@ public class GenericRemoveNodesOperationsCreator {
 			IExtLanguageManager extLanguageManager) {
 
 		fSelectedNodes = selectedNodes;
+		fAffectedNodesByCathegory = new NodesByCathegory();
+		fOperations = new ArrayList<>();
 		removeNodesWithAncestorsOnList(fSelectedNodes);
 
-		fOperations = new ArrayList<>(); 
-
-		createModelOperationsDeletingNodes(
+		createDeletingNodesOperations(
 				fSelectedNodes,
-
-				fAffectedConstraints,
-				fAffectedTestCases,
+				fAffectedNodesByCathegory,
 				fOperations,
 
 				extLanguageManager,
@@ -69,11 +64,11 @@ public class GenericRemoveNodesOperationsCreator {
 	}
 
 	public Set<ConstraintNode> getAffectedConstraints() {
-		return fAffectedConstraints;
+		return fAffectedNodesByCathegory.getConstraints();
 	}
 
 	public Set<TestCaseNode> getAffectedTestCases() {
-		return fAffectedTestCases;
+		return fAffectedNodesByCathegory.getTestCases();
 	}
 
 	private void removeNodesWithAncestorsOnList(Set<IAbstractNode> selectedNodes) {
@@ -98,49 +93,59 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void createModelOperationsDeletingNodes(
+	private static void createDeletingNodesOperations(
 			Set<IAbstractNode> selectedNodes,
-
-			Set<ConstraintNode> outAffectedConstraints,
-			Set<TestCaseNode> outAffectedTestCases,
-			List<IModelOperation> outOperations,
+			NodesByCathegory outAffectedNodesByCathegory,
+			List<IModelOperation> outOperations, // XYX refactor - return
 
 			IExtLanguageManager extLanguageManager,
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate){
 
-		Set<IAbstractNode> affectedNodes = new HashSet<>();
-
 		processNodes(
 				selectedNodes, 
-				affectedNodes, outAffectedConstraints, outAffectedTestCases, 
+				outAffectedNodesByCathegory,
 				outOperations, 
 				extLanguageManager, validate);
 
-		if (!outAffectedConstraints.isEmpty()) {
+		createOperations(outAffectedNodesByCathegory, outOperations, extLanguageManager, typeAdapterProvider, validate);
+	}
+
+	private static void createOperations(
+			NodesByCathegory outAffectedNodesByCathegory,
+			List<IModelOperation> outOperations, 
+			IExtLanguageManager extLanguageManager,
+			ITypeAdapterProvider typeAdapterProvider, 
+			boolean validate) {
+
+		Set<ConstraintNode> affectedConstraints = outAffectedNodesByCathegory.getConstraints();
+
+		if (!affectedConstraints.isEmpty()) {
 			addRemoveOperationsForAffectedConstraints(
-					outAffectedConstraints, outOperations, 
+					affectedConstraints, outOperations, 
 					extLanguageManager, typeAdapterProvider, validate);
 		}
 
-		if (!outAffectedTestCases.isEmpty()) {
+		Set<TestCaseNode> affectedTestCases = outAffectedNodesByCathegory.getTestCases();
+
+		if (!affectedTestCases.isEmpty()) {
 			addRemoveOperationsForAffectedTestCases(
-					outAffectedTestCases, outOperations, 
+					affectedTestCases, outOperations, 
 					extLanguageManager, typeAdapterProvider, validate);
 		}
 
-		if (!affectedNodes.isEmpty()) {
+		Set<IAbstractNode> affectedOtherNodes = outAffectedNodesByCathegory.getOtherNodes();
+
+		if (!affectedOtherNodes.isEmpty()) {
 			addRemoveOperationsForAffectedNodes(
-					affectedNodes, outOperations, 
+					affectedOtherNodes, outOperations, 
 					extLanguageManager, typeAdapterProvider, validate);
 		}
 	}
 
 	private static void processNodes(
 			Set<IAbstractNode> selectedNodes, 
-			Set<IAbstractNode> outAffectedNodes, 
-			Set<ConstraintNode> outAffectedConstraints, 
-			Set<TestCaseNode> outAffectedTestCases,
+			NodesByCathegory outAffectedNodes,
 			List<IModelOperation> outOperations, IExtLanguageManager extLanguageManager, boolean validate) {
 
 		NodesByType selectedNodesByType = new NodesByType(selectedNodes);
@@ -149,14 +154,15 @@ public class GenericRemoveNodesOperationsCreator {
 
 		processParametersAndChoices(
 				selectedNodesByType, 
-				outAffectedNodes, outAffectedConstraints, outAffectedTestCases);
+				//outAffectedNodes, outAffectedConstraints, outAffectedTestCases
+				outAffectedNodes);
 
 		processConstraintsAndTestCases(selectedNodesByType, outAffectedNodes);
 	}
 
 	private static void processClassesAndMethods(
 			NodesByType selectedNodesByType, 
-			Set<IAbstractNode> outAffectedNodes) {
+			NodesByCathegory outAffectedNodes) {
 
 		ArrayList<ClassNode> classNodes = selectedNodesByType.getClasses();
 
@@ -171,43 +177,29 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processParametersAndChoices(
-			NodesByType selectedNodesByType,
-			Set<IAbstractNode> outAffectedNodes, 
-			Set<ConstraintNode> outAffectedConstraints,
-			Set<TestCaseNode> outAffectedTestCases) {
+	private static void processParametersAndChoices(NodesByType selectedNodesByType, NodesByCathegory inOutAffectedNodes) {
 
-		processParameters(
-				selectedNodesByType, 
-				outAffectedConstraints, 
-				outAffectedNodes);
+		processParameters(selectedNodesByType, inOutAffectedNodes);
 
-		processChoices(
-				selectedNodesByType, 
-				outAffectedNodes,
-				outAffectedConstraints, 
-				outAffectedTestCases);
+		processChoices(selectedNodesByType,	inOutAffectedNodes);
 	}
 
 	private static void processChoices(
 			NodesByType selectedNodesByType, 
-			Set<IAbstractNode> outAffectedNodes,
-			Set<ConstraintNode> outAffectedConstraints, 
-			Set<TestCaseNode> outAffectedTestCases) {
+			NodesByCathegory inOutAffectedNodes) {
 
 		ArrayList<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
 
 		if (!choiceNodes.isEmpty()) {
 			processChoicesFilteringConstraintsAndTestCases(
 					choiceNodes, 
-					outAffectedConstraints,	outAffectedTestCases, 
-					outAffectedNodes);
+					inOutAffectedNodes);
 		}
 	}
 
 	private static void processConstraintsAndTestCases(
 			NodesByType selectedNodesByType,
-			Set<IAbstractNode> inOutAffectedNodes) {
+			NodesByCathegory inOutAffectedNodes) {
 
 		ArrayList<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
 
@@ -223,65 +215,51 @@ public class GenericRemoveNodesOperationsCreator {
 	}
 
 	private static void processParameters(
-			NodesByType selectedNodesByType, 
-			Set<ConstraintNode> inOutAffectedConstraints,
-			Set<IAbstractNode> inOutAffectedNodes) {
+			NodesByType selectedNodesByType, NodesByCathegory inOutAffectedNodes) {
 
 		ArrayList<AbstractParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
 
 		if (!globalParameters.isEmpty()) {
-			processGlobalParameters(
-					selectedNodesByType, 
-					inOutAffectedConstraints, 
-					inOutAffectedNodes);
+			processGlobalParameters(selectedNodesByType, inOutAffectedNodes);
 		}
 
 		ArrayList<AbstractParameterNode> localParameters = selectedNodesByType.getLocalParameters();
 
 		if (!localParameters.isEmpty()) {
-			processLocalParameters(
-					selectedNodesByType, 
-					inOutAffectedConstraints, inOutAffectedNodes);
+			processLocalParameters(selectedNodesByType, inOutAffectedNodes);
 		}
 	}
 
-	private static void processConstraints(ArrayList<ConstraintNode> constraintNodes, Set<IAbstractNode> affectedNodes) {
+	private static void processConstraints(ArrayList<ConstraintNode> constraintNodes, NodesByCathegory inOutAffectedNodes) {
 
 		for (ConstraintNode constraint : constraintNodes) {
-			affectedNodes.add(constraint);
+			inOutAffectedNodes.addConstraint(constraint);
 		}
 	}
 
-	private static void processMethods(ArrayList<MethodNode> methods, Set<IAbstractNode> affectedNodes) {
+	private static void processMethods(ArrayList<MethodNode> methods, NodesByCathegory inOutAffectedNodes) {
 
 		Iterator<MethodNode> methodItr = methods.iterator();
 
 		while (methodItr.hasNext()) {
 			MethodNode method = methodItr.next();
-			affectedNodes.add(method);
+			inOutAffectedNodes.addOtherNode(method);
 		}
 	}
 
 	private static void processLocalParameters(
 			NodesByType selectedNodesByType, 
-			Set<ConstraintNode> outAffectedConstraints,
-			Set<IAbstractNode> outAffectedNodes) {
+			NodesByCathegory inOutAffectedNodes) {
 
-		processLocalBasicParameters(
-				selectedNodesByType, 
-				outAffectedConstraints, outAffectedNodes);
+		processLocalBasicParameters(selectedNodesByType, inOutAffectedNodes);
 
-		processLocalBasicChildrenOfCompositeParameters(
-				selectedNodesByType, 
-				outAffectedConstraints, outAffectedNodes);
+		processLocalBasicChildrenOfCompositeParameters(selectedNodesByType,	inOutAffectedNodes);
 
-		processLocalCompositeParameters(selectedNodesByType, outAffectedNodes);
+		processLocalCompositeParameters(selectedNodesByType, inOutAffectedNodes);
 	}
 
 	private static void processLocalBasicParameters(
-			NodesByType selectedNodesByType,
-			Set<ConstraintNode> outAffectedConstraints,
-			Set<IAbstractNode> outAffectedNodes) {
+			NodesByType selectedNodesByType, NodesByCathegory inOutAffectedNodes) {
 
 		Iterator<AbstractParameterNode> paramItr = selectedNodesByType.getLocalParameters().iterator();
 
@@ -293,30 +271,27 @@ public class GenericRemoveNodesOperationsCreator {
 				continue;
 			}
 
-			processBasicParameter(
-					param, 
-					outAffectedConstraints, 
-					outAffectedNodes);
+			processBasicParameter(param, inOutAffectedNodes);
 		}
 	}
 
 	private static void processBasicParameter(
 			AbstractParameterNode param,
-			Set<ConstraintNode> outAffectedConstraints,
-			Set<IAbstractNode> outAffectedNodes) {
+			NodesByCathegory inOutAffectedNodes) {
+
 		IAbstractNode parent = param.getParent();
 
 		if ((parent instanceof MethodNode) || (parent instanceof CompositeParameterNode)) {
 
-			accumulateAffectedConstraints(param, outAffectedConstraints);
-			outAffectedNodes.add(param);
+			accumulateAffectedConstraints(param, inOutAffectedNodes);
+			inOutAffectedNodes.addOtherNode(param);
 		}
 	}
 
 	private static void processLocalBasicChildrenOfCompositeParameters(
 			NodesByType selectedNodesByType,
-			Set<ConstraintNode> outAffectedConstraints,
-			Set<IAbstractNode> affectedNodes) {
+			NodesByCathegory inOutNodesByCathegory // TODO MO-RE use
+			) {
 
 		Iterator<AbstractParameterNode> paramItr = selectedNodesByType.getLocalParameters().iterator();
 
@@ -338,7 +313,7 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processLocalCompositeParameters(
 			NodesByType selectedNodesByType,
-			Set<IAbstractNode> affectedNodes) {
+			NodesByCathegory inOutAffectedNodes) {
 
 		Iterator<AbstractParameterNode> paramItr = selectedNodesByType.getLocalParameters().iterator();
 
@@ -346,13 +321,13 @@ public class GenericRemoveNodesOperationsCreator {
 			AbstractParameterNode param = paramItr.next();
 
 			if (param instanceof CompositeParameterNode)
-				affectedNodes.add(param);
+				inOutAffectedNodes.addOtherNode(param);
 		}
 	}
 
-	private static void processGlobalParameters(NodesByType selectedNodesByType,
-			Set<ConstraintNode> outAffectedConstraints,
-			Set<IAbstractNode> inOutAffectedNodes) {
+	private static void processGlobalParameters(
+			NodesByType selectedNodesByType,
+			NodesByCathegory inOutAffectedNodes) {
 
 		/*
 		 * Iterate through global params. Do the same checks as for method
@@ -372,11 +347,9 @@ public class GenericRemoveNodesOperationsCreator {
 			boolean isDependent = false;
 			if (!isDependent) {
 				//remove mentioning constraints from the list to avoid duplicates
-				accumulateAffectedConstraints(
-						global, 
-						//allConstraintNodes, 
-						outAffectedConstraints);
-				inOutAffectedNodes.add(global);
+				accumulateAffectedConstraints(global, inOutAffectedNodes);
+
+				inOutAffectedNodes.addOtherNode(global);
 				//	globalItr.remove(); 
 				/*
 				 * in case linkers contain parameters assigned to removal -
@@ -389,33 +362,30 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processTestCases(ArrayList<TestCaseNode> testCaseNodes, Set<IAbstractNode> affectedNodes) {
+	private static void processTestCases(ArrayList<TestCaseNode> testCaseNodes, NodesByCathegory inOutAffectedNodes) {
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
-			affectedNodes.add(testCaseNode);
+			inOutAffectedNodes.addTestCase(testCaseNode);
 		}
 	}
 
 	private static void processChoicesFilteringConstraintsAndTestCases(
-			ArrayList<ChoiceNode> choiceNodes, 
-			Set<ConstraintNode> outAffectedConstraints, Set<TestCaseNode> outAffectedTestCases, 
-			Set<IAbstractNode> affectedNodes) {
+			ArrayList<ChoiceNode> choiceNodes, NodesByCathegory inOutAffectedNodes) {
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
-			accumulateAffectedConstraints(choiceNode, outAffectedConstraints);
+			accumulateAffectedConstraints(choiceNode, inOutAffectedNodes);
 
-			accumulateAffectedTestCases(
-					choiceNode, outAffectedTestCases);
+			accumulateAffectedTestCases(choiceNode, inOutAffectedNodes);
 
-			affectedNodes.add(choiceNode);
+			inOutAffectedNodes.addOtherNode(choiceNode);
 		}
 	}
 
-	private static void processClasses(ArrayList<ClassNode> classsNodes, Set<IAbstractNode> inOutAffectedNodes) {
+	private static void processClasses(ArrayList<ClassNode> classsNodes, NodesByCathegory outAffectedNodesByCathegory) {
 
 		for (ClassNode classNode : classsNodes) {
-			inOutAffectedNodes.add(classNode);
+			outAffectedNodesByCathegory.addOtherNode(classNode);
 		}
 	}
 
@@ -468,13 +438,13 @@ public class GenericRemoveNodesOperationsCreator {
 	}
 
 	private static void accumulateAffectedConstraints(
-			IAbstractNode abstractNode, Set<ConstraintNode> outAffectedConstraints) {
+			IAbstractNode abstractNode, NodesByCathegory inOutAffectedNodes) {
 
 		if (abstractNode instanceof ChoiceNode) {
 			Set<ConstraintNode> mentioningConstraintNodes = 
 					ChoiceNodeHelper.getMentioningConstraints((ChoiceNode) abstractNode);
 
-			outAffectedConstraints.addAll(mentioningConstraintNodes);
+			inOutAffectedNodes.addAllConstraints(mentioningConstraintNodes);
 			return;
 		} 
 
@@ -482,18 +452,63 @@ public class GenericRemoveNodesOperationsCreator {
 			Set<ConstraintNode> mentioningConstraintNodes = 
 					BasicParameterNodeHelper.getMentioningConstraints((BasicParameterNode) abstractNode);
 
-			outAffectedConstraints.addAll(mentioningConstraintNodes);
+			inOutAffectedNodes.addAllConstraints(mentioningConstraintNodes);
 			return;
 		}
 	}
 
 	private static void accumulateAffectedTestCases(
-			ChoiceNode choiceNode, Set<TestCaseNode> outAffectedTestCases) {
+			ChoiceNode choiceNode, NodesByCathegory inOutAffectedNodes) {
 
-		Set<TestCaseNode> mentioningConstraintNodes = 
+		Set<TestCaseNode> mentioningTestCaseNodes = 
 				ChoiceNodeHelper.getMentioningTestCases(choiceNode);
 
-		outAffectedTestCases.addAll(mentioningConstraintNodes);
+		inOutAffectedNodes.addAllTestCases(mentioningTestCaseNodes);
+	}
+
+	private static class NodesByCathegory {
+
+		private Set<TestCaseNode> fTestCases;
+		private Set<ConstraintNode> fConstraints;
+		private Set<IAbstractNode> fOtherNodes;
+
+		public NodesByCathegory() {
+			fTestCases = new HashSet<>();
+			fConstraints = new HashSet<>();
+			fOtherNodes = new HashSet<>();
+		}
+
+		public void addConstraint(ConstraintNode constraint) {
+			fConstraints.add(constraint);
+		}
+
+		public void addAllConstraints(Set<ConstraintNode> constraintNodes) {
+			fConstraints.addAll(constraintNodes);
+		}
+
+		public void addAllTestCases(Set<TestCaseNode> testCaseNodes) {
+			fTestCases.addAll(testCaseNodes);
+		}
+
+		public void addTestCase(TestCaseNode testCaseNode) {
+			fTestCases.add(testCaseNode);
+		}
+
+		public void addOtherNode(IAbstractNode abstractNode) {
+			fOtherNodes.add(abstractNode);
+		}
+
+		public Set<TestCaseNode> getTestCases() {
+			return fTestCases;
+		}
+
+		public Set<ConstraintNode> getConstraints() {
+			return fConstraints;
+		}
+
+		public Set<IAbstractNode> getOtherNodes() {
+			return fOtherNodes;
+		}
 	}
 
 }
