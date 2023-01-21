@@ -11,8 +11,11 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -162,6 +165,67 @@ public class BasicParameterNodeHelper {
 		return extractTypeFromSignature(linkedParameterSignature);
 	}
 
+	public static Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
+
+		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
+
+		for(BasicParameterNode parameter : parameters){
+			result.addAll(getMentioningConstraints(parameter));
+		}
+
+		return result;
+	}
+	
+	public static Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
+
+		if (parameter.isGlobalParameter()) {
+		
+			List<BasicParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedBasicParameters(parameter);
+			
+			Set<ConstraintNode> mentioningConstraints = getMentioningConstraints(linkedParameters);
+			
+			return mentioningConstraints;
+			
+		}
+		
+		Set<ConstraintNode> result = new HashSet<>();
+		
+		getMentioningConstraintsRecursive(parameter.getParent(), parameter, result);
+		
+		return result;
+	}
+	
+	public static void getMentioningConstraintsRecursive(
+			IAbstractNode currentNode, 
+			BasicParameterNode parameter, 
+			Set<ConstraintNode> inOutConstraints) {
+		
+		if (currentNode == null) {
+			return;
+		}
+		
+		if (currentNode instanceof MethodNode) {
+			
+			MethodNode methodNode = (MethodNode) currentNode;
+			
+			Set<ConstraintNode> constraintsOfMethod = methodNode.getMentioningConstraints(parameter);
+			inOutConstraints.addAll(constraintsOfMethod);
+			return;
+		}
+		
+		if (currentNode instanceof CompositeParameterNode) {
+			
+			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) currentNode;
+			
+			Set<ConstraintNode> constraintsOfMethod = compositeParameterNode.getMentioningConstraints(parameter);
+			inOutConstraints.addAll(constraintsOfMethod);
+			
+			getMentioningConstraintsRecursive(currentNode.getParent(), parameter, inOutConstraints);
+			return;
+		}
+		
+		ExceptionHelper.reportRuntimeException("Invalid type of node.");
+	}
 	
 	private static String extractTypeFromSignature(String linkedParameterSignature) {
 		

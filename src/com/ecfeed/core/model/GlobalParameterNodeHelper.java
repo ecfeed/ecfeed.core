@@ -32,6 +32,29 @@ public class GlobalParameterNodeHelper {
 
 		return result;
 	}
+	
+	public static List<BasicParameterNode> getLinkedBasicParameters(BasicParameterNode globalParameterNode) {
+		
+		List<AbstractParameterNode> abstractParameterNodes = getLinkedParameters(globalParameterNode);
+		
+		List<BasicParameterNode> basicParameterNodes = getBasicParameters(abstractParameterNodes);
+		
+		return basicParameterNodes;
+	}
+	
+	public static List<BasicParameterNode> getBasicParameters(List<AbstractParameterNode> abstractParameterNodes) {
+		
+		List<BasicParameterNode> result = new ArrayList<>();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
+			
+			if (abstractParameterNode instanceof BasicParameterNode) {
+				result.add((BasicParameterNode) abstractParameterNode);
+			}
+		}
+		
+		return result;
+	}
 
 	private static void getParametersLinkedToGlobalParameterRecursive(
 			AbstractParameterNode globBasicParameterNode,

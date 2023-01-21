@@ -875,5 +875,25 @@ public class ChoiceNodeHelper {
 			}
 		}
 	}
+	
+	public static Set<ConstraintNode> getMentioningConstraints(ChoiceNode choiceNode) {
+		
+		BasicParameterNode basicParameterNode = getBasicParameter(choiceNode);
+		
+		Set<ConstraintNode> constraintMentioningParameter = 
+				BasicParameterNodeHelper.getMentioningConstraints(basicParameterNode);
+		
+		Set<ConstraintNode> result = new HashSet<>();
+		
+		for (ConstraintNode constraintNode : constraintMentioningParameter) {
+			
+			if (constraintNode.mentions(choiceNode)) {
+				
+				result.add(constraintNode);
+			}
+		}
+		
+		return result;
+	}
 
 }

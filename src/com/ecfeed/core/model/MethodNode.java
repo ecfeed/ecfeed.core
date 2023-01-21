@@ -493,17 +493,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return false;
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
-
-		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
-
-		for(BasicParameterNode parameter : parameters){
-			result.addAll(getMentioningConstraints(parameter));
-		}
-
-		return result;
-	}
-
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
 
