@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -55,7 +54,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 		createModelOperationsDeletingNodes(
 				fSelectedNodes,
-				getAllTestCaseNodes(fSelectedNodes),
 
 				fAffectedConstraints,
 				fAffectedTestCases,
@@ -102,7 +100,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void createModelOperationsDeletingNodes(
 			Set<IAbstractNode> selectedNodes,
-			Set<TestCaseNode> allTestCaseNodes,
 
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<TestCaseNode> outAffectedTestCases,
@@ -116,7 +113,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 		processNodes(
 				selectedNodes, 
-				allTestCaseNodes, 
 				affectedNodes, outAffectedConstraints, outAffectedTestCases, 
 				outOperations, 
 				extLanguageManager, validate);
@@ -142,7 +138,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processNodes(
 			Set<IAbstractNode> selectedNodes, 
-			Set<TestCaseNode> allTestCaseNodes, 
 			Set<IAbstractNode> outAffectedNodes, 
 			Set<ConstraintNode> outAffectedConstraints, 
 			Set<TestCaseNode> outAffectedTestCases,
@@ -154,7 +149,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 		processParametersAndChoices(
 				selectedNodesByType, 
-				allTestCaseNodes, 
 				outAffectedNodes, outAffectedConstraints, outAffectedTestCases);
 
 		processConstraintsAndTestCases(selectedNodesByType, outAffectedNodes);
@@ -179,7 +173,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processParametersAndChoices(
 			NodesByType selectedNodesByType,
-			Set<TestCaseNode> allTestCaseNodes,
 			Set<IAbstractNode> outAffectedNodes, 
 			Set<ConstraintNode> outAffectedConstraints,
 			Set<TestCaseNode> outAffectedTestCases) {
@@ -191,7 +184,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 		processChoices(
 				selectedNodesByType, 
-				allTestCaseNodes, 
 				outAffectedNodes,
 				outAffectedConstraints, 
 				outAffectedTestCases);
@@ -199,7 +191,6 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processChoices(
 			NodesByType selectedNodesByType, 
-			Set<TestCaseNode> allTestCaseNodes, 
 			Set<IAbstractNode> outAffectedNodes,
 			Set<ConstraintNode> outAffectedConstraints, 
 			Set<TestCaseNode> outAffectedTestCases) {
@@ -209,7 +200,6 @@ public class GenericRemoveNodesOperationsCreator {
 		if (!choiceNodes.isEmpty()) {
 			processChoicesFilteringConstraintsAndTestCases(
 					choiceNodes, 
-					allTestCaseNodes, 
 					outAffectedConstraints,	outAffectedTestCases, 
 					outAffectedNodes);
 		}
@@ -408,14 +398,16 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processChoicesFilteringConstraintsAndTestCases(
 			ArrayList<ChoiceNode> choiceNodes, 
-			Set<TestCaseNode> allTestCaseNodes, 
 			Set<ConstraintNode> outAffectedConstraints, Set<TestCaseNode> outAffectedTestCases, 
 			Set<IAbstractNode> affectedNodes) {
 
 		for (ChoiceNode choiceNode : choiceNodes) {
+
 			accumulateAffectedConstraints(choiceNode, outAffectedConstraints);
 
-			createAffectedTestCases(choiceNode, allTestCaseNodes, outAffectedTestCases);
+			accumulateAffectedTestCases(
+					choiceNode, outAffectedTestCases);
+
 			affectedNodes.add(choiceNode);
 		}
 	}
@@ -475,34 +467,8 @@ public class GenericRemoveNodesOperationsCreator {
 		fOperations.add(operation);
 	}
 
-	private static Set<TestCaseNode> getAllTestCaseNodes(Set<IAbstractNode> selectedNodes) {
-
-		// TODO MO-RE rewrite using services of nodes
-		// List<IAbstractNode> IAbstractNode.getAllFilteredChilden(NodeTypeFilter) TODO
-		// ITestCasesParentNode.getTestCaseNodes()
-
-		return selectedNodes.iterator().next()
-				.getRoot()
-				.getChildren()
-				.stream()
-				.filter(e -> (e instanceof ClassNode))
-				.map(m -> m.getChildren()
-						.stream()
-						.filter(e -> (e instanceof MethodNode))
-						.collect(Collectors.toList()))
-				.flatMap(f -> f.stream())
-				.map(m -> m.getChildren()
-						.stream()
-						.filter(e -> (e instanceof TestCaseNode))
-						.collect(Collectors.toList()))
-				.flatMap(f -> f.stream())
-				.map(e -> (TestCaseNode) e)
-				.collect(Collectors.toSet());
-	}
-
 	private static void accumulateAffectedConstraints(
-			IAbstractNode abstractNode, 
-			Set<ConstraintNode> outAffectedConstraints) {
+			IAbstractNode abstractNode, Set<ConstraintNode> outAffectedConstraints) {
 
 		if (abstractNode instanceof ChoiceNode) {
 			Set<ConstraintNode> mentioningConstraintNodes = 
@@ -521,19 +487,13 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void createAffectedTestCases(
-			IAbstractNode node, 
-			Set<TestCaseNode> allTestCaseNodes,
-			Set<TestCaseNode> outAffectedTestCases) {
+	private static void accumulateAffectedTestCases(
+			ChoiceNode choiceNode, Set<TestCaseNode> outAffectedTestCases) {
 
-		Iterator<TestCaseNode> itr = allTestCaseNodes.iterator();
-		while (itr.hasNext()) {
-			TestCaseNode testCase = itr.next();
-			if (testCase.mentions((ChoiceNode)node)) {
-				outAffectedTestCases.add(testCase);
-			}
-		}
+		Set<TestCaseNode> mentioningConstraintNodes = 
+				ChoiceNodeHelper.getMentioningTestCases(choiceNode);
 
+		outAffectedTestCases.addAll(mentioningConstraintNodes);
 	}
 
 }
