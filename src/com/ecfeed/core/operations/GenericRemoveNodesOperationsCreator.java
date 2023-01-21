@@ -46,17 +46,17 @@ public class GenericRemoveNodesOperationsCreator {
 
 		fSelectedNodes = selectedNodes;
 		fAffectedNodesByCathegory = new NodesByCathegory();
-		fOperations = new ArrayList<>();
+
 		removeNodesWithAncestorsOnList(fSelectedNodes);
 
-		createDeletingNodesOperations(
-				fSelectedNodes,
-				fAffectedNodesByCathegory,
-				fOperations,
+		fOperations = 
+				createDeletingNodesOperations(
+						fSelectedNodes,
+						fAffectedNodesByCathegory,
 
-				extLanguageManager,
-				typeAdapterProvider, 
-				validate);
+						extLanguageManager,
+						typeAdapterProvider, 
+						validate);
 	}
 
 	public List<IModelOperation> getOperations() {
@@ -93,36 +93,41 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void createDeletingNodesOperations(
+	private static List<IModelOperation> createDeletingNodesOperations(
 			Set<IAbstractNode> selectedNodes,
 			NodesByCathegory outAffectedNodesByCathegory,
-			List<IModelOperation> outOperations, // XYX refactor - return
-
-			IExtLanguageManager extLanguageManager,
-			ITypeAdapterProvider typeAdapterProvider, 
-			boolean validate){
-
-		processNodes(
-				selectedNodes, 
-				outAffectedNodesByCathegory,
-				outOperations, 
-				extLanguageManager, validate);
-
-		createOperations(outAffectedNodesByCathegory, outOperations, extLanguageManager, typeAdapterProvider, validate);
-	}
-
-	private static void createOperations(
-			NodesByCathegory outAffectedNodesByCathegory,
-			List<IModelOperation> outOperations, 
 			IExtLanguageManager extLanguageManager,
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate) {
+
+		List<IModelOperation> resultOperations = new ArrayList<>();
+		processNodes(
+				selectedNodes, 
+				outAffectedNodesByCathegory,
+				resultOperations, // TODO MO-RE do we neet this?
+				extLanguageManager, validate);
+
+		List<IModelOperation> resultOperations2 =
+				createOperations(outAffectedNodesByCathegory, extLanguageManager, typeAdapterProvider, validate);
+
+		resultOperations.addAll(resultOperations2);
+
+		return resultOperations;
+	}
+
+	private static List<IModelOperation> createOperations(
+			NodesByCathegory outAffectedNodesByCathegory,
+			IExtLanguageManager extLanguageManager,
+			ITypeAdapterProvider typeAdapterProvider, 
+			boolean validate) {
+
+		List<IModelOperation> resultOperations = new ArrayList<>();
 
 		Set<ConstraintNode> affectedConstraints = outAffectedNodesByCathegory.getConstraints();
 
 		if (!affectedConstraints.isEmpty()) {
 			addRemoveOperationsForAffectedConstraints(
-					affectedConstraints, outOperations, 
+					affectedConstraints, resultOperations, 
 					extLanguageManager, typeAdapterProvider, validate);
 		}
 
@@ -130,7 +135,7 @@ public class GenericRemoveNodesOperationsCreator {
 
 		if (!affectedTestCases.isEmpty()) {
 			addRemoveOperationsForAffectedTestCases(
-					affectedTestCases, outOperations, 
+					affectedTestCases, resultOperations, 
 					extLanguageManager, typeAdapterProvider, validate);
 		}
 
@@ -138,9 +143,11 @@ public class GenericRemoveNodesOperationsCreator {
 
 		if (!affectedOtherNodes.isEmpty()) {
 			addRemoveOperationsForAffectedNodes(
-					affectedOtherNodes, outOperations, 
+					affectedOtherNodes, resultOperations, 
 					extLanguageManager, typeAdapterProvider, validate);
 		}
+
+		return resultOperations;
 	}
 
 	private static void processNodes(
