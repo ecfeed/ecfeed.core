@@ -62,46 +62,48 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, classNodes.size());
 		assertEquals(classNode, classNodes.get(0));
 	}
+	
+	// TODO MO-RE remove class with method and parameter
 
-//	@Test
-//	public void removeMethods() {
-//
-//		RootNode rootNode = new RootNode("Root", null);
-//		ClassNode classNode = new ClassNode("Class", null);
-//		rootNode.addClass(classNode);
-//
-//		MethodNode methodNode1 = new MethodNode("Method1");
-//		classNode.addMethod(methodNode1);
-//		MethodNode methodNode2 = new MethodNode("Method2");
-//		classNode.addMethod(methodNode2);
-//
-//		// removing the first method
-//
-//		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-//		nodesToDelete.add(methodNode1);
-//
-//		GenericRemoveNodesOperation genericRemoveNodesOperation1 = 
-//				createRemovingNodesOperation(nodesToDelete, rootNode);
-//		genericRemoveNodesOperation1.execute();
-//
-//		assertEquals(1, classNode.getMethods().size());
-//
-//		nodesToDelete.clear();
-//		nodesToDelete.add(methodNode2);
-//
-//		GenericRemoveNodesOperation genericRemoveNodesOperation2 = 
-//				createRemovingNodesOperation(nodesToDelete, rootNode);
-//		genericRemoveNodesOperation2.execute();
-//
-//		assertEquals(0, classNode.getMethods().size());
-//
-//		genericRemoveNodesOperation2.getReverseOperation().execute();
-//		assertEquals(1, classNode.getMethods().size());
-//
-//		genericRemoveNodesOperation1.getReverseOperation().execute();
-//		assertEquals(2, classNode.getMethods().size());
-//	}
-//
+	@Test
+	public void removeMethods() {
+
+		RootNode rootNode = new RootNode("Root", null);
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		MethodNode methodNode1 = new MethodNode("Method1");
+		classNode.addMethod(methodNode1);
+		MethodNode methodNode2 = new MethodNode("Method2");
+		classNode.addMethod(methodNode2);
+
+		// removing the first method
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(methodNode1);
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation1 = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation1.execute();
+
+		assertEquals(1, classNode.getMethods().size());
+
+		nodesToDelete.clear();
+		nodesToDelete.add(methodNode2);
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation2 = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation2.execute();
+
+		assertEquals(0, classNode.getMethods().size());
+
+		genericRemoveNodesOperation2.getReverseOperation().execute();
+		assertEquals(1, classNode.getMethods().size());
+
+		genericRemoveNodesOperation1.getReverseOperation().execute();
+		assertEquals(2, classNode.getMethods().size());
+	}
+
 //	@Test
 //	public void removeBasicParameterOfMethod() {
 //

@@ -121,15 +121,9 @@ public class GenericRemoveNodesOperationsCreator {
 		
 		List<IModelOperation> result = new ArrayList<>();
 		
-		Set<ClassNode> classNodes = outAffectedNodesByType.getClasses();
+		addOperationsForMethods(outAffectedNodesByType, extLanguageManager, result);
 		
-		for (ClassNode classNode : classNodes) {
-			
-			RootOperationRemoveClass operation = 
-					new RootOperationRemoveClass(classNode.getRoot(), classNode, extLanguageManager);
-		
-			result.add(operation);
-		}
+		addOperationsForClasses(outAffectedNodesByType, extLanguageManager, result);
 			
 		return result;
 		
@@ -160,6 +154,38 @@ public class GenericRemoveNodesOperationsCreator {
 //		}
 
 //		return resultOperations;
+	}
+
+	private static void addOperationsForClasses(
+			NodesByType outAffectedNodesByType,
+			IExtLanguageManager extLanguageManager, 
+			List<IModelOperation> result) {
+		
+		Set<ClassNode> classNodes = outAffectedNodesByType.getClasses();
+		
+		for (ClassNode classNode : classNodes) {
+			
+			RootOperationRemoveClass operation = 
+					new RootOperationRemoveClass(classNode.getRoot(), classNode, extLanguageManager);
+		
+			result.add(operation);
+		}
+	}
+
+	private static void addOperationsForMethods(
+			NodesByType outAffectedNodesByType,
+			IExtLanguageManager extLanguageManager, 
+			List<IModelOperation> result) {
+		
+		Set<MethodNode> methodNodes = outAffectedNodesByType.getMethods();
+		
+		for (MethodNode methodNode : methodNodes) {
+			
+			ClassOperationRemoveMethod operation = 
+					new ClassOperationRemoveMethod(methodNode.getClassNode(), methodNode, extLanguageManager);
+		
+			result.add(operation);
+		}
 	}
 
 	private static void processNodes(
