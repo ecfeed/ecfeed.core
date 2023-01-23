@@ -17,27 +17,27 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class RootOperationRemoveClass extends AbstractModelOperation {
 
 	private ClassNode fRemovedClass;
-	private RootNode fTarget;
+	private RootNode fRootNode;
 	private int fCurrentIndex;
 
-	public RootOperationRemoveClass(RootNode target, ClassNode removedClass, IExtLanguageManager extLanguageManager) {
+	public RootOperationRemoveClass(RootNode rootNode, ClassNode classNode, IExtLanguageManager extLanguageManager) {  // TODO MO-RE calculate root node
 		super(OperationNames.REMOVE_CLASS, extLanguageManager);
-		fTarget = target;
-		fRemovedClass = removedClass;
-		fCurrentIndex = removedClass.getMyClassIndex();
+		fRootNode = rootNode;
+		fRemovedClass = classNode;
+		fCurrentIndex = classNode.getMyClassIndex();
 	}
 
 	@Override
 	public void execute() {
-		setOneNodeToSelect(fTarget);
+		setOneNodeToSelect(fRootNode);
 		fCurrentIndex = fRemovedClass.getMyClassIndex();
-		fTarget.removeClass(fRemovedClass);
+		fRootNode.removeClass(fRemovedClass);
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationAddClass(fTarget, fRemovedClass, fCurrentIndex, getExtLanguageManager());
+		return new RootOperationAddClass(fRootNode, fRemovedClass, fCurrentIndex, getExtLanguageManager());
 	}
 
 }

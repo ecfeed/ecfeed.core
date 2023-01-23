@@ -29,7 +29,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class FactoryRemoveOperation {
+public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 	private static class UnsupportedModelOperation implements IModelOperation{
 		

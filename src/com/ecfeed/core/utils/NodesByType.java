@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -28,8 +27,8 @@ public class NodesByType {
 
 	private Set<ClassNode> fClasses;
 	private Set<MethodNode> fMethods;
-	private Set<AbstractParameterNode> fLocalParameters;
-	private Set<AbstractParameterNode> fGlobalParameters;
+	private Set<BasicParameterNode> fBasicParameters;
+	private Set<CompositeParameterNode> fCompositeParameters;
 	private Set<ChoiceNode> fChoices;
 	private Set<ConstraintNode> fConstraints;
 	private Set<TestCaseNode> fTestCases;
@@ -38,8 +37,8 @@ public class NodesByType {
 
 		fClasses = new HashSet<>();
 		fMethods = new HashSet<>();
-		fLocalParameters = new HashSet<>();
-		fGlobalParameters = new HashSet<>();
+		fBasicParameters = new HashSet<>();
+		fCompositeParameters = new HashSet<>();
 		fChoices = new HashSet<>();
 		fConstraints = new HashSet<>();
 		fTestCases = new HashSet<>();
@@ -54,43 +53,39 @@ public class NodesByType {
 		}	
 	}
 
-	private void addNodeByType(IAbstractNode selectedNode) {
+	public void addNodeByType(IAbstractNode abstractNode) { // TODO MO-RE rename to addNode
 
-		if (selectedNode instanceof ClassNode) {
-			fClasses.add((ClassNode)selectedNode);
+		if (abstractNode instanceof ClassNode) {
+			fClasses.add((ClassNode)abstractNode);
 			return;
 		} 
 
-		if (selectedNode instanceof MethodNode) {
-			fMethods.add((MethodNode)selectedNode);
+		if (abstractNode instanceof MethodNode) {
+			fMethods.add((MethodNode)abstractNode);
 			return;
 		}
 
-		if ((selectedNode instanceof BasicParameterNode) || (selectedNode instanceof CompositeParameterNode)) {
+		if (abstractNode instanceof BasicParameterNode) {
+			fBasicParameters.add((BasicParameterNode) abstractNode);
+			return;
+		}
 
-			AbstractParameterNode abstractParameterNode = (AbstractParameterNode) selectedNode;
-
-			if (abstractParameterNode.isGlobalParameter()) {
-				fGlobalParameters.add(abstractParameterNode);
-				return;
-			} else {
-				fLocalParameters.add(abstractParameterNode);
-				return;
-			}
+		if (abstractNode instanceof CompositeParameterNode) {
+			fCompositeParameters.add((CompositeParameterNode) abstractNode);
 		} 
 
-		if (selectedNode instanceof ConstraintNode) {
-			fConstraints.add((ConstraintNode)selectedNode);
+		if (abstractNode instanceof ConstraintNode) {
+			fConstraints.add((ConstraintNode)abstractNode);
 			return;
 		} 
 
-		if (selectedNode instanceof TestCaseNode) {
-			fTestCases.add((TestCaseNode)selectedNode);
+		if (abstractNode instanceof TestCaseNode) {
+			fTestCases.add((TestCaseNode)abstractNode);
 			return;
 		} 
 
-		if (selectedNode instanceof ChoiceNode) {
-			fChoices.add((ChoiceNode)selectedNode);
+		if (abstractNode instanceof ChoiceNode) {
+			fChoices.add((ChoiceNode)abstractNode);
 			return;
 		} 
 
@@ -106,14 +101,26 @@ public class NodesByType {
 		return fMethods;
 	}
 
-	public Set<AbstractParameterNode> getLocalParameters() {
-		return fLocalParameters;
+	public Set<BasicParameterNode> getBasicParameters() {
+		return fBasicParameters;
 	}
 
-	public Set<AbstractParameterNode> getGlobalParameters() {
-		return fGlobalParameters;
+	public Set<CompositeParameterNode> getCompositeParameters() {
+		return fCompositeParameters;
 	}
 
+	//	public void addBasicParameters(Collection<BasicParameterNode> basicChildParaBasicParameterNodes) {
+	//		
+	//		for (BasicParameterNode basicParameterNode : basicChildParaBasicParameterNodes) {
+	//			
+	//			if (basicParameterNode.isGlobalParameter()) {
+	//				fGlobalParameters.add(basicParameterNode);
+	//			} else {
+	//				fLocalParameters.add(basicParameterNode);
+	//			}
+	//		}
+	//	}
+	//	
 	public Set<ChoiceNode> getChoices() {
 		return fChoices;
 	}
@@ -122,8 +129,16 @@ public class NodesByType {
 		return fConstraints;
 	}
 
+	public void addConstraints(Collection<ConstraintNode> constraintNodes) {
+		fConstraints.addAll(constraintNodes);
+	}
+
 	public Set<TestCaseNode> getTestCaseNodes() {
 		return fTestCases;
+	}
+
+	public void addTestCases(Collection<TestCaseNode> testCaseNodes) {
+		fTestCases.addAll(testCaseNodes);
 	}
 
 }
