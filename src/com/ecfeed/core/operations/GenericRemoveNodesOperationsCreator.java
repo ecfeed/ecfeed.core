@@ -27,11 +27,13 @@ import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
@@ -134,7 +136,9 @@ public class GenericRemoveNodesOperationsCreator {
 			addOperationsForTestCases(outAffectedNodesByType, extLanguageManager, result);
 		}
 		
-		// TODO MO-RE choices
+		if (!outAffectedNodesByType.getChoices().isEmpty()) {
+			addOperationsForChoices(outAffectedNodesByType, validate, extLanguageManager, result);
+		}
 		
 		if (!outAffectedNodesByType.getBasicParameters().isEmpty()) {
 			addOperationsForBasicParameters(outAffectedNodesByType, validate, extLanguageManager, result);
@@ -193,6 +197,32 @@ public class GenericRemoveNodesOperationsCreator {
 					new MethodOperationRemoveTestCase(testCaseNode.getMethod(), testCaseNode, extLanguageManager);
 		
 			result.add(operation);
+		}
+	}
+	
+	private static void addOperationsForChoices(
+			NodesByType outAffectedNodesByType,
+			boolean validate,
+			IExtLanguageManager extLanguageManager, 
+			List<IModelOperation> result) {
+
+		Set<ChoiceNode> testCaseNodes = outAffectedNodesByType.getChoices();
+		
+		for (ChoiceNode choiceNode : testCaseNodes) {
+			
+			IAbstractNode abstractParent = choiceNode.getParent();
+			
+			if (!(abstractParent instanceof IChoicesParentNode)) {
+				ExceptionHelper.reportRuntimeException("Invalid type of choice parent.");
+			}
+
+			IChoicesParentNode choicesParentNode = (IChoicesParentNode)abstractParent; 
+			
+			IModelOperation modelOperation = 
+					new GenericOperationRemoveChoice(
+							choicesParentNode, choiceNode, new TypeAdapterProviderForJava(), validate, extLanguageManager);
+			
+			result.add(modelOperation);
 		}
 	}
 
