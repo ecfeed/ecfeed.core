@@ -32,13 +32,12 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
 
-public class GenericRemoveNodesOperationsCreator {
+public class GenericRemoveNodesProcessorOfNodes {
 
 	private final Set<IAbstractNode> fSelectedNodes;
 	private NodesByType fAffectedNodesByType;
-	private List<IModelOperation> fOperations;
 
-	public GenericRemoveNodesOperationsCreator(
+	public GenericRemoveNodesProcessorOfNodes(
 			Set<IAbstractNode> selectedNodes, 
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
@@ -48,21 +47,22 @@ public class GenericRemoveNodesOperationsCreator {
 		fAffectedNodesByType = new NodesByType();
 
 		removeNodesWithAncestorsOnList(fSelectedNodes);
-
-		fOperations = 
-				createDeletingNodesOperations(
-						fSelectedNodes,
-						fAffectedNodesByType,
-
-						extLanguageManager,
-						typeAdapterProvider, 
-						validate);
+		
+		processNodes(
+				fSelectedNodes, 
+				fAffectedNodesByType,
+				extLanguageManager, 
+				validate);
 	}
 
-	public List<IModelOperation> getOperations() {
-		return fOperations;
-	}
+//	public List<IModelOperation> getOperations() {
+//		return fOperations;
+//	}
 
+	public NodesByType getProcessedNodes() {
+		return fAffectedNodesByType;
+	}
+	
 	public Set<ConstraintNode> getAffectedConstraints() {
 		return fAffectedNodesByType.getConstraints();
 	}
@@ -91,27 +91,6 @@ public class GenericRemoveNodesOperationsCreator {
 				}
 			}
 		}
-	}
-
-	private static List<IModelOperation> createDeletingNodesOperations(
-			Set<IAbstractNode> selectedNodes,
-			NodesByType outAffectedNodesByType,
-			IExtLanguageManager extLanguageManager,
-			ITypeAdapterProvider typeAdapterProvider, 
-			boolean validate) {
-
-		processNodes(
-				selectedNodes, 
-				outAffectedNodesByType,
-				extLanguageManager, 
-				validate);
-
-		List<IModelOperation> resultOperations = 
-				GenericRemoveNodesOperationsAccumulator.convertNodesToOperations(
-						outAffectedNodesByType, 
-						extLanguageManager, typeAdapterProvider, validate);
-
-		return resultOperations;
 	}
 
 	private static void processNodes(
