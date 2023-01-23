@@ -44,21 +44,6 @@ public class NodesByType {
 		fTestCases = new HashSet<>();
 	}
 
-	@Override
-	public String toString() {
-	
-		String str = 
-				"Cls:" + fClasses.size() +
-				" Met:" + fMethods.size() + 
-				" BasPar:" + fBasicParameters.size() +
-				" ComPar:" + fCompositeParameters.size() + 
-				" Cho:" + fChoices.size() + 
-				" Cnst:" + fConstraints.size() +
-				" TCas:" + fTestCases.size();
-		
-		return str;
-	}
-	
 	public NodesByType(Collection<IAbstractNode> abstractNodes) {
 
 		this();
@@ -68,7 +53,34 @@ public class NodesByType {
 		}	
 	}
 
-	public void addNode(IAbstractNode abstractNode) { // TODO MO-RE rename to addNode
+	@Override
+	public String toString() {
+
+		if (fClasses.size() == 0 && 
+				fMethods.size() == 0 && 
+				fBasicParameters.size() == 0 && 
+				fCompositeParameters.size() == 0 && 
+				fChoices.size() == 0 &&
+				fConstraints.size() == 0 && 
+				fTestCases.size() == 0) {
+
+			return "Empty";
+		}
+
+
+		String str = 
+				"Cls:" + fClasses.size() +
+				" Met:" + fMethods.size() + 
+				" BasPar:" + fBasicParameters.size() +
+				" ComPar:" + fCompositeParameters.size() + 
+				" Cho:" + fChoices.size() + 
+				" Cnst:" + fConstraints.size() +
+				" TCas:" + fTestCases.size();
+
+		return str;
+	}
+
+	public void addNode(IAbstractNode abstractNode) {
 
 		if (abstractNode instanceof ClassNode) {
 			fClasses.add((ClassNode)abstractNode);
@@ -106,7 +118,6 @@ public class NodesByType {
 		} 
 
 		ExceptionHelper.reportRuntimeException("Unknown node type.");
-		//fOtherNodes.add(selectedNode);
 	}
 
 	public Set<ClassNode> getClasses() {
@@ -125,18 +136,6 @@ public class NodesByType {
 		return fCompositeParameters;
 	}
 
-	//	public void addBasicParameters(Collection<BasicParameterNode> basicChildParaBasicParameterNodes) {
-	//		
-	//		for (BasicParameterNode basicParameterNode : basicChildParaBasicParameterNodes) {
-	//			
-	//			if (basicParameterNode.isGlobalParameter()) {
-	//				fGlobalParameters.add(basicParameterNode);
-	//			} else {
-	//				fLocalParameters.add(basicParameterNode);
-	//			}
-	//		}
-	//	}
-	//	
 	public Set<ChoiceNode> getChoices() {
 		return fChoices;
 	}

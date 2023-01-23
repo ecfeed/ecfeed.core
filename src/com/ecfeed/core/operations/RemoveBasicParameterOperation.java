@@ -27,18 +27,28 @@ import com.ecfeed.core.utils.StringHelper;
 
 public class RemoveBasicParameterOperation extends CompositeOperation{
 
+	private String fParameterName;
+	
 	public RemoveBasicParameterOperation(
-			MethodNode target, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
+			MethodNode methodNode, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
 
-		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
+		super(OperationNames.REMOVE_PARAMETER, true, methodNode, methodNode, extLanguageManager);
 
-		addOperation(new RemoveBasicParameterOperationPrivate(target, parameter, extLanguageManager));
+		fParameterName = parameter.getName();
+		
+		addOperation(new RemoveBasicParameterOperationPrivate(methodNode, parameter, extLanguageManager));
 
 		if (validate) {
-			addOperation(new MethodOperationRemoveInconsistentChildren(target, extLanguageManager));
+			addOperation(new MethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
 		}
 	}
 
+	@Override
+	public String toString() {
+	
+		return "Operation remove parameter:" + fParameterName;
+	}
+	
 	public RemoveBasicParameterOperation(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		this(target, parameter, true, extLanguageManager);
 	}

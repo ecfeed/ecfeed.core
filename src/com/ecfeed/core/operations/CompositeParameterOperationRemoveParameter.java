@@ -22,7 +22,10 @@ import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class CompositeParameterOperationRemoveParameter extends CompositeOperation{
+public class CompositeParameterOperationRemoveParameter extends CompositeOperation {
+	
+	
+	private String fParameterName;
 
 	public CompositeParameterOperationRemoveParameter(
 			CompositeParameterNode compositeParameterNode, 
@@ -31,11 +34,19 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 		super(OperationNames.REMOVE_PARAMETER, true, compositeParameterNode, compositeParameterNode, extLanguageManager);
 
+		fParameterName  = parameter.getName();
+		
 		addOperation(new RemoveCompositeParameterOperationPrivate(compositeParameterNode, parameter, extLanguageManager));
 
 		addOperation(new CompositeParameterOperationRemoveInconsistentChildren(compositeParameterNode, extLanguageManager));
 	}
 
+	@Override
+	public String toString() {
+	
+		return "Operation remove parameter:" + fParameterName;
+	}
+	
 	private class RemoveCompositeParameterOperationPrivate extends GenericOperationRemoveParameter {
 
 		private AbstractParameterNode fAbstractParameterNode;
