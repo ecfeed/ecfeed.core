@@ -241,6 +241,8 @@ public class GenericRemoveNodesOperationsCreator {
 
 		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
 
+			IAbstractNode parent = basicParameterNode.getParent();
+			
 			if (basicParameterNode.isGlobalParameter()) {
 
 				IModelOperation operation = 
@@ -252,12 +254,25 @@ public class GenericRemoveNodesOperationsCreator {
 				result.add(operation);
 				continue;
 
-			} else {
+			} 
+			
+			// TODO MO-RE merge operations ? (regardless of parent)
+			
+			if (parent instanceof MethodNode) {
 
 				IModelOperation operation = 
 						new RemoveBasicParameterOperation(
-								(MethodNode)basicParameterNode.getParent(), basicParameterNode, validate, extLanguageManager);
+								(MethodNode)parent, basicParameterNode, validate, extLanguageManager);
 
+				result.add(operation);
+				continue;
+			}
+
+			if (parent instanceof CompositeParameterNode) {
+
+				IModelOperation operation = 
+						new CompositeParameterOperationRemoveParameter(
+								(CompositeParameterNode)parent, basicParameterNode, extLanguageManager);
 				result.add(operation);
 				continue;
 			}
