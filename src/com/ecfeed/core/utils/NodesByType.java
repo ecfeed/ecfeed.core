@@ -44,6 +44,21 @@ public class NodesByType {
 		fTestCases = new HashSet<>();
 	}
 
+	@Override
+	public String toString() {
+	
+		String str = 
+				"Cls:" + fClasses.size() +
+				" Met:" + fMethods.size() + 
+				" BasPar:" + fBasicParameters.size() +
+				" ComPar:" + fCompositeParameters.size() + 
+				" Cho:" + fChoices.size() + 
+				" Cnst:" + fConstraints.size() +
+				" TCas:" + fTestCases.size();
+		
+		return str;
+	}
+	
 	public NodesByType(Collection<IAbstractNode> abstractNodes) {
 
 		this();
@@ -72,6 +87,7 @@ public class NodesByType {
 
 		if (abstractNode instanceof CompositeParameterNode) {
 			fCompositeParameters.add((CompositeParameterNode) abstractNode);
+			return;
 		} 
 
 		if (abstractNode instanceof ConstraintNode) {
