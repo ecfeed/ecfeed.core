@@ -12,6 +12,7 @@ package com.ecfeed.core.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -99,36 +100,32 @@ public class NodesByType {
 		//fOtherNodes.add(selectedNode);
 	}
 
-	public ArrayList<ClassNode> getClasses() {
+	public List<ClassNode> getClasses() {
 		return fClasses;
 	}
 
-	public ArrayList<MethodNode> getMethods() {
+	public List<MethodNode> getMethods() {
 		return fMethods;
 	}
 
-	public ArrayList<AbstractParameterNode> getLocalParameters() {
+	public List<AbstractParameterNode> getLocalParameters() {
 		return fLocalParameters;
 	}
 
-	public ArrayList<AbstractParameterNode> getGlobalParameters() {
+	public List<AbstractParameterNode> getGlobalParameters() {
 		return fGlobalParameters;
 	}
 
-	public ArrayList<ChoiceNode> getChoices() {
+	public List<ChoiceNode> getChoices() {
 		return fChoices;
 	}
 
-	public ArrayList<ConstraintNode> getConstraints() {
+	public List<ConstraintNode> getConstraints() {
 		return fConstraints;
 	}
 
-	public ArrayList<TestCaseNode> getTestCaseNodes() {
+	public List<TestCaseNode> getTestCaseNodes() {
 		return fTestCases;
 	}
-
-	//	public ArrayList<IAbstractNode> getOtherNodes() {
-	//		return fOtherNodes;
-	//	}
 
 }

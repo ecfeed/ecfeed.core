@@ -173,13 +173,13 @@ public class GenericRemoveNodesOperationsCreator {
 			NodesByType selectedNodesByType, 
 			NodesByCathegory outAffectedNodes) {
 
-		ArrayList<ClassNode> classNodes = selectedNodesByType.getClasses();
+		List<ClassNode> classNodes = selectedNodesByType.getClasses();
 
 		if (!classNodes.isEmpty()) {
 			processClasses(classNodes, outAffectedNodes);
 		}
 
-		ArrayList<MethodNode> methods = selectedNodesByType.getMethods();
+		List<MethodNode> methods = selectedNodesByType.getMethods();
 
 		if (!methods.isEmpty()) {
 			processMethods(methods, outAffectedNodes);
@@ -197,7 +197,7 @@ public class GenericRemoveNodesOperationsCreator {
 			NodesByType selectedNodesByType, 
 			NodesByCathegory inOutAffectedNodes) {
 
-		ArrayList<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
+		List<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
 
 		if (!choiceNodes.isEmpty()) {
 			processChoicesFilteringConstraintsAndTestCases(
@@ -210,13 +210,13 @@ public class GenericRemoveNodesOperationsCreator {
 			NodesByType selectedNodesByType,
 			NodesByCathegory inOutAffectedNodes) {
 
-		ArrayList<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
+		List<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
 
 		if (!testCaseNodes.isEmpty()) {
 			processTestCases(testCaseNodes, inOutAffectedNodes);
 		}
 
-		ArrayList<ConstraintNode> constraints = selectedNodesByType.getConstraints();
+		List<ConstraintNode> constraints = selectedNodesByType.getConstraints();
 
 		if (!constraints.isEmpty()) {
 			processConstraints(constraints, inOutAffectedNodes);
@@ -226,27 +226,27 @@ public class GenericRemoveNodesOperationsCreator {
 	private static void processParameters(
 			NodesByType selectedNodesByType, NodesByCathegory inOutAffectedNodes) {
 
-		ArrayList<AbstractParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
+		List<AbstractParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
 
 		if (!globalParameters.isEmpty()) {
 			processGlobalParameters(selectedNodesByType, inOutAffectedNodes);
 		}
 
-		ArrayList<AbstractParameterNode> localParameters = selectedNodesByType.getLocalParameters();
+		List<AbstractParameterNode> localParameters = selectedNodesByType.getLocalParameters();
 
 		if (!localParameters.isEmpty()) {
 			processLocalParameters(selectedNodesByType, inOutAffectedNodes);
 		}
 	}
 
-	private static void processConstraints(ArrayList<ConstraintNode> constraintNodes, NodesByCathegory inOutAffectedNodes) {
+	private static void processConstraints(List<ConstraintNode> constraintNodes, NodesByCathegory inOutAffectedNodes) {
 
 		for (ConstraintNode constraint : constraintNodes) {
 			inOutAffectedNodes.addConstraint(constraint);
 		}
 	}
 
-	private static void processMethods(ArrayList<MethodNode> methods, NodesByCathegory inOutAffectedNodes) {
+	private static void processMethods(List<MethodNode> methods, NodesByCathegory inOutAffectedNodes) {
 
 		Iterator<MethodNode> methodItr = methods.iterator();
 
@@ -347,7 +347,7 @@ public class GenericRemoveNodesOperationsCreator {
 		 * remove it from the lists.
 		 */
 
-		ArrayList<AbstractParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
+		List<AbstractParameterNode> globalParameters = selectedNodesByType.getGlobalParameters();
 
 		Iterator<AbstractParameterNode> globalItr = globalParameters.iterator();
 
@@ -373,7 +373,7 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processTestCases(ArrayList<TestCaseNode> testCaseNodes, NodesByCathegory inOutAffectedNodes) {
+	private static void processTestCases(List<TestCaseNode> testCaseNodes, NodesByCathegory inOutAffectedNodes) {
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 			inOutAffectedNodes.addTestCase(testCaseNode);
@@ -381,7 +381,7 @@ public class GenericRemoveNodesOperationsCreator {
 	}
 
 	private static void processChoicesFilteringConstraintsAndTestCases(
-			ArrayList<ChoiceNode> choiceNodes, NodesByCathegory inOutAffectedNodes) {
+			List<ChoiceNode> choiceNodes, NodesByCathegory inOutAffectedNodes) {
 
 		for (ChoiceNode choiceNode : choiceNodes) {
 
@@ -393,7 +393,7 @@ public class GenericRemoveNodesOperationsCreator {
 		}
 	}
 
-	private static void processClasses(ArrayList<ClassNode> classsNodes, NodesByCathegory outAffectedNodesByCathegory) {
+	private static void processClasses(List<ClassNode> classsNodes, NodesByCathegory outAffectedNodesByCathegory) {
 
 		for (ClassNode classNode : classsNodes) {
 			outAffectedNodesByCathegory.addOtherNode(classNode);
