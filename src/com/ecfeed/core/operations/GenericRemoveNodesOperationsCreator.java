@@ -11,6 +11,7 @@
 package com.ecfeed.core.operations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
@@ -297,8 +299,7 @@ public class GenericRemoveNodesOperationsCreator {
 
 	private static void processLocalBasicChildrenOfCompositeParameters(
 			NodesByType selectedNodesByType,
-			NodesByCathegory inOutNodesByCathegory // TODO MO-RE use
-			) {
+			NodesByCathegory inOutAffectedNodes) {
 
 		Iterator<AbstractParameterNode> paramItr = selectedNodesByType.getLocalParameters().iterator();
 
@@ -306,16 +307,19 @@ public class GenericRemoveNodesOperationsCreator {
 			AbstractParameterNode param = paramItr.next();
 
 			if (param instanceof CompositeParameterNode) {
-				processBasicChildren((CompositeParameterNode)param);
+				processAllChildBasicParametersOfCompositeParameter((CompositeParameterNode)param, inOutAffectedNodes);
 			}
 		}
 	}
 
-	private static void processBasicChildren(CompositeParameterNode param) {
+	private static void processAllChildBasicParametersOfCompositeParameter(
+			CompositeParameterNode compositeParameterNode,
+			NodesByCathegory inOutAffectedNodes) {
 
-		// TODO MO-RE: find all basic parameters (children of composite parameter)
-		//and call processBasicParameter for each
-
+		List<BasicParameterNode> basicChildParaBasicParameterNodes = 
+				CompositeParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
+		
+		inOutAffectedNodes.addBasicParameters(basicChildParaBasicParameterNodes);
 	}
 
 	private static void processLocalCompositeParameters(
@@ -489,11 +493,11 @@ public class GenericRemoveNodesOperationsCreator {
 			fConstraints.add(constraint);
 		}
 
-		public void addAllConstraints(Set<ConstraintNode> constraintNodes) {
+		public void addAllConstraints(Collection<ConstraintNode> constraintNodes) {
 			fConstraints.addAll(constraintNodes);
 		}
 
-		public void addAllTestCases(Set<TestCaseNode> testCaseNodes) {
+		public void addAllTestCases(Collection<TestCaseNode> testCaseNodes) {
 			fTestCases.addAll(testCaseNodes);
 		}
 
@@ -505,6 +509,10 @@ public class GenericRemoveNodesOperationsCreator {
 			fOtherNodes.add(abstractNode);
 		}
 
+		public void addBasicParameters(List<BasicParameterNode> abstractNode) {
+			fOtherNodes.addAll(abstractNode);
+		}
+		
 		public Set<TestCaseNode> getTestCases() {
 			return fTestCases;
 		}

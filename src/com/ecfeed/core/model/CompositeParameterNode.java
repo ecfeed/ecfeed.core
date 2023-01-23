@@ -18,39 +18,39 @@ import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class CompositeParameterNode extends AbstractParameterNode implements IParametersAndConstraintsParentNode {
-	
+
 	public static final String COMPOSITE_PARAMETER_TYPE = "Structure";
-	
+
 	private ParametersHolder fParametersHolder; 
 	private ConstraintNodeListHolder fConstraintNodeListHolder;
 
 	public CompositeParameterNode(
 			String name,
 			IModelChangeRegistrator modelChangeRegistrator) {
-		
+
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
-		
+
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 	}
 
 	public boolean isGlobalParameter() {
-		
+
 		IAbstractNode parent = getParent();
-		
+
 		if (parent == null) {
 			return false;
 		}
-		
+
 		if (parent instanceof MethodNode) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	@Override
 	public void setName(String name) {
 
@@ -66,7 +66,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public String toString() {
-		
+
 		return new String(getName());
 	}
 
@@ -84,31 +84,31 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public List<IAbstractNode> getChildren() {
-		
+
 		List<IAbstractNode> children = new ArrayList<>();
-		
+
 		List<AbstractParameterNode> parameters = fParametersHolder.getParameters();
 		children.addAll(parameters);
-		
+
 		List<ConstraintNode> constraintNodes = fConstraintNodeListHolder.getConstraintNodes();
 		children.addAll(constraintNodes);
-		
+
 		return children;
 	}
 
 	@Override
 	public boolean isMatch(IAbstractNode other) {
-		
+
 		if (other instanceof CompositeParameterNode == false) {
 			return false;
 		}
-		
+
 		CompositeParameterNode otherComposite = (CompositeParameterNode) other;
-		
+
 		if (!fParametersHolder.isMatch(otherComposite.fParametersHolder)) {
 			return false;
 		}
-		
+
 		return super.isMatch(other);
 	}
 
@@ -125,73 +125,73 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter) {
-		
+
 		fParametersHolder.addParameter(parameter, this);
 	}
 
 	@Override
 	public void addParameter(AbstractParameterNode parameter, int index) {
-		
+
 		fParametersHolder.addParameter(parameter, index, this);
 	}
 
 	@Override
 	public void addParameters(List<AbstractParameterNode> parameters) {
-		
+
 		fParametersHolder.addParameters(parameters, this);
 	}
 
 	@Override
 	public boolean removeParameter(AbstractParameterNode parameter) {
-		
+
 		return fParametersHolder.removeParameter(parameter);
 	}
 
 	@Override
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
-		
+
 		fParametersHolder.replaceParameters(parameters);
 	}
 
 	@Override
 	public int getParametersCount() {
-		
+
 		return fParametersHolder.getParametersCount();
 	}
 
 	@Override
 	public List<AbstractParameterNode> getParameters() {
-		
+
 		return fParametersHolder.getParameters();
 	}
 
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
-		
+
 		return fParametersHolder.getParameter(parameterIndex);
 	}
 
 	@Override
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
-		
+
 		return fParametersHolder.findParameter(parameterNameToFind);
 	}
 
 	@Override
 	public int getParameterIndex(String parameterName) {
-		
+
 		return fParametersHolder.getParameterIndex(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(String parameterName) {
-		
+
 		return fParametersHolder.parameterExists(parameterName);
 	}
 
 	@Override
 	public boolean parameterExists(BasicParameterNode abstractParameterNode) {
-		
+
 		return fParametersHolder.parameterExists(abstractParameterNode);
 	}
 
@@ -202,16 +202,16 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public List<String> getParametersNames() {
-		
+
 		return fParametersHolder.getParametersNames();
 	}
 
 	@Override
 	public String generateNewParameterName(String startParameterName) {
-		
+
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
-	
+
 	public IParametersParentNode getParametersParent() {
 
 		return (IParametersParentNode)getParent();
@@ -219,19 +219,19 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public ConstraintsItr getIterator() {
-		
+
 		return fConstraintNodeListHolder.getIterator();
 	}
 
 	@Override
 	public boolean hasNextConstraint(ConstraintsItr contIterator) {
-		
+
 		return fConstraintNodeListHolder.hasNextConstraint(contIterator);
 	}
 
 	@Override
 	public ConstraintNode getNextConstraint(ConstraintsItr contIterator) {
-		
+
 		return fConstraintNodeListHolder.getNextConstraint(contIterator);
 	}
 
@@ -243,19 +243,19 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public void addConstraint(ConstraintNode constraint) {
-		
+
 		fConstraintNodeListHolder.addConstraint(constraint, this);
 	}
 
 	@Override
 	public void addConstraint(ConstraintNode constraint, int index) {
-		
+
 		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
 
 	@Override
 	public List<ConstraintNode> getConstraintNodes() {
-		
+
 		return fConstraintNodeListHolder.getConstraintNodes();
 	}
 
@@ -267,79 +267,79 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public List<Constraint> getConstraints() {
-		
+
 		return fConstraintNodeListHolder.getConstraints();
 	}
-	
+
 	@Override
 	public void setConstraints(List<ConstraintNode> constraints) {
-		
+
 		fConstraintNodeListHolder.setConstraints(constraints);
 	}
 
 	@Override
 	public List<Constraint> getConstraints(String name) {
-		
+
 		return fConstraintNodeListHolder.getConstraints(name);
 	}
 
 	@Override
 	public Set<String> getNamesOfConstraints() {
-		
+
 		return fConstraintNodeListHolder.getConstraintsNames();
 	}
 
 	@Override
 	public boolean removeConstraint(ConstraintNode constraint) {
-		
+
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
 	@Override
 	public boolean isChoiceMentionedInConstraints(ChoiceNode choice) {
-		
+
 		return fConstraintNodeListHolder.isChoiceMentioned(choice);
 	}
 
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
-		
+
 		return fConstraintNodeListHolder.getMentioningConstraints(parameter);
 	}
 
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter, String label) {
-		
+
 		return fConstraintNodeListHolder.getMentioningConstraints(parameter, label);
 	}
 
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(ChoiceNode choice) {
-		
+
 		return fConstraintNodeListHolder.getMentioningConstraints(choice);
 	}
 
 	@Override
 	public boolean isParameterMentionedInConstraints(BasicParameterNode parameter) {
-		
+
 		return fConstraintNodeListHolder.isParameterMentioned(parameter);
 	}
 
 	@Override
 	public void replaceConstraints(List<ConstraintNode> constraints) {
-		
+
 		fConstraintNodeListHolder.replaceConstraints(constraints);
 	}
 
 	@Override
 	public void removeAllConstraints() {
-		
+
 		fConstraintNodeListHolder.removeAllConstraints();
 	}
 
 	@Override
 	public void removeMentioningConstraints(BasicParameterNode methodParameter) {
-		
+
 		fConstraintNodeListHolder.removeMentioningConstraints(methodParameter);
 	}
 
