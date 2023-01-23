@@ -49,11 +49,11 @@ public class NodesByType {
 		this();
 
 		for(IAbstractNode selectedNode : abstractNodes) {
-			addNodeByType(selectedNode);
+			addNode(selectedNode);
 		}	
 	}
 
-	public void addNodeByType(IAbstractNode abstractNode) { // TODO MO-RE rename to addNode
+	public void addNode(IAbstractNode abstractNode) { // TODO MO-RE rename to addNode
 
 		if (abstractNode instanceof ClassNode) {
 			fClasses.add((ClassNode)abstractNode);

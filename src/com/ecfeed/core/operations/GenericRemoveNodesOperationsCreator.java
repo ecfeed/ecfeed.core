@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
@@ -23,8 +25,11 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -104,7 +109,7 @@ public class GenericRemoveNodesOperationsCreator {
 				outAffectedNodesByType,
 				extLanguageManager, 
 				validate);
-
+		
 		List<IModelOperation> resultOperations = 
 				createOperationsFromAffectedNodes(
 						outAffectedNodesByType, 
@@ -120,10 +125,28 @@ public class GenericRemoveNodesOperationsCreator {
 			boolean validate) {
 		
 		List<IModelOperation> result = new ArrayList<>();
+
+		if (!outAffectedNodesByType.getConstraints().isEmpty()) {
+			addOperationsForConstraints(outAffectedNodesByType, extLanguageManager, result);
+		}
+
+		if (!outAffectedNodesByType.getTestCaseNodes().isEmpty()) {
+			addOperationsForTestCases(outAffectedNodesByType, extLanguageManager, result);
+		}
 		
-		addOperationsForMethods(outAffectedNodesByType, extLanguageManager, result);
+		// TODO MO-RE choices
 		
-		addOperationsForClasses(outAffectedNodesByType, extLanguageManager, result);
+		if (!outAffectedNodesByType.getBasicParameters().isEmpty()) {
+			addOperationsForBasicParameters(outAffectedNodesByType, validate, extLanguageManager, result);
+		}
+		
+		if (!outAffectedNodesByType.getMethods().isEmpty()) {
+			addOperationsForMethods(outAffectedNodesByType, extLanguageManager, result);
+		}
+		
+		if (!outAffectedNodesByType.getClasses().isEmpty()) {
+			addOperationsForClasses(outAffectedNodesByType, extLanguageManager, result);
+		}
 			
 		return result;
 		
@@ -154,6 +177,91 @@ public class GenericRemoveNodesOperationsCreator {
 //		}
 
 //		return resultOperations;
+	}
+
+	private static void addOperationsForTestCases(
+			NodesByType outAffectedNodesByType,
+			IExtLanguageManager extLanguageManager, 
+			List<IModelOperation> result) {
+
+		
+		Set<TestCaseNode> testCaseNodes = outAffectedNodesByType.getTestCaseNodes();
+		
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+			
+			MethodOperationRemoveTestCase operation = 
+					new MethodOperationRemoveTestCase(testCaseNode.getMethod(), testCaseNode, extLanguageManager);
+		
+			result.add(operation);
+		}
+	}
+
+	private static void addOperationsForConstraints(
+			NodesByType outAffectedNodesByType,
+			IExtLanguageManager extLanguageManager, 
+			List<IModelOperation> result) {
+		
+		Set<ConstraintNode> constraintNodes = outAffectedNodesByType.getConstraints();
+		
+		for (ConstraintNode constraintNode : constraintNodes) {
+			
+			IAbstractNode abstractParent = constraintNode.getParent();
+			
+			// TODO MO-RE merge MethodOperationRemoveConstraint and CompositeParameterOperationRemoveConstraint into one operation 
+			if (abstractParent instanceof MethodNode) {
+			
+				IModelOperation operation = 
+						new MethodOperationRemoveConstraint(
+								(MethodNode) abstractParent, constraintNode, extLanguageManager);
+				result.add(operation);
+				continue;
+			}
+			
+			if (abstractParent instanceof CompositeParameterNode) {
+				
+				IModelOperation operation = 
+					new CompositeParameterOperationRemoveConstraint(
+						(CompositeParameterNode) abstractParent, constraintNode, extLanguageManager);
+				
+				result.add(operation);
+				continue;
+			}
+			
+			ExceptionHelper.reportRuntimeException("Invalid parent of constraint.");
+		}
+	}
+
+	private static void addOperationsForBasicParameters(
+			NodesByType outAffectedNodesByType,
+			boolean validate,
+			IExtLanguageManager extLanguageManager, 
+			List<IModelOperation> result) {
+
+		Set<BasicParameterNode> basicParameterNodes = outAffectedNodesByType.getBasicParameters();
+
+		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
+
+			if (basicParameterNode.isGlobalParameter()) {
+
+				IModelOperation operation = 
+						new GenericOperationRemoveGlobalParameter(
+								(IParametersParentNode)basicParameterNode.getParametersParent(), 
+								basicParameterNode,
+								extLanguageManager);
+
+				result.add(operation);
+				continue;
+
+			} else {
+
+				IModelOperation operation = 
+						new RemoveBasicParameterOperation(
+								(MethodNode)basicParameterNode.getParent(), basicParameterNode, validate, extLanguageManager);
+
+				result.add(operation);
+				continue;
+			}
+		}
 	}
 
 	private static void addOperationsForClasses(
@@ -278,7 +386,7 @@ public class GenericRemoveNodesOperationsCreator {
 				Set<BasicParameterNode> basicParameters = selectedNodesByType.getBasicParameters();
 		
 				if (!basicParameters.isEmpty()) {
-					processBasicParameters(selectedNodesByType, inOutAffectedNodes);
+					processBasicParameters(basicParameters, inOutAffectedNodes);
 				}
 		
 				Set<CompositeParameterNode> compositeParameters = selectedNodesByType.getCompositeParameters();
@@ -292,7 +400,7 @@ public class GenericRemoveNodesOperationsCreator {
 	private static void processConstraints(Set<ConstraintNode> constraintNodes, NodesByType inOutAffectedNodes) {
 
 		for (ConstraintNode constraint : constraintNodes) {
-			inOutAffectedNodes.addNodeByType(constraint);
+			inOutAffectedNodes.addNode(constraint);
 		}
 	}
 
@@ -302,7 +410,7 @@ public class GenericRemoveNodesOperationsCreator {
 
 		while (methodItr.hasNext()) {
 			MethodNode method = methodItr.next();
-			inOutAffectedNodes.addNodeByType(method);
+			inOutAffectedNodes.addNode(method);
 		}
 	}
 
@@ -339,7 +447,7 @@ public class GenericRemoveNodesOperationsCreator {
 		if ((parent instanceof MethodNode) || (parent instanceof CompositeParameterNode)) {
 
 			accumulateAffectedConstraints(abstractParameterNode, inOutAffectedNodes);
-			inOutAffectedNodes.addNodeByType(abstractParameterNode);
+			inOutAffectedNodes.addNode(abstractParameterNode);
 		}
 	}
 
@@ -360,7 +468,7 @@ public class GenericRemoveNodesOperationsCreator {
 				CompositeParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
 
 		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
-			inOutAffectedNodes.addNodeByType(basicParameterNode);
+			inOutAffectedNodes.addNode(basicParameterNode);
 		}
 	}
 
@@ -371,16 +479,14 @@ public class GenericRemoveNodesOperationsCreator {
 		for (CompositeParameterNode compositeParameterNode : compositeParameters) {
 
 			if (!compositeParameterNode.isGlobalParameter()) {
-				inOutAffectedNodes.addNodeByType(compositeParameterNode);
+				inOutAffectedNodes.addNode(compositeParameterNode);
 			}
 		}
 	}
 
 	private static void processBasicParameters(
-			NodesByType selectedNodesByType,
+			Set<BasicParameterNode> basicParameters,
 			NodesByType inOutAffectedNodes) {
-
-		ExceptionHelper.reportRuntimeException("XYX TODO");
 
 		//		/*
 		//		 * Iterate through global params. Do the same checks as for method
@@ -405,12 +511,43 @@ public class GenericRemoveNodesOperationsCreator {
 		//				inOutAffectedNodes.addOtherNode(global);
 		//			}
 		//		}
+		
+		for (BasicParameterNode basicParameterNode : basicParameters) {
+			
+			accumulateAffectedConstraints(basicParameterNode, inOutAffectedNodes);
+			accumulateAffectedTestCases(basicParameterNode, inOutAffectedNodes);
+			
+			inOutAffectedNodes.addNode(basicParameterNode);
+		}
+	}
+
+	private static void accumulateAffectedTestCases(
+			BasicParameterNode basicParameterNode,
+			NodesByType inOutAffectedNodes) {
+		
+		if (basicParameterNode.isGlobalParameter()) {
+			
+			List<AbstractParameterNode> linkedParameters = 
+					GlobalParameterNodeHelper.getLinkedParameters(basicParameterNode);
+			
+			for (AbstractParameterNode abstractParameterNode : linkedParameters) {
+				
+				MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
+				
+				inOutAffectedNodes.addTestCases(methodNode.getTestCases());
+			}
+		} else {
+			
+			MethodNode methodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
+			inOutAffectedNodes.addTestCases(methodNode.getTestCases());
+			
+		}
 	}
 
 	private static void processTestCases(Set<TestCaseNode> testCaseNodes, NodesByType inOutAffectedNodes) {
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
-			inOutAffectedNodes.addNodeByType(testCaseNode);
+			inOutAffectedNodes.addNode(testCaseNode);
 		}
 	}
 
@@ -424,14 +561,14 @@ public class GenericRemoveNodesOperationsCreator {
 
 			accumulateAffectedTestCases(choiceNode, inOutAffectedNodes);
 
-			inOutAffectedNodes.addNodeByType(choiceNode);
+			inOutAffectedNodes.addNode(choiceNode);
 		}
 	}
 
 	private static void processClasses(Set<ClassNode> classsNodes, NodesByType outAffectedNodesByType) {
 
 		for (ClassNode classNode : classsNodes) {
-			outAffectedNodesByType.addNodeByType(classNode);
+			outAffectedNodesByType.addNode(classNode);
 		}
 	}
 
