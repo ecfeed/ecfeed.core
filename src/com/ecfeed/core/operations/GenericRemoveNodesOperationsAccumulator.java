@@ -37,89 +37,9 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
 
-public class GenericRemoveNodesOperationsCreator {
+public class GenericRemoveNodesOperationsAccumulator {
 
-	private final Set<IAbstractNode> fSelectedNodes;
-	private NodesByType fAffectedNodesByType;
-	private List<IModelOperation> fOperations;
-
-	public GenericRemoveNodesOperationsCreator(
-			Set<IAbstractNode> selectedNodes, 
-			ITypeAdapterProvider typeAdapterProvider, 
-			boolean validate,
-			IExtLanguageManager extLanguageManager) {
-
-		fSelectedNodes = selectedNodes;
-		fAffectedNodesByType = new NodesByType();
-
-		removeNodesWithAncestorsOnList(fSelectedNodes);
-
-		fOperations = 
-				createDeletingNodesOperations(
-						fSelectedNodes,
-						fAffectedNodesByType,
-
-						extLanguageManager,
-						typeAdapterProvider, 
-						validate);
-	}
-
-	public List<IModelOperation> getOperations() {
-		return fOperations;
-	}
-
-	public Set<ConstraintNode> getAffectedConstraints() {
-		return fAffectedNodesByType.getConstraints();
-	}
-
-	public Set<TestCaseNode> getAffectedTestCases() {
-		return fAffectedNodesByType.getTestCaseNodes();
-	}
-
-	private void removeNodesWithAncestorsOnList(Set<IAbstractNode> selectedNodes) {
-
-		Iterator<IAbstractNode> iterator = selectedNodes.iterator();
-
-		while (iterator.hasNext()) {
-
-			IAbstractNode currentNode = iterator.next();
-
-			List<IAbstractNode> ancestors = currentNode.getAncestors();
-
-			for (IAbstractNode ancestor : ancestors) {
-
-				if (selectedNodes.contains(ancestor)) {
-
-					// node is deleted because ancestor will be remove with the whole sub-tree which includes current node 
-					iterator.remove(); 
-					break;
-				}
-			}
-		}
-	}
-
-	private static List<IModelOperation> createDeletingNodesOperations(
-			Set<IAbstractNode> selectedNodes,
-			NodesByType outAffectedNodesByType,
-			IExtLanguageManager extLanguageManager,
-			ITypeAdapterProvider typeAdapterProvider, 
-			boolean validate) {
-
-		processNodes(
-				selectedNodes, 
-				outAffectedNodesByType,
-				extLanguageManager, 
-				validate);
-
-		List<IModelOperation> resultOperations = 
-				GenericRemoveNodesOperationsAccumulator.convertNodesToOperations(
-						outAffectedNodesByType, 
-						extLanguageManager, typeAdapterProvider, validate);
-
-		return resultOperations;
-	}
-
-	private static List<IModelOperation> createOperationsFromAffectedNodes(
+	public static List<IModelOperation> convertNodesToOperations(
 			NodesByType outAffectedNodesByType,
 			IExtLanguageManager extLanguageManager,
 			ITypeAdapterProvider typeAdapterProvider, 
