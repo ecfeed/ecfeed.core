@@ -149,9 +149,9 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		}
 		if(fChild instanceof ConstraintNode){
 			if(fIndex == -1){
-				return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fExtLanguageManager);
+				return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fExtLanguageManager);
 			}
-			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
+			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof TestSuiteNode) {
 			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);

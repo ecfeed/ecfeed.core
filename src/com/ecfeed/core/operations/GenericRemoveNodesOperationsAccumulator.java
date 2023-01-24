@@ -129,8 +129,11 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (abstractParent instanceof MethodNode) {
 
 				IModelOperation operation = 
-						new MethodOperationRemoveConstraint(
-								(MethodNode) abstractParent, constraintNode, extLanguageManager);
+						//new MethodOperationRemoveConstraint(
+						//		(MethodNode) abstractParent, constraintNode, extLanguageManager);
+						new OnConstraintOperationRemove(
+								(MethodNode)abstractParent, constraintNode, extLanguageManager);
+						
 				result.add(operation);
 				continue;
 			}
@@ -138,8 +141,11 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (abstractParent instanceof CompositeParameterNode) {
 
 				IModelOperation operation = 
-						new CompositeParameterOperationRemoveConstraint(
-								(CompositeParameterNode) abstractParent, constraintNode, extLanguageManager);
+						//new CompositeParameterOperationRemoveConstraint(
+						//		(CompositeParameterNode) abstractParent, constraintNode, extLanguageManager);
+						
+						new OnConstraintOperationRemove(
+								(CompositeParameterNode)abstractParent, constraintNode, extLanguageManager);
 
 				result.add(operation);
 				continue;

@@ -32,7 +32,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 	private static class UnsupportedModelOperation implements IModelOperation{
-		
+
 		@Override
 		public void execute() {
 			ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
@@ -96,7 +96,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 		public Object visit(BasicParameterNode node) throws Exception {
 
 			IAbstractNode parent = node.getParent();
-			
+
 			if ((parent instanceof RootNode) || (parent instanceof ClassNode)) {
 
 				return new GenericOperationRemoveGlobalParameter(
@@ -106,38 +106,38 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 			}
 
 			if (parent instanceof MethodNode) {
-				
-					return new RemoveBasicParameterOperation(
-							(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+
+				return new RemoveBasicParameterOperation(
+						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			}
-			
+
 			if (parent instanceof CompositeParameterNode) {
 
 				return new CompositeParameterOperationRemoveParameter(
 						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
-			
+
 			ExceptionHelper.reportRuntimeException("Unexpected parent for basic parameter.");
 			return null;
 		}
-		
+
 		@Override
 		public Object visit(CompositeParameterNode node) throws Exception {
-			
+
 			IAbstractNode parent = node.getParent();
-			
+
 			if (parent instanceof MethodNode) {
 
 				return new RemoveBasicParameterOperation(
 						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			} 
-			
+
 			if (parent instanceof CompositeParameterNode) {
 
 				return new CompositeParameterOperationRemoveParameter(
 						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
-			
+
 			ExceptionHelper.reportRuntimeException("Unexpected parent for composite parameter.");
 			return null;
 		}
@@ -154,35 +154,43 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 		@Override
 		public Object visit(ConstraintNode node) throws Exception {
-			
+
 			IAbstractNode abstractParent = node.getParent();
-			
+
+			// TODO MO-RE MERGE
 			if (abstractParent instanceof MethodNode) {
-			
-				return new MethodOperationRemoveConstraint(
+
+				//return new MethodOperationRemoveConstraint(
+				//		(MethodNode) abstractParent, node, fExtLanguageManager);
+				
+				return new OnConstraintOperationRemove(
 						(MethodNode) abstractParent, node, fExtLanguageManager);
 			}
-			
+
 			if (abstractParent instanceof CompositeParameterNode) {
-				return new CompositeParameterOperationRemoveConstraint(
+				//				return new CompositeParameterOperationRemoveConstraint(
+				//						(CompositeParameterNode) abstractParent, node, fExtLanguageManager);
+
+				return new OnConstraintOperationRemove(
 						(CompositeParameterNode) abstractParent, node, fExtLanguageManager);
+
 			}
-			
+
 			ExceptionHelper.reportRuntimeException("Invalid parent of constraint.");
 			return null;
 		}
 
 		@Override
 		public Object visit(ChoiceNode choiceNode) throws Exception {
-			
+
 			IAbstractNode abstractParent = choiceNode.getParent();
-			
+
 			if (!(abstractParent instanceof IChoicesParentNode)) {
 				ExceptionHelper.reportRuntimeException("Invalid type of parent.");
 			}
 
 			IChoicesParentNode choicesParentNode = (IChoicesParentNode)abstractParent; 
-			
+
 			return new GenericOperationRemoveChoice(choicesParentNode, choiceNode, fAdapterProvider, fValidate, fExtLanguageManager);
 		}
 
@@ -193,14 +201,14 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate, 
 			IExtLanguageManager extLanguageManager){
-		
+
 		try {
 			RemoveOperationVisitor removeOperationVisitor = 
 					new RemoveOperationVisitor(adapterProvider, validate, extLanguageManager);
-			
+
 			return (IModelOperation)node.accept(removeOperationVisitor);
 		} catch (Exception e) {
-			
+
 			return new UnsupportedModelOperation();
 		}
 	}

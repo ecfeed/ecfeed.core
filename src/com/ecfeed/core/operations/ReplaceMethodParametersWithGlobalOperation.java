@@ -58,7 +58,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends CompositeOperati
 			for(ConstraintNode constraint : method.getConstraintNodes()){
 				if(constraint.mentions(target)){
 					ConstraintNode copy = constraint.makeClone();
-					addOperation(new MethodOperationAddConstraint(method, copy, constraint.getMyIndex(), extLanguageManager));
+					addOperation(new OnConstraintOperationAdd(method, copy, constraint.getMyIndex(), extLanguageManager));
 				}
 			}
 			for(TestCaseNode tc : method.getTestCases()){

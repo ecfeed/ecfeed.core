@@ -67,7 +67,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 			return new RemoveBasicParameterOperation(node, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
-			return new MethodOperationRemoveConstraint(node, (ConstraintNode)fChild, fExtLanguageManager);
+			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof TestSuiteNode) {
 			return new MethodOperationRemoveTestCase(node, (TestCaseNode)fChild, fExtLanguageManager);

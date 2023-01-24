@@ -11,40 +11,48 @@
 package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class CompositeParameterOperationRemoveConstraint extends AbstractModelOperation { // TODO MO-RE merge with MethodOperationRemoveConstraint
+public class OnConstraintOperationRemove extends AbstractModelOperation {
 
-	private CompositeParameterNode fCompositeParameterNode;
+	private IParametersAndConstraintsParentNode fParentNode;
 	private ConstraintNode fConstraint;
 	private int fIndex;
 
-	public CompositeParameterOperationRemoveConstraint(CompositeParameterNode target, ConstraintNode constraint, IExtLanguageManager extLanguageManager){
+	public OnConstraintOperationRemove(
+			IParametersAndConstraintsParentNode parentNode,
+			ConstraintNode constraint, 
+			IExtLanguageManager extLanguageManager) {
+
 		super(OperationNames.REMOVE_CONSTRAINT, extLanguageManager);
-		fCompositeParameterNode = target;
+
+		fParentNode = parentNode;
 		fConstraint = constraint;
 		fIndex = fConstraint.getMyIndex();
 	}
-	
+
 	@Override
 	public String toString() {
-		
+
 		return "Remove constraint: " + fConstraint.getName();
 	}
 
 	@Override
 	public void execute() {
-		
-		setOneNodeToSelect(fCompositeParameterNode);
+
+		setOneNodeToSelect(fParentNode);
+
 		fIndex = fConstraint.getMyIndex();
-		fCompositeParameterNode.removeConstraint(fConstraint);
+		fParentNode.removeConstraint(fConstraint);
+
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new CompositeParameterOperationAddConstraint(fCompositeParameterNode, fConstraint, fIndex, getExtLanguageManager());
+
+		return new OnConstraintOperationAdd(fParentNode, fConstraint, fIndex, getExtLanguageManager());
 	}
 
 }
