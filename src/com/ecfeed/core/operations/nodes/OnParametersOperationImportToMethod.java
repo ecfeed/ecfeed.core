@@ -23,7 +23,6 @@ import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.GenericOperationImportParameters;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.GenericOperationImportParameters.ReverseOperation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 

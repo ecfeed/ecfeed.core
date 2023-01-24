@@ -14,7 +14,6 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.operations.GenericOperationAddParameter;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.GenericOperationAddParameter.ReverseOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnParameterOperationAddToComposite extends GenericOperationAddParameter {

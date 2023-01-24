@@ -20,7 +20,6 @@ import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.GenericOperationAddParameter;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.GenericOperationAddParameter.ReverseOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnParameterOperationAddToMethod extends GenericOperationAddParameter {
