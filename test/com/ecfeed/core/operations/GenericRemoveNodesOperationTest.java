@@ -562,6 +562,101 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 	}
 
+//	@Test
+//	public void AAremoveChoiceNodeOfCompositeParameter() {
+//
+//		RootNode rootNode = new RootNode("Root", null);
+//
+//		// class node 
+//		ClassNode classNode = new ClassNode("Class", null);
+//		rootNode.addClass(classNode);
+//
+//		// method node
+//
+//		MethodNode methodNode = new MethodNode("Method");
+//		classNode.addMethod(methodNode);
+//
+//		// composite parameter node
+//		
+//		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode("S1", null);
+//		methodNode.addParameter(compositeParameterNode1);
+//		
+//		// basic parameters of composite parameter and choices 
+//
+//		BasicParameterNode basicParameterNode1 = 
+//				new BasicParameterNode(
+//						"BasicParam1", "String", "", false, null);
+//		compositeParameterNode1.addParameter(basicParameterNode1);
+//
+//		ChoiceNode choiceNode11 = new ChoiceNode("Choice11", "11");
+//		basicParameterNode1.addChoice(choiceNode11);
+//
+//		ChoiceNode choiceNode12 = new ChoiceNode("Choice12", "12");
+//		basicParameterNode1.addChoice(choiceNode12);
+//
+//		BasicParameterNode basicParameterNode2 = 
+//				new BasicParameterNode(
+//						"BasicParam2", "String", "", false, null);
+//		compositeParameterNode1.addParameter(basicParameterNode2);
+//
+//		ChoiceNode choiceNode21 = new ChoiceNode("Choice21", "21");
+//		basicParameterNode2.addChoice(choiceNode21);
+//
+//		// constraints
+//
+//		ConstraintNode constraintNode1 = createConstraintNodeWithChoiceCondition(basicParameterNode1, choiceNode11);
+//		methodNode.addConstraint(constraintNode1);
+//
+//		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
+//		methodNode.addConstraint(constraintNode2);
+//
+//		// test case
+//
+//		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
+//		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+//		methodNode.addTestCase(testCaseNode);
+//
+//		// copy parameters to deployed parameters
+//
+//		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+//		deployedParameters.add(basicParameterNode1);
+//		deployedParameters.add(basicParameterNode2);
+//		methodNode.setDeployedParameters(deployedParameters);
+//
+//		// list of nodes to delete
+//
+//		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+//		nodesToDelete.add(choiceNode11);
+//
+//		// remove
+//
+//		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+//				createRemovingNodesOperation(nodesToDelete, rootNode);
+//		genericRemoveNodesOperation.execute();
+//
+//		assertEquals(1, methodNode.getParameters().size());
+//		assertEquals(2, compositeParameterNode1.getParameters().size());
+//		
+//		assertEquals(1, basicParameterNode1.getChoiceCount());
+//
+//		assertEquals(1, methodNode.getConstraintNodes().size());
+//		assertEquals(0, methodNode.getTestCases().size());
+//		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+//
+//		// reverse operation
+//
+//		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+//		reverseOperation.execute();
+//
+//		assertEquals(2, methodNode.getParameters().size());
+//		assertEquals(2, basicParameterNode1.getChoiceCount());
+//
+//		assertEquals(2, methodNode.getConstraintNodes().size());
+//
+//		assertEquals(1, methodNode.getTestCases().size());
+//		assertEquals(2, methodNode.getDeployedMethodParameters().size());
+//	}
+	
 	@Test
 	public void removeConstraint() {
 
