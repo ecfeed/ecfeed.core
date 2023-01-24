@@ -66,9 +66,9 @@ public class OnConstraintOperationAdd extends AbstractModelOperation {
 			ExceptionHelper.reportRuntimeException(OperationMessages.CONSTRAINT_NOT_ALLOWED);
 		}
 
-		if(fConstraint.updateReferences(fParentNode) == false){
-			ExceptionHelper.reportRuntimeException(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);
-		}
+//		if(fConstraint.updateReferences(fParentNode) == false){
+//			ExceptionHelper.reportRuntimeException(OperationMessages.INCOMPATIBLE_CONSTRAINT_PROBLEM);
+//		}
 
 		fParentNode.addConstraint(fConstraint, fIndex);
 		markModelUpdated();

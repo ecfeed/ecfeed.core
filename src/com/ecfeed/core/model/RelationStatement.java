@@ -205,23 +205,27 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	@Override
-	public boolean updateReferences(IParametersAndConstraintsParentNode methodNode) {
+	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
 
-		AbstractParameterNode tmpParameterNode = methodNode.findParameter(fLeftParameter.getName());
-		BasicParameterNode basicParameterNode = (BasicParameterNode) tmpParameterNode;
+		String compositeName = AbstractParameterNodeHelper.getCompositeName(fLeftParameter);
 
-		if (tmpParameterNode != null) {
+		BasicParameterNode basicParameterNode = 
+				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
+						compositeName, parent);
 
-			if (!basicParameterNode.isExpected()) {
-				if (fRightCondition.updateReferences(methodNode)) {
-					fLeftParameter = basicParameterNode;
-					return true;
-				}
-			} else {
-				return true;
-			}
+		if (basicParameterNode == null) {
+			return false;
 		}
-		return false;
+
+		if (basicParameterNode.isExpected()) {
+			return true;
+		}
+
+		if (fRightCondition.updateReferences(parent)) {
+			fLeftParameter = basicParameterNode;
+		}
+		
+		return true;
 	}
 
 	@Override

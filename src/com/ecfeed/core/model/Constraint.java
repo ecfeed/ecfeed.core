@@ -563,11 +563,15 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
 
-		if (fPrecondition.updateReferences(method) && fPostcondition.updateReferences(method)) {
-			return true;
+		if (!fPrecondition.updateReferences(method)) {
+			return false;
+		}
+			
+		if (!fPostcondition.updateReferences(method)) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	public Constraint makeClone() {
