@@ -38,8 +38,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode1 =
 				new BasicParameterNode("arg0", "int", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter1 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToMethod methodOperationAddParameter1 =
+				new OnParameterOperationAddToMethod(
 					methodNode1,
 					methodParameterNode1,
 					extLanguageManagerForSimple);
@@ -56,8 +56,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode2 =
 				new BasicParameterNode("arg0", "long", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter2 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToMethod methodOperationAddParameter2 =
+				new OnParameterOperationAddToMethod(
 						methodNode2,
 						methodParameterNode2,
 						extLanguageManagerForSimple);
@@ -84,8 +84,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode1 =
 				new BasicParameterNode("arg0", "int", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter1 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToMethod methodOperationAddParameter1 =
+				new OnParameterOperationAddToMethod(
 						methodNode1,
 						methodParameterNode1,
 						extLanguageManagerForJava);
@@ -104,8 +104,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode2 =
 				new BasicParameterNode("arg0", "long", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter2 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToMethod methodOperationAddParameter2 =
+				new OnParameterOperationAddToMethod(
 						methodNode2,
 						methodParameterNode2,
 						extLanguageManagerForJava);

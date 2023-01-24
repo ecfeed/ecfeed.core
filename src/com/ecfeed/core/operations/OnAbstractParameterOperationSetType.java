@@ -29,7 +29,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 
-public class AbstractParameterOperationSetType extends AbstractModelOperation {
+public class OnAbstractParameterOperationSetType extends AbstractModelOperation {
 
 	private BasicParameterNode fAbstractParameterNode;
 	private ParameterConversionDefinition fParameterConversionDefinition;
@@ -39,7 +39,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	private Map<IChoicesParentNode, List<ChoiceNode>> fOriginalChoices;
 	private Map<ChoiceNode, String> fOriginalValues;
 
-	public AbstractParameterOperationSetType(
+	public OnAbstractParameterOperationSetType(
 			BasicParameterNode abstractParameterNode, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
@@ -274,7 +274,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 	protected class ReverseOperation extends AbstractReverseOperation {
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(AbstractParameterOperationSetType.this, extLanguageManager);
+			super(OnAbstractParameterOperationSetType.this, extLanguageManager);
 		}
 
 		@Override
@@ -290,7 +290,7 @@ public class AbstractParameterOperationSetType extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new AbstractParameterOperationSetType(
+			return new OnAbstractParameterOperationSetType(
 					fAbstractParameterNode, 
 					fNewTypeInIntrLanguage,
 					fParameterConversionDefinition,

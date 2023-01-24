@@ -36,7 +36,7 @@ public class ChoiceOperationRemoveLabel extends CompositeOperation{
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationAddLabel(fTarget, fLabel, getExtLanguageManager());
+			return new OnChoiceOperationAddLabel(fTarget, fLabel, getExtLanguageManager());
 		}
 
 	}

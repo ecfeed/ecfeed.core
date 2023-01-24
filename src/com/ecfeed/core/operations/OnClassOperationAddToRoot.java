@@ -17,17 +17,17 @@ import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class RootOperationAddClass extends AbstractModelOperation {
+public class OnClassOperationAddToRoot extends AbstractModelOperation {
 
 	private RootNode fRootNode;
 	private ClassNode fclassToAdd;
 	private int fAddIndex;
 
-	public RootOperationAddClass(RootNode target, ClassNode classToAdd, IExtLanguageManager extLanguageManager) {
+	public OnClassOperationAddToRoot(RootNode target, ClassNode classToAdd, IExtLanguageManager extLanguageManager) {
 		this(target, classToAdd, -1, extLanguageManager);
 	}
 	
-	public RootOperationAddClass(RootNode rootNode, ClassNode classToAdd, int addIndex, IExtLanguageManager extLanguageManager) {
+	public OnClassOperationAddToRoot(RootNode rootNode, ClassNode classToAdd, int addIndex, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.ADD_CLASS, extLanguageManager);
 		fRootNode = rootNode;
 		fclassToAdd = classToAdd;

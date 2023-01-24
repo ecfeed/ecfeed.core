@@ -16,8 +16,8 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ChoiceOperationAddLabels extends CompositeOperation {
-	public ChoiceOperationAddLabels(
+public class OnChoiceOperationAddLabels extends CompositeOperation {
+	public OnChoiceOperationAddLabels(
 			ChoiceNode target, 
 			Collection<String> labels, 
 			IAbstractNode nodeToSelect,
@@ -29,7 +29,7 @@ public class ChoiceOperationAddLabels extends CompositeOperation {
 
 		for(String label : labels){
 			if(target.getInheritedLabels().contains(label) == false){
-				addOperation(new ChoiceOperationAddLabel(target, label, extLanguageManager));
+				addOperation(new OnChoiceOperationAddLabel(target, label, extLanguageManager));
 			}
 		}
 	}

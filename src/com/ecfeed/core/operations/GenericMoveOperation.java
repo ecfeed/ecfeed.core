@@ -108,12 +108,12 @@ public class GenericMoveOperation extends CompositeOperation {
 			
 			if (node.getParent() == newParent.getParent()) {
 				element.add(node);
-				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRemove(element, newParent.getSuiteName(), getExtLanguageManager()));
 			} else {
 				TestCaseNode nodeCopy = node.makeClone();
 				element.add(nodeCopy);
 				
-				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRemove(element, newParent.getSuiteName(), getExtLanguageManager()));
 				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false, getExtLanguageManager())));
 				addOperation((IModelOperation)newParent.getParent().accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false, getExtLanguageManager())));
 			}
@@ -129,7 +129,7 @@ public class GenericMoveOperation extends CompositeOperation {
 				TestSuiteNode nodeCopy = node.makeClone();
 				element.addAll(nodeCopy.getTestCaseNodes());
 				
-				addOperation(new MethodOperationRenameTestCases(element, node.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRemove(element, node.getSuiteName(), getExtLanguageManager()));
 				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false, getExtLanguageManager())));
 				addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false, getExtLanguageManager())));
 			}

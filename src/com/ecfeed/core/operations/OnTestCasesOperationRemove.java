@@ -18,9 +18,9 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
-public class MethodOperationRenameTestCases extends CompositeOperation {
+public class OnTestCasesOperationRemove extends CompositeOperation {
 
-	public MethodOperationRenameTestCases(
+	public OnTestCasesOperationRemove(
 			Collection<TestCaseNode> testCases, 
 			String newName,
 			IExtLanguageManager extLanguageManager) {

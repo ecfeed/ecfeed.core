@@ -81,8 +81,8 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 
-			MethodOperationRemoveTestCase operation = 
-					new MethodOperationRemoveTestCase(testCaseNode.getMethod(), testCaseNode, extLanguageManager);
+			OnTestCaseOperationRemove operation = 
+					new OnTestCaseOperationRemove(testCaseNode.getMethod(), testCaseNode, extLanguageManager);
 
 			result.add(operation);
 		}

@@ -149,7 +149,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new MethodOperationRemoveTestCase(node.getMethod(), node, fExtLanguageManager);
+			return new OnTestCaseOperationRemove(node.getMethod(), node, fExtLanguageManager);
 		}
 
 		@Override

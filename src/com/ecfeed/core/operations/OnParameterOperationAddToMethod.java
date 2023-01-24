@@ -20,14 +20,14 @@ import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationAddParameter extends GenericOperationAddParameter {
+public class OnParameterOperationAddToMethod extends GenericOperationAddParameter {
 
 	List<TestCaseNode> fRemovedTestCases;
 	MethodNode fMethodNode;
 	AbstractParameterNode fMethodParameterNode;
 	private int fNewIndex;
 
-	public MethodOperationAddParameter(
+	public OnParameterOperationAddToMethod(
 			MethodNode methodNode,
 			AbstractParameterNode methodParameterNode,
 			int index,
@@ -41,7 +41,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
 	}
 
-	public MethodOperationAddParameter(
+	public OnParameterOperationAddToMethod(
 			MethodNode target,
 			AbstractParameterNode parameter,
 			IExtLanguageManager extLanguageManager) {
@@ -101,7 +101,7 @@ public class MethodOperationAddParameter extends GenericOperationAddParameter {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodOperationAddParameter(fMethodNode, fMethodParameterNode, getExtLanguageManager());
+			return new OnParameterOperationAddToMethod(fMethodNode, fMethodParameterNode, getExtLanguageManager());
 		}
 
 	}

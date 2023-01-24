@@ -44,7 +44,7 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.SimpleLanguageHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class BasicParameterOperationSetType extends AbstractParameterOperationSetType {
+public class OnBasicParameterOperationSetType extends OnAbstractParameterOperationSetType {
 
 	private String fOriginalDefaultValue;
 	private Map<Integer, String> fOriginalConstraintValues;
@@ -56,7 +56,7 @@ public class BasicParameterOperationSetType extends AbstractParameterOperationSe
 	private String fNewTypeInIntrLanguage;
 	private IExtLanguageManager fExtLanguageManager;
 
-	public BasicParameterOperationSetType(
+	public OnBasicParameterOperationSetType(
 			BasicParameterNode target, 
 			String newTypeInIntrLanguage, 
 			ParameterConversionDefinition parameterConversionDefinition,
@@ -249,7 +249,7 @@ public class BasicParameterOperationSetType extends AbstractParameterOperationSe
 
 	}
 
-	private class ReverseSetTypeOperation extends AbstractParameterOperationSetType.ReverseOperation{
+	private class ReverseSetTypeOperation extends OnAbstractParameterOperationSetType.ReverseOperation{
 
 		public ReverseSetTypeOperation(IExtLanguageManager extLanguageManager) {
 
@@ -284,7 +284,7 @@ public class BasicParameterOperationSetType extends AbstractParameterOperationSe
 		@Override
 		public IModelOperation getReverseOperation() {
 
-			return new BasicParameterOperationSetType(
+			return new OnBasicParameterOperationSetType(
 					fMethodParameterNode, 
 					getNewType(), 
 					fParameterConversionDefinition, 

@@ -27,7 +27,7 @@ public class RootOperationAddClasses extends CompositeOperation {
 		super(OperationNames.ADD_CLASSES, false, target, target, extLanguageManager);
 		
 		for(ClassNode classNode : classes){
-			addOperation(new RootOperationAddClass(target, classNode, index++, extLanguageManager));
+			addOperation(new OnClassOperationAddToRoot(target, classNode, index++, extLanguageManager));
 		}
 	}
 }

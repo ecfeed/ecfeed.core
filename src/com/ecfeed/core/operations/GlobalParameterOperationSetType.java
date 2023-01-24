@@ -39,8 +39,8 @@ public class GlobalParameterOperationSetType extends CompositeOperation {
 		fGlobalParameterNode = globalParameterNode;
 		fParameterConversionDefinition = parameterConversionDefinition;
 		
-		AbstractParameterOperationSetType abstractParameterOperationSetType = 
-				new AbstractParameterOperationSetType(
+		OnAbstractParameterOperationSetType abstractParameterOperationSetType = 
+				new OnAbstractParameterOperationSetType(
 						globalParameterNode, 
 						newType, 
 						parameterConversionDefinition,

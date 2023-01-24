@@ -94,10 +94,10 @@ public class FactoryAddChildOperation implements IModelVisitor{
 		generateUniqueNameForClass(rootNode, classNode);
 
 		if (fIndex == -1) {
-			return new RootOperationAddClass(rootNode, classNode, fExtLanguageManager);
+			return new OnClassOperationAddToRoot(rootNode, classNode, fExtLanguageManager);
 		}
 
-		return new RootOperationAddClass(rootNode, classNode, fIndex, fExtLanguageManager);
+		return new OnClassOperationAddToRoot(rootNode, classNode, fIndex, fExtLanguageManager);
 	}
 	
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
@@ -137,15 +137,15 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			BasicParameterNode parameter = new BasicParameterNode(globalParameter, defaultValue, false);
 
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node,parameter, fExtLanguageManager);
+				return new OnParameterOperationAddToMethod(node,parameter, fExtLanguageManager);
 			}
-			return new MethodOperationAddParameter(node, parameter, fIndex, fExtLanguageManager);
+			return new OnParameterOperationAddToMethod(node, parameter, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof BasicParameterNode){
 			if(fIndex == -1){
-				return new MethodOperationAddParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
+				return new OnParameterOperationAddToMethod(node, (BasicParameterNode)fChild, fExtLanguageManager);
 			}
-			return new MethodOperationAddParameter(node, (BasicParameterNode)fChild, fIndex, fExtLanguageManager);
+			return new OnParameterOperationAddToMethod(node, (BasicParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
 			if(fIndex == -1){
