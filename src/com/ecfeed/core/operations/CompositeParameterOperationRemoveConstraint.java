@@ -14,7 +14,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class CompositeParameterOperationRemoveConstraint extends AbstractModelOperation {
+public class CompositeParameterOperationRemoveConstraint extends AbstractModelOperation { // TODO MO-RE merge with MethodOperationRemoveConstraint
 
 	private CompositeParameterNode fCompositeParameterNode;
 	private ConstraintNode fConstraint;
@@ -25,6 +25,12 @@ public class CompositeParameterOperationRemoveConstraint extends AbstractModelOp
 		fCompositeParameterNode = target;
 		fConstraint = constraint;
 		fIndex = fConstraint.getMyIndex();
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "Remove constraint: " + fConstraint.getName();
 	}
 
 	@Override

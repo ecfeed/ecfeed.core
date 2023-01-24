@@ -36,6 +36,12 @@ public class MethodOperationAddConstraint extends AbstractModelOperation {
 	}
 
 	@Override
+	public String toString() {
+		
+		return "Add constraint: " + fConstraint.getName();
+	}
+	
+	@Override
 	public void execute() {
 
 		setOneNodeToSelect(fMethodNode);

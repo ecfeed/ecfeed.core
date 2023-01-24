@@ -16,7 +16,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
-public class CompositeParameterOperationAddConstraint extends AbstractModelOperation {
+public class CompositeParameterOperationAddConstraint extends AbstractModelOperation { // TODO MO-RE add merge with MethodOperationAddConstraint
 
 	private CompositeParameterNode fCompositeParameterNode;
 	private ConstraintNode fConstraint;
@@ -35,6 +35,12 @@ public class CompositeParameterOperationAddConstraint extends AbstractModelOpera
 		fIndex = index;
 	}
 
+	@Override
+	public String toString() {
+		
+		return "Add constraint: " + fConstraint.getName();
+	}
+	
 	public CompositeParameterOperationAddConstraint(
 			CompositeParameterNode target, 
 			ConstraintNode constraint, 

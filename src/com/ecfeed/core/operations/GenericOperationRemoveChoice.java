@@ -36,6 +36,11 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 		private ITypeAdapterProvider fAdapterProvider;
 
 		private class ReverseOperation extends AbstractModelOperation{
+			
+			@Override
+			public String toString() {
+				return "reverse Remove choice " + fChoice.getName();
+			}
 
 			private class ReverseParameterAdapter implements IBasicParameterVisitor{
 
@@ -141,6 +146,11 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 			fOriginalIndex = fChoice.getMyIndex();
 		}
 
+		@Override
+		public String toString() {
+			return "Remove choice " + fChoice.getName();
+		}
+		
 		@Override
 		public void execute() {
 
