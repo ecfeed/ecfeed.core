@@ -154,13 +154,13 @@ public class FactoryAddChildOperation implements IModelVisitor{
 			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
 		}
 		if(fChild instanceof TestSuiteNode) {
-			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
+			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
 		}
 		if(fChild instanceof TestCaseNode){
 			if(fIndex == -1){
-				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
+				return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
 			}
-			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
+			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();

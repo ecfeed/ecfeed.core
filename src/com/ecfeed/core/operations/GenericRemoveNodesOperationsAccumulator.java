@@ -195,7 +195,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (parent instanceof CompositeParameterNode) {
 
 				IModelOperation operation = 
-						new CompositeParameterOperationRemoveParameter(
+						new OnParameterOperationRemoveFromComposite(
 								(CompositeParameterNode)parent, basicParameterNode, extLanguageManager);
 				result.add(operation);
 				continue;
@@ -228,7 +228,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (parent instanceof CompositeParameterNode) {
 
 				IModelOperation modelOperation = 
-						new CompositeParameterOperationRemoveParameter(
+						new OnParameterOperationRemoveFromComposite(
 								(CompositeParameterNode)parent, basicParameterNode, extLanguageManager);
 
 				result.add(modelOperation);

@@ -24,13 +24,13 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationImportParameters extends GenericOperationImportParameters {
+public class OnParametersOperationImportToMethod extends GenericOperationImportParameters {
 
 	List<TestCaseNode> fRemovedTestCases;
 	List<BasicParameterNode> fAbstractParameterNodes;
 	MethodNode fMethodNode;
 
-	public MethodOperationImportParameters(
+	public OnParametersOperationImportToMethod(
 			MethodNode methodNode, 
 			List<BasicParameterNode> abstractParameterNodes,
 			IExtLanguageManager extLanguageManager) {
@@ -96,7 +96,7 @@ public class MethodOperationImportParameters extends GenericOperationImportParam
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new MethodOperationImportParameters(fMethodNode, fAbstractParameterNodes, getExtLanguageManager());
+			return new OnParametersOperationImportToMethod(fMethodNode, fAbstractParameterNodes, getExtLanguageManager());
 		}
 
 	}

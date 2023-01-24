@@ -13,7 +13,7 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.MethodOperationSetConstraints;
+import com.ecfeed.core.operations.OnConstraintsOperationSetOnMethod;
 import com.ecfeed.core.operations.OperationSimpleAddChoice;
 import com.ecfeed.core.operations.OperationSimpleSetTestCases;
 import com.ecfeed.core.operations.SimpleOperationSetMethodParameterType;
@@ -44,7 +44,7 @@ public class ParameterTransformer {
 		String oldMethodParameterType = srcMethodParameterNode.getType();
 		String globalParameterType = dstGlobalParameterNode.getType();
 		
-		MethodOperationSetConstraints reverseOperation = 
+		OnConstraintsOperationSetOnMethod reverseOperation = 
 				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
 
 		outReverseOperations.add(reverseOperation);
@@ -344,7 +344,7 @@ public class ParameterTransformer {
 	}
 
 
-	private static MethodOperationSetConstraints createReverseOperationSetConstraints(
+	private static OnConstraintsOperationSetOnMethod createReverseOperationSetConstraints(
 			BasicParameterNode srcParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
@@ -360,8 +360,8 @@ public class ParameterTransformer {
 			listOfClonedConstraintNodes.add(clone);
 		}
 
-		MethodOperationSetConstraints reverseOperation = 
-				new MethodOperationSetConstraints(methodNode, listOfClonedConstraintNodes, extLanguageManager);
+		OnConstraintsOperationSetOnMethod reverseOperation = 
+				new OnConstraintsOperationSetOnMethod(methodNode, listOfClonedConstraintNodes, extLanguageManager);
 
 		return reverseOperation;
 	}

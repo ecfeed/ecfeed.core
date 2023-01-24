@@ -35,7 +35,7 @@ public class GenericOperationAddChoice extends CompositeOperation {
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if((method != null) && validate){
-				addOperation(new MethodOperationRemoveInconsistentChildren(method, getExtLanguageManager()));
+				addOperation(new OnMethodOperationRemoveInconsistentChildren(method, getExtLanguageManager()));
 			}
 		}
 	}

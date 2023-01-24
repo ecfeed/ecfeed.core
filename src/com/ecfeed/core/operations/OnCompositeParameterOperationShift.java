@@ -25,11 +25,11 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class CompositeParameterShiftOperation extends GenericShiftOperation { // TODO MO-RE implement
+public class OnCompositeParameterOperationShift extends GenericShiftOperation { // TODO MO-RE implement
 
 	private List<AbstractParameterNode> fParameters;
 
-	public CompositeParameterShiftOperation(
+	public OnCompositeParameterOperationShift(
 			List<AbstractParameterNode> parameters, 
 			IAbstractNode shifted, 
 			boolean up,
@@ -38,7 +38,7 @@ public class CompositeParameterShiftOperation extends GenericShiftOperation { //
 		this(parameters, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
 	}
 
-	public CompositeParameterShiftOperation(
+	public OnCompositeParameterOperationShift(
 			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			boolean up, 
@@ -47,7 +47,7 @@ public class CompositeParameterShiftOperation extends GenericShiftOperation { //
 		setShift(minAllowedShift(shifted, up));
 	}
 
-	public CompositeParameterShiftOperation(
+	public OnCompositeParameterOperationShift(
 			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			int shift,
@@ -77,7 +77,7 @@ public class CompositeParameterShiftOperation extends GenericShiftOperation { //
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new CompositeParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
+		return new OnCompositeParameterOperationShift(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
 	}
 
 	@Override

@@ -14,7 +14,7 @@ import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ConstraintOperationChangeType extends AbstractModelOperation {
+public class OnConstraintOperationChangeType extends AbstractModelOperation {
 
 	public static final String CANNOT_CHANGE_CONSTRAINT_TYPE_TO_THE_SAME_TYPE = "Cannot change constraint type to the same type.";
 	private ConstraintNode fCurrentConstraintNode;
@@ -23,7 +23,7 @@ public class ConstraintOperationChangeType extends AbstractModelOperation {
 
 	private Constraint fInitialConstraintCopy;
 
-	public ConstraintOperationChangeType(
+	public OnConstraintOperationChangeType(
 			ConstraintNode constraintNode,
 			ConstraintType newConstraintType,
 			IExtLanguageManager extLanguageManager) {

@@ -77,10 +77,10 @@ public class FactoryShiftOperation {
 		@Override
 		public Object visit(MethodNode node) throws Exception {
 			if(fShifted.get(0) instanceof BasicParameterNode){
-				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+				return new OnParameterParameterOfMethodOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof CompositeParameterNode){
-				return new CompositeParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+				return new OnCompositeParameterOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
@@ -188,7 +188,7 @@ public class FactoryShiftOperation {
 		@Override
 		public Object visit(MethodNode node) throws Exception {
 			if(fShifted.get(0) instanceof BasicParameterNode){
-				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
+				return new OnParameterParameterOfMethodOperationShift(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fShift, fExtLanguageManager);

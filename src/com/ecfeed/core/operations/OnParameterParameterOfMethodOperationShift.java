@@ -25,11 +25,11 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodParameterShiftOperation extends GenericShiftOperation {
+public class OnParameterParameterOfMethodOperationShift extends GenericShiftOperation {
 
 	private List<AbstractParameterNode> fParameters;
 
-	public MethodParameterShiftOperation(
+	public OnParameterParameterOfMethodOperationShift(
 			List<AbstractParameterNode> parameters, 
 			IAbstractNode shifted, 
 			boolean up,
@@ -38,7 +38,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		this(parameters, Arrays.asList(new IAbstractNode[]{shifted}), up, extLanguageManager);
 	}
 
-	public MethodParameterShiftOperation(
+	public OnParameterParameterOfMethodOperationShift(
 			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			boolean up, 
@@ -47,7 +47,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 		setShift(minAllowedShift(shifted, up));
 	}
 
-	public MethodParameterShiftOperation(
+	public OnParameterParameterOfMethodOperationShift(
 			List<AbstractParameterNode> parameters, 
 			List<? extends IAbstractNode> shifted, 
 			int shift,
@@ -76,7 +76,7 @@ public class MethodParameterShiftOperation extends GenericShiftOperation {
 
 	@Override
 	public IModelOperation getReverseOperation(){
-		return new MethodParameterShiftOperation(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
+		return new OnParameterParameterOfMethodOperationShift(fParameters, getShiftedElements(), -getShift(), getExtLanguageManager());
 	}
 
 	@Override

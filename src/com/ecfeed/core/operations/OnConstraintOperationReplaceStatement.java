@@ -16,13 +16,13 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
+public class OnConstraintOperationReplaceStatement extends AbstractModelOperation{
 
 	private AbstractStatement fNewStatement;
 	private AbstractStatement fCurrentStatement;
 	private ConstraintNode fTarget;
 
-	public ConstraintOperationReplaceStatement(
+	public OnConstraintOperationReplaceStatement(
 			ConstraintNode target, 
 			AbstractStatement current, 
 			AbstractStatement newStatement,
@@ -55,7 +55,7 @@ public class ConstraintOperationReplaceStatement extends AbstractModelOperation{
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement, getExtLanguageManager());
+		return new OnConstraintOperationReplaceStatement(fTarget, fNewStatement, fCurrentStatement, getExtLanguageManager());
 	}
 
 }

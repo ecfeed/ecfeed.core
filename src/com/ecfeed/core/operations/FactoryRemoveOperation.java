@@ -113,7 +113,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			if (parent instanceof CompositeParameterNode) {
 
-				return new CompositeParameterOperationRemoveParameter(
+				return new OnParameterOperationRemoveFromComposite(
 						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
 
@@ -134,7 +134,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			if (parent instanceof CompositeParameterNode) {
 
-				return new CompositeParameterOperationRemoveParameter(
+				return new OnParameterOperationRemoveFromComposite(
 						(CompositeParameterNode)node.getParent(), node, fExtLanguageManager);
 			}
 
@@ -144,7 +144,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return new MethodOperationRemoveTestSuite(node.getMethod(), node, fExtLanguageManager);
+			return new OnTestSuiteOperationRemoveFromMethod(node.getMethod(), node, fExtLanguageManager);
 		}
 
 		@Override

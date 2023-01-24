@@ -18,12 +18,12 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationConvertTo extends AbstractModelOperation {
+public class OnMethodOperationConvertTo extends AbstractModelOperation {
 
 	private MethodNode fTargetMethodNode;
 	private MethodNode fSourceMethodNode;
 
-	public MethodOperationConvertTo(MethodNode target, MethodNode source, IExtLanguageManager extLanguageManager) {
+	public OnMethodOperationConvertTo(MethodNode target, MethodNode source, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.CONVERT_METHOD, extLanguageManager);
 
@@ -69,7 +69,7 @@ public class MethodOperationConvertTo extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationConvertTo(fSourceMethodNode, fTargetMethodNode, getExtLanguageManager());
+		return new OnMethodOperationConvertTo(fSourceMethodNode, fTargetMethodNode, getExtLanguageManager());
 	}
 
 }

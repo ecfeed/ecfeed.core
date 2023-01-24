@@ -18,12 +18,12 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionDefinition;
 
 
-public class GlobalParameterOperationSetType extends CompositeOperation {
+public class OnGlobalParameterOperationSetType extends CompositeOperation {
 
 	BasicParameterNode fGlobalParameterNode;
 	ParameterConversionDefinition fParameterConversionDefinition;
 	
-	public GlobalParameterOperationSetType(
+	public OnGlobalParameterOperationSetType(
 			BasicParameterNode globalParameterNode, 
 			String newType, 
 			ParameterConversionDefinition parameterConversionDefinition,

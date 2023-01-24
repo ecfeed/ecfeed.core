@@ -54,7 +54,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.EXTENDED_FILTER,
 						new ExtLanguageManagerForJava());
@@ -63,7 +63,7 @@ public class ConstraintOperationChangeTypeTest {
 			changeTypeOperation.execute();
 			fail();
 		} catch (Exception e) {
-			TestHelper.checkExceptionMessage(e, ConstraintOperationChangeType.CANNOT_CHANGE_CONSTRAINT_TYPE_TO_THE_SAME_TYPE);
+			TestHelper.checkExceptionMessage(e, OnConstraintOperationChangeType.CANNOT_CHANGE_CONSTRAINT_TYPE_TO_THE_SAME_TYPE);
 		}
 	}
 
@@ -101,7 +101,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.BASIC_FILTER,
 						new ExtLanguageManagerForJava());
@@ -161,7 +161,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.EXTENDED_FILTER,
 						new ExtLanguageManagerForJava());
@@ -220,7 +220,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.ASSIGNMENT,
 						new ExtLanguageManagerForJava());
@@ -285,7 +285,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.BASIC_FILTER,
 						new ExtLanguageManagerForJava());
@@ -348,7 +348,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.BASIC_FILTER,
 						new ExtLanguageManagerForJava());
@@ -408,7 +408,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.ASSIGNMENT,
 						new ExtLanguageManagerForJava());
@@ -471,7 +471,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.EXTENDED_FILTER,
 						new ExtLanguageManagerForJava());
@@ -536,7 +536,7 @@ public class ConstraintOperationChangeTypeTest {
 		// executing operation
 
 		IModelOperation changeTypeOperation =
-				new ConstraintOperationChangeType(
+				new OnConstraintOperationChangeType(
 						constraintNode,
 						ConstraintType.EXTENDED_FILTER,
 						new ExtLanguageManagerForJava());

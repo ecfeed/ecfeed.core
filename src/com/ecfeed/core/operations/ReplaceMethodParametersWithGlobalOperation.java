@@ -63,7 +63,7 @@ public class ReplaceMethodParametersWithGlobalOperation extends CompositeOperati
 			}
 			for(TestCaseNode tc : method.getTestCases()){
 				TestCaseNode copy = tc.makeClone();
-				addOperation(new MethodOperationAddTestCase(method, copy, adapterProvider, tc.getMyIndex(), extLanguageManager));
+				addOperation(new OnTestCaseOperationAddToMethod(method, copy, adapterProvider, tc.getMyIndex(), extLanguageManager));
 			}
 		}
 

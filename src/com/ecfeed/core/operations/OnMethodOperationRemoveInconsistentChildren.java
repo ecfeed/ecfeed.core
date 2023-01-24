@@ -13,36 +13,42 @@ package com.ecfeed.core.operations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintsParentNodeHelper;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestCaseParentNodeHelper;
 import com.ecfeed.core.utils.BooleanHolder;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class CompositeParameterOperationRemoveInconsistentChildren extends AbstractModelOperation {
+public class OnMethodOperationRemoveInconsistentChildren extends AbstractModelOperation {
 
-	private CompositeParameterNode fCompositeParameterNode;
+	private MethodNode fMethodNode;
 	private List<ConstraintNode> fOriginalConstraints;
+	private List<TestCaseNode> fOriginalTestCases;
 
-	public CompositeParameterOperationRemoveInconsistentChildren(
-			CompositeParameterNode target, IExtLanguageManager extLanguageManager) {
-
+	public OnMethodOperationRemoveInconsistentChildren(MethodNode target, IExtLanguageManager extLanguageManager) {
+		
 		super(OperationNames.MAKE_CONSISTENT, extLanguageManager);
-
-		fCompositeParameterNode = target;
+		
+		fMethodNode = target;
 		fOriginalConstraints = null;
+		fOriginalTestCases = null;
 	}
 
 	@Override
 	public void execute() {
 
-		setOneNodeToSelect(fCompositeParameterNode);
+		setOneNodeToSelect(fMethodNode);
 
-		fOriginalConstraints = new ArrayList<ConstraintNode>(fCompositeParameterNode.getConstraintNodes());
+		fOriginalConstraints = new ArrayList<ConstraintNode>(fMethodNode.getConstraintNodes());
+		fOriginalTestCases = new ArrayList<TestCaseNode>(fMethodNode.getTestCases());
 
 		BooleanHolder modelUpdated = new BooleanHolder(false);
 
-		ConstraintsParentNodeHelper.removeInconsistentConstraints(fCompositeParameterNode, modelUpdated);
+		TestCaseParentNodeHelper.removeInconsistentTestCases(fMethodNode, modelUpdated);
+
+		ConstraintsParentNodeHelper.removeInconsistentConstraints(fMethodNode, modelUpdated);
 
 		if (modelUpdated.get()) {
 			markModelUpdated();
@@ -63,15 +69,15 @@ public class CompositeParameterOperationRemoveInconsistentChildren extends Abstr
 		@Override
 		public void execute() {
 
-			setOneNodeToSelect(fCompositeParameterNode);
-			fCompositeParameterNode.replaceConstraints(fOriginalConstraints);
+			setOneNodeToSelect(fMethodNode);
+			fMethodNode.replaceTestCases(fOriginalTestCases);
+			fMethodNode.replaceConstraints(fOriginalConstraints);
 			markModelUpdated();
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new CompositeParameterOperationRemoveInconsistentChildren(
-					fCompositeParameterNode, getExtLanguageManager());
+			return new OnMethodOperationRemoveInconsistentChildren(fMethodNode, getExtLanguageManager());
 		}
 
 	}

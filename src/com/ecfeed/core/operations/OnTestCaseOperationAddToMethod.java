@@ -22,14 +22,14 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 import com.ecfeed.core.utils.StringHelper;
 
-public class MethodOperationAddTestCase extends AbstractModelOperation {
+public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 
 	private MethodNode fMethodNode;
 	private TestCaseNode fTestCaseNode;
 	private int fIndex;
 	private ITypeAdapterProvider fTypeAdapterProvider;
 
-	public MethodOperationAddTestCase(
+	public OnTestCaseOperationAddToMethod(
 			MethodNode methodNode, 
 			TestCaseNode testCaseNode, 
 			ITypeAdapterProvider typeAdapterProvider, 
@@ -43,7 +43,7 @@ public class MethodOperationAddTestCase extends AbstractModelOperation {
 		fTypeAdapterProvider = typeAdapterProvider;
 	}
 
-	public MethodOperationAddTestCase(
+	public OnTestCaseOperationAddToMethod(
 			MethodNode target, 
 			TestCaseNode testCase, 
 			ITypeAdapterProvider typeAdapterProvider, 

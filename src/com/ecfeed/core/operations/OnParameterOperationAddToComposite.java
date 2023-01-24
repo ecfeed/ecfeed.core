@@ -14,14 +14,14 @@ import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class CompositeParameterOperationAddParameter extends GenericOperationAddParameter {
+public class OnParameterOperationAddToComposite extends GenericOperationAddParameter {
 
 //	List<TestCaseNode> fRemovedTestCases;
 	CompositeParameterNode fCompositeParameterNode;
 	AbstractParameterNode fAbstractParameterNode;
 //	private int fNewIndex;
 
-	public CompositeParameterOperationAddParameter(
+	public OnParameterOperationAddToComposite(
 			CompositeParameterNode compositeParameterNode, 
 			AbstractParameterNode abstractParameterNode, 
 			int index,
@@ -34,7 +34,7 @@ public class CompositeParameterOperationAddParameter extends GenericOperationAdd
 //		fNewIndex = index != -1 ? index : compositeParameterNode.getParameters().size();
 	}
 
-	public CompositeParameterOperationAddParameter(
+	public OnParameterOperationAddToComposite(
 			CompositeParameterNode target, 
 			AbstractParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
@@ -94,7 +94,7 @@ public class CompositeParameterOperationAddParameter extends GenericOperationAdd
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new CompositeParameterOperationAddParameter(fCompositeParameterNode, fAbstractParameterNode, getExtLanguageManager());
+			return new OnParameterOperationAddToComposite(fCompositeParameterNode, fAbstractParameterNode, getExtLanguageManager());
 		}
 
 	}

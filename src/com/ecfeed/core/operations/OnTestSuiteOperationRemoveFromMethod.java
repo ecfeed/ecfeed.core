@@ -11,7 +11,7 @@ import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
+public class OnTestSuiteOperationRemoveFromMethod extends AbstractModelOperation {
 
 	private MethodNode fMethodNode;
 	private TestSuiteNode fTestSuite;
@@ -64,7 +64,7 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 
 	}
 
-	public MethodOperationRemoveTestSuite(MethodNode target, TestSuiteNode testSuite, IExtLanguageManager extLanguageManager) {
+	public OnTestSuiteOperationRemoveFromMethod(MethodNode target, TestSuiteNode testSuite, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.REMOVE_TEST_SUITE, extLanguageManager);
 		fMethodNode = target;
 		fTestSuite = testSuite;
@@ -81,7 +81,7 @@ public class MethodOperationRemoveTestSuite extends AbstractModelOperation {
 	@Override
 	public IModelOperation getReverseOperation() {
 
-		return new MethodOperationAddTestSuite(
+		return new OnTestSuiteOperationAddToMethod(
 				fMethodNode, 
 				fTestCaseNodes, 
 				new DummyAdapterProvider(), 

@@ -18,9 +18,9 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class MethodOperationAddTestSuite extends CompositeOperation {
+public class OnTestSuiteOperationAddToMethod extends CompositeOperation {
 
-	public MethodOperationAddTestSuite(
+	public OnTestSuiteOperationAddToMethod(
 			MethodNode methodNode, 
 			String testSuiteName, 
 			List<TestCase> testCases, 
@@ -32,7 +32,7 @@ public class MethodOperationAddTestSuite extends CompositeOperation {
 	}
 
 	// TODO MO-RE do we need this method (does it make sense to add test cases without test suite name apart from testing) ?
-	public MethodOperationAddTestSuite(
+	public OnTestSuiteOperationAddToMethod(
 			MethodNode methodNode, 
 			List<TestCaseNode> testCases, 
 			ITypeAdapterProvider typeAdapterProvider,
@@ -57,7 +57,7 @@ public class MethodOperationAddTestSuite extends CompositeOperation {
 							testCase.getListOfChoiceNodes());
 
 			addOperation(
-					new MethodOperationAddTestCase(
+					new OnTestCaseOperationAddToMethod(
 							methodNode, 
 							testCaseNode, 
 							typeAdapterProvider,
@@ -70,7 +70,7 @@ public class MethodOperationAddTestSuite extends CompositeOperation {
 		for (TestCaseNode testCase : testCases) {
 
 			addOperation(
-					new MethodOperationAddTestCase(
+					new OnTestCaseOperationAddToMethod(
 							methodNode, 
 							testCase, 
 							typeAdapterProvider,

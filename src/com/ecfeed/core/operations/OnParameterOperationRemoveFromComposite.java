@@ -22,12 +22,12 @@ import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class CompositeParameterOperationRemoveParameter extends CompositeOperation {
+public class OnParameterOperationRemoveFromComposite extends CompositeOperation {
 	
 	
 	private String fParameterName;
 
-	public CompositeParameterOperationRemoveParameter(
+	public OnParameterOperationRemoveFromComposite(
 			CompositeParameterNode compositeParameterNode, 
 			AbstractParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
@@ -38,7 +38,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 		
 		addOperation(new RemoveCompositeParameterOperationPrivate(compositeParameterNode, parameter, extLanguageManager));
 
-		addOperation(new CompositeParameterOperationRemoveInconsistentChildren(compositeParameterNode, extLanguageManager));
+		addOperation(new OnCompositeParameterOperationRemoveInconsistentChildren(compositeParameterNode, extLanguageManager));
 	}
 
 	@Override
@@ -120,7 +120,7 @@ public class CompositeParameterOperationRemoveParameter extends CompositeOperati
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new CompositeParameterOperationRemoveParameter(getCompositeParameter(), (BasicParameterNode)getParameter(), getExtLanguageManager());
+				return new OnParameterOperationRemoveFromComposite(getCompositeParameter(), (BasicParameterNode)getParameter(), getExtLanguageManager());
 			}
 
 		}

@@ -89,7 +89,7 @@ public class OnTestCaseOperationRemove extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new MethodOperationAddTestCase(fMethodNode, fTestCase, new DummyAdapterProvider(), fIndex, getExtLanguageManager());
+		return new OnTestCaseOperationAddToMethod(fMethodNode, fTestCase, new DummyAdapterProvider(), fIndex, getExtLanguageManager());
 	}
 
 }
