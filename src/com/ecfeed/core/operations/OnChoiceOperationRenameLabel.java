@@ -25,14 +25,14 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
 
-public class ChoiceOperationRenameLabel extends AbstractModelOperation {
+public class OnChoiceOperationRenameLabel extends AbstractModelOperation {
 
 	public ChoiceNode fChoiceNode;
 	public String fCurrentLabel;
 	public String fNewLabel;
 	public IExtLanguageManager fExtLanguageManager;
 
-	public ChoiceOperationRenameLabel(
+	public OnChoiceOperationRenameLabel(
 			ChoiceNode choiceNode, String currentLabel, String newLabel, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.RENAME_LABEL, extLanguageManager);

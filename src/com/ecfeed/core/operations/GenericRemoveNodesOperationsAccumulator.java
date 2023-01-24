@@ -262,8 +262,8 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 		for (MethodNode methodNode : methodNodes) {
 
-			ClassOperationRemoveMethod operation = 
-					new ClassOperationRemoveMethod(methodNode.getClassNode(), methodNode, extLanguageManager);
+			OnMethodOperationRemoveFromClass operation = 
+					new OnMethodOperationRemoveFromClass(methodNode.getClassNode(), methodNode, extLanguageManager);
 
 			result.add(operation);
 		}

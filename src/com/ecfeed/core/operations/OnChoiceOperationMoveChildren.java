@@ -14,7 +14,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ChoiceOperationMoveChildren extends AbstractModelOperation {
+public class OnChoiceOperationMoveChildren extends AbstractModelOperation {
 
 	private static final String MOVE_CHOICES = "Move choices.";
 
@@ -22,7 +22,7 @@ public class ChoiceOperationMoveChildren extends AbstractModelOperation {
 	private ChoiceNode fDstChoiceNode;
 	IExtLanguageManager fExtLanguageManager;
 
-	public ChoiceOperationMoveChildren(
+	public OnChoiceOperationMoveChildren(
 			ChoiceNode srcChoiceNode, 
 			ChoiceNode dstChoiceNode,
 			IExtLanguageManager extLanguageManager) {
@@ -59,7 +59,7 @@ public class ChoiceOperationMoveChildren extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationMoveChildren(fSrcChoiceNode, fDstChoiceNode, fExtLanguageManager);
+			return new OnChoiceOperationMoveChildren(fSrcChoiceNode, fDstChoiceNode, fExtLanguageManager);
 		}
 
 	}

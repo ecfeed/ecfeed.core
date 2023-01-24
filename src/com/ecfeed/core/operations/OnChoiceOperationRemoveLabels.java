@@ -12,18 +12,17 @@ package com.ecfeed.core.operations;
 
 import java.util.Collection;
 
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ClassOperationAddMethods extends CompositeOperation{
+public class OnChoiceOperationRemoveLabels extends CompositeOperation {
 
-	public ClassOperationAddMethods(ClassNode target, Collection<MethodNode> methods, int index, IExtLanguageManager extLanguageManager) {
-		
-		super(OperationNames.ADD_METHODS, false, target, target, extLanguageManager);
-		
-		for(MethodNode method : methods){
-			addOperation(new ClassOperationAddMethod(target, method, index++, extLanguageManager));
+	public OnChoiceOperationRemoveLabels(ChoiceNode target, Collection<String> labels, IExtLanguageManager extLanguageManager) {
+		super(OperationNames.REMOVE_PARTITION_LABELS, false, target, target, extLanguageManager);
+		for(String label : labels){
+			if(target.getInheritedLabels().contains(label) == false){
+				addOperation(new OnChoiceOperationRemoveLabel(target, label, extLanguageManager));
+			}
 		}
 	}
 }

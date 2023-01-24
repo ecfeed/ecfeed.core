@@ -14,7 +14,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ChoiceOperationRemoveLabel extends CompositeOperation{
+public class OnChoiceOperationRemoveLabel extends CompositeOperation{
 
 	private class RemoveLabelOperation extends AbstractModelOperation{
 
@@ -22,7 +22,7 @@ public class ChoiceOperationRemoveLabel extends CompositeOperation{
 		private String fLabel;
 
 		public RemoveLabelOperation(ChoiceNode target, String label, IExtLanguageManager extLanguageManager) {
-			super(ChoiceOperationRemoveLabel.this.getName(), extLanguageManager);
+			super(OnChoiceOperationRemoveLabel.this.getName(), extLanguageManager);
 			fTarget = target;
 			fLabel = label;
 		}
@@ -41,7 +41,7 @@ public class ChoiceOperationRemoveLabel extends CompositeOperation{
 
 	}
 
-	public ChoiceOperationRemoveLabel(ChoiceNode target, String label, IExtLanguageManager extLanguageManager) {
+	public OnChoiceOperationRemoveLabel(ChoiceNode target, String label, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_PARTITION_LABEL, true, target, target, extLanguageManager);
 		

@@ -89,7 +89,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 		@Override
 		public Object visit(MethodNode node) throws Exception {
-			return new ClassOperationRemoveMethod(node.getClassNode(), node, fExtLanguageManager);
+			return new OnMethodOperationRemoveFromClass(node.getClassNode(), node, fExtLanguageManager);
 		}
 
 		@Override

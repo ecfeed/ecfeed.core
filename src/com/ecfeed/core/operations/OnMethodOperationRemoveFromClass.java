@@ -15,13 +15,13 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ClassOperationRemoveMethod extends AbstractModelOperation {
+public class OnMethodOperationRemoveFromClass extends AbstractModelOperation {
 
 	private ClassNode fTarget;
 	private MethodNode fMethod;
 	private int fCurrentIndex;
 
-	public ClassOperationRemoveMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguageManager) {
+	public OnMethodOperationRemoveFromClass(ClassNode target, MethodNode method, IExtLanguageManager extLanguageManager) {
 		
 		super(OperationNames.REMOVE_METHOD, extLanguageManager);
 		
@@ -46,7 +46,7 @@ public class ClassOperationRemoveMethod extends AbstractModelOperation {
 	@Override
 	public IModelOperation getReverseOperation() {
 		
-		return new ClassOperationAddMethod(fTarget, fMethod, fCurrentIndex, getExtLanguageManager());
+		return new OnMethodOperationAddToClass(fTarget, fMethod, fCurrentIndex, getExtLanguageManager());
 	}
 
 }

@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class ClassOperationAddMethod extends AbstractModelOperation{
+public class OnMethodOperationAddToClass extends AbstractModelOperation{
 
 	private ClassNode fClassNode;
 	private MethodNode fMethod;
@@ -29,14 +29,14 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	private static final String UNEXPECTED_PROBLEM_WHILE_ADDING_ELEMENT = "Element could not be added to the model";
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, int index, IExtLanguageManager extLanguageManager) {
+	public OnMethodOperationAddToClass(ClassNode target, MethodNode method, int index, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.ADD_METHOD, extLanguageManager);
 		fClassNode = target;
 		fMethod = method;
 		fIndex = index;
 	}
 
-	public ClassOperationAddMethod(ClassNode target, MethodNode method, IExtLanguageManager extLanguageManager) {
+	public OnMethodOperationAddToClass(ClassNode target, MethodNode method, IExtLanguageManager extLanguageManager) {
 		this(target, method, -1, extLanguageManager);
 	}
 
@@ -87,7 +87,7 @@ public class ClassOperationAddMethod extends AbstractModelOperation{
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ClassOperationRemoveMethod(fClassNode, fMethod, getExtLanguageManager());
+		return new OnMethodOperationRemoveFromClass(fClassNode, fMethod, getExtLanguageManager());
 	}
 
 }

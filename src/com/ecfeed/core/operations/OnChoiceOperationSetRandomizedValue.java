@@ -7,7 +7,7 @@ import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation { 
+public class OnChoiceOperationSetRandomizedValue extends AbstractModelOperation { 
 
 	private boolean fNewRandomized;
 	private boolean fOriginalRandomized;
@@ -15,7 +15,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 	private ITypeAdapterProvider fAdapterProvider;
 
 
-	public ChoiceOperationSetRandomizedValue(
+	public OnChoiceOperationSetRandomizedValue(
 			ChoiceNode choiceNode, 
 			boolean newRandomized, 
 			ITypeAdapterProvider adapterProvider,
@@ -70,7 +70,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 	private class ReverseOperation extends AbstractModelOperation {
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(ChoiceOperationSetRandomizedValue.this.getName(), extLanguageManager);
+			super(OnChoiceOperationSetRandomizedValue.this.getName(), extLanguageManager);
 		}
 
 		@Override
@@ -81,7 +81,7 @@ public class ChoiceOperationSetRandomizedValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider, getExtLanguageManager());
+			return new OnChoiceOperationSetRandomizedValue(fChoiceNode, fNewRandomized, fAdapterProvider, getExtLanguageManager());
 		}
 
 		@Override

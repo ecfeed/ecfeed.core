@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.LogHelperCore;
 
-public class ChoiceOperationSetValue extends AbstractModelOperation {
+public class OnChoiceOperationSetValue extends AbstractModelOperation {
 
 	private String fNewValue;
 	private String fOriginalValue;
@@ -30,7 +30,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 	private ITypeAdapterProvider fAdapterProvider;
 
-	public ChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, IExtLanguageManager extLanguageManager){
+	public OnChoiceOperationSetValue(ChoiceNode target, String newValue, ITypeAdapterProvider adapterProvider, IExtLanguageManager extLanguageManager){
 		
 		super(OperationNames.SET_PARTITION_VALUE, extLanguageManager);
 		
@@ -122,7 +122,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 		}
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(ChoiceOperationSetValue.this.getName(), extLanguageManager);
+			super(OnChoiceOperationSetValue.this.getName(), extLanguageManager);
 		}
 
 		@Override
@@ -140,7 +140,7 @@ public class ChoiceOperationSetValue extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider, getExtLanguageManager());
+			return new OnChoiceOperationSetValue(fOwnChoiceNode, fNewValue, fAdapterProvider, getExtLanguageManager());
 		}
 	}
 
