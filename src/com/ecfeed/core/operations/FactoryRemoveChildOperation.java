@@ -21,6 +21,8 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
+import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
@@ -45,7 +47,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(RootNode node) throws Exception {
 		if(fChild instanceof ClassNode){
-			return new RootOperationRemoveClass(node, (ClassNode)fChild, fExtLanguageManager);
+			return new OnClassOperationRemove(node, (ClassNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof BasicParameterNode && ((BasicParameterNode)(fChild)).isGlobalParameter()){
 			return new GenericOperationRemoveParameter(node, (BasicParameterNode)fChild, fExtLanguageManager);
@@ -67,7 +69,7 @@ public class FactoryRemoveChildOperation implements IModelVisitor{
 	@Override
 	public Object visit(MethodNode node) throws Exception {
 		if(fChild instanceof BasicParameterNode){
-			return new RemoveBasicParameterOperation(node, (BasicParameterNode)fChild, fExtLanguageManager);
+			return new OnBasicParameterOperationRemove(node, (BasicParameterNode)fChild, fExtLanguageManager);
 		}
 		if(fChild instanceof ConstraintNode){
 			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fExtLanguageManager);

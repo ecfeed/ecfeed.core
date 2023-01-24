@@ -8,21 +8,25 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
+public class OnTestCaseOperationUpdateTestData extends AbstractModelOperation {
 
 	private ChoiceNode fNewValue;
 	private ChoiceNode fPreviousValue;
 	private int fIndex;
 	private TestCaseNode fTarget;
 
-	public TestCaseOperationUpdateTestData(
+	public OnTestCaseOperationUpdateTestData(
 			TestCaseNode target, 
 			int index, 
 			ChoiceNode value, 
@@ -50,7 +54,7 @@ public class TestCaseOperationUpdateTestData extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new TestCaseOperationUpdateTestData(fTarget, fIndex, fPreviousValue, getExtLanguageManager());
+		return new OnTestCaseOperationUpdateTestData(fTarget, fIndex, fPreviousValue, getExtLanguageManager());
 	}
 
 }

@@ -8,20 +8,24 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class StatementOperationReplaceChild extends AbstractModelOperation {
+public class OnStatementOperationReplaceChild extends AbstractModelOperation {
 
 	private AbstractStatement fNewChild;
 	private AbstractStatement fCurrentChild;
 	private StatementArray fTarget;
 
-	public StatementOperationReplaceChild(StatementArray target, AbstractStatement child, AbstractStatement newStatement, IExtLanguageManager extLanguageManager) {
+	public OnStatementOperationReplaceChild(StatementArray target, AbstractStatement child, AbstractStatement newStatement, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.REPLACE_STATEMENT, extLanguageManager);
 		fTarget = target;
 		fCurrentChild = child;
@@ -39,7 +43,7 @@ public class StatementOperationReplaceChild extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationReplaceChild(fTarget, fNewChild, fCurrentChild, getExtLanguageManager());
+		return new OnStatementOperationReplaceChild(fTarget, fNewChild, fCurrentChild, getExtLanguageManager());
 	}
 
 }

@@ -8,35 +8,39 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OperationSimpleRemoveAllTestCases extends AbstractModelOperation {
+public class OnTestCasesOperationSimpleSet extends AbstractModelOperation {
 
 	private static final String ADD_TEST_CASES = "Add test cases";
 
 	ITestCasesParentNode fMethodNode;
-	List<TestCaseNode> fOriginalTestCases;
+	List<TestCaseNode> fTestCases;
 
-	public OperationSimpleRemoveAllTestCases(
+	public OnTestCasesOperationSimpleSet(
 			ITestCasesParentNode methodNode,
+			List<TestCaseNode> testCases,
 			IExtLanguageManager extLanguageManager) {
 
 		super(ADD_TEST_CASES, extLanguageManager);
 
 		fMethodNode = methodNode;
-		fOriginalTestCases = methodNode.getTestCases();
+		fTestCases = new ArrayList<>(testCases);
 	}
 
 	@Override
 	public void execute() {
 
-		fMethodNode.removeAllTestCases();
+		fMethodNode.replaceTestCases(fTestCases);
 		markModelUpdated();
 	}
 
@@ -48,19 +52,19 @@ public class OperationSimpleRemoveAllTestCases extends AbstractModelOperation {
 	private class ReverseOperation extends AbstractModelOperation {
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super("Reverse operation to " + ADD_TEST_CASES, extLanguageManager);
+			super(OnTestCasesOperationSimpleSet.this.getName(), extLanguageManager);
 		}
 
 		@Override
 		public void execute() {
 
-			fMethodNode.replaceTestCases(fOriginalTestCases);
+			fMethodNode.removeAllTestCases();
 			markModelUpdated();
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return null;
+			return new OnTestCasesOperationSimpleSet(fMethodNode, fTestCases, getExtLanguageManager());
 		}
 
 	}

@@ -8,7 +8,7 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +21,20 @@ import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
+import com.ecfeed.core.operations.AbstractReverseOperation;
+import com.ecfeed.core.operations.CompositeOperation;
+import com.ecfeed.core.operations.GenericOperationRemoveParameter;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class RemoveBasicParameterOperation extends CompositeOperation{
+public class OnBasicParameterOperationRemove extends CompositeOperation{
 
 	private String fParameterName;
 	
-	public RemoveBasicParameterOperation(
+	public OnBasicParameterOperationRemove(
 			MethodNode methodNode, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_PARAMETER, true, methodNode, methodNode, extLanguageManager);
@@ -50,11 +54,11 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 		return "Operation remove parameter:" + fParameterName;
 	}
 	
-	public RemoveBasicParameterOperation(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
+	public OnBasicParameterOperationRemove(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		this(target, parameter, true, extLanguageManager);
 	}
 
-	public RemoveBasicParameterOperation(
+	public OnBasicParameterOperationRemove(
 			MethodNode target, 
 			AbstractParameterNode parameter, 
 			boolean validate, 
@@ -196,7 +200,7 @@ public class RemoveBasicParameterOperation extends CompositeOperation{
 
 			@Override
 			public IModelOperation getReverseOperation() {
-				return new RemoveBasicParameterOperation(getTargetMethod(), (BasicParameterNode)getParameter(), getExtLanguageManager());
+				return new OnBasicParameterOperationRemove(getTargetMethod(), (BasicParameterNode)getParameter(), getExtLanguageManager());
 			}
 
 		}

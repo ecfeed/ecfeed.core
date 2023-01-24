@@ -12,6 +12,7 @@ package com.ecfeed.core.operations;
 
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
 
 import java.util.List;
 
@@ -38,8 +39,8 @@ public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 		
 		for (AbstractParameterNode linkedBasicParameterNode : linkedParameters) {
 			
-			RemoveBasicParameterOperation operation = 
-					new RemoveBasicParameterOperation(
+			OnBasicParameterOperationRemove operation = 
+					new OnBasicParameterOperationRemove(
 							(MethodNode) linkedBasicParameterNode.getParent(), 
 							linkedBasicParameterNode, 
 							extLanguageManager);
@@ -64,8 +65,8 @@ public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 		List<AbstractParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedParameters(parameter);
 		
 		for(AbstractParameterNode linker : linkedParameters){
-			RemoveBasicParameterOperation operation = 
-					new RemoveBasicParameterOperation(
+			OnBasicParameterOperationRemove operation = 
+					new OnBasicParameterOperationRemove(
 							(MethodNode)linker.getParent(), linker, true, ignoreDuplicates, extLanguageManager);
 			
 			addOperation(operation);

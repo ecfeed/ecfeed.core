@@ -8,7 +8,7 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,13 @@ import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class ParameterOperationSetExpected extends AbstractModelOperation {
+public class OnParameterOperationSetExpected extends AbstractModelOperation {
 
 	private BasicParameterNode fTarget;
 	private boolean fExpected;
@@ -39,7 +42,7 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 	private class ReverseOperation extends AbstractModelOperation{
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(ParameterOperationSetExpected.this.getName(), extLanguageManager);
+			super(OnParameterOperationSetExpected.this.getName(), extLanguageManager);
 		}
 
 		@Override
@@ -69,12 +72,12 @@ public class ParameterOperationSetExpected extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new ParameterOperationSetExpected(fTarget, fExpected, getExtLanguageManager());
+			return new OnParameterOperationSetExpected(fTarget, fExpected, getExtLanguageManager());
 		}
 
 	}
 
-	public ParameterOperationSetExpected(BasicParameterNode target, boolean expected, IExtLanguageManager extLanguageManager){
+	public OnParameterOperationSetExpected(BasicParameterNode target, boolean expected, IExtLanguageManager extLanguageManager){
 		super(OperationNames.SET_EXPECTED_STATUS, extLanguageManager);
 		fTarget = target;
 		fExpected = expected;

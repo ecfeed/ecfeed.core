@@ -24,6 +24,8 @@ import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
+import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
@@ -189,7 +191,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (parent instanceof MethodNode) {
 
 				IModelOperation operation = 
-						new RemoveBasicParameterOperation(
+						new OnBasicParameterOperationRemove(
 								(MethodNode)parent, basicParameterNode, validate, extLanguageManager);
 
 				result.add(operation);
@@ -222,7 +224,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			if (parent instanceof MethodNode) {
 
 				IModelOperation modelOperation = 
-						new RemoveBasicParameterOperation(
+						new OnBasicParameterOperationRemove(
 								(MethodNode)parent, basicParameterNode, validate, extLanguageManager);
 
 				result.add(modelOperation);
@@ -250,8 +252,8 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 		for (ClassNode classNode : classNodes) {
 
-			RootOperationRemoveClass operation = 
-					new RootOperationRemoveClass(classNode.getRoot(), classNode, extLanguageManager);
+			OnClassOperationRemove operation = 
+					new OnClassOperationRemove(classNode.getRoot(), classNode, extLanguageManager);
 
 			result.add(operation);
 		}

@@ -8,19 +8,22 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.operations.CompositeOperation;
+import com.ecfeed.core.operations.GenericOperationAddChoice;
+import com.ecfeed.core.operations.GenericRemoveNodesOperation;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ReplaceChoicesOperation extends CompositeOperation {
+public class OnChoicesOperationReplace extends CompositeOperation {
 
-	public ReplaceChoicesOperation(
+	public OnChoicesOperationReplace(
 			BasicParameterNode abstractParameterNode, 
 			List<ChoiceNode> choices, 
 			ITypeAdapterProvider adapterProvider,

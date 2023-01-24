@@ -8,7 +8,7 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.List;
 
@@ -19,15 +19,16 @@ import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
-import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
-import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
+import com.ecfeed.core.operations.CompositeOperation;
+import com.ecfeed.core.operations.GenericOperationAddParameter;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ReplaceMethodParametersWithGlobalOperation extends CompositeOperation{
+public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOperation{
 
-	public ReplaceMethodParametersWithGlobalOperation(
+	public OnMethodParametersOperationReplaceWithGlobal(
 			IParametersParentNode parent, 
 			List<BasicParameterNode> originals, 
 			ITypeAdapterProvider adapterProvider,

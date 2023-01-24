@@ -8,22 +8,26 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.Arrays;
 
 import com.ecfeed.core.model.IRelationalStatement;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class StatementOperationSetRelation extends AbstractModelOperation {
+public class OnStatementOperationSetRelation extends AbstractModelOperation {
 
 	private IRelationalStatement fTarget;
 	private EMathRelation fNewRelation;
 	private EMathRelation fCurrentRelation;
 
-	public StatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, IExtLanguageManager extLanguageManager) {
+	public OnStatementOperationSetRelation(IRelationalStatement target, EMathRelation relation, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_STATEMENT_RELATION, extLanguageManager);
 		fTarget = target;
 		fNewRelation = relation;
@@ -41,7 +45,7 @@ public class StatementOperationSetRelation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationSetRelation(fTarget, fCurrentRelation, getExtLanguageManager());
+		return new OnStatementOperationSetRelation(fTarget, fCurrentRelation, getExtLanguageManager());
 	}
 
 }

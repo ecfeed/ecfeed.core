@@ -17,7 +17,6 @@ import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
-import com.ecfeed.core.operations.RootOperationRemoveClass;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -69,7 +68,7 @@ public class OnClassOperationAddToRoot extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new RootOperationRemoveClass(fRootNode, fclassToAdd, getExtLanguageManager());
+		return new OnClassOperationRemove(fRootNode, fclassToAdd, getExtLanguageManager());
 	}
 
 }

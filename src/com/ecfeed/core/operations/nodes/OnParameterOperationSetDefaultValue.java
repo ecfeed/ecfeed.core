@@ -8,22 +8,26 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationMessages;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.utils.ERunMode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
+public class OnParameterOperationSetDefaultValue extends AbstractModelOperation {
 
 	private BasicParameterNode fTarget;
 	private ITypeAdapter<?> fTypeAdapter;
 	private String fNewValue;
 	private String fOriginalValue;
 
-	public ParameterOperationSetDefaultValue(BasicParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, IExtLanguageManager extLanguageManager) {
+	public OnParameterOperationSetDefaultValue(BasicParameterNode target, String newValue, ITypeAdapter<?> typeAdapter, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_DEFAULT_VALUE, extLanguageManager);
 		fTarget = target;
 		fNewValue = newValue;
@@ -44,7 +48,7 @@ public class ParameterOperationSetDefaultValue extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter, getExtLanguageManager());
+		return new OnParameterOperationSetDefaultValue(fTarget, fOriginalValue, fTypeAdapter, getExtLanguageManager());
 	}
 
 }

@@ -8,37 +8,37 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.ecfeed.core.model.ITestCasesParentNode;
-import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OperationSimpleSetTestCases extends AbstractModelOperation {
+public class OnMethodParameterOperationSimpleSetType extends AbstractModelOperation {
 
-	private static final String ADD_TEST_CASES = "Add test cases";
+	private static final String SET_PARAMETER_TYPE = "Set parameter type";
 
-	ITestCasesParentNode fMethodNode;
-	List<TestCaseNode> fTestCases;
+	private BasicParameterNode fMethodParameterNode;
+	private String fOldType;
+	private String fNewType;
 
-	public OperationSimpleSetTestCases(
-			ITestCasesParentNode methodNode,
-			List<TestCaseNode> testCases,
+	public OnMethodParameterOperationSimpleSetType(
+			BasicParameterNode methodParameterNode,
+			String newType,
 			IExtLanguageManager extLanguageManager) {
 
-		super(ADD_TEST_CASES, extLanguageManager);
+		super(SET_PARAMETER_TYPE, extLanguageManager);
 
-		fMethodNode = methodNode;
-		fTestCases = new ArrayList<>(testCases);
+		fMethodParameterNode = methodParameterNode;
+		fNewType = newType;
+		fOldType = methodParameterNode.getType();
 	}
 
 	@Override
 	public void execute() {
 
-		fMethodNode.replaceTestCases(fTestCases);
+		fMethodParameterNode.setType(fNewType);
 		markModelUpdated();
 	}
 
@@ -50,19 +50,18 @@ public class OperationSimpleSetTestCases extends AbstractModelOperation {
 	private class ReverseOperation extends AbstractModelOperation {
 
 		public ReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(OperationSimpleSetTestCases.this.getName(), extLanguageManager);
+			super(SET_PARAMETER_TYPE + " - reverse operation", extLanguageManager);
 		}
 
 		@Override
 		public void execute() {
 
-			fMethodNode.removeAllTestCases();
-			markModelUpdated();
+			fMethodParameterNode.setType(fOldType);
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new OperationSimpleSetTestCases(fMethodNode, fTestCases, getExtLanguageManager());
+			return null;
 		}
 
 	}

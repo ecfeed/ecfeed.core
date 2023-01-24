@@ -8,18 +8,21 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
+public class OnParameterOperationSetTypeComments extends AbstractModelOperation {
 
 	private String fComments;
 	private BasicParameterNode fTarget;
 	private String fCurrentComments;
 
-	public ParameterSetTypeCommentsOperation(BasicParameterNode target, String comments, IExtLanguageManager extLanguageManager) {
+	public OnParameterOperationSetTypeComments(BasicParameterNode target, String comments, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_COMMENTS, extLanguageManager);
 		fTarget = target;
 		fComments = comments;
@@ -35,7 +38,7 @@ public class ParameterSetTypeCommentsOperation extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new ParameterSetTypeCommentsOperation(fTarget, fCurrentComments, getExtLanguageManager());
+		return new OnParameterOperationSetTypeComments(fTarget, fCurrentComments, getExtLanguageManager());
 	}
 
 }

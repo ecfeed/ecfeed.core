@@ -8,18 +8,19 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.Collection;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
+import com.ecfeed.core.operations.CompositeOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class RootOperationAddClasses extends CompositeOperation {
+public class OnClassesOperationAddToRoot extends CompositeOperation {
 	
-	public RootOperationAddClasses(
+	public OnClassesOperationAddToRoot(
 			RootNode target, 
 			Collection<ClassNode> classes, 
 			int index,

@@ -8,20 +8,22 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class RootOperationRemoveClass extends AbstractModelOperation {
+public class OnClassOperationRemove extends AbstractModelOperation {
 
 	private ClassNode fRemovedClass;
 	private RootNode fRootNode;
 	private int fCurrentIndex;
 
-	public RootOperationRemoveClass(RootNode rootNode, ClassNode classNode, IExtLanguageManager extLanguageManager) {  // TODO MO-RE calculate root node
+	public OnClassOperationRemove(RootNode rootNode, ClassNode classNode, IExtLanguageManager extLanguageManager) {  // TODO MO-RE calculate root node
 		super(OperationNames.REMOVE_CLASS, extLanguageManager);
 		fRootNode = rootNode;
 		fRemovedClass = classNode;

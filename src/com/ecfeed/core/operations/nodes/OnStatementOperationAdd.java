@@ -8,19 +8,22 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class StatementOperationAddStatement extends AbstractModelOperation {
+public class OnStatementOperationAdd extends AbstractModelOperation {
 
 	private AbstractStatement fStatement;
 	private StatementArray fTarget;
 	private int fIndex;
 
-	public StatementOperationAddStatement(StatementArray parent, AbstractStatement statement, int index, IExtLanguageManager extLanguageManager) {
+	public OnStatementOperationAdd(StatementArray parent, AbstractStatement statement, int index, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.ADD_STATEMENT, extLanguageManager);
 		fTarget = parent;
 		fStatement = statement;
@@ -35,7 +38,7 @@ public class StatementOperationAddStatement extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationRemoveStatement(fTarget, fStatement, getExtLanguageManager());
+		return new OnStatementOperationRemove(fTarget, fStatement, getExtLanguageManager());
 	}
 
 }

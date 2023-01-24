@@ -8,13 +8,14 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IChoicesParentNode;
+import com.ecfeed.core.operations.AbstractOneWayModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OperationSimpleAddChoice extends AbstractOneWayModelOperation {
+public class OnChoiceOperationAddSimple extends AbstractOneWayModelOperation {
 
 	private static final String ADD_CHOICE = "Add choice";
 
@@ -22,7 +23,7 @@ public class OperationSimpleAddChoice extends AbstractOneWayModelOperation {
 	private int fIndexOfChoice;
 	private IChoicesParentNode fChoicesParentNode;
 
-	public OperationSimpleAddChoice(
+	public OnChoiceOperationAddSimple(
 			ChoiceNode choiceNode, 
 			int indexOfChoice,
 			IChoicesParentNode choicesParentNode, 

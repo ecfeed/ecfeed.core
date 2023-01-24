@@ -8,23 +8,25 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IChoicesParentNode;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class SimpleOperationRemoveAllChoices extends AbstractModelOperation {
+public class OnChoicesOperationSimpleRemoveAll extends AbstractModelOperation {
 
 	private static final String REMOVE_ALL_CHOICES_OF_PARAMETER = "Remove all choices of parameter";
 
 	IChoicesParentNode fChoicesParentNode;
 	List<ChoiceNode> fOldChoiceNodes;
 
-	public SimpleOperationRemoveAllChoices(
+	public OnChoicesOperationSimpleRemoveAll(
 			IChoicesParentNode choicesParentNode, IExtLanguageManager extLanguageManager) {
 
 		super(REMOVE_ALL_CHOICES_OF_PARAMETER, extLanguageManager);
@@ -69,7 +71,7 @@ public class SimpleOperationRemoveAllChoices extends AbstractModelOperation {
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new SimpleOperationRemoveAllChoices(fChoicesParentNode, getExtLanguageManager());
+			return new OnChoicesOperationSimpleRemoveAll(fChoicesParentNode, getExtLanguageManager());
 		}
 
 	}

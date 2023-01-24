@@ -8,19 +8,22 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.IStatementCondition;
 import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.operations.AbstractModelOperation;
+import com.ecfeed.core.operations.IModelOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class StatementOperationSetCondition extends AbstractModelOperation {
+public class OnStatementOperationSetCondition extends AbstractModelOperation {
 
 	private RelationStatement fTarget;
 	private IStatementCondition fCurrentCondition;
 	private IStatementCondition fNewCondition;
 
-	public StatementOperationSetCondition(RelationStatement target, IStatementCondition condition, IExtLanguageManager extLanguageManager) {
+	public OnStatementOperationSetCondition(RelationStatement target, IStatementCondition condition, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.SET_STATEMENT_CONDITION, extLanguageManager);
 		fTarget = target;
 		fNewCondition = condition;
@@ -35,7 +38,7 @@ public class StatementOperationSetCondition extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new StatementOperationSetCondition(fTarget, fCurrentCondition, getExtLanguageManager());
+		return new OnStatementOperationSetCondition(fTarget, fCurrentCondition, getExtLanguageManager());
 	}
 
 }

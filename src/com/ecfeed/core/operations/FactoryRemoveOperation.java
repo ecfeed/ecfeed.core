@@ -25,6 +25,8 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
+import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
@@ -89,7 +91,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 		@Override
 		public Object visit(ClassNode node) throws Exception {
-			return new RootOperationRemoveClass(node.getRoot(), node, fExtLanguageManager);
+			return new OnClassOperationRemove(node.getRoot(), node, fExtLanguageManager);
 		}
 
 		@Override
@@ -112,7 +114,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			if (parent instanceof MethodNode) {
 
-				return new RemoveBasicParameterOperation(
+				return new OnBasicParameterOperationRemove(
 						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			}
 
@@ -133,7 +135,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			if (parent instanceof MethodNode) {
 
-				return new RemoveBasicParameterOperation(
+				return new OnBasicParameterOperationRemove(
 						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
 			} 
 
