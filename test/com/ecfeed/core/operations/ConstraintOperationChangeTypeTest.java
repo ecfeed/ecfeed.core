@@ -28,6 +28,7 @@ import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.StatementArray;
 import com.ecfeed.core.model.StatementArrayOperator;
 import com.ecfeed.core.model.StaticStatement;
+import com.ecfeed.core.operations.nodes.OnConstraintOperationChangeType;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.TestHelper;

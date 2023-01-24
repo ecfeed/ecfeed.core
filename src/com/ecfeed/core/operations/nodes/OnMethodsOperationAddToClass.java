@@ -8,27 +8,24 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.operations;
+package com.ecfeed.core.operations.nodes;
 
 import java.util.Collection;
 
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
+import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.operations.CompositeOperation;
+import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class RootOperationAddClasses extends CompositeOperation {
-	
-	public RootOperationAddClasses(
-			RootNode target, 
-			Collection<ClassNode> classes, 
-			int index,
-			IExtLanguageManager extLanguageManager) {
+public class OnMethodsOperationAddToClass extends CompositeOperation{
+
+	public OnMethodsOperationAddToClass(ClassNode target, Collection<MethodNode> methods, int index, IExtLanguageManager extLanguageManager) {
 		
-		super(OperationNames.ADD_CLASSES, false, target, target, extLanguageManager);
+		super(OperationNames.ADD_METHODS, false, target, target, extLanguageManager);
 		
-		for(ClassNode classNode : classes){
-			addOperation(new OnClassOperationAddToRoot(target, classNode, index++, extLanguageManager));
+		for(MethodNode method : methods){
+			addOperation(new OnMethodOperationAddToClass(target, method, index++, extLanguageManager));
 		}
 	}
 }

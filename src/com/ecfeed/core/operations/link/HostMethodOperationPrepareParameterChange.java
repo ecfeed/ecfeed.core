@@ -23,8 +23,8 @@ import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.operations.OperationNames;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 

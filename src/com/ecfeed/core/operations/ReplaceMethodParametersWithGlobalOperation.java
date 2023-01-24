@@ -19,6 +19,8 @@ import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.link.MethodParameterOperationSetLink;
+import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
+import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
 import com.ecfeed.core.operations.link.HostMethodOperationPrepareParameterChange;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;

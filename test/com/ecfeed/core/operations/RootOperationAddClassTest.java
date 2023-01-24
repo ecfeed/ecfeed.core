@@ -17,6 +17,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
+import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
