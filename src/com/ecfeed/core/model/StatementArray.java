@@ -184,16 +184,16 @@ public class StatementArray extends AbstractStatement {
 		return copy;
 	}
 
-	@Override
-	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
-
-		for (AbstractStatement statement : fStatements) {
-			if (!statement.updateReferences(method)) {
-				return false;
-			}
-		}
-		return true;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
+	//
+	//		for (AbstractStatement statement : fStatements) {
+	//			if (!statement.updateReferences(method)) {
+	//				return false;
+	//			}
+	//		}
+	//		return true;
+	//	}
 
 	List<AbstractStatement> getStatements() {
 		return fStatements;
@@ -430,18 +430,18 @@ public class StatementArray extends AbstractStatement {
 		}
 	}
 
-//	@Override
-//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		StatementArray deployedStatementArray = new StatementArray(getOperator());
-//
-//		for (AbstractStatement sourceAbstractStatement : fStatements) {
-//
-//			AbstractStatement deployedStatement = sourceAbstractStatement.createDeepCopy(deploymentMapper);
-//			deployedStatementArray.addStatement(deployedStatement);
-//		}
-//
-//		return deployedStatementArray;
-//	}
+	//	@Override
+	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		StatementArray deployedStatementArray = new StatementArray(getOperator());
+	//
+	//		for (AbstractStatement sourceAbstractStatement : fStatements) {
+	//
+	//			AbstractStatement deployedStatement = sourceAbstractStatement.createDeepCopy(deploymentMapper);
+	//			deployedStatementArray.addStatement(deployedStatement);
+	//		}
+	//
+	//		return deployedStatementArray;
+	//	}
 
 }

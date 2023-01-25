@@ -34,13 +34,13 @@ public class ConstraintNode extends AbstractNode {
 	public int getMyIndex() {
 
 		IAbstractNode parent = getParent();
-		
+
 		if (!(parent instanceof IConstraintsParentNode)) {
 			return -1;
 		}
-		
+
 		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) parent;
-		
+
 		return constraintsParentNode.getConstraintNodes().indexOf(this);
 	}
 
@@ -76,9 +76,9 @@ public class ConstraintNode extends AbstractNode {
 
 	public ConstraintNode createCopy(NodeMapper mapper) {
 		Constraint copyOfConstraint = fConstraint.createCopy(mapper);
-		
+
 		ConstraintNode copyOfConstraintNode = new ConstraintNode(getName(), copyOfConstraint, getModelChangeRegistrator());
-		
+
 		copyOfConstraintNode.setProperties(getProperties());
 
 		return copyOfConstraintNode;
@@ -126,10 +126,10 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-//	public boolean mentions(BasicParameterNode parameter) {
-//
-//		return fConstraint.mentions(parameter);
-//	}
+	//	public boolean mentions(BasicParameterNode parameter) {
+	//
+	//		return fConstraint.mentions(parameter);
+	//	}
 
 	public boolean mentions(BasicParameterNode parameter) {
 
@@ -141,9 +141,9 @@ public class ConstraintNode extends AbstractNode {
 		if (parameter instanceof BasicParameterNode && parameter.isGlobalParameter()) {
 			BasicParameterNode global = (BasicParameterNode)parameter;
 			List<AbstractParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedParameters(global);
-			
+
 			for (AbstractParameterNode linkedParameter: linkedParameters) {
-				
+
 				if (linkedParameter instanceof BasicParameterNode) {
 					return fConstraint.mentions((BasicParameterNode)linkedParameter);
 				}
@@ -158,26 +158,27 @@ public class ConstraintNode extends AbstractNode {
 		return fConstraint.mentions(parameter, label);
 	}
 
-	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
-
-		if (fConstraint.updateReferences(parent)) {
-			setParent(parent);
-			registerChange();
-			return true;
-		}
-
-		return false;
-	}
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
+	//
+	//		if (fConstraint.updateReferences(parent)) {
+	//			setParent(parent);
+	//			registerChange();
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
 	public ConstraintNode getCopy(IParametersAndConstraintsParentNode parent) {
 
 		ConstraintNode copy = makeClone();
+		return copy;
 
-		if (copy.updateReferences(parent))
-			return copy;
-		else {
-			return null;
-		}
+//		if (copy.updateReferences(parent))
+//			return copy;
+//		else {
+//			return null;
+//		}
 	}
 
 	@Override
@@ -225,9 +226,9 @@ public class ConstraintNode extends AbstractNode {
 	private boolean areParametersConsistent() {
 
 		final Set<BasicParameterNode> referencedParameters = getConstraint().getReferencedParameters();
-		
+
 		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
-		
+
 		final List<AbstractParameterNode> parametersOfParent = parametersParentNode.getParameters();
 
 		for (BasicParameterNode referencedParameter : referencedParameters) {
@@ -245,10 +246,10 @@ public class ConstraintNode extends AbstractNode {
 			List<AbstractParameterNode> methodParameters) {
 
 		for (AbstractParameterNode param : methodParameters) {
-			
+
 			if (param instanceof BasicParameterNode) {
 				BasicParameterNode methodParam = (BasicParameterNode) param;
-				
+
 				if (methodParam.isLinked() && methodParam.getLinkToGlobalParameter().equals(argParameter)) {
 					return true;
 				}
@@ -329,20 +330,20 @@ public class ConstraintNode extends AbstractNode {
 	private boolean constraintsConsistent() {
 
 		IParametersParentNode parametersParentNode = (IParametersParentNode) getParent();
-		
+
 		for (AbstractParameterNode abstractParameterNode : parametersParentNode.getParameters()) {
-			
+
 			if (!(abstractParameterNode instanceof BasicParameterNode)) {
 				continue;
 			}
-			
+
 			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-			
+
 			if (!isConsistentForParameter(basicParameterNode)) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -394,9 +395,9 @@ public class ConstraintNode extends AbstractNode {
 
 	@Override
 	public int getMaxIndex() {
-		
+
 		IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) getParent();
-		
+
 		return constraintsParentNode.getConstraintNodes().size();
 	}
 

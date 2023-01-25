@@ -157,9 +157,9 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	public String getLeftParameterCompositeName() {
 
 		BasicParameterNode leftParameter = getLeftParameter();
-		
+
 		String nameInIntrLanguage = AbstractParameterNodeHelper.getCompositeName(leftParameter);
-		
+
 		return nameInIntrLanguage;
 	}
 
@@ -204,29 +204,29 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return statement;
 	}
 
-	@Override
-	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
-
-		String compositeName = AbstractParameterNodeHelper.getCompositeName(fLeftParameter);
-
-		BasicParameterNode basicParameterNode = 
-				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
-						compositeName, parent);
-
-		if (basicParameterNode == null) {
-			return false;
-		}
-
-		if (basicParameterNode.isExpected()) {
-			return true;
-		}
-
-		if (fRightCondition.updateReferences(parent)) {
-			fLeftParameter = basicParameterNode;
-		}
-		
-		return true;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode parent) {
+	//
+	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fLeftParameter);
+	//
+	//		BasicParameterNode basicParameterNode = 
+	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
+	//						compositeName, parent);
+	//
+	//		if (basicParameterNode == null) {
+	//			return false;
+	//		}
+	//
+	//		if (basicParameterNode.isExpected()) {
+	//			return true;
+	//		}
+	//
+	//				if (fRightCondition.updateReferences(parent)) {
+	//					fLeftParameter = basicParameterNode;
+	//				}
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public boolean isEqualTo(IStatement statement) {
@@ -520,26 +520,26 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		return result;
 	}
 
-//	@Override
-//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		BasicParameterNode sourceParameter = getLeftParameter();
-//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
-//
-//		IStatementCondition sourceCondition = getCondition();
-//		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
-//
-//		EMathRelation sourceRelation = getRelation();
-//
-//		RelationStatement deployedRelationStatement =
-//				new RelationStatement(
-//						deployedParameter,
-//						sourceRelation,
-//						deployedStatementCondition);
-//
-//		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
-//
-//		return deployedRelationStatement;
-//	}
+	//	@Override
+	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		BasicParameterNode sourceParameter = getLeftParameter();
+	//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+	//
+	//		IStatementCondition sourceCondition = getCondition();
+	//		IStatementCondition deployedStatementCondition = sourceCondition.createDeepCopy(deploymentMapper);
+	//
+	//		EMathRelation sourceRelation = getRelation();
+	//
+	//		RelationStatement deployedRelationStatement =
+	//				new RelationStatement(
+	//						deployedParameter,
+	//						sourceRelation,
+	//						deployedStatementCondition);
+	//
+	//		deploymentMapper.addRelationStatementMappings(this, deployedRelationStatement);
+	//
+	//		return deployedRelationStatement;
+	//	}
 }
 

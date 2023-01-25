@@ -32,7 +32,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class FactoryAddChildOperation implements IModelVisitor{
+public class FactoryAddChildOperation implements IModelVisitor{ // XYX
 
 	private IAbstractNode fChild;
 	private int fIndex;

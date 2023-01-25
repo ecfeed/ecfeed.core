@@ -20,7 +20,7 @@ public abstract class AbstractStatement implements IStatement {
 	AbstractStatement fParent = null;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
 	public abstract boolean mentionsChoiceOfParameter(BasicParameterNode parameter);
-	public abstract boolean updateReferences(IParametersAndConstraintsParentNode parent);
+	//public abstract boolean updateReferences(IParametersAndConstraintsParentNode parent);
 
 	protected abstract void convert(ParameterConversionItem parameterConversionItem);
 
