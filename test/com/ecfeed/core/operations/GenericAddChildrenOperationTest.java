@@ -227,6 +227,56 @@ public class GenericAddChildrenOperationTest {
 		genericAddChildrenOperation1.getReverseOperation().execute();
 		assertEquals(0, basicParameterNode1.getChoices().size());
 	}
+
+	@Test
+	public void addChoiceToChoice() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		BasicParameterNode basicParameterNode1 = 
+				new BasicParameterNode(
+						"BasicParam1", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode1);
+		
+		// add choice node 1 
+		
+		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
+		
+		GenericAddChildrenOperation genericAddChildrenOperation1 = 
+				createAddingNodeOperation(basicParameterNode1, choiceNode1, 0 );
+		genericAddChildrenOperation1.execute();
+		
+		assertEquals(1, basicParameterNode1.getChoices().size());
+		
+		// add choice node 2 
+		
+		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
+		
+		GenericAddChildrenOperation genericAddChildrenOperation2 = 
+				createAddingNodeOperation(choiceNode1, choiceNode2, 0 );
+		genericAddChildrenOperation2.execute();
+		
+		assertEquals(1, basicParameterNode1.getChoices().size());
+		assertEquals(1, choiceNode1.getChoices().size());
+		
+		
+		// reverse operation 2
+	
+		genericAddChildrenOperation2.getReverseOperation().execute();
+		assertEquals(1, basicParameterNode1.getChoices().size());
+		assertEquals(0, choiceNode1.getChoices().size());
+		
+		// reverse operation 1
+		
+		genericAddChildrenOperation1.getReverseOperation().execute();
+		assertEquals(0, basicParameterNode1.getChoices().size());
+	}
 	
 //	@Test
 //	public void removeBasicParameterOfNestedStructure() {
