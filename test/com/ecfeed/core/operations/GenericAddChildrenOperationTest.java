@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
@@ -127,89 +129,55 @@ public class GenericAddChildrenOperationTest {
 		assertEquals(0, methods.size());
 	}
 
-//	@Test
-//	public void removeBasicParameterOfMethod() {
-//
-//		RootNode rootNode = new RootNode("Root", null);
-//
-//		// class node 
-//		ClassNode classNode = new ClassNode("Class", null);
-//		rootNode.addClass(classNode);
-//
-//		// method node
-//
-//		MethodNode methodNode = new MethodNode("Method");
-//		classNode.addMethod(methodNode);
-//
-//		// basic parameters and choices 
-//
-//		BasicParameterNode basicParameterNode1 = 
-//				new BasicParameterNode(
-//						"BasicParam1", "String", "", false, null);
-//		methodNode.addParameter(basicParameterNode1);
-//
-//		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
-//		basicParameterNode1.addChoice(choiceNode1);
-//
-//		BasicParameterNode basicParameterNode2 = 
-//				new BasicParameterNode(
-//						"BasicParam2", "String", "", false, null);
-//		methodNode.addParameter(basicParameterNode2);
-//
-//		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
-//		basicParameterNode2.addChoice(choiceNode2);
-//
-//		// constraints
-//
-//		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
-//		methodNode.addConstraint(constraintNode1);
-//
-//		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
-//		methodNode.addConstraint(constraintNode2);
-//
-//		// test case
-//
-//		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-//		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
-//		methodNode.addTestCase(testCaseNode);
-//
-//		// copy parameters to deployed parameters
-//
-//		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-//		deployedParameters.add(basicParameterNode1);
-//		deployedParameters.add(basicParameterNode2);
-//		methodNode.setDeployedParameters(deployedParameters);
-//
-//		// list of nodes to delete
-//
-//		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-//		nodesToDelete.add(basicParameterNode1);
-//
-//		// remove
-//
-//		GenericRemoveNodesOperation genericRemoveNodesOperation = 
-//				createRemovingNodesOperation(nodesToDelete, rootNode);
-//		genericRemoveNodesOperation.execute();
-//
-//		assertEquals(1, methodNode.getParameters().size());
-//		assertEquals(1, methodNode.getConstraintNodes().size());
-//
-//		assertEquals(0, methodNode.getTestCases().size());
-//		assertEquals(0, methodNode.getDeployedMethodParameters().size());
-//
-//		// reverse
-//		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
-//		reverseOperation.execute();
-//
-//		assertEquals(2, methodNode.getParameters().size());
-//
-//		List<ConstraintNode> resultConstraintNodes = methodNode.getConstraintNodes();
-//		assertEquals(2, resultConstraintNodes.size());
-//
-//		assertEquals(1, methodNode.getTestCases().size());
-//		assertEquals(2, methodNode.getDeployedMethodParameters().size());
-//	}
-//
+	@Test
+	public void addBasicParameterToMethod() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		// add basic parameters node 1 
+
+		BasicParameterNode basicParameterNode1 = 
+				new BasicParameterNode(
+						"BasicParam1", "String", "", false, null);
+		GenericAddChildrenOperation genericAddChildrenOperation1 = 
+				createAddingNodeOperation(methodNode, basicParameterNode1, 0 );
+		genericAddChildrenOperation1.execute();
+		
+		List<AbstractParameterNode> parameterNodes = methodNode.getParameters();
+		assertEquals(1, parameterNodes.size());
+
+		// add basic parameters node 2 
+
+		BasicParameterNode basicParameterNode2 = 
+				new BasicParameterNode(
+						"BasicParam2", "String", "", false, null);
+		GenericAddChildrenOperation genericAddChildrenOperation2 = 
+				createAddingNodeOperation(methodNode, basicParameterNode2, 0 );
+		genericAddChildrenOperation2.execute();
+		
+		parameterNodes = methodNode.getParameters();
+		assertEquals(2, parameterNodes.size());
+		
+		// reverse operation 2
+		
+		genericAddChildrenOperation2.getReverseOperation().execute();
+		parameterNodes = methodNode.getParameters();
+		assertEquals(1, parameterNodes.size());
+		
+
+		// reverse operation 1
+		
+		genericAddChildrenOperation1.getReverseOperation().execute();
+		parameterNodes = methodNode.getParameters();
+		assertEquals(0, parameterNodes.size());
+	}
+
 //	@Test
 //	public void removeBasicParameterOfNestedStructure() {
 //
