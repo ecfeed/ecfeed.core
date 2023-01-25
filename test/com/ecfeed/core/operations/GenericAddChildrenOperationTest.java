@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
@@ -178,6 +179,55 @@ public class GenericAddChildrenOperationTest {
 		assertEquals(0, parameterNodes.size());
 	}
 
+	@Test
+	public void addChoiceToBasicParameterOfMethod() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		BasicParameterNode basicParameterNode1 = 
+				new BasicParameterNode(
+						"BasicParam1", "String", "", false, null);
+		methodNode.addParameter(basicParameterNode1);
+		
+		// add choice node 1 
+		
+		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
+		
+		GenericAddChildrenOperation genericAddChildrenOperation1 = 
+				createAddingNodeOperation(basicParameterNode1, choiceNode1, 0 );
+		genericAddChildrenOperation1.execute();
+		
+		List<ChoiceNode> choiceNodes = basicParameterNode1.getChoices();
+		assertEquals(1, choiceNodes.size());
+		
+		// add choice node 2 
+		
+		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
+		
+		GenericAddChildrenOperation genericAddChildrenOperation2 = 
+				createAddingNodeOperation(basicParameterNode1, choiceNode2, 0 );
+		genericAddChildrenOperation2.execute();
+		
+		choiceNodes = basicParameterNode1.getChoices();
+		assertEquals(2, choiceNodes.size());
+		
+		// reverse operation 2
+	
+		genericAddChildrenOperation2.getReverseOperation().execute();
+		assertEquals(1, basicParameterNode1.getChoices().size());
+		
+		// reverse operation 1
+		
+		genericAddChildrenOperation1.getReverseOperation().execute();
+		assertEquals(0, basicParameterNode1.getChoices().size());
+	}
+	
 //	@Test
 //	public void removeBasicParameterOfNestedStructure() {
 //
