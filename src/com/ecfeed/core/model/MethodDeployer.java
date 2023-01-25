@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
 
 public abstract class MethodDeployer {
 
@@ -83,28 +84,79 @@ public abstract class MethodDeployer {
 			List<AbstractParameterNode> sourceParameters, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
 
 		for (AbstractParameterNode sourceParameter : sourceParameters) {
-
 			if (sourceParameter instanceof BasicParameterNode) {
-
-				deployBasicParameter(((BasicParameterNode) sourceParameter), targetMethodNode, prefix, mapper);
-			}
-
-			if (sourceParameter instanceof CompositeParameterNode) {
-
-				String childPrefix = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-
-				List<AbstractParameterNode> childSourceParameters = 
-						((CompositeParameterNode) sourceParameter).getParameters();
-
-				deployParametersRecursively(childSourceParameters, targetMethodNode, childPrefix, mapper);
+				handleBasicParameter((BasicParameterNode) sourceParameter, targetMethodNode, prefix, mapper);
+			} else	if (sourceParameter instanceof CompositeParameterNode) {
+				handleCompositeParameter((CompositeParameterNode) sourceParameter, targetMethodNode, prefix, mapper);
 			}
 		}
+	}
+
+	private static void handleBasicParameter(
+			BasicParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
+
+		deployBasicParameter(sourceParameter, targetMethodNode, prefix, mapper);
+	}
+
+	private static void handleCompositeParameter(
+			CompositeParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
+
+		List<AbstractParameterNode> childSourceParameters = new ArrayList<>();
+
+		if (sourceParameter.isLinked()) {
+			handleCompositeParameterLinked(sourceParameter, childSourceParameters);
+		} else {
+			handleCompositeParameterNotLinked(sourceParameter, childSourceParameters);
+		}
+
+		String childPrefix = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+
+		deployParametersRecursively(childSourceParameters, targetMethodNode, childPrefix, mapper);
+	}
+
+	private static void handleCompositeParameterLinked(
+			CompositeParameterNode sourceParameter, List<AbstractParameterNode> childSourceParameters) {
+
+		CompositeParameterNode sourceParameterGlobal = (CompositeParameterNode) sourceParameter.getLinkToGlobalParameter();
+
+		for (AbstractParameterNode node : sourceParameterGlobal.getParameters()) {
+			if (node instanceof CompositeParameterNode) {
+				handleCompositeParameterLinkedGetComposite(node, childSourceParameters);
+			} else {
+				handleCompositeParameterLinkedGetBasic(node, childSourceParameters);
+			}
+		}
+	}
+
+	private static void handleCompositeParameterNotLinked(
+			CompositeParameterNode parameter, List<AbstractParameterNode> childSourceParameters) {
+
+		childSourceParameters.addAll(parameter.getParameters());
+	}
+
+	private static void handleCompositeParameterLinkedGetComposite(
+			AbstractParameterNode parameter, List<AbstractParameterNode> childSourceParameters) {
+// Create a mock deployment parameter.
+		CompositeParameterNode composite = new CompositeParameterNode(parameter.getName(), null);
+		composite.setLinkToGlobalParameter(parameter);
+
+		childSourceParameters.add(composite);
+	}
+
+	private static void handleCompositeParameterLinkedGetBasic(
+			AbstractParameterNode parameter, List<AbstractParameterNode> childSourceParameters) {
+// Create a mock deployment parameter.
+		BasicParameterNode basic = new BasicParameterNode(parameter.getName(), ((BasicParameterNode) parameter).getType(), null);
+		basic.setLinkToGlobalParameter(parameter);
+
+		childSourceParameters.add(basic);
 	}
 
 	private static void deployBasicParameter(
 			BasicParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
 
 		BasicParameterNode copy = sourceParameter.createCopy(mapper);
+
 		copy.setCompositeName(prefix + copy.getName());
 
 		targetMethodNode.addParameter(copy);

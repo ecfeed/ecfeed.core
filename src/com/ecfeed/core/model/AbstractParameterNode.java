@@ -10,9 +10,12 @@
 
 package com.ecfeed.core.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class AbstractParameterNode extends AbstractNode {
+
+	private AbstractParameterNode fLinkToGlobalParameter;
 
 	public enum ParameterType {
 		BASIC,
@@ -21,6 +24,21 @@ public abstract class AbstractParameterNode extends AbstractNode {
 
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
+	}
+
+	public void setLinkToGlobalParameter(AbstractParameterNode node) {
+
+		this.fLinkToGlobalParameter = node;
+	}
+
+	public AbstractParameterNode getLinkToGlobalParameter() {
+
+		return fLinkToGlobalParameter;
+	}
+
+	public boolean isLinked() {
+
+		return getLinkToGlobalParameter() != null;
 	}
 
 	@Override
@@ -66,7 +84,7 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		}
 
 		if (parent instanceof CompositeParameterNode) {
-			return false;
+			return ((AbstractParameterNode) parent).isGlobalParameter();
 		}
 
 		return true;
@@ -75,12 +93,15 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	public String getQualifiedName() { // TODO MO-RE remove
 
 		if (isGlobalParameter()) {
-
-			if (getParent() == getRoot() || getParent() == null) {
-				return getName();
-			}
-
-			return getParent().getName() + ":" + getName();
+			LinkedList<String> segments = new LinkedList<>();
+			IAbstractNode parent = this;
+			
+			do {
+				segments.addFirst(parent.getName());
+				parent = parent.getParent();
+			} while (parent != null && !(parent instanceof RootNode));
+			
+			return String.join(":", segments);
 		} else {
 
 			return getNonQualifiedName();

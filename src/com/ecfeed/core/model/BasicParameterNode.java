@@ -28,7 +28,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	private String fTypeComments;
 	private boolean fExpected;
 	private String fDefaultValue;
-	private AbstractParameterNode fLinkToGlobalParameter;
 	private List<ChoiceNode> fChoicesCopy;
 	private BasicParameterNode fDeploymentParameterNode;
 
@@ -49,9 +48,9 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		fType = type;
 		fExpected = expected;
 		fDefaultValue = defaultValue;
-		fLinkToGlobalParameter = link;
-
 		fChoicesListHolder = new ChoicesListHolder(modelChangeRegistrator);
+
+		setLinkToGlobalParameter(link);
 
 		createDefaultProperties();
 	}
@@ -106,7 +105,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 				source.getType(),
 				source.getDefaultValue(),
 				source.fExpected,
-				source.fLinkToGlobalParameter,
+				source.getLinkToGlobalParameter(),
 				source.getModelChangeRegistrator());
 
 		for(ChoiceNode choice : source.getChoices()){
@@ -196,8 +195,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	private void copyProperties(BasicParameterNode copyOfBasicParameterNode) {
 
-		copyOfBasicParameterNode.fLinkToGlobalParameter = fLinkToGlobalParameter;
-
+		copyOfBasicParameterNode.setLinkToGlobalParameter(getLinkToGlobalParameter());
 		copyOfBasicParameterNode.setProperties(getProperties());
 
 		if (getDefaultValue() != null) {
@@ -207,11 +205,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	public String getType() {
 
-		if (isLinked() && fLinkToGlobalParameter != null) {
+		if (isLinked() && getLinkToGlobalParameter() != null) {
 
-			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+			if (getLinkToGlobalParameter() instanceof BasicParameterNode) {
 
-				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				BasicParameterNode link = (BasicParameterNode) getLinkToGlobalParameter();
 
 				return link.getType();
 			}
@@ -234,16 +232,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	public String getTypeComments() {
 
-		if (isLinked() && fLinkToGlobalParameter != null) {
+		if (isLinked() && getLinkToGlobalParameter() != null) {
 
-			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+			if (getLinkToGlobalParameter() instanceof BasicParameterNode) {
 
-				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				BasicParameterNode link = (BasicParameterNode) getLinkToGlobalParameter();
+
 				return link.getTypeComments();
 			}
 
 			return null;
-
 		}
 
 		return fTypeComments;
@@ -263,11 +261,11 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		boolean linked = isLinked();
 
-		if (linked && fLinkToGlobalParameter != null) {
+		if (linked && getLinkToGlobalParameter() != null) {
 
-			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+			if (getLinkToGlobalParameter() instanceof BasicParameterNode) {
 
-				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				BasicParameterNode link = (BasicParameterNode) getLinkToGlobalParameter();
 
 				return link.getChoices();
 			}
@@ -280,19 +278,18 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	public List<ChoiceNode> getChoicesWithCopies() {
 
-		if (isLinked() && fLinkToGlobalParameter != null) {
+		if (isLinked() && getLinkToGlobalParameter() != null) {
 
-			if (fLinkToGlobalParameter instanceof BasicParameterNode) {
+			if (getLinkToGlobalParameter() instanceof BasicParameterNode) {
 
-				BasicParameterNode link = (BasicParameterNode)fLinkToGlobalParameter;
+				BasicParameterNode link = (BasicParameterNode) getLinkToGlobalParameter();
 
 				if (fChoicesCopy == null) {
-					fChoicesCopy = link.getChoicesCopy();
+					fChoicesCopy = link.getChoices();
 					return fChoicesCopy;
-
 				}
 
-				List<ChoiceNode> temp = link.getChoicesCopy();
+				List<ChoiceNode> temp = link.getChoices();
 
 				if (!choiceListsMatch(fChoicesCopy, temp)) {
 					fChoicesCopy = temp;
@@ -426,30 +423,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public void setExpected(boolean isexpected) {
 		fExpected = isexpected;
 		registerChange();
-	}
-
-	public boolean isLinked() {
-
-		if (fLinkToGlobalParameter != null) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public AbstractParameterNode getLinkToGlobalParameter() {
-
-		return fLinkToGlobalParameter;
-	}
-
-	public void setLinkToGlobalParameter(AbstractParameterNode link) {
-
-		fLinkToGlobalParameter = link;
-	}
-
-	public void setLinkToMethod(MethodNode link) {
-
-		fLinkToGlobalParameter = null;
 	}
 
 	@Override

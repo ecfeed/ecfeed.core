@@ -27,10 +27,20 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	public CompositeParameterNode(
 			String name,
 			IModelChangeRegistrator modelChangeRegistrator) {
+
+		this(name, null, modelChangeRegistrator);
+	}
+
+	public CompositeParameterNode(
+			String name,
+			AbstractParameterNode link,
+			IModelChangeRegistrator modelChangeRegistrator) {
 		
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		setLinkToGlobalParameter(link);
 		
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
@@ -72,13 +82,15 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public CompositeParameterNode makeClone() {
-		CompositeParameterNode copy = 
-				new CompositeParameterNode(getName(), getModelChangeRegistrator());
+		CompositeParameterNode copy = new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
+
+		for (AbstractParameterNode parameter : getParameters()) {
+			copy.addParameter((AbstractParameterNode) parameter.makeClone());
+		}
 
 		copy.setProperties(getProperties());
 		copy.setParent(this.getParent());
 
-		copy.setParent(getParent());
 		return copy;
 	}
 
@@ -337,4 +349,37 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		fConstraintNodeListHolder.removeMentioningConstraints(methodParameter);
 	}
 	
+	public String getType() {
+
+		return COMPOSITE_PARAMETER_TYPE;
+	}
+	
+	public List<CompositeParameterNode> getNestedCompositeParameters() {
+		List<CompositeParameterNode> nodes = new ArrayList<>();
+		
+		for (AbstractParameterNode node : getParameters()) {
+			
+			if (node instanceof CompositeParameterNode) {
+				nodes.add((CompositeParameterNode) node);
+				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters());
+			}
+		}
+		
+		return nodes;
+	}
+	
+	public List<BasicParameterNode> getNestedBasicParameters() {
+		List<BasicParameterNode> nodes = new ArrayList<>();
+		
+		for (AbstractParameterNode node : getParameters()) {
+			
+			if (node instanceof BasicParameterNode) {
+				nodes.add((BasicParameterNode) node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedBasicParameters());
+			}
+		}
+		
+		return nodes;
+	}
 }
