@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNodeHelper;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -46,6 +47,13 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 			MethodNode methodNode = (MethodNode) parent;
 			addOperation(new MethodOperationMakeConsistent(methodNode, extLanguageManager));
 		}
+	}
+	
+	public HostMethodOperationPrepareParameterChange(
+			CompositeParameterNode target,
+			IExtLanguageManager extLanguageManager) {
+
+		super(OperationNames.SET_LINKED, true, target, target, extLanguageManager);
 	}
 
 	public void addOperation(int index, IModelOperation operation){
