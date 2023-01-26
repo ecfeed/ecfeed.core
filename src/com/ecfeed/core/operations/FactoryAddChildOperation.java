@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.operations;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
@@ -25,7 +26,7 @@ import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
 import com.ecfeed.core.operations.nodes.OnMethodOperationAddToClass;
-import com.ecfeed.core.operations.nodes.OnParameterOperationAddToMethod;
+import com.ecfeed.core.operations.nodes.OnParameterOperationAddToParent;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -76,8 +77,185 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		}
 
 		reportOperationNotSupportedException();
+
 		return null;
 	}
+
+	@Override
+	public Object visit(ClassNode node) throws Exception {
+
+		if(fChild instanceof MethodNode){
+			if(fIndex == -1){
+				return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fExtLanguageManager);
+			}
+			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
+		}else if(fChild instanceof BasicParameterNode){
+			BasicParameterNode globalParameter = new BasicParameterNode((BasicParameterNode)fChild);
+			if(fIndex == -1){
+				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
+			}
+			return new GenericOperationAddParameter(node, globalParameter, fIndex, true, fExtLanguageManager);
+		}
+
+		reportOperationNotSupportedException();
+		return null;
+	}
+
+	@Override
+	public Object visit(MethodNode node) throws Exception {
+
+		if (fChild instanceof AbstractParameterNode ) {
+			return new OnParameterOperationAddToParent(node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
+		}
+		
+		// TODO MO-RE remove ifs on fIndex 
+		if (fChild instanceof ConstraintNode) {
+
+			if (fIndex == -1) {
+				return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fExtLanguageManager);
+			}
+
+			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
+		}
+
+		if (fChild instanceof TestSuiteNode) {
+			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
+		}
+
+		if (fChild instanceof TestCaseNode) {
+			if(fIndex == -1){
+				return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
+			}
+			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
+		}
+
+		reportOperationNotSupportedException();
+		return null;
+	}
+
+	@Override
+	public Object visit(BasicParameterNode node) throws Exception {
+
+		if (node.isGlobalParameter()) {
+
+			if(fChild instanceof ChoiceNode){
+				if(fIndex == -1){ // TODO MO-RE remove if (fIndex)
+					return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+				}
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+			}
+
+			reportOperationNotSupportedException();
+			return null;
+
+
+		} else {
+
+			if(fChild instanceof ChoiceNode){
+				if(fIndex == -1){ // TODO MO-RE remove if (fIndex)
+					return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+				}
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+			}
+
+			reportOperationNotSupportedException();
+			return null;
+		}
+	}
+
+	@Override
+	public Object visit(CompositeParameterNode node) throws Exception {
+
+		if (fChild instanceof AbstractParameterNode ) {
+
+			return new OnParameterOperationAddToParent(
+					node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
+		}
+
+		reportOperationNotSupportedException();
+		return null;
+	}
+
+
+	@Override
+	public Object visit(TestSuiteNode node) throws Exception {
+		reportOperationNotSupportedException();
+		return null;
+	}
+
+	@Override
+	public Object visit(TestCaseNode node) throws Exception {
+		reportOperationNotSupportedException();
+		return null;
+	}
+
+	@Override
+	public Object visit(ConstraintNode node) throws Exception {
+		reportOperationNotSupportedException();
+		return null;
+	}
+
+	@Override
+	public Object visit(ChoiceNode node) throws Exception {
+		if(fChild instanceof ChoiceNode){
+			if(fIndex == -1){
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
+			}
+			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+		}
+
+		reportOperationNotSupportedException();
+		return null;
+	}
+
+	//	private Object createAddChildOperationForMethodNode(MethodNode node) throws Exception {
+	//
+	//		//		if (fChild instanceof BasicParameterNode) {
+	//		//			
+	//		//			BasicParameterNode globalParameter = (BasicParameterNode)fChild;
+	//		//			String defaultValue = fAdapterProvider.getAdapter(globalParameter.getType()).getDefaultValue();
+	//		//			BasicParameterNode parameter = new BasicParameterNode(globalParameter, defaultValue, false);
+	//		//
+	//		//			if(fIndex == -1){
+	//		//				return new OnParameterOperationAddToMethod(node,parameter, fExtLanguageManager);
+	//		//			}
+	//		//			return new OnParameterOperationAddToMethod(node, parameter, fIndex, fExtLanguageManager);
+	//		//		}
+	//
+	//		if (fChild instanceof AbstractParameterNode ) {
+	//
+	//			return new OnParameterOperationAddToParent(node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
+	//
+	//			//			if(fIndex == -1){
+	//			//				return new OnParameterOperationAddToMethod(node, (BasicParameterNode)fChild, fExtLanguageManager);
+	//			//			}
+	//			//			return new OnParameterOperationAddToMethod(node, (BasicParameterNode)fChild, fIndex, fExtLanguageManager);
+	//		}
+	//
+	//		// TODO MO-RE remove ifs on fIndex 
+	//		if (fChild instanceof ConstraintNode) {
+	//
+	//			if (fIndex == -1) {
+	//				return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fExtLanguageManager);
+	//			}
+	//
+	//			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
+	//		}
+	//
+	//		if (fChild instanceof TestSuiteNode) {
+	//			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
+	//		}
+	//
+	//		if (fChild instanceof TestCaseNode) {
+	//			if(fIndex == -1){
+	//				return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
+	//			}
+	//			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
+	//		}
+	//
+	//		reportOperationNotSupportedException();
+	//		return null;
+	//	}
 
 	private Object createOperationAddParameter(RootNode rootNode) {
 
@@ -104,7 +282,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 
 		return new OnClassOperationAddToRoot(rootNode, classNode, fIndex, fExtLanguageManager);
 	}
-	
+
 	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
 
 		String oldName = classNode.getName();
@@ -112,132 +290,6 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		String newName = RootNodeHelper.generateNewClassName(rootNode, oldNameCore);
 
 		classNode.setName(newName);
-	}
-
-	@Override
-	public Object visit(ClassNode node) throws Exception {
-
-		if(fChild instanceof MethodNode){
-			if(fIndex == -1){
-				return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fExtLanguageManager);
-			}
-			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
-		}else if(fChild instanceof BasicParameterNode){
-			BasicParameterNode globalParameter = new BasicParameterNode((BasicParameterNode)fChild);
-			if(fIndex == -1){
-				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
-			}
-			return new GenericOperationAddParameter(node, globalParameter, fIndex, true, fExtLanguageManager);
-		}
-
-		reportOperationNotSupportedException();
-		return null;
-	}
-
-	@Override
-	public Object visit(MethodNode node) throws Exception {
-		if(fChild instanceof BasicParameterNode){
-			BasicParameterNode globalParameter = (BasicParameterNode)fChild;
-			String defaultValue = fAdapterProvider.getAdapter(globalParameter.getType()).getDefaultValue();
-			BasicParameterNode parameter = new BasicParameterNode(globalParameter, defaultValue, false);
-
-			if(fIndex == -1){
-				return new OnParameterOperationAddToMethod(node,parameter, fExtLanguageManager);
-			}
-			return new OnParameterOperationAddToMethod(node, parameter, fIndex, fExtLanguageManager);
-		}
-		if(fChild instanceof BasicParameterNode){
-			if(fIndex == -1){
-				return new OnParameterOperationAddToMethod(node, (BasicParameterNode)fChild, fExtLanguageManager);
-			}
-			return new OnParameterOperationAddToMethod(node, (BasicParameterNode)fChild, fIndex, fExtLanguageManager);
-		}
-		if(fChild instanceof ConstraintNode){
-			if(fIndex == -1){
-				return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fExtLanguageManager);
-			}
-			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
-		}
-		if(fChild instanceof TestSuiteNode) {
-			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
-		}
-		if(fChild instanceof TestCaseNode){
-			if(fIndex == -1){
-				return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
-			}
-			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
-		}
-
-		reportOperationNotSupportedException();
-		return null;
-	}
-
-	@Override
-	public Object visit(BasicParameterNode node) throws Exception {
-
-		if (node.isGlobalParameter()) {
-
-			if(fChild instanceof ChoiceNode){
-				if(fIndex == -1){
-					return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
-				}
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
-			}
-
-			reportOperationNotSupportedException();
-			return null;
-
-
-		} else {
-			
-			if(fChild instanceof ChoiceNode){
-				if(fIndex == -1){
-					return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
-				}
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
-			}
-
-			reportOperationNotSupportedException();
-			return null;
-		}
-	}
-	
-	@Override
-	public Object visit(CompositeParameterNode node) throws Exception {
-		ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE
-		return null;
-	}
-	
-
-	@Override
-	public Object visit(TestSuiteNode node) throws Exception {
-		reportOperationNotSupportedException();
-		return null;
-	}
-	
-	@Override
-	public Object visit(TestCaseNode node) throws Exception {
-		reportOperationNotSupportedException();
-		return null;
-	}
-
-	@Override
-	public Object visit(ConstraintNode node) throws Exception {
-		reportOperationNotSupportedException();
-		return null;
-	}
-
-	@Override
-	public Object visit(ChoiceNode node) throws Exception {
-		if(fChild instanceof ChoiceNode){
-			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
-			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
-		}
-
-		reportOperationNotSupportedException();
-		return null;
 	}
 
 	private void reportOperationNotSupportedException() throws Exception {

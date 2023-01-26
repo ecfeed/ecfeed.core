@@ -15,35 +15,41 @@ import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.ITestCasesParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.GenericOperationAddParameter;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnParameterOperationAddToMethod extends GenericOperationAddParameter {
+public class OnParameterOperationAddToParent extends GenericOperationAddParameter {
 
 	List<TestCaseNode> fRemovedTestCases;
-	MethodNode fMethodNode;
-	AbstractParameterNode fMethodParameterNode;
+	IParametersParentNode fIParametersParentNode;
+	ITestCasesParentNode fTestCasesParentNode;
+	AbstractParameterNode fParameterNode;
 	private int fNewIndex;
 
-	public OnParameterOperationAddToMethod(
-			MethodNode methodNode,
-			AbstractParameterNode methodParameterNode,
+	public OnParameterOperationAddToParent(
+			IParametersParentNode parametersParentNode,
+			AbstractParameterNode abstractParameterNode,
 			int index,
 			IExtLanguageManager extLanguageManager) {
 
-		super(methodNode, methodParameterNode, index, true, extLanguageManager);
+		super(parametersParentNode, abstractParameterNode, index, true, extLanguageManager);
 
-		fRemovedTestCases = new ArrayList<TestCaseNode>(methodNode.getTestCases());
-		fMethodNode = methodNode;
-		fMethodParameterNode = methodParameterNode;
-		fNewIndex = index != -1 ? index : methodNode.getParameters().size();
+		fIParametersParentNode = parametersParentNode;
+		fParameterNode = abstractParameterNode;
+		fNewIndex = index != -1 ? index : parametersParentNode.getParameters().size();
+		
+		fTestCasesParentNode = MethodNodeHelper.findMethodNode(parametersParentNode);
+		fRemovedTestCases = new ArrayList<TestCaseNode>(fTestCasesParentNode.getTestCases());
 	}
 
-	public OnParameterOperationAddToMethod(
+	public OnParameterOperationAddToParent(
 			MethodNode target,
 			AbstractParameterNode parameter,
 			IExtLanguageManager extLanguageManager) {
@@ -56,31 +62,13 @@ public class OnParameterOperationAddToMethod extends GenericOperationAddParamete
 
 		IExtLanguageManager extLanguageManager = getExtLanguageManager();
 
-		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fMethodNode, extLanguageManager);
+		List<String> parameterTypesInExtLanguage = ParametersParentNodeHelper.getParameterTypes(fIParametersParentNode, extLanguageManager);
 
-		String newParameterType = AbstractParameterNodeHelper.getType(fMethodParameterNode, extLanguageManager);
+		String newParameterType = AbstractParameterNodeHelper.getType(fParameterNode, extLanguageManager);
 
 		parameterTypesInExtLanguage.add(fNewIndex, newParameterType);
 
-		//				ClassNode parentClassNode = fMethodNode.getClassNode();
-		//		
-		//				if (parentClassNode != null) {
-		//		
-		//					String methodNameInExtLanguage = AbstractNodeHelper.getName(fMethodNode, extLanguageManager);
-		//		
-		//					MethodNode foundMethodNode =
-		//							ClassNodeHelper.findMethodByExtLanguage(
-		//									parentClassNode, methodNameInExtLanguage, extLanguageManager);
-		//		
-		//					if (foundMethodNode != null) {
-		//		
-		//						ExceptionHelper.reportRuntimeException(
-		//								ClassNodeHelper.createMethodNameDuplicateMessage(
-		//										parentClassNode, foundMethodNode, false, extLanguageManager));
-		//					}
-		//				}
-
-		fMethodNode.removeAllTestCases();
+		fTestCasesParentNode.removeAllTestCases();
 		super.execute();
 	}
 
@@ -92,18 +80,18 @@ public class OnParameterOperationAddToMethod extends GenericOperationAddParamete
 	private class MethodReverseOperation extends ReverseOperation{
 
 		public MethodReverseOperation(IExtLanguageManager extLanguageManager) {
-			super(fMethodNode, fMethodParameterNode, extLanguageManager);
+			super(fIParametersParentNode, fParameterNode, extLanguageManager);
 		}
 
 		@Override
 		public void execute() {
-			fMethodNode.replaceTestCases(fRemovedTestCases);
+			fTestCasesParentNode.replaceTestCases(fRemovedTestCases);
 			super.execute();
 		}
 
 		@Override
 		public IModelOperation getReverseOperation() {
-			return new OnParameterOperationAddToMethod(fMethodNode, fMethodParameterNode, getExtLanguageManager());
+			return null;
 		}
 
 	}
