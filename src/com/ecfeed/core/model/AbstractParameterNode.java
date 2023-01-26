@@ -84,7 +84,7 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		}
 
 		if (parent instanceof CompositeParameterNode) {
-			return ((AbstractParameterNode) parent).isGlobalParameter();
+			return false;
 		}
 
 		return true;

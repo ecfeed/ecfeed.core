@@ -25,7 +25,7 @@ import com.ecfeed.core.utils.StringHelper;
 public class BasicParameterNode extends AbstractParameterNode implements IChoicesParentNode {
 
 	private String fType;
-	private String fTypeComments;
+	private String fTypeComments = "";
 	private boolean fExpected;
 	private String fDefaultValue;
 	private List<ChoiceNode> fChoicesCopy;
@@ -406,7 +406,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 	public String getDefaultValueForSerialization() {
 		if (fDefaultValue == null) {
-			return new String();
+			return "";
 		}
 		return fDefaultValue;
 	}	

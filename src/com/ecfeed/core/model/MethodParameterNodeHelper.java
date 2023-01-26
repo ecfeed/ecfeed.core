@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -114,4 +115,7 @@ public class MethodParameterNodeHelper {
 		return null;
 	}
 
+	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
+		return AbstractParameterNodeHelper.createReverseSignature(methodParameterNode, extLanguageManage);
+	}
 }

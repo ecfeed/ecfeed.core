@@ -37,7 +37,7 @@ public class ModelSerializerWithConstraintsTest {
 
     private RootNode createModelComposite(int version) {
         RootNode model = new RootNode("model", null, version);
-        BasicParameterNode p1 = RootNodeHelper.addGlobalParameterToRoot(model, "P1", "int", null);
+        BasicParameterNode p1 = RootNodeHelper.addGlobalBasicParameterToRoot(model, "P1", "int", null);
         p1.addChoice(new ChoiceNode("P1C1", "1"));
         p1.addChoice(new ChoiceNode("P1C2", "2"));
         p1.addChoice(new ChoiceNode("P1C3", "3"));
@@ -54,7 +54,7 @@ public class ModelSerializerWithConstraintsTest {
 
         ClassNode c1 = new ClassNode("Class", null);
 
-        BasicParameterNode c1p1 = ClassNodeHelper.addGlobalParameterToClass(c1, "C1P1", "int", null);
+        BasicParameterNode c1p1 = ClassNodeHelper.addGlobalBasicParameterToClass(c1, "C1P1", "int", null);
         c1p1.addChoice(new ChoiceNode("C1P1C1", "1"));
         c1p1.addChoice(new ChoiceNode("C1P1C2", "2"));
         c1p1.addChoice(new ChoiceNode("C1P1C3", "3"));
