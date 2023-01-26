@@ -515,103 +515,51 @@ public class GenericAddChildrenOperationTest {
 		assertEquals(1, methodNode.getTestCases().size());
 	}
 
-	//	@Test
-	//	public void removeGlobalBasicParameter() {
-	//
-	//		RootNode rootNode = new RootNode("Root", null);
-	//
-	//		// global parameter
-	//
-	//		BasicParameterNode globalBasicParameterNode1 = 
-	//				new BasicParameterNode(
-	//						"GlobalBasicParam1", "String", "", false, null);
-	//		rootNode.addParameter(globalBasicParameterNode1);
-	//
-	//		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
-	//		globalBasicParameterNode1.addChoice(choiceNode1);
-	//
-	//		// class node
-	//
-	//		ClassNode classNode = new ClassNode("Class", null);
-	//		rootNode.addClass(classNode);
-	//
-	//		// method node
-	//
-	//		MethodNode methodNode = new MethodNode("Method");
-	//		classNode.addMethod(methodNode);
-	//
-	//		// linked parameter
-	//
-	//		BasicParameterNode basicParameterNode1 =
-	//				new BasicParameterNode(
-	//						"BasicParam1",
-	//						"String",
-	//						"",
-	//						false,
-	//						globalBasicParameterNode1,
-	//						null);
-	//
-	//		methodNode.addParameter(basicParameterNode1);
-	//
-	//		BasicParameterNode basicParameterNode2 = 
-	//				new BasicParameterNode(
-	//						"BasicParam2", "String", "", false, null);
-	//		methodNode.addParameter(basicParameterNode2);
-	//
-	//		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
-	//		basicParameterNode2.addChoice(choiceNode2);
-	//
-	//		// constraints
-	//
-	//		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
-	//		methodNode.addConstraint(constraintNode1);
-	//
-	//		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
-	//		methodNode.addConstraint(constraintNode2);
-	//
-	//		// test case
-	//
-	//		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-	//		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
-	//		methodNode.addTestCase(testCaseNode);
-	//
-	//		// copy parameters to deployed parameters
-	//
-	//		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-	//		deployedParameters.add(basicParameterNode1);
-	//		deployedParameters.add(basicParameterNode2);
-	//		methodNode.setDeployedParameters(deployedParameters);
-	//
-	//		// list of nodes to delete
-	//
-	//		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-	//		nodesToDelete.add(globalBasicParameterNode1);
-	//
-	//		// remove operation
-	//
-	//		GenericRemoveNodesOperation genericRemoveNodesOperation = 
-	//				createRemovingNodesOperation(nodesToDelete, rootNode);
-	//		genericRemoveNodesOperation.execute();
-	//
-	//		assertEquals(1, methodNode.getParameters().size());
-	//		assertEquals(1, methodNode.getConstraintNodes().size());
-	//
-	//		assertEquals(0, methodNode.getTestCases().size());
-	//		assertEquals(0, methodNode.getDeployedMethodParameters().size());
-	//
-	//		// reverse
-	//		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
-	//		reverseOperation.execute();
-	//
-	//		assertEquals(2, methodNode.getParameters().size());
-	//
-	//		List<ConstraintNode> resultConstraintNodes = methodNode.getConstraintNodes();
-	//		assertEquals(2, resultConstraintNodes.size());
-	//
-	//		assertEquals(1, methodNode.getTestCases().size());
-	//		assertEquals(2, methodNode.getDeployedMethodParameters().size());
-	//	}
-	//
+	@Test
+	public void addGlobalBasicParameter() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// global parameter
+
+		BasicParameterNode globalBasicParameterNode1 = 
+				new BasicParameterNode(
+						"GlobalBasicParam1", "String", "", false, null);
+
+		GenericAddChildrenOperation genericAddChildrenOperation1 = 
+				createAddingNodeOperation(rootNode, globalBasicParameterNode1, 0 );
+		genericAddChildrenOperation1.execute();
+
+		assertEquals(1, rootNode.getParameters().size());
+
+		genericAddChildrenOperation1.getReverseOperation().execute();
+		assertEquals(0, rootNode.getParameters().size());
+	}
+
+	@Test
+	public void addChoiceToGlobalBasicParameter() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// global parameter
+
+		BasicParameterNode globalBasicParameterNode1 = 
+				new BasicParameterNode(
+						"GlobalBasicParam1", "String", "", false, null);
+		rootNode.addParameter(globalBasicParameterNode1);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
+
+		GenericAddChildrenOperation genericAddChildrenOperation1 = 
+				createAddingNodeOperation(globalBasicParameterNode1, choiceNode1, 0 );
+		genericAddChildrenOperation1.execute();
+
+		assertEquals(1, globalBasicParameterNode1.getChoices().size());
+
+		genericAddChildrenOperation1.getReverseOperation().execute();
+		assertEquals(0, globalBasicParameterNode1.getChoices().size());
+	}
+
 	//	@Test
 	//	public void removeChoiceNodeOfMethodBasicParameter() {
 	//
