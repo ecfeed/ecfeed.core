@@ -10,12 +10,14 @@
 
 package com.ecfeed.core.model;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class CompositeParameterNode extends AbstractParameterNode implements IParametersAndConstraintsParentNode {
 	
@@ -46,19 +48,14 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 	}
 
+	public boolean isMethodParameter() {
+
+		return (getParent() instanceof MethodNode);
+	}
+
 	public boolean isGlobalParameter() {
 		
-		IAbstractNode parent = getParent();
-		
-		if (parent == null) {
-			return false;
-		}
-		
-		if (parent instanceof MethodNode) {
-			return false;
-		}
-		
-		return true;
+		return ((getParent() instanceof RootNode) || (getParent() instanceof ClassNode));
 	}
 	
 	@Override
@@ -116,12 +113,35 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		}
 		
 		CompositeParameterNode otherComposite = (CompositeParameterNode) other;
+
+		if (!propertiesMatch(otherComposite)) {
+			return false;
+		}
 		
 		if (!fParametersHolder.isMatch(otherComposite.fParametersHolder)) {
 			return false;
 		}
 		
 		return super.isMatch(other);
+	}
+
+	public boolean propertiesMatch(CompositeParameterNode parameter) {
+
+		if (!StringHelper.isEqual(getName(), parameter.getName())) {
+			return false;
+		}
+
+		if (isLinked() != parameter.isLinked()) {
+			return false;
+		}
+
+		if (isLinked()) {
+			if (!StringHelper.isEqual(getLinkToGlobalParameter().getName(), parameter.getLinkToGlobalParameter().getName())) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override

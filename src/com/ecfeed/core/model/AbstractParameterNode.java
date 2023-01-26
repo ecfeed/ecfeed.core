@@ -91,21 +91,15 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	}
 
 	public String getQualifiedName() { // TODO MO-RE remove
-
-		if (isGlobalParameter()) {
-			LinkedList<String> segments = new LinkedList<>();
-			IAbstractNode parent = this;
+		LinkedList<String> segments = new LinkedList<>();
+		IAbstractNode parent = this;
 			
-			do {
-				segments.addFirst(parent.getName());
-				parent = parent.getParent();
-			} while (parent != null && !(parent instanceof RootNode));
+		do {
+			segments.addFirst(parent.getName());
+			parent = parent.getParent();
+		} while (parent != null && !(parent instanceof RootNode));
 			
-			return String.join(":", segments);
-		} else {
-
-			return getNonQualifiedName();
-		}
+		return String.join(":", segments);
 	}
 
 	public IParametersParentNode getParametersParent() {

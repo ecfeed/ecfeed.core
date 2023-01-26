@@ -51,6 +51,11 @@ public class ModelSerializerWithConstraintsTest {
         p22.addChoice(new ChoiceNode("P22C1", "1"));
         p22.addChoice(new ChoiceNode("P22C2", "2"));
         p22.addChoice(new ChoiceNode("P22C3", "3"));
+        CompositeParameterNode p23 = new CompositeParameterNode("P23", null);
+        BasicParameterNode p231 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(p2, "P231", "int");
+        p231.addChoice(new ChoiceNode("P231C1", "1"));
+        p231.addChoice(new ChoiceNode("P231C2", "2"));
+        p231.addChoice(new ChoiceNode("P231C3", "3"));
 
         ClassNode c1 = new ClassNode("Class", null);
 
@@ -68,6 +73,11 @@ public class ModelSerializerWithConstraintsTest {
         c1p22.addChoice(new ChoiceNode("C1P22C1", "1"));
         c1p22.addChoice(new ChoiceNode("C1P22C2", "2"));
         c1p22.addChoice(new ChoiceNode("C1P22C3", "3"));
+        CompositeParameterNode c1p23 = new CompositeParameterNode("C1P23", null);
+        BasicParameterNode c1p231 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(c1p2, "C1P231", "int");
+        c1p231.addChoice(new ChoiceNode("C1P231C1", "1"));
+        c1p231.addChoice(new ChoiceNode("C1P231C2", "2"));
+        c1p231.addChoice(new ChoiceNode("C1P231C3", "3"));
 
         MethodNode m1 = ClassNodeHelper.addMethodToClass(c1, "Method1", null);
 
@@ -162,10 +172,18 @@ public class ModelSerializerWithConstraintsTest {
                 ChoiceNodeHelper.addChoiceToChoice(m1p621c3, "M1P621C3A", "4");
 //        ChoiceNode m1p621c3b =
                 ChoiceNodeHelper.addChoiceToChoice(m1p621c3, "M1P621C3B", "5");
+        CompositeParameterNode m1p63 = new CompositeParameterNode("M1P63", null);
+        CompositeParameterNode m1p64 = new CompositeParameterNode("M1P64", null);
+        CompositeParameterNode m1p65 = new CompositeParameterNode("M1P65", null);
+        CompositeParameterNode m1p66 = new CompositeParameterNode("M1P66", null);
 
         model.addParameter(p2);
 
+        p2.addParameter(p23);
+
         c1.addParameter(c1p2);
+
+        c1p2.addParameter(c1p23);
 
         m1.addParameter(m1p1);
         m1.addParameter(m1p2);
@@ -175,6 +193,10 @@ public class ModelSerializerWithConstraintsTest {
 
         m1p6.addParameter(m1p61);
         m1p6.addParameter(m1p62);
+        m1p6.addParameter(m1p63);
+        m1p6.addParameter(m1p64);
+        m1p6.addParameter(m1p65);
+        m1p6.addParameter(m1p66);
 
         m1.addParameter(m1p6);
 
@@ -207,6 +229,22 @@ public class ModelSerializerWithConstraintsTest {
 
         NodeMapper mapper = new NodeMapper();
         MethodDeployer.deploy(m1, mapper);
+
+// Link to a parameter (global).
+
+        m1p63.setLinkToGlobalParameter(p2);
+
+// Link to a parameter (global, nested).
+
+        m1p64.setLinkToGlobalParameter(p23);
+
+// Link to a parameter (class).
+
+        m1p65.setLinkToGlobalParameter(c1p2);
+
+// Link to a parameter (class, nested).
+
+        m1p66.setLinkToGlobalParameter(c1p23);
 
         return model;
     }
