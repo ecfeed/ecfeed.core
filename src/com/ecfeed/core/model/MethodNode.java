@@ -217,11 +217,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return sibling;
 	}
 
-	public boolean checkDuplicate() { // TODO MO-RE remove ? no check of duplicates (when unique function name) ??
-		return getSibling() != null;
-	}
-
-	@Override
 	public void addConstraint(ConstraintNode constraint) {
 
 		fConstraintNodeListHolder.addConstraint(constraint, this);
