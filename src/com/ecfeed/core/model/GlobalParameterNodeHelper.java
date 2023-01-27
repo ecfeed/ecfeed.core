@@ -170,7 +170,7 @@ public class GlobalParameterNodeHelper {
 			type = getType(basicParameterNode, extLanguageManager);
 		}
 
-		return type + " " + qualifiedName;
+		return (type + " " + qualifiedName).trim();
 	}
 
 	public static String getQualifiedName(
