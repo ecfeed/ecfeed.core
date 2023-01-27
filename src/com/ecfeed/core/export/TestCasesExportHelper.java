@@ -24,8 +24,8 @@ import com.ecfeed.core.model.FixedChoiceValueFactory;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodParameterNodeHelper;
 import com.ecfeed.core.model.ModelHelper;
+import com.ecfeed.core.model.ParametersParentNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 import com.ecfeed.core.utils.JustifyType;
@@ -128,7 +128,7 @@ public class TestCasesExportHelper {
 		BasicParameterNode parameter = getBasicParameterFromSequence(parameterCommandSequence, methodNode, extLanguageManager);
 
 		String substitute = resolveParameterCommand(command, parameter, extLanguageManager);
-		
+
 		return substitute;
 	}
 
@@ -136,19 +136,19 @@ public class TestCasesExportHelper {
 			String parameterCommandSequence,
 			MethodNode methodNode,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		int parameterIndex = getParameterIndexFromSequence(parameterCommandSequence, methodNode, extLanguageManager);
 
 		List<AbstractParameterNode> parameters = methodNode.getParameters();
 
 		BasicParameterNode parameter = (BasicParameterNode) parameters.get(parameterIndex);
-		
+
 		return parameter;
 	}
 
 	private static String resolveParameterCommand(
 			String command, BasicParameterNode parameter, IExtLanguageManager extLanguageManager) {
-		
+
 		String result = command;
 		switch(command){
 		case PARAMETER_COMMAND_NAME:
@@ -349,7 +349,7 @@ public class TestCasesExportHelper {
 
 			String valueSubstitute = 
 					createValueSubstitute(parameterCommandSequence, testCase, methodNode, extLanguageManager);
-			
+
 			if (valueSubstitute != null) {
 				result = result.replace(parameterCommandSequence, valueSubstitute);
 			}
@@ -375,7 +375,7 @@ public class TestCasesExportHelper {
 		int parameterIndex = 
 				getParameterIndexFromSequence(
 						parameterCommandSequence, methodNode, extLanguageManager);
-		
+
 		if (parameterIndex == -1) {
 			return null;
 		}
@@ -384,7 +384,7 @@ public class TestCasesExportHelper {
 			return null;
 		}
 
-		BasicParameterNode basicParameterNode = getBasicParameter(parameterIndex, methodNode);
+		BasicParameterNode basicParameterNode = ParametersParentNodeHelper.getBasicParameter(parameterIndex, methodNode);
 		String parameterType = basicParameterNode.getType();
 
 		ChoiceNode choice = testCase.getTestData().get(parameterIndex);
@@ -393,19 +393,6 @@ public class TestCasesExportHelper {
 		String substitute = resolveChoiceCommand(command, choice, parameterType, extLanguageManager);
 
 		return substitute;
-	}
-
-	private static BasicParameterNode getBasicParameter(int parameterNumber, MethodNode methodNode) { // TODO MO-RE move to IParametersParent ?
-
-		AbstractParameterNode abstractParameterNode = methodNode.getParameter(parameterNumber);
-
-		if (!(abstractParameterNode instanceof BasicParameterNode)) {
-			ExceptionHelper.reportRuntimeException("Basic parameter expected.");
-		}
-
-		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-		return basicParameterNode;
 	}
 
 	private static String resolveChoiceCommand(

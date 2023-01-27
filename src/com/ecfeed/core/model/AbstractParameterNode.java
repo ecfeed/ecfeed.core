@@ -72,7 +72,7 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		return true;
 	}
 
-	public String getQualifiedName() { // TODO MO-RE remove
+	public String getQualifiedName() {
 
 		if (isGlobalParameter()) {
 

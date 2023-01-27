@@ -26,19 +26,19 @@ public class ParametersParentNodeHelper {
 		for (AbstractParameterNode abstractParameterNode : parameterParentNode.getParameters()) {
 
 			if (abstractParameterNode instanceof BasicParameterNode) {
-				
+
 				BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-				
+
 				String type = basicParameterNode.getType();
-	
+
 				type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
-	
+
 				result.add(type);
 				continue;
 			}
-			
+
 			if (abstractParameterNode instanceof CompositeParameterNode) {
-				
+
 				result.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
 				continue;
 			}
@@ -46,7 +46,7 @@ public class ParametersParentNodeHelper {
 
 		return result;
 	}
-	
+
 	public static List<String> getParameterNames(IParametersParentNode method, IExtLanguageManager extLanguageManager) {
 
 		List<String> result = new ArrayList<String>();
@@ -69,12 +69,12 @@ public class ParametersParentNodeHelper {
 		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
 			return null;
 		}
-		
+
 		String parentName = AbstractNodeHelper.getParentName(globalParameterExtendedName);
 		String parameterName = ParametersAndConstraintsParentNodeHelper.getParameterName(globalParameterExtendedName);
 
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(parametersParentNode);
-		
+
 		ClassNode classNode = methodNode.getClassNode();
 		String className = classNode.getName();
 
@@ -94,5 +94,18 @@ public class ParametersParentNodeHelper {
 		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
 		return null;
 	}
-	
+
+	public static BasicParameterNode getBasicParameter(int parameterNumber, IParametersParentNode parametersParentNode) {
+
+		AbstractParameterNode abstractParameterNode = parametersParentNode.getParameter(parameterNumber);
+
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Basic parameter expected.");
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+		return basicParameterNode;
+	}
+
 }
