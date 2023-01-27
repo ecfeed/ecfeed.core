@@ -11,13 +11,17 @@
 package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
 import org.junit.Test;
+
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
 
 public class ChoiceConditionTest {
 
@@ -124,7 +128,7 @@ public class ChoiceConditionTest {
 	private List<ChoiceNode> createList(ChoiceNode choiceNode1) {
 		return Arrays.asList(choiceNode1);
 	}
-	
+
 	@Test
 	public void evaluateForStrings() {
 
@@ -564,34 +568,34 @@ public class ChoiceConditionTest {
 
 	}
 
-	@Test
-	public void updateReferencesTest() {
-		MethodNode method1 = new MethodNode("method1", null);
-		BasicParameterNode method1LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-		method1.addParameter(method1LeftParameterNode);
-		BasicParameterNode method1RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-		method1.addParameter(method1RightParameterNode);
-
-		RelationStatement statement = 
-				RelationStatement.createRelationStatementWithParameterCondition(
-						method1LeftParameterNode, EMathRelation.EQUAL, method1RightParameterNode);
-
-		MethodNode method2 = new MethodNode("method2", null);
-		BasicParameterNode method2LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-		method2.addParameter(method2LeftParameterNode);
-		BasicParameterNode method2RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-		method2.addParameter(method2RightParameterNode);
-
-
-		ParameterCondition parameterCondition = (ParameterCondition)statement.getCondition();
-
-		assertNotEquals(method2LeftParameterNode.hashCode(), statement.getLeftParameter().hashCode());
-		assertNotEquals(method2RightParameterNode.hashCode(), parameterCondition.getRightParameterNode().hashCode());
-
-		statement.updateReferences(method2);
-
-		assertEquals(method2LeftParameterNode.hashCode(), statement.getLeftParameter().hashCode());
-		assertEquals(method2RightParameterNode.hashCode(), parameterCondition.getRightParameterNode().hashCode());
-	}	
+	//	@Test
+	//	public void updateReferencesTest() {
+	//		MethodNode method1 = new MethodNode("method1", null);
+	//		BasicParameterNode method1LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+	//		method1.addParameter(method1LeftParameterNode);
+	//		BasicParameterNode method1RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+	//		method1.addParameter(method1RightParameterNode);
+	//
+	//		RelationStatement statement = 
+	//				RelationStatement.createRelationStatementWithParameterCondition(
+	//						method1LeftParameterNode, EMathRelation.EQUAL, method1RightParameterNode);
+	//
+	//		MethodNode method2 = new MethodNode("method2", null);
+	//		BasicParameterNode method2LeftParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+	//		method2.addParameter(method2LeftParameterNode);
+	//		BasicParameterNode method2RightParameterNode = new BasicParameterNode("par2", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+	//		method2.addParameter(method2RightParameterNode);
+	//
+	//
+	//		ParameterCondition parameterCondition = (ParameterCondition)statement.getCondition();
+	//
+	//		assertNotEquals(method2LeftParameterNode.hashCode(), statement.getLeftParameter().hashCode());
+	//		assertNotEquals(method2RightParameterNode.hashCode(), parameterCondition.getRightParameterNode().hashCode());
+	//
+	//		statement.updateReferences(method2);
+	//
+	//		assertEquals(method2LeftParameterNode.hashCode(), statement.getLeftParameter().hashCode());
+	//		assertEquals(method2RightParameterNode.hashCode(), parameterCondition.getRightParameterNode().hashCode());
+	//	}	
 
 }

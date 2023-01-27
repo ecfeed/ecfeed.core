@@ -22,6 +22,8 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
+import com.ecfeed.core.operations.nodes.OnTestCasesOperationRename;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -88,7 +90,7 @@ public class GenericMoveOperation extends CompositeOperation {
 					}
 					
 					for(MethodNode method : methodsInvolved){
-						addOperation(new MethodOperationRemoveInconsistentChildren(method, extLanguageManager));
+						addOperation(new OnMethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 					}
 				}
 			}
@@ -108,12 +110,12 @@ public class GenericMoveOperation extends CompositeOperation {
 			
 			if (node.getParent() == newParent.getParent()) {
 				element.add(node);
-				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
 			} else {
 				TestCaseNode nodeCopy = node.makeClone();
 				element.add(nodeCopy);
 				
-				addOperation(new MethodOperationRenameTestCases(element, newParent.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRename(element, newParent.getSuiteName(), getExtLanguageManager()));
 				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false, getExtLanguageManager())));
 				addOperation((IModelOperation)newParent.getParent().accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false, getExtLanguageManager())));
 			}
@@ -129,7 +131,7 @@ public class GenericMoveOperation extends CompositeOperation {
 				TestSuiteNode nodeCopy = node.makeClone();
 				element.addAll(nodeCopy.getTestCaseNodes());
 				
-				addOperation(new MethodOperationRenameTestCases(element, node.getSuiteName(), getExtLanguageManager()));
+				addOperation(new OnTestCasesOperationRename(element, node.getSuiteName(), getExtLanguageManager()));
 				addOperation((IModelOperation)node.getParent().accept(new FactoryRemoveChildOperation(node, adapterProvider, false, getExtLanguageManager())));
 				addOperation((IModelOperation)newParent.accept(new FactoryAddChildOperation(nodeCopy, adapterProvider, false, getExtLanguageManager())));
 			}

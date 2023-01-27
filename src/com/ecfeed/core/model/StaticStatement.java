@@ -34,10 +34,10 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	public StaticStatement(EvaluationResult value) {
-		
+
 		this(value, null);
 	}
-	
+
 	public StaticStatement(boolean value, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(modelChangeRegistrator);
@@ -92,10 +92,10 @@ public class StaticStatement extends AbstractStatement {
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
-	@Override
-	public boolean updateReferences(IParametersAndConstraintsParentNode parent){
-		return true;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode parent){
+	//		return true;
+	//	}
 
 	@Override
 	public boolean isEqualTo(IStatement statement){
@@ -173,10 +173,10 @@ public class StaticStatement extends AbstractStatement {
 		return new ArrayList<>();
 	}
 
-//	@Override
-//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		return new StaticStatement(fValue, getModelChangeRegistrator());
-//	}
+	//	@Override
+	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		return new StaticStatement(fValue, getModelChangeRegistrator());
+	//	}
 
 }

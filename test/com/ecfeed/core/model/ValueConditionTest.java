@@ -11,13 +11,17 @@
 package com.ecfeed.core.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.ecfeed.core.utils.*;
 import org.junit.Test;
+
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.EvaluationResult;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.MessageStack;
 
 public class ValueConditionTest {
 
@@ -214,7 +218,7 @@ public class ValueConditionTest {
 		//		evaluateRandomizedOne(methodParameterNode, "a-z", EStatementRelation.EQUAL, "a-z", AssertType.FALSE);
 		//		evaluateRandomizedOne(methodParameterNode, "a-z", EStatementRelation.EQUAL, "x", AssertType.FALSE);
 	}
-	
+
 	@Test
 	public void evaluateForRandomizedInteger() {
 		evaluateForRangeIntegerTypes(JavaLanguageHelper.TYPE_NAME_INT);
@@ -340,7 +344,7 @@ public class ValueConditionTest {
 		//		evaluateRandomizedOne(methodParameterNode, "a-z", EStatementRelation.EQUAL, "x", AssertType.FALSE);
 
 	}
-	
+
 	@Test
 	public void uAAAevaluateForAmbiguousInteger() {
 		evaluateForAmbiguousIntegerTypes(JavaLanguageHelper.TYPE_NAME_INT);
@@ -566,24 +570,24 @@ public class ValueConditionTest {
 		assertEquals(true, result);
 	}
 
-	@Test
-	public void updateReferencesTest() {
-		MethodNode method1 = new MethodNode("method1", null);
-		BasicParameterNode method1ParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-		method1.addParameter(method1ParameterNode);
-
-		RelationStatement statement = 
-				RelationStatement.createRelationStatementWithValueCondition(
-						method1ParameterNode, EMathRelation.EQUAL, "ABC");
-
-		MethodNode method2 = new MethodNode("method2", null);
-		BasicParameterNode method2ParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
-		method2.addParameter(method2ParameterNode);
-
-		assertNotEquals(method2ParameterNode.hashCode(), statement.getLeftParameter().hashCode());
-
-		statement.updateReferences(method2);
-
-		assertEquals(method2ParameterNode.hashCode(), statement.getLeftParameter().hashCode());
-	}	
+	//	@Test
+	//	public void updateReferencesTest() {
+	//		MethodNode method1 = new MethodNode("method1", null);
+	//		BasicParameterNode method1ParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+	//		method1.addParameter(method1ParameterNode);
+	//
+	//		RelationStatement statement = 
+	//				RelationStatement.createRelationStatementWithValueCondition(
+	//						method1ParameterNode, EMathRelation.EQUAL, "ABC");
+	//
+	//		MethodNode method2 = new MethodNode("method2", null);
+	//		BasicParameterNode method2ParameterNode = new BasicParameterNode("par1", JavaLanguageHelper.TYPE_NAME_STRING, "", false, null);
+	//		method2.addParameter(method2ParameterNode);
+	//
+	//		assertNotEquals(method2ParameterNode.hashCode(), statement.getLeftParameter().hashCode());
+	//
+	//		statement.updateReferences(method2);
+	//
+	//		assertEquals(method2ParameterNode.hashCode(), statement.getLeftParameter().hashCode());
+	//	}	
 }

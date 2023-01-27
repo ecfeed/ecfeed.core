@@ -168,6 +168,11 @@ public class ParametersHolder {
 
 		return result;
 	}
+	
+	public void removeAllParameters() {
+		
+		fParameters.clear();
+	}
 
 	public void replaceParameters(List<AbstractParameterNode> parameters) {
 

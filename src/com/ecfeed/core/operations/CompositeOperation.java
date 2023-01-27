@@ -64,6 +64,12 @@ public class CompositeOperation extends AbstractModelOperation {
 
 		fNodeToSelectAfterReverseOperation = nodeToelectAfterReverseOperation;
 	}
+	
+	@Override
+	public String toString() {
+		
+		return getName() + " " + fOperations.toString();
+	}
 
 	protected void addOperation(IModelOperation operation) {
 		

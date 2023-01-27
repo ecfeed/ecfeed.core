@@ -19,8 +19,8 @@ import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.MethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.operations.OperationNames;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -87,6 +87,6 @@ public class MethodParameterOperationSetLink extends CompositeOperation {
 		super(OperationNames.SET_LINK, true, target, target, extLanguageManager);
 		addOperation(new SetLinkOperation(target, link, extLanguageManager));
 		MethodNode methodNode = (MethodNode) target.getParent();
-		addOperation(new MethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
+		addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
 	}
 }

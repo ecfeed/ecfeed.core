@@ -90,7 +90,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 		IParametersAndConstraintsParentNode methodNode = 
 				(IParametersAndConstraintsParentNode) fLeftMethodParameterNode.getParent();
-		
+
 		AbstractParameterNode methodParameterNode = methodNode.getParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
@@ -174,27 +174,27 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return new ExpectedValueStatement(parameter, choice, fPredicate);
 	}
 
-	@Override
-	public boolean updateReferences(IParametersAndConstraintsParentNode method){
-		BasicParameterNode parameter = (BasicParameterNode)method.findParameter(fLeftMethodParameterNode.getName());
-		if(parameter != null && parameter.isExpected()){
-			fLeftMethodParameterNode = parameter;
-			fChoiceNode.setParent(parameter);
-			String type = parameter.getType();
-
-			if(!fPredicate.isPrimitive(type)){
-				ChoiceNode choice = parameter.getChoice(fChoiceNode.getQualifiedName());
-				if(choice != null){
-					fChoiceNode = choice;
-				}
-				else{
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode method){
+	//		BasicParameterNode parameter = (BasicParameterNode)method.findParameter(fLeftMethodParameterNode.getName());
+	//		if(parameter != null && parameter.isExpected()){
+	//			fLeftMethodParameterNode = parameter;
+	//			fChoiceNode.setParent(parameter);
+	//			String type = parameter.getType();
+	//
+	//			if(!fPredicate.isPrimitive(type)){
+	//				ChoiceNode choice = parameter.getChoice(fChoiceNode.getQualifiedName());
+	//				if(choice != null){
+	//					fChoiceNode = choice;
+	//				}
+	//				else{
+	//					return false;
+	//				}
+	//			}
+	//			return true;
+	//		}
+	//		return false;
+	//	}
 
 	@Override
 	public boolean isEqualTo(IStatement statement){
@@ -258,24 +258,24 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return new ArrayList<>();
 	}
 
-//	@Override
-//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		BasicParameterNode sourceParameter = getLeftMethodParameterNode();
-//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
-//
-//		ChoiceNode sourceChoiceNode = getChoice();
-//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
-//
-//		IPrimitiveTypePredicate deployedPredicate = getPredicate();
-//
-//		ExpectedValueStatement expectedValueStatement =
-//				new ExpectedValueStatement(
-//						deployedParameter,
-//						deployedChoiceNode,
-//						deployedPredicate);
-//
-//		return expectedValueStatement;
-//	}
+	//	@Override
+	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		BasicParameterNode sourceParameter = getLeftMethodParameterNode();
+	//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+	//
+	//		ChoiceNode sourceChoiceNode = getChoice();
+	//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+	//
+	//		IPrimitiveTypePredicate deployedPredicate = getPredicate();
+	//
+	//		ExpectedValueStatement expectedValueStatement =
+	//				new ExpectedValueStatement(
+	//						deployedParameter,
+	//						deployedChoiceNode,
+	//						deployedPredicate);
+	//
+	//		return expectedValueStatement;
+	//	}
 
 }

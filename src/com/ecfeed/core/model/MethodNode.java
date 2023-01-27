@@ -59,7 +59,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		ClassNode classNode = getClassNode();
 
 		if (classNode != null) {
-			
+
 			MethodNode otherMethodNode = classNode.findMethodWithTheSameName(name);
 
 			if (otherMethodNode != null) {
@@ -102,6 +102,13 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		fConstraintNodeListHolder.removeConstraint(contIterator);
 	}	
+
+	public void removeAllDeployedParameters() {
+
+		if (fDeployedParametersHolder != null) {
+			fDeployedParametersHolder.removeAllParameters();
+		}
+	}
 
 	public List<String> getParameterTypes() { // TODO MO-RE move to IParametersParant
 
@@ -244,7 +251,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		fConstraintNodeListHolder.addConstraint(constraint, index, this);
 	}
-	
+
 	@Override
 	public boolean removeConstraint(ConstraintNode constraint) {
 
@@ -319,6 +326,12 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public List<Constraint> getConstraints() {
 
 		return fConstraintNodeListHolder.getConstraints();
+	}
+
+	@Override
+	public void setConstraints(List<ConstraintNode> constraints) {
+
+		fConstraintNodeListHolder.setConstraints(constraints);
 	}
 
 	@Override
@@ -451,11 +464,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return result;
 	}
 
-	public void removeTestCases(){
-		fTestCaseNodes.clear();
-		registerChange();
-	}
-
 	public void removeTestSuite(TestSuiteNode testSuite) {
 
 		String testSuiteName = testSuite.getName();
@@ -485,17 +493,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return false;
 	}
 
-	public Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
-
-		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
-
-		for(BasicParameterNode parameter : parameters){
-			result.addAll(getMentioningConstraints(parameter));
-		}
-
-		return result;
-	}
-
 	@Override
 	public Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
 
@@ -511,6 +508,19 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public Set<ConstraintNode> getMentioningConstraints(ChoiceNode choice) {
 
 		return fConstraintNodeListHolder.getMentioningConstraints(choice);
+	}
+
+	public Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
+
+		Set<ConstraintNode> result = new HashSet<>();
+
+		for (BasicParameterNode basicParameterNode : parameters) {
+			Set<ConstraintNode> constraintsForOneParameter = getMentioningConstraints(basicParameterNode);
+
+			result.addAll(constraintsForOneParameter);
+		}
+
+		return result;
 	}
 
 	public List<TestCaseNode> getMentioningTestCases(ChoiceNode choice){
@@ -818,6 +828,12 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	public List<BasicParameterNode> getParametersAsBasic() {
 
 		return fParametersHolder.getParametersAsBasic();
+	}
+
+	public void setTestCases(List<TestCaseNode> testCases) {
+
+		fTestCaseNodes.clear();
+		fTestCaseNodes.addAll(testCases);
 	}
 
 }

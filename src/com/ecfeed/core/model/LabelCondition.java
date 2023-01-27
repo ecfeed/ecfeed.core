@@ -46,11 +46,11 @@ public class LabelCondition implements IStatementCondition {
 		return evaluateContainsLabel(choice);
 	}
 
-	@Override
-	public boolean updateReferences(IParametersParentNode methodNode) {
-
-		return true;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition() {
@@ -104,6 +104,11 @@ public class LabelCondition implements IStatementCondition {
 
 	public String getRightLabel() {
 		return fRightLabel;
+	}
+
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
 	}
 
 	@Override
@@ -186,21 +191,21 @@ public class LabelCondition implements IStatementCondition {
 		return null;
 	}
 
-//	@Override
-//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		String developedLabel = getRightLabel();
-//
-//		RelationStatement deployedParentRelationStatement =
-//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
-//
-//		LabelCondition deployedLabelCondition =
-//				new LabelCondition(
-//						developedLabel,
-//						deployedParentRelationStatement);
-//
-//		return deployedLabelCondition;
-//	}
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		String developedLabel = getRightLabel();
+	//
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+	//
+	//		LabelCondition deployedLabelCondition =
+	//				new LabelCondition(
+	//						developedLabel,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployedLabelCondition;
+	//	}
 
 }
 

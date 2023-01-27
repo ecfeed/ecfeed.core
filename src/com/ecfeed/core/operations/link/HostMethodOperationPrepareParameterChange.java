@@ -23,8 +23,8 @@ import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.AbstractReverseOperation;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.IModelOperation;
-import com.ecfeed.core.operations.MethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.operations.OperationNames;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -44,7 +44,7 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 			addOperation(new OperationPrepareMethodForParameterTypeChange(target, newType, extLanguageManager));
 
 			MethodNode methodNode = (MethodNode) parent;
-			addOperation(new MethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
+			addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
 		}
 	}
 
@@ -91,7 +91,7 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 			fOriginalTestCases = new ArrayList<>(method.getTestCases());
 			fOriginalConstraints = new ArrayList<>(method.getConstraintNodes());
 
-			method.removeTestCases();
+			method.removeAllTestCases();
 			method.removeMentioningConstraints(fTarget);
 		}
 

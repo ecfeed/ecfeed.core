@@ -317,20 +317,20 @@ public class ChoiceNodeHelper {
 	public static String createSignatureOfChoiceWithParameter(ChoiceNode choiceNode, IExtLanguageManager extLanguageManager) {
 
 		BasicParameterNode basicParameterNode = choiceNode.getParameter();	
-		
+
 		String choiceQualifiedName = ChoiceNodeHelper.getQualifiedName(choiceNode, extLanguageManager);
-		
+
 		if (basicParameterNode == null) {
 
 			return choiceQualifiedName;
 		}
 
 		String parameterCompositeName = AbstractParameterNodeHelper.getCompositeName(basicParameterNode, extLanguageManager);
-		
+
 		if (basicParameterNode.isExpected()) {
 			return "[e]" +	ChoiceNodeHelper.getValueString(choiceNode, extLanguageManager);
 		}
-		
+
 		return parameterCompositeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + choiceQualifiedName;
 	}
 
@@ -874,6 +874,79 @@ public class ChoiceNodeHelper {
 				return newParameterName;
 			}
 		}
+	}
+
+	public static Set<ConstraintNode> getMentioningConstraints(ChoiceNode choiceNode) {
+
+		BasicParameterNode basicParameterNode = getBasicParameter(choiceNode);
+
+		Set<ConstraintNode> constraintMentioningParameter = 
+				BasicParameterNodeHelper.getMentioningConstraints(basicParameterNode);
+
+		Set<ConstraintNode> result = new HashSet<>();
+
+		for (ConstraintNode constraintNode : constraintMentioningParameter) {
+
+			if (constraintNode.mentions(choiceNode)) {
+
+				result.add(constraintNode);
+			}
+		}
+
+		return result;
+	}
+
+	public static Set<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
+
+		BasicParameterNode basicParameterNode = getBasicParameter(choiceNodeNotFromTestCase);
+
+		if (basicParameterNode.isGlobalParameter()) {
+			return getMentioningTestCasesForGlobalChoice(choiceNodeNotFromTestCase, basicParameterNode);
+		}
+
+		return getMentioningTestCasesForLocalChoice(choiceNodeNotFromTestCase);
+
+	}
+
+	private static Set<TestCaseNode> getMentioningTestCasesForLocalChoice(ChoiceNode choiceNodeNotFromTestCase) {
+
+		Set<TestCaseNode> result = new HashSet<>();
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(choiceNodeNotFromTestCase);
+
+		if (methodNode == null) {
+			return new HashSet<>();
+		}
+
+		accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+		return result;
+	}
+
+	private static Set<TestCaseNode> getMentioningTestCasesForGlobalChoice(
+			ChoiceNode choiceNodeNotFromTestCase,
+			BasicParameterNode basicParameterNode) {
+
+		Set<TestCaseNode> result = new HashSet<>();
+
+		List<BasicParameterNode> linkedParameterNodes = 
+				GlobalParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
+
+		for (BasicParameterNode linkedParameterNode : linkedParameterNodes) {
+
+			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
+			accumulateChoiceMentioningTestCases(choiceNodeNotFromTestCase, methodNode, result);
+		}
+
+		return result;
+	}
+
+	private static void accumulateChoiceMentioningTestCases(
+			ChoiceNode choiceNodeNotFromTestCase,
+			MethodNode methodNode,
+			Set<TestCaseNode> result) {
+
+		List<TestCaseNode> testCaseNodes = methodNode.getMentioningTestCases(choiceNodeNotFromTestCase);
+		result.addAll(testCaseNodes);
 	}
 
 }

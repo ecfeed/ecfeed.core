@@ -74,7 +74,7 @@ public class ValueCondition implements IStatementCondition {
 
 		BasicParameterNode leftParameter = fParentRelationStatement.getLeftParameter();
 		int leftParameterIndex = leftParameter.getMyIndex();
-		
+
 		List<ChoiceNode> choicesForParameter = domain.get(leftParameterIndex);
 
 		EMathRelation relation = fParentRelationStatement.getRelation();
@@ -97,6 +97,7 @@ public class ValueCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
 	}
@@ -129,11 +130,11 @@ public class ValueCondition implements IStatementCondition {
 		return new ValueCondition(fRightValue, statement);
 	}
 
-	@Override
-	public boolean updateReferences(IParametersParentNode methodNode) {
-
-		return true;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition(){
@@ -230,22 +231,22 @@ public class ValueCondition implements IStatementCondition {
 		return null;
 	}
 
-//	@Override
-//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		String deployedRightValue = getRightValue();
-//
-//		RelationStatement deployedParentRelationStatement =
-//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
-//
-//		ValueCondition deployedValueCondition =
-//				new ValueCondition(
-//						deployedRightValue,
-//						deployedParentRelationStatement);
-//
-//		return deployedValueCondition;
-//
-//	}
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		String deployedRightValue = getRightValue();
+	//
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+	//
+	//		ValueCondition deployedValueCondition =
+	//				new ValueCondition(
+	//						deployedRightValue,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployedValueCondition;
+	//
+	//	}
 
 }	
 

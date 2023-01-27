@@ -17,6 +17,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IBasicParameterVisitor;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -36,6 +37,11 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 		private ITypeAdapterProvider fAdapterProvider;
 
 		private class ReverseOperation extends AbstractModelOperation{
+			
+			@Override
+			public String toString() {
+				return "reverse Remove choice " + fChoice.getName();
+			}
 
 			private class ReverseParameterAdapter implements IBasicParameterVisitor{
 
@@ -142,6 +148,11 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 		}
 
 		@Override
+		public String toString() {
+			return "Remove choice " + fChoice.getName();
+		}
+		
+		@Override
 		public void execute() {
 
 			setOneNodeToSelect(fTarget);
@@ -208,7 +219,7 @@ public class GenericOperationRemoveChoice extends CompositeOperation {
 		if (validate) {
 			
 			for (MethodNode method : target.getParameter().getMethods()) {
-				addOperation(new MethodOperationRemoveInconsistentChildren(method, extLanguageManager));
+				addOperation(new OnMethodOperationRemoveInconsistentChildren(method, extLanguageManager));
 			}
 		}
 	}
