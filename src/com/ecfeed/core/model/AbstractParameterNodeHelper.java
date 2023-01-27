@@ -33,32 +33,34 @@ public abstract class AbstractParameterNodeHelper {
 	public static String getCompositeName( // TODO MO-RE merge overloads into one function ? 
 			AbstractParameterNode abstractParameterNode) {
 
-		AbstractParameterNode currentParameterNode = abstractParameterNode;
-		String compositeName = "";
+//		AbstractParameterNode currentParameterNode = abstractParameterNode;
+//		String compositeName = "";
+//		
+//		for (;;) {
+//
+//			String currentParameterNodeName = currentParameterNode.getName();
+//			
+//			if (StringHelper.isNullOrEmpty(compositeName)) {
+//				compositeName = currentParameterNodeName; 
+//			} else {
+//				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
+//			}
+//			
+//			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
+//			
+//			if (parametersParentNode == null || parametersParentNode instanceof MethodNode) {
+//				return compositeName;
+//			}
+//			
+//			if (parametersParentNode instanceof CompositeParameterNode) {
+//				currentParameterNode = (AbstractParameterNode) parametersParentNode;
+//				continue;
+//			}
+//			
+//			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
+//		}
 		
-		for (;;) {
-
-			String currentParameterNodeName = currentParameterNode.getName();
-			
-			if (StringHelper.isNullOrEmpty(compositeName)) {
-				compositeName = currentParameterNodeName; 
-			} else {
-				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
-			}
-			
-			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
-			
-			if (parametersParentNode == null || parametersParentNode instanceof MethodNode) {
-				return compositeName;
-			}
-			
-			if (parametersParentNode instanceof CompositeParameterNode) {
-				currentParameterNode = (AbstractParameterNode) parametersParentNode;
-				continue;
-			}
-			
-			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
-		}
+		return getCompositeName(abstractParameterNode, null);
 	}
 	
 	public static String getCompositeName(
@@ -70,8 +72,7 @@ public abstract class AbstractParameterNodeHelper {
 		
 		for (;;) {
 
-			String currentParameterNodeNameInExtLanguage = 
-					getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
+			String currentParameterNodeNameInExtLanguage = getParameterName(currentParameterNode, extLanguageManager);
 			
 			if (StringHelper.isNullOrEmpty(compositeName)) {
 				compositeName = currentParameterNodeNameInExtLanguage; 
@@ -81,7 +82,11 @@ public abstract class AbstractParameterNodeHelper {
 			
 			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
 			
-			if (parametersParentNode == null || parametersParentNode instanceof MethodNode || parametersParentNode instanceof ClassNode || parametersParentNode instanceof RootNode) {
+			if (parametersParentNode == null || 
+					parametersParentNode instanceof MethodNode || 
+					parametersParentNode instanceof ClassNode || 
+					parametersParentNode instanceof RootNode) {
+				
 				return compositeName;
 			}
 			
@@ -92,6 +97,16 @@ public abstract class AbstractParameterNodeHelper {
 			
 			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
 		}
+	}
+
+	private static String getParameterName(AbstractParameterNode currentParameterNode,
+			IExtLanguageManager extLanguageManager) {
+		
+		if (extLanguageManager == null) {
+			return currentParameterNode.getName();
+		}
+		
+		return getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
 	}
 
 	private static String getParameterNameInExtLanguage(
