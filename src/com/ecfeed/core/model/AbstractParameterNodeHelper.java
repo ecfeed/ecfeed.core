@@ -30,36 +30,8 @@ public abstract class AbstractParameterNodeHelper {
 		return name;
 	}
 
-	public static String getCompositeName( // TODO MO-RE merge overloads into one function ? 
-			AbstractParameterNode abstractParameterNode) {
+	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
 
-//		AbstractParameterNode currentParameterNode = abstractParameterNode;
-//		String compositeName = "";
-//		
-//		for (;;) {
-//
-//			String currentParameterNodeName = currentParameterNode.getName();
-//			
-//			if (StringHelper.isNullOrEmpty(compositeName)) {
-//				compositeName = currentParameterNodeName; 
-//			} else {
-//				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
-//			}
-//			
-//			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
-//			
-//			if (parametersParentNode == null || parametersParentNode instanceof MethodNode) {
-//				return compositeName;
-//			}
-//			
-//			if (parametersParentNode instanceof CompositeParameterNode) {
-//				currentParameterNode = (AbstractParameterNode) parametersParentNode;
-//				continue;
-//			}
-//			
-//			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
-//		}
-		
 		return getCompositeName(abstractParameterNode, null);
 	}
 	

@@ -82,7 +82,7 @@ public class ConstraintNodeHelper {
 		return qualifiedName + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditions; 
 	}
 
-	private static String createQualifiedName(ConstraintNode constraintNode) { // TODO MO-RE tests
+	private static String createQualifiedName(ConstraintNode constraintNode) {
 
 		String prefix = createQualifiedPrefix(constraintNode);
 
