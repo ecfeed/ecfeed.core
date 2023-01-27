@@ -110,11 +110,6 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		
 		// TODO MO-RE remove ifs on fIndex 
 		if (fChild instanceof ConstraintNode) {
-
-			if (fIndex == -1) {
-				return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fExtLanguageManager);
-			}
-
 			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
 		}
 
@@ -123,9 +118,6 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		}
 
 		if (fChild instanceof TestCaseNode) {
-			if(fIndex == -1){
-				return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
-			}
 			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
 		}
 
