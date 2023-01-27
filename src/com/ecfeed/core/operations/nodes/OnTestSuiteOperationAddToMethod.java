@@ -33,7 +33,6 @@ public class OnTestSuiteOperationAddToMethod extends CompositeOperation {
 		createTestSuites(testCases, testSuiteName, methodNode, typeAdapterProvider);
 	}
 
-	// TODO MO-RE do we need this method (does it make sense to add test cases without test suite name apart from testing) ?
 	public OnTestSuiteOperationAddToMethod(
 			MethodNode methodNode, 
 			List<TestCaseNode> testCases, 

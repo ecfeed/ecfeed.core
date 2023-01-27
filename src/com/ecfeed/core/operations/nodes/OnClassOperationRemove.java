@@ -23,7 +23,7 @@ public class OnClassOperationRemove extends AbstractModelOperation {
 	private RootNode fRootNode;
 	private int fCurrentIndex;
 
-	public OnClassOperationRemove(RootNode rootNode, ClassNode classNode, IExtLanguageManager extLanguageManager) {  // TODO MO-RE calculate root node
+	public OnClassOperationRemove(RootNode rootNode, ClassNode classNode, IExtLanguageManager extLanguageManager) {
 		super(OperationNames.REMOVE_CLASS, extLanguageManager);
 		fRootNode = rootNode;
 		fRemovedClass = classNode;
