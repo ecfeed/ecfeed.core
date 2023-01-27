@@ -108,4 +108,26 @@ public class ParametersParentNodeHelper {
 		return basicParameterNode;
 	}
 
+	public static List<String> getParameterTypes(List<AbstractParameterNode> parameters) {
+
+		List<String> parameterTypes = new ArrayList<String>();
+
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+
+			if (abstractParameterNode instanceof BasicParameterNode) {
+
+				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
+
+				String parameterType = methodParameterNode.getType();
+				parameterTypes.add(parameterType);
+
+			} else {
+
+				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
+			}
+		}
+
+		return parameterTypes;
+	}
+
 }

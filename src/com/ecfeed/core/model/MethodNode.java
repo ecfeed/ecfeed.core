@@ -110,28 +110,9 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 	}
 
-	public List<String> getParameterTypes() { // TODO MO-RE move to IParametersParant
+	public List<String> getParameterTypes() {
 
-		List<String> parameterTypes = new ArrayList<String>();
-
-		List<AbstractParameterNode> parameters = getParameters();
-
-		for (AbstractParameterNode abstractParameterNode : parameters) {
-
-			if (abstractParameterNode instanceof BasicParameterNode) {
-
-				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-
-				String parameterType = methodParameterNode.getType();
-				parameterTypes.add(parameterType);
-
-			} else {
-
-				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
-			}
-		}
-
-		return parameterTypes;
+		return ParametersParentNodeHelper.getParameterTypes(getParameters());
 	}
 
 	@Override
