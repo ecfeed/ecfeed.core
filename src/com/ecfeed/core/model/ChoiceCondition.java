@@ -98,32 +98,29 @@ public class ChoiceCondition implements IStatementCondition {
 		return !(node instanceof MethodNode);
 	}
 
-	@Override
-	public boolean updateReferences(IParametersParentNode methodNode) {
-
-		String parameterName = fParentRelationStatement.getLeftParameter().getName();
-		AbstractParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
-
-		String choiceName = fRightChoice.getQualifiedName();
-
-		if (abstractParameterNode instanceof BasicParameterNode) {
-
-			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
-
-			ChoiceNode choiceNode = basicParameterNode.getChoice(choiceName);
-
-			if (choiceNode == null) {
-				return false;
-			}
-
-			fRightChoice = choiceNode;
-
-			return true;
-		} else {
-
-			return false;
-		}
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fParentRelationStatement.getLeftParameter());
+	//
+	//		BasicParameterNode basicParameterNode = 
+	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(
+	//						compositeName, methodNode);
+	//
+	//		//		String parameterName = fParentRelationStatement.getLeftParameter().getName();
+	//		//		AbstractParameterNode abstractParameterNode = methodNode.findParameter(parameterName);
+	//
+	//		String choiceName = fRightChoice.getQualifiedName();
+	//
+	//		ChoiceNode choiceNode = basicParameterNode.getChoice(choiceName);
+	//
+	//		if (choiceNode == null) {
+	//			return false;
+	//		}
+	//
+	//		fRightChoice = choiceNode;
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition(){
@@ -191,6 +188,10 @@ public class ChoiceCondition implements IStatementCondition {
 		return choices;
 	}
 
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
 
 	public ChoiceNode getRightChoice() {
 		return fRightChoice;
@@ -393,27 +394,27 @@ public class ChoiceCondition implements IStatementCondition {
 		}
 	}
 
-//	@Override
-//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		ChoiceNode sourceChoiceNode = getRightChoice();
-//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
-//
-//		RelationStatement sourceParentRelationStatement = fParentRelationStatement;
-//		RelationStatement deployedParentRelationStatement =
-//				deploymentMapper.getDeployedRelationStatement(sourceParentRelationStatement);
-//
-//		if (deployedParentRelationStatement == null) {
-//			ExceptionHelper.reportRuntimeException("Empyt parent relation statement.");
-//		}
-//
-//		IStatementCondition deployeChoiceCondition =
-//				new ChoiceCondition(
-//						deployedChoiceNode,
-//						deployedParentRelationStatement);
-//
-//		return deployeChoiceCondition;
-//	}
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		ChoiceNode sourceChoiceNode = getRightChoice();
+	//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+	//
+	//		RelationStatement sourceParentRelationStatement = fParentRelationStatement;
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(sourceParentRelationStatement);
+	//
+	//		if (deployedParentRelationStatement == null) {
+	//			ExceptionHelper.reportRuntimeException("Empyt parent relation statement.");
+	//		}
+	//
+	//		IStatementCondition deployeChoiceCondition =
+	//				new ChoiceCondition(
+	//						deployedChoiceNode,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployeChoiceCondition;
+	//	}
 
 }
 

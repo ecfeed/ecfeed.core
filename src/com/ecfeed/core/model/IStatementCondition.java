@@ -20,9 +20,10 @@ import com.ecfeed.core.utils.ParameterConversionItem;
 public interface IStatementCondition {
 	public String createSignature(IExtLanguageManager extLanguageManager);
 	public Object getCondition();
+	public RelationStatement getParentRelationStatement();
 	public EvaluationResult evaluate(List<ChoiceNode> values);
 	public boolean adapt(List<ChoiceNode> values);
-	public boolean updateReferences(IParametersParentNode methodNode);
+	//public boolean updateReferences(IParametersParentNode methodNode);
 	public boolean compare(IStatementCondition condition);
 	public Object accept(IStatementVisitor visitor) throws Exception;
 	public boolean mentions(AbstractParameterNode abstractParameterNode);

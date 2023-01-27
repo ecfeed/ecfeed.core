@@ -512,29 +512,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		return copy;
 	}
 
-	public List<BasicParameterNode> getLinkedMethodParameters(){
-
-		if (isGlobalParameter()) {
-			return new ArrayList<>();
-		}
-
-		List<BasicParameterNode> result = new ArrayList<>();
-
-
-		List<MethodNode> methods = getMethods();
-
-		if (methods == null) {
-			return new ArrayList<>();
-
-		}
-
-		for(MethodNode method : methods) {
-			result.addAll(method.getLinkers(this));
-		}
-
-		return result;
-	}
-
 	@Override
 	public int getChildrenCount() {
 

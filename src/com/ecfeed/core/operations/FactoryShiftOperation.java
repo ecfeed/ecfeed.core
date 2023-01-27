@@ -23,6 +23,8 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationShift;
+import com.ecfeed.core.operations.nodes.OnParameterParameterOfMethodOperationShift;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
@@ -77,10 +79,10 @@ public class FactoryShiftOperation {
 		@Override
 		public Object visit(MethodNode node) throws Exception {
 			if(fShifted.get(0) instanceof BasicParameterNode){
-				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+				return new OnParameterParameterOfMethodOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof CompositeParameterNode){
-				return new CompositeParameterShiftOperation(node.getParameters(), fShifted, fUp, fExtLanguageManager);
+				return new OnCompositeParameterOperationShift(node.getParameters(), fShifted, fUp, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fUp, fExtLanguageManager);
@@ -188,7 +190,7 @@ public class FactoryShiftOperation {
 		@Override
 		public Object visit(MethodNode node) throws Exception {
 			if(fShifted.get(0) instanceof BasicParameterNode){
-				return new MethodParameterShiftOperation(node.getParameters(), fShifted, fShift, fExtLanguageManager);
+				return new OnParameterParameterOfMethodOperationShift(node.getParameters(), fShifted, fShift, fExtLanguageManager);
 			}
 			if(fShifted.get(0) instanceof ConstraintNode){
 				return new GenericShiftOperation(node.getConstraintNodes(), fShifted, fShift, fExtLanguageManager);

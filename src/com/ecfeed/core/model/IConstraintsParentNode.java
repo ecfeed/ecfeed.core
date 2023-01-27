@@ -24,6 +24,7 @@ public interface IConstraintsParentNode extends IAbstractNode {
 	public List<ConstraintNode> getConstraintNodes();
 	public List<ConstraintNode> getConstraintNodes(String name);
 	public List<Constraint> getConstraints();
+	public void setConstraints(List<ConstraintNode> constraints);
 	public List<Constraint> getConstraints(String name);
 	public Set<String> getNamesOfConstraints();
 	public boolean removeConstraint(ConstraintNode constraint);

@@ -10,12 +10,14 @@
 
 package com.ecfeed.core.utils;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
@@ -23,25 +25,23 @@ import com.ecfeed.core.model.TestCaseNode;
 
 public class NodesByType {
 
-	private ArrayList<ClassNode> fClasses = new ArrayList<>();
-	private ArrayList<MethodNode> fMethods = new ArrayList<>();
-	private ArrayList<BasicParameterNode> fLocalParameters = new ArrayList<>();  // TODO MO-RE merge with global ?
-	private ArrayList<BasicParameterNode> fGlobalParameters = new ArrayList<>();
-	private ArrayList<ChoiceNode> fChoices = new ArrayList<>();
-	private ArrayList<ConstraintNode> fConstraints = new ArrayList<>();
-	private ArrayList<TestCaseNode> fTestCases = new ArrayList<>();
-	private ArrayList<IAbstractNode> fOtherNodes = new ArrayList<>();
+	private Set<ClassNode> fClasses;
+	private Set<MethodNode> fMethods;
+	private Set<BasicParameterNode> fBasicParameters;
+	private Set<CompositeParameterNode> fCompositeParameters;
+	private Set<ChoiceNode> fChoices;
+	private Set<ConstraintNode> fConstraints;
+	private Set<TestCaseNode> fTestCases;
 
 	public NodesByType() {
 
-		fClasses = new ArrayList<>();
-		fMethods = new ArrayList<>();
-		fLocalParameters = new ArrayList<>();
-		fGlobalParameters = new ArrayList<>();
-		fChoices = new ArrayList<>();
-		fConstraints = new ArrayList<>();
-		fTestCases = new ArrayList<>();
-		fOtherNodes = new ArrayList<>();
+		fClasses = new HashSet<>();
+		fMethods = new HashSet<>();
+		fBasicParameters = new HashSet<>();
+		fCompositeParameters = new HashSet<>();
+		fChoices = new HashSet<>();
+		fConstraints = new HashSet<>();
+		fTestCases = new HashSet<>();
 	}
 
 	public NodesByType(Collection<IAbstractNode> abstractNodes) {
@@ -49,81 +49,111 @@ public class NodesByType {
 		this();
 
 		for(IAbstractNode selectedNode : abstractNodes) {
-			addNodeByType(selectedNode);
+			addNode(selectedNode);
 		}	
 	}
 
-	private void addNodeByType(IAbstractNode selectedNode) {
+	@Override
+	public String toString() {
 
-		if (selectedNode instanceof ClassNode) {
-			fClasses.add((ClassNode)selectedNode);
+		if (fClasses.size() == 0 && 
+				fMethods.size() == 0 && 
+				fBasicParameters.size() == 0 && 
+				fCompositeParameters.size() == 0 && 
+				fChoices.size() == 0 &&
+				fConstraints.size() == 0 && 
+				fTestCases.size() == 0) {
+
+			return "Empty";
+		}
+
+
+		String str = 
+				"Cls:" + fClasses.size() +
+				" Met:" + fMethods.size() + 
+				" BasPar:" + fBasicParameters.size() +
+				" ComPar:" + fCompositeParameters.size() + 
+				" Cho:" + fChoices.size() + 
+				" Cnst:" + fConstraints.size() +
+				" TCas:" + fTestCases.size();
+
+		return str;
+	}
+
+	public void addNode(IAbstractNode abstractNode) {
+
+		if (abstractNode instanceof ClassNode) {
+			fClasses.add((ClassNode)abstractNode);
 			return;
 		} 
 
-		if (selectedNode instanceof MethodNode) {
-			fMethods.add((MethodNode)selectedNode);
+		if (abstractNode instanceof MethodNode) {
+			fMethods.add((MethodNode)abstractNode);
 			return;
 		}
 
-		if (selectedNode instanceof BasicParameterNode) {
+		if (abstractNode instanceof BasicParameterNode) {
+			fBasicParameters.add((BasicParameterNode) abstractNode);
+			return;
+		}
 
-			if (((BasicParameterNode) selectedNode).isGlobalParameter()) {
-				fGlobalParameters.add((BasicParameterNode)selectedNode);
-			} else {
-				fLocalParameters.add((BasicParameterNode)selectedNode);
-			}
-
+		if (abstractNode instanceof CompositeParameterNode) {
+			fCompositeParameters.add((CompositeParameterNode) abstractNode);
 			return;
 		} 
 
-		if (selectedNode instanceof ConstraintNode) {
-			fConstraints.add((ConstraintNode)selectedNode);
+		if (abstractNode instanceof ConstraintNode) {
+			fConstraints.add((ConstraintNode)abstractNode);
 			return;
 		} 
 
-		if (selectedNode instanceof TestCaseNode) {
-			fTestCases.add((TestCaseNode)selectedNode);
+		if (abstractNode instanceof TestCaseNode) {
+			fTestCases.add((TestCaseNode)abstractNode);
 			return;
 		} 
 
-		if (selectedNode instanceof ChoiceNode) {
-			fChoices.add((ChoiceNode)selectedNode);
+		if (abstractNode instanceof ChoiceNode) {
+			fChoices.add((ChoiceNode)abstractNode);
 			return;
 		} 
 
-		fOtherNodes.add(selectedNode);
+		ExceptionHelper.reportRuntimeException("Unknown node type.");
 	}
 
-	public ArrayList<ClassNode> getClasses() {
+	public Set<ClassNode> getClasses() {
 		return fClasses;
 	}
 
-	public ArrayList<MethodNode> getMethods() {
+	public Set<MethodNode> getMethods() {
 		return fMethods;
 	}
 
-	public ArrayList<BasicParameterNode> getLocalParameters() {
-		return fLocalParameters;
+	public Set<BasicParameterNode> getBasicParameters() {
+		return fBasicParameters;
 	}
 
-	public ArrayList<BasicParameterNode> getGlobalParameters() {
-		return fGlobalParameters;
+	public Set<CompositeParameterNode> getCompositeParameters() {
+		return fCompositeParameters;
 	}
 
-	public ArrayList<ChoiceNode> getChoices() {
+	public Set<ChoiceNode> getChoices() {
 		return fChoices;
 	}
 
-	public ArrayList<ConstraintNode> getConstraints() {
+	public Set<ConstraintNode> getConstraints() {
 		return fConstraints;
 	}
 
-	public ArrayList<TestCaseNode> getTestCaseNodes() {
+	public void addConstraints(Collection<ConstraintNode> constraintNodes) {
+		fConstraints.addAll(constraintNodes);
+	}
+
+	public Set<TestCaseNode> getTestCaseNodes() {
 		return fTestCases;
 	}
 
-	public ArrayList<IAbstractNode> getOtherNodes() {
-		return fOtherNodes;
+	public void addTestCases(Collection<TestCaseNode> testCaseNodes) {
+		fTestCases.addAll(testCaseNodes);
 	}
 
 }

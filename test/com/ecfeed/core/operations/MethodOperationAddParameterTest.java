@@ -17,6 +17,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.operations.nodes.OnParameterOperationAddToParent;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -38,8 +39,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode1 =
 				new BasicParameterNode("arg0", "int", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter1 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToParent methodOperationAddParameter1 =
+				new OnParameterOperationAddToParent(
 					methodNode1,
 					methodParameterNode1,
 					extLanguageManagerForSimple);
@@ -56,8 +57,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode2 =
 				new BasicParameterNode("arg0", "long", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter2 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToParent methodOperationAddParameter2 =
+				new OnParameterOperationAddToParent(
 						methodNode2,
 						methodParameterNode2,
 						extLanguageManagerForSimple);
@@ -84,8 +85,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode1 =
 				new BasicParameterNode("arg0", "int", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter1 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToParent methodOperationAddParameter1 =
+				new OnParameterOperationAddToParent(
 						methodNode1,
 						methodParameterNode1,
 						extLanguageManagerForJava);
@@ -104,8 +105,8 @@ public class MethodOperationAddParameterTest {
 		BasicParameterNode methodParameterNode2 =
 				new BasicParameterNode("arg0", "long", "0", false, null);
 
-		MethodOperationAddParameter methodOperationAddParameter2 =
-				new MethodOperationAddParameter(
+		OnParameterOperationAddToParent methodOperationAddParameter2 =
+				new OnParameterOperationAddToParent(
 						methodNode2,
 						methodParameterNode2,
 						extLanguageManagerForJava);

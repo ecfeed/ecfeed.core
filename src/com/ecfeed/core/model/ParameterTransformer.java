@@ -13,11 +13,11 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.MethodOperationSetConstraints;
-import com.ecfeed.core.operations.OperationSimpleAddChoice;
-import com.ecfeed.core.operations.OperationSimpleSetTestCases;
-import com.ecfeed.core.operations.SimpleOperationSetMethodParameterType;
 import com.ecfeed.core.operations.link.OperationSimpleSetLink;
+import com.ecfeed.core.operations.nodes.OnChoiceOperationAddSimple;
+import com.ecfeed.core.operations.nodes.OnConstraintsOperationSetOnMethod;
+import com.ecfeed.core.operations.nodes.OnMethodParameterOperationSimpleSetType;
+import com.ecfeed.core.operations.nodes.OnTestCasesOperationSimpleSet;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
@@ -44,7 +44,7 @@ public class ParameterTransformer {
 		String oldMethodParameterType = srcMethodParameterNode.getType();
 		String globalParameterType = dstGlobalParameterNode.getType();
 		
-		MethodOperationSetConstraints reverseOperation = 
+		OnConstraintsOperationSetOnMethod reverseOperation = 
 				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
 
 		outReverseOperations.add(reverseOperation);
@@ -70,8 +70,8 @@ public class ParameterTransformer {
 
 		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
 
-		SimpleOperationSetMethodParameterType reverseSetTypeOperation = 
-			new SimpleOperationSetMethodParameterType(
+		OnMethodParameterOperationSimpleSetType reverseSetTypeOperation = 
+			new OnMethodParameterOperationSimpleSetType(
 					srcMethodParameterNode, 
 					oldMethodParameterType, 
 					extLanguageManager);
@@ -145,8 +145,8 @@ public class ParameterTransformer {
 			removeTestCases((ITestCasesParentNode)parent, outReverseOperations, extLanguageManager);
 		}
 
-		SimpleOperationSetMethodParameterType reverseSetTypeOperation = 
-				new SimpleOperationSetMethodParameterType(
+		OnMethodParameterOperationSimpleSetType reverseSetTypeOperation = 
+				new OnMethodParameterOperationSimpleSetType(
 						methodParameterNode, 
 						oldMethodParameterType, 
 						extLanguageManager);
@@ -295,8 +295,8 @@ public class ParameterTransformer {
 		IChoicesParentNode choicesParentNode = (IChoicesParentNode)choiceNode.getParent();
 		int indexOfTopChoice = choiceNode.getMyIndex();
 
-		OperationSimpleAddChoice operationSimpleAddChoice = 
-				new OperationSimpleAddChoice(choiceNode, indexOfTopChoice, choicesParentNode, extLanguageManager);
+		OnChoiceOperationAddSimple operationSimpleAddChoice = 
+				new OnChoiceOperationAddSimple(choiceNode, indexOfTopChoice, choicesParentNode, extLanguageManager);
 
 		outReverseOperations.add(operationSimpleAddChoice);
 
@@ -337,12 +337,12 @@ public class ParameterTransformer {
 			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		OperationSimpleSetTestCases inOutReverseOperation = 
-				new OperationSimpleSetTestCases(methodNode, methodNode.getTestCases(), extLanguageManager);
+		OnTestCasesOperationSimpleSet inOutReverseOperation = 
+				new OnTestCasesOperationSimpleSet(methodNode, methodNode.getTestCases(), extLanguageManager);
 
 		reverseOperations.add(inOutReverseOperation);
 
-		methodNode.removeTestCases();
+		methodNode.removeAllTestCases();
 	}
 
 	private static void removeLinkOnMethodParameter(
@@ -362,7 +362,7 @@ public class ParameterTransformer {
 	}
 
 
-	private static MethodOperationSetConstraints createReverseOperationSetConstraints(
+	private static OnConstraintsOperationSetOnMethod createReverseOperationSetConstraints(
 			BasicParameterNode srcParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
@@ -378,8 +378,8 @@ public class ParameterTransformer {
 			listOfClonedConstraintNodes.add(clone);
 		}
 
-		MethodOperationSetConstraints reverseOperation = 
-				new MethodOperationSetConstraints(methodNode, listOfClonedConstraintNodes, extLanguageManager);
+		OnConstraintsOperationSetOnMethod reverseOperation = 
+				new OnConstraintsOperationSetOnMethod(methodNode, listOfClonedConstraintNodes, extLanguageManager);
 
 		return reverseOperation;
 	}

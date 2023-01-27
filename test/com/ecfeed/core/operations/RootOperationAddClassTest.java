@@ -17,6 +17,7 @@ import org.junit.Test;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
+import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
 import com.ecfeed.core.utils.TestHelper;
@@ -32,7 +33,7 @@ public class RootOperationAddClassTest {
 
 		ClassNode classNode1 = new ClassNode("com.Class1", null);
 
-		RootOperationAddClass operation1Simple = new RootOperationAddClass(rootNode, classNode1, new ExtLanguageManagerForSimple());
+		OnClassOperationAddToRoot operation1Simple = new OnClassOperationAddToRoot(rootNode, classNode1, new ExtLanguageManagerForSimple());
 
 		try {
 			operation1Simple.execute();
@@ -44,7 +45,7 @@ public class RootOperationAddClassTest {
 
 		ClassNode classNode2 = new ClassNode("com.xx.Class1", null);
 
-		RootOperationAddClass operation2Simple = new RootOperationAddClass(rootNode, classNode2, new ExtLanguageManagerForSimple());
+		OnClassOperationAddToRoot operation2Simple = new OnClassOperationAddToRoot(rootNode, classNode2, new ExtLanguageManagerForSimple());
 
 		try {
 			operation2Simple.execute();
@@ -59,7 +60,7 @@ public class RootOperationAddClassTest {
 
 		// adding the same class in Java mode should be ok
 
-		RootOperationAddClass operation2Java = new RootOperationAddClass(rootNode, classNode2, new ExtLanguageManagerForJava());
+		OnClassOperationAddToRoot operation2Java = new OnClassOperationAddToRoot(rootNode, classNode2, new ExtLanguageManagerForJava());
 
 		try {
 			operation2Java.execute();

@@ -21,15 +21,16 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NodesByType;
 
 public class GenericRemoveNodesOperation extends CompositeOperation {
 
-	private final Set<IAbstractNode> fSelectedNodes;
+	//private final Set<IAbstractNode> fNodesToRemove;
 
-	private GenericRemoveNodesOperationsCreator fGenericRemoveNodesOperationsCreator;
+	private GenericRemoveNodesProcessorOfNodes fGenericRemoveNodesProcessorOfNodes;
 
 	public GenericRemoveNodesOperation(
-			Collection<? extends IAbstractNode> nodes, 
+			Collection<? extends IAbstractNode> nodesToRemove, 
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IAbstractNode nodeToSelect,
@@ -42,23 +43,50 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 				nodeToSelectAfterReverseOperation,
 				extLanguageManager);
 
-		fSelectedNodes = new HashSet<>(nodes);
-		removeNodesWithAncestorsOnList();
+		Set<IAbstractNode> fNodesToRemove = createSetOfNodesToRemove(nodesToRemove);
 
-		fGenericRemoveNodesOperationsCreator = 
-				new GenericRemoveNodesOperationsCreator(
-						fSelectedNodes, typeAdapterProvider, validate, extLanguageManager);
+		NodesByType processedNodes = processNodes(fNodesToRemove, typeAdapterProvider, validate, extLanguageManager);
 
-		List<IModelOperation> operations = fGenericRemoveNodesOperationsCreator.getOperations();
-		
+		List<IModelOperation> operations =  
+				GenericRemoveNodesOperationsAccumulator.convertNodesToOperations(
+						processedNodes, 
+						extLanguageManager, typeAdapterProvider, validate);
+
+		addChildOperations(operations);
+	}
+
+	private void addChildOperations(List<IModelOperation> operations) {
 		for (IModelOperation modelOperation : operations) {
 			addOperation(modelOperation);
 		}
 	}
 
-	private void removeNodesWithAncestorsOnList() {
+	private NodesByType processNodes(
+			Set<IAbstractNode> nodesToRemove,
+			ITypeAdapterProvider typeAdapterProvider, 
+			boolean validate,
+			IExtLanguageManager extLanguageManager) {
+		
+		fGenericRemoveNodesProcessorOfNodes = 
+				new GenericRemoveNodesProcessorOfNodes(
+						nodesToRemove, typeAdapterProvider, validate, extLanguageManager);
 
-		Iterator<IAbstractNode> iterator = fSelectedNodes.iterator();
+		NodesByType processedNodes = fGenericRemoveNodesProcessorOfNodes.getProcessedNodes();
+		return processedNodes;
+	}
+
+	private Set<IAbstractNode> createSetOfNodesToRemove(Collection<? extends IAbstractNode> nodesToRemove) {
+		
+		Set<IAbstractNode> setOfNodes = new HashSet<>(nodesToRemove);
+		
+		removeNodesWithAncestorsOnList(setOfNodes);
+		
+		return setOfNodes;
+	}
+
+	private static void removeNodesWithAncestorsOnList(Set<IAbstractNode> inOutNodesToRemove) {
+
+		Iterator<IAbstractNode> iterator = inOutNodesToRemove.iterator();
 
 		while (iterator.hasNext()) {
 
@@ -68,7 +96,7 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 
 			for (IAbstractNode ancestor : ancestors) {
 
-				if (fSelectedNodes.contains(ancestor)) {
+				if (inOutNodesToRemove.contains(ancestor)) {
 
 					// node is deleted because ancestor will be remove with the whole sub-tree which includes current node 
 					iterator.remove(); 
@@ -79,11 +107,11 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 	}
 
 	public Set<ConstraintNode> getAffectedConstraints() {
-		return fGenericRemoveNodesOperationsCreator.getAffectedConstraints();
+		return fGenericRemoveNodesProcessorOfNodes.getAffectedConstraints();
 	}
 
 	public Set<TestCaseNode> getAffectedTestCases() {
-		return fGenericRemoveNodesOperationsCreator.getAffectedTestCases();
+		return fGenericRemoveNodesProcessorOfNodes.getAffectedTestCases();
 	}
 
 }

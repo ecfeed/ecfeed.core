@@ -14,6 +14,7 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveInconsistentChildren;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ERunMode;
@@ -35,7 +36,7 @@ public class GenericOperationAddChoice extends CompositeOperation {
 
 		for (MethodNode method : target.getParameter().getMethods()) {
 			if((method != null) && validate){
-				addOperation(new MethodOperationRemoveInconsistentChildren(method, getExtLanguageManager()));
+				addOperation(new OnMethodOperationRemoveInconsistentChildren(method, getExtLanguageManager()));
 			}
 		}
 	}

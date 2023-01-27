@@ -56,7 +56,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
-	
+
 	public Constraint(
 			String name,
 			ConstraintType constraintType,
@@ -561,14 +561,18 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
-	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
-
-		if (fPrecondition.updateReferences(method) && fPostcondition.updateReferences(method)) {
-			return true;
-		}
-
-		return false;
-	}
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
+	//
+	//		if (!fPrecondition.updateReferences(method)) {
+	//			return false;
+	//		}
+	//			
+	//		if (!fPostcondition.updateReferences(method)) {
+	//			return false;
+	//		}
+	//
+	//		return true;
+	//	}
 
 	public Constraint makeClone() {
 
@@ -821,7 +825,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(LabelCondition condition) throws Exception {
 
-			return new HashSet<BasicParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
+
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
+
+			return result;
 		}
 
 		@Override
@@ -840,17 +850,28 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ParameterCondition condition) throws Exception {
 
-			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
 
-			set.add(condition.getRightParameterNode());
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
 
-			return set;
+
+			result.add(condition.getRightParameterNode());
+
+			return result;
 		}
 
 		@Override
 		public Object visit(ValueCondition condition) throws Exception {
 
-			return new HashSet<BasicParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
+
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
+
+			return result;
 		}
 	}
 
@@ -969,7 +990,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		public Object visit(ExpectedValueStatement statement) {
 
 			BasicParameterNode leftMethodParameterNode = statement.getLeftMethodParameterNode();
-			
+
 			fMethods.add((MethodNode) leftMethodParameterNode.getParent());
 
 			return null;

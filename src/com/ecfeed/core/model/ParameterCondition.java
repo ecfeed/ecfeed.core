@@ -55,6 +55,11 @@ public class ParameterCondition implements IStatementCondition {
 		return evaluateForLeftAndRightString(choices, substituteType);
 	}
 
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
+	}
+
 	private boolean isLeftChoiceRandomizedString(List<ChoiceNode> choices) {
 
 		return isChoiceRandomizedString(choices, fParentRelationStatement.getLeftParameter());
@@ -168,22 +173,22 @@ public class ParameterCondition implements IStatementCondition {
 		return new ParameterCondition(parameter, statement);
 	}
 
-	@Override
-	public boolean updateReferences(IParametersParentNode methodNode) {
-
-		String compositeName = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
-		
-		BasicParameterNode basicParameterNode = 
-				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(compositeName, methodNode);
-
-		if (basicParameterNode == null) {
-			return false;
-		}
-
-		fRightParameterNode = basicParameterNode;
-
-		return true;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		String compositeName = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+	//		
+	//		BasicParameterNode basicParameterNode = 
+	//				BasicParameterNodeHelper.findBasicParameterByQualifiedIntrName(compositeName, methodNode);
+	//
+	//		if (basicParameterNode == null) {
+	//			return false;
+	//		}
+	//
+	//		fRightParameterNode = basicParameterNode;
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition(){
@@ -360,22 +365,22 @@ public class ParameterCondition implements IStatementCondition {
 		return null;
 	}
 
-//	@Override
-//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
-//
-//		BasicParameterNode sourcMethodParameterNode = getRightParameterNode();
-//		BasicParameterNode deployedMethodParameterNode =
-//				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
-//
-//		RelationStatement deployedParentRelationStatement =
-//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
-//
-//		ParameterCondition deployedParameterCondition =
-//				new ParameterCondition(
-//						deployedMethodParameterNode,
-//						deployedParentRelationStatement);
-//
-//		return deployedParameterCondition;
-//	}
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		BasicParameterNode sourcMethodParameterNode = getRightParameterNode();
+	//		BasicParameterNode deployedMethodParameterNode =
+	//				deploymentMapper.getDeployedParameterNode(sourcMethodParameterNode);
+	//
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+	//
+	//		ParameterCondition deployedParameterCondition =
+	//				new ParameterCondition(
+	//						deployedMethodParameterNode,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployedParameterCondition;
+	//	}
 
 }	
