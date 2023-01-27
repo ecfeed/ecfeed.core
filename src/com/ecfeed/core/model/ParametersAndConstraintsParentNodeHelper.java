@@ -11,7 +11,10 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.utils.*;
 
@@ -27,9 +30,76 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		return dstParamNameParts[0];
 	}
+	
+	public static Collection<ConstraintNode> getAffectedConstraints(
+			CompositeParameterNode methodParameter) {
+		
+		Set<ConstraintNode> constraints = new HashSet<>();
 
+		IAbstractNode container = methodParameter.getParent();
+		
+		while ((container != null) && (container instanceof IParametersAndConstraintsParentNode)) {
+			
+			constraints.addAll(((IParametersAndConstraintsParentNode) container).getConstraintNodes());
+			container = container.getParent();
+		}
+		
+		return constraints;
+	}
+	
+	public static Collection<ChoiceNode> getChoicesUsedInConstraints(
+			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
+		
+		Set<ChoiceNode> choices = new HashSet<>();
+			
+		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters()) {
+			for (ConstraintNode constraint : constraints) {
+				
+				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
+			}
+		}
+		
+		return choices;
+	}
+	
+	public static Collection<BasicParameterNode> getParametersUsedInConstraints(
+			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
+		
+		Set<BasicParameterNode> parameters = new HashSet<>();
+		
+		List<BasicParameterNode> parametersNested = methodParameter.getNestedBasicParameters();
+		
+		for (ConstraintNode constraint : constraints) {
+			Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
+			
+			for (BasicParameterNode parameterBasic : parametersNested) {
+				
+				if (parametersConstraint.contains(parameterBasic)) {
+					parameters.add(parameterBasic);
+					System.out.println(parameterBasic);
+				}
+			}
+		}
+		
+		return parameters;
+	}
+	
+	public static Collection<String> getLabelsUsedInConstraints(
+			CompositeParameterNode methodParameter, Collection<ConstraintNode> constraints) {
+		
+		Set<String> labels = new HashSet<>();
+			
+		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters()) {
+			for (ConstraintNode constraint : constraints) {
+				
+				labels.addAll(ConstraintNodeHelper.getLabelsUsedInConstraint(constraint, parameterBasic));
+			}
+		}
+		
+		return labels;
+	}
+	
 	public static List<ChoiceNode> getChoicesUsedInConstraints(BasicParameterNode methodParameterNode) {
-
 		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
 
 		IParametersAndConstraintsParentNode parametersAndConstraintsParentNode = 
@@ -50,7 +120,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		return resultChoiceNodes;
 	}
-
+	
 	public static List<String> getLabelsUsedInConstraints(BasicParameterNode methodParameterNode) {
 
 		List<String> resultLabels = new ArrayList<>();
@@ -73,7 +143,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 		return resultLabels;
 	}
-
+	
 	public static void convertConstraints(
 			List<ConstraintNode> constraintNodes,
 			ParameterConversionItem parameterConversionItem) {
@@ -107,7 +177,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 	}
 	
 	public static BasicParameterNode addLinkedParameterToMethod(
-			IParametersParentNode parametersParentNode, String name, String type, BasicParameterNode linkToGlobalParameter) {
+			IParametersParentNode parametersParentNode, String name, String type, AbstractParameterNode linkToGlobalParameter) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
 		methodParameterNode.setLinkToGlobalParameter(linkToGlobalParameter);

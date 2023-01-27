@@ -20,7 +20,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOperation {
 
-	BasicParameterNode fMethodParameterNode;
+	AbstractParameterNode fMethodParameterNode;
 	AbstractParameterNode fGlobalParameterNode;
 
 	ListOfModelOperations fReverseOperations;
@@ -29,7 +29,7 @@ public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOpera
 
 	public MethodOperationUnlinkFromGlobalParameter(
 			AbstractParameterNode globalParameterNode,
-			BasicParameterNode methodParameterNode, 
+			AbstractParameterNode methodParameterNode, 
 			IExtLanguageManager extLanguageManager) {
 
 		super("Unlink from global parameter", extLanguageManager);

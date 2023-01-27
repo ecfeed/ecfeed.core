@@ -22,10 +22,19 @@ public class RootNodeHelper {
 	public static final String CLASS_WITH_NAME = "Class with name";
 	public static final String ALREADY_EXISTS = "already exists";
 
-	public static BasicParameterNode addGlobalParameterToRoot(
+	public static BasicParameterNode addGlobalBasicParameterToRoot(
 			RootNode rootNode, String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode = new BasicParameterNode (name, type, modelChangeRegistrator);
+		rootNode.addParameter(globalParameterNode);
+
+		return globalParameterNode;
+	}
+
+	public static CompositeParameterNode addGlobalCompositeParameterToRoot(
+			RootNode rootNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
+
+		CompositeParameterNode globalParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
 		rootNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;

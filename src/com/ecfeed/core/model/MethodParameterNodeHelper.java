@@ -13,6 +13,7 @@ package com.ecfeed.core.model;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.SignatureHelper;
 
@@ -68,48 +69,7 @@ public class MethodParameterNodeHelper {
 		return signature;
 	}
 
-	public static String createReverseSignature(
-			BasicParameterNode basicParameterNode,
-			IExtLanguageManager extLanguageManager) {
-		
-		IAbstractNode parent = basicParameterNode.getParent();
-		
-		String parentCompositeParameterSignature = "";
-		
-		if (parent instanceof CompositeParameterNode) {
-			
-			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
-			
-			parentCompositeParameterSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-		}
-		
-		String type = AbstractParameterNodeHelper.getType(basicParameterNode, extLanguageManager);
-		String name = AbstractParameterNodeHelper.createNameSignature(basicParameterNode, extLanguageManager);
-
-		String currentParameterSignature = 
-				parentCompositeParameterSignature + 
-				AbstractParameterNodeHelper.createReverseSignature(
-						type,
-						name,
-						basicParameterNode.isExpected());
-
-		if (basicParameterNode.isLinked()) {
-		
-			BasicParameterNode globalParameterNode = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
 	
-			if (globalParameterNode != null) {
-				currentParameterSignature += " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, extLanguageManager);
-			}
-			
-//			MethodNode methodNode = methodParameterNode.getLinkToMethod();
-//			
-//			if (methodNode != null) {
-//				signature += "[LINKED]->" + methodNode.getName();
-//			}
-		}
-
-		return currentParameterSignature;
-	}
 
 	public static String getType(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManager) {
 
@@ -155,4 +115,7 @@ public class MethodParameterNodeHelper {
 		return null;
 	}
 
+	public static String createReverseSignature(BasicParameterNode methodParameterNode, IExtLanguageManager extLanguageManage) {
+		return AbstractParameterNodeHelper.createReverseSignature(methodParameterNode, extLanguageManage);
+	}
 }

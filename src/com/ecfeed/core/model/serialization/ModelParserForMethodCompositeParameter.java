@@ -13,12 +13,13 @@ package com.ecfeed.core.model.serialization;
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.CompositeParameterNode;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.LogHelperCore;
 
 import nu.xom.Element;
+
+import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
 
 public class ModelParserForMethodCompositeParameter implements IModelParserForMethodCompositeParameter {
 
@@ -65,6 +66,32 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 				} catch (Exception e) {
 					LogHelperCore.logError("A composite parameter could not be parsed: " + targetCompositeParameterNode.getName());
 				}
+			}
+		}
+
+		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
+			String linkPath;
+
+			try {
+				linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errorList);
+			} catch (ParserException e) {
+				return Optional.empty();
+			}
+
+			IAbstractNode linkValue = method.getRoot();
+
+			for (String segment : linkPath.split(":")) {
+				linkValue = linkValue.getChild(segment);
+
+				if (linkValue == null) {
+					if (method.getParent().getName().equals(segment)) {
+						linkValue = method.getParent();
+					}
+				}
+			}
+
+			if (linkValue != null) {
+				targetCompositeParameterNode.setLinkToGlobalParameter((AbstractParameterNode) linkValue);
 			}
 		}
 
