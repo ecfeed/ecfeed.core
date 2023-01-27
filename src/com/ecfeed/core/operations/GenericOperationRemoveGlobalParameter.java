@@ -28,17 +28,17 @@ public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 			IParametersParentNode target, 
 			BasicParameterNode parameter,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguageManager);
-		
+
 		if (!parameter.isGlobalParameter()) {
 			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
 		}
-		
+
 		List<AbstractParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedParameters(parameter);
-		
+
 		for (AbstractParameterNode linkedBasicParameterNode : linkedParameters) {
-			
+
 			OnBasicParameterOperationRemove operation = 
 					new OnBasicParameterOperationRemove(
 							(MethodNode) linkedBasicParameterNode.getParent(), 
@@ -46,33 +46,32 @@ public class GenericOperationRemoveGlobalParameter extends CompositeOperation {
 							extLanguageManager);
 			addOperation(operation);
 		}
-		
+
 		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguageManager));
 	}
 
-	public GenericOperationRemoveGlobalParameter(
-			IParametersParentNode target, 
-			BasicParameterNode parameter, 
-			boolean ignoreDuplicates,
-			IExtLanguageManager extLanguageManager) {
-		
-		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguageManager);
-		
-		if (!parameter.isGlobalParameter()) {
-			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
-		}
-		
-		List<AbstractParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedParameters(parameter);
-		
-		for(AbstractParameterNode linker : linkedParameters){
-			OnBasicParameterOperationRemove operation = 
-					new OnBasicParameterOperationRemove(
-							(MethodNode)linker.getParent(), linker, true, ignoreDuplicates, extLanguageManager);
-			
-			addOperation(operation);
-		}
-		
-		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguageManager));
-	}
+	//	public GenericOperationRemoveGlobalParameter(
+	//			IParametersParentNode target, 
+	//			BasicParameterNode parameter, 
+	//			IExtLanguageManager extLanguageManager) {
+	//		
+	//		super(OperationNames.REMOVE_GLOBAL_PARAMETER, true, target, target, extLanguageManager);
+	//		
+	//		if (!parameter.isGlobalParameter()) {
+	//			ExceptionHelper.reportRuntimeException("Invalid type of parameter.");
+	//		}
+	//		
+	//		List<AbstractParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedParameters(parameter);
+	//		
+	//		for(AbstractParameterNode linker : linkedParameters){
+	//			OnBasicParameterOperationRemove operation = 
+	//					new OnBasicParameterOperationRemove(
+	//							(MethodNode)linker.getParent(), linker, true, extLanguageManager);
+	//			
+	//			addOperation(operation);
+	//		}
+	//		
+	//		addOperation(new GenericOperationRemoveParameter(target, parameter, extLanguageManager));
+	//	}
 
 }

@@ -18,7 +18,7 @@ import com.ecfeed.core.utils.BooleanHolder;
 
 public class TestCaseParentNodeHelper {
 
-	public static void addTestCaseToMethod(ITestCasesParentNode testCasesParentNode, ChoiceNode choiceNode) { // TODO MO-RE move to test cases parent node
+	public static void addTestCaseToMethod(ITestCasesParentNode testCasesParentNode, ChoiceNode choiceNode) {
 
 		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
 		listOfChoicesForTestCase.add(choiceNode);

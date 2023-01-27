@@ -33,14 +33,14 @@ import com.ecfeed.core.utils.StringHelper;
 public class OnBasicParameterOperationRemove extends CompositeOperation{
 
 	private String fParameterName;
-	
+
 	public OnBasicParameterOperationRemove(
 			MethodNode methodNode, AbstractParameterNode parameter, boolean validate, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_PARAMETER, true, methodNode, methodNode, extLanguageManager);
 
 		fParameterName = parameter.getName();
-		
+
 		addOperation(new RemoveBasicParameterOperationPrivate(methodNode, parameter, extLanguageManager));
 
 		if (validate) {
@@ -50,28 +50,27 @@ public class OnBasicParameterOperationRemove extends CompositeOperation{
 
 	@Override
 	public String toString() {
-	
+
 		return "Operation remove parameter:" + fParameterName;
 	}
-	
+
 	public OnBasicParameterOperationRemove(MethodNode target, AbstractParameterNode parameter, IExtLanguageManager extLanguageManager) {
 		this(target, parameter, true, extLanguageManager);
 	}
 
-	public OnBasicParameterOperationRemove(
-			MethodNode target, 
-			AbstractParameterNode parameter, 
-			boolean validate, 
-			boolean ignoreDuplicates, 
-			IExtLanguageManager extLanguageManager){
-
-		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
-
-		addOperation(new RemoveBasicParameterOperationPrivate(target, parameter, ignoreDuplicates, extLanguageManager));
-		if(validate){
-			addOperation(new OnMethodOperationRemoveInconsistentChildren(target, extLanguageManager));
-		}
-	}
+	//	public OnBasicParameterOperationRemove(
+	//			MethodNode target, 
+	//			AbstractParameterNode parameter, 
+	//			boolean validate, 
+	//			IExtLanguageManager extLanguageManager){
+	//
+	//		super(OperationNames.REMOVE_PARAMETER, true, target, target, extLanguageManager);
+	//
+	//		addOperation(new RemoveBasicParameterOperationPrivate(target, parameter, extLanguageManager));
+	//		if(validate){
+	//			addOperation(new OnMethodOperationRemoveInconsistentChildren(target, extLanguageManager));
+	//		}
+	//	}
 
 	private class RemoveBasicParameterOperationPrivate extends GenericOperationRemoveParameter{
 
@@ -88,23 +87,14 @@ public class OnBasicParameterOperationRemove extends CompositeOperation{
 			fOriginalDeployedParameters = new ArrayList<>();
 		}
 
-		public RemoveBasicParameterOperationPrivate(
-				MethodNode target, 
-				AbstractParameterNode parameter, 
-				boolean ignoreDuplicates, // TODO MO-RE remove
-				IExtLanguageManager extLanguageManager) {
-
-			this(target, parameter, extLanguageManager);
-		}
-
 		@Override
 		public void execute() {
 
 			MethodNode targetMethodNode = getTargetMethod();
-			
+
 			List<String> paramTypesInExtLanguage = 
 					ParametersParentNodeHelper.getParameterTypes(targetMethodNode, getExtLanguageManager());
-			
+
 			int index = getParameter().getMyIndex();
 			paramTypesInExtLanguage.remove(index);
 
@@ -120,11 +110,11 @@ public class OnBasicParameterOperationRemove extends CompositeOperation{
 			fOriginalTestCases.clear();
 			fOriginalTestCases.addAll(targetMethodNode.getTestCases());
 			targetMethodNode.removeAllTestCases();
-			
+
 			fOriginalDeployedParameters.clear();
 			fOriginalDeployedParameters.addAll(targetMethodNode.getDeployedMethodParameters());
 			targetMethodNode.removeAllDeployedParameters();
-			
+
 			super.execute();
 		}
 
@@ -169,7 +159,7 @@ public class OnBasicParameterOperationRemove extends CompositeOperation{
 
 			String errorMessage =
 					ClassNodeHelper.verifyNewMethodSignatureIsValid(
-						classNode, methodNameInExtLanguage, getExtLanguageManager());
+							classNode, methodNameInExtLanguage, getExtLanguageManager());
 
 			if (errorMessage != null) {
 				problems.add(errorMessage);
@@ -190,11 +180,11 @@ public class OnBasicParameterOperationRemove extends CompositeOperation{
 			public void execute() {
 
 				MethodNode methodNode = getTargetMethod();
-				
+
 				setOneNodeToSelect(methodNode);
 				methodNode.replaceTestCases(fOriginalTestCases);
 				methodNode.setDeployedParameters(fOriginalDeployedParameters);
-				
+
 				RemoveBasicParameterOperationPrivate.super.getReverseOperation().execute();
 			}
 
