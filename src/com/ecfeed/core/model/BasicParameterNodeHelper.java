@@ -137,23 +137,23 @@ public class BasicParameterNodeHelper {
 			String parameterNameToFindInIntrLanguage,
 			IParametersParentNode parametersParentNode) {
 		
-		String firstToken = 
-				StringHelper.getFirstToken(parameterNameToFindInIntrLanguage, SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+		String[] elements = parameterNameToFindInIntrLanguage.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+
+		IAbstractNode parameter = null;
 		
-		if (firstToken == null) {
-			AbstractParameterNode abstractParameterNode = 
-					parametersParentNode.findParameter(parameterNameToFindInIntrLanguage);
-			
-			return (BasicParameterNode) abstractParameterNode;
+		if (parametersParentNode instanceof MethodNode) {
+			parameter = parametersParentNode.findParameter(elements[0]);
+		} 
+		
+		if (parameter == null) {
+			parameter = parametersParentNode.getRoot().getChild(elements[0]);
 		}
 		
-		String remainingPart = 
-				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, parameterNameToFindInIntrLanguage);
+		for (int i = 1 ; i < elements.length ; i++) {
+			parameter = ((IParametersParentNode) parameter).findParameter(elements[i]);
+		}
 		
-		CompositeParameterNode compositeParameterNode = 
-				(CompositeParameterNode) parametersParentNode.findParameter(firstToken);
-		
-		return findParameterByQualifiedNameRecursive(remainingPart, compositeParameterNode);
+		return (BasicParameterNode) parameter;
 	}
 
 	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {

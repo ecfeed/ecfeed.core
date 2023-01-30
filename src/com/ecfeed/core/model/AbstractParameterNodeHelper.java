@@ -48,7 +48,7 @@ public abstract class AbstractParameterNodeHelper {
 			
 			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
 			
-			if (parametersParentNode == null || parametersParentNode instanceof MethodNode) {
+			if (parametersParentNode == null || parametersParentNode instanceof MethodNode || parametersParentNode instanceof RootNode) {
 				return compositeName;
 			}
 			
