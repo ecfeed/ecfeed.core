@@ -3,23 +3,43 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class TestSuiteNode extends AbstractNode {
-	List<TestCaseNode> fTestCaseNodes;
-	String fSuiteName;
-	boolean fDisplayLimitExceeded;
+	private String fSuiteName;
+	private List<TestCaseNode> fTestCaseNodes;
+	private boolean fDisplayLimitExceeded;
 
-	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<TestCaseNode> testData) {
+	public TestSuiteNode(
+			String name, IModelChangeRegistrator modelChangeRegistrator, List<TestCaseNode> testCaseNodes) {
+
 		super(name, modelChangeRegistrator);
 
-		fTestCaseNodes = testData;
+		String firstName = testCaseNodes.get(0).getName();
+
+		if (firstName == null) {
+			ExceptionHelper.reportRuntimeException("Empty test case name.");
+		}
+
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+
+			if (!StringHelper.isEqual(firstName, testCaseNode.getName())) {
+				ExceptionHelper.reportRuntimeException("Inconsistent test case names.");
+			}
+		}
+
+		fTestCaseNodes = testCaseNodes;
 	}
 
-	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator, Collection<TestCaseNode> testData) {
+	public TestSuiteNode(
+			String name, IModelChangeRegistrator modelChangeRegistrator, Collection<TestCaseNode> testCaseNodes) {
+
 		super(name, modelChangeRegistrator);
 
-		fTestCaseNodes = testData.stream().collect(Collectors.toList());
+		//fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
+		fTestCaseNodes = new ArrayList<>(testCaseNodes);
 	}
 
 	public TestSuiteNode(List<TestCaseNode> testData) {
@@ -31,7 +51,8 @@ public class TestSuiteNode extends AbstractNode {
 	public TestSuiteNode(Collection<TestCaseNode> testData) {
 		super("", null);
 
-		fTestCaseNodes = testData.stream().collect(Collectors.toList());
+		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
+		fTestCaseNodes = new ArrayList<>(testData);
 	}
 
 	public TestSuiteNode() {
@@ -40,15 +61,19 @@ public class TestSuiteNode extends AbstractNode {
 		fTestCaseNodes = new ArrayList<>();
 	}
 
+	public String toString() {
+		return fSuiteName;
+	}
+
 	public void setDisplayLimitExceededFlag(boolean displayLimitExceeded) {
 		fDisplayLimitExceeded  = displayLimitExceeded;
 	}
-	
+
 	public boolean getDisplayLimitExceededFlag() {
-	
+
 		return fDisplayLimitExceeded;
 	}
-	
+
 	public List<TestCaseNode> getTestCaseNodes() { 
 
 		return fTestCaseNodes;
@@ -67,16 +92,16 @@ public class TestSuiteNode extends AbstractNode {
 
 	@Override
 	public List<IAbstractNode> getChildren() {
-		
+
 		List<IAbstractNode> result = new ArrayList<>();
 		result.addAll(fTestCaseNodes);
 
 		return result;
 	}
-	
+
 	@Override
 	public int getChildrenCount() {
-		
+
 		return fTestCaseNodes.size();
 	}
 
