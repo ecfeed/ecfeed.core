@@ -67,6 +67,10 @@ public class ParametersAndConstraintsParentNodeHelper {
 		
 		Set<BasicParameterNode> parameters = new HashSet<>();
 		
+		if (methodParameter.isLinked() && (methodParameter.getLinkToGlobalParameter() != null)) {
+			methodParameter = (CompositeParameterNode) methodParameter.getLinkToGlobalParameter();
+		}
+		
 		List<BasicParameterNode> parametersNested = methodParameter.getNestedBasicParameters();
 		
 		for (ConstraintNode constraint : constraints) {
