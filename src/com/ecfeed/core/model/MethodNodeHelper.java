@@ -223,7 +223,7 @@ public class MethodNodeHelper {
 				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
 
 				signatureOfOneParameter = 
-						AbstractParameterNodeHelper.createSignature(compositeParameterNode);
+						AbstractParameterNodeHelper.createSignature(compositeParameterNode, extLanguageManager);
 			}
 
 			signature += signatureOfOneParameter;

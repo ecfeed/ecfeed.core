@@ -16,6 +16,7 @@ import java.util.Set;
 
 import com.ecfeed.core.model.ConstraintNodeListHolder.ConstraintsItr;
 import com.ecfeed.core.utils.JavaLanguageHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class CompositeParameterNode extends AbstractParameterNode implements IParametersAndConstraintsParentNode {
 
@@ -28,27 +29,32 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 			String name,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
+		this(name, null, modelChangeRegistrator);
+	}
+
+	public CompositeParameterNode(
+			String name,
+			AbstractParameterNode link,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
 		super(name, modelChangeRegistrator);
 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(name);
+
+		setLinkToGlobalParameter(link);
 
 		fParametersHolder = new ParametersHolder(modelChangeRegistrator);
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 	}
 
+	public boolean isMethodParameter() {
+
+		return (getParent() instanceof MethodNode);
+	}
+
 	public boolean isGlobalParameter() {
-
-		IAbstractNode parent = getParent();
-
-		if (parent == null) {
-			return false;
-		}
-
-		if (parent instanceof MethodNode) {
-			return false;
-		}
-
-		return true;
+		
+		return ((getParent() instanceof RootNode) || (getParent() instanceof ClassNode));
 	}
 
 	@Override
@@ -72,13 +78,15 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public CompositeParameterNode makeClone() {
-		CompositeParameterNode copy = 
-				new CompositeParameterNode(getName(), getModelChangeRegistrator());
+		CompositeParameterNode copy = new CompositeParameterNode(getName(), getLinkToGlobalParameter(), getModelChangeRegistrator());
+
+		for (AbstractParameterNode parameter : getParameters()) {
+			copy.addParameter((AbstractParameterNode) parameter.makeClone());
+		}
 
 		copy.setProperties(getProperties());
 		copy.setParent(this.getParent());
 
-		copy.setParent(getParent());
 		return copy;
 	}
 
@@ -105,11 +113,34 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		CompositeParameterNode otherComposite = (CompositeParameterNode) other;
 
+		if (!propertiesMatch(otherComposite)) {
+			return false;
+		}
+
 		if (!fParametersHolder.isMatch(otherComposite.fParametersHolder)) {
 			return false;
 		}
 
 		return super.isMatch(other);
+	}
+
+	public boolean propertiesMatch(CompositeParameterNode parameter) {
+
+		if (!StringHelper.isEqual(getName(), parameter.getName())) {
+			return false;
+		}
+
+		if (isLinked() != parameter.isLinked()) {
+			return false;
+		}
+
+		if (isLinked()) {
+			if (!StringHelper.isEqual(getLinkToGlobalParameter().getName(), parameter.getLinkToGlobalParameter().getName())) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	@Override
@@ -162,19 +193,31 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
-		return fParametersHolder.getParameters();
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return ((CompositeParameterNode) getLinkToGlobalParameter()).getParameters();
+		} else {
+			return fParametersHolder.getParameters();
+		}
 	}
 
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
 
-		return fParametersHolder.getParameter(parameterIndex);
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return ((CompositeParameterNode) getLinkToGlobalParameter()).getParameter(parameterIndex);
+		} else {
+			return fParametersHolder.getParameter(parameterIndex);
+		}
 	}
 
 	@Override
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
 
-		return fParametersHolder.findParameter(parameterNameToFind);
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return ((CompositeParameterNode) getLinkToGlobalParameter()).findParameter(parameterNameToFind);
+		} else {
+			return fParametersHolder.findParameter(parameterNameToFind);
+		}
 	}
 
 	@Override
@@ -343,4 +386,37 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		fConstraintNodeListHolder.removeMentioningConstraints(methodParameter);
 	}
 
+	public String getType() {
+
+		return COMPOSITE_PARAMETER_TYPE;
+	}
+
+	public List<CompositeParameterNode> getNestedCompositeParameters() {
+		List<CompositeParameterNode> nodes = new ArrayList<>();
+
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof CompositeParameterNode) {
+				nodes.add((CompositeParameterNode) node);
+				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters());
+			}
+		}
+
+		return nodes;
+	}
+
+	public List<BasicParameterNode> getNestedBasicParameters() {
+		List<BasicParameterNode> nodes = new ArrayList<>();
+
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof BasicParameterNode) {
+				nodes.add((BasicParameterNode) node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedBasicParameters());
+			}
+		}
+
+		return nodes;
+	}
 }

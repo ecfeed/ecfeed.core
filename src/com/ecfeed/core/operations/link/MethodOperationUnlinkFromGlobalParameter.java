@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations.link;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.operations.AbstractModelOperation;
@@ -20,7 +19,7 @@ import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOperation {
 
-	BasicParameterNode fMethodParameterNode;
+	AbstractParameterNode fMethodParameterNode;
 	AbstractParameterNode fGlobalParameterNode;
 
 	ListOfModelOperations fReverseOperations;
@@ -29,7 +28,7 @@ public class MethodOperationUnlinkFromGlobalParameter extends AbstractModelOpera
 
 	public MethodOperationUnlinkFromGlobalParameter(
 			AbstractParameterNode globalParameterNode,
-			BasicParameterNode methodParameterNode, 
+			AbstractParameterNode methodParameterNode, 
 			IExtLanguageManager extLanguageManager) {
 
 		super("Unlink from global parameter", extLanguageManager);

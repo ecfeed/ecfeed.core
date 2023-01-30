@@ -150,7 +150,7 @@ public class MethodDeployerTest {
 		String globalParameterName = "RP1";
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, parameterType, null);
+				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, parameterType, null);
 
 		String globalChoiceNodeName = "RC11";
 
@@ -280,7 +280,7 @@ public class MethodDeployerTest {
 		String globalParameterName = "RP1";
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, parameterType, null);
+				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, parameterType, null);
 
 		String globalChoiceNodeName = "RC11";
 
@@ -330,7 +330,7 @@ public class MethodDeployerTest {
 		String globalParameterName = "RP1";
 
 		BasicParameterNode globalParameterNodeOfRoot = 
-				RootNodeHelper.addGlobalParameterToRoot(rootNode, globalParameterName, parameterType, null);
+				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, parameterType, null);
 
 		String globalChoiceNodeName = "RC11";
 

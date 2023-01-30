@@ -19,6 +19,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
@@ -75,7 +76,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			//targetMethodParameterNode.setLinked(linked);
 		}
 
-		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method != null && method.getClassNode() != null) {
+		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method.getClassNode() != null) {
 			String linkPath;
 
 			try {
@@ -86,7 +87,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 				return Optional.empty();
 			}
 
-			BasicParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
 
 			if (link != null) {
 				targetMethodParameterNode.setLinkToGlobalParameter(link);
@@ -113,7 +114,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 
 		targetMethodParameterNode.setDescription(ModelParserHelper.parseComments(parameterElement));
 
-		if (targetMethodParameterNode.isLinked() == false) {
+		if (!targetMethodParameterNode.isLinked()) {
 			targetMethodParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(parameterElement));
 		}
 

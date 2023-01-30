@@ -22,6 +22,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 
 public class NodesByType {
 
@@ -31,6 +32,7 @@ public class NodesByType {
 	private Set<CompositeParameterNode> fCompositeParameters;
 	private Set<ChoiceNode> fChoices;
 	private Set<ConstraintNode> fConstraints;
+	private Set<TestSuiteNode> fTestSuites;
 	private Set<TestCaseNode> fTestCases;
 
 	public NodesByType() {
@@ -41,6 +43,7 @@ public class NodesByType {
 		fCompositeParameters = new HashSet<>();
 		fChoices = new HashSet<>();
 		fConstraints = new HashSet<>();
+		fTestSuites = new HashSet<>();
 		fTestCases = new HashSet<>();
 	}
 
@@ -62,6 +65,7 @@ public class NodesByType {
 				fCompositeParameters.size() == 0 && 
 				fChoices.size() == 0 &&
 				fConstraints.size() == 0 && 
+				fTestSuites.size() == 0 &&
 				fTestCases.size() == 0) {
 
 			return "Empty";
@@ -75,6 +79,7 @@ public class NodesByType {
 				" ComPar:" + fCompositeParameters.size() + 
 				" Cho:" + fChoices.size() + 
 				" Cnst:" + fConstraints.size() +
+				" TSui:" + fTestSuites.size() +
 				" TCas:" + fTestCases.size();
 
 		return str;
@@ -106,6 +111,17 @@ public class NodesByType {
 			fConstraints.add((ConstraintNode)abstractNode);
 			return;
 		} 
+
+		if (abstractNode instanceof TestCaseNode) {
+			fTestCases.add((TestCaseNode)abstractNode);
+			return;
+		} 
+
+		if (abstractNode instanceof TestSuiteNode) {
+			fTestSuites.add((TestSuiteNode)abstractNode);
+			return;
+		} 
+
 
 		if (abstractNode instanceof TestCaseNode) {
 			fTestCases.add((TestCaseNode)abstractNode);
@@ -150,6 +166,10 @@ public class NodesByType {
 
 	public Set<TestCaseNode> getTestCaseNodes() {
 		return fTestCases;
+	}
+
+	public Set<TestSuiteNode> getTestSuiteNodes() {
+		return fTestSuites;
 	}
 
 	public void addTestCases(Collection<TestCaseNode> testCaseNodes) {

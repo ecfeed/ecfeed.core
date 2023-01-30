@@ -343,30 +343,24 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	private List<ChoiceNode> getTestDomainForParameterIndex(int parameterIndex) {
 
-		BasicParameterNode abstractParameterNode = (BasicParameterNode) getParameter(parameterIndex);
+		BasicParameterNode basicParameterNode = (BasicParameterNode) getParameter(parameterIndex);
 
-		if (abstractParameterNode instanceof BasicParameterNode) {
-			return getTestDomainForParameterNode(abstractParameterNode);
-		} else {
-			return abstractParameterNode.getLeafChoicesWithCopies();
-		}
-
+		return getTestDomainForParameterNode(basicParameterNode);
 	}
 
-	private static List<ChoiceNode> getTestDomainForParameterNode(BasicParameterNode abstractParameterNode) {
+	private static List<ChoiceNode> getTestDomainForParameterNode(BasicParameterNode basicParameterNode) {
 
-		BasicParameterNode methodParameterNode = (BasicParameterNode) abstractParameterNode;
 		List<ChoiceNode> choicesForParameter = new ArrayList<>();
 
-		if (methodParameterNode.isExpected()) {
-			ChoiceNode choiceNode = ChoiceNodeHelper.createChoiceNodeWithDefaultValue(methodParameterNode);
+		if (basicParameterNode.isExpected()) {
+			ChoiceNode choiceNode = ChoiceNodeHelper.createChoiceNodeWithDefaultValue(basicParameterNode);
 
 			choicesForParameter.add(choiceNode);
 
 			return choicesForParameter;
 		}
 
-		return abstractParameterNode.getLeafChoicesWithCopies();
+		return basicParameterNode.getLeafChoicesWithCopies();
 	}
 
 	@Override
@@ -556,7 +550,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	@Override
 	public int getMaxChildIndex(IAbstractNode potentialChild) {
 
-		if (potentialChild instanceof BasicParameterNode) { 
+		if (potentialChild instanceof BasicParameterNode) {
 			return getParameters().size();
 		}
 

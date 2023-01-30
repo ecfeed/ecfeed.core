@@ -380,6 +380,18 @@ public abstract class XomBuilder implements IModelVisitor {
 			appendTypeComments(targetCompositeParameterElement, node);
 		}
 
+		encodeAndAddAttribute(
+				targetCompositeParameterElement,
+				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
+				fWhiteCharConverter);
+
+		if (node.getLinkToGlobalParameter() != null) {
+			encodeAndAddAttribute(
+					targetCompositeParameterElement,
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()),
+					fWhiteCharConverter);
+		}
+
 		return targetCompositeParameterElement;
 	}
 

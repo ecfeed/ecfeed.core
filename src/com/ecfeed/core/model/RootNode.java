@@ -260,7 +260,7 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 	
-	public List<BasicParameterNode> getGlobalParameters() {
+	public List<BasicParameterNode> getGlobalBasicParameters() {
 		
 		List<BasicParameterNode> globalParameterNodes = new ArrayList<>();
 		
@@ -272,6 +272,25 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 				BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 				
 				globalParameterNodes.add(globalParameterNode);
+			}
+		}
+		
+		return globalParameterNodes;
+	}
+	
+	public List<CompositeParameterNode> getGlobalCompositeParameters() {
+		
+		List<CompositeParameterNode> globalParameterNodes = new ArrayList<>();
+		
+		List<AbstractParameterNode> abstractParameters = getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
+			
+			if (abstractParameterNode instanceof CompositeParameterNode) {
+				CompositeParameterNode globalParameterNode = (CompositeParameterNode) abstractParameterNode;
+				
+				globalParameterNodes.add(globalParameterNode);
+				globalParameterNodes.addAll(globalParameterNode.getNestedCompositeParameters());
 			}
 		}
 		
