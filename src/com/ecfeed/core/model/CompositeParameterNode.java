@@ -193,15 +193,16 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
-		if (isLinked() && (getLinkToGlobalParameter() != null)) {
-			return ((CompositeParameterNode) getLinkToGlobalParameter()).getParameters();
-		} else {
-			return fParametersHolder.getParameters();
-		}
+		return fParametersHolder.getParameters();
 	}
 
 	@Override
 	public AbstractParameterNode getParameter(int parameterIndex) {
+
+		return fParametersHolder.getParameter(parameterIndex);
+	}
+
+	public AbstractParameterNode getParameterTransient(int parameterIndex) {
 
 		if (isLinked() && (getLinkToGlobalParameter() != null)) {
 			return ((CompositeParameterNode) getLinkToGlobalParameter()).getParameter(parameterIndex);
