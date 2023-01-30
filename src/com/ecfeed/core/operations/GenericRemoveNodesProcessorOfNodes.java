@@ -28,6 +28,7 @@ import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
@@ -47,7 +48,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 		fAffectedNodesByType = new NodesByType();
 
 		removeNodesWithAncestorsOnList(fSelectedNodes);
-		
+
 		processNodes(
 				fSelectedNodes, 
 				fAffectedNodesByType,
@@ -55,14 +56,10 @@ public class GenericRemoveNodesProcessorOfNodes {
 				validate);
 	}
 
-//	public List<IModelOperation> getOperations() {
-//		return fOperations;
-//	}
-
 	public NodesByType getProcessedNodes() {
 		return fAffectedNodesByType;
 	}
-	
+
 	public Set<ConstraintNode> getAffectedConstraints() {
 		return fAffectedNodesByType.getConstraints();
 	}
@@ -102,11 +99,11 @@ public class GenericRemoveNodesProcessorOfNodes {
 
 		processClassesAndMethods(selectedNodesByType, outAffectedNodes);
 
-		processParametersAndChoices(
-				selectedNodesByType, 
-				outAffectedNodes);
+		processParametersAndChoices(selectedNodesByType, outAffectedNodes);
 
-		processConstraintsAndTestCases(selectedNodesByType, outAffectedNodes);
+		processTestSuitesAndTestCases(selectedNodesByType, outAffectedNodes);
+
+		processConstraints(selectedNodesByType, outAffectedNodes);
 	}
 
 	private static void processClassesAndMethods(
@@ -123,6 +120,22 @@ public class GenericRemoveNodesProcessorOfNodes {
 
 		if (!methods.isEmpty()) {
 			processMethods(methods, outAffectedNodes);
+		}
+	}
+
+	private static void processTestSuitesAndTestCases(
+			NodesByType selectedNodesByType, NodesByType outAffectedNodes) {
+
+		Set<TestSuiteNode> testSuiteNodes = selectedNodesByType.getTestSuiteNodes();
+
+		if (!testSuiteNodes.isEmpty()) {
+			processTestSuites(testSuiteNodes, outAffectedNodes);
+		}
+
+		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
+
+		if (!testCaseNodes.isEmpty()) {
+			processTestCases(testCaseNodes, outAffectedNodes);
 		}
 	}
 
@@ -146,23 +159,6 @@ public class GenericRemoveNodesProcessorOfNodes {
 		}
 	}
 
-	private static void processConstraintsAndTestCases(
-			NodesByType selectedNodesByType,
-			NodesByType inOutAffectedNodes) {
-
-		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
-
-		if (!testCaseNodes.isEmpty()) {
-			processTestCases(testCaseNodes, inOutAffectedNodes);
-		}
-
-		Set<ConstraintNode> constraints = selectedNodesByType.getConstraints();
-
-		if (!constraints.isEmpty()) {
-			processConstraints(constraints, inOutAffectedNodes);
-		}
-	}
-
 	private static void processParameters(
 			NodesByType selectedNodesByType, NodesByType inOutAffectedNodes) {
 
@@ -180,7 +176,16 @@ public class GenericRemoveNodesProcessorOfNodes {
 
 	}
 
-	private static void processConstraints(Set<ConstraintNode> constraintNodes, NodesByType inOutAffectedNodes) {
+	private static void processConstraints(NodesByType selectedNodesByType, NodesByType outAffectedNodes) {
+
+		Set<ConstraintNode> constraints = selectedNodesByType.getConstraints();
+
+		if (!constraints.isEmpty()) {
+			processConstraintsIntr(constraints, outAffectedNodes);
+		}
+	}
+
+	private static void processConstraintsIntr(Set<ConstraintNode> constraintNodes, NodesByType inOutAffectedNodes) {
 
 		for (ConstraintNode constraint : constraintNodes) {
 			inOutAffectedNodes.addNode(constraint);
@@ -272,6 +277,13 @@ public class GenericRemoveNodesProcessorOfNodes {
 			MethodNode methodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
 			inOutAffectedNodes.addTestCases(methodNode.getTestCases());
 
+		}
+	}
+
+	private static void processTestSuites(Set<TestSuiteNode> testSuiteNodes, NodesByType inOutAffectedNodes) {
+		
+		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
+			inOutAffectedNodes.addNode(testSuiteNode);
 		}
 	}
 

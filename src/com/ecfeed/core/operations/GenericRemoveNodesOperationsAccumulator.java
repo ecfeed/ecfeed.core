@@ -24,12 +24,14 @@ import com.ecfeed.core.model.IChoicesParentNode;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
+import com.ecfeed.core.operations.nodes.OnTestSuiteOperationRemoveFromMethod;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -50,6 +52,10 @@ public class GenericRemoveNodesOperationsAccumulator {
 			addOperationsForConstraints(outAffectedNodesByType, extLanguageManager, result);
 		}
 
+		if (!outAffectedNodesByType.getTestSuiteNodes().isEmpty()) {
+			addOperationsForTestSuites(outAffectedNodesByType, extLanguageManager, result);
+		}
+		
 		if (!outAffectedNodesByType.getTestCaseNodes().isEmpty()) {
 			addOperationsForTestCases(outAffectedNodesByType, extLanguageManager, result);
 		}
@@ -77,6 +83,24 @@ public class GenericRemoveNodesOperationsAccumulator {
 		return result;
 	}
 
+	private static void addOperationsForTestSuites(
+			NodesByType outAffectedNodesByType,
+			IExtLanguageManager extLanguageManager, 
+			List<IModelOperation> result) {
+
+		Set<TestSuiteNode> testSuiteNodes = outAffectedNodesByType.getTestSuiteNodes();
+
+		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
+			
+			OnTestSuiteOperationRemoveFromMethod operation =
+					new OnTestSuiteOperationRemoveFromMethod(
+					testSuiteNode.getMethod(), testSuiteNode, extLanguageManager);
+
+			result.add(operation);
+		}
+	}
+
+	
 	private static void addOperationsForTestCases(
 			NodesByType outAffectedNodesByType,
 			IExtLanguageManager extLanguageManager, 

@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.StringHelper;
 
 public abstract class AbstractModelOperation implements IModelOperation {
 
@@ -54,12 +55,27 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		fNodesToSelect = nodesToSelect;
 	}
 
+	public String createDescription(String... operationParameters) {
+
+		String parametersString = "";
+		String separator = ", ";
+
+		for (String operationParameter : operationParameters) {
+
+			parametersString = parametersString + operationParameter + separator;
+		}
+
+		parametersString = StringHelper.getAllBeforeLastToken(parametersString, separator);
+
+		return "OP:" + fName + "(" + parametersString + ")";
+	}
+
 	public IExtLanguageManager getExtLanguageManager() {
 		return fExtLanguageManager;
 	}
 
 	public void setOneNodeToSelect(IAbstractNode nodeToSelect) {
-		
+
 		List<IAbstractNode> nodes = new ArrayList<>();
 		nodes.add(nodeToSelect);
 

@@ -168,6 +168,10 @@ public class NodesByType {
 		return fTestCases;
 	}
 
+	public Set<TestSuiteNode> getTestSuiteNodes() {
+		return fTestSuites;
+	}
+
 	public void addTestCases(Collection<TestCaseNode> testCaseNodes) {
 		fTestCases.addAll(testCaseNodes);
 	}

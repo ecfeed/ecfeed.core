@@ -25,8 +25,6 @@ import com.ecfeed.core.utils.NodesByType;
 
 public class GenericRemoveNodesOperation extends CompositeOperation {
 
-	//private final Set<IAbstractNode> fNodesToRemove;
-
 	private GenericRemoveNodesProcessorOfNodes fGenericRemoveNodesProcessorOfNodes;
 
 	public GenericRemoveNodesOperation(
@@ -66,7 +64,7 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		fGenericRemoveNodesProcessorOfNodes = 
 				new GenericRemoveNodesProcessorOfNodes(
 						nodesToRemove, typeAdapterProvider, validate, extLanguageManager);
@@ -76,11 +74,11 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 	}
 
 	private Set<IAbstractNode> createSetOfNodesToRemove(Collection<? extends IAbstractNode> nodesToRemove) {
-		
+
 		Set<IAbstractNode> setOfNodes = new HashSet<>(nodesToRemove);
-		
+
 		removeNodesWithAncestorsOnList(setOfNodes);
-		
+
 		return setOfNodes;
 	}
 
