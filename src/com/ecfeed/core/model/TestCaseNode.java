@@ -60,15 +60,9 @@ public class TestCaseNode extends AbstractNode {
 		return copy;
 	}
 
-	public TestCaseNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
+	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
 
-		super(name, modelChangeRegistrator);
-		fTestData = testData;
-	}
-
-	public TestCaseNode(List<ChoiceNode> testData) {
-
-		super("", null);
+		super(testSuiteName, modelChangeRegistrator);
 		fTestData = testData;
 	}
 
@@ -254,7 +248,7 @@ public class TestCaseNode extends AbstractNode {
 		return new TestCase(fTestData);
 	}
 
-	public void updateChoiceReferences(
+	public void updateChoiceReferences( // TODO MO-RE do we need this ?
 			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 
 		int index = 0;

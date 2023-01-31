@@ -200,9 +200,9 @@ public class AbstractNodeTest{
 		classNode.addMethod(method);
 		root.addClass(classNode);
 
-		assertEquals(8, root.getSubtreeSize());
-		assertEquals(7, classNode.getSubtreeSize());
-		assertEquals(6, method.getSubtreeSize());
+		assertEquals(10, root.getSubtreeSize());
+		assertEquals(9, classNode.getSubtreeSize());
+		assertEquals(8, method.getSubtreeSize());
 		assertEquals(1, constraint.getSubtreeSize());
 		assertEquals(1, testCase.getSubtreeSize());
 		assertEquals(1, expCat.getSubtreeSize());

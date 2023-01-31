@@ -346,7 +346,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
             choiceNodes.add(choiceNode);
         }
 
-        return new TestCaseNode(choiceNodes);
+        return new TestCaseNode("TestSuite", null, choiceNodes);
     }
 
 }

@@ -147,7 +147,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// copy parameters to deployed parameters
@@ -238,7 +238,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// copy parameters to deployed parameters
@@ -334,7 +334,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case 
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// copy parameters to deployed parameters
@@ -434,7 +434,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// copy parameters to deployed parameters
@@ -520,7 +520,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// copy parameters to deployed parameters
@@ -613,7 +613,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode11, choiceNode21});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// copy parameters to deployed parameters
@@ -741,7 +741,7 @@ public class GenericRemoveNodesOperationTest {
 		// test case
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// copy parameters to deployed parameters

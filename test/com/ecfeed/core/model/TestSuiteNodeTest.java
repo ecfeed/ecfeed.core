@@ -25,7 +25,7 @@ public class TestSuiteNodeTest {
 		
 		// add test case 1
 		
-		TestCaseNode testCaseNode1 = new TestCaseNode(null);
+		TestCaseNode testCaseNode1 = new TestCaseNode("TestSuite", null, null);
 		testSuiteNode.addTestCase(testCaseNode1);
 		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
 		
@@ -36,7 +36,7 @@ public class TestSuiteNodeTest {
 		
 		// add test case 2
 		
-		TestCaseNode testCaseNode2 = new TestCaseNode(null);
+		TestCaseNode testCaseNode2 = new TestCaseNode("TestSuite", null, null);
 		testSuiteNode.addTestCase(testCaseNode2);
 		assertEquals(2, testSuiteNode.getTestCaseNodes().size());
 
