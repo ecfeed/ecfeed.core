@@ -11,9 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import com.ecfeed.core.utils.CommonConstants;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -38,7 +36,7 @@ public class MethodNodeHelper {
 
 		return RegexHelper.createMessageAllowedCharsForMethod(extLanguageManager);
 	}
-	
+
 	public static String verifyMethodNameIsValid(
 			String methodNameInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
@@ -51,7 +49,7 @@ public class MethodNodeHelper {
 
 		return null;
 	}
-	
+
 	private static boolean isValid(String name) {
 
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
@@ -68,7 +66,7 @@ public class MethodNodeHelper {
 				isParamNameAdded,
 				false, extLanguageManager);
 	}
-	
+
 	public static String createLongSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
 		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
@@ -267,7 +265,7 @@ public class MethodNodeHelper {
 
 		return signature;
 	}
-	
+
 	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
 
 		List<Boolean> expectedFlags = new ArrayList<Boolean>();
@@ -289,90 +287,90 @@ public class MethodNodeHelper {
 
 		return expectedFlags;
 	}
-	
-	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
 
-		List<TestSuiteNode> testSuites = method.getTestSuites();
+	//	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
+	//
+	//		List<TestSuiteNode> testSuites = method.getTestSuites();
+	//
+	//		List<String> testSuiteNames = new ArrayList<>();
+	//		testSuiteNames.addAll(method.getTestCaseNames());
+	//
+	//		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
+	//
+	//		TestSuiteNode testSuiteNode;
+	//		for (String testSuiteName : testSuiteNames) {
+	//
+	//			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuiteName);
+	//
+	//			if (existingNode.isPresent()) {
+	//				testSuiteNode = existingNode.get();
+	//				testSuiteNode.getTestCaseNodes().clear();
+	//			} else {
+	//				testSuiteNode = new TestSuiteNode();
+	//				testSuiteNode.setSuiteName(testSuiteName);
+	//				testSuiteNode.setParent(method);
+	//				testSuites.add(testSuiteNode);
+	//			}
+	//
+	//			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
+	//			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
+	//				testSuiteNode.setName(testSuiteName);
+	//				testSuiteNode.setDisplayLimitExceededFlag(true);
+	//			} else {
+	//				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
+	//				testSuiteNode.setName(testSuiteName);
+	//				testSuiteNode.setDisplayLimitExceededFlag(false);
+	//			}
+	//		}
+	//
+	//		testSuites.sort((a, b) -> a.getSuiteName().compareTo(b.getSuiteName()));
+	//
+	//		return testSuites;
+	//	}
 
-		List<String> testSuiteNames = new ArrayList<>();
-		testSuiteNames.addAll(method.getTestCaseNames());
+	//	public static String findNotUsedJavaTypeForParameter(
+	//			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	//
+	//		ClassNode classNode = methodNode.getClassNode();
+	//
+	//		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
+	//
+	//		for (String type : typeListInExtLanguage) {
+	//			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
+	//				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
+	//				return type;
+	//			}
+	//		}
+	//
+	//		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
+	//
+	//		return userType;
+	//	}
 
-		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
+	//	private static boolean isNewTypeUsed(
+	//			String typeForLastParameter,
+	//			ClassNode classNode,
+	//			MethodNode methodNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	////		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+	////		parameterTypesInExternalLanguage.add(typeForLastParameter);
+	//
+	//		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
+	//
+	//		MethodNode foundMethodNode =
+	//				ClassNodeHelper.findMethodByExtLanguage(
+	//						classNode,
+	//						methodNameInExternalLanguage,
+	//						extLanguageManager);
+	//
+	//		if (foundMethodNode != null) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
-		TestSuiteNode testSuiteNode;
-		for (String testSuiteName : testSuiteNames) {
-
-			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuiteName);
-
-			if (existingNode.isPresent()) {
-				testSuiteNode = existingNode.get();
-				testSuiteNode.getTestCaseNodes().clear();
-			} else {
-				testSuiteNode = new TestSuiteNode();
-				testSuiteNode.setSuiteName(testSuiteName);
-				testSuiteNode.setParent(method);
-				testSuites.add(testSuiteNode);
-			}
-
-			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
-			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
-				testSuiteNode.setName(testSuiteName);
-				testSuiteNode.setDisplayLimitExceededFlag(true);
-			} else {
-				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
-				testSuiteNode.setName(testSuiteName);
-				testSuiteNode.setDisplayLimitExceededFlag(false);
-			}
-		}
-
-		testSuites.sort((a, b) -> a.getSuiteName().compareTo(b.getSuiteName()));
-
-		return testSuites;
-	}
-	
-//	public static String findNotUsedJavaTypeForParameter(
-//			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-//
-//		ClassNode classNode = methodNode.getClassNode();
-//
-//		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
-//
-//		for (String type : typeListInExtLanguage) {
-//			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
-//				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
-//				return type;
-//			}
-//		}
-//
-//		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
-//
-//		return userType;
-//	}
-	
-//	private static boolean isNewTypeUsed(
-//			String typeForLastParameter,
-//			ClassNode classNode,
-//			MethodNode methodNode,
-//			IExtLanguageManager extLanguageManager) {
-//
-////		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
-////		parameterTypesInExternalLanguage.add(typeForLastParameter);
-//
-//		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
-//
-//		MethodNode foundMethodNode =
-//				ClassNodeHelper.findMethodByExtLanguage(
-//						classNode,
-//						methodNameInExternalLanguage,
-//						extLanguageManager);
-//
-//		if (foundMethodNode != null) {
-//			return true;
-//		}
-//
-//		return false;
-//	}
-	
 	public static String findNewUserTypeForJavaLanguage(
 			MethodNode methodNode, 
 			IExtLanguageManager extLanguageManager) {
@@ -402,21 +400,21 @@ public class MethodNodeHelper {
 	}
 
 	public static MethodNode findMethodNode(IAbstractNode anyNodeFromMethodTree) {
-		
+
 		IAbstractNode currentNode = anyNodeFromMethodTree;
-		
+
 		for(;;) {
-			
+
 			if (currentNode == null) {
 				return null;
 			}
-			
+
 			if (currentNode instanceof MethodNode) {
 				return (MethodNode) currentNode;
 			}
-			
+
 			currentNode = currentNode.getParent();
 		}
 	}
-	
+
 }

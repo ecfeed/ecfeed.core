@@ -241,35 +241,6 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testRemoveTestCase(){
-		MethodNode method = new MethodNode("name", null);
-		TestCaseNode testCase1 = new TestCaseNode("name1", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase2 = new TestCaseNode("name1", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase3 = new TestCaseNode("name2", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase4 = new TestCaseNode("name2", null, new ArrayList<ChoiceNode>());
-
-		method.addTestCase(testCase1);
-		method.addTestCase(testCase2);
-		method.addTestCase(testCase3);
-		method.addTestCase(testCase4);
-
-		assertEquals(4, method.getTestCases().size());
-
-		method.removeTestCase(testCase1);
-
-		assertEquals(3, method.getTestCases().size());
-		assertFalse(method.getTestCases().contains(testCase1));
-
-		TestSuiteNode testSuiteNode = new TestSuiteNode();
-		testSuiteNode.setName("name2");
-		method.removeTestSuite(testSuiteNode);
-		assertEquals(1, method.getTestCases().size());
-		assertFalse(method.getTestCases().contains(testCase3));
-		assertFalse(method.getTestCases().contains(testCase4));
-		assertTrue(method.getTestCases().contains(testCase2));
-	}
-
-	@Test
 	public void removeChoicesParentParameterTest(){
 		//		MethodNode method = new MethodNode("method");
 		//		ParameterNode parameter = new ParameterNode("parameter", "type", "0", false);

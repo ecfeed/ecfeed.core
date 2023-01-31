@@ -455,60 +455,60 @@ public class MethodNodeHelperTest {
 		assertEquals("cn 1", namesArray.get(0));
 	}
 
-	@Test
-	public void groupTestCasesTest() {
-
-		RootNode rootNode = new RootNode("root", null);
-
-		ClassNode classNode = new ClassNode("class", null);
-		rootNode.addClass(classNode);
-
-		MethodNode methodNode = new MethodNode("method", null);
-		classNode.addMethod(methodNode);
-
-		BasicParameterNode methodParameterNode =
-				new BasicParameterNode(
-						"par","int", "0",false,null);
-
-		methodNode.addParameter(methodParameterNode);
-
-		ChoiceNode choiceNode = new ChoiceNode("c", "1", null);
-		methodParameterNode.addChoice(choiceNode);
-
-		List<ChoiceNode> choices = new ArrayList<>();
-		choices.add(choiceNode);
-
-		TestCaseNode testCase1 = new TestCaseNode("t1", null, choices);
-		methodNode.addTestCase(testCase1);
-
-		TestCaseNode testCase2 = new TestCaseNode("t1", null, choices);
-		methodNode.addTestCase(testCase2);
-
-		List<TestSuiteNode> testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
-
-		// the second time - result should be the same
-
-		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
-
-		// the third, different test case
-
-		TestCaseNode testCase3 = new TestCaseNode("txx", null, choices);
-		methodNode.addTestCase(testCase3);
-
-		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
-
-		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
-
-		// removing the third test case
-		methodNode.removeTestCase(testCase3);
-
-		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
-		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
-	}
+	//	@Test
+	//	public void groupTestCasesTest() {
+	//
+	//		RootNode rootNode = new RootNode("root", null);
+	//
+	//		ClassNode classNode = new ClassNode("class", null);
+	//		rootNode.addClass(classNode);
+	//
+	//		MethodNode methodNode = new MethodNode("method", null);
+	//		classNode.addMethod(methodNode);
+	//
+	//		BasicParameterNode methodParameterNode =
+	//				new BasicParameterNode(
+	//						"par","int", "0",false,null);
+	//
+	//		methodNode.addParameter(methodParameterNode);
+	//
+	//		ChoiceNode choiceNode = new ChoiceNode("c", "1", null);
+	//		methodParameterNode.addChoice(choiceNode);
+	//
+	//		List<ChoiceNode> choices = new ArrayList<>();
+	//		choices.add(choiceNode);
+	//
+	//		TestCaseNode testCase1 = new TestCaseNode("t1", null, choices);
+	//		methodNode.addTestCase(testCase1);
+	//
+	//		TestCaseNode testCase2 = new TestCaseNode("t1", null, choices);
+	//		methodNode.addTestCase(testCase2);
+	//
+	//		List<TestSuiteNode> testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+	//		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
+	//
+	//		// the second time - result should be the same
+	//
+	//		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+	//		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
+	//
+	//		// the third, different test case
+	//
+	//		TestCaseNode testCase3 = new TestCaseNode("txx", null, choices);
+	//		methodNode.addTestCase(testCase3);
+	//
+	//		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+	//		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
+	//
+	//		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+	//		checkTestSuites2(testSuiteNodes, testCase1, testCase2, testCase3);
+	//
+	//		// removing the third test case
+	//		methodNode.removeTestCase(testCase3);
+	//
+	//		testSuiteNodes = MethodNodeHelper.createGroupingTestSuites(methodNode);
+	//		checkTestSuites1(testSuiteNodes, testCase1, testCase2);
+	//	}
 
 	public void checkTestSuites1(List<TestSuiteNode> testSuiteNodes, TestCaseNode testCase1, TestCaseNode testCase2) {
 
