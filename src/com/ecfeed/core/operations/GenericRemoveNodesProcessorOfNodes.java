@@ -30,6 +30,7 @@ import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
+import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
 
@@ -54,6 +55,10 @@ public class GenericRemoveNodesProcessorOfNodes {
 				fAffectedNodesByType,
 				extLanguageManager, 
 				validate);
+		
+		if (fAffectedNodesByType.getTestSuiteNodes().size() > 0) {
+			ExceptionHelper.reportRuntimeException("Test suites not expected.");
+		}
 	}
 
 	public NodesByType getProcessedNodes() {
@@ -283,7 +288,16 @@ public class GenericRemoveNodesProcessorOfNodes {
 	private static void processTestSuites(Set<TestSuiteNode> testSuiteNodes, NodesByType inOutAffectedNodes) {
 		
 		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
-			inOutAffectedNodes.addNode(testSuiteNode);
+			addTestCasesOfTestSuite(testSuiteNode, inOutAffectedNodes);
+		}
+	}
+
+	private static void addTestCasesOfTestSuite(TestSuiteNode testSuiteNode, NodesByType inOutAffectedNodes) {
+		
+		List<TestCaseNode> testCaseNodes = testSuiteNode.getTestCaseNodes();
+		
+		for (TestCaseNode testCaseNode : testCaseNodes) {
+			inOutAffectedNodes.addNode(testCaseNode);
 		}
 	}
 
