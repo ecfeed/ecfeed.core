@@ -10,32 +10,54 @@
 
 package com.ecfeed.core.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.Test;
 
 public class TestSuiteNodeTest {
 
+	
 	@Test
-	public void addAndDeleteEmptyTestSuites() {
+	public void addAndDeleteTestCases() {
 		
-		MethodNode methodNode = new MethodNode("Method");
-		assertEquals(0, methodNode.getTestSuites().size());
+		TestSuiteNode testSuiteNode = new TestSuiteNode("TestSuite1", null);
+		assertEquals(0, testSuiteNode.getTestCaseNodes().size());
 		
-		TestSuiteNode testSuiteNode1 = new TestSuiteNode("TestSuite1", null);
-		methodNode.addTestSuite(testSuiteNode1);
-		assertEquals(1, methodNode.getTestSuites().size());
+		// add test case 1
 		
-		TestSuiteNode testSuiteNode2 = new TestSuiteNode("TestSuite2", null);
-		methodNode.addTestSuite(testSuiteNode2);
-		assertEquals(2, methodNode.getTestSuites().size());
+		TestCaseNode testCaseNode1 = new TestCaseNode(null);
+		testSuiteNode.addTestCase(testCaseNode1);
+		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
 		
-		
-		methodNode.removeTestSuite(testSuiteNode1);
-		assertEquals(1, methodNode.getTestSuites().size());
-		
-		methodNode.removeTestSuite(testSuiteNode2);
-		assertEquals(0, methodNode.getTestSuites().size());
-	}
+		// add the same test case
 
+		testSuiteNode.addTestCase(testCaseNode1);
+		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
+		
+		// add test case 2
+		
+		TestCaseNode testCaseNode2 = new TestCaseNode(null);
+		testSuiteNode.addTestCase(testCaseNode2);
+		assertEquals(2, testSuiteNode.getTestCaseNodes().size());
+
+		// add test case 2 again
+		
+		testSuiteNode.addTestCase(testCaseNode2);
+		assertEquals(2, testSuiteNode.getTestCaseNodes().size());
+		
+		// delete test case 1
+		
+		testSuiteNode.removeTestCase(testCaseNode1);
+		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
+		
+		// try delete test case 1 again
+		
+		testSuiteNode.removeTestCase(testCaseNode1);
+		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
+		
+		// delete test case 2
+
+		testSuiteNode.removeTestCase(testCaseNode2);
+		assertEquals(0, testSuiteNode.getTestCaseNodes().size());
+	}
 }

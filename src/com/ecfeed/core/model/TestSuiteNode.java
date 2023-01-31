@@ -10,16 +10,18 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TestSuiteNode extends AbstractNode {
-	private String fSuiteName;
 	private Set<TestCaseNode> fTestCaseNodes;
 	private boolean fDisplayLimitExceeded; // TODO MO-RE remove this flag (display does not belong here)
-	
+
 	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
-		
+
 		if (StringHelper.isNullOrEmpty(name)) {
 			ExceptionHelper.reportRuntimeException("Empty test suite name.");
 		}
+
+		fTestCaseNodes = new HashSet<>();
+		fDisplayLimitExceeded = false;
 	}
 
 	public TestSuiteNode(
@@ -30,9 +32,9 @@ public class TestSuiteNode extends AbstractNode {
 		this(name, modelChangeRegistrator);
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
-			
+
 			String currentName = testCaseNode.getName();
-			
+
 			if (!StringHelper.isEqual(name, currentName)) {
 				ExceptionHelper.reportRuntimeException("Inconsistent test case names.");
 			}
@@ -41,35 +43,35 @@ public class TestSuiteNode extends AbstractNode {
 		fTestCaseNodes = new HashSet<>(testCaseNodes);
 	}
 
-//	public TestSuiteNode(
-//			String name, IModelChangeRegistrator modelChangeRegistrator, Collection<TestCaseNode> testCaseNodes) {
-//
-//		super(name, modelChangeRegistrator);
-//
-//		fTestCaseNodes = new HashSet<>(testCaseNodes);
-//	}
+	//	public TestSuiteNode(
+	//			String name, IModelChangeRegistrator modelChangeRegistrator, Collection<TestCaseNode> testCaseNodes) {
+	//
+	//		super(name, modelChangeRegistrator);
+	//
+	//		fTestCaseNodes = new HashSet<>(testCaseNodes);
+	//	}
 
-//	public TestSuiteNode(List<TestCaseNode> testData) {
-//		super("", null);
-//
-//		fTestCaseNodes = testData;
-//	}
+	//	public TestSuiteNode(List<TestCaseNode> testData) {
+	//		super("", null);
+	//
+	//		fTestCaseNodes = testData;
+	//	}
 
-//	public TestSuiteNode(Collection<TestCaseNode> testData) {
-//		super("", null);
-//
-//		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
-//		fTestCaseNodes = new ArrayList<>(testData);
-//	}
+	//	public TestSuiteNode(Collection<TestCaseNode> testData) {
+	//		super("", null);
+	//
+	//		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
+	//		fTestCaseNodes = new ArrayList<>(testData);
+	//	}
 
-//	public TestSuiteNode() {
-//		super("", null);
-//
-//		fTestCaseNodes = new ArrayList<>();
-//	}
+	//	public TestSuiteNode() {
+	//		super("", null);
+	//
+	//		fTestCaseNodes = new ArrayList<>();
+	//	}
 
 	public String toString() {
-		return fSuiteName;
+		return getName();
 	}
 
 	public void setDisplayLimitExceededFlag(boolean displayLimitExceeded) {
@@ -80,10 +82,15 @@ public class TestSuiteNode extends AbstractNode {
 
 		return fDisplayLimitExceeded;
 	}
-	
+
 	void addTestCase(TestCaseNode testCaseNode) {
-		
+
 		fTestCaseNodes.add(testCaseNode);
+	}
+	
+	void removeTestCase(TestCaseNode testCaseNode) {
+
+		fTestCaseNodes.remove(testCaseNode);
 	}
 
 	public List<TestCaseNode> getTestCaseNodes() { 
@@ -115,11 +122,11 @@ public class TestSuiteNode extends AbstractNode {
 	}
 
 	public void setSuiteName(String suiteName) {
-		fSuiteName = suiteName;
+		super.setName(suiteName);
 	}
 
 	public String getSuiteName() {
-		return fSuiteName;
+		return getName();
 	}
 
 	public TestSuiteNode getCopy(MethodNode method){
@@ -148,7 +155,7 @@ public class TestSuiteNode extends AbstractNode {
 
 	@Override
 	public TestSuiteNode makeClone() {
-		
+
 		TestSuiteNode copy = new TestSuiteNode(this.getName(), fTestCaseNodes, getModelChangeRegistrator());
 		copy.setProperties(getProperties());
 		return copy;

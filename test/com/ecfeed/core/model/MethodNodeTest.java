@@ -111,38 +111,6 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testAddTestCase(){
-		MethodNode method = new MethodNode("name", null);
-		TestCaseNode testCase1 = new TestCaseNode("suite_1", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase2 = new TestCaseNode("suite_2", null, new ArrayList<ChoiceNode>());
-		assertEquals(0, method.getTestCases().size());
-		assertEquals(0, method.getTestCases("suite_1").size());
-		assertEquals(0, method.getTestCases("suite_2").size());
-
-		method.addTestCase(testCase1);
-		method.addTestCase(testCase2);
-
-		assertEquals(method, testCase1.getParent());
-		assertEquals(method, testCase2.getParent());
-
-		assertEquals(2, method.getTestCases().size());
-		assertTrue(method.getTestCases().contains(testCase1));
-		assertTrue(method.getTestCases().contains(testCase2));
-
-		assertEquals(1, method.getTestCases("suite_1").size());
-		assertTrue(method.getTestCases("suite_1").contains(testCase1));
-		assertFalse(method.getTestCases("suite_1").contains(testCase2));
-
-		assertEquals(1, method.getTestCases("suite_2").size());
-		assertTrue(method.getTestCases("suite_2").contains(testCase2));
-		assertFalse(method.getTestCases("suite_2").contains(testCase1));
-
-		assertEquals(2, method.getTestCaseNames().size());
-		assertTrue(method.getTestCaseNames().contains("suite_1"));
-		assertTrue(method.getTestCaseNames().contains("suite_2"));
-	}
-
-	@Test
 	public void testGetChildren(){
 		MethodNode method = new MethodNode("name", null);
 		TestCaseNode testCase = new TestCaseNode("test_case", null, new ArrayList<ChoiceNode>());
@@ -572,6 +540,60 @@ public class MethodNodeTest {
 			MethodNode m = gen.generateMethod(3, 3, 10);
 			assertTrue(m.isMatch(m));
 		}
+	}
+
+	@Test
+	public void addAndDeleteEmptyTestSuites() {
+		
+		MethodNode methodNode = new MethodNode("Method");
+		assertEquals(0, methodNode.getTestSuites().size());
+		
+		TestSuiteNode testSuiteNode1 = new TestSuiteNode("TestSuite1", null);
+		methodNode.addTestSuite(testSuiteNode1);
+		assertEquals(1, methodNode.getTestSuites().size());
+		
+		TestSuiteNode testSuiteNode2 = new TestSuiteNode("TestSuite2", null);
+		methodNode.addTestSuite(testSuiteNode2);
+		assertEquals(2, methodNode.getTestSuites().size());
+		
+		
+		methodNode.removeTestSuite(testSuiteNode1);
+		assertEquals(1, methodNode.getTestSuites().size());
+		
+		methodNode.removeTestSuite(testSuiteNode2);
+		assertEquals(0, methodNode.getTestSuites().size());
+	}
+
+	@Test
+	public void addTestCaseTest(){
+		MethodNode method = new MethodNode("name", null);
+		TestCaseNode testCase1 = new TestCaseNode("suite_1", null, new ArrayList<ChoiceNode>());
+		TestCaseNode testCase2 = new TestCaseNode("suite_2", null, new ArrayList<ChoiceNode>());
+		assertEquals(0, method.getTestCases().size());
+		assertEquals(0, method.getTestCases("suite_1").size());
+		assertEquals(0, method.getTestCases("suite_2").size());
+
+		method.addTestCase(testCase1);
+		method.addTestCase(testCase2);
+
+		assertEquals(method, testCase1.getParent());
+		assertEquals(method, testCase2.getParent());
+
+		assertEquals(2, method.getTestCases().size());
+		assertTrue(method.getTestCases().contains(testCase1));
+		assertTrue(method.getTestCases().contains(testCase2));
+
+		assertEquals(1, method.getTestCases("suite_1").size());
+		assertTrue(method.getTestCases("suite_1").contains(testCase1));
+		assertFalse(method.getTestCases("suite_1").contains(testCase2));
+
+		assertEquals(1, method.getTestCases("suite_2").size());
+		assertTrue(method.getTestCases("suite_2").contains(testCase2));
+		assertFalse(method.getTestCases("suite_2").contains(testCase1));
+
+		assertEquals(2, method.getTestCaseNames().size());
+		assertTrue(method.getTestCaseNames().contains("suite_1"));
+		assertTrue(method.getTestCaseNames().contains("suite_2"));
 	}
 
 }
