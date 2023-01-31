@@ -234,24 +234,77 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public void addTestSuite(TestSuiteNode testSuite) {
+	public void addTestSuite(TestSuiteNode testSuite) { // TODO MO-RE private ?
 		addTestSuite(testSuite, fTestSuiteNodes.size());
 	}
 
-	public void addTestSuite(TestSuiteNode testCase, int index) {
+	public void addTestSuite(TestSuiteNode testCase, int index) { // TODO MO-RE private ?
 		fTestSuiteNodes.add(index, testCase);
 		registerChange();
 	}
+	
+	public void addTestCase(TestCaseNode testCaseNode, int index) {
+		
+		String testSuiteName = testCaseNode.getName();
 
-	public void addTestCase(TestCaseNode testCase){
-		addTestCase(testCase, fTestCaseNodes.size());
-	}
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
 
-	public void addTestCase(TestCaseNode testCase, int index) {
-		fTestCaseNodes.add(index, testCase);
-		testCase.setParent(this);
+		if (testSuiteNode == null) {
+			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
+			addTestSuite(testSuiteNode);
+		}
+
+		testSuiteNode.addTestCase(testCaseNode);
+		
+		fTestCaseNodes.add(index, testCaseNode);
+		testCaseNode.setParent(this);
+		
 		registerChange();
 	}
+
+	public void addTestCase(TestCaseNode testCaseNode){
+
+		addTestCase(testCaseNode, fTestCaseNodes.size());
+	}
+
+	public boolean removeTestCase(TestCaseNode testCaseNode) {
+
+		String testSuiteName = testCaseNode.getName();
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			ExceptionHelper.reportRuntimeException("Non existing test suite.");
+		}
+
+		testSuiteNode.removeTestCase(testCaseNode);
+
+		if (testSuiteNode.getTestCaseNodes().size() == 0) {
+			removeTestSuite(testSuiteNode);
+		}
+
+		testCaseNode.setParent(null);
+		boolean result = fTestCaseNodes.remove(testCaseNode);
+
+		registerChange();
+		return result;
+	}
+
+	public TestSuiteNode findTestSuite(String testSuiteName) {
+
+		if (testSuiteName == null) {
+			ExceptionHelper.reportRuntimeException("Empty test suite name.");
+		}
+
+		for (TestSuiteNode testSuiteNode : fTestSuiteNodes) {
+			if (testSuiteName.equals(testSuiteNode.getName())) {
+				return testSuiteNode; 
+			}
+		}
+
+		return null;
+	}
+
 
 	public ClassNode getClassNode() {
 		return (ClassNode)getParent();
@@ -425,13 +478,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 
 		return names;
-	}
-
-	public boolean removeTestCase(TestCaseNode testCase) {
-		testCase.setParent(null);
-		boolean result = fTestCaseNodes.remove(testCase);
-		registerChange();
-		return result;
 	}
 
 	public void removeTestSuite(TestSuiteNode testSuite) {

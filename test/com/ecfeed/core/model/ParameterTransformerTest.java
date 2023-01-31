@@ -1167,7 +1167,7 @@ public class ParameterTransformerTest {
 		List<ChoiceNode> choices = new ArrayList<>();
 		choices.add(choiceNodeOfMethod11);
 
-		TestCaseNode testCaseNode = new TestCaseNode(choices);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choices);
 		List<TestCaseNode> testCaseNodes = new ArrayList<TestCaseNode>();
 		testCaseNodes.add(testCaseNode);
 
