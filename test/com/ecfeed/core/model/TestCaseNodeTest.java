@@ -22,36 +22,6 @@ import com.ecfeed.core.testutils.RandomModelGenerator;
 
 public class TestCaseNodeTest {
 
-	// TODO MO-RE 
-	//	@Test
-	//	public void testRemoveTestCase(){
-	//		MethodNode method = new MethodNode("name", null);
-	//		TestCaseNode testCase1 = new TestCaseNode("name1", null, new ArrayList<ChoiceNode>());
-	//		TestCaseNode testCase2 = new TestCaseNode("name1", null, new ArrayList<ChoiceNode>());
-	//		TestCaseNode testCase3 = new TestCaseNode("name2", null, new ArrayList<ChoiceNode>());
-	//		TestCaseNode testCase4 = new TestCaseNode("name2", null, new ArrayList<ChoiceNode>());
-	//
-	//		method.addTestCase(testCase1);
-	//		method.addTestCase(testCase2);
-	//		method.addTestCase(testCase3);
-	//		method.addTestCase(testCase4);
-	//
-	//		assertEquals(4, method.getTestCases().size());
-	//
-	//		method.removeTestCase(testCase1);
-	//
-	//		assertEquals(3, method.getTestCases().size());
-	//		assertFalse(method.getTestCases().contains(testCase1));
-	//
-	//		TestSuiteNode testSuiteNode = new TestSuiteNode();
-	//		testSuiteNode.setName("name2");
-	//		method.removeTestSuite(testSuiteNode);
-	//		assertEquals(1, method.getTestCases().size());
-	//		assertFalse(method.getTestCases().contains(testCase3));
-	//		assertFalse(method.getTestCases().contains(testCase4));
-	//		assertTrue(method.getTestCases().contains(testCase2));
-	//	}
-
 	@Test
 	public void compare(){
 		ChoiceNode p1 = new ChoiceNode("name", "value", null);

@@ -31,11 +31,57 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
-	public void setName(String nameInIntrLanguage) {
-		
-		
+	public void setName(String newNameInIntrLanguage) {
+
+		if (newNameInIntrLanguage == null) {
+			ExceptionHelper.reportRuntimeException("Empty new test case name.");
+		}
+
+		if (newNameInIntrLanguage.equals(getName())) {
+			return;
+		}
+
+		IAbstractNode parent = getParent();
+
+		if (parent == null) {
+			super.setName(newNameInIntrLanguage);
+			return;
+		}
+
+		MethodNode methodNode = (MethodNode) parent;
+
+		processOldTestSuite(methodNode);
+
+		processNewTestSuite(newNameInIntrLanguage, methodNode);
+
+		setName(newNameInIntrLanguage);
 	}
-	
+
+	private void processNewTestSuite(String newNameInIntrLanguage, MethodNode methodNode) {
+		TestSuiteNode newTestSuiteNode = methodNode.findTestSuite(newNameInIntrLanguage);
+
+		if (newTestSuiteNode == null) {
+			newTestSuiteNode = new TestSuiteNode(newNameInIntrLanguage, getModelChangeRegistrator());
+			methodNode.addTestSuite(newTestSuiteNode);
+		}
+
+		newTestSuiteNode.addTestCase(this);
+	}
+
+	private void processOldTestSuite(MethodNode methodNode) {
+		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(getName());
+
+		if (oldTestSuiteNode == null) {
+			ExceptionHelper.reportRuntimeException("Cannot find parent test suite.");
+		}
+
+		oldTestSuiteNode.removeTestCase(this);
+
+		if (oldTestSuiteNode.getTestCaseNodes().isEmpty()) {
+			methodNode.removeTestSuite(oldTestSuiteNode);
+		}
+	}
+
 	@Override
 	public int getMyIndex(){
 		if(getMethod() == null){
