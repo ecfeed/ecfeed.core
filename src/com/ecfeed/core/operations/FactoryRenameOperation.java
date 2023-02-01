@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.operations.nodes.OnTestCaseOperatopRename;
 import com.ecfeed.core.utils.*;
 
 public class FactoryRenameOperation {
@@ -326,7 +327,7 @@ public class FactoryRenameOperation {
 
 		@Override
 		public Object visit(TestCaseNode node) throws Exception {
-			return new GenericOperationRename(node, fNewPackageName, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
+			return new OnTestCaseOperatopRename(node, fNewNonQualifiedNameInExtLanguage, fExtLanguageManager);
 		}
 
 		@Override

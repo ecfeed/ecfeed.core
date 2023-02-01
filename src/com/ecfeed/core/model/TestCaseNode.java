@@ -31,6 +31,12 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
+	public void setName(String nameInIntrLanguage) {
+		
+		
+	}
+	
+	@Override
 	public int getMyIndex(){
 		if(getMethod() == null){
 			return -1;
