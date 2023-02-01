@@ -134,31 +134,22 @@ public class BasicParameterNodeHelper {
 			String parameterNameToFindInIntrLanguage, 
 			IParametersParentNode parametersParentNode) {
 		
-		return findParameterByQualifiedNameRecursive(
-				parameterNameToFindInIntrLanguage, parametersParentNode);
+		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
 	}
 	
-	private static BasicParameterNode findParameterByQualifiedNameRecursive(
-			String parameterNameToFindInIntrLanguage,
-			IParametersParentNode parametersParentNode) {
+	private static BasicParameterNode findParameterByQualifiedNameRecursive(String parameterName, IAbstractNode parameterParent) {
 		
-		String[] elements = parameterNameToFindInIntrLanguage.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 
-		IAbstractNode parameter = null;
-		
-		if (parametersParentNode instanceof MethodNode) {
-			parameter = parametersParentNode.findParameter(elements[0]);
-		} 
-		
-		if (parameter == null) {
-			parameter = parametersParentNode.getRoot().getChild(elements[0]);
+		while (parameterParent.getChild(segments[0]) == null || !(parameterParent instanceof MethodNode || parameterParent instanceof ClassNode || parameterParent instanceof RootNode)) {
+			parameterParent = (IParametersParentNode) parameterParent.getParent();
 		}
 		
-		for (int i = 1 ; i < elements.length ; i++) {
-			parameter = ((IParametersParentNode) parameter).findParameter(elements[i]);
+		for (int i = 0 ; i < segments.length ; i++) {
+			parameterParent = parameterParent.getChild(segments[i]);
 		}
 		
-		return (BasicParameterNode) parameter;
+		return (BasicParameterNode) parameterParent;
 	}
 
 	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {

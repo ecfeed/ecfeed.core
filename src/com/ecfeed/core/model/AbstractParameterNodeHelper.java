@@ -48,16 +48,12 @@ public abstract class AbstractParameterNodeHelper {
 			
 			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
 			
-			if (parametersParentNode == null || parametersParentNode instanceof MethodNode || parametersParentNode instanceof RootNode) {
-				return compositeName;
-			}
-			
 			if (parametersParentNode instanceof CompositeParameterNode) {
 				currentParameterNode = (AbstractParameterNode) parametersParentNode;
 				continue;
 			}
 			
-			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
+			return compositeName;
 		}
 	}
 	
