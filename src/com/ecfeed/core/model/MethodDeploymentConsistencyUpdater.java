@@ -91,12 +91,15 @@ public class MethodDeploymentConsistencyUpdater {
 	}
 
 	private static int getNestedSize(AbstractParameterNode parameter, int size) {
-
+		
 		if (parameter instanceof BasicParameterNode) {
 			size++;
-		}
-
-		if (parameter instanceof CompositeParameterNode) {
+		} else if (parameter instanceof CompositeParameterNode) {
+			
+			if (parameter.isLinked() && (parameter.getLinkToGlobalParameter() != null)) {
+				parameter = parameter.getLinkToGlobalParameter();
+			}
+			
 			List<AbstractParameterNode> parameters = ((CompositeParameterNode) parameter).getParameters();
 
 			for (AbstractParameterNode parameterNested : parameters) {

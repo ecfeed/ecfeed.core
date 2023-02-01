@@ -439,13 +439,17 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 	}
 
 	private BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
-
-		IAbstractNode parameter = parameterParent;
-		for (String segment : parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
-			parameter = parameter.getChild(segment);
+		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+		
+		while (parameterParent.getChild(segments[0]) == null) {
+			parameterParent = parameterParent.getParent();
+		}
+		
+		for (String segment : segments) {
+			parameterParent = parameterParent.getChild(segment);
 		}
 
-		return (BasicParameterNode) parameter;
+		return (BasicParameterNode) parameterParent;
 	}
 
 }

@@ -107,7 +107,12 @@ public class BasicParameterNodeHelper {
 		for (AbstractParameterNode abstractParameterNode : abstractParameters) {
 			
 			if (abstractParameterNode instanceof CompositeParameterNode) {
-				accumulateBasicParametersRecursively((IParametersParentNode)abstractParameterNode, inOutResult);
+				
+				if (abstractParameterNode.isLinked() && (abstractParameterNode.getLinkToGlobalParameter() != null)) {
+					accumulateBasicParametersRecursively((IParametersParentNode)abstractParameterNode.getLinkToGlobalParameter(), inOutResult);
+				} else {
+					accumulateBasicParametersRecursively((IParametersParentNode)abstractParameterNode, inOutResult);
+				}
 			} else {
 				inOutResult.add((BasicParameterNode) abstractParameterNode);
 			}

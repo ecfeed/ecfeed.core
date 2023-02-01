@@ -288,11 +288,11 @@ public abstract class XomBuilder implements IModelVisitor {
 	public Element createDeployedParameter(BasicParameterNode parameterNode) {
 		Element targetParamElement;
 
-		if (parameterNode.isGlobalParameter()) {
-			targetParamElement = createTargetGlobalDeployedParameterElement(parameterNode);
-		} else {
+//		if (parameterNode.isGlobalParameter()) {
+//			targetParamElement = createTargetGlobalDeployedParameterElement(parameterNode);
+//		} else {
 			targetParamElement = createTargetDeployedParameterElement(parameterNode);
-		}
+//		}
 
 		return targetParamElement;
 	}
@@ -414,16 +414,16 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetGlobalBasicParamElement;
 	}
 
-	private Element createTargetGlobalDeployedParameterElement(BasicParameterNode node) {
-		Element targetGlobalBasicParamElement = createAbstractElement(getBasicParameterNodeName(), node);
-
-		encodeAndAddAttribute(
-				targetGlobalBasicParamElement,
-				new Attribute(TYPE_NAME_ATTRIBUTE, node.getType()),
-				fWhiteCharConverter);
-
-		return targetGlobalBasicParamElement;
-	}
+//	private Element createTargetGlobalDeployedParameterElement(BasicParameterNode node) {
+//		Element targetGlobalBasicParamElement = createAbstractElement(getBasicParameterNodeName(), node);
+//
+//		encodeAndAddAttribute(
+//				targetGlobalBasicParamElement,
+//				new Attribute(TYPE_NAME_ATTRIBUTE, node.getType()),
+//				fWhiteCharConverter);
+//
+//		return targetGlobalBasicParamElement;
+//	}
 
 	private Element createTargetGlobalCompositeParameterElement(CompositeParameterNode node) {
 		Element targetGlobalParamElement = createAbstractElement(getCompositeParameterNodeName(), node);

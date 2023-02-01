@@ -208,7 +208,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		LinkedList<String> prefixes = new LinkedList<>();
 
-		while (parameter.getParent() != fConstraintParent) {
+		while ((parameter.getParent() != fConstraintParent) && (parameter.getParent() != parameter.getRoot())) {
 			parameter = parameter.getParent();
 			prefixes.addFirst(parameter.getName());
 		}
