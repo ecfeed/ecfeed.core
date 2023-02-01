@@ -234,37 +234,43 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public void addTestSuite(TestSuiteNode testSuite) { // TODO MO-RE private ?
+	public void addTestSuite(TestSuiteNode testSuite) {
 		addTestSuite(testSuite, fTestSuiteNodes.size());
 	}
 
-	public void addTestSuite(TestSuiteNode testCase, int index) { // TODO MO-RE private ?
+	public void addTestSuite(TestSuiteNode testCase, int index) {
+		testCase.setParent(this);
 		fTestSuiteNodes.add(index, testCase);
 		registerChange();
 	}
-	
-	public void addTestCase(TestCaseNode testCaseNode, int index) {
-		
+
+	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {
+
 		String testSuiteName = testCaseNode.getName();
 
 		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
 
 		if (testSuiteNode == null) {
 			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
-			addTestSuite(testSuiteNode);
+
+			if (indexOfNewTestCase.isPresent()) {
+				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
+			} else {
+				addTestSuite(testSuiteNode);
+			}
 		}
 
 		testSuiteNode.addTestCase(testCaseNode);
-		
+
 		fTestCaseNodes.add(index, testCaseNode);
 		testCaseNode.setParent(this);
-		
+
 		registerChange();
 	}
 
-	public void addTestCase(TestCaseNode testCaseNode){
+	public void addTestCase(TestCaseNode testCaseNode) {
 
-		addTestCase(testCaseNode, fTestCaseNodes.size());
+		addTestCase(testCaseNode, fTestCaseNodes.size(), Optional.empty());
 	}
 
 	public boolean removeTestCase(TestCaseNode testCaseNode) {
@@ -303,6 +309,17 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 
 		return null;
+	}
+
+	public int findTestSuiteIndex(String testSuiteName) {
+		
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+		
+		if (testSuiteNode == null) {
+			return -1;
+		}
+		
+		return testSuiteNode.getMyIndex();
 	}
 
 

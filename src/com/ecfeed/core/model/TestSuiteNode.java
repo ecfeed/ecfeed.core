@@ -70,9 +70,29 @@ public class TestSuiteNode extends AbstractNode {
 	//		fTestCaseNodes = new ArrayList<>();
 	//	}
 
+	@Override
 	public String toString() {
 		return getName();
 	}
+	
+	@Override
+	public int getMyIndex() {
+
+		IAbstractNode parent = getParent();
+
+		if (parent == null) {
+			return -1;
+		}
+
+		if (!(parent instanceof MethodNode)) {
+			return -1;
+		}
+		
+		MethodNode methodNode = (MethodNode) parent;
+		
+		return methodNode.getTestSuites().indexOf(this);
+	}
+	
 
 	public void setDisplayLimitExceededFlag(boolean displayLimitExceeded) {
 		fDisplayLimitExceeded  = displayLimitExceeded;

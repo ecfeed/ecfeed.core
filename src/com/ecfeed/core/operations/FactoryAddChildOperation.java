@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.Optional;
+
 import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
@@ -117,7 +119,8 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		}
 
 		if (fChild instanceof TestCaseNode) {
-			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
+			return new OnTestCaseOperationAddToMethod(
+					node, (TestCaseNode)fChild, fAdapterProvider, fIndex, Optional.empty(), fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();

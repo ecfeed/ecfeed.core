@@ -12,6 +12,9 @@ package com.ecfeed.core.operations.nodes;
 
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
+
+import java.util.Optional;
+
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
@@ -31,6 +34,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 	private MethodNode fMethodNode;
 	private TestCaseNode fTestCaseNode;
 	private int fIndex;
+	private Optional<Integer> fIndexOfTestSuite;
 	private ITypeAdapterProvider fTypeAdapterProvider;
 
 	public OnTestCaseOperationAddToMethod(
@@ -38,12 +42,14 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 			TestCaseNode testCaseNode, 
 			ITypeAdapterProvider typeAdapterProvider, 
 			int index,
+			Optional<Integer> indexOfTestSuite,
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.ADD_TEST_CASE, extLanguageManager);
 		fMethodNode = methodNode;
 		fTestCaseNode = testCaseNode;
 		fIndex = index;
+		fIndexOfTestSuite = indexOfTestSuite;
 		fTypeAdapterProvider = typeAdapterProvider;
 	}
 
@@ -53,7 +59,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 			ITypeAdapterProvider typeAdapterProvider, 
 			IExtLanguageManager extLanguageManager) {
 
-		this(target, testCase, typeAdapterProvider, -1, extLanguageManager);
+		this(target, testCase, typeAdapterProvider, -1, Optional.empty(), extLanguageManager);
 	}
 
 	@Override
@@ -101,7 +107,7 @@ public class OnTestCaseOperationAddToMethod extends AbstractModelOperation {
 			}
 		}
 
-		fMethodNode.addTestCase(fTestCaseNode, fIndex);
+		fMethodNode.addTestCase(fTestCaseNode, fIndex, fIndexOfTestSuite);
 
 		markModelUpdated();
 	}
