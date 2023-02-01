@@ -142,7 +142,11 @@ public class BasicParameterNodeHelper {
 		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 
 		while (parameterParent.getChild(segments[0]) == null || !(parameterParent instanceof MethodNode || parameterParent instanceof ClassNode || parameterParent instanceof RootNode)) {
-			parameterParent = (IParametersParentNode) parameterParent.getParent();
+			parameterParent = parameterParent.getParent();
+
+			if (parameterParent == null) {
+				return null;
+			}
 		}
 		
 		for (int i = 0 ; i < segments.length ; i++) {
