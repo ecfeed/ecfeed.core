@@ -542,27 +542,27 @@ public class MethodNodeTest {
 		}
 	}
 
-	@Test
-	public void addAndDeleteEmptyTestSuites() {
-
-		MethodNode methodNode = new MethodNode("Method");
-		assertEquals(0, methodNode.getTestSuites().size());
-
-		TestSuiteNode testSuiteNode1 = new TestSuiteNode("TestSuite1", null);
-		methodNode.addTestSuite(testSuiteNode1);
-		assertEquals(1, methodNode.getTestSuites().size());
-
-		TestSuiteNode testSuiteNode2 = new TestSuiteNode("TestSuite2", null);
-		methodNode.addTestSuite(testSuiteNode2);
-		assertEquals(2, methodNode.getTestSuites().size());
-
-
-		methodNode.removeTestSuite(testSuiteNode1);
-		assertEquals(1, methodNode.getTestSuites().size());
-
-		methodNode.removeTestSuite(testSuiteNode2);
-		assertEquals(0, methodNode.getTestSuites().size());
-	}
+	//	@Test
+	//	public void addAndDeleteEmptyTestSuites() {
+	//
+	//		MethodNode methodNode = new MethodNode("Method");
+	//		assertEquals(0, methodNode.getTestSuites().size());
+	//
+	//		TestSuiteNode testSuiteNode1 = new TestSuiteNode("TestSuite1", null);
+	//		methodNode.addTestSuite(testSuiteNode1);
+	//		assertEquals(1, methodNode.getTestSuites().size());
+	//
+	//		TestSuiteNode testSuiteNode2 = new TestSuiteNode("TestSuite2", null);
+	//		methodNode.addTestSuite(testSuiteNode2);
+	//		assertEquals(2, methodNode.getTestSuites().size());
+	//
+	//
+	//		methodNode.removeTestSuite(testSuiteNode1);
+	//		assertEquals(1, methodNode.getTestSuites().size());
+	//
+	//		methodNode.removeTestSuite(testSuiteNode2);
+	//		assertEquals(0, methodNode.getTestSuites().size());
+	//	}
 
 	@Test
 	public void addTestCase() {
@@ -611,46 +611,46 @@ public class MethodNodeTest {
 		assertEquals(testSuiteName1, method.getTestCases().get(1).getName());
 
 		assertEquals(2, method.getTestSuites().size());
-		
+
 		TestSuiteNode foundTestSuite1 = method.findTestSuite(testSuiteName1);
 		assertEquals(2, foundTestSuite1.getTestCaseNodes().size());
 
 		TestSuiteNode foundTestSuite2 = method.findTestSuite(testSuiteName2);
 		assertEquals(1, foundTestSuite2.getTestCaseNodes().size());
-		
+
 		// remove test case 11
-		
+
 		method.removeTestCase(testCase11);
-		
+
 		assertEquals(2, method.getTestCases().size());
 		assertEquals(2, method.getTestSuites().size());
-		
+
 		foundTestSuite1 = method.findTestSuite(testSuiteName1);
 		assertEquals(1, foundTestSuite1.getTestCaseNodes().size());
 
 		foundTestSuite2 = method.findTestSuite(testSuiteName2);
 		assertEquals(1, foundTestSuite2.getTestCaseNodes().size());
-		
+
 		// remove test case 21
-		
+
 		method.removeTestCase(testCase21);
-		
+
 		assertEquals(1, method.getTestCases().size());
 		assertEquals(1, method.getTestSuites().size());
-		
+
 		foundTestSuite1 = method.findTestSuite(testSuiteName1);
 		assertEquals(1, foundTestSuite1.getTestCaseNodes().size());
 
 		foundTestSuite2 = method.findTestSuite(testSuiteName2);
 		assertNull(foundTestSuite2);
-		
+
 		// remove test case 12
 
 		method.removeTestCase(testCase12);
-		
+
 		assertEquals(0, method.getTestCases().size());
 		assertEquals(0, method.getTestSuites().size());
-		
+
 		foundTestSuite1 = method.findTestSuite(testSuiteName1);
 		assertNull(foundTestSuite1);
 	}

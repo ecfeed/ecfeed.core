@@ -312,13 +312,13 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 	}
 
 	public int findTestSuiteIndex(String testSuiteName) {
-		
+
 		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
-		
+
 		if (testSuiteNode == null) {
 			return -1;
 		}
-		
+
 		return testSuiteNode.getMyIndex();
 	}
 
@@ -499,8 +499,8 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 	public void removeTestSuite(TestSuiteNode testSuite) {
 
-		String testSuiteName = testSuite.getName();
-		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));
+		//		String testSuiteName = testSuite.getName();
+		//		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));
 
 		fTestSuiteNodes.remove(testSuite);
 		registerChange();

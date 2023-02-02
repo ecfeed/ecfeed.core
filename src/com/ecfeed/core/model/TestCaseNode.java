@@ -54,10 +54,11 @@ public class TestCaseNode extends AbstractNode {
 
 		processNewTestSuite(newNameInIntrLanguage, methodNode);
 
-		setName(newNameInIntrLanguage);
+		super.setName(newNameInIntrLanguage);
 	}
 
 	private void processNewTestSuite(String newNameInIntrLanguage, MethodNode methodNode) {
+		
 		TestSuiteNode newTestSuiteNode = methodNode.findTestSuite(newNameInIntrLanguage);
 
 		if (newTestSuiteNode == null) {
@@ -69,6 +70,7 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	private void processOldTestSuite(MethodNode methodNode) {
+		
 		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(getName());
 
 		if (oldTestSuiteNode == null) {
