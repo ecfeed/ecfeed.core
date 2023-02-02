@@ -50,38 +50,17 @@ public class TestCaseNode extends AbstractNode {
 
 		MethodNode methodNode = (MethodNode) parent;
 
-		processOldTestSuite(methodNode);
-
-		processNewTestSuite(newNameInIntrLanguage, methodNode);
-
-		super.setName(newNameInIntrLanguage);
-	}
-
-	private void processNewTestSuite(String newNameInIntrLanguage, MethodNode methodNode) {
-		
-		TestSuiteNode newTestSuiteNode = methodNode.findTestSuite(newNameInIntrLanguage);
-
-		if (newTestSuiteNode == null) {
-			newTestSuiteNode = new TestSuiteNode(newNameInIntrLanguage, getModelChangeRegistrator());
-			methodNode.addTestSuite(newTestSuiteNode);
-		}
-
-		newTestSuiteNode.addTestCase(this);
-	}
-
-	private void processOldTestSuite(MethodNode methodNode) {
-		
-		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(getName());
-
-		if (oldTestSuiteNode == null) {
-			ExceptionHelper.reportRuntimeException("Cannot find parent test suite.");
-		}
-
+		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
 		oldTestSuiteNode.removeTestCase(this);
-
-		if (oldTestSuiteNode.getTestCaseNodes().isEmpty()) {
+		
+		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
 			methodNode.removeTestSuite(oldTestSuiteNode);
 		}
+
+		super.setName(newNameInIntrLanguage);
+		
+		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(newNameInIntrLanguage);
+		newTestSuiteNode.addTestCase(this);
 	}
 
 	@Override

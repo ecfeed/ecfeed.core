@@ -234,11 +234,22 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public void addTestSuite(TestSuiteNode testSuite) {
+	public TestSuiteNode provideValidTestSuiteNode(String newName) {
+		
+		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
+
+		if (newTestSuiteNode == null) {
+			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
+			addTestSuite(newTestSuiteNode);
+		}
+		return newTestSuiteNode;
+	}
+	
+	private void addTestSuite(TestSuiteNode testSuite) {
 		addTestSuite(testSuite, fTestSuiteNodes.size());
 	}
 
-	public void addTestSuite(TestSuiteNode testCase, int index) {
+	private void addTestSuite(TestSuiteNode testCase, int index) {
 		testCase.setParent(this);
 		fTestSuiteNodes.add(index, testCase);
 		registerChange();
@@ -273,7 +284,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		addTestCase(testCaseNode, fTestCaseNodes.size(), Optional.empty());
 	}
 
-	public boolean removeTestCase(TestCaseNode testCaseNode) {
+	public void removeTestCase(TestCaseNode testCaseNode) {
 
 		String testSuiteName = testCaseNode.getName();
 
@@ -290,10 +301,12 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 
 		testCaseNode.setParent(null);
-		boolean result = fTestCaseNodes.remove(testCaseNode);
+		
+		if (!fTestCaseNodes.remove(testCaseNode)) {
+			ExceptionHelper.reportRuntimeException("Cannot remove test case.");
+		}
 
 		registerChange();
-		return result;
 	}
 
 	public TestSuiteNode findTestSuite(String testSuiteName) {
@@ -497,7 +510,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return names;
 	}
 
-	public void removeTestSuite(TestSuiteNode testSuite) {
+	void removeTestSuite(TestSuiteNode testSuite) {
 
 		//		String testSuiteName = testSuite.getName();
 		//		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));

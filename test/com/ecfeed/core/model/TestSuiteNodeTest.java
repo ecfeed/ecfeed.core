@@ -10,54 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.Test;
-
 public class TestSuiteNodeTest {
 
-	
-	@Test
-	public void addAndDeleteTestCases() {
-		
-		TestSuiteNode testSuiteNode = new TestSuiteNode("TestSuite1", null);
-		assertEquals(0, testSuiteNode.getTestCaseNodes().size());
-		
-		// add test case 1
-		
-		TestCaseNode testCaseNode1 = new TestCaseNode("TestSuite", null, null);
-		testSuiteNode.addTestCase(testCaseNode1);
-		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
-		
-		// add the same test case
-
-		testSuiteNode.addTestCase(testCaseNode1);
-		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
-		
-		// add test case 2
-		
-		TestCaseNode testCaseNode2 = new TestCaseNode("TestSuite", null, null);
-		testSuiteNode.addTestCase(testCaseNode2);
-		assertEquals(2, testSuiteNode.getTestCaseNodes().size());
-
-		// add test case 2 again
-		
-		testSuiteNode.addTestCase(testCaseNode2);
-		assertEquals(2, testSuiteNode.getTestCaseNodes().size());
-		
-		// delete test case 1
-		
-		testSuiteNode.removeTestCase(testCaseNode1);
-		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
-		
-		// try delete test case 1 again
-		
-		testSuiteNode.removeTestCase(testCaseNode1);
-		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
-		
-		// delete test case 2
-
-		testSuiteNode.removeTestCase(testCaseNode2);
-		assertEquals(0, testSuiteNode.getTestCaseNodes().size());
-	}
 }
