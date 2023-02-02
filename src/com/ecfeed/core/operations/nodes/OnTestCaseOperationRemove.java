@@ -10,14 +10,14 @@
 
 package com.ecfeed.core.operations.nodes;
 
+import java.util.Optional;
+
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
-import com.ecfeed.core.type.adapter.ITypeAdapter;
-import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
-import com.ecfeed.core.utils.ERunMode;
+import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
 public class OnTestCaseOperationRemove extends AbstractModelOperation {
@@ -25,61 +25,17 @@ public class OnTestCaseOperationRemove extends AbstractModelOperation {
 	private MethodNode fMethodNode;
 	private TestCaseNode fTestCase;
 	private int fIndex;
+	private int fTestSuiteIndex;
 
-	private class DummyAdapterProvider implements ITypeAdapterProvider{
-
-		@Override
-		public ITypeAdapter<?> getAdapter(String type) {
-
-			return new ITypeAdapter<Object>() {
-				@Override
-				public boolean isNullAllowed() {
-					return false;
-				}
-				@Override
-				public String getDefaultValue() {
-					return null;
-				}
-				@Override
-				public String adapt(String value, boolean isRandomized, ERunMode conversionMode, IExtLanguageManager extLanguageManager) {
-					return value;
-				}
-				@Override
-				public Object generateValue(String range, String context) {
-					return null;
-				}
-				@Override
-				public String generateValueAsString(String range, String context) {
-					return null;
-				}
-				@Override
-				public boolean isRandomizable() {
-					return false;
-				}
-				@Override
-				public String getMyTypeName() {
-					return null;
-				}
-				@Override
-				public boolean isConvertibleTo(String type) {
-					return false;
-				}
-				@Override
-				public boolean canCovertWithoutLossOfData(String oldType, String value, boolean isRandomized) {
-					return false;
-				}
-			};
-		}
-
-	}
-
-	public OnTestCaseOperationRemove(MethodNode target, TestCaseNode testCase, IExtLanguageManager extLanguageManager) {
+	public OnTestCaseOperationRemove(
+			MethodNode target, TestCaseNode testCase, IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_TEST_CASE, extLanguageManager);
 
 		fMethodNode = target;
 		fTestCase = testCase;
 		fIndex = testCase.getMyIndex();
+		fTestSuiteIndex = fMethodNode.findTestSuiteIndex(testCase.getName());
 	}
 
 	@Override
@@ -92,7 +48,13 @@ public class OnTestCaseOperationRemove extends AbstractModelOperation {
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new OnTestCaseOperationAddToMethod(fMethodNode, fTestCase, new DummyAdapterProvider(), fIndex, getExtLanguageManager());
+		return new OnTestCaseOperationAddToMethod(
+				fMethodNode, 
+				fTestCase, 
+				new TypeAdapterProviderForJava(), 
+				fIndex, 
+				Optional.of(fTestSuiteIndex),
+				getExtLanguageManager());
 	}
 
 }

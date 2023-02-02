@@ -127,30 +127,4 @@ public class MethodDeploymentConsistencyUpdater {
 		return prefixParsed;
 	}
 
-	// TODO MO-RE do we need this ?
-	//	private static void validateDeploymentNameConsistency(MethodNode method) {
-	//
-	//		if (!method.isDeployed()) {
-	//			return;
-	//		}
-	//
-	//		List<BasicParameterNode> deployment = method.getDeployedMethodParameters();
-	//
-	//		if (deployment == null) {
-	//			return;
-	//		}
-	//
-	//		for (AbstractParameterNode parameter : deployment) {
-	//			String[] parameterCandidateSegments = parameter.getName().split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-	//
-	//			try {
-	//				AbstractParameterNode parameterCandidate = method.getParameter(method.getParameterIndex(parameterCandidateSegments[0]));
-	//				getNestedBasicParameter(parameterCandidate, parameterCandidateSegments, 1);
-	//			}
-	//			catch (Exception e) {
-	//				ExceptionHelper.reportRuntimeException("The method could not be serialized. At least one parameter is missing.");
-	//			}
-	//		}
-	//	}
-	
 }

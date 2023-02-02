@@ -90,15 +90,29 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		return true;
 	}
 
+	//	public String getQualifiedName() {
+	//
+	//		if (isGlobalParameter()) {
+	//
+	//			if (getParent() == getRoot() || getParent() == null) {
+	//				return getName();
+	//			}
+	//
+	//			return getParent().getName() + ":" + getName();
+	//		} else {
+	//
+	//			return getNonQualifiedName();
+	//		}
+	
 	public String getQualifiedName() { // TODO MO-RE remove
 		LinkedList<String> segments = new LinkedList<>();
 		IAbstractNode parent = this;
-			
+
 		do {
 			segments.addFirst(parent.getName());
 			parent = parent.getParent();
 		} while (parent != null && !(parent instanceof RootNode));
-			
+
 		return String.join(":", segments);
 	}
 

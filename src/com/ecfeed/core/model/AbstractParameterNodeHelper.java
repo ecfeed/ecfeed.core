@@ -30,8 +30,9 @@ public abstract class AbstractParameterNodeHelper {
 		return name;
 	}
 
-	public static String getCompositeName( // TODO MO-RE merge overloads into one function ? 
-			AbstractParameterNode abstractParameterNode) {
+	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
+
+//		return getCompositeName(abstractParameterNode, null);
 
 		AbstractParameterNode currentParameterNode = abstractParameterNode;
 		String compositeName = "";
@@ -66,8 +67,7 @@ public abstract class AbstractParameterNodeHelper {
 		
 		for (;;) {
 
-			String currentParameterNodeNameInExtLanguage = 
-					getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
+			String currentParameterNodeNameInExtLanguage = getParameterName(currentParameterNode, extLanguageManager);
 			
 			if (StringHelper.isNullOrEmpty(compositeName)) {
 				compositeName = currentParameterNodeNameInExtLanguage; 
@@ -77,7 +77,11 @@ public abstract class AbstractParameterNodeHelper {
 			
 			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
 			
-			if (parametersParentNode == null || parametersParentNode instanceof MethodNode || parametersParentNode instanceof ClassNode || parametersParentNode instanceof RootNode) {
+			if (parametersParentNode == null || 
+					parametersParentNode instanceof MethodNode || 
+					parametersParentNode instanceof ClassNode || 
+					parametersParentNode instanceof RootNode) {
+				
 				return compositeName;
 			}
 			
@@ -88,6 +92,16 @@ public abstract class AbstractParameterNodeHelper {
 			
 			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
 		}
+	}
+
+	private static String getParameterName(AbstractParameterNode currentParameterNode,
+			IExtLanguageManager extLanguageManager) {
+		
+		if (extLanguageManager == null) {
+			return currentParameterNode.getName();
+		}
+		
+		return getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
 	}
 
 	private static String getParameterNameInExtLanguage(

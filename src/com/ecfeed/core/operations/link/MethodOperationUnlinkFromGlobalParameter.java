@@ -11,7 +11,6 @@
 package com.ecfeed.core.operations.link;
 
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ListOfModelOperations;
 import com.ecfeed.core.model.ParameterTransformer;
 import com.ecfeed.core.operations.AbstractModelOperation;

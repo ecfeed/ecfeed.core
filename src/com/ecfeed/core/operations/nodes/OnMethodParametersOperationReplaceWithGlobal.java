@@ -11,6 +11,7 @@
 package com.ecfeed.core.operations.nodes;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNodeHelper;
@@ -66,7 +67,9 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 			}
 			for(TestCaseNode tc : method.getTestCases()){
 				TestCaseNode copy = tc.makeClone();
-				addOperation(new OnTestCaseOperationAddToMethod(method, copy, adapterProvider, tc.getMyIndex(), extLanguageManager));
+				addOperation(
+						new OnTestCaseOperationAddToMethod(
+								method, copy, adapterProvider, tc.getMyIndex(), Optional.empty(), extLanguageManager));
 			}
 		}
 

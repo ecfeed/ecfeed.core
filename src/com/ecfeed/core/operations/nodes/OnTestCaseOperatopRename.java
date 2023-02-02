@@ -10,37 +10,49 @@
 
 package com.ecfeed.core.operations.nodes;
 
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.RootNode;
+import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnClassOperationRemove extends AbstractModelOperation {
+public class OnTestCaseOperatopRename extends AbstractModelOperation {
 
-	private ClassNode fRemovedClass;
-	private RootNode fRootNode;
-	private int fCurrentIndex;
+	private TestCaseNode fTestCaseNode;
+	private String fNewName;
+	private String fOrginalName;
 
-	public OnClassOperationRemove(RootNode rootNode, ClassNode classNode, IExtLanguageManager extLanguageManager) {
-		super(OperationNames.REMOVE_CLASS, extLanguageManager);
-		fRootNode = rootNode;
-		fRemovedClass = classNode;
-		fCurrentIndex = classNode.getMyClassIndex();
+	public OnTestCaseOperatopRename(
+			TestCaseNode testCaseNode,
+			String newName,
+			IExtLanguageManager extLanguageManager) { // XYX need this ?
+
+		super(OperationNames.RENAME, extLanguageManager);
+
+		fTestCaseNode = testCaseNode;
+		fNewName = newName;
 	}
 
 	@Override
 	public void execute() {
-		setOneNodeToSelect(fRootNode);
-		fCurrentIndex = fRemovedClass.getMyClassIndex();
-		fRootNode.removeClass(fRemovedClass);
+
+		
+		setOneNodeToSelect(fTestCaseNode);
+		
+		fOrginalName = fTestCaseNode.getName();
+		fTestCaseNode.setName(fNewName);
+		
+		
+
 		markModelUpdated();
 	}
 
 	@Override
 	public IModelOperation getReverseOperation() {
-		return new OnClassOperationAddToRoot(fRootNode, fRemovedClass, fCurrentIndex, getExtLanguageManager());
+		return new OnTestCaseOperatopRename(
+				fTestCaseNode, 
+				fOrginalName,
+				getExtLanguageManager());
 	}
 
 }

@@ -31,7 +31,6 @@ import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
 import com.ecfeed.core.operations.nodes.OnTestCaseOperationRemove;
-import com.ecfeed.core.operations.nodes.OnTestSuiteOperationRemoveFromMethod;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
@@ -151,7 +150,9 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 		@Override
 		public Object visit(TestSuiteNode node) throws Exception {
-			return new OnTestSuiteOperationRemoveFromMethod(node.getMethod(), node, fExtLanguageManager);
+			ExceptionHelper.reportRuntimeException("Unexpected test suite removing operation.");
+			//return new OnTestSuiteOperationRemoveFromMethod(node.getMethod(), node, fExtLanguageManager);
+			return null;
 		}
 
 		@Override

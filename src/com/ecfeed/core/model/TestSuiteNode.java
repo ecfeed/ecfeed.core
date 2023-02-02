@@ -2,68 +2,97 @@ package com.ecfeed.core.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class TestSuiteNode extends AbstractNode {
-	private String fSuiteName;
-	private List<TestCaseNode> fTestCaseNodes;
-	private boolean fDisplayLimitExceeded;
+	private Set<TestCaseNode> fTestCaseNodes;
+	private boolean fDisplayLimitExceeded; // TODO MO-RE remove this flag (display does not belong here)
 
-	public TestSuiteNode(
-			String name, IModelChangeRegistrator modelChangeRegistrator, List<TestCaseNode> testCaseNodes) {
-
+	public TestSuiteNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 
-		String firstName = testCaseNodes.get(0).getName();
-
-		if (firstName == null) {
-			ExceptionHelper.reportRuntimeException("Empty test case name.");
+		if (StringHelper.isNullOrEmpty(name)) {
+			ExceptionHelper.reportRuntimeException("Empty test suite name.");
 		}
+
+		fTestCaseNodes = new HashSet<>();
+		fDisplayLimitExceeded = false;
+	}
+
+	public TestSuiteNode(
+			String name, 
+			Collection<TestCaseNode> testCaseNodes,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		this(name, modelChangeRegistrator);
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 
-			if (!StringHelper.isEqual(firstName, testCaseNode.getName())) {
+			String currentName = testCaseNode.getName();
+
+			if (!StringHelper.isEqual(name, currentName)) {
 				ExceptionHelper.reportRuntimeException("Inconsistent test case names.");
 			}
 		}
 
-		fTestCaseNodes = testCaseNodes;
+		fTestCaseNodes = new HashSet<>(testCaseNodes);
 	}
 
-	public TestSuiteNode(
-			String name, IModelChangeRegistrator modelChangeRegistrator, Collection<TestCaseNode> testCaseNodes) {
+	//	public TestSuiteNode(
+	//			String name, IModelChangeRegistrator modelChangeRegistrator, Collection<TestCaseNode> testCaseNodes) {
+	//
+	//		super(name, modelChangeRegistrator);
+	//
+	//		fTestCaseNodes = new HashSet<>(testCaseNodes);
+	//	}
 
-		super(name, modelChangeRegistrator);
+	//	public TestSuiteNode(List<TestCaseNode> testData) {
+	//		super("", null);
+	//
+	//		fTestCaseNodes = testData;
+	//	}
 
-		//fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
-		fTestCaseNodes = new ArrayList<>(testCaseNodes);
-	}
+	//	public TestSuiteNode(Collection<TestCaseNode> testData) {
+	//		super("", null);
+	//
+	//		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
+	//		fTestCaseNodes = new ArrayList<>(testData);
+	//	}
 
-	public TestSuiteNode(List<TestCaseNode> testData) {
-		super("", null);
+	//	public TestSuiteNode() {
+	//		super("", null);
+	//
+	//		fTestCaseNodes = new ArrayList<>();
+	//	}
 
-		fTestCaseNodes = testData;
-	}
-
-	public TestSuiteNode(Collection<TestCaseNode> testData) {
-		super("", null);
-
-		// fTestCaseNodes = testData.stream().collect(Collectors.toList()); TODO MO-RE use constructor
-		fTestCaseNodes = new ArrayList<>(testData);
-	}
-
-	public TestSuiteNode() {
-		super("", null);
-
-		fTestCaseNodes = new ArrayList<>();
-	}
-
+	@Override
 	public String toString() {
-		return fSuiteName;
+		return getName();
 	}
+	
+	@Override
+	public int getMyIndex() {
+
+		IAbstractNode parent = getParent();
+
+		if (parent == null) {
+			return -1;
+		}
+
+		if (!(parent instanceof MethodNode)) {
+			return -1;
+		}
+		
+		MethodNode methodNode = (MethodNode) parent;
+		
+		return methodNode.getTestSuites().indexOf(this);
+	}
+	
 
 	public void setDisplayLimitExceededFlag(boolean displayLimitExceeded) {
 		fDisplayLimitExceeded  = displayLimitExceeded;
@@ -74,9 +103,23 @@ public class TestSuiteNode extends AbstractNode {
 		return fDisplayLimitExceeded;
 	}
 
+	void addTestCase(TestCaseNode testCaseNode) {
+		
+		if (!StringHelper.isEqual(testCaseNode.getName(), this.getName())) {
+			ExceptionHelper.reportRuntimeException("Test case name does not match test suite name.");
+		}
+
+		fTestCaseNodes.add(testCaseNode);
+	}
+	
+	void removeTestCase(TestCaseNode testCaseNode) {
+
+		fTestCaseNodes.remove(testCaseNode);
+	}
+
 	public List<TestCaseNode> getTestCaseNodes() { 
 
-		return fTestCaseNodes;
+		return new ArrayList<>(fTestCaseNodes);
 	}
 
 	@Override
@@ -93,10 +136,7 @@ public class TestSuiteNode extends AbstractNode {
 	@Override
 	public List<IAbstractNode> getChildren() {
 
-		List<IAbstractNode> result = new ArrayList<>();
-		result.addAll(fTestCaseNodes);
-
-		return result;
+		return new ArrayList<>(fTestCaseNodes);
 	}
 
 	@Override
@@ -106,11 +146,11 @@ public class TestSuiteNode extends AbstractNode {
 	}
 
 	public void setSuiteName(String suiteName) {
-		fSuiteName = suiteName;
+		super.setName(suiteName);
 	}
 
 	public String getSuiteName() {
-		return fSuiteName;
+		return getName();
 	}
 
 	public TestSuiteNode getCopy(MethodNode method){
@@ -139,13 +179,8 @@ public class TestSuiteNode extends AbstractNode {
 
 	@Override
 	public TestSuiteNode makeClone() {
-		List<TestCaseNode> testdata = new ArrayList<>();
 
-		for(TestCaseNode choice : fTestCaseNodes) {
-			testdata.add(choice);
-		}
-
-		TestSuiteNode copy = new TestSuiteNode(this.getName(), getModelChangeRegistrator(), testdata);
+		TestSuiteNode copy = new TestSuiteNode(this.getName(), fTestCaseNodes, getModelChangeRegistrator());
 		copy.setProperties(getProperties());
 		return copy;
 	}

@@ -31,6 +31,39 @@ public class TestCaseNode extends AbstractNode {
 	}
 
 	@Override
+	public void setName(String newNameInIntrLanguage) {
+
+		if (newNameInIntrLanguage == null) {
+			ExceptionHelper.reportRuntimeException("Empty new test case name.");
+		}
+
+		if (newNameInIntrLanguage.equals(getName())) {
+			return;
+		}
+
+		IAbstractNode parent = getParent();
+
+		if (parent == null) {
+			super.setName(newNameInIntrLanguage);
+			return;
+		}
+
+		MethodNode methodNode = (MethodNode) parent;
+
+		TestSuiteNode oldTestSuiteNode = methodNode.findTestSuite(this.getName());
+		oldTestSuiteNode.removeTestCase(this);
+		
+		if (oldTestSuiteNode.getTestCaseNodes().size() == 0) {
+			methodNode.removeTestSuite(oldTestSuiteNode);
+		}
+
+		super.setName(newNameInIntrLanguage);
+		
+		TestSuiteNode newTestSuiteNode = methodNode.provideValidTestSuiteNode(newNameInIntrLanguage);
+		newTestSuiteNode.addTestCase(this);
+	}
+
+	@Override
 	public int getMyIndex(){
 		if(getMethod() == null){
 			return -1;
@@ -60,15 +93,9 @@ public class TestCaseNode extends AbstractNode {
 		return copy;
 	}
 
-	public TestCaseNode(String name, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) {
+	public TestCaseNode(String testSuiteName, IModelChangeRegistrator modelChangeRegistrator, List<ChoiceNode> testData) { // TODO MO-RE registrator as last parameter
 
-		super(name, modelChangeRegistrator);
-		fTestData = testData;
-	}
-
-	public TestCaseNode(List<ChoiceNode> testData) {
-
-		super("", null);
+		super(testSuiteName, modelChangeRegistrator);
 		fTestData = testData;
 	}
 
@@ -254,7 +281,7 @@ public class TestCaseNode extends AbstractNode {
 		return new TestCase(fTestData);
 	}
 
-	public void updateChoiceReferences(
+	public void updateChoiceReferences( // TODO MO-RE do we need this ?
 			ChoiceNode oldChoiceNode, ChoiceNode newChoiceNode) {
 
 		int index = 0;

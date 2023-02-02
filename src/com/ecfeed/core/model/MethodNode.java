@@ -110,28 +110,9 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		}
 	}
 
-	public List<String> getParameterTypes() { // TODO MO-RE move to IParametersParant
+	public List<String> getParameterTypes() {
 
-		List<String> parameterTypes = new ArrayList<String>();
-
-		List<AbstractParameterNode> parameters = getParameters();
-
-		for (AbstractParameterNode abstractParameterNode : parameters) {
-
-			if (abstractParameterNode instanceof BasicParameterNode) {
-
-				BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
-
-				String parameterType = methodParameterNode.getType();
-				parameterTypes.add(parameterType);
-
-			} else {
-
-				parameterTypes.add(CompositeParameterNode.COMPOSITE_PARAMETER_TYPE);
-			}
-		}
-
-		return parameterTypes;
+		return ParametersParentNodeHelper.getParameterTypes(getParameters());
 	}
 
 	@Override
@@ -236,11 +217,6 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return sibling;
 	}
 
-	public boolean checkDuplicate() { // TODO MO-RE remove ? no check of duplicates (when unique function name) ??
-		return getSibling() != null;
-	}
-
-	@Override
 	public void addConstraint(ConstraintNode constraint) {
 
 		fConstraintNodeListHolder.addConstraint(constraint, this);
@@ -258,24 +234,107 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return fConstraintNodeListHolder.removeConstraint(constraint);
 	}
 
-	public void addTestSuite(TestSuiteNode testSuite) {
+	public TestSuiteNode provideValidTestSuiteNode(String newName) {
+		
+		TestSuiteNode newTestSuiteNode = findTestSuite(newName);
+
+		if (newTestSuiteNode == null) {
+			newTestSuiteNode = new TestSuiteNode(newName, getModelChangeRegistrator());
+			addTestSuite(newTestSuiteNode);
+		}
+		return newTestSuiteNode;
+	}
+	
+	private void addTestSuite(TestSuiteNode testSuite) {
 		addTestSuite(testSuite, fTestSuiteNodes.size());
 	}
 
-	public void addTestSuite(TestSuiteNode testCase, int index) {
+	private void addTestSuite(TestSuiteNode testCase, int index) {
+		testCase.setParent(this);
 		fTestSuiteNodes.add(index, testCase);
 		registerChange();
 	}
 
-	public void addTestCase(TestCaseNode testCase){
-		addTestCase(testCase, fTestCaseNodes.size());
-	}
+	public void addTestCase(TestCaseNode testCaseNode, int index, Optional<Integer> indexOfNewTestCase) {
 
-	public void addTestCase(TestCaseNode testCase, int index) {
-		fTestCaseNodes.add(index, testCase);
-		testCase.setParent(this);
+		String testSuiteName = testCaseNode.getName();
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			testSuiteNode = new TestSuiteNode(testSuiteName, getModelChangeRegistrator());
+
+			if (indexOfNewTestCase.isPresent()) {
+				addTestSuite(testSuiteNode, indexOfNewTestCase.get());
+			} else {
+				addTestSuite(testSuiteNode);
+			}
+		}
+
+		testSuiteNode.addTestCase(testCaseNode);
+
+		fTestCaseNodes.add(index, testCaseNode);
+		testCaseNode.setParent(this);
+
 		registerChange();
 	}
+
+	public void addTestCase(TestCaseNode testCaseNode) {
+
+		addTestCase(testCaseNode, fTestCaseNodes.size(), Optional.empty());
+	}
+
+	public void removeTestCase(TestCaseNode testCaseNode) {
+
+		String testSuiteName = testCaseNode.getName();
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			ExceptionHelper.reportRuntimeException("Non existing test suite.");
+		}
+
+		testSuiteNode.removeTestCase(testCaseNode);
+
+		if (testSuiteNode.getTestCaseNodes().size() == 0) {
+			removeTestSuite(testSuiteNode);
+		}
+
+		testCaseNode.setParent(null);
+		
+		if (!fTestCaseNodes.remove(testCaseNode)) {
+			ExceptionHelper.reportRuntimeException("Cannot remove test case.");
+		}
+
+		registerChange();
+	}
+
+	public TestSuiteNode findTestSuite(String testSuiteName) {
+
+		if (testSuiteName == null) {
+			ExceptionHelper.reportRuntimeException("Empty test suite name.");
+		}
+
+		for (TestSuiteNode testSuiteNode : fTestSuiteNodes) {
+			if (testSuiteName.equals(testSuiteNode.getName())) {
+				return testSuiteNode; 
+			}
+		}
+
+		return null;
+	}
+
+	public int findTestSuiteIndex(String testSuiteName) {
+
+		TestSuiteNode testSuiteNode = findTestSuite(testSuiteName);
+
+		if (testSuiteNode == null) {
+			return -1;
+		}
+
+		return testSuiteNode.getMyIndex();
+	}
+
 
 	public ClassNode getClassNode() {
 		return (ClassNode)getParent();
@@ -451,17 +510,10 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 		return names;
 	}
 
-	public boolean removeTestCase(TestCaseNode testCase) {
-		testCase.setParent(null);
-		boolean result = fTestCaseNodes.remove(testCase);
-		registerChange();
-		return result;
-	}
+	void removeTestSuite(TestSuiteNode testSuite) {
 
-	public void removeTestSuite(TestSuiteNode testSuite) {
-
-		String testSuiteName = testSuite.getName();
-		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));
+		//		String testSuiteName = testSuite.getName();
+		//		fTestCaseNodes.removeIf(e -> testSuiteName.equals(e.getName()));
 
 		fTestSuiteNodes.remove(testSuite);
 		registerChange();

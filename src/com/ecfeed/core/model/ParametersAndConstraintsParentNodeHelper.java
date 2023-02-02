@@ -163,7 +163,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 			IParametersParentNode parametersParentNode, String name, String type) {
 
 		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, "0", false, null);
-		
+
 		parametersParentNode.addParameter(methodParameterNode);
 
 		return methodParameterNode;
@@ -171,15 +171,15 @@ public class ParametersAndConstraintsParentNodeHelper {
 
 	public static CompositeParameterNode addCompositeParameterToMethod(
 			MethodNode methodNode, String compositeParameterName) {
-		
+
 		CompositeParameterNode compositeMethodParameterNode2 = 
 				new CompositeParameterNode(compositeParameterName, null);
 
 		methodNode.addParameter(compositeMethodParameterNode2);
-		
+
 		return compositeMethodParameterNode2;
 	}
-	
+
 	public static BasicParameterNode addLinkedParameterToMethod(
 			IParametersParentNode parametersParentNode, String name, String type, AbstractParameterNode linkToGlobalParameter) {
 
@@ -204,7 +204,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 			AbstractParameterNode.ParameterType parameterType,
 			IExtLanguageManager extLanguageManager) {
 
-		// TODO MO-RE divide into composite parameter helper and method node helper ? or rename method node helper
 		String name = ParametersAndConstraintsParentNodeHelper.generateNewParameterName(parametersParentNode);
 
 		IModelChangeRegistrator modelChangeRegistrator = parametersParentNode.getModelChangeRegistrator();

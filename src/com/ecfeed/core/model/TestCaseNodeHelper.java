@@ -124,7 +124,7 @@ public class TestCaseNodeHelper {
 			newTestCase.add(newChoiceNode);
 		}
 
-		TestCaseNode testCaseNode = new TestCaseNode(newTestCase.getListOfChoiceNodes());
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, newTestCase.getListOfChoiceNodes());
 		testCaseNode.setParent(methodNode);
 
 		for (ChoiceNode choiceNode : testCaseNode.getTestData()) {

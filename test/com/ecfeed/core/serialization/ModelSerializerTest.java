@@ -71,7 +71,7 @@ public class ModelSerializerTest {
 	}
 
 	private void classSerializerTest(boolean runOnAndroid, String androidBaseRunner, int version){
-		ClassNode classNode = new ClassNode("com.example.TestClass", null, runOnAndroid, androidBaseRunner);
+		ClassNode classNode = new ClassNode("com.example.TestClass", null);
 		classNode.addMethod(new MethodNode("testMethod1", null));
 		classNode.addMethod(new MethodNode("testMethod2", null));
 		classNode.addParameter(new BasicParameterNode("parameter1", "int", null));
@@ -132,7 +132,7 @@ public class ModelSerializerTest {
 		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
 		methodNode.addConstraint(constraintNode);
 
-		ClassNode classNode = new ClassNode("com.example.TestClass", null, false, null);
+		ClassNode classNode = new ClassNode("com.example.TestClass", null);
 		classNode.addMethod(methodNode);
 
 		RootNode model = new RootNode("model", null, version);

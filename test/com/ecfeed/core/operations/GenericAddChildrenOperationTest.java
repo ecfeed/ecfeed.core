@@ -31,6 +31,7 @@ import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.model.TestCaseNode;
+import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
@@ -358,23 +359,29 @@ public class GenericAddChildrenOperationTest {
 		// add test case 1
 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-		TestCaseNode testCaseNode1 = new TestCaseNode(choicesOfTestCase);
+		String testSuiteName = "TestSuite";
+		
+		TestCaseNode testCaseNode1 = new TestCaseNode(testSuiteName, null, choicesOfTestCase);
 
 		GenericAddChildrenOperation genericAddChildrenOperation1 = 
 				createAddingNodeOperation(methodNode, testCaseNode1, 0 );
 		genericAddChildrenOperation1.execute();
 
 		assertEquals(1, methodNode.getTestCases().size());
+		assertEquals(1, methodNode.getTestSuites().size());
+		TestSuiteNode testSuiteNode = methodNode.findTestSuite(testSuiteName);
+		assertEquals(1, testSuiteNode.getTestCaseNodes().size());
 
 		// add test case 2
 
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode(testSuiteName, null, choicesOfTestCase);
 
 		GenericAddChildrenOperation genericAddChildrenOperation2 = 
 				createAddingNodeOperation(methodNode, testCaseNode, 0 );
 		genericAddChildrenOperation2.execute();
-
+		
 		assertEquals(2, methodNode.getTestCases().size());
+		assertEquals(2,testSuiteNode.getTestCaseNodes().size());
 
 		// reverse operation2
 
@@ -415,7 +422,7 @@ public class GenericAddChildrenOperationTest {
 
 		// test case 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// add composite parameter 1
@@ -483,7 +490,7 @@ public class GenericAddChildrenOperationTest {
 
 		// test case 
 		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1});
-		TestCaseNode testCaseNode = new TestCaseNode(choicesOfTestCase);
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
 		methodNode.addTestCase(testCaseNode);
 
 		// composite parameter 1
