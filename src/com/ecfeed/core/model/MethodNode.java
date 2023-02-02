@@ -302,9 +302,7 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		testCaseNode.setParent(null);
 		
-		if (!fTestCaseNodes.remove(testCaseNode)) {
-			ExceptionHelper.reportRuntimeException("Cannot remove test case.");
-		}
+		fTestCaseNodes.remove(testCaseNode);
 
 		registerChange();
 	}
