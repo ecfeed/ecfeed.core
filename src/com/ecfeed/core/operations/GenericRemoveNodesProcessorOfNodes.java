@@ -55,7 +55,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 				fAffectedNodesByType,
 				extLanguageManager, 
 				validate);
-		
+
 		if (fAffectedNodesByType.getTestSuiteNodes().size() > 0) {
 			ExceptionHelper.reportRuntimeException("Test suites not expected.");
 		}
@@ -213,7 +213,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 
 		processLocalBasicChildrenOfCompositeParameters(compositeParameters,	inOutAffectedNodes);
 
-		processLocalCompositeParameters(compositeParameters, inOutAffectedNodes);
+		processLocalAndGlobalCompositeParameters(compositeParameters, inOutAffectedNodes);
 	}
 
 	private static void processLocalBasicChildrenOfCompositeParameters(
@@ -237,15 +237,12 @@ public class GenericRemoveNodesProcessorOfNodes {
 		}
 	}
 
-	private static void processLocalCompositeParameters(
+	private static void processLocalAndGlobalCompositeParameters(
 			Set<CompositeParameterNode> compositeParameters,
 			NodesByType inOutAffectedNodes) {
 
 		for (CompositeParameterNode compositeParameterNode : compositeParameters) {
-
-			if (!compositeParameterNode.isGlobalParameter()) {
-				inOutAffectedNodes.addNode(compositeParameterNode);
-			}
+			inOutAffectedNodes.addNode(compositeParameterNode);
 		}
 	}
 
@@ -286,16 +283,16 @@ public class GenericRemoveNodesProcessorOfNodes {
 	}
 
 	private static void processTestSuites(Set<TestSuiteNode> testSuiteNodes, NodesByType inOutAffectedNodes) {
-		
+
 		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
 			addTestCasesOfTestSuite(testSuiteNode, inOutAffectedNodes);
 		}
 	}
 
 	private static void addTestCasesOfTestSuite(TestSuiteNode testSuiteNode, NodesByType inOutAffectedNodes) {
-		
+
 		List<TestCaseNode> testCaseNodes = testSuiteNode.getTestCaseNodes();
-		
+
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 			inOutAffectedNodes.addNode(testCaseNode);
 		}
