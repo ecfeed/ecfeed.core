@@ -41,7 +41,7 @@ import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 public class GenericRemoveNodesOperationTest {
 
 	@Test
-	public void removeClassWithoutChildren() {
+	public void classWithoutChildrenRemove() {
 
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode classNode = new ClassNode("Class", null);
@@ -67,7 +67,7 @@ public class GenericRemoveNodesOperationTest {
 	// TODO MO-RE remove class with method and parameter
 
 	@Test
-	public void removeMethods() {
+	public void methodsRemove() {
 
 		RootNode rootNode = new RootNode("Root", null);
 		ClassNode classNode = new ClassNode("Class", null);
@@ -106,7 +106,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeBasicParameterOfMethod() {
+	public void basicParameterRemoveFromMethod() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -189,7 +189,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeBasicParameterOfNestedStructure() {
+	public void basicParameterRemoveFromNestedStructure() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -281,7 +281,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeBasicParameterGlobal() {
+	public void basicParameterGlobalRemove() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -378,7 +378,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeCompositeParameterLocal() {
+	public void compositeParameterLocalRemove() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -475,7 +475,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeCompositeParameterGlobalTrivialCase() {
+	public void compositeParameterGlobalRemoveTrivialCase() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -504,7 +504,7 @@ public class GenericRemoveNodesOperationTest {
 
 
 	@Test
-	public void removeChoiceNodeOfMethodBasicParameter() {
+	public void choiceNodeRemoveFromMethodBasicParameter() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -592,7 +592,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeChoiceNodeOfCompositeParameter() {
+	public void choiceNodeRemoveFromCompositeParameter() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -687,7 +687,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeConstraint() {
+	public void constraintRemoveFromMethod() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -736,7 +736,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeTestCases() {
+	public void testCasesRemove() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -803,7 +803,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void removeTestSuites() {
+	public void testSuitesRemove() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
