@@ -17,7 +17,6 @@ import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IParametersParentNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.GenericOperationRemoveParameter;
 import com.ecfeed.core.operations.IModelOperation;
@@ -56,22 +55,22 @@ public class OnCompositeParameterOperationRemove extends CompositeOperation{
 			return;
 		}
 
-		if (!abstractParameterNode.isGlobalParameter()) {
-			addOperationsForLocalParameter(abstractParameterNode);
-			return;
-		}
+		//		if (!abstractParameterNode.isGlobalParameter()) {
+		//			addOperationsForLocalParameter(abstractParameterNode);
+		//			return;
+		//		}
 
 		addOperationsForGlobalParameter(parentNode, abstractParameterNode);
 	}
 
-	private void addOperationsForLocalParameter(AbstractParameterNode abstractParameterNode) {
-
-		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
-
-		if (methodNode != null) {
-			addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, getExtLanguageManager()));
-		}
-	}
+	//	private void addOperationsForLocalParameter(AbstractParameterNode abstractParameterNode) {
+	//
+	//		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
+	//
+	//		//		if (methodNode != null) {
+	//		//			addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, getExtLanguageManager()));
+	//		//		}
+	//	}
 
 	private void addOperationsForGlobalParameter(
 			IParametersParentNode parentNode, 

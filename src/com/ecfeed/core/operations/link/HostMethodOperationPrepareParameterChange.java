@@ -60,7 +60,7 @@ public class HostMethodOperationPrepareParameterChange extends CompositeOperatio
 			return;
 		}
 
-		operations().add(index, operation);
+		getOperations().add(index, operation);
 	}
 
 	private class OperationPrepareMethodForParameterTypeChange extends AbstractModelOperation {

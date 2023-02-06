@@ -153,6 +153,19 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
+	public boolean mentionsAnyOfParameters(
+			List<BasicParameterNode> basicParameterNodesToDelete) {
+		
+		for (BasicParameterNode basicParameterNode : basicParameterNodesToDelete) {
+			if (mentions(basicParameterNode)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	
 	public boolean mentions(BasicParameterNode parameter, String label) {
 
 		return fConstraint.mentions(parameter, label);

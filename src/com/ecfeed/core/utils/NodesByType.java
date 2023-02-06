@@ -12,6 +12,7 @@ package com.ecfeed.core.utils;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.BasicParameterNode;
@@ -34,7 +35,7 @@ public class NodesByType {
 	private Set<ConstraintNode> fConstraints;
 	private Set<TestSuiteNode> fTestSuites;
 	private Set<TestCaseNode> fTestCases;
-	private boolean fAllTestCases;
+
 
 	public NodesByType() {
 
@@ -46,7 +47,6 @@ public class NodesByType {
 		fConstraints = new HashSet<>();
 		fTestSuites = new HashSet<>();
 		fTestCases = new HashSet<>();
-		fAllTestCases = false;
 	}
 
 	public NodesByType(Collection<IAbstractNode> abstractNodes) {
@@ -138,14 +138,6 @@ public class NodesByType {
 		ExceptionHelper.reportRuntimeException("Unknown node type.");
 	}
 
-	public void markAllTestCases() {
-		fAllTestCases = true;
-	}
-
-	public boolean getAllTestCasesFlag() {
-		return fAllTestCases;
-	}
-
 	public Set<ClassNode> getClasses() {
 		return fClasses;
 	}
@@ -184,6 +176,18 @@ public class NodesByType {
 
 	public void addTestCases(Collection<TestCaseNode> testCaseNodes) {
 		fTestCases.addAll(testCaseNodes);
+	}
+
+	public void addBasicParameters(List<BasicParameterNode> basicParameterNodes) {
+		fBasicParameters.addAll(basicParameterNodes);
+	}
+
+	public void addTestCases(List<ConstraintNode> constraintsToDelete) {
+		fConstraints.addAll(constraintsToDelete);
+	}
+
+	public void addCompositeParameters(List<CompositeParameterNode> compositeParameters) {
+		fCompositeParameters.addAll(compositeParameters);
 	}
 
 }

@@ -511,19 +511,19 @@ public class GenericRemoveNodesOperationTest {
 		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode("S1", null);
 		methodNode.addParameter(compositeParameterNode1);
 
-		CompositeParameterNode compositeParameterNode2 = new CompositeParameterNode("S2", null);
-		compositeParameterNode1.addParameter(compositeParameterNode2);
+		CompositeParameterNode compositeParameterNode11 = new CompositeParameterNode("S11", null);
+		compositeParameterNode1.addParameter(compositeParameterNode11);
 
 		// basic parameters and choices 
 
 		BasicParameterNode basicParameterNode1 = new BasicParameterNode("P1", "String", "", false, null);
-		compositeParameterNode2.addParameter(basicParameterNode1);
+		compositeParameterNode11.addParameter(basicParameterNode1);
 
 		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
 		basicParameterNode1.addChoice(choiceNode1);
 
 		BasicParameterNode basicParameterNode2 = new BasicParameterNode("P2", "String", "", false, null);
-		compositeParameterNode2.addParameter(basicParameterNode2);
+		compositeParameterNode11.addParameter(basicParameterNode2);
 
 		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
 		basicParameterNode2.addChoice(choiceNode2);
@@ -535,13 +535,18 @@ public class GenericRemoveNodesOperationTest {
 
 		// constraint of method
 
-		ConstraintNode constraintNode1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
-		methodNode.addConstraint(constraintNode1);
+		ConstraintNode constraintNodeOnMethod = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		methodNode.addConstraint(constraintNodeOnMethod);
 
-		// constraint of composite parameter node
+		// constraint of composite parameter node 1
 
-		ConstraintNode constraintNode2 = createConstraintNodeWithValueCondition(basicParameterNode2,"2");
-		compositeParameterNode2.addConstraint(constraintNode2);
+		ConstraintNode constraintNodeOnS1 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		compositeParameterNode1.addConstraint(constraintNodeOnS1);
+		
+		// constraint of composite parameter node 11
+
+		ConstraintNode constraintNodeOnS11 = createConstraintNodeWithValueCondition(basicParameterNode1,"1");
+		compositeParameterNode11.addConstraint(constraintNodeOnS11);
 
 		// test case 
 
@@ -556,37 +561,58 @@ public class GenericRemoveNodesOperationTest {
 		deployedParameters.add(basicParameterNode2);
 		methodNode.setDeployedParameters(deployedParameters);
 
+		// initial checks
+		
+		assertEquals(2, methodNode.getParameters().size());
+		assertEquals(1, methodNode.getConstraints().size());
+		assertEquals(1, methodNode.getTestCases().size());
+		
+		assertEquals(1, compositeParameterNode1.getParameters().size());
+		assertEquals(1, compositeParameterNode1.getConstraints().size());
+		
+		assertEquals(2, compositeParameterNode11.getParameters().size());
+		assertEquals(1, compositeParameterNode11.getConstraints().size());
+		
 		// list of nodes to delete
 
 		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-		nodesToDelete.add(compositeParameterNode1);
+		nodesToDelete.add(compositeParameterNode11);
 
 		// remove
 
 		GenericRemoveNodesOperation genericRemoveNodesOperation = 
 				createRemovingNodesOperation(nodesToDelete, rootNode);
+		
+		// check generated operations
+		
+		List<IModelOperation> operations = genericRemoveNodesOperation.getOperations();
+		assertEquals(6, operations.size()); // 2 constraints, 1 test case, 2 parameters, 1 composite
+		
 		genericRemoveNodesOperation.execute();
 
-		assertEquals(1, methodNode.getParameters().size());
-		assertEquals(0, methodNode.getConstraintNodes().size());
+		// checks after remove
 
+		assertEquals(2, methodNode.getParameters().size());
+		assertEquals(0, methodNode.getConstraints().size());
 		assertEquals(0, methodNode.getTestCases().size());
-		assertEquals(0, methodNode.getDeployedMethodParameters().size());
-
+		
+		assertEquals(0, compositeParameterNode1.getParameters().size());
+		assertEquals(0, compositeParameterNode1.getConstraints().size());
+		
 		// reverse
 
 		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
 		reverseOperation.execute();
 
 		assertEquals(2, methodNode.getParameters().size());
-		assertEquals(1, methodNode.getConstraintNodes().size());
-
+		assertEquals(1, methodNode.getConstraints().size());
 		assertEquals(1, methodNode.getTestCases().size());
-		assertEquals(2, methodNode.getDeployedMethodParameters().size());
-
-		assertEquals(2, compositeParameterNode2.getParameters().size());
-
-		assertEquals(1, compositeParameterNode2.getConstraintNodes().size());
+		
+		assertEquals(1, compositeParameterNode1.getParameters().size());
+		assertEquals(1, compositeParameterNode1.getConstraints().size());
+		
+		assertEquals(2, compositeParameterNode11.getParameters().size());
+		assertEquals(1, compositeParameterNode11.getConstraints().size());
 	}
 
 	@Test

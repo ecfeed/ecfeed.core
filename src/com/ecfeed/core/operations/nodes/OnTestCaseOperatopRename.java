@@ -25,7 +25,7 @@ public class OnTestCaseOperatopRename extends AbstractModelOperation {
 	public OnTestCaseOperatopRename(
 			TestCaseNode testCaseNode,
 			String newName,
-			IExtLanguageManager extLanguageManager) { // XYX need this ?
+			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.RENAME, extLanguageManager);
 
