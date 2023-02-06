@@ -41,11 +41,13 @@ public class OnBasicParameterOperationRemove extends CompositeOperation{
 
 		fParameterName = parameter.getName();
 
+		// TODO MO-RE - change composite operation into IModelOperation
 		addOperation(new RemoveBasicParameterOperationPrivate(methodNode, parameter, extLanguageManager));
 
-		if (validate) {
-			addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
-		}
+		// TODO MO-RE inconsisten children should be calculated already in GenericRemoveNodesProcessorOfNodes
+		//		if (validate) {
+		//			addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
+		//		}
 	}
 
 	@Override

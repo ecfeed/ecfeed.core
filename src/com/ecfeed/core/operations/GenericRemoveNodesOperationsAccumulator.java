@@ -51,10 +51,6 @@ public class GenericRemoveNodesOperationsAccumulator {
 			addOperationsForConstraints(outAffectedNodesByType, extLanguageManager, result);
 		}
 
-		//		if (!outAffectedNodesByType.getTestSuiteNodes().isEmpty()) {
-		//			addOperationsForTestSuites(outAffectedNodesByType, extLanguageManager, result);
-		//		}
-		//
 		if (!outAffectedNodesByType.getTestCaseNodes().isEmpty()) {
 			addOperationsForTestCases(outAffectedNodesByType, extLanguageManager, result);
 		}
