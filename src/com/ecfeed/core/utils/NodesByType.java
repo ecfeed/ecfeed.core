@@ -34,6 +34,7 @@ public class NodesByType {
 	private Set<ConstraintNode> fConstraints;
 	private Set<TestSuiteNode> fTestSuites;
 	private Set<TestCaseNode> fTestCases;
+	private boolean fAllTestCases;
 
 	public NodesByType() {
 
@@ -45,6 +46,7 @@ public class NodesByType {
 		fConstraints = new HashSet<>();
 		fTestSuites = new HashSet<>();
 		fTestCases = new HashSet<>();
+		fAllTestCases = false;
 	}
 
 	public NodesByType(Collection<IAbstractNode> abstractNodes) {
@@ -134,6 +136,14 @@ public class NodesByType {
 		} 
 
 		ExceptionHelper.reportRuntimeException("Unknown node type.");
+	}
+
+	public void markAllTestCases() {
+		fAllTestCases = true;
+	}
+
+	public boolean getAllTestCasesFlag() {
+		return fAllTestCases;
 	}
 
 	public Set<ClassNode> getClasses() {
