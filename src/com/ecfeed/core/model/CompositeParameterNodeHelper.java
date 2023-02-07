@@ -3,6 +3,8 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ecfeed.core.utils.ObjectHelper;
+
 public class CompositeParameterNodeHelper {
 
 	public static BasicParameterNode addNewBasicParameterNodeToCompositeParameter(
@@ -93,6 +95,90 @@ public class CompositeParameterNodeHelper {
 			getLinkedCompositeParametersRecursive(
 					targetCompositeParameterNode, child, resultLinkedCompositeParameters);
 		}
+	}
+
+	public static List<CompositeParameterNode> getLocalCompositeParametersLinkedToGlobal(
+			CompositeParameterNode globParameterNode) {
+
+		List<CompositeParameterNode> localCompositeParameterNodes =	new ArrayList<>();
+
+		IAbstractNode startNode = findStartNode(globParameterNode);
+
+		getLocalCompositeParametersLinkedToGlobalRecursive(startNode, globParameterNode, localCompositeParameterNodes);
+
+		return localCompositeParameterNodes;
+	}
+
+	private static IAbstractNode findStartNode(AbstractParameterNode globParameterNode) {
+
+		ClassNode classNode = AbstractNodeHelper.findClassNode(globParameterNode);
+
+		if (classNode != null) {
+			return classNode;
+		}
+
+		RootNode rootNode = AbstractNodeHelper.findRootNode(globParameterNode);
+
+		return rootNode;
+	}
+	
+	private static void getLocalCompositeParametersLinkedToGlobalRecursive(
+			IAbstractNode currentNode,
+			CompositeParameterNode globalCompositeParameterNode,
+			List<CompositeParameterNode> inOutLocalCompositeParameterNodes) {
+
+		if (currentNode instanceof CompositeParameterNode) {
+
+			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) currentNode;
+
+			CompositeParameterNode linkToGlobalParameter = 
+					(CompositeParameterNode) compositeParameterNode.getLinkToGlobalParameter();
+
+			if (ObjectHelper.isEqual(linkToGlobalParameter, globalCompositeParameterNode)) {
+				inOutLocalCompositeParameterNodes.add(compositeParameterNode);
+			}
+
+		}
+
+		List<IAbstractNode> children = currentNode.getChildren();
+
+		for (IAbstractNode child : children) {
+
+			if (isNodeIgnoredForSearchOfComposites(child)) {
+				continue;
+			}
+
+			getLocalCompositeParametersLinkedToGlobalRecursive(
+					child,
+					globalCompositeParameterNode,
+					inOutLocalCompositeParameterNodes);
+		}
+
+	}
+	
+	private static boolean isNodeIgnoredForSearchOfComposites(IAbstractNode node) {
+
+		if (node instanceof BasicParameterNode) {
+			return true;
+		}
+
+		if (node instanceof ChoiceNode) {
+			return true;
+		}
+
+		if (node instanceof ConstraintNode) {
+			return true;
+		}
+
+		if (node instanceof TestSuiteNode) {
+			return true;
+		}
+
+		if (node instanceof TestCaseNode) {
+			return true;
+		}
+
+		return false;
 	}
 
 }
