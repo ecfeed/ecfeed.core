@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.ExtLanguageManagerForSimple;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class GlobalParameterNodeHelperTest {
 
@@ -52,7 +53,7 @@ public class GlobalParameterNodeHelperTest {
 		String signature = 
 				GlobalParameterNodeHelper.createSignature(
 						globalParameterNode,
-						GlobalParameterNodeHelper.SignatureType.WITH_TYPE,
+						SignatureHelper.SignatureType.WITH_TYPE,
 						new ExtLanguageManagerForJava());
 		
 		assertEquals("String global_1", signature);
@@ -60,7 +61,7 @@ public class GlobalParameterNodeHelperTest {
 		signature = 
 				GlobalParameterNodeHelper.createSignature(
 						globalParameterNode, 
-						GlobalParameterNodeHelper.SignatureType.WITH_TYPE, 
+						SignatureHelper.SignatureType.WITH_TYPE, 
 						new ExtLanguageManagerForSimple());
 		
 		assertEquals("Text global 1", signature);

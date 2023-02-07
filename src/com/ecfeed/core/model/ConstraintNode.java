@@ -140,7 +140,7 @@ public class ConstraintNode extends AbstractNode {
 
 		if (parameter instanceof BasicParameterNode && parameter.isGlobalParameter()) {
 			BasicParameterNode global = (BasicParameterNode)parameter;
-			List<AbstractParameterNode> linkedParameters = GlobalParameterNodeHelper.getLinkedParameters(global);
+			List<AbstractParameterNode> linkedParameters = AbstractParameterNodeHelper.getLinkedParameters(global);
 
 			for (AbstractParameterNode linkedParameter: linkedParameters) {
 

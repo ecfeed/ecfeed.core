@@ -15,124 +15,71 @@ import java.util.List;
 
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ObjectHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 
 public class GlobalParameterNodeHelper { // TODO MO-RE remove this class - move functions to helpers accordint to the real type 
 
-	public enum SignatureType {
-		WITH_TYPE,
-		WITHOUT_TYPE
-	}
-
-//	public static List<MethodNode> getLinkedMethods(AbstractParameterNode globalParameterNode) {
-//
-//		if (globalParameterNode instanceof CompositeParameterNode) {
-//			
-//			List<CompositeParameterNode> compositeLocalParameters = 
-//					getLocalCompositeParametersLinkedToGlobal(globalParameterNode);
-//			
-//			List<MethodNode> methodNodes = getMethodsForCompositeParameters(compositeLocalParameters);
-//			return methodNodes;
-//		}
-//		
-//		ExceptionHelper.reportRuntimeException("TODO"); // TODO MO-RE 
-//		return null;
-//	}
-	
-	public static List<AbstractParameterNode> getLinkedParameters(AbstractParameterNode globalParameterNode) {
-
-		List<AbstractParameterNode> result = new ArrayList<>();
-
-		IParametersParentNode parametersParentNode = globalParameterNode.getParametersParent();
-
-		getParametersLinkedToGlobalParameterRecursive(globalParameterNode, parametersParentNode, result);
-
-		return result;
-	}
-	
-	public static List<BasicParameterNode> getLinkedBasicParameters(BasicParameterNode globalParameterNode) {
-		
-		List<AbstractParameterNode> abstractParameterNodes = getLinkedParameters(globalParameterNode);
-		
-		List<BasicParameterNode> basicParameterNodes = getBasicParameters(abstractParameterNodes);
-		
-		return basicParameterNodes;
-	}
-	
-	public static List<BasicParameterNode> getBasicParameters(List<AbstractParameterNode> abstractParameterNodes) {
-		
-		List<BasicParameterNode> result = new ArrayList<>();
-		
-		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
-			
-			if (abstractParameterNode instanceof BasicParameterNode) {
-				result.add((BasicParameterNode) abstractParameterNode);
-			}
-		}
-		
-		return result;
-	}
-
 	public static List<CompositeParameterNode> getLocalCompositeParametersLinkedToGlobal(
 			CompositeParameterNode globParameterNode) {
-		
+
 		List<CompositeParameterNode> localCompositeParameterNodes =	new ArrayList<>();
-		
+
 		IAbstractNode startNode = findStartNode(globParameterNode);
-		
+
 		getLocalCompositeParametersLinkedToGlobalRecursive(startNode, globParameterNode, localCompositeParameterNodes);
-		
+
 		return localCompositeParameterNodes;
 	}
 
 	private static IAbstractNode findStartNode(AbstractParameterNode globParameterNode) {
-		
+
 		ClassNode classNode = AbstractNodeHelper.findClassNode(globParameterNode);
-		
+
 		if (classNode != null) {
 			return classNode;
 		}
-		
+
 		RootNode rootNode = AbstractNodeHelper.findRootNode(globParameterNode);
-		
+
 		return rootNode;
 	}
-	
+
 	private static void getLocalCompositeParametersLinkedToGlobalRecursive(
 			IAbstractNode currentNode,
 			CompositeParameterNode globalCompositeParameterNode,
 			List<CompositeParameterNode> inOutLocalCompositeParameterNodes) {
-		
+
 		if (currentNode instanceof CompositeParameterNode) {
-			
+
 			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) currentNode;
-			
+
 			CompositeParameterNode linkToGlobalParameter = 
 					(CompositeParameterNode) compositeParameterNode.getLinkToGlobalParameter();
-			
+
 			if (ObjectHelper.isEqual(linkToGlobalParameter, globalCompositeParameterNode)) {
 				inOutLocalCompositeParameterNodes.add(compositeParameterNode);
 			}
-			
+
 		}
-		
+
 		List<IAbstractNode> children = currentNode.getChildren();
-		
+
 		for (IAbstractNode child : children) {
-			
+
 			if (isNodeIgnoredForSearchOfComposites(child)) {
 				continue;
 			}
-			
+
 			getLocalCompositeParametersLinkedToGlobalRecursive(
-						child,
-						globalCompositeParameterNode,
-						inOutLocalCompositeParameterNodes);
+					child,
+					globalCompositeParameterNode,
+					inOutLocalCompositeParameterNodes);
 		}
-		
+
 	}
 
 	private static boolean isNodeIgnoredForSearchOfComposites(IAbstractNode node) {
-		
+
 		if (node instanceof BasicParameterNode) {
 			return true;
 		}
@@ -152,66 +99,29 @@ public class GlobalParameterNodeHelper { // TODO MO-RE remove this class - move 
 		if (node instanceof TestCaseNode) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	public static List<MethodNode> getMethodsForCompositeParameters(
 			List<CompositeParameterNode> compositeLocalParameters) {
-		
+
 		List<MethodNode> methodNodes = new ArrayList<>();
-		
+
 		for (CompositeParameterNode compositeParameterNode : compositeLocalParameters) {
-		
+
 			MethodNode methodNode = MethodNodeHelper.findMethodNode(compositeParameterNode);
-			
+
 			methodNodes.add(methodNode);
 		}
-		
+
 		return methodNodes;
-	}
-
-	private static void getParametersLinkedToGlobalParameterRecursive(
-			AbstractParameterNode globBasicParameterNode,
-			IAbstractNode currentNode,
-			List<AbstractParameterNode> inOutLinkedParameters) {
-
-		if (isParameterLinkedToGlobal(currentNode, globBasicParameterNode)) {
-			inOutLinkedParameters.add((BasicParameterNode) currentNode);
-			return;
-		}
-
-		if ((currentNode instanceof ChoiceNode)) {
-			return;
-		}
-
-		List<IAbstractNode> children = currentNode.getChildren();
-
-		for (IAbstractNode childNode : children) {
-			getParametersLinkedToGlobalParameterRecursive(globBasicParameterNode, childNode, inOutLinkedParameters);
-		}
-	}
-
-	private static boolean isParameterLinkedToGlobal(
-			IAbstractNode currentNode,
-			AbstractParameterNode globalBasicParameterNode) {
-
-		if (!(currentNode instanceof BasicParameterNode)) {
-			return false;
-		}
-
-		BasicParameterNode basicParameterNode = (BasicParameterNode) currentNode;
-
-		if (basicParameterNode.getLinkToGlobalParameter() == globalBasicParameterNode) {
-			return true;
-		}
-
-		return false;
 	}
 
 	public static String checkLinkedParameters(BasicParameterNode globalParameterNode) {
 
-		List<AbstractParameterNode> linkedMethodMethodParameters = getLinkedParameters(globalParameterNode);
+		List<AbstractParameterNode> linkedMethodMethodParameters = 
+				AbstractParameterNodeHelper.getLinkedParameters(globalParameterNode);
 
 		if (linkedMethodMethodParameters == null) {
 			return null;
@@ -268,12 +178,12 @@ public class GlobalParameterNodeHelper { // TODO MO-RE remove this class - move 
 
 	public static String createSignature(
 			AbstractParameterNode globalParameterNode, 
-			SignatureType signatureType,
+			SignatureHelper.SignatureType signatureType,
 			IExtLanguageManager extLanguageManager) {
 
 		String qualifiedName = getQualifiedName(globalParameterNode, extLanguageManager);
 
-		if (signatureType == SignatureType.WITHOUT_TYPE) {
+		if (signatureType == SignatureHelper.SignatureType.WITHOUT_TYPE) {
 			return qualifiedName;
 		}
 

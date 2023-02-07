@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
@@ -24,7 +25,6 @@ import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IConstraintsParentNode;
 import com.ecfeed.core.model.MethodNode;
@@ -439,7 +439,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 		if (basicParameterNode.isGlobalParameter()) {
 
 			List<AbstractParameterNode> linkedParameters = 
-					GlobalParameterNodeHelper.getLinkedParameters(basicParameterNode);
+					AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
 
 			for (AbstractParameterNode abstractParameterNode : linkedParameters) {
 

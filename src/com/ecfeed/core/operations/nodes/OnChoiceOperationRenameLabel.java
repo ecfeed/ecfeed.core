@@ -13,10 +13,10 @@ package com.ecfeed.core.operations.nodes;
 import java.util.List;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ConstraintHelper;
-import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.operations.AbstractModelOperation;
 import com.ecfeed.core.operations.IModelOperation;
@@ -89,7 +89,7 @@ public class OnChoiceOperationRenameLabel extends AbstractModelOperation {
 	private String checkLinkedParameters(BasicParameterNode globalParameterNode) {
 
 		List<AbstractParameterNode> linkedMethodMethodParameters = 
-				GlobalParameterNodeHelper.getLinkedParameters(globalParameterNode);
+				AbstractParameterNodeHelper.getLinkedParameters(globalParameterNode);
 
 		if (linkedMethodMethodParameters == null) {
 			return null;

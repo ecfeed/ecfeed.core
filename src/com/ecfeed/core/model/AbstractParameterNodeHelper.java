@@ -447,4 +447,53 @@ public abstract class AbstractParameterNodeHelper {
 		return resultTypeInIntrLanguage;
 	}
 
+	public static List<AbstractParameterNode> getLinkedParameters(AbstractParameterNode globalParameterNode) {
+
+		List<AbstractParameterNode> result = new ArrayList<>();
+
+		IParametersParentNode parametersParentNode = globalParameterNode.getParametersParent();
+
+		getParametersLinkedToGlobalParameterRecursive(globalParameterNode, parametersParentNode, result);
+
+		return result;
+	}
+	
+	private static void getParametersLinkedToGlobalParameterRecursive(
+			AbstractParameterNode globBasicParameterNode,
+			IAbstractNode currentNode,
+			List<AbstractParameterNode> inOutLinkedParameters) {
+
+		if (isParameterLinkedToGlobal(currentNode, globBasicParameterNode)) {
+			inOutLinkedParameters.add((BasicParameterNode) currentNode);
+			return;
+		}
+
+		if ((currentNode instanceof ChoiceNode)) {
+			return;
+		}
+
+		List<IAbstractNode> children = currentNode.getChildren();
+
+		for (IAbstractNode childNode : children) {
+			getParametersLinkedToGlobalParameterRecursive(globBasicParameterNode, childNode, inOutLinkedParameters);
+		}
+	}
+	
+	private static boolean isParameterLinkedToGlobal(
+			IAbstractNode currentNode,
+			AbstractParameterNode globalBasicParameterNode) {
+
+		if (!(currentNode instanceof BasicParameterNode)) {
+			return false;
+		}
+
+		BasicParameterNode basicParameterNode = (BasicParameterNode) currentNode;
+
+		if (basicParameterNode.getLinkToGlobalParameter() == globalBasicParameterNode) {
+			return true;
+		}
+
+		return false;
+	}
+	
 }

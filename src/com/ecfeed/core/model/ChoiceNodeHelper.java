@@ -929,7 +929,7 @@ public class ChoiceNodeHelper {
 		Set<TestCaseNode> result = new HashSet<>();
 
 		List<BasicParameterNode> linkedParameterNodes = 
-				GlobalParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
+				BasicParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
 
 		for (BasicParameterNode linkedParameterNode : linkedParameterNodes) {
 
