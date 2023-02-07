@@ -10,20 +10,15 @@
 
 package com.ecfeed.core.operations.nodes;
 
-import java.util.List;
-
 import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.CompositeParameterNode;
-import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IParametersParentNode;
-import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.GenericOperationRemoveParameter;
 import com.ecfeed.core.operations.IModelOperation;
 import com.ecfeed.core.operations.OperationNames;
 import com.ecfeed.core.utils.IExtLanguageManager;
 
-public class OnCompositeParameterOperationRemove extends CompositeOperation{
+public class OnCompositeParameterOperationRemove extends CompositeOperation { // TODO MO-RE change to AbstractModelOperation
 
 	private IParametersParentNode fParentNode; 
 	private AbstractParameterNode fAbstractParameterNode; 
@@ -35,7 +30,7 @@ public class OnCompositeParameterOperationRemove extends CompositeOperation{
 	public OnCompositeParameterOperationRemove(
 			IParametersParentNode parentNode, 
 			AbstractParameterNode abstractParameterNode, 
-			boolean validate, 
+			boolean validate, // TODO MO-RE remove ?
 			IExtLanguageManager extLanguageManager) {
 
 		super(OperationNames.REMOVE_PARAMETER, true, parentNode, parentNode, extLanguageManager);
@@ -44,68 +39,11 @@ public class OnCompositeParameterOperationRemove extends CompositeOperation{
 		fAbstractParameterNode = abstractParameterNode;
 		fValidate = validate;
 
-		fParametersIndex = abstractParameterNode.getMyIndex();
 		fParameterName = abstractParameterNode.getName();
 
 		addOperation(
 				new RemoveCompositeParameterOperationPrivate(
 						parentNode, abstractParameterNode, extLanguageManager));
-
-		if (!validate) {
-			return;
-		}
-
-		//		if (!abstractParameterNode.isGlobalParameter()) {
-		//			addOperationsForLocalParameter(abstractParameterNode);
-		//			return;
-		//		}
-
-		addOperationsForGlobalParameter(parentNode, abstractParameterNode);
-	}
-
-	//	private void addOperationsForLocalParameter(AbstractParameterNode abstractParameterNode) {
-	//
-	//		MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
-	//
-	//		//		if (methodNode != null) {
-	//		//			addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, getExtLanguageManager()));
-	//		//		}
-	//	}
-
-	private void addOperationsForGlobalParameter(
-			IParametersParentNode parentNode, 
-			AbstractParameterNode parameter) {
-
-		List<CompositeParameterNode> compositeLocalParameters = 
-				GlobalParameterNodeHelper.getLocalCompositeParametersLinkedToGlobal(
-						(CompositeParameterNode) parameter);
-
-		addOperationsForRemovingLocalCompositeParameters(compositeLocalParameters, getExtLanguageManager());
-
-		List<MethodNode> linkedMethodNodes = 
-				GlobalParameterNodeHelper.getMethodsForCompositeParameters(compositeLocalParameters);
-
-		addOperationsForRemovingInconsistentChildrenFromMethods(linkedMethodNodes, getExtLanguageManager());
-	}
-
-	private void addOperationsForRemovingInconsistentChildrenFromMethods(
-			List<MethodNode> linkedMethodNodes,
-			IExtLanguageManager extLanguageManager) {
-
-		for (MethodNode methodNode : linkedMethodNodes) {
-			addOperation(new OnMethodOperationRemoveInconsistentChildren(methodNode, extLanguageManager));
-		}
-	}
-
-	private void addOperationsForRemovingLocalCompositeParameters(
-			List<CompositeParameterNode> compositeLocalParameters,
-			IExtLanguageManager extLanguageManager) {
-
-		for (CompositeParameterNode compositeLocalParameterNode : compositeLocalParameters) {
-			addOperation(
-					new RemoveCompositeParameterOperationPrivate(
-							compositeLocalParameterNode.getParent(), compositeLocalParameterNode, extLanguageManager));
-		}
 	}
 
 	@Override
@@ -127,7 +65,11 @@ public class OnCompositeParameterOperationRemove extends CompositeOperation{
 		@Override
 		public void execute() {
 
-			super.execute();
+			fParametersIndex = fAbstractParameterNode.getMyIndex();
+
+			fParentNode.removeParameter(fAbstractParameterNode);
+
+			markModelUpdated();
 		}
 
 		@Override

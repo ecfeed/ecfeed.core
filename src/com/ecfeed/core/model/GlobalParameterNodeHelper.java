@@ -16,7 +16,7 @@ import java.util.List;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ObjectHelper;
 
-public class GlobalParameterNodeHelper {
+public class GlobalParameterNodeHelper { // TODO MO-RE remove this class - move functions to helpers accordint to the real type 
 
 	public enum SignatureType {
 		WITH_TYPE,
