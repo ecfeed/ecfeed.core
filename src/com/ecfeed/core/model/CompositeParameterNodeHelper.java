@@ -181,4 +181,19 @@ public class CompositeParameterNodeHelper {
 		return false;
 	}
 
+	public static List<MethodNode> getMethodsForCompositeParameters(
+			List<CompositeParameterNode> compositeLocalParameters) {
+
+		List<MethodNode> methodNodes = new ArrayList<>();
+
+		for (CompositeParameterNode compositeParameterNode : compositeLocalParameters) {
+
+			MethodNode methodNode = MethodNodeHelper.findMethodNode(compositeParameterNode);
+
+			methodNodes.add(methodNode);
+		}
+
+		return methodNodes;
+	}
+
 }

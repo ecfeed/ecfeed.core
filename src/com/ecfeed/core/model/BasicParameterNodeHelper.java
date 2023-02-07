@@ -256,4 +256,57 @@ public class BasicParameterNodeHelper {
 		return result;
 	}
 
+	public static String checkLinkedParameters(BasicParameterNode globalParameterNode) {
+
+		List<AbstractParameterNode> linkedMethodMethodParameters = 
+				AbstractParameterNodeHelper.getLinkedParameters(globalParameterNode);
+
+		if (linkedMethodMethodParameters == null) {
+			return null;
+		}
+
+		if (linkedMethodMethodParameters.size() <= 0) {
+			return null;
+		}
+
+		AbstractParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
+
+		String errorMessage = 
+				"Parameter " + firstMethodParameterNode.getName() + 
+				" of method " + firstMethodParameterNode.getParent().toString() + 
+				" is linked to current global parameter " + globalParameterNode.getName() + ". " + 
+				"Change of parameter type is not possible.";
+
+		return errorMessage;
+	}
+
+	public static ChoiceNode addNewChoiceToBasicParameter(
+			BasicParameterNode globalParameterNode, 
+			String choiceNodeName, 
+			String valueString,
+			boolean isRandomizedValue,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
+		choiceNode.setRandomizedValue(isRandomizedValue);
+
+		globalParameterNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
+
+	public static ChoiceNode addNewChoiceToBasicParameter(
+			BasicParameterNode globalParameterNode, 
+			String choiceNodeName, 
+			String valueString,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		ChoiceNode choiceNode = new ChoiceNode(choiceNodeName, valueString, modelChangeRegistrator);
+		choiceNode.setRandomizedValue(false);
+
+		globalParameterNode.addChoice(choiceNode);
+
+		return choiceNode;
+	}
+
 }

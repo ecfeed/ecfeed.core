@@ -24,6 +24,46 @@ import com.ecfeed.core.utils.TypeHelper;
 
 public abstract class AbstractParameterNodeHelper {
 
+	public static String createSignature(
+			AbstractParameterNode globalParameterNode, 
+			SignatureHelper.SignatureType signatureType,
+			IExtLanguageManager extLanguageManager) {
+
+		String qualifiedName = getQualifiedName(globalParameterNode, extLanguageManager);
+
+		if (signatureType == SignatureHelper.SignatureType.WITHOUT_TYPE) {
+			return qualifiedName;
+		}
+
+		String type = "";
+
+		if (globalParameterNode instanceof BasicParameterNode) {
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode)globalParameterNode;
+			type = getType(basicParameterNode, extLanguageManager);
+		}
+
+		return (type + " " + qualifiedName).trim();
+	}
+
+	public static String getQualifiedName(
+			AbstractParameterNode globalParameterNode,
+			IExtLanguageManager extLanguageManager) {
+
+		String qualifiedName = globalParameterNode.getQualifiedName();
+		qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+
+		return qualifiedName;
+	}
+
+	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
+
+		String type = globalParameterNode.getType();
+		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
+
+		return type;
+	}
+
 	public static String getName(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String name = extLanguageManager.convertTextFromIntrToExtLanguage(abstractParameterNode.getName());
@@ -32,87 +72,87 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String getCompositeName(AbstractParameterNode abstractParameterNode) {
 
-//		return getCompositeName(abstractParameterNode, null);
+		//		return getCompositeName(abstractParameterNode, null);
 
 		AbstractParameterNode currentParameterNode = abstractParameterNode;
 		String compositeName = "";
-		
+
 		for (;;) {
 
 			String currentParameterNodeName = currentParameterNode.getName();
-			
+
 			if (StringHelper.isNullOrEmpty(compositeName)) {
 				compositeName = currentParameterNodeName; 
 			} else {
 				compositeName = currentParameterNodeName + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
 			}
-			
+
 			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
-			
+
 			if (parametersParentNode instanceof CompositeParameterNode) {
 				currentParameterNode = (AbstractParameterNode) parametersParentNode;
 				continue;
 			}
-			
+
 			return compositeName;
 		}
 	}
-	
+
 	public static String getCompositeName(
 			AbstractParameterNode abstractParameterNode, 
 			IExtLanguageManager extLanguageManager) {
 
 		AbstractParameterNode currentParameterNode = abstractParameterNode;
 		String compositeName = "";
-		
+
 		for (;;) {
 
 			String currentParameterNodeNameInExtLanguage = getParameterName(currentParameterNode, extLanguageManager);
-			
+
 			if (StringHelper.isNullOrEmpty(compositeName)) {
 				compositeName = currentParameterNodeNameInExtLanguage; 
 			} else {
 				compositeName = currentParameterNodeNameInExtLanguage + SignatureHelper.SIGNATURE_NAME_SEPARATOR + compositeName;
 			}
-			
+
 			IParametersParentNode parametersParentNode = currentParameterNode.getParent();
-			
+
 			if (parametersParentNode == null || 
 					parametersParentNode instanceof MethodNode || 
 					parametersParentNode instanceof ClassNode || 
 					parametersParentNode instanceof RootNode) {
-				
+
 				return compositeName;
 			}
-			
+
 			if (parametersParentNode instanceof CompositeParameterNode) {
 				currentParameterNode = (AbstractParameterNode) parametersParentNode;
 				continue;
 			}
-			
+
 			ExceptionHelper.reportRuntimeException("Invalid type of parameters parent.");
 		}
 	}
 
 	private static String getParameterName(AbstractParameterNode currentParameterNode,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		if (extLanguageManager == null) {
 			return currentParameterNode.getName();
 		}
-		
+
 		return getParameterNameInExtLanguage(currentParameterNode, extLanguageManager);
 	}
 
 	private static String getParameterNameInExtLanguage(
 			AbstractParameterNode currentParameterNode,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		String currentParameterNodeNameInIntrLanguage = currentParameterNode.getName();
-		
+
 		String currentParameterNodeNameInExtLanguage = 
 				extLanguageManager.convertTextFromIntrToExtLanguage(currentParameterNodeNameInIntrLanguage);
-		
+
 		return currentParameterNodeNameInExtLanguage;
 	}
 
@@ -124,19 +164,19 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String getType(AbstractParameterNode abstractParameterNode, IExtLanguageManager extLanguageManager) {
-		
+
 		if (abstractParameterNode instanceof CompositeParameterNode) {
 			return CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
 		}
-		
+
 		BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
 
 		String type = basicParameterNode.getType();
-		
+
 		if (type == null) {
 			return null;
 		}
-		
+
 		type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
 		return type;
 	}
@@ -166,7 +206,7 @@ public abstract class AbstractParameterNodeHelper {
 			if (parameterTypeInIntrLanguage != null) {
 				signature += " ";
 			}
-			
+
 			parameterNameInIntrLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(parameterNameInIntrLanguage);
 
 			signature += parameterNameInIntrLanguage;
@@ -174,9 +214,9 @@ public abstract class AbstractParameterNodeHelper {
 
 		return signature;
 	}
-	
-//--------------------------------------------------------------------------------------------------		
-	
+
+	//--------------------------------------------------------------------------------------------------		
+
 	public static String createSignature(
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
@@ -190,7 +230,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		return signature;
 	}
-	
+
 	public static String createSignature(
 			CompositeParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
@@ -204,7 +244,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		return signature;
 	}	
-	
+
 	public static String createSignature(
 			String parameterType,
 			String parameterName,
@@ -221,7 +261,7 @@ public abstract class AbstractParameterNodeHelper {
 		if (parameterType != null) {
 			signature += parameterType;
 		}
-		
+
 		if (parameterName != null) {
 
 			signature += extLanguageManager.getTypeSeparator();
@@ -235,24 +275,24 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createReverseSignature(
 			BasicParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
-		
-//		IAbstractNode parent = parameter.getParent();
+
+		//		IAbstractNode parent = parameter.getParent();
 		String parentCompositeSignature = "";
-		
-//		if (parent instanceof CompositeParameterNode) {
-//			
-//			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
-//			
-//			parentCompositeSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-//		}
-		
+
+		//		if (parent instanceof CompositeParameterNode) {
+		//			
+		//			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) parent;
+		//			
+		//			parentCompositeSignature = compositeParameterNode.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		//		}
+
 		String name = createNameSignature(parameter, extLanguageManager);
 		String type = getType(parameter, extLanguageManager);
 
 		String signature = parentCompositeSignature + createReverseSignature(type, name, parameter.isExpected());
-		
+
 		if (parameter.isLinked()) {
-			
+
 			signature += addLinkedPrefix(parameter, extLanguageManager);
 		}
 
@@ -262,25 +302,25 @@ public abstract class AbstractParameterNodeHelper {
 	public static String createReverseSignature(
 			CompositeParameterNode parameter, 
 			IExtLanguageManager extLanguageManager) {
-		
+
 		String name = createNameSignature(parameter, extLanguageManager);
 
 		String signature = name;
 		signature += SignatureHelper.SIGNATURE_TYPE_SEPARATOR;
 		signature += CompositeParameterNode.COMPOSITE_PARAMETER_TYPE;
-		
+
 		if (parameter.isLinked()) {
 			signature += addLinkedPrefix(parameter, extLanguageManager);
 		}
 
 		return signature;
 	}
-	
+
 	public static String createReverseSignature(
 			String type, 
 			String name, 
 			Boolean expected) {
-		
+
 		String signature = "";
 
 		if (expected != null) {
@@ -299,22 +339,22 @@ public abstract class AbstractParameterNodeHelper {
 
 		return signature;
 	}
-	
+
 	private static String addLinkedPrefix(
 			AbstractParameterNode parameter, 
 			IExtLanguageManager languageManager) {
-		
+
 		AbstractParameterNode parameterLinked = parameter.getLinkToGlobalParameter();
-		
+
 		if (parameterLinked != null) {
-			return " [LINKED]->" + GlobalParameterNodeHelper.getQualifiedName(parameterLinked, languageManager);
+			return " [LINKED]->" + getQualifiedName(parameterLinked, languageManager);
 		}
-		
+
 		return "";
 	}
-	
-//--------------------------------------------------------------------------------------------------	
-	
+
+	//--------------------------------------------------------------------------------------------------	
+
 	private static String createExpectedDecoration(Boolean expectedFlag) {
 
 		String signature = "";
@@ -362,44 +402,44 @@ public abstract class AbstractParameterNodeHelper {
 		return result;
 	}
 
-//	public static BasicParameterNode getReferencedParameter(IParametersAndConstraintsParentNode method, BasicParameterNode reference) {
-//
-//		for (AbstractParameterNode parameter : method.getParameters()) {
-//
-//			if (parameter instanceof BasicParameterNode) {
-//				Optional<BasicParameterNode> parameterParsed = getReferenceParameterBasic((BasicParameterNode) parameter, reference);
-//
-//				if (parameterParsed.isPresent()) {
-//					return parameterParsed.get();
-//				}
-//			}
-//		}
-//
-//		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
-//
-//		return null;
-//	}
+	//	public static BasicParameterNode getReferencedParameter(IParametersAndConstraintsParentNode method, BasicParameterNode reference) {
+	//
+	//		for (AbstractParameterNode parameter : method.getParameters()) {
+	//
+	//			if (parameter instanceof BasicParameterNode) {
+	//				Optional<BasicParameterNode> parameterParsed = getReferenceParameterBasic((BasicParameterNode) parameter, reference);
+	//
+	//				if (parameterParsed.isPresent()) {
+	//					return parameterParsed.get();
+	//				}
+	//			}
+	//		}
+	//
+	//		ExceptionHelper.reportRuntimeException("The referenced method does not contain the required parameter");
+	//
+	//		return null;
+	//	}
 
-//	private static Optional<BasicParameterNode> getReferenceParameterBasic(BasicParameterNode parameter, BasicParameterNode reference) {
-//
-//		if (parameter.getDeploymentParameter().isLinked()) {
-//			if (parameter.getDeploymentParameter().getLinkToGlobalParameter() == reference) {
-//				return Optional.of(parameter);
-//			}
-//		}
-//
-//		if (parameter.getDeploymentParameter() == reference) {
-//			return Optional.of(parameter);
-//		}
-//
-//		if (parameter.getDeploymentParameter() == null) {
-//			if (parameter.getName().equals(reference.getName())) {
-//				return Optional.of(parameter);
-//			}
-//		}
-//
-//		return Optional.empty();
-//	}
+	//	private static Optional<BasicParameterNode> getReferenceParameterBasic(BasicParameterNode parameter, BasicParameterNode reference) {
+	//
+	//		if (parameter.getDeploymentParameter().isLinked()) {
+	//			if (parameter.getDeploymentParameter().getLinkToGlobalParameter() == reference) {
+	//				return Optional.of(parameter);
+	//			}
+	//		}
+	//
+	//		if (parameter.getDeploymentParameter() == reference) {
+	//			return Optional.of(parameter);
+	//		}
+	//
+	//		if (parameter.getDeploymentParameter() == null) {
+	//			if (parameter.getName().equals(reference.getName())) {
+	//				return Optional.of(parameter);
+	//			}
+	//		}
+	//
+	//		return Optional.empty();
+	//	}
 
 	public static boolean hasRandomizedChoices(BasicParameterNode abstractParameterNode) {
 
@@ -414,7 +454,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		return false;
 	}
-	
+
 	public static String getMaxJavaTypeFromConversionDefinition( 
 			TypeHelper.TypeCathegory javaTypeCathegory,
 			ParameterConversionDefinition parameterConversionDefinition) {
@@ -457,7 +497,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		return result;
 	}
-	
+
 	private static void getParametersLinkedToGlobalParameterRecursive(
 			AbstractParameterNode globBasicParameterNode,
 			IAbstractNode currentNode,
@@ -478,7 +518,7 @@ public abstract class AbstractParameterNodeHelper {
 			getParametersLinkedToGlobalParameterRecursive(globBasicParameterNode, childNode, inOutLinkedParameters);
 		}
 	}
-	
+
 	private static boolean isParameterLinkedToGlobal(
 			IAbstractNode currentNode,
 			AbstractParameterNode globalBasicParameterNode) {
@@ -495,5 +535,5 @@ public abstract class AbstractParameterNodeHelper {
 
 		return false;
 	}
-	
+
 }

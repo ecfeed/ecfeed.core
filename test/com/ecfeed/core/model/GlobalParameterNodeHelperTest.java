@@ -28,17 +28,17 @@ public class GlobalParameterNodeHelperTest {
 		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
 		globalParameterNode.setParent(rootNode);
 
-		String qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
+		String qualifiedName = AbstractParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("global_1", qualifiedName);
 
-		qualifiedName = GlobalParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterNodeHelper.getQualifiedName(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("global 1", qualifiedName);
 
 
-		String type = GlobalParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
+		String type = AbstractParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("String", type);
 
-		qualifiedName = GlobalParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
+		qualifiedName = AbstractParameterNodeHelper.getType(globalParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("Text", qualifiedName);
 	}
 
@@ -51,7 +51,7 @@ public class GlobalParameterNodeHelperTest {
 		globalParameterNode.setParent(rootNode);
 
 		String signature = 
-				GlobalParameterNodeHelper.createSignature(
+				AbstractParameterNodeHelper.createSignature(
 						globalParameterNode,
 						SignatureHelper.SignatureType.WITH_TYPE,
 						new ExtLanguageManagerForJava());
@@ -59,7 +59,7 @@ public class GlobalParameterNodeHelperTest {
 		assertEquals("String global_1", signature);
 
 		signature = 
-				GlobalParameterNodeHelper.createSignature(
+				AbstractParameterNodeHelper.createSignature(
 						globalParameterNode, 
 						SignatureHelper.SignatureType.WITH_TYPE, 
 						new ExtLanguageManagerForSimple());
