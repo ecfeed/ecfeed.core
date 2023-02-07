@@ -290,10 +290,57 @@ public class RootNode extends AbstractNode implements IParametersParentNode {
 				CompositeParameterNode globalParameterNode = (CompositeParameterNode) abstractParameterNode;
 				
 				globalParameterNodes.add(globalParameterNode);
-				globalParameterNodes.addAll(globalParameterNode.getNestedCompositeParameters());
+				globalParameterNodes.addAll(globalParameterNode.getNestedCompositeParameters(true));
 			}
 		}
 		
 		return globalParameterNodes;
+	}
+	
+	@Override
+	public List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) {
+		List<AbstractParameterNode> nodes = new ArrayList<>();
+		
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof BasicParameterNode) {
+				nodes.add(node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.add((CompositeParameterNode) node);
+				nodes.addAll(((CompositeParameterNode) node).getNestedAbstractParameters(follow));
+			}
+		}
+		
+		return nodes;
+	}
+	
+	@Override
+	public List<BasicParameterNode> getNestedBasicParameters(boolean follow) {
+		List<BasicParameterNode> nodes = new ArrayList<>();
+
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof BasicParameterNode) {
+				nodes.add((BasicParameterNode) node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedBasicParameters(follow));
+			}
+		}
+
+		return nodes;
+	}
+
+	@Override
+	public List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) {
+		List<CompositeParameterNode> nodes = new ArrayList<>();
+
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters(follow));
+			}
+		}
+
+		return nodes;
 	}
 }

@@ -52,7 +52,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		
 		Set<ChoiceNode> choices = new HashSet<>();
 			
-		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters()) {
+		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
 			for (ConstraintNode constraint : constraints) {
 				
 				choices.addAll(ConstraintNodeHelper.getChoicesUsedInConstraint(constraint, parameterBasic));
@@ -67,11 +67,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		
 		Set<BasicParameterNode> parameters = new HashSet<>();
 		
-		if (methodParameter.isLinked() && (methodParameter.getLinkToGlobalParameter() != null)) {
-			methodParameter = (CompositeParameterNode) methodParameter.getLinkToGlobalParameter();
-		}
-		
-		List<BasicParameterNode> parametersNested = methodParameter.getNestedBasicParameters();
+		List<BasicParameterNode> parametersNested = methodParameter.getNestedBasicParameters(true);
 		
 		for (ConstraintNode constraint : constraints) {
 			Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
@@ -93,7 +89,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		
 		Set<String> labels = new HashSet<>();
 			
-		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters()) {
+		for (BasicParameterNode parameterBasic : methodParameter.getNestedBasicParameters(true)) {
 			for (ConstraintNode constraint : constraints) {
 				
 				labels.addAll(ConstraintNodeHelper.getLabelsUsedInConstraint(constraint, parameterBasic));

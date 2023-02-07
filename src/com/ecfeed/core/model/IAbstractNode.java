@@ -29,6 +29,7 @@ public interface IAbstractNode {
 	public abstract int getChildrenCount();
 	public boolean hasChildren();
 	public List<IAbstractNode> getAncestors();
+	public IAbstractNode getContainer();
 	public IAbstractNode getParent();
 	public IAbstractNode getRoot();
 	public IAbstractNode getChild(String qualifiedName);

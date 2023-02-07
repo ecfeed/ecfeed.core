@@ -75,19 +75,51 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		return parameters.size();
 	}
 
+	public boolean isRootParameter() {
+		IAbstractNode parent = this;
+		
+		while (parent != null) {
+			parent = parent.getParent();
+			
+			if (parent instanceof RootNode) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isClassParameter() {
+		IAbstractNode parent = this;
+		
+		while (parent != null) {
+			parent = parent.getParent();
+			
+			if (parent instanceof ClassNode) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isMethodParameter() {
+		IAbstractNode parent = this;
+		
+		while (parent != null) {
+			parent = parent.getParent();
+			
+			if (parent instanceof MethodNode) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public boolean isGlobalParameter() {
 
-		IAbstractNode parent = getParent();
-
-		if (parent instanceof MethodNode) {
-			return false;
-		}
-
-		if (parent instanceof CompositeParameterNode) {
-			return false;
-		}
-
-		return true;
+		return !isMethodParameter();
 	}
 
 	public String getQualifiedName() { // TODO MO-RE remove
@@ -97,8 +129,8 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		do {
 			segments.addFirst(parent.getName());
 			parent = parent.getParent();
-		} while (parent != null && !(parent instanceof RootNode));
-			
+		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
+
 		return String.join(":", segments);
 	}
 

@@ -33,25 +33,22 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 			}
 	
 			AbstractParameterNode parameterCandidate;
-			String[] parameterCandidateSegments = parameter.get().getName().split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-	
-			parameterCandidate = method.findParameter(parameterCandidateSegments[0]);
 			
-			if (parameterCandidate == null) {
-				parameterCandidate = ((IParametersParentNode) method.getClassNode()).findParameter(parameterCandidateSegments[0]);
+			if (parameter.get().getLinkToGlobalParameter() != null) {
+				parameterCandidate = parameter.get().getLinkToGlobalParameter();
+			} else {
+				String[] parameterCandidateSegments = parameter.get().getName().split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+		
+				parameterCandidate = method.findParameter(parameterCandidateSegments[0]);
+				
+				if (parameterCandidate == null) {
+					System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + String.join(":", parameterCandidateSegments) + "].");
+					return Optional.empty();
+				}
+				
+				parameterCandidate = MethodDeploymentConsistencyUpdater.getNestedBasicParameter(parameterCandidate, parameterCandidateSegments, 1);
 			}
 			
-			if (parameterCandidate == null) {
-				parameterCandidate = ((IParametersParentNode) method.getRoot()).findParameter(parameterCandidateSegments[0]);
-			}
-			
-			if (parameterCandidate == null) {
-				System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + String.join(":", parameterCandidateSegments) + "].");
-				return Optional.empty();
-			}
-			
-			parameterCandidate = MethodDeploymentConsistencyUpdater.getNestedBasicParameter(parameterCandidate, parameterCandidateSegments, 1);
-	
 			parameter.get().setDeploymentParameter((BasicParameterNode) parameterCandidate);
 
 		} catch(Exception e) {
@@ -85,7 +82,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 
 		ModelParserHelper.parseParameterProperties(element, parameter);
 
-		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method.getClassNode() != null) {
+		if (element.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null) {
 			String linkPath;
 
 			try {
@@ -94,11 +91,16 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				return Optional.empty();
 			}
 
-			AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			AbstractParameterNode link = null;
+			
+			if (method.getClassNode() != null) {
+				link = method.getClassNode().findGlobalParameter(linkPath);
+			}
 			
 			if (link == null) {
 				link = ((IParametersParentNode) method.getRoot()).findParameter(linkPath);
 			}
+			
 
 			if (link != null) {
 				parameter.setLinkToGlobalParameter(link);

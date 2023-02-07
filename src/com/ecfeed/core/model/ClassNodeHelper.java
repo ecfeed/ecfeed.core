@@ -198,4 +198,18 @@ public class ClassNodeHelper {
 		return false;
 	}
 
+	public static ClassNode findClassNode(IAbstractNode anyNode) {
+		IAbstractNode parent = anyNode;
+		
+		while (parent != null) {
+			
+			if (parent instanceof ClassNode) {
+				return (ClassNode) parent;
+			}
+			
+			parent = parent.getParent();
+		}
+		
+		return null;
+	}
 }

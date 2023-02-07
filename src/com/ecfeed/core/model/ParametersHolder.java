@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -84,15 +85,24 @@ public class ParametersHolder {
 	}	
 
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
-
-		for (AbstractParameterNode parameter : fParameters) {
-
-			final String parameterName = parameter.getName();
-
-			if (parameterName.equals(parameterNameToFind)) {
-				return parameter;
+	
+		for (AbstractParameterNode parameter : getParameters()) {
+			
+			if (parameter instanceof BasicParameterNode) {
+				if (parameter.getQualifiedName().equals(parameterNameToFind)) {
+					return parameter;
+				}
+			} else if (parameter instanceof CompositeParameterNode) {
+				Collection<AbstractParameterNode> nestedParameters = ((CompositeParameterNode) parameter).getNestedAbstractParameters(false);
+				
+				for (AbstractParameterNode nestedParameter : nestedParameters) {
+					if (nestedParameter.getQualifiedName().equals(parameterNameToFind)) {
+						return parameter;
+					}
+				}
 			}
 		}
+		
 		return null;
 	}
 

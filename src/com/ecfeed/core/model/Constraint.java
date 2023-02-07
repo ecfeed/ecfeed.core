@@ -1000,8 +1000,13 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		public Object visit(RelationStatement statement) {
 
 			BasicParameterNode leftParameter = statement.getLeftParameter();
-			fMethods.add((MethodNode) leftParameter.getParent());
-
+			
+			IAbstractNode method = leftParameter.getParent();
+			
+			if (method != null && (method instanceof MethodNode)) {
+				fMethods.add((MethodNode) method);
+			}
+			
 			return null;
 		}
 

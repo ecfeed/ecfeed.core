@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -137,19 +138,22 @@ public class BasicParameterNodeHelper {
 		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
 	}
 	
-	private static BasicParameterNode findParameterByQualifiedNameRecursive(String parameterName, IAbstractNode parameterParent) {
+	private static BasicParameterNode findParameterByQualifiedNameRecursive(String parameterName, IAbstractNode parameterParent) {	
+		MethodNode parent = MethodNodeHelper.findMethodNode(parameterParent);
 		
-		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-
-		while (parameterParent.getChild(segments[0]) == null || !(parameterParent instanceof MethodNode || parameterParent instanceof ClassNode || parameterParent instanceof RootNode)) {
-			parameterParent = (IParametersParentNode) parameterParent.getParent();
+		if (parent == null) {
+			return null;
 		}
 		
-		for (int i = 0 ; i < segments.length ; i++) {
-			parameterParent = parameterParent.getChild(segments[i]);
+		List<BasicParameterNode> parameters = parent.getNestedBasicParameters(true);
+		
+		for (BasicParameterNode parameter : parameters) {
+			if (parameter.getQualifiedName().equals(parameterName)) {
+				return parameter;
+			}
 		}
 		
-		return (BasicParameterNode) parameterParent;
+		return null;
 	}
 
 	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {
