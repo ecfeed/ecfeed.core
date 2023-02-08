@@ -12,7 +12,6 @@ package com.ecfeed.core.model;
 
 import java.util.List;
 
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.SignatureHelper;
 
 public class MethodDeploymentConsistencyUpdater {
@@ -59,25 +58,6 @@ public class MethodDeploymentConsistencyUpdater {
 			AbstractParameterNode parameterReference = parameter.getDeploymentParameter();
 			parameter.setNameUnsafe(getQualifiedDeploymentName(parameterReference));
 		}
-	}
-
-	public static BasicParameterNode getNestedBasicParameter(AbstractParameterNode parameter, String[] path, int index) {
-
-		if (parameter instanceof BasicParameterNode) {
-			return (BasicParameterNode) parameter;
-		}
-
-		try {
-			CompositeParameterNode element = (CompositeParameterNode) parameter;
-			AbstractParameterNode elementNested = element.getParameter(element.getParameterIndex(path[index]));
-
-			return getNestedBasicParameter(elementNested, path, index + 1);
-		}
-		catch (Exception e) {
-			ExceptionHelper.reportRuntimeException("The parameter '" + parameter.getName() + "'could not be parsed.");
-		}
-
-		return null;
 	}
 
 	private static int getNestedSize(MethodNode method) {

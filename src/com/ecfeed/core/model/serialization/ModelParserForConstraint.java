@@ -439,28 +439,18 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
 	}
 
+	// TO-DO mo-re move to a helper.
 	private BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
 		
 		List<BasicParameterNode> parameters = ((IParametersParentNode) parameterParent).getNestedBasicParameters(true);
 		
 		for (BasicParameterNode parameter : parameters) {
-			if (parameter.getName().equals(parameterName)) {
+			if (parameter.getQualifiedName().equals(parameterName)) {
 				return parameter;
 			}
 		}
 		
 		return null;
-//		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-//		
-//		while (parameterParent.getChild(segments[0]) == null) {
-//			parameterParent = parameterParent.getParent();
-//		}
-//		
-//		for (String segment : segments) {
-//			parameterParent = parameterParent.getChild(segment);
-//		}
-//
-//		return (BasicParameterNode) parameterParent;
 	}
 
 }

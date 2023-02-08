@@ -119,8 +119,6 @@ public abstract class XomBuilder implements IModelVisitor {
 				LogHelperCore.logError("The number of deployed parameters is inconsistent.");
 			}
 		}
-		
-		String data = targetMethodElement.toXML();
 
 		return targetMethodElement;
 	}

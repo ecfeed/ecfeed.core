@@ -76,7 +76,6 @@ public class ParametersAndConstraintsParentNodeHelper {
 				
 				if (parametersConstraint.contains(parameterBasic)) {
 					parameters.add(parameterBasic);
-					System.out.println(parameterBasic);
 				}
 			}
 		}
