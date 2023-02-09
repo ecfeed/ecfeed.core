@@ -233,7 +233,8 @@ public class GenericRemoveNodesProcessorOfNodes {
 			IAbstractNode abstractNode, NodesByType inOutAffectedNodes) {
 
 		if (abstractNode instanceof ChoiceNode) {
-			Set<ConstraintNode> mentioningConstraintNodes = 
+
+			List<ConstraintNode> mentioningConstraintNodes = 
 					ChoiceNodeHelper.getMentioningConstraints((ChoiceNode) abstractNode);
 
 			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
@@ -241,7 +242,8 @@ public class GenericRemoveNodesProcessorOfNodes {
 		} 
 
 		if (abstractNode instanceof BasicParameterNode) {
-			Set<ConstraintNode> mentioningConstraintNodes = 
+
+			List<ConstraintNode> mentioningConstraintNodes = 
 					BasicParameterNodeHelper.getMentioningConstraints((BasicParameterNode) abstractNode);
 
 			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);

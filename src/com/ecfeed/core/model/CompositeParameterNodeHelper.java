@@ -121,7 +121,7 @@ public class CompositeParameterNodeHelper {
 
 		return rootNode;
 	}
-	
+
 	private static void getLocalCompositeParametersLinkedToGlobalRecursive(
 			IAbstractNode currentNode,
 			CompositeParameterNode globalCompositeParameterNode,
@@ -155,7 +155,7 @@ public class CompositeParameterNodeHelper {
 		}
 
 	}
-	
+
 	private static boolean isNodeIgnoredForSearchOfComposites(IAbstractNode node) {
 
 		if (node instanceof BasicParameterNode) {
@@ -194,6 +194,29 @@ public class CompositeParameterNodeHelper {
 		}
 
 		return methodNodes;
+	}
+
+	public static boolean parameterMentionsBasicParameter(
+			CompositeParameterNode compositeParameterNode,
+			BasicParameterNode checkedBasicParameterNode) {
+
+		AbstractParameterNode link = compositeParameterNode.getLinkToGlobalParameter();
+
+		if (link != null) {
+			return AbstractParameterNodeHelper.parameterMentionsBasicParameter(
+					link,checkedBasicParameterNode);		
+		}
+
+		List<AbstractParameterNode> parameters = compositeParameterNode.getParameters();
+
+		for (AbstractParameterNode abstractParameterNode : parameters) {
+
+			if (AbstractParameterNodeHelper.parameterMentionsBasicParameter(abstractParameterNode, checkedBasicParameterNode)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }

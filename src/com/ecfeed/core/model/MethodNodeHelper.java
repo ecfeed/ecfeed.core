@@ -417,4 +417,20 @@ public class MethodNodeHelper {
 		}
 	}
 
+	public static boolean methodNodeMentionsBasicParameter(
+			MethodNode methodNode,
+			BasicParameterNode basicParameterNode) {
+		
+		List<AbstractParameterNode> abstractParameterNodes = methodNode.getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
+			
+			if (AbstractParameterNodeHelper.parameterMentionsBasicParameter(abstractParameterNode, basicParameterNode)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 }

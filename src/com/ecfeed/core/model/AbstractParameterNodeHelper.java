@@ -491,9 +491,9 @@ public abstract class AbstractParameterNodeHelper {
 
 		List<AbstractParameterNode> result = new ArrayList<>();
 
-		IParametersParentNode parametersParentNode = globalParameterNode.getParametersParent();
+		IAbstractNode rootNode = AbstractNodeHelper.findRoot(globalParameterNode);
 
-		getParametersLinkedToGlobalParameterRecursive(globalParameterNode, parametersParentNode, result);
+		getParametersLinkedToGlobalParameterRecursive(globalParameterNode, rootNode, result);
 
 		return result;
 	}
@@ -503,8 +503,14 @@ public abstract class AbstractParameterNodeHelper {
 			IAbstractNode currentNode,
 			List<AbstractParameterNode> inOutLinkedParameters) {
 
-		if (isParameterLinkedToGlobal(currentNode, globBasicParameterNode)) {
-			inOutLinkedParameters.add((BasicParameterNode) currentNode);
+		if (currentNode.getName().equals("S11")) {
+			System.out.println("XYX");
+		}
+		
+		if ((currentNode instanceof AbstractParameterNode) &&
+				isParameterLinkedToGlobal((AbstractParameterNode) currentNode, globBasicParameterNode)) {
+			
+			inOutLinkedParameters.add((AbstractParameterNode) currentNode);
 			return;
 		}
 
@@ -520,20 +526,58 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	private static boolean isParameterLinkedToGlobal(
-			IAbstractNode currentNode,
+			AbstractParameterNode currentParameter,
 			AbstractParameterNode globalBasicParameterNode) {
 
-		if (!(currentNode instanceof BasicParameterNode)) {
+		AbstractParameterNode linkToGlobalParameter = currentParameter.getLinkToGlobalParameter();
+		
+		if (linkToGlobalParameter == null) {
 			return false;
 		}
-
-		BasicParameterNode basicParameterNode = (BasicParameterNode) currentNode;
-
-		if (basicParameterNode.getLinkToGlobalParameter() == globalBasicParameterNode) {
+		
+		if (linkToGlobalParameter == globalBasicParameterNode) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public static boolean parameterMentionsBasicParameter(
+			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode basicParameterNode) {
+		
+		if (abstractParameterNode instanceof BasicParameterNode) {
+			return BasicParameterNodeHelper.parameterMentionsBasicParameter(
+					(BasicParameterNode)abstractParameterNode, basicParameterNode);
+		}
+		
+		if (abstractParameterNode instanceof CompositeParameterNode) {
+			return CompositeParameterNodeHelper.parameterMentionsBasicParameter(
+					(CompositeParameterNode)abstractParameterNode, basicParameterNode);
+		}
+		
+		return false;
+	}
+
+	public static CompositeParameterNode getTopComposite(BasicParameterNode basicParameterNode) {
+		
+		IAbstractNode currentNode = basicParameterNode;
+		CompositeParameterNode topCompositeParameterNode = null;
+		
+		for (;;) {
+			
+			IAbstractNode parent = currentNode.getParent();
+			
+			if (parent == null || parent instanceof ClassNode || parent instanceof RootNode) {
+				return topCompositeParameterNode;
+			}
+			
+			if (parent instanceof CompositeParameterNode) {
+				topCompositeParameterNode = (CompositeParameterNode) parent;
+			}
+			
+			currentNode = parent;
+		}
 	}
 
 }

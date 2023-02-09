@@ -12,14 +12,9 @@ package com.ecfeed.core.operations;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNodeHelper;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
@@ -35,63 +30,104 @@ public class GenericRemoveNodesProcessorOfParameters {
 	public static void processParameters(
 			NodesByType selectedNodesByType, NodesByType inOutAffectedNodes) {
 
-		Set<BasicParameterNode> basicParameters = selectedNodesByType.getBasicParameters();
+		List<BasicParameterNode> basicParameters = selectedNodesByType.getListOfBasicParameters();
 
 		if (!basicParameters.isEmpty()) {
 			processBasicParameters(basicParameters, inOutAffectedNodes);
 		}
 
-		Set<CompositeParameterNode> compositeParameters = selectedNodesByType.getCompositeParameters();
+		List<CompositeParameterNode> compositeParameters = 
+				selectedNodesByType.getListOfCompositeParameters();
 
 		if (!compositeParameters.isEmpty()) {
-
-			List<CompositeParameterNode> compositeParametersList = 
-					new ArrayList<CompositeParameterNode>(compositeParameters);
-
-			processCompositeParameters(compositeParametersList, inOutAffectedNodes);
+			processCompositeParameters(compositeParameters, inOutAffectedNodes);
 		}
+	}
+
+	private static void processBasicParameters(
+			List<BasicParameterNode> basicParameterNodesToDelete,
+			NodesByType inOutAffectedNodes) {
+
+		List<ConstraintNode> calculatedConstraintNodesToDelete = 
+				BasicParameterNodeHelper.getMentioningConstraints(basicParameterNodesToDelete);
+
+		List<TestCaseNode> calculatedTestCaseNodesToDelete = 
+				calculateTestCaseNodesToDelete(basicParameterNodesToDelete, 0);
+
+		List<BasicParameterNode> calculatedBasicParameterNodesToDelete = 
+				calculateBasicParameterNodesToDelete(basicParameterNodesToDelete, 0);
+
+		inOutAffectedNodes.addConstraints(calculatedConstraintNodesToDelete);
+		inOutAffectedNodes.addTestCases(calculatedTestCaseNodesToDelete);
+		inOutAffectedNodes.addBasicParameters(calculatedBasicParameterNodesToDelete);
+		inOutAffectedNodes.addBasicParameters(basicParameterNodesToDelete);
 	}
 
 	private static void processCompositeParameters(
-			List<CompositeParameterNode> compositeParameterNodes, 
+			List<CompositeParameterNode> compositeParameterNodesToDelete, 
 			NodesByType inOutAffectedNodes) {
 
-		List<BasicParameterNode> basicParameterNodesToDelete = 
-				getBasicParameterNodesToDelete(compositeParameterNodes);
+		List<BasicParameterNode> calculatedBasicParameterNodesToDelete = 
+				calculateBasicParameterNodesToDelete(compositeParameterNodesToDelete);
 
-		List<ConstraintNode> constraintNodesToDelete = 
-				getConstraintsToDelete(compositeParameterNodes, basicParameterNodesToDelete);
+		List<ConstraintNode> calculatedConstraintNodesToDelete = 
+				calculateConstraintsToDelete(compositeParameterNodesToDelete, calculatedBasicParameterNodesToDelete);
 
-		List<TestCaseNode> testCaseNodesToDelete = 
-				getTestCaseNodesToDelete(compositeParameterNodes);
-		
-		List<CompositeParameterNode> compositeParameterNodesToDelete = 
-				getCompositeParameterNodesToDelete(compositeParameterNodes);
+		List<TestCaseNode> calculatedTestCaseNodesToDelete = 
+				calculateTestCaseNodesToDelete(compositeParameterNodesToDelete);
 
-		inOutAffectedNodes.addConstraints(constraintNodesToDelete);
-		inOutAffectedNodes.addTestCases(testCaseNodesToDelete);
-		inOutAffectedNodes.addBasicParameters(basicParameterNodesToDelete);
+		List<CompositeParameterNode> calculatedCompositeParameterNodesToDelete = 
+				calculateCompositeParameterNodesToDelete(compositeParameterNodesToDelete);
+
+		inOutAffectedNodes.addConstraints(calculatedConstraintNodesToDelete);
+		inOutAffectedNodes.addTestCases(calculatedTestCaseNodesToDelete);
+		inOutAffectedNodes.addBasicParameters(calculatedBasicParameterNodesToDelete);
+		inOutAffectedNodes.addCompositeParameters(calculatedCompositeParameterNodesToDelete);
 		inOutAffectedNodes.addCompositeParameters(compositeParameterNodesToDelete);
-		inOutAffectedNodes.addCompositeParameters(compositeParameterNodes);
 	}
 
-	private static List<CompositeParameterNode> getCompositeParameterNodesToDelete(
+	private static List<CompositeParameterNode> calculateCompositeParameterNodesToDelete(
 			List<CompositeParameterNode> compositeParameterNodes) {
-		
+
 		List<CompositeParameterNode> resultLinkedCompositeParameterNodes = new ArrayList<>();
-		
+
 		for (CompositeParameterNode compositeParameterNode : compositeParameterNodes) {
-		
+
 			List<CompositeParameterNode> linkedCompositeParameterNodes = 
 					CompositeParameterNodeHelper.getLinkedCompositeParameters(compositeParameterNode);
-			
+
 			resultLinkedCompositeParameterNodes.addAll(linkedCompositeParameterNodes);
 		}
-		
+
 		return resultLinkedCompositeParameterNodes;
 	}
 
-	private static List<BasicParameterNode> getBasicParameterNodesToDelete(
+	private static List<BasicParameterNode> calculateBasicParameterNodesToDelete(
+			List<BasicParameterNode> basicParameterNodes, int dummy) {
+
+		List<BasicParameterNode> resultBasicParameterNodes = new ArrayList<>();
+
+		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
+
+			List<BasicParameterNode> currentBasicParameterNodes = 
+					calculateBasicParameterNodesToDelete(basicParameterNode);
+
+			resultBasicParameterNodes.addAll(currentBasicParameterNodes);
+		}
+
+		return resultBasicParameterNodes;
+	}
+
+	private static List<BasicParameterNode> calculateBasicParameterNodesToDelete(
+			BasicParameterNode basicParameterNode) {
+
+		List<BasicParameterNode> resultBasicParameterNodes = 
+				BasicParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
+
+		return resultBasicParameterNodes;
+	}
+
+	private static List<BasicParameterNode> calculateBasicParameterNodesToDelete(
 			List<CompositeParameterNode> compositeParametesNodes) {
 
 		List<BasicParameterNode> basicParameterNodesToReturn = new ArrayList<>();
@@ -107,7 +143,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		return basicParameterNodesToReturn;
 	}
 
-	private static List<ConstraintNode> getConstraintsToDelete(
+	private static List<ConstraintNode> calculateConstraintsToDelete(
 			List<CompositeParameterNode> compositeParameterNodes,
 			List<BasicParameterNode> basicParameterNodesToDelete) {
 
@@ -116,7 +152,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		for (CompositeParameterNode compositeParameterNode : compositeParameterNodes) {
 
 			List<ConstraintNode> currentConstraintNodes = 
-					getConstraintsToDeleteForCompositeParameter(compositeParameterNode, basicParameterNodesToDelete);
+					calculateConstraintsToDeleteForCompositeParameter(compositeParameterNode, basicParameterNodesToDelete);
 
 			resultConstraintNodesToDelete.addAll(currentConstraintNodes);
 		}
@@ -124,18 +160,18 @@ public class GenericRemoveNodesProcessorOfParameters {
 		return resultConstraintNodesToDelete;
 	}
 
-	private static List<ConstraintNode> getConstraintsToDeleteForCompositeParameter(
+	private static List<ConstraintNode> calculateConstraintsToDeleteForCompositeParameter(
 			CompositeParameterNode compositeParameterNode,
 			List<BasicParameterNode> basicParameterNodesToDelete) {
 
 		if (compositeParameterNode.isGlobalParameter()) {
-			return getConstraintsToDeleteForGlobalParameter(compositeParameterNode, basicParameterNodesToDelete);
+			return calculateConstraintsToDeleteForGlobalParameter(compositeParameterNode, basicParameterNodesToDelete);
 		}
 
-		return getConstraintsToDeleteForLocalParameter(compositeParameterNode, basicParameterNodesToDelete);
+		return calculateConstraintsToDeleteForLocalParameter(compositeParameterNode, basicParameterNodesToDelete);
 	}
 
-	private static List<ConstraintNode> getConstraintsToDeleteForGlobalParameter(
+	private static List<ConstraintNode> calculateConstraintsToDeleteForGlobalParameter(
 			CompositeParameterNode globalCompositeParameterNode,
 			List<BasicParameterNode> basicParameterNodesToDelete) {
 
@@ -147,7 +183,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		for (CompositeParameterNode compositeParameterNode : linkedCompositeParameterNodes) {
 
 			List<ConstraintNode> currentConstraintNodes = 
-					getConstraintsToDeleteForLocalParameter(
+					calculateConstraintsToDeleteForLocalParameter(
 							compositeParameterNode, basicParameterNodesToDelete);
 
 			resultConstraintNodes.addAll(currentConstraintNodes);
@@ -156,7 +192,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		return resultConstraintNodes;
 	}
 
-	private static List<ConstraintNode> getConstraintsToDeleteForLocalParameter(
+	private static List<ConstraintNode> calculateConstraintsToDeleteForLocalParameter(
 			CompositeParameterNode compositeParameterNode, 
 			List<BasicParameterNode> basicParameterNodesToDelete) {
 
@@ -202,7 +238,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		}
 	}
 
-	private static List<TestCaseNode> getTestCaseNodesToDelete(
+	private static List<TestCaseNode> calculateTestCaseNodesToDelete(
 			List<CompositeParameterNode> compositeParameterNodes) {
 
 		List<TestCaseNode> resultConstraintNodesToDelete = new ArrayList<>();
@@ -210,7 +246,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		for (CompositeParameterNode compositeParameterNode : compositeParameterNodes) {
 
 			List<TestCaseNode> currentConstraintNodes = 
-					getTestCasesToDeleteForDelete(compositeParameterNode);
+					calculateTestCasesToDeleteForDelete(compositeParameterNode);
 
 			resultConstraintNodesToDelete.addAll(currentConstraintNodes);
 		}
@@ -218,17 +254,47 @@ public class GenericRemoveNodesProcessorOfParameters {
 		return resultConstraintNodesToDelete;
 	}
 
-	private static List<TestCaseNode> getTestCasesToDeleteForDelete(
+	private static List<TestCaseNode> calculateTestCaseNodesToDelete(
+			List<BasicParameterNode> basicParameterNodes, int dummy) {
+
+		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
+
+		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
+
+			List<TestCaseNode> currentTestCaseNodes = 
+					calculateTestCasesToDeleteForSingleParameter(basicParameterNode);
+
+			resultTestCaseNodesToDelete.addAll(currentTestCaseNodes);
+		}
+
+		return resultTestCaseNodesToDelete;
+	}
+
+	private static List<TestCaseNode> calculateTestCasesToDeleteForDelete(
 			CompositeParameterNode compositeParameterNode) {
 
 		if (compositeParameterNode.isGlobalParameter()) {
-			return getTestCasesToDeleteForGlobalParameter(compositeParameterNode);
+			return calculateTestCasesToDeleteForGlobalParameter(compositeParameterNode);
 		}
 
-		return getTestCasesToDeleteForLocalParameter(compositeParameterNode);
+		return calculateTestCasesToDeleteForLocalParameter(compositeParameterNode);
 	}
 
-	private static List<TestCaseNode> getTestCasesToDeleteForGlobalParameter(
+	private static List<TestCaseNode> calculateTestCasesToDeleteForSingleParameter(
+			BasicParameterNode basicParameterNode) {
+
+		List<TestCaseNode> resultTestCaseNodes = new ArrayList<>();
+
+		List<MethodNode> mentionininMethods = BasicParameterNodeHelper.getMentioningMethodNodes(basicParameterNode);
+
+		for (MethodNode methodNode : mentionininMethods) {
+			resultTestCaseNodes.addAll(methodNode.getTestCases());
+		}
+
+		return resultTestCaseNodes;
+	}
+
+	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalParameter(
 			CompositeParameterNode globalCompositeParameterNode) {
 
 		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
@@ -240,7 +306,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		for (CompositeParameterNode linkedCompositeParameterNode : linkedCompositeParameterNodes) {
 
 			List<TestCaseNode> testCases = 
-					getTestCasesToDeleteForLocalParameter(linkedCompositeParameterNode);
+					calculateTestCasesToDeleteForLocalParameter(linkedCompositeParameterNode);
 
 
 
@@ -250,7 +316,7 @@ public class GenericRemoveNodesProcessorOfParameters {
 		return resultTestCaseNodesToDelete;
 	}
 
-	private static List<TestCaseNode> getTestCasesToDeleteForLocalParameter(
+	private static List<TestCaseNode> calculateTestCasesToDeleteForLocalParameter(
 			CompositeParameterNode compositeParameterNode) {
 
 		MethodNode methodNode = MethodNodeHelper.findMethodNode(compositeParameterNode);
@@ -259,60 +325,47 @@ public class GenericRemoveNodesProcessorOfParameters {
 	}
 
 
-	private static void processBasicParameters(
-			Set<BasicParameterNode> basicParameters,
-			NodesByType inOutAffectedNodes) {
+	//	private static void accumulateAffectedTestCases(
+	//			BasicParameterNode basicParameterNode,
+	//			NodesByType inOutAffectedNodes) {
+	//
+	//		if (basicParameterNode.isGlobalParameter()) {
+	//
+	//			List<AbstractParameterNode> linkedParameters = 
+	//					AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
+	//
+	//			for (AbstractParameterNode abstractParameterNode : linkedParameters) {
+	//
+	//				MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
+	//
+	//				inOutAffectedNodes.addTestCases(methodNode.getTestCases());
+	//			}
+	//		} else {
+	//
+	//			MethodNode methodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
+	//			inOutAffectedNodes.addTestCases(methodNode.getTestCases());
+	//
+	//		}
+	//	}
 
-		for (BasicParameterNode basicParameterNode : basicParameters) {
-
-			accumulateAffectedConstraints(basicParameterNode, inOutAffectedNodes);
-			accumulateAffectedTestCases(basicParameterNode, inOutAffectedNodes);
-
-			inOutAffectedNodes.addNode(basicParameterNode);
-		}
-	}
-
-	private static void accumulateAffectedTestCases(
-			BasicParameterNode basicParameterNode,
-			NodesByType inOutAffectedNodes) {
-
-		if (basicParameterNode.isGlobalParameter()) {
-
-			List<AbstractParameterNode> linkedParameters = 
-					AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
-
-			for (AbstractParameterNode abstractParameterNode : linkedParameters) {
-
-				MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
-
-				inOutAffectedNodes.addTestCases(methodNode.getTestCases());
-			}
-		} else {
-
-			MethodNode methodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
-			inOutAffectedNodes.addTestCases(methodNode.getTestCases());
-
-		}
-	}
-
-	private static void accumulateAffectedConstraints(
-			IAbstractNode abstractNode, NodesByType inOutAffectedNodes) {
-
-		if (abstractNode instanceof ChoiceNode) {
-			Set<ConstraintNode> mentioningConstraintNodes = 
-					ChoiceNodeHelper.getMentioningConstraints((ChoiceNode) abstractNode);
-
-			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
-			return;
-		} 
-
-		if (abstractNode instanceof BasicParameterNode) {
-			Set<ConstraintNode> mentioningConstraintNodes = 
-					BasicParameterNodeHelper.getMentioningConstraints((BasicParameterNode) abstractNode);
-
-			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
-			return;
-		}
-	}
+	//	private static void accumulateAffectedConstraints(
+	//			IAbstractNode abstractNode, NodesByType inOutAffectedNodes) {
+	//
+	//		if (abstractNode instanceof ChoiceNode) {
+	//			Set<ConstraintNode> mentioningConstraintNodes = 
+	//					ChoiceNodeHelper.getMentioningConstraints((ChoiceNode) abstractNode);
+	//
+	//			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
+	//			return;
+	//		} 
+	//
+	//		if (abstractNode instanceof BasicParameterNode) {
+	//			Set<ConstraintNode> mentioningConstraintNodes = 
+	//					BasicParameterNodeHelper.getMentioningConstraints((BasicParameterNode) abstractNode);
+	//
+	//			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
+	//			return;
+	//		}
+	//	}
 
 }

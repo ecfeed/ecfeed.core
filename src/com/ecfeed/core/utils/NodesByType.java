@@ -10,6 +10,7 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -150,8 +151,21 @@ public class NodesByType {
 		return fBasicParameters;
 	}
 
+	public List<BasicParameterNode> getListOfBasicParameters() {
+		
+		List<BasicParameterNode> list =	new ArrayList<>(fBasicParameters);
+		return list;
+	}
+	
 	public Set<CompositeParameterNode> getCompositeParameters() {
 		return fCompositeParameters;
+	}
+
+	public List<CompositeParameterNode> getListOfCompositeParameters() {
+		
+		List<CompositeParameterNode> list =	new ArrayList<>(fCompositeParameters);
+
+		return list;
 	}
 
 	public Set<ChoiceNode> getChoices() {

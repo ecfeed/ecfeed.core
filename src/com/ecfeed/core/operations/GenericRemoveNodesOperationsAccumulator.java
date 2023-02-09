@@ -211,7 +211,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 				IModelOperation operation = 
 						new OnBasicParameterOperationRemove(
-								(MethodNode)parent, basicParameterNode, validate, extLanguageManager);
+								(MethodNode)parent, basicParameterNode, extLanguageManager);
 
 				result.add(operation);
 				continue;

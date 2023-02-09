@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -165,6 +166,94 @@ public class BasicParameterNodeHelper {
 		return extractTypeFromSignature(linkedParameterSignature);
 	}
 
+	public static List<MethodNode> getMentioningMethodNodes(BasicParameterNode basicParameterNode) {
+
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
+
+		if (methodNode != null) {
+			return Arrays.asList(methodNode);
+		}
+		
+		IAbstractNode parentAbstractNode = basicParameterNode.getParent();
+		
+		if (parentAbstractNode instanceof CompositeParameterNode) {
+			return getMentioningMethodsForChildOfGlobalStructure(basicParameterNode);
+		}
+
+		return getMentioningMethodsForGlobalParameter(basicParameterNode);
+	}
+
+	private static List<MethodNode> getMentioningMethodsForChildOfGlobalStructure(
+			BasicParameterNode basicParameterNode) {
+		
+		CompositeParameterNode compositeParameterNode = 
+				AbstractParameterNodeHelper.getTopComposite(basicParameterNode);
+		
+		List<MethodNode> resultMethodNodes = new ArrayList<>();
+
+		List<AbstractParameterNode> linkedParameters = 
+				AbstractParameterNodeHelper.getLinkedParameters(compositeParameterNode);
+
+		for (AbstractParameterNode linkedParameterNode : linkedParameters) {
+
+			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
+
+			if (methodNode != null) {
+				resultMethodNodes.add(methodNode);
+			}
+		}
+
+		return resultMethodNodes;
+	}
+
+	private static List<MethodNode> getMentioningMethodsForGlobalParameter(BasicParameterNode basicParameterNode) {
+		
+		List<MethodNode> resultMethodNodes = new ArrayList<>();
+
+		List<AbstractParameterNode> linkedParameters = 
+				AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
+
+		for (AbstractParameterNode linkedParameterNode : linkedParameters) {
+
+			MethodNode methodNode = MethodNodeHelper.findMethodNode(linkedParameterNode);
+
+			if (methodNode != null) {
+				resultMethodNodes.add(methodNode);
+			}
+		}
+
+		return resultMethodNodes;
+	}
+
+	//	private static void getMentioningMethodNodesRecursive(
+	//			BasicParameterNode basicParameterNode, 
+	//			IAbstractNode currentNode,
+	//			List<MethodNode> inOutResultMethodNodes) {
+	//		
+	//		if ((currentNode instanceof CompositeParameterNode) || (currentNode instanceof BasicParameterNode)) {
+	//			return;
+	//		}
+	//		
+	//		if (currentNode instanceof MethodNode) {
+	//			
+	//			MethodNode methodNode = (MethodNode) currentNode;
+	//			
+	//			if (MethodNodeHelper.methodNodeMentionsBasicParameter(methodNode, basicParameterNode)) {
+	//				inOutResultMethodNodes.add(methodNode);
+	//			}
+	//			
+	//			return;
+	//		}
+	//		
+	//		
+	//		List<IAbstractNode> children = currentNode.getChildren();
+	//		
+	//		for (IAbstractNode abstractNode : children) {
+	//			getMentioningMethodNodesRecursive(basicParameterNode, abstractNode, inOutResultMethodNodes);
+	//		}
+	//		
+	//	}
+
 	public static Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
 
 		Set<ConstraintNode> result = new HashSet<ConstraintNode>();
@@ -176,21 +265,38 @@ public class BasicParameterNodeHelper {
 		return result;
 	}
 
-	public static Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
+	public static List<ConstraintNode> getMentioningConstraints(List<BasicParameterNode> basicParameterNodesToDelete) {
 
-		if (parameter.isGlobalParameter()) {
+		Set<ConstraintNode> resultConstraintNodesToDelete = new HashSet<>();
 
-			List<BasicParameterNode> linkedParameters = BasicParameterNodeHelper.getLinkedBasicParameters(parameter);
+		for (BasicParameterNode basicParameterNode : basicParameterNodesToDelete) {
 
-			Set<ConstraintNode> mentioningConstraints = getMentioningConstraints(linkedParameters);
+			List<ConstraintNode> currentConstraintNodes =
+					getMentioningConstraints(basicParameterNode);
 
-			return mentioningConstraints;
-
+			resultConstraintNodesToDelete.addAll(currentConstraintNodes);
 		}
+
+		ArrayList<ConstraintNode> resultList = new ArrayList<>(resultConstraintNodesToDelete);
+		return resultList;
+	}
+
+	public static List<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) { 
+
+		Set<ConstraintNode> setOfMentioningConstraints = getMentioningConstraints(parameter, 0);
+
+		ArrayList<ConstraintNode> mentioningConstraints = new ArrayList<>(setOfMentioningConstraints);
+
+		return mentioningConstraints;
+	}
+
+	private static Set<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter, int dummy) {
 
 		Set<ConstraintNode> result = new HashSet<>();
 
-		getMentioningConstraintsRecursive(parameter.getParent(), parameter, result);
+		RootNode rootNode = AbstractNodeHelper.findRootNode(parameter);
+
+		getMentioningConstraintsRecursive(rootNode, parameter, result);
 
 		return result;
 	}
@@ -204,27 +310,25 @@ public class BasicParameterNodeHelper {
 			return;
 		}
 
-		if (currentNode instanceof MethodNode) {
-
-			MethodNode methodNode = (MethodNode) currentNode;
-
-			Set<ConstraintNode> constraintsOfMethod = methodNode.getMentioningConstraints(parameter);
-			inOutConstraints.addAll(constraintsOfMethod);
+		if ((currentNode instanceof BasicParameterNode) || (currentNode instanceof ChoiceNode)) {
 			return;
 		}
 
-		if (currentNode instanceof CompositeParameterNode) {
+		if (currentNode instanceof IConstraintsParentNode) {
 
-			CompositeParameterNode compositeParameterNode = (CompositeParameterNode) currentNode;
+			IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) currentNode;
 
-			Set<ConstraintNode> constraintsOfMethod = compositeParameterNode.getMentioningConstraints(parameter);
+			Set<ConstraintNode> constraintsOfMethod = 
+					constraintsParentNode.getMentioningConstraints(parameter);
+
 			inOutConstraints.addAll(constraintsOfMethod);
-
-			getMentioningConstraintsRecursive(currentNode.getParent(), parameter, inOutConstraints);
-			return;
 		}
 
-		ExceptionHelper.reportRuntimeException("Invalid type of node.");
+		List<IAbstractNode> children = currentNode.getChildren();
+
+		for (IAbstractNode child : children) {
+			getMentioningConstraintsRecursive(child, parameter, inOutConstraints);
+		}
 	}
 
 	private static String extractTypeFromSignature(String linkedParameterSignature) {
@@ -233,9 +337,14 @@ public class BasicParameterNodeHelper {
 		return type;
 	}
 
-	public static List<BasicParameterNode> getLinkedBasicParameters(BasicParameterNode globalParameterNode) {
+	public static List<BasicParameterNode> getLinkedBasicParameters(
+			BasicParameterNode basicParameterNode) {
 
-		List<AbstractParameterNode> abstractParameterNodes = AbstractParameterNodeHelper.getLinkedParameters(globalParameterNode);
+		if (!basicParameterNode.isGlobalParameter()) {
+			return new ArrayList<>();
+		}
+
+		List<AbstractParameterNode> abstractParameterNodes = AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
 
 		List<BasicParameterNode> basicParameterNodes = getBasicParameters(abstractParameterNodes);
 
@@ -307,6 +416,27 @@ public class BasicParameterNodeHelper {
 		globalParameterNode.addChoice(choiceNode);
 
 		return choiceNode;
+	}
+
+	public static boolean parameterMentionsBasicParameter(
+			BasicParameterNode basicParameterNode,
+			BasicParameterNode checkedBasicParameterNode) {
+
+		if (basicParameterNode.equals(checkedBasicParameterNode)) {
+			return true;
+		}
+
+		AbstractParameterNode link = basicParameterNode.getLinkToGlobalParameter();
+
+		if (link == null) {
+			return false;
+		}
+
+		if (link.equals(basicParameterNode)) {
+			return true;
+		}
+
+		return false;
 	}
 
 }

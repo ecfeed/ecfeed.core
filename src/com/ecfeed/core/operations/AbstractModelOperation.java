@@ -57,6 +57,24 @@ public abstract class AbstractModelOperation implements IModelOperation {
 
 	public String createDescription(String... operationParameters) {
 
+		String parametersString = createDescriptionOfParameters(operationParameters);
+
+		return "OP:" + fName + "(" + parametersString + ")";
+	}
+
+	public String createDescriptionOfReverseOperation(String... operationParameters) {
+
+		String parametersString = createDescriptionOfParameters(operationParameters);
+
+		return "REVERSE OP:" + fName + "(" + parametersString + ")";
+	}
+	
+	public static String createReverseOperationName(String name) {
+		return "REVERSE " + name;
+	}
+
+	private String createDescriptionOfParameters(String... operationParameters) {
+
 		String parametersString = "";
 		String separator = ", ";
 
@@ -66,9 +84,9 @@ public abstract class AbstractModelOperation implements IModelOperation {
 		}
 
 		parametersString = StringHelper.getAllBeforeLastToken(parametersString, separator);
-
-		return "OP:" + fName + "(" + parametersString + ")";
+		return parametersString;
 	}
+
 
 	public IExtLanguageManager getExtLanguageManager() {
 		return fExtLanguageManager;

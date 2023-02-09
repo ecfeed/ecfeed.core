@@ -27,6 +27,7 @@ import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
+import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
@@ -114,7 +115,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 			if (parent instanceof MethodNode) {
 
 				return new OnBasicParameterOperationRemove(
-						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+						(MethodNode)node.getParent(), node, fExtLanguageManager);
 			}
 
 			if (parent instanceof CompositeParameterNode) {
@@ -134,8 +135,11 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 			if (parent instanceof MethodNode) {
 
-				return new OnBasicParameterOperationRemove(
-						(MethodNode)node.getParent(), node, fValidate, fExtLanguageManager);
+				return new OnCompositeParameterOperationRemove(
+						(MethodNode)node.getParent(), 
+						(CompositeParameterNode)node, 
+						fValidate, 
+						fExtLanguageManager);
 			} 
 
 			if (parent instanceof CompositeParameterNode) {
@@ -170,7 +174,7 @@ public class FactoryRemoveOperation { // TODO MO-RE do we need this ?
 
 				//return new MethodOperationRemoveConstraint(
 				//		(MethodNode) abstractParent, node, fExtLanguageManager);
-				
+
 				return new OnConstraintOperationRemove(
 						(MethodNode) abstractParent, node, fExtLanguageManager);
 			}

@@ -17,7 +17,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.RegexHelper;
 
-public class ModelHelper {
+public class ModelHelper { // TODO MO-RE move functions into specific classes
 
 	public static String getFullPath(IAbstractNode abstractNode, IExtLanguageManager extLanguageManager) {
 
@@ -98,7 +98,7 @@ public class ModelHelper {
 		return name.matches(RegexHelper.REGEX_TEST_CASE_NODE_NAME);
 	}
 
-	public static RootNode findRoot(IAbstractNode startNode) { 
+	public static RootNode findRoot(IAbstractNode startNode) { // TODO MO-RE there is a similar function in AbstractNodeHelper
 
 		IAbstractNode node = startNode;
 

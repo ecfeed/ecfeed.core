@@ -876,11 +876,11 @@ public class ChoiceNodeHelper {
 		}
 	}
 
-	public static Set<ConstraintNode> getMentioningConstraints(ChoiceNode choiceNode) {
+	public static List<ConstraintNode> getMentioningConstraints(ChoiceNode choiceNode) {
 
 		BasicParameterNode basicParameterNode = getBasicParameter(choiceNode);
 
-		Set<ConstraintNode> constraintMentioningParameter = 
+		List<ConstraintNode> constraintMentioningParameter = 
 				BasicParameterNodeHelper.getMentioningConstraints(basicParameterNode);
 
 		Set<ConstraintNode> result = new HashSet<>();
@@ -893,7 +893,7 @@ public class ChoiceNodeHelper {
 			}
 		}
 
-		return result;
+		return new ArrayList<ConstraintNode>(result);
 	}
 
 	public static Set<TestCaseNode> getMentioningTestCases(ChoiceNode choiceNodeNotFromTestCase) {
