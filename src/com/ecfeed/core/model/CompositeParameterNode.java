@@ -370,15 +370,6 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return COMPOSITE_PARAMETER_TYPE;
 	}
-	
-	public CompositeParameterNode getLinkDestination() {
-		
-		if (isLinked() && (getLinkToGlobalParameter() != null)) {
-			return ((CompositeParameterNode) getLinkToGlobalParameter()).getLinkDestination();
-		}
-		
-		return this;
-	}
 
 	@Override
 	public List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) {
@@ -428,5 +419,15 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		}
 
 		return nodes;
+	}
+
+	@Override
+	public CompositeParameterNode getLinkDestination() {
+		
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return ((CompositeParameterNode) getLinkToGlobalParameter()).getLinkDestination();
+		}
+		
+		return this;
 	}
 }

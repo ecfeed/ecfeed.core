@@ -1001,10 +1001,10 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 			BasicParameterNode leftParameter = statement.getLeftParameter();
 			
-			IAbstractNode method = leftParameter.getParent();
+			IAbstractNode container = leftParameter.getContainer();
 			
-			if (method != null && (method instanceof MethodNode)) {
-				fMethods.add((MethodNode) method);
+			if (container instanceof MethodNode) {
+				fMethods.add((MethodNode) container);
 			}
 			
 			return null;

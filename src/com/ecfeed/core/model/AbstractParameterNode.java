@@ -26,6 +26,8 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		super(name, modelChangeRegistrator);
 	}
 
+	abstract public AbstractParameterNode getLinkDestination();
+
 	public void setLinkToGlobalParameter(AbstractParameterNode node) {
 
 		this.fLinkToGlobalParameter = node;
