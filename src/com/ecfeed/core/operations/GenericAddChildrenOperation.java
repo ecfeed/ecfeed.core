@@ -61,6 +61,6 @@ public class GenericAddChildrenOperation extends CompositeOperation {
 	}
 
 	public boolean enabled(){
-		return operations().isEmpty() == false;
+		return getOperations().isEmpty() == false;
 	}
 }

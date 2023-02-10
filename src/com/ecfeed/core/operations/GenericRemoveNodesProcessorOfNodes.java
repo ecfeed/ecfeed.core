@@ -14,19 +14,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.CompositeParameterNode;
-import com.ecfeed.core.model.CompositeParameterNodeHelper;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNodeHelper;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
@@ -55,7 +50,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 				fAffectedNodesByType,
 				extLanguageManager, 
 				validate);
-		
+
 		if (fAffectedNodesByType.getTestSuiteNodes().size() > 0) {
 			ExceptionHelper.reportRuntimeException("Test suites not expected.");
 		}
@@ -146,7 +141,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 
 	private static void processParametersAndChoices(NodesByType selectedNodesByType, NodesByType inOutAffectedNodes) {
 
-		processParameters(selectedNodesByType, inOutAffectedNodes);
+		GenericRemoveNodesProcessorOfParameters.processParameters(selectedNodesByType, inOutAffectedNodes);
 
 		processChoices(selectedNodesByType,	inOutAffectedNodes);
 	}
@@ -162,23 +157,6 @@ public class GenericRemoveNodesProcessorOfNodes {
 					choiceNodes, 
 					inOutAffectedNodes);
 		}
-	}
-
-	private static void processParameters(
-			NodesByType selectedNodesByType, NodesByType inOutAffectedNodes) {
-
-		Set<BasicParameterNode> basicParameters = selectedNodesByType.getBasicParameters();
-
-		if (!basicParameters.isEmpty()) {
-			processBasicParameters(basicParameters, inOutAffectedNodes);
-		}
-
-		Set<CompositeParameterNode> compositeParameters = selectedNodesByType.getCompositeParameters();
-
-		if (!compositeParameters.isEmpty()) {
-			processCompositeParameters(compositeParameters, inOutAffectedNodes);
-		}
-
 	}
 
 	private static void processConstraints(NodesByType selectedNodesByType, NodesByType outAffectedNodes) {
@@ -207,95 +185,17 @@ public class GenericRemoveNodesProcessorOfNodes {
 		}
 	}
 
-	private static void processCompositeParameters(
-			Set<CompositeParameterNode> compositeParameters, 
-			NodesByType inOutAffectedNodes) {
-
-		processLocalBasicChildrenOfCompositeParameters(compositeParameters,	inOutAffectedNodes);
-
-		processLocalCompositeParameters(compositeParameters, inOutAffectedNodes);
-	}
-
-	private static void processLocalBasicChildrenOfCompositeParameters(
-			Set<CompositeParameterNode> compositeParameters,
-			NodesByType inOutAffectedNodes) {
-
-		for (CompositeParameterNode compositeParameterNode : compositeParameters) {
-			processAllChildBasicParametersOfCompositeParameter(compositeParameterNode, inOutAffectedNodes);
-		}
-	}
-
-	private static void processAllChildBasicParametersOfCompositeParameter(
-			CompositeParameterNode compositeParameterNode,
-			NodesByType inOutAffectedNodes) {
-
-		List<BasicParameterNode> basicParameterNodes = 
-				CompositeParameterNodeHelper.getAllChildBasicParameters(compositeParameterNode);
-
-		for (BasicParameterNode basicParameterNode : basicParameterNodes) {
-			inOutAffectedNodes.addNode(basicParameterNode);
-		}
-	}
-
-	private static void processLocalCompositeParameters(
-			Set<CompositeParameterNode> compositeParameters,
-			NodesByType inOutAffectedNodes) {
-
-		for (CompositeParameterNode compositeParameterNode : compositeParameters) {
-
-			if (!compositeParameterNode.isGlobalParameter()) {
-				inOutAffectedNodes.addNode(compositeParameterNode);
-			}
-		}
-	}
-
-	private static void processBasicParameters(
-			Set<BasicParameterNode> basicParameters,
-			NodesByType inOutAffectedNodes) {
-
-		for (BasicParameterNode basicParameterNode : basicParameters) {
-
-			accumulateAffectedConstraints(basicParameterNode, inOutAffectedNodes);
-			accumulateAffectedTestCases(basicParameterNode, inOutAffectedNodes);
-
-			inOutAffectedNodes.addNode(basicParameterNode);
-		}
-	}
-
-	private static void accumulateAffectedTestCases(
-			BasicParameterNode basicParameterNode,
-			NodesByType inOutAffectedNodes) {
-
-		if (basicParameterNode.isGlobalParameter()) {
-
-			List<AbstractParameterNode> linkedParameters = 
-					GlobalParameterNodeHelper.getLinkedParameters(basicParameterNode);
-
-			for (AbstractParameterNode abstractParameterNode : linkedParameters) {
-
-				MethodNode methodNode = MethodNodeHelper.findMethodNode(abstractParameterNode);
-
-				inOutAffectedNodes.addTestCases(methodNode.getTestCases());
-			}
-		} else {
-
-			MethodNode methodNode = MethodNodeHelper.findMethodNode(basicParameterNode);
-			inOutAffectedNodes.addTestCases(methodNode.getTestCases());
-
-		}
-	}
-
 	private static void processTestSuites(Set<TestSuiteNode> testSuiteNodes, NodesByType inOutAffectedNodes) {
-		
+
 		for (TestSuiteNode testSuiteNode : testSuiteNodes) {
 			addTestCasesOfTestSuite(testSuiteNode, inOutAffectedNodes);
 		}
 	}
 
 	private static void addTestCasesOfTestSuite(TestSuiteNode testSuiteNode, NodesByType inOutAffectedNodes) {
-		
+
 		List<TestCaseNode> testCaseNodes = testSuiteNode.getTestCaseNodes();
-		
+
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 			inOutAffectedNodes.addNode(testCaseNode);
 		}
@@ -333,7 +233,8 @@ public class GenericRemoveNodesProcessorOfNodes {
 			IAbstractNode abstractNode, NodesByType inOutAffectedNodes) {
 
 		if (abstractNode instanceof ChoiceNode) {
-			Set<ConstraintNode> mentioningConstraintNodes = 
+
+			List<ConstraintNode> mentioningConstraintNodes = 
 					ChoiceNodeHelper.getMentioningConstraints((ChoiceNode) abstractNode);
 
 			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
@@ -341,7 +242,8 @@ public class GenericRemoveNodesProcessorOfNodes {
 		} 
 
 		if (abstractNode instanceof BasicParameterNode) {
-			Set<ConstraintNode> mentioningConstraintNodes = 
+
+			List<ConstraintNode> mentioningConstraintNodes = 
 					BasicParameterNodeHelper.getMentioningConstraints((BasicParameterNode) abstractNode);
 
 			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);

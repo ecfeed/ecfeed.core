@@ -150,7 +150,7 @@ public abstract class AbstractNodeHelper  {
 		return parent.getRoot();
 	}
 
-	public static RootNode findRootNode(IAbstractNode abstractNode) {
+	public static RootNode findRootNode(IAbstractNode abstractNode) { // TODO MO-RE move to root node helper
 
 		IAbstractNode parent = abstractNode.getParent();
 
@@ -165,7 +165,7 @@ public abstract class AbstractNodeHelper  {
 		return findRootNode(parent);
 	}
 
-	public static ClassNode findClassNode(IAbstractNode abstractNode) {
+	public static ClassNode findClassNode(IAbstractNode abstractNode) { // TODO MO-RE move to classNodeHelper
 
 		IAbstractNode parent = abstractNode.getParent();
 

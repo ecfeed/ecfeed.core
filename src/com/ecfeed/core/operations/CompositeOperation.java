@@ -145,7 +145,7 @@ public class CompositeOperation extends AbstractModelOperation {
 	}
 
 
-	protected List<IModelOperation> operations() {
+	public List<IModelOperation> getOperations() {
 		return fOperations;
 	}
 

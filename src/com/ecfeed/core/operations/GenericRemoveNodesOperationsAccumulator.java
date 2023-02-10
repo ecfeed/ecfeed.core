@@ -26,6 +26,7 @@ import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.operations.nodes.OnBasicParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnClassOperationRemove;
+import com.ecfeed.core.operations.nodes.OnCompositeParameterOperationRemove;
 import com.ecfeed.core.operations.nodes.OnConstraintOperationRemove;
 import com.ecfeed.core.operations.nodes.OnMethodOperationRemoveFromClass;
 import com.ecfeed.core.operations.nodes.OnParameterOperationRemoveFromComposite;
@@ -50,10 +51,6 @@ public class GenericRemoveNodesOperationsAccumulator {
 			addOperationsForConstraints(outAffectedNodesByType, extLanguageManager, result);
 		}
 
-		//		if (!outAffectedNodesByType.getTestSuiteNodes().isEmpty()) {
-		//			addOperationsForTestSuites(outAffectedNodesByType, extLanguageManager, result);
-		//		}
-		//
 		if (!outAffectedNodesByType.getTestCaseNodes().isEmpty()) {
 			addOperationsForTestCases(outAffectedNodesByType, extLanguageManager, result);
 		}
@@ -214,7 +211,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 
 				IModelOperation operation = 
 						new OnBasicParameterOperationRemove(
-								(MethodNode)parent, basicParameterNode, validate, extLanguageManager);
+								(MethodNode)parent, basicParameterNode, extLanguageManager);
 
 				result.add(operation);
 				continue;
@@ -237,31 +234,48 @@ public class GenericRemoveNodesOperationsAccumulator {
 			IExtLanguageManager extLanguageManager, 
 			List<IModelOperation> result) {
 
-		Set<CompositeParameterNode> basicParameterNodes = outAffectedNodesByType.getCompositeParameters();
+		Set<CompositeParameterNode> compositeParameterNodes = outAffectedNodesByType.getCompositeParameters();
 
-		for (CompositeParameterNode basicParameterNode : basicParameterNodes) {
+		for (CompositeParameterNode basicParameterNode : compositeParameterNodes) {
 
-			IAbstractNode parent = basicParameterNode.getParent();
+			IParametersParentNode parent = (IParametersParentNode)basicParameterNode.getParent();
+			
+			IModelOperation modelOperation = 
+								new OnCompositeParameterOperationRemove(
+										parent, basicParameterNode, validate, extLanguageManager);
+		
+			result.add(modelOperation);
+		
 
-			if (parent instanceof MethodNode) {
-
-				IModelOperation modelOperation = 
-						new OnBasicParameterOperationRemove(
-								(MethodNode)parent, basicParameterNode, validate, extLanguageManager);
-
-				result.add(modelOperation);
-				continue;
-			} 
-
-			if (parent instanceof CompositeParameterNode) {
-
-				IModelOperation modelOperation = 
-						new OnParameterOperationRemoveFromComposite(
-								(CompositeParameterNode)parent, basicParameterNode, extLanguageManager);
-
-				result.add(modelOperation);
-				continue;
-			}
+			//			if (parent instanceof MethodNode) {
+			//
+			//				IModelOperation modelOperation = 
+			//						new OnBasicParameterOperationRemove(
+			//								parent, basicParameterNode, validate, extLanguageManager);
+			//
+			//				result.add(modelOperation);
+			//				continue;
+			//			} 
+			//	
+			//			if (parent instanceof MethodNode) {
+			//
+			//				IModelOperation modelOperation = 
+			//						new OnBasicParameterOperationRemove(
+			//								(MethodNode)parent, basicParameterNode, validate, extLanguageManager);
+			//
+			//				result.add(modelOperation);
+			//				continue;
+			//			} 
+			//
+			//			if (parent instanceof CompositeParameterNode) {
+			//
+			//				IModelOperation modelOperation = 
+			//						new OnParameterOperationRemoveFromComposite(
+			//								(CompositeParameterNode)parent, basicParameterNode, extLanguageManager);
+			//
+			//				result.add(modelOperation);
+			//				continue;
+			//			}
 		}
 	}
 

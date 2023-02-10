@@ -47,8 +47,7 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 
 		List<IModelOperation> operations =  
 				GenericRemoveNodesOperationsAccumulator.convertNodesToOperations(
-						processedNodes, 
-						extLanguageManager, typeAdapterProvider, validate);
+						processedNodes,	extLanguageManager, typeAdapterProvider, validate);
 
 		addChildOperations(operations);
 	}

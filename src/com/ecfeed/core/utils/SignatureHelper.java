@@ -12,6 +12,11 @@ package com.ecfeed.core.utils;
 
 public class SignatureHelper {
 
+	public enum SignatureType {
+		WITH_TYPE,
+		WITHOUT_TYPE
+	}
+	
 	public static final String SIGNATURE_NAME_SEPARATOR = ":";  // separates sections of composite 
 	public static final String SIGNATURE_TYPE_SEPARATOR = " : ";  // name from type
 	public static final String SIGNATURE_CONTENT_SEPARATOR = " : "; // name from content

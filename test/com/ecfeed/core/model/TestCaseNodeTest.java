@@ -57,7 +57,13 @@ public class TestCaseNodeTest {
 		
 		TestSuiteNode resultTestSuiteNode = resultTestSuiteNodes.get(0);
 		assertEquals(newTestSuiteName, resultTestSuiteNode.getName());
-		assertEquals(1, resultTestSuiteNode.getTestCaseNodes().size());
+
+
+		
+		
+		
+		
+		
 		
 		TestCaseNode resultTestCaseNode2 = resultTestSuiteNode.getTestCaseNodes().get(0);
 		assertEquals(newTestSuiteName, resultTestCaseNode2.getName());

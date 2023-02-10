@@ -10,8 +10,10 @@
 
 package com.ecfeed.core.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.BasicParameterNode;
@@ -34,6 +36,7 @@ public class NodesByType {
 	private Set<ConstraintNode> fConstraints;
 	private Set<TestSuiteNode> fTestSuites;
 	private Set<TestCaseNode> fTestCases;
+
 
 	public NodesByType() {
 
@@ -148,8 +151,21 @@ public class NodesByType {
 		return fBasicParameters;
 	}
 
+	public List<BasicParameterNode> getListOfBasicParameters() {
+		
+		List<BasicParameterNode> list =	new ArrayList<>(fBasicParameters);
+		return list;
+	}
+	
 	public Set<CompositeParameterNode> getCompositeParameters() {
 		return fCompositeParameters;
+	}
+
+	public List<CompositeParameterNode> getListOfCompositeParameters() {
+		
+		List<CompositeParameterNode> list =	new ArrayList<>(fCompositeParameters);
+
+		return list;
 	}
 
 	public Set<ChoiceNode> getChoices() {
@@ -174,6 +190,18 @@ public class NodesByType {
 
 	public void addTestCases(Collection<TestCaseNode> testCaseNodes) {
 		fTestCases.addAll(testCaseNodes);
+	}
+
+	public void addBasicParameters(List<BasicParameterNode> basicParameterNodes) {
+		fBasicParameters.addAll(basicParameterNodes);
+	}
+
+	public void addTestCases(List<ConstraintNode> constraintsToDelete) {
+		fConstraints.addAll(constraintsToDelete);
+	}
+
+	public void addCompositeParameters(List<CompositeParameterNode> compositeParameters) {
+		fCompositeParameters.addAll(compositeParameters);
 	}
 
 }

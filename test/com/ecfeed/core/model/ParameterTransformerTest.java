@@ -29,7 +29,7 @@ import com.ecfeed.core.utils.ParameterConversionDefinition;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.ParameterConversionItemPartForChoice;
 import com.ecfeed.core.utils.ParameterConversionItemPartForLabel;
- import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
+import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 import com.ecfeed.core.utils.TestHelper;
 
 public class ParameterTransformerTest {
@@ -73,7 +73,7 @@ public class ParameterTransformerTest {
 		BasicParameterNode globalParameterNodeOfRoot = 
 				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
@@ -86,7 +86,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeForClass = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		// add methodNode 
@@ -205,7 +205,7 @@ public class ParameterTransformerTest {
 		BasicParameterNode globalParameterNodeOfRoot = 
 				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
@@ -218,7 +218,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeForClass = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		globalChoiceNodeForClass.addLabel(globalLabel1);
@@ -341,7 +341,7 @@ public class ParameterTransformerTest {
 		BasicParameterNode globalParameterNodeOfRoot = 
 				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
@@ -354,7 +354,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeForClass = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		// add methodNode 
@@ -477,7 +477,7 @@ public class ParameterTransformerTest {
 				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNode = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		globalChoiceNode.addLabel(globalLabel1);
@@ -492,7 +492,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeForClass = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		// add methodNode 
@@ -612,7 +612,7 @@ public class ParameterTransformerTest {
 				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeOfRoot = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
@@ -624,7 +624,7 @@ public class ParameterTransformerTest {
 		BasicParameterNode globalParameterNodeOfClass = 
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, globalParameterName, "String", null);
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		// add methodNode 
@@ -742,7 +742,7 @@ public class ParameterTransformerTest {
 		BasicParameterNode globalParameterNodeOfRoot = 
 				RootNodeHelper.addGlobalBasicParameterToRoot(rootNode, globalParameterName, "String", null);
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceName1, "0", null);
 
 		// add class node
@@ -755,7 +755,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, globalParameterName, "String", null);
 
 		ChoiceNode globalChoiceNodeForClass = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass, globalChoiceName1, "0", null);
 
 		// add methodNode 
@@ -889,7 +889,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, "CP1", parameterType, null);
 
 		ChoiceNode globalChoiceNode11 = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass1, "CC11", choiceValueString, null);
 
 		// add method node
@@ -953,12 +953,12 @@ public class ParameterTransformerTest {
 		BasicParameterNode tmp = (BasicParameterNode) methodParameterNode1.getLinkToGlobalParameter();
 		methodParameterNode1.setLinkToGlobalParameter(null);
 		// methodParameterNode1.setLinked(false); 
-		
+
 		List<ChoiceNode> methodParameterChoices = methodParameterNode1.getChoices();
 		assertEquals(0, methodParameterChoices.size());
-		
+
 		methodParameterNode1.setLinkToGlobalParameter(tmp);
-//		methodParameterNode1.setLinked(true); 
+		//		methodParameterNode1.setLinked(true); 
 
 		// reverting
 		reverseOperations.executeFromTail();
@@ -1008,7 +1008,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, "CP1", parameterType, null);
 
 		ChoiceNode globalChoiceNode1 = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass1, "CC1", choiceValueString, null);
 
 		ChoiceNode globalChoiceNode11 = 
@@ -1144,7 +1144,7 @@ public class ParameterTransformerTest {
 				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, "CP1", parameterType, null);
 
 		ChoiceNode globalChoiceOfClass11 =
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfClass1, "CC11", choiceValueString, null);
 
 		// add method node
@@ -1226,11 +1226,11 @@ public class ParameterTransformerTest {
 		final String choiceValueString = "1";
 
 		ChoiceNode globalChoiceNodeOfRoot1 = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfRoot1, "C1", choiceValueString, null);
 
 		ChoiceNode globalChoiceNodeOfRoot2 = 
-				GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+				BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 						globalParameterNodeOfRoot1, "C2", choiceValueString, null);
 
 		// add class node
@@ -1299,7 +1299,7 @@ public class ParameterTransformerTest {
 
 		// change Linked property for checking child choices only
 
-		
+
 		BasicParameterNode tmp = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
 		methodParameterNode.setLinkToGlobalParameter(null);
 
@@ -1314,11 +1314,11 @@ public class ParameterTransformerTest {
 
 	@Test
 	public void checkValueConversionsForDifferentTypesAndValues() {
-	
+
 		assertFalse(canConvert("ABC", tString, tInt, IsChoiceRandomized.FALSE));
 		assertTrue(canConvert("ABC", tString, tString, IsChoiceRandomized.FALSE));
 		assertTrue(canConvert("1", tString, tInt, IsChoiceRandomized.FALSE));
-		
+
 		assertTrue(canConvert("123.0", tDouble, tInt, IsChoiceRandomized.FALSE));
 		assertTrue(canConvert("123.0:123.0", tDouble, tInt, IsChoiceRandomized.TRUE));
 
@@ -1339,13 +1339,13 @@ public class ParameterTransformerTest {
 
 		assertTrue(canConvert("123", tFloat, tByte, IsChoiceRandomized.FALSE));
 		assertTrue(canConvert("123:123", tFloat, tByte, IsChoiceRandomized.TRUE));
-		
+
 		assertFalse(canConvert("false", tBoolean, tByte, IsChoiceRandomized.FALSE));
 		assertTrue(canConvert("false", tBoolean, tString, IsChoiceRandomized.FALSE));
-		
+
 		assertTrue(canConvert("false", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
 		assertTrue(canConvert("true", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
-		
+
 		assertFalse(canConvert("1", tBoolean, tBoolean, IsChoiceRandomized.FALSE));
 		assertTrue(canConvert("false", tString, tBoolean, IsChoiceRandomized.FALSE));
 	}
@@ -1355,17 +1355,17 @@ public class ParameterTransformerTest {
 			String oldType, 
 			String newType, 
 			IsChoiceRandomized isChoiceRandomized) {
-		
+
 		boolean isRandomized = false;
-		
+
 		if (isChoiceRandomized == IsChoiceRandomized.TRUE) {
 			isRandomized = true;
 		}
-		
+
 		boolean isCompatible = ParameterTransformer.isValueCompatibleWithType(value, newType, isRandomized);
 		return isCompatible;
 	}
-	
+
 	@Test
 	public void convertChoicesWithCheckIfPossible() {
 
@@ -1438,12 +1438,12 @@ public class ParameterTransformerTest {
 	}
 
 	private void performTypeOperation(WhatToTest whatToTest, ValueConversionOperator operator) {
-		
+
 		ParameterConversionDefinition resultConversionDefinition = operator.getParameterConversionDefinition();
 
 		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tString, "ABC", SuccessExpected.TRUE, "ABC");
 		assertEquals(0, resultConversionDefinition.getItemCount());
-		
+
 		operator.operate(whatToTest, IsChoiceRandomized.FALSE, tString, tInt, "ABC", SuccessExpected.FALSE, "123");
 		assertEquals(1, resultConversionDefinition.getItemCount());
 		ParameterConversionItem parameterConversionItem = resultConversionDefinition.getCopyOfItem(0);

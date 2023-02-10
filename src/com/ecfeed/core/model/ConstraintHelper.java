@@ -230,4 +230,5 @@ public class ConstraintHelper {
 
 		return visitor.getMethods();
 	}
+
 }

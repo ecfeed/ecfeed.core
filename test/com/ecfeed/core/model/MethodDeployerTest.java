@@ -154,7 +154,7 @@ public class MethodDeployerTest {
 
 		String globalChoiceNodeName = "RC11";
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
 
 		// add class node
@@ -284,7 +284,7 @@ public class MethodDeployerTest {
 
 		String globalChoiceNodeName = "RC11";
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
 
 		// add class node
@@ -334,7 +334,7 @@ public class MethodDeployerTest {
 
 		String globalChoiceNodeName = "RC11";
 
-		GlobalParameterNodeHelper.addNewChoiceToGlobalParameter(
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(
 				globalParameterNodeOfRoot, globalChoiceNodeName, "100", null);
 
 		// add class node
