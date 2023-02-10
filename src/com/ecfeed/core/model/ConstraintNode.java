@@ -126,30 +126,31 @@ public class ConstraintNode extends AbstractNode {
 		return false;
 	}
 
-	//	public boolean mentions(BasicParameterNode parameter) {
-	//
-	//		return fConstraint.mentions(parameter);
-	//	}
-
 	public boolean mentions(BasicParameterNode parameter) {
 
-		if (parameter instanceof BasicParameterNode && (!parameter.isGlobalParameter())) {
-			BasicParameterNode param = (BasicParameterNode)parameter;
-			return fConstraint.mentions(param);
+		if (fConstraint.mentions(parameter)) {
+			return true;
 		}
 
-		if (parameter instanceof BasicParameterNode && parameter.isGlobalParameter()) {
-			BasicParameterNode global = (BasicParameterNode)parameter;
-			List<AbstractParameterNode> linkedParameters = AbstractParameterNodeHelper.getLinkedParameters(global);
+		if (parameter.isGlobalParameter()) {
+			return mentionsGlobalParameter(parameter);
+		}
 
-			for (AbstractParameterNode linkedParameter: linkedParameters) {
+		return false;
+	}
 
-				if (linkedParameter instanceof BasicParameterNode) {
-					return fConstraint.mentions((BasicParameterNode)linkedParameter);
-				}
+	private boolean mentionsGlobalParameter(BasicParameterNode globalBasicParameterNode) {
+		
+		List<AbstractParameterNode> linkedParameters = 
+				AbstractParameterNodeHelper.getLinkedParameters(globalBasicParameterNode);
+
+		for (AbstractParameterNode linkedParameter: linkedParameters) {
+
+			if (linkedParameter instanceof BasicParameterNode) {
+				return fConstraint.mentions((BasicParameterNode)linkedParameter);
 			}
 		}
-
+		
 		return false;
 	}
 
