@@ -76,7 +76,11 @@ public abstract class MethodDeployer {
 
 		String prefix = "";
 
-		deployParametersRecursively(methodSource.getParameters(), methodTarget, prefix, mapper);
+		List<BasicParameterNode> nestedBasicParameters = methodSource.getNestedBasicParameters(true);
+
+		nestedBasicParameters.stream().forEach(e -> handleBasicParameter(e, methodTarget, prefix, mapper));
+
+//		deployParametersRecursively(methodSource.getParameters(), methodTarget, prefix, mapper);
 	}
 
 	private static void deployParametersRecursively(
