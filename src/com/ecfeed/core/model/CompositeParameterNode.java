@@ -53,7 +53,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 	}
 
 	public boolean isGlobalParameter() {
-		
+
 		return ((getParent() instanceof RootNode) || (getParent() instanceof ClassNode));
 	}
 

@@ -14,10 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.ClassNode;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
@@ -153,8 +150,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 		Set<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
 
 		if (!choiceNodes.isEmpty()) {
-			GenericRemoveNodesProcessorOfChoices.processChoices(
-					choiceNodes, inOutAffectedNodes);
+			GenericRemoveNodesProcessorOfChoices.processChoices(choiceNodes, inOutAffectedNodes);
 		}
 	}
 

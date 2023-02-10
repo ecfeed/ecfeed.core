@@ -564,4 +564,15 @@ public class ChoiceNode extends AbstractNode implements IChoicesParentNode {
 		return new ArrayList<>();
 	}
 
+	public boolean isPartOfGlobalParameter() {
+		
+		MethodNode methodNode = MethodNodeHelper.findMethodNode(this);
+		
+		if (methodNode == null) {
+			return true;
+		}
+		
+		return false;
+	}
+
 }
