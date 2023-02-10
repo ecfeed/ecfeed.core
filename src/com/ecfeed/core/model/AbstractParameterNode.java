@@ -120,8 +120,21 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	}
 	
 	public boolean isGlobalParameter() {
+		IAbstractNode parent = this;
 
-		return !isMethodParameter();
+		while (parent != null) {
+			parent = parent.getParent();
+
+			if (parent instanceof MethodNode) {
+				return false;
+			}
+
+			if (parent instanceof ClassNode || parent instanceof RootNode) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	public String getQualifiedName() { // TODO MO-RE remove

@@ -164,6 +164,16 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return methodParameterNode;
 	}
 
+	public static BasicParameterNode addGlobalParameterToParent(
+			IParametersParentNode parametersParentNode, String name, String type) {
+
+		BasicParameterNode methodParameterNode = new BasicParameterNode(name, type, null, false, null);
+
+		parametersParentNode.addParameter(methodParameterNode);
+
+		return methodParameterNode;
+	}
+
 	public static CompositeParameterNode addCompositeParameterToMethod(
 			MethodNode methodNode, String compositeParameterName) {
 		

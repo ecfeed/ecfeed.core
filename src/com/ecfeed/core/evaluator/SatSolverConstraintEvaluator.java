@@ -67,7 +67,7 @@ public class SatSolverConstraintEvaluator implements IConstraintEvaluator<Choice
 		List<BasicParameterNode> result = new ArrayList<>();
 		
 		for (BasicParameterNode parameter : method.getNestedBasicParameters(false)) {
-			result.add(parameter.getLinkDestination());
+			result.add(parameter);
 		}
 		
 		return result;

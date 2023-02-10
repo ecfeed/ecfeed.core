@@ -11,10 +11,11 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class ParametersHolder {
@@ -86,23 +87,39 @@ public class ParametersHolder {
 
 	public AbstractParameterNode findParameter(String parameterNameToFind) {
 	
+		if (parameterNameToFind.contains(SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
+			return findParameterQualified(parameterNameToFind);
+		} else {
+			return findParameterNonQualified(parameterNameToFind);
+		}
+	}
+
+	public AbstractParameterNode findParameterNonQualified(String parameterNameToFind) {
+
+		Optional<AbstractParameterNode> result = getParameters().stream()
+				.filter(e -> e.getName().equals(parameterNameToFind))
+				.findAny();
+
+		if (result.isPresent()) {
+			return result.get();
+		}
+
+		return null;
+	}
+
+	public AbstractParameterNode findParameterQualified(String parameterNameToFind) {
+
 		for (AbstractParameterNode parameter : getParameters()) {
-			
-			if (parameter instanceof BasicParameterNode) {
-				if (parameter.getQualifiedName().equals(parameterNameToFind)) {
-					return parameter;
-				}
-			} else if (parameter instanceof CompositeParameterNode) {
-				Collection<AbstractParameterNode> nestedParameters = ((CompositeParameterNode) parameter).getNestedAbstractParameters(false);
-				
-				for (AbstractParameterNode nestedParameter : nestedParameters) {
-					if (nestedParameter.getQualifiedName().equals(parameterNameToFind)) {
-						return parameter;
-					}
-				}
+
+			if (parameter.getQualifiedName().equals(parameterNameToFind)) {
+				return parameter;
+			}
+
+			if (parameter instanceof CompositeParameterNode) {
+				return ((CompositeParameterNode) parameter).findParameter(parameterNameToFind);
 			}
 		}
-		
+
 		return null;
 	}
 

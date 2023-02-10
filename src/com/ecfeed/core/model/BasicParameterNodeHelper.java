@@ -120,6 +120,17 @@ public class BasicParameterNodeHelper {
 		}
 	}
 
+	public static BasicParameterNode findBasicParameterByQualifiedName(
+			String parameterNameToFindInExtLanguage,
+			IParametersParentNode parametersParentNode,
+			IExtLanguageManager extLanguageManager) {
+
+		String parameterNameToFindInIntrLanguage =
+				extLanguageManager.convertTextFromExtToIntrLanguage(parameterNameToFindInExtLanguage);
+
+		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
+	}
+
 	public static BasicParameterNode findBasicParameterByQualifiedIntrName(
 			String parameterNameToFindInIntrLanguage, 
 			IParametersParentNode parametersParentNode) {
