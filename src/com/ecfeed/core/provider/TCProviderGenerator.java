@@ -55,7 +55,7 @@ public class TCProviderGenerator implements ITCProvider {
                     genInitData.getGeneratorArguments(),
                     progressMonitor);
         } catch (Exception e) {
-
+        	e.printStackTrace();
             ExceptionHelper.reportRuntimeException("Cannot initalize generator.", e);
         }
     }

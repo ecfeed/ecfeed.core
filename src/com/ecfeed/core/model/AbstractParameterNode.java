@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.model;
 
+import com.ecfeed.core.utils.SignatureHelper;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,6 +27,8 @@ public abstract class AbstractParameterNode extends AbstractNode {
 	public AbstractParameterNode(String name, IModelChangeRegistrator modelChangeRegistrator) {
 		super(name, modelChangeRegistrator);
 	}
+
+	abstract public AbstractParameterNode getLinkDestination();
 
 	public void setLinkToGlobalParameter(AbstractParameterNode node) {
 
@@ -75,35 +79,66 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		return parameters.size();
 	}
 
-	public boolean isGlobalParameter() {
+	public boolean isRootParameter() {
+		IAbstractNode parent = this;
 
-		IAbstractNode parent = getParent();
+		while (parent != null) {
+			parent = parent.getParent();
 
-		if (parent instanceof MethodNode) {
-			return false;
+			if (parent instanceof RootNode) {
+				return true;
+			}
 		}
 
-		if (parent instanceof CompositeParameterNode) {
-			return false;
-		}
-
-		return true;
+		return false;
 	}
 
-	//	public String getQualifiedName() {
-	//
-	//		if (isGlobalParameter()) {
-	//
-	//			if (getParent() == getRoot() || getParent() == null) {
-	//				return getName();
-	//			}
-	//
-	//			return getParent().getName() + ":" + getName();
-	//		} else {
-	//
-	//			return getNonQualifiedName();
-	//		}
-	
+	public boolean isClassParameter() {
+		IAbstractNode parent = this;
+
+		while (parent != null) {
+			parent = parent.getParent();
+
+			if (parent instanceof ClassNode) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean isMethodParameter() {
+		IAbstractNode parent = this;
+
+		while (parent != null) {
+			parent = parent.getParent();
+
+			if (parent instanceof MethodNode) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean isGlobalParameter() {
+		IAbstractNode parent = this;
+
+		while (parent != null) {
+			parent = parent.getParent();
+
+			if (parent instanceof MethodNode) {
+				return false;
+			}
+
+			if (parent instanceof ClassNode || parent instanceof RootNode) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public String getQualifiedName() { // TODO MO-RE remove
 		LinkedList<String> segments = new LinkedList<>();
 		IAbstractNode parent = this;
@@ -111,9 +146,9 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		do {
 			segments.addFirst(parent.getName());
 			parent = parent.getParent();
-		} while (parent != null && !(parent instanceof RootNode));
+		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
 
-		return String.join(":", segments);
+		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 	}
 
 	public IParametersParentNode getParametersParent() {

@@ -47,16 +47,6 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		fConstraintNodeListHolder = new ConstraintNodeListHolder(modelChangeRegistrator);
 	}
 
-	public boolean isMethodParameter() {
-
-		return (getParent() instanceof MethodNode);
-	}
-
-	public boolean isGlobalParameter() {
-		
-		return ((getParent() instanceof RootNode) || (getParent() instanceof ClassNode));
-	}
-
 	@Override
 	public void setName(String name) {
 
@@ -67,13 +57,14 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public String getNonQualifiedName() {
+		
 		return getName();
 	}
 
 	@Override
 	public String toString() {
 
-		return new String(getName());
+		return getName();
 	}
 
 	@Override
@@ -189,7 +180,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return fParametersHolder.getParametersCount();
 	}
-
+	
 	@Override
 	public List<AbstractParameterNode> getParameters() {
 
@@ -201,26 +192,13 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 		return fParametersHolder.getParameter(parameterIndex);
 	}
-
-	public AbstractParameterNode getParameterTransient(int parameterIndex) {
-
-		if (isLinked() && (getLinkToGlobalParameter() != null)) {
-			return ((CompositeParameterNode) getLinkToGlobalParameter()).getParameter(parameterIndex);
-		} else {
-			return fParametersHolder.getParameter(parameterIndex);
-		}
-	}
-
+	
 	@Override
-	public AbstractParameterNode findParameter(String parameterNameToFind) {
-
-		if (isLinked() && (getLinkToGlobalParameter() != null)) {
-			return ((CompositeParameterNode) getLinkToGlobalParameter()).findParameter(parameterNameToFind);
-		} else {
-			return fParametersHolder.findParameter(parameterNameToFind);
-		}
+	public AbstractParameterNode findParameter(String parameterName) {
+		
+		return fParametersHolder.findParameter(parameterName);
 	}
-
+	
 	@Override
 	public int getParameterIndex(String parameterName) {
 
@@ -256,6 +234,7 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		return fParametersHolder.generateNewParameterName(startParameterName);
 	}
 
+	@Override
 	public IParametersParentNode getParametersParent() {
 
 		return (IParametersParentNode)getParent();
@@ -392,32 +371,63 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 		return COMPOSITE_PARAMETER_TYPE;
 	}
 
-	public List<CompositeParameterNode> getNestedCompositeParameters() {
-		List<CompositeParameterNode> nodes = new ArrayList<>();
+	@Override
+	public List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) {
+		List<AbstractParameterNode> nodes = new ArrayList<>();
+		List<AbstractParameterNode> parameters = follow ? getLinkDestination().getParameters() : getParameters();
+		
+		for (AbstractParameterNode node : parameters) {
 
-		for (AbstractParameterNode node : getParameters()) {
+			if (node instanceof BasicParameterNode) {
+				nodes.add(node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.add((CompositeParameterNode) node);
+				nodes.addAll(((CompositeParameterNode) node).getNestedAbstractParameters(follow));
+			}
+		}
+		
+		return nodes;
+	}
+
+	@Override
+	public List<BasicParameterNode> getNestedBasicParameters(boolean follow) {
+		List<BasicParameterNode> nodes = new ArrayList<>();
+		List<AbstractParameterNode> parameters = follow ? getLinkDestination().getParameters() : getParameters();
+
+		for (AbstractParameterNode node : parameters) {
+
+			if (node instanceof BasicParameterNode) {
+				nodes.add((BasicParameterNode) node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedBasicParameters(follow));
+			}
+		}
+
+		return nodes;
+	}
+	
+	@Override
+	public List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) {
+		List<CompositeParameterNode> nodes = new ArrayList<>();
+		List<AbstractParameterNode> parameters = follow ? getLinkDestination().getParameters() : getParameters();
+
+		for (AbstractParameterNode node : parameters) {
 
 			if (node instanceof CompositeParameterNode) {
-				nodes.add((CompositeParameterNode) node);
-				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters());
+				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters(follow));
 			}
 		}
 
 		return nodes;
 	}
 
-	public List<BasicParameterNode> getNestedBasicParameters() {
-		List<BasicParameterNode> nodes = new ArrayList<>();
-
-		for (AbstractParameterNode node : getParameters()) {
-
-			if (node instanceof BasicParameterNode) {
-				nodes.add((BasicParameterNode) node);
-			} else if (node instanceof CompositeParameterNode) {
-				nodes.addAll(((CompositeParameterNode) node).getNestedBasicParameters());
-			}
+	@Override
+	public CompositeParameterNode getLinkDestination() {
+		
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return ((CompositeParameterNode) getLinkToGlobalParameter()).getLinkDestination();
 		}
-
-		return nodes;
+		
+		return this;
 	}
 }

@@ -156,17 +156,12 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		if (parameterNode.isGlobalParameter()) {
 			targetParamElement = createTargetGlobalCompositeParameterElement(parameterNode);
-
-			for (AbstractParameterNode parameterParsed : parameterNode.getParameters()) {
-				targetParamElement.appendChild(createTargetParameterElement(parameterParsed));
-			}
-
 		} else {
-			targetParamElement = createTargetCompositeMethodParameterElement(parameterNode);
-
-			for (AbstractParameterNode parameterParsed : parameterNode.getParameters()) {
-				targetParamElement.appendChild(createTargetParameterElement(parameterParsed));
-			}
+			targetParamElement = createTargetMethodCompositeParameterElement(parameterNode);
+		}
+		
+		for (AbstractParameterNode parameterParsed : parameterNode.getParameters()) {
+			targetParamElement.appendChild(createTargetParameterElement(parameterParsed));
 		}
 
 		for (ConstraintNode constraintNode : parameterNode.getConstraintNodes()) {
@@ -369,7 +364,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetBasicParameterElement;
 	}
 
-	private Element createTargetCompositeMethodParameterElement(CompositeParameterNode node) {
+	private Element createTargetMethodCompositeParameterElement(CompositeParameterNode node) {
 		Element targetCompositeParameterElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
