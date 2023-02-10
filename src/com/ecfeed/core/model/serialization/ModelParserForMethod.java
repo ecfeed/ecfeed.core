@@ -10,33 +10,38 @@
 
 package com.ecfeed.core.model.serialization;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
-
-import java.util.Optional;
-
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ListOfStrings;
 import com.ecfeed.core.utils.StringHelper;
-
 import nu.xom.Element;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
 
 public class ModelParserForMethod implements IModelParserForMethod {
 
 	IModelParserForMethodParameter fModelParserForMethodParameter;
+	IModelParserForMethodCompositeParameter fModelParserForMethodCompositeParameter;
+	IModelParserForMethodDeployedParameter fModelParserForMethodDeployedParameter;
 	IModelParserForTestCase fModelParserForTestCase;
 	IModelParserForConstraint fModelParserForConstraint;
 	
 	public  ModelParserForMethod(
 			IModelParserForMethodParameter modelParserForMethodParameter,
+			IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter,
+			IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter,
 			IModelParserForTestCase modelParserForTestCase,
 			IModelParserForConstraint modelParserForConstraint) {
 		
 		fModelParserForMethodParameter = modelParserForMethodParameter;
+		fModelParserForMethodCompositeParameter = modelParserForMethodCompositeParameter;
+		fModelParserForMethodDeployedParameter = modelParserForMethodDeployedParameter;
 		fModelParserForTestCase = modelParserForTestCase;
 		fModelParserForConstraint = modelParserForConstraint;
 	}
@@ -47,7 +52,7 @@ public class ModelParserForMethod implements IModelParserForMethod {
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(methodElement.getQualifiedName(), METHOD_NODE_NAME, errorList);
 			name = ModelParserHelper.getElementName(methodElement, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
@@ -58,32 +63,38 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		parseMethodProperties(methodElement, targetMethodNode);
 
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeName())) {
-
-			Optional<MethodParameterNode> node = 
-					fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList);
-			if (node.isPresent()) {
-				targetMethodNode.addParameter(node.get());
-			}
-		}
-
-		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.TEST_CASE_NODE_NAME)) {
-			Optional<TestCaseNode> node = fModelParserForTestCase.parseTestCase(child, targetMethodNode, errorList);
-			if (node.isPresent()) {
-				targetMethodNode.addTestCase(node.get());
+		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeNames())) {
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+				fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList)
+						.ifPresent(targetMethodNode::addParameter);
+			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
+				fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, errorList)
+						.ifPresent(targetMethodNode::addParameter);
 			}
 		}
 
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.CONSTRAINT_NODE_NAME)) {
-			Optional<ConstraintNode> node = fModelParserForConstraint.parseConstraint(child, targetMethodNode, errorList);
-			if (node.isPresent()) {
-				targetMethodNode.addConstraint(node.get());
+			fModelParserForConstraint.parseConstraint(child, targetMethodNode, errorList)
+					.ifPresent(targetMethodNode::addConstraint);
+		}
+
+		List<BasicParameterNode> parametersDeployed = new ArrayList<>();
+		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.METHOD_DEPLOYED_PARAMETERS_NAME)) {
+			for (Element childNested : ModelParserHelper.getIterableChildren(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
+				fModelParserForMethodDeployedParameter.parseMethodDeployedParameter(childNested, targetMethodNode, errorList)
+						.ifPresent(parametersDeployed::add);
 			}
+		}
+		targetMethodNode.setDeployedParameters(parametersDeployed);
+
+		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationConstants.TEST_CASE_NODE_NAME)) {
+			fModelParserForTestCase.parseTestCase(child, targetMethodNode, errorList)
+					.ifPresent(targetMethodNode::addTestCase);
 		}
 
 		targetMethodNode.setDescription(ModelParserHelper.parseComments(methodElement));
 
-		return Optional.ofNullable(targetMethodNode);
+		return Optional.of(targetMethodNode);
 	}
 
 	private void parseMethodProperties(Element methodElement, MethodNode targetMethodNode) {

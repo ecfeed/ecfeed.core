@@ -10,63 +10,24 @@
 
 package com.ecfeed.core.model.serialization;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.BASIC_COMMENTS_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CLASS_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.COMMENTS_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_POSTCONDITION_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_PRECONDITION_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.EXPECTED_PARAMETER_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.LABEL_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.LABEL_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.METHOD_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_IS_RADOMIZED_ATTRIBUTE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.NODE_NAME_ATTRIBUTE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_IS_LINKED_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PARAMETER_LINK_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTIES_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_TYPE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_ATTRIBUTE_VALUE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.PROPERTY_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.ROOT_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_CASE_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_PARAMETER_NODE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_SUITE_NAME_ATTRIBUTE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_COMMENTS_BLOCK_TAG_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE;
-import static com.ecfeed.core.model.serialization.SerializationConstants.VALUE_ATTRIBUTE_NAME;
-import static com.ecfeed.core.model.serialization.SerializationConstants.VERSION_ATTRIBUTE;
-
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ConstraintType;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.IModelVisitor;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.NodePropertyDefs;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.TestSuiteNode;
-
+import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.ExceptionHelper;
+import com.ecfeed.core.utils.LogHelperCore;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Elements;
+
+import java.util.Objects;
+
+import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
 public abstract class XomBuilder implements IModelVisitor {
 
 	private final SerializatorParams fSerializatorParams;
 	private WhiteCharConverter fWhiteCharConverter = new WhiteCharConverter();
 
-	protected abstract String getParameterNodeName();
+	protected abstract String getBasicParameterNodeName();
+	protected abstract String getCompositeParameterNodeName();
 	protected abstract String getStatementParameterAttributeName();
 	protected abstract String getChoiceNodeName();
 	protected abstract String getChoiceAttributeName();
@@ -85,20 +46,19 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(RootNode rootNode) throws Exception {
-
 		Element targetRootElement = createTargetRootElement(rootNode);
 
 		for (ClassNode classNode : rootNode.getClasses()) {
 
 			if (shouldSerializeNode(classNode)) {
-				targetRootElement.appendChild((Element)visit(classNode));
+				targetRootElement.appendChild((Element) visit(classNode));
 			}
 		}
 
-		for (GlobalParameterNode parameterNode : rootNode.getGlobalParameters()) {
+		for (AbstractParameterNode parameterNode : rootNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetRootElement.appendChild((Element)visit(parameterNode));
+				targetRootElement.appendChild(createTargetParameterElement(parameterNode));
 			}
 		}
 
@@ -107,20 +67,19 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(ClassNode classNode) throws Exception {
-
 		Element targetClassElement = createTargetClassElement(classNode);
 
 		for (MethodNode methodNode : classNode.getMethods()) {
 
 			if (shouldSerializeNode(methodNode)) {
-				targetClassElement.appendChild((Element)visit(methodNode));
+				targetClassElement.appendChild((Element) visit(methodNode));
 			}
 		}
 
-		for (GlobalParameterNode parameterNode : classNode.getGlobalParameters()) {
+		for (AbstractParameterNode parameterNode : classNode.getParameters()) {
 
 			if (shouldSerializeNode(parameterNode)) {
-				targetClassElement.appendChild((Element)visit(parameterNode));
+				targetClassElement.appendChild(createTargetParameterElement(parameterNode));
 			}
 		}
 
@@ -129,27 +88,35 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(MethodNode methodNode) throws Exception {
-
 		Element targetMethodElement = createTargetMethodElement(methodNode);
 
-		for (MethodParameterNode parameter : methodNode.getMethodParameters()) {
+		for (AbstractParameterNode parameterNode : methodNode.getParameters()) {
 
-			if (shouldSerializeNode(parameter)) {
-				targetMethodElement.appendChild((Element)parameter.accept(this));
+			if (shouldSerializeNode(parameterNode)) {
+				targetMethodElement.appendChild((Element) parameterNode.accept(this));
 			}
 		}
 
-		for (ConstraintNode constraint : methodNode.getConstraintNodes()) {
+		for (ConstraintNode constraintNode : methodNode.getConstraintNodes()) {
 
-			if (shouldSerializeNode(constraint)) {
-				targetMethodElement.appendChild((Element)constraint.accept(this));
+			if (shouldSerializeNode(constraintNode)) {
+				targetMethodElement.appendChild((Element) constraintNode.accept(this));
 			}
 		}
 
-		for (TestCaseNode testCase : methodNode.getTestCases()) {
+		for (TestCaseNode testCaseNode : methodNode.getTestCases()) {
 
-			if (shouldSerializeNode(testCase)) {
-				targetMethodElement.appendChild((Element)testCase.accept(this));
+			if (shouldSerializeNode(testCaseNode)) {
+				targetMethodElement.appendChild((Element)testCaseNode.accept(this));
+			}
+		}
+
+		if (methodNode.isDeployed()) {
+			if (MethodDeploymentConsistencyUpdater.validateDeploymentSizeConsistency(methodNode)) {
+
+				targetMethodElement.appendChild(createTargetMethodDeployedParametersElement(methodNode));
+			} else {
+				LogHelperCore.logError("The number of deployed parameters is inconsistent.");
 			}
 		}
 
@@ -157,35 +124,55 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	@Override
-	public Object visit(MethodParameterNode node)  throws Exception {
+	public Object visit(BasicParameterNode parameterNode)  throws Exception {
+		Element targetParamElement;
 
-		Element targetParameterElement = createTargetMethodParameterElement(node); 
+		if (parameterNode.isGlobalParameter()) {
+			targetParamElement = createTargetGlobalBasicParameterElement(parameterNode);
 
-		for (ChoiceNode choiceNode : node.getRealChoices()) {
+			for (ChoiceNode choiceNode : parameterNode.getChoices()) {
 
-			if (shouldSerializeNode(choiceNode)) {
-				targetParameterElement.appendChild((Element)choiceNode.accept(this));
+				if (shouldSerializeNode(choiceNode)) {
+					targetParamElement.appendChild((Element) choiceNode.accept(this));
+				}
+			}
+		} else {
+			targetParamElement = createTargetBasicMethodParameterElement(parameterNode);
+
+			for (ChoiceNode choiceNode : parameterNode.getRealChoices()) {
+
+				if (shouldSerializeNode(choiceNode)) {
+					targetParamElement.appendChild((Element)choiceNode.accept(this));
+				}
 			}
 		}
 
-		return targetParameterElement;
+		return targetParamElement;
 	}
-
+	
 	@Override
-	public Object visit(GlobalParameterNode node) throws Exception {
+	public Object visit(CompositeParameterNode parameterNode)  throws Exception {
+		Element targetParamElement;
 
-		Element targetGlobalParamElement = createTargetGlobalParameterElement(node);
+		if (parameterNode.isGlobalParameter()) {
+			targetParamElement = createTargetGlobalCompositeParameterElement(parameterNode);
+		} else {
+			targetParamElement = createTargetMethodCompositeParameterElement(parameterNode);
+		}
+		
+		for (AbstractParameterNode parameterParsed : parameterNode.getParameters()) {
+			targetParamElement.appendChild(createTargetParameterElement(parameterParsed));
+		}
 
-		for (ChoiceNode choiceNode : node.getChoices()) {
-
-			if (shouldSerializeNode(choiceNode)) {
-				targetGlobalParamElement.appendChild((Element)choiceNode.accept(this));
+		for (ConstraintNode constraintNode : parameterNode.getConstraintNodes()) {
+			if (shouldSerializeNode(constraintNode)) {
+				targetParamElement.appendChild((Element) constraintNode.accept(this));
 			}
 		}
 
-		return targetGlobalParamElement;
+		return targetParamElement;
 	}
-
+	
 	@Override
 	public Object visit(TestSuiteNode node) throws Exception {
 
@@ -194,7 +181,6 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
-
 		Element targetTestCaseElement = createTargetTestCaseElement(node);
 
 		for (ChoiceNode choiceNode : node.getTestData()) {
@@ -209,7 +195,6 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(ConstraintNode node) throws Exception{
-
 		Element targetConstraintElement = createAbstractElement(CONSTRAINT_NODE_NAME, node);
 
 		ConstraintType constraintType = node.getConstraint().getType();
@@ -221,12 +206,14 @@ public abstract class XomBuilder implements IModelVisitor {
 		Element preconditionElement = new Element(CONSTRAINT_PRECONDITION_NODE_NAME);
 		preconditionElement.appendChild((Element)precondition.accept(
 				new XomStatementBuilder(
+						node.getParent(),
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
 		Element postconditionElement = new Element(CONSTRAINT_POSTCONDITION_NODE_NAME);
 		postconditionElement.appendChild((Element)postcondition.accept(
 				new XomStatementBuilder(
+						node.getParent(),
 						getStatementParameterAttributeName(),
 						getStatementChoiceAttributeName())));
 
@@ -238,7 +225,6 @@ public abstract class XomBuilder implements IModelVisitor {
 
 	@Override
 	public Object visit(ChoiceNode node) throws Exception {
-
 		Element targetChoiceElement = createTargetChoiceElement(node);
 
 		for (String label : node.getLabels()) {
@@ -263,14 +249,13 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private Element createTargetChoiceElement(ChoiceNode node) {
-
 		Element targetChoiceElement = createAbstractElement(getChoiceNodeName(), node);
 
 		String legalValue = removeDisallowedXmlCharacters(node);
 
 		encodeAndAddAttribute(targetChoiceElement, new Attribute(VALUE_ATTRIBUTE, legalValue), fWhiteCharConverter);
 
-		boolean isRandomizedValue = ((ChoiceNode)node).isRandomizedValue();
+		boolean isRandomizedValue = node.isRandomizedValue();
 		targetChoiceElement.addAttribute(new Attribute(NODE_IS_RADOMIZED_ATTRIBUTE, String.valueOf(isRandomizedValue)));
 
 		return targetChoiceElement;
@@ -282,49 +267,161 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetClassElement;
 	}
 
-	private Element createTargetMethodParameterElement(MethodParameterNode node) {
+	private Element createTargetParameterElement(AbstractParameterNode parameter) throws Exception {
 
-		Element targetParameterElement = createAbstractElement(getParameterNodeName(), node);
-
-		if (fSerializatorParams.getSerializeProperties()) {
-			addParameterProperties(node, targetParameterElement);
+		if (parameter instanceof BasicParameterNode) {
+			return (Element) visit((BasicParameterNode) parameter);
+		} else if (parameter instanceof CompositeParameterNode) {
+			return (Element) visit((CompositeParameterNode) parameter);
 		}
 
-		if (fSerializatorParams.getSerializeComments()) {
-			appendTypeComments(targetParameterElement, node);
-		}
+		ExceptionHelper.reportRuntimeException("The parameter type is not compatible.");
+
+		return null;
+	}
+
+	public Element createDeployedParameter(BasicParameterNode parameterNode) {
+		Element targetParamElement;
+
+//		if (parameterNode.isGlobalParameter()) {
+//			targetParamElement = createTargetGlobalDeployedParameterElement(parameterNode);
+//		} else {
+			targetParamElement = createTargetDeployedParameterElement(parameterNode);
+//		}
+
+		return targetParamElement;
+	}
+
+	private Element createTargetDeployedParameterElement(BasicParameterNode node) {
+		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
 
 		encodeAndAddAttribute(
-				targetParameterElement, new Attribute(TYPE_NAME_ATTRIBUTE, node.getRealType()), 
+				targetBasicParameterElement, new Attribute(TYPE_NAME_ATTRIBUTE, node.getRealType()),
 				fWhiteCharConverter);
 
 		encodeAndAddAttribute(
-				targetParameterElement, 
+				targetBasicParameterElement,
 				new Attribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, Boolean.toString(node.isExpected())),
 				fWhiteCharConverter);
 
 		encodeAndAddAttribute(
-				targetParameterElement, 
+				targetBasicParameterElement,
 				new Attribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, node.getDefaultValueForSerialization()),
 				fWhiteCharConverter);
 
 		encodeAndAddAttribute(
-				targetParameterElement, 
+				targetBasicParameterElement,
 				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
 				fWhiteCharConverter);
 
-		if (node.getLink() != null) {
+		if (node.getLinkToGlobalParameter() != null) {
 			encodeAndAddAttribute(
-					targetParameterElement, 
-					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLink().getQualifiedName()), 
+					targetBasicParameterElement,
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()),
 					fWhiteCharConverter);
 		}
 
-		return targetParameterElement;
+		return targetBasicParameterElement;
 	}
 
-	private Element createTargetGlobalParameterElement(GlobalParameterNode node) {
-		Element targetGlobalParamElement = createAbstractElement(getParameterNodeName(), node);
+	private Element createTargetBasicMethodParameterElement(BasicParameterNode node) {
+		Element targetBasicParameterElement = createAbstractElement(getBasicParameterNodeName(), node);
+
+		if (fSerializatorParams.getSerializeProperties()) {
+			addParameterProperties(node, targetBasicParameterElement);
+		}
+
+		if (fSerializatorParams.getSerializeComments()) {
+			appendTypeCommentsForMethodParameterNode(targetBasicParameterElement, node);
+		}
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement, new Attribute(TYPE_NAME_ATTRIBUTE, node.getRealType()),
+				fWhiteCharConverter);
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement,
+				new Attribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, Boolean.toString(node.isExpected())),
+				fWhiteCharConverter);
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement,
+				new Attribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, node.getDefaultValueForSerialization()),
+				fWhiteCharConverter);
+
+		encodeAndAddAttribute(
+				targetBasicParameterElement,
+				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
+				fWhiteCharConverter);
+
+		if (node.getLinkToGlobalParameter() != null) {
+			encodeAndAddAttribute(
+					targetBasicParameterElement,
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()), 
+					fWhiteCharConverter);
+		}
+
+		return targetBasicParameterElement;
+	}
+
+	private Element createTargetMethodCompositeParameterElement(CompositeParameterNode node) {
+		Element targetCompositeParameterElement = createAbstractElement(getCompositeParameterNodeName(), node);
+
+		if (fSerializatorParams.getSerializeProperties()) {
+			addParameterProperties(node, targetCompositeParameterElement);
+		}
+
+		if (fSerializatorParams.getSerializeComments()) {
+			appendTypeComments(targetCompositeParameterElement, node);
+		}
+
+		encodeAndAddAttribute(
+				targetCompositeParameterElement,
+				new Attribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME, Boolean.toString(node.isLinked())),
+				fWhiteCharConverter);
+
+		if (node.getLinkToGlobalParameter() != null) {
+			encodeAndAddAttribute(
+					targetCompositeParameterElement,
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()),
+					fWhiteCharConverter);
+		}
+
+		return targetCompositeParameterElement;
+	}
+
+	private Element createTargetGlobalBasicParameterElement(BasicParameterNode node) {
+		Element targetGlobalBasicParamElement = createAbstractElement(getBasicParameterNodeName(), node);
+
+		if (fSerializatorParams.getSerializeProperties()) {
+			addParameterProperties(node, targetGlobalBasicParamElement);
+		}
+
+		if (fSerializatorParams.getSerializeComments()) {
+			appendTypeComments(targetGlobalBasicParamElement, node);
+		}
+
+		encodeAndAddAttribute(
+				targetGlobalBasicParamElement,
+				new Attribute(TYPE_NAME_ATTRIBUTE, node.getType()), 
+				fWhiteCharConverter);
+
+		return targetGlobalBasicParamElement;
+	}
+
+//	private Element createTargetGlobalDeployedParameterElement(BasicParameterNode node) {
+//		Element targetGlobalBasicParamElement = createAbstractElement(getBasicParameterNodeName(), node);
+//
+//		encodeAndAddAttribute(
+//				targetGlobalBasicParamElement,
+//				new Attribute(TYPE_NAME_ATTRIBUTE, node.getType()),
+//				fWhiteCharConverter);
+//
+//		return targetGlobalBasicParamElement;
+//	}
+
+	private Element createTargetGlobalCompositeParameterElement(CompositeParameterNode node) {
+		Element targetGlobalParamElement = createAbstractElement(getCompositeParameterNodeName(), node);
 
 		if (fSerializatorParams.getSerializeProperties()) {
 			addParameterProperties(node, targetGlobalParamElement);
@@ -334,10 +431,6 @@ public abstract class XomBuilder implements IModelVisitor {
 			appendTypeComments(targetGlobalParamElement, node);
 		}
 
-		encodeAndAddAttribute(
-				targetGlobalParamElement, 
-				new Attribute(TYPE_NAME_ATTRIBUTE, node.getType()), 
-				fWhiteCharConverter);
 		return targetGlobalParamElement;
 	}
 
@@ -367,7 +460,17 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetMethodElement;
 	}
 
-	private boolean shouldSerializeNode(AbstractNode abstractNode) {
+	private Element createTargetMethodDeployedParametersElement(MethodNode methodNode) {
+		Element targetMethodDeployedParameters = new Element(METHOD_DEPLOYED_PARAMETERS_NAME);
+
+		for (BasicParameterNode parameter : Objects.requireNonNull(methodNode.getDeployedMethodParameters())) {
+			targetMethodDeployedParameters.appendChild(createDeployedParameter(parameter));
+		}
+
+		return targetMethodDeployedParameters;
+	}
+
+	private boolean shouldSerializeNode(IAbstractNode abstractNode) {
 
 		ISerializerPredicate serializerPredicate = fSerializatorParams.getSerializerPredicate();
 
@@ -392,10 +495,9 @@ public abstract class XomBuilder implements IModelVisitor {
 		return value.replaceAll(xml10pattern, "");
 	}
 
-	private void appendChoiceOfTestCase(Element targetTestCaseElement,
-			TestCaseNode node, ChoiceNode choiceNode) {
+	private void appendChoiceOfTestCase(Element targetTestCaseElement, TestCaseNode node, ChoiceNode choiceNode) {
 
-		if (choiceNode.getParameter() != null && node.getMethodParameter(choiceNode).isExpected()) {
+		if (choiceNode.getParameter() != null && node.getBasicMethodParameter(choiceNode).isExpected()) {
 
 			Element expectedParameterElement = new Element(EXPECTED_PARAMETER_NODE_NAME);
 			Attribute expectedValueAttribute = new Attribute(VALUE_ATTRIBUTE_NAME, choiceNode.getValueString());
@@ -444,8 +546,8 @@ public abstract class XomBuilder implements IModelVisitor {
 	}
 
 	private void addParameterProperty(
-			NodePropertyDefs.PropertyId propertyId, 
-			AbstractParameterNode abstractParameterNode, 
+			NodePropertyDefs.PropertyId propertyId,
+			AbstractParameterNode abstractParameterNode,
 			Element targetElement) {
 
 		String value = abstractParameterNode.getPropertyValue(propertyId);
@@ -455,8 +557,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		appendProperty(getPropertyName(propertyId), getPropertyType(propertyId), value, targetElement);
 	}
 
-
-	private Element createAbstractElement(String nodeTag, AbstractNode node) {
+	private Element createAbstractElement(String nodeTag, IAbstractNode node) {
 
 		Element targetAbstractElement = new Element(nodeTag);
 		Attribute nameAttr = new Attribute(NODE_NAME_ATTRIBUTE, node.getName());
@@ -466,7 +567,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		return targetAbstractElement;
 	}
 
-	private Element appendComments(Element element, AbstractNode node) {
+	private Element appendComments(Element element, IAbstractNode node) {
 
 		if (node.getDescription() != null) {
 			Element commentsBlock = new Element(COMMENTS_BLOCK_TAG_NAME);
@@ -481,14 +582,14 @@ public abstract class XomBuilder implements IModelVisitor {
 		return null;
 	}
 
-	private void appendTypeComments(Element element, MethodParameterNode node) {
+	private void appendTypeCommentsForMethodParameterNode(Element element, BasicParameterNode node) {
 
 		if (node.isLinked() == false) {
-			appendTypeComments(element, (AbstractParameterNode)node);
+			appendTypeComments(element, node);
 		}
 	}
 
-	private void appendTypeComments(Element element, AbstractParameterNode node) {
+	private void appendTypeComments(Element element, BasicParameterNode node) {
 
 		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
 		Element commentElement;
@@ -505,6 +606,46 @@ public abstract class XomBuilder implements IModelVisitor {
 		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
 		commentElement.appendChild(typeComments);
 	}
+
+	private void appendTypeComments(Element element, AbstractParameterNode node) {
+
+		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
+		Element commentElement;
+
+		if (commentElements.size() > 0) {
+			commentElement = commentElements.get(0);
+		} else {
+			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
+			element.appendChild(commentElement);
+		}
+
+		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+
+		commentElement.appendChild(typeComments);
+	}
+	
+//	private void appendTypeComments(Element element, BasicParameterNode node) {
+//
+//		if (node.isLinked() == false) {
+//			appendComments(element, node);
+//			return;
+//		}
+//		
+//		Elements commentElements = element.getChildElements(COMMENTS_BLOCK_TAG_NAME);
+//		Element commentElement;
+//
+//		if (commentElements.size() > 0) {
+//			commentElement = commentElements.get(0);
+//		} else {
+//			commentElement = new Element(COMMENTS_BLOCK_TAG_NAME);
+//			element.appendChild(commentElement);
+//		}
+//
+//		Element typeComments = new Element(TYPE_COMMENTS_BLOCK_TAG_NAME);
+//
+//		typeComments.appendChild(fWhiteCharConverter.encode(node.getTypeComments()));
+//		commentElement.appendChild(typeComments);
+//	}
 
 	public static void encodeAndAddAttribute(
 			Element element, Attribute attribute, WhiteCharConverter whiteCharConverter) {
@@ -573,5 +714,4 @@ public abstract class XomBuilder implements IModelVisitor {
 
 		return targetPropertyElement;
 	}
-
 }

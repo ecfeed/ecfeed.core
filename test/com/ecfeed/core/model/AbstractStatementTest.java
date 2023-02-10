@@ -31,17 +31,24 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public String getLeftParameterName() {
+		public String getLeftParameterCompositeName() {
 			return null;
 		}
+
 		@Override
 		public AbstractStatement makeClone(){
 			return null;
 		}
+
 		@Override
-		public boolean updateReferences(MethodNode method){
-			return true;
+		public AbstractStatement createCopy(NodeMapper mapper) {
+			return null;
 		}
+
+		//		@Override
+		//		public boolean updateReferences(IParametersAndConstraintsParentNode method){
+		//			return true;
+		//		}
 
 		@Override
 		public String createSignature(IExtLanguageManager extLanguageManager) {
@@ -52,14 +59,17 @@ public class AbstractStatementTest {
 		public boolean isEqualTo(IStatement statement) {
 			return false;
 		}
+
 		@Override
 		public Object accept(IStatementVisitor visitor) {
 			return null;
 		}
+
 		@Override
 		public boolean mentions(int methodParameterIndex) {
 			return false;
 		}
+
 		@Override
 		public boolean isAmbiguous(List<List<ChoiceNode>> values, MessageStack messageStack, IExtLanguageManager extLanguageManager) {
 			return false;
@@ -78,14 +88,8 @@ public class AbstractStatementTest {
 		protected void convert(ParameterConversionItem parameterConversionItem) {
 		}
 
-		//		@Override
-		//		protected void updateParameterReferences(
-		//				MethodParameterNode srcMethodParameterNode,
-		//				ChoicesParentNode dstParameterForChoices) {
-		//		}
-
 		@Override
-		public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+		public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 			return false;
 		}
 
@@ -95,14 +99,15 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public List<String> getLabels(MethodParameterNode methodParameterNode) {
+		public List<String> getLabels(BasicParameterNode methodParameterNode) {
 			return null;
 		}
 
 		@Override
-		public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+		public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 			return null;
 		}
+
 	}
 
 	@Test

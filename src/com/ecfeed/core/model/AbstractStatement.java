@@ -19,14 +19,17 @@ public abstract class AbstractStatement implements IStatement {
 
 	AbstractStatement fParent = null;
 	private final IModelChangeRegistrator fModelChangeRegistrator;
-	public abstract boolean mentionsChoiceOfParameter(AbstractParameterNode parameter);
+	public abstract boolean mentionsChoiceOfParameter(BasicParameterNode parameter);
+	//public abstract boolean updateReferences(IParametersAndConstraintsParentNode parent);
+
+	protected abstract void convert(ParameterConversionItem parameterConversionItem);
 
 	public AbstractStatement(IModelChangeRegistrator modelChangeRegistrator) {
 
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public abstract String getLeftParameterName();
+	public abstract String getLeftParameterCompositeName();
 	public abstract boolean mentions(int methodParameterIndex);
 
 	public IModelChangeRegistrator getModelChangeRegistrator() {
@@ -72,11 +75,11 @@ public abstract class AbstractStatement implements IStatement {
 		return false;
 	}
 
-	public boolean mentions(MethodParameterNode parameter, String label) {
+	public boolean mentions(AbstractParameterNode parameter, String label) {
 		return false;
 	}
 
-	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
+	public boolean mentionsParameterAndOrderRelation(AbstractParameterNode parameter) {
 		return false;
 	}
 
@@ -90,13 +93,4 @@ public abstract class AbstractStatement implements IStatement {
 		return false;
 	}
 
-	public abstract AbstractStatement makeClone();
-
-	public abstract boolean updateReferences(MethodNode method);
-
-	protected abstract void convert(ParameterConversionItem parameterConversionItem);
-
-//	protected abstract void updateParameterReferences(
-//			MethodParameterNode srcMethodParameterNode,
-//			ChoicesParentNode dstParameterForChoices);
 }

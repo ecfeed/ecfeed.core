@@ -41,59 +41,13 @@ public class SimpleLanguageModelVerifierTest {
 	}
 
 	@Test
-	public void methodDuplicatedTest() {
-
-		RootNode rootNode = new RootNode("rootNode", null);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		ClassNode classNode = new ClassNode("com.Class_1", null);
-		rootNode.addClass(classNode);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		MethodNode methodNode1 = new MethodNode("Method_1", null);
-		classNode.addMethod(methodNode1);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		MethodParameterNode methodParameterNode11 =
-				new MethodParameterNode("Param1", "int", "0", false, null);
-		methodNode1.addParameter(methodParameterNode11);
-
-		MethodNode methodNode2 = new MethodNode("Method_1", null);
-		classNode.addMethod(methodNode2);
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		MethodParameterNode methodParameterNode21 =
-				new MethodParameterNode("Param1", "int", "0", false, null);
-		methodNode2.addParameter(methodParameterNode21);
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("byte");
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("String");
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("char");
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("boolean");
-		assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("long");
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-
-		methodParameterNode21.setType("double");
-		assertNotNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
-	}
-
-	@Test
 	public void notAllowedNames() {
 
 		RootNode rootNode = new RootNode("rootNode", null);
 
 		// invalid global parameter name
 
-		GlobalParameterNode globalParameterNodeErr = new GlobalParameterNode("__", "int", null);
+		BasicParameterNode globalParameterNodeErr = new BasicParameterNode("__", "int", null);
 		rootNode.addParameter(globalParameterNodeErr);
 
 		String errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
@@ -105,7 +59,7 @@ public class SimpleLanguageModelVerifierTest {
 
 		// valid global parameter name
 
-		new GlobalParameterNode("par1", "int", null);
+		new BasicParameterNode("par1", "int", null);
 		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
 		assertNull(errorMessage);
 
@@ -151,8 +105,8 @@ public class SimpleLanguageModelVerifierTest {
 
         // invalid method parameter name
 
-        MethodParameterNode methodParameterNodeErr =
-                new MethodParameterNode("___","int", "0", false, null);
+        BasicParameterNode methodParameterNodeErr =
+                new BasicParameterNode("___","int", "0", false, null);
         methodNodeOk.addParameter(methodParameterNodeErr);
 
 		errorMessage = SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode);
@@ -164,8 +118,8 @@ public class SimpleLanguageModelVerifierTest {
 
         methodNodeOk.removeParameter(methodParameterNodeErr);
 
-        MethodParameterNode methodParameterNodeOk =
-                new MethodParameterNode("par","int", "0", false, null);
+        BasicParameterNode methodParameterNodeOk =
+                new BasicParameterNode("par","int", "0", false, null);
         methodNodeOk.addParameter(methodParameterNodeOk);
 
         assertNull(SimpleLanguageModelVerifier.checkIsModelCompatibleWithSimpleLanguage(rootNode));
@@ -212,7 +166,7 @@ public class SimpleLanguageModelVerifierTest {
 		assertNull(errorMessage);
 	}
 
-	public void checkInvalidNameMessage(String errorMessage, AbstractNode nodeErr) {
+	public void checkInvalidNameMessage(String errorMessage, IAbstractNode nodeErr) {
 
 		TestHelper.checkMessage(
 				errorMessage,

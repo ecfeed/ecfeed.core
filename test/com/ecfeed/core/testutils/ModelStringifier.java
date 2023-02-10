@@ -10,29 +10,19 @@
 
 package com.ecfeed.core.testutils;
 
-import com.ecfeed.core.model.AbstractNode;
-import com.ecfeed.core.model.AbstractStatement;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.RelationStatement;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.ExpectedValueStatement;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.StatementArray;
-import com.ecfeed.core.model.StaticStatement;
-import com.ecfeed.core.model.TestCaseNode;
-import com.ecfeed.core.model.ChoiceCondition;
-import com.ecfeed.core.model.LabelCondition;
+import com.ecfeed.core.model.*;
 
 public class ModelStringifier {
-	public String stringify(AbstractNode node, int indent){
+	
+	public String stringify(IAbstractNode node, int indent){
 		if(node instanceof ChoiceNode){
 			return stringify((ChoiceNode)node, indent);
 		}
-		if(node instanceof MethodParameterNode){
-			return stringify((MethodParameterNode)node, indent);
+		if(node instanceof BasicParameterNode){
+			return stringify((BasicParameterNode)node, indent);
+		}
+		if(node instanceof CompositeParameterNode){
+			return stringify((CompositeParameterNode)node, indent);
 		}
 		if(node instanceof MethodNode){
 			return stringify((MethodNode)node, indent);
@@ -73,6 +63,10 @@ public class ModelStringifier {
 		String result = intendentString(indent);
 		result += "Model " + r.getName();
 
+		for(AbstractParameterNode c : r.getParameters()){
+			result += "\n" + stringify(c, indent + 2);
+		}
+
 		for(ClassNode c : r.getClasses()){
 			result += "\n" + stringify(c, indent + 2);
 		}
@@ -94,7 +88,7 @@ public class ModelStringifier {
 	public String stringify(MethodNode m, int indent){
 		String result = intendentString(indent);
 		result += "Method " + m.toString();
-		for(MethodParameterNode child : m.getMethodParameters()){
+		for(AbstractParameterNode child : m.getParameters()){
 			result += "\n";
 			result += stringify(child, indent + 2);
 		}
@@ -106,11 +100,17 @@ public class ModelStringifier {
 			result += "\n";
 			result += stringify(child, indent + 2);
 		}
+		if (m.isDeployed()) {
+			for (AbstractParameterNode child : m.getDeployedMethodParameters()) {
+				result += "\n";
+				result += stringify(child, indent + 2);
+			}
+		}
 
 		return result;
 	}
 
-	public String stringify(MethodParameterNode c, int indent){
+	public String stringify(BasicParameterNode c, int indent){
 		String result = intendentString(indent);
 		result += "Parameter " + c.getName() + "[" + c.getType() + "], " + (c.isExpected() ? "expected" : "patitioned");
 		result += " default value: " + c.getDefaultValue();
@@ -121,11 +121,25 @@ public class ModelStringifier {
 		return result;
 	}
 
+	public String stringify(CompositeParameterNode c, int indent){
+		String result = intendentString(indent);
+		result += "Structure " + c.getName();
+		for(AbstractParameterNode child : c.getParameters()){
+			result += "\n";
+			result += stringify(child, indent + 2);
+		}
+		for(ConstraintNode child : c.getConstraintNodes()){
+			result += "\n";
+			result += stringify(child, indent + 2);
+		}
+		return result;
+	}
+
 	public String stringify(TestCaseNode tc, int indent){
 		String result = intendentString(indent);
 		result += "Test case " + tc.toString() + "[";
 		for(ChoiceNode choice : tc.getTestData()){
-			MethodParameterNode parameter = tc.getMethodParameter(choice);
+			BasicParameterNode parameter = tc.getBasicMethodParameter(choice);
 			if(parameter.isExpected()){
 				result += "[e]" + choice.getValueString();
 			}

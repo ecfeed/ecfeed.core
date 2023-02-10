@@ -57,6 +57,14 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
+	public Constraint(
+			String name,
+			ConstraintType constraintType,
+			AbstractStatement precondition,
+			AbstractStatement postcondition) {
+		this(name, constraintType, precondition, postcondition, null);
+	}
+
 	public String getName() {
 		return fName;
 	}
@@ -222,7 +230,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
 
-			MethodParameterNode leftParameterNode = assignmentStatement.getLeftParameter();
+			BasicParameterNode leftParameterNode = assignmentStatement.getLeftParameter();
 
 			if (!leftParameterNode.isExpected()) {
 				return ("Left parameter should of assignment: " + assignmentStatement.createSignature(extLanguageManager) + " should be expected.");
@@ -426,7 +434,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	@Override
 	public String toString() {
 
-		return createSignature(new ExtLanguageManagerForJava());
+		return ConstraintHelper.createSignatureOfConditions(this, new ExtLanguageManagerForJava());
 	}
 
 	public void convert(ParameterConversionItem parameterConversionItem) {
@@ -442,19 +450,6 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	//		fPrecondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	//		fPostcondition.updateParameterReferences(oldMethodParameterNode, dstParameterForChoices);
 	//	}
-
-	public String createSignature(IExtLanguageManager extLanguageManager) {
-
-		String postconditionSignature = AbstractStatementHelper.createSignature(fPostcondition, extLanguageManager);
-
-		if (fConstraintType == ConstraintType.BASIC_FILTER) {
-			return postconditionSignature;
-		}
-
-		String preconditionSignature = AbstractStatementHelper.createSignature(fPrecondition, extLanguageManager);
-
-		return preconditionSignature + " => " + postconditionSignature;
-	}
 
 	@Override
 	public boolean mentions(int dimension) {
@@ -508,12 +503,12 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	public boolean mentions(MethodParameterNode parameter) {
+	public boolean mentions(BasicParameterNode parameter) {
 
 		return fPrecondition.mentions(parameter) || fPostcondition.mentions(parameter);
 	}
 
-	public boolean mentions(MethodParameterNode parameter, String label) {
+	public boolean mentions(BasicParameterNode parameter, String label) {
 
 		return fPrecondition.mentions(parameter, label) || fPostcondition.mentions(parameter, label);
 	}
@@ -533,7 +528,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return result;
 	}
 
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 
 		List<ChoiceNode> result = new ArrayList<>();
 
@@ -543,7 +538,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return result;
 	}
 
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 
 		List<String> result = new ArrayList<>();
 
@@ -553,7 +548,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return result;
 	}
 
-	public boolean mentionsParameterAndOrderRelation(MethodParameterNode parameter) {
+	public boolean mentionsParameterAndOrderRelation(BasicParameterNode parameter) {
 
 		if (fPrecondition.mentionsParameterAndOrderRelation(parameter)) {
 			return true;
@@ -566,25 +561,37 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		return false;
 	}
 
-	public boolean updateReferences(MethodNode method) {
-
-		if (fPrecondition.updateReferences(method) && fPostcondition.updateReferences(method)) {
-			return true;
-		}
-
-		return false;
-	}
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode method) {
+	//
+	//		if (!fPrecondition.updateReferences(method)) {
+	//			return false;
+	//		}
+	//			
+	//		if (!fPostcondition.updateReferences(method)) {
+	//			return false;
+	//		}
+	//
+	//		return true;
+	//	}
 
 	public Constraint makeClone() {
 
 		AbstractStatement precondition = fPrecondition.makeClone();
 		AbstractStatement postcondition = fPostcondition.makeClone();
 
-		return new Constraint(new String(fName), fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
+	}
+
+	public Constraint createCopy(NodeMapper mapper) {
+
+		AbstractStatement precondition = fPrecondition.createCopy(mapper);
+		AbstractStatement postcondition = fPostcondition.createCopy(mapper);
+
+		return new Constraint(fName, fConstraintType, precondition, postcondition, fModelChangeRegistrator);
 	}
 
 	public void verifyConversionOfParameterFromToType(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			String oldType,
 			String newType,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
@@ -607,7 +614,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	public void convertValues(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		TypeChangeStatementVisitor typeChangeVerificationProvider = 
@@ -667,18 +674,18 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<AbstractParameterNode> getReferencedParameters() {
+	public Set<BasicParameterNode> getReferencedParameters() {
 
 		try{
-			Set<AbstractParameterNode> referenced = 
-					(Set<AbstractParameterNode>)fPrecondition.accept(new ReferencedParametersProvider());
+			Set<BasicParameterNode> referenced = 
+					(Set<BasicParameterNode>)fPrecondition.accept(new ReferencedParametersProvider());
 
 			referenced.addAll(
-					(Set<AbstractParameterNode>)fPostcondition.accept(new ReferencedParametersProvider()));
+					(Set<BasicParameterNode>)fPostcondition.accept(new ReferencedParametersProvider()));
 
 			return referenced;
 		} catch(Exception e) {
-			return new HashSet<AbstractParameterNode>();
+			return new HashSet<BasicParameterNode>();
 		}
 	}
 
@@ -688,7 +695,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Set<String> getReferencedLabels(MethodParameterNode parameter) {
+	public Set<String> getReferencedLabels(BasicParameterNode parameter) {
 
 		try {
 			Set<String> referenced = (Set<String>)fPrecondition.accept(new ReferencedLabelsProvider(parameter));
@@ -700,7 +707,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		}
 	}
 
-	boolean mentionsChoiceOfParameter(MethodParameterNode methodParameter) {
+	boolean mentionsChoiceOfParameter(BasicParameterNode methodParameter) {
 
 		if (fPrecondition.mentionsChoiceOfParameter(methodParameter)) {
 			return true;
@@ -784,17 +791,17 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 		@Override
 		public Object visit(StaticStatement statement) throws Exception {
-			return new HashSet<MethodParameterNode>();
+			return new HashSet<BasicParameterNode>();
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public Object visit(StatementArray statement) throws Exception {
 
-			Set<MethodParameterNode> set = new HashSet<MethodParameterNode>();
+			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
 
 			for (AbstractStatement s : statement.getStatements()) {
-				set.addAll((Set<MethodParameterNode>)s.accept(this));
+				set.addAll((Set<BasicParameterNode>)s.accept(this));
 			}
 
 			return set;
@@ -803,7 +810,7 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ExpectedValueStatement statement) throws Exception {
 
-			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
+			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
 			set.add(statement.getLeftMethodParameterNode());
 
 			return set;
@@ -818,14 +825,20 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(LabelCondition condition) throws Exception {
 
-			return new HashSet<MethodParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
+
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
+
+			return result;
 		}
 
 		@Override
 		public Object visit(ChoiceCondition condition) throws Exception {
 
-			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
-			AbstractParameterNode parameter = condition.getRightChoice().getParameter();
+			Set<BasicParameterNode> set = new HashSet<BasicParameterNode>();
+			BasicParameterNode parameter = condition.getRightChoice().getParameter();
 
 			if (parameter != null) {
 				set.add(parameter);
@@ -837,26 +850,37 @@ public class Constraint implements IConstraint<ChoiceNode> {
 		@Override
 		public Object visit(ParameterCondition condition) throws Exception {
 
-			Set<AbstractParameterNode> set = new HashSet<AbstractParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
 
-			set.add(condition.getRightParameterNode());
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
 
-			return set;
+
+			result.add(condition.getRightParameterNode());
+
+			return result;
 		}
 
 		@Override
 		public Object visit(ValueCondition condition) throws Exception {
 
-			return new HashSet<MethodParameterNode>();
+			Set<BasicParameterNode> result = new HashSet<BasicParameterNode>();
+
+			RelationStatement parentRelationStatement = condition.getParentRelationStatement();
+			BasicParameterNode leftParameter = parentRelationStatement.getLeftParameter();
+			result.add(leftParameter);
+
+			return result;
 		}
 	}
 
 	private class ReferencedLabelsProvider implements IStatementVisitor {
 
-		private MethodParameterNode fParameter;
+		private BasicParameterNode fParameter;
 		private Set<String> EMPTY_SET = new HashSet<String>();
 
-		public ReferencedLabelsProvider(MethodParameterNode parameter) {
+		public ReferencedLabelsProvider(BasicParameterNode parameter) {
 
 			fParameter = parameter;
 		}
@@ -923,4 +947,91 @@ public class Constraint implements IConstraint<ChoiceNode> {
 
 	}
 
+	public static class CollectingMethodVisitor  implements IStatementVisitor {
+
+		private Set<MethodNode> fMethods = new HashSet<>();
+
+		public CollectingMethodVisitor() {
+		}
+
+		public Set<MethodNode> getMethods() {
+
+			return fMethods;
+		}
+
+		@Override
+		public Object visit(StaticStatement statement) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(StatementArray statement) {
+
+			for (AbstractStatement child : statement.getChildren()) {
+				try {
+					CollectingMethodVisitor visitor = new CollectingMethodVisitor();
+					child.accept(visitor);
+
+					if (visitor.getMethods().size() == 0) {
+						continue;
+					}
+
+					fMethods.addAll(visitor.getMethods());
+				} catch (Exception e) {
+					ExceptionHelper.reportRuntimeException("Something is wrong");
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ExpectedValueStatement statement) {
+
+			BasicParameterNode leftMethodParameterNode = statement.getLeftMethodParameterNode();
+
+			fMethods.add((MethodNode) leftMethodParameterNode.getParent());
+
+			return null;
+		}
+
+		@Override
+		public Object visit(RelationStatement statement) {
+
+			BasicParameterNode leftParameter = statement.getLeftParameter();
+			
+			IAbstractNode container = leftParameter.getContainer();
+			
+			if (container instanceof MethodNode) {
+				fMethods.add((MethodNode) container);
+			}
+			
+			return null;
+		}
+
+		@Override
+		public Object visit(LabelCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ChoiceCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ParameterCondition condition) {
+
+			return null;
+		}
+
+		@Override
+		public Object visit(ValueCondition condition) {
+
+			return null;
+		}
+	}
 }

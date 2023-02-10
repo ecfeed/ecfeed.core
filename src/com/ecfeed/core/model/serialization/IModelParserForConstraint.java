@@ -13,13 +13,13 @@ package com.ecfeed.core.model.serialization;
 import java.util.Optional;
 
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
 public interface IModelParserForConstraint {
 
-	public Optional<ConstraintNode> parseConstraint(Element element, MethodNode method, ListOfStrings errorList) throws ParserException; 
+	public Optional<ConstraintNode> parseConstraint(Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException;
 
 }

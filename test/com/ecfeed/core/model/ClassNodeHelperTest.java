@@ -163,8 +163,8 @@ public class ClassNodeHelperTest {
 
 		String methodNameInJavaLanguage = "method_1";
 
-		String[] userParameterTypesInJavaLanguage = { "User1", "com.User2" };
-		String[] userParameterTypesInSimpleLanguage = { "User1", "User2" };
+		// String[] userParameterTypesInJavaLanguage = { "User1", "com.User2" };
+		// String[] userParameterTypesInSimpleLanguage = { "User1", "User2" };
 
 		List<String> paramTypesInJavaLanguage = new ArrayList<>();
 		paramTypesInJavaLanguage.add("int");
@@ -180,28 +180,28 @@ public class ClassNodeHelperTest {
 		// invalid parameter types in java language
 
 		String errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, Arrays.asList(userParameterTypesInJavaLanguage), new ExtLanguageManagerForJava());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, Arrays.asList(userParameterTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
 		// empty class
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
 
@@ -212,38 +212,16 @@ public class ClassNodeHelperTest {
 		classNode.addMethod(methodNode);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInJavaLanguage, new ExtLanguageManagerForJava());
 
 		assertNull(errorMessage);
 
 		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
+				ClassNodeHelper.verifyNewMethodSignatureIsValid(
+						classNode, methodNameInSimpleLanguage, new ExtLanguageManagerForSimple());
 
 		assertNull(errorMessage);
-
-
-		// class with conflicting method
-
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
-		methodNode.addParameter(param1);
-
-		MethodParameterNode param2 = new MethodParameterNode("param2", "double", "0.0", true, null);
-		methodNode.addParameter(param2);
-
-
-		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInJavaLanguage, paramTypesInJavaLanguage, new ExtLanguageManagerForJava());
-
-		assertNotNull(errorMessage);
-
-		errorMessage =
-				ClassNodeHelper.verifyNewMethodSignatureIsValidAndUnique(
-						classNode, methodNameInSimpleLanguage, paramTypesInSimpleLanguage, new ExtLanguageManagerForSimple());
-
-		assertNotNull(errorMessage);
 	}
 
 	@Test
@@ -253,39 +231,39 @@ public class ClassNodeHelperTest {
 
 		ClassNode classNode = new ClassNode("class1", null);
 
-		String[] userTypes1 = {"User1", "com.User2"};
+		// String[] userTypes1 = {"User1", "com.User2"};
 
 		String result =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method", Arrays.asList(userTypes1), new ExtLanguageManagerForJava());
+						classNode, "method", new ExtLanguageManagerForJava());
 
 		assertEquals("method1", result);
 
 		// simple language
 
-		String[] userTypes2 = {"User1", "User2"};
+		// String[] userTypes2 = {"User1", "User2"};
 
 		result =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method", Arrays.asList(userTypes2), new ExtLanguageManagerForSimple());
+						classNode, "method", new ExtLanguageManagerForSimple());
 		assertEquals("method1", result);
 
 		// java language
 
 		String methodName;
 
-		String[] paramTypesInJavaLanguage = {"int", "String"};
+		//		String[] paramTypesInJavaLanguage = {"int", "String"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-					classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
+					classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_1", methodName);
 
 		// simple language
 
-		String[] paramTypesInSimpleLanguage = {"Number", "Text"};
+		// String[] paramTypesInSimpleLanguage = {"Number", "Text"};
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
+						classNode, "method 1", new ExtLanguageManagerForSimple());
 		assertEquals("method 1", methodName);
 
 		// add method with the same name but only one parameter
@@ -293,38 +271,38 @@ public class ClassNodeHelperTest {
 		MethodNode methodNode1 = new MethodNode("method_1", null);
 		classNode.addMethod(methodNode1);
 
-		MethodParameterNode param1 = new MethodParameterNode("param1", "int", "0", false, null);
+		BasicParameterNode param1 = new BasicParameterNode("param1", "int", "0", false, null);
 		methodNode1.addParameter(param1);
 
 		// check in java language
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
-		assertEquals("method_1", methodName);
+						classNode, "method_1", new ExtLanguageManagerForJava());
+		assertEquals("method_2", methodName);
 
 		// check in simple language
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
-		assertEquals("method 1", methodName);
+						classNode, "method 1", new ExtLanguageManagerForSimple());
+		assertEquals("method 2", methodName);
 
 		// adding the second parameter
 
-		MethodParameterNode param2 = new MethodParameterNode("param2", "String", "0", false, null);
+		BasicParameterNode param2 = new BasicParameterNode("param2", "String", "0", false, null);
 		methodNode1.addParameter(param2);
 
 		// check in Java and Simple language
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method_1", Arrays.asList(paramTypesInJavaLanguage), new ExtLanguageManagerForJava());
+						classNode, "method_1", new ExtLanguageManagerForJava());
 		assertEquals("method_2", methodName);
 
 		methodName =
 				ClassNodeHelper.generateNewMethodName(
-						classNode, "method 1", Arrays.asList(paramTypesInSimpleLanguage), new ExtLanguageManagerForSimple());
+						classNode, "method 1", new ExtLanguageManagerForSimple());
 		assertEquals("method 2", methodName);
 	}
 

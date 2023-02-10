@@ -45,10 +45,10 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testAddParameter(){
+	public void addParameter(){
 		MethodNode method = new MethodNode("name", null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type1", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("expCat", "type2", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type1", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("expCat", "type2", "0", true, null);
 		assertEquals(0, method.getParameters().size());
 		method.addParameter(parameter);
 		assertEquals(1, method.getParameters().size());
@@ -72,7 +72,7 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testAddConstraint(){
+	public void addConstraint(){
 		MethodNode method = new MethodNode("name", null);
 		Constraint constraint1 = new Constraint("name1", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null);
 		Constraint constraint2 = new Constraint("name2", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null);
@@ -100,56 +100,24 @@ public class MethodNodeTest {
 		assertFalse(method.getConstraints("name2").contains(constraint1));
 		assertTrue(method.getConstraints("name2").contains(constraint2));
 
-		assertEquals(2, method.getConstraintsNames().size());
-		assertTrue(method.getConstraintsNames().contains("name1"));
-		assertTrue(method.getConstraintsNames().contains("name2"));
+		assertEquals(2, method.getNamesOfConstraints().size());
+		assertTrue(method.getNamesOfConstraints().contains("name1"));
+		assertTrue(method.getNamesOfConstraints().contains("name2"));
 
 		method.removeConstraint(constraintNode1);
-		assertFalse(method.getConstraintsNames().contains("name1"));
-		assertTrue(method.getConstraintsNames().contains("name2"));
+		assertFalse(method.getNamesOfConstraints().contains("name1"));
+		assertTrue(method.getNamesOfConstraints().contains("name2"));
 
 	}
 
 	@Test
-	public void testAddTestCase(){
-		MethodNode method = new MethodNode("name", null);
-		TestCaseNode testCase1 = new TestCaseNode("suite_1", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase2 = new TestCaseNode("suite_2", null, new ArrayList<ChoiceNode>());
-		assertEquals(0, method.getTestCases().size());
-		assertEquals(0, method.getTestCases("suite_1").size());
-		assertEquals(0, method.getTestCases("suite_2").size());
-
-		method.addTestCase(testCase1);
-		method.addTestCase(testCase2);
-
-		assertEquals(method, testCase1.getParent());
-		assertEquals(method, testCase2.getParent());
-
-		assertEquals(2, method.getTestCases().size());
-		assertTrue(method.getTestCases().contains(testCase1));
-		assertTrue(method.getTestCases().contains(testCase2));
-
-		assertEquals(1, method.getTestCases("suite_1").size());
-		assertTrue(method.getTestCases("suite_1").contains(testCase1));
-		assertFalse(method.getTestCases("suite_1").contains(testCase2));
-
-		assertEquals(1, method.getTestCases("suite_2").size());
-		assertTrue(method.getTestCases("suite_2").contains(testCase2));
-		assertFalse(method.getTestCases("suite_2").contains(testCase1));
-
-		assertEquals(2, method.getTestCaseNames().size());
-		assertTrue(method.getTestCaseNames().contains("suite_1"));
-		assertTrue(method.getTestCaseNames().contains("suite_2"));
-	}
-
-	@Test
-	public void testGetChildren(){
+	public void getChildrenTest(){
 		MethodNode method = new MethodNode("name", null);
 		TestCaseNode testCase = new TestCaseNode("test_case", null, new ArrayList<ChoiceNode>());
 		ConstraintNode constraint = new ConstraintNode("constraint",
-				 new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(false, null), new StaticStatement(false, null), null), null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("expCat", "type", "0", true, null);
+				new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(false, null), new StaticStatement(false, null), null), null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("expCat", "type", "0", true, null);
 
 		assertEquals(0, method.getChildren().size());
 		assertFalse(method.hasChildren());
@@ -158,7 +126,7 @@ public class MethodNodeTest {
 		method.addConstraint(constraint);
 		method.addTestCase(testCase);
 
-		assertEquals(4, method.getChildren().size());
+		assertEquals(5, method.getChildren().size());
 		assertTrue(method.hasChildren());
 		assertTrue(method.getChildren().contains(parameter));
 		assertTrue(method.getChildren().contains(expCat));
@@ -241,35 +209,6 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testRemoveTestCase(){
-		MethodNode method = new MethodNode("name", null);
-		TestCaseNode testCase1 = new TestCaseNode("name1", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase2 = new TestCaseNode("name1", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase3 = new TestCaseNode("name2", null, new ArrayList<ChoiceNode>());
-		TestCaseNode testCase4 = new TestCaseNode("name2", null, new ArrayList<ChoiceNode>());
-
-		method.addTestCase(testCase1);
-		method.addTestCase(testCase2);
-		method.addTestCase(testCase3);
-		method.addTestCase(testCase4);
-
-		assertEquals(4, method.getTestCases().size());
-
-		method.removeTestCase(testCase1);
-
-		assertEquals(3, method.getTestCases().size());
-		assertFalse(method.getTestCases().contains(testCase1));
-
-		TestSuiteNode testSuiteNode = new TestSuiteNode();
-		testSuiteNode.setName("name2");
-		method.removeTestSuite(testSuiteNode);
-		assertEquals(1, method.getTestCases().size());
-		assertFalse(method.getTestCases().contains(testCase3));
-		assertFalse(method.getTestCases().contains(testCase4));
-		assertTrue(method.getTestCases().contains(testCase2));
-	}
-
-	@Test
 	public void removeChoicesParentParameterTest(){
 		//		MethodNode method = new MethodNode("method");
 		//		ParameterNode parameter = new ParameterNode("parameter", "type", "0", false);
@@ -331,11 +270,11 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testGetExpectedParametersNames(){
+	public void getExpectedParametersNames(){
 		MethodNode method = new MethodNode("name", null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		MethodParameterNode expCat1 = new MethodParameterNode("expCat1", "type", "0", true, null);
-		MethodParameterNode expCat2 = new MethodParameterNode("expCat2", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode expCat1 = new BasicParameterNode("expCat1", "type", "0", true, null);
+		BasicParameterNode expCat2 = new BasicParameterNode("expCat2", "type", "0", true, null);
 
 		method.addParameter(parameter);
 		method.addParameter(expCat1);
@@ -357,7 +296,7 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testReplaceParameterWithExpected(){
+	public void replaceParameterWithExpected(){
 		//		MethodNode method = new MethodNode("method");
 		//		ParameterNode parameter = new ParameterNode("parameter", "type","0",  false);
 		//		ChoiceNode choice = new ChoiceNode("choice", "value");
@@ -390,7 +329,7 @@ public class MethodNodeTest {
 	}
 
 	@Test
-	public void testReplaceParameterWithChoicesParent(){
+	public void replaceParameterWithChoicesParent(){
 		//		MethodNode method = new MethodNode("method");
 		//		ParameterNode parameter = new ParameterNode("parameter", "type", "0", true);
 		//		ChoiceNode choice = new ChoiceNode("choice", "value");
@@ -476,16 +415,16 @@ public class MethodNodeTest {
 	//	}
 
 	@Test
-	public void testChoiceRemoved(){
+	public void choiceRemoved(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
 		ChoiceNode choice = new ChoiceNode("choice", "value", null);
 		Constraint mentioningConstraint = 
 				new Constraint(
 						"constraint",
 						ConstraintType.EXTENDED_FILTER,
 						RelationStatement.createRelationStatementWithChoiceCondition(
-                                parameter, EMathRelation.EQUAL, choice), new StaticStatement(false, null), null);
+								parameter, EMathRelation.EQUAL, choice), new StaticStatement(false, null), null);
 
 		Constraint notMentioningConstraint =
 				new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(false, null), new StaticStatement(false, null), null);
@@ -542,8 +481,8 @@ public class MethodNodeTest {
 		m2.setName("m1");
 		assertTrue(m1.isMatch(m2));
 
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
 
 		m1.addParameter(c1);
 		assertFalse(m1.isMatch(m2));
@@ -601,6 +540,119 @@ public class MethodNodeTest {
 			MethodNode m = gen.generateMethod(3, 3, 10);
 			assertTrue(m.isMatch(m));
 		}
+	}
+
+	//	@Test
+	//	public void addAndDeleteEmptyTestSuites() {
+	//
+	//		MethodNode methodNode = new MethodNode("Method");
+	//		assertEquals(0, methodNode.getTestSuites().size());
+	//
+	//		TestSuiteNode testSuiteNode1 = new TestSuiteNode("TestSuite1", null);
+	//		methodNode.addTestSuite(testSuiteNode1);
+	//		assertEquals(1, methodNode.getTestSuites().size());
+	//
+	//		TestSuiteNode testSuiteNode2 = new TestSuiteNode("TestSuite2", null);
+	//		methodNode.addTestSuite(testSuiteNode2);
+	//		assertEquals(2, methodNode.getTestSuites().size());
+	//
+	//
+	//		methodNode.removeTestSuite(testSuiteNode1);
+	//		assertEquals(1, methodNode.getTestSuites().size());
+	//
+	//		methodNode.removeTestSuite(testSuiteNode2);
+	//		assertEquals(0, methodNode.getTestSuites().size());
+	//	}
+
+	@Test
+	public void addTestCase() {
+
+		MethodNode method = new MethodNode("name", null);
+
+		assertEquals(0, method.getTestCases().size());
+		assertEquals(0, method.getTestSuites().size());
+
+		// add test case 11
+
+		String testSuiteName1 = "Suite1";
+		TestCaseNode testCase11 = new TestCaseNode(testSuiteName1, null, new ArrayList<ChoiceNode>());
+
+		method.addTestCase(testCase11);
+
+		assertEquals(1, method.getTestCases().size());
+		assertEquals(testSuiteName1, method.getTestCases().get(0).getName());
+
+		assertEquals(1, method.getTestSuites().size());
+
+		TestSuiteNode addedTestSuite1 = method.getTestSuites().get(0);
+		assertEquals(testSuiteName1, addedTestSuite1.getName());
+		assertEquals(1, addedTestSuite1.getTestCaseNodes().size());
+
+		// add test case 12
+
+		TestCaseNode testCase12 = new TestCaseNode(testSuiteName1, null, new ArrayList<ChoiceNode>());
+
+		method.addTestCase(testCase12);
+
+		assertEquals(2, method.getTestCases().size());
+		assertEquals(testSuiteName1, method.getTestCases().get(1).getName());
+
+		assertEquals(1, method.getTestSuites().size());
+		assertEquals(2, method.getTestSuites().get(0).getTestCaseNodes().size());
+
+		// add test case 21 to new testSuite
+
+		String testSuiteName2 = "Suite2";
+		TestCaseNode testCase21 = new TestCaseNode(testSuiteName2, null, new ArrayList<ChoiceNode>());
+
+		method.addTestCase(testCase21);
+
+		assertEquals(3, method.getTestCases().size());
+		assertEquals(testSuiteName1, method.getTestCases().get(1).getName());
+
+		assertEquals(2, method.getTestSuites().size());
+
+		TestSuiteNode foundTestSuite1 = method.findTestSuite(testSuiteName1);
+		assertEquals(2, foundTestSuite1.getTestCaseNodes().size());
+
+		TestSuiteNode foundTestSuite2 = method.findTestSuite(testSuiteName2);
+		assertEquals(1, foundTestSuite2.getTestCaseNodes().size());
+
+		// remove test case 11
+
+		method.removeTestCase(testCase11);
+
+		assertEquals(2, method.getTestCases().size());
+		assertEquals(2, method.getTestSuites().size());
+
+		foundTestSuite1 = method.findTestSuite(testSuiteName1);
+		assertEquals(1, foundTestSuite1.getTestCaseNodes().size());
+
+		foundTestSuite2 = method.findTestSuite(testSuiteName2);
+		assertEquals(1, foundTestSuite2.getTestCaseNodes().size());
+
+		// remove test case 21
+
+		method.removeTestCase(testCase21);
+
+		assertEquals(1, method.getTestCases().size());
+		assertEquals(1, method.getTestSuites().size());
+
+		foundTestSuite1 = method.findTestSuite(testSuiteName1);
+		assertEquals(1, foundTestSuite1.getTestCaseNodes().size());
+
+		foundTestSuite2 = method.findTestSuite(testSuiteName2);
+		assertNull(foundTestSuite2);
+
+		// remove test case 12
+
+		method.removeTestCase(testCase12);
+
+		assertEquals(0, method.getTestCases().size());
+		assertEquals(0, method.getTestSuites().size());
+
+		foundTestSuite1 = method.findTestSuite(testSuiteName1);
+		assertNull(foundTestSuite1);
 	}
 
 }

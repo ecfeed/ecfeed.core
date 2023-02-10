@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.model.NodePropertyDefs;
 import com.ecfeed.core.utils.EMathRelation;
@@ -31,13 +31,23 @@ public class ModelParserHelper  {
 	public static IModelParserForMethod createStandardModelParserForMethod() {
 		
 		IModelParserForMethodParameter modelParserForMethodParameter = new ModelParserForMethodParameter();
+
+		IModelParserForMethodDeployedParameter modelParserForMethodDeployedParameter = new ModelParserForMethodDeployedParameter();
 		
 		IModelParserForTestCase modelParserForTestCase = new ModelParserForTestCase();
 		
 		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+
+		IModelParserForMethodCompositeParameter modelParserForMethodCompositeParameter
+				= new ModelParserForMethodCompositeParameter(modelParserForMethodParameter, modelParserForConstraint);
 		
-		IModelParserForMethod modelParserForMethod = 
-				new ModelParserForMethod(modelParserForMethodParameter, modelParserForTestCase, modelParserForConstraint);
+		IModelParserForMethod modelParserForMethod = new ModelParserForMethod(
+				modelParserForMethodParameter,
+				modelParserForMethodCompositeParameter,
+				modelParserForMethodDeployedParameter,
+				modelParserForTestCase,
+				modelParserForConstraint);
+
 		return modelParserForMethod;
 	}
 	
@@ -46,13 +56,18 @@ public class ModelParserHelper  {
 		IModelParserForChoice modelParserForChoice = new ModelParserForChoice(null);
 		
 		IModelParserForMethod modelParserForMethod = createStandardModelParserForMethod();
+
+		IModelParserForConstraint modelParserFroConstraint = new ModelParserForConstraint();
 		
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
+
+		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
+				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserFroConstraint);
 		
 		ModelParserForClass modelParserForClass = 
 				new ModelParserForClass(
-						modelParserForGlobalParameter, modelParserForMethod);
+						modelParserForGlobalParameter, modelParserForGlobalCompositeParameter, modelParserForMethod);
 		return modelParserForClass;
 	}
 	
@@ -64,19 +79,30 @@ public class ModelParserHelper  {
 		IModelParserForGlobalParameter modelParserForGlobalParameter = 
 				new ModelParserForGlobalParameter(modelParserForChoice);
 
+		IModelParserForConstraint modelParserForConstraint = new ModelParserForConstraint();
+
+		IModelParserForGlobalCompositeParameter modelParserForGlobalCompositeParameter =
+				new ModelParserForGlobalCompositeParameter(modelParserForGlobalParameter, modelParserForConstraint);
+
 		IModelParserForClass modelParserForClass = ModelParserHelper.createStandardModelParserForClass();
 		
 		IModelParserForRoot modelParserForRoot = 
 				new ModelParserForRoot(
 						modelVersion, 
 						modelParserForGlobalParameter,
+						modelParserForGlobalCompositeParameter,
 						modelParserForClass,
 						modelChangeRegistrator);
 		
 		return modelParserForRoot;
 	}
 	
-	public static void assertNodeTag(
+	public static boolean verifyElementName(Element element, String expectedName) {
+
+		return element.getQualifiedName().equals(expectedName);
+	}
+	
+	public static void assertNameEqualsExpectedName(
 			String qualifiedName, String expectedName, ListOfStrings errorList) throws ParserException {
 
 		if (qualifiedName.equals(expectedName) == false) {
@@ -249,7 +275,7 @@ public class ModelParserHelper  {
 		return property.getAttributeValue(SerializationConstants.PROPERTY_ATTRIBUTE_VALUE);
 	}	
 
-	static void parseParameterProperties(Element parameterElement, AbstractParameterNode targetAbstractParameterNode) {
+	static void parseParameterProperties(Element parameterElement, BasicParameterNode targetAbstractParameterNode) {
 
 		parseParameterProperty(
 				NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE, 
@@ -280,7 +306,7 @@ public class ModelParserHelper  {
 	static void parseParameterProperty(
 			NodePropertyDefs.PropertyId propertyId, 
 			Element methodElement, 
-			AbstractParameterNode targetAbstractParameterNode) {
+			BasicParameterNode targetAbstractParameterNode) {
 
 		String value = ModelParserHelper.getPropertyValue(propertyId, methodElement);
 		if (StringHelper.isNullOrEmpty(value)) {

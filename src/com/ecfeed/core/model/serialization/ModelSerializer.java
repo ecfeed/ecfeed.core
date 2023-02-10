@@ -13,18 +13,11 @@ package com.ecfeed.core.model.serialization;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.ecfeed.core.model.*;
+
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Serializer;
-
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.ClassNode;
-import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
-import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
-import com.ecfeed.core.model.RootNode;
-import com.ecfeed.core.model.TestCaseNode;
 
 public class ModelSerializer {
 
@@ -58,14 +51,14 @@ public class ModelSerializer {
 		return null;
 	}
 
-	public Object serialize(MethodParameterNode node) throws Exception {
+	public Object serialize(BasicParameterNode node) throws Exception {
 		Element element = (Element)node.accept(fXomBuilder);
 		writeDocument(element);
 		return null;
 	}
 
-	public Object serialize(GlobalParameterNode node) throws Exception {
-		Element element = (Element)node.accept(fXomBuilder);
+	public Object serialize(CompositeParameterNode node) throws Exception {
+		Element element = (Element) node.accept(fXomBuilder);
 		writeDocument(element);
 		return null;
 	}

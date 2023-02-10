@@ -299,23 +299,44 @@ public class RemoteTCProviderStandard implements ITCProvider {
 
     private TestCaseNode createTestCase(ResultTestCaseSchema testCaseSchema) {
 
-        int parametersCount = fMethodNode.getParametersCount();
+// TODO mo-re All methods must be deployed before generating the test case.
+        int parametersCount = 0;
+        
+        if (getMethodNode().isDeployed()) {
+        	parametersCount = getMethodNode().getDeployedMethodParameters().size();
+        } else {
+        	parametersCount = getMethodNode().getChildrenCount();
+        }
 
         ChoiceSchema[] choiceSchemas = testCaseSchema.getTestCase();
         List<ChoiceNode> choiceNodes = new ArrayList<>();
 
         for (int paramIndex = 0; paramIndex < parametersCount; paramIndex++) {
-            MethodParameterNode methodParameterNode = getMethodNode().getMethodParameter(paramIndex);
+        	
+// TODO mo-re All methods must be deployed before generating the test case.
+        	BasicParameterNode basicParameterNode;
+            
+            if (getMethodNode().isDeployed()) {
+            	basicParameterNode = getMethodNode().getDeployedMethodParameters().get(paramIndex);
+            } else {
+            	AbstractParameterNode abstractParameterNode = getMethodNode().getMethodParameter(paramIndex);
+            	
+            	if (abstractParameterNode instanceof CompositeParameterNode) {
+                	continue;
+                }
+            	
+            	basicParameterNode = (BasicParameterNode) abstractParameterNode;
+            }
 
             String choiceName = choiceSchemas[paramIndex].getName();
             String choiceValue = choiceSchemas[paramIndex].getValue();
             ChoiceNode choiceNode;
 
-            if (methodParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
-                choiceNode = new ChoiceNode(choiceName, choiceValue, methodParameterNode.getModelChangeRegistrator());
-                choiceNode.setParent(methodParameterNode);
+            if (basicParameterNode.isExpected() || choiceName.equals(ChoiceNode.ASSIGNMENT_NAME)) {
+                choiceNode = new ChoiceNode(choiceName, choiceValue, basicParameterNode.getModelChangeRegistrator());
+                choiceNode.setParent(basicParameterNode);
             } else {
-                choiceNode = methodParameterNode.findChoice(choiceName);
+                choiceNode = basicParameterNode.findChoice(choiceName);
             }
 
             if (choiceNode == null) {
@@ -325,7 +346,7 @@ public class RemoteTCProviderStandard implements ITCProvider {
             choiceNodes.add(choiceNode);
         }
 
-        return new TestCaseNode(choiceNodes);
+        return new TestCaseNode("TestSuite", null, choiceNodes);
     }
 
 }

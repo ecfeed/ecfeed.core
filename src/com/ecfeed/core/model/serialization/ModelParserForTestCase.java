@@ -18,11 +18,12 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TEST_SU
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
@@ -36,7 +37,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 		String name;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), TEST_CASE_NODE_NAME, errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), TEST_CASE_NODE_NAME, errorList);
 			name = ModelParserHelper.getAttributeValue(element, TEST_SUITE_NAME_ATTRIBUTE, errorList);
 		} catch (ParserException e) {
 			return Optional.empty();
@@ -44,9 +45,20 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 
 		String[] elementTypes = new String[] { TEST_PARAMETER_NODE_NAME, EXPECTED_PARAMETER_NODE_NAME };
 		List<Element> parameterElements = ModelParserHelper.getIterableChildren(element, elementTypes);
-		List<MethodParameterNode> parameters = method.getMethodParameters();
+		
+		List<BasicParameterNode> parameters;
 
-		List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
+		if (method.isDeployed()) {
+			parameters = method.getDeployedMethodParameters().stream().map(BasicParameterNode::getDeploymentParameter).collect(Collectors.toList());
+		} else {
+			try {
+				parameters = method.getParametersAsBasic();
+			} catch (Exception e ) {
+				return Optional.empty();
+			}
+		}
+
+		List<ChoiceNode> testData = new ArrayList<>();
 
 		if (parameters.size() != parameterElements.size()) {
 			errorList.add(Messages.WRONG_NUMBER_OF_TEST_PAREMETERS(name));
@@ -55,7 +67,7 @@ public class ModelParserForTestCase implements IModelParserForTestCase {
 
 		for (int i = 0; i < parameterElements.size(); i++) {
 			Element testParameterElement = parameterElements.get(i);
-			MethodParameterNode parameter = parameters.get(i);
+			BasicParameterNode parameter = parameters.get(i);
 			ChoiceNode testValue = null;
 
 			if (testParameterElement.getLocalName().equals(SerializationConstants.TEST_PARAMETER_NODE_NAME)) {

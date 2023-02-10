@@ -72,7 +72,9 @@ public class ValueCondition implements IStatementCondition {
 
 		String substituteType = ConditionHelper.getSubstituteType(fParentRelationStatement);		
 
-		int leftParameterIndex = fParentRelationStatement.getLeftParameter().getMyIndex();
+		BasicParameterNode leftParameter = fParentRelationStatement.getLeftParameter();
+		int leftParameterIndex = leftParameter.getMyIndex();
+
 		List<ChoiceNode> choicesForParameter = domain.get(leftParameterIndex);
 
 		EMathRelation relation = fParentRelationStatement.getRelation();
@@ -95,11 +97,12 @@ public class ValueCondition implements IStatementCondition {
 		return false;
 	}
 
+	@Override
 	public RelationStatement getParentRelationStatement() {
 		return fParentRelationStatement;
 	}
 
-	private static String getChoiceString(List<ChoiceNode> choices, MethodParameterNode methodParameterNode) {
+	private static String getChoiceString(List<ChoiceNode> choices, BasicParameterNode methodParameterNode) {
 
 		ChoiceNode choiceNode = StatementConditionHelper.getChoiceForMethodParameter(choices, methodParameterNode);
 
@@ -118,14 +121,20 @@ public class ValueCondition implements IStatementCondition {
 	@Override
 	public ValueCondition makeClone() {
 
-		return new ValueCondition(new String(fRightValue), fParentRelationStatement);
+		return new ValueCondition(fRightValue, fParentRelationStatement);
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode methodNode) {
+	public ValueCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 
-		return true;
+		return new ValueCondition(fRightValue, statement);
 	}
+
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition(){
@@ -191,7 +200,7 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -213,14 +222,31 @@ public class ValueCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 		return false;
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 		return null;
 	}
+
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		String deployedRightValue = getRightValue();
+	//
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+	//
+	//		ValueCondition deployedValueCondition =
+	//				new ValueCondition(
+	//						deployedRightValue,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployedValueCondition;
+	//
+	//	}
 
 }	
 

@@ -27,8 +27,8 @@ public class CopyNodeTest{
 		RootNode root = new RootNode("name", null);
 		ClassNode class1 = new ClassNode("class1", null);
 		ClassNode class2 = new ClassNode("class2", null);
-		GlobalParameterNode par1 = new GlobalParameterNode("par1", "int", null);
-		GlobalParameterNode par2 = new GlobalParameterNode("par2", "int", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", null);
 		root.addClass(class1);
 		root.addClass(class2);
 		root.addParameter(par1);
@@ -43,8 +43,8 @@ public class CopyNodeTest{
 		ClassNode classNode = new ClassNode("Class", null);
 		MethodNode method1 = new MethodNode("method1", null);
 		MethodNode method2 = new MethodNode("method2", null);
-		GlobalParameterNode par1 = new GlobalParameterNode("par1", "int", null);
-		GlobalParameterNode par2 = new GlobalParameterNode("par2", "int", null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", null);
 		classNode.addMethod(method1);
 		classNode.addMethod(method2);
 		classNode.addParameter(par1);
@@ -57,8 +57,8 @@ public class CopyNodeTest{
 	@Test
 	public void copyMethodTest(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
-		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
 		ConstraintNode constraint1 = new ConstraintNode("constraint1", new Constraint("constraint1", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
 		ConstraintNode constraint2 = new ConstraintNode("constraint2", new Constraint("constraint2", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null), null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
@@ -83,7 +83,7 @@ public class CopyNodeTest{
 
 	@Test
 	public void copyGlobalParameterTest(){
-		GlobalParameterNode parameter = new GlobalParameterNode("parameter", "int", null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "1", null);
 		ChoiceNode choice11 = new ChoiceNode("choice11", "11", null);
 		ChoiceNode choice12 = new ChoiceNode("choice12", "12", null);
@@ -97,13 +97,13 @@ public class CopyNodeTest{
 		parameter.addChoice(choice1);
 		parameter.addChoice(choice2);
 
-		GlobalParameterNode copy = parameter.makeClone();
+		BasicParameterNode copy = parameter.makeClone();
 		assertTrue(parameter.isMatch(copy));
 	}
 
 	@Test
 	public void copyMethodParameterTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "1", null);
 		ChoiceNode choice11 = new ChoiceNode("choice11", "11", null);
 		ChoiceNode choice12 = new ChoiceNode("choice12", "12", null);
@@ -117,15 +117,15 @@ public class CopyNodeTest{
 		parameter.addChoice(choice1);
 		parameter.addChoice(choice2);
 
-		MethodParameterNode copy = parameter.makeClone();
+		BasicParameterNode copy = parameter.makeClone();
 		assertTrue(parameter.isMatch(copy));
 	}
 
 	@Test
 	public void copyConstraintTest(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
-		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		choice1.addLabel("label");
 		par1.addChoice(choice1);
@@ -152,8 +152,8 @@ public class CopyNodeTest{
 	@Test
 	public void copyTestCaseTest(){
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode par1 = new MethodParameterNode("par1", "int", "0", false, null);
-		MethodParameterNode par2 = new MethodParameterNode("par2", "int", "0", true, null);
+		BasicParameterNode par1 = new BasicParameterNode("par1", "int", "0", false, null);
+		BasicParameterNode par2 = new BasicParameterNode("par2", "int", "0", true, null);
 		ChoiceNode choice1 = new ChoiceNode("choice1", "0", null);
 		par1.addChoice(choice1);
 		ChoiceNode expectedChoice1 = new ChoiceNode("expected", "0", null);
@@ -219,7 +219,7 @@ public class CopyNodeTest{
 
 	@Test
 	public void choiceStatementTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "65", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "65", false, null);
 		ChoiceNode choice = new ChoiceNode("choice", "876", null);
 		parameter.addChoice(choice);
 		choice.addLabel("label");
@@ -238,7 +238,7 @@ public class CopyNodeTest{
 
 	@Test
 	public void expectedStatementTest(){
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "65", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "65", true, null);
 		ChoiceNode choice = new ChoiceNode("expected", "876", null);
 		choice.setParent(parameter);
 
@@ -300,13 +300,13 @@ public class CopyNodeTest{
 	//		fChoice2.addLabel(fLabel2);
 	//	}
 	//
-	//	public void testNode(AbstractNode node, AbstractNode copy){
+	//	public void testNode(Abstract Node node, Abstract Node copy){
 	//		assertTrue(node.getClass().isInstance(copy));
 	//		assertNotEquals(node, copy);
 	//		assertEquals(node.getName(), copy.getName());
 	//	}
 	//
-	//	public void testParent(AbstractNode node, AbstractNode parent, boolean isParent){
+	//	public void testParent(Abstract Node node, Abstract Node parent, boolean isParent){
 	//		if(isParent)
 	//			assertEquals(node.getParent(), parent);
 	//		else

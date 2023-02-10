@@ -109,7 +109,7 @@ public final class JavaLanguageHelper {
 
 
 	public static final String INVALID_JAVA_TYPE = "Invalid java type";
-	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier.";
+	public static final String NODE_NAME_IS_NOT_A_VALID_IDENTIFIER = "Node name is not a valid identifier";
 	public static final String SPACES_ARE_NOT_ALLOWED_IN_NAME = "Spaces are not allowed in name.";
 	public static final String NAME_MUST_NOT_CONTAIN_ONLY_UNDERLINE_CHARACTERS = "Name must not contain only underline characters.";
 
@@ -180,7 +180,7 @@ public final class JavaLanguageHelper {
 	public static void verifyIsValidJavaIdentifier(String name) {
 
 		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER);
+			ExceptionHelper.reportRuntimeException(NODE_NAME_IS_NOT_A_VALID_IDENTIFIER + " - " + name + ".");
 		}
 	}
 

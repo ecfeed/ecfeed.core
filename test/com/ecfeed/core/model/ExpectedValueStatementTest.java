@@ -25,9 +25,9 @@ import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 public class ExpectedValueStatementTest{
 
 	private static MethodNode fMethod;
-	private static MethodParameterNode fExpParameter1;
-	private static MethodParameterNode fPartParameter1;
-	private static MethodParameterNode fPartParameter2;
+	private static BasicParameterNode fExpParameter1;
+	private static BasicParameterNode fPartParameter1;
+	private static BasicParameterNode fPartParameter2;
 	private static String fExpectedValue1;
 
 
@@ -36,10 +36,10 @@ public class ExpectedValueStatementTest{
 		fMethod = new MethodNode("method", null);
 		fExpectedValue1 = "value1";
 
-		fExpParameter1 = new MethodParameterNode("parameterE1", "type", "0", true, null);
+		fExpParameter1 = new BasicParameterNode("parameterE1", "type", "0", true, null);
 		fExpParameter1.setDefaultValueString(fExpectedValue1);
-		fPartParameter1 = new MethodParameterNode("parameterP1", "type", "0", false, null);
-		fPartParameter2 = new MethodParameterNode("parameterP2", "type", "0", false, null);
+		fPartParameter1 = new BasicParameterNode("parameterP1", "type", "0", false, null);
+		fPartParameter2 = new BasicParameterNode("parameterP2", "type", "0", false, null);
 
 		fMethod.addParameter(fPartParameter1);
 		fMethod.addParameter(fExpParameter1);
@@ -67,8 +67,8 @@ public class ExpectedValueStatementTest{
 	public void compareTest(){
 		IPrimitiveTypePredicate predicate = new JavaPrimitiveTypePredicate();
 
-		MethodParameterNode c1 = new MethodParameterNode("c", "type", "0", true, null);
-		MethodParameterNode c2 = new MethodParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
 
 		ChoiceNode p1 = new ChoiceNode("name", "value", null);
 		ChoiceNode p2 = new ChoiceNode("name", "value", null);

@@ -10,17 +10,17 @@
 
 package com.ecfeed.core.model.serialization;
 
-import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NAME_ATTRIBUTE;
-
 import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IModelChangeRegistrator;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
+
+import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
 public class ModelParserForGlobalParameter implements IModelParserForGlobalParameter {
 
@@ -30,23 +30,33 @@ public class ModelParserForGlobalParameter implements IModelParserForGlobalParam
 		fModelParserForChoice = modelParserForChoice;
 	}
 	
-	public Optional<GlobalParameterNode> parseGlobalParameter(
+	public Optional<BasicParameterNode> parseGlobalBasicParameter(
 			Element element, 
 			IModelChangeRegistrator modelChangeRegistrator, 
 			
 			ListOfStrings errorList) {
 
 		String name, type;
+		String defaultValue = null;
+		String expected = String.valueOf(false);
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getParameterNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getBasicParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 			type = ModelParserHelper.getAttributeValue(element, TYPE_NAME_ATTRIBUTE, errorList);
+
+			if (element.getAttribute(PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME) != null) {
+				expected = ModelParserHelper.getAttributeValue(element, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
+			}
+
+			if (element.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
+				defaultValue = ModelParserHelper.getAttributeValue(element, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
+			}
 		} catch (ParserException e) {
 			return Optional.empty();
 		}
 
-		GlobalParameterNode targetGlobalParameterNode = new GlobalParameterNode(name, type, modelChangeRegistrator);
+		BasicParameterNode targetGlobalParameterNode = new BasicParameterNode(name, type, defaultValue, Boolean.parseBoolean(expected), modelChangeRegistrator);
 
 		ModelParserHelper.parseParameterProperties(element, targetGlobalParameterNode);
 

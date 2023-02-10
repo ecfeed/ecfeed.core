@@ -77,22 +77,22 @@ public class ModelParserTest {
         Assert.assertEquals(36, body.get(10).size());
 
         RootNode parentRoot = new RootNode("test", new ModelChangeRegistrator(), 1);
-        List<AbstractParameterNode> parentRootData = model.parse(parentRoot);
+        List<BasicParameterNode> parentRootData = model.parse(parentRoot);
 
         Assert.assertEquals(11, parentRootData.size());
-        Assert.assertTrue(parentRootData.get(0) instanceof GlobalParameterNode);
+        Assert.assertTrue(parentRootData.get(0) instanceof BasicParameterNode);
 
         ClassNode parentClass = new ClassNode("test", parentRoot.getModelChangeRegistrator());
-        List<AbstractParameterNode> parentClassData = model.parse(parentClass);
+        List<BasicParameterNode> parentClassData = model.parse(parentClass);
 
         Assert.assertEquals(11, parentClassData.size());
-        Assert.assertTrue(parentClassData.get(0) instanceof GlobalParameterNode);
+        Assert.assertTrue(parentClassData.get(0) instanceof BasicParameterNode);
 
         MethodNode parentMethod = new MethodNode("test", parentRoot.getModelChangeRegistrator());
-        List<AbstractParameterNode> parentMethodData = model.parse(parentMethod);
+        List<BasicParameterNode> parentMethodData = model.parse(parentMethod);
 
         Assert.assertEquals(11, parentMethodData.size());
-        Assert.assertTrue(parentMethodData.get(0) instanceof MethodParameterNode);
+        Assert.assertTrue(parentMethodData.get(0) instanceof BasicParameterNode);
     }
 
     @Test

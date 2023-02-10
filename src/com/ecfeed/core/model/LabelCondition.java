@@ -46,11 +46,11 @@ public class LabelCondition implements IStatementCondition {
 		return evaluateContainsLabel(choice);
 	}
 
-	@Override
-	public boolean updateReferences(MethodNode methodNode) {
-
-		return true;
-	}
+	//	@Override
+	//	public boolean updateReferences(IParametersParentNode methodNode) {
+	//
+	//		return true;
+	//	}
 
 	@Override
 	public Object getCondition() {
@@ -96,8 +96,19 @@ public class LabelCondition implements IStatementCondition {
 		return new LabelCondition(fRightLabel, fParentRelationStatement);
 	}
 
+	@Override
+	public LabelCondition createCopy(RelationStatement statement, NodeMapper mapper) {
+
+		return new LabelCondition(fRightLabel, statement);
+	}
+
 	public String getRightLabel() {
 		return fRightLabel;
+	}
+
+	@Override
+	public RelationStatement getParentRelationStatement() {
+		return fParentRelationStatement;
 	}
 
 	@Override
@@ -135,7 +146,7 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -166,12 +177,12 @@ public class LabelCondition implements IStatementCondition {
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode abstractParameterNode) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode abstractParameterNode) {
 		return false;
 	}
 
 	@Override
-	public String getLabel(MethodParameterNode methodParameterNode) {
+	public String getLabel(BasicParameterNode methodParameterNode) {
 
 		if (fParentRelationStatement.getLeftParameter() == methodParameterNode) {
 			return fRightLabel;
@@ -179,6 +190,22 @@ public class LabelCondition implements IStatementCondition {
 
 		return null;
 	}
+
+	//	@Override
+	//	public IStatementCondition createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		String developedLabel = getRightLabel();
+	//
+	//		RelationStatement deployedParentRelationStatement =
+	//				deploymentMapper.getDeployedRelationStatement(fParentRelationStatement);
+	//
+	//		LabelCondition deployedLabelCondition =
+	//				new LabelCondition(
+	//						developedLabel,
+	//						deployedParentRelationStatement);
+	//
+	//		return deployedLabelCondition;
+	//	}
 
 }
 

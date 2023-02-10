@@ -15,7 +15,7 @@ import java.util.List;
 
 public class TestCase {
 
-	List<ChoiceNode> fChoices;
+	private List<ChoiceNode> fChoices;
 
 	public TestCase() {
 

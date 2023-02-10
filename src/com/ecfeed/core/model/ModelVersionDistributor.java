@@ -14,7 +14,7 @@ public class ModelVersionDistributor {
 
 	public static int getCurrentSoftwareVersion() {
 
-		return 4;
+		return 5;
 	}
 
 	public static boolean isAndroidAttributeInTheClass(int version) {

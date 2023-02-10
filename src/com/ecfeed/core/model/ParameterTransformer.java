@@ -13,11 +13,11 @@ package com.ecfeed.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ecfeed.core.operations.MethodOperationSetConstraints;
-import com.ecfeed.core.operations.OperationSimpleAddChoice;
-import com.ecfeed.core.operations.OperationSimpleSetLink;
-import com.ecfeed.core.operations.OperationSimpleSetTestCases;
-import com.ecfeed.core.operations.SimpleOperationSetMethodParameterType;
+import com.ecfeed.core.operations.link.OperationSimpleSetLink;
+import com.ecfeed.core.operations.nodes.OnChoiceOperationAddSimple;
+import com.ecfeed.core.operations.nodes.OnConstraintsOperationSetOnMethod;
+import com.ecfeed.core.operations.nodes.OnMethodParameterOperationSimpleSetType;
+import com.ecfeed.core.operations.nodes.OnTestCasesOperationSimpleSet;
 import com.ecfeed.core.type.adapter.ITypeAdapter;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
@@ -33,8 +33,8 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 public class ParameterTransformer {
 
 	public static MethodNode linkMethodParameteToGlobalParameter(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstGlobalParameterNode, 
+			BasicParameterNode srcMethodParameterNode,
+			BasicParameterNode dstGlobalParameterNode, 
 			ParameterConversionDefinition parameterConversionDefinition,
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
@@ -44,7 +44,7 @@ public class ParameterTransformer {
 		String oldMethodParameterType = srcMethodParameterNode.getType();
 		String globalParameterType = dstGlobalParameterNode.getType();
 		
-		MethodOperationSetConstraints reverseOperation = 
+		OnConstraintsOperationSetOnMethod reverseOperation = 
 				createReverseOperationSetConstraints(srcMethodParameterNode, extLanguageManager);
 
 		outReverseOperations.add(reverseOperation);
@@ -60,14 +60,18 @@ public class ParameterTransformer {
 
 		deleteRemainingChoices(srcMethodParameterNode, outReverseOperations, extLanguageManager);
 
-		MethodNode methodNode = srcMethodParameterNode.getMethod();
+		IAbstractNode parent = srcMethodParameterNode.getParent();
+		IParametersParentNode methodNode = (IParametersParentNode) parent;
 
-		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
+		if (parent instanceof ITestCasesParentNode) {
+			
+			removeTestCases((ITestCasesParentNode)methodNode, outReverseOperations, extLanguageManager);
+		}
 
 		setLink(srcMethodParameterNode, dstGlobalParameterNode, outReverseOperations, extLanguageManager);
 
-		SimpleOperationSetMethodParameterType reverseSetTypeOperation = 
-			new SimpleOperationSetMethodParameterType(
+		OnMethodParameterOperationSimpleSetType reverseSetTypeOperation = 
+			new OnMethodParameterOperationSimpleSetType(
 					srcMethodParameterNode, 
 					oldMethodParameterType, 
 					extLanguageManager);
@@ -77,30 +81,54 @@ public class ParameterTransformer {
 		
 		srcMethodParameterNode.setType(globalParameterType);
 		
-		return methodNode;
+		return (MethodNode) parent;
+	}
+	
+	public static void unlinkMethodParameteFromGlobalParameter(
+			AbstractParameterNode methodParameterNode,
+			AbstractParameterNode globalParameterNode, 
+			ListOfModelOperations outReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		if (methodParameterNode instanceof BasicParameterNode) {
+			unlinkMethodParameteFromGlobalParameter(
+					(BasicParameterNode) methodParameterNode, globalParameterNode,
+					outReverseOperations, extLanguageManager);
+		} else if (methodParameterNode instanceof CompositeParameterNode) {
+			unlinkMethodParameteFromGlobalParameter(
+					(CompositeParameterNode) methodParameterNode, globalParameterNode,
+					outReverseOperations, extLanguageManager);
+		}
 	}
 
 	public static void unlinkMethodParameteFromGlobalParameter(
-			MethodParameterNode methodParameterNode,
-			GlobalParameterNode globalParameterNode, 
+			BasicParameterNode methodParameterNode,
+			AbstractParameterNode globalParameterNode, 
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 		checkParametersForNotNull(methodParameterNode, globalParameterNode);
-
-		String linkedParameterType = methodParameterNode.getLink().getType();
+			
+		BasicParameterNode link = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
+		String linkedParameterType = link.getType();
+		
 		String oldMethodParameterType = methodParameterNode.getType();
 
-		MethodNode methodNode = methodParameterNode.getMethod();
+		IAbstractNode parent = methodParameterNode.getParent();
+		
+		IParametersAndConstraintsParentNode methodNode = 
+				(IParametersAndConstraintsParentNode) parent;
 
 		removeLinkOnMethodParameter(methodParameterNode, outReverseOperations, extLanguageManager);
 
 		ListOfModelOperations reverseOperationsForChoicesCopy = new ListOfModelOperations();
 
 		List<ParameterConversionItem> parameterConversionItems = new ArrayList<>();
-
+		
+		BasicParameterNode global2 = (BasicParameterNode) globalParameterNode; 
+					
 		ChoicesParentNodeHelper.createCopyOfChoicesSubTreesBetweenParameters(
-				globalParameterNode, methodParameterNode, 
+				global2, methodParameterNode, 
 				reverseOperationsForChoicesCopy,
 				parameterConversionItems,
 				extLanguageManager);
@@ -113,10 +141,12 @@ public class ParameterTransformer {
 
 		outReverseOperations.addAll(reverseOperationsForChoicesCopy);
 
-		removeTestCases(methodNode, outReverseOperations, extLanguageManager);
+		if (parent instanceof ITestCasesParentNode) {
+			removeTestCases((ITestCasesParentNode)parent, outReverseOperations, extLanguageManager);
+		}
 
-		SimpleOperationSetMethodParameterType reverseSetTypeOperation = 
-				new SimpleOperationSetMethodParameterType(
+		OnMethodParameterOperationSimpleSetType reverseSetTypeOperation = 
+				new OnMethodParameterOperationSimpleSetType(
 						methodParameterNode, 
 						oldMethodParameterType, 
 						extLanguageManager);
@@ -125,16 +155,26 @@ public class ParameterTransformer {
 		
 		methodParameterNode.setType(linkedParameterType);
 	}
+	
+	public static void unlinkMethodParameteFromGlobalParameter(
+			CompositeParameterNode methodParameterNode,
+			AbstractParameterNode globalParameterNode, 
+			ListOfModelOperations outReverseOperations,
+			IExtLanguageManager extLanguageManager) {
+
+		checkParametersForNotNull(methodParameterNode, globalParameterNode);
+		
+		removeLinkOnMethodParameter(methodParameterNode, outReverseOperations, extLanguageManager);
+	}
 
 	private static void setLink(
-			MethodParameterNode srcMethodParameterNode,
-			GlobalParameterNode dstParameterForChoices,
+			AbstractParameterNode srcMethodParameterNode,
+			AbstractParameterNode dstParameterForChoices,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
 
-		srcMethodParameterNode.setLink(dstParameterForChoices);
-		srcMethodParameterNode.setLinked(true);
+		srcMethodParameterNode.setLinkToGlobalParameter(dstParameterForChoices);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 
 				new OperationSimpleSetLink(
@@ -145,8 +185,8 @@ public class ParameterTransformer {
 
 	public static void convertByConversionListForLinking(
 			ParameterConversionDefinition parameterConversionItems,
-			MethodParameterNode srcParameterNode, 
-			GlobalParameterNode dstParameterNode,
+			BasicParameterNode srcParameterNode, 
+			BasicParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
@@ -164,18 +204,18 @@ public class ParameterTransformer {
 
 	public static void verifyConversionOfParameterToType(
 			String newType, 
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode abstractParameterNode,
 			ParameterConversionDefinition inOutParameterConversionDefinition) {
 
-		if (abstractParameterNode instanceof GlobalParameterNode) {
+		if (abstractParameterNode instanceof BasicParameterNode && abstractParameterNode.isGlobalParameter()) {
 
-			GlobalParameterNode globalParameterNode = (GlobalParameterNode)abstractParameterNode;
+			BasicParameterNode globalParameterNode = (BasicParameterNode)abstractParameterNode;
 
 			ChoiceNodeHelper.verifyConversionOfChoices(globalParameterNode, newType, inOutParameterConversionDefinition);
 			return;
 		}
 
-		MethodParameterNode methodParameterNode = (MethodParameterNode)abstractParameterNode;
+		BasicParameterNode methodParameterNode = (BasicParameterNode)abstractParameterNode;
 
 		if (methodParameterNode.isExpected()) {
 			addDefaultValueToConversionDefinition(
@@ -190,7 +230,7 @@ public class ParameterTransformer {
 	}
 
 	public static void convertChoicesAndConstraintsToType(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		convertChoicesToType(methodParameterNode, parameterConversionDefinition);
@@ -199,7 +239,7 @@ public class ParameterTransformer {
 	}
 
 	public static void convertChoicesToType(
-			AbstractParameterNode abstractParameterNode,
+			BasicParameterNode abstractParameterNode,
 			ParameterConversionDefinition parameterConversionDefinition) {
 
 		ChoiceNodeHelper.convertValuesOfChoicesToType(abstractParameterNode, parameterConversionDefinition);
@@ -220,7 +260,7 @@ public class ParameterTransformer {
 	}
 
 	private static void deleteRemainingChoices(
-			ChoicesParentNode srcMethodParameterNode,
+			IChoicesParentNode srcMethodParameterNode,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
@@ -252,11 +292,11 @@ public class ParameterTransformer {
 			ListOfModelOperations outReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		ChoicesParentNode choicesParentNode = choiceNode.getParent();
+		IChoicesParentNode choicesParentNode = (IChoicesParentNode)choiceNode.getParent();
 		int indexOfTopChoice = choiceNode.getMyIndex();
 
-		OperationSimpleAddChoice operationSimpleAddChoice = 
-				new OperationSimpleAddChoice(choiceNode, indexOfTopChoice, choicesParentNode, extLanguageManager);
+		OnChoiceOperationAddSimple operationSimpleAddChoice = 
+				new OnChoiceOperationAddSimple(choiceNode, indexOfTopChoice, choicesParentNode, extLanguageManager);
 
 		outReverseOperations.add(operationSimpleAddChoice);
 
@@ -264,24 +304,24 @@ public class ParameterTransformer {
 	}
 
 	private static void convertConstraints(
-			MethodNode methodNode, 
+			IConstraintsParentNode methodNode, 
 			AbstractParameterNode srcParameterNode,
-			AbstractParameterNode dstParameterNode, 
+			BasicParameterNode dstParameterNode, 
 			List<ParameterConversionItem> parameterConversionItems,
 			ListOfModelOperations outReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
 		for (ParameterConversionItem parameterConversionItem : parameterConversionItems) {
 
-			MethodNodeHelper.convertConstraints(
+			ParametersAndConstraintsParentNodeHelper.convertConstraints(
 					methodNode.getConstraintNodes(),
 					parameterConversionItem);
 		}
 	}
 
 	private static void checkParametersForNotNull(
-			MethodParameterNode methodParameterNode,
-			GlobalParameterNode dstGlobalParameterNode) {
+			AbstractParameterNode methodParameterNode,
+			AbstractParameterNode dstGlobalParameterNode) {
 
 		if (methodParameterNode == null) {
 			ExceptionHelper.reportRuntimeException("Empty method parameter.");
@@ -292,11 +332,13 @@ public class ParameterTransformer {
 		}
 	}
 
-	private static void removeTestCases(MethodNode methodNode, ListOfModelOperations reverseOperations,
+	private static void removeTestCases(
+			ITestCasesParentNode methodNode, 
+			ListOfModelOperations reverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		OperationSimpleSetTestCases inOutReverseOperation = 
-				new OperationSimpleSetTestCases(methodNode, methodNode.getTestCases(), extLanguageManager);
+		OnTestCasesOperationSimpleSet inOutReverseOperation = 
+				new OnTestCasesOperationSimpleSet(methodNode, methodNode.getTestCases(), extLanguageManager);
 
 		reverseOperations.add(inOutReverseOperation);
 
@@ -304,14 +346,13 @@ public class ParameterTransformer {
 	}
 
 	private static void removeLinkOnMethodParameter(
-			MethodParameterNode srcMethodParameterNode,
+			AbstractParameterNode srcMethodParameterNode,
 			ListOfModelOperations inOutReverseOperations,
 			IExtLanguageManager extLanguageManager) {
 
-		GlobalParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLink();
+		AbstractParameterNode oldGlobalParameterNode = srcMethodParameterNode.getLinkToGlobalParameter();
 
-		srcMethodParameterNode.setLink(null);
-		srcMethodParameterNode.setLinked(false);
+		srcMethodParameterNode.setLinkToGlobalParameter(null);
 
 		OperationSimpleSetLink reverseOperationSimpleSetLink = 
 				new OperationSimpleSetLink(
@@ -321,11 +362,11 @@ public class ParameterTransformer {
 	}
 
 
-	private static MethodOperationSetConstraints createReverseOperationSetConstraints(
-			MethodParameterNode srcParameterNode,
+	private static OnConstraintsOperationSetOnMethod createReverseOperationSetConstraints(
+			BasicParameterNode srcParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
-		MethodNode methodNode = srcParameterNode.getMethod();
+		IConstraintsParentNode methodNode = (IConstraintsParentNode) srcParameterNode.getParent();
 
 		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
 
@@ -337,22 +378,22 @@ public class ParameterTransformer {
 			listOfClonedConstraintNodes.add(clone);
 		}
 
-		MethodOperationSetConstraints reverseOperation = 
-				new MethodOperationSetConstraints(methodNode, listOfClonedConstraintNodes, extLanguageManager);
+		OnConstraintsOperationSetOnMethod reverseOperation = 
+				new OnConstraintsOperationSetOnMethod(methodNode, listOfClonedConstraintNodes, extLanguageManager);
 
 		return reverseOperation;
 	}
 
 	private static void convertByConversionItemForLinking(
 			ParameterConversionItem parameterConversionItem, 
-			MethodParameterNode srcParameterNode, 
-			GlobalParameterNode dstParameterNode,
+			BasicParameterNode srcParameterNode, 
+			BasicParameterNode dstParameterNode,
 			ListOfModelOperations inOutReverseOperations, 
 			IExtLanguageManager extLanguageManager) {
 
-		MethodNode methodNode = srcParameterNode.getMethod();
+		IConstraintsParentNode methodNode = (IConstraintsParentNode) srcParameterNode.getParent();
 
-		MethodNodeHelper.convertConstraints(
+		ParametersAndConstraintsParentNodeHelper.convertConstraints(
 				methodNode.getConstraintNodes(),
 				parameterConversionItem); 
 

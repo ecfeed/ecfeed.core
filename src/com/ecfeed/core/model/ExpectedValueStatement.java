@@ -17,18 +17,18 @@ import com.ecfeed.core.type.adapter.IPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.MessageStack;
 import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.StringHelper;
-import com.ecfeed.core.utils.MessageStack;
 
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
-	MethodParameterNode fLeftMethodParameterNode;
-	ChoiceNode fChoiceNode;
-	private IPrimitiveTypePredicate fPredicate;
+	private BasicParameterNode fLeftMethodParameterNode;
+	private ChoiceNode fChoiceNode;
+	private IPrimitiveTypePredicate fPredicate; // TODO NE-TE remove ?
 
 	public ExpectedValueStatement(
-			MethodParameterNode methodParameterNode, 
+			BasicParameterNode methodParameterNode,
 			ChoiceNode choiceNode, 
 			IPrimitiveTypePredicate predicate) {
 
@@ -40,7 +40,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public String getLeftParameterName() {
+	public String getLeftParameterCompositeName() {
 		return fLeftMethodParameterNode.getName();
 	}
 
@@ -57,14 +57,14 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public boolean setExpectedValues(List<ChoiceNode> testCaseChoices) {
 
-
 		if (testCaseChoices == null) {
 			return true;
 		}
 
-		if  (fLeftMethodParameterNode.getMethod() != null) {
+		IParametersParentNode parametersParent = (IParametersParentNode) fLeftMethodParameterNode.getParent();
+		if  (parametersParent != null) {
 
-			int index = fLeftMethodParameterNode.getMethod().getParameters().indexOf(fLeftMethodParameterNode);
+			int index = parametersParent.getParameters().indexOf(fLeftMethodParameterNode);
 			testCaseChoices.set(index, fChoiceNode.makeClone());
 		}
 
@@ -88,8 +88,10 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public boolean mentions(int methodParameterIndex) {
 
-		MethodNode methodNode = fLeftMethodParameterNode.getMethod();
-		MethodParameterNode methodParameterNode = methodNode.getMethodParameter(methodParameterIndex);
+		IParametersAndConstraintsParentNode methodNode = 
+				(IParametersAndConstraintsParentNode) fLeftMethodParameterNode.getParent();
+
+		AbstractParameterNode methodParameterNode = methodNode.getParameter(methodParameterIndex);
 
 		if (mentions(methodParameterNode)) {
 			return true;
@@ -108,15 +110,15 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 
-		AbstractParameterNode abstractParameterNode = fChoiceNode.getParameter();
+		BasicParameterNode abstractParameterNode = fChoiceNode.getParameter();
 
-		if (!(abstractParameterNode instanceof MethodParameterNode)) {
+		if (!(abstractParameterNode instanceof BasicParameterNode)) {
 			return null;
 		}
 
-		MethodParameterNode methodParameterNode2 = (MethodParameterNode) abstractParameterNode;
+		BasicParameterNode methodParameterNode2 = (BasicParameterNode) abstractParameterNode;
 
 		if (!methodParameterNode2.equals(methodParameterNode)) {
 			return null;
@@ -128,19 +130,22 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 		return result;
 	}
 
-
 	@Override
 	public void derandomize() {
 		fChoiceNode.derandomize();
 
 	}
 
-	public MethodParameterNode getLeftMethodParameterNode() {
+	public BasicParameterNode getLeftMethodParameterNode() {
 		return fLeftMethodParameterNode;
 	}
 
 	public ChoiceNode getChoice() {
 		return fChoiceNode;
+	}
+
+	public IPrimitiveTypePredicate getPredicate() {
+		return fPredicate;
 	}
 
 	@Override
@@ -151,7 +156,7 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager){
 
-		final MethodParameterNode parameter = getLeftMethodParameterNode();
+		final BasicParameterNode parameter = getLeftMethodParameterNode();
 
 		return MethodParameterNodeHelper.getName(parameter, extLanguageManager) + getRelation().toString() + fChoiceNode.getValueString();
 	}
@@ -162,26 +167,34 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode method){
-		MethodParameterNode parameter = (MethodParameterNode)method.findParameter(fLeftMethodParameterNode.getName());
-		if(parameter != null && parameter.isExpected()){
-			fLeftMethodParameterNode = parameter;
-			fChoiceNode.setParent(parameter);
-			String type = parameter.getType();
+	public ExpectedValueStatement createCopy(NodeMapper mapper) {
+		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftMethodParameterNode);
+		ChoiceNode choice = mapper.getMappedNodeDeployment(fChoiceNode);
 
-			if(fPredicate.isPrimitive(type) == false){
-				ChoiceNode choice = parameter.getChoice(fChoiceNode.getQualifiedName());
-				if(choice != null){
-					fChoiceNode = choice;
-				}
-				else{
-					return false;
-				}
-			}
-			return true;
-		}
-		return false;
+		return new ExpectedValueStatement(parameter, choice, fPredicate);
 	}
+
+	//	@Override
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode method){
+	//		BasicParameterNode parameter = (BasicParameterNode)method.findParameter(fLeftMethodParameterNode.getName());
+	//		if(parameter != null && parameter.isExpected()){
+	//			fLeftMethodParameterNode = parameter;
+	//			fChoiceNode.setParent(parameter);
+	//			String type = parameter.getType();
+	//
+	//			if(!fPredicate.isPrimitive(type)){
+	//				ChoiceNode choice = parameter.getChoice(fChoiceNode.getQualifiedName());
+	//				if(choice != null){
+	//					fChoiceNode = choice;
+	//				}
+	//				else{
+	//					return false;
+	//				}
+	//			}
+	//			return true;
+	//		}
+	//		return false;
+	//	}
 
 	@Override
 	public boolean isEqualTo(IStatement statement){
@@ -236,13 +249,33 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 		return false;
 	}
 
 	@Override
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 		return new ArrayList<>();
 	}
+
+	//	@Override
+	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		BasicParameterNode sourceParameter = getLeftMethodParameterNode();
+	//		BasicParameterNode deployedParameter = deploymentMapper.getDeployedParameterNode(sourceParameter);
+	//
+	//		ChoiceNode sourceChoiceNode = getChoice();
+	//		ChoiceNode deployedChoiceNode = deploymentMapper.getDeployedChoiceNode(sourceChoiceNode);
+	//
+	//		IPrimitiveTypePredicate deployedPredicate = getPredicate();
+	//
+	//		ExpectedValueStatement expectedValueStatement =
+	//				new ExpectedValueStatement(
+	//						deployedParameter,
+	//						deployedChoiceNode,
+	//						deployedPredicate);
+	//
+	//		return expectedValueStatement;
+	//	}
 
 }

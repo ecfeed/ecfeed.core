@@ -24,8 +24,9 @@ public class ModelLogger {
 	//	}
 
 
-	public static void printModel(String message, AbstractNode someNodeOfModel) {
-		AbstractNode root = ModelHelper.findRoot(someNodeOfModel);
+	public static void printModel(String message, IAbstractNode someNodeOfModel) {
+		
+		IAbstractNode root = ModelHelper.findRoot(someNodeOfModel);
 
 		if (root == null) {
 			System.out.println("Root not found.");
@@ -36,17 +37,17 @@ public class ModelLogger {
 		System.out.println("Model ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 	}
 
-	private static void printChildren(AbstractNode abstractNode, int indent) {
+	private static void printChildren(IAbstractNode abstractNode, int indent) {
 
 		printAbstractNode(abstractNode, indent);
 
-		List<? extends AbstractNode> children = abstractNode.getChildren();
+		List<IAbstractNode> children = abstractNode.getChildren();
 
 		if (children.size() == 0) {
 			return;
 		}
 
-		for (AbstractNode child : children) {
+		for (IAbstractNode child : children) {
 			printChildren(child, indent + indentIncrement);
 		}
 	}
@@ -61,7 +62,7 @@ public class ModelLogger {
 		printIndentedLine("F:" + line, indent);
 	}	
 
-	private static void printObjectLine(AbstractNode abstractNode, String fieldName, int indent) {
+	private static void printObjectLine(IAbstractNode abstractNode, String fieldName, int indent) {
 		printIndentedLine(
 				getIsFieldStr(fieldName) + 
 				abstractNode.getClass().getSimpleName() +
@@ -70,7 +71,7 @@ public class ModelLogger {
 				", #" + abstractNode.hashCode(), indent);
 	}
 
-	private static void printAbstractNode(AbstractNode abstractNode, int indent) {
+	private static void printAbstractNode(IAbstractNode abstractNode, int indent) {
 
 		if (abstractNode == null) {
 			printIndentedLine("Abstract node is null", indent);
@@ -88,8 +89,8 @@ public class ModelLogger {
 			printMethodNode((MethodNode)abstractNode, null, indent);
 			return;
 		}
-		if (abstractNode instanceof MethodParameterNode) {
-			printMethodParameterNode((MethodParameterNode)abstractNode, null, indent);
+		if (abstractNode instanceof BasicParameterNode) {
+			printMethodParameterNode((BasicParameterNode)abstractNode, null, indent);
 			return;
 		}		
 		if (abstractNode instanceof ChoiceNode) {
@@ -117,7 +118,7 @@ public class ModelLogger {
 		}		
 		printObjectLine(constraintNode, fieldName, indent);
 
-		AbstractNode parent = constraintNode.getParent();
+		IAbstractNode parent = constraintNode.getParent();
 		printMethodNode((MethodNode)parent, "parentMethod", indent + indentIncrement);
 
 		AbstractStatement precondition = constraintNode.getConstraint().getPrecondition();
@@ -136,7 +137,7 @@ public class ModelLogger {
 		printObjectLine(methodNode, fieldName, indent);
 	}
 
-	private static void printMethodParameterNode(MethodParameterNode methodParameterNode, String fieldName, int indent) {
+	private static void printMethodParameterNode(BasicParameterNode methodParameterNode, String fieldName, int indent) {
 		if (methodParameterNode == null) {
 			printIndentedLine("MethodNode is null", indent);
 			return;
@@ -147,7 +148,7 @@ public class ModelLogger {
 		printFieldLine(methodParameterNode.getType() + " [isLinked]=" + isLinked, indent + indentIncrement);
 
 		if (isLinked) {
-			GlobalParameterNode globalParameterNode = methodParameterNode.getLink();
+			BasicParameterNode globalParameterNode = (BasicParameterNode) methodParameterNode.getLinkToGlobalParameter();
 			if (globalParameterNode == null) {
 				printIndentedLine("GlobalParameterNode is null", indent + indentIncrement);
 			} else {

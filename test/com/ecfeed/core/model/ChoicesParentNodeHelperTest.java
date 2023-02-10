@@ -30,8 +30,8 @@ public class ChoicesParentNodeHelperTest {
 
 		// source parameter with two choices
 
-		MethodParameterNode methodParameterNode1 = 
-				MethodNodeHelper.addParameterToMethod(methodNode, "P1", "String");
+		BasicParameterNode methodParameterNode1 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(
@@ -88,8 +88,8 @@ public class ChoicesParentNodeHelperTest {
 
 		// source parameter with two choices
 
-		MethodParameterNode methodParameterNode1 = 
-				MethodNodeHelper.addParameterToMethod(methodNode, "P1", "String");
+		BasicParameterNode methodParameterNode1 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(
@@ -106,8 +106,8 @@ public class ChoicesParentNodeHelperTest {
 
 		// destination parameter 
 
-		MethodParameterNode methodParameterNode2 = 
-				MethodNodeHelper.addParameterToMethod(methodNode, "P2", "String");
+		BasicParameterNode methodParameterNode2 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P2", "String");
 
 
 		// creating copy
@@ -146,8 +146,8 @@ public class ChoicesParentNodeHelperTest {
 
 		// source parameter with two choices
 
-		MethodParameterNode methodParameterNode1 = 
-				MethodNodeHelper.addParameterToMethod(methodNode, "P1", "String");
+		BasicParameterNode methodParameterNode1 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P1", "String");
 
 		ChoiceNode choiceNode1 = 
 				MethodParameterNodeHelper.addChoiceToMethodParameter(
@@ -161,8 +161,8 @@ public class ChoicesParentNodeHelperTest {
 
 		// destination parameter 
 
-		MethodParameterNode methodParameterNode2 = 
-				MethodNodeHelper.addParameterToMethod(methodNode, "P2", "String");
+		BasicParameterNode methodParameterNode2 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "P2", "String");
 
 		// creating copy
 

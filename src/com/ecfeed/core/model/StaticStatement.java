@@ -33,6 +33,11 @@ public class StaticStatement extends AbstractStatement {
 		fValue = value;
 	}
 
+	public StaticStatement(EvaluationResult value) {
+
+		this(value, null);
+	}
+
 	public StaticStatement(boolean value, IModelChangeRegistrator modelChangeRegistrator) {
 
 		super(modelChangeRegistrator);
@@ -77,14 +82,20 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public StaticStatement makeClone(){
+	public StaticStatement makeClone() {
 		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
 
 	@Override
-	public boolean updateReferences(MethodNode method){
-		return true;
+	public StaticStatement createCopy(NodeMapper mapper) {
+
+		return new StaticStatement(fValue, getModelChangeRegistrator());
 	}
+
+	//	@Override
+	//	public boolean updateReferences(IParametersAndConstraintsParentNode parent){
+	//		return true;
+	//	}
 
 	@Override
 	public boolean isEqualTo(IStatement statement){
@@ -105,7 +116,7 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftParameterName(){
+	public String getLeftParameterCompositeName(){
 		return toString();
 	}
 
@@ -133,7 +144,7 @@ public class StaticStatement extends AbstractStatement {
 	}
 
 	@Override
-	public List<ChoiceNode> getChoices(MethodParameterNode methodParameterNode) {
+	public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
 		return new ArrayList<ChoiceNode>();
 	}
 
@@ -153,13 +164,19 @@ public class StaticStatement extends AbstractStatement {
 	//	}
 
 	@Override
-	public boolean mentionsChoiceOfParameter(AbstractParameterNode parameter) {
+	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 		return false;
 	}
 
 	@Override
-	public List<String> getLabels(MethodParameterNode methodParameterNode) {
+	public List<String> getLabels(BasicParameterNode methodParameterNode) {
 		return new ArrayList<>();
 	}
+
+	//	@Override
+	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
+	//
+	//		return new StaticStatement(fValue, getModelChangeRegistrator());
+	//	}
 
 }

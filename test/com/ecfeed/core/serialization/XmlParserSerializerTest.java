@@ -26,6 +26,7 @@ import com.ecfeed.core.evaluator.DummyEvaluator;
 import com.ecfeed.core.generators.GeneratorValue;
 import com.ecfeed.core.generators.RandomGenerator;
 import com.ecfeed.core.generators.api.IGeneratorValue;
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.ChoiceNode;
@@ -35,7 +36,7 @@ import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.ExpectedValueStatement;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ModelComparator;
 import com.ecfeed.core.model.ModelVersionDistributor;
 import com.ecfeed.core.model.RelationStatement;
@@ -114,10 +115,10 @@ public class XmlParserSerializerTest {
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode choicesParentParameter =
-					new MethodParameterNode("choicesParentParameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
-			MethodParameterNode expectedParameter =
-					new MethodParameterNode("expectedParameter", JavaLanguageHelper.TYPE_NAME_CHAR, "0", true, null);
+			BasicParameterNode choicesParentParameter =
+					new BasicParameterNode("choicesParentParameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
+			BasicParameterNode expectedParameter =
+					new BasicParameterNode("expectedParameter", JavaLanguageHelper.TYPE_NAME_CHAR, "0", true, null);
 			expectedParameter.setDefaultValueString("d");
 			ChoiceNode choice1 = new ChoiceNode("choice", "p", null);
 			choice1.setParent(choicesParentParameter);
@@ -230,7 +231,7 @@ public class XmlParserSerializerTest {
 
 		// method parameter 1 node with choice
 
-		MethodParameterNode methodParameterNode1 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode1 = new BasicParameterNode(
 				"par1",
 				"int",
 				"1",
@@ -243,7 +244,7 @@ public class XmlParserSerializerTest {
 
 		// method parameter 2 node with choice
 
-		MethodParameterNode methodParameterNode2 = new MethodParameterNode(
+		BasicParameterNode methodParameterNode2 = new BasicParameterNode(
 				"par2",
 				"int",
 				"2",
@@ -329,7 +330,7 @@ public class XmlParserSerializerTest {
 			RootNode root = new RootNode("root", null, version);
 			ClassNode classNode = new ClassNode("classNode", null);
 			MethodNode method = new MethodNode("method", null);
-			MethodParameterNode parameter = new MethodParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
+			BasicParameterNode parameter = new BasicParameterNode("parameter", JavaLanguageHelper.TYPE_NAME_STRING, "0", false, null);
 			ChoiceNode choice = new ChoiceNode("choice", "A                 B", null);
 			List<ChoiceNode> testData = new ArrayList<ChoiceNode>();
 			testData.add(choice);
@@ -381,8 +382,8 @@ public class XmlParserSerializerTest {
 	protected MethodNode createMethodNode(int numOfParameters,
 			int numOfExpParameters, int numOfConstraints, int numOfTestCases) {
 		MethodNode method = new MethodNode(randomName(), null);
-		List<MethodParameterNode> choicesParentParameters = createChoicesParentParameters(numOfParameters);
-		List<MethodParameterNode> expectedParameters = createExpectedParameters(numOfExpParameters);
+		List<BasicParameterNode> choicesParentParameters = createChoicesParentParameters(numOfParameters);
+		List<BasicParameterNode> expectedParameters = createExpectedParameters(numOfExpParameters);
 
 		for(int i = 0, j = 0; i < choicesParentParameters.size() || j < expectedParameters.size();){
 			if(rand.nextBoolean() && i < choicesParentParameters.size()){
@@ -396,7 +397,7 @@ public class XmlParserSerializerTest {
 		}
 
 		List<ConstraintNode> constraints = createConstraints(choicesParentParameters, expectedParameters, numOfConstraints);
-		List<TestCaseNode> testCases = createTestCases(method.getMethodParameters(), numOfTestCases);
+		List<TestCaseNode> testCases = createTestCases(getMethodParameters(method), numOfTestCases);
 
 		for(ConstraintNode constraint : constraints){
 			method.addConstraint(constraint);
@@ -408,33 +409,46 @@ public class XmlParserSerializerTest {
 		return method;
 	}
 
-	private List<MethodParameterNode> createChoicesParentParameters(int numOfParameters) {
-		List<MethodParameterNode> parameters = new ArrayList<MethodParameterNode>();
+	private List<BasicParameterNode> getMethodParameters(MethodNode method) {
+		
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+		
+		List<AbstractParameterNode> methodParameters = method.getParameters();
+		
+		for (AbstractParameterNode abstractParameterNode : methodParameters) {
+			result.add((BasicParameterNode) abstractParameterNode);
+		}
+		
+		return result;
+	}
+
+	private List<BasicParameterNode> createChoicesParentParameters(int numOfParameters) {
+		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 		for(int i = 0; i < numOfParameters; i++){
 			parameters.add(createChoicesParentParameter(CATEGORY_TYPES[rand.nextInt(CATEGORY_TYPES.length)], rand.nextInt(MAX_PARTITIONS) + 1));
 		}
 		return parameters;
 	}
 
-	private MethodParameterNode createChoicesParentParameter(String type, int numOfChoices) {
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", false, null);
+	private BasicParameterNode createChoicesParentParameter(String type, int numOfChoices) {
+		BasicParameterNode parameter = new BasicParameterNode(randomName(), type, "0", false, null);
 		for(int i = 0; i < numOfChoices; i++){
 			parameter.addChoice(createChoice(type, 1));
 		}
 		return parameter;
 	}
 
-	private List<MethodParameterNode> createExpectedParameters(int numOfExpParameters) {
-		List<MethodParameterNode> parameters = new ArrayList<MethodParameterNode>();
+	private List<BasicParameterNode> createExpectedParameters(int numOfExpParameters) {
+		List<BasicParameterNode> parameters = new ArrayList<BasicParameterNode>();
 		for(int i = 0; i < numOfExpParameters; i++){
 			parameters.add(createExpectedValueParameter(CATEGORY_TYPES[rand.nextInt(CATEGORY_TYPES.length)]));
 		}
 		return parameters;
 	}
 
-	private MethodParameterNode createExpectedValueParameter(String type) {
+	private BasicParameterNode createExpectedValueParameter(String type) {
 		String defaultValue = createRandomValue(type);
-		MethodParameterNode parameter = new MethodParameterNode(randomName(), type, "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode(randomName(), type, "0", true, null);
 		parameter.setDefaultValueString(defaultValue);
 		return parameter;
 	}
@@ -501,8 +515,8 @@ public class XmlParserSerializerTest {
 	}
 
 
-	private List<ConstraintNode> createConstraints(List<MethodParameterNode> choicesParentParameters,
-			List<MethodParameterNode> expectedParameters, int numOfConstraints) {
+	private List<ConstraintNode> createConstraints(List<BasicParameterNode> choicesParentParameters,
+			List<BasicParameterNode> expectedParameters, int numOfConstraints) {
 		List<ConstraintNode> constraints = new ArrayList<ConstraintNode>();
 		for(int i = 0; i < numOfConstraints; ++i){
 			constraints.add(new ConstraintNode(randomName(), createConstraint(choicesParentParameters, expectedParameters), null));
@@ -510,8 +524,8 @@ public class XmlParserSerializerTest {
 		return constraints;
 	}
 
-	private Constraint createConstraint(List<MethodParameterNode> choicesParentParameters,
-			List<MethodParameterNode> expectedParameters) {
+	private Constraint createConstraint(List<BasicParameterNode> choicesParentParameters,
+			List<BasicParameterNode> expectedParameters) {
 
 		AbstractStatement precondition = createChoicesParentStatement(choicesParentParameters);
 		AbstractStatement postcondition = null;
@@ -526,7 +540,7 @@ public class XmlParserSerializerTest {
 		return new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 	}
 
-	private AbstractStatement createChoicesParentStatement(List<MethodParameterNode> parameters) {
+	private AbstractStatement createChoicesParentStatement(List<BasicParameterNode> parameters) {
 		AbstractStatement statement = null;
 		while(statement == null){
 			switch(rand.nextInt(3)){
@@ -545,8 +559,8 @@ public class XmlParserSerializerTest {
 		return statement;
 	}
 
-	private AbstractStatement createLabelStatement(List<MethodParameterNode> parameters) {
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+	private AbstractStatement createLabelStatement(List<BasicParameterNode> parameters) {
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
 		Set<String> labels = parameter.getLeafLabels();
 		String label;
 		if(labels.size() > 0){
@@ -560,8 +574,8 @@ public class XmlParserSerializerTest {
 		return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
 	}
 
-	private AbstractStatement createChoiceStatement(List<MethodParameterNode> parameters) {
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+	private AbstractStatement createChoiceStatement(List<BasicParameterNode> parameters) {
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
 		ChoiceNode choiceNode = 
 				new ArrayList<ChoiceNode>(parameter.getLeafChoices()).get(rand.nextInt(parameter.getChoices().size()));
 
@@ -579,23 +593,23 @@ public class XmlParserSerializerTest {
 		return relation;
 	}
 
-	private AbstractStatement createExpectedStatement(List<MethodParameterNode> parameters) {
+	private AbstractStatement createExpectedStatement(List<BasicParameterNode> parameters) {
 		if(parameters.size() == 0) return null;
-		MethodParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
+		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
 		return new ExpectedValueStatement(parameter, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
 	}
 
-	private List<MethodParameterNode> getChoicesParentParameters(List<? extends MethodParameterNode> parameters) {
-		List<MethodParameterNode> result = new ArrayList<MethodParameterNode>();
-		for(MethodParameterNode parameter : parameters){
-			if(parameter instanceof MethodParameterNode == false){
+	private List<BasicParameterNode> getChoicesParentParameters(List<? extends BasicParameterNode> parameters) {
+		List<BasicParameterNode> result = new ArrayList<BasicParameterNode>();
+		for(BasicParameterNode parameter : parameters){
+			if(parameter instanceof BasicParameterNode == false){
 				result.add(parameter);
 			}
 		}
 		return result;
 	}
 
-	private AbstractStatement createStatementArray(int levels, List<MethodParameterNode> parameters) {
+	private AbstractStatement createStatementArray(int levels, List<BasicParameterNode> parameters) {
 
 		StatementArray array = 
 				new StatementArray(rand.nextBoolean()?StatementArrayOperator.AND:StatementArrayOperator.OR, null);
@@ -617,7 +631,8 @@ public class XmlParserSerializerTest {
 	}
 
 	private List<TestCaseNode> createTestCases(
-			List<MethodParameterNode> parameters, int numOfTestCases) {
+			List<BasicParameterNode> parameters, int numOfTestCases) {
+		
 		List<TestCaseNode> result = new ArrayList<TestCaseNode>();
 		try {
 			RandomGenerator<ChoiceNode> generator = new RandomGenerator<ChoiceNode>();
@@ -642,9 +657,9 @@ public class XmlParserSerializerTest {
 	}
 
 	private List<List<ChoiceNode>> getGeneratorInput(
-			List<MethodParameterNode> parameters) {
+			List<BasicParameterNode> parameters) {
 		List<List<ChoiceNode>> result = new ArrayList<List<ChoiceNode>>();
-		for(MethodParameterNode parameter : parameters){
+		for(BasicParameterNode parameter : parameters){
 			result.add(parameter.getLeafChoices());
 		}
 		return result;

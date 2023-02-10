@@ -11,260 +11,14 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 import com.ecfeed.core.utils.CommonConstants;
-import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.JavaLanguageHelper;
-import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.RegexHelper;
-import com.ecfeed.core.utils.StringHelper;
 
 public class MethodNodeHelper {
-
-	public static GlobalParameterNode findGlobalParameter(MethodNode fMethodNode, String globalParameterExtendedName) {
-
-		if (StringHelper.isNullOrEmpty(globalParameterExtendedName)) {
-			return null;
-		}
-
-		String parentName = getParentName(globalParameterExtendedName);
-		String parameterName = getParameterName(globalParameterExtendedName);
-
-		ClassNode classNode = fMethodNode.getClassNode();
-		String className = classNode.getName();
-
-		if (StringHelper.isEqual(className, parentName)) {
-			AbstractParameterNode abstractParameterNode = classNode.findParameter(parameterName);
-			return (GlobalParameterNode)abstractParameterNode;
-		}
-
-		RootNode rootNode = classNode.getRoot();
-		String rootName = rootNode.getName();
-
-		if (parentName == null || rootName.equals(parentName)) {
-			AbstractParameterNode abstractParameterNode = rootNode.findParameter(parameterName);
-			return (GlobalParameterNode)abstractParameterNode;
-		}			
-
-		ExceptionHelper.reportRuntimeException("Invalid dst parameter extended name.");
-		return null;
-	}
-
-	private static String getParentName(String parameterExtendedName) {
-
-		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
-
-		if (dstParamNameParts.length == 2) {
-			return dstParamNameParts[0]; 
-		}
-
-		return null;
-	}
-
-	private static String getParameterName(String parameterExtendedName) {
-
-		String[] dstParamNameParts = StringHelper.splitIntoTokens(parameterExtendedName, ":");
-
-		if (dstParamNameParts.length == 2) {
-			return dstParamNameParts[1]; 
-		}
-
-		return dstParamNameParts[0];
-	}
-
-	public static List<ChoiceNode> getChoicesUsedInConstraints(MethodParameterNode methodParameterNode) {
-
-		List<ChoiceNode> resultChoiceNodes = new ArrayList<ChoiceNode>();
-
-		MethodNode methodNode = methodParameterNode.getMethod();
-
-		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
-
-		for (ConstraintNode constraintNode : constraintNodes) {
-
-			List<ChoiceNode> choiceNodesForConstraint = 
-					ConstraintNodeHelper.getChoicesUsedInConstraint(
-							constraintNode, methodParameterNode);
-
-			resultChoiceNodes.addAll(choiceNodesForConstraint);
-		}
-
-		resultChoiceNodes = ChoiceNodeHelper.removeDuplicates(resultChoiceNodes);
-
-		return resultChoiceNodes;
-	}
-
-	public static List<String> getLabelsUsedInConstraints(MethodParameterNode methodParameterNode) {
-
-		List<String> resultLabels = new ArrayList<>();
-
-		MethodNode methodNode = methodParameterNode.getMethod();
-
-		List<ConstraintNode> constraintNodes = methodNode.getConstraintNodes();
-
-		for (ConstraintNode constraintNode : constraintNodes) {
-
-			List<String> labelsOfConstraint = 
-					ConstraintNodeHelper.getLabelsUsedInConstraint(
-							constraintNode, methodParameterNode);
-
-			resultLabels.addAll(labelsOfConstraint);
-
-			resultLabels = StringHelper.removeDuplicates(resultLabels);
-		}
-
-		return resultLabels;
-	}
-
-
-	//	public static void updateParameterReferencesInConstraints(
-	//			MethodParameterNode oldMethodParameterNode,
-	//			ChoicesParentNode dstParameterForChoices,
-	//			List<ConstraintNode> constraintNodes,
-	//			ListOfModelOperations reverseOperations,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		if (oldMethodParameterNode == null) {
-	//			ExceptionHelper.reportRuntimeException("Invalid old parameter node.");
-	//		}
-	//
-	//		if (dstParameterForChoices == null) {
-	//			ExceptionHelper.reportRuntimeException("Invalid new parameter node.");
-	//		}
-	//
-	//		for (ConstraintNode constraintNode : constraintNodes) {
-	//			ConstraintNodeHelper.updateParameterReferences(
-	//					constraintNode,
-	//					oldMethodParameterNode, dstParameterForChoices);
-	//		}
-	//	}
-
-	//	public static void updateChoiceReferencesInTestCases(
-	//			ParameterConversionItem parameterConversionItem,
-	//			List<TestCaseNode> testCaseNodes,
-	//			ListOfModelOperations inOutReverseOperations,
-	//			IExtLanguageManager extLanguageManager) {
-	//
-	//		IParameterConversionItemPart srcPart = parameterConversionItem.getDstPart();
-	//
-	//		if (!(srcPart instanceof ParameterConversionItemPartForChoice)) {
-	//			return;
-	//		}
-	//
-	//		IParameterConversionItemPart dstPart = parameterConversionItem.getDstPart();
-	//
-	//		if (!(dstPart instanceof ParameterConversionItemPartForChoice)) {
-	//			return;
-	//		}
-	//
-	//		ParameterConversionItemPartForChoice srcPartForChoice = (ParameterConversionItemPartForChoice) srcPart;
-	//		ParameterConversionItemPartForChoice dstPartForChoice = (ParameterConversionItemPartForChoice) dstPart;
-	//
-	//		ChoiceNode srcChoice = srcPartForChoice.getChoiceNode();
-	//		ChoiceNode dstChoice = dstPartForChoice.getChoiceNode();
-	//
-	//		for (TestCaseNode testCaseNode : testCaseNodes)  {
-	//
-	//			testCaseNode.updateChoiceReferences(srcChoice, dstChoice);
-	//		}
-	//
-	//		if (inOutReverseOperations != null) {
-	//			MethodOperationUpdateChoiceReferencesInTestCases reverseOperation = 
-	//					new MethodOperationUpdateChoiceReferencesInTestCases(
-	//							parameterConversionItem, 
-	//							testCaseNodes, extLanguageManager);
-	//
-	//			inOutReverseOperations.add(reverseOperation);
-	//		}
-	//	}
-
-	public static void convertConstraints(
-			List<ConstraintNode> constraintNodes,
-			ParameterConversionItem parameterConversionItem) {
-
-		for (ConstraintNode constraintNode : constraintNodes) {
-			ConstraintNodeHelper.convertConstraint(
-					constraintNode, 
-					parameterConversionItem);
-		}
-	}
-
-	public static void addTestCaseToMethod(MethodNode methodNode, ChoiceNode choiceNode) {
-
-		List<ChoiceNode> listOfChoicesForTestCase = new ArrayList<ChoiceNode>();
-		listOfChoicesForTestCase.add(choiceNode);
-
-		TestCaseNode testCaseNode = new TestCaseNode("name", null, listOfChoicesForTestCase);
-		methodNode.addTestCase(testCaseNode);
-	}
-
-	public static String getName(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		return AbstractNodeHelper.getName(methodNode, extLanguageManager);
-	}
-
-	public static void setName(MethodNode methodNode, String name, IExtLanguageManager extLanguageManager) {
-
-		AbstractNodeHelper.setName(methodNode, name, extLanguageManager);
-	}
-
-	public static MethodParameterNode findMethodParameterByName(
-			String parameterNameToFindInExtLanguage, 
-			MethodNode methodNode, 
-			IExtLanguageManager extLanguageManager) {
-
-		List<AbstractParameterNode> methodParameters = methodNode.getParameters();
-
-		for (AbstractParameterNode parameter : methodParameters) {
-
-			MethodParameterNode methodParameterNode = (MethodParameterNode)parameter;
-
-			String parameterNameInExtLanguage = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
-
-			if (StringHelper.isEqual(parameterNameToFindInExtLanguage, parameterNameInExtLanguage)) {
-				return methodParameterNode;
-			}
-		}
-		return null;
-
-	}
-
-	public static List<String> getParameterNames(MethodNode method, IExtLanguageManager extLanguageManager) {
-
-		List<String> result = new ArrayList<String>();
-
-		for(AbstractParameterNode parameter : method.getParameters()){
-
-			MethodParameterNode methodParameterNode = (MethodParameterNode)parameter;
-
-			String name = MethodParameterNodeHelper.getName(methodParameterNode, extLanguageManager);
-
-			result.add(name);
-		}
-
-		return result;
-	}
-
-	public static List<String> getParameterTypes(MethodNode method, IExtLanguageManager extLanguageManager) {
-
-		List<String> result = new ArrayList<String>();
-
-		for (AbstractParameterNode parameter : method.getParameters()) {
-
-			String type = parameter.getType();
-
-			type = extLanguageManager.convertTypeFromIntrToExtLanguage(type);
-
-			result.add(type);
-		}
-
-		return result;
-	}
 
 	public static String validateMethodName(String nameInExternalLanguage, IExtLanguageManager extLanguageManager) {
 
@@ -283,12 +37,11 @@ public class MethodNodeHelper {
 		return RegexHelper.createMessageAllowedCharsForMethod(extLanguageManager);
 	}
 
-	public static String verifyMethodSignatureIsValid(
+	public static String verifyMethodNameIsValid(
 			String methodNameInExtLanguage,
-			List<String> parameterTypesInExtLanguage,
 			IExtLanguageManager extLanguageManager) {
 
-		String errorMessage = MethodNodeHelper.validateMethodName(methodNameInExtLanguage, extLanguageManager);
+		String errorMessage = validateMethodName(methodNameInExtLanguage, extLanguageManager);
 
 		if (errorMessage != null) {
 			return errorMessage;
@@ -297,40 +50,35 @@ public class MethodNodeHelper {
 		return null;
 	}
 
-	public static MethodParameterNode addParameterToMethod(MethodNode methodNode, String name, String type) {
+	private static boolean isValid(String name) {
 
-		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
-		methodNode.addParameter(methodParameterNode);
+		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
+			return false;
+		}
 
-		return methodParameterNode;
-	}
-	
-	public static MethodParameterNode addLinkedParameterToMethod(
-			MethodNode methodNode, String name, String type, GlobalParameterNode linkToGlobalParameter) {
-
-		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, "0", false, null);
-		methodParameterNode.setLinked(true);
-		methodParameterNode.setLink(linkToGlobalParameter);
-		methodNode.addParameter(methodParameterNode);
-
-		return methodParameterNode;
-	}
-
-	public static MethodParameterNode addExpectedParameterToMethod(
-			MethodNode methodNode, String name, String type, String defaultValue) {
-
-		MethodParameterNode methodParameterNode = new MethodParameterNode(name, type, defaultValue, true, null);
-		methodNode.addParameter(methodParameterNode);
-
-		return methodParameterNode;
+		return true;
 	}
 
 	public static String createSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
 
-		return MethodNodeHelper.createSignature(
+		return createSignature(
 				methodNode,
 				isParamNameAdded,
 				false, extLanguageManager);
+	}
+
+	public static String createLongSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
+
+		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
+
+		IAbstractNode parent = methodNode.getParent();
+
+		if (parent == null) {
+
+			return shortSignature;
+		}
+
+		return parent.getName() + "." + shortSignature;
 	}
 
 	public static String createSignature(
@@ -341,7 +89,7 @@ public class MethodNodeHelper {
 
 
 		final List<Boolean> expectedParametersFlags =
-				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getMethodParameters()) : null);
+				(isExpectedDecorationAdded ? getExpectedParametersFlags(methodNode.getParameters()) : null);
 
 		List<String> parametersNames = new ArrayList<>();
 
@@ -351,22 +99,19 @@ public class MethodNodeHelper {
 			parametersNames = null;
 		}
 
+		List<String> parameterTypes = methodNode.getParameterTypes();
+
+		String methodName = methodNode.getName();
+
 		String signature =
 				createSignatureByIntrLanguage(
-						methodNode.getName(),
-						methodNode.getParameterTypes(),
+						methodName,
+						parameterTypes,
 						parametersNames,
 						expectedParametersFlags,
 						extLanguageOfTheResult);
 
 		return signature;
-	}
-
-	public static String createLongSignature(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
-
-		String shortSignature = createSignature(methodNode, isParamNameAdded, extLanguageManager);
-
-		return methodNode.getParent().getName() + "." + shortSignature;
 	}
 
 	public static String createSignatureWithExpectedDecorations(MethodNode methodNode, boolean isParamNameAdded, IExtLanguageManager extLanguageManager) {
@@ -457,16 +202,27 @@ public class MethodNodeHelper {
 
 		for (int paramIndex = 0; paramIndex < paramCount; paramIndex++) {
 
-			MethodParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
+			AbstractParameterNode methodParameterNode = methodNode.getMethodParameter(paramIndex);
 
+			String signatureOfOneParameter = "";
 
+			if (methodParameterNode instanceof BasicParameterNode) {
 
-			String signatureOfOneParameter = 
-					AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
-							methodParameterNode.getType(),
-							methodParameterNode.getName(),
-							methodParameterNode.isExpected(), 
-							extLanguageManager);
+				BasicParameterNode basicParameterNode = (BasicParameterNode) methodParameterNode;
+
+				signatureOfOneParameter =
+						AbstractParameterNodeHelper.createSignatureOfOneParameterByIntrLanguage(
+								basicParameterNode.getType(),
+								basicParameterNode.getName(),
+								basicParameterNode.isExpected(),
+								extLanguageManager);
+			} else {
+
+				CompositeParameterNode compositeParameterNode = (CompositeParameterNode) methodParameterNode;
+
+				signatureOfOneParameter =
+						AbstractParameterNodeHelper.createSignature(compositeParameterNode, extLanguageManager);
+			}
 
 			signature += signatureOfOneParameter;
 
@@ -510,125 +266,114 @@ public class MethodNodeHelper {
 		return signature;
 	}
 
-	private static List<Boolean> getExpectedParametersFlags(List<MethodParameterNode> methodParameters) {
+	private static List<Boolean> getExpectedParametersFlags(List<AbstractParameterNode> methodParameters) {
 
 		List<Boolean> expectedFlags = new ArrayList<Boolean>();
 
-		for(MethodParameterNode methodParameter : methodParameters) {
+		for (AbstractParameterNode abstractParameterNode : methodParameters) {
 
-			if (methodParameter.isExpected()) {
+			if (!(abstractParameterNode instanceof BasicParameterNode)) {
+				continue;
+			}
+
+			BasicParameterNode basicParameterNode = (BasicParameterNode) abstractParameterNode;
+
+			if (basicParameterNode.isExpected()) {
 				expectedFlags.add(true);
 			} else {
 				expectedFlags.add(false);
 			}
-
 		}
 
 		return expectedFlags;
 	}
 
-	private static boolean isValid(String name) {
-
-		if (!JavaLanguageHelper.isValidJavaIdentifier(name)) {
-			return false;
-		}
-
-		return true;
-	}
-
-	public static Set<String> getConstraintNames(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		Set<String> constraintNames = methodNode.getConstraintsNames();
-
-		//		constraintNames = convertConstraintNamesToExtLanguage(constraintNames, extLanguageManager);
-
-		return constraintNames;
-	}
-
-
-	//	private static Set<String> convertConstraintNamesToExtLanguage(Set<String> constraintNames, IExtLanguageManager extLanguageManager) {
+	//	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
 	//
-	//		Set<String> result = new HashSet<String>();
+	//		List<TestSuiteNode> testSuites = method.getTestSuites();
 	//
-	//		for(String constraintName : constraintNames) {
+	//		List<String> testSuiteNames = new ArrayList<>();
+	//		testSuiteNames.addAll(method.getTestCaseNames());
 	//
-	//			String nameInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(constraintName);
-	//			result.add(nameInExtLanguage);
+	//		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
+	//
+	//		TestSuiteNode testSuiteNode;
+	//		for (String testSuiteName : testSuiteNames) {
+	//
+	//			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuiteName);
+	//
+	//			if (existingNode.isPresent()) {
+	//				testSuiteNode = existingNode.get();
+	//				testSuiteNode.getTestCaseNodes().clear();
+	//			} else {
+	//				testSuiteNode = new TestSuiteNode();
+	//				testSuiteNode.setSuiteName(testSuiteName);
+	//				testSuiteNode.setParent(method);
+	//				testSuites.add(testSuiteNode);
+	//			}
+	//
+	//			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
+	//			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
+	//				testSuiteNode.setName(testSuiteName);
+	//				testSuiteNode.setDisplayLimitExceededFlag(true);
+	//			} else {
+	//				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
+	//				testSuiteNode.setName(testSuiteName);
+	//				testSuiteNode.setDisplayLimitExceededFlag(false);
+	//			}
 	//		}
 	//
-	//		return result;
+	//		testSuites.sort((a, b) -> a.getSuiteName().compareTo(b.getSuiteName()));
+	//
+	//		return testSuites;
 	//	}
 
+	//	public static String findNotUsedJavaTypeForParameter(
+	//			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	//
+	//		ClassNode classNode = methodNode.getClassNode();
+	//
+	//		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
+	//
+	//		for (String type : typeListInExtLanguage) {
+	//			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
+	//				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
+	//				return type;
+	//			}
+	//		}
+	//
+	//		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
+	//
+	//		return userType;
+	//	}
 
-	public static MethodParameterNode createNewParameter(
-			MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	//	private static boolean isNewTypeUsed(
+	//			String typeForLastParameter,
+	//			ClassNode classNode,
+	//			MethodNode methodNode,
+	//			IExtLanguageManager extLanguageManager) {
+	//
+	////		List<String> parameterTypesInExternalLanguage = ParametersParentNodeHelper.getParameterTypes(methodNode, extLanguageManager);
+	////		parameterTypesInExternalLanguage.add(typeForLastParameter);
+	//
+	//		String methodNameInExternalLanguage = AbstractNodeHelper.getName(methodNode, extLanguageManager);
+	//
+	//		MethodNode foundMethodNode =
+	//				ClassNodeHelper.findMethodByExtLanguage(
+	//						classNode,
+	//						methodNameInExternalLanguage,
+	//						extLanguageManager);
+	//
+	//		if (foundMethodNode != null) {
+	//			return true;
+	//		}
+	//
+	//		return false;
+	//	}
 
-		String name = MethodNodeHelper.generateNewParameterName(methodNode);
-
-		String type = MethodNodeHelper.findNotUsedJavaTypeForParameter(methodNode, extLanguageManager);
-
-		String defaultValue = JavaLanguageHelper.getDefaultValue(type);
-
-		MethodParameterNode parameter = 
-				new MethodParameterNode(name, type, defaultValue, false, methodNode.getModelChangeRegistrator());
-
-		return parameter;
-	}
-
-	public static String generateNewParameterName(ParametersParentNode parametersParentNode) {
-
-		int i = 0;
-
-		String name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
-
-		while(parametersParentNode.findParameter(name) != null) {
-			name = CommonConstants.DEFAULT_NEW_PARAMETER_NAME + i++;
-		}
-
-		return name;
-	}
-
-	public static String findNotUsedJavaTypeForParameter(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		ClassNode classNode = methodNode.getClassNode();
-
-		String[] typeListInExtLanguage = extLanguageManager.createListListOfSupportedTypes();
-
-		for (String type : typeListInExtLanguage) {
-			if (!isNewTypeUsed(type, classNode, methodNode, extLanguageManager)) {
-				type = extLanguageManager.convertToMinimalTypeFromExtToIntrLanguage(type);
-				return type;
-			}
-		}
-
-		String userType = findNewUserTypeForJavaLanguage(methodNode, extLanguageManager);
-
-		return userType;
-	}
-
-	private static boolean isNewTypeUsed(
-			String typeForLastParameter, ClassNode classNode, MethodNode methodNode, IExtLanguageManager extLanguageManager) {
-
-		List<String> parameterTypesInExternalLanguage = MethodNodeHelper.getParameterTypes(methodNode, extLanguageManager);
-		parameterTypesInExternalLanguage.add(typeForLastParameter);
-
-		String methodNameInExternalLanguage = MethodNodeHelper.getName(methodNode, extLanguageManager);
-
-		MethodNode foundMethodNode = 
-				ClassNodeHelper.findMethodByExtLanguage(
-						classNode,
-						methodNameInExternalLanguage,
-						parameterTypesInExternalLanguage,
-						extLanguageManager);
-
-		if (foundMethodNode != null) {
-			return true;
-		}
-
-		return false;
-	}
-
-	public static String findNewUserTypeForJavaLanguage(MethodNode methodNode, IExtLanguageManager extLanguageManager) {
+	public static String findNewUserTypeForJavaLanguage(
+			MethodNode methodNode,
+			IExtLanguageManager extLanguageManager) {
 
 		ClassNode classNode = methodNode.getClassNode();
 
@@ -643,7 +388,7 @@ public class MethodNodeHelper {
 			List<String> newTypes = methodNode.getParameterTypes();
 			newTypes.add(type);
 
-			if (classNode.findMethodWithTheSameSignature(methodNode.getName(), newTypes) == null) {
+			if (classNode.findMethodWithTheSameName(methodNode.getName()) == null) {
 				break;
 
 			} else {
@@ -654,124 +399,35 @@ public class MethodNodeHelper {
 		return type;
 	}
 
-	public static List<TestSuiteNode> createGroupingTestSuites(MethodNode method) {
+	public static MethodNode findMethodNode(IAbstractNode anyNode) {
+		IAbstractNode parent = anyNode;
 
-		List<TestSuiteNode> testSuites = method.getTestSuites();
+		while (parent != null) {
 
-		List<String> testSuiteNames = new ArrayList<>();
-		testSuiteNames.addAll(method.getTestCaseNames());
-
-		testSuites.removeIf(e -> !testSuiteNames.contains(e.getSuiteName()));
-
-		TestSuiteNode testSuiteNode;
-		for (String testSuiteName : testSuiteNames) {
-
-			Optional<TestSuiteNode> existingNode = method.getTestSuite(testSuiteName);
-
-			if (existingNode.isPresent()) {
-				testSuiteNode = existingNode.get();
-				testSuiteNode.getTestCaseNodes().clear();
-			} else {
-				testSuiteNode = new TestSuiteNode();
-				testSuiteNode.setSuiteName(testSuiteName);
-				testSuiteNode.setParent(method);
-				testSuites.add(testSuiteNode);
+			if (parent instanceof MethodNode) {
+				return (MethodNode) parent;
 			}
 
-			Collection<TestCaseNode> testCasesSuite = method.getTestCases(testSuiteName);
-			if(testCasesSuite.size() > CommonConstants.MAX_DISPLAYED_TEST_CASES_PER_SUITE) {
-				testSuiteNode.setName(testSuiteName);
-				testSuiteNode.setDisplayLimitExceededFlag(true);
-			} else {
-				testSuiteNode.getTestCaseNodes().addAll(testCasesSuite);
-				testSuiteNode.setName(testSuiteName);
-				testSuiteNode.setDisplayLimitExceededFlag(false);
-			}
+			parent = parent.getParent();
 		}
 
-		testSuites.sort((a, b) -> a.getSuiteName().compareTo(b.getSuiteName()));
-
-		return testSuites;
-	}
-
-	public static MethodParameterNode findExpectedParameterNotUsedInAssignment(MethodNode methodNode, Constraint constraint) {
-
-		if (constraint.getType() != ConstraintType.ASSIGNMENT) {
-			return null;
-		}
-
-		AbstractStatement postcondition = constraint.getPostcondition();
-
-		if (!(postcondition instanceof StatementArray)) {
-			return null;
-		}
-
-		StatementArray statementArray = (StatementArray)postcondition;
-
-		MethodParameterNode parameterNode = findNotUsedExpectedParameter(methodNode, statementArray);
-		return parameterNode;
-	}
-
-	public static MethodParameterNode findNotUsedExpectedParameter(MethodNode methodNode, StatementArray statementArray) {
-
-		List<MethodParameterNode> parameters = methodNode.getMethodParameters();
-
-		for (MethodParameterNode parameterNode : parameters) {
-
-			if (!parameterNode.isExpected()) {
-				continue;
-			}
-
-			if (!isParameterUsedInAssignment(parameterNode, statementArray)) {
-				return parameterNode;
-			}
-		}
 		return null;
 	}
 
-	public static boolean isParameterUsedInAssignment(MethodParameterNode parameterNode, StatementArray statementArray) {
+	public static boolean methodNodeMentionsBasicParameter(
+			MethodNode methodNode,
+			BasicParameterNode basicParameterNode) {
 
-		List<AbstractStatement> statements = statementArray.getStatements();
+		List<AbstractParameterNode> abstractParameterNodes = methodNode.getParameters();
 
-		for (AbstractStatement abstractStatement : statements) {
+		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
 
-			if (!(abstractStatement instanceof AssignmentStatement)) {
-				continue;
-			}
-
-			AssignmentStatement assignmentStatement = (AssignmentStatement)abstractStatement;
-
-			MethodParameterNode leftParameter = assignmentStatement.getLeftParameter();
-
-			if (leftParameter == parameterNode) {
+			if (AbstractParameterNodeHelper.parameterMentionsBasicParameter(abstractParameterNode, basicParameterNode)) {
 				return true;
 			}
-
 		}
 
 		return false;
-	}
-
-	public static List<String> getStatementValuesForParameter(
-			MethodNode methodNode,
-			MethodParameterNode methodParameterNode) {
-
-		List<Constraint> constraints = methodNode.getConstraints();
-
-		List<String> values = new ArrayList<>();
-
-		for (Constraint constraint : constraints) {
-
-			List<String> valuesOfConstraint = constraint.getStatementValuesForParameter(); 
-
-			if (valuesOfConstraint != null && !valuesOfConstraint.isEmpty()) {
-				values.addAll(valuesOfConstraint);
-			}
-		}
-
-		values = StringHelper.removeDuplicates(values);
-
-		return values;
 	}
 
 }

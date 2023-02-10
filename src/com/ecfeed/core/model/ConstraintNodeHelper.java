@@ -16,6 +16,8 @@ import java.util.List;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.ParameterConversionItem;
+import com.ecfeed.core.utils.SignatureHelper;
+import com.ecfeed.core.utils.StringHelper;
 
 public class ConstraintNodeHelper {
 
@@ -48,7 +50,7 @@ public class ConstraintNodeHelper {
 
 	public static List<ChoiceNode> getChoicesUsedInConstraint(
 			ConstraintNode constraintNode,
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<ChoiceNode> result = 
 				ConstraintHelper.getChoicesUsedInConstraints(
@@ -60,7 +62,7 @@ public class ConstraintNodeHelper {
 
 	public static List<String> getLabelsUsedInConstraint(
 			ConstraintNode constraintNode,
-			MethodParameterNode methodParameterNode) {
+			BasicParameterNode methodParameterNode) {
 
 		List<String> result = 
 				ConstraintHelper.getLabelsUsedInConstraints(
@@ -72,12 +74,73 @@ public class ConstraintNodeHelper {
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		return ConstraintHelper.createSignature(constraintNode.getConstraint(), extLanguageManager);
+		String qualifiedName = createQualifiedName(constraintNode);
+
+		String signatureOfConditions = 
+				ConstraintHelper.createSignatureOfConditions(constraintNode.getConstraint(), extLanguageManager);
+
+		return qualifiedName + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditions; 
+	}
+
+	private static String createQualifiedName(ConstraintNode constraintNode) {
+
+		String prefix = createQualifiedPrefix(constraintNode);
+
+		String name = constraintNode.getConstraint().getName();
+
+		if (StringHelper.isNullOrEmpty(prefix)) {
+			return name;
+		}
+
+		String qualifiedName = prefix + SignatureHelper.SIGNATURE_NAME_SEPARATOR + name;
+
+		return qualifiedName;
 	}
 
 	public static String getName(ConstraintNode ownNode, IExtLanguageManager extLanguageManager) {
 
 		return AbstractNodeHelper.getName(ownNode, extLanguageManager);
+	}
+
+	private static String createQualifiedPrefix(ConstraintNode constraintNode) {
+
+		String prefix = createQualifiedPrefixIntr(constraintNode);
+		
+		prefix = prefix.trim();
+		
+		prefix = StringHelper.removeFromPostfix(":", prefix);
+		
+		prefix = prefix.trim();
+		
+		return prefix;
+	}
+
+	private static String createQualifiedPrefixIntr(ConstraintNode constraintNode) {
+
+		String prefix = "";
+		IAbstractNode currentNode = constraintNode;
+
+		for (;;) {
+
+			IAbstractNode parent = currentNode.getParent();
+
+			if (parent == null) {
+				return "";
+			}
+
+			if (parent instanceof MethodNode) {
+				return prefix;
+			}
+
+			if (!(parent instanceof CompositeParameterNode)) {
+				ExceptionHelper.reportRuntimeException("Composite parameter expected.");
+			}
+
+			prefix = parent.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR + prefix;
+
+			currentNode = parent;
+		}
+
 	}
 
 	public static List<ConstraintNode> makeDerandomizedCopyOfConstraintNodes(List<ConstraintNode> constraints) {

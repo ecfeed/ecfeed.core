@@ -11,6 +11,7 @@ package com.ecfeed.core.export;
 
 import java.util.Collection;
 
+import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.model.TestCaseNode;
 
 
@@ -27,5 +28,5 @@ public interface IExportTemplate {
 	String getHeaderTemplate();
 	String getTestCaseTemplate();
 
-	String createPreview(Collection<TestCaseNode> testCases);
+	String createPreview(Collection<TestCaseNode> testCases, MethodNode methodNode);
 }

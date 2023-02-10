@@ -14,6 +14,7 @@ public class SerializationConstants {
 	public static final String ROOT_NODE_NAME = "Model";
 	public static final String CLASS_NODE_NAME = "Class";
 	public static final String METHOD_NODE_NAME = "Method";
+	public static final String METHOD_DEPLOYED_PARAMETERS_NAME = "Deployment";
 
 	public static final String EXPECTED_VALUE_PARAMETER_NODE_NAME = "ExpectedValueParameter";
 	public static final String LABEL_NODE_NAME = "Label";

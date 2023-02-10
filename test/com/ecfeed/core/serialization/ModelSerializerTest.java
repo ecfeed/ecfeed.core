@@ -10,27 +10,23 @@
 
 package com.ecfeed.core.serialization;
 
-import static com.ecfeed.core.testutils.ModelTestUtils.assertElementsEqual;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.serialization.ModelParser;
+import com.ecfeed.core.model.serialization.ModelSerializer;
+import com.ecfeed.core.utils.EMathRelation;
+import com.ecfeed.core.utils.ListOfStrings;
+import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.ecfeed.core.model.*;
-import com.ecfeed.core.utils.ListOfStrings;
-import org.junit.Test;
-
-import com.ecfeed.core.model.serialization.ModelParser;
-import com.ecfeed.core.model.serialization.ModelSerializer;
-import com.ecfeed.core.testutils.RandomModelGenerator;
-import com.ecfeed.core.utils.EMathRelation;
+import static com.ecfeed.core.testutils.ModelTestUtils.assertElementsEqual;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ModelSerializerTest {
-
-	RandomModelGenerator fGenerator = new RandomModelGenerator();
 
 	@Test
 	public void modelSerializerTest() {
@@ -44,15 +40,15 @@ public class ModelSerializerTest {
 
 		model.addClass(new ClassNode("com.example.TestClass1", null));
 		model.addClass(new ClassNode("com.example.TestClass2", null));
-		model.addParameter(new GlobalParameterNode("globalParameter1", "int", null));
-		model.addParameter(new GlobalParameterNode("globalParameter2", "com.example.UserType", null));
+		model.addParameter(new BasicParameterNode("globalParameter1", "int", null));
+		model.addParameter(new BasicParameterNode("globalParameter2", "com.example.UserType", null));
 
-		OutputStream ostream = new ByteArrayOutputStream();
+		ByteArrayOutputStream ostream = new ByteArrayOutputStream();
 		ModelSerializer serializer = new ModelSerializer(ostream, version);
 		try {
 			serializer.serialize(model);
 
-			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
+			InputStream istream = new ByteArrayInputStream(ostream.toByteArray());
 			ModelParser parser = new ModelParser();
 			RootNode parsedModel = parser.parseModel(istream, null, new ListOfStrings());
 
@@ -61,7 +57,6 @@ public class ModelSerializerTest {
 			fail("Unexpected exception: " + e.getMessage());
 		}
 	}
-
 
 	@Test
 	public void classSerializerTestWithoutAndroidBaseRunner(){
@@ -76,12 +71,12 @@ public class ModelSerializerTest {
 	}
 
 	private void classSerializerTest(boolean runOnAndroid, String androidBaseRunner, int version){
-		ClassNode classNode = new ClassNode("com.example.TestClass", null, runOnAndroid, androidBaseRunner);
+		ClassNode classNode = new ClassNode("com.example.TestClass", null);
 		classNode.addMethod(new MethodNode("testMethod1", null));
 		classNode.addMethod(new MethodNode("testMethod2", null));
-		classNode.addParameter(new GlobalParameterNode("parameter1", "int", null));
-		classNode.addParameter(new GlobalParameterNode("parameter2", "float", null));
-		classNode.addParameter(new GlobalParameterNode("parameter3", "com.example.UserType", null));
+		classNode.addParameter(new BasicParameterNode("parameter1", "int", null));
+		classNode.addParameter(new BasicParameterNode("parameter2", "float", null));
+		classNode.addParameter(new BasicParameterNode("parameter3", "com.example.UserType", null));
 
 		RootNode model = new RootNode("model", null, version);
 		model.addClass(classNode);
@@ -118,48 +113,11 @@ public class ModelSerializerTest {
 		}
 	}
 
-	//	@Test
-	//	public void modelSerializerCrossTest1(){
-	//		RootNode model = fGenerator.generateModel(3);
-	//		OutputStream ostream = new ByteArrayOutputStream();
-	//		ObsoleteXmlModelSerializer oldSerializer = new ObsoleteXmlModelSerializer(ostream);
-	//		try {
-	//			oldSerializer.writeXmlDocument(model);
-	//			InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
-	//			IModelParser parser = new EctParser();
-	//			RootNode parsedModel = parser.parseModel(istream);
-	//			assertElementsEqual(model, parsedModel);
-	//
-	//		} catch (Exception e) {
-	//			fail("Unexpected exception: " + e.getMessage());
-	//		}
-	//	}
-
-
-	//	@Test
-	//	public void modelSerializerCrossTest2(){
-	//		for(int i = 0; i < 10; i++){
-	//			RootNode model = fGenerator.generateModel(5);
-	//			OutputStream ostream = new ByteArrayOutputStream();
-	//			IModelSerializer serializer = new EctSerializer(ostream);
-	//			try {
-	//				serializer.serialize(model);
-	//				InputStream istream = new ByteArrayInputStream(((ByteArrayOutputStream)ostream).toByteArray());
-	//				IModelParser parser = new ObsoleteXmlModelParser();
-	//				RootNode parsedModel = parser.parseModel(istream);
-	//				assertElementsEqual(model, parsedModel);
-	//
-	//			} catch (Exception e) {
-	//				fail("Unexpected exception: " + e.getMessage());
-	//			}
-	//		}
-	//	}
-
 	private RootNode createModel(int version) {
 
 		ChoiceNode choice = new ChoiceNode("choice", "0", null);
 
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "int", "0", false, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "int", "0", false, null);
 		parameter.addChoice(choice);
 
 		MethodNode methodNode = new MethodNode("testMethod1", null);
@@ -169,12 +127,12 @@ public class ModelSerializerTest {
 				"constraint",
 				ConstraintType.EXTENDED_FILTER,
 				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice), null
-        );
+				);
 
 		ConstraintNode constraintNode = new ConstraintNode("name1", constraint, null);
 		methodNode.addConstraint(constraintNode);
 
-		ClassNode classNode = new ClassNode("com.example.TestClass", null, false, null);
+		ClassNode classNode = new ClassNode("com.example.TestClass", null);
 		classNode.addMethod(methodNode);
 
 		RootNode model = new RootNode("model", null, version);

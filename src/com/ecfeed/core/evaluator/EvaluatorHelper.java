@@ -5,22 +5,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeComparator;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
 public class EvaluatorHelper {
 
-    // TODO - where is the output ?
     public static void prepareVariablesForParameter(
-            MethodParameterNode methodParameterNode,
-            ParamChoiceSets paramChoiceSets,
+            BasicParameterNode basicParameterNode,
+            ParameterChoices paramChoiceSets,
             EcSatSolver satSolver,
-            ChoicesMappingsBucket choicesMappingsBucket,
+            ChoiceMappings choicesMappingsBucket,
             ChoiceToSolverIdMappings choiceToSolverIdMappings) {
 
-        if (choiceToSolverIdMappings.eQContainsKey(methodParameterNode))
+        if (choiceToSolverIdMappings.eQContainsKey(basicParameterNode))
             return;
 
         //we need to create new set of variables, as we are seeing this parameter for the first time
@@ -36,22 +35,20 @@ public class EvaluatorHelper {
         HashMap<ChoiceNode, Integer> choiceID = new HashMap<>();
 
 
-        List<ChoiceNode> sortedChoices = new ArrayList<>(paramChoiceSets.atomicGet(methodParameterNode));
+        List<ChoiceNode> sortedChoices = new ArrayList<>(paramChoiceSets.getAtomic(basicParameterNode));
 
         int n = sortedChoices.size();
 
-        if (!JavaLanguageHelper.isNumericTypeName(methodParameterNode.getType())) {
+        if (!JavaLanguageHelper.isNumericTypeName(basicParameterNode.getType())) {
             for (int i = 0; i < n; i++) {
                 choiceVars.add(satSolver.newId());
                 choiceID.put(sortedChoices.get(i), choiceVars.get(i));
             }
-            choiceToSolverIdMappings.eqPut(methodParameterNode, choiceID);
+            choiceToSolverIdMappings.eqPut(basicParameterNode, choiceID);
             return;
         }
 
-
         Collections.sort(sortedChoices, new ChoiceNodeComparator());
-
 
         prefixVars.add(satSolver.newId());
 
@@ -61,13 +58,13 @@ public class EvaluatorHelper {
             choiceID.put(sortedChoices.get(i), choiceVars.get(i));
         }
 
-        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.sainitizedGet(methodParameterNode))
+        for (ChoiceNode sanitizedChoiceNode : paramChoiceSets.getSanitized(basicParameterNode))
             if (!choiceID.containsKey(sanitizedChoiceNode)) {
                 Integer sanitizedID = satSolver.newId();
                 choiceID.put(sanitizedChoiceNode, sanitizedID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode atomicValue : choicesMappingsBucket.sanToAtmGet(sanitizedChoiceNode)) {
+                for (ChoiceNode atomicValue : choicesMappingsBucket.getSanitizedToAtomic(sanitizedChoiceNode)) {
                     Integer atomicID = choiceID.get(atomicValue);
                     final int[] clause = {-atomicID, sanitizedID};
                     satSolver.addSat4Clause(clause); // atomicID => sanitizedID
@@ -77,13 +74,13 @@ public class EvaluatorHelper {
                 satSolver.addSat4Clause(bigClause.stream().mapToInt(Integer::intValue).toArray()); //sanitizedID => (atomicID1 OR ... OR atomicIDn)
             }
 
-        for (ChoiceNode inputValue : paramChoiceSets.inputGet(methodParameterNode))
+        for (ChoiceNode inputValue : paramChoiceSets.getInput(basicParameterNode))
             if (!choiceID.containsKey(inputValue)) {
                 Integer inputID = satSolver.newId();
                 choiceID.put(inputValue, inputID);
 
                 List<Integer> bigClause = new ArrayList<>();
-                for (ChoiceNode sanitizedValue : choicesMappingsBucket.inputToSanGet(methodParameterNode).get(inputValue)) {
+                for (ChoiceNode sanitizedValue : choicesMappingsBucket.getInputToSanitized(basicParameterNode).get(inputValue)) {
                     Integer sanitizedID = choiceID.get(sanitizedValue);
                     satSolver.addSat4Clause(new int[]{-sanitizedID, inputID}); // sanitizedID => inputID
                     bigClause.add(sanitizedID);
@@ -122,9 +119,9 @@ public class EvaluatorHelper {
             inverseLThVars.put(choice, lessThVars.get(i));
         }
 
-        choiceToSolverIdMappings.lePut(methodParameterNode, inverseLEqVars);
-        choiceToSolverIdMappings.ltPut(methodParameterNode, inverseLThVars);
-        choiceToSolverIdMappings.eqPut(methodParameterNode, choiceID);
+        choiceToSolverIdMappings.lePut(basicParameterNode, inverseLEqVars);
+        choiceToSolverIdMappings.ltPut(basicParameterNode, inverseLThVars);
+        choiceToSolverIdMappings.eqPut(basicParameterNode, choiceID);
     }
 
 }

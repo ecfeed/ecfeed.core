@@ -19,14 +19,14 @@ import com.ecfeed.core.utils.ParameterConversionItemPartForValue;
 
 public class TypeChangeVerificationStatementVisitor implements IStatementVisitor {
 
-	private MethodParameterNode fMethodParameterNode;
+	private BasicParameterNode fMethodParameterNode;
 	private String fOldType;
 	private String fConstraintName;
 	private ParameterConversionDefinition fInOutParameterConversionDefinition;
 	private ITypeAdapter<?> fNewTypeAdapter;
 
 	public TypeChangeVerificationStatementVisitor(
-			MethodParameterNode methodParameterNode,
+			BasicParameterNode methodParameterNode,
 			String oldType,
 			String newType,
 			String constraintName,
@@ -44,7 +44,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
 		
-		MethodParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
+		BasicParameterNode methodParameterNodeFromConstraint = statement.getLeftMethodParameterNode(); 
 
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;
@@ -72,7 +72,7 @@ public class TypeChangeVerificationStatementVisitor implements IStatementVisitor
 
 		RelationStatement parentRelationStatement = condition.getParentRelationStatement();
 		
-		MethodParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
+		BasicParameterNode methodParameterNodeFromConstraint = parentRelationStatement.getLeftParameter();
 		
 		if (methodParameterNodeFromConstraint != fMethodParameterNode) {
 			return null;

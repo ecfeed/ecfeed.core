@@ -22,14 +22,14 @@ import org.junit.Test;
 
 public class AbstractNodeTest{
 
-	private class AbstractNodeImpl extends AbstractNode{
+	private class AbstractNodeImpl extends AbstractNode {
 
 		public AbstractNodeImpl(String name) {
 			super(name, null);
 		}
 
 		@Override
-		protected String getNonQualifiedName() {
+		public String getNonQualifiedName() {
 			return getName();
 		}
 
@@ -46,6 +46,16 @@ public class AbstractNodeTest{
 		@Override
 		public Object accept(IModelVisitor visitor) {
 			return null;
+		}
+
+		@Override
+		public boolean isMyAncestor(IAbstractNode candidateForAncestor) {
+			return false;
+		}
+
+		@Override
+		public int getMaxChildIndex(IAbstractNode potentialChild) {
+			return 0;
 		}
 
 	}
@@ -67,13 +77,16 @@ public class AbstractNodeTest{
 	}
 
 	@Test
-	public void testParent(){
-		AbstractNode parent = new AbstractNodeImpl("parent");
-		AbstractNode child = new AbstractNodeImpl("child");
+	public void testParent() {
+		
+		IAbstractNode parent = new AbstractNodeImpl("parent");
+		IAbstractNode child = new AbstractNodeImpl("child");
 
 		assertEquals(null, child.getParent());
 		child.setParent(parent);
-		assertEquals(parent, child.getParent());
+		
+		IAbstractNode actualParent = child.getParent();
+		assertEquals(parent, actualParent);
 	}
 
 	@Test
@@ -108,8 +121,8 @@ public class AbstractNodeTest{
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("name1", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode(
 				"name",
@@ -172,8 +185,8 @@ public class AbstractNodeTest{
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("name1", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("name2", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("name1", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("name2", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("name", new Constraint("name", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null );
 		TestCaseNode testCase = new TestCaseNode("name", null, new ArrayList<ChoiceNode>());
@@ -187,9 +200,9 @@ public class AbstractNodeTest{
 		classNode.addMethod(method);
 		root.addClass(classNode);
 
-		assertEquals(8, root.getSubtreeSize());
-		assertEquals(7, classNode.getSubtreeSize());
-		assertEquals(6, method.getSubtreeSize());
+		assertEquals(10, root.getSubtreeSize());
+		assertEquals(9, classNode.getSubtreeSize());
+		assertEquals(8, method.getSubtreeSize());
 		assertEquals(1, constraint.getSubtreeSize());
 		assertEquals(1, testCase.getSubtreeSize());
 		assertEquals(1, expCat.getSubtreeSize());
@@ -199,11 +212,12 @@ public class AbstractNodeTest{
 
 	@Test
 	public void getChildTest(){
+		
 		RootNode root = new RootNode("root", null);
 		ClassNode classNode = new ClassNode("class", null);
 		MethodNode method = new MethodNode("method", null);
-		MethodParameterNode parameter = new MethodParameterNode("parameter", "type", "0", false, null);
-		MethodParameterNode expCat = new MethodParameterNode("expCat", "type", "0", true, null);
+		BasicParameterNode parameter = new BasicParameterNode("parameter", "type", "0", false, null);
+		BasicParameterNode expCat = new BasicParameterNode("expCat", "type", "0", true, null);
 		expCat.setDefaultValueString("0");
 		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(false, null), null), null);
 		TestCaseNode testCase = new TestCaseNode("testCase", null, new ArrayList<ChoiceNode>());
@@ -238,7 +252,10 @@ public class AbstractNodeTest{
 		assertEquals(p, classNode.getChild("method:parameter:p"));
 		assertEquals(p, method.getChild("parameter:p"));
 		assertEquals(p, parameter.getChild("p"));
-		assertEquals(p1, root.getChild("class:method:parameter:p:p1"));
+		
+		IAbstractNode childChoice = root.getChild("class:method:parameter:p:p1");
+		assertEquals(p1, childChoice);
+		
 		assertEquals(p1, classNode.getChild("method:parameter:p:p1"));
 		assertEquals(p1, method.getChild("parameter:p:p1"));
 		assertEquals(p1, parameter.getChild("p:p1"));
@@ -247,7 +264,7 @@ public class AbstractNodeTest{
 
 	@Test
 	public void getSiblingTest(){
-		MethodParameterNode cat = new MethodParameterNode("cat", "type", "0", false, null);
+		BasicParameterNode cat = new BasicParameterNode("cat", "type", "0", false, null);
 		ChoiceNode p1 = new ChoiceNode("p1", "0", null);
 		ChoiceNode p2 = new ChoiceNode("p2", "0", null);
 
@@ -265,6 +282,7 @@ public class AbstractNodeTest{
 
 	@Test
 	public void compareTest(){
+		
 		AbstractNode n1 = new AbstractNodeImpl("n");
 		AbstractNode n2 = new AbstractNodeImpl("n");
 

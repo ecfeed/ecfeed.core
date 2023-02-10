@@ -36,7 +36,7 @@ public class ModelParserForChoice implements IModelParserForChoice {
 		boolean isRandomized;
 
 		try {
-			ModelParserHelper.assertNodeTag(element.getQualifiedName(), SerializationHelperVersion1.getChoiceNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationHelperVersion1.getChoiceNodeName(), errorList);
 			name = ModelParserHelper.getElementName(element, errorList);
 			value = ModelParserHelper.getAttributeValue(element, VALUE_ATTRIBUTE, errorList);
 			isRandomized = ModelParserHelper.getIsRandomizedValue(element, NODE_IS_RADOMIZED_ATTRIBUTE);

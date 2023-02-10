@@ -19,17 +19,17 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
 
 public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
 
-	public Optional<MethodParameterNode> parseMethodParameter(
+	public Optional<BasicParameterNode> parseMethodParameter(
 			Element parameterElement, MethodNode method, ListOfStrings errorList) {
 
 		String name, type;
@@ -37,7 +37,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 		String expected = String.valueOf(false);
 
 		try {
-			ModelParserHelper.assertNodeTag(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
+			ModelParserHelper.assertNameEqualsExpectedName(parameterElement.getQualifiedName(), getParameterNodeName(), errorList);
 			name = ModelParserHelper.getElementName(parameterElement, errorList);
 			type = ModelParserHelper.getAttributeValue(parameterElement, TYPE_NAME_ATTRIBUTE, errorList);
 
@@ -45,7 +45,10 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 				expected = 
 						ModelParserHelper.getAttributeValue(
 								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
-				defaultValue = 
+			}
+
+			if (parameterElement.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
+				defaultValue =
 						ModelParserHelper.getAttributeValue(
 								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
 			}
@@ -54,29 +57,29 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 			return Optional.empty();
 		}
 
-		MethodParameterNode targetMethodParameterNode = 
-				new MethodParameterNode(
+		BasicParameterNode targetMethodParameterNode = 
+				new BasicParameterNode(
 						name, type, defaultValue, Boolean.parseBoolean(expected), method.getModelChangeRegistrator()
 						);
 
 		ModelParserHelper.parseParameterProperties(parameterElement, targetMethodParameterNode);
 
 		if (parameterElement.getAttribute(PARAMETER_IS_LINKED_ATTRIBUTE_NAME) != null) {
-			boolean linked ;
-
-			try {
-				linked = 
-						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
-								parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
-
-			} catch (ParserException e) {
-				return Optional.empty();
-			}
-
-			targetMethodParameterNode.setLinked(linked);
+			//			boolean linked ;
+			//
+			//			try {
+			//				linked = 
+			//						Boolean.parseBoolean(ModelParserHelper.getAttributeValue(
+			//								parameterElement, PARAMETER_IS_LINKED_ATTRIBUTE_NAME, errorList));
+			//
+			//			} catch (ParserException e) {
+			//				return Optional.empty();
+			//			}
+			//
+			//targetMethodParameterNode.setLinked(linked);
 		}
 
-		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method != null && method.getClassNode() != null) {
+		if (parameterElement.getAttribute(PARAMETER_LINK_ATTRIBUTE_NAME) != null && method.getClassNode() != null) {
 			String linkPath;
 
 			try {
@@ -87,15 +90,15 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 				return Optional.empty();
 			}
 
-			GlobalParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
+			AbstractParameterNode link = method.getClassNode().findGlobalParameter(linkPath);
 
 			if (link != null) {
-				targetMethodParameterNode.setLink(link);
+				targetMethodParameterNode.setLinkToGlobalParameter(link);
 			} else {
-				targetMethodParameterNode.setLinked(false);
+				// targetMethodParameterNode.setLinked(false);
 			}
 		} else {
-			targetMethodParameterNode.setLinked(false);
+			// targetMethodParameterNode.setLinked(false);
 		}
 
 		ModelParserForChoice modelParserForChoice = 
@@ -114,7 +117,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 
 		targetMethodParameterNode.setDescription(ModelParserHelper.parseComments(parameterElement));
 
-		if (targetMethodParameterNode.isLinked() == false) {
+		if (!targetMethodParameterNode.isLinked()) {
 			targetMethodParameterNode.setTypeComments(ModelParserHelper.parseTypeComments(parameterElement));
 		}
 
@@ -122,7 +125,7 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 	}
 
 	private String getParameterNodeName() {
-		return SerializationHelperVersion1.getParameterNodeName();
+		return SerializationHelperVersion1.getBasicParameterNodeName();
 	}
 
 

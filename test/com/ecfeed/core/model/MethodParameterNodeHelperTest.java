@@ -21,8 +21,8 @@ public class MethodParameterNodeHelperTest {
 	@Test
 	public void getNameTest() {
 
-		MethodParameterNode methodParameterNode =
-				new MethodParameterNode("parameter_1", "type1", "0", false, null);
+		BasicParameterNode methodParameterNode =
+				new BasicParameterNode("parameter_1", "type1", "0", false, null);
 
 		String name = MethodParameterNodeHelper.getName(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("parameter_1", name);
@@ -35,10 +35,10 @@ public class MethodParameterNodeHelperTest {
 	@Test
 	public void createSignatureTest(){
 
-		MethodParameterNode methodParameterNode;
+		BasicParameterNode methodParameterNode;
 
 		methodParameterNode =
-				new MethodParameterNode("par_1", "int", "0", false, null);
+				new BasicParameterNode("par_1", "int", "0", false, null);
 
 		String signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("int par_1", signature);
@@ -48,7 +48,7 @@ public class MethodParameterNodeHelperTest {
 
 
 		methodParameterNode =
-				new MethodParameterNode("par_1", "String", "0", true, null);
+				new BasicParameterNode("par_1", "String", "0", true, null);
 
 		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]String par_1", signature);
@@ -56,10 +56,8 @@ public class MethodParameterNodeHelperTest {
 		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("[e]Text: par 1", signature);
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", "String", null);
-		methodParameterNode.setLink(globalParameterNode);
-
-		methodParameterNode.setLinked(true);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
+		methodParameterNode.setLinkToGlobalParameter(globalParameterNode);
 
 		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]String par_1[LINKED]->global_1", signature);
@@ -71,10 +69,10 @@ public class MethodParameterNodeHelperTest {
 	@Test
 	public void createReverseSignatureTest(){
 
-		MethodParameterNode methodParameterNode;
+		BasicParameterNode methodParameterNode;
 
 		methodParameterNode =
-				new MethodParameterNode("par_1", "int", "0", false, null);
+				new BasicParameterNode("par_1", "int", "0", false, null);
 
 		String signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("par_1 : int", signature);
@@ -84,7 +82,7 @@ public class MethodParameterNodeHelperTest {
 
 
 		methodParameterNode =
-				new MethodParameterNode("par_1", "String", "0", true, null);
+				new BasicParameterNode("par_1", "String", "0", true, null);
 
 		signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForJava());
 		assertEquals("[e]par_1 : String", signature);
@@ -92,16 +90,14 @@ public class MethodParameterNodeHelperTest {
 		signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("[e]par 1 : Text", signature);
 
-		GlobalParameterNode globalParameterNode = new GlobalParameterNode("global_1", "String", null);
-		methodParameterNode.setLink(globalParameterNode);
-
-		methodParameterNode.setLinked(true);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
+		methodParameterNode.setLinkToGlobalParameter(globalParameterNode);
 
 		signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForJava());
-		assertEquals("[e]par_1 : String[LINKED]->global_1", signature);
+		assertEquals("[e]par_1 : String [LINKED]->global_1", signature);
 
 		signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForSimple());
-		assertEquals("[e]par 1 : Text[LINKED]->global 1", signature);
+		assertEquals("[e]par 1 : Text [LINKED]->global 1", signature);
 	}
 
 }

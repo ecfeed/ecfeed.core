@@ -10,34 +10,41 @@
 
 package com.ecfeed.core.operations;
 
-import com.ecfeed.core.model.AbstractNode;
+import java.util.Optional;
+
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.ConstraintNode;
-import com.ecfeed.core.model.GlobalParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.IModelVisitor;
 import com.ecfeed.core.model.MethodNode;
-import com.ecfeed.core.model.MethodParameterNode;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
 import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.model.TestSuiteNode;
+import com.ecfeed.core.operations.nodes.OnClassOperationAddToRoot;
+import com.ecfeed.core.operations.nodes.OnConstraintOperationAdd;
+import com.ecfeed.core.operations.nodes.OnMethodOperationAddToClass;
+import com.ecfeed.core.operations.nodes.OnParameterOperationAddToParent;
+import com.ecfeed.core.operations.nodes.OnTestCaseOperationAddToMethod;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.StringHelper;
 
-public class FactoryAddChildOperation implements IModelVisitor{
+public class FactoryAddChildOperation implements IModelVisitor {
 
-	private AbstractNode fChild;
+	private IAbstractNode fChild;
 	private int fIndex;
 	private boolean fValidate;
 	IExtLanguageManager fExtLanguageManager;
 	private ITypeAdapterProvider fAdapterProvider;
 
 	public FactoryAddChildOperation(
-			AbstractNode child, 
+			IAbstractNode child, 
 			int index, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
@@ -51,7 +58,7 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	}
 
 	public FactoryAddChildOperation(
-			AbstractNode child, 
+			IAbstractNode child, 
 			ITypeAdapterProvider adapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
@@ -66,50 +73,14 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 			return createOperationAddClass(rootNode);
 
-		} else if (fChild instanceof AbstractParameterNode) {
+		} else if (fChild instanceof BasicParameterNode) {
 
 			return createOperationAddParameter(rootNode);
 		}
 
 		reportOperationNotSupportedException();
+
 		return null;
-	}
-
-	private Object createOperationAddParameter(RootNode rootNode) {
-
-		AbstractParameterNode abstractParameterNode = (AbstractParameterNode)fChild;
-
-		//It might be problematic that we actually add a copy of the requested node, so the option to add
-		//a MethodParameterNode to GlobalParameterParent (and vice versa) might be removed
-		GlobalParameterNode globalParameter = new GlobalParameterNode(abstractParameterNode);
-
-		if(fIndex == -1) {
-			return new GenericOperationAddParameter(rootNode, globalParameter, true, fExtLanguageManager);
-		}
-
-		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguageManager);
-	}
-
-	private Object createOperationAddClass(RootNode rootNode) {
-
-		ClassNode classNode = (ClassNode)fChild;
-
-		generateUniqueNameForClass(rootNode, classNode);
-
-		if (fIndex == -1) {
-			return new RootOperationAddClass(rootNode, classNode, fExtLanguageManager);
-		}
-
-		return new RootOperationAddClass(rootNode, classNode, fIndex, fExtLanguageManager);
-	}
-	
-	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
-
-		String oldName = classNode.getName();
-		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
-		String newName = RootNodeHelper.generateNewClassName(rootNode, oldNameCore);
-
-		classNode.setName(newName);
 	}
 
 	@Override
@@ -117,11 +88,11 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		if(fChild instanceof MethodNode){
 			if(fIndex == -1){
-				return new ClassOperationAddMethod(node, (MethodNode)fChild, fExtLanguageManager);
+				return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fExtLanguageManager);
 			}
-			return new ClassOperationAddMethod(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
-		}else if(fChild instanceof AbstractParameterNode){
-			GlobalParameterNode globalParameter = new GlobalParameterNode((AbstractParameterNode)fChild);
+			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
+		}else if(fChild instanceof BasicParameterNode){
+			BasicParameterNode globalParameter = new BasicParameterNode((BasicParameterNode)fChild);
 			if(fIndex == -1){
 				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
 			}
@@ -134,36 +105,22 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 	@Override
 	public Object visit(MethodNode node) throws Exception {
-		if(fChild instanceof GlobalParameterNode){
-			GlobalParameterNode globalParameter = (GlobalParameterNode)fChild;
-			String defaultValue = fAdapterProvider.getAdapter(globalParameter.getType()).getDefaultValue();
-			MethodParameterNode parameter = new MethodParameterNode(globalParameter, defaultValue, false);
 
-			if(fIndex == -1){
-				return new MethodOperationAddParameter(node,parameter, fExtLanguageManager);
-			}
-			return new MethodOperationAddParameter(node, parameter, fIndex, fExtLanguageManager);
+		if (fChild instanceof AbstractParameterNode ) {
+			return new OnParameterOperationAddToParent(node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
-		if(fChild instanceof MethodParameterNode){
-			if(fIndex == -1){
-				return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fExtLanguageManager);
-			}
-			return new MethodOperationAddParameter(node, (MethodParameterNode)fChild, fIndex, fExtLanguageManager);
+		
+		if (fChild instanceof ConstraintNode) {
+			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
 		}
-		if(fChild instanceof ConstraintNode){
-			if(fIndex == -1){
-				return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fExtLanguageManager);
-			}
-			return new MethodOperationAddConstraint(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
+
+		if (fChild instanceof TestSuiteNode) {
+			return new OnTestCaseOperationAddToMethod(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
 		}
-		if(fChild instanceof TestSuiteNode) {
-			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
-		}
-		if(fChild instanceof TestCaseNode){
-			if(fIndex == -1){
-				return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fExtLanguageManager);
-			}
-			return new MethodOperationAddTestCase(node, (TestCaseNode)fChild, fAdapterProvider, fIndex, fExtLanguageManager);
+
+		if (fChild instanceof TestCaseNode) {
+			return new OnTestCaseOperationAddToMethod(
+					node, (TestCaseNode)fChild, fAdapterProvider, fIndex, Optional.empty(), fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
@@ -171,37 +128,49 @@ public class FactoryAddChildOperation implements IModelVisitor{
 	}
 
 	@Override
-	public Object visit(MethodParameterNode node) throws Exception {
-		if(fChild instanceof ChoiceNode){
-			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
-			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
-		}
+	public Object visit(BasicParameterNode node) throws Exception {
 
-		reportOperationNotSupportedException();
-		return null;
+		if (node.isGlobalParameter()) {
+
+			if(fChild instanceof ChoiceNode){
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+			}
+
+			reportOperationNotSupportedException();
+			return null;
+
+
+		} else {
+
+			if(fChild instanceof ChoiceNode){
+				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+			}
+
+			reportOperationNotSupportedException();
+			return null;
+		}
 	}
 
 	@Override
-	public Object visit(GlobalParameterNode node) throws Exception {
-		if(fChild instanceof ChoiceNode){
-			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
-			}
-			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
+	public Object visit(CompositeParameterNode node) throws Exception {
+
+		if (fChild instanceof AbstractParameterNode ) {
+
+			return new OnParameterOperationAddToParent(
+					node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
 		return null;
 	}
+
 
 	@Override
 	public Object visit(TestSuiteNode node) throws Exception {
 		reportOperationNotSupportedException();
 		return null;
 	}
-	
+
 	@Override
 	public Object visit(TestCaseNode node) throws Exception {
 		reportOperationNotSupportedException();
@@ -216,15 +185,40 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 	@Override
 	public Object visit(ChoiceNode node) throws Exception {
+		
 		if(fChild instanceof ChoiceNode){
-			if(fIndex == -1){
-				return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fValidate, fExtLanguageManager);
-			}
 			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
 		}
 
 		reportOperationNotSupportedException();
 		return null;
+	}
+
+	private Object createOperationAddParameter(RootNode rootNode) {
+
+		BasicParameterNode abstractParameterNode = (BasicParameterNode)fChild;
+
+		BasicParameterNode globalParameter = new BasicParameterNode(abstractParameterNode);
+
+		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguageManager);
+	}
+
+	private Object createOperationAddClass(RootNode rootNode) {
+
+		ClassNode classNode = (ClassNode)fChild;
+
+		generateUniqueNameForClass(rootNode, classNode);
+
+		return new OnClassOperationAddToRoot(rootNode, classNode, fIndex, fExtLanguageManager);
+	}
+
+	private void generateUniqueNameForClass(RootNode rootNode, ClassNode classNode) {
+
+		String oldName = classNode.getName();
+		String oldNameCore = StringHelper.removeFromNumericPostfix(oldName);
+		String newName = RootNodeHelper.generateNewClassName(rootNode, oldNameCore);
+
+		classNode.setName(newName);
 	}
 
 	private void reportOperationNotSupportedException() throws Exception {
@@ -234,4 +228,5 @@ public class FactoryAddChildOperation implements IModelVisitor{
 
 		ExceptionHelper.reportRuntimeException(OperationMessages.OPERATION_NOT_SUPPORTED_PROBLEM);
 	}
+
 }

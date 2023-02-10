@@ -33,8 +33,13 @@ public abstract class XomBuilderVersionWithNewNodeNames extends XomBuilderWithou
 	}
 
 	@Override
-	protected String getParameterNodeName() {
-		return SerializationHelperVersion1.getParameterNodeName();
+	protected String getBasicParameterNodeName() {
+		return SerializationHelperVersion1.getBasicParameterNodeName();
+	}
+
+	@Override
+	protected String getCompositeParameterNodeName() {
+		return SerializationHelperVersion1.getCompositeParameterNodeName();
 	}
 
 	@Override

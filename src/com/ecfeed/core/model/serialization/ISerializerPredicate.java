@@ -10,11 +10,11 @@
 
 package com.ecfeed.core.model.serialization;
 
-import com.ecfeed.core.model.AbstractNode;
+import com.ecfeed.core.model.IAbstractNode;
 
 
 public interface ISerializerPredicate {
 	
-	boolean shouldSerializeNode(AbstractNode abstractNode);
+	boolean shouldSerializeNode(IAbstractNode abstractNode);
 
 }

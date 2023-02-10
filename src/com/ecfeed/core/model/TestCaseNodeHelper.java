@@ -56,7 +56,7 @@ public class TestCaseNodeHelper {
 		for (int index = 0; index < testData.size(); index++) {
 
 			ChoiceNode choice = testData.get(index);
-			result += ChoiceNodeHelper.createTestDataLabel(choice, extLanguageManager);
+			result += ChoiceNodeHelper.createSignatureOfChoiceWithParameter(choice, extLanguageManager);
 
 			if (index < testData.size() - 1) {
 				result += ", ";
@@ -68,7 +68,7 @@ public class TestCaseNodeHelper {
 
 	private static String getMethodName(TestCaseNode testCaseNode, IExtLanguageManager extLanguageManager) {
 
-		AbstractNode parent = testCaseNode.getParent();
+		IAbstractNode parent = testCaseNode.getParent();
 
 		if (parent == null) {
 			return null;
@@ -124,7 +124,7 @@ public class TestCaseNodeHelper {
 			newTestCase.add(newChoiceNode);
 		}
 
-		TestCaseNode testCaseNode = new TestCaseNode(newTestCase.getListOfChoiceNodes());
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, newTestCase.getListOfChoiceNodes());
 		testCaseNode.setParent(methodNode);
 
 		for (ChoiceNode choiceNode : testCaseNode.getTestData()) {

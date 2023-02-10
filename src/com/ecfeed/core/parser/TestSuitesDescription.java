@@ -4,7 +4,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 
 import java.util.List;
 
-public class TestSuitesDescription { // TODO - REUSE IN JUNIT5
+public class TestSuitesDescription {
 
     private static final String specialValueAllSuites = "ALL";
 
