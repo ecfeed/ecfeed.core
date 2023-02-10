@@ -153,9 +153,8 @@ public class GenericRemoveNodesProcessorOfNodes {
 		Set<ChoiceNode> choiceNodes = selectedNodesByType.getChoices();
 
 		if (!choiceNodes.isEmpty()) {
-			processChoicesFilteringConstraintsAndTestCases(
-					choiceNodes, 
-					inOutAffectedNodes);
+			GenericRemoveNodesProcessorOfChoices.processChoices(
+					choiceNodes, inOutAffectedNodes);
 		}
 	}
 
@@ -208,56 +207,12 @@ public class GenericRemoveNodesProcessorOfNodes {
 		}
 	}
 
-	private static void processChoicesFilteringConstraintsAndTestCases(
-			Set<ChoiceNode> choiceNodes, 
-			NodesByType inOutAffectedNodes) {
-
-		for (ChoiceNode choiceNode : choiceNodes) {
-
-			accumulateAffectedConstraints(choiceNode, inOutAffectedNodes);
-
-			accumulateAffectedTestCases(choiceNode, inOutAffectedNodes);
-
-			inOutAffectedNodes.addNode(choiceNode);
-		}
-	}
 
 	private static void processClasses(Set<ClassNode> classsNodes, NodesByType outAffectedNodesByType) {
 
 		for (ClassNode classNode : classsNodes) {
 			outAffectedNodesByType.addNode(classNode);
 		}
-	}
-
-	private static void accumulateAffectedConstraints(
-			IAbstractNode abstractNode, NodesByType inOutAffectedNodes) {
-
-		if (abstractNode instanceof ChoiceNode) {
-
-			List<ConstraintNode> mentioningConstraintNodes = 
-					ChoiceNodeHelper.getMentioningConstraints((ChoiceNode) abstractNode);
-
-			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
-			return;
-		} 
-
-		if (abstractNode instanceof BasicParameterNode) {
-
-			List<ConstraintNode> mentioningConstraintNodes = 
-					BasicParameterNodeHelper.getMentioningConstraints((BasicParameterNode) abstractNode);
-
-			inOutAffectedNodes.addConstraints(mentioningConstraintNodes);
-			return;
-		}
-	}
-
-	private static void accumulateAffectedTestCases(
-			ChoiceNode choiceNode, NodesByType inOutAffectedNodes) {
-
-		Set<TestCaseNode> mentioningTestCaseNodes = 
-				ChoiceNodeHelper.getMentioningTestCases(choiceNode);
-
-		inOutAffectedNodes.addTestCases(mentioningTestCaseNodes);
 	}
 
 }
