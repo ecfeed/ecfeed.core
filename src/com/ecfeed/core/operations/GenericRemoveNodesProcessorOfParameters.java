@@ -68,16 +68,16 @@ public class GenericRemoveNodesProcessorOfParameters {
 			NodesByType inOutAffectedNodes) {
 
 		List<BasicParameterNode> calculatedBasicParameterNodesToDelete = 
-				calculateBasicParameterNodesToDelete(compositeParameterNodesToDelete);
+				calculateBasicParameterNodesToDelete(compositeParameterNodesToDelete); // TODO MO-RE getMentioningBasicParameterNodes, to helper
 
 		List<ConstraintNode> calculatedConstraintNodesToDelete = 
-				calculateConstraintsToDelete(compositeParameterNodesToDelete, calculatedBasicParameterNodesToDelete);
+				calculateConstraintsToDelete(compositeParameterNodesToDelete, calculatedBasicParameterNodesToDelete);  // TODO MO-RE getMentioningConstraintNodes, to helper
 
 		List<TestCaseNode> calculatedTestCaseNodesToDelete = 
 				calculateTestCaseNodesToDelete(compositeParameterNodesToDelete);
 
 		List<CompositeParameterNode> calculatedCompositeParameterNodesToDelete = 
-				calculateCompositeParameterNodesToDelete(compositeParameterNodesToDelete);
+				calculateCompositeParameterNodesToDelete(compositeParameterNodesToDelete);  // TODO MO-RE getMentioningCompositeParameterNodes, to helper
 
 		inOutAffectedNodes.addConstraints(calculatedConstraintNodesToDelete);
 		inOutAffectedNodes.addTestCases(calculatedTestCaseNodesToDelete);

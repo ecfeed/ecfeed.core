@@ -465,169 +465,198 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(1, compositeParameterNode1.getConstraints().size());
 	}
 
-	//	@Test
-	//	public void AAchoiceRemoveFromGlobalComposite() {
-	//
-	//		RootNode rootNode = new RootNode("Root", null);
-	//
-	//		// global composite
-	//
-	//		CompositeParameterNode globalCompositeParameterNode11 = new CompositeParameterNode("GS11", null);
-	//		rootNode.addParameter(globalCompositeParameterNode11);
-	//
-	//		// basic parameters and choices of global composite
-	//
-	//		BasicParameterNode basicParameterNode1OfGlobalComposite =
-	//				new BasicParameterNode("P1", "String", "", false, null);
-	//		globalCompositeParameterNode11.addParameter(basicParameterNode1OfGlobalComposite);
-	//
-	//		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
-	//		basicParameterNode1OfGlobalComposite.addChoice(choiceNode1);
-	//
-	//		BasicParameterNode basicParameterNode2OfGlobalComposite =
-	//				new BasicParameterNode("P2", "String", "", false, null);
-	//		globalCompositeParameterNode11.addParameter(basicParameterNode2OfGlobalComposite);
-	//
-	//		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
-	//		basicParameterNode2OfGlobalComposite.addChoice(choiceNode2);
-	//
-	//		// constraint of composite parameter node 11
-	//
-	//		ConstraintNode constraintNodeOnGlobalS11 =
-	//				createConstraintNodeWithValueCondition(basicParameterNode1OfGlobalComposite,"GS11");
-	//
-	//		// TODO MO-RE at all levels add constraints which use deleted choice
-	//
-	//		globalCompositeParameterNode11.addConstraint(constraintNodeOnGlobalS11);
-	//
-	//		// class node
-	//		ClassNode classNode = new ClassNode("Class", null);
-	//		rootNode.addClass(classNode);
-	//
-	//		// method node
-	//
-	//		MethodNode methodNode = new MethodNode("Method");
-	//		classNode.addMethod(methodNode);
-	//
-	//		// composite of method
-	//
-	//		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode("S1", null);
-	//		methodNode.addParameter(compositeParameterNode1);
-	//
-	//		// linked composite 11 of composite 1
-	//
-	//		CompositeParameterNode compositeParameterNode11 = new CompositeParameterNode("S11", null);
-	//		compositeParameterNode11.setLinkToGlobalParameter(globalCompositeParameterNode11);
-	//		compositeParameterNode1.addParameter(compositeParameterNode11);
-	//
-	//		// additional structure on method level
-	//
-	//		CompositeParameterNode compositeParameterNode3 = new CompositeParameterNode("S3", null);
-	//		methodNode.addParameter(compositeParameterNode3);
-	//
-	//		// constraint of method
-	//
-	//		ConstraintNode constraintNodeOnMethod = createConstraintNodeWithValueCondition(basicParameterNode1OfGlobalComposite,"M1");
-	//		methodNode.addConstraint(constraintNodeOnMethod);
-	//
-	//		// constraint of composite parameter node 1
-	//
-	//		ConstraintNode constraintNodeOnS1 = createConstraintNodeWithValueCondition(basicParameterNode1OfGlobalComposite,"S1");
-	//		compositeParameterNode1.addConstraint(constraintNodeOnS1);
-	//
-	//		// test case
-	//
-	//		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
-	//		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
-	//		methodNode.addTestCase(testCaseNode);
-	//
-	//		// copy parameters to deployed parameters
-	//
-	//		List<BasicParameterNode> deployedParameters = new ArrayList<>();
-	//		deployedParameters.add(basicParameterNode1OfGlobalComposite);
-	//		deployedParameters.add(basicParameterNode2OfGlobalComposite);
-	//		methodNode.setDeployedParameters(deployedParameters);
-	//
-	//		// initial checks
-	//
-	//		assertEquals(1, rootNode.getParameters().size());
-	//		assertEquals(1, rootNode.getClasses().size());
-	//
-	//		assertEquals(2, globalCompositeParameterNode11.getParameters().size());
-	//		assertEquals(1, globalCompositeParameterNode11.getConstraints().size());
-	//
-	//		assertEquals(2, methodNode.getParameters().size());
-	//		assertEquals(1, methodNode.getConstraints().size());
-	//		assertEquals(1, methodNode.getTestCases().size());
-	//
-	//		assertEquals(1, compositeParameterNode1.getParameters().size());
-	//		assertEquals(1, compositeParameterNode1.getConstraints().size());
-	//
-	//		//		Root
-	//		//		GS11
-	//		//			P1
-	//		//				Choice1
-	//		//			P2
-	//		//				Choice2
-	//		//			constraintGS11(P1)
-	//		//		Class
-	//		//			Method
-	//		//				S1
-	//		//					S11 -> GS11
-	//		//					constraintS1(P1)
-	//		//				S2
-	//		//				constraintM1(P1)
-	//		//				testCase
-	//
-	//		// list of nodes to delete
-	//
-	//		List<IAbstractNode> nodesToDelete = new ArrayList<>();
-	//		nodesToDelete.add(choiceNode1);
-	//
-	//		// remove
-	//
-	//		GenericRemoveNodesOperation genericRemoveNodesOperation =
-	//				createRemovingNodesOperation(nodesToDelete, rootNode);
-	//
-	//		// check generated operations
-	//
-	//		List<IModelOperation> operations = genericRemoveNodesOperation.getOperations();
-	//		assertEquals(5, operations.size()); // 3 constraints, 1 test case, 1 parameter
-	//
-	//		genericRemoveNodesOperation.execute();
-	//
-	//		// checks after remove
-	//
-	//		assertEquals(1, rootNode.getParameters().size());
-	//		assertEquals(1, globalCompositeParameterNode11.getParameters().size());
-	//
-	//		assertEquals(2, methodNode.getParameters().size());
-	//		assertEquals(0, methodNode.getConstraints().size());
-	//		assertEquals(0, methodNode.getTestCases().size());
-	//
-	//		assertEquals(1, compositeParameterNode1.getParameters().size());
-	//		assertEquals(0, compositeParameterNode1.getConstraints().size());
-	//
-	//		// reverse
-	//
-	//		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
-	//		reverseOperation.execute();
-	//
-	//		// checks after reverse
-	//
-	//		assertEquals(1, rootNode.getParameters().size());
-	//		assertEquals(1, rootNode.getClasses().size());
-	//
-	//		assertEquals(2, globalCompositeParameterNode11.getParameters().size());
-	//		assertEquals(1, globalCompositeParameterNode11.getConstraints().size());
-	//
-	//		assertEquals(2, methodNode.getParameters().size());
-	//		assertEquals(1, methodNode.getConstraints().size());
-	//		assertEquals(1, methodNode.getTestCases().size());
-	//
-	//		assertEquals(1, compositeParameterNode1.getParameters().size());
-	//		assertEquals(1, compositeParameterNode1.getConstraints().size());
-	//	}
+	@Test
+	public void choiceRemoveFromGlobalComposite() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// global composite
+
+		CompositeParameterNode globalCompositeParameterNode11 = new CompositeParameterNode("GS11", null);
+		rootNode.addParameter(globalCompositeParameterNode11);
+
+		// basic parameters and choices of global composite
+
+		BasicParameterNode basicParameterNode1OfGlobalComposite = 
+				new BasicParameterNode("P1", "String", "", false, null);
+		globalCompositeParameterNode11.addParameter(basicParameterNode1OfGlobalComposite);
+
+		ChoiceNode choiceNode1 = new ChoiceNode("Choice1", "1");
+		basicParameterNode1OfGlobalComposite.addChoice(choiceNode1);
+
+		BasicParameterNode basicParameterNode2OfGlobalComposite = 
+				new BasicParameterNode("P2", "String", "", false, null);
+		globalCompositeParameterNode11.addParameter(basicParameterNode2OfGlobalComposite);
+
+		ChoiceNode choiceNode2 = new ChoiceNode("Choice2", "2");
+		basicParameterNode2OfGlobalComposite.addChoice(choiceNode2);
+
+		// constraints of composite parameter node 11
+
+		ConstraintNode constraintNode1OnGlobalS11 = 
+				createConstraintNodeWithChoiceCondition(basicParameterNode1OfGlobalComposite, choiceNode1);
+
+		globalCompositeParameterNode11.addConstraint(constraintNode1OnGlobalS11);
+
+		ConstraintNode constraintNode2OnGlobalS11 = 
+				createConstraintNodeWithChoiceCondition(basicParameterNode2OfGlobalComposite,choiceNode2);
+
+		globalCompositeParameterNode11.addConstraint(constraintNode2OnGlobalS11);
+
+		// class node 
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+
+		// method node
+
+		MethodNode methodNode = new MethodNode("Method");
+		classNode.addMethod(methodNode);
+
+		// composite of method
+
+		CompositeParameterNode compositeParameterNode1 = new CompositeParameterNode("S1", null);
+		methodNode.addParameter(compositeParameterNode1);
+
+		// linked composite 11 of composite 1 
+
+		CompositeParameterNode compositeParameterNode11 = new CompositeParameterNode("S11", null);
+		compositeParameterNode11.setLinkToGlobalParameter(globalCompositeParameterNode11);
+		compositeParameterNode1.addParameter(compositeParameterNode11);
+
+		// additional structure on method level
+
+		CompositeParameterNode compositeParameterNode3 = new CompositeParameterNode("S3", null);
+		methodNode.addParameter(compositeParameterNode3);
+
+		// constraint of method
+
+		ConstraintNode constraintNode1OnMethod = 
+				createConstraintNodeWithChoiceCondition(basicParameterNode1OfGlobalComposite, choiceNode1);
+
+		methodNode.addConstraint(constraintNode1OnMethod);
+
+		ConstraintNode constraintNode2OnMethod = 
+				createConstraintNodeWithChoiceCondition(basicParameterNode2OfGlobalComposite, choiceNode2);
+
+		methodNode.addConstraint(constraintNode2OnMethod);
+
+		// constraint of composite parameter node 1
+
+		ConstraintNode constraintNode1OnS1 = 
+				createConstraintNodeWithChoiceCondition(basicParameterNode1OfGlobalComposite, choiceNode1);
+
+		compositeParameterNode1.addConstraint(constraintNode1OnS1);
+
+		ConstraintNode constraintNode2OnS1 = 
+				createConstraintNodeWithChoiceCondition(basicParameterNode2OfGlobalComposite, choiceNode2);
+
+		compositeParameterNode1.addConstraint(constraintNode2OnS1);
+
+		// test case 
+
+		List<ChoiceNode> choicesOfTestCase = Arrays.asList(new ChoiceNode[] {choiceNode1, choiceNode2});
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
+		methodNode.addTestCase(testCaseNode);
+
+		// copy parameters to deployed parameters
+
+		List<BasicParameterNode> deployedParameters = new ArrayList<>();
+		deployedParameters.add(basicParameterNode1OfGlobalComposite);
+		deployedParameters.add(basicParameterNode2OfGlobalComposite);
+		methodNode.setDeployedParameters(deployedParameters);
+
+		// initial checks
+
+		assertEquals(1, rootNode.getParameters().size());
+		assertEquals(1, rootNode.getClasses().size());
+
+		assertEquals(2, globalCompositeParameterNode11.getParameters().size());
+		assertEquals(2, globalCompositeParameterNode11.getConstraints().size());
+
+		assertEquals(1, basicParameterNode1OfGlobalComposite.getChoices().size());
+
+		assertEquals(2, methodNode.getParameters().size());
+		assertEquals(2, methodNode.getConstraints().size());
+		assertEquals(1, methodNode.getTestCases().size());
+
+		assertEquals(1, compositeParameterNode1.getParameters().size());
+		assertEquals(2, compositeParameterNode1.getConstraints().size());
+
+		//		Root
+		//		GS11
+		//			P1
+		//				Choice1
+		//			P2
+		//				Choice2
+		//			constraintGS11(P1=Choice1)
+		//			constraintGS11(P2=Choice2)
+		//		Class
+		//			Method
+		//				S1
+		//					S11 -> GS11
+		//					constraintS11(P1=Choice1)
+		//					constraintS11(P2=Choice2)
+		//				S2
+		//				constraintM1(P1=Choice1)
+		//				constraintM1(P2=Choice2)
+		//				testCase
+
+		// list of nodes to delete
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(choiceNode1);
+
+		// remove
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+
+		// check generated operations
+
+		List<IModelOperation> operations = genericRemoveNodesOperation.getOperations();
+		assertEquals(5, operations.size()); // 3 constraints, 1 test case, 1 choice
+
+		genericRemoveNodesOperation.execute();
+
+		// checks after remove
+
+		assertEquals(1, rootNode.getParameters().size());
+		assertEquals(1, rootNode.getClasses().size());
+
+		assertEquals(2, globalCompositeParameterNode11.getParameters().size());
+		assertEquals(1, globalCompositeParameterNode11.getConstraints().size());
+
+		assertEquals(0, basicParameterNode1OfGlobalComposite.getChoices().size());
+
+		assertEquals(2, methodNode.getParameters().size());
+		assertEquals(1, methodNode.getConstraints().size());
+		assertEquals(0, methodNode.getTestCases().size());
+
+		assertEquals(1, compositeParameterNode1.getParameters().size());
+		assertEquals(1, compositeParameterNode1.getConstraints().size());
+
+		// reverse
+
+		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+		reverseOperation.execute();
+
+		// checks after reverse
+
+		assertEquals(1, rootNode.getParameters().size());
+		assertEquals(1, rootNode.getClasses().size());
+
+		assertEquals(2, globalCompositeParameterNode11.getParameters().size());
+		assertEquals(2, globalCompositeParameterNode11.getConstraints().size());
+
+		assertEquals(1, basicParameterNode1OfGlobalComposite.getChoices().size());
+
+		assertEquals(2, methodNode.getParameters().size());
+		assertEquals(2, methodNode.getConstraints().size());
+		assertEquals(1, methodNode.getTestCases().size());
+
+		assertEquals(1, compositeParameterNode1.getParameters().size());
+		assertEquals(2, compositeParameterNode1.getConstraints().size());
+	}
 
 	@Test
 	public void basicParameterRemoveFromNestedStructure() {
