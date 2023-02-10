@@ -466,7 +466,7 @@ public class GenericRemoveNodesOperationTest {
 	}
 
 	@Test
-	public void AAchoiceRemoveFromGlobalComposite() {
+	public void choiceRemoveFromGlobalComposite() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
