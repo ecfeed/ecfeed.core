@@ -58,109 +58,19 @@ public abstract class MethodDeployer {
 		methodNode.setDeployedParameters(deployedParameters);
 	}
 
-	public static List<TestCase> revertToOriginalChoices(NodeMapper mapper, List<TestCase> deployedTestCases) { // TODO MO-RE mapper as last parameter
-
-		List<TestCase> result = new ArrayList<>();
-
-		for (TestCase deployedTestCase : deployedTestCases) {
-
-			TestCase revertedTestCaseNode = revertToOriginalTestCase(mapper, deployedTestCase);
-
-			result.add(revertedTestCaseNode);
-		}
-
-		return result;
-	}
-
 	private static void deployParameters(MethodNode methodSource, MethodNode methodTarget, NodeMapper mapper) {
-
-		String prefix = "";
 
 		List<BasicParameterNode> nestedBasicParameters = methodSource.getNestedBasicParameters(true);
 
-		nestedBasicParameters.stream().forEach(e -> handleBasicParameter(e, methodTarget, prefix, mapper));
-
-//		deployParametersRecursively(methodSource.getParameters(), methodTarget, prefix, mapper);
-	}
-
-	private static void deployParametersRecursively(
-			List<AbstractParameterNode> sourceParameters, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
-
-		for (AbstractParameterNode sourceParameter : sourceParameters) {
-			if (sourceParameter instanceof BasicParameterNode) {
-				handleBasicParameter((BasicParameterNode) sourceParameter, targetMethodNode, prefix, mapper);
-			} else	if (sourceParameter instanceof CompositeParameterNode) {
-				handleCompositeParameter((CompositeParameterNode) sourceParameter, targetMethodNode, prefix, mapper);
-			}
-		}
-	}
-
-	private static void handleBasicParameter(
-			BasicParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
-
-		deployBasicParameter(sourceParameter, targetMethodNode, prefix, mapper);
-	}
-
-	private static void handleCompositeParameter(
-			CompositeParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
-
-		List<AbstractParameterNode> childSourceParameters = new ArrayList<>();
-
-		if (sourceParameter.isLinked()) {
-			handleCompositeParameterLinked(sourceParameter, childSourceParameters);
-		} else {
-			handleCompositeParameterNotLinked(sourceParameter, childSourceParameters);
-		}
-
-		String childPrefix = prefix + sourceParameter.getName() + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-
-		deployParametersRecursively(childSourceParameters, targetMethodNode, childPrefix, mapper);
-	}
-
-	private static void handleCompositeParameterLinked(
-			CompositeParameterNode sourceParameter, List<AbstractParameterNode> childSourceParameters) {
-
-		CompositeParameterNode sourceParameterGlobal = (CompositeParameterNode) sourceParameter.getLinkToGlobalParameter();
-
-		for (AbstractParameterNode node : sourceParameterGlobal.getParameters()) {
-			if (node instanceof CompositeParameterNode) {
-				handleCompositeParameterLinkedGetComposite(node, childSourceParameters);
-			} else {
-				handleCompositeParameterLinkedGetBasic(node, childSourceParameters);
-			}
-		}
-	}
-
-	private static void handleCompositeParameterNotLinked(
-			CompositeParameterNode parameter, List<AbstractParameterNode> childSourceParameters) {
-
-		childSourceParameters.addAll(parameter.getParameters());
-	}
-
-	private static void handleCompositeParameterLinkedGetComposite(
-			AbstractParameterNode parameter, List<AbstractParameterNode> childSourceParameters) {
-// Create a mock deployment parameter.
-		CompositeParameterNode composite = new CompositeParameterNode(parameter.getName(), null);
-		composite.setLinkToGlobalParameter(parameter);
-
-		childSourceParameters.add(composite);
-	}
-
-	private static void handleCompositeParameterLinkedGetBasic(
-			AbstractParameterNode parameter, List<AbstractParameterNode> childSourceParameters) {
-// Create a mock deployment parameter.
-		BasicParameterNode basic = new BasicParameterNode(parameter.getName(), ((BasicParameterNode) parameter).getType(), null);
-		basic.setLinkToGlobalParameter(parameter);
-
-		childSourceParameters.add(basic);
+		nestedBasicParameters.stream().forEach(e -> deployBasicParameter(e, methodTarget, mapper));
 	}
 
 	private static void deployBasicParameter(
-			BasicParameterNode sourceParameter, MethodNode targetMethodNode, String prefix, NodeMapper mapper) {
+			BasicParameterNode sourceParameter, MethodNode targetMethodNode, NodeMapper mapper) {
 
 		BasicParameterNode copy = sourceParameter.createCopy(mapper);
 
-		copy.setCompositeName(prefix + copy.getName());
+		copy.setCompositeName(copy.getName());
 
 		targetMethodNode.addParameter(copy);
 	}
@@ -212,7 +122,21 @@ public abstract class MethodDeployer {
 		}
 	}
 
-	private static TestCase revertToOriginalTestCase(NodeMapper mapper, TestCase deployedTestCase) {
+	public static List<TestCase> revertToOriginalTestCases(List<TestCase> deployedTestCases, NodeMapper mapper) {
+
+		List<TestCase> result = new ArrayList<>();
+
+		for (TestCase deployedTestCase : deployedTestCases) {
+
+			TestCase revertedTestCaseNode = revertToOriginalTestCase(deployedTestCase, mapper);
+
+			result.add(revertedTestCaseNode);
+		}
+
+		return result;
+	}
+
+	private static TestCase revertToOriginalTestCase(TestCase deployedTestCase, NodeMapper mapper) {
 
 		List<ChoiceNode> revertedChoices = new ArrayList<>();
 
