@@ -43,16 +43,16 @@ public class ModelSerializerWithConstraintsTest {
         p1.addChoice(new ChoiceNode("P1C3", "3"));
 
         CompositeParameterNode p2 = new CompositeParameterNode("P2", null);
-        BasicParameterNode p21 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(p2, "P21", "int");
+        BasicParameterNode p21 = ParametersAndConstraintsParentNodeHelper.addGlobalParameterToParent(p2, "P21", "int");
         p21.addChoice(new ChoiceNode("P21C1", "1"));
         p21.addChoice(new ChoiceNode("P21C2", "2"));
         p21.addChoice(new ChoiceNode("P21C3", "3"));
-        BasicParameterNode p22 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(p2, "P22", "int");
+        BasicParameterNode p22 = ParametersAndConstraintsParentNodeHelper.addGlobalParameterToParent(p2, "P22", "int");
         p22.addChoice(new ChoiceNode("P22C1", "1"));
         p22.addChoice(new ChoiceNode("P22C2", "2"));
         p22.addChoice(new ChoiceNode("P22C3", "3"));
         CompositeParameterNode p23 = new CompositeParameterNode("P23", null);
-        BasicParameterNode p231 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(p2, "P231", "int");
+        BasicParameterNode p231 = ParametersAndConstraintsParentNodeHelper.addGlobalParameterToParent(p2, "P231", "int");
         p231.addChoice(new ChoiceNode("P231C1", "1"));
         p231.addChoice(new ChoiceNode("P231C2", "2"));
         p231.addChoice(new ChoiceNode("P231C3", "3"));
@@ -65,16 +65,16 @@ public class ModelSerializerWithConstraintsTest {
         c1p1.addChoice(new ChoiceNode("C1P1C3", "3"));
 
         CompositeParameterNode c1p2 = new CompositeParameterNode("C1P2", null);
-        BasicParameterNode c1p21 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(c1p2, "C1P21", "int");
+        BasicParameterNode c1p21 = ParametersAndConstraintsParentNodeHelper.addGlobalParameterToParent(c1p2, "C1P21", "int");
         c1p21.addChoice(new ChoiceNode("C1P21C1", "1"));
         c1p21.addChoice(new ChoiceNode("C1P21C2", "2"));
         c1p21.addChoice(new ChoiceNode("C1P21C3", "3"));
-        BasicParameterNode c1p22 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(c1p2, "C1P22", "int");
+        BasicParameterNode c1p22 = ParametersAndConstraintsParentNodeHelper.addGlobalParameterToParent(c1p2, "C1P22", "int");
         c1p22.addChoice(new ChoiceNode("C1P22C1", "1"));
         c1p22.addChoice(new ChoiceNode("C1P22C2", "2"));
         c1p22.addChoice(new ChoiceNode("C1P22C3", "3"));
         CompositeParameterNode c1p23 = new CompositeParameterNode("C1P23", null);
-        BasicParameterNode c1p231 = ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(c1p2, "C1P231", "int");
+        BasicParameterNode c1p231 = ParametersAndConstraintsParentNodeHelper.addGlobalParameterToParent(c1p2, "C1P231", "int");
         c1p231.addChoice(new ChoiceNode("C1P231C1", "1"));
         c1p231.addChoice(new ChoiceNode("C1P231C2", "2"));
         c1p231.addChoice(new ChoiceNode("C1P231C3", "3"));

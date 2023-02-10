@@ -17,6 +17,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.ecfeed.core.model.*;
@@ -438,18 +439,18 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
 	}
 
+	// TO-DO mo-re move to a helper.
 	private BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
-		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
 		
-		while (parameterParent.getChild(segments[0]) == null) {
-			parameterParent = parameterParent.getParent();
+		List<BasicParameterNode> parameters = ((IParametersParentNode) parameterParent).getNestedBasicParameters(true);
+		
+		for (BasicParameterNode parameter : parameters) {
+			if (parameter.getQualifiedName().equals(parameterName)) {
+				return parameter;
+			}
 		}
 		
-		for (String segment : segments) {
-			parameterParent = parameterParent.getChild(segment);
-		}
-
-		return (BasicParameterNode) parameterParent;
+		return null;
 	}
 
 }

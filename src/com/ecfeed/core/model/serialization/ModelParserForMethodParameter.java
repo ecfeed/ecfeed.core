@@ -45,7 +45,10 @@ public class ModelParserForMethodParameter implements IModelParserForMethodParam
 				expected = 
 						ModelParserHelper.getAttributeValue(
 								parameterElement, PARAMETER_IS_EXPECTED_ATTRIBUTE_NAME, errorList);
-				defaultValue = 
+			}
+
+			if (parameterElement.getAttribute(DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME) != null) {
+				defaultValue =
 						ModelParserHelper.getAttributeValue(
 								parameterElement, DEFAULT_EXPECTED_VALUE_ATTRIBUTE_NAME, errorList);
 			}

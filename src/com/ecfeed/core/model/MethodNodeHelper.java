@@ -399,37 +399,34 @@ public class MethodNodeHelper {
 		return type;
 	}
 
-	public static MethodNode findMethodNode(IAbstractNode anyNodeFromMethodTree) {
+	public static MethodNode findMethodNode(IAbstractNode anyNode) {
+		IAbstractNode parent = anyNode;
 
-		IAbstractNode currentNode = anyNodeFromMethodTree;
+		while (parent != null) {
 
-		for(;;) {
-
-			if (currentNode == null) {
-				return null;
+			if (parent instanceof MethodNode) {
+				return (MethodNode) parent;
 			}
 
-			if (currentNode instanceof MethodNode) {
-				return (MethodNode) currentNode;
-			}
-
-			currentNode = currentNode.getParent();
+			parent = parent.getParent();
 		}
+
+		return null;
 	}
 
 	public static boolean methodNodeMentionsBasicParameter(
 			MethodNode methodNode,
 			BasicParameterNode basicParameterNode) {
-		
+
 		List<AbstractParameterNode> abstractParameterNodes = methodNode.getParameters();
-		
+
 		for (AbstractParameterNode abstractParameterNode : abstractParameterNodes) {
-			
+
 			if (AbstractParameterNodeHelper.parameterMentionsBasicParameter(abstractParameterNode, basicParameterNode)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
