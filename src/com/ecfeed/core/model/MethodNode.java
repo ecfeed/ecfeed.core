@@ -21,7 +21,7 @@ import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
 import com.ecfeed.core.utils.JavaLanguageHelper;
 
-public class MethodNode  extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
+public class MethodNode extends AbstractNode implements IParametersAndConstraintsParentNode, ITestCasesParentNode {
 
 	ParametersHolder fParametersHolder;
 	ParametersHolder fDeployedParametersHolder;
@@ -878,6 +878,53 @@ public class MethodNode  extends AbstractNode implements IParametersAndConstrain
 
 		fTestCaseNodes.clear();
 		fTestCaseNodes.addAll(testCases);
+	}
+
+	@Override
+	public List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) {
+		List<AbstractParameterNode> nodes = new ArrayList<>();
+		
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof BasicParameterNode) {
+				nodes.add(node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.add((CompositeParameterNode) node);
+				nodes.addAll(((CompositeParameterNode) node).getNestedAbstractParameters(follow));
+			}
+		}
+		
+		return nodes;
+	}
+	
+	@Override
+	public List<BasicParameterNode> getNestedBasicParameters(boolean follow) {
+		List<BasicParameterNode> nodes = new ArrayList<>();
+
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof BasicParameterNode) {
+				nodes.add((BasicParameterNode) node);
+			} else if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedBasicParameters(follow));
+			}
+		}
+
+		return nodes;
+	}
+
+	@Override
+	public List<CompositeParameterNode> getNestedCompositeParameters(boolean follow) {
+		List<CompositeParameterNode> nodes = new ArrayList<>();
+
+		for (AbstractParameterNode node : getParameters()) {
+
+			if (node instanceof CompositeParameterNode) {
+				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters(follow));
+			}
+		}
+
+		return nodes;
 	}
 
 }

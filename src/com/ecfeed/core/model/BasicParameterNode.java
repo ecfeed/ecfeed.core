@@ -166,6 +166,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		mapper.addMappings(this, parameter);
 
+		parameter.setNameUnsafe(getQualifiedName());
+
 		return parameter;
 	}
 
@@ -666,6 +668,16 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
+	}
+	
+	@Override
+	public BasicParameterNode getLinkDestination() {
+		
+		if (isLinked() && (getLinkToGlobalParameter() != null)) {
+			return ((BasicParameterNode) getLinkToGlobalParameter()).getLinkDestination();
+		}
+		
+		return this;
 	}
 
 }

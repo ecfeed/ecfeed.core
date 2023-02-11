@@ -17,14 +17,29 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATEMENT_ARRAY_NODE_NAME;
 import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRAINT_STATIC_STATEMENT_NODE_NAME;
 
+import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.*;
+import com.ecfeed.core.model.AbstractStatement;
+import com.ecfeed.core.model.AssignmentStatement;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.ChoiceNode;
+import com.ecfeed.core.model.Constraint;
+import com.ecfeed.core.model.ConstraintNode;
+import com.ecfeed.core.model.ConstraintType;
+import com.ecfeed.core.model.ExpectedValueStatement;
+import com.ecfeed.core.model.IAbstractNode;
+import com.ecfeed.core.model.IModelChangeRegistrator;
+import com.ecfeed.core.model.IParametersAndConstraintsParentNode;
+import com.ecfeed.core.model.IParametersParentNode;
+import com.ecfeed.core.model.RelationStatement;
+import com.ecfeed.core.model.StatementArray;
+import com.ecfeed.core.model.StatementArrayOperator;
+import com.ecfeed.core.model.StaticStatement;
 import com.ecfeed.core.type.adapter.JavaPrimitiveTypePredicate;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.ListOfStrings;
 
-import com.ecfeed.core.utils.SignatureHelper;
 import nu.xom.Element;
 
 public class ModelParserForConstraint implements IModelParserForConstraint {
@@ -438,18 +453,18 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
 	}
 
+	// TO-DO mo-re move to a helper.
 	private BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
-		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
-		
-		while (parameterParent.getChild(segments[0]) == null) {
-			parameterParent = parameterParent.getParent();
-		}
-		
-		for (String segment : segments) {
-			parameterParent = parameterParent.getChild(segment);
+
+		List<BasicParameterNode> parameters = ((IParametersParentNode) parameterParent).getNestedBasicParameters(true);
+
+		for (BasicParameterNode parameter : parameters) {
+			if (parameter.getQualifiedName().equals(parameterName)) {
+				return parameter;
+			}
 		}
 
-		return (BasicParameterNode) parameterParent;
+		return null;
 	}
 
 }

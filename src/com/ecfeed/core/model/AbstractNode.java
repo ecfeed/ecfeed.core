@@ -168,6 +168,25 @@ public abstract class AbstractNode implements IAbstractNode {
 	}
 
 	@Override
+	public IAbstractNode getContainer() {
+		IAbstractNode container;
+		
+		container = MethodNodeHelper.findMethodNode(this);
+		
+		if (container != null) {
+			return container;
+		}
+		
+		container = ClassNodeHelper.findClassNode(this);
+		
+		if (container != null) {
+			return container;
+		}
+		
+		return RootNodeHelper.findRootNode(this);
+	}
+	
+	@Override
 	public IAbstractNode getParent() {
 
 		return fParent;
@@ -439,5 +458,4 @@ public abstract class AbstractNode implements IAbstractNode {
 
 		fModelChangeRegistrator.registerChange();
 	}
-
 }

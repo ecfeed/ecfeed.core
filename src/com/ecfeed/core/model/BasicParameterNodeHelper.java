@@ -20,7 +20,6 @@ import java.util.Set;
 
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.SignatureHelper;
 import com.ecfeed.core.utils.StringHelper;
 
 public class BasicParameterNodeHelper {
@@ -121,11 +120,11 @@ public class BasicParameterNodeHelper {
 	}
 
 	public static BasicParameterNode findBasicParameterByQualifiedName(
-			String parameterNameToFindInExtLanguage, 
+			String parameterNameToFindInExtLanguage,
 			IParametersParentNode parametersParentNode,
 			IExtLanguageManager extLanguageManager) {
 
-		String parameterNameToFindInIntrLanguage = 
+		String parameterNameToFindInIntrLanguage =
 				extLanguageManager.convertTextFromExtToIntrLanguage(parameterNameToFindInExtLanguage);
 
 		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
@@ -137,24 +136,23 @@ public class BasicParameterNodeHelper {
 
 		return findParameterByQualifiedNameRecursive(parameterNameToFindInIntrLanguage, parametersParentNode);
 	}
-
+	
 	private static BasicParameterNode findParameterByQualifiedNameRecursive(String parameterName, IAbstractNode parameterParent) {
+		MethodNode parent = MethodNodeHelper.findMethodNode(parameterParent);
 
-		String[] segments = parameterName.split(SignatureHelper.SIGNATURE_NAME_SEPARATOR);
+		if (parent == null) {
+			return null;
+		}
 
-		while (parameterParent.getChild(segments[0]) == null || !(parameterParent instanceof MethodNode || parameterParent instanceof ClassNode || parameterParent instanceof RootNode)) {
-			parameterParent = parameterParent.getParent();
+		List<BasicParameterNode> parameters = parent.getNestedBasicParameters(true);
 
-			if (parameterParent == null) {
-				return null;
+		for (BasicParameterNode parameter : parameters) {
+			if (parameter.getQualifiedName().equals(parameterName)) {
+				return parameter;
 			}
 		}
-
-		for (int i = 0 ; i < segments.length ; i++) {
-			parameterParent = parameterParent.getChild(segments[i]);
-		}
-
-		return (BasicParameterNode) parameterParent;
+		
+		return null;
 	}
 
 	public static String calculateNewParameterType(BasicParameterNode fTarget, String linkedParameterSignature) {
@@ -173,9 +171,9 @@ public class BasicParameterNodeHelper {
 		if (methodNode != null) {
 			return Arrays.asList(methodNode);
 		}
-		
+
 		IAbstractNode parentAbstractNode = basicParameterNode.getParent();
-		
+
 		if (parentAbstractNode instanceof CompositeParameterNode) {
 			return getMentioningMethodsForChildOfGlobalStructure(basicParameterNode);
 		}
@@ -185,13 +183,13 @@ public class BasicParameterNodeHelper {
 
 	private static List<MethodNode> getMentioningMethodsForChildOfGlobalStructure(
 			BasicParameterNode basicParameterNode) {
-		
-		CompositeParameterNode compositeParameterNode = 
+
+		CompositeParameterNode compositeParameterNode =
 				AbstractParameterNodeHelper.getTopComposite(basicParameterNode);
-		
+
 		List<MethodNode> resultMethodNodes = new ArrayList<>();
 
-		List<AbstractParameterNode> linkedParameters = 
+		List<AbstractParameterNode> linkedParameters =
 				AbstractParameterNodeHelper.getLinkedParameters(compositeParameterNode);
 
 		for (AbstractParameterNode linkedParameterNode : linkedParameters) {
@@ -207,10 +205,10 @@ public class BasicParameterNodeHelper {
 	}
 
 	private static List<MethodNode> getMentioningMethodsForGlobalParameter(BasicParameterNode basicParameterNode) {
-		
+
 		List<MethodNode> resultMethodNodes = new ArrayList<>();
 
-		List<AbstractParameterNode> linkedParameters = 
+		List<AbstractParameterNode> linkedParameters =
 				AbstractParameterNodeHelper.getLinkedParameters(basicParameterNode);
 
 		for (AbstractParameterNode linkedParameterNode : linkedParameters) {
@@ -226,32 +224,32 @@ public class BasicParameterNodeHelper {
 	}
 
 	//	private static void getMentioningMethodNodesRecursive(
-	//			BasicParameterNode basicParameterNode, 
+	//			BasicParameterNode basicParameterNode,
 	//			IAbstractNode currentNode,
 	//			List<MethodNode> inOutResultMethodNodes) {
-	//		
+	//
 	//		if ((currentNode instanceof CompositeParameterNode) || (currentNode instanceof BasicParameterNode)) {
 	//			return;
 	//		}
-	//		
+	//
 	//		if (currentNode instanceof MethodNode) {
-	//			
+	//
 	//			MethodNode methodNode = (MethodNode) currentNode;
-	//			
+	//
 	//			if (MethodNodeHelper.methodNodeMentionsBasicParameter(methodNode, basicParameterNode)) {
 	//				inOutResultMethodNodes.add(methodNode);
 	//			}
-	//			
+	//
 	//			return;
 	//		}
-	//		
-	//		
+	//
+	//
 	//		List<IAbstractNode> children = currentNode.getChildren();
-	//		
+	//
 	//		for (IAbstractNode abstractNode : children) {
 	//			getMentioningMethodNodesRecursive(basicParameterNode, abstractNode, inOutResultMethodNodes);
 	//		}
-	//		
+	//
 	//	}
 
 	public static Set<ConstraintNode> getMentioningConstraints(Collection<BasicParameterNode> parameters) {
@@ -281,7 +279,7 @@ public class BasicParameterNodeHelper {
 		return resultList;
 	}
 
-	public static List<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) { 
+	public static List<ConstraintNode> getMentioningConstraints(BasicParameterNode parameter) {
 
 		Set<ConstraintNode> setOfMentioningConstraints = getMentioningConstraints(parameter, 0);
 
@@ -318,7 +316,7 @@ public class BasicParameterNodeHelper {
 
 			IConstraintsParentNode constraintsParentNode = (IConstraintsParentNode) currentNode;
 
-			Set<ConstraintNode> constraintsOfMethod = 
+			Set<ConstraintNode> constraintsOfMethod =
 					constraintsParentNode.getMentioningConstraints(parameter);
 
 			inOutConstraints.addAll(constraintsOfMethod);
@@ -367,7 +365,7 @@ public class BasicParameterNodeHelper {
 
 	public static String checkLinkedParameters(BasicParameterNode globalParameterNode) {
 
-		List<AbstractParameterNode> linkedMethodMethodParameters = 
+		List<AbstractParameterNode> linkedMethodMethodParameters =
 				AbstractParameterNodeHelper.getLinkedParameters(globalParameterNode);
 
 		if (linkedMethodMethodParameters == null) {
@@ -380,18 +378,18 @@ public class BasicParameterNodeHelper {
 
 		AbstractParameterNode firstMethodParameterNode = linkedMethodMethodParameters.get(0);
 
-		String errorMessage = 
-				"Parameter " + firstMethodParameterNode.getName() + 
-				" of method " + firstMethodParameterNode.getParent().toString() + 
-				" is linked to current global parameter " + globalParameterNode.getName() + ". " + 
+		String errorMessage =
+				"Parameter " + firstMethodParameterNode.getName() +
+				" of method " + firstMethodParameterNode.getParent().toString() +
+				" is linked to current global parameter " + globalParameterNode.getName() + ". " +
 				"Change of parameter type is not possible.";
 
 		return errorMessage;
 	}
 
 	public static ChoiceNode addNewChoiceToBasicParameter(
-			BasicParameterNode globalParameterNode, 
-			String choiceNodeName, 
+			BasicParameterNode globalParameterNode,
+			String choiceNodeName,
 			String valueString,
 			boolean isRandomizedValue,
 			IModelChangeRegistrator modelChangeRegistrator) {
@@ -405,8 +403,8 @@ public class BasicParameterNodeHelper {
 	}
 
 	public static ChoiceNode addNewChoiceToBasicParameter(
-			BasicParameterNode globalParameterNode, 
-			String choiceNodeName, 
+			BasicParameterNode globalParameterNode,
+			String choiceNodeName,
 			String valueString,
 			IModelChangeRegistrator modelChangeRegistrator) {
 

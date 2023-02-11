@@ -115,4 +115,18 @@ public class RootNodeHelper {
 		return true;
 	}
 
+	public static RootNode findRootNode(IAbstractNode anyNode) {
+		IAbstractNode parent = anyNode;
+		
+		while (parent != null) {
+			
+			if (parent instanceof RootNode) {
+				return (RootNode) parent;
+			}
+			
+			parent = parent.getParent();
+		}
+		
+		return null;
+	}
 }

@@ -35,5 +35,8 @@ public interface IParametersParentNode extends IAbstractNode {
 	public List<String> getParametersNames();
 
 	public String generateNewParameterName(String startParameterName);
-
+	
+	public List<AbstractParameterNode> getNestedAbstractParameters(boolean follow);
+	public List<CompositeParameterNode> getNestedCompositeParameters(boolean follow);
+	public List<BasicParameterNode> getNestedBasicParameters(boolean follow);
 }
