@@ -8,7 +8,7 @@
  *  
  *******************************************************************************/
 
-package com.ecfeed.core.utils;
+package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,12 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 
 public class ParametersContainer {
+
+	public enum ParameterType { // TODO MO-RE use instead of boolean addExpectedParameterNodes
+
+		STANDARD,
+		EXPECTED
+	};
 
 	public List<String> initialize(
 			IParametersParentNode parametersParentNode,
