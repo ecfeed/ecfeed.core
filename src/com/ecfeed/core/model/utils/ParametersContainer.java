@@ -31,11 +31,11 @@ public class ParametersContainer {
 
 	public void calculateParametersData(
 			IParametersParentNode parametersParentNode,
-			boolean addExpectedParameterNodes) {
+			ParameterType parameterType) {
 
 		fParametersDescriptions = new HashMap<>();
 
-		addParameterNamesRecursively(parametersParentNode, addExpectedParameterNodes, fParametersDescriptions);
+		addParameterNamesRecursively(parametersParentNode, parameterType, fParametersDescriptions);
 	}
 
 	public List<String> getParameterNames() {
@@ -67,14 +67,14 @@ public class ParametersContainer {
 
 	private static void addParameterNamesRecursively(
 			IParametersParentNode parametersParentNode, 
-			boolean addExpectedParameterNodes,
+			ParameterType parameterType,
 			Map<String, BasicParameterNode> inOutParameterCompositeNames) {
 
 		List<BasicParameterNode> parameters = parametersParentNode.getNestedBasicParameters(true);
 
 		for (BasicParameterNode basicParameterNode : parameters) {
 
-			if (shouldAddParameter(basicParameterNode, addExpectedParameterNodes)) {
+			if (shouldAddParameter(basicParameterNode, parameterType)) {
 
 				String qualifiedName = basicParameterNode.getQualifiedName();
 
@@ -85,9 +85,9 @@ public class ParametersContainer {
 
 	private static boolean shouldAddParameter(
 			BasicParameterNode methodParameterNode,
-			boolean addExpectedParameterNodes) {
+			ParameterType parameterType) {
 
-		if (addExpectedParameterNodes) {
+		if (parameterType == ParameterType.EXPECTED) {
 
 			if (methodParameterNode.isExpected()) {
 				return true;

@@ -26,6 +26,7 @@ import com.ecfeed.core.model.MethodParameterNodeHelper;
 import com.ecfeed.core.model.ParametersAndConstraintsParentNodeHelper;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.RootNodeHelper;
+import com.ecfeed.core.model.utils.ParametersContainer.ParameterType;
 
 public class ParametersContainerTest {
 
@@ -56,7 +57,7 @@ public class ParametersContainerTest {
 		MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode2, "MC2", "MC2");
 
 		ParametersContainer parametersContainer = new ParametersContainer();
-		parametersContainer.calculateParametersData(methodNode, false);
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -103,18 +104,18 @@ public class ParametersContainerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(compositeParameterNode, "MP2", "String");
 
 		MethodParameterNodeHelper.addChoiceToMethodParameter(parameterNode2, "MC2", "MC2");
-		
+
 		// parameter 0
 
 		BasicParameterNode parameterNode0 = 
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(compositeParameterNode, "MP0", "String");
 
 		MethodParameterNodeHelper.addChoiceToMethodParameter(parameterNode0, "MC0", "MC0");
-		
+
 		// parameters container
 
 		ParametersContainer parametersContainer = new ParametersContainer();
-		parametersContainer.calculateParametersData(methodNode, false);
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
 
 		List<String> parameterNames = parametersContainer.getParameterNames();
 
@@ -132,5 +133,5 @@ public class ParametersContainerTest {
 		assertEquals(parameterNode1, resultParameter1);
 		assertEquals(parameterNode2, resultParameter2);
 	}
-	
+
 }
