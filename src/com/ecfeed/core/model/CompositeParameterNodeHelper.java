@@ -7,13 +7,26 @@ import com.ecfeed.core.utils.ObjectHelper;
 
 public class CompositeParameterNodeHelper {
 
-	public static BasicParameterNode addNewBasicParameterNodeToCompositeParameter(
+	public static BasicParameterNode addNewBasicParameterNodeToCompositeParameter( // TODO MO-RE rename to addBasicParameter
 			CompositeParameterNode compositeParameterNode, String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode parameterNode = new BasicParameterNode (name, type, modelChangeRegistrator);
 		compositeParameterNode.addParameter(parameterNode);
 
 		return parameterNode;
+	}
+
+	public static CompositeParameterNode addCompositeParameter(
+			CompositeParameterNode parentCompositeParameterNode, 
+			String childCompositeName, 
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		CompositeParameterNode childCompositeParameterNode = 
+				new CompositeParameterNode(childCompositeName, modelChangeRegistrator);
+
+		parentCompositeParameterNode.addParameter(childCompositeParameterNode);
+
+		return childCompositeParameterNode;
 	}
 
 	public static CompositeParameterNode addNewCompositeParameterNodeToCompositeParameter(
