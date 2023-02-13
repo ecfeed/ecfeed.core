@@ -101,7 +101,7 @@ public class ParametersContainer {
 				return false;
 			}
 
-			if (methodParameterNode.getChoices().size() == 0) {
+			if (methodParameterNode.getChoices().isEmpty()) {
 				return false;
 			}
 

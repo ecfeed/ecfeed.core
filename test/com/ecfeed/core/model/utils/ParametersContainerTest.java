@@ -101,6 +101,24 @@ public class ParametersContainerTest {
 		
 		MethodParameterNodeHelper.addChoiceToMethodParameter(basicParameterNode1OfComposite2, "C1", "C1");
 		
+		// 	Root
+		// 		Class
+		// 			Method
+		//				MP1
+		//					MC1
+		//				MP2
+		//					MC2
+		//				S1
+		//					P11
+		//						C1
+		//					P12
+		// 						C2
+		//					P10
+		//						C0
+		//					S2
+		//						P21
+		//							C1
+		
 		// parameters container from level of method node
 
 		ParametersContainer parametersContainer = new ParametersContainer();
@@ -196,6 +214,76 @@ public class ParametersContainerTest {
 		
 		assertEquals(basicParameterNode1OfComposite2, resultParameter1OfComposite2);
 	}
+	
+	@Test
+	public void globalBasicParameters() {
 
+		RootNode rootNode = new RootNode("Root", null);
+		
+		// root parameter node 1
+		
+		BasicParameterNode rootParameterNode1 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(rootNode, "RP1", "String");
+
+		MethodParameterNodeHelper.addChoiceToMethodParameter(rootParameterNode1, "RC1", "RC1");
+
+		// class node
+
+		ClassNode classNode = RootNodeHelper.addClassNodeToRoot(rootNode, "Class", null);
+
+		// class parameter node 
+		
+		BasicParameterNode classParameterNode1 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(classNode, "CP1", "String");
+
+		MethodParameterNodeHelper.addChoiceToMethodParameter(classParameterNode1, "CC1", "CC1");
+
+		// method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+
+		// parameter 1 of method 
+
+		BasicParameterNode methodParameterNode1 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP1", "String");
+		methodParameterNode1.setLinkToGlobalParameter(rootParameterNode1);
+
+		// parameter 2 of method
+
+		BasicParameterNode methodParameterNode2 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(methodNode, "MP2", "String");
+		methodParameterNode2.setLinkToGlobalParameter(classParameterNode1);
+
+		// 	Root
+		//		RP1
+		//			RC1
+		// 		Class
+		//			CP1
+		//				CC1
+		// 			Method
+		//				MP1 -> RP1 
+		//				MP2 -> CP1
+		
+		// parameters container from level of method node
+
+		ParametersContainer parametersContainer = new ParametersContainer();
+		parametersContainer.calculateParametersData(methodNode, ParameterType.STANDARD);
+
+		List<String> parameterNames = parametersContainer.getParameterNames();
+
+		assertEquals(2, parameterNames.size());
+
+		assertEquals("MP1", parameterNames.get(0));
+		assertEquals("MP2", parameterNames.get(1));		
+		
+		assertNull(parametersContainer.findBasicParameter("NO-PARAM", methodNode));
+
+		BasicParameterNode resultMethodParameter1 = parametersContainer.findBasicParameter("MP1", methodNode);
+		BasicParameterNode resultMethodParameter2 = parametersContainer.findBasicParameter("MP2", methodNode);
+
+		assertEquals(methodParameterNode1, resultMethodParameter1);
+		assertEquals(methodParameterNode2, resultMethodParameter2);
+	}
+	
 	// TODO MO-RE add tests for	ParameterType.EXPECTED
 }
