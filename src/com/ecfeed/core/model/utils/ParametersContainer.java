@@ -11,8 +11,10 @@
 package com.ecfeed.core.model.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
@@ -25,27 +27,39 @@ public class ParametersContainer {
 		EXPECTED
 	};
 
-	public List<String> initialize(
+	Map<String, BasicParameterNode> fParametersDescriptions;
+
+	public void calculateParametersData(
 			IParametersParentNode parametersParentNode,
 			boolean addExpectedParameterNodes) {
 
-		List<String> parametersCompositeNames = new ArrayList<String>();
+		fParametersDescriptions = new HashMap<>();
 
-		addParameterNamesRecursively(parametersParentNode, addExpectedParameterNodes, parametersCompositeNames);
+		addParameterNamesRecursively(parametersParentNode, addExpectedParameterNodes, fParametersDescriptions);
+	}
 
-		return parametersCompositeNames;
+	public List<String> getParameterNames() {
+
+		List<String> resultNames = new ArrayList<>();
+
+		for (String key : fParametersDescriptions.keySet()) {
+			resultNames.add(key);
+		}
+
+		Collections.sort(resultNames);
+
+		return resultNames;
 	}
 
 	public BasicParameterNode findBasicParameter(
 			String qualifiedNameOfParameter, 
 			IParametersParentNode parametersParentNode) {
 
-		Optional<BasicParameterNode> candidate = parametersParentNode.getNestedBasicParameters(true).stream()
-				.filter(e -> e.getQualifiedName().equals(qualifiedNameOfParameter))
-				.findAny();
+		for (String key : fParametersDescriptions.keySet()) {
 
-		if (candidate.isPresent()) {
-			return candidate.get();
+			if (qualifiedNameOfParameter.equals(key)) {
+				return fParametersDescriptions.get(key);
+			}
 		}
 
 		return null;
@@ -54,16 +68,22 @@ public class ParametersContainer {
 	private static void addParameterNamesRecursively(
 			IParametersParentNode parametersParentNode, 
 			boolean addExpectedParameterNodes,
-			List<String> inOutParameterCompositeNames) {
+			Map<String, BasicParameterNode> inOutParameterCompositeNames) {
 
 		List<BasicParameterNode> parameters = parametersParentNode.getNestedBasicParameters(true);
 
-		parameters.stream()
-		.filter(e -> shouldAddItem(e, addExpectedParameterNodes))
-		.forEach(e -> inOutParameterCompositeNames.add(e.getQualifiedName()));
+		for (BasicParameterNode basicParameterNode : parameters) {
+
+			if (shouldAddParameter(basicParameterNode, addExpectedParameterNodes)) {
+
+				String qualifiedName = basicParameterNode.getQualifiedName();
+
+				inOutParameterCompositeNames.put(qualifiedName, basicParameterNode);
+			}
+		}
 	}
 
-	private static boolean shouldAddItem(
+	private static boolean shouldAddParameter(
 			BasicParameterNode methodParameterNode,
 			boolean addExpectedParameterNodes) {
 

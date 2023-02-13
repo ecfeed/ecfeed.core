@@ -30,7 +30,7 @@ import com.ecfeed.core.model.RootNodeHelper;
 public class ParametersContainerTest {
 
 	@Test
-	public void parametersOfMethod() {
+	public void parameterOfMethod() {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -56,8 +56,9 @@ public class ParametersContainerTest {
 		MethodParameterNodeHelper.addChoiceToMethodParameter(methodParameterNode2, "MC2", "MC2");
 
 		ParametersContainer parametersContainer = new ParametersContainer();
+		parametersContainer.calculateParametersData(methodNode, false);
 
-		List<String> parameterNames = parametersContainer.initialize(methodNode, false);
+		List<String> parameterNames = parametersContainer.getParameterNames();
 
 		assertEquals(2, parameterNames.size());
 
@@ -102,24 +103,34 @@ public class ParametersContainerTest {
 				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(compositeParameterNode, "MP2", "String");
 
 		MethodParameterNodeHelper.addChoiceToMethodParameter(parameterNode2, "MC2", "MC2");
+		
+		// parameter 0
+
+		BasicParameterNode parameterNode0 = 
+				ParametersAndConstraintsParentNodeHelper.addBasicParameterToParent(compositeParameterNode, "MP0", "String");
+
+		MethodParameterNodeHelper.addChoiceToMethodParameter(parameterNode0, "MC0", "MC0");
+		
+		// parameters container
 
 		ParametersContainer parametersContainer = new ParametersContainer();
+		parametersContainer.calculateParametersData(methodNode, false);
 
-		List<String> parameterNames = parametersContainer.initialize(methodNode, false);
+		List<String> parameterNames = parametersContainer.getParameterNames();
 
-		assertEquals(2, parameterNames.size());
+		assertEquals(3, parameterNames.size());
 
-		String parameter1Name = "S1:MP1";
-		String parameter2Name = "S1:MP2";
+		assertEquals("S1:MP0", parameterNames.get(0));
+		assertEquals("S1:MP1", parameterNames.get(1));
+		assertEquals("S1:MP2", parameterNames.get(2));
 
-		assertEquals(parameter1Name, parameterNames.get(0));
-		assertEquals(parameter2Name, parameterNames.get(1));
+		BasicParameterNode resultParameter0 = parametersContainer.findBasicParameter("S1:MP0", methodNode);
+		BasicParameterNode resultParameter1 = parametersContainer.findBasicParameter("S1:MP1", methodNode);
+		BasicParameterNode resultParameter2 = parametersContainer.findBasicParameter("S1:MP2", methodNode);
 
-		BasicParameterNode resultParameter1 = parametersContainer.findBasicParameter(parameter1Name, methodNode);
-		BasicParameterNode resultParameter2 = parametersContainer.findBasicParameter(parameter2Name, methodNode);
-
+		assertEquals(parameterNode0, resultParameter0);
 		assertEquals(parameterNode1, resultParameter1);
 		assertEquals(parameterNode2, resultParameter2);
 	}
-
+	
 }
