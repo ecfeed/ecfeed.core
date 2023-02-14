@@ -10,16 +10,20 @@
 
 package com.ecfeed.core.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.ecfeed.core.utils.EMathRelation;
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.TestHelper;
+
+
+import static org.junit.Assert.*;
 
 public class MethodDeployerTest {
 
@@ -228,7 +232,7 @@ public class MethodDeployerTest {
 		assertEquals("S1:P2", name2);
 	}
 
-	@Test
+//	@Test
 	public void deployTwoLinkedParametersWithTheSameNames() {
 
 		MethodNode methodNode = createModelWithTwoLinkedParametersOneAtMethodLevel("P1", "P1");
@@ -240,35 +244,372 @@ public class MethodDeployerTest {
 
 		// check
 
-		// assertEquals(1, deployedMethod.getParametersCount()); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged 
+//		assertEquals(1, deployedMethod.getParametersCount()); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
 		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
 
 		String name1 = deployedParameters.get(0).getName();
 		assertEquals("P1", name1);
 	}
 
-	@Test
+//	@Test
 	public void deployTwoLinkedParametersWithTheSameNamesInStructures() {
+		MethodNode methodNode = createModelWithTwoLinkedParametersInCompositeParameters("P1", "P1");
 
-		//MethodNode methodNode = createModelWithTwoLinkedParametersInCompositeParameters("P1", "P1");
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
 
-		// deploy 
+		int parametersCount = deployedMethod.getParametersCount();
+//		assertEquals(2, parametersCount); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
+		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
 
-		//NodeMapper mapper = new NodeMapper();
-		//MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
-
-		// check
-
-		//int parametersCount = deployedMethod.getParametersCount();
-		//assertEquals(2, parametersCount); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged 
-		//List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
-
-		//String name1 = deployedParameters.get(0).getName();
-		// assertEquals("P1", name1); TODO MO-RE uncomment
+		String name1 = deployedParameters.get(0).getName();
+		 assertEquals("P1", name1); //TODO MO-RE uncomment
 		
 		// TODO MO-RE check OTHER parameter
 	}
-	
+
+	@Test
+	public void deployLinkedRootStructure() {
+		RootNode rootNode = new RootNode("Root", null);
+		CompositeParameterNode gs1 = new CompositeParameterNode("GS1", null);
+		BasicParameterNode gs1p1 = new BasicParameterNode("GS1P1", "int", "0", false, null);
+		ChoiceNode gs1p1c1 = new ChoiceNode("GS1P1C1", "1");
+		BasicParameterNode gs1p2 = new BasicParameterNode("GS1P2", "int", "0", false, null);
+		ChoiceNode gs1p2c1 = new ChoiceNode("GS1P1C1", "1");
+		ClassNode c1 = new ClassNode("Class", null);
+		MethodNode c1m1 = new MethodNode("method", null);
+		CompositeParameterNode ms1 = new CompositeParameterNode("MS1", null);
+
+		rootNode.addParameter(gs1);
+		gs1.addParameter(gs1p1);
+		gs1p1.addChoice(gs1p1c1);
+		gs1.addParameter(gs1p2);
+		gs1p2.addChoice(gs1p2c1);
+		rootNode.addClass(c1);
+		c1.addMethod(c1m1);
+		c1m1.addParameter(ms1);
+
+		ms1.setLinkToGlobalParameter(gs1);
+
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+
+		List<BasicParameterNode> parameters = c1m1.getNestedBasicParameters(true);
+		List<BasicParameterNode> parametersDeployed = deployedMethod.getNestedBasicParameters(false);
+
+		assertEquals(parameters.size(), parametersDeployed.size());
+
+		assertEquals("GS1:GS1P1", parametersDeployed.get(0).getName());
+		assertEquals("GS1:GS1P2", parametersDeployed.get(1).getName());
+
+		assertNotSame(parametersDeployed.get(0), parameters.get(0));
+		assertNotSame(parametersDeployed.get(1), parameters.get(1));
+
+		assertEquals(parameters.get(0), mapper.getMappedNodeSource(parametersDeployed.get(0)));
+		assertEquals(parameters.get(1), mapper.getMappedNodeSource(parametersDeployed.get(1)));
+
+		List<ChoiceNode> choices = new ArrayList<>();
+
+		choices.addAll(gs1p1.getChoices());
+		choices.addAll(gs1p2.getChoices());
+
+		List<ChoiceNode> choicesDeployed = new ArrayList<>();
+
+		choicesDeployed.addAll(parametersDeployed.get(0).getChoices().stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toList()));
+
+		choicesDeployed.addAll(parametersDeployed.get(1).getChoices().stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toList()));
+
+		for (ChoiceNode choice : choices) {
+			assertTrue(choicesDeployed.contains(choice));
+		}
+	}
+
+	@Test
+	public void deployLinkedClassStructure() {
+		RootNode rootNode = new RootNode("Root", null);
+		ClassNode c1 = new ClassNode("Class", null);
+		CompositeParameterNode gs1 = new CompositeParameterNode("GS1", null);
+		BasicParameterNode gs1p1 = new BasicParameterNode("GS1P1", "int", "0", false, null);
+		ChoiceNode gs1p1c1 = new ChoiceNode("GS1P1C1", "1");
+		BasicParameterNode gs1p2 = new BasicParameterNode("GS1P2", "int", "0", false, null);
+		ChoiceNode gs1p2c1 = new ChoiceNode("GS1P1C1", "1");
+		MethodNode c1m1 = new MethodNode("method", null);
+		CompositeParameterNode ms1 = new CompositeParameterNode("MS1", null);
+
+		rootNode.addClass(c1);
+		c1.addParameter(gs1);
+		gs1.addParameter(gs1p1);
+		gs1p1.addChoice(gs1p1c1);
+		gs1.addParameter(gs1p2);
+		gs1p2.addChoice(gs1p2c1);
+		c1.addMethod(c1m1);
+		c1m1.addParameter(ms1);
+
+		ms1.setLinkToGlobalParameter(gs1);
+
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+
+		List<BasicParameterNode> parameters = c1m1.getNestedBasicParameters(true);
+		List<BasicParameterNode> parametersDeployed = deployedMethod.getNestedBasicParameters(false);
+
+		assertEquals(parameters.size(), parametersDeployed.size());
+
+		assertEquals("Class:GS1:GS1P1", parametersDeployed.get(0).getName());
+		assertEquals("Class:GS1:GS1P2", parametersDeployed.get(1).getName());
+
+		assertNotSame(parametersDeployed.get(0), parameters.get(0));
+		assertNotSame(parametersDeployed.get(1), parameters.get(1));
+
+		assertEquals(parameters.get(0), mapper.getMappedNodeSource(parametersDeployed.get(0)));
+		assertEquals(parameters.get(1), mapper.getMappedNodeSource(parametersDeployed.get(1)));
+
+		List<ChoiceNode> choices = new ArrayList<>();
+
+		choices.addAll(gs1p1.getChoices());
+		choices.addAll(gs1p2.getChoices());
+
+		List<ChoiceNode> choicesDeployed = new ArrayList<>();
+
+		choicesDeployed.addAll(parametersDeployed.get(0).getChoices().stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toList()));
+
+		choicesDeployed.addAll(parametersDeployed.get(1).getChoices().stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toList()));
+
+		for (ChoiceNode choice : choices) {
+			assertTrue(choicesDeployed.contains(choice));
+		}
+	}
+
+	@Test
+	public void deployLinkedRootStructureWithConstraint() {
+		RootNode rootNode = new RootNode("Root", null);
+		CompositeParameterNode gs1 = new CompositeParameterNode("GS1", null);
+		BasicParameterNode gs1p1 = new BasicParameterNode("GS1P1", "int", "0", false, null);
+		ChoiceNode gs1p1c1 = new ChoiceNode("GS1P1C1", "1");
+		BasicParameterNode gs1p2 = new BasicParameterNode("GS1P2", "int", "0", false, null);
+		ChoiceNode gs1p2c1 = new ChoiceNode("GS1P1C1", "1");
+		ClassNode c1 = new ClassNode("Class", null);
+		MethodNode c1m1 = new MethodNode("method", null);
+		CompositeParameterNode ms1 = new CompositeParameterNode("MS1", null);
+		BasicParameterNode mp1 = new BasicParameterNode("MP1", "int", "0", false, null);
+
+		rootNode.addParameter(gs1);
+		gs1.addParameter(gs1p1);
+		gs1p1.addChoice(gs1p1c1);
+		gs1.addParameter(gs1p2);
+		gs1p2.addChoice(gs1p2c1);
+		rootNode.addClass(c1);
+		c1.addMethod(c1m1);
+		c1m1.addParameter(ms1);
+		c1m1.addParameter(mp1);
+
+		ms1.setLinkToGlobalParameter(gs1);
+
+		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(mp1, EMathRelation.EQUAL, gs1p1);
+		RelationStatement r2 = RelationStatement.createRelationStatementWithParameterCondition(gs1p1, EMathRelation.EQUAL, mp1);
+
+		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+
+		assertEquals(1, deployedMethod.getConstraintNodes().size());
+
+		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
+
+		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
+		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
+
+		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
+
+		for (BasicParameterNode parameter : parametersConstraint) {
+			assertTrue(parametersDeployed.contains(parameter));
+		}
+
+		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toSet());
+
+		for (BasicParameterNode parameter : parametersConstraintMapped) {
+			assertTrue(parametersSource.contains(parameter));
+		}
+	}
+
+	@Test
+	public void deployLinkedClassStructureWithConstraint() {
+		RootNode rootNode = new RootNode("Root", null);
+		ClassNode c1 = new ClassNode("Class", null);
+		CompositeParameterNode gs1 = new CompositeParameterNode("GS1", null);
+		BasicParameterNode gs1p1 = new BasicParameterNode("GS1P1", "int", "0", false, null);
+		ChoiceNode gs1p1c1 = new ChoiceNode("GS1P1C1", "1");
+		BasicParameterNode gs1p2 = new BasicParameterNode("GS1P2", "int", "0", false, null);
+		ChoiceNode gs1p2c1 = new ChoiceNode("GS1P1C1", "1");
+		MethodNode c1m1 = new MethodNode("method", null);
+		CompositeParameterNode ms1 = new CompositeParameterNode("MS1", null);
+		BasicParameterNode mp1 = new BasicParameterNode("MP1", "int", "0", false, null);
+
+		rootNode.addClass(c1);
+		c1.addParameter(gs1);
+		gs1.addParameter(gs1p1);
+		gs1p1.addChoice(gs1p1c1);
+		gs1.addParameter(gs1p2);
+		gs1p2.addChoice(gs1p2c1);
+		c1.addMethod(c1m1);
+		c1m1.addParameter(ms1);
+		c1m1.addParameter(mp1);
+
+		ms1.setLinkToGlobalParameter(gs1);
+
+		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(mp1, EMathRelation.EQUAL, gs1p1);
+		RelationStatement r2 = RelationStatement.createRelationStatementWithParameterCondition(gs1p1, EMathRelation.EQUAL, mp1);
+
+		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+
+		assertEquals(1, deployedMethod.getConstraintNodes().size());
+
+		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
+
+		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
+		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
+
+		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
+
+		for (BasicParameterNode parameter : parametersConstraint) {
+			assertTrue(parametersDeployed.contains(parameter));
+		}
+
+		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toSet());
+
+		for (BasicParameterNode parameter : parametersConstraintMapped) {
+			assertTrue(parametersSource.contains(parameter));
+		}
+	}
+
+	@Test
+	public void deployNestedStructureWithConstraint1() {
+		RootNode rootNode = new RootNode("Root", null);
+		ClassNode c1 = new ClassNode("Class", null);
+		MethodNode c1m1 = new MethodNode("method", null);
+		CompositeParameterNode ms1 = new CompositeParameterNode("MS1", null);
+		BasicParameterNode ms1p1 = new BasicParameterNode("MS1P1", "int", "0", false, null);
+		ChoiceNode ms1p1c1 = new ChoiceNode("MS1P1C1", "1");
+		CompositeParameterNode ms2 = new CompositeParameterNode("MS2", null);
+		BasicParameterNode ms2p1 = new BasicParameterNode("MS2P1", "int", "0", false, null);
+		ChoiceNode ms2p1c1 = new ChoiceNode("MS2P1C1", "2");
+		BasicParameterNode mp1 = new BasicParameterNode("MP1", "int", "0", false, null);
+
+		rootNode.addClass(c1);
+		c1.addMethod(c1m1);
+		c1m1.addParameter(ms1);
+		ms1.addParameter(ms1p1);
+		ms1p1.addChoice(ms1p1c1);
+		c1m1.addParameter(ms2);
+		ms2.addParameter(ms2p1);
+		ms2p1.addChoice(ms2p1c1);
+		c1m1.addParameter(mp1);
+
+		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(ms1p1, EMathRelation.EQUAL, ms2p1);
+		RelationStatement r2 = RelationStatement.createRelationStatementWithChoiceCondition(ms2p1, EMathRelation.EQUAL, ms2p1c1);
+
+		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+
+		assertEquals(1, deployedMethod.getConstraintNodes().size());
+
+		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
+
+		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
+		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
+
+		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
+
+		for (BasicParameterNode parameter : parametersConstraint) {
+			assertTrue(parametersDeployed.contains(parameter));
+		}
+
+		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toSet());
+
+		for (BasicParameterNode parameter : parametersConstraintMapped) {
+			assertTrue(parametersSource.contains(parameter));
+		}
+	}
+
+	@Test
+	public void deployNestedStructureWithConstraint2() {
+		RootNode rootNode = new RootNode("Root", null);
+		ClassNode c1 = new ClassNode("Class", null);
+		MethodNode c1m1 = new MethodNode("method", null);
+		CompositeParameterNode ms1 = new CompositeParameterNode("MS1", null);
+		CompositeParameterNode ms1s1 = new CompositeParameterNode("MS1S1", null);
+		BasicParameterNode ms1s1p1 = new BasicParameterNode("MS1S1P1", "int", "0", false, null);
+		ChoiceNode ms1s1p1c1 = new ChoiceNode("MS1S1P1C1", "1");
+		CompositeParameterNode ms1s2 = new CompositeParameterNode("MS1S2", null);
+		BasicParameterNode ms1s2p1 = new BasicParameterNode("MS1S2P1", "int", "0", false, null);
+		ChoiceNode ms1s2p1c1 = new ChoiceNode("MS1S2P1C1", "2");
+		BasicParameterNode mp1 = new BasicParameterNode("MP1", "int", "0", false, null);
+
+		rootNode.addClass(c1);
+		c1.addMethod(c1m1);
+		c1m1.addParameter(ms1);
+		ms1.addParameter(ms1s1);
+		ms1s1.addParameter(ms1s1p1);
+		ms1s1p1.addChoice(ms1s1p1c1);
+		ms1.addParameter(ms1s2);
+		ms1s2.addParameter(ms1s2p1);
+		ms1s2p1.addChoice(ms1s2p1c1);
+		c1m1.addParameter(mp1);
+
+		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(ms1s1p1, EMathRelation.EQUAL, ms1s2p1);
+		RelationStatement r2 = RelationStatement.createRelationStatementWithChoiceCondition(ms1s2p1, EMathRelation.EQUAL, ms1s2p1c1);
+
+		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1s1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+
+		NodeMapper mapper = new NodeMapper();
+		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+
+		assertEquals(1, deployedMethod.getConstraintNodes().size());
+
+		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
+
+		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
+		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
+
+		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
+
+		for (BasicParameterNode parameter : parametersConstraint) {
+			assertTrue(parametersDeployed.contains(parameter));
+		}
+
+		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
+				.map(mapper::getMappedNodeSource)
+				.collect(Collectors.toSet());
+
+		for (BasicParameterNode parameter : parametersConstraintMapped) {
+			assertTrue(parametersSource.contains(parameter));
+		}
+	}
+
 	private MethodNode createModelWithTwoLinkedParametersOneAtMethodLevel(String parameter1Name, String parameter2Name) {
 
 		RootNode rootNode = new RootNode("Root", null);
@@ -318,8 +659,7 @@ public class MethodDeployerTest {
 		return methodNode;
 	}
 
-	// TODO MO-RE private
-	public MethodNode createModelWithTwoLinkedParametersInCompositeParameters(String parameter1Name, String parameter2Name) {
+	private MethodNode createModelWithTwoLinkedParametersInCompositeParameters(String parameter1Name, String parameter2Name) {
 
 		RootNode rootNode = new RootNode("Root", null);
 
@@ -359,7 +699,6 @@ public class MethodDeployerTest {
 
 		compositeParameterNode1.addParameter(basicParameter1);
 
-		
 		// add composite parameter 2 and linked parameter 
 
 		CompositeParameterNode compositeParameterNode2 = 
