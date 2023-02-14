@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -416,32 +417,10 @@ public class MethodDeployerTest {
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(mp1, EMathRelation.EQUAL, gs1p1);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithParameterCondition(gs1p1, EMathRelation.EQUAL, mp1);
 
-		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
-		ms1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+		Constraint m1con1 = new Constraint("Constraint", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1.addConstraint(new ConstraintNode("Constraint", m1con1, null));
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
-
-		assertEquals(1, deployedMethod.getConstraintNodes().size());
-
-		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
-
-		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
-		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
-
-		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
-
-		for (BasicParameterNode parameter : parametersConstraint) {
-			assertTrue(parametersDeployed.contains(parameter));
-		}
-
-		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
-				.map(mapper::getMappedNodeSource)
-				.collect(Collectors.toSet());
-
-		for (BasicParameterNode parameter : parametersConstraintMapped) {
-			assertTrue(parametersSource.contains(parameter));
-		}
+		validateConstraint(c1m1, mp1, gs1p1);
 	}
 
 	@Test
@@ -472,32 +451,10 @@ public class MethodDeployerTest {
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(mp1, EMathRelation.EQUAL, gs1p1);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithParameterCondition(gs1p1, EMathRelation.EQUAL, mp1);
 
-		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
-		ms1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+		Constraint m1con1 = new Constraint("Constraint", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1.addConstraint(new ConstraintNode("Constraint", m1con1, null));
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
-
-		assertEquals(1, deployedMethod.getConstraintNodes().size());
-
-		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
-
-		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
-		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
-
-		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
-
-		for (BasicParameterNode parameter : parametersConstraint) {
-			assertTrue(parametersDeployed.contains(parameter));
-		}
-
-		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
-				.map(mapper::getMappedNodeSource)
-				.collect(Collectors.toSet());
-
-		for (BasicParameterNode parameter : parametersConstraintMapped) {
-			assertTrue(parametersSource.contains(parameter));
-		}
+		validateConstraint(c1m1, mp1, gs1p1);
 	}
 
 	@Test
@@ -526,32 +483,10 @@ public class MethodDeployerTest {
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(ms1p1, EMathRelation.EQUAL, ms2p1);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithChoiceCondition(ms2p1, EMathRelation.EQUAL, ms2p1c1);
 
-		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
-		ms1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+		Constraint m1con1 = new Constraint("Constraint", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1.addConstraint(new ConstraintNode("Constraint", m1con1, null));
 
-		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
-
-		assertEquals(1, deployedMethod.getConstraintNodes().size());
-
-		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
-
-		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
-		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
-
-		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
-
-		for (BasicParameterNode parameter : parametersConstraint) {
-			assertTrue(parametersDeployed.contains(parameter));
-		}
-
-		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
-				.map(mapper::getMappedNodeSource)
-				.collect(Collectors.toSet());
-
-		for (BasicParameterNode parameter : parametersConstraintMapped) {
-			assertTrue(parametersSource.contains(parameter));
-		}
+		validateConstraint(c1m1, ms1p1, ms2p1, ms2p1c1);
 	}
 
 	@Test
@@ -582,31 +517,62 @@ public class MethodDeployerTest {
 		RelationStatement r1 = RelationStatement.createRelationStatementWithParameterCondition(ms1s1p1, EMathRelation.EQUAL, ms1s2p1);
 		RelationStatement r2 = RelationStatement.createRelationStatementWithChoiceCondition(ms1s2p1, EMathRelation.EQUAL, ms1s2p1c1);
 
-		Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, r1, r2,null);
-		ms1s1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
+		Constraint m1con1 = new Constraint("Constraint", ConstraintType.EXTENDED_FILTER, r1, r2,null);
+		ms1s1.addConstraint(new ConstraintNode("Constraint", m1con1, null));
 
+		validateConstraint(c1m1, ms1s1p1, ms1s2p1, ms1s2p1c1);
+	}
+
+	private void validateConstraint(MethodNode method, AbstractNode... references) {
 		NodeMapper mapper = new NodeMapper();
-		MethodNode deployedMethod = MethodDeployer.deploy(c1m1, mapper);
+		MethodNode methodDeployed = MethodDeployer.deploy(method, mapper);
 
-		assertEquals(1, deployedMethod.getConstraintNodes().size());
+		assertEquals(1, methodDeployed.getConstraintNodes().size());
 
-		ConstraintNode constraint = deployedMethod.getConstraintNodes().get(0);
+		ConstraintNode constraint = methodDeployed.getConstraintNodes().get(0);
 
-		List<BasicParameterNode> parametersSource = c1m1.getNestedBasicParameters(true);
-		List<BasicParameterNode> parametersDeployed = deployedMethod.getParametersAsBasic();
+		List<AbstractNode> nodesSource = new ArrayList<>();
 
-		Set<BasicParameterNode> parametersConstraint = constraint.getConstraint().getReferencedParameters();
-
-		for (BasicParameterNode parameter : parametersConstraint) {
-			assertTrue(parametersDeployed.contains(parameter));
+		for (BasicParameterNode parameter : method.getNestedBasicParameters(true)) {
+			nodesSource.add(parameter);
+			nodesSource.addAll(parameter.getAllChoices());
 		}
 
-		Set<BasicParameterNode> parametersConstraintMapped = parametersConstraint.stream()
+		List<AbstractNode> nodesDeployed = new ArrayList<>();
+
+		for (BasicParameterNode parameter : methodDeployed.getParametersAsBasic()) {
+			nodesDeployed.add(parameter);
+			nodesDeployed.addAll(parameter.getAllChoices());
+		}
+
+		Set<AbstractNode> nodesConstraint = new HashSet<>();
+		nodesConstraint.addAll(constraint.getConstraint().getReferencedParameters().stream().map(e -> (AbstractNode) e).collect(Collectors.toSet()));
+		nodesConstraint.addAll(constraint.getConstraint().getReferencedChoices().stream().map(e -> (AbstractNode) e).collect(Collectors.toSet()));
+
+// The deployed constraint must contain only nodes included in the deployed method.
+
+		for (AbstractNode parameter : nodesConstraint) {
+			assertTrue(nodesDeployed.contains(parameter));
+			assertFalse(nodesSource.contains(parameter));
+		}
+
+		Set<AbstractNode> nodesConstraintMapped = nodesConstraint.stream()
 				.map(mapper::getMappedNodeSource)
 				.collect(Collectors.toSet());
 
-		for (BasicParameterNode parameter : parametersConstraintMapped) {
-			assertTrue(parametersSource.contains(parameter));
+// The deployed (and reversed) constraint must contain only nodes included in the source method.
+
+		for (AbstractNode parameter : nodesConstraintMapped) {
+			assertTrue(nodesSource.contains(parameter));
+			assertFalse(nodesDeployed.contains(parameter));
+		}
+
+// The deployed (and reversed) constraint must contain only specific nodes included in the source constraint.
+
+		assertEquals(nodesConstraintMapped.size(), references.length);
+
+		for (AbstractNode reference : references) {
+			assertTrue(nodesConstraintMapped.contains(reference));
 		}
 	}
 
