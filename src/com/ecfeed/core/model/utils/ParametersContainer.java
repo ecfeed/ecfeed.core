@@ -202,6 +202,22 @@ public class ParametersContainer {
 		return parametersData.getBasicParameterNode();
 	}
 
+	public String findName(BasicParameterNode basicParameterNode) {
+		
+		for (String key : fParametersDescriptions.keySet()) {
+			
+			ParametersData parametersData = fParametersDescriptions.get(key);
+			
+			BasicParameterNode currentBasicParameterNode = parametersData.getBasicParameterNode();
+			
+			if (basicParameterNode == currentBasicParameterNode) {
+				return key;
+			}
+		}
+		
+		return null;
+	}
+	
 	public AbstractParameterNode findLinkingParameter(String qualifiedNameOfParameter) {
 
 		ParametersData parametersData = fParametersDescriptions.get(qualifiedNameOfParameter);
