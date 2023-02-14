@@ -116,6 +116,11 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
+	@Override
+	public BasicParameterNode getLeftParameter() {
+		return null;
+	}
+	
 	public String getLeftParameterCompositeName(){
 		return toString();
 	}

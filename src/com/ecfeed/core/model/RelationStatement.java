@@ -316,7 +316,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 
-	public BasicParameterNode getLeftParameter(){
+	@Override
+	public BasicParameterNode getLeftParameter() {
 		return fLeftParameter;
 	}
 

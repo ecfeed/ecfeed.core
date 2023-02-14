@@ -392,6 +392,12 @@ public class StatementArray extends AbstractStatement {
 		return EvaluationResult.TRUE;
 	}
 
+	@Override
+	public BasicParameterNode getLeftParameter() {
+		return null;
+	}
+	
+	@Override
 	public String getLeftParameterCompositeName() {
 		return fOperator.toString();
 	}

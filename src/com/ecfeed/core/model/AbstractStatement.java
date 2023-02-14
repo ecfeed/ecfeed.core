@@ -30,6 +30,7 @@ public abstract class AbstractStatement implements IStatement {
 	}
 
 	public abstract String getLeftParameterCompositeName();
+	public abstract BasicParameterNode getLeftParameter();
 	public abstract boolean mentions(int methodParameterIndex);
 
 	public IModelChangeRegistrator getModelChangeRegistrator() {
