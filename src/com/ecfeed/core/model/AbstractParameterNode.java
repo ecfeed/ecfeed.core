@@ -10,9 +10,6 @@
 
 package com.ecfeed.core.model;
 
-import com.ecfeed.core.utils.SignatureHelper;
-
-import java.util.LinkedList;
 import java.util.List;
 
 public abstract class AbstractParameterNode extends AbstractNode {
@@ -153,18 +150,6 @@ public abstract class AbstractParameterNode extends AbstractNode {
 //		}
 //
 //		return false;
-	}
-
-	public String getQualifiedName() { // TODO MO-RE remove
-		LinkedList<String> segments = new LinkedList<>();
-		IAbstractNode parent = this;
-
-		do {
-			segments.addFirst(parent.getName());
-			parent = parent.getParent();
-		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
-
-		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 	}
 
 	public IParametersParentNode getParametersParent() {

@@ -166,7 +166,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		mapper.addMappings(this, parameter);
 
-		parameter.setNameUnsafe(getQualifiedName());
+		parameter.setNameUnsafe(AbstractParameterNodeHelper.getQualifiedName(this));
 
 		return parameter;
 	}

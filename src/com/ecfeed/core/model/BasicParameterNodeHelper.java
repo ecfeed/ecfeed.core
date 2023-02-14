@@ -147,7 +147,7 @@ public class BasicParameterNodeHelper {
 		List<BasicParameterNode> parameters = parent.getNestedBasicParameters(true);
 
 		for (BasicParameterNode parameter : parameters) {
-			if (parameter.getQualifiedName().equals(parameterName)) {
+			if (AbstractParameterNodeHelper.getQualifiedName(parameter).equals(parameterName)) {
 				return parameter;
 			}
 		}

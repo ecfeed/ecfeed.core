@@ -18,6 +18,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import java.util.Optional;
 
 import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
@@ -43,10 +44,10 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
 			} else {
 		
-				String candidateName = parameter.get().getQualifiedName();
+				String candidateName = AbstractParameterNodeHelper.getQualifiedName(parameter.get());
 				
 				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-					.filter(e -> e.getQualifiedName().equals(candidateName))
+					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(candidateName))
 					.findAny();
 				
 				if (candidate.isPresent()) {
@@ -97,7 +98,7 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				String linkPath = ModelParserHelper.getAttributeValue(element, PARAMETER_LINK_ATTRIBUTE_NAME, errors);
 				
 				method.getNestedBasicParameters(true).stream()
-					.filter(e -> e.getQualifiedName().equals(linkPath))
+					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(linkPath))
 					.findAny()
 					.ifPresent(parameter::setLinkToGlobalParameter);
 				

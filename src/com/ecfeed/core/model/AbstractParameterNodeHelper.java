@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -50,12 +51,43 @@ public abstract class AbstractParameterNodeHelper {
 			AbstractParameterNode globalParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = globalParameterNode.getQualifiedName();
+		String qualifiedName = getQualifiedName(globalParameterNode);
 		qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
 
 		return qualifiedName;
 	}
 
+	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) {
+		
+		LinkedList<String> segments = new LinkedList<>();
+		
+		IAbstractNode parent = abstractParameterNode;
+
+		do {
+			segments.addFirst(parent.getName());
+			parent = parent.getParent();
+		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
+
+		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+	}
+
+	public static String getQualifiedName(
+			AbstractParameterNode abstractParameterNode, 
+			AbstractParameterNode linkingCompositeParameterNode) {
+		
+		if (linkingCompositeParameterNode == null) {
+			return getQualifiedName(abstractParameterNode);
+		}
+		
+		String ownQualifiedName = getQualifiedName(abstractParameterNode);
+		String ownQualifiedNameWithoutPrefix = 
+				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+		
+		String linkingSignature = getQualifiedName(linkingCompositeParameterNode);
+		
+		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
+	}
+	
 	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = globalParameterNode.getType();

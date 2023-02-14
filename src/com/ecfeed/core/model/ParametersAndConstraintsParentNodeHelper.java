@@ -174,7 +174,7 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return methodParameterNode;
 	}
 
-	public static CompositeParameterNode addCompositeParameterToMethod(
+	public static CompositeParameterNode addCompositeParameterToMethod( // TODO MO-RE remove ?
 			MethodNode methodNode, String compositeParameterName) {
 
 		CompositeParameterNode compositeMethodParameterNode2 = 
@@ -185,6 +185,18 @@ public class ParametersAndConstraintsParentNodeHelper {
 		return compositeMethodParameterNode2;
 	}
 
+	public static CompositeParameterNode addCompositeParameter(
+			IParametersParentNode parentNode, 
+			String compositeParameterName) {
+
+		CompositeParameterNode compositeMethodParameterNode2 = 
+				new CompositeParameterNode(compositeParameterName, null);
+
+		parentNode.addParameter(compositeMethodParameterNode2);
+
+		return compositeMethodParameterNode2;
+	}
+	
 	public static BasicParameterNode addLinkedParameterToMethod(
 			IParametersParentNode parametersParentNode, String name, String type, AbstractParameterNode linkToGlobalParameter) {
 

@@ -20,6 +20,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -459,7 +460,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		List<BasicParameterNode> parameters = ((IParametersParentNode) parameterParent).getNestedBasicParameters(true);
 
 		for (BasicParameterNode parameter : parameters) {
-			if (parameter.getQualifiedName().equals(parameterName)) {
+			if (AbstractParameterNodeHelper.getQualifiedName(parameter).equals(parameterName)) {
 				return parameter;
 			}
 		}

@@ -111,7 +111,7 @@ public class ParametersHolder {
 
 		for (AbstractParameterNode parameter : getParameters()) {
 
-			if (parameter.getQualifiedName().equals(parameterNameToFind)) {
+			if (AbstractParameterNodeHelper.getQualifiedName(parameter).equals(parameterNameToFind)) {
 				return parameter;
 			}
 

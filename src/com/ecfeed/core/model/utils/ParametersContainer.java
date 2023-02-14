@@ -16,27 +16,167 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ecfeed.core.model.AbstractParameterNode;
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.IParametersParentNode;
 
 public class ParametersContainer {
 
-	public enum ParameterType { // TODO MO-RE use instead of boolean addExpectedParameterNodes
+	public enum ParameterType {
 
 		STANDARD,
 		EXPECTED
 	};
 
-	Map<String, BasicParameterNode> fParametersDescriptions;
+	Map<String, ParametersData> fParametersDescriptions;
 
 	public void calculateParametersData(
 			IParametersParentNode parametersParentNode,
 			ParameterType parameterType) {
 
 		fParametersDescriptions = new HashMap<>();
+		AbstractParameterNode linkingParameterNode = null;
 
-		addParameterNamesRecursively(parametersParentNode, parameterType, fParametersDescriptions);
+		calculateParametersDataRecursive(
+				parametersParentNode, parameterType, linkingParameterNode, fParametersDescriptions);
 	}
+
+	private void calculateParametersDataRecursive(
+			IParametersParentNode parametersParentNode,
+			ParameterType parameterType, 
+			AbstractParameterNode linkingParameterNode,
+			Map<String, ParametersData> inOutParametersDescriptions) {
+
+		List<AbstractParameterNode> childParameters = parametersParentNode.getParameters();
+
+		for (AbstractParameterNode childParameterNode : childParameters) {
+
+			if (childParameterNode instanceof BasicParameterNode) {
+
+				BasicParameterNode basicParameterNode = (BasicParameterNode) childParameterNode;
+
+				addBasicParameter(
+						basicParameterNode, 
+						parameterType, 
+						linkingParameterNode, 
+						inOutParametersDescriptions);
+
+				continue;
+			}
+
+			if (childParameterNode instanceof CompositeParameterNode) {
+
+				CompositeParameterNode currentCompositeParameterNode = (CompositeParameterNode) childParameterNode; 
+
+				calculateParametersForComposite(
+						currentCompositeParameterNode, 
+						parameterType, 
+						linkingParameterNode,
+						inOutParametersDescriptions);
+
+				continue;
+			}
+		}
+	}
+
+	private void calculateParametersForComposite(
+			CompositeParameterNode currentCompositeParameterNode,
+			ParameterType parameterType, 
+			AbstractParameterNode linkingParameterNode,
+			Map<String, ParametersData> inOutParametersDescriptions) {
+
+		AbstractParameterNode newlinkingParameterNode = 
+				currentCompositeParameterNode.getLinkToGlobalParameter();
+
+		if (newlinkingParameterNode == null) {
+
+			calculateParametersDataRecursive(
+					currentCompositeParameterNode,
+					parameterType, 
+					linkingParameterNode,
+					inOutParametersDescriptions);
+
+			return;
+		}
+
+		calculateParametersDataRecursive(
+				(IParametersParentNode)newlinkingParameterNode,
+				parameterType, 
+				currentCompositeParameterNode,
+				inOutParametersDescriptions);
+	}
+
+	private void addBasicParameter(
+			BasicParameterNode basicParameterNode,
+			ParameterType parameterType,
+			AbstractParameterNode linkingParameterNode, 
+			Map<String, ParametersData> inOutParametersDescriptions) {
+
+		String qualifiedName = 
+				AbstractParameterNodeHelper.getQualifiedName(basicParameterNode, linkingParameterNode);
+
+		BasicParameterNode link = (BasicParameterNode) basicParameterNode.getLinkToGlobalParameter();
+
+		if (link == null) {
+
+			if (shouldAddParameter(basicParameterNode, parameterType)) {
+				ParametersData parametersData = new ParametersData(basicParameterNode, linkingParameterNode);
+				inOutParametersDescriptions.put(qualifiedName, parametersData);
+			}
+			
+			return;
+		}
+
+		if (shouldAddParameter(link, parameterType)) {
+			ParametersData parametersData = new ParametersData(basicParameterNode, basicParameterNode);
+			inOutParametersDescriptions.put(qualifiedName, parametersData);
+		}
+
+		return;
+	}
+
+	//	public void calculateParametersData(
+	//			IParametersParentNode parametersParentNode,
+	//			ParameterType parameterType) {
+	//
+	//		fParametersDescriptions = new HashMap<>();
+	//
+	////		List<BasicParameterNode> parameters = parametersParentNode.getNestedBasicParameters(false);
+	////		
+	////		for (BasicParameterNode basicParameterNode : parameters) {
+	////		
+	////			if (shouldAddParameter(basicParameterNode, parameterType)) {
+	////		
+	////				String qualifiedName = AbstractParameterNodeHelper.getQualifiedName(basicParameterNode);
+	////		
+	////				fParametersDescriptions.put(qualifiedName, basicParameterNode);
+	////			}
+	////		}
+	//		
+	//		List<CompositeParameterNode> parameters = parametersParentNode.getNestedCompositeParameters(false);
+	//		
+	//		for (CompositeParameterNode compositeParameterNode : parameters) {
+	//			
+	//			calculateParametersDataForComposite(compositeParameterNode); 
+	//		}
+	//		
+	//	}
+
+	//	private void calculateParametersDataForComposite(CompositeParameterNode compositeParameterNode) {
+	//
+	//		// TODO Auto-generated method stub
+	//
+	//		CompositeParameterNode link = (CompositeParameterNode) compositeParameterNode.getLinkToGlobalParameter();
+	//
+	//		if (link == null) {
+	//			calculateDataForLocalParameters(compositeParameterNode);
+	//		}
+	//
+	//		TUTAJ calculate data for linked composite
+	//
+	//	}
 
 	public List<String> getParameterNames() {
 
@@ -51,45 +191,36 @@ public class ParametersContainer {
 		return resultNames;
 	}
 
-	public BasicParameterNode findBasicParameter(
-			String qualifiedNameOfParameter, 
-			IParametersParentNode parametersParentNode) {
+	public BasicParameterNode findBasicParameter(String qualifiedNameOfParameter) {
 
-		for (String key : fParametersDescriptions.keySet()) {
+		ParametersData parametersData = fParametersDescriptions.get(qualifiedNameOfParameter);
 
-			if (qualifiedNameOfParameter.equals(key)) {
-				return fParametersDescriptions.get(key);
-			}
+		if (parametersData == null) {
+			return null;
 		}
 
-		return null;
+		return parametersData.getBasicParameterNode();
 	}
 
-	private static void addParameterNamesRecursively(
-			IParametersParentNode parametersParentNode, 
-			ParameterType parameterType,
-			Map<String, BasicParameterNode> inOutParameterCompositeNames) {
+	public AbstractParameterNode findLinkingParameter(String qualifiedNameOfParameter) {
 
-		List<BasicParameterNode> parameters = parametersParentNode.getNestedBasicParameters(true);
+		ParametersData parametersData = fParametersDescriptions.get(qualifiedNameOfParameter);
 
-		for (BasicParameterNode basicParameterNode : parameters) {
-
-			if (shouldAddParameter(basicParameterNode, parameterType)) {
-
-				String qualifiedName = basicParameterNode.getQualifiedName();
-
-				inOutParameterCompositeNames.put(qualifiedName, basicParameterNode);
-			}
+		if (parametersData == null) {
+			return null;
 		}
+
+		return parametersData.getLinkingParameterNode();
+
 	}
 
 	private static boolean shouldAddParameter(
-			BasicParameterNode methodParameterNode,
+			BasicParameterNode basicParameterNode,
 			ParameterType parameterType) {
 
 		if (parameterType == ParameterType.EXPECTED) {
 
-			if (methodParameterNode.isExpected()) {
+			if (basicParameterNode.isExpected()) {
 				return true;
 			}
 
@@ -97,15 +228,35 @@ public class ParametersContainer {
 
 		} else {
 
-			if (methodParameterNode.isExpected()) {
+			if (basicParameterNode.isExpected()) {
 				return false;
 			}
 
-			if (methodParameterNode.getChoices().isEmpty()) {
+			if (basicParameterNode.getChoices().isEmpty()) {
 				return false;
 			}
 
 			return true;
+		}
+	}
+
+	private static class ParametersData {
+
+		private BasicParameterNode fBasicParameterNode;
+		private AbstractParameterNode fLinkingCompositeParameterNode;
+
+		ParametersData(BasicParameterNode basicParameterNode, AbstractParameterNode linkingCompositeParameterNode) {
+
+			fBasicParameterNode = basicParameterNode;
+			fLinkingCompositeParameterNode = linkingCompositeParameterNode;
+		}
+
+		BasicParameterNode getBasicParameterNode() {
+			return fBasicParameterNode;
+		}
+
+		AbstractParameterNode getLinkingParameterNode() {
+			return fLinkingCompositeParameterNode;
 		}
 	}
 
