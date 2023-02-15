@@ -128,7 +128,7 @@ public class ConstraintNodeHelper {
 				return "";
 			}
 
-			if (parent instanceof MethodNode) {
+			if ((parent instanceof MethodNode) || (parent instanceof RootNode)) {
 				return prefix;
 			}
 
