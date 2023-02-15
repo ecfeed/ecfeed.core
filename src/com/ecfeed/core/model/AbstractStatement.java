@@ -30,7 +30,7 @@ public abstract class AbstractStatement implements IStatement {
 	}
 
 	// TODO MO-RE move abstracts to interface IStatement ?
-	public abstract String getLeftParameterCompositeName();
+	public abstract String getLeftOperandName();
 	public abstract BasicParameterNode getLeftParameter();
 	public abstract CompositeParameterNode getLeftParameterLinkingContext();
 	public abstract boolean mentions(int methodParameterIndex);

@@ -398,7 +398,7 @@ public class StatementArray extends AbstractStatement {
 	}
 	
 	@Override
-	public String getLeftParameterCompositeName() {
+	public String getLeftOperandName() {
 		return fOperator.toString();
 	}
 

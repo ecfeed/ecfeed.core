@@ -104,7 +104,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(ExpectedValueStatement statement) throws Exception {
 
-		String parameterName = statement.getLeftParameterCompositeName();
+		String parameterName = statement.getLeftOperandName();
 		ChoiceNode condition = statement.getChoice();
 		Attribute parameterAttribute =
 				new Attribute(fStatementParameterAttributeName, parameterName);
