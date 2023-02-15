@@ -20,6 +20,7 @@ import java.util.TreeSet;
 import com.ecfeed.core.evaluator.SatSolverConstraintEvaluator;
 import com.ecfeed.core.generators.api.IConstraintEvaluator;
 import com.ecfeed.core.model.*;
+import com.ecfeed.core.utils.SimpleProgressMonitor;
 
 public abstract class GeneratorHelper {
 
@@ -32,7 +33,7 @@ public abstract class GeneratorHelper {
 
         Collection<Constraint> constraints = methodNode.getConstraints();
         IConstraintEvaluator<ChoiceNode> constraintEvaluator = new SatSolverConstraintEvaluator(constraints, methodNode);
-        algorithm.initialize(choicesForParameters, constraintEvaluator, null);
+        algorithm.initialize(choicesForParameters, constraintEvaluator, new SimpleProgressMonitor());
 
         List<List<ChoiceNode>> testCases = new ArrayList<List<ChoiceNode>>();
         List<ChoiceNode> testCase = null;

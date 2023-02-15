@@ -17,8 +17,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ecfeed.core.utils.EMathRelation;
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.Test;
 
 import com.ecfeed.core.utils.TestHelper;
