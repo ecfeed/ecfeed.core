@@ -37,7 +37,7 @@ public class ParametersContainer {
 			ParameterType parameterType) {
 
 		fParametersDescriptions = new HashMap<>();
-		AbstractParameterNode linkingParameterNode = null;
+		CompositeParameterNode linkingParameterNode = null;
 
 		calculateParametersDataRecursive(
 				parametersParentNode, parameterType, linkingParameterNode, fParametersDescriptions);
@@ -46,7 +46,7 @@ public class ParametersContainer {
 	private void calculateParametersDataRecursive(
 			IParametersParentNode parametersParentNode,
 			ParameterType parameterType, 
-			AbstractParameterNode linkingParameterNode,
+			CompositeParameterNode linkingParameterNode,
 			Map<String, ParametersData> inOutParametersDescriptions) {
 
 		List<AbstractParameterNode> childParameters = parametersParentNode.getParameters();
@@ -84,7 +84,7 @@ public class ParametersContainer {
 	private void calculateParametersForComposite(
 			CompositeParameterNode currentCompositeParameterNode,
 			ParameterType parameterType, 
-			AbstractParameterNode linkingParameterNode,
+			CompositeParameterNode linkingParameterNode,
 			Map<String, ParametersData> inOutParametersDescriptions) {
 
 		AbstractParameterNode newlinkingParameterNode = 
@@ -111,7 +111,7 @@ public class ParametersContainer {
 	private void addBasicParameter(
 			BasicParameterNode basicParameterNode,
 			ParameterType parameterType,
-			AbstractParameterNode linkingParameterNode, 
+			CompositeParameterNode linkingParameterNode, 
 			Map<String, ParametersData> inOutParametersDescriptions) {
 
 		String qualifiedName = 
@@ -125,12 +125,12 @@ public class ParametersContainer {
 				ParametersData parametersData = new ParametersData(basicParameterNode, linkingParameterNode);
 				inOutParametersDescriptions.put(qualifiedName, parametersData);
 			}
-			
+
 			return;
 		}
 
 		if (shouldAddParameter(link, parameterType)) {
-			ParametersData parametersData = new ParametersData(basicParameterNode, basicParameterNode);
+			ParametersData parametersData = new ParametersData(basicParameterNode, linkingParameterNode);
 			inOutParametersDescriptions.put(qualifiedName, parametersData);
 		}
 
@@ -203,22 +203,22 @@ public class ParametersContainer {
 	}
 
 	public String findName(BasicParameterNode basicParameterNode) {
-		
+
 		for (String key : fParametersDescriptions.keySet()) {
-			
+
 			ParametersData parametersData = fParametersDescriptions.get(key);
-			
+
 			BasicParameterNode currentBasicParameterNode = parametersData.getBasicParameterNode();
-			
+
 			if (basicParameterNode == currentBasicParameterNode) {
 				return key;
 			}
 		}
-		
+
 		return null;
 	}
-	
-	public AbstractParameterNode findLinkingParameter(String qualifiedNameOfParameter) {
+
+	public CompositeParameterNode findLinkingParameter(String qualifiedNameOfParameter) {
 
 		ParametersData parametersData = fParametersDescriptions.get(qualifiedNameOfParameter);
 
@@ -259,9 +259,9 @@ public class ParametersContainer {
 	private static class ParametersData {
 
 		private BasicParameterNode fBasicParameterNode;
-		private AbstractParameterNode fLinkingCompositeParameterNode;
+		private CompositeParameterNode fLinkingCompositeParameterNode;
 
-		ParametersData(BasicParameterNode basicParameterNode, AbstractParameterNode linkingCompositeParameterNode) {
+		ParametersData(BasicParameterNode basicParameterNode, CompositeParameterNode linkingCompositeParameterNode) {
 
 			fBasicParameterNode = basicParameterNode;
 			fLinkingCompositeParameterNode = linkingCompositeParameterNode;
@@ -271,7 +271,7 @@ public class ParametersContainer {
 			return fBasicParameterNode;
 		}
 
-		AbstractParameterNode getLinkingParameterNode() {
+		CompositeParameterNode getLinkingParameterNode() {
 			return fLinkingCompositeParameterNode;
 		}
 	}

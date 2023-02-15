@@ -24,7 +24,7 @@ public class AssignmentStatement extends RelationStatement {
 			BasicParameterNode parameter, 
 			IStatementCondition condition) {
 
-		super(parameter, EMathRelation.ASSIGN, condition);
+		super(parameter, null, EMathRelation.ASSIGN, condition);
 	}
 
 	public static AssignmentStatement createAssignmentWithChoiceCondition(

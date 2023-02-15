@@ -277,10 +277,10 @@ public class ModelParser {
 			return new ModelParserForConstraint().parseExpectedValueStatement(document.getRootElement(), method, outErrorList);
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
-			return new ExpectedValueStatement(null, null, null);
+			return new ExpectedValueStatement(null, null, null, null);
 		} catch (IOException e) {
 			ParserException.report(Messages.IO_EXCEPTION(e));
-			return new ExpectedValueStatement(null, null, null);
+			return new ExpectedValueStatement(null, null, null, null);
 		}
 	}
 

@@ -73,9 +73,9 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String getQualifiedName(
 			AbstractParameterNode abstractParameterNode, 
-			AbstractParameterNode linkingCompositeParameterNode) {
+			CompositeParameterNode linkingContext) {
 		
-		if (linkingCompositeParameterNode == null) {
+		if (linkingContext == null) {
 			return getQualifiedName(abstractParameterNode);
 		}
 		
@@ -83,7 +83,7 @@ public abstract class AbstractParameterNodeHelper {
 		String ownQualifiedNameWithoutPrefix = 
 				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
 		
-		String linkingSignature = getQualifiedName(linkingCompositeParameterNode);
+		String linkingSignature = getQualifiedName(linkingContext);
 		
 		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
@@ -130,7 +130,7 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
-	public static String getCompositeName(
+	public static String getCompositeName( // TODO MO-RE there are methods getQualifiedName in this module
 			AbstractParameterNode abstractParameterNode, 
 			IExtLanguageManager extLanguageManager) {
 

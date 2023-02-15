@@ -29,15 +29,18 @@ import com.ecfeed.core.utils.StringHelper;
 public class RelationStatement extends AbstractStatement implements IRelationalStatement{
 
 	private BasicParameterNode fLeftParameter;
+	private CompositeParameterNode fLeftParameterLinkingContext;
 	private EMathRelation fRelation;
 	private IStatementCondition fRightCondition;
 
 	public static RelationStatement createRelationStatementWithLabelCondition(
-			BasicParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
 			String label) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = 
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
 		IStatementCondition condition = new LabelCondition(label, relationStatement);
 		relationStatement.setCondition(condition);
@@ -46,11 +49,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithChoiceCondition(
-			BasicParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
 			ChoiceNode choiceNode) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = 
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
 		IStatementCondition condition = new ChoiceCondition(choiceNode, relationStatement);
 
@@ -60,11 +65,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithParameterCondition(
-			BasicParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
 			BasicParameterNode rightParameter) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = 
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
 		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement);
 
@@ -74,11 +81,13 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	public static RelationStatement createRelationStatementWithValueCondition(
-			BasicParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
 			EMathRelation relation,
 			String textValue) {
 
-		RelationStatement relationStatement = new RelationStatement(parameter, relation, null);
+		RelationStatement relationStatement = 
+				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
 		IStatementCondition condition = new ValueCondition(textValue, relationStatement);
 		relationStatement.setCondition(condition);
@@ -87,13 +96,15 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	}
 
 	protected RelationStatement(
-			BasicParameterNode parameter,
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkinContext,
 			EMathRelation relation, 
 			IStatementCondition condition) {
 
-		super(parameter.getModelChangeRegistrator());
+		super(leftParameter.getModelChangeRegistrator());
 
-		fLeftParameter = parameter;
+		fLeftParameter = leftParameter;
+		fLeftParameterLinkingContext = leftParameterLinkinContext;
 		fRelation = relation;
 		fRightCondition = condition;
 	}
@@ -174,8 +185,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 
 		String conditionSignature = fRightCondition.createSignature(extLanguageManager);
 
-		BasicParameterNode methodParameterNode = getLeftParameter();
-		String parameterName = AbstractParameterNodeHelper.getCompositeName(methodParameterNode, extLanguageManager);
+		BasicParameterNode leftBasicParameterNode = getLeftParameter();
+		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
+
+		String parameterName = 
+				AbstractParameterNodeHelper.getQualifiedName(leftBasicParameterNode, leftParameterLinkingCondition);
 
 		return parameterName + getRelation() + conditionSignature;
 	}
@@ -189,14 +203,18 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public RelationStatement makeClone() {
 
-		return new RelationStatement(fLeftParameter, fRelation, fRightCondition.makeClone());
+		return 
+				new RelationStatement(
+						fLeftParameter, fLeftParameterLinkingContext, fRelation, fRightCondition.makeClone());
 	}
 
 	@Override
 	public RelationStatement createCopy(NodeMapper mapper) {
+
 		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftParameter);
 
-		RelationStatement statement = new RelationStatement(parameter, fRelation, null);
+		RelationStatement statement = 
+				new RelationStatement(parameter, fLeftParameterLinkingContext, fRelation, null);
 
 		IStatementCondition condition = fRightCondition.createCopy(statement, mapper);
 		statement.setCondition(condition);
@@ -319,6 +337,11 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 	@Override
 	public BasicParameterNode getLeftParameter() {
 		return fLeftParameter;
+	}
+
+	@Override
+	public CompositeParameterNode getLeftParameterLinkingContext() {
+		return fLeftParameterLinkingContext;
 	}
 
 	public void setCondition(IStatementCondition condition) {

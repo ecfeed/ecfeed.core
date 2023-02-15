@@ -24,11 +24,13 @@ import com.ecfeed.core.utils.StringHelper;
 public class ExpectedValueStatement extends AbstractStatement implements IRelationalStatement {
 
 	private BasicParameterNode fLeftParameterNode;
+	private CompositeParameterNode fLeftParameterLinkingContext;
 	private ChoiceNode fChoiceNode;
 	private IPrimitiveTypePredicate fPredicate; // TODO NE-TE remove ?
 
 	public ExpectedValueStatement(
 			BasicParameterNode basicParameterNode,
+			CompositeParameterNode leftParameterLinkingContext,
 			ChoiceNode choiceNode, 
 			IPrimitiveTypePredicate predicate) {
 
@@ -43,7 +45,12 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 	public BasicParameterNode getLeftParameter() {
 		return fLeftParameterNode;
 	}
-	
+
+	@Override
+	public CompositeParameterNode getLeftParameterLinkingContext() {
+		return fLeftParameterLinkingContext;
+	}
+
 	@Override
 	public String getLeftParameterCompositeName() {
 		return fLeftParameterNode.getName();
@@ -168,15 +175,16 @@ public class ExpectedValueStatement extends AbstractStatement implements IRelati
 
 	@Override
 	public ExpectedValueStatement makeClone(){
-		return new ExpectedValueStatement(fLeftParameterNode, fChoiceNode.makeClone(), fPredicate);
+		return new ExpectedValueStatement(
+				fLeftParameterNode, fLeftParameterLinkingContext, fChoiceNode.makeClone(), fPredicate);
 	}
 
 	@Override
 	public ExpectedValueStatement createCopy(NodeMapper mapper) {
-		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftParameterNode);
+		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fLeftParameterNode); 
 		ChoiceNode choice = mapper.getMappedNodeDeployment(fChoiceNode);
 
-		return new ExpectedValueStatement(parameter, choice, fPredicate);
+		return new ExpectedValueStatement(parameter, fLeftParameterLinkingContext, choice, fPredicate);
 	}
 
 	//	@Override
