@@ -73,7 +73,10 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		RelationStatement relationStatement = 
 				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
 
-		IStatementCondition condition = new ParameterCondition(rightParameter, relationStatement);
+		CompositeParameterNode rightParameterLinkingContext = leftParameterLinkingContext;
+		
+		IStatementCondition condition = 
+				new ParameterCondition(rightParameter, rightParameterLinkingContext, relationStatement);
 
 		relationStatement.setCondition(condition);
 

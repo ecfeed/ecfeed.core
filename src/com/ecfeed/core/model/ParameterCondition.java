@@ -27,13 +27,16 @@ import com.ecfeed.core.utils.RelationMatcher;
 public class ParameterCondition implements IStatementCondition {
 
 	private BasicParameterNode fRightParameterNode;
+	private CompositeParameterNode fRightParameterLinkingContext;
 	private RelationStatement fParentRelationStatement;
 
 	public ParameterCondition(
 			BasicParameterNode rightParameter,
+			CompositeParameterNode rightParameterLinkingContext,
 			RelationStatement parentRelationStatement) {
 
 		fRightParameterNode = rightParameter;
+		fRightParameterLinkingContext = rightParameterLinkingContext;
 		fParentRelationStatement = parentRelationStatement;
 	}
 
@@ -163,14 +166,14 @@ public class ParameterCondition implements IStatementCondition {
 	public ParameterCondition makeClone() {
 
 		// parameters are not cloned
-		return new ParameterCondition(fRightParameterNode, fParentRelationStatement);
+		return new ParameterCondition(fRightParameterNode, fRightParameterLinkingContext, fParentRelationStatement);
 	}
 
 	@Override
 	public ParameterCondition createCopy(RelationStatement statement, NodeMapper mapper) {
 		BasicParameterNode parameter = mapper.getMappedNodeDeployment(fRightParameterNode);
 
-		return new ParameterCondition(parameter, statement);
+		return new ParameterCondition(parameter, fRightParameterLinkingContext, statement);
 	}
 
 	//	@Override
@@ -233,9 +236,11 @@ public class ParameterCondition implements IStatementCondition {
 	@Override
 	public String createSignature(IExtLanguageManager extLanguageManager) {
 
-		String name = AbstractParameterNodeHelper.getCompositeName(fRightParameterNode);
+		String name = 
+				AbstractParameterNodeHelper.getQualifiedName(
+						fRightParameterNode, fRightParameterLinkingContext);
+		
 		return StatementConditionHelper.createParameterDescription(name);
-
 	}
 
 	@Override

@@ -328,7 +328,8 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		}
 
 		if (relation == EMathRelation.ASSIGN) {
-			return AssignmentStatement.createAssignmentWithParameterCondition(leftParameterNode, rightParameterNode);
+			return AssignmentStatement.createAssignmentWithParameterCondition(
+					leftParameterNode, rightParameterNode, null);  // TODO MO-RE linking context
 		}
 
 		return RelationStatement.createRelationStatementWithParameterCondition(
