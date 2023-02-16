@@ -623,7 +623,7 @@ public class GenericAddChildrenOperationTest {
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						basicParameterNode, EMathRelation.EQUAL, value);
+						basicParameterNode, null, EMathRelation.EQUAL, value);  // TODO MO-RE leftParameterLinkingContext
 
 		Constraint constraint = new Constraint(
 				"constraint", 

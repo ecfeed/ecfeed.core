@@ -1426,7 +1426,7 @@ public class GenericRemoveNodesOperationTest {
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithValueCondition(
-						basicParameterNode, EMathRelation.EQUAL, value);
+						basicParameterNode, null, EMathRelation.EQUAL, value); // TODO MO-RE leftParameterLinkingContext
 
 		Constraint constraint = new Constraint(
 				"constraint", 
@@ -1446,7 +1446,7 @@ public class GenericRemoveNodesOperationTest {
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						basicParameterNode, EMathRelation.EQUAL, choiceNode);
+						basicParameterNode, null, EMathRelation.EQUAL, choiceNode);
 
 		Constraint constraint = new Constraint(
 				"constraint", 

@@ -45,7 +45,7 @@ public class ChoiceConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						leftMethodParameterNode, statementRelation, rightChoiceNode);
+						leftMethodParameterNode, null, statementRelation, rightChoiceNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
 		leftChoiceNode.setParent(leftMethodParameterNode);
@@ -75,7 +75,7 @@ public class ChoiceConditionTest {
 		rightChoiceNode.setRandomizedValue(true);
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						leftMethodParameterNode, statementRelation, rightChoiceNode);
+						leftMethodParameterNode, null, statementRelation, rightChoiceNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
 		leftChoiceNode.setRandomizedValue(true);
@@ -107,7 +107,7 @@ public class ChoiceConditionTest {
 		rightChoiceNode.setRandomizedValue(true);
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						leftMethodParameterNode, statementRelation, rightChoiceNode);
+						leftMethodParameterNode, null, statementRelation, rightChoiceNode);
 
 		ChoiceNode leftChoiceNode = new ChoiceNode("Label" + leftChoiceValue, leftChoiceValue, null);
 		leftChoiceNode.setRandomizedValue(true);
@@ -559,7 +559,7 @@ public class ChoiceConditionTest {
 
 		RelationStatement statement = 
 				RelationStatement.createRelationStatementWithParameterCondition(
-						leftParam, EMathRelation.EQUAL, rightParam);
+						leftParam, null, EMathRelation.EQUAL, rightParam);
 
 		RelationStatement copy = statement.makeClone();
 

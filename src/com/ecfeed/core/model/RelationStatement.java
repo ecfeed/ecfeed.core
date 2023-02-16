@@ -194,7 +194,8 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 		CompositeParameterNode leftParameterLinkingCondition = getLeftParameterLinkingContext();
 
 		String parameterName = 
-				AbstractParameterNodeHelper.getQualifiedName(leftBasicParameterNode, leftParameterLinkingCondition);
+				AbstractParameterNodeHelper.getQualifiedName(
+						leftBasicParameterNode, leftParameterLinkingCondition, extLanguageManager);
 
 		return parameterName + getRelation() + conditionSignature;
 	}

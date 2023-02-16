@@ -256,7 +256,7 @@ public class RandomModelGenerator {
 			List<String> choiceNames = new ArrayList<String>(parameter.getAllChoiceNames());
 			String luckyChoiceName = choiceNames.get(rand.nextInt(choiceNames.size()));
 			ChoiceNode condition = parameter.getChoice(luckyChoiceName);
-			return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, condition);
+			return RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, relation, condition); // TODO MO-RE leftParameterLinkingContext
 		}
 		else{
 			if(parameter.getLeafLabels().size() == 0){
@@ -266,7 +266,7 @@ public class RandomModelGenerator {
 			Set<String>labels = parameter.getLeafLabels();
 
 			String label = labels.toArray(new String[]{})[rand.nextInt(labels.size())];
-			return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
+			return RelationStatement.createRelationStatementWithLabelCondition(parameter, null, relation, label);  // TODO MO-RE leftParameterLinkingContext
 		}
 	}
 
@@ -299,7 +299,7 @@ public class RandomModelGenerator {
 		String name = generateString(RegexHelper.REGEX_PARTITION_NODE_NAME);
 		ChoiceNode choice = new ChoiceNode(name, value, null);
 		parameter.addChoice(choice);
-		return new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
+		return new ExpectedValueStatement(parameter, null, choice, new JavaPrimitiveTypePredicate());  // TODO MO-RE leftParameterLinkingContext
 	}
 
 	public StatementArray generateStatementArray(MethodNode method, int depth) {

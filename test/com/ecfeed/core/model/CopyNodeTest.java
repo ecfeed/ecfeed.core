@@ -138,9 +138,9 @@ public class CopyNodeTest{
 
 		StatementArray precondition = new StatementArray(StatementArrayOperator.OR, null);
 		precondition.addStatement(new StaticStatement(true, null));
-		precondition.addStatement(RelationStatement.createRelationStatementWithChoiceCondition(par1, EMathRelation.EQUAL, choice1));
-		precondition.addStatement(RelationStatement.createRelationStatementWithLabelCondition(par1, EMathRelation.NOT_EQUAL, "label"));
-		ExpectedValueStatement postcondition = new ExpectedValueStatement(par2, expectedChoice, new JavaPrimitiveTypePredicate());
+		precondition.addStatement(RelationStatement.createRelationStatementWithChoiceCondition(par1, null, EMathRelation.EQUAL, choice1));
+		precondition.addStatement(RelationStatement.createRelationStatementWithLabelCondition(par1, null, EMathRelation.NOT_EQUAL, "label"));
+		ExpectedValueStatement postcondition = new ExpectedValueStatement(par2, null, expectedChoice, new JavaPrimitiveTypePredicate());
 
 		ConstraintNode constraint = new ConstraintNode("constraint", new Constraint("constraint", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null), null);
 		method.addConstraint(constraint);
@@ -225,9 +225,12 @@ public class CopyNodeTest{
 		choice.addLabel("label");
 
 		RelationStatement statement1 = 
-				RelationStatement.createRelationStatementWithChoiceCondition(parameter, EMathRelation.EQUAL, choice);
+				RelationStatement.createRelationStatementWithChoiceCondition(
+						parameter, null, EMathRelation.EQUAL, choice);
+		
 		RelationStatement statement2 = 
-				RelationStatement.createRelationStatementWithLabelCondition(parameter, EMathRelation.EQUAL, "label");
+				RelationStatement.createRelationStatementWithLabelCondition(
+						parameter, null, EMathRelation.EQUAL, "label");
 
 		RelationStatement copy1 = statement1.makeClone();
 		RelationStatement copy2 = statement2.makeClone();
@@ -242,7 +245,7 @@ public class CopyNodeTest{
 		ChoiceNode choice = new ChoiceNode("expected", "876", null);
 		choice.setParent(parameter);
 
-		ExpectedValueStatement statement = new ExpectedValueStatement(parameter, choice, new JavaPrimitiveTypePredicate());
+		ExpectedValueStatement statement = new ExpectedValueStatement(parameter, null, choice, new JavaPrimitiveTypePredicate());
 		ExpectedValueStatement copy = statement.makeClone();
 		assertTrue(statement.isEqualTo(copy));
 	}

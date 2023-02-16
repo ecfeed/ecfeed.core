@@ -51,7 +51,7 @@ public class ExpectedValueStatementTest{
 	public void testAdapt(){
 		ChoiceNode choice1 = new ChoiceNode("choice1", "", null);
 		ChoiceNode statementChoice = new ChoiceNode("exp_choice", "statement expected value", null);
-		ExpectedValueStatement testStatement = new ExpectedValueStatement(fExpParameter1, statementChoice, new JavaPrimitiveTypePredicate());
+		ExpectedValueStatement testStatement = new ExpectedValueStatement(fExpParameter1, null, statementChoice, new JavaPrimitiveTypePredicate());
 
 		List<ChoiceNode> testData = new ArrayList<>();
 		testData.add(choice1);
@@ -64,22 +64,22 @@ public class ExpectedValueStatementTest{
 	}
 
 	@Test
-	public void compareTest(){
+	public void compareTest() { 
 		IPrimitiveTypePredicate predicate = new JavaPrimitiveTypePredicate();
 
-		BasicParameterNode c1 = new BasicParameterNode("c", "type", "0", true, null);
-		BasicParameterNode c2 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode par1 = new BasicParameterNode("c", "type", "0", true, null);
+		BasicParameterNode par2 = new BasicParameterNode("c", "type", "0", true, null);
 
-		ChoiceNode p1 = new ChoiceNode("name", "value", null);
-		ChoiceNode p2 = new ChoiceNode("name", "value", null);
+		ChoiceNode c1 = new ChoiceNode("name", "value", null);
+		ChoiceNode c2 = new ChoiceNode("name", "value", null);
 
-		ExpectedValueStatement s1 = new ExpectedValueStatement(c1, p1, predicate);
-		ExpectedValueStatement s2 = new ExpectedValueStatement(c2, p2, predicate);
+		ExpectedValueStatement s1 = new ExpectedValueStatement(par1, null, c1, predicate); // TODO MO-RE compare with composite parameters
+		ExpectedValueStatement s2 = new ExpectedValueStatement(par2, null, c2, predicate);
 
 		assertTrue(s1.isEqualTo(s2));
-		c1.setName("c1");
+		par1.setName("c1");
 		assertFalse(s1.isEqualTo(s2));
-		c2.setName("c1");
+		par2.setName("c1");
 		assertTrue(s1.isEqualTo(s2));
 
 		s1.getChoice().setValueString("v1");

@@ -329,16 +329,16 @@ public class ParametersContainerTest {
 		BasicParameterNode resultMethodParameter1 = parametersContainer.findBasicParameter("MP1");
 		assertEquals(methodParameterNode1, resultMethodParameter1);
 
-		AbstractParameterNode resultLinkingParameter1 = parametersContainer.findLinkingParameter("MP1");
-		assertEquals(resultLinkingParameter1, methodParameterNode1);
+		CompositeParameterNode resultLinkingParameter1 = parametersContainer.findLinkingParameter("MP1");
+		assertNull(resultLinkingParameter1);
 
 		// check parameter 2
 
 		BasicParameterNode resultMethodParameter2 = parametersContainer.findBasicParameter("MP2");
 		assertEquals(methodParameterNode2, resultMethodParameter2);
 
-		AbstractParameterNode resultLinkingParameter2 = parametersContainer.findLinkingParameter("MP2");
-		assertEquals(resultLinkingParameter2, methodParameterNode2);
+		CompositeParameterNode resultLinkingParameter2 = parametersContainer.findLinkingParameter("MP2");
+		assertNull(resultLinkingParameter2);
 	}
 
 	@Test

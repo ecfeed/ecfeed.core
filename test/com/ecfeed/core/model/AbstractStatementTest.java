@@ -31,10 +31,11 @@ public class AbstractStatementTest {
 		}
 
 		@Override
-		public String getLeftParameterCompositeName() {
+		public CompositeParameterNode getLeftParameterLinkingContext() {
+			// TODO Auto-generated method stub
 			return null;
 		}
-
+		
 		@Override
 		public AbstractStatement makeClone(){
 			return null;
@@ -105,6 +106,18 @@ public class AbstractStatementTest {
 
 		@Override
 		public List<ChoiceNode> getChoices(BasicParameterNode methodParameterNode) {
+			return null;
+		}
+
+		@Override
+		public String getLeftOperandName() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public BasicParameterNode getLeftParameter() {
+			// TODO Auto-generated method stub
 			return null;
 		}
 

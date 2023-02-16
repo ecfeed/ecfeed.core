@@ -478,7 +478,7 @@ public class XmlUpgradeTest {
 		// constraint
 
 		AbstractStatement precondition =
-				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, EMathRelation.EQUAL, choiceNode11);
+				RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode1, null, EMathRelation.EQUAL, choiceNode11);  // TODO MO-RE leftParameterLinkingContext
 
 		AbstractStatement postcondition =
 				AssignmentStatement.createAssignmentWithValueCondition(methodParameterNode2, "5");

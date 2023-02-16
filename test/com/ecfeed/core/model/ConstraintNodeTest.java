@@ -73,7 +73,7 @@ public class ConstraintNodeTest {
 
 			RelationStatement precondition = 
 					RelationStatement.createRelationStatementWithChoiceCondition(
-							methodParameterNode, EMathRelation.EQUAL, choiceNode);
+							methodParameterNode, null, EMathRelation.EQUAL, choiceNode);
 
 			StaticStatement postcondition = new StaticStatement(true, null);	
 

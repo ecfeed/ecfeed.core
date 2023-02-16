@@ -77,7 +77,8 @@ public class AssignmentStatementTest {
 		// assignment with parameter condition
 
 		AbstractStatement assignmentWithParameterCondition =
-				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+				AssignmentStatement.createAssignmentWithParameterCondition(
+						methodParameterNode2, methodParameterNode1, null);
 
 		testCaseChoiceNode1 = new ChoiceNode("result1", "33", null);
 		testCaseChoiceNode2 = new ChoiceNode("result2", "0", null);
@@ -209,11 +210,11 @@ public class AssignmentStatementTest {
         statementArray  = new StatementArray(StatementArrayOperator.ASSIGN, null);
 
 		AbstractStatement assignmentWithParameterCondition =
-				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1, null);
 		statementArray.addStatement(assignmentWithParameterCondition);
 
         AbstractStatement assignmentWithParameterCondition2 =
-                AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode3, methodParameterNode1);
+                AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode3, methodParameterNode1, null);
         statementArray.addStatement(assignmentWithParameterCondition2);
 
 		testCaseChoiceNode1 = new ChoiceNode("result1", "33", null);

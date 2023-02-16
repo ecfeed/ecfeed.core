@@ -48,19 +48,22 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String getQualifiedName(
-			AbstractParameterNode globalParameterNode,
+			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = getQualifiedName(globalParameterNode);
-		qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+		String qualifiedName = getQualifiedName(abstractParameterNode);
+		
+		if (extLanguageManager != null) {
+			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+		}
 
 		return qualifiedName;
 	}
 
 	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) {
-		
+
 		LinkedList<String> segments = new LinkedList<>();
-		
+
 		IAbstractNode parent = abstractParameterNode;
 
 		do {
@@ -73,21 +76,31 @@ public abstract class AbstractParameterNodeHelper {
 
 	public static String getQualifiedName(
 			AbstractParameterNode abstractParameterNode, 
-			CompositeParameterNode linkingContext) {
-		
+			CompositeParameterNode linkingContext,
+			IExtLanguageManager extLanguageManager) {
+
 		if (linkingContext == null) {
-			return getQualifiedName(abstractParameterNode);
+			return getQualifiedName(abstractParameterNode, extLanguageManager);
 		}
-		
-		String ownQualifiedName = getQualifiedName(abstractParameterNode);
+
+		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
+
 		String ownQualifiedNameWithoutPrefix = 
 				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
-		
-		String linkingSignature = getQualifiedName(linkingContext);
-		
+
+		String linkingSignature = getQualifiedName(linkingContext, extLanguageManager);
+
 		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
-	
+
+	public static String getQualifiedName(
+			AbstractParameterNode abstractParameterNode, 
+			CompositeParameterNode linkingContext) {
+
+		String qualifiedName = getQualifiedName(abstractParameterNode, linkingContext, null);
+		return qualifiedName;
+	}
+
 	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = globalParameterNode.getType();
