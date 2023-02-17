@@ -166,7 +166,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		mapper.addMappings(this, parameter);
 
-		parameter.setNameUnsafe(getQualifiedName());
+		parameter.setNameUnsafe(AbstractParameterNodeHelper.getQualifiedName(this));
 
 		return parameter;
 	}
@@ -191,7 +191,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		if (!this.isLinked()) {
 			ChoiceNodeHelper.cloneChoiceNodesRecursively(this, copyOfBasicParameterNode, mapper);
 		}
-			
+
 		return copyOfBasicParameterNode;
 	}
 
@@ -263,19 +263,23 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		boolean linked = isLinked();
 
-		if (linked && getLinkToGlobalParameter() != null) {
-
-			if (getLinkToGlobalParameter() instanceof BasicParameterNode) {
-
-				BasicParameterNode link = (BasicParameterNode) getLinkToGlobalParameter();
-
-				return link.getChoices();
-			}
-
-			return null;
+		if (!linked) {
+			return fChoicesListHolder.getChoices();
 		}
 
-		return fChoicesListHolder.getChoices();
+		AbstractParameterNode abstractLinkToGlobalParameter = getLinkToGlobalParameter();
+
+		if (abstractLinkToGlobalParameter == null) {
+			ExceptionHelper.reportRuntimeException("Invalid configuration of linked parameter.");
+		}
+
+		if (!(abstractLinkToGlobalParameter instanceof BasicParameterNode)) {
+			ExceptionHelper.reportRuntimeException("Invalid link type.");
+		}
+
+		BasicParameterNode basicParameterNodeLink = (BasicParameterNode) abstractLinkToGlobalParameter;
+
+		return basicParameterNodeLink.getChoices();
 	}
 
 	public List<ChoiceNode> getChoicesWithCopies() {
@@ -669,14 +673,14 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_WEB_ELEMENT_TYPE);
 		setPropertyDefaultValue(NodePropertyDefs.PropertyId.PROPERTY_OPTIONAL);
 	}
-	
+
 	@Override
 	public BasicParameterNode getLinkDestination() {
-		
+
 		if (isLinked() && (getLinkToGlobalParameter() != null)) {
 			return ((BasicParameterNode) getLinkToGlobalParameter()).getLinkDestination();
 		}
-		
+
 		return this;
 	}
 

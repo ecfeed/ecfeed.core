@@ -58,8 +58,8 @@ public class SatSolverMethodDeployerNestingTest {
     static ChoiceNode m1p621c2 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C2", "2");
     static ChoiceNode m1p621c3 = MethodParameterNodeHelper.addChoiceToMethodParameter(m1p621, "M1P621C3", "3");
 
-    static RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, EMathRelation.EQUAL, m1p1c1);
-    static RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p611, EMathRelation.LESS_THAN, m1p611c3);
+    static RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, null, EMathRelation.EQUAL, m1p1c1);
+    static RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p611, null, EMathRelation.LESS_THAN, m1p611c3);
 
     static Constraint m1c1 = new Constraint("M1C1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
 

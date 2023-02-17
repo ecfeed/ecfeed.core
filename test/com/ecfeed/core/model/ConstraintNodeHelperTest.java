@@ -49,7 +49,7 @@ public class ConstraintNodeHelperTest {
 
 		AbstractStatement precondition1 =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter1, EMathRelation.EQUAL, "A");
+						parameter1, null, EMathRelation.EQUAL, "A");  // TODO MO-RE leftParameterLinkingContext
 
 		AbstractStatement precondition = precondition1;
 
@@ -57,7 +57,7 @@ public class ConstraintNodeHelperTest {
 
 		AbstractStatement postcondition1 =
 				RelationStatement.createRelationStatementWithValueCondition(
-						parameter2, EMathRelation.EQUAL, "C");
+						parameter2, null, EMathRelation.EQUAL, "C");  // TODO MO-RE leftParameterLinkingContext
 
 		AbstractStatement postcondition = postcondition1;
 
@@ -65,11 +65,11 @@ public class ConstraintNodeHelperTest {
 
 		ConstraintNode c1 = new ConstraintNode("cn", constraint, null);
 
-		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForJava);
-		assertEquals("co_1 : par_1=A => par_2=C", signature);
-
-		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
+		String signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForSimple);
 		assertEquals("co_1 : par 1=A => par 2=C", signature);
+
+		signature = ConstraintNodeHelper.createSignature(c1, extLanguageManagerForJava);
+		assertEquals("co_1 : par_1=A => par_2=C", signature);
 	}
 
 	@Test
@@ -85,13 +85,13 @@ public class ConstraintNodeHelperTest {
 
 		AbstractStatement precondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter1, EMathRelation.EQUAL, choice1);
+						parameter1, null, EMathRelation.EQUAL, choice1);
 
 		BasicParameterNode parameter2 = new BasicParameterNode("par_2", "int", "0", false, null);
 
 		AbstractStatement postcondition =
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						parameter2, EMathRelation.EQUAL, choice2);
+						parameter2, null, EMathRelation.EQUAL, choice2);
 
 		Constraint constraint = new Constraint("co", ConstraintType.EXTENDED_FILTER, precondition, postcondition, null);
 
@@ -106,18 +106,18 @@ public class ConstraintNodeHelperTest {
 
 	@Test
 	public void createSignatureForCompositeParameterTest(){
-		
+
 		// add method and composite parameter
-		
+
 		MethodNode methodNode = new MethodNode("method");
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode("Composite", null);
 		methodNode.addParameter(compositeParameterNode);
-		
+
 		// create and add constraint
-		
+
 		Constraint constraint = new Constraint(
 				"c", ConstraintType.EXTENDED_FILTER, new StaticStatement(true, null), new StaticStatement(true, null), null);
-		
+
 		ConstraintNode c1 =	new ConstraintNode("c", constraint, null);
 
 		c1.setName("c_1");
@@ -125,11 +125,11 @@ public class ConstraintNodeHelperTest {
 		c1.getConstraint().setPrecondition(new StaticStatement(false, null));
 
 		c1.getConstraint().setPostcondition(new StaticStatement(false, null));
-		
+
 		compositeParameterNode.addConstraint(c1);
-		
+
 		// check signatures
-		
+
 		String signature = createSignature(c1,  new ExtLanguageManagerForJava());
 		assertEquals("Composite:c_1 : false => false", signature);
 

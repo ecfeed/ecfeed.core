@@ -55,11 +55,11 @@ public class TestHelper {
 
 		RelationStatement relationStatement1 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						methodParameterNode, EMathRelation.EQUAL, choiceNode1);
+						methodParameterNode, null, EMathRelation.EQUAL, choiceNode1);
 
 		RelationStatement relationStatement2 = 
 				RelationStatement.createRelationStatementWithChoiceCondition(
-						methodParameterNode, EMathRelation.LESS_THAN, choiceNode2);
+						methodParameterNode, null, EMathRelation.LESS_THAN, choiceNode2);
 
 		Constraint constraint = new Constraint(
 				constraintName, 

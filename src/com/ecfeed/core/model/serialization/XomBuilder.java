@@ -317,7 +317,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		if (node.getLinkToGlobalParameter() != null) {
 			encodeAndAddAttribute(
 					targetBasicParameterElement,
-					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()),
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, AbstractParameterNodeHelper.getQualifiedName(node.getLinkToGlobalParameter())),
 					fWhiteCharConverter);
 		}
 
@@ -357,7 +357,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		if (node.getLinkToGlobalParameter() != null) {
 			encodeAndAddAttribute(
 					targetBasicParameterElement,
-					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()), 
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, AbstractParameterNodeHelper.getQualifiedName(node.getLinkToGlobalParameter())), 
 					fWhiteCharConverter);
 		}
 
@@ -383,7 +383,7 @@ public abstract class XomBuilder implements IModelVisitor {
 		if (node.getLinkToGlobalParameter() != null) {
 			encodeAndAddAttribute(
 					targetCompositeParameterElement,
-					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, node.getLinkToGlobalParameter().getQualifiedName()),
+					new Attribute(PARAMETER_LINK_ATTRIBUTE_NAME, AbstractParameterNodeHelper.getQualifiedName(node.getLinkToGlobalParameter())),
 					fWhiteCharConverter);
 		}
 

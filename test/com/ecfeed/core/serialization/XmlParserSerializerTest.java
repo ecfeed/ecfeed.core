@@ -134,14 +134,14 @@ public class XmlParserSerializerTest {
 					"constraint",
 					ConstraintType.EXTENDED_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, null, EMathRelation.EQUAL, choice1), // TODO MO-RE leftParameterLinkingContext
 					null);
 
 			Constraint constraintBasicFilter = new Constraint(
 					"constraint",
 					ConstraintType.BASIC_FILTER,
 					new StaticStatement(true, null),
-					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, EMathRelation.EQUAL, choice1),
+					RelationStatement.createRelationStatementWithChoiceCondition(choicesParentParameter, null, EMathRelation.EQUAL, choice1),  // TODO MO-RE leftParameterLinkingContext
 					null);
 
 			Constraint constraintAssignment = new Constraint(
@@ -156,7 +156,7 @@ public class XmlParserSerializerTest {
 							"constraint",
 							ConstraintType.EXTENDED_FILTER,
 							new StaticStatement(true, null),
-							RelationStatement.createRelationStatementWithLabelCondition(choicesParentParameter, EMathRelation.EQUAL, "label"),
+							RelationStatement.createRelationStatementWithLabelCondition(choicesParentParameter, null, EMathRelation.EQUAL, "label"), // TODO MO-RE leftParameterLinkingContext
 							null);
 
 			Constraint expectedConstraint =
@@ -166,6 +166,7 @@ public class XmlParserSerializerTest {
 							new StaticStatement(true, null),
 							new ExpectedValueStatement(
 									expectedParameter,
+									null, // TODO MO-RE
 									new ChoiceNode("expected", "n", null),
 									new JavaPrimitiveTypePredicate()),
 							null
@@ -266,7 +267,9 @@ public class XmlParserSerializerTest {
 		// assignment with parameter condition
 
 		AbstractStatement assignmentWithParameterCondition =
-				AssignmentStatement.createAssignmentWithParameterCondition(methodParameterNode2, methodParameterNode1);
+				AssignmentStatement.createAssignmentWithParameterCondition(
+						methodParameterNode2, methodParameterNode1, null);
+		
 		statementArray.addStatement(assignmentWithParameterCondition);
 
 		// assignment with choice condition
@@ -571,7 +574,7 @@ public class XmlParserSerializerTest {
 			parameter.getChoices().get(0).addLabel(label);
 		}
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createRelationStatementWithLabelCondition(parameter, relation, label);
+		return RelationStatement.createRelationStatementWithLabelCondition(parameter, null, relation, label); // TODO MO-RE leftParameterLinkingContext
 	}
 
 	private AbstractStatement createChoiceStatement(List<BasicParameterNode> parameters) {
@@ -580,7 +583,7 @@ public class XmlParserSerializerTest {
 				new ArrayList<ChoiceNode>(parameter.getLeafChoices()).get(rand.nextInt(parameter.getChoices().size()));
 
 		EMathRelation relation = pickRelation();
-		return RelationStatement.createRelationStatementWithChoiceCondition(parameter, relation, choiceNode);
+		return RelationStatement.createRelationStatementWithChoiceCondition(parameter, null, relation, choiceNode);  // TODO MO-RE leftParameterLinkingContext
 	}
 
 	private EMathRelation pickRelation() {
@@ -596,7 +599,8 @@ public class XmlParserSerializerTest {
 	private AbstractStatement createExpectedStatement(List<BasicParameterNode> parameters) {
 		if(parameters.size() == 0) return null;
 		BasicParameterNode parameter = parameters.get(rand.nextInt(parameters.size()));
-		return new ExpectedValueStatement(parameter, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
+		return new ExpectedValueStatement(
+				parameter, null, new ChoiceNode("default", createRandomValue(parameter.getType()), null), new JavaPrimitiveTypePredicate());
 	}
 
 	private List<BasicParameterNode> getChoicesParentParameters(List<? extends BasicParameterNode> parameters) {

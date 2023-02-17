@@ -29,7 +29,10 @@ public abstract class AbstractStatement implements IStatement {
 		fModelChangeRegistrator = modelChangeRegistrator;
 	}
 
-	public abstract String getLeftParameterCompositeName();
+	// TODO MO-RE move abstracts to interface IStatement ?
+	public abstract String getLeftOperandName();
+	public abstract BasicParameterNode getLeftParameter();
+	public abstract CompositeParameterNode getLeftParameterLinkingContext();
 	public abstract boolean mentions(int methodParameterIndex);
 
 	public IModelChangeRegistrator getModelChangeRegistrator() {

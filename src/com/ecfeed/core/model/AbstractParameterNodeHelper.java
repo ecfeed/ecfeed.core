@@ -11,6 +11,7 @@
 package com.ecfeed.core.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,12 +48,56 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String getQualifiedName(
-			AbstractParameterNode globalParameterNode,
+			AbstractParameterNode abstractParameterNode,
 			IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = globalParameterNode.getQualifiedName();
-		qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+		String qualifiedName = getQualifiedName(abstractParameterNode);
+		
+		if (extLanguageManager != null) {
+			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
+		}
 
+		return qualifiedName;
+	}
+
+	public static String getQualifiedName(AbstractParameterNode abstractParameterNode) {
+
+		LinkedList<String> segments = new LinkedList<>();
+
+		IAbstractNode parent = abstractParameterNode;
+
+		do {
+			segments.addFirst(parent.getName());
+			parent = parent.getParent();
+		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
+
+		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+	}
+
+	public static String getQualifiedName(
+			AbstractParameterNode abstractParameterNode, 
+			CompositeParameterNode linkingContext,
+			IExtLanguageManager extLanguageManager) {
+
+		if (linkingContext == null) {
+			return getQualifiedName(abstractParameterNode, extLanguageManager);
+		}
+
+		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
+
+		String ownQualifiedNameWithoutPrefix = 
+				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+
+		String linkingSignature = getQualifiedName(linkingContext, extLanguageManager);
+
+		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
+	}
+
+	public static String getQualifiedName(
+			AbstractParameterNode abstractParameterNode, 
+			CompositeParameterNode linkingContext) {
+
+		String qualifiedName = getQualifiedName(abstractParameterNode, linkingContext, null);
 		return qualifiedName;
 	}
 
@@ -98,7 +143,7 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
-	public static String getCompositeName(
+	public static String getCompositeName( // TODO MO-RE there are methods getQualifiedName in this module
 			AbstractParameterNode abstractParameterNode, 
 			IExtLanguageManager extLanguageManager) {
 

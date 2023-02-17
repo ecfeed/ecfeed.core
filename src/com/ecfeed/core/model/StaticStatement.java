@@ -15,8 +15,8 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 
 public class StaticStatement extends AbstractStatement {
 
@@ -116,7 +116,12 @@ public class StaticStatement extends AbstractStatement {
 		return false;
 	}
 
-	public String getLeftParameterCompositeName(){
+	@Override
+	public BasicParameterNode getLeftParameter() {
+		return null;
+	}
+
+	public String getLeftOperandName(){
 		return toString();
 	}
 
@@ -157,12 +162,6 @@ public class StaticStatement extends AbstractStatement {
 			ParameterConversionItem parameterConversionItem) {
 	}
 
-	//	@Override
-	//	protected void updateParameterReferences(
-	//			MethodParameterNode srcMethodParameterNode,
-	//			ChoicesParentNode dstParameterForChoices) {
-	//	}
-
 	@Override
 	public boolean mentionsChoiceOfParameter(BasicParameterNode parameter) {
 		return false;
@@ -173,10 +172,21 @@ public class StaticStatement extends AbstractStatement {
 		return new ArrayList<>();
 	}
 
+	@Override
+	public CompositeParameterNode getLeftParameterLinkingContext() {
+		return null;
+	}
+
 	//	@Override
 	//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper) {
 	//
 	//		return new StaticStatement(fValue, getModelChangeRegistrator());
+	//	}
+
+	//	@Override
+	//	protected void updateParameterReferences(
+	//			MethodParameterNode srcMethodParameterNode,
+	//			ChoicesParentNode dstParameterForChoices) {
 	//	}
 
 }

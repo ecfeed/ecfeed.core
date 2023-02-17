@@ -404,7 +404,7 @@ public class ClassNode extends AbstractNode implements IParametersParentNode {
 
 		for (BasicParameterNode parameter : globalParameters) {
 
-			String currentQualifiedName = parameter.getQualifiedName();
+			String currentQualifiedName = AbstractParameterNodeHelper.getQualifiedName(parameter);
 
 			if(currentQualifiedName.equals(qualifiedName)){
 				return parameter;

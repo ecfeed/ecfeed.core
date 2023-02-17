@@ -66,13 +66,13 @@ public class RelationStatementTest {
 
 		if (okExpected) {
 			try {
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
+				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);  // TODO MO-RE leftParameterLinkingContext
 			} catch (Exception e) {
 				fail();
 			}
 		} else {
 			try {
-				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, EMathRelation.EQUAL, methodParameterNode2);
+				RelationStatement.createRelationStatementWithParameterCondition(methodParameterNode1, null, EMathRelation.EQUAL, methodParameterNode2);  // TODO MO-RE leftParameterLinkingContext
 				fail();
 			} catch (Exception e) {
 			}

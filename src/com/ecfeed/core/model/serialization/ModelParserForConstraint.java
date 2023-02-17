@@ -20,6 +20,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.CONSTRA
 import java.util.List;
 import java.util.Optional;
 
+import com.ecfeed.core.model.AbstractParameterNodeHelper;
 import com.ecfeed.core.model.AbstractStatement;
 import com.ecfeed.core.model.AssignmentStatement;
 import com.ecfeed.core.model.BasicParameterNode;
@@ -282,7 +283,8 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			return AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode, choice);
 		}
 
-		return RelationStatement.createRelationStatementWithChoiceCondition(methodParameterNode, relation, choice);
+		return RelationStatement.createRelationStatementWithChoiceCondition
+				(methodParameterNode, null, relation, choice); // TODO MO-RE read and create relations with linking context
 	}
 
 	public AbstractStatement parseParameterStatement(
@@ -326,10 +328,12 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		}
 
 		if (relation == EMathRelation.ASSIGN) {
-			return AssignmentStatement.createAssignmentWithParameterCondition(leftParameterNode, rightParameterNode);
+			return AssignmentStatement.createAssignmentWithParameterCondition(
+					leftParameterNode, rightParameterNode, null);  // TODO MO-RE linking context
 		}
 
-		return RelationStatement.createRelationStatementWithParameterCondition(leftParameterNode, relation, rightParameterNode);
+		return RelationStatement.createRelationStatementWithParameterCondition(
+				leftParameterNode, null, relation, rightParameterNode); // TODO MO-RE read and create relations with linking context
 	}
 	//
 	public AbstractStatement parseValueStatement(
@@ -369,7 +373,8 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			return AssignmentStatement.createAssignmentWithValueCondition(leftParameterNode, value);
 		}
 
-		return RelationStatement.createRelationStatementWithValueCondition(leftParameterNode, relation, value);
+		return RelationStatement.createRelationStatementWithValueCondition(
+				leftParameterNode, null, relation, value); // TODO MO-RE read and create relations with linking context
 	}
 
 	private boolean isOkExpectedPropertyOfParameter(
@@ -423,7 +428,8 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		}
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
-		return RelationStatement.createRelationStatementWithLabelCondition(basicParameterNode, relation, label);
+		return RelationStatement.createRelationStatementWithLabelCondition(
+				basicParameterNode, null, relation, label); // TODO MO-RE read and create relations with linking context
 	}
 
 	public ExpectedValueStatement parseExpectedValueStatement(
@@ -450,7 +456,8 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		ChoiceNode condition = new ChoiceNode("expected", valueString, parameter.getModelChangeRegistrator());
 		condition.setParent(parameter);
 
-		return new ExpectedValueStatement(parameter, condition, new JavaPrimitiveTypePredicate());
+		return new ExpectedValueStatement(
+				parameter, null, condition, new JavaPrimitiveTypePredicate());  // TODO MO-RE read and create relations with linking context
 	}
 
 	// TO-DO mo-re move to a helper.
@@ -459,7 +466,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		List<BasicParameterNode> parameters = ((IParametersParentNode) parameterParent).getNestedBasicParameters(true);
 
 		for (BasicParameterNode parameter : parameters) {
-			if (parameter.getQualifiedName().equals(parameterName)) {
+			if (AbstractParameterNodeHelper.getQualifiedName(parameter).equals(parameterName)) {
 				return parameter;
 			}
 		}

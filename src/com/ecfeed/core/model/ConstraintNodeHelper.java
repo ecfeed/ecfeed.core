@@ -74,25 +74,31 @@ public class ConstraintNodeHelper {
 
 	public static String createSignature(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		String qualifiedName = createQualifiedName(constraintNode);
+		String qualifiedNameInExtLanguage = createQualifiedName(constraintNode, extLanguageManager); 
 
-		String signatureOfConditions = 
+		String signatureOfConditionsInExtLanguage = 
 				ConstraintHelper.createSignatureOfConditions(constraintNode.getConstraint(), extLanguageManager);
 
-		return qualifiedName + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditions; 
+		String signatureInExtLanguage = 
+				qualifiedNameInExtLanguage + SignatureHelper.SIGNATURE_CONTENT_SEPARATOR + signatureOfConditionsInExtLanguage;
+
+		return signatureInExtLanguage; 
 	}
 
-	private static String createQualifiedName(ConstraintNode constraintNode) {
+	private static String createQualifiedName(ConstraintNode constraintNode, IExtLanguageManager extLanguageManager) {
 
-		String prefix = createQualifiedPrefix(constraintNode);
+		String prefixInIntrLanguage = createQualifiedPrefix(constraintNode);
 
-		String name = constraintNode.getConstraint().getName();
+		String prefixInExtLanguage = extLanguageManager.convertTextFromIntrToExtLanguage(prefixInIntrLanguage);
 
-		if (StringHelper.isNullOrEmpty(prefix)) {
-			return name;
+		String constraintName = constraintNode.getConstraint().getName();
+
+		if (StringHelper.isNullOrEmpty(prefixInExtLanguage)) {
+			return constraintName;
 		}
 
-		String qualifiedName = prefix + SignatureHelper.SIGNATURE_NAME_SEPARATOR + name;
+		String qualifiedName = 
+				prefixInExtLanguage + SignatureHelper.SIGNATURE_NAME_SEPARATOR + constraintName;
 
 		return qualifiedName;
 	}
@@ -105,13 +111,13 @@ public class ConstraintNodeHelper {
 	private static String createQualifiedPrefix(ConstraintNode constraintNode) {
 
 		String prefix = createQualifiedPrefixIntr(constraintNode);
-		
+
 		prefix = prefix.trim();
-		
+
 		prefix = StringHelper.removeFromPostfix(":", prefix);
-		
+
 		prefix = prefix.trim();
-		
+
 		return prefix;
 	}
 
@@ -128,7 +134,7 @@ public class ConstraintNodeHelper {
 				return "";
 			}
 
-			if (parent instanceof MethodNode) {
+			if ((parent instanceof MethodNode) || (parent instanceof RootNode)) {
 				return prefix;
 			}
 

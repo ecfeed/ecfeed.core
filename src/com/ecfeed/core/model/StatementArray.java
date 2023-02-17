@@ -15,8 +15,8 @@ import java.util.List;
 
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.IExtLanguageManager;
-import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.MessageStack;
+import com.ecfeed.core.utils.ParameterConversionItem;
 import com.ecfeed.core.utils.StringHelper;
 
 public class StatementArray extends AbstractStatement {
@@ -392,7 +392,13 @@ public class StatementArray extends AbstractStatement {
 		return EvaluationResult.TRUE;
 	}
 
-	public String getLeftParameterCompositeName() {
+	@Override
+	public BasicParameterNode getLeftParameter() {
+		return null;
+	}
+	
+	@Override
+	public String getLeftOperandName() {
 		return fOperator.toString();
 	}
 
@@ -428,6 +434,11 @@ public class StatementArray extends AbstractStatement {
 		for (AbstractStatement child : fStatements) {
 			child.convert(parameterConversionItem);
 		}
+	}
+
+	@Override
+	public CompositeParameterNode getLeftParameterLinkingContext() {
+		return null;
 	}
 
 	//	@Override

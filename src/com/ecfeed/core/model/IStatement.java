@@ -30,6 +30,5 @@ public interface IStatement{
 	public void derandomize();
 	public AbstractStatement makeClone();
 	AbstractStatement createCopy(NodeMapper mapper);
-//	public AbstractStatement createDeepCopy(DeploymentMapper deploymentMapper);
 	
 }

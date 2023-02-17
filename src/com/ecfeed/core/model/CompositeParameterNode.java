@@ -373,7 +373,9 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public List<AbstractParameterNode> getNestedAbstractParameters(boolean follow) {
+		
 		List<AbstractParameterNode> nodes = new ArrayList<>();
+		
 		List<AbstractParameterNode> parameters = follow ? getLinkDestination().getParameters() : getParameters();
 		
 		for (AbstractParameterNode node : parameters) {
@@ -391,7 +393,9 @@ public class CompositeParameterNode extends AbstractParameterNode implements IPa
 
 	@Override
 	public List<BasicParameterNode> getNestedBasicParameters(boolean follow) {
+		
 		List<BasicParameterNode> nodes = new ArrayList<>();
+		
 		List<AbstractParameterNode> parameters = follow ? getLinkDestination().getParameters() : getParameters();
 
 		for (AbstractParameterNode node : parameters) {
