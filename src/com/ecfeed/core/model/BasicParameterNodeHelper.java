@@ -437,4 +437,27 @@ public class BasicParameterNodeHelper {
 		return false;
 	}
 
+	public static BasicParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
+
+		if (parameterParent == null || parameterName == null) {
+			return null;
+		}
+
+		IAbstractNode container = parameterParent.getContainer();
+		List<BasicParameterNode> parameters = new ArrayList<>();
+
+		parameters.addAll(((IParametersParentNode) container).getNestedBasicParameters(true));
+		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
+
+		for (BasicParameterNode parameter : parameters) {
+			String name = AbstractParameterNodeHelper.getQualifiedName(parameter);
+
+			if (name.equals(parameterName)) {
+				return parameter;
+			}
+		}
+
+		return null;
+	}
+
 }

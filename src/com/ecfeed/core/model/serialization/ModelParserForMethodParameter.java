@@ -19,10 +19,7 @@ import static com.ecfeed.core.model.serialization.SerializationConstants.TYPE_NA
 import java.util.List;
 import java.util.Optional;
 
-import com.ecfeed.core.model.AbstractParameterNode;
-import com.ecfeed.core.model.ChoiceNode;
-import com.ecfeed.core.model.BasicParameterNode;
-import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.*;
 import com.ecfeed.core.utils.ListOfStrings;
 
 import nu.xom.Element;
@@ -30,7 +27,7 @@ import nu.xom.Element;
 public class ModelParserForMethodParameter implements IModelParserForMethodParameter {
 
 	public Optional<BasicParameterNode> parseMethodParameter(
-			Element parameterElement, MethodNode method, ListOfStrings errorList) {
+			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings errorList) {
 
 		String name, type;
 		String defaultValue = null;

@@ -183,6 +183,16 @@ public class ModelParserHelper  {
 		return WhiteCharConverter.getInstance().decode(value);
 	}
 
+	static String getAttributeValue(Element element, String attributeName) throws ParserException {
+		String value = element.getAttributeValue(attributeName);
+
+		if (value == null) {
+			return null;
+		}
+
+		return WhiteCharConverter.getInstance().decode(value);
+	}
+
 	static boolean getIsRandomizedValue(Element element, String attributeName) throws ParserException {
 		String isRandomizedValue = element.getAttributeValue(attributeName);
 

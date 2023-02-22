@@ -927,6 +927,7 @@ public class MethodNode extends AbstractNode implements IParametersAndConstraint
 		for (AbstractParameterNode node : parameters) {
 
 			if (node instanceof CompositeParameterNode) {
+				nodes.add((CompositeParameterNode) node);
 				nodes.addAll(((CompositeParameterNode) node).getNestedCompositeParameters(follow));
 			}
 		}

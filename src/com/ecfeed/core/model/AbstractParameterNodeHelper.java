@@ -101,6 +101,17 @@ public abstract class AbstractParameterNodeHelper {
 		return qualifiedName;
 	}
 
+	public static String getQualifiedName(String linkingContext, String parameterName) {
+
+		if (linkingContext == null) {
+			return parameterName;
+		}
+
+		String parameterNameWithoutPrefix =	StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, parameterName);
+
+		return linkingContext + SignatureHelper.SIGNATURE_NAME_SEPARATOR + parameterNameWithoutPrefix;
+	}
+
 	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
 
 		String type = globalParameterNode.getType();

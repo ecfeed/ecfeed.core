@@ -62,6 +62,7 @@ public class SerializationConstants {
 	public static final String STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME = "rightParameter";
 	public static final String STATEMENT_RIGHT_VALUE_ATTRIBUTE_NAME = "rightValue";
 	public static final String STATEMENT_RELATION_ATTRIBUTE_NAME = "relation";
+	public static final String STATEMENT_LINKING_CONTEXT = "context";
 	public static final String STATEMENT_OPERATOR_ATTRIBUTE_NAME = "operator";
 	public static final String STATEMENT_STATIC_VALUE_ATTRIBUTE_NAME = "value";
 	public static final String STATEMENT_OPERATOR_AND_ATTRIBUTE_VALUE = "and";

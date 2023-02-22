@@ -35,6 +35,7 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 	public Optional<CompositeParameterNode> parseMethodCompositeParameter(
 			Element element,
 			MethodNode method,
+			IAbstractNode parent,
 			ListOfStrings errorList) {
 
 		String name;
@@ -47,18 +48,24 @@ public class ModelParserForMethodCompositeParameter implements IModelParserForMe
 		}
 
 		CompositeParameterNode targetCompositeParameterNode = new CompositeParameterNode(name, method.getModelChangeRegistrator());
+		targetCompositeParameterNode.setParent(parent);
 
 		List<Element> children = ModelParserHelper.getIterableChildren(element, SerializationHelperVersion1.getParameterNodeNames());
 
 		for (Element child : children) {
 
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForMethodParameter.parseMethodParameter(child, method, errorList)
+				fModelParserForMethodParameter.parseMethodParameter(child, method, targetCompositeParameterNode, errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				parseMethodCompositeParameter(child, method, errorList)
+				parseMethodCompositeParameter(child, method, targetCompositeParameterNode, errorList)
 						.ifPresent(targetCompositeParameterNode::addParameter);
-			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
+			}
+		}
+
+		for (Element child : children) {
+
+			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getConstraintName())) {
 
 				try {
 					fModelParserForConstraint.parseConstraint(child, targetCompositeParameterNode, errorList)

@@ -232,4 +232,28 @@ public class CompositeParameterNodeHelper {
 		return false;
 	}
 
+	public static CompositeParameterNode getParameterFromPath(IAbstractNode parameterParent, String parameterName) {
+
+		if (parameterParent == null || parameterName == null) {
+			return null;
+		}
+
+		IAbstractNode container = parameterParent.getContainer();
+		List<CompositeParameterNode> parameters = new ArrayList<>();
+
+		parameters.add((CompositeParameterNode) parameterParent);
+		parameters.addAll(((IParametersParentNode) container).getNestedCompositeParameters(true));
+		parameters.addAll(((IParametersParentNode) parameterParent).getNestedCompositeParameters(true));
+
+		for (CompositeParameterNode parameter : parameters) {
+			String name = AbstractParameterNodeHelper.getQualifiedName(parameter);
+
+			if (name.equals(parameterName)) {
+				return parameter;
+			}
+		}
+
+		return null;
+	}
+
 }
