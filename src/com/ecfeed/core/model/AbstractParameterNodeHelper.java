@@ -107,7 +107,7 @@ public abstract class AbstractParameterNodeHelper {
 			return parameterName;
 		}
 
-		if (parameterName.startsWith("[G]:")) {
+		if (parameterName.startsWith(SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
 			return parameterName.substring(4);
 		}
 
@@ -635,4 +635,29 @@ public abstract class AbstractParameterNodeHelper {
 		}
 	}
 
+	public static String getRelativeName(IAbstractNode parent, IAbstractNode parameter) {
+
+		if (parameter == null) {
+			ExceptionHelper.reportRuntimeException("The referenced parameter is non-existent.");
+		}
+
+		if (parent == null) {
+			return parameter.getName();
+		}
+
+		if (((AbstractParameterNode) parameter).isGlobalParameter()) {
+			return SignatureHelper.SIGNATURE_GLOBAL_MARKER +
+					SignatureHelper.SIGNATURE_NAME_SEPARATOR +
+					AbstractParameterNodeHelper.getQualifiedName((AbstractParameterNode) parameter);
+		} else {
+			LinkedList<String> prefixes = new LinkedList<>();
+
+			while (parameter != parent) {
+				prefixes.addFirst(parameter.getName());
+				parameter = parameter.getParent();
+			}
+
+			return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, prefixes);
+		}
+	}
 }

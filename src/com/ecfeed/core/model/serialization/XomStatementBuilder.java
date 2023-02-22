@@ -11,11 +11,8 @@
 package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.*;
-import com.ecfeed.core.utils.SignatureHelper;
 import nu.xom.Attribute;
 import nu.xom.Element;
-
-import java.util.*;
 
 import static com.ecfeed.core.model.serialization.SerializationConstants.*;
 
@@ -108,12 +105,10 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		BasicParameterNode parameter = statement.getLeftParameter();
 
-		String prefix = getCommonParent(parameter);
-
-		String parameterName = prefix + parameter.getName();
+		String relativeName = AbstractParameterNodeHelper.getRelativeName(fConstraintParent, parameter);
 
 		Attribute parameterAttribute =
-				new Attribute(fStatementParameterAttributeName, parameterName);
+				new Attribute(fStatementParameterAttributeName, relativeName);
 
 		Attribute relationAttribute =
 				new Attribute(STATEMENT_RELATION_ATTRIBUTE_NAME, statement.getRelation().getName());
@@ -164,13 +159,13 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		BasicParameterNode rightMethodParameterNode = condition.getRightParameterNode();
 
-		String prefix = getCommonParent(rightMethodParameterNode);
+		String relativeName = AbstractParameterNodeHelper.getRelativeName(fConstraintParent, rightMethodParameterNode);
 
 		Element targetParameterElement = new Element(CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME);
 
 		XomBuilder.encodeAndAddAttribute(
 				targetParameterElement, 
-				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, prefix + rightMethodParameterNode.getName()),
+				new Attribute(STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME, relativeName),
 				fWhiteCharConverter);
 
 		return targetParameterElement;
@@ -187,26 +182,6 @@ public class XomStatementBuilder implements IStatementVisitor {
 				fWhiteCharConverter);
 
 		return targetParameterElement;
-	}	
-
-	private String getCommonParent(IAbstractNode parameter) {
-
-		if (fConstraintParent == null || parameter == null) {
-			return "";
-		}
-
-		LinkedList<String> prefixes = new LinkedList<>();
-
-		while ((parameter.getParent() != fConstraintParent) && (parameter.getParent() != parameter.getRoot())) {
-			parameter = parameter.getParent();
-			prefixes.addFirst(parameter.getName());
-		}
-
-		if (!(parameter.getContainer() instanceof MethodNode)) {
-			prefixes.addFirst("[G]");
-		}
-
-		return prefixes.size() > 0 ? String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, prefixes) + SignatureHelper.SIGNATURE_NAME_SEPARATOR : "";
 	}
 }
 
