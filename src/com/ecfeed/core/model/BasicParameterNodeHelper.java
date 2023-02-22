@@ -443,10 +443,10 @@ public class BasicParameterNodeHelper {
 			return null;
 		}
 
-		IAbstractNode container = parameterParent.getContainer();
+//		IAbstractNode container = parameterParent.getContainer();
 		List<BasicParameterNode> parameters = new ArrayList<>();
 
-		parameters.addAll(((IParametersParentNode) container).getNestedBasicParameters(true));
+//		parameters.addAll(((IParametersParentNode) container).getNestedBasicParameters(true));
 		parameters.addAll(((IParametersParentNode) parameterParent).getNestedBasicParameters(true));
 
 		for (BasicParameterNode parameter : parameters) {

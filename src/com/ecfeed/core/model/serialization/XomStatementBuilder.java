@@ -106,7 +106,7 @@ public class XomStatementBuilder implements IStatementVisitor {
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {
 
-		IAbstractNode parameter = statement.getLeftParameter();
+		BasicParameterNode parameter = statement.getLeftParameter();
 
 		String prefix = getCommonParent(parameter);
 
@@ -200,6 +200,10 @@ public class XomStatementBuilder implements IStatementVisitor {
 		while ((parameter.getParent() != fConstraintParent) && (parameter.getParent() != parameter.getRoot())) {
 			parameter = parameter.getParent();
 			prefixes.addFirst(parameter.getName());
+		}
+
+		if (!(parameter.getContainer() instanceof MethodNode)) {
+			prefixes.addFirst("[G]");
 		}
 
 		return prefixes.size() > 0 ? String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, prefixes) + SignatureHelper.SIGNATURE_NAME_SEPARATOR : "";

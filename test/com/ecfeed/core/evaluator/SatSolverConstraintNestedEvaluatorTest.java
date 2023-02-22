@@ -66,12 +66,12 @@ public class SatSolverConstraintNestedEvaluatorTest {
 
     @Test
     public void accessParameterInNestedStructureFromStructureLinkedToRoot() {
-        assertEquals(1, countGeneratedTestCases(dupa1));
+        assertEquals(1, countGeneratedTestCases(xmlAccessParameterInNestedStructureFromStructureLinkedToRoot));
     }
 
     @Test
     public void accessParameterInNestedStructureFromStructureLinkedToClass() {
-        assertEquals(1, countGeneratedTestCases(dupa2));
+        assertEquals(1, countGeneratedTestCases(xmlAccessParameterInNestedStructureFromStructureLinkedToClass));
     }
 
     private String xmlLinkedRootStructure = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
@@ -407,7 +407,7 @@ public class SatSolverConstraintNestedEvaluatorTest {
             "                            <StaticStatement value=\"true\"/>\n" +
             "                        </Premise>\n" +
             "                        <Consequence>\n" +
-            "                            <ParameterStatement context=\"S1:S2\" rightParameter=\"S3:par1\" parameter=\"par1\" relation=\"greaterthan\"/>\n" +
+            "                            <ParameterStatement rightParameter=\"S3:par1\" parameter=\"par1\" relation=\"equal\" context=\"S1:S2\"/>\n" +
             "                        </Consequence>\n" +
             "                    </Constraint>\n" +
             "                </Structure>\n" +
@@ -416,7 +416,7 @@ public class SatSolverConstraintNestedEvaluatorTest {
             "    </Class>\n" +
             "</Model>";
 
-    private String dupa1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+    private String xmlAccessParameterInNestedStructureFromStructureLinkedToRoot = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<Model name=\"TestModel11\" version=\"5\">\n" +
             "    <Class name=\"C1\">\n" +
             "        <Method name=\"M1\">\n" +
@@ -453,11 +453,15 @@ public class SatSolverConstraintNestedEvaluatorTest {
             "                            <StaticStatement value=\"true\"/>\n" +
             "                        </Premise>\n" +
             "                        <Consequence>\n" +
-            "                            <ParameterStatement context=\"S1:S2\" rightParameter=\"S1:par1\" parameter=\"S1:S2:par1\" relation=\"greaterthan\"/>\n" +
+            "                            <ParameterStatement rightParameter=\"[G]:S1:par1\" parameter=\"par1\" relation=\"greaterthan\" context=\"S1:S2\"/>\n" +
             "                        </Consequence>\n" +
             "                    </Constraint>\n" +
             "                </Structure>\n" +
             "            </Structure>\n" +
+            "            <Deployment>\n" +
+            "                <Parameter name=\"S1:par1\" type=\"int\" isExpected=\"false\" expected=\"\" linked=\"false\"/>\n" +
+            "                <Parameter name=\"S1:S2:par1\" type=\"int\" isExpected=\"false\" expected=\"\" linked=\"false\"/>\n" +
+            "            </Deployment>\n" +
             "        </Method>\n" +
             "    </Class>\n" +
             "    <Structure name=\"S1\">\n" +
@@ -478,7 +482,7 @@ public class SatSolverConstraintNestedEvaluatorTest {
             "    </Structure>\n" +
             "</Model>";
 
-    private String dupa2 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+    private String xmlAccessParameterInNestedStructureFromStructureLinkedToClass = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<Model name=\"TestModel11\" version=\"5\">\n" +
             "    <Class name=\"C1\">\n" +
             "        <Method name=\"M1\">\n" +

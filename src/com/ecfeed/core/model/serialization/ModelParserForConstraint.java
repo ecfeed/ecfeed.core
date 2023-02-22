@@ -278,6 +278,11 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
 
 		String linkingContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_CONTEXT);
+		CompositeParameterNode linkingContextNode = CompositeParameterNodeHelper.getParameterFromPath(parent, linkingContextName);
+
+		if (linkingContextNode != null) {
+			parent = linkingContextNode;
+		}
 
 		String parameterName =	ModelParserHelper.getAttributeValue(
 				element, SerializationHelperVersion1.getStatementParameterAttributeName(),
@@ -313,8 +318,6 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 			return null;
 		}
 
-		CompositeParameterNode linkingContextNode = CompositeParameterNodeHelper.getParameterFromPath(parent, linkingContextName);
-
 		if (relation == EMathRelation.ASSIGN) {
 			return AssignmentStatement.createAssignmentWithParameterCondition(
 					leftParameterNode, rightParameterNode, linkingContextNode);
@@ -323,7 +326,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return RelationStatement.createRelationStatementWithParameterCondition(
 				leftParameterNode, linkingContextNode, relation, rightParameterNode);
 	}
-	//
+
 	public AbstractStatement parseValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 

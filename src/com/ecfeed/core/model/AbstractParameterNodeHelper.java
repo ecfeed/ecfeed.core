@@ -107,9 +107,11 @@ public abstract class AbstractParameterNodeHelper {
 			return parameterName;
 		}
 
-		String parameterNameWithoutPrefix =	StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, parameterName);
+		if (parameterName.startsWith("[G]:")) {
+			return parameterName.substring(4);
+		}
 
-		return linkingContext + SignatureHelper.SIGNATURE_NAME_SEPARATOR + parameterNameWithoutPrefix;
+		return linkingContext + SignatureHelper.SIGNATURE_NAME_SEPARATOR + parameterName;
 	}
 
 	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
