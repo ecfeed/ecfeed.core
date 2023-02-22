@@ -124,8 +124,8 @@ public class XomStatementBuilder implements IStatementVisitor {
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, parameterAttribute, fWhiteCharConverter);
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, relationAttribute, fWhiteCharConverter);
 
-		if (statement.getLeftParameterLinkingContext() != null) {
-			String linkingContextValue = AbstractParameterNodeHelper.getQualifiedName(statement.getLeftParameterLinkingContext());
+		if (fConstraintParent instanceof CompositeParameterNode) {
+			String linkingContextValue = AbstractParameterNodeHelper.getQualifiedName((AbstractParameterNode) fConstraintParent);
 			Attribute linkingContext = new Attribute(STATEMENT_LINKING_CONTEXT, linkingContextValue);
 			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
 		}
