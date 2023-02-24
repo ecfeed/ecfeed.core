@@ -111,7 +111,7 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
-		NodeMapper nodeMapper = new NodeMapper();
+		NodeMapper nodeMapper = new NodeMapper();	// TODO [KRZ] - This should not be here.
 		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
 		MethodDeployer.copyDeployedParameters(deployedMethodNode, methodNode);
 		

@@ -71,7 +71,10 @@ public abstract class AbstractParameterNodeHelper {
 			parent = parent.getParent();
 		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
 
-		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		String prefix = SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		String name =  String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
+		
+		return name.startsWith(prefix) ? name.substring(prefix.length()) : name;
 	}
 
 	public static String getQualifiedName(
@@ -79,32 +82,32 @@ public abstract class AbstractParameterNodeHelper {
 			CompositeParameterNode linkingContext,
 			IExtLanguageManager extLanguageManager) {
 
-//		boolean isGlobal = abstractParameterNode.isGlobalParameter();
+		boolean isGlobal = abstractParameterNode.isGlobalParameter();
 		
-//		if (linkingContext == null || !isGlobal) {
-			return getQualifiedName(abstractParameterNode, extLanguageManager);
-//		}
-//		
-//		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
-//
-//		String ownQualifiedNameWithoutPrefix = 
-//				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
-//	
-//		CompositeParameterNode candidate = null;
-//		
-//		parameterLoop:
-//		for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
-//			for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
-//				if (candidateParametr == abstractParameterNode) {
-//					candidate = candidateComposite;
-//					break parameterLoop;
-//				}
-//			}
-//		}
-//
-//		String linkingSignature = getQualifiedName(candidate != null ? candidate : linkingContext, extLanguageManager);
-//
-//		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
+		if (linkingContext == null || !isGlobal) {
+			return getQualifiedName(abstractParameterNode, extLanguageManager); // TODO [KRZ] - For simplified version use just this line.
+		}
+		
+		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
+
+		String ownQualifiedNameWithoutPrefix = 
+				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+	
+		CompositeParameterNode candidate = null;
+		
+		parameterLoop:
+		for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
+			for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
+				if (candidateParametr == abstractParameterNode) {
+					candidate = candidateComposite;
+					break parameterLoop;
+				}
+			}
+		}
+
+		String linkingSignature = getQualifiedName(candidate != null ? candidate : linkingContext, extLanguageManager);
+
+		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
 
 	public static String getQualifiedName(

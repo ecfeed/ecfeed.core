@@ -45,12 +45,10 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
 			} else {
 		
-				String prefix = SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
 				String candidateName = AbstractParameterNodeHelper.getQualifiedName(parameter.get());
-				String candidateNameParsed = candidateName.startsWith(prefix) ?	candidateName.substring(prefix.length()) : candidateName;
 				
 				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(candidateNameParsed))
+					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(candidateName))
 					.findAny();
 				
 				if (candidate.isPresent()) {
