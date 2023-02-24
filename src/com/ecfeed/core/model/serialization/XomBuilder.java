@@ -111,6 +111,10 @@ public abstract class XomBuilder implements IModelVisitor {
 			}
 		}
 
+		NodeMapper nodeMapper = new NodeMapper();
+		MethodNode deployedMethodNode = MethodDeployer.deploy(methodNode, nodeMapper);
+		MethodDeployer.copyDeployedParameters(deployedMethodNode, methodNode);
+		
 		if (methodNode.isDeployed()) {
 			if (MethodDeploymentConsistencyUpdater.validateDeploymentSizeConsistency(methodNode)) {
 

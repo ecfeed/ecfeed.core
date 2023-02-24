@@ -130,6 +130,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public void setCompositeName(String name) {
 
 		String simplifiedName = name.replace(SignatureHelper.SIGNATURE_NAME_SEPARATOR, "_"); 
+		simplifiedName = simplifiedName.replace("[", "_"); 
+		simplifiedName = simplifiedName.replace("]", "_"); 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(simplifiedName);
 
 		super.setName(name);
@@ -166,7 +168,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		mapper.addMappings(this, parameter);
 
-		parameter.setNameUnsafe(AbstractParameterNodeHelper.getQualifiedName(this));
+		parameter.setNameUnsafe(AbstractParameterNodeHelper.getRelativeName(this.getContainer(), this));
 
 		return parameter;
 	}

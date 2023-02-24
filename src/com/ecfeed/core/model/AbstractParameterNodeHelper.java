@@ -79,18 +79,32 @@ public abstract class AbstractParameterNodeHelper {
 			CompositeParameterNode linkingContext,
 			IExtLanguageManager extLanguageManager) {
 
-		if (linkingContext == null) {
+//		boolean isGlobal = abstractParameterNode.isGlobalParameter();
+		
+//		if (linkingContext == null || !isGlobal) {
 			return getQualifiedName(abstractParameterNode, extLanguageManager);
-		}
-
-		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
-
-		String ownQualifiedNameWithoutPrefix = 
-				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
-
-		String linkingSignature = getQualifiedName(linkingContext, extLanguageManager);
-
-		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
+//		}
+//		
+//		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
+//
+//		String ownQualifiedNameWithoutPrefix = 
+//				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+//	
+//		CompositeParameterNode candidate = null;
+//		
+//		parameterLoop:
+//		for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
+//			for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
+//				if (candidateParametr == abstractParameterNode) {
+//					candidate = candidateComposite;
+//					break parameterLoop;
+//				}
+//			}
+//		}
+//
+//		String linkingSignature = getQualifiedName(candidate != null ? candidate : linkingContext, extLanguageManager);
+//
+//		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
 
 	public static String getQualifiedName(
@@ -102,13 +116,14 @@ public abstract class AbstractParameterNodeHelper {
 	}
 
 	public static String getQualifiedName(String linkingContext, String parameterName) {
-
+		String prefix = SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
+		
+		if (parameterName.startsWith(prefix)) {
+			return parameterName.substring(prefix.length());
+		}
+		
 		if (linkingContext == null) {
 			return parameterName;
-		}
-
-		if (parameterName.startsWith(SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR)) {
-			return parameterName.substring(4);
 		}
 
 		return linkingContext + SignatureHelper.SIGNATURE_NAME_SEPARATOR + parameterName;

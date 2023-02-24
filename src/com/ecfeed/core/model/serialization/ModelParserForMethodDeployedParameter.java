@@ -23,6 +23,7 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
+import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 
@@ -31,10 +32,10 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 	public Optional<BasicParameterNode> parseMethodDeployedParameter(Element element, MethodNode method, ListOfStrings errors) {
 		Optional<BasicParameterNode> parameter = parseMethodBasicParameter(element, method, errors);
 
-
 		try {
 		
 			if (!parameter.isPresent()) {
+				
 				ExceptionHelper.reportRuntimeException("The deployed parameter is non-existent.");
 			}
 	
@@ -44,22 +45,28 @@ public class ModelParserForMethodDeployedParameter implements IModelParserForMet
 				parameter.get().setDeploymentParameter((BasicParameterNode) candidate);
 			} else {
 		
+				String prefix = SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
 				String candidateName = AbstractParameterNodeHelper.getQualifiedName(parameter.get());
+				String candidateNameParsed = candidateName.startsWith(prefix) ?	candidateName.substring(prefix.length()) : candidateName;
 				
 				Optional<BasicParameterNode> candidate = method.getNestedBasicParameters(true).stream()
-					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(candidateName))
+					.filter(e -> AbstractParameterNodeHelper.getQualifiedName(e).equals(candidateNameParsed))
 					.findAny();
 				
 				if (candidate.isPresent()) {
+					
 					parameter.get().setDeploymentParameter(candidate.get());
 				} else {
+					
 					System.out.println("The deployed parameter is corrupted. The main node could not be found - [" + candidateName + "].");
 					return Optional.empty();
 				}
 			}
 
 		} catch(Exception e) {
-			e.printStackTrace();
+			
+			ExceptionHelper.reportRuntimeException("The deployed parameter could not be parsed.");
+			return Optional.empty();
 		}
 		
 		return parameter;
