@@ -11,18 +11,13 @@
 package com.ecfeed.core.operations;
 
 import java.util.List;
-import java.util.Set;
 
-import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.IAbstractNode;
-import com.ecfeed.core.model.TestCaseNode;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
 import com.ecfeed.core.utils.NodesByType;
 
 public class GenericRemoveNodesOperation extends CompositeOperation {
-
-	private GenericRemoveNodesProcessorOfNodes fGenericRemoveNodesProcessorOfNodes;
 
 	public GenericRemoveNodesOperation(
 			NodesByType processedNodesToDelete,
@@ -51,12 +46,12 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 		}
 	}
 
-	public Set<ConstraintNode> getAffectedConstraints() {
-		return fGenericRemoveNodesProcessorOfNodes.getAffectedConstraints();
-	}
-
-	public Set<TestCaseNode> getAffectedTestCases() {
-		return fGenericRemoveNodesProcessorOfNodes.getAffectedTestCases();
-	}
+	//	public Set<ConstraintNode> getAffectedConstraints() {
+	//		return fGenericRemoveNodesProcessorOfNodes.getAffectedConstraints();
+	//	}
+	//
+	//	public Set<TestCaseNode> getAffectedTestCases() {
+	//		return fGenericRemoveNodesProcessorOfNodes.getAffectedTestCases();
+	//	}
 
 }

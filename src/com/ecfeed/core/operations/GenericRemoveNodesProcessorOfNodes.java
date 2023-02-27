@@ -59,13 +59,13 @@ public class GenericRemoveNodesProcessorOfNodes {
 		return fAffectedNodesByType;
 	}
 
-	public Set<ConstraintNode> getAffectedConstraints() {
-		return fAffectedNodesByType.getConstraints();
-	}
-
-	public Set<TestCaseNode> getAffectedTestCases() {
-		return fAffectedNodesByType.getTestCaseNodes();
-	}
+	//	public Set<ConstraintNode> getAffectedConstraints() {
+	//		return fAffectedNodesByType.getConstraints();
+	//	}
+	//
+	//	public Set<TestCaseNode> getAffectedTestCases() {
+	//		return fAffectedNodesByType.getTestCaseNodes();
+	//	}
 
 	private Set<IAbstractNode> createSetOfNodesToRemove(Collection<? extends IAbstractNode> nodesToRemove) {
 
