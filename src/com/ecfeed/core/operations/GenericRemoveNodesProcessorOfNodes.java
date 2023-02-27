@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -32,12 +34,12 @@ public class GenericRemoveNodesProcessorOfNodes {
 	private NodesByType fAffectedNodesByType;
 
 	public GenericRemoveNodesProcessorOfNodes(
-			Set<IAbstractNode> selectedNodes, 
+			Collection<? extends IAbstractNode> nodesToRemove,
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
-		fSelectedNodes = selectedNodes;
+		fSelectedNodes = createSetOfNodesToRemove(nodesToRemove);
 		fAffectedNodesByType = new NodesByType();
 
 		removeNodesWithAncestorsOnList(fSelectedNodes);
@@ -63,6 +65,15 @@ public class GenericRemoveNodesProcessorOfNodes {
 
 	public Set<TestCaseNode> getAffectedTestCases() {
 		return fAffectedNodesByType.getTestCaseNodes();
+	}
+
+	private Set<IAbstractNode> createSetOfNodesToRemove(Collection<? extends IAbstractNode> nodesToRemove) {
+
+		Set<IAbstractNode> setOfNodes = new HashSet<>(nodesToRemove);
+
+		removeNodesWithAncestorsOnList(setOfNodes);
+
+		return setOfNodes;
 	}
 
 	private void removeNodesWithAncestorsOnList(Set<IAbstractNode> selectedNodes) {

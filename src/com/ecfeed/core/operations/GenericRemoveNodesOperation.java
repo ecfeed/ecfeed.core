@@ -10,9 +10,6 @@
 
 package com.ecfeed.core.operations;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +25,7 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 	private GenericRemoveNodesProcessorOfNodes fGenericRemoveNodesProcessorOfNodes;
 
 	public GenericRemoveNodesOperation(
-			Collection<? extends IAbstractNode> nodesToRemove, 
+			NodesByType processedNodesToDelete,
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IAbstractNode nodeToSelect,
@@ -41,13 +38,9 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 				nodeToSelectAfterReverseOperation,
 				extLanguageManager);
 
-		Set<IAbstractNode> fNodesToRemove = createSetOfNodesToRemove(nodesToRemove);
-
-		NodesByType processedNodes = processNodes(fNodesToRemove, typeAdapterProvider, validate, extLanguageManager);
-
 		List<IModelOperation> operations =  
 				GenericRemoveNodesOperationsAccumulator.convertNodesToOperations(
-						processedNodes,	extLanguageManager, typeAdapterProvider, validate);
+						processedNodesToDelete,	extLanguageManager, typeAdapterProvider, validate);
 
 		addChildOperations(operations);
 	}
@@ -55,51 +48,6 @@ public class GenericRemoveNodesOperation extends CompositeOperation {
 	private void addChildOperations(List<IModelOperation> operations) {
 		for (IModelOperation modelOperation : operations) {
 			addOperation(modelOperation);
-		}
-	}
-
-	private NodesByType processNodes(
-			Set<IAbstractNode> nodesToRemove,
-			ITypeAdapterProvider typeAdapterProvider, 
-			boolean validate,
-			IExtLanguageManager extLanguageManager) {
-
-		fGenericRemoveNodesProcessorOfNodes = 
-				new GenericRemoveNodesProcessorOfNodes(
-						nodesToRemove, typeAdapterProvider, validate, extLanguageManager);
-
-		NodesByType processedNodes = fGenericRemoveNodesProcessorOfNodes.getProcessedNodes();
-		return processedNodes;
-	}
-
-	private Set<IAbstractNode> createSetOfNodesToRemove(Collection<? extends IAbstractNode> nodesToRemove) {
-
-		Set<IAbstractNode> setOfNodes = new HashSet<>(nodesToRemove);
-
-		removeNodesWithAncestorsOnList(setOfNodes);
-
-		return setOfNodes;
-	}
-
-	private static void removeNodesWithAncestorsOnList(Set<IAbstractNode> inOutNodesToRemove) {
-
-		Iterator<IAbstractNode> iterator = inOutNodesToRemove.iterator();
-
-		while (iterator.hasNext()) {
-
-			IAbstractNode currentNode = iterator.next();
-
-			List<IAbstractNode> ancestors = currentNode.getAncestors();
-
-			for (IAbstractNode ancestor : ancestors) {
-
-				if (inOutNodesToRemove.contains(ancestor)) {
-
-					// node is deleted because ancestor will be remove with the whole sub-tree which includes current node 
-					iterator.remove(); 
-					break;
-				}
-			}
 		}
 	}
 

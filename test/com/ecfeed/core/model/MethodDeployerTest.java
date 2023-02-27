@@ -257,7 +257,7 @@ public class MethodDeployerTest {
 		NodeMapper mapper = new NodeMapper();
 		MethodNode deployedMethod = MethodDeployer.deploy(methodNode, mapper);
 
-		int parametersCount = deployedMethod.getParametersCount();
+		//int parametersCount = deployedMethod.getParametersCount();
 //		assertEquals(2, parametersCount); // TODO MO-RE here test fails - if name and link are the same the parameters should be merged
 		List<AbstractParameterNode> deployedParameters = deployedMethod.getParameters();
 

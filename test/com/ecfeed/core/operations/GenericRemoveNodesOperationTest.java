@@ -37,6 +37,7 @@ import com.ecfeed.core.type.adapter.TypeAdapterProviderForJava;
 import com.ecfeed.core.utils.EMathRelation;
 import com.ecfeed.core.utils.EvaluationResult;
 import com.ecfeed.core.utils.ExtLanguageManagerForJava;
+import com.ecfeed.core.utils.NodesByType;
 
 public class GenericRemoveNodesOperationTest {
 
@@ -1496,9 +1497,15 @@ public class GenericRemoveNodesOperationTest {
 			List<IAbstractNode> nodesToDelete, 
 			IAbstractNode nodeToBeSelectedAfterOperation) {
 
+		GenericRemoveNodesProcessorOfNodes genericRemoveNodesProcessorOfNodes =
+				new GenericRemoveNodesProcessorOfNodes(
+						nodesToDelete, new TypeAdapterProviderForJava(), true, new ExtLanguageManagerForJava());
+		
+		NodesByType processedNodesToDelete = genericRemoveNodesProcessorOfNodes.getProcessedNodes();
+		
 		GenericRemoveNodesOperation genericRemoveNodesOperation = 
 				new GenericRemoveNodesOperation(
-						nodesToDelete, 
+						processedNodesToDelete,
 						new TypeAdapterProviderForJava(), 
 						true, 
 						nodeToBeSelectedAfterOperation, 

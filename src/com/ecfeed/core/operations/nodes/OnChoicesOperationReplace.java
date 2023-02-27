@@ -18,8 +18,10 @@ import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.operations.CompositeOperation;
 import com.ecfeed.core.operations.GenericOperationAddChoice;
 import com.ecfeed.core.operations.GenericRemoveNodesOperation;
+import com.ecfeed.core.operations.GenericRemoveNodesProcessorOfNodes;
 import com.ecfeed.core.type.adapter.ITypeAdapterProvider;
 import com.ecfeed.core.utils.IExtLanguageManager;
+import com.ecfeed.core.utils.NodesByType;
 
 public class OnChoicesOperationReplace extends CompositeOperation {
 
@@ -41,9 +43,20 @@ public class OnChoicesOperationReplace extends CompositeOperation {
 			}
 		}
 
+		GenericRemoveNodesProcessorOfNodes genericRemoveNodesProcessorOfNodes = 
+				new GenericRemoveNodesProcessorOfNodes(
+						abstractParameterNode.getChoices(), adapterProvider, true, extLanguageManager);
+		
+		NodesByType processedNodesToDelete = genericRemoveNodesProcessorOfNodes.getProcessedNodes();
+		
 		addOperation(
 				new GenericRemoveNodesOperation(
-						abstractParameterNode.getChoices(), adapterProvider, true, abstractParameterNode, abstractParameterNode, extLanguageManager));
+						processedNodesToDelete,
+						adapterProvider, 
+						true, 
+						abstractParameterNode, 
+						abstractParameterNode, 
+						extLanguageManager));
 
 		for(ChoiceNode choice : skipped){
 			addOperation(new GenericOperationAddChoice(abstractParameterNode, choice, adapterProvider, true, extLanguageManager));
