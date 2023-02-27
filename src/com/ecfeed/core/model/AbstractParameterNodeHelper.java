@@ -78,17 +78,18 @@ public abstract class AbstractParameterNodeHelper {
 			AbstractParameterNode abstractParameterNode, 
 			CompositeParameterNode linkingContext,
 			IExtLanguageManager extLanguageManager) {
-
-		boolean isGlobal = abstractParameterNode.isGlobalParameter();
 		
-		if (linkingContext == null || !isGlobal) {
-			return getQualifiedName(abstractParameterNode, extLanguageManager); // TODO [KRZ] - For simplified version use just this line.
+		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
+			return getQualifiedName(abstractParameterNode, extLanguageManager);
 		}
 		
 		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
 
-		String ownQualifiedNameWithoutPrefix = 
-				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+		
+		if (abstractParameterNode.isClassParameter()) {
+			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
+		}
 	
 		CompositeParameterNode candidate = null;
 		
