@@ -23,7 +23,6 @@ import com.ecfeed.core.model.BasicParameterNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ExceptionHelper;
 import com.ecfeed.core.utils.ListOfStrings;
-import com.ecfeed.core.utils.SignatureHelper;
 
 import nu.xom.Element;
 

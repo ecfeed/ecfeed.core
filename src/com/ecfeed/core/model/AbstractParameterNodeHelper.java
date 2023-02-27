@@ -71,10 +71,7 @@ public abstract class AbstractParameterNodeHelper {
 			parent = parent.getParent();
 		} while (!(parent == null || parent instanceof RootNode || parent instanceof MethodNode));
 
-		String prefix = SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-		String name =  String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
-		
-		return name.startsWith(prefix) ? name.substring(prefix.length()) : name;
+		return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, segments);
 	}
 
 	public static String getQualifiedName(
@@ -116,20 +113,6 @@ public abstract class AbstractParameterNodeHelper {
 
 		String qualifiedName = getQualifiedName(abstractParameterNode, linkingContext, null);
 		return qualifiedName;
-	}
-
-	public static String getQualifiedName(String linkingContext, String parameterName) {
-		String prefix = SignatureHelper.SIGNATURE_GLOBAL_MARKER + SignatureHelper.SIGNATURE_NAME_SEPARATOR;
-		
-		if (parameterName.startsWith(prefix)) {
-			return parameterName.substring(prefix.length());
-		}
-		
-		if (linkingContext == null) {
-			return parameterName;
-		}
-
-		return linkingContext + SignatureHelper.SIGNATURE_NAME_SEPARATOR + parameterName;
 	}
 
 	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
@@ -650,32 +633,6 @@ public abstract class AbstractParameterNodeHelper {
 			}
 
 			currentNode = parent;
-		}
-	}
-
-	public static String getRelativeName(IAbstractNode parent, IAbstractNode parameter) {
-
-		if (parameter == null) {
-			ExceptionHelper.reportRuntimeException("The referenced parameter is non-existent.");
-		}
-
-		if (parent == null) {
-			return parameter.getName();
-		}
-
-		if (((AbstractParameterNode) parameter).isGlobalParameter()) {
-			return SignatureHelper.SIGNATURE_GLOBAL_MARKER +
-					SignatureHelper.SIGNATURE_NAME_SEPARATOR +
-					AbstractParameterNodeHelper.getQualifiedName((AbstractParameterNode) parameter);
-		} else {
-			LinkedList<String> prefixes = new LinkedList<>();
-
-			while (parameter != parent) {
-				prefixes.addFirst(parameter.getName());
-				parameter = parameter.getParent();
-			}
-
-			return String.join(SignatureHelper.SIGNATURE_NAME_SEPARATOR, prefixes);
 		}
 	}
 }

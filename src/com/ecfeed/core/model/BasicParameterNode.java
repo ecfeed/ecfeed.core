@@ -130,8 +130,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	public void setCompositeName(String name) {
 
 		String simplifiedName = name.replace(SignatureHelper.SIGNATURE_NAME_SEPARATOR, "_"); 
-		simplifiedName = simplifiedName.replace("[", "_"); 
-		simplifiedName = simplifiedName.replace("]", "_"); 
 		JavaLanguageHelper.verifyIsValidJavaIdentifier(simplifiedName);
 
 		super.setName(name);
@@ -159,7 +157,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		return parameter;
 	}
-
+	
+// TODO LATEST [REFACTOR]	
 	public BasicParameterNode createCopy(NodeMapper mapper) {
 		BasicParameterNode parameter = makeClone(mapper);
 
@@ -168,7 +167,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		mapper.addMappings(this, parameter);
 
-		parameter.setNameUnsafe(AbstractParameterNodeHelper.getRelativeName(this.getContainer(), this));
+		parameter.setNameUnsafe(AbstractParameterNodeHelper.getQualifiedName(this));
 
 		return parameter;
 	}
