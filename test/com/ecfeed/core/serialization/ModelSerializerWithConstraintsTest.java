@@ -204,24 +204,30 @@ public class ModelSerializerWithConstraintsTest {
 
 // External constraint.
 
-        RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, null, EMathRelation.EQUAL, m1p1c1);
-        RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(m1p3, null, EMathRelation.LESS_THAN, m1p3c3);
+        RelationStatement m1r1 = RelationStatement.createRelationStatementWithChoiceCondition(
+                m1p1, null, EMathRelation.EQUAL, m1p1c1);
+        RelationStatement m1r2 = RelationStatement.createRelationStatementWithChoiceCondition(
+                m1p3, null, EMathRelation.LESS_THAN, m1p3c3);
 
         Constraint m1con1 = new Constraint("M1Con1", ConstraintType.EXTENDED_FILTER, m1r1, m1r2,null);
         m1.addConstraint(new ConstraintNode("M1Con1", m1con1, null));
 
 // Internal constraint.
 
-        RelationStatement m1p61r1 = RelationStatement.createRelationStatementWithChoiceCondition(m1p611, null, EMathRelation.EQUAL, m1p611c1);
-        RelationStatement m1p61r2 = RelationStatement.createRelationStatementWithParameterCondition(m1p612, null, EMathRelation.LESS_THAN, m1p613);
+        RelationStatement m1p61r1 = RelationStatement.createRelationStatementWithChoiceCondition(
+                m1p611, m1p61, EMathRelation.EQUAL, m1p611c1);
+        RelationStatement m1p61r2 = RelationStatement.createRelationStatementWithParameterCondition(
+                m1p612, m1p61, EMathRelation.LESS_THAN, m1p613);
 
         Constraint m1p61con1 = new Constraint("M1P61Con1", ConstraintType.EXTENDED_FILTER, m1p61r1, m1p61r2,null);
         m1p61.addConstraint(new ConstraintNode("M1P61Con1", m1p61con1, null));
 
 // Mixed constraint.
 
-        RelationStatement m1r3 = RelationStatement.createRelationStatementWithChoiceCondition(m1p1, null, EMathRelation.EQUAL, m1p1c2);
-        RelationStatement m1r4 = RelationStatement.createRelationStatementWithParameterCondition(m1p612, null, EMathRelation.LESS_THAN, m1p613);
+        RelationStatement m1r3 = RelationStatement.createRelationStatementWithChoiceCondition(
+                m1p1, null, EMathRelation.EQUAL, m1p1c2);
+        RelationStatement m1r4 = RelationStatement.createRelationStatementWithParameterCondition(
+                m1p612, null, EMathRelation.LESS_THAN, m1p613);
 
         Constraint m1con2 = new Constraint("M1P61Con1", ConstraintType.EXTENDED_FILTER, m1r3, m1r4,null);
 

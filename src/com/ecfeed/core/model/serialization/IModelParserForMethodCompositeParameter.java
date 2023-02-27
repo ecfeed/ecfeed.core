@@ -11,6 +11,7 @@
 package com.ecfeed.core.model.serialization;
 
 import com.ecfeed.core.model.CompositeParameterNode;
+import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
 import com.ecfeed.core.utils.ListOfStrings;
 import nu.xom.Element;
@@ -20,6 +21,6 @@ import java.util.Optional;
 public interface IModelParserForMethodCompositeParameter {
 
 	Optional<CompositeParameterNode> parseMethodCompositeParameter(
-			Element parameterElement, MethodNode method, ListOfStrings errorList);
+			Element parameterElement, MethodNode method, IAbstractNode parent, ListOfStrings errorList);
 
 }

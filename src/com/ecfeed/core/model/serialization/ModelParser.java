@@ -165,7 +165,7 @@ public class ModelParser {
 		
 		try {
 			Document document = fBuilder.build(istream);
-			return new ModelParserForMethodParameter().parseMethodParameter(document.getRootElement(), method, outErrorList).get();
+			return new ModelParserForMethodParameter().parseMethodParameter(document.getRootElement(), method, method, outErrorList).get();
 		} catch (ParsingException e) {
 			ParserException.report(Messages.PARSING_EXCEPTION(e));
 			return null;

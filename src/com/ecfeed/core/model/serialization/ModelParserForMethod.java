@@ -65,10 +65,10 @@ public class ModelParserForMethod implements IModelParserForMethod {
 
 		for (Element child : ModelParserHelper.getIterableChildren(methodElement, SerializationHelperVersion1.getParameterNodeNames())) {
 			if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getBasicParameterNodeName())) {
-				fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, errorList)
+				fModelParserForMethodParameter.parseMethodParameter(child, targetMethodNode, targetMethodNode, errorList)
 						.ifPresent(targetMethodNode::addParameter);
 			} else if (ModelParserHelper.verifyElementName(child, SerializationHelperVersion1.getCompositeParameterNodeName())) {
-				fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, errorList)
+				fModelParserForMethodCompositeParameter.parseMethodCompositeParameter(child, targetMethodNode, targetMethodNode, errorList)
 						.ifPresent(targetMethodNode::addParameter);
 			}
 		}
