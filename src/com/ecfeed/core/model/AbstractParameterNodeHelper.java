@@ -52,7 +52,7 @@ public abstract class AbstractParameterNodeHelper {
 			IExtLanguageManager extLanguageManager) {
 
 		String qualifiedName = getQualifiedName(abstractParameterNode);
-		
+
 		if (extLanguageManager != null) {
 			qualifiedName = extLanguageManager.convertTextFromIntrToExtLanguage(qualifiedName);
 		}
@@ -78,30 +78,30 @@ public abstract class AbstractParameterNodeHelper {
 			AbstractParameterNode abstractParameterNode, 
 			CompositeParameterNode linkingContext,
 			IExtLanguageManager extLanguageManager) {
-		
+
 		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
 			return getQualifiedName(abstractParameterNode, extLanguageManager);
 		}
-		
+
 		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
 
 		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
-		
+
 		if (abstractParameterNode.isClassParameter()) {
 			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
 		}
-	
+
 		CompositeParameterNode candidate = null;
-		
+
 		parameterLoop:
-		for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
-			for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
-				if (candidateParametr == abstractParameterNode) {
-					candidate = candidateComposite;
-					break parameterLoop;
+			for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
+				for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
+					if (candidateParametr == abstractParameterNode) {
+						candidate = candidateComposite;
+						break parameterLoop;
+					}
 				}
 			}
-		}
 
 		String linkingSignature = getQualifiedName(candidate != null ? candidate : linkingContext, extLanguageManager);
 
@@ -551,7 +551,7 @@ public abstract class AbstractParameterNodeHelper {
 
 		List<AbstractParameterNode> result = new ArrayList<>();
 
-		IAbstractNode rootNode = AbstractNodeHelper.findRoot(globalParameterNode);
+		IAbstractNode rootNode = RootNodeHelper.findRootNode(globalParameterNode);
 
 		getParametersLinkedToGlobalParameterRecursive(globalParameterNode, rootNode, result);
 

@@ -70,7 +70,7 @@ public class CompositeParameterNodeHelper {
 
 		List<CompositeParameterNode> resultLinkedCompositeParameters = new ArrayList<>();
 
-		RootNode rootNode = AbstractNodeHelper.findRootNode(compositeParameterNode);
+		RootNode rootNode = RootNodeHelper.findRootNode(compositeParameterNode);
 
 		getLinkedCompositeParametersRecursive(
 				compositeParameterNode, rootNode, resultLinkedCompositeParameters);
@@ -130,7 +130,7 @@ public class CompositeParameterNodeHelper {
 			return classNode;
 		}
 
-		RootNode rootNode = AbstractNodeHelper.findRootNode(globParameterNode);
+		RootNode rootNode = RootNodeHelper.findRootNode(globParameterNode);
 
 		return rootNode;
 	}

@@ -116,6 +116,7 @@ public class RootNodeHelper {
 	}
 
 	public static RootNode findRootNode(IAbstractNode anyNode) {
+		
 		IAbstractNode parent = anyNode;
 		
 		while (parent != null) {
