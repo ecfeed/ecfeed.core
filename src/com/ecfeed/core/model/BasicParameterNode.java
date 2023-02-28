@@ -678,11 +678,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 	@Override
 	public BasicParameterNode getLinkDestination() {
 
-		if (isLinked() && (getLinkToGlobalParameter() != null)) {
-			return ((BasicParameterNode) getLinkToGlobalParameter()).getLinkDestination();
-		}
-
-		return this;
+		return (BasicParameterNode) super.getLinkDestination();
 	}
-
 }
