@@ -51,7 +51,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			addOperationsForConstraints(outAffectedNodesByType, extLanguageManager, result);
 		}
 
-		if (!outAffectedNodesByType.getTestCaseNodes().isEmpty()) {
+		if (!outAffectedNodesByType.getTestCases().isEmpty()) {
 			addOperationsForTestCases(outAffectedNodesByType, extLanguageManager, result);
 		}
 
@@ -102,7 +102,7 @@ public class GenericRemoveNodesOperationsAccumulator {
 			List<IModelOperation> result) {
 
 
-		Set<TestCaseNode> testCaseNodes = outAffectedNodesByType.getTestCaseNodes();
+		Set<TestCaseNode> testCaseNodes = outAffectedNodesByType.getTestCases();
 
 		for (TestCaseNode testCaseNode : testCaseNodes) {
 

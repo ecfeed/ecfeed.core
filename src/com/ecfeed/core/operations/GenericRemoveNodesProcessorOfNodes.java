@@ -10,6 +10,8 @@
 
 package com.ecfeed.core.operations;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -32,12 +34,12 @@ public class GenericRemoveNodesProcessorOfNodes {
 	private NodesByType fAffectedNodesByType;
 
 	public GenericRemoveNodesProcessorOfNodes(
-			Set<IAbstractNode> selectedNodes, 
+			Collection<? extends IAbstractNode> nodesToRemove,
 			ITypeAdapterProvider typeAdapterProvider, 
 			boolean validate,
 			IExtLanguageManager extLanguageManager) {
 
-		fSelectedNodes = selectedNodes;
+		fSelectedNodes = createSetOfNodesToRemove(nodesToRemove);
 		fAffectedNodesByType = new NodesByType();
 
 		removeNodesWithAncestorsOnList(fSelectedNodes);
@@ -48,7 +50,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 				extLanguageManager, 
 				validate);
 
-		if (fAffectedNodesByType.getTestSuiteNodes().size() > 0) {
+		if (fAffectedNodesByType.getTestSuites().size() > 0) {
 			ExceptionHelper.reportRuntimeException("Test suites not expected.");
 		}
 	}
@@ -57,12 +59,21 @@ public class GenericRemoveNodesProcessorOfNodes {
 		return fAffectedNodesByType;
 	}
 
-	public Set<ConstraintNode> getAffectedConstraints() {
-		return fAffectedNodesByType.getConstraints();
-	}
+	//	public Set<ConstraintNode> getAffectedConstraints() {
+	//		return fAffectedNodesByType.getConstraints();
+	//	}
+	//
+	//	public Set<TestCaseNode> getAffectedTestCases() {
+	//		return fAffectedNodesByType.getTestCaseNodes();
+	//	}
 
-	public Set<TestCaseNode> getAffectedTestCases() {
-		return fAffectedNodesByType.getTestCaseNodes();
+	private Set<IAbstractNode> createSetOfNodesToRemove(Collection<? extends IAbstractNode> nodesToRemove) {
+
+		Set<IAbstractNode> setOfNodes = new HashSet<>(nodesToRemove);
+
+		removeNodesWithAncestorsOnList(setOfNodes);
+
+		return setOfNodes;
 	}
 
 	private void removeNodesWithAncestorsOnList(Set<IAbstractNode> selectedNodes) {
@@ -123,13 +134,13 @@ public class GenericRemoveNodesProcessorOfNodes {
 	private static void processTestSuitesAndTestCases(
 			NodesByType selectedNodesByType, NodesByType outAffectedNodes) {
 
-		Set<TestSuiteNode> testSuiteNodes = selectedNodesByType.getTestSuiteNodes();
+		Set<TestSuiteNode> testSuiteNodes = selectedNodesByType.getTestSuites();
 
 		if (!testSuiteNodes.isEmpty()) {
 			processTestSuites(testSuiteNodes, outAffectedNodes);
 		}
 
-		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
+		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCases();
 
 		if (!testCaseNodes.isEmpty()) {
 			processTestCases(testCaseNodes, outAffectedNodes);

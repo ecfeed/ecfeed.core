@@ -50,6 +50,20 @@ public class NodesByType {
 		fTestCases = new HashSet<>();
 	}
 
+	public NodesByType(NodesByType other) {
+
+		fClasses = other.getClasses();
+		fMethods = other.getMethods();
+		fBasicParameters = other.getBasicParameters();
+		fCompositeParameters = other.getCompositeParameters();
+		fChoices = other.getChoices();
+		fConstraints = other.getConstraints();
+		fTestSuites = other.getTestSuites();
+		fTestCases = other.getTestCases();
+	}
+
+
+
 	public NodesByType(Collection<IAbstractNode> abstractNodes) {
 
 		this();
@@ -62,18 +76,9 @@ public class NodesByType {
 	@Override
 	public String toString() {
 
-		if (fClasses.size() == 0 && 
-				fMethods.size() == 0 && 
-				fBasicParameters.size() == 0 && 
-				fCompositeParameters.size() == 0 && 
-				fChoices.size() == 0 &&
-				fConstraints.size() == 0 && 
-				fTestSuites.size() == 0 &&
-				fTestCases.size() == 0) {
-
+		if (isEmpty()) {
 			return "Empty";
-		}
-
+		} 
 
 		String str = 
 				"Cls:" + fClasses.size() +
@@ -86,6 +91,74 @@ public class NodesByType {
 				" TCas:" + fTestCases.size();
 
 		return str;
+	}
+
+	public boolean isEmpty() {
+
+		if (fClasses.size() > 0) {
+			return false;
+		}
+
+		if (fMethods.size() > 0) {
+			return false;
+		}
+
+		if (fBasicParameters.size() > 0) {
+			return false;
+		}
+
+		if (fCompositeParameters.size() > 0) {
+			return false;
+		}
+
+		if (fChoices.size() > 0) {
+			return false;
+		}
+
+		if (fConstraints.size() > 0) {
+			return false;
+		}
+
+		if (fTestSuites.size() > 0) {
+			return false;
+		}
+
+		if (fTestCases.size() > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public String createContentMessage() {
+
+		String message = "";
+
+		message += createContentMessageForNodeType(fClasses.size(), "class", "classes");
+		message += createContentMessageForNodeType(fMethods.size(), "method", "methods");
+		message += createContentMessageForNodeType(fBasicParameters.size(), "parameter", "parameters");
+		message += createContentMessageForNodeType(fCompositeParameters.size(), "structure", "structures");
+		message += createContentMessageForNodeType(fChoices.size(), "choice", "choices");
+		message += createContentMessageForNodeType(fConstraints.size(), "constraint", "constraints");
+		message += createContentMessageForNodeType(fTestSuites.size(), "test suite", "test suites");
+		message += createContentMessageForNodeType(fTestCases.size(), "test case", "test cases");
+
+		message = StringHelper.removeFromPostfix(", ", message);
+
+		return message;
+	}
+
+	private String createContentMessageForNodeType(int size, String nameInSingular, String nameInPlural) {
+
+		if (size == 0) {
+			return "";
+		}
+
+		if (size == 1) {
+			return "1 " + nameInSingular + ", ";
+		}
+
+		return size + " " + nameInPlural + ", ";
 	}
 
 	public void addNode(IAbstractNode abstractNode) {
@@ -125,7 +198,6 @@ public class NodesByType {
 			return;
 		} 
 
-
 		if (abstractNode instanceof TestCaseNode) {
 			fTestCases.add((TestCaseNode)abstractNode);
 			return;
@@ -152,17 +224,17 @@ public class NodesByType {
 	}
 
 	public List<BasicParameterNode> getListOfBasicParameters() {
-		
+
 		List<BasicParameterNode> list =	new ArrayList<>(fBasicParameters);
 		return list;
 	}
-	
+
 	public Set<CompositeParameterNode> getCompositeParameters() {
 		return fCompositeParameters;
 	}
 
 	public List<CompositeParameterNode> getListOfCompositeParameters() {
-		
+
 		List<CompositeParameterNode> list =	new ArrayList<>(fCompositeParameters);
 
 		return list;
@@ -180,12 +252,16 @@ public class NodesByType {
 		fConstraints.addAll(constraintNodes);
 	}
 
-	public Set<TestCaseNode> getTestCaseNodes() {
+	public Set<TestCaseNode> getTestCases() {
 		return fTestCases;
 	}
 
-	public Set<TestSuiteNode> getTestSuiteNodes() {
+	public Set<TestSuiteNode> getTestSuites() {
 		return fTestSuites;
+	}
+
+	public void addMethods(Set<MethodNode> methods) {
+		fMethods.addAll(methods);
 	}
 
 	public void addTestCases(Collection<TestCaseNode> testCaseNodes) {
@@ -202,6 +278,22 @@ public class NodesByType {
 
 	public void addCompositeParameters(List<CompositeParameterNode> compositeParameters) {
 		fCompositeParameters.addAll(compositeParameters);
+	}
+
+	public void addBasicParameters(Set<BasicParameterNode> basicParameters) {
+		fBasicParameters.addAll(basicParameters);
+	}
+
+	public void addCompositeParameters(Set<CompositeParameterNode> compositeParameters) {
+		fCompositeParameters.addAll(compositeParameters);
+	}
+
+	public void addChoices(Set<ChoiceNode> choices) {
+		fChoices.addAll(choices);
+	}
+
+	public void addTestSuites(Set<TestSuiteNode> testSuiteNodes) {
+		fTestSuites.addAll(testSuiteNodes);
 	}
 
 }
