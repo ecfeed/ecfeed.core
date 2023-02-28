@@ -50,7 +50,7 @@ public class GenericRemoveNodesProcessorOfNodes {
 				extLanguageManager, 
 				validate);
 
-		if (fAffectedNodesByType.getTestSuiteNodes().size() > 0) {
+		if (fAffectedNodesByType.getTestSuites().size() > 0) {
 			ExceptionHelper.reportRuntimeException("Test suites not expected.");
 		}
 	}
@@ -134,13 +134,13 @@ public class GenericRemoveNodesProcessorOfNodes {
 	private static void processTestSuitesAndTestCases(
 			NodesByType selectedNodesByType, NodesByType outAffectedNodes) {
 
-		Set<TestSuiteNode> testSuiteNodes = selectedNodesByType.getTestSuiteNodes();
+		Set<TestSuiteNode> testSuiteNodes = selectedNodesByType.getTestSuites();
 
 		if (!testSuiteNodes.isEmpty()) {
 			processTestSuites(testSuiteNodes, outAffectedNodes);
 		}
 
-		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCaseNodes();
+		Set<TestCaseNode> testCaseNodes = selectedNodesByType.getTestCases();
 
 		if (!testCaseNodes.isEmpty()) {
 			processTestCases(testCaseNodes, outAffectedNodes);
