@@ -157,7 +157,8 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 
 		return parameter;
 	}
-
+	
+// TODO LATEST [REFACTOR]	
 	public BasicParameterNode createCopy(NodeMapper mapper) {
 		BasicParameterNode parameter = makeClone(mapper);
 

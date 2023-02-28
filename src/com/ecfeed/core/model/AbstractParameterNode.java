@@ -96,6 +96,10 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		while (parent != null) {
 			parent = parent.getParent();
 
+			if (parent instanceof MethodNode) {
+				return false;
+			}
+			
 			if (parent instanceof ClassNode) {
 				return true;
 			}
@@ -133,23 +137,6 @@ public abstract class AbstractParameterNode extends AbstractNode {
 		}
 		
 		return true;
-		
-		// TODO MO-RE remove
-//		IAbstractNode parent = this;
-//
-//		while (parent != null) {
-//			parent = parent.getParent();
-//
-//			if (parent instanceof MethodNode) {
-//				return false;
-//			}
-//
-//			if (parent instanceof ClassNode || parent instanceof RootNode) {
-//				return true;
-//			}
-//		}
-//
-//		return false;
 	}
 
 	public IParametersParentNode getParametersParent() {

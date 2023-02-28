@@ -223,21 +223,23 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 	}
 
+// TODO LATEST [REFACTOR]		
 	public AbstractStatement parseChoiceStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_CHOICE_STATEMENT_NODE_NAME, errorList);
 
-		String linkingContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_CONTEXT);
+		String parameterContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+		CompositeParameterNode parameterContext = CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName);
 
-		String parameterName = ModelParserHelper.getAttributeValue(
-				element, SerializationHelperVersion1.getStatementParameterAttributeName(),
+		String parameterName =	ModelParserHelper.getAttributeValue(
+				element, 
+				SerializationHelperVersion1.getStatementParameterAttributeName(),
 				errorList);
+		
+		BasicParameterNode parameterNode = BasicParameterNodeHelper.getParameterFromPath(parameterContext == null ? parent : parameterContext, parameterName);
 
-		String methodParameterNodeName = AbstractParameterNodeHelper.getQualifiedName(linkingContextName, parameterName);
-		BasicParameterNode methodParameterNode = BasicParameterNodeHelper.getParameterFromPath(parent, methodParameterNodeName);
-
-		if (methodParameterNode == null) {
+		if (parameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
 			return null;
 		}
@@ -248,7 +250,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
-		if (!isOkExpectedPropertyOfParameter(methodParameterNode, relation, errorList)) {
+		if (!isOkExpectedPropertyOfParameter(parameterNode, relation, errorList)) {
 			return null;
 		}
 
@@ -256,89 +258,93 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				element, SerializationHelperVersion1.getStatementChoiceAttributeName(),
 				errorList);
 
-		ChoiceNode choice = methodParameterNode.getChoice(choiceName);
+		ChoiceNode choice = parameterNode.getChoice(choiceName);
 		if (choice == null) {
 			errorList.add(Messages.WRONG_PARTITION_NAME(choiceName, parameterName, parent.getName()));
 			return null;
 		}
 
 		if (relation == EMathRelation.ASSIGN) {
-			return AssignmentStatement.createAssignmentWithChoiceCondition(methodParameterNode, choice);
+			return AssignmentStatement.createAssignmentWithChoiceCondition(parameterNode, choice);
 		}
 
-		CompositeParameterNode linkingContextNode = CompositeParameterNodeHelper.getParameterFromPath(parent, linkingContextName);
-
 		return RelationStatement.createRelationStatementWithChoiceCondition
-				(methodParameterNode, linkingContextNode, relation, choice);
+				(parameterNode, parameterContext, relation, choice);
 	}
-
+	
+// TODO LATEST [REFACTOR]		
 	public AbstractStatement parseParameterStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_PARAMETER_STATEMENT_NODE_NAME, errorList);
 
-		String linkingContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_CONTEXT);
+		String parameterContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+		CompositeParameterNode parameterContext = CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName);
 
 		String parameterName =	ModelParserHelper.getAttributeValue(
-				element, SerializationHelperVersion1.getStatementParameterAttributeName(),
+				element, 
+				SerializationHelperVersion1.getStatementParameterAttributeName(),
 				errorList);
+		
+		BasicParameterNode parameterNode = BasicParameterNodeHelper.getParameterFromPath(parameterContext == null ? parent : parameterContext, parameterName);
 
-		String leftParameterNodeName = AbstractParameterNodeHelper.getQualifiedName(linkingContextName, parameterName);
-		BasicParameterNode leftParameterNode = BasicParameterNodeHelper.getParameterFromPath(parent, leftParameterNodeName);
-
-		if (leftParameterNode == null) {
+		if (parameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
 			return null;
 		}
-
+		
 		String relationName = ModelParserHelper.getAttributeValue(
-				element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME,
+				element, 
+				SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME,
 				errorList);
 
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
-		if (!isOkExpectedPropertyOfParameter(leftParameterNode, relation, errorList)) {
+		if (!isOkExpectedPropertyOfParameter(parameterNode, relation, errorList)) {
 			return null;
 		}
 
+		String rightParameterContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT);
+		CompositeParameterNode rightParameterContext = CompositeParameterNodeHelper.getParameterFromPath(parent, rightParameterContextName);
+		
 		String rightParameterName =	ModelParserHelper.getAttributeValue(
-				element, SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME,
+				element, 
+				SerializationConstants.STATEMENT_RIGHT_PARAMETER_ATTRIBUTE_NAME,
 				errorList);
-
-		String rightParameterNodeName = AbstractParameterNodeHelper.getQualifiedName(linkingContextName, rightParameterName);
-		BasicParameterNode rightParameterNode = BasicParameterNodeHelper.getParameterFromPath(parent, rightParameterNodeName);
+		
+		BasicParameterNode rightParameterNode = BasicParameterNodeHelper.getParameterFromPath(rightParameterContext == null ? parent : rightParameterContext, rightParameterName);
 
 		if (rightParameterNode == null) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(rightParameterName, parent.getName()));
 			return null;
 		}
 
-		CompositeParameterNode linkingContextNode = CompositeParameterNodeHelper.getParameterFromPath(parent, linkingContextName);
-
 		if (relation == EMathRelation.ASSIGN) {
 			return AssignmentStatement.createAssignmentWithParameterCondition(
-					leftParameterNode, rightParameterNode, linkingContextNode);
+					parameterNode, rightParameterNode, rightParameterContext);
 		}
 
 		return RelationStatement.createRelationStatementWithParameterCondition(
-				leftParameterNode, linkingContextNode, relation, rightParameterNode);
+				parameterNode, parameterContext, relation, rightParameterNode, rightParameterContext);
 	}
-	//
+
+// TODO LATEST [REFACTOR]		
 	public AbstractStatement parseValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), SerializationConstants.CONSTRAINT_VALUE_STATEMENT_NODE_NAME, errorList);
 
-		String linkingContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_CONTEXT);
+		String parameterContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+		CompositeParameterNode parameterContext = CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName);
 
-		String parameterName = ModelParserHelper.getAttributeValue(
-				element, SerializationHelperVersion1.getStatementParameterAttributeName(),
+		String parameterName =	ModelParserHelper.getAttributeValue(
+				element, 
+				SerializationHelperVersion1.getStatementParameterAttributeName(),
 				errorList);
+		
+		BasicParameterNode parameterNode = BasicParameterNodeHelper.getParameterFromPath(parameterContext == null ? parent : parameterContext, parameterName);
 
-		String leftParameterNodeName = AbstractParameterNodeHelper.getQualifiedName(linkingContextName, parameterName);
-		BasicParameterNode leftParameterNode = BasicParameterNodeHelper.getParameterFromPath(parent, leftParameterNodeName);
-
-		if (leftParameterNode == null) {
+		if (parameterNode == null) {
 			errorList.add(EMPTY_PARAMETER_WHILE_PARSING_VALUE_STATEMENT);
 			return null;
 		}
@@ -349,7 +355,7 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
-		if (!isOkExpectedPropertyOfParameter(leftParameterNode, relation, errorList)) {
+		if (!isOkExpectedPropertyOfParameter(parameterNode, relation, errorList)) {
 			return null;
 		}
 
@@ -358,13 +364,11 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				errorList);
 
 		if (relation == EMathRelation.ASSIGN) {
-			return AssignmentStatement.createAssignmentWithValueCondition(leftParameterNode, value);
+			return AssignmentStatement.createAssignmentWithValueCondition(parameterNode, value);
 		}
 
-		CompositeParameterNode linkingContextNode = CompositeParameterNodeHelper.getParameterFromPath(parent, linkingContextName);
-
 		return RelationStatement.createRelationStatementWithValueCondition(
-				leftParameterNode, linkingContextNode, relation, value);
+				parameterNode, parameterContext, relation, value);
 	}
 
 	private boolean isOkExpectedPropertyOfParameter(
@@ -390,12 +394,14 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 		return true;
 	}
 
+// TODO LATEST [REFACTOR]		
 	public RelationStatement parseLabelStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_LABEL_STATEMENT_NODE_NAME, errorList);
 
-		String linkingContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_CONTEXT);
+		String parameterContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+		CompositeParameterNode parameterContext = CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName);
 
 		String parameterName = ModelParserHelper.getAttributeValue(
 				element, SerializationHelperVersion1.getStatementParameterAttributeName(),
@@ -409,27 +415,26 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				element, SerializationConstants.STATEMENT_RELATION_ATTRIBUTE_NAME,
 				errorList);
 
-		String leftParameterNodeName = AbstractParameterNodeHelper.getQualifiedName(linkingContextName, parameterName);
-		BasicParameterNode basicParameterNode = BasicParameterNodeHelper.getParameterFromPath(parent, leftParameterNodeName);
+		BasicParameterNode parameterNode = BasicParameterNodeHelper.getParameterFromPath(parameterContext == null ? parent : parameterContext, parameterName);
 
-		if (basicParameterNode == null || basicParameterNode.isExpected()) {
+		if (parameterNode == null || parameterNode.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
 			return null;
 		}
 		EMathRelation relation = ModelParserHelper.parseRelationName(relationName, errorList);
 
-		CompositeParameterNode linkingContextNode = CompositeParameterNodeHelper.getParameterFromPath(parent, linkingContextName);
-
 		return RelationStatement.createRelationStatementWithLabelCondition(
-				basicParameterNode, linkingContextNode, relation, label);
+				parameterNode, parameterContext, relation, label);
 	}
 
+// TODO LATEST [REFACTOR]		
 	public ExpectedValueStatement parseExpectedValueStatement(
 			Element element, IParametersAndConstraintsParentNode parent, ListOfStrings errorList) throws ParserException {
 
 		ModelParserHelper.assertNameEqualsExpectedName(element.getQualifiedName(), CONSTRAINT_EXPECTED_STATEMENT_NODE_NAME, errorList);
 
-		String linkingContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_CONTEXT);
+		String parameterContextName = ModelParserHelper.getAttributeValue(element, SerializationConstants.STATEMENT_LINKING_PARAMETER_CONTEXT);
+		CompositeParameterNode parameterContext = CompositeParameterNodeHelper.getParameterFromPath(parent, parameterContextName);
 
 		String parameterName = ModelParserHelper.getAttributeValue(
 				element, SerializationHelperVersion1.getStatementParameterAttributeName(), errorList);
@@ -438,20 +443,17 @@ public class ModelParserForConstraint implements IModelParserForConstraint {
 				element, SerializationConstants.STATEMENT_EXPECTED_VALUE_ATTRIBUTE_NAME,
 				errorList);
 
-		String leftParameterNodeName = AbstractParameterNodeHelper.getQualifiedName(linkingContextName, parameterName);
-		BasicParameterNode parameter = BasicParameterNodeHelper.getParameterFromPath(parent, leftParameterNodeName);
+		BasicParameterNode parameterNode = BasicParameterNodeHelper.getParameterFromPath(parameterContext == null ? parent : parameterContext, parameterName);
 
-		if (parameter == null || !parameter.isExpected()) {
+		if (parameterNode == null || !parameterNode.isExpected()) {
 			errorList.add(Messages.WRONG_PARAMETER_NAME(parameterName, parent.getName()));
 			return null;
 		}
 
-		ChoiceNode condition = new ChoiceNode("expected", valueString, parameter.getModelChangeRegistrator());
-		condition.setParent(parameter);
-
-		CompositeParameterNode linkingContextNode = CompositeParameterNodeHelper.getParameterFromPath(parent, linkingContextName);
+		ChoiceNode condition = new ChoiceNode("expected", valueString, parameterNode.getModelChangeRegistrator());
+		condition.setParent(parameterNode);
 
 		return new ExpectedValueStatement(
-				parameter, linkingContextNode, condition, new JavaPrimitiveTypePredicate());
+				parameterNode, parameterContext, condition, new JavaPrimitiveTypePredicate());
 	}
 }

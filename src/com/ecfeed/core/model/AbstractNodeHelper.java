@@ -179,5 +179,4 @@ public abstract class AbstractNodeHelper  {
 
 		return findClassNode(parent);
 	}
-
 }

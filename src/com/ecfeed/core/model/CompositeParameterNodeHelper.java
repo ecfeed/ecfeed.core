@@ -238,11 +238,8 @@ public class CompositeParameterNodeHelper {
 			return null;
 		}
 
-		IAbstractNode container = parameterParent.getContainer();
 		List<CompositeParameterNode> parameters = new ArrayList<>();
 
-		parameters.add((CompositeParameterNode) parameterParent);
-		parameters.addAll(((IParametersParentNode) container).getNestedCompositeParameters(true));
 		parameters.addAll(((IParametersParentNode) parameterParent).getNestedCompositeParameters(true));
 
 		for (CompositeParameterNode parameter : parameters) {

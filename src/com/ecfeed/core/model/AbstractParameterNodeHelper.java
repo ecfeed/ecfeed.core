@@ -78,17 +78,32 @@ public abstract class AbstractParameterNodeHelper {
 			AbstractParameterNode abstractParameterNode, 
 			CompositeParameterNode linkingContext,
 			IExtLanguageManager extLanguageManager) {
-
-		if (linkingContext == null) {
+		
+		if (linkingContext == null || !abstractParameterNode.isGlobalParameter()) {
 			return getQualifiedName(abstractParameterNode, extLanguageManager);
 		}
-
+		
 		String ownQualifiedName = getQualifiedName(abstractParameterNode, extLanguageManager);
 
-		String ownQualifiedNameWithoutPrefix = 
-				StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+		String ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedName);
+		
+		if (abstractParameterNode.isClassParameter()) {
+			ownQualifiedNameWithoutPrefix = StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, ownQualifiedNameWithoutPrefix);
+		}
+	
+		CompositeParameterNode candidate = null;
+		
+		parameterLoop:
+		for (CompositeParameterNode candidateComposite : linkingContext.getNestedCompositeParameters(false)) {
+			for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
+				if (candidateParametr == abstractParameterNode) {
+					candidate = candidateComposite;
+					break parameterLoop;
+				}
+			}
+		}
 
-		String linkingSignature = getQualifiedName(linkingContext, extLanguageManager);
+		String linkingSignature = getQualifiedName(candidate != null ? candidate : linkingContext, extLanguageManager);
 
 		return linkingSignature + SignatureHelper.SIGNATURE_NAME_SEPARATOR + ownQualifiedNameWithoutPrefix;
 	}
@@ -99,17 +114,6 @@ public abstract class AbstractParameterNodeHelper {
 
 		String qualifiedName = getQualifiedName(abstractParameterNode, linkingContext, null);
 		return qualifiedName;
-	}
-
-	public static String getQualifiedName(String linkingContext, String parameterName) {
-
-		if (linkingContext == null) {
-			return parameterName;
-		}
-
-		String parameterNameWithoutPrefix =	StringHelper.removeToPrefix(SignatureHelper.SIGNATURE_NAME_SEPARATOR, parameterName);
-
-		return linkingContext + SignatureHelper.SIGNATURE_NAME_SEPARATOR + parameterNameWithoutPrefix;
 	}
 
 	public static String getType(BasicParameterNode globalParameterNode, IExtLanguageManager extLanguageManager) {
@@ -632,5 +636,4 @@ public abstract class AbstractParameterNodeHelper {
 			currentNode = parent;
 		}
 	}
-
 }

@@ -70,10 +70,18 @@ public class RelationStatement extends AbstractStatement implements IRelationalS
 			EMathRelation relation,
 			BasicParameterNode rightParameter) {
 
+		return createRelationStatementWithParameterCondition(leftParameter, leftParameterLinkingContext, relation, rightParameter, null);
+	}
+
+	public static RelationStatement createRelationStatementWithParameterCondition(
+			BasicParameterNode leftParameter,
+			CompositeParameterNode leftParameterLinkingContext,
+			EMathRelation relation,
+			BasicParameterNode rightParameter,
+			CompositeParameterNode rightParameterLinkingContext) {
+
 		RelationStatement relationStatement = 
 				new RelationStatement(leftParameter, leftParameterLinkingContext, relation, null);
-
-		CompositeParameterNode rightParameterLinkingContext = leftParameterLinkingContext;
 		
 		IStatementCondition condition = 
 				new ParameterCondition(rightParameter, rightParameterLinkingContext, relationStatement);
