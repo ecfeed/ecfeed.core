@@ -75,7 +75,7 @@ public class GenericMoveOperation extends CompositeOperation {
 
 					if((node instanceof BasicParameterNode && ((BasicParameterNode)node).isGlobalParameter()) && newParent instanceof MethodNode){
 						BasicParameterNode parameter = (BasicParameterNode)node;
-						node = new BasicParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false);
+						node = new BasicParameterNode(parameter, adapterProvider.getAdapter(parameter.getType()).getDefaultValue(), false, null);
 					}
 					
 					if(newIndex != -1){

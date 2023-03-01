@@ -110,11 +110,6 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		addChoices(source.getChoices());
 	}
 
-	public BasicParameterNode(BasicParameterNode source,
-			String defaultValue, boolean expected) {
-		this(source, defaultValue, expected, null);
-	}
-
 	public BasicParameterNode(BasicParameterNode source) {
 
 		this(
