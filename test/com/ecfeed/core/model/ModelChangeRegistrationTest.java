@@ -65,7 +65,7 @@ public class ModelChangeRegistrationTest {
 		ModelChangeRegistrator changeCounter = new ModelChangeRegistrator();
 
 		RootNode rootNode = new RootNode("Root", changeCounter);
-		BasicParameterNode globalParameterNode = new BasicParameterNode("g1", "t", changeCounter);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("g1", "t", "0", false, changeCounter);
 
 		changeCounter.registerModelSaved();
 		rootNode.addParameter(globalParameterNode);

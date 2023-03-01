@@ -55,7 +55,7 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		createDefaultProperties();
 	}
 
-	public BasicParameterNode(
+	public BasicParameterNode( // TODO MO-RE remove constructors and create static factory methods for creating global choice (not expected, without default value) and local parameter
 			String name,
 			String type,
 			String defaultValue,

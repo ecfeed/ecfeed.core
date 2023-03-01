@@ -29,11 +29,10 @@ public class ClassNodeHelper {
 			ClassNode classNode, 
 			String name, 
 			String type,
-			String defaultValue,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode = 
-				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
+				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
 		
 		classNode.addParameter(globalParameterNode);
 

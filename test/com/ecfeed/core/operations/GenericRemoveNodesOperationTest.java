@@ -684,7 +684,7 @@ public class GenericRemoveNodesOperationTest {
 
 		// local parameter linked to global
 
-		BasicParameterNode localBasicParameterNode = MethodNodeHelper.addNewBasicParameter(methodNode, "P1", "String", null);
+		BasicParameterNode localBasicParameterNode = MethodNodeHelper.addNewBasicParameter(methodNode, "P1", "String", "0", null);
 		localBasicParameterNode.setLinkToGlobalParameter(globalBasicParameterNode);
 
 		// test case

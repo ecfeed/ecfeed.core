@@ -56,7 +56,7 @@ public class MethodParameterNodeHelperTest {
 		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("[e]Text: par 1", signature);
 
-		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", "0", false, null);
 		methodParameterNode.setLinkToGlobalParameter(globalParameterNode);
 
 		signature = MethodParameterNodeHelper.createSignature(methodParameterNode, new ExtLanguageManagerForJava());
@@ -90,7 +90,7 @@ public class MethodParameterNodeHelperTest {
 		signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForSimple());
 		assertEquals("[e]par 1 : Text", signature);
 
-		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", null);
+		BasicParameterNode globalParameterNode = new BasicParameterNode("global_1", "String", "0", false, null);
 		methodParameterNode.setLinkToGlobalParameter(globalParameterNode);
 
 		signature = MethodParameterNodeHelper.createReverseSignature(methodParameterNode, new ExtLanguageManagerForJava());
