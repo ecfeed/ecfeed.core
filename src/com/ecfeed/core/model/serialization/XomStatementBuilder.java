@@ -136,16 +136,15 @@ public class XomStatementBuilder implements IStatementVisitor {
 		return targetStatementElement;
 	}
 
-// TODO LATEST [REFACTOR]	
 	@Override
 	public Object visit(RelationStatement statement) throws Exception {
 
 		BasicParameterNode parameter = statement.getLeftParameter();
 
-		String relativeName = AbstractParameterNodeHelper.getQualifiedName(parameter);
+		String parameterName = AbstractParameterNodeHelper.getQualifiedName(parameter);
 
 		Attribute parameterAttribute =
-				new Attribute(fStatementParameterAttributeName, relativeName);
+				new Attribute(fStatementParameterAttributeName, parameterName);
 
 		Attribute relationAttribute =
 				new Attribute(STATEMENT_RELATION_ATTRIBUTE_NAME, statement.getRelation().getName());
@@ -155,71 +154,56 @@ public class XomStatementBuilder implements IStatementVisitor {
 
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, parameterAttribute, fWhiteCharConverter);
 		XomBuilder.encodeAndAddAttribute(targetStatementElement, relationAttribute, fWhiteCharConverter);
+		
+		BasicParameterNode parameterRight = getRightParameter(condition);
 
-//-----------------------------------		
-		
-		BasicParameterNode parameterRight = null;
-		
-		if (condition instanceof ChoiceCondition) {
-			parameterRight = ((ChoiceCondition) condition).getRightChoice().getParameter();
-		} else if (condition instanceof ParameterCondition) {
-			parameterRight = ((ParameterCondition) condition).getRightParameterNode();
-		}
-		
-//-------------------------------------		
-		
-		String parameterContext = null;
-		String rightParameterContext = null;
-		
-		if (parameter.getParent() instanceof  CompositeParameterNode) {
-			
-			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
-			
-			parameterLoop:
-			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
-				for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
-					if (candidateComposite.isLinked()) {
-						if (candidateParametr == parameter) {
-							parameterContext = AbstractParameterNodeHelper.getQualifiedName(candidateComposite);
-							break parameterLoop;
-						}
-					}
-				}
-			}
-		}
-		
-		if (parameterRight != null && parameterRight.getParent() instanceof CompositeParameterNode) {
-			
-			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
-			
-			parameterLoop:
-			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
-				if (candidateComposite.isLinked()) {
-					for (AbstractParameterNode candidateParametr : candidateComposite.getLinkDestination().getParameters()) {
-						if (candidateParametr == parameterRight) {
-							rightParameterContext = AbstractParameterNodeHelper.getQualifiedName(candidateComposite);
-							break parameterLoop;
-						}
-					}
-				}
-			}
-		}
-		
-//-------------------------------------				
-		
+		String parameterContext = getParameterContext(parameter);
+
 		if (parameterContext != null) {
 			Attribute linkingContext = new Attribute(STATEMENT_LINKING_PARAMETER_CONTEXT, parameterContext);
 			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
 		}
-		
+
+		String rightParameterContext = getParameterContext(parameterRight);
+
 		if (rightParameterContext != null) {
 			Attribute linkingContext = new Attribute(STATEMENT_LINKING_RIGHT_PARAMETER_CONTEXT, rightParameterContext);
 			XomBuilder.encodeAndAddAttribute(targetStatementElement, linkingContext, fWhiteCharConverter);
 		}
 		
-//-------------------------------------			
-		
 		return targetStatementElement;
+	}
+
+	private BasicParameterNode getRightParameter(IStatementCondition condition) {
+
+		if (condition instanceof ChoiceCondition) {
+			return ((ChoiceCondition) condition).getRightChoice().getParameter();
+		} else if (condition instanceof ParameterCondition) {
+			return ((ParameterCondition) condition).getRightParameterNode();
+		}
+
+		return null;
+	}
+
+	private String getParameterContext(BasicParameterNode parameter) {
+
+		if (parameter != null && parameter.getParent() instanceof  CompositeParameterNode) {
+
+			IParametersAndConstraintsParentNode parent = (IParametersAndConstraintsParentNode) fConstraintParent;
+
+			parameterLoop:
+			for (CompositeParameterNode candidateComposite : parent.getNestedCompositeParameters(false)) {
+				for (AbstractParameterNode candidateParameter : candidateComposite.getLinkDestination().getParameters()) {
+					if (candidateComposite.isLinked()) {
+						if (candidateParameter == parameter) {
+							return AbstractParameterNodeHelper.getQualifiedName(candidateComposite);
+						}
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 
 	@Override
