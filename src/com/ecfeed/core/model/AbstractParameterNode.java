@@ -122,7 +122,7 @@ public abstract class AbstractParameterNode extends AbstractNode {
 
 	public boolean isGlobalParameter() {
 		
-		RootNode rootNode = AbstractNodeHelper.findRootNode(this);
+		RootNode rootNode = RootNodeHelper.findRootNode(this);
 		
 		if (rootNode == null) {
 			return false;

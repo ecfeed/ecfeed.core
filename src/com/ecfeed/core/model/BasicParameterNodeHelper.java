@@ -292,7 +292,7 @@ public class BasicParameterNodeHelper {
 
 		Set<ConstraintNode> result = new HashSet<>();
 
-		RootNode rootNode = AbstractNodeHelper.findRootNode(parameter);
+		RootNode rootNode = RootNodeHelper.findRootNode(parameter);
 
 		getMentioningConstraintsRecursive(rootNode, parameter, result);
 
