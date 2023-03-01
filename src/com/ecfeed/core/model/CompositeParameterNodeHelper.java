@@ -8,9 +8,15 @@ import com.ecfeed.core.utils.ObjectHelper;
 public class CompositeParameterNodeHelper {
 
 	public static BasicParameterNode addNewBasicParameterNodeToCompositeParameter( // TODO MO-RE rename to addBasicParameter
-			CompositeParameterNode compositeParameterNode, String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
+			CompositeParameterNode compositeParameterNode, 
+			String name, 
+			String type,
+			String defaultValue,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode parameterNode = new BasicParameterNode (name, type, modelChangeRegistrator);
+		BasicParameterNode parameterNode = 
+				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
+		
 		compositeParameterNode.addParameter(parameterNode);
 
 		return parameterNode;

@@ -26,9 +26,15 @@ public class ClassNodeHelper {
 
 
 	public static BasicParameterNode addGlobalBasicParameterToClass(
-			ClassNode classNode, String name, String type, IModelChangeRegistrator modelChangeRegistrator) {
+			ClassNode classNode, 
+			String name, 
+			String type,
+			String defaultValue,
+			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode globalParameterNode = new BasicParameterNode (name, type, modelChangeRegistrator);
+		BasicParameterNode globalParameterNode = 
+				new BasicParameterNode (name, type, defaultValue, false, modelChangeRegistrator);
+		
 		classNode.addParameter(globalParameterNode);
 
 		return globalParameterNode;

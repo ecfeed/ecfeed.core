@@ -65,13 +65,13 @@ public class BasicParameterNode extends AbstractParameterNode implements IChoice
 		this(name, type, defaultValue, expected, null, modelChangeRegistrator);
 	}
 
-	public BasicParameterNode(
-			String name,
-			String type,
-			IModelChangeRegistrator modelChangeRegistrator) {
-
-		this(name, type, null, false, null, modelChangeRegistrator);
-	}
+//	public BasicParameterNode( // TODO MO-RE remove this constructor ? May fail somewhere when there is no default value
+//			String name,
+//			String type,
+//			IModelChangeRegistrator modelChangeRegistrator) {
+//
+//		this(name, type, null, false, null, modelChangeRegistrator);
+//	}
 
 	public BasicParameterNode(
 			String name,

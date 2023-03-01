@@ -444,9 +444,11 @@ public class MethodNodeHelper {
 			MethodNode methodNode, 
 			String name, 
 			String type,
+			String defaultValue,
 			IModelChangeRegistrator modelChangeRegistrator) {
 
-		BasicParameterNode basicParameterNode = new BasicParameterNode(name, type, modelChangeRegistrator);
+		BasicParameterNode basicParameterNode = 
+				new BasicParameterNode(name, type, defaultValue, false, modelChangeRegistrator);
 
 		methodNode.addParameter(basicParameterNode);
 
