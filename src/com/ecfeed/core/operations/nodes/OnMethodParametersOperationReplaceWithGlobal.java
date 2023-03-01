@@ -51,7 +51,9 @@ public class OnMethodParametersOperationReplaceWithGlobal extends CompositeOpera
 				IExtLanguageManager extLanguageManager) {
 			super(OperationNames.REPLACE_PARAMETER_WITH_LINK, true, target, target, extLanguageManager);
 			MethodNode method = (MethodNode) target.getParent();
-			BasicParameterNode global = new BasicParameterNode(target);
+			BasicParameterNode global =
+					target.makeClone();
+					// new BasicParameterNode(target);
 			addOperation(new GenericOperationAddParameter(parent, global, true, extLanguageManager));
 			addOperation(new MethodParameterOperationSetLink(target, global, extLanguageManager));
 			

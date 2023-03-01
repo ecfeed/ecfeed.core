@@ -92,7 +92,9 @@ public class FactoryAddChildOperation implements IModelVisitor {
 			}
 			return new OnMethodOperationAddToClass(node, (MethodNode)fChild, fIndex, fExtLanguageManager);
 		}else if(fChild instanceof BasicParameterNode){
-			BasicParameterNode globalParameter = new BasicParameterNode((BasicParameterNode)fChild);
+			BasicParameterNode globalParameter = 
+					((BasicParameterNode)fChild).makeClone();
+			//					new BasicParameterNode((BasicParameterNode)fChild);
 			if(fIndex == -1){
 				return new GenericOperationAddParameter(node, globalParameter, true, fExtLanguageManager);
 			}
@@ -109,7 +111,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 		if (fChild instanceof AbstractParameterNode ) {
 			return new OnParameterOperationAddToParent(node, (AbstractParameterNode)fChild, fIndex, fExtLanguageManager);
 		}
-		
+
 		if (fChild instanceof ConstraintNode) {
 			return new OnConstraintOperationAdd(node, (ConstraintNode)fChild, fIndex, fExtLanguageManager);
 		}
@@ -185,7 +187,7 @@ public class FactoryAddChildOperation implements IModelVisitor {
 
 	@Override
 	public Object visit(ChoiceNode node) throws Exception {
-		
+
 		if(fChild instanceof ChoiceNode){
 			return new GenericOperationAddChoice(node, (ChoiceNode)fChild, fAdapterProvider, fIndex, fValidate, fExtLanguageManager);
 		}
@@ -198,7 +200,9 @@ public class FactoryAddChildOperation implements IModelVisitor {
 
 		BasicParameterNode abstractParameterNode = (BasicParameterNode)fChild;
 
-		BasicParameterNode globalParameter = new BasicParameterNode(abstractParameterNode);
+		BasicParameterNode globalParameter =
+				((BasicParameterNode)abstractParameterNode).makeClone();
+				// new BasicParameterNode(abstractParameterNode);
 
 		return new GenericOperationAddParameter(rootNode, globalParameter, fIndex, true, fExtLanguageManager);
 	}
