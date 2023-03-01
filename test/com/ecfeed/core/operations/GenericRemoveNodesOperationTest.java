@@ -20,14 +20,17 @@ import java.util.List;
 import org.junit.Test;
 
 import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ClassNode;
+import com.ecfeed.core.model.ClassNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
 import com.ecfeed.core.model.Constraint;
 import com.ecfeed.core.model.ConstraintNode;
 import com.ecfeed.core.model.ConstraintType;
 import com.ecfeed.core.model.IAbstractNode;
 import com.ecfeed.core.model.MethodNode;
+import com.ecfeed.core.model.MethodNodeHelper;
 import com.ecfeed.core.model.RelationStatement;
 import com.ecfeed.core.model.RootNode;
 import com.ecfeed.core.model.StaticStatement;
@@ -751,6 +754,55 @@ public class GenericRemoveNodesOperationTest {
 		assertEquals(2, methodNode.getDeployedMethodParameters().size());
 	}
 
+	@Test
+	public void basicParameterRemoveLinked() {
+
+		RootNode rootNode = new RootNode("Root", null);
+
+		// class node 
+		
+		ClassNode classNode = new ClassNode("Class", null);
+		rootNode.addClass(classNode);
+		
+		// global basic parameter
+		
+		BasicParameterNode globalBasicParameterNode = 
+				ClassNodeHelper.addGlobalBasicParameterToClass(classNode, "GP1", "String", null); // TODO MO-RE rename to addNew... because creating - also other functions
+
+		// global choice
+		
+		BasicParameterNodeHelper.addNewChoiceToBasicParameter(globalBasicParameterNode, "GC1", "A", null);
+		
+		// method node
+
+		MethodNode methodNode = ClassNodeHelper.addMethodToClass(classNode, "Method", null);
+		
+		BasicParameterNode localBasicParameterNode = MethodNodeHelper.addNewBasicParameter(methodNode, "P1", "String", null);
+		localBasicParameterNode.setLinkToGlobalParameter(globalBasicParameterNode);
+
+		// list of nodes to delete
+
+		List<IAbstractNode> nodesToDelete = new ArrayList<>();
+		nodesToDelete.add(globalBasicParameterNode);
+
+		// remove
+
+		GenericRemoveNodesOperation genericRemoveNodesOperation = 
+				createRemovingNodesOperation(nodesToDelete, rootNode);
+		genericRemoveNodesOperation.execute();
+
+		assertEquals(0, classNode.getParameters().size());
+		assertEquals(0, methodNode.getParameters().size());
+		
+		// reverse
+
+		IModelOperation reverseOperation = genericRemoveNodesOperation.getReverseOperation();
+		reverseOperation.execute();
+
+		assertEquals(1, classNode.getParameters().size());
+		assertEquals(1, methodNode.getParameters().size());
+	}
+	
 	@Test
 	public void basicParameterGlobalRemove() {
 

@@ -430,7 +430,7 @@ public class MethodNodeHelper {
 		return false;
 	}
 
-	public static CompositeParameterNode addCompositeParameter(
+	public static CompositeParameterNode addCompositeParameter( // TODO MO-RE rename addNew ... because creating
 			MethodNode methodNode, String name, IModelChangeRegistrator modelChangeRegistrator) {
 
 		CompositeParameterNode compositeParameterNode = new CompositeParameterNode(name, modelChangeRegistrator);
@@ -440,4 +440,17 @@ public class MethodNodeHelper {
 		return compositeParameterNode;
 	}
 
+	public static BasicParameterNode addNewBasicParameter(
+			MethodNode methodNode, 
+			String name, 
+			String type,
+			IModelChangeRegistrator modelChangeRegistrator) {
+
+		BasicParameterNode basicParameterNode = new BasicParameterNode(name, type, modelChangeRegistrator);
+
+		methodNode.addParameter(basicParameterNode);
+
+		return basicParameterNode;
+	}
+	
 }
