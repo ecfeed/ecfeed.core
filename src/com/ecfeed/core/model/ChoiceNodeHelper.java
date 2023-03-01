@@ -325,7 +325,6 @@ public class ChoiceNodeHelper {
 			return choiceQualifiedName;
 		}
 
-//		String parameterCompositeName = AbstractParameterNodeHelper.getQualifiedName(basicParameterNode, extLanguageManager);
 		String parameterCompositeName = AbstractParameterNodeHelper.getCompositeName(basicParameterNode, extLanguageManager);
 
 		if (basicParameterNode.isExpected()) {
