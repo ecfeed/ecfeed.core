@@ -32,7 +32,7 @@ public class ClassNodeHelper {
 			IModelChangeRegistrator modelChangeRegistrator) {
 
 		BasicParameterNode globalParameterNode = 
-				new BasicParameterNode (name, type, null, false, modelChangeRegistrator);
+				BasicParameterNode.createGlobalParameter(name, type, modelChangeRegistrator);
 		
 		classNode.addParameter(globalParameterNode);
 
