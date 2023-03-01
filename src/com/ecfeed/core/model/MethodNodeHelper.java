@@ -452,5 +452,14 @@ public class MethodNodeHelper {
 
 		return basicParameterNode;
 	}
-	
+
+	public static TestCaseNode addNewTestCase(MethodNode methodNode, List<ChoiceNode> choicesOfTestCase) {
+
+		TestCaseNode testCaseNode = new TestCaseNode("TestSuite", null, choicesOfTestCase);
+		methodNode.addTestCase(testCaseNode);
+
+		return testCaseNode;
+	}
+
+
 }

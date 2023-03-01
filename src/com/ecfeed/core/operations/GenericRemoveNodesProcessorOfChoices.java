@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.ecfeed.core.model.AbstractParameterNodeHelper;
+import com.ecfeed.core.model.BasicParameterNode;
+import com.ecfeed.core.model.BasicParameterNodeHelper;
 import com.ecfeed.core.model.ChoiceNode;
 import com.ecfeed.core.model.ChoiceNodeHelper;
 import com.ecfeed.core.model.CompositeParameterNode;
@@ -50,20 +52,56 @@ public class GenericRemoveNodesProcessorOfChoices {
 		inOutAffectedNodes.addNode(choiceNode);
 	}
 
-	private static List<TestCaseNode> calculateTestCasesToDelete(ChoiceNode choiceNode) { // TODO to choice node helper - getMentioningTestCases
+	private static List<TestCaseNode> calculateTestCasesToDelete(ChoiceNode choiceNode) { // TODO MO-RE to choice node helper - getMentioningTestCases
 
 		if (choiceNode.isPartOfGlobalParameter()) {
-			return calculateTestCasesToDeleteForGlobalParameter(choiceNode);
+			return calculateTestCasesToDeleteForGlobalChoiceNode(choiceNode);
 		}
 
 		return calculateTestCasesToDeleteForLocalNode(choiceNode);
 	}
 
-	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalParameter(ChoiceNode globalChoiceNode) {
+	private static List<TestCaseNode> calculateTestCasesToDeleteForGlobalChoiceNode(ChoiceNode globalChoiceNode) {
+
+		CompositeParameterNode compositeParameterNode = AbstractParameterNodeHelper.getTopComposite(globalChoiceNode);
+
+		if (compositeParameterNode != null) {
+			return calculateTestCasesForChoiceOfGlobalComposite(compositeParameterNode);
+		}
+
+		BasicParameterNode basicParameterNode = BasicParameterNodeHelper.findBasicParameter(globalChoiceNode);
+
+		if (basicParameterNode != null) {
+			return calculateTestCasesForChoiceOfGlobalBasicParameter(basicParameterNode);
+		}
+
+		return new ArrayList<>();
+	}
+
+	private static List<TestCaseNode> calculateTestCasesForChoiceOfGlobalBasicParameter(
+			BasicParameterNode basicParameterNode) {
 
 		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
 
-		CompositeParameterNode compositeParameterNode = AbstractParameterNodeHelper.getTopComposite(globalChoiceNode);
+		List<BasicParameterNode> linkedBasicParameterNodes =
+				BasicParameterNodeHelper.getLinkedBasicParameters(basicParameterNode);
+
+
+		for (BasicParameterNode linkedBasicParameterNode : linkedBasicParameterNodes) {
+
+			List<TestCaseNode> testCases = 
+					calculateTestCasesToDeleteForLocalNode(linkedBasicParameterNode);
+
+			resultTestCaseNodesToDelete.addAll(testCases);
+		}
+
+		return resultTestCaseNodesToDelete;
+	}
+
+	private static List<TestCaseNode> calculateTestCasesForChoiceOfGlobalComposite(
+			CompositeParameterNode compositeParameterNode) {
+
+		List<TestCaseNode> resultTestCaseNodesToDelete = new ArrayList<>();
 
 		List<CompositeParameterNode> linkedCompositeParameterNodes =
 				CompositeParameterNodeHelper.getLinkedCompositeParameters(compositeParameterNode);
